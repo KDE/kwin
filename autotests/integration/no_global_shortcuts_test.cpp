@@ -247,10 +247,11 @@ void NoGlobalShortcutsTest::testAxisShortcut()
     // try to trigger the shortcut
     quint32 timestamp = 1;
     Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
-    if (direction == Qt::Vertical)
+    if (direction == Qt::Vertical) {
         Test::pointerAxisVertical(sign * 5.0, timestamp++);
-    else
+    } else {
         Test::pointerAxisHorizontal(sign * 5.0, timestamp++);
+    }
     QCoreApplication::instance()->processEvents();
     QCOMPARE(actionSpy.count(), 0);
     Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);

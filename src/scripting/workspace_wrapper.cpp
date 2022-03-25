@@ -308,8 +308,9 @@ void WorkspaceWrapper::setupClientConnections(AbstractClient *client)
             this, &WorkspaceWrapper::clientMaximizeSet);
 
     X11Client *x11Client = qobject_cast<X11Client *>(client); // TODO: Drop X11-specific signals.
-    if (!x11Client)
+    if (!x11Client) {
         return;
+    }
 
     connect(x11Client, &X11Client::clientManaging, this, &WorkspaceWrapper::clientManaging);
     connect(x11Client, &X11Client::clientFullScreenSet, this, &WorkspaceWrapper::clientFullScreenSet);

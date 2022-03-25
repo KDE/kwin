@@ -428,10 +428,11 @@ quint64 ScriptedEffect::animate(KWin::EffectWindow *window, KWin::AnimationEffec
                                 int delay, bool fullScreen, bool keepAlive)
 {
     QEasingCurve qec;
-    if (curve < QEasingCurve::Custom)
+    if (curve < QEasingCurve::Custom) {
         qec.setType(static_cast<QEasingCurve::Type>(curve));
-    else if (curve == GaussianCurve)
+    } else if (curve == GaussianCurve) {
         qec.setCustomType(qecGaussian);
+    }
     return AnimationEffect::animate(window, attribute, metaData, ms, fpx2FromScriptValue(to), qec,
                                     delay, fpx2FromScriptValue(from), fullScreen, keepAlive);
 }
@@ -446,10 +447,11 @@ quint64 ScriptedEffect::set(KWin::EffectWindow *window, KWin::AnimationEffect::A
                             int delay, bool fullScreen, bool keepAlive)
 {
     QEasingCurve qec;
-    if (curve < QEasingCurve::Custom)
+    if (curve < QEasingCurve::Custom) {
         qec.setType(static_cast<QEasingCurve::Type>(curve));
-    else if (curve == GaussianCurve)
+    } else if (curve == GaussianCurve) {
         qec.setCustomType(qecGaussian);
+    }
     return AnimationEffect::set(window, attribute, metaData, ms, fpx2FromScriptValue(to), qec,
                                 delay, fpx2FromScriptValue(from), fullScreen, keepAlive);
 }

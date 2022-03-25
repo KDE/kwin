@@ -104,8 +104,9 @@ GLTexture::GLTexture(const QImage &image, GLenum target)
 {
     Q_D(GLTexture);
 
-    if (image.isNull())
+    if (image.isNull()) {
         return;
+    }
 
     d->m_target = target;
 
@@ -365,8 +366,9 @@ void GLTexture::setSize(const QSize &size)
 
 void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &src)
 {
-    if (image.isNull() || isNull())
+    if (image.isNull() || isNull()) {
         return;
+    }
 
     Q_D(GLTexture);
     Q_ASSERT(!d->m_foreign);
@@ -495,8 +497,9 @@ void GLTexture::generateMipmaps()
 {
     Q_D(GLTexture);
 
-    if (d->m_canUseMipmaps && d->s_supportsFramebufferObjects)
+    if (d->m_canUseMipmaps && d->s_supportsFramebufferObjects) {
         glGenerateMipmap(d->m_target);
+    }
 }
 
 void GLTexture::unbind()
@@ -513,8 +516,9 @@ void GLTexture::render(const QRect &rect)
 void GLTexture::render(const QRegion &region, const QRect &rect, bool hardwareClipping)
 {
     Q_D(GLTexture);
-    if (rect.isEmpty())
+    if (rect.isEmpty()) {
         return; // nothing to paint and m_vbo is likely nullptr and d->m_cachedSize empty as well, #337090
+    }
     if (rect.size() != d->m_cachedSize) {
         d->m_cachedSize = rect.size();
         QRect r(rect);
@@ -572,20 +576,23 @@ void GLTexture::clear()
 {
     Q_D(GLTexture);
     Q_ASSERT(!d->m_foreign);
-    if (!GLTexturePrivate::s_fbo && GLRenderTarget::supported() && GLPlatform::instance()->driver() != Driver_Catalyst) // fail. -> bug #323065
+    if (!GLTexturePrivate::s_fbo && GLRenderTarget::supported() && GLPlatform::instance()->driver() != Driver_Catalyst) { // fail. -> bug #323065
         glGenFramebuffers(1, &GLTexturePrivate::s_fbo);
+    }
 
     if (GLTexturePrivate::s_fbo) {
         // Clear the texture
         GLuint previousFramebuffer = 0;
         glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, reinterpret_cast<GLint *>(&previousFramebuffer));
-        if (GLTexturePrivate::s_fbo != previousFramebuffer)
+        if (GLTexturePrivate::s_fbo != previousFramebuffer) {
             glBindFramebuffer(GL_FRAMEBUFFER, GLTexturePrivate::s_fbo);
+        }
         glClearColor(0, 0, 0, 0);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, d->m_texture, 0);
         glClear(GL_COLOR_BUFFER_BIT);
-        if (GLTexturePrivate::s_fbo != previousFramebuffer)
+        if (GLTexturePrivate::s_fbo != previousFramebuffer) {
             glBindFramebuffer(GL_FRAMEBUFFER, previousFramebuffer);
+        }
     } else {
         if (const int size = width() * height()) {
             uint32_t *buffer = new uint32_t[size];
@@ -645,10 +652,11 @@ void GLTexturePrivate::updateMatrix()
     m_matrix[NormalizedCoordinates].setToIdentity();
     m_matrix[UnnormalizedCoordinates].setToIdentity();
 
-    if (m_target == GL_TEXTURE_RECTANGLE_ARB)
+    if (m_target == GL_TEXTURE_RECTANGLE_ARB) {
         m_matrix[NormalizedCoordinates].scale(m_size.width(), m_size.height());
-    else
+    } else {
         m_matrix[UnnormalizedCoordinates].scale(1.0 / m_size.width(), 1.0 / m_size.height());
+    }
 
     if (!m_yInverted) {
         m_matrix[NormalizedCoordinates].translate(0.0, 1.0);
@@ -668,8 +676,9 @@ bool GLTexture::isYInverted() const
 void GLTexture::setYInverted(bool inverted)
 {
     Q_D(GLTexture);
-    if (d->m_yInverted == inverted)
+    if (d->m_yInverted == inverted) {
         return;
+    }
 
     d->m_yInverted = inverted;
     d->updateMatrix();

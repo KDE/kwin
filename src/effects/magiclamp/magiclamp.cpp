@@ -106,8 +106,9 @@ void MagicLampEffect::deform(EffectWindow *w, int mask, WindowPaintData &data, W
                     di = d[1][1];
                     position = Bottom;
                 }
-                if (d[0][1] < di)
+                if (d[0][1] < di) {
                     position = Right;
+                }
                 switch (position) {
                 case Top:
                     pt.setY(extG.y());
@@ -123,14 +124,15 @@ void MagicLampEffect::deform(EffectWindow *w, int mask, WindowPaintData &data, W
                     break;
                 }
             } else {
-                if (pt.y() < geo.y())
+                if (pt.y() < geo.y()) {
                     position = Top;
-                else if (pt.x() < geo.x())
+                } else if (pt.x() < geo.x()) {
                     position = Left;
-                else if (pt.y() > geo.bottom())
+                } else if (pt.y() > geo.bottom()) {
                     position = Bottom;
-                else if (pt.x() > geo.right())
+                } else if (pt.x() > geo.right()) {
                     position = Right;
+                }
             }
             icon = QRect(pt, QSize(0, 0));
         } else {
@@ -138,8 +140,9 @@ void MagicLampEffect::deform(EffectWindow *w, int mask, WindowPaintData &data, W
             EffectWindow *panel = nullptr;
             const auto stackingOrder = effects->stackingOrder();
             for (EffectWindow *window : stackingOrder) {
-                if (!window->isDock())
+                if (!window->isDock()) {
                     continue;
+                }
                 // we have to use intersects as there seems to be a Plasma bug
                 // the published icon geometry might be bigger than the panel
                 if (window->frameGeometry().intersects(icon)) {
@@ -153,16 +156,18 @@ void MagicLampEffect::deform(EffectWindow *w, int mask, WindowPaintData &data, W
                 QRect panelScreen = effects->clientArea(ScreenArea, panel);
                 if (panel->width() >= panel->height()) {
                     // horizontal panel
-                    if (panel->y() <= panelScreen.height() / 2)
+                    if (panel->y() <= panelScreen.height() / 2) {
                         position = Top;
-                    else
+                    } else {
                         position = Bottom;
+                    }
                 } else {
                     // vertical panel
-                    if (panel->x() <= panelScreen.width() / 2)
+                    if (panel->x() <= panelScreen.width() / 2) {
                         position = Left;
-                    else
+                    } else {
                         position = Right;
+                    }
                 }
             } else {
                 // we did not find a panel, so it might be autohidden
@@ -228,8 +233,9 @@ void MagicLampEffect::deform(EffectWindow *w, int mask, WindowPaintData &data, W
                     offset[1] = (icon.y() + quad[2].y() - geo.y()) * progress * ((quadFactor * quadFactor * quadFactor) / height_cube);
                     p_progress[1] = qMin(offset[1] / (icon.y() + icon.height() - geo.y() - float(quad[2].y())), 1.0f);
                     p_progress[0] = qMin(offset[0] / (icon.y() + icon.height() - geo.y() - float(quad[0].y())), 1.0f);
-                } else
+                } else {
                     lastQuad = quad;
+                }
 
                 SANITIZE_PROGRESS;
                 // x values are moved towards the center of the icon
@@ -246,8 +252,9 @@ void MagicLampEffect::deform(EffectWindow *w, int mask, WindowPaintData &data, W
                     offset[1] = (geo.y() - icon.height() + geo.height() + quad[2].y() - icon.y()) * progress * ((quadFactor * quadFactor * quadFactor) / height_cube);
                     p_progress[0] = qMin(offset[0] / (geo.y() - icon.height() + geo.height() - icon.y() - float(geo.height() - quad[0].y())), 1.0f);
                     p_progress[1] = qMin(offset[1] / (geo.y() - icon.height() + geo.height() - icon.y() - float(geo.height() - quad[2].y())), 1.0f);
-                } else
+                } else {
                     lastQuad = quad;
+                }
 
                 offset[0] = -offset[0];
                 offset[1] = -offset[1];
@@ -267,8 +274,9 @@ void MagicLampEffect::deform(EffectWindow *w, int mask, WindowPaintData &data, W
                     offset[1] = (geo.x() - icon.width() + geo.width() + quad[1].x() - icon.x()) * progress * ((quadFactor * quadFactor * quadFactor) / width_cube);
                     p_progress[0] = qMin(offset[0] / (geo.x() - icon.width() + geo.width() - icon.x() - float(geo.width() - quad[0].x())), 1.0f);
                     p_progress[1] = qMin(offset[1] / (geo.x() - icon.width() + geo.width() - icon.x() - float(geo.width() - quad[1].x())), 1.0f);
-                } else
+                } else {
                     lastQuad = quad;
+                }
 
                 offset[0] = -offset[0];
                 offset[1] = -offset[1];
@@ -288,8 +296,9 @@ void MagicLampEffect::deform(EffectWindow *w, int mask, WindowPaintData &data, W
                     offset[1] = (icon.x() + quad[1].x() - geo.x()) * progress * ((quadFactor * quadFactor * quadFactor) / width_cube);
                     p_progress[0] = qMin(offset[0] / (icon.x() + icon.width() - geo.x() - float(quad[0].x())), 1.0f);
                     p_progress[1] = qMin(offset[1] / (icon.x() + icon.width() - geo.x() - float(quad[1].x())), 1.0f);
-                } else
+                } else {
                     lastQuad = quad;
+                }
 
                 SANITIZE_PROGRESS;
                 // y values are moved towards the center of the icon
@@ -324,8 +333,9 @@ void MagicLampEffect::slotWindowDeleted(EffectWindow *w)
 
 void MagicLampEffect::slotWindowMinimized(EffectWindow *w)
 {
-    if (effects->activeFullScreenEffect())
+    if (effects->activeFullScreenEffect()) {
         return;
+    }
 
     MagicLampAnimation &animation = m_animations[w];
 
@@ -343,8 +353,9 @@ void MagicLampEffect::slotWindowMinimized(EffectWindow *w)
 
 void MagicLampEffect::slotWindowUnminimized(EffectWindow *w)
 {
-    if (effects->activeFullScreenEffect())
+    if (effects->activeFullScreenEffect()) {
         return;
+    }
 
     MagicLampAnimation &animation = m_animations[w];
 

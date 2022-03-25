@@ -63,20 +63,23 @@ const char *const *BrightnessSaturationShader::attributeNames() const
 void BrightnessSaturationShader::updateState(const QSGMaterialShader::RenderState &state, QSGMaterial *newMaterial, QSGMaterial *oldMaterial)
 {
     Q_ASSERT(program()->isLinked());
-    if (state.isMatrixDirty())
+    if (state.isMatrixDirty()) {
         program()->setUniformValue(m_id_matrix, state.combinedMatrix());
-    if (state.isOpacityDirty())
+    }
+    if (state.isOpacityDirty()) {
         program()->setUniformValue(m_id_opacity, state.opacity());
+    }
 
     auto *tx = static_cast<BrightnessSaturationMaterial *>(newMaterial);
     auto *oldTx = static_cast<BrightnessSaturationMaterial *>(oldMaterial);
     QSGTexture *t = tx->texture();
     t->setFiltering(QSGTexture::Linear);
 
-    if (!oldTx || oldTx->texture()->textureId() != t->textureId())
+    if (!oldTx || oldTx->texture()->textureId() != t->textureId()) {
         t->bind();
-    else
+    } else {
         t->updateBindOptions();
+    }
 
     program()->setUniformValue(m_id_saturation, static_cast<float>(tx->saturation));
     program()->setUniformValue(m_id_brightness, static_cast<float>(tx->brightness));

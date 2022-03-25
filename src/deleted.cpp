@@ -41,8 +41,9 @@ Deleted::Deleted()
 
 Deleted::~Deleted()
 {
-    if (delete_refcount != 0)
+    if (delete_refcount != 0) {
         qCCritical(KWIN_CORE) << "Deleted client has non-zero reference count (" << delete_refcount << ")";
+    }
     Q_ASSERT(delete_refcount == 0);
     if (workspace()) {
         workspace()->removeDeleted(this);
@@ -80,8 +81,9 @@ void Deleted::copyToDeleted(Toplevel *c)
     m_type = c->windowType();
     m_windowRole = c->windowRole();
     m_shade = c->isShade();
-    if (WinInfo *cinfo = dynamic_cast<WinInfo *>(info))
+    if (WinInfo *cinfo = dynamic_cast<WinInfo *>(info)) {
         cinfo->disable();
+    }
     if (AbstractClient *client = dynamic_cast<AbstractClient *>(c)) {
         if (client->isDecorated()) {
             client->layoutDecorationRects(decoration_left,
@@ -115,8 +117,9 @@ void Deleted::copyToDeleted(Toplevel *c)
 
 void Deleted::unrefWindow()
 {
-    if (--delete_refcount > 0)
+    if (--delete_refcount > 0) {
         return;
+    }
     // needs to be delayed
     // a) when calling from effects, otherwise it'd be rather complicated to handle the case of the
     // window going away during a painting pass
@@ -171,8 +174,9 @@ NET::WindowType Deleted::windowType(bool direct, int supportedTypes) const
 
 void Deleted::mainClientClosed(Toplevel *client)
 {
-    if (AbstractClient *c = dynamic_cast<AbstractClient *>(client))
+    if (AbstractClient *c = dynamic_cast<AbstractClient *>(client)) {
         m_mainClients.removeAll(c);
+    }
 }
 
 xcb_window_t Deleted::frameId() const

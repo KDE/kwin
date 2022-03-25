@@ -63,8 +63,9 @@ void SwitcherItem::setVisible(bool visible)
     if (m_visible == visible) {
         return;
     }
-    if (visible)
+    if (visible) {
         Q_EMIT screenGeometryChanged();
+    }
     m_visible = visible;
     Q_EMIT visibleChanged();
 }

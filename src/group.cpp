@@ -49,9 +49,9 @@ Group::~Group()
 
 QIcon Group::icon() const
 {
-    if (leader_client != nullptr)
+    if (leader_client != nullptr) {
         return leader_client->icon();
-    else if (leader_wid != XCB_WINDOW_NONE) {
+    } else if (leader_wid != XCB_WINDOW_NONE) {
         QIcon ic;
         NETWinInfo info(kwinApp()->x11Connection(), leader_wid, kwinApp()->x11RootWindow(), NET::WMIcon, NET::WM2IconPixmap);
         auto readIcon = [&ic, &info, this](int size, bool scale = true) {

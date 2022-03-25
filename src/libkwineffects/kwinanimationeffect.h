@@ -84,10 +84,11 @@ public:
     inline QString toString() const
     {
         QString ret;
-        if (valid)
+        if (valid) {
             ret = QString::number(f[0]) + QLatin1Char(',') + QString::number(f[1]);
-        else
+        } else {
             ret = QString();
+        }
         return ret;
     }
 

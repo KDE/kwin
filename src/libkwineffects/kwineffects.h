@@ -3402,8 +3402,9 @@ public:
      */
     inline void manage(const EffectWindowList &list)
     {
-        for (int i = 0; i < list.size(); i++)
+        for (int i = 0; i < list.size(); i++) {
             manage(list.at(i));
+        }
     }
     /**
      * Deregister a window. All transformations applied to the
@@ -4045,8 +4046,9 @@ Motion<T>::~Motion()
 template<typename T>
 void Motion<T>::calculate(const int msec)
 {
-    if (m_value == m_target && m_velocity == T()) // At target and not moving
+    if (m_value == m_target && m_velocity == T()) { // At target and not moving
         return;
+    }
 
     // Poor man's time independent calculation
     int steps = qMax(1, msec / 5);

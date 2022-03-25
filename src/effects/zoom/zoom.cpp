@@ -186,8 +186,9 @@ void ZoomEffect::showCursor()
 
 void ZoomEffect::hideCursor()
 {
-    if (mouseTracking == MouseTrackingProportional && mousePointer == MousePointerKeep)
+    if (mouseTracking == MouseTrackingProportional && mousePointer == MousePointerKeep) {
         return; // don't replace the actual cursor by a static image for no reason.
+    }
     if (!isMouseHidden) {
         // try to load the cursor-theme into a OpenGL texture and if successful then hide the mouse-pointer
         GLTexture *texture = nullptr;
@@ -225,8 +226,9 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
         // Load the saved zoom value.
         source_zoom = 1.0;
         target_zoom = ZoomConfig::initialZoom();
-        if (target_zoom > 1.0)
+        if (target_zoom > 1.0) {
             zoomIn(target_zoom);
+        }
     } else {
         source_zoom = 1.0;
     }
@@ -236,15 +238,17 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
 {
     if (zoom != target_zoom) {
         int time = 0;
-        if (lastPresentTime.count())
+        if (lastPresentTime.count()) {
             time = (presentTime - lastPresentTime).count();
+        }
         lastPresentTime = presentTime;
 
         const float zoomDist = qAbs(target_zoom - source_zoom);
-        if (target_zoom > zoom)
+        if (target_zoom > zoom) {
             zoom = qMin(zoom + ((zoomDist * time) / animationTime(150 * zoomFactor)), target_zoom);
-        else
+        } else {
             zoom = qMax(zoom - ((zoomDist * time) / animationTime(150 * zoomFactor)), target_zoom);
+        }
     }
 
     if (zoom == 1.0) {
@@ -283,18 +287,22 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &d
             int y = cursorPoint.y() * zoom - prevPoint.y() * (zoom - 1.0);
             int threshold = 4;
             xMove = yMove = 0;
-            if (x < threshold)
+            if (x < threshold) {
                 xMove = (x - threshold) / zoom;
-            else if (x + threshold > screenSize.width())
+            } else if (x + threshold > screenSize.width()) {
                 xMove = (x + threshold - screenSize.width()) / zoom;
-            if (y < threshold)
+            }
+            if (y < threshold) {
                 yMove = (y - threshold) / zoom;
-            else if (y + threshold > screenSize.height())
+            } else if (y + threshold > screenSize.height()) {
                 yMove = (y + threshold - screenSize.height()) / zoom;
-            if (xMove)
+            }
+            if (xMove) {
                 prevPoint.setX(qMax(0, qMin(screenSize.width(), prevPoint.x() + xMove)));
-            if (yMove)
+            }
+            if (yMove) {
                 prevPoint.setY(qMax(0, qMin(screenSize.height(), prevPoint.y() + yMove)));
+            }
             data.setXTranslation(-int(prevPoint.x() * (zoom - 1.0)));
             data.setYTranslation(-int(prevPoint.y() * (zoom - 1.0)));
             break;
@@ -353,27 +361,30 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &d
 
 void ZoomEffect::postPaintScreen()
 {
-    if (zoom != target_zoom)
+    if (zoom != target_zoom) {
         effects->addRepaintFull();
-    else
+    } else {
         lastPresentTime = std::chrono::milliseconds::zero();
+    }
     effects->postPaintScreen();
 }
 
 void ZoomEffect::zoomIn(double to)
 {
     source_zoom = zoom;
-    if (to < 0.0)
+    if (to < 0.0) {
         target_zoom *= zoomFactor;
-    else
+    } else {
         target_zoom = to;
+    }
     if (!polling) {
         polling = true;
         effects->startMousePolling();
     }
     cursorPoint = effects->cursorPos();
-    if (mouseTracking == MouseTrackingDisabled)
+    if (mouseTracking == MouseTrackingDisabled) {
         prevPoint = cursorPoint;
+    }
     effects->addRepaintFull();
 }
 
@@ -388,8 +399,9 @@ void ZoomEffect::zoomOut()
             effects->stopMousePolling();
         }
     }
-    if (mouseTracking == MouseTrackingDisabled)
+    if (mouseTracking == MouseTrackingDisabled) {
         prevPoint = effects->cursorPos();
+    }
     effects->addRepaintFull();
 }
 
@@ -415,23 +427,26 @@ void ZoomEffect::timelineFrameChanged(int /* frame */)
 
 void ZoomEffect::moveZoom(int x, int y)
 {
-    if (timeline.state() == QTimeLine::Running)
+    if (timeline.state() == QTimeLine::Running) {
         timeline.stop();
+    }
 
     const QSize screenSize = effects->virtualScreenSize();
-    if (x < 0)
+    if (x < 0) {
         xMove = -qMax(1.0, screenSize.width() / zoom / moveFactor);
-    else if (x > 0)
+    } else if (x > 0) {
         xMove = qMax(1.0, screenSize.width() / zoom / moveFactor);
-    else
+    } else {
         xMove = 0;
+    }
 
-    if (y < 0)
+    if (y < 0) {
         yMove = -qMax(1.0, screenSize.height() / zoom / moveFactor);
-    else if (y > 0)
+    } else if (y > 0) {
         yMove = qMax(1.0, screenSize.height() / zoom / moveFactor);
-    else
+    } else {
         yMove = 0;
+    }
 
     timeline.start();
 }
@@ -470,8 +485,9 @@ void ZoomEffect::moveMouseToCenter()
 void ZoomEffect::slotMouseChanged(const QPoint &pos, const QPoint &old, Qt::MouseButtons,
                                   Qt::MouseButtons, Qt::KeyboardModifiers, Qt::KeyboardModifiers)
 {
-    if (zoom == 1.0)
+    if (zoom == 1.0) {
         return;
+    }
     cursorPoint = pos;
     if (pos != old) {
         lastMouseEvent = QTime::currentTime();
@@ -488,8 +504,9 @@ void ZoomEffect::slotWindowDamaged()
 
 void ZoomEffect::moveFocus(const QPoint &point)
 {
-    if (zoom == 1.0)
+    if (zoom == 1.0) {
         return;
+    }
     focusPoint = point;
     lastFocusEvent = QTime::currentTime();
     effects->addRepaintFull();

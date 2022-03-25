@@ -760,8 +760,9 @@ bool EffectPluginFactory::isSupported() const
 EffectsHandler::EffectsHandler(CompositingType type)
     : compositing_type(type)
 {
-    if (compositing_type == NoCompositing)
+    if (compositing_type == NoCompositing) {
         return;
+    }
     KWin::effects = this;
     connect(this, QOverload<int, int>::of(&EffectsHandler::desktopChanged), this, &EffectsHandler::desktopChangedLegacy);
 }
@@ -946,10 +947,12 @@ WindowQuadList WindowQuadList::splitAtX(double x) const
         bool wholeleft = true;
         bool wholeright = true;
         for (int i = 0; i < 4; ++i) {
-            if (quad[i].x() < x)
+            if (quad[i].x() < x) {
                 wholeright = false;
-            if (quad[i].x() > x)
+            }
+            if (quad[i].x() > x) {
                 wholeleft = false;
+            }
         }
         if (wholeleft || wholeright) { // is whole in one split part
             ret.append(quad);
@@ -973,10 +976,12 @@ WindowQuadList WindowQuadList::splitAtY(double y) const
         bool wholetop = true;
         bool wholebottom = true;
         for (int i = 0; i < 4; ++i) {
-            if (quad[i].y() < y)
+            if (quad[i].y() < y) {
                 wholebottom = false;
-            if (quad[i].y() > y)
+            }
+            if (quad[i].y() > y) {
                 wholetop = false;
+            }
         }
         if (wholetop || wholebottom) { // is whole in one split part
             ret.append(quad);
@@ -994,8 +999,9 @@ WindowQuadList WindowQuadList::splitAtY(double y) const
 
 WindowQuadList WindowQuadList::makeGrid(int maxQuadSize) const
 {
-    if (empty())
+    if (empty()) {
         return *this;
+    }
 
     // Find the bounding rectangle
     double left = first().left();
@@ -1047,8 +1053,9 @@ WindowQuadList WindowQuadList::makeGrid(int maxQuadSize) const
 
 WindowQuadList WindowQuadList::makeRegularGrid(int xSubdivisions, int ySubdivisions) const
 {
-    if (empty())
+    if (empty()) {
         return *this;
+    }
 
     // Find the bounding rectangle
     double left = first().left();
@@ -1303,8 +1310,9 @@ WindowMotionManager::~WindowMotionManager()
 
 void WindowMotionManager::manage(EffectWindow *w)
 {
-    if (m_managedWindows.contains(w))
+    if (m_managedWindows.contains(w)) {
         return;
+    }
 
     double strength = 0.08;
     double smoothness = 4.0;
@@ -1358,9 +1366,9 @@ void WindowMotionManager::calculate(int time)
         // TODO: Motion needs to be calculated from the window's center
 
         Motion2D *trans = &motion->translation;
-        if (trans->distance().isNull())
+        if (trans->distance().isNull()) {
             ++stopped;
-        else {
+        } else {
             // Still moving
             trans->calculate(time);
             const short fx = trans->target().x() <= trans->startValue().x() ? -1 : 1;
@@ -1374,9 +1382,9 @@ void WindowMotionManager::calculate(int time)
         }
 
         Motion2D *scale = &motion->scale;
-        if (scale->distance().isNull())
+        if (scale->distance().isNull()) {
             ++stopped;
-        else {
+        } else {
             // Still scaling
             scale->calculate(time);
             const short fx = scale->target().x() < 1.0 ? -1 : 1;
@@ -1390,8 +1398,9 @@ void WindowMotionManager::calculate(int time)
         }
 
         // We just finished this window's motion
-        if (stopped == 2)
+        if (stopped == 2) {
             m_movingWindowsSet.remove(it.key());
+        }
     }
 }
 
@@ -1411,8 +1420,9 @@ void WindowMotionManager::reset()
 void WindowMotionManager::reset(EffectWindow *w)
 {
     QHash<EffectWindow *, WindowMotion>::iterator it = m_managedWindows.find(w);
-    if (it == m_managedWindows.end())
+    if (it == m_managedWindows.end()) {
         return;
+    }
 
     WindowMotion *motion = &it.value();
     motion->translation.setTarget(w->pos());
@@ -1424,8 +1434,9 @@ void WindowMotionManager::reset(EffectWindow *w)
 void WindowMotionManager::apply(EffectWindow *w, WindowPaintData &data)
 {
     QHash<EffectWindow *, WindowMotion>::iterator it = m_managedWindows.find(w);
-    if (it == m_managedWindows.end())
+    if (it == m_managedWindows.end()) {
         return;
+    }
 
     // TODO: Take into account existing scale so that we can work with multiple managers (E.g. Present windows + grid)
     WindowMotion *motion = &it.value();
@@ -1440,12 +1451,14 @@ void WindowMotionManager::moveWindow(EffectWindow *w, QPoint target, double scal
 
     WindowMotion *motion = &it.value();
 
-    if (yScale == 0.0)
+    if (yScale == 0.0) {
         yScale = scale;
+    }
     QPointF scalePoint(scale, yScale);
 
-    if (motion->translation.value() == target && motion->scale.value() == scalePoint)
+    if (motion->translation.value() == target && motion->scale.value() == scalePoint) {
         return; // Window already at that position
+    }
 
     motion->translation.setTarget(target);
     motion->scale.setTarget(scalePoint);
@@ -1456,8 +1469,9 @@ void WindowMotionManager::moveWindow(EffectWindow *w, QPoint target, double scal
 QRectF WindowMotionManager::transformedGeometry(EffectWindow *w) const
 {
     QHash<EffectWindow *, WindowMotion>::const_iterator it = m_managedWindows.constFind(w);
-    if (it == m_managedWindows.end())
+    if (it == m_managedWindows.end()) {
         return w->frameGeometry();
+    }
 
     const WindowMotion *motion = &it.value();
     QRectF geometry(w->frameGeometry());
@@ -1473,8 +1487,9 @@ QRectF WindowMotionManager::transformedGeometry(EffectWindow *w) const
 void WindowMotionManager::setTransformedGeometry(EffectWindow *w, const QRectF &geometry)
 {
     QHash<EffectWindow *, WindowMotion>::iterator it = m_managedWindows.find(w);
-    if (it == m_managedWindows.end())
+    if (it == m_managedWindows.end()) {
         return;
+    }
     WindowMotion *motion = &it.value();
     motion->translation.setValue(geometry.topLeft());
     motion->scale.setValue(QPointF(geometry.width() / qreal(w->width()), geometry.height() / qreal(w->height())));
@@ -1483,8 +1498,9 @@ void WindowMotionManager::setTransformedGeometry(EffectWindow *w, const QRectF &
 QRectF WindowMotionManager::targetGeometry(EffectWindow *w) const
 {
     QHash<EffectWindow *, WindowMotion>::const_iterator it = m_managedWindows.constFind(w);
-    if (it == m_managedWindows.end())
+    if (it == m_managedWindows.end()) {
         return w->frameGeometry();
+    }
 
     const WindowMotion *motion = &it.value();
     QRectF geometry(w->frameGeometry());
@@ -1503,8 +1519,9 @@ EffectWindow *WindowMotionManager::windowAtPoint(QPoint point, bool useStackingO
     // TODO: Stacking order uses EffectsHandler::stackingOrder() then filters by m_managedWindows
     QHash<EffectWindow *, WindowMotion>::ConstIterator it = m_managedWindows.constBegin();
     while (it != m_managedWindows.constEnd()) {
-        if (transformedGeometry(it.key()).contains(point))
+        if (transformedGeometry(it.key()).contains(point)) {
             return it.key();
+        }
         ++it;
     }
 

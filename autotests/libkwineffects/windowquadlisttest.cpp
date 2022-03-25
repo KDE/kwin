@@ -96,14 +96,18 @@ void WindowQuadListTest::testMakeGrid()
             auto vertexTest = [actualQuad, expectedQuad](int index) {
                 const KWin::WindowVertex &actualVertex = actualQuad[index];
                 const KWin::WindowVertex &expectedVertex = expectedQuad[index];
-                if (actualVertex.x() != expectedVertex.x())
+                if (actualVertex.x() != expectedVertex.x()) {
                     return false;
-                if (actualVertex.y() != expectedVertex.y())
+                }
+                if (actualVertex.y() != expectedVertex.y()) {
                     return false;
-                if (!qFuzzyIsNull(actualVertex.u() - expectedVertex.u()))
+                }
+                if (!qFuzzyIsNull(actualVertex.u() - expectedVertex.u())) {
                     return false;
-                if (!qFuzzyIsNull(actualVertex.v() - expectedVertex.v()))
+                }
+                if (!qFuzzyIsNull(actualVertex.v() - expectedVertex.v())) {
                     return false;
+                }
                 return true;
             };
             found = vertexTest(0) && vertexTest(1) && vertexTest(2) && vertexTest(3);
@@ -180,14 +184,18 @@ void WindowQuadListTest::testMakeRegularGrid()
             auto vertexTest = [actualQuad, expectedQuad](int index) {
                 const KWin::WindowVertex &actualVertex = actualQuad[index];
                 const KWin::WindowVertex &expectedVertex = expectedQuad[index];
-                if (actualVertex.x() != expectedVertex.x())
+                if (actualVertex.x() != expectedVertex.x()) {
                     return false;
-                if (actualVertex.y() != expectedVertex.y())
+                }
+                if (actualVertex.y() != expectedVertex.y()) {
                     return false;
-                if (!qFuzzyIsNull(actualVertex.u() - expectedVertex.u()))
+                }
+                if (!qFuzzyIsNull(actualVertex.u() - expectedVertex.u())) {
                     return false;
-                if (!qFuzzyIsNull(actualVertex.v() - expectedVertex.v()))
+                }
+                if (!qFuzzyIsNull(actualVertex.v() - expectedVertex.v())) {
                     return false;
+                }
                 return true;
             };
             found = vertexTest(0) && vertexTest(1) && vertexTest(2) && vertexTest(3);

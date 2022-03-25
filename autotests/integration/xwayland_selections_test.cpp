@@ -29,8 +29,9 @@ struct ProcessKillBeforeDeleter
 {
     static inline void cleanup(QProcess *pointer)
     {
-        if (pointer)
+        if (pointer) {
             pointer->kill();
+        }
         delete pointer;
     }
 };

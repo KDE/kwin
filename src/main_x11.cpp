@@ -90,8 +90,9 @@ public:
     void addWM(const QString &wm)
     {
         // TODO: Check if WM is installed
-        if (!QStandardPaths::findExecutable(wm).isEmpty())
+        if (!QStandardPaths::findExecutable(wm).isEmpty()) {
             wmList->addItem(wm);
+        }
     }
     QString selectedWM() const
     {
@@ -118,8 +119,9 @@ private:
             int32_t version[] = {2, 0};
             xcb_change_property(kwinApp()->x11Connection(), XCB_PROP_MODE_REPLACE, requestor_P,
                                 property_P, XCB_ATOM_INTEGER, 32, 2, version);
-        } else
+        } else {
             return KSelectionOwner::genericReply(target_P, property_P, requestor_P);
+        }
         return true;
     }
 
@@ -149,8 +151,9 @@ private:
 
     xcb_atom_t make_selection_atom(int screen_P)
     {
-        if (screen_P < 0)
+        if (screen_P < 0) {
             screen_P = QX11Info::appScreen();
+        }
         QByteArray screen(QByteArrayLiteral("WM_S"));
         screen.append(QByteArray::number(screen_P));
         ScopedCPointer<xcb_intern_atom_reply_t> atom(xcb_intern_atom_reply(
@@ -184,8 +187,9 @@ ApplicationX11::~ApplicationX11()
     setTerminating();
     destroyCompositor();
     destroyWorkspace();
-    if (!owner.isNull() && owner->ownerWindow() != XCB_WINDOW_NONE) // If there was no --replace (no new WM)
+    if (!owner.isNull() && owner->ownerWindow() != XCB_WINDOW_NONE) { // If there was no --replace (no new WM)
         Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
+    }
 }
 
 void ApplicationX11::setReplace(bool replace)
@@ -251,8 +255,9 @@ void ApplicationX11::performStartup()
                                                                                                                  maskValues)));
         if (!redirectCheck.isNull()) {
             fputs(i18n("kwin: another window manager is running (try using --replace)\n").toLocal8Bit().constData(), stderr);
-            if (!wasCrash()) // if this is a crash-restart, DrKonqi may have stopped the process w/o killing the connection
+            if (!wasCrash()) { // if this is a crash-restart, DrKonqi may have stopped the process w/o killing the connection
                 ::exit(1);
+            }
         }
 
         createInput();
@@ -273,8 +278,9 @@ void ApplicationX11::performStartup()
 
 bool ApplicationX11::notify(QObject *o, QEvent *e)
 {
-    if (e->spontaneous() && Workspace::self()->workspaceEvent(e))
+    if (e->spontaneous() && Workspace::self()->workspaceEvent(e)) {
         return true;
+    }
     return QApplication::notify(o, e);
 }
 
@@ -290,10 +296,11 @@ void ApplicationX11::crashChecking()
         // Something has gone seriously wrong
         AlternativeWMDialog dialog;
         QString cmd = QStringLiteral(KWIN_INTERNAL_NAME_X11);
-        if (dialog.exec() == QDialog::Accepted)
+        if (dialog.exec() == QDialog::Accepted) {
             cmd = dialog.selectedWM();
-        else
+        } else {
             ::exit(1);
+        }
         if (cmd.length() > 500) {
             qCDebug(KWIN_CORE) << "Command is too long, truncating";
             cmd = cmd.left(500);
@@ -371,8 +378,9 @@ int main(int argc, char *argv[])
         int pos; // Temporarily needed to reconstruct DISPLAY var if multi-head
         QByteArray display_name = qgetenv("DISPLAY");
 
-        if ((pos = display_name.lastIndexOf('.')) != -1)
+        if ((pos = display_name.lastIndexOf('.')) != -1) {
             display_name.remove(pos, 10); // 10 is enough to be sure we removed ".s"
+        }
 
         for (int i = 0; i < number_of_screens; i++) {
             // If execution doesn't pass by here, then kwin
@@ -402,12 +410,15 @@ int main(int argc, char *argv[])
         }
     }
 
-    if (signal(SIGTERM, KWin::sighandler) == SIG_IGN)
+    if (signal(SIGTERM, KWin::sighandler) == SIG_IGN) {
         signal(SIGTERM, SIG_IGN);
-    if (signal(SIGINT, KWin::sighandler) == SIG_IGN)
+    }
+    if (signal(SIGINT, KWin::sighandler) == SIG_IGN) {
         signal(SIGINT, SIG_IGN);
-    if (signal(SIGHUP, KWin::sighandler) == SIG_IGN)
+    }
+    if (signal(SIGHUP, KWin::sighandler) == SIG_IGN) {
         signal(SIGHUP, SIG_IGN);
+    }
     signal(SIGPIPE, SIG_IGN);
 
     // Disable the glib event loop integration, since it seems to be responsible

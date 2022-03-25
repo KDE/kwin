@@ -112,16 +112,18 @@ void X11Filter::keyRelease(xcb_generic_event_t *event)
     int mod_index = -1;
     for (int i = XCB_MAP_INDEX_SHIFT;
          i <= XCB_MAP_INDEX_5;
-         ++i)
+         ++i) {
         if ((mk & (1 << i)) != 0) {
-            if (mod_index >= 0)
+            if (mod_index >= 0) {
                 return;
+            }
             mod_index = i;
         }
+    }
     bool release = false;
-    if (mod_index == -1)
+    if (mod_index == -1) {
         release = true;
-    else {
+    } else {
         Xcb::ModifierMapping xmk;
         if (xmk) {
             xcb_keycode_t *keycodes = xmk.keycodes();

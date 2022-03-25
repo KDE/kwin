@@ -1632,10 +1632,12 @@ void XdgToplevelClient::changeMaximize(bool horizontal, bool vertical, bool adju
 
     // 'adjust == true' means to update the size only, e.g. after changing workspace size
     if (!adjust) {
-        if (vertical)
+        if (vertical) {
             m_requestedMaximizeMode = MaximizeMode(m_requestedMaximizeMode ^ MaximizeVertical);
-        if (horizontal)
+        }
+        if (horizontal) {
             m_requestedMaximizeMode = MaximizeMode(m_requestedMaximizeMode ^ MaximizeHorizontal);
+        }
     }
 
     m_requestedMaximizeMode = rules()->checkMaximize(m_requestedMaximizeMode);

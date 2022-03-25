@@ -34,8 +34,9 @@ namespace KWin
 Cursors *Cursors::s_self = nullptr;
 Cursors *Cursors::self()
 {
-    if (!s_self)
+    if (!s_self) {
         s_self = new Cursors;
+    }
     return s_self;
 }
 
@@ -54,10 +55,11 @@ void Cursors::removeCursor(Cursor *cursor)
 {
     m_cursors.removeOne(cursor);
     if (m_currentCursor == cursor) {
-        if (m_cursors.isEmpty())
+        if (m_cursors.isEmpty()) {
             m_currentCursor = nullptr;
-        else
+        } else {
             setCurrentCursor(m_cursors.constFirst());
+        }
     }
     if (m_mouse == cursor) {
         m_mouse = nullptr;
@@ -87,8 +89,9 @@ bool Cursors::isCursorHidden() const
 
 void Cursors::setCurrentCursor(Cursor *cursor)
 {
-    if (m_currentCursor == cursor)
+    if (m_currentCursor == cursor) {
         return;
+    }
 
     Q_ASSERT(m_cursors.contains(cursor) || !cursor);
 
@@ -686,8 +689,9 @@ QByteArray CursorShape::name() const
 InputConfig *InputConfig::s_self = nullptr;
 InputConfig *InputConfig::self()
 {
-    if (!s_self)
+    if (!s_self) {
         s_self = new InputConfig;
+    }
     return s_self;
 }
 

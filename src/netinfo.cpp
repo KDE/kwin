@@ -152,26 +152,29 @@ void RootInfo::changeActiveWindow(xcb_window_t w, NET::RequestSource src, xcb_ti
 {
     Workspace *workspace = Workspace::self();
     if (X11Client *c = workspace->findClient(Predicate::WindowMatch, w)) {
-        if (timestamp == XCB_CURRENT_TIME)
+        if (timestamp == XCB_CURRENT_TIME) {
             timestamp = c->userTime();
-        if (src != NET::FromApplication && src != FromTool)
+        }
+        if (src != NET::FromApplication && src != FromTool) {
             src = NET::FromTool;
-        if (src == NET::FromTool)
+        }
+        if (src == NET::FromTool) {
             workspace->activateClient(c, true); // force
-        else if (c == workspace->mostRecentlyActivatedClient()) {
+        } else if (c == workspace->mostRecentlyActivatedClient()) {
             return; // WORKAROUND? With > 1 plasma activities, we cause this ourselves. bug #240673
         } else { // NET::FromApplication
             X11Client *c2;
-            if (workspace->allowClientActivation(c, timestamp, false, true))
+            if (workspace->allowClientActivation(c, timestamp, false, true)) {
                 workspace->activateClient(c);
             // if activation of the requestor's window would be allowed, allow activation too
-            else if (active_window != XCB_WINDOW_NONE
-                     && (c2 = workspace->findClient(Predicate::WindowMatch, active_window)) != nullptr
-                     && workspace->allowClientActivation(c2,
-                                                         timestampCompare(timestamp, c2->userTime() > 0 ? timestamp : c2->userTime()), false, true)) {
+            } else if (active_window != XCB_WINDOW_NONE
+                       && (c2 = workspace->findClient(Predicate::WindowMatch, active_window)) != nullptr
+                       && workspace->allowClientActivation(c2,
+                                                           timestampCompare(timestamp, c2->userTime() > 0 ? timestamp : c2->userTime()), false, true)) {
                 workspace->activateClient(c);
-            } else
+            } else {
                 c->demandAttention();
+            }
         }
     }
 }
@@ -179,10 +182,12 @@ void RootInfo::changeActiveWindow(xcb_window_t w, NET::RequestSource src, xcb_ti
 void RootInfo::restackWindow(xcb_window_t w, RequestSource src, xcb_window_t above, int detail, xcb_timestamp_t timestamp)
 {
     if (X11Client *c = Workspace::self()->findClient(Predicate::WindowMatch, w)) {
-        if (timestamp == XCB_CURRENT_TIME)
+        if (timestamp == XCB_CURRENT_TIME) {
             timestamp = c->userTime();
-        if (src != NET::FromApplication && src != FromTool)
+        }
+        if (src != NET::FromApplication && src != FromTool) {
             src = NET::FromTool;
+        }
         c->restackWindow(above, detail, src, timestamp, true);
     }
 }
@@ -190,8 +195,9 @@ void RootInfo::restackWindow(xcb_window_t w, RequestSource src, xcb_window_t abo
 void RootInfo::closeWindow(xcb_window_t w)
 {
     X11Client *c = Workspace::self()->findClient(Predicate::WindowMatch, w);
-    if (c)
+    if (c) {
         c->closeWindow();
+    }
 }
 
 void RootInfo::moveResize(xcb_window_t w, int x_root, int y_root, unsigned long direction)
@@ -206,14 +212,16 @@ void RootInfo::moveResize(xcb_window_t w, int x_root, int y_root, unsigned long 
 void RootInfo::moveResizeWindow(xcb_window_t w, int flags, int x, int y, int width, int height)
 {
     X11Client *c = Workspace::self()->findClient(Predicate::WindowMatch, w);
-    if (c)
+    if (c) {
         c->NETMoveResizeWindow(flags, x, y, width, height);
+    }
 }
 
 void RootInfo::gotPing(xcb_window_t w, xcb_timestamp_t timestamp)
 {
-    if (X11Client *c = Workspace::self()->findClient(Predicate::WindowMatch, w))
+    if (X11Client *c = Workspace::self()->findClient(Predicate::WindowMatch, w)) {
         c->gotPing(timestamp);
+    }
 }
 
 void RootInfo::changeShowingDesktop(bool showing)
@@ -258,34 +266,45 @@ void WinInfo::changeState(NET::States state, NET::States mask)
     mask &= ~NET::Hidden; // clients are not allowed to change this directly
     state &= mask; // for safety, clear all other bits
 
-    if ((mask & NET::FullScreen) != 0 && (state & NET::FullScreen) == 0)
+    if ((mask & NET::FullScreen) != 0 && (state & NET::FullScreen) == 0) {
         m_client->setFullScreen(false, false);
-    if ((mask & NET::Max) == NET::Max)
+    }
+    if ((mask & NET::Max) == NET::Max) {
         m_client->setMaximize(state & NET::MaxVert, state & NET::MaxHoriz);
-    else if (mask & NET::MaxVert)
+    } else if (mask & NET::MaxVert) {
         m_client->setMaximize(state & NET::MaxVert, m_client->maximizeMode() & MaximizeHorizontal);
-    else if (mask & NET::MaxHoriz)
+    } else if (mask & NET::MaxHoriz) {
         m_client->setMaximize(m_client->maximizeMode() & MaximizeVertical, state & NET::MaxHoriz);
+    }
 
-    if (mask & NET::Shaded)
+    if (mask & NET::Shaded) {
         m_client->setShade(state & NET::Shaded ? ShadeNormal : ShadeNone);
-    if (mask & NET::KeepAbove)
+    }
+    if (mask & NET::KeepAbove) {
         m_client->setKeepAbove((state & NET::KeepAbove) != 0);
-    if (mask & NET::KeepBelow)
+    }
+    if (mask & NET::KeepBelow) {
         m_client->setKeepBelow((state & NET::KeepBelow) != 0);
-    if (mask & NET::SkipTaskbar)
+    }
+    if (mask & NET::SkipTaskbar) {
         m_client->setOriginalSkipTaskbar((state & NET::SkipTaskbar) != 0);
-    if (mask & NET::SkipPager)
+    }
+    if (mask & NET::SkipPager) {
         m_client->setSkipPager((state & NET::SkipPager) != 0);
-    if (mask & NET::SkipSwitcher)
+    }
+    if (mask & NET::SkipSwitcher) {
         m_client->setSkipSwitcher((state & NET::SkipSwitcher) != 0);
-    if (mask & NET::DemandsAttention)
+    }
+    if (mask & NET::DemandsAttention) {
         m_client->demandAttention((state & NET::DemandsAttention) != 0);
-    if (mask & NET::Modal)
+    }
+    if (mask & NET::Modal) {
         m_client->setModal((state & NET::Modal) != 0);
+    }
     // unsetting fullscreen first, setting it last (because e.g. maximize works only for !isFullScreen() )
-    if ((mask & NET::FullScreen) != 0 && (state & NET::FullScreen) != 0)
+    if ((mask & NET::FullScreen) != 0 && (state & NET::FullScreen) != 0) {
         m_client->setFullScreen(true, false);
+    }
 }
 
 void WinInfo::disable()

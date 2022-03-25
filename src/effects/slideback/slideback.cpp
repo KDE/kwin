@@ -42,10 +42,11 @@ void SlideBackEffect::slotStackingOrderChanged()
 
     m_upmostWindow = usableNewStackingOrder.last();
 
-    if (m_upmostWindow == m_justMapped) // a window was added, got on top, stacking changed. Nothing impressive
+    if (m_upmostWindow == m_justMapped) { // a window was added, got on top, stacking changed. Nothing impressive
         m_justMapped = nullptr;
-    else if (!usableOldStackingOrder.isEmpty() && m_upmostWindow != usableOldStackingOrder.last())
+    } else if (!usableOldStackingOrder.isEmpty() && m_upmostWindow != usableOldStackingOrder.last()) {
         windowRaised(m_upmostWindow);
+    }
 
     oldStackingOrder = newStackingOrder;
     usableOldStackingOrder = usableNewStackingOrder;
@@ -253,10 +254,12 @@ void SlideBackEffect::postPaintWindow(EffectWindow *w)
 
 void SlideBackEffect::slotWindowDeleted(EffectWindow *w)
 {
-    if (w == m_upmostWindow)
+    if (w == m_upmostWindow) {
         m_upmostWindow = nullptr;
-    if (w == m_justMapped)
+    }
+    if (w == m_justMapped) {
         m_justMapped = nullptr;
+    }
     usableOldStackingOrder.removeAll(w);
     oldStackingOrder.removeAll(w);
     coveringWindows.removeAll(w);

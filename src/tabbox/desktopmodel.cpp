@@ -31,8 +31,9 @@ DesktopModel::~DesktopModel()
 
 QVariant DesktopModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid() || index.column() != 0)
+    if (!index.isValid() || index.column() != 0) {
         return QVariant();
+    }
 
     if (index.parent().isValid()) {
         // parent is valid -> access to Client
@@ -41,8 +42,9 @@ QVariant DesktopModel::data(const QModelIndex &index, int role) const
     }
 
     const int desktopIndex = index.row();
-    if (desktopIndex >= m_desktopList.count())
+    if (desktopIndex >= m_desktopList.count()) {
         return QVariant();
+    }
     switch (role) {
     case Qt::DisplayRole:
     case DesktopNameRole:
@@ -118,8 +120,9 @@ QModelIndex DesktopModel::index(int row, int column, const QModelIndex &parent) 
         }
         return createIndex(row, column, parent.row() + 1);
     }
-    if (row > m_desktopList.count() || m_desktopList.isEmpty())
+    if (row > m_desktopList.count() || m_desktopList.isEmpty()) {
         return QModelIndex();
+    }
     return createIndex(row, column);
 }
 
@@ -135,8 +138,9 @@ QHash<int, QByteArray> DesktopModel::roleNames() const
 
 QModelIndex DesktopModel::desktopIndex(int desktop) const
 {
-    if (desktop > m_desktopList.count())
+    if (desktop > m_desktopList.count()) {
         return QModelIndex();
+    }
     return createIndex(m_desktopList.indexOf(desktop), 0);
 }
 

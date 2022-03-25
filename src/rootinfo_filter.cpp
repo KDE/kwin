@@ -24,10 +24,12 @@ bool RootInfoFilter::event(xcb_generic_event_t *event)
     NET::Properties dirtyProtocols;
     NET::Properties2 dirtyProtocols2;
     m_rootInfo->event(event, &dirtyProtocols, &dirtyProtocols2);
-    if (dirtyProtocols & NET::DesktopNames)
+    if (dirtyProtocols & NET::DesktopNames) {
         VirtualDesktopManager::self()->save();
-    if (dirtyProtocols2 & NET::WM2DesktopLayout)
+    }
+    if (dirtyProtocols2 & NET::WM2DesktopLayout) {
         VirtualDesktopManager::self()->updateLayout();
+    }
     return false;
 }
 

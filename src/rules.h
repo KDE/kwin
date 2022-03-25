@@ -342,8 +342,9 @@ inline bool Rules::checkSetRule(SetRule rule, bool init)
 {
     if (rule > (SetRule)DontAffect) { // Unused or DontAffect
         if (rule == (SetRule)Force || rule == (SetRule)ApplyNow
-            || rule == (SetRule)ForceTemporarily || init)
+            || rule == (SetRule)ForceTemporarily || init) {
             return true;
+        }
     }
     return false;
 }

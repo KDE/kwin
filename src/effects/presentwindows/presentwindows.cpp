@@ -199,8 +199,9 @@ void *PresentWindowsEffect::proxy()
 void PresentWindowsEffect::toggleActiveClass()
 {
     if (!m_activated) {
-        if (!effects->activeWindow())
+        if (!effects->activeWindow()) {
             return;
+        }
         m_mode = ModeWindowClass;
         m_class = effects->activeWindow()->windowClass();
     }
@@ -224,13 +225,15 @@ void PresentWindowsEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono:
     m_motionManager.calculate(time);
 
     // We need to mark the screen as having been transformed otherwise there will be no repainting
-    if (m_activated || m_motionManager.managingWindows())
+    if (m_activated || m_motionManager.managingWindows()) {
         data.mask |= Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+    }
 
-    if (m_activated)
+    if (m_activated) {
         m_decalOpacity = qMin(1.0, m_decalOpacity + time / m_fadeDuration);
-    else
+    } else {
         m_decalOpacity = qMax(0.0, m_decalOpacity - time / m_fadeDuration);
+    }
 
     effects->prePaintScreen(data, presentTime);
 }
@@ -240,11 +243,13 @@ void PresentWindowsEffect::paintScreen(int mask, const QRegion &region, ScreenPa
     effects->paintScreen(mask, region, data);
 
     // Display the filter box
-    if (!m_windowFilter.isEmpty())
+    if (!m_windowFilter.isEmpty()) {
         m_filterFrame->render(region);
+    }
 
-    if (m_closeView)
+    if (m_closeView) {
         effects->renderOffscreenQuickView(m_closeView);
+    }
 }
 
 void PresentWindowsEffect::postPaintScreen()
@@ -334,29 +339,34 @@ void PresentWindowsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &d
         // Calculate window's opacity
         // TODO: Minimized windows or windows not on the current desktop are only 75% visible?
         if (winData->visible) {
-            if (winData->deleted)
+            if (winData->deleted) {
                 winData->opacity = qMax(0.0, winData->opacity - time / m_fadeDuration);
-            else
+            } else {
                 winData->opacity = qMin(/*(w->isMinimized() || !w->isOnCurrentDesktop()) ? 0.75 :*/ 1.0,
                                         winData->opacity + time / m_fadeDuration);
-        } else
+            }
+        } else {
             winData->opacity = qMax(0.0, winData->opacity - time / m_fadeDuration);
+        }
 
         if (winData->opacity <= 0.0) {
             // don't disable painting for panels if show panel is set
-            if (!(m_showPanel && w->isDock()))
+            if (!(m_showPanel && w->isDock())) {
                 w->disablePainting(EffectWindow::PAINT_DISABLED);
-        } else if (winData->opacity != 1.0)
+            }
+        } else if (winData->opacity != 1.0) {
             data.setTranslucent();
+        }
 
         const bool isInMotion = m_motionManager.isManaging(w);
         // Calculate window's brightness
-        if (w == m_highlightedWindow || !m_activated)
+        if (w == m_highlightedWindow || !m_activated) {
             winData->highlight = qMin(1.0, winData->highlight + time / m_fadeDuration);
-        else if (!isInMotion && w->isDesktop())
+        } else if (!isInMotion && w->isDesktop()) {
             winData->highlight = 0.3;
-        else
+        } else {
             winData->highlight = qMax(0.0, winData->highlight - time / m_fadeDuration);
+        }
 
         // Closed windows
         if (winData->deleted) {
@@ -366,16 +376,19 @@ void PresentWindowsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &d
                 // we have to keep the window in the list to prevent flickering
                 winData->referenced = false;
                 w->unrefWindow();
-            } else
+            } else {
                 w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DELETE);
+            }
         }
 
         // desktop windows on other desktops (Plasma activity per desktop) should not be painted
-        if (w->isDesktop() && !w->isOnCurrentDesktop())
+        if (w->isDesktop() && !w->isOnCurrentDesktop()) {
             w->disablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
+        }
 
-        if (isInMotion)
+        if (isInMotion) {
             data.setTransformed(); // We will be moving this window
+        }
     }
     effects->prePaintWindow(w, data, presentTime);
 }
@@ -419,15 +432,18 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
                 if (tScale < 1.05) {
                     tScale = 1.05;
                 }
-                if (effSize.width() * tScale > area.width())
+                if (effSize.width() * tScale > area.width()) {
                     tScale = area.width() / effSize.width();
-                if (effSize.height() * tScale > area.height())
+                }
+                if (effSize.height() * tScale > area.height()) {
                     tScale = area.height() / effSize.height();
+                }
 
                 const qreal scale = interpolate(1.0, tScale, winData->highlight);
                 if (scale > 1.0) {
-                    if (scale < tScale) // don't use lanczos during transition
+                    if (scale < tScale) { // don't use lanczos during transition
                         mask &= ~PAINT_WINDOW_LANCZOS;
+                    }
 
                     const float df = (tScale - 1.0f) * 0.5f;
                     int tx = qRound(rect.width() * df);
@@ -477,8 +493,9 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
         } else {
             effects->paintWindow(w, mask, region, data);
         }
-    } else
+    } else {
         effects->paintWindow(w, mask, region, data);
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -486,8 +503,9 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
 
 void PresentWindowsEffect::slotWindowAdded(EffectWindow *w)
 {
-    if (!m_activated)
+    if (!m_activated) {
         return;
+    }
 
     WindowData *winData = &m_windowData[w];
     winData->visible = isVisibleWindow(w);
@@ -513,12 +531,14 @@ void PresentWindowsEffect::slotWindowAdded(EffectWindow *w)
 
 void PresentWindowsEffect::slotWindowClosed(EffectWindow *w)
 {
-    if (m_managerWindow == w)
+    if (m_managerWindow == w) {
         m_managerWindow = nullptr;
+    }
 
     DataHash::iterator winData = m_windowData.find(w);
-    if (winData == m_windowData.end())
+    if (winData == m_windowData.end()) {
         return;
+    }
 
     winData->deleted = true;
     if (!winData->referenced) {
@@ -526,16 +546,18 @@ void PresentWindowsEffect::slotWindowClosed(EffectWindow *w)
         w->refWindow();
     }
 
-    if (m_highlightedWindow == w)
+    if (m_highlightedWindow == w) {
         setHighlightedWindow(findFirstWindow());
+    }
 
     rearrangeWindows();
 
     const auto managedWindows = m_motionManager.managedWindows();
     for (EffectWindow *w : managedWindows) {
         winData = m_windowData.find(w);
-        if (winData != m_windowData.end() && !winData->deleted)
+        if (winData != m_windowData.end() && !winData->deleted) {
             return; // found one that is not deleted? then we go on
+        }
     }
     setActive(false); // else no need to keep this open
 }
@@ -543,8 +565,9 @@ void PresentWindowsEffect::slotWindowClosed(EffectWindow *w)
 void PresentWindowsEffect::slotWindowDeleted(EffectWindow *w)
 {
     DataHash::iterator winData = m_windowData.find(w);
-    if (winData == m_windowData.end())
+    if (winData == m_windowData.end()) {
         return;
+    }
 
     delete winData->textFrame;
     delete winData->iconFrame;
@@ -556,10 +579,12 @@ void PresentWindowsEffect::slotWindowFrameGeometryChanged(EffectWindow *w, const
 {
     Q_UNUSED(old)
 
-    if (!m_activated)
+    if (!m_activated) {
         return;
-    if (!m_windowData.contains(w))
+    }
+    if (!m_windowData.contains(w)) {
         return;
+    }
 
     rearrangeWindows();
 }
@@ -567,25 +592,29 @@ void PresentWindowsEffect::slotWindowFrameGeometryChanged(EffectWindow *w, const
 bool PresentWindowsEffect::borderActivated(ElectricBorder border)
 {
     int mode = 0;
-    if (m_borderActivate.contains(border))
+    if (m_borderActivate.contains(border)) {
         mode |= 1;
-    else if (m_borderActivateAll.contains(border))
+    } else if (m_borderActivateAll.contains(border)) {
         mode |= 2;
-    else if (m_borderActivateClass.contains(border))
+    } else if (m_borderActivateClass.contains(border)) {
         mode |= 4;
+    }
 
-    if (!mode)
+    if (!mode) {
         return false;
+    }
 
-    if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
+    if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this) {
         return true;
+    }
 
-    if (mode & 1)
+    if (mode & 1) {
         toggleActive();
-    else if (mode & 2)
+    } else if (mode & 2) {
         toggleActiveAllDesktops();
-    else if (mode & 4)
+    } else if (mode & 4) {
         toggleActiveClass();
+    }
     return true;
 }
 
@@ -733,31 +762,35 @@ void PresentWindowsEffect::mouseActionWindow(WindowMouseAction &action)
 {
     switch (action) {
     case WindowActivateAction:
-        if (m_highlightedWindow)
+        if (m_highlightedWindow) {
             effects->activateWindow(m_highlightedWindow);
+        }
         setActive(false);
         break;
     case WindowExitAction:
         setActive(false);
         break;
     case WindowToCurrentDesktopAction:
-        if (m_highlightedWindow)
+        if (m_highlightedWindow) {
             effects->windowToDesktop(m_highlightedWindow, effects->currentDesktop());
+        }
         break;
     case WindowToAllDesktopsAction:
         if (m_highlightedWindow) {
-            if (m_highlightedWindow->isOnAllDesktops())
+            if (m_highlightedWindow->isOnAllDesktops()) {
                 effects->windowToDesktop(m_highlightedWindow, effects->currentDesktop());
-            else
+            } else {
                 effects->windowToDesktop(m_highlightedWindow, NET::OnAllDesktops);
+            }
         }
         break;
     case WindowMinimizeAction:
         if (m_highlightedWindow) {
-            if (m_highlightedWindow->isMinimized())
+            if (m_highlightedWindow->isMinimized()) {
                 m_highlightedWindow->unminimize();
-            else
+            } else {
                 m_highlightedWindow->minimize();
+            }
         }
         break;
     case WindowCloseAction:
@@ -774,8 +807,9 @@ void PresentWindowsEffect::mouseActionDesktop(DesktopMouseAction &action)
 {
     switch (action) {
     case DesktopActivateAction:
-        if (m_highlightedWindow)
+        if (m_highlightedWindow) {
             effects->activateWindow(m_highlightedWindow);
+        }
         setActive(false);
         break;
     case DesktopExitAction:
@@ -845,8 +879,9 @@ void PresentWindowsEffect::grabbedKeyboardEvent(QKeyEvent *e)
             return;
         case Qt::Key_Return:
         case Qt::Key_Enter:
-            if (m_highlightedWindow)
+            if (m_highlightedWindow) {
                 effects->activateWindow(m_highlightedWindow);
+            }
             setActive(false);
             return;
         case Qt::Key_Tab:
@@ -880,8 +915,9 @@ void PresentWindowsEffect::slotPropertyNotify(EffectWindow *w, long a)
     if (m_atomDesktop == XCB_ATOM_NONE && m_atomWindows == XCB_ATOM_NONE) {
         return;
     }
-    if (!w || (a != m_atomDesktop && a != m_atomWindows))
+    if (!w || (a != m_atomDesktop && a != m_atomWindows)) {
         return; // Not our atom
+    }
 
     if (a == m_atomDesktop) {
         QByteArray byteData = w->readProperty(m_atomDesktop, m_atomDesktop, 32);
@@ -898,15 +934,17 @@ void PresentWindowsEffect::slotPropertyNotify(EffectWindow *w, long a)
             return;
         }
         // present windows is active so don't do anything
-        if (m_activated)
+        if (m_activated) {
             return;
+        }
 
         int desktop = data[0];
-        if (desktop > effects->numberOfDesktops())
+        if (desktop > effects->numberOfDesktops()) {
             return;
-        if (desktop == -1)
+        }
+        if (desktop == -1) {
             toggleActiveAllDesktops();
-        else {
+        } else {
             m_mode = ModeSelectedDesktop;
             m_desktop = desktop;
             m_managerWindow = w;
@@ -927,8 +965,9 @@ void PresentWindowsEffect::slotPropertyNotify(EffectWindow *w, long a)
             return;
         }
         // present windows is active so don't do anything
-        if (m_activated)
+        if (m_activated) {
             return;
+        }
 
         // for security clear selected windows
         m_selectedWindows.clear();
@@ -966,12 +1005,14 @@ void PresentWindowsEffect::presentWindows(const QStringList &windows)
 
 void PresentWindowsEffect::rearrangeWindows()
 {
-    if (!m_activated)
+    if (!m_activated) {
         return;
+    }
 
     effects->addRepaintFull(); // Trigger the first repaint
-    if (m_closeView)
+    if (m_closeView) {
         m_closeView->hide();
+    }
 
     // Work out which windows are on which screens
     EffectWindowList windowlist;
@@ -981,8 +1022,9 @@ void PresentWindowsEffect::rearrangeWindows()
         windowlist = m_motionManager.managedWindows();
         for (EffectWindow *w : qAsConst(windowlist)) {
             DataHash::iterator winData = m_windowData.find(w);
-            if (winData == m_windowData.end() || winData->deleted)
+            if (winData == m_windowData.end() || winData->deleted) {
                 continue; // don't include closed windows
+            }
             windowlists[w->screen()].append(w);
             winData->visible = true;
         }
@@ -991,15 +1033,17 @@ void PresentWindowsEffect::rearrangeWindows()
         const auto managedWindows = m_motionManager.managedWindows();
         for (EffectWindow *w : managedWindows) {
             DataHash::iterator winData = m_windowData.find(w);
-            if (winData == m_windowData.end() || winData->deleted)
+            if (winData == m_windowData.end() || winData->deleted) {
                 continue; // don't include closed windows
+            }
 
             if (w->caption().contains(m_windowFilter, Qt::CaseInsensitive) || w->windowClass().contains(m_windowFilter, Qt::CaseInsensitive) || w->windowRole().contains(m_windowFilter, Qt::CaseInsensitive)) {
                 windowlist.append(w);
                 windowlists[w->screen()].append(w);
                 winData->visible = true;
-            } else
+            } else {
                 winData->visible = false;
+            }
         }
     }
     if (windowlist.isEmpty()) {
@@ -1010,10 +1054,12 @@ void PresentWindowsEffect::rearrangeWindows()
     // We filtered out the highlighted window
     if (m_highlightedWindow) {
         DataHash::iterator winData = m_windowData.find(m_highlightedWindow);
-        if (winData != m_windowData.end() && !winData->visible)
+        if (winData != m_windowData.end() && !winData->visible) {
             setHighlightedWindow(findFirstWindow());
-    } else
+        }
+    } else {
         setHighlightedWindow(findFirstWindow());
+    }
 
     const QList<EffectScreen *> screens = effects->screens();
     for (EffectScreen *screen : screens) {
@@ -1022,12 +1068,14 @@ void PresentWindowsEffect::rearrangeWindows()
 
         // Don't rearrange if the grid is the same size as what it was before to prevent
         // windows moving to a better spot if one was filtered out.
-        if (m_layoutMode == LayoutRegularGrid && m_gridSizes[screen].columns && m_gridSizes[screen].rows && windows.size() < m_gridSizes[screen].columns * m_gridSizes[screen].rows && windows.size() > (m_gridSizes[screen].columns - 1) * m_gridSizes[screen].rows && windows.size() > m_gridSizes[screen].columns * (m_gridSizes[screen].rows - 1))
+        if (m_layoutMode == LayoutRegularGrid && m_gridSizes[screen].columns && m_gridSizes[screen].rows && windows.size() < m_gridSizes[screen].columns * m_gridSizes[screen].rows && windows.size() > (m_gridSizes[screen].columns - 1) * m_gridSizes[screen].rows && windows.size() > m_gridSizes[screen].columns * (m_gridSizes[screen].rows - 1)) {
             continue;
+        }
 
         // No point continuing if there is no windows to process
-        if (!windows.count())
+        if (!windows.count()) {
             continue;
+        }
 
         calculateWindowTransformations(windows, screen, m_motionManager);
     }
@@ -1037,16 +1085,19 @@ void PresentWindowsEffect::rearrangeWindows()
     const auto managedWindows = m_motionManager.managedWindows();
     for (EffectWindow *w : managedWindows) {
         DataHash::iterator winData = m_windowData.find(w);
-        if (winData == m_windowData.end())
+        if (winData == m_windowData.end()) {
             continue;
+        }
 
-        if (!metrics)
+        if (!metrics) {
             metrics = new QFontMetrics(winData->textFrame->font());
+        }
 
         QRect geom = m_motionManager.targetGeometry(w).toRect();
         QString string = metrics->elidedText(w->caption(), Qt::ElideRight, geom.width() * 0.9);
-        if (string != winData->textFrame->text())
+        if (string != winData->textFrame->text()) {
             winData->textFrame->setText(string);
+        }
     }
     delete metrics;
 }
@@ -1054,16 +1105,18 @@ void PresentWindowsEffect::rearrangeWindows()
 void PresentWindowsEffect::calculateWindowTransformations(EffectWindowList windowlist, EffectScreen *screen,
                                                           WindowMotionManager &motionManager, bool external)
 {
-    if (m_layoutMode == LayoutRegularGrid)
+    if (m_layoutMode == LayoutRegularGrid) {
         calculateWindowTransformationsClosest(windowlist, screen, motionManager);
-    else if (m_layoutMode == LayoutFlexibleGrid)
+    } else if (m_layoutMode == LayoutFlexibleGrid) {
         calculateWindowTransformationsKompose(windowlist, screen, motionManager);
-    else
+    } else {
         calculateWindowTransformationsNatural(windowlist, screen, motionManager);
+    }
 
     // If called externally we don't need to remember this data
-    if (external)
+    if (external) {
         m_windowData.clear();
+    }
 }
 
 static inline int distance(QPoint &pos1, QPoint &pos2)
@@ -1077,12 +1130,14 @@ void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowLis
                                                                  WindowMotionManager &motionManager)
 {
     // This layout mode requires at least one window visible
-    if (windowlist.count() == 0)
+    if (windowlist.count() == 0) {
         return;
+    }
 
     QRect area = effects->clientArea(ScreenArea, screen, effects->currentDesktop());
-    if (m_showPanel) // reserve space for the panel
+    if (m_showPanel) { // reserve space for the panel
         area = effects->clientArea(MaximizeArea, screen, effects->currentDesktop());
+    }
     int columns = int(ceil(sqrt(double(windowlist.count()))));
     int rows = int(ceil(windowlist.count() / double(columns)));
 
@@ -1103,11 +1158,12 @@ void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowLis
     // precalculate all slot centers
     QVector<QPoint> slotCenters;
     slotCenters.resize(rows * columns);
-    for (int x = 0; x < columns; ++x)
+    for (int x = 0; x < columns; ++x) {
         for (int y = 0; y < rows; ++y) {
             slotCenters[x + y * columns] = QPoint(area.x() + slotWidth * x + slotWidth / 2,
                                                   area.y() + slotHeight * y + slotHeight / 2);
         }
+    }
 
     // Assign each window to the closest available slot
     EffectWindowList tmpList = windowlist; // use a QLinkedList copy instead?
@@ -1130,16 +1186,18 @@ void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowLis
             }
         }
         Q_ASSERT(slotCandidate != -1);
-        if (takenSlots[slotCandidate])
+        if (takenSlots[slotCandidate]) {
             tmpList << takenSlots[slotCandidate]; // occupier needs a new home now :p
+        }
         tmpList.removeAll(w);
         takenSlots[slotCandidate] = w; // ...and we rumble in =)
     }
 
     for (int slot = 0; slot < columns * rows; ++slot) {
         EffectWindow *w = takenSlots[slot];
-        if (!w) // some slots might be empty
+        if (!w) { // some slots might be empty
             continue;
+        }
 
         // Work out where the slot is
         QRect target(
@@ -1176,12 +1234,14 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
                                                                  WindowMotionManager &motionManager)
 {
     // This layout mode requires at least one window visible
-    if (windowlist.count() == 0)
+    if (windowlist.count() == 0) {
         return;
+    }
 
     QRect availRect = effects->clientArea(ScreenArea, screen, effects->currentDesktop());
-    if (m_showPanel) // reserve space for the panel
+    if (m_showPanel) { // reserve space for the panel
         availRect = effects->clientArea(MaximizeArea, screen, effects->currentDesktop());
+    }
     std::sort(windowlist.begin(), windowlist.end()); // The location of the windows should not depend on the stacking order
 
     // Following code is taken from Kompose 0.5.4, src/komposelayout.cpp
@@ -1214,8 +1274,9 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
             EffectWindow *window;
 
             // Check for end of List
-            if (it == windowlist.end())
+            if (it == windowlist.end()) {
                 break;
+            }
             window = *it;
 
             // Calculate width and height of widget
@@ -1263,20 +1324,24 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
 
             int alignmentXoffset = 0;
             int alignmentYoffset = 0;
-            if (i == 0 && h > widgeth)
+            if (i == 0 && h > widgeth) {
                 alignmentYoffset = h - widgeth;
-            if (j == 0 && w > widgetw)
+            }
+            if (j == 0 && w > widgetw) {
                 alignmentXoffset = w - widgetw;
+            }
             QRect geom(availRect.x() + j * (w + spacing) + spacing + alignmentXoffset + xOffsetFromLastCol,
                        availRect.y() + i * (h + spacing) + spacing + alignmentYoffset,
                        widgetw, widgeth);
             geometryRects.append(geom);
 
             // Set the x offset for the next column
-            if (alignmentXoffset == 0)
+            if (alignmentXoffset == 0) {
                 xOffsetFromLastCol += widgetw - w;
-            if (maxHeightInRow < widgeth)
+            }
+            if (maxHeightInRow < widgeth) {
                 maxHeightInRow = widgeth;
+            }
         }
         maxRowHeights.append(maxHeightInRow);
     }
@@ -1285,8 +1350,9 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
             int pos = i * columns + j;
-            if (pos >= windowlist.count())
+            if (pos >= windowlist.count()) {
                 break;
+            }
 
             EffectWindow *window = windowlist[pos];
             QRect target = geometryRects[pos];
@@ -1301,8 +1367,9 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
             //         mWindowData[window].area.left() << "; " << mWindowData[window].area.right() <<
             //         "), scale: " << mWindowData[window].scale << endl;
         }
-        if (maxRowHeights[i] - h > 0)
+        if (maxRowHeights[i] - h > 0) {
             topOffset += maxRowHeights[i] - h;
+        }
     }
 }
 
@@ -1331,8 +1398,9 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
     std::sort(windowlist.begin(), windowlist.end());
 
     QRect area = effects->clientArea(ScreenArea, screen, effects->currentDesktop());
-    if (m_showPanel) // reserve space for the panel
+    if (m_showPanel) { // reserve space for the panel
         area = effects->clientArea(MaximizeArea, screen, effects->currentDesktop());
+    }
     QRect bounds = area;
     int direction = 0;
     QHash<EffectWindow *, QRect> targets;
@@ -1344,8 +1412,9 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
         // is on the edge of the screen to try to use as much screen real estate as possible.
         directions[w] = direction;
         direction++;
-        if (direction == 4)
+        if (direction == 4) {
             direction = 0;
+        }
     }
 
     // Iterate over all windows, if two overlap push them apart _slightly_ as we try to
@@ -1356,8 +1425,9 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
         for (EffectWindow *w : qAsConst(windowlist)) {
             QRect *target_w = &targets[w];
             for (EffectWindow *e : qAsConst(windowlist)) {
-                if (w == e)
+                if (w == e) {
                     continue;
+                }
 
                 QRect *target_e = &targets[e];
                 if (target_w->adjusted(-5, -5, 5, 5).intersects(target_e->adjusted(-5, -5, 5, 5))) {
@@ -1366,8 +1436,9 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
                     // Determine pushing direction
                     QPoint diff(target_e->center() - target_w->center());
                     // Prevent dividing by zero and non-movement
-                    if (diff.x() == 0 && diff.y() == 0)
+                    if (diff.x() == 0 && diff.y() == 0) {
                         diff.setX(1);
+                    }
                     // Try to keep screen aspect ratio
                     // if (bounds.height() / bounds.width() > area.height() / area.width())
                     //    diff.setY(diff.y() / 2);
@@ -1393,19 +1464,25 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
                     int ySection = (target_w->y() - bounds.y()) / (bounds.height() / 3);
                     diff = QPoint(0, 0);
                     if (xSection != 1 || ySection != 1) { // Remove this if you want the center to pull as well
-                        if (xSection == 1)
+                        if (xSection == 1) {
                             xSection = (directions[w] / 2 ? 2 : 0);
-                        if (ySection == 1)
+                        }
+                        if (ySection == 1) {
                             ySection = (directions[w] % 2 ? 2 : 0);
+                        }
                     }
-                    if (xSection == 0 && ySection == 0)
+                    if (xSection == 0 && ySection == 0) {
                         diff = QPoint(bounds.topLeft() - target_w->center());
-                    if (xSection == 2 && ySection == 0)
+                    }
+                    if (xSection == 2 && ySection == 0) {
                         diff = QPoint(bounds.topRight() - target_w->center());
-                    if (xSection == 2 && ySection == 2)
+                    }
+                    if (xSection == 2 && ySection == 2) {
                         diff = QPoint(bounds.bottomRight() - target_w->center());
-                    if (xSection == 0 && ySection == 2)
+                    }
+                    if (xSection == 0 && ySection == 2) {
                         diff = QPoint(bounds.bottomLeft() - target_w->center());
+                    }
                     if (diff.x() != 0 || diff.y() != 0) {
                         diff *= m_accuracy / double(diff.manhattanLength());
                         target_w->translate(diff);
@@ -1422,12 +1499,13 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
     // Work out scaling by getting the most top-left and most bottom-right window coords.
     // The 20's and 10's are so that the windows don't touch the edge of the screen.
     double scale;
-    if (bounds == area)
+    if (bounds == area) {
         scale = 1.0; // Don't add borders to the screen
-    else if (area.width() / double(bounds.width()) < area.height() / double(bounds.height()))
+    } else if (area.width() / double(bounds.width()) < area.height() / double(bounds.height())) {
         scale = (area.width() - 20) / double(bounds.width());
-    else
+    } else {
         scale = (area.height() - 20) / double(bounds.height());
+    }
     // Make bounding rect fill the screen size for later steps
     bounds = QRect(
         (bounds.x() * scale - (area.width() - 20 - bounds.width() * scale) / 2 - 10) / scale,
@@ -1472,9 +1550,9 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
                                 target->y() - yDiff - heightDiff,
                                 target->width() + widthDiff,
                                 target->height() + heightDiff);
-                if (isOverlappingAny(w, targets, borderRegion))
+                if (isOverlappingAny(w, targets, borderRegion)) {
                     *target = oldRect;
-                else {
+                } else {
                     moved = true;
                     heightDiff = heightForWidth(w, target->width() + widthDiff) - target->height();
                     yDiff = heightDiff / 2;
@@ -1487,9 +1565,9 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
                     target->y() + yDiff,
                     target->width() + widthDiff,
                     target->height() + heightDiff);
-                if (isOverlappingAny(w, targets, borderRegion))
+                if (isOverlappingAny(w, targets, borderRegion)) {
                     *target = oldRect;
-                else {
+                } else {
                     moved = true;
                     heightDiff = heightForWidth(w, target->width() + widthDiff) - target->height();
                     yDiff = heightDiff / 2;
@@ -1502,9 +1580,9 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
                     target->y() + yDiff,
                     target->width() + widthDiff,
                     target->height() + heightDiff);
-                if (isOverlappingAny(w, targets, borderRegion))
+                if (isOverlappingAny(w, targets, borderRegion)) {
                     *target = oldRect;
-                else {
+                } else {
                     moved = true;
                     heightDiff = heightForWidth(w, target->width() + widthDiff) - target->height();
                     yDiff = heightDiff / 2;
@@ -1517,10 +1595,11 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
                     target->y() - yDiff - heightDiff,
                     target->width() + widthDiff,
                     target->height() + heightDiff);
-                if (isOverlappingAny(w, targets, borderRegion))
+                if (isOverlappingAny(w, targets, borderRegion)) {
                     *target = oldRect;
-                else
+                } else {
                     moved = true;
+                }
             }
         } while (moved);
 
@@ -1550,18 +1629,22 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
 bool PresentWindowsEffect::isOverlappingAny(EffectWindow *w, const QHash<EffectWindow *, QRect> &targets, const QRegion &border)
 {
     QHash<EffectWindow *, QRect>::const_iterator winTarget = targets.find(w);
-    if (winTarget == targets.constEnd())
+    if (winTarget == targets.constEnd()) {
         return false;
-    if (border.intersects(*winTarget))
+    }
+    if (border.intersects(*winTarget)) {
         return true;
+    }
 
     // Is there a better way to do this?
     QHash<EffectWindow *, QRect>::const_iterator target;
     for (target = targets.constBegin(); target != targets.constEnd(); ++target) {
-        if (target == winTarget)
+        if (target == winTarget) {
             continue;
-        if (winTarget->adjusted(-5, -5, 5, 5).intersects(target->adjusted(-5, -5, 5, 5)))
+        }
+        if (winTarget->adjusted(-5, -5, 5, 5).intersects(target->adjusted(-5, -5, 5, 5))) {
             return true;
+        }
     }
     return false;
 }
@@ -1571,10 +1654,12 @@ bool PresentWindowsEffect::isOverlappingAny(EffectWindow *w, const QHash<EffectW
 
 void PresentWindowsEffect::setActive(bool active)
 {
-    if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
+    if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this) {
         return;
-    if (m_activated == active)
+    }
+    if (m_activated == active) {
         return;
+    }
     if (effects->isScreenLocked() && active) {
         return;
     }
@@ -1610,8 +1695,9 @@ void PresentWindowsEffect::setActive(bool active)
             winData->deleted = false;
             winData->referenced = false;
             winData->opacity = 0.0;
-            if (w->isOnCurrentDesktop() && !w->isMinimized())
+            if (w->isOnCurrentDesktop() && !w->isMinimized()) {
                 winData->opacity = 1.0;
+            }
 
             winData->highlight = 1.0;
             winData->textFrame = effects->effectFrame(EffectFrameUnstyled, false);
@@ -1665,8 +1751,9 @@ void PresentWindowsEffect::setActive(bool active)
         }
     } else {
         m_needInitialSelection = false;
-        if (m_highlightedWindow)
+        if (m_highlightedWindow) {
             effects->setElevatedWindow(m_highlightedWindow, false);
+        }
 
         // Fade in/out all windows
         EffectWindow *activeWindow = effects->activeWindow();
@@ -1697,16 +1784,18 @@ void PresentWindowsEffect::setActive(bool active)
         m_selectedWindows.clear();
 
         effects->stopMouseInterception(this);
-        if (m_hasKeyboardGrab)
+        if (m_hasKeyboardGrab) {
             effects->ungrabKeyboard();
+        }
         m_hasKeyboardGrab = false;
 
         // destroy atom on manager window
         if (m_managerWindow) {
-            if (m_mode == ModeSelectedDesktop && m_atomDesktop != XCB_ATOM_NONE)
+            if (m_mode == ModeSelectedDesktop && m_atomDesktop != XCB_ATOM_NONE) {
                 m_managerWindow->deleteProperty(m_atomDesktop);
-            else if (m_mode == ModeWindowGroup && m_atomWindows != XCB_ATOM_NONE)
+            } else if (m_mode == ModeWindowGroup && m_atomWindows != XCB_ATOM_NONE) {
                 m_managerWindow->deleteProperty(m_atomWindows);
+            }
             m_managerWindow = nullptr;
         }
     }
@@ -1736,18 +1825,24 @@ void PresentWindowsEffect::updateFilterFrame()
 
 bool PresentWindowsEffect::isSelectableWindow(EffectWindow *w)
 {
-    if (!w->isOnCurrentActivity())
+    if (!w->isOnCurrentActivity()) {
         return false;
-    if (w->isSpecialWindow() || w->isUtility())
+    }
+    if (w->isSpecialWindow() || w->isUtility()) {
         return false;
-    if (w->isDeleted())
+    }
+    if (w->isDeleted()) {
         return false;
-    if (!w->acceptsFocus())
+    }
+    if (!w->acceptsFocus()) {
         return false;
-    if (w->isSkipSwitcher())
+    }
+    if (w->isSkipSwitcher()) {
         return false;
-    if (m_ignoreMinimized && w->isMinimized())
+    }
+    if (m_ignoreMinimized && w->isMinimized()) {
         return false;
+    }
 
     switch (m_mode) {
     default:
@@ -1766,18 +1861,21 @@ bool PresentWindowsEffect::isSelectableWindow(EffectWindow *w)
 
 bool PresentWindowsEffect::isVisibleWindow(EffectWindow *w)
 {
-    if (w->isDesktop())
+    if (w->isDesktop()) {
         return true;
+    }
     return isSelectableWindow(w);
 }
 
 void PresentWindowsEffect::setHighlightedWindow(EffectWindow *w)
 {
-    if (w == m_highlightedWindow || (w != nullptr && !m_motionManager.isManaging(w)))
+    if (w == m_highlightedWindow || (w != nullptr && !m_motionManager.isManaging(w))) {
         return;
+    }
 
-    if (m_closeView)
+    if (m_closeView) {
         m_closeView->hide();
+    }
     if (m_highlightedWindow) {
         effects->setElevatedWindow(m_highlightedWindow, false);
         m_highlightedWindow->addRepaintFull(); // Trigger the first repaint
@@ -1793,15 +1891,17 @@ void PresentWindowsEffect::setHighlightedWindow(EffectWindow *w)
 
 void PresentWindowsEffect::updateCloseWindow()
 {
-    if (!m_closeView || m_doNotCloseWindows)
+    if (!m_closeView || m_doNotCloseWindows) {
         return;
+    }
 
     if (!m_activated || !m_highlightedWindow || m_highlightedWindow->isDesktop()) {
         m_closeView->hide();
         return;
     }
-    if (m_closeView->isVisible())
+    if (m_closeView->isVisible()) {
         return;
+    }
 
     const QRectF rect(m_motionManager.targetGeometry(m_highlightedWindow));
     if (2 * m_closeView->geometry().width() > rect.width() && 2 * m_closeView->geometry().height() > rect.height()) {
@@ -1832,20 +1932,23 @@ void PresentWindowsEffect::updateCloseWindow()
     if (rect.contains(effects->cursorPos())) {
         m_closeView->show();
         m_closeView->disarm();
-    } else
+    } else {
         m_closeView->hide();
+    }
 }
 
 void PresentWindowsEffect::closeWindow()
 {
-    if (m_highlightedWindow)
+    if (m_highlightedWindow) {
         m_highlightedWindow->closeWindow();
+    }
 }
 
 EffectWindow *PresentWindowsEffect::relativeWindow(EffectWindow *w, int xdiff, int ydiff, bool wrap) const
 {
-    if (!w)
+    if (!w) {
         return m_motionManager.managedWindows().constFirst();
+    }
 
     // TODO: Is it possible to select hidden windows?
     EffectWindow *next;
@@ -1864,23 +1967,26 @@ EffectWindow *PresentWindowsEffect::relativeWindow(EffectWindow *w, int xdiff, i
                 const auto managedWindows = m_motionManager.managedWindows();
                 for (EffectWindow *e : managedWindows) {
                     DataHash::const_iterator winData = m_windowData.find(e);
-                    if (winData == m_windowData.end() || !winData->visible)
+                    if (winData == m_windowData.end() || !winData->visible) {
                         continue;
+                    }
 
                     QRectF eArea = m_motionManager.transformedGeometry(e);
                     if (eArea.intersects(detectRect) && eArea.x() > wArea.x()) {
-                        if (next == nullptr)
+                        if (next == nullptr) {
                             next = e;
-                        else {
+                        } else {
                             QRectF nArea = m_motionManager.transformedGeometry(next);
-                            if (eArea.x() < nArea.x())
+                            if (eArea.x() < nArea.x()) {
                                 next = e;
+                            }
                         }
                     }
                 }
                 if (next == nullptr) {
-                    if (wrap) // We are at the right-most window, now get the left-most one to wrap
+                    if (wrap) { // We are at the right-most window, now get the left-most one to wrap
                         return relativeWindow(w, -1000, 0, false);
+                    }
                     break; // No more windows to the right
                 }
                 w = next;
@@ -1896,23 +2002,26 @@ EffectWindow *PresentWindowsEffect::relativeWindow(EffectWindow *w, int xdiff, i
                 const auto managedWindows = m_motionManager.managedWindows();
                 for (EffectWindow *e : managedWindows) {
                     DataHash::const_iterator winData = m_windowData.find(e);
-                    if (winData == m_windowData.end() || !winData->visible)
+                    if (winData == m_windowData.end() || !winData->visible) {
                         continue;
+                    }
 
                     QRectF eArea = m_motionManager.transformedGeometry(e);
                     if (eArea.intersects(detectRect) && eArea.x() + eArea.width() < wArea.x() + wArea.width()) {
-                        if (next == nullptr)
+                        if (next == nullptr) {
                             next = e;
-                        else {
+                        } else {
                             QRectF nArea = m_motionManager.transformedGeometry(next);
-                            if (eArea.x() + eArea.width() > nArea.x() + nArea.width())
+                            if (eArea.x() + eArea.width() > nArea.x() + nArea.width()) {
                                 next = e;
+                            }
                         }
                     }
                 }
                 if (next == nullptr) {
-                    if (wrap) // We are at the left-most window, now get the right-most one to wrap
+                    if (wrap) { // We are at the left-most window, now get the right-most one to wrap
                         return relativeWindow(w, 1000, 0, false);
+                    }
                     break; // No more windows to the left
                 }
                 w = next;
@@ -1933,23 +2042,26 @@ EffectWindow *PresentWindowsEffect::relativeWindow(EffectWindow *w, int xdiff, i
                 const auto managedWindows = m_motionManager.managedWindows();
                 for (EffectWindow *e : managedWindows) {
                     DataHash::const_iterator winData = m_windowData.find(e);
-                    if (winData == m_windowData.end() || !winData->visible)
+                    if (winData == m_windowData.end() || !winData->visible) {
                         continue;
+                    }
 
                     QRectF eArea = m_motionManager.transformedGeometry(e);
                     if (eArea.intersects(detectRect) && eArea.y() > wArea.y()) {
-                        if (next == nullptr)
+                        if (next == nullptr) {
                             next = e;
-                        else {
+                        } else {
                             QRectF nArea = m_motionManager.transformedGeometry(next);
-                            if (eArea.y() < nArea.y())
+                            if (eArea.y() < nArea.y()) {
                                 next = e;
+                            }
                         }
                     }
                 }
                 if (next == nullptr) {
-                    if (wrap) // We are at the bottom-most window, now get the top-most one to wrap
+                    if (wrap) { // We are at the bottom-most window, now get the top-most one to wrap
                         return relativeWindow(w, 0, -1000, false);
+                    }
                     break; // No more windows to the bottom
                 }
                 w = next;
@@ -1965,23 +2077,26 @@ EffectWindow *PresentWindowsEffect::relativeWindow(EffectWindow *w, int xdiff, i
                 const auto managedWindows = m_motionManager.managedWindows();
                 for (EffectWindow *e : managedWindows) {
                     DataHash::const_iterator winData = m_windowData.find(e);
-                    if (winData == m_windowData.end() || !winData->visible)
+                    if (winData == m_windowData.end() || !winData->visible) {
                         continue;
+                    }
 
                     QRectF eArea = m_motionManager.transformedGeometry(e);
                     if (eArea.intersects(detectRect) && eArea.y() + eArea.height() < wArea.y() + wArea.height()) {
-                        if (next == nullptr)
+                        if (next == nullptr) {
                             next = e;
-                        else {
+                        } else {
                             QRectF nArea = m_motionManager.transformedGeometry(next);
-                            if (eArea.y() + eArea.height() > nArea.y() + nArea.height())
+                            if (eArea.y() + eArea.height() > nArea.y() + nArea.height()) {
                                 next = e;
+                            }
                         }
                     }
                 }
                 if (next == nullptr) {
-                    if (wrap) // We are at the top-most window, now get the bottom-most one to wrap
+                    if (wrap) { // We are at the top-most window, now get the bottom-most one to wrap
                         return relativeWindow(w, 0, 1000, false);
+                    }
                     break; // No more windows to the top
                 }
                 w = next;
@@ -2001,13 +2116,16 @@ EffectWindow *PresentWindowsEffect::findFirstWindow() const
     const auto managedWindows = m_motionManager.managedWindows();
     for (EffectWindow *w : managedWindows) {
         DataHash::const_iterator winData = m_windowData.find(w);
-        if (winData == m_windowData.end())
+        if (winData == m_windowData.end()) {
             continue;
+        }
         QRectF geometry = m_motionManager.transformedGeometry(w);
-        if (winData->visible == false)
+        if (winData->visible == false) {
             continue; // Not visible
-        if (winData->deleted)
+        }
+        if (winData->deleted) {
             continue; // Window has been closed
+        }
         if (topLeft == nullptr) {
             topLeft = w;
             topLeftGeometry = geometry;

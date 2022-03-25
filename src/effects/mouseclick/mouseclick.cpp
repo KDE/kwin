@@ -46,8 +46,9 @@ MouseClickEffect::MouseClickEffect()
 
 MouseClickEffect::~MouseClickEffect()
 {
-    if (m_enabled)
+    if (m_enabled) {
         effects->stopMousePolling();
+    }
     qDeleteAll(m_clicks);
     m_clicks.clear();
 
@@ -158,8 +159,9 @@ void MouseClickEffect::slotMouseChanged(const QPoint &pos, const QPoint &,
                                         Qt::MouseButtons buttons, Qt::MouseButtons oldButtons,
                                         Qt::KeyboardModifiers, Qt::KeyboardModifiers)
 {
-    if (buttons == oldButtons)
+    if (buttons == oldButtons) {
         return;
+    }
 
     MouseEvent *m = nullptr;
     int i = BUTTON_COUNT;
@@ -257,22 +259,25 @@ bool MouseClickEffect::isActive() const
 
 void MouseClickEffect::drawCircle(const QColor &color, float cx, float cy, float r)
 {
-    if (effects->isOpenGLCompositing())
+    if (effects->isOpenGLCompositing()) {
         drawCircleGl(color, cx, cy, r);
-    else if (effects->compositingType() == QPainterCompositing)
+    } else if (effects->compositingType() == QPainterCompositing) {
         drawCircleQPainter(color, cx, cy, r);
+    }
 }
 
 void MouseClickEffect::paintScreenSetup(int mask, QRegion region, ScreenPaintData &data)
 {
-    if (effects->isOpenGLCompositing())
+    if (effects->isOpenGLCompositing()) {
         paintScreenSetupGl(mask, region, data);
+    }
 }
 
 void MouseClickEffect::paintScreenFinish(int mask, QRegion region, ScreenPaintData &data)
 {
-    if (effects->isOpenGLCompositing())
+    if (effects->isOpenGLCompositing()) {
         paintScreenFinishGl(mask, region, data);
+    }
 }
 
 void MouseClickEffect::drawCircleGl(const QColor &color, float cx, float cy, float r)

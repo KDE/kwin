@@ -50,8 +50,9 @@ void SubSurfaceMonitor::registerSubSurface(SubSurfaceInterface *subSurface)
 void SubSurfaceMonitor::unregisterSubSurface(SubSurfaceInterface *subSurface)
 {
     SurfaceInterface *surface = subSurface->surface();
-    if (!surface)
+    if (!surface) {
         return;
+    }
 
     disconnect(subSurface, nullptr, this, nullptr);
 

@@ -644,8 +644,9 @@ private:
 
 inline QList<EffectWindow *> EffectsHandlerImpl::elevatedWindows() const
 {
-    if (isScreenLocked())
+    if (isScreenLocked()) {
         return QList<EffectWindow *>();
+    }
     return elevated_windows;
 }
 

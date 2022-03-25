@@ -641,8 +641,9 @@ void Scene::clearStackingOrder()
 
 void Scene::paintWindow(Window *w, int mask, const QRegion &region)
 {
-    if (region.isEmpty()) // completely clipped
+    if (region.isEmpty()) { // completely clipped
         return;
+    }
 
     WindowPaintData data(w->window()->effectWindow(), screenProjectionMatrix());
     effects->paintWindow(effectWindow(w), mask, region, data);
@@ -795,14 +796,18 @@ QRegion Scene::Window::decorationShape() const
 
 bool Scene::Window::isVisible() const
 {
-    if (toplevel->isDeleted())
+    if (toplevel->isDeleted()) {
         return false;
-    if (!toplevel->isOnCurrentDesktop())
+    }
+    if (!toplevel->isOnCurrentDesktop()) {
         return false;
-    if (!toplevel->isOnCurrentActivity())
+    }
+    if (!toplevel->isOnCurrentActivity()) {
         return false;
-    if (AbstractClient *c = dynamic_cast<AbstractClient *>(toplevel))
+    }
+    if (AbstractClient *c = dynamic_cast<AbstractClient *>(toplevel)) {
         return c->isShown();
+    }
     return true; // Unmanaged is always visible
 }
 
@@ -819,21 +824,25 @@ bool Scene::Window::isPaintingEnabled() const
 void Scene::Window::resetPaintingEnabled()
 {
     disable_painting = 0;
-    if (toplevel->isDeleted())
+    if (toplevel->isDeleted()) {
         disable_painting |= PAINT_DISABLED_BY_DELETE;
+    }
     if (static_cast<EffectsHandlerImpl *>(effects)->isDesktopRendering()) {
         if (!toplevel->isOnDesktop(static_cast<EffectsHandlerImpl *>(effects)->currentRenderedDesktop())) {
             disable_painting |= PAINT_DISABLED_BY_DESKTOP;
         }
     } else {
-        if (!toplevel->isOnCurrentDesktop())
+        if (!toplevel->isOnCurrentDesktop()) {
             disable_painting |= PAINT_DISABLED_BY_DESKTOP;
+        }
     }
-    if (!toplevel->isOnCurrentActivity())
+    if (!toplevel->isOnCurrentActivity()) {
         disable_painting |= PAINT_DISABLED_BY_ACTIVITY;
+    }
     if (AbstractClient *c = dynamic_cast<AbstractClient *>(toplevel)) {
-        if (c->isMinimized())
+        if (c->isMinimized()) {
             disable_painting |= PAINT_DISABLED_BY_MINIMIZE;
+        }
         if (c->isHiddenInternal()) {
             disable_painting |= PAINT_DISABLED;
         }

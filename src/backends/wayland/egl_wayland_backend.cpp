@@ -174,8 +174,9 @@ bool EglWaylandBackend::initializeEgl()
         m_havePlatformBase = hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base"));
         if (m_havePlatformBase) {
             // Make sure that the wayland platform is supported
-            if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_wayland")))
+            if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_wayland"))) {
                 return false;
+            }
 
             display = eglGetPlatformDisplayEXT(EGL_PLATFORM_WAYLAND_EXT, m_backend->display(), nullptr);
         } else {
@@ -183,8 +184,9 @@ bool EglWaylandBackend::initializeEgl()
         }
     }
 
-    if (display == EGL_NO_DISPLAY)
+    if (display == EGL_NO_DISPLAY) {
         return false;
+    }
     setEglDisplay(display);
     return initEglAPI();
 }

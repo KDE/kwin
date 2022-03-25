@@ -57,8 +57,9 @@ Monitor::Monitor(QWidget *parent)
     setRatio((qreal)avail.width() / (qreal)avail.height());
     for (int i = 0;
          i < 8;
-         ++i)
+         ++i) {
         popups[i] = new QMenu(this);
+    }
     scene = new QGraphicsScene(this);
     view = new QGraphicsView(scene, this);
     view->setBackgroundBrush(Qt::black);
@@ -137,10 +138,11 @@ void Monitor::setEdgeEnabled(int edge, bool enabled)
 void Monitor::setEdgeHidden(int edge, bool set)
 {
     hidden[edge] = set;
-    if (set)
+    if (set) {
         items[edge]->hide();
-    else
+    } else {
         items[edge]->show();
+    }
 }
 
 bool Monitor::edgeHidden(int edge) const
@@ -198,8 +200,9 @@ void Monitor::popup(Corner *c, QPoint pos)
          i < 8;
          ++i) {
         if (items[i] == c) {
-            if (popup_actions[i].count() == 0)
+            if (popup_actions[i].count() == 0) {
                 return;
+            }
             if (QAction *a = popups[i]->exec(pos)) {
                 selectEdgeItem(i, popup_actions[i].indexOf(a));
                 Q_EMIT changed();
@@ -218,10 +221,11 @@ void Monitor::flip(Corner *c, QPoint pos)
          i < 8;
          ++i) {
         if (items[i] == c) {
-            if (popup_actions[i].count() == 0)
+            if (popup_actions[i].count() == 0) {
                 setEdge(i, !edge(i));
-            else
+            } else {
                 popup(c, pos);
+            }
             return;
         }
     }

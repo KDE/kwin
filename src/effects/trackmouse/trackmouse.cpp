@@ -35,8 +35,9 @@ TrackMouseEffect::TrackMouseEffect()
 {
     initConfig<TrackMouseConfig>();
     m_texture[0] = m_texture[1] = nullptr;
-    if (effects->isOpenGLCompositing() || effects->compositingType() == QPainterCompositing)
+    if (effects->isOpenGLCompositing() || effects->compositingType() == QPainterCompositing) {
         m_angleBase = 90.0;
+    }
     m_mousePolling = false;
 
     m_action = new QAction(this);
@@ -54,8 +55,9 @@ TrackMouseEffect::TrackMouseEffect()
 
 TrackMouseEffect::~TrackMouseEffect()
 {
-    if (m_mousePolling)
+    if (m_mousePolling) {
         effects->stopMousePolling();
+    }
     for (int i = 0; i < 2; ++i) {
         delete m_texture[i];
         m_texture[i] = nullptr;
@@ -66,18 +68,23 @@ void TrackMouseEffect::reconfigure(ReconfigureFlags)
 {
     m_modifiers = Qt::KeyboardModifiers();
     TrackMouseConfig::self()->read();
-    if (TrackMouseConfig::shift())
+    if (TrackMouseConfig::shift()) {
         m_modifiers |= Qt::ShiftModifier;
-    if (TrackMouseConfig::alt())
+    }
+    if (TrackMouseConfig::alt()) {
         m_modifiers |= Qt::AltModifier;
-    if (TrackMouseConfig::control())
+    }
+    if (TrackMouseConfig::control()) {
         m_modifiers |= Qt::ControlModifier;
-    if (TrackMouseConfig::meta())
+    }
+    if (TrackMouseConfig::meta()) {
         m_modifiers |= Qt::MetaModifier;
+    }
 
     if (m_modifiers) {
-        if (!m_mousePolling)
+        if (!m_mousePolling) {
             effects->startMousePolling();
+        }
         m_mousePolling = true;
     } else if (m_mousePolling) {
         effects->stopMousePolling();
@@ -149,8 +156,9 @@ bool TrackMouseEffect::init()
     effects->makeOpenGLContextCurrent();
     if (!m_texture[0] && m_image[0].isNull()) {
         loadTexture();
-        if (!m_texture[0] && m_image[0].isNull())
+        if (!m_texture[0] && m_image[0].isNull()) {
             return false;
+        }
     }
     m_lastRect[0].moveCenter(cursorPos());
     m_lastRect[1].moveCenter(cursorPos());
@@ -225,8 +233,9 @@ void TrackMouseEffect::loadTexture()
 {
     QString f[2] = {QStandardPaths::locate(QStandardPaths::AppDataLocation, QStringLiteral("tm_outer.png")),
                     QStandardPaths::locate(QStandardPaths::AppDataLocation, QStringLiteral("tm_inner.png"))};
-    if (f[0].isEmpty() || f[1].isEmpty())
+    if (f[0].isEmpty() || f[1].isEmpty()) {
         return;
+    }
 
     for (int i = 0; i < 2; ++i) {
         if (effects->isOpenGLCompositing()) {
