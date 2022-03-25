@@ -90,7 +90,7 @@ Xwayland::~Xwayland()
 
 void Xwayland::start()
 {
-    m_launcher->start();
+    //    m_launcher->start();
 }
 
 XwaylandLauncher *Xwayland::xwaylandLauncher() const
@@ -171,7 +171,7 @@ void Xwayland::handleXwaylandFinished()
 
 void Xwayland::handleXwaylandReady()
 {
-    if (!createX11Connection()) {
+    if (!createX11Connection(m_launcher->xcbConnectionFd())) {
         Q_EMIT errorOccurred();
         return;
     }
@@ -250,9 +250,9 @@ void Xwayland::handleSelectionClaimedOwnership()
     Q_EMIT started();
 }
 
-bool Xwayland::createX11Connection()
+bool Xwayland::createX11Connection(int x11Fd)
 {
-    xcb_connection_t *connection = xcb_connect_to_fd(m_launcher->xcbConnectionFd(), nullptr);
+    xcb_connection_t *connection = xcb_connect_to_fd(x11Fd, nullptr);
 
     const int errorCode = xcb_connection_has_error(connection);
     if (errorCode) {

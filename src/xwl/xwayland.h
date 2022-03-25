@@ -65,7 +65,7 @@ private:
     void uninstallSocketNotifier();
     void updatePrimary(AbstractOutput *primaryOutput);
 
-    bool createX11Connection();
+    bool createX11Connection(int x11Fd);
     void destroyX11Connection();
 
     DragEventReply dragMoveFilter(Toplevel *target, const QPoint &pos) override;
