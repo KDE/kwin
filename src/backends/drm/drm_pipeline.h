@@ -63,9 +63,6 @@ public:
     void applyPendingChanges();
     void revertPendingChanges();
 
-    bool setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const QPoint &hotspot = QPoint());
-    bool moveCursor(QPoint pos);
-
     DrmConnector *connector() const;
     DrmCrtc *currentCrtc() const;
     DrmGpu *gpu() const;
@@ -104,10 +101,6 @@ public:
 
         QSharedPointer<DrmPipelineLayer> layer;
 
-        QPoint cursorPos;
-        QPoint cursorHotspot;
-        QSharedPointer<DrmDumbBuffer> cursorBo;
-
         // the transformation that this pipeline will apply to submitted buffers
         DrmPlane::Transformations bufferTransformation = DrmPlane::Transformation::Rotate0;
         // the transformation that buffers submitted to the pipeline should have
@@ -126,7 +119,6 @@ public:
 
 private:
     bool activePending() const;
-    bool isCursorVisible() const;
     bool isBufferForDirectScanout() const;
     uint32_t calculateUnderscan();
 
@@ -134,8 +126,6 @@ private:
     bool presentLegacy();
     bool legacyModeset();
     bool applyPendingChangesLegacy();
-    bool setCursorLegacy();
-    bool moveCursorLegacy();
     static bool commitPipelinesLegacy(const QVector<DrmPipeline *> &pipelines, CommitMode mode);
 
     // atomic modesetting only

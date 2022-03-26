@@ -388,9 +388,6 @@ DrmRenderOutput::DrmRenderOutput(DrmOutput *output, DrmPipeline *pipeline)
     , m_pipeline(pipeline)
 {
     connect(output, &DrmOutput::geometryChanged, this, &DrmRenderOutput::geometryChanged);
-    connect(Cursors::self(), &Cursors::currentCursorChanged, this, &DrmRenderOutput::updateCursor);
-    connect(Cursors::self(), &Cursors::hiddenChanged, this, &DrmRenderOutput::updateCursor);
-    connect(Cursors::self(), &Cursors::positionChanged, this, &DrmRenderOutput::moveCursor);
 }
 
 QRect DrmRenderOutput::geometry() const
@@ -406,99 +403,12 @@ QRect DrmRenderOutput::geometry() const
 
 bool DrmRenderOutput::usesSoftwareCursor() const
 {
-    return !(m_setCursorSuccessful && m_moveCursorSuccessful);
+    return true;
 }
 
 OutputLayer *DrmRenderOutput::layer() const
 {
     return m_pipeline->pending.layer.get();
-}
-
-static bool isCursorSpriteCompatible(const QImage *buffer, const QImage *sprite)
-{
-    // Note that we need compare the rects in the device independent pixels because the
-    // buffer and the cursor sprite image may have different scale factors.
-    const QRect bufferRect(QPoint(0, 0), buffer->size() / buffer->devicePixelRatio());
-    const QRect spriteRect(QPoint(0, 0), sprite->size() / sprite->devicePixelRatio());
-
-    return bufferRect.contains(spriteRect);
-}
-
-void DrmRenderOutput::updateCursor()
-{
-    static bool valid;
-    static const bool forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR", &valid) == 1 && valid;
-    if (forceSoftwareCursor) {
-        m_setCursorSuccessful = false;
-        return;
-    }
-    if (!m_pipeline->pending.crtc) {
-        return;
-    }
-    const Cursor *cursor = Cursors::self()->currentCursor();
-    if (!cursor) {
-        m_pipeline->setCursor(nullptr);
-        return;
-    }
-    const QImage cursorImage = cursor->image();
-    if (cursorImage.isNull() || Cursors::self()->isCursorHidden()) {
-        m_pipeline->setCursor(nullptr);
-        return;
-    }
-    if (m_cursor && m_cursor->isEmpty()) {
-        m_pipeline->setCursor(nullptr);
-        return;
-    }
-    const auto plane = m_pipeline->pending.crtc->cursorPlane();
-    if (!m_cursor || (plane && !plane->formats().value(m_cursor->drmFormat()).contains(DRM_FORMAT_MOD_LINEAR))) {
-        if (plane && (!plane->formats().contains(DRM_FORMAT_ARGB8888) || !plane->formats().value(DRM_FORMAT_ARGB8888).contains(DRM_FORMAT_MOD_LINEAR))) {
-            m_pipeline->setCursor(nullptr);
-            m_setCursorSuccessful = false;
-            return;
-        }
-        m_cursor = QSharedPointer<DumbSwapchain>::create(m_pipeline->gpu(), m_pipeline->gpu()->cursorSize(), plane ? DRM_FORMAT_ARGB8888 : DRM_FORMAT_XRGB8888, QImage::Format::Format_ARGB32_Premultiplied);
-        if (!m_cursor || m_cursor->isEmpty()) {
-            m_pipeline->setCursor(nullptr);
-            m_setCursorSuccessful = false;
-            return;
-        }
-    }
-    m_cursor->releaseBuffer(m_cursor->currentBuffer());
-    m_cursor->acquireBuffer();
-
-    const auto output = m_pipeline->output();
-    QImage *c = m_cursor->currentBuffer()->image();
-    c->setDevicePixelRatio(output->scale());
-    if (!isCursorSpriteCompatible(c, &cursorImage)) {
-        // If the cursor image is too big, fall back to rendering the software cursor.
-        m_pipeline->setCursor(nullptr);
-        m_setCursorSuccessful = false;
-        return;
-    }
-    c->fill(Qt::transparent);
-    QPainter p;
-    p.begin(c);
-    p.setWorldTransform(output->logicalToNativeMatrix(cursor->rect(), 1, output->transform()).toTransform());
-    p.setRenderHint(QPainter::SmoothPixmapTransform);
-    p.drawImage(QPoint(0, 0), cursorImage);
-    p.end();
-    m_setCursorSuccessful = m_pipeline->setCursor(m_cursor->currentBuffer(), output->logicalToNativeMatrix(cursor->rect(), output->scale(), output->transform()).map(cursor->hotspot()));
-    moveCursor();
-}
-
-void DrmRenderOutput::moveCursor()
-{
-    if (!m_setCursorSuccessful || !m_pipeline->pending.crtc) {
-        return;
-    }
-    Cursor *cursor = Cursors::self()->currentCursor();
-    const auto output = m_pipeline->output();
-    const QMatrix4x4 monitorMatrix = output->logicalToNativeMatrix(geometry(), output->scale(), output->transform());
-    const QMatrix4x4 hotspotMatrix = output->logicalToNativeMatrix(cursor->rect(), output->scale(), output->transform());
-    m_moveCursorSuccessful = m_pipeline->moveCursor(monitorMatrix.map(cursor->pos()) - hotspotMatrix.map(cursor->hotspot()));
-    if (!m_moveCursorSuccessful) {
-        m_pipeline->setCursor(nullptr);
-    }
 }
 
 }

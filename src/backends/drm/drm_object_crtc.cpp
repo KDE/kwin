@@ -18,12 +18,11 @@
 namespace KWin
 {
 
-DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryPlane, DrmPlane *cursorPlane)
+DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryPlane)
     : DrmObject(gpu, crtcId, {PropertyDefinition(QByteArrayLiteral("MODE_ID"), Requirement::Required), PropertyDefinition(QByteArrayLiteral("ACTIVE"), Requirement::Required), PropertyDefinition(QByteArrayLiteral("VRR_ENABLED"), Requirement::Optional), PropertyDefinition(QByteArrayLiteral("GAMMA_LUT"), Requirement::Optional), PropertyDefinition(QByteArrayLiteral("GAMMA_LUT_SIZE"), Requirement::Optional)}, DRM_MODE_OBJECT_CRTC)
     , m_crtc(drmModeGetCrtc(gpu->fd(), crtcId))
     , m_pipeIndex(pipeIndex)
     , m_primaryPlane(primaryPlane)
-    , m_cursorPlane(cursorPlane)
 {
 }
 
@@ -92,11 +91,6 @@ int DrmCrtc::gammaRampSize() const
 DrmPlane *DrmCrtc::primaryPlane() const
 {
     return m_primaryPlane;
-}
-
-DrmPlane *DrmCrtc::cursorPlane() const
-{
-    return m_cursorPlane;
 }
 
 void DrmCrtc::disable()

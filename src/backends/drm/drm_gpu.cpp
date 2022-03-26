@@ -193,16 +193,11 @@ void DrmGpu::initDrmResources()
     for (int i = 0; i < resources->count_crtcs; ++i) {
         uint32_t crtcId = resources->crtcs[i];
         DrmPlane *primary = nullptr;
-        DrmPlane *cursor = nullptr;
         for (const auto &plane : qAsConst(planes)) {
             if (plane->isCrtcSupported(i)) {
                 if (plane->type() == DrmPlane::TypeIndex::Primary) {
                     if (!primary || primary->getProp(DrmPlane::PropertyIndex::CrtcId)->pending() == crtcId) {
                         primary = plane;
-                    }
-                } else if (plane->type() == DrmPlane::TypeIndex::Cursor) {
-                    if (!cursor || cursor->getProp(DrmPlane::PropertyIndex::CrtcId)->pending() == crtcId) {
-                        cursor = plane;
                     }
                 }
             }
@@ -212,7 +207,7 @@ void DrmGpu::initDrmResources()
             continue;
         }
         planes.removeOne(primary);
-        auto c = new DrmCrtc(this, crtcId, i, primary, cursor);
+        auto c = new DrmCrtc(this, crtcId, i, primary);
         if (!c->init()) {
             delete c;
             continue;
@@ -812,7 +807,6 @@ QVector<DrmObject *> DrmGpu::unusedObjects() const
         if (pipeline->pending.crtc) {
             ret.removeOne(pipeline->pending.crtc);
             ret.removeOne(pipeline->pending.crtc->primaryPlane());
-            ret.removeOne(pipeline->pending.crtc->cursorPlane());
         }
     }
     return ret;

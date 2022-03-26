@@ -87,15 +87,6 @@ public:
     OutputLayer *layer() const override;
     QRect geometry() const override;
 
-protected:
-    void updateCursor();
-    void moveCursor();
-
-    QSharedPointer<DumbSwapchain> m_cursor;
-    bool m_setCursorSuccessful;
-    bool m_moveCursorSuccessful;
-    QRect m_lastCursorGeometry;
-
     DrmPipeline *const m_pipeline;
 };
 }

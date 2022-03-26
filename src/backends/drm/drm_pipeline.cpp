@@ -182,12 +182,6 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
         const auto buffer = pending.layer->currentBuffer().data();
         pending.crtc->primaryPlane()->set(QPoint(0, 0), buffer ? buffer->size() : bufferSize(), QPoint(0, 0), modeSize);
         pending.crtc->primaryPlane()->setBuffer(activePending() ? buffer : nullptr);
-
-        if (pending.crtc->cursorPlane()) {
-            pending.crtc->cursorPlane()->set(QPoint(0, 0), gpu()->cursorSize(), pending.cursorPos, gpu()->cursorSize());
-            pending.crtc->cursorPlane()->setBuffer(activePending() ? pending.cursorBo.get() : nullptr);
-            pending.crtc->cursorPlane()->setPending(DrmPlane::PropertyIndex::CrtcId, (activePending() && pending.cursorBo) ? pending.crtc->id() : 0);
-        }
     }
     if (!m_connector->atomicPopulate(req)) {
         return false;
@@ -197,9 +191,6 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
             return false;
         }
         if (!pending.crtc->primaryPlane()->atomicPopulate(req)) {
-            return false;
-        }
-        if (pending.crtc->cursorPlane() && !pending.crtc->cursorPlane()->atomicPopulate(req)) {
             return false;
         }
     }
@@ -237,9 +228,6 @@ void DrmPipeline::prepareAtomicModeset()
 
     pending.crtc->primaryPlane()->setPending(DrmPlane::PropertyIndex::CrtcId, activePending() ? pending.crtc->id() : 0);
     pending.crtc->primaryPlane()->setTransformation(pending.bufferTransformation);
-    if (pending.crtc->cursorPlane()) {
-        pending.crtc->cursorPlane()->setTransformation(DrmPlane::Transformation::Rotate0);
-    }
 }
 
 uint32_t DrmPipeline::calculateUnderscan()
@@ -261,9 +249,6 @@ void DrmPipeline::atomicCommitFailed()
     if (pending.crtc) {
         pending.crtc->rollbackPending();
         pending.crtc->primaryPlane()->rollbackPending();
-        if (pending.crtc->cursorPlane()) {
-            pending.crtc->cursorPlane()->rollbackPending();
-        }
     }
 }
 
@@ -273,9 +258,6 @@ void DrmPipeline::atomicCommitSuccessful(CommitMode mode)
     if (pending.crtc) {
         pending.crtc->commitPending();
         pending.crtc->primaryPlane()->commitPending();
-        if (pending.crtc->cursorPlane()) {
-            pending.crtc->cursorPlane()->commitPending();
-        }
     }
     if (mode != CommitMode::Test) {
         if (activePending()) {
@@ -286,67 +268,12 @@ void DrmPipeline::atomicCommitSuccessful(CommitMode mode)
             pending.crtc->commit();
             pending.crtc->primaryPlane()->setNext(pending.layer->currentBuffer());
             pending.crtc->primaryPlane()->commit();
-            if (pending.crtc->cursorPlane()) {
-                pending.crtc->cursorPlane()->setNext(pending.cursorBo);
-                pending.crtc->cursorPlane()->commit();
-            }
         }
         m_current = pending;
         if (mode == CommitMode::CommitModeset && activePending()) {
             pageFlipped(std::chrono::steady_clock::now().time_since_epoch());
         }
     }
-}
-
-bool DrmPipeline::setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const QPoint &hotspot)
-{
-    if (pending.cursorBo == buffer && pending.cursorHotspot == hotspot) {
-        return true;
-    }
-    bool result;
-    const bool visibleBefore = isCursorVisible();
-    pending.cursorBo = buffer;
-    pending.cursorHotspot = hotspot;
-    // explicitly check for the cursor plane and not for AMS, as we might not always have one
-    if (pending.crtc->cursorPlane()) {
-        result = commitPipelines({this}, CommitMode::Test);
-    } else {
-        result = setCursorLegacy();
-    }
-    if (result) {
-        m_next = pending;
-        if (m_output && (visibleBefore || isCursorVisible())) {
-            m_output->renderLoop()->scheduleRepaint();
-        }
-    } else {
-        pending = m_next;
-    }
-    return result;
-}
-
-bool DrmPipeline::moveCursor(QPoint pos)
-{
-    if (pending.cursorPos == pos) {
-        return true;
-    }
-    const bool visibleBefore = isCursorVisible();
-    bool result;
-    pending.cursorPos = pos;
-    // explicitly check for the cursor plane and not for AMS, as we might not always have one
-    if (pending.crtc->cursorPlane()) {
-        result = commitPipelines({this}, CommitMode::Test);
-    } else {
-        result = moveCursorLegacy();
-    }
-    if (result) {
-        m_next = pending;
-        if (m_output && (visibleBefore || isCursorVisible())) {
-            m_output->renderLoop()->scheduleRepaint();
-        }
-    } else {
-        pending = m_next;
-    }
-    return result;
 }
 
 void DrmPipeline::applyPendingChanges()
@@ -375,12 +302,6 @@ QSize DrmPipeline::sourceSize() const
     return modeSize;
 }
 
-bool DrmPipeline::isCursorVisible() const
-{
-    const QRect mode = QRect(QPoint(), pending.mode->size());
-    return pending.cursorBo && QRect(pending.cursorPos, pending.cursorBo->size()).intersects(mode);
-}
-
 DrmConnector *DrmPipeline::connector() const
 {
     return m_connector;
@@ -396,9 +317,6 @@ void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp)
     m_current.crtc->flipBuffer();
     if (m_current.crtc->primaryPlane()) {
         m_current.crtc->primaryPlane()->flipBuffer();
-    }
-    if (m_current.crtc->cursorPlane()) {
-        m_current.crtc->cursorPlane()->flipBuffer();
     }
     m_pageflipPending = false;
     if (m_output) {
@@ -595,9 +513,6 @@ void DrmPipeline::printDebugInfo() const
         printProps(pending.crtc, PrintMode::All);
         if (pending.crtc->primaryPlane()) {
             printProps(pending.crtc->primaryPlane(), PrintMode::All);
-        }
-        if (pending.crtc->cursorPlane()) {
-            printProps(pending.crtc->cursorPlane(), PrintMode::All);
         }
     }
 }
