@@ -9,16 +9,18 @@
 #ifndef KWIN_VIRTUAL_KEYBOARD_H
 #define KWIN_VIRTUAL_KEYBOARD_H
 
+#include <utility>
+#include <vector>
+
 #include <QObject>
 
-#include <kwinglobals.h>
 #include <kwin_export.h>
+#include <kwinglobals.h>
 
+#include <KWaylandServer/textinput_v2_interface.h>
 #include <QPointer>
 #include <QTimer>
-#include <KWaylandServer/textinput_v2_interface.h>
 
-class KStatusNotifierItem;
 class QProcess;
 
 namespace KWaylandServer
@@ -40,11 +42,17 @@ class KWIN_EXPORT InputMethod : public QObject
 {
     Q_OBJECT
 public:
+    enum ForwardModifiersForce {
+        NoForce = 0,
+        Force = 1,
+    };
+
     ~InputMethod() override;
 
     void init();
     void setEnabled(bool enable);
-    bool isEnabled() const {
+    bool isEnabled() const
+    {
         return m_enabled;
     }
     bool isActive() const;
@@ -54,17 +62,23 @@ public:
     bool isVisible() const;
     bool isAvailable() const;
 
+    InputPanelV1Client *panel() const;
+    void setPanel(InputPanelV1Client *client);
     void setInputMethodCommand(const QString &path);
 
+    KWaylandServer::InputMethodGrabV1 *keyboardGrab();
+    bool shouldShowOnActive() const;
+
+    void forwardModifiers(ForwardModifiersForce force);
+
 Q_SIGNALS:
+    void panelChanged();
     void activeChanged(bool active);
     void enabledChanged(bool enabled);
     void visibleChanged();
     void availableChanged();
 
 private Q_SLOTS:
-    void clientAdded(AbstractClient* client);
-
     // textinput interface slots
     void handleFocusedSurfaceChanged();
     void surroundingTextChanged();
@@ -76,6 +90,7 @@ private Q_SLOTS:
 
     // inputcontext slots
     void setPreeditString(uint32_t serial, const QString &text, const QString &commit);
+    void setPreeditStyling(quint32 index, quint32 length, quint32 style);
     void setPreeditCursor(qint32 index);
     void key(quint32 serial, quint32 time, quint32 key, bool pressed);
     void modifiers(quint32 serial, quint32 mods_depressed, quint32 mods_latched, quint32 mods_locked, quint32 group);
@@ -84,7 +99,7 @@ private:
     void updateInputPanelState();
     void adoptInputMethodContext();
     void commitString(qint32 serial, const QString &text);
-    void keysymReceived(quint32 serial, quint32 time, quint32 sym, bool pressed, Qt::KeyboardModifiers modifiers);
+    void keysymReceived(quint32 serial, quint32 time, quint32 sym, bool pressed, quint32 modifiers);
     void deleteSurroundingText(int32_t index, uint32_t length);
     void setCursorPosition(qint32 index, qint32 anchor);
     void setLanguage(uint32_t serial, const QString &language);
@@ -93,22 +108,30 @@ private:
     void stopInputMethod();
     void setTrackedClient(AbstractClient *trackedClient);
     void installKeyboardGrab(KWaylandServer::InputMethodGrabV1 *keyboardGrab);
+    void updateModifiersMap(const QByteArray &modifiers);
 
-    struct {
+    bool touchEventTriggered() const;
+    void resetPendingPreedit();
+
+    struct
+    {
         QString text = QString();
-        quint32 begin = 0;
-        quint32 end = 0;
+        qint32 cursor = 0;
+        std::vector<std::pair<quint32, quint32>> highlightRanges;
     } preedit;
 
     bool m_enabled = true;
     quint32 m_serial = 0;
     QPointer<InputPanelV1Client> m_inputClient;
     QPointer<AbstractClient> m_trackedClient;
+    QPointer<KWaylandServer::InputMethodGrabV1> m_keyboardGrab;
 
     QProcess *m_inputMethodProcess = nullptr;
     QTimer m_inputMethodCrashTimer;
     uint m_inputMethodCrashes = 0;
     QString m_inputMethodCommand;
+
+    bool m_hasPendingModifiers = false;
 
     KWIN_SINGLETON(InputMethod)
 };

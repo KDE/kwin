@@ -8,11 +8,15 @@
 */
 #include "testutils.h"
 // KWin
-#include "xcbutils.h"
+#include "utils/xcbutils.h"
 // Qt
 #include <QApplication>
 #include <QtTest>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <private/qtx11extras_p.h>
+#else
 #include <QX11Info>
+#endif
 // xcb
 #include <xcb/xcb.h>
 
@@ -36,7 +40,7 @@ private Q_SLOTS:
 void TestXcbWindow::initTestCase()
 {
     qApp->setProperty("x11RootWindow", QVariant::fromValue<quint32>(QX11Info::appRootWindow()));
-    qApp->setProperty("x11Connection", QVariant::fromValue<void*>(QX11Info::connection()));
+    qApp->setProperty("x11Connection", QVariant::fromValue<void *>(QX11Info::connection()));
 }
 
 void TestXcbWindow::defaultCtor()

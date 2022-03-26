@@ -77,10 +77,12 @@ public:
 
     void showApplicationMenu(int actionId) override;
 
-    AbstractClient *client() {
+    AbstractClient *client()
+    {
         return m_client;
     }
-    KDecoration2::DecoratedClient *decoratedClient() {
+    KDecoration2::DecoratedClient *decoratedClient()
+    {
         return KDecoration2::DecoratedClientPrivate::client();
     }
 

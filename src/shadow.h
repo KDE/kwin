@@ -25,7 +25,8 @@ namespace KWaylandServer
 class ShadowInterface;
 }
 
-namespace KWin {
+namespace KWin
+{
 
 class Toplevel;
 
@@ -81,12 +82,14 @@ public:
      */
     void setToplevel(Toplevel *toplevel);
 
-    bool hasDecorationShadow() const {
+    bool hasDecorationShadow() const
+    {
         return !m_decorationShadow.isNull();
     }
     QImage decorationShadowImage() const;
 
-    QWeakPointer<KDecoration2::DecorationShadow> decorationShadow() const {
+    QWeakPointer<KDecoration2::DecorationShadow> decorationShadow() const
+    {
         return m_decorationShadow.toWeakRef();
     }
 
@@ -103,10 +106,12 @@ public:
     };
     QSize elementSize(ShadowElements element) const;
 
-    QRect rect() const {
+    QRect rect() const
+    {
         return QRect(QPoint(0, 0), m_cachedSize);
     }
-    QMargins offset() const {
+    QMargins offset() const
+    {
         return m_offset;
     }
 
@@ -121,7 +126,8 @@ public Q_SLOTS:
 protected:
     Shadow(Toplevel *toplevel);
 
-    inline const QPixmap &shadowPixmap(ShadowElements element) const {
+    inline const QPixmap &shadowPixmap(ShadowElements element) const
+    {
         return m_shadowElements[element];
     };
 

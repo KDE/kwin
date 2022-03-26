@@ -9,7 +9,6 @@
 
 #include "showpaint_config.h"
 
-#include <KAboutData>
 #include <KActionCollection>
 #include <KGlobalAccel>
 #include <KLocalizedString>
@@ -18,9 +17,7 @@
 
 #include <QAction>
 
-K_PLUGIN_FACTORY_WITH_JSON(ShowPaintEffectConfigFactory,
-                           "showpaint_config.json",
-                           registerPlugin<KWin::ShowPaintEffectConfig>();)
+K_PLUGIN_CLASS(KWin::ShowPaintEffectConfig)
 
 namespace KWin
 {
@@ -47,8 +44,6 @@ ShowPaintEffectConfig::ShowPaintEffectConfig(QWidget *parent, const QVariantList
 
     connect(m_ui->shortcutsEditor, &KShortcutsEditor::keyChange,
             this, &ShowPaintEffectConfig::markAsChanged);
-
-    load();
 }
 
 ShowPaintEffectConfig::~ShowPaintEffectConfig()

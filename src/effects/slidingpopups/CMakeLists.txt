@@ -2,6 +2,20 @@
 # Effect
 
 # Source files
-set(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-    slidingpopups/slidingpopups.cpp
+set(slidingpopups_SOURCES
+    main.cpp
+    slidingpopups.cpp
+)
+
+kconfig_add_kcfg_files(slidingpopups_SOURCES
+    slidingpopupsconfig.kcfgc
+)
+
+kwin4_add_effect_module(kwin4_effect_slidingpopups ${slidingpopups_SOURCES})
+target_link_libraries(kwin4_effect_slidingpopups PRIVATE
+    kwineffects
+
+    Plasma::KWaylandServer
+
+    KF5::ConfigGui
 )

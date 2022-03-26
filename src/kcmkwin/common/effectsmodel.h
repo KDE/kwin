@@ -223,7 +223,8 @@ protected:
         Scripted
     };
 
-    struct EffectData {
+    struct EffectData
+    {
         QString name;
         QString description;
         QString authorName;

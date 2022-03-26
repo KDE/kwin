@@ -11,10 +11,21 @@ namespace KWin
 {
 namespace Xwl
 {
-class XwlDataSource : public KWaylandServer::AbstractDataSource
+
+/**
+ * The XwlDataSource class represents a data source owned by the Xwayland data bridge. It's
+ * used as a source in data transfers from X11 clients to Wayland clients.
+ *
+ * The XwlDataSource class is sealed as its destructor emits the aboutToBeDestroyed() signal.
+ * If you decide to unseal it, ensure that the about to be destroyed signal is emitted properly!
+ */
+class XwlDataSource final : public KWaylandServer::AbstractDataSource
 {
     Q_OBJECT
+
 public:
+    ~XwlDataSource() override;
+
     void requestData(const QString &mimeType, qint32 fd) override;
     void cancel() override;
     QStringList mimeTypes() const override;
@@ -26,22 +37,31 @@ public:
 
     void dndAction(KWaylandServer::DataDeviceManagerInterface::DnDAction action) override;
 
-    KWaylandServer::DataDeviceManagerInterface::DnDAction selectedDragAndDropAction() {
+    KWaylandServer::DataDeviceManagerInterface::DnDAction selectedDragAndDropAction()
+    {
         return m_dndAction;
     }
 
-    void dropPerformed() override {
+    void dropPerformed() override
+    {
         Q_EMIT dropped();
     }
-    void dndFinished() override {
+    void dndFinished() override
+    {
         Q_EMIT finished();
     }
+    void dndCancelled() override
+    {
+        Q_EMIT cancelled();
+    }
+
     bool isAccepted() const override;
 
 Q_SIGNALS:
     void dataRequested(const QString &mimeType, qint32 fd);
     void dropped();
     void finished();
+    void cancelled();
 
 private:
     QStringList m_mimeTypes;

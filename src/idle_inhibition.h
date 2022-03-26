@@ -9,9 +9,9 @@
 */
 #pragma once
 
+#include <QMap>
 #include <QObject>
 #include <QVector>
-#include <QMap>
 
 namespace KWaylandServer
 {
@@ -33,10 +33,12 @@ public:
 
     void registerClient(AbstractClient *client);
 
-    bool isInhibited() const {
+    bool isInhibited() const
+    {
         return !m_idleInhibitors.isEmpty();
     }
-    bool isInhibited(AbstractClient *client) const {
+    bool isInhibited(AbstractClient *client) const
+    {
         return m_idleInhibitors.contains(client);
     }
 

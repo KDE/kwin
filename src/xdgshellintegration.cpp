@@ -47,7 +47,9 @@ void XdgShellIntegration::registerXdgToplevel(XdgToplevelInterface *toplevel)
     // we don't want too loose any client requests that are allowed to be sent prior to
     // the first initial commit, e.g. set_maximized or set_fullscreen.
     connect(toplevel, &XdgToplevelInterface::resetOccurred,
-            this, [this, toplevel] { createXdgToplevelClient(toplevel); });
+            this, [this, toplevel] {
+                createXdgToplevelClient(toplevel);
+            });
 
     createXdgToplevelClient(toplevel);
 }
@@ -56,7 +58,7 @@ void XdgShellIntegration::createXdgToplevelClient(XdgToplevelInterface *toplevel
 {
     if (!workspace()) {
         qCWarning(KWIN_CORE, "An xdg-toplevel surface has been created while the compositor "
-                  "is still not fully initialized. That is a compositor bug!");
+                             "is still not fully initialized. That is a compositor bug!");
         return;
     }
 
@@ -67,7 +69,7 @@ void XdgShellIntegration::registerXdgPopup(XdgPopupInterface *popup)
 {
     if (!workspace()) {
         qCWarning(KWIN_CORE, "An xdg-popup surface has been created while the compositor is "
-                  "still not fully initialized. That is a compositor bug!");
+                             "still not fully initialized. That is a compositor bug!");
         return;
     }
 

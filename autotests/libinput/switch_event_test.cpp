@@ -8,8 +8,8 @@
 */
 #include "mock_libinput.h"
 
-#include "libinput/device.h"
-#include "libinput/events.h"
+#include "backends/libinput/device.h"
+#include "backends/libinput/events.h"
 
 #include <QtTest>
 
@@ -75,7 +75,7 @@ void TestLibinputSwitchEvent::testToggled()
     nativeEvent->timeMicroseconds = 23456789;
 
     QScopedPointer<Event> event(Event::create(nativeEvent));
-    auto se = dynamic_cast<SwitchEvent*>(event.data());
+    auto se = dynamic_cast<SwitchEvent *>(event.data());
     QVERIFY(se);
     QCOMPARE(se->device(), m_device.get());
     QCOMPARE(se->nativeDevice(), m_nativeDevice.get());

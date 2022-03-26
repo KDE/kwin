@@ -7,13 +7,13 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
+
 #include "abstract_output.h"
-#include "platform.h"
 #include "cursor.h"
 #include "deleted.h"
 #include "effects.h"
 #include "internal_client.h"
-#include "screens.h"
+#include "platform.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -21,8 +21,8 @@
 #include <QRasterWindow>
 
 #include <KWayland/Client/keyboard.h>
-#include <KWayland/Client/surface.h>
 #include <KWayland/Client/seat.h>
+#include <KWayland/Client/surface.h>
 #include <KWindowSystem>
 
 #include <KWaylandServer/surface_interface.h>
@@ -77,10 +77,12 @@ public:
     HelperWindow();
     ~HelperWindow() override;
 
-    QPoint latestGlobalMousePos() const {
+    QPoint latestGlobalMousePos() const
+    {
         return m_latestGlobalMousePos;
     }
-    Qt::MouseButtons pressedButtons() const {
+    Qt::MouseButtons pressedButtons() const
+    {
         return m_pressedButtons;
     }
 
@@ -224,7 +226,7 @@ void InternalWindowTest::testEnterLeave()
     QVERIFY(!c->isDecorated());
     QCOMPARE(workspace()->findInternal(&win), c);
     QCOMPARE(c->frameGeometry(), QRect(0, 0, 100, 100));
-    QVERIFY(c->isShown(false));
+    QVERIFY(c->isShown());
     QVERIFY(workspace()->stackingOrder().contains(c));
 
     QSignalSpy enterSpy(&win, &HelperWindow::entered);
@@ -235,24 +237,24 @@ void InternalWindowTest::testEnterLeave()
     QVERIFY(moveSpy.isValid());
 
     quint32 timestamp = 1;
-    kwinApp()->platform()->pointerMotion(QPoint(50, 50), timestamp++);
+    Test::pointerMotion(QPoint(50, 50), timestamp++);
     QTRY_COMPARE(moveSpy.count(), 1);
 
-    kwinApp()->platform()->pointerMotion(QPoint(60, 50), timestamp++);
+    Test::pointerMotion(QPoint(60, 50), timestamp++);
     QTRY_COMPARE(moveSpy.count(), 2);
     QCOMPARE(moveSpy[1].first().toPoint(), QPoint(60, 50));
 
-    kwinApp()->platform()->pointerMotion(QPoint(101, 50), timestamp++);
+    Test::pointerMotion(QPoint(101, 50), timestamp++);
     QTRY_COMPARE(leaveSpy.count(), 1);
 
     // set a mask on the window
     win.setMask(QRegion(10, 20, 30, 40));
     // outside the mask we should not get an enter
-    kwinApp()->platform()->pointerMotion(QPoint(5, 5), timestamp++);
+    Test::pointerMotion(QPoint(5, 5), timestamp++);
     QVERIFY(!enterSpy.wait(100));
     QCOMPARE(enterSpy.count(), 1);
     // inside the mask we should still get an enter
-    kwinApp()->platform()->pointerMotion(QPoint(25, 27), timestamp++);
+    Test::pointerMotion(QPoint(25, 27), timestamp++);
     QTRY_COMPARE(enterSpy.count(), 2);
 }
 
@@ -271,11 +273,11 @@ void InternalWindowTest::testPointerPressRelease()
     QTRY_COMPARE(clientAddedSpy.count(), 1);
 
     quint32 timestamp = 1;
-    kwinApp()->platform()->pointerMotion(QPoint(50, 50), timestamp++);
+    Test::pointerMotion(QPoint(50, 50), timestamp++);
 
-    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
     QTRY_COMPARE(pressSpy.count(), 1);
-    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     QTRY_COMPARE(releaseSpy.count(), 1);
 }
 
@@ -291,11 +293,11 @@ void InternalWindowTest::testPointerAxis()
     QTRY_COMPARE(clientAddedSpy.count(), 1);
 
     quint32 timestamp = 1;
-    kwinApp()->platform()->pointerMotion(QPoint(50, 50), timestamp++);
+    Test::pointerMotion(QPoint(50, 50), timestamp++);
 
-    kwinApp()->platform()->pointerAxisVertical(5.0, timestamp++);
+    Test::pointerAxisVertical(5.0, timestamp++);
     QTRY_COMPARE(wheelSpy.count(), 1);
-    kwinApp()->platform()->pointerAxisHorizontal(5.0, timestamp++);
+    Test::pointerAxisHorizontal(5.0, timestamp++);
     QTRY_COMPARE(wheelSpy.count(), 2);
 }
 
@@ -326,12 +328,12 @@ void InternalWindowTest::testKeyboard()
 
     quint32 timestamp = 1;
     QFETCH(QPoint, cursorPos);
-    kwinApp()->platform()->pointerMotion(cursorPos, timestamp++);
+    Test::pointerMotion(cursorPos, timestamp++);
 
-    kwinApp()->platform()->keyboardKeyPressed(KEY_A, timestamp++);
+    Test::keyboardKeyPressed(KEY_A, timestamp++);
     QTRY_COMPARE(pressSpy.count(), 1);
     QCOMPARE(releaseSpy.count(), 0);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_A, timestamp++);
+    Test::keyboardKeyReleased(KEY_A, timestamp++);
     QTRY_COMPARE(releaseSpy.count(), 1);
     QCOMPARE(pressSpy.count(), 1);
 }
@@ -356,13 +358,13 @@ void InternalWindowTest::testKeyboardShowWithoutActivating()
 
     quint32 timestamp = 1;
     const QPoint cursorPos = QPoint(50, 50);
-    kwinApp()->platform()->pointerMotion(cursorPos, timestamp++);
+    Test::pointerMotion(cursorPos, timestamp++);
 
-    kwinApp()->platform()->keyboardKeyPressed(KEY_A, timestamp++);
+    Test::keyboardKeyPressed(KEY_A, timestamp++);
     QCOMPARE(pressSpy.count(), 0);
     QVERIFY(!pressSpy.wait(100));
     QCOMPARE(releaseSpy.count(), 0);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_A, timestamp++);
+    Test::keyboardKeyReleased(KEY_A, timestamp++);
     QCOMPARE(releaseSpy.count(), 0);
     QVERIFY(!releaseSpy.wait(100));
     QCOMPARE(pressSpy.count(), 0);
@@ -414,18 +416,18 @@ void InternalWindowTest::testKeyboardTriggersLeave()
 
     // now let's trigger a key, which should result in a leave
     quint32 timestamp = 1;
-    kwinApp()->platform()->keyboardKeyPressed(KEY_A, timestamp++);
+    Test::keyboardKeyPressed(KEY_A, timestamp++);
     QVERIFY(leftSpy.wait());
     QCOMPARE(pressSpy.count(), 1);
 
-    kwinApp()->platform()->keyboardKeyReleased(KEY_A, timestamp++);
+    Test::keyboardKeyReleased(KEY_A, timestamp++);
     QTRY_COMPARE(releaseSpy.count(), 1);
 
     // after hiding the internal window, next key press should trigger an enter
     win.hide();
-    kwinApp()->platform()->keyboardKeyPressed(KEY_A, timestamp++);
+    Test::keyboardKeyPressed(KEY_A, timestamp++);
     QVERIFY(enteredSpy.wait());
-    kwinApp()->platform()->keyboardKeyReleased(KEY_A, timestamp++);
+    Test::keyboardKeyReleased(KEY_A, timestamp++);
 
     // Destroy the test client.
     shellSurface.reset();
@@ -451,46 +453,46 @@ void InternalWindowTest::testTouch()
 
     quint32 timestamp = 1;
     QCOMPARE(win.pressedButtons(), Qt::MouseButtons());
-    kwinApp()->platform()->touchDown(0, QPointF(50, 50), timestamp++);
+    Test::touchDown(0, QPointF(50, 50), timestamp++);
     QCOMPARE(pressSpy.count(), 1);
     QCOMPARE(win.latestGlobalMousePos(), QPoint(50, 50));
     QCOMPARE(win.pressedButtons(), Qt::MouseButtons(Qt::LeftButton));
 
     // further touch down should not trigger
-    kwinApp()->platform()->touchDown(1, QPointF(75, 75), timestamp++);
+    Test::touchDown(1, QPointF(75, 75), timestamp++);
     QCOMPARE(pressSpy.count(), 1);
-    kwinApp()->platform()->touchUp(1, timestamp++);
+    Test::touchUp(1, timestamp++);
     QCOMPARE(releaseSpy.count(), 0);
     QCOMPARE(win.latestGlobalMousePos(), QPoint(50, 50));
     QCOMPARE(win.pressedButtons(), Qt::MouseButtons(Qt::LeftButton));
 
     // another press
-    kwinApp()->platform()->touchDown(1, QPointF(10, 10), timestamp++);
+    Test::touchDown(1, QPointF(10, 10), timestamp++);
     QCOMPARE(pressSpy.count(), 1);
     QCOMPARE(win.latestGlobalMousePos(), QPoint(50, 50));
     QCOMPARE(win.pressedButtons(), Qt::MouseButtons(Qt::LeftButton));
 
     // simulate the move
     QCOMPARE(moveSpy.count(), 0);
-    kwinApp()->platform()->touchMotion(0, QPointF(80, 90), timestamp++);
+    Test::touchMotion(0, QPointF(80, 90), timestamp++);
     QCOMPARE(moveSpy.count(), 1);
     QCOMPARE(win.latestGlobalMousePos(), QPoint(80, 90));
     QCOMPARE(win.pressedButtons(), Qt::MouseButtons(Qt::LeftButton));
 
     // move on other ID should not do anything
-    kwinApp()->platform()->touchMotion(1, QPointF(20, 30), timestamp++);
+    Test::touchMotion(1, QPointF(20, 30), timestamp++);
     QCOMPARE(moveSpy.count(), 1);
     QCOMPARE(win.latestGlobalMousePos(), QPoint(80, 90));
     QCOMPARE(win.pressedButtons(), Qt::MouseButtons(Qt::LeftButton));
 
     // now up our main point
-    kwinApp()->platform()->touchUp(0, timestamp++);
+    Test::touchUp(0, timestamp++);
     QCOMPARE(releaseSpy.count(), 1);
     QCOMPARE(win.latestGlobalMousePos(), QPoint(80, 90));
     QCOMPARE(win.pressedButtons(), Qt::MouseButtons());
 
     // and up the additional point
-    kwinApp()->platform()->touchUp(1, timestamp++);
+    Test::touchUp(1, timestamp++);
     QCOMPARE(releaseSpy.count(), 1);
     QCOMPARE(moveSpy.count(), 1);
     QCOMPARE(win.latestGlobalMousePos(), QPoint(80, 90));
@@ -614,15 +616,15 @@ void InternalWindowTest::testModifierClickUnrestrictedMove()
 
     // simulate modifier+click
     quint32 timestamp = 1;
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
     QVERIFY(!internalClient->isInteractiveMove());
-    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(internalClient->isInteractiveMove());
     // release modifier should not change it
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
     QVERIFY(internalClient->isInteractiveMove());
     // but releasing the key should end move/resize
-    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     QVERIFY(!internalClient->isInteractiveMove());
 }
 
@@ -652,12 +654,12 @@ void InternalWindowTest::testModifierScroll()
     internalClient->setOpacity(0.5);
     QCOMPARE(internalClient->opacity(), 0.5);
     quint32 timestamp = 1;
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
-    kwinApp()->platform()->pointerAxisVertical(-5, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
+    Test::pointerAxisVertical(-5, timestamp++);
     QCOMPARE(internalClient->opacity(), 0.6);
-    kwinApp()->platform()->pointerAxisVertical(5, timestamp++);
+    Test::pointerAxisVertical(5, timestamp++);
     QCOMPARE(internalClient->opacity(), 0.5);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
 }
 
 void InternalWindowTest::testPopup()
@@ -677,9 +679,9 @@ void InternalWindowTest::testPopup()
 void InternalWindowTest::testScale()
 {
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection,
-        Q_ARG(int, 2),
-        Q_ARG(QVector<QRect>, QVector<QRect>({QRect(0,0,1280, 1024), QRect(1280/2, 0, 1280, 1024)})),
-        Q_ARG(QVector<int>, QVector<int>({2,2})));
+                              Q_ARG(int, 2),
+                              Q_ARG(QVector<QRect>, QVector<QRect>({QRect(0, 0, 1280, 1024), QRect(1280 / 2, 0, 1280, 1024)})),
+                              Q_ARG(QVector<int>, QVector<int>({2, 2})));
 
     QSignalSpy clientAddedSpy(workspace(), &Workspace::internalClientAdded);
     QVERIFY(clientAddedSpy.isValid());
@@ -839,7 +841,7 @@ void InternalWindowTest::testDismissPopup()
     auto serverPopup = clientAddedSpy.last().first().value<InternalClient *>();
     QVERIFY(serverPopup);
 
-    //Create the other window to click
+    // Create the other window to click
     HelperWindow otherClientToplevel;
     otherClientToplevel.setGeometry(100, 100, 100, 100);
     otherClientToplevel.show();
@@ -850,9 +852,8 @@ void InternalWindowTest::testDismissPopup()
     // Click somewhere outside the popup window.
     QSignalSpy popupClosedSpy(serverPopup, &InternalClient::windowClosed);
     quint32 timestamp = 0;
-    kwinApp()->platform()->pointerMotion(serverOtherToplevel->frameGeometry().center(),
-                                         timestamp++);
-    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    Test::pointerMotion(serverOtherToplevel->frameGeometry().center(), timestamp++);
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
     QTRY_COMPARE(popupClosedSpy.count(), 1);
 }
 

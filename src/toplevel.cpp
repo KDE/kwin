@@ -10,7 +10,7 @@
 
 #include "abstract_client.h"
 #include "abstract_output.h"
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
 #include "atoms.h"
@@ -103,7 +103,7 @@ void Toplevel::detectShape(xcb_window_t id)
 }
 
 // used only by Deleted::copy()
-void Toplevel::copyToDeleted(Toplevel* c)
+void Toplevel::copyToDeleted(Toplevel *c)
 {
     m_internalId = c->internalId();
     m_bufferGeometry = c->m_bufferGeometry;
@@ -240,7 +240,7 @@ void Toplevel::getResourceClass()
 
 void Toplevel::setResourceClass(const QByteArray &name, const QByteArray &className)
 {
-    resource_name  = name;
+    resource_name = name;
     resource_class = className;
     Q_EMIT windowClassChanged();
 }
@@ -342,17 +342,17 @@ void Toplevel::addWorkspaceRepaint(int x, int y, int w, int h)
     addWorkspaceRepaint(QRect(x, y, w, h));
 }
 
-void Toplevel::addWorkspaceRepaint(const QRect& r2)
+void Toplevel::addWorkspaceRepaint(const QRect &r2)
 {
-    if (!Compositor::compositing())
-        return;
-    Compositor::self()->addRepaint(r2);
+    if (Compositor::compositing()) {
+        Compositor::self()->scene()->addRepaint(r2);
+    }
 }
 
 void Toplevel::addWorkspaceRepaint(const QRegion &region)
 {
     if (Compositor::compositing()) {
-        Compositor::self()->addRepaint(region);
+        Compositor::self()->scene()->addRepaint(region);
     }
 }
 
@@ -411,22 +411,6 @@ void Toplevel::setOutput(AbstractOutput *output)
         m_output = output;
         Q_EMIT screenChanged();
     }
-
-    qreal newScale = m_output->scale();
-    if (newScale != m_screenScale) {
-        m_screenScale = newScale;
-        Q_EMIT screenScaleChanged();
-    }
-}
-
-qreal Toplevel::screenScale() const
-{
-    return m_screenScale;
-}
-
-qreal Toplevel::bufferScale() const
-{
-    return surface() ? surface()->bufferScale() : 1;
 }
 
 bool Toplevel::isOnActiveOutput() const
@@ -507,8 +491,8 @@ QRegion Toplevel::shapeRegion() const
     const QRect bufferGeometry = this->bufferGeometry();
 
     if (shape()) {
-        auto cookie = xcb_shape_get_rectangles_unchecked(connection(), frameId(), XCB_SHAPE_SK_BOUNDING);
-        ScopedCPointer<xcb_shape_get_rectangles_reply_t> reply(xcb_shape_get_rectangles_reply(connection(), cookie, nullptr));
+        auto cookie = xcb_shape_get_rectangles_unchecked(kwinApp()->x11Connection(), frameId(), XCB_SHAPE_SK_BOUNDING);
+        ScopedCPointer<xcb_shape_get_rectangles_reply_t> reply(xcb_shape_get_rectangles_reply(kwinApp()->x11Connection(), cookie, nullptr));
         if (!reply.isNull()) {
             m_shapeRegion = QRegion();
             const xcb_rectangle_t *rects = xcb_shape_get_rectangles_rectangles(reply.data());
@@ -547,7 +531,7 @@ bool Toplevel::isDeleted() const
 
 bool Toplevel::isOnCurrentActivity() const
 {
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     if (!Activities::self()) {
         return true;
     }
@@ -609,17 +593,18 @@ void Toplevel::setSkipCloseAnimation(bool set)
     Q_EMIT skipCloseAnimationChanged();
 }
 
+KWaylandServer::SurfaceInterface *Toplevel::surface() const
+{
+    return m_surface;
+}
+
 void Toplevel::setSurface(KWaylandServer::SurfaceInterface *surface)
 {
     if (m_surface == surface) {
         return;
     }
     m_surface = surface;
-    connect(m_surface, &KWaylandServer::SurfaceInterface::destroyed, this, [this]() {
-        m_surface = nullptr;
-        m_surfaceId = 0;
-    });
-    m_surfaceId = surface->id();
+    m_pendingSurfaceId = 0;
     Q_EMIT surfaceChanged();
 }
 
@@ -736,3 +721,4 @@ bool Toplevel::isOnCurrentDesktop() const
 
 } // namespace
 
+#include "moc_toplevel.cpp"

@@ -39,6 +39,7 @@ public:
     ~TabletInputRedirection() override;
 
     void tabletPad();
+    bool focusUpdatesBlocked() override;
 
     void tabletToolEvent(KWin::InputRedirection::TabletEventType type, const QPointF &pos,
                          qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
@@ -64,13 +65,14 @@ public:
 private:
     void cleanupDecoration(Decoration::DecoratedClientImpl *old,
                            Decoration::DecoratedClientImpl *now) override;
-    void cleanupInternalWindow(QWindow *old, QWindow *now) override;
-    void focusUpdate(KWin::Toplevel *old, KWin::Toplevel *now) override;
+    void focusUpdate(Toplevel *focusOld, Toplevel *focusNow) override;
 
     bool m_tipDown = false;
     bool m_tipNear = false;
 
     QPointF m_lastPosition;
+    QMetaObject::Connection m_decorationGeometryConnection;
+    QMetaObject::Connection m_decorationDestroyedConnection;
 };
 
 }

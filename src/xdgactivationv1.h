@@ -30,7 +30,8 @@ class KWIN_EXPORT XdgActivationV1Integration : public QObject
 public:
     XdgActivationV1Integration(KWaylandServer::XdgActivationV1Interface *activation, QObject *parent);
 
-    struct ActivationToken {
+    struct ActivationToken
+    {
         ~ActivationToken();
 
         const QString token;

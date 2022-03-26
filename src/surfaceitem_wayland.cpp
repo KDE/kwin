@@ -139,7 +139,7 @@ SurfacePixmap *SurfaceItemWayland::createPixmap()
 }
 
 SurfacePixmapWayland::SurfacePixmapWayland(SurfaceItemWayland *item, QObject *parent)
-    : SurfacePixmap(Compositor::self()->scene()->createPlatformSurfaceTextureWayland(this), parent)
+    : SurfacePixmap(Compositor::self()->scene()->createSurfaceTextureWayland(this), parent)
     , m_item(item)
 {
 }

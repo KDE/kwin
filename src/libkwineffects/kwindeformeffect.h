@@ -38,7 +38,7 @@ public:
     static bool supported();
 
 private:
-    void drawWindow(EffectWindow *window, int mask, const QRegion& region, WindowPaintData &data) override;
+    void drawWindow(EffectWindow *window, int mask, const QRegion &region, WindowPaintData &data) override;
 
 protected:
     /**

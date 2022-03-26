@@ -13,12 +13,13 @@
 #include <QTimeZone>
 #include <QtMath>
 
-namespace KWin {
+namespace KWin
+{
 
-#define TWILIGHT_NAUT       -12.0
-#define TWILIGHT_CIVIL       -6.0
-#define SUN_RISE_SET         -0.833
-#define SUN_HIGH              2.0
+#define TWILIGHT_NAUT -12.0
+#define TWILIGHT_CIVIL -6.0
+#define SUN_RISE_SET -0.833
+#define SUN_HIGH 2.0
 
 static QTime convertToLocalTime(const QDateTime &when, const QTime &utcTime)
 {
@@ -36,13 +37,13 @@ QPair<QDateTime, QDateTime> calculateSunTimings(const QDateTime &dateTime, doubl
     const double rad = M_PI / 180.;
     const double earthObliquity = 23.4397; // epsilon
 
-    const double lat = latitude;    // phi
-    const double lng = -longitude;  // lw
+    const double lat = latitude; // phi
+    const double lng = -longitude; // lw
 
     // times
     const QDateTime utcDateTime = dateTime.toUTC();
-    const double juPrompt = utcDateTime.date().toJulianDay();   // J
-    const double ju2000 = 2451545.;                 // J2000
+    const double juPrompt = utcDateTime.date().toJulianDay(); // J
+    const double ju2000 = 2451545.; // J2000
 
     // geometry
     auto mod360 = [](double number) -> double {
@@ -90,7 +91,7 @@ QPair<QDateTime, QDateTime> calculateSunTimings(const QDateTime &dateTime, doubl
         const double decl = declination(date);
         const double ret0 = (sin(angle) - sin(lat) * sin(decl)) / (cos(lat) * cos(decl));
 
-        double ret = mod360(acos( ret0 ));
+        double ret = mod360(acos(ret0));
         if (180. < ret) {
             ret = ret - 360.;
         }
@@ -102,11 +103,11 @@ QPair<QDateTime, QDateTime> calculateSunTimings(const QDateTime &dateTime, doubl
      */
 
     // transit is at noon
-    auto getTransit = [&](const double date) -> double {  // Jtransit
-        const double juMeanSolTime = juPrompt - ju2000 - 0.0009 - lng / 360.;       // n_x = J - J_2000 - J_0 - l_w / 360°
+    auto getTransit = [&](const double date) -> double { // Jtransit
+        const double juMeanSolTime = juPrompt - ju2000 - 0.0009 - lng / 360.; // n_x = J - J_2000 - J_0 - l_w / 360°
         const double juTrEstimate = date + qRound64(juMeanSolTime) - juMeanSolTime; // J_x = J + n - n_x
-        const double anom = anomaly(juTrEstimate);                                  // M
-        const double eclLngM = ecliptLngMean(anom);                                 // L_sun
+        const double anom = anomaly(juTrEstimate); // M
+        const double eclLngM = ecliptLngMean(anom); // L_sun
 
         return juTrEstimate + 0.0053 * sin(anom) - 0.0068 * sin(2 * eclLngM);
     };
@@ -155,7 +156,7 @@ QPair<QDateTime, QDateTime> calculateSunTimings(const QDateTime &dateTime, doubl
         dateTimeEnd = QDateTime(dateTime.date(), localTime);
     }
 
-    return { dateTimeBegin, dateTimeEnd };
+    return {dateTimeBegin, dateTimeEnd};
 }
 
 }

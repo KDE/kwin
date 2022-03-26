@@ -13,17 +13,17 @@
 #include <KPluginMetaData>
 #include <KSharedConfig>
 // Qt
-#include <QObject>
 #include <QFlags>
 #include <QMap>
+#include <QObject>
 #include <QPair>
 #include <QQueue>
+#include <QStaticPlugin>
 
 namespace KWin
 {
 class Effect;
 class EffectPluginFactory;
-enum class BuiltInEffect;
 
 /**
  * @brief Flags defining how a Loader should load an Effect.
@@ -187,7 +187,7 @@ private:
     KSharedConfig::Ptr m_config;
 };
 
-template <typename Loader, typename QueueType>
+template<typename Loader, typename QueueType>
 class EffectLoadQueue;
 /**
  * @brief Helper class to queue the loading of Effects.
@@ -212,17 +212,17 @@ class AbstractEffectLoadQueue : public QObject
 public:
     explicit AbstractEffectLoadQueue(QObject *parent = nullptr)
         : QObject(parent)
-        {
-        }
+    {
+    }
 protected Q_SLOTS:
     virtual void dequeue() = 0;
 
 private:
-    template <typename Loader, typename QueueType>
+    template<typename Loader, typename QueueType>
     friend class EffectLoadQueue;
 };
 
-template <typename Loader, typename QueueType>
+template<typename Loader, typename QueueType>
 class EffectLoadQueue : public AbstractEffectLoadQueue
 {
 public:
@@ -242,6 +242,7 @@ public:
         m_queue.clear();
         m_dequeueScheduled = false;
     }
+
 protected:
     void dequeue() override
     {
@@ -253,6 +254,7 @@ protected:
         m_effectLoader->loadEffect(pair.first, pair.second);
         scheduleDequeue();
     }
+
 private:
     void scheduleDequeue()
     {
@@ -268,39 +270,13 @@ private:
 };
 
 /**
- * @brief Can load the Built-In-Effects
- */
-class BuiltInEffectLoader : public AbstractEffectLoader
-{
-    Q_OBJECT
-public:
-    explicit BuiltInEffectLoader(QObject *parent = nullptr);
-    ~BuiltInEffectLoader() override;
-
-    bool hasEffect(const QString &name) const override;
-    bool isEffectSupported(const QString &name) const override;
-    QStringList listOfKnownEffects() const override;
-
-    void clear() override;
-    void queryAndLoadAll() override;
-    bool loadEffect(const QString& name) override;
-    bool loadEffect(BuiltInEffect effect, LoadEffectFlags flags);
-
-private:
-    bool loadEffect(const QString &name, BuiltInEffect effect, LoadEffectFlags flags);
-    QString internalName(const QString &name) const;
-    EffectLoadQueue<BuiltInEffectLoader, BuiltInEffect> *m_queue;
-    QMap<BuiltInEffect, Effect*> m_loadedEffects;
-};
-
-/**
  * @brief Can load scripted Effects
  */
 class KWIN_EXPORT ScriptedEffectLoader : public AbstractEffectLoader
 {
     Q_OBJECT
 public:
-    explicit ScriptedEffectLoader(QObject* parent = nullptr);
+    explicit ScriptedEffectLoader(QObject *parent = nullptr);
     ~ScriptedEffectLoader() override;
 
     bool hasEffect(const QString &name) const override;
@@ -316,7 +292,7 @@ private:
     QList<KPluginMetaData> findAllEffects() const;
     KPluginMetaData findEffect(const QString &name) const;
     QStringList m_loadedEffects;
-    EffectLoadQueue< ScriptedEffectLoader, KPluginMetaData > *m_queue;
+    EffectLoadQueue<ScriptedEffectLoader, KPluginMetaData> *m_queue;
     QMetaObject::Connection m_queryConnection;
 };
 
@@ -343,12 +319,10 @@ private:
     KPluginMetaData findEffect(const QString &name) const;
     EffectPluginFactory *factory(const KPluginMetaData &info) const;
     QStringList m_loadedEffects;
-    EffectLoadQueue< PluginEffectLoader, KPluginMetaData> *m_queue;
     QString m_pluginSubDirectory;
-    QMetaObject::Connection m_queryConnection;
 };
 
-class EffectLoader : public AbstractEffectLoader
+class KWIN_EXPORT EffectLoader : public AbstractEffectLoader
 {
     Q_OBJECT
 public:
@@ -363,7 +337,7 @@ public:
     void clear() override;
 
 private:
-    QList<AbstractEffectLoader*> m_loaders;
+    QList<AbstractEffectLoader *> m_loaders;
 };
 
 }

@@ -9,7 +9,7 @@
 #ifndef KWIN_SCENE_QPAINTER_BACKEND_H
 #define KWIN_SCENE_QPAINTER_BACKEND_H
 
-#include <QObject>
+#include "renderbackend.h"
 
 class QImage;
 class QRegion;
@@ -19,23 +19,23 @@ class QString;
 namespace KWin
 {
 
-class PlatformSurfaceTexture;
 class SurfacePixmapInternal;
 class SurfacePixmapWayland;
+class SurfaceTexture;
 class AbstractOutput;
 
-class QPainterBackend : public QObject
+class KWIN_EXPORT QPainterBackend : public RenderBackend
 {
     Q_OBJECT
 
 public:
     virtual ~QPainterBackend();
 
-    PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap);
-    PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
+    CompositingType compositingType() const override final;
 
-    virtual void endFrame(AbstractOutput *output, const QRegion &damage) = 0;
-    virtual QRegion beginFrame(AbstractOutput *output) = 0;
+    SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap);
+    SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
+
     /**
      * @brief Whether the creation of the Backend failed.
      *
@@ -44,15 +44,10 @@ public:
      *
      * @return bool @c true if the creation of the Backend failed, @c false otherwise.
      */
-    bool isFailed() const {
+    bool isFailed() const
+    {
         return m_failed;
     }
-    /**
-     * Overload for the case that there is a different buffer per screen.
-     * Default implementation just calls buffer.
-     * @param screenId The id of the screen as used in Screens
-     * @todo Get a better identifier for screen then a counter variable
-     */
     virtual QImage *bufferForScreen(AbstractOutput *output) = 0;
 
 protected:

@@ -5,7 +5,7 @@
 */
 
 #include "session_consolekit.h"
-#include "utils.h"
+#include "utils/common.h"
 
 #include <QCoreApplication>
 #include <QDBusConnection>
@@ -21,7 +21,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#if HAVE_SYS_SYSMACROS_H
+#if __has_include(<sys/sysmacros.h>)
 #include <sys/sysmacros.h>
 #endif
 
@@ -66,7 +66,7 @@ static QString findProcessSessionPath()
     QDBusMessage message = QDBusMessage::createMethodCall(s_serviceName, s_managerPath,
                                                           s_managerInterface,
                                                           QStringLiteral("GetSessionByPID"));
-    message.setArguments({ uint32_t(QCoreApplication::applicationPid()) });
+    message.setArguments({uint32_t(QCoreApplication::applicationPid())});
 
     const QDBusMessage reply = QDBusConnection::systemBus().call(message);
     if (reply.type() == QDBusMessage::ErrorMessage) {
@@ -81,7 +81,7 @@ static bool takeControl(const QString &sessionPath)
     QDBusMessage message = QDBusMessage::createMethodCall(s_serviceName, sessionPath,
                                                           s_sessionInterface,
                                                           QStringLiteral("TakeControl"));
-    message.setArguments({ false });
+    message.setArguments({false});
 
     const QDBusMessage reply = QDBusConnection::systemBus().call(message);
 
@@ -213,7 +213,7 @@ void ConsoleKitSession::switchTo(uint terminal)
     QDBusMessage message = QDBusMessage::createMethodCall(s_serviceName, m_seatPath,
                                                           s_seatInterface,
                                                           QStringLiteral("SwitchTo"));
-    message.setArguments({ terminal });
+    message.setArguments({terminal});
 
     QDBusConnection::systemBus().asyncCall(message);
 }
@@ -235,24 +235,24 @@ bool ConsoleKitSession::initialize()
     QDBusMessage activeMessage = QDBusMessage::createMethodCall(s_serviceName, m_sessionPath,
                                                                 s_propertiesInterface,
                                                                 QStringLiteral("Get"));
-    activeMessage.setArguments({ s_sessionInterface, QStringLiteral("active") });
+    activeMessage.setArguments({s_sessionInterface, QStringLiteral("active")});
 
     QDBusMessage seatMessage = QDBusMessage::createMethodCall(s_serviceName, m_sessionPath,
                                                               s_propertiesInterface,
                                                               QStringLiteral("Get"));
-    seatMessage.setArguments({ s_sessionInterface, QStringLiteral("Seat") });
+    seatMessage.setArguments({s_sessionInterface, QStringLiteral("Seat")});
 
     QDBusMessage terminalMessage = QDBusMessage::createMethodCall(s_serviceName, m_sessionPath,
                                                                   s_propertiesInterface,
                                                                   QStringLiteral("Get"));
-    terminalMessage.setArguments({ s_sessionInterface, QStringLiteral("VTNr") });
+    terminalMessage.setArguments({s_sessionInterface, QStringLiteral("VTNr")});
 
     QDBusPendingReply<QVariant> activeReply =
-            QDBusConnection::systemBus().asyncCall(activeMessage);
+        QDBusConnection::systemBus().asyncCall(activeMessage);
     QDBusPendingReply<QVariant> terminalReply =
-            QDBusConnection::systemBus().asyncCall(terminalMessage);
+        QDBusConnection::systemBus().asyncCall(terminalMessage);
     QDBusPendingReply<QVariant> seatReply =
-            QDBusConnection::systemBus().asyncCall(seatMessage);
+        QDBusConnection::systemBus().asyncCall(seatMessage);
 
     // We must wait until all replies have been received because the drm backend needs a
     // valid seat name to properly select gpu devices, this also simplifies startup code.
@@ -290,6 +290,11 @@ bool ConsoleKitSession::initialize()
                                          this,
                                          SLOT(handlePauseDevice(uint, uint, QString)));
 
+    QDBusConnection::systemBus().connect(s_serviceName, m_sessionPath, s_sessionInterface,
+                                         QStringLiteral("ResumeDevice"),
+                                         this,
+                                         SLOT(handleResumeDevice(uint, uint, QDBusUnixFileDescriptor)));
+
     QDBusConnection::systemBus().connect(s_serviceName, m_sessionPath, s_propertiesInterface,
                                          QStringLiteral("PropertiesChanged"),
                                          this,
@@ -308,14 +313,25 @@ void ConsoleKitSession::updateActive(bool active)
 
 void ConsoleKitSession::handlePauseDevice(uint major, uint minor, const QString &type)
 {
+    Q_EMIT devicePaused(makedev(major, minor));
+
     if (type == QLatin1String("pause")) {
         QDBusMessage message = QDBusMessage::createMethodCall(s_serviceName, m_sessionPath,
                                                               s_sessionInterface,
                                                               QStringLiteral("PauseDeviceComplete"));
-        message.setArguments({ major, minor });
+        message.setArguments({major, minor});
 
         QDBusConnection::systemBus().asyncCall(message);
     }
+}
+
+void ConsoleKitSession::handleResumeDevice(uint major, uint minor, QDBusUnixFileDescriptor fileDescriptor)
+{
+    // We don't care about the file descriptor as the libinput backend will re-open input devices
+    // and the drm file descriptors remain valid after pausing gpus.
+    Q_UNUSED(fileDescriptor)
+
+    Q_EMIT deviceResumed(makedev(major, minor));
 }
 
 void ConsoleKitSession::handlePropertiesChanged(const QString &interfaceName, const QVariantMap &properties)

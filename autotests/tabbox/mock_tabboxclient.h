@@ -20,39 +20,50 @@ class MockTabBoxClient : public TabBox::TabBoxClient
 {
 public:
     explicit MockTabBoxClient(QString caption);
-    bool isMinimized() const override {
+    bool isMinimized() const override
+    {
         return false;
     }
-    QString caption() const override {
+    QString caption() const override
+    {
         return m_caption;
     }
     void close() override;
-    int height() const override {
+    int height() const override
+    {
         return 100;
     }
-    virtual QPixmap icon(const QSize &size = QSize(32, 32)) const {
+    virtual QPixmap icon(const QSize &size = QSize(32, 32)) const
+    {
         return QPixmap(size);
     }
-    bool isCloseable() const override {
+    bool isCloseable() const override
+    {
         return true;
     }
-    bool isFirstInTabBox() const override {
+    bool isFirstInTabBox() const override
+    {
         return false;
     }
-    int width() const override {
+    int width() const override
+    {
         return 100;
     }
-    int x() const override {
+    int x() const override
+    {
         return 0;
     }
-    int y() const override {
+    int y() const override
+    {
         return 0;
     }
-    QIcon icon() const override {
+    QIcon icon() const override
+    {
         return QIcon();
     }
 
-    QUuid internalId() const override {
+    QUuid internalId() const override
+    {
         return QUuid{};
     }
 

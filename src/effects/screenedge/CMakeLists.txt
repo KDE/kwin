@@ -2,6 +2,15 @@
 # Effect
 
 # Source files
-set(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-    screenedge/screenedgeeffect.cpp
+set(screenedge_SOURCES
+    main.cpp
+    screenedgeeffect.cpp
+)
+
+kwin4_add_effect_module(kwin4_effect_screenedge ${screenedge_SOURCES})
+target_link_libraries(kwin4_effect_screenedge PRIVATE
+    kwineffects
+    kwinglutils
+
+    KF5::Plasma
 )

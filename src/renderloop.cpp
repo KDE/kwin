@@ -7,13 +7,13 @@
 #include "renderloop.h"
 #include "options.h"
 #include "renderloop_p.h"
-#include "utils.h"
 #include "surfaceitem.h"
+#include "utils/common.h"
 
 namespace KWin
 {
 
-template <typename T>
+template<typename T>
 T alignTimestamp(const T &timestamp, const T &alignment)
 {
     return timestamp + ((alignment - (timestamp % alignment)) % alignment);
@@ -28,7 +28,9 @@ RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q)
     : q(q)
 {
     compositeTimer.setSingleShot(true);
-    QObject::connect(&compositeTimer, &QTimer::timeout, q, [this]() { dispatch(); });
+    QObject::connect(&compositeTimer, &QTimer::timeout, q, [this]() {
+        dispatch();
+    });
 }
 
 void RenderLoopPrivate::scheduleRepaint()
@@ -36,7 +38,7 @@ void RenderLoopPrivate::scheduleRepaint()
     if (kwinApp()->isTerminating() || compositeTimer.isActive()) {
         return;
     }
-    if (vrrPolicy == RenderLoop::VrrPolicy::Always || (vrrPolicy == RenderLoop::VrrPolicy::Automatic && hasFullscreenSurface)) {
+    if (vrrPolicy == RenderLoop::VrrPolicy::Always || (vrrPolicy == RenderLoop::VrrPolicy::Automatic && fullscreenItem != nullptr)) {
         presentMode = SyncMode::Adaptive;
     } else {
         presentMode = SyncMode::Fixed;
@@ -48,7 +50,7 @@ void RenderLoopPrivate::scheduleRepaint()
     nextPresentationTimestamp = lastPresentationTimestamp + vblankInterval;
     if (nextPresentationTimestamp < currentTime && presentMode == SyncMode::Fixed) {
         nextPresentationTimestamp = lastPresentationTimestamp
-                + alignTimestamp(currentTime - lastPresentationTimestamp, vblankInterval);
+            + alignTimestamp(currentTime - lastPresentationTimestamp, vblankInterval);
     }
 
     // Estimate when it's a good time to perform the next compositing cycle.
@@ -127,8 +129,10 @@ void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp)
     if (lastPresentationTimestamp <= timestamp) {
         lastPresentationTimestamp = timestamp;
     } else {
-        qCWarning(KWIN_CORE, "Got invalid presentation timestamp: %ld (current %ld)",
-                  timestamp.count(), lastPresentationTimestamp.count());
+        qCWarning(KWIN_CORE,
+                  "Got invalid presentation timestamp: %lld (current %lld)",
+                  static_cast<long long>(timestamp.count()),
+                  static_cast<long long>(lastPresentationTimestamp.count()));
         lastPresentationTimestamp = std::chrono::steady_clock::now().time_since_epoch();
     }
 
@@ -214,9 +218,9 @@ void RenderLoop::setRefreshRate(int refreshRate)
     Q_EMIT refreshRateChanged();
 }
 
-void RenderLoop::scheduleRepaint()
+void RenderLoop::scheduleRepaint(Item *item)
 {
-    if (d->pendingRepaint) {
+    if (d->pendingRepaint || (d->fullscreenItem != nullptr && item != nullptr && item != d->fullscreenItem)) {
         return;
     }
     if (!d->pendingFrameCount && !d->inhibitCount) {
@@ -236,9 +240,9 @@ std::chrono::nanoseconds RenderLoop::nextPresentationTimestamp() const
     return d->nextPresentationTimestamp;
 }
 
-void RenderLoop::setFullscreenSurface(SurfaceItem *surfaceItem)
+void RenderLoop::setFullscreenSurface(Item *surfaceItem)
 {
-    d->hasFullscreenSurface = surfaceItem != nullptr;
+    d->fullscreenItem = surfaceItem;
 }
 
 RenderLoop::VrrPolicy RenderLoop::vrrPolicy() const

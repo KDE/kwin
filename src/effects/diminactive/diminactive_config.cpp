@@ -7,21 +7,18 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-
 #include "diminactive_config.h"
+
+#include <config-kwin.h>
 
 // KConfigSkeleton
 #include "diminactiveconfig.h"
-#include <config-kwin.h>
 
 #include <kwineffects_interface.h>
 
-#include <KAboutData>
 #include <KPluginFactory>
 
-K_PLUGIN_FACTORY_WITH_JSON(DimInactiveEffectConfigFactory,
-                           "diminactive_config.json",
-                           registerPlugin<KWin::DimInactiveEffectConfig>();)
+K_PLUGIN_CLASS(KWin::DimInactiveEffectConfig)
 
 namespace KWin
 {
@@ -32,7 +29,6 @@ DimInactiveEffectConfig::DimInactiveEffectConfig(QWidget *parent, const QVariant
     m_ui.setupUi(this);
     DimInactiveConfig::instance(KWIN_CONFIG);
     addConfig(DimInactiveConfig::self(), this);
-    load();
 }
 
 DimInactiveEffectConfig::~DimInactiveEffectConfig()

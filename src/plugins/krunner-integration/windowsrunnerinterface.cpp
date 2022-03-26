@@ -17,7 +17,6 @@
 #include "krunner1adaptor.h"
 #include <KLocalizedString>
 
-
 namespace KWin
 {
 WindowsRunner::WindowsRunner(QObject *parent)
@@ -49,7 +48,7 @@ void WindowsRunner::initialize()
 RemoteActions WindowsRunner::Actions()
 {
     RemoteActions actions;
-    return  actions;
+    return actions;
 }
 
 RemoteMatches WindowsRunner::Match(const QString &searchTerm)
@@ -58,55 +57,55 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
 
     auto term = searchTerm;
     WindowsRunnerAction action = ActivateAction;
-    if (term.endsWith(i18nc("Note this is a KRunner keyword", "activate") , Qt::CaseInsensitive)) {
+    if (term.endsWith(i18nc("Note this is a KRunner keyword", "activate"), Qt::CaseInsensitive)) {
         action = ActivateAction;
         term = term.left(term.lastIndexOf(i18nc("Note this is a KRunner keyword", "activate")) - 1);
-    } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "close") , Qt::CaseInsensitive)) {
+    } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "close"), Qt::CaseInsensitive)) {
         action = CloseAction;
         term = term.left(term.lastIndexOf(i18nc("Note this is a KRunner keyword", "close")) - 1);
-    } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "min") , Qt::CaseInsensitive)) {
+    } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "min"), Qt::CaseInsensitive)) {
         action = MinimizeAction;
         term = term.left(term.lastIndexOf(i18nc("Note this is a KRunner keyword", "min")) - 1);
-    } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "minimize") , Qt::CaseInsensitive)) {
+    } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "minimize"), Qt::CaseInsensitive)) {
         action = MinimizeAction;
         term = term.left(term.lastIndexOf(i18nc("Note this is a KRunner keyword", "minimize")) - 1);
-    } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "max") , Qt::CaseInsensitive)) {
+    } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "max"), Qt::CaseInsensitive)) {
         action = MaximizeAction;
         term = term.left(term.lastIndexOf(i18nc("Note this is a KRunner keyword", "max")) - 1);
-    } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "maximize") , Qt::CaseInsensitive)) {
+    } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "maximize"), Qt::CaseInsensitive)) {
         action = MaximizeAction;
         term = term.left(term.lastIndexOf(i18nc("Note this is a KRunner keyword", "maximize")) - 1);
-    } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "fullscreen") , Qt::CaseInsensitive)) {
+    } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "fullscreen"), Qt::CaseInsensitive)) {
         action = FullscreenAction;
         term = term.left(term.lastIndexOf(i18nc("Note this is a KRunner keyword", "fullscreen")) - 1);
-    } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "shade") , Qt::CaseInsensitive)) {
+    } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "shade"), Qt::CaseInsensitive)) {
         action = ShadeAction;
         term = term.left(term.lastIndexOf(i18nc("Note this is a KRunner keyword", "shade")) - 1);
-    } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "keep above") , Qt::CaseInsensitive)) {
+    } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "keep above"), Qt::CaseInsensitive)) {
         action = KeepAboveAction;
         term = term.left(term.lastIndexOf(i18nc("Note this is a KRunner keyword", "keep above")) - 1);
-    } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "keep below") , Qt::CaseInsensitive)) {
+    } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "keep below"), Qt::CaseInsensitive)) {
         action = KeepBelowAction;
         term = term.left(term.lastIndexOf(i18nc("Note this is a KRunner keyword", "keep below")) - 1);
     }
 
     // keyword match: when term starts with "window" we list all windows
     // the list can be restricted to windows matching a given name, class, role or desktop
-    if (term.startsWith(i18nc("Note this is a KRunner keyword", "window") , Qt::CaseInsensitive)) {
+    if (term.startsWith(i18nc("Note this is a KRunner keyword", "window"), Qt::CaseInsensitive)) {
         const QStringList keywords = term.split(QLatin1Char(' '));
         QString windowName;
         QString windowAppName;
         VirtualDesktop *targetDesktop = nullptr;
         QVariant desktopId;
-        for (const QString& keyword : keywords) {
+        for (const QString &keyword : keywords) {
             if (keyword.endsWith(QLatin1Char('='))) {
                 continue;
             }
-            if (keyword.startsWith(i18nc("Note this is a KRunner keyword", "name") + QStringLiteral("=") , Qt::CaseInsensitive)) {
+            if (keyword.startsWith(i18nc("Note this is a KRunner keyword", "name") + QStringLiteral("="), Qt::CaseInsensitive)) {
                 windowName = keyword.split(QStringLiteral("="))[1];
-            } else if (keyword.startsWith(i18nc("Note this is a KRunner keyword", "appname") + QStringLiteral("=") , Qt::CaseInsensitive)) {
+            } else if (keyword.startsWith(i18nc("Note this is a KRunner keyword", "appname") + QStringLiteral("="), Qt::CaseInsensitive)) {
                 windowAppName = keyword.split(QStringLiteral("="))[1];
-            } else if (keyword.startsWith(i18nc("Note this is a KRunner keyword", "desktop") + QStringLiteral("=") , Qt::CaseInsensitive)) {
+            } else if (keyword.startsWith(i18nc("Note this is a KRunner keyword", "desktop") + QStringLiteral("="), Qt::CaseInsensitive)) {
                 desktopId = keyword.split(QStringLiteral("="))[1];
                 for (const auto desktop : VirtualDesktopManager::self()->desktops()) {
                     if (desktop->name().contains(desktopId.toString(), Qt::CaseInsensitive) || desktop->x11DesktopNumber() == desktopId.toUInt()) {
@@ -140,13 +139,13 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
             // check for windows when no keywords were used
             // check the name and app name for containing the query without the keyword
             if (windowName.isEmpty() && windowAppName.isEmpty() && !targetDesktop) {
-                const QString& test = term.mid(keywords[0].length() + 1);
+                const QString &test = term.mid(keywords[0].length() + 1);
                 if (!name.contains(test, Qt::CaseInsensitive) && !appName.contains(test, Qt::CaseInsensitive)) {
                     continue;
                 }
             }
             // blacklisted everything else: we have a match
-            if (actionSupported(client, action)){
+            if (actionSupported(client, action)) {
                 matches << windowsMatch(client, action);
             }
         }
@@ -159,7 +158,7 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
 
     bool desktopAdded = false;
     // check for desktop keyword
-    if (term.startsWith(i18nc("Note this is a KRunner keyword", "desktop") , Qt::CaseInsensitive)) {
+    if (term.startsWith(i18nc("Note this is a KRunner keyword", "desktop"), Qt::CaseInsensitive)) {
         const QStringList parts = term.split(QLatin1Char(' '));
         if (parts.size() == 1) {
             // only keyword - list all desktops
@@ -201,7 +200,6 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
         }
     }
 
-
     return matches;
 }
 
@@ -219,7 +217,6 @@ void WindowsRunner::Run(const QString &id, const QString &actionId)
         VirtualDesktopManager::self()->setCurrent(desktop);
         return;
     }
-
 
     const auto uuid = QUuid::fromString(objectId);
     const auto client = workspace()->findAbstractClient(uuid);
@@ -290,7 +287,7 @@ RemoteMatch WindowsRunner::windowsMatch(const AbstractClient *client, const Wind
 
     // When there is no icon name, send a pixmap along instead
     if (match.iconName.isEmpty()) {
-        QImage convertedImage = client->icon().pixmap(QSize(16,16)).toImage().convertToFormat(QImage::Format_RGBA8888);
+        QImage convertedImage = client->icon().pixmap(QSize(16, 16)).toImage().convertToFormat(QImage::Format_RGBA8888);
         RemoteImage remoteImage{
             convertedImage.width(),
             convertedImage.height(),
@@ -298,8 +295,7 @@ RemoteMatch WindowsRunner::windowsMatch(const AbstractClient *client, const Wind
             true, // hasAlpha
             8, // bitsPerSample
             4, // channels
-            QByteArray(reinterpret_cast<const char *>(convertedImage.constBits()), convertedImage.sizeInBytes())
-        };
+            QByteArray(reinterpret_cast<const char *>(convertedImage.constBits()), convertedImage.sizeInBytes())};
         properties.insert(QStringLiteral("icon-data"), QVariant::fromValue(remoteImage));
     }
 

@@ -61,8 +61,7 @@ void ExpoArea::update()
     }
     const QRect oldRect = m_rect;
 
-    const int screen = effects->screens().indexOf(m_screen);
-    m_rect = effects->clientArea(MaximizeArea, screen, effects->currentDesktop());
+    m_rect = effects->clientArea(MaximizeArea, m_screen, effects->currentDesktop());
 
     // Map the area to the output local coordinates.
     m_rect.translate(-m_screen->geometry().topLeft());

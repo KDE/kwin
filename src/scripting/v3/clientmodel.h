@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "virtualdesktops.h"
+
 #include <QAbstractListModel>
 #include <QPointer>
 #include <QSortFilterProxyModel>
@@ -15,7 +17,7 @@
 namespace KWin
 {
 class AbstractClient;
-class VirtualDesktop;
+class AbstractOutput;
 
 namespace ScriptingModels::V3
 {
@@ -110,9 +112,9 @@ private:
 
     ClientModel *m_clientModel = nullptr;
     std::optional<QString> m_activity;
+    QPointer<AbstractOutput> m_output;
     QPointer<VirtualDesktop> m_desktop;
     QString m_filter;
-    std::optional<QString> m_screenName;
     std::optional<WindowTypes> m_windowType;
 };
 

@@ -13,8 +13,6 @@
 
 #include <KDecoration2/Private/DecorationBridge>
 
-#include <KSharedConfig>
-
 #include <QObject>
 #include <QSharedPointer>
 
@@ -47,20 +45,20 @@ public:
     std::unique_ptr<KDecoration2::DecoratedClientPrivate> createClient(KDecoration2::DecoratedClient *client, KDecoration2::Decoration *decoration) override;
     std::unique_ptr<KDecoration2::DecorationSettingsPrivate> settings(KDecoration2::DecorationSettings *parent) override;
 
-    bool needsBlur() const {
-        return m_blur;
-    }
-    QString recommendedBorderSize() const {
+    QString recommendedBorderSize() const
+    {
         return m_recommendedBorderSize;
     }
 
-    bool showToolTips() const {
+    bool showToolTips() const
+    {
         return m_showToolTips;
     }
 
     void reconfigure();
 
-    const QSharedPointer<KDecoration2::DecorationSettings> &settings() const {
+    const QSharedPointer<KDecoration2::DecorationSettings> &settings() const
+    {
         return m_settings;
     }
 
@@ -77,8 +75,6 @@ private:
     QString readTheme() const;
     void readDecorationOptions();
     KPluginFactory *m_factory;
-    KSharedConfig::Ptr m_lnfConfig;
-    bool m_blur;
     bool m_showToolTips;
     QString m_recommendedBorderSize;
     QString m_plugin;

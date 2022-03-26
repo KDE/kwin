@@ -8,13 +8,16 @@
 */
 
 #include <QTest>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <private/qtx11extras_p.h>
+#else
 #include <QX11Info>
+#endif
 
-#include <KPluginLoader>
 #include <KPluginMetaData>
 
 #include "main.h"
-#include "utils.h"
+#include "utils/common.h"
 
 namespace KWin
 {
@@ -28,7 +31,6 @@ public:
 
 protected:
     void performStartup() override;
-
 };
 
 X11TestApplication::X11TestApplication(int &argc, char **argv)
@@ -37,14 +39,14 @@ X11TestApplication::X11TestApplication(int &argc, char **argv)
     setX11Connection(QX11Info::connection());
     setX11RootWindow(QX11Info::appRootWindow());
 
-    // move directory containing executable to front, so that KPluginLoader prefers the plugins in
+    // move directory containing executable to front, so that KPluginMetaData::findPluginById prefers the plugins in
     // the build dir over system installed ones
     const auto ownPath = libraryPaths().last();
     removeLibraryPath(ownPath);
     addLibraryPath(ownPath);
 
     const KPluginMetaData plugin = KPluginMetaData::findPluginById(QStringLiteral("org.kde.kwin.platforms"),
-                                                        QStringLiteral("KWinX11Platform"));
+                                                                   QStringLiteral("KWinX11Platform"));
     if (!plugin.isValid()) {
         quit();
         return;

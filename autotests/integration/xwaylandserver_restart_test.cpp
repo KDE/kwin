@@ -5,6 +5,7 @@
 */
 
 #include "kwin_wayland_test.h"
+
 #include "composite.h"
 #include "main.h"
 #include "platform.h"
@@ -14,6 +15,7 @@
 #include "workspace.h"
 #include "x11client.h"
 #include "xwl/xwayland.h"
+#include "xwl/xwaylandlauncher.h"
 
 #include <xcb/xcb_icccm.h>
 
@@ -76,7 +78,7 @@ void XwaylandServerRestartTest::testRestart()
     // Pretend that the Xwayland process has crashed by sending a SIGKILL to it.
     QSignalSpy startedSpy(xwayland, &Xwl::Xwayland::started);
     QVERIFY(startedSpy.isValid());
-    kwin_safe_kill(xwayland->process());
+    kwin_safe_kill(xwayland->xwaylandLauncher()->process());
     QVERIFY(startedSpy.wait());
     QCOMPARE(startedSpy.count(), 1);
 
@@ -106,7 +108,7 @@ void XwaylandServerRestartTest::testRestart()
     QVERIFY(client->isDecorated());
 
     // Render a frame to ensure that the compositor doesn't crash.
-    Compositor::self()->addRepaintFull();
+    Compositor::self()->scene()->addRepaintFull();
     QSignalSpy frameRenderedSpy(Compositor::self()->scene(), &Scene::frameRendered);
     QVERIFY(frameRenderedSpy.wait());
 

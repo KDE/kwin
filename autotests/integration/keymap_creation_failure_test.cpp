@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
+
 #include "abstract_client.h"
 #include "keyboard_input.h"
 #include "keyboard_layout.h"
@@ -46,7 +47,7 @@ void KeymapCreationFailureTest::initTestCase()
     qputenv("XKB_DEFAULT_VARIANT", "no");
     qputenv("XKB_DEFAULT_OPTIONS", "no");
 
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -82,8 +83,8 @@ void KeymapCreationFailureTest::testPointerButton()
 
     // now create the crashing condition
     // which is sending in a pointer event
-    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, 0);
-    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, 1);
+    Test::pointerButtonPressed(BTN_LEFT, 0);
+    Test::pointerButtonReleased(BTN_LEFT, 1);
 }
 
 WAYLANDTEST_MAIN(KeymapCreationFailureTest)

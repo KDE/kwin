@@ -2,6 +2,13 @@
 # Effect
 
 # Source files
-set(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-    snaphelper/snaphelper.cpp
+set(snaphelper_SOURCES
+    main.cpp
+    snaphelper.cpp
+)
+
+kwin4_add_effect_module(kwin4_effect_snaphelper ${snaphelper_SOURCES})
+target_link_libraries(kwin4_effect_snaphelper PRIVATE
+    kwineffects
+    kwinglutils
 )

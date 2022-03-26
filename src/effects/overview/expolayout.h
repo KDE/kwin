@@ -25,8 +25,7 @@ class ExpoLayout : public QQuickItem
 public:
     enum LayoutMode : uint {
         LayoutClosest = 0,
-        LayoutKompose = 1,
-        LayoutNatural = 2,
+        LayoutNatural = 1,
     };
     Q_ENUM(LayoutMode)
 
@@ -48,7 +47,11 @@ public:
     void setReady();
 
 protected:
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     void geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry) override;
+#else
+    void geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry) override;
+#endif
     void updatePolish() override;
 
 Q_SIGNALS:
@@ -59,7 +62,6 @@ Q_SIGNALS:
 
 private:
     void calculateWindowTransformationsClosest();
-    void calculateWindowTransformationsKompose();
     void calculateWindowTransformationsNatural();
 
     QList<ExpoCell *> m_cells;

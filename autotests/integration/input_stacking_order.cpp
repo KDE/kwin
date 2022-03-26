@@ -7,22 +7,21 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
-#include "abstract_output.h"
-#include "platform.h"
+
 #include "abstract_client.h"
+#include "abstract_output.h"
 #include "cursor.h"
 #include "deleted.h"
-#include "screenedge.h"
-#include "screens.h"
+#include "platform.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include <kwineffects.h>
 
-#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
+#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/event_queue.h>
-#include <KWayland/Client/registry.h>
 #include <KWayland/Client/pointer.h>
+#include <KWayland/Client/registry.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
@@ -49,8 +48,8 @@ private:
 
 void InputStackingOrderTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
-    qRegisterMetaType<KWin::Deleted*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -132,7 +131,7 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
     QCOMPARE(window1->frameGeometry(), window2->frameGeometry());
 
     // enter
-    kwinApp()->platform()->pointerMotion(QPointF(25, 25), 1);
+    Test::pointerMotion(QPointF(25, 25), 1);
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 1);
     // window 2 should have focus

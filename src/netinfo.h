@@ -14,8 +14,8 @@
 
 #include <NETWM>
 
-#include <xcb/xcb.h>
 #include <memory>
+#include <xcb/xcb.h>
 
 namespace KWin
 {
@@ -47,7 +47,7 @@ protected:
     void changeShowingDesktop(bool showing) override;
 
 private:
-    RootInfo(xcb_window_t w, const char* name, NET::Properties properties, NET::WindowTypes types,
+    RootInfo(xcb_window_t w, const char *name, NET::Properties properties, NET::WindowTypes types,
              NET::States states, NET::Properties2 properties2, NET::Actions actions, int scr = -1);
     static RootInfo *s_self;
     friend RootInfo *rootInfo();

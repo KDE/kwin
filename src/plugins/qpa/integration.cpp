@@ -40,6 +40,7 @@ Integration::Integration()
     : QObject()
     , QPlatformIntegration()
     , m_fontDb(new QGenericUnixFontDatabase())
+    , m_services(new QGenericUnixServices())
 {
 }
 
@@ -51,6 +52,11 @@ Integration::~Integration()
     if (m_dummyScreen) {
         QWindowSystemInterface::handleScreenRemoved(m_dummyScreen);
     }
+}
+
+QHash<AbstractOutput *, Screen *> Integration::screens() const
+{
+    return m_screens;
 }
 
 bool Integration::hasCapability(Capability cap) const
@@ -159,7 +165,7 @@ void Integration::handlePlatformCreated()
 
 void Integration::handleOutputEnabled(AbstractOutput *output)
 {
-    Screen *platformScreen = new Screen(output);
+    Screen *platformScreen = new Screen(output, this);
     QWindowSystemInterface::handleScreenAdded(platformScreen);
     m_screens.insert(output, platformScreen);
 
@@ -183,6 +189,11 @@ void Integration::handleOutputDisabled(AbstractOutput *output)
     }
 
     QWindowSystemInterface::handleScreenRemoved(platformScreen);
+}
+
+QPlatformServices *Integration::services() const
+{
+    return m_services.data();
 }
 
 }

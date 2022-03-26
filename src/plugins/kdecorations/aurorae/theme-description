@@ -35,9 +35,12 @@ this prefix and if not provided inactive windows will be rendered with the same 
 windows.
 
 You have to provide a special decoration for opaque mode, that is when compositing is not active.
-This opaque decoration is used for generating the window mask. The element prefix is
-"decoration-opaque" for active and "decoration-opaque-inactive" for inactive windows. The mask is
-generated from the active window.
+The element prefix is "decoration-opaque" for active and "decoration-opaque-inactive" for
+inactive windows.
+
+If you want to provide a mask for your decoration, you can include an element "mask"
+inside "decoration.svgz" file. That element will be used to specify the blur region
+of your decoration.
 
 Maximized Windows
 -----------------

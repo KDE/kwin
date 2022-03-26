@@ -8,8 +8,9 @@
 */
 
 #include "abstract_output.h"
-#include <KSharedConfig>
+#include "outputlayer.h"
 #include <KConfigGroup>
+#include <KSharedConfig>
 
 namespace KWin
 {
@@ -78,11 +79,17 @@ QDebug operator<<(QDebug debug, const AbstractOutput *output)
 
 AbstractOutput::AbstractOutput(QObject *parent)
     : QObject(parent)
+    , m_layer(new OutputLayer(this))
 {
 }
 
 AbstractOutput::~AbstractOutput()
 {
+}
+
+OutputLayer *AbstractOutput::layer() const
+{
+    return m_layer;
 }
 
 QUuid AbstractOutput::uuid() const
@@ -98,11 +105,6 @@ bool AbstractOutput::isEnabled() const
 void AbstractOutput::setEnabled(bool enable)
 {
     Q_UNUSED(enable)
-}
-
-void AbstractOutput::applyChanges(const KWaylandServer::OutputChangeSetV2 *changeSet)
-{
-    Q_UNUSED(changeSet)
 }
 
 bool AbstractOutput::isInternal() const
@@ -146,11 +148,6 @@ QString AbstractOutput::serialNumber() const
     return QString();
 }
 
-RenderLoop *AbstractOutput::renderLoop() const
-{
-    return nullptr;
-}
-
 void AbstractOutput::inhibitDirectScanout()
 {
     m_directScanoutCount++;
@@ -168,7 +165,12 @@ bool AbstractOutput::directScanoutInhibited() const
 std::chrono::milliseconds AbstractOutput::dimAnimationTime()
 {
     // See kscreen.kcfg
-    return std::chrono::milliseconds (KSharedConfig::openConfig()->group("Effect-Kscreen").readEntry("Duration", 250));
+    return std::chrono::milliseconds(KSharedConfig::openConfig()->group("Effect-Kscreen").readEntry("Duration", 250));
+}
+
+bool AbstractOutput::usesSoftwareCursor() const
+{
+    return true;
 }
 
 } // namespace KWin

@@ -11,27 +11,25 @@
 #ifndef __MAIN_H__
 #define __MAIN_H__
 
+#include "tabboxconfig.h"
 #include <kcmodule.h>
 #include <ksharedconfig.h>
-#include "tabboxconfig.h"
 
 namespace KWin
 {
 class KWinTabBoxConfigForm;
-enum class BuiltInEffect;
 namespace TabBox
 {
 class KWinTabboxData;
 class TabBoxSettings;
 }
 
-
 class KWinTabBoxConfig : public KCModule
 {
     Q_OBJECT
 
 public:
-    explicit KWinTabBoxConfig(QWidget* parent, const QVariantList& args);
+    explicit KWinTabBoxConfig(QWidget *parent, const QVariantList &args);
     ~KWinTabBoxConfig() override;
 
 public Q_SLOTS:
@@ -43,7 +41,6 @@ private Q_SLOTS:
     void updateUnmanagedState();
     void updateDefaultIndicator();
     void configureEffectClicked();
-    void slotGHNS();
 
 private:
     void updateUiFromConfig(KWinTabBoxConfigForm *form, const TabBox::TabBoxSettings *config);

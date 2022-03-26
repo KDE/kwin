@@ -2,6 +2,17 @@
 # Effect
 
 # Source files
-set(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-    startupfeedback/startupfeedback.cpp
+set(startupfeedback_SOURCES
+    main.cpp
+    startupfeedback.cpp
+    startupfeedback.qrc
+)
+
+kwin4_add_effect_module(kwin4_effect_startupfeedback ${startupfeedback_SOURCES})
+target_link_libraries(kwin4_effect_startupfeedback PRIVATE
+    kwineffects
+    kwinglutils
+
+    Qt::DBus
+    Qt::Widgets
 )

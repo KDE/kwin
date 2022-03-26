@@ -6,8 +6,8 @@
 
 #include "basiceglsurfacetexture_internal.h"
 #include "kwingltexture.h"
-#include "logging.h"
 #include "surfaceitem_internal.h"
+#include "utils/common.h"
 
 #include <QOpenGLFramebufferObject>
 
@@ -16,7 +16,7 @@ namespace KWin
 
 BasicEGLSurfaceTextureInternal::BasicEGLSurfaceTextureInternal(OpenGLBackend *backend,
                                                                SurfacePixmapInternal *pixmap)
-    : PlatformOpenGLSurfaceTextureInternal(backend, pixmap)
+    : OpenGLSurfaceTextureInternal(backend, pixmap)
 {
 }
 

@@ -38,6 +38,13 @@ public:
     void addDamage(const QRegion &region);
     void resetDamage();
 
+    qreal effectiveDevicePixelRatio() const;
+    qreal devicePixelRatio() const;
+    void setDevicePixelRatio(qreal dpr);
+
+    // Reserve some space for padding. We pad decoration parts to avoid texture bleeding.
+    static const int TexturePad = 1;
+
 Q_SIGNALS:
     void damaged(const QRegion &region);
 
@@ -46,10 +53,12 @@ protected:
 
     Decoration::DecoratedClientImpl *client() const;
 
-    bool areImageSizesDirty() const {
+    bool areImageSizesDirty() const
+    {
         return m_imageSizesDirty;
     }
-    void resetImageSizesDirty() {
+    void resetImageSizesDirty()
+    {
         m_imageSizesDirty = false;
     }
     QImage renderToImage(const QRect &geo);
@@ -58,6 +67,7 @@ protected:
 private:
     QPointer<Decoration::DecoratedClientImpl> m_client;
     QRegion m_damage;
+    qreal m_devicePixelRatio = 1;
     bool m_imageSizesDirty;
 };
 
@@ -76,6 +86,8 @@ public:
 private Q_SLOTS:
     void handleFrameGeometryChanged();
     void handleWindowClosed(Toplevel *original, Deleted *deleted);
+    void handleOutputChanged();
+    void handleOutputScaleChanged();
 
 protected:
     void preprocess() override;
@@ -83,6 +95,7 @@ protected:
 
 private:
     Toplevel *m_window;
+    QPointer<AbstractOutput> m_output;
     QPointer<KDecoration2::Decoration> m_decoration;
     QScopedPointer<DecorationRenderer> m_renderer;
 };

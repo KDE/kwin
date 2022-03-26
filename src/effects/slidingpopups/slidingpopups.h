@@ -15,7 +15,6 @@
 #include <kwineffects.h>
 
 #include <KWaylandServer/slide_interface.h>
-#include <KWaylandServer/utils.h>
 
 namespace KWin
 {
@@ -36,7 +35,8 @@ public:
     void reconfigure(ReconfigureFlags flags) override;
     bool isActive() const override;
 
-    int requestedEffectChainPosition() const override {
+    int requestedEffectChainPosition() const override
+    {
         return 40;
     }
 
@@ -52,6 +52,7 @@ private Q_SLOTS:
     void slotWindowDeleted(EffectWindow *w);
     void slotPropertyNotify(EffectWindow *w, long atom);
     void slotWaylandSlideOnShowChanged(EffectWindow *w);
+    void slotWindowFrameGeometryChanged(EffectWindow *w, const QRect &);
 
     void slideIn(EffectWindow *w);
     void slideOut(EffectWindow *w);
@@ -60,9 +61,12 @@ private Q_SLOTS:
 private:
     void setupAnimData(EffectWindow *w);
     void setupInternalWindowSlide(EffectWindow *w);
+    void setupSlideData(EffectWindow *w);
+    void setupInputPanelSlide();
 
-    KWaylandServer::ScopedGlobalPointer<KWaylandServer::SlideManagerInterface> m_slideManager;
-    long m_atom;
+    static KWaylandServer::SlideManagerInterface *s_slideManager;
+    static QTimer *s_slideManagerRemoveTimer;
+    long m_atom = 0;
 
     int m_slideLength;
     std::chrono::milliseconds m_slideInDuration;
@@ -73,7 +77,8 @@ private:
         Out
     };
 
-    struct Animation {
+    struct Animation
+    {
         AnimationKind kind;
         TimeLine timeLine;
         std::chrono::milliseconds lastPresentTime = std::chrono::milliseconds::zero();
@@ -87,14 +92,15 @@ private:
         Bottom
     };
 
-    struct AnimationData {
+    struct AnimationData
+    {
         int offset;
         Location location;
         std::chrono::milliseconds slideInDuration;
         std::chrono::milliseconds slideOutDuration;
         int slideLength;
     };
-    QHash<const EffectWindow*, AnimationData> m_animationsData;
+    QHash<const EffectWindow *, AnimationData> m_animationsData;
 };
 
 inline int SlidingPopupsEffect::slideInDuration() const

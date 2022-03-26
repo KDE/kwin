@@ -9,18 +9,18 @@
 */
 
 #include "scriptedeffect.h"
+#include "scripting_logging.h"
 #include "scriptingutils.h"
 #include "workspace_wrapper.h"
-#include "scripting_logging.h"
 
 #include "input.h"
 #include "screenedge.h"
-#include "screens.h"
+#include "workspace.h"
 // KDE
 #include <KConfigGroup>
-#include <kconfigloader.h>
 #include <KGlobalAccel>
 #include <KPluginMetaData>
+#include <kconfigloader.h>
 // Qt
 #include <QAction>
 #include <QFile>
@@ -32,14 +32,15 @@ Q_DECLARE_METATYPE(KSharedConfigPtr)
 namespace KWin
 {
 
-struct AnimationSettings {
+struct AnimationSettings
+{
     enum {
-        Type       = 1<<0,
-        Curve      = 1<<1,
-        Delay      = 1<<2,
-        Duration   = 1<<3,
-        FullScreen = 1<<4,
-        KeepAlive  = 1<<5
+        Type = 1 << 0,
+        Curve = 1 << 1,
+        Delay = 1 << 2,
+        Duration = 1 << 3,
+        FullScreen = 1 << 4,
+        KeepAlive = 1 << 5
     };
     AnimationEffect::Attribute type;
     QEasingCurve::Type curve;
@@ -150,7 +151,7 @@ ScriptedEffect *ScriptedEffect::create(const KPluginMetaData &effect)
     return ScriptedEffect::create(name, scriptFile, effect.value(QStringLiteral("X-KDE-Ordering")).toInt());
 }
 
-ScriptedEffect *ScriptedEffect::create(const QString& effectName, const QString& pathToScript, int chainPosition)
+ScriptedEffect *ScriptedEffect::create(const QString &effectName, const QString &pathToScript, int chainPosition)
 {
     ScriptedEffect *effect = new ScriptedEffect();
     if (!effect->init(effectName, pathToScript)) {
@@ -175,7 +176,7 @@ ScriptedEffect::ScriptedEffect()
 {
     Q_ASSERT(effects);
     connect(effects, &EffectsHandler::activeFullScreenEffectChanged, this, [this]() {
-        Effect* fullScreenEffect = effects->activeFullScreenEffect();
+        Effect *fullScreenEffect = effects->activeFullScreenEffect();
         if (fullScreenEffect == m_activeFullScreenEffect) {
             return;
         }
@@ -233,16 +234,14 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
 
     globalObject.setProperty(QStringLiteral("Effect"),
                              m_engine->newQMetaObject(&ScriptedEffect::staticMetaObject));
-#ifndef KWIN_UNIT_TEST
     globalObject.setProperty(QStringLiteral("KWin"),
                              m_engine->newQMetaObject(&QtScriptWorkspaceWrapper::staticMetaObject));
-#endif
     globalObject.setProperty(QStringLiteral("Globals"),
                              m_engine->newQMetaObject(&KWin::staticMetaObject));
     globalObject.setProperty(QStringLiteral("QEasingCurve"),
                              m_engine->newQMetaObject(&QEasingCurve::staticMetaObject));
 
-    static const QStringList globalProperties {
+    static const QStringList globalProperties{
         QStringLiteral("animationTime"),
         QStringLiteral("displayWidth"),
         QStringLiteral("displayHeight"),
@@ -350,18 +349,17 @@ QJSValue ScriptedEffect::animate_helper(const QJSValue &object, AnimationType an
 
                 s.metaData = 0;
                 typedef QMap<AnimationEffect::MetaType, QString> MetaTypeMap;
-                static MetaTypeMap metaTypes({
-                    {AnimationEffect::SourceAnchor, QStringLiteral("sourceAnchor")},
-                    {AnimationEffect::TargetAnchor, QStringLiteral("targetAnchor")},
-                    {AnimationEffect::RelativeSourceX, QStringLiteral("relativeSourceX")},
-                    {AnimationEffect::RelativeSourceY, QStringLiteral("relativeSourceY")},
-                    {AnimationEffect::RelativeTargetX, QStringLiteral("relativeTargetX")},
-                    {AnimationEffect::RelativeTargetY, QStringLiteral("relativeTargetY")},
-                    {AnimationEffect::Axis, QStringLiteral("axis")}
-                });
+                static MetaTypeMap metaTypes({{AnimationEffect::SourceAnchor, QStringLiteral("sourceAnchor")},
+                                              {AnimationEffect::TargetAnchor, QStringLiteral("targetAnchor")},
+                                              {AnimationEffect::RelativeSourceX, QStringLiteral("relativeSourceX")},
+                                              {AnimationEffect::RelativeSourceY, QStringLiteral("relativeSourceY")},
+                                              {AnimationEffect::RelativeTargetX, QStringLiteral("relativeTargetX")},
+                                              {AnimationEffect::RelativeTargetY, QStringLiteral("relativeTargetY")},
+                                              {AnimationEffect::Axis, QStringLiteral("axis")}});
 
                 for (auto it = metaTypes.constBegin(),
-                     end = metaTypes.constEnd(); it != end; ++it) {
+                          end = metaTypes.constEnd();
+                     it != end; ++it) {
                     QJSValue metaVal = value.property(*it);
                     if (metaVal.isNumber()) {
                         AnimationEffect::setMetaData(it.key(), metaVal.toInt(), s.metaData);
@@ -511,9 +509,9 @@ bool ScriptedEffect::cancel(const QList<quint64> &animationIds)
     return ret;
 }
 
-bool ScriptedEffect::isGrabbed(EffectWindow* w, ScriptedEffect::DataRole grabRole)
+bool ScriptedEffect::isGrabbed(EffectWindow *w, ScriptedEffect::DataRole grabRole)
 {
-    void *e = w->data(static_cast<KWin::DataRole>(grabRole)).value<void*>();
+    void *e = w->data(static_cast<KWin::DataRole>(grabRole)).value<void *>();
     if (e) {
         return e != this;
     } else {
@@ -605,12 +603,12 @@ QJSValue ScriptedEffect::readConfig(const QString &key, const QJSValue &defaultV
 
 int ScriptedEffect::displayWidth() const
 {
-    return screens()->displaySize().width();
+    return workspace()->geometry().width();
 }
 
 int ScriptedEffect::displayHeight() const
 {
-    return screens()->displaySize().height();
+    return workspace()->geometry().height();
 }
 
 int ScriptedEffect::animationTime(int defaultTime) const
@@ -639,7 +637,7 @@ bool ScriptedEffect::unregisterScreenEdge(int edge)
 {
     auto it = screenEdgeCallbacks().find(edge);
     if (it == screenEdgeCallbacks().end()) {
-        //not previously registered
+        // not previously registered
         return false;
     }
     ScreenEdges::self()->unreserve(static_cast<KWin::ElectricBorder>(edge), this);

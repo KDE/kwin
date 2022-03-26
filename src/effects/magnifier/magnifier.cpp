@@ -14,11 +14,11 @@
 #include "magnifierconfig.h"
 
 #include <QAction>
-#include <kwinconfig.h>
 #include <kstandardaction.h>
+#include <kwinconfig.h>
 
-#include <kwinglutils.h>
 #include <KGlobalAccel>
+#include <kwinglutils.h>
 
 namespace KWin
 {
@@ -34,21 +34,21 @@ MagnifierEffect::MagnifierEffect()
     , m_fbo(nullptr)
 {
     initConfig<MagnifierConfig>();
-    QAction* a;
+    QAction *a;
     a = KStandardAction::zoomIn(this, &MagnifierEffect::zoomIn, this);
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Equal);
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Equal);
-    effects->registerGlobalShortcut(Qt::META + Qt::Key_Equal, a);
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Equal));
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Equal));
+    effects->registerGlobalShortcut(Qt::META | Qt::Key_Equal, a);
 
     a = KStandardAction::zoomOut(this, &MagnifierEffect::zoomOut, this);
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Minus);
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Minus);
-    effects->registerGlobalShortcut(Qt::META + Qt::Key_Minus, a);
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Minus));
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Minus));
+    effects->registerGlobalShortcut(Qt::META | Qt::Key_Minus, a);
 
     a = KStandardAction::actualSize(this, &MagnifierEffect::toggle, this);
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_0);
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_0);
-    effects->registerGlobalShortcut(Qt::META + Qt::Key_0, a);
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_0));
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_0));
+    effects->registerGlobalShortcut(Qt::META | Qt::Key_0, a);
 
     connect(effects, &EffectsHandler::mouseChanged, this, &MagnifierEffect::slotMouseChanged);
     connect(effects, &EffectsHandler::windowDamaged, this, &MagnifierEffect::slotWindowDamaged);
@@ -83,7 +83,7 @@ void MagnifierEffect::reconfigure(ReconfigureFlags)
         toggle();
 }
 
-void MagnifierEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime)
+void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     const int time = m_lastPresentTime.count() ? (presentTime - m_lastPresentTime).count() : 0;
 
@@ -114,19 +114,19 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::mill
         data.paint |= magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH);
 }
 
-void MagnifierEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& data)
+void MagnifierEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
-    effects->paintScreen(mask, region, data);   // paint normal screen
+    effects->paintScreen(mask, region, data); // paint normal screen
     if (zoom != 1.0) {
         // get the right area from the current rendered screen
         const QRect area = magnifierArea();
         const QPoint cursor = cursorPos();
 
-        QRect srcArea(cursor.x() - (double)area.width() / (zoom*2),
-                      cursor.y() - (double)area.height() / (zoom*2),
+        QRect srcArea(cursor.x() - (double)area.width() / (zoom * 2),
+                      cursor.y() - (double)area.height() / (zoom * 2),
                       (double)area.width() / zoom, (double)area.height() / zoom);
         if (effects->isOpenGLCompositing()) {
-            m_fbo->blitFromFramebuffer(srcArea);
+            m_fbo->blitFromFramebuffer(effects->mapToRenderTarget(srcArea));
             // paint magnifier
             m_texture->bind();
             auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
@@ -135,7 +135,7 @@ void MagnifierEffect::paintScreen(int mask, const QRegion &region, ScreenPaintDa
             mvp.ortho(0, size.width(), size.height(), 0, 0, 65535);
             mvp.translate(area.x(), area.y());
             s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-            m_texture->render(infiniteRegion(), area);
+            m_texture->render(area);
             ShaderManager::instance()->popShader();
             m_texture->unbind();
             QVector<float> verts;
@@ -206,7 +206,7 @@ void MagnifierEffect::zoomIn()
         effects->makeOpenGLContextCurrent();
         m_texture = new GLTexture(GL_RGBA8, magnifier_size.width(), magnifier_size.height());
         m_texture->setYInverted(false);
-        m_fbo = new GLRenderTarget(*m_texture);
+        m_fbo = new GLRenderTarget(m_texture);
     }
     effects->addRepaint(magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH));
 }
@@ -245,7 +245,7 @@ void MagnifierEffect::toggle()
             effects->makeOpenGLContextCurrent();
             m_texture = new GLTexture(GL_RGBA8, magnifier_size.width(), magnifier_size.height());
             m_texture->setYInverted(false);
-            m_fbo = new GLRenderTarget(*m_texture);
+            m_fbo = new GLRenderTarget(m_texture);
         }
     } else {
         target_zoom = 1;
@@ -257,8 +257,8 @@ void MagnifierEffect::toggle()
     effects->addRepaint(magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH));
 }
 
-void MagnifierEffect::slotMouseChanged(const QPoint& pos, const QPoint& old,
-                                   Qt::MouseButtons, Qt::MouseButtons, Qt::KeyboardModifiers, Qt::KeyboardModifiers)
+void MagnifierEffect::slotMouseChanged(const QPoint &pos, const QPoint &old,
+                                       Qt::MouseButtons, Qt::MouseButtons, Qt::KeyboardModifiers, Qt::KeyboardModifiers)
 {
     if (pos != old && zoom != 1)
         // need full repaint as we might lose some change events on fast mouse movements
@@ -279,4 +279,3 @@ bool MagnifierEffect::isActive() const
 }
 
 } // namespace
-

@@ -50,8 +50,8 @@ void WlSource::setDataSourceIface(KWaylandServer::AbstractDataSource *dsi)
     // TODO, this can probably be removed after some testing
     // all mime types should be constant after a data source is set
     m_offerConnection = connect(dsi,
-                         &KWaylandServer::DataSourceInterface::mimeTypeOffered,
-                         this, &WlSource::receiveOffer);
+                                &KWaylandServer::DataSourceInterface::mimeTypeOffered,
+                                this, &WlSource::receiveOffer);
 
     m_dsi = dsi;
 }
@@ -191,8 +191,7 @@ void X11Source::handleTargets()
                                                         atoms->wl_selection,
                                                         XCB_GET_PROPERTY_TYPE_ANY,
                                                         0,
-                                                        4096
-                                                        );
+                                                        4096);
     auto *reply = xcb_get_property_reply(xcbConn, cookie, nullptr);
     if (!reply) {
         qCDebug(KWIN_XWL) << "Failed to get selection property";
@@ -220,12 +219,10 @@ void X11Source::handleTargets()
             continue;
         }
 
-
         const auto mimeIt = std::find_if(m_offers.begin(), m_offers.end(),
-            [value, i](const Mime &mime) {
-                return mime.second == value[i];
-            }
-        );
+                                         [value, i](const Mime &mime) {
+                                             return mime.second == value[i];
+                                         });
 
         auto mimePair = Mime(mimeStrings[0], value[i]);
         if (mimeIt == m_offers.end()) {
@@ -275,10 +272,9 @@ bool X11Source::handleSelectionNotify(xcb_selection_notify_event_t *event)
 void X11Source::startTransfer(const QString &mimeName, qint32 fd)
 {
     const auto mimeIt = std::find_if(m_offers.begin(), m_offers.end(),
-        [mimeName](const Mime &mime) {
-            return mime.first == mimeName;
-        }
-    );
+                                     [mimeName](const Mime &mime) {
+                                         return mime.first == mimeName;
+                                     });
     if (mimeIt == m_offers.end()) {
         qCDebug(KWIN_XWL) << "Sending X11 clipboard to Wayland failed: unsupported MIME.";
         close(fd);

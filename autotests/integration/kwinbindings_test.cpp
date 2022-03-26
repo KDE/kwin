@@ -7,11 +7,11 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
+
 #include "abstract_client.h"
 #include "cursor.h"
 #include "input.h"
 #include "platform.h"
-#include "screens.h"
 #include "scripting/scripting.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
@@ -43,10 +43,9 @@ private Q_SLOTS:
     void testWindowToDesktop();
 };
 
-
 void KWinBindingsTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -101,7 +100,7 @@ void KWinBindingsTest::testSwitchWindow()
     // now let's trigger the shortcuts
 
     // invoke global shortcut through dbus
-    auto invokeShortcut = [] (const QString &shortcut) {
+    auto invokeShortcut = [](const QString &shortcut) {
         auto msg = QDBusMessage::createMethodCall(
             QStringLiteral("org.kde.kglobalaccel"),
             QStringLiteral("/component/kwin"),
@@ -158,7 +157,7 @@ void KWinBindingsTest::testSwitchWindowScript()
     c3->move(QPoint(200, 200));
     c4->move(QPoint(0, 200));
 
-    auto runScript = [] (const QString &slot) {
+    auto runScript = [](const QString &slot) {
         QTemporaryFile tmpFile;
         QVERIFY(tmpFile.open());
         QTextStream out(&tmpFile);
@@ -228,7 +227,7 @@ void KWinBindingsTest::testWindowToDesktop()
     VirtualDesktopManager::self()->setCount(desktop);
 
     // now trigger the shortcut
-    auto invokeShortcut = [] (int desktop) {
+    auto invokeShortcut = [](int desktop) {
         auto msg = QDBusMessage::createMethodCall(
             QStringLiteral("org.kde.kglobalaccel"),
             QStringLiteral("/component/kwin"),

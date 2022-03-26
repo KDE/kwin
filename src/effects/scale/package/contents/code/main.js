@@ -30,13 +30,11 @@ class ScaleEffect {
     }
 
     loadConfig() {
-        const defaultDuration = 160;
+        const defaultDuration = 200;
         const duration = effect.readConfig("Duration", defaultDuration) || defaultDuration;
         this.duration = animationTime(duration);
-        this.inScale = effect.readConfig("InScale", 0.96);
-        this.inOpacity = effect.readConfig("InOpacity", 0.4);
-        this.outScale = effect.readConfig("OutScale", 0.96);
-        this.outOpacity = effect.readConfig("OutOpacity", 0.0);
+        this.inScale = effect.readConfig("InScale", 0.8);
+        this.outScale = effect.readConfig("OutScale", 0.8);
     }
 
     static isScaleWindow(window) {
@@ -98,13 +96,13 @@ class ScaleEffect {
         if (!window.visible) {
             return;
         }
-        if (!effect.grab(window, Effect.WindowAddedGrabRole)) {
+        if (effect.isGrabbed(window, Effect.WindowAddedGrabRole)) {
             return;
         }
         this.setupForcedRoles(window);
         window.scaleInAnimation = animate({
             window: window,
-            curve: QEasingCurve.InOutSine,
+            curve: QEasingCurve.OutCubic,
             duration: this.duration,
             animations: [
                 {
@@ -113,7 +111,7 @@ class ScaleEffect {
                 },
                 {
                     type: Effect.Opacity,
-                    from: this.inOpacity
+                    from: 0
                 }
             ]
         });
@@ -126,10 +124,10 @@ class ScaleEffect {
         if (!ScaleEffect.isScaleWindow(window)) {
             return;
         }
-        if (!window.visible) {
+        if (!window.visible || window.skipsCloseAnimation) {
             return;
         }
-        if (!effect.grab(window, Effect.WindowClosedGrabRole)) {
+        if (effect.isGrabbed(window, Effect.WindowClosedGrabRole)) {
             return;
         }
         if (window.scaleInAnimation) {
@@ -139,7 +137,7 @@ class ScaleEffect {
         this.setupForcedRoles(window);
         window.scaleOutAnimation = animate({
             window: window,
-            curve: QEasingCurve.InOutSine,
+            curve: QEasingCurve.InCubic,
             duration: this.duration,
             animations: [
                 {
@@ -148,7 +146,7 @@ class ScaleEffect {
                 },
                 {
                     type: Effect.Opacity,
-                    to: this.outOpacity
+                    to: 0
                 }
             ]
         });

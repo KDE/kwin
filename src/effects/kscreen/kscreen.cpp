@@ -37,6 +37,8 @@
  * 3: fading in
  */
 
+Q_LOGGING_CATEGORY(KWIN_KSCREEN, "kwin_effect_kscreen", QtWarningMsg)
+
 namespace KWin
 {
 
@@ -46,11 +48,9 @@ KscreenEffect::KscreenEffect()
 {
     initConfig<KscreenConfig>();
     connect(effects, &EffectsHandler::propertyNotify, this, &KscreenEffect::propertyNotify);
-    connect(effects, &EffectsHandler::xcbConnectionChanged, this,
-        [this] {
-            m_atom = effects->announceSupportProperty(QByteArrayLiteral("_KDE_KWIN_KSCREEN_SUPPORT"), this);
-        }
-    );
+    connect(effects, &EffectsHandler::xcbConnectionChanged, this, [this]() {
+        m_atom = effects->announceSupportProperty(QByteArrayLiteral("_KDE_KWIN_KSCREEN_SUPPORT"), this);
+    });
     reconfigure(ReconfigureAll);
 
     const QList<EffectScreen *> screens = effects->screens();
@@ -58,7 +58,7 @@ KscreenEffect::KscreenEffect()
         addScreen(screen);
     }
     connect(effects, &EffectsHandler::screenAdded, this, &KscreenEffect::addScreen);
-    connect(effects, &EffectsHandler::screenRemoved, this, [this] (KWin::EffectScreen *screen) {
+    connect(effects, &EffectsHandler::screenRemoved, this, [this](KWin::EffectScreen *screen) {
         m_waylandStates.remove(screen);
     });
 }
@@ -74,7 +74,7 @@ void KscreenEffect::addScreen(EffectScreen *screen)
         state.m_timeLine.setDuration(std::chrono::milliseconds(animationTime<KscreenConfig>(250)));
         setState(state, StateFadingIn);
     });
-    connect(screen, &EffectScreen::aboutToTurnOff, this, [this, screen] (std::chrono::milliseconds dimmingIn) {
+    connect(screen, &EffectScreen::aboutToTurnOff, this, [this, screen](std::chrono::milliseconds dimmingIn) {
         auto &state = m_waylandStates[screen];
         state.m_timeLine.setDuration(dimmingIn);
         setState(state, StateFadingOut);
@@ -130,7 +130,7 @@ void KscreenEffect::postPaintScreen()
 
 void KscreenEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
-    auto screen = effects->findScreen(w->screen());
+    auto screen = w->screen();
     if (isScreenActive(screen)) {
         auto &state = !effects->waylandDisplay() ? m_xcbState : m_waylandStates[screen];
         if (state.m_state != StateNormal) {
@@ -142,26 +142,26 @@ void KscreenEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, st
 
 void KscreenEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
-    auto screen = effects->findScreen(w->screen());
+    auto screen = w->screen();
     if (isScreenActive(screen)) {
         auto &state = !effects->waylandDisplay() ? m_xcbState : m_waylandStates[screen];
-        //fade to black and fully opaque
+        // fade to black and fully opaque
         switch (state.m_state) {
-            case StateFadingOut:
-                data.setOpacity(data.opacity() + (1.0 - data.opacity()) * state.m_timeLine.value());
-                data.multiplyBrightness(1.0 - state.m_timeLine.value());
-                break;
-            case StateFadedOut:
-                data.multiplyOpacity(0.0);
-                data.multiplyBrightness(0.0);
-                break;
-            case StateFadingIn:
-                data.setOpacity(data.opacity() + (1.0 - data.opacity()) * (1.0 - state.m_timeLine.value()));
-                data.multiplyBrightness(state.m_timeLine.value());
-                break;
-            default:
-                // no adjustment
-                break;
+        case StateFadingOut:
+            data.setOpacity(data.opacity() + (1.0 - data.opacity()) * state.m_timeLine.value());
+            data.multiplyBrightness(1.0 - state.m_timeLine.value());
+            break;
+        case StateFadedOut:
+            data.multiplyOpacity(0.0);
+            data.multiplyBrightness(0.0);
+            break;
+        case StateFadingIn:
+            data.setOpacity(data.opacity() + (1.0 - data.opacity()) * (1.0 - state.m_timeLine.value()));
+            data.multiplyBrightness(state.m_timeLine.value());
+            break;
+        default:
+            // no adjustment
+            break;
         }
     }
     effects->paintWindow(w, mask, region, data);
@@ -189,7 +189,7 @@ void KscreenEffect::propertyNotify(EffectWindow *window, long int atom)
     const uint32_t *data = byteData.isEmpty() ? nullptr : reinterpret_cast<const uint32_t *>(byteData.data());
     if (!data || data[0] >= LastState) { // Property was deleted
         if (data) {
-            qCDebug(KWINEFFECTS) << "Incorrect Property state, immediate stop: " << data[0];
+            qCDebug(KWIN_KSCREEN) << "Incorrect Property state, immediate stop: " << data[0];
         }
         setState(m_xcbState, StateNormal);
         return;

@@ -10,21 +10,18 @@
 #define KWIN_ABSTRACT_WAYLAND_OUTPUT_H
 
 #include "abstract_output.h"
-#include "utils.h"
 #include "renderloop.h"
+#include "utils/common.h"
 #include <kwin_export.h>
 
 #include <QObject>
-#include <QTimer>
 #include <QSize>
-
-namespace KWaylandServer
-{
-class OutputChangeSet;
-}
+#include <QTimer>
 
 namespace KWin
 {
+
+class WaylandOutputConfig;
 
 /**
  * Generic output representation in a Wayland session
@@ -109,7 +106,8 @@ public:
 
     int refreshRate() const override;
 
-    bool isInternal() const override {
+    bool isInternal() const override
+    {
         return m_internal;
     }
 
@@ -121,7 +119,7 @@ public:
     void moveTo(const QPoint &pos);
     void setScale(qreal scale);
 
-    void applyChanges(const KWaylandServer::OutputChangeSetV2 *changeSet) override;
+    void applyChanges(const WaylandOutputConfig &config);
 
     bool isEnabled() const override;
     void setEnabled(bool enable) override;
@@ -136,22 +134,14 @@ public:
     virtual void setDpmsMode(DpmsMode mode);
 
     uint32_t overscan() const;
-    virtual void setOverscan(uint32_t overscan);
 
     /**
      * Returns a matrix that can translate into the display's coordinates system
      */
     static QMatrix4x4 logicalToNativeMatrix(const QRect &rect, qreal scale, Transform transform);
 
-    void recordingStarted();
-    void recordingStopped();
-
-    bool isBeingRecorded();
-
     void setVrrPolicy(RenderLoop::VrrPolicy policy);
     RenderLoop::VrrPolicy vrrPolicy() const;
-
-    virtual void setRgbRange(RgbRange range);
     RgbRange rgbRange() const;
 
     bool isPlaceholder() const;
@@ -173,25 +163,21 @@ protected:
                     const QSize &physicalSize,
                     const QVector<Mode> &modes, const QByteArray &edid);
 
-    void setName(const QString &name) {
+    void setName(const QString &name)
+    {
         m_name = name;
     }
-    void setInternal(bool set) {
+    void setInternal(bool set)
+    {
         m_internal = set;
     }
 
-    virtual void updateEnablement(bool enable) {
+    virtual void updateEnablement(bool enable)
+    {
         Q_UNUSED(enable);
     }
-    virtual void updateMode(const QSize &size, uint32_t refreshRate)
+    virtual void updateTransform(Transform transform)
     {
-        Q_UNUSED(size);
-        Q_UNUSED(refreshRate);
-    }
-    virtual void applyMode(int modeIndex) {
-        Q_UNUSED(modeIndex);
-    }
-    virtual void updateTransform(Transform transform) {
         Q_UNUSED(transform);
     }
 
@@ -224,7 +210,6 @@ private:
     DpmsMode m_dpmsMode = DpmsMode::On;
     SubPixel m_subPixel = SubPixel::Unknown;
     int m_refreshRate = -1;
-    int m_recorders = 0;
     bool m_isEnabled = true;
     bool m_internal = false;
     bool m_isPlaceholder = false;

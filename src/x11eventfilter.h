@@ -37,21 +37,30 @@ public:
     /**
      * Returns the type of events to filter.
      */
-    QVector<int> eventTypes() const { return m_eventTypes; }
+    QVector<int> eventTypes() const
+    {
+        return m_eventTypes;
+    }
 
     /**
      * Returns the major opcode of the extension.
      *
      * Only used when the event type is XCB_GE_GENERIC.
      */
-    int extension() const { return m_extension; }
+    int extension() const
+    {
+        return m_extension;
+    }
 
     /**
      * Returns the types of generic events to filter.
      *
      * Only used when the event type is XCB_GE_GENERIC.
      */
-    QVector<int> genericEventTypes() const { return m_genericEventTypes; }
+    QVector<int> genericEventTypes() const
+    {
+        return m_genericEventTypes;
+    }
 
     /**
      * This method is called for every event of the filtered type.

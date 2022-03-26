@@ -30,7 +30,7 @@ typedef uint32_t xkb_layout_index_t;
 
 namespace KWaylandServer
 {
-    class SeatInterface;
+class SeatInterface;
 }
 
 namespace KWin
@@ -50,7 +50,8 @@ public:
     void updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group);
     void updateKey(uint32_t key, InputRedirection::KeyboardKeyState state);
     xkb_keysym_t toKeysym(uint32_t key);
-    xkb_keysym_t currentKeysym() const {
+    xkb_keysym_t currentKeysym() const
+    {
         return m_keysym;
     }
     QString toString(xkb_keysym_t keysym);
@@ -66,30 +67,33 @@ public:
     void switchToPreviousLayout();
     bool switchToLayout(xkb_layout_index_t layout);
 
-    enum class LED {
-        NumLock = 1 << 0,
-        CapsLock = 1 << 1,
-        ScrollLock = 1 << 2
-    };
-    Q_DECLARE_FLAGS(LEDs, LED)
-    LEDs leds() const {
+    LEDs leds() const
+    {
         return m_leds;
     }
 
-    xkb_keymap *keymap() const {
+    xkb_keymap *keymap() const
+    {
         return m_keymap;
     }
 
-    xkb_state *state() const {
+    xkb_state *state() const
+    {
         return m_state;
     }
 
-    quint32 currentLayout() const {
+    quint32 currentLayout() const
+    {
         return m_currentLayout;
+    }
+
+    const auto &modifierState() const
+    {
+        return m_modifierState;
     }
     QString layoutName(xkb_layout_index_t index) const;
     QString layoutName() const;
-    const QString &layoutShortName(int index) const;
+    QString layoutShortName(int index) const;
     quint32 numberOfLayouts() const;
 
     /**
@@ -102,6 +106,7 @@ public:
 
 Q_SIGNALS:
     void ledsChanged(const LEDs &leds);
+    void modifierStateChanged();
 
 private:
     void applyEnvironmentRules(xkb_rule_names &);
@@ -129,7 +134,8 @@ private:
     xkb_keysym_t m_keysym;
     quint32 m_currentLayout = 0;
 
-    struct {
+    struct
+    {
         xkb_compose_table *table = nullptr;
         xkb_compose_state *state = nullptr;
     } m_compose;
@@ -137,7 +143,8 @@ private:
     KConfigGroup m_configGroup;
     KSharedConfigPtr m_numLockConfig;
 
-    struct {
+    struct
+    {
         xkb_mod_index_t depressed = 0;
         xkb_mod_index_t latched = 0;
         xkb_mod_index_t locked = 0;
@@ -152,15 +159,11 @@ private:
     QPointer<KWaylandServer::SeatInterface> m_seat;
 };
 
-inline
-Qt::KeyboardModifiers Xkb::modifiers() const
+inline Qt::KeyboardModifiers Xkb::modifiers() const
 {
     return m_modifiers;
 }
 
 }
-
-Q_DECLARE_METATYPE(KWin::Xkb::LED)
-Q_DECLARE_METATYPE(KWin::Xkb::LEDs)
 
 #endif

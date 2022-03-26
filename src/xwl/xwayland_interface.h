@@ -45,7 +45,6 @@ public:
     static XwaylandInterface *self();
 
     virtual Xwl::DragEventReply dragMoveFilter(Toplevel *target, const QPoint &pos) = 0;
-    virtual QProcess *process() const = 0;
     virtual KWaylandServer::AbstractDropHandler *xwlDropHandler() = 0;
 
 protected:

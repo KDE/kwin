@@ -11,12 +11,12 @@
 
 #include "abstract_client.h"
 #include "atoms.h"
-#include "x11client.h"
 #include "deleted.h"
 #include "main.h"
 #include "platform.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11client.h"
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/surface.h>
@@ -48,7 +48,6 @@ private Q_SLOTS:
 
     void testKeepAbove();
     void testKeepBelow();
-
 };
 
 void StackingOrderTest::initTestCase()
@@ -197,7 +196,8 @@ void StackingOrderTest::testRaiseTransient()
 
 struct WindowUnrefDeleter
 {
-    static inline void cleanup(Deleted *d) {
+    static inline void cleanup(Deleted *d)
+    {
         if (d != nullptr) {
             d->unrefWindow();
         }
@@ -265,11 +265,10 @@ void StackingOrderTest::testDeletedTransient()
 
     // Close the top-most transient.
     connect(transient2, &AbstractClient::windowClosed, this,
-        [](Toplevel *toplevel, Deleted *deleted) {
-            Q_UNUSED(toplevel)
-            deleted->refWindow();
-        }
-    );
+            [](Toplevel *toplevel, Deleted *deleted) {
+                Q_UNUSED(toplevel)
+                deleted->refWindow();
+            });
 
     QSignalSpy windowClosedSpy(transient2, &AbstractClient::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
@@ -293,19 +292,19 @@ static xcb_window_t createGroupWindow(xcb_connection_t *conn,
 {
     xcb_window_t wid = xcb_generate_id(conn);
     xcb_create_window(
-        conn,                          // c
-        XCB_COPY_FROM_PARENT,          // depth
-        wid,                           // wid
-        rootWindow(),                  // parent
-        geometry.x(),                  // x
-        geometry.y(),                  // y
-        geometry.width(),              // width
-        geometry.height(),             // height
-        0,                             // border_width
+        conn, // c
+        XCB_COPY_FROM_PARENT, // depth
+        wid, // wid
+        rootWindow(), // parent
+        geometry.x(), // x
+        geometry.y(), // y
+        geometry.width(), // width
+        geometry.height(), // height
+        0, // border_width
         XCB_WINDOW_CLASS_INPUT_OUTPUT, // _class
-        XCB_COPY_FROM_PARENT,          // visual
-        0,                             // value_mask
-        nullptr                        // value_list
+        XCB_COPY_FROM_PARENT, // visual
+        0, // value_mask
+        nullptr // value_list
     );
 
     xcb_size_hints_t sizeHints = {};
@@ -318,14 +317,14 @@ static xcb_window_t createGroupWindow(xcb_connection_t *conn,
     }
 
     xcb_change_property(
-        conn,                    // c
-        XCB_PROP_MODE_REPLACE,   // mode
-        wid,                     // window
+        conn, // c
+        XCB_PROP_MODE_REPLACE, // mode
+        wid, // window
         atoms->wm_client_leader, // property
-        XCB_ATOM_WINDOW,         // type
-        32,                      // format
-        1,                       // data_len
-        &leaderWid               // data
+        XCB_ATOM_WINDOW, // type
+        32, // format
+        1, // data_len
+        &leaderWid // data
     );
 
     return wid;
@@ -333,7 +332,8 @@ static xcb_window_t createGroupWindow(xcb_connection_t *conn,
 
 struct XcbConnectionDeleter
 {
-    static inline void cleanup(xcb_connection_t *c) {
+    static inline void cleanup(xcb_connection_t *c)
+    {
         xcb_disconnect(c);
     }
 };
@@ -412,13 +412,13 @@ void StackingOrderTest::testGroupTransientIsAboveWindowGroup()
     xcb_atom_t net_wm_window_type_normal = Xcb::Atom(
         QByteArrayLiteral("_NET_WM_WINDOW_TYPE_NORMAL"), false, conn.data());
     xcb_change_property(
-        conn.data(),               // c
-        XCB_PROP_MODE_REPLACE,     // mode
-        transientWid,              // window
-        net_wm_window_type,        // property
-        XCB_ATOM_ATOM,             // type
-        32,                        // format
-        1,                         // data_len
+        conn.data(), // c
+        XCB_PROP_MODE_REPLACE, // mode
+        transientWid, // window
+        net_wm_window_type, // property
+        XCB_ATOM_ATOM, // type
+        32, // format
+        1, // data_len
         &net_wm_window_type_normal // data
     );
 
@@ -526,13 +526,13 @@ void StackingOrderTest::testRaiseGroupTransient()
     xcb_atom_t net_wm_window_type_normal = Xcb::Atom(
         QByteArrayLiteral("_NET_WM_WINDOW_TYPE_NORMAL"), false, conn.data());
     xcb_change_property(
-        conn.data(),               // c
-        XCB_PROP_MODE_REPLACE,     // mode
-        transientWid,              // window
-        net_wm_window_type,        // property
-        XCB_ATOM_ATOM,             // type
-        32,                        // format
-        1,                         // data_len
+        conn.data(), // c
+        XCB_PROP_MODE_REPLACE, // mode
+        transientWid, // window
+        net_wm_window_type, // property
+        XCB_ATOM_ATOM, // type
+        32, // format
+        1, // data_len
         &net_wm_window_type_normal // data
     );
 
@@ -660,13 +660,13 @@ void StackingOrderTest::testDeletedGroupTransient()
     xcb_atom_t net_wm_window_type_normal = Xcb::Atom(
         QByteArrayLiteral("_NET_WM_WINDOW_TYPE_NORMAL"), false, conn.data());
     xcb_change_property(
-        conn.data(),               // c
-        XCB_PROP_MODE_REPLACE,     // mode
-        transientWid,              // window
-        net_wm_window_type,        // property
-        XCB_ATOM_ATOM,             // type
-        32,                        // format
-        1,                         // data_len
+        conn.data(), // c
+        XCB_PROP_MODE_REPLACE, // mode
+        transientWid, // window
+        net_wm_window_type, // property
+        XCB_ATOM_ATOM, // type
+        32, // format
+        1, // data_len
         &net_wm_window_type_normal // data
     );
 
@@ -687,11 +687,10 @@ void StackingOrderTest::testDeletedGroupTransient()
 
     // Unmap the transient.
     connect(transient, &X11Client::windowClosed, this,
-        [](Toplevel *toplevel, Deleted *deleted) {
-            Q_UNUSED(toplevel)
-            deleted->refWindow();
-        }
-    );
+            [](Toplevel *toplevel, Deleted *deleted) {
+                Q_UNUSED(toplevel)
+                deleted->refWindow();
+            });
 
     QSignalSpy windowClosedSpy(transient, &X11Client::windowClosed);
     QVERIFY(windowClosedSpy.isValid());

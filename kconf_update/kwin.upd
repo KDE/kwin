@@ -79,3 +79,9 @@ Id=remove-xrender-backend
 File=kwinrc
 Group=Compositing
 Script=kwin-5.23-remove-xrender-backend.py,python3
+
+# Enable the Scale effect by default.
+Id=enable-scale-effect-by-default
+File=kwinrc
+Group=Plugins
+Key=kwin4_effect_fadeEnabled,kwin4_effect_scaleEnabled

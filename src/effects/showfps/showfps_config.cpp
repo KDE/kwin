@@ -6,35 +6,30 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-
 #include "showfps_config.h"
+
+#include <config-kwin.h>
 
 // KConfigSkeleton
 #include "showfpsconfig.h"
-#include <config-kwin.h>
 #include <kwineffects_interface.h>
 
 #include <KLocalizedString>
-#include <KAboutData>
 #include <KPluginFactory>
 
-K_PLUGIN_FACTORY_WITH_JSON(ShowFpsEffectConfigFactory,
-                           "showfps_config.json",
-                           registerPlugin<KWin::ShowFpsEffectConfig>();)
+K_PLUGIN_CLASS(KWin::ShowFpsEffectConfig)
 
 namespace KWin
 {
 
-ShowFpsEffectConfig::ShowFpsEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(parent, args)
+ShowFpsEffectConfig::ShowFpsEffectConfig(QWidget *parent, const QVariantList &args)
+    : KCModule(parent, args)
 {
     m_ui = new Ui::ShowFpsEffectConfigForm;
     m_ui->setupUi(this);
 
     ShowFpsConfig::instance(KWIN_CONFIG);
     addConfig(ShowFpsConfig::self(), this);
-
-    load();
 }
 
 ShowFpsEffectConfig::~ShowFpsEffectConfig()

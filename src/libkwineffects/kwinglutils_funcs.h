@@ -32,7 +32,7 @@ namespace KWin
 {
 
 typedef void (*resolveFuncPtr)();
-void KWINGLUTILS_EXPORT glResolveFunctions(const std::function<resolveFuncPtr(const char*)> &resolveFunction);
+void KWINGLUTILS_EXPORT glResolveFunctions(const std::function<resolveFuncPtr(const char *)> &resolveFunction);
 
 // GL_ARB_robustness / GL_EXT_robustness
 using glGetGraphicsResetStatus_func = GLenum (*)();
@@ -41,8 +41,8 @@ using glReadnPixels_func = void (*)(GLint x, GLint y, GLsizei width, GLsizei hei
 using glGetnUniformfv_func = void (*)(GLuint program, GLint location, GLsizei bufSize, GLfloat *params);
 
 extern KWINGLUTILS_EXPORT glGetGraphicsResetStatus_func glGetGraphicsResetStatus;
-extern KWINGLUTILS_EXPORT glReadnPixels_func            glReadnPixels;
-extern KWINGLUTILS_EXPORT glGetnUniformfv_func          glGetnUniformfv;
+extern KWINGLUTILS_EXPORT glReadnPixels_func glReadnPixels;
+extern KWINGLUTILS_EXPORT glGetnUniformfv_func glGetnUniformfv;
 
 } // namespace
 

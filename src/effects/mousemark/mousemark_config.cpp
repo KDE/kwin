@@ -6,45 +6,41 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-
 #include "mousemark_config.h"
+
+#include <config-kwin.h>
 
 // KConfigSkeleton
 #include "mousemarkconfig.h"
-#include <config-kwin.h>
 #include <kwineffects_interface.h>
 
 #include <QAction>
 
-#include <KLocalizedString>
 #include <KActionCollection>
-#include <KAboutData>
 #include <KGlobalAccel>
+#include <KLocalizedString>
 #include <KPluginFactory>
 
 #include <QDebug>
 #include <QWidget>
 
-K_PLUGIN_FACTORY_WITH_JSON(MouseMarkEffectConfigFactory,
-                           "mousemark_config.json",
-                           registerPlugin<KWin::MouseMarkEffectConfig>();)
+K_PLUGIN_CLASS(KWin::MouseMarkEffectConfig)
 
 namespace KWin
 {
 
-MouseMarkEffectConfigForm::MouseMarkEffectConfigForm(QWidget* parent) : QWidget(parent)
+MouseMarkEffectConfigForm::MouseMarkEffectConfigForm(QWidget *parent)
+    : QWidget(parent)
 {
     setupUi(this);
 }
 
-MouseMarkEffectConfig::MouseMarkEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(parent, args)
+MouseMarkEffectConfig::MouseMarkEffectConfig(QWidget *parent, const QVariantList &args)
+    : KCModule(parent, args)
 {
     m_ui = new MouseMarkEffectConfigForm(this);
 
-    m_ui->kcfg_LineWidth->setSuffix(ki18ncp("Suffix", " pixel", " pixels"));
-
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
     layout->addWidget(m_ui);
 
@@ -55,21 +51,23 @@ MouseMarkEffectConfig::MouseMarkEffectConfig(QWidget* parent, const QVariantList
     m_actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
     m_actionCollection->setComponentDisplayName(i18n("KWin"));
 
-    QAction* a = m_actionCollection->addAction(QStringLiteral("ClearMouseMarks"));
+    QAction *a = m_actionCollection->addAction(QStringLiteral("ClearMouseMarks"));
     a->setText(i18n("Clear Mouse Marks"));
     a->setProperty("isConfigurationAction", true);
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::SHIFT + Qt::META + Qt::Key_F11);
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::SHIFT + Qt::META + Qt::Key_F11);
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::SHIFT | Qt::META | Qt::Key_F11));
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::SHIFT | Qt::META | Qt::Key_F11));
 
     a = m_actionCollection->addAction(QStringLiteral("ClearLastMouseMark"));
     a->setText(i18n("Clear Last Mouse Mark"));
     a->setProperty("isConfigurationAction", true);
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::SHIFT + Qt::META + Qt::Key_F12);
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::SHIFT + Qt::META + Qt::Key_F12);
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::SHIFT | Qt::META | Qt::Key_F12));
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::SHIFT | Qt::META | Qt::Key_F12));
 
     m_ui->editor->addCollection(m_actionCollection);
 
-    load();
+    connect(m_ui->kcfg_LineWidth, qOverload<int>(&QSpinBox::valueChanged), this, [this]() {
+        updateSpinBoxSuffix();
+    });
 }
 
 MouseMarkEffectConfig::~MouseMarkEffectConfig()
@@ -78,18 +76,30 @@ MouseMarkEffectConfig::~MouseMarkEffectConfig()
     m_ui->editor->undo();
 }
 
+void MouseMarkEffectConfig::load()
+{
+    KCModule::load();
+
+    updateSpinBoxSuffix();
+}
+
 void MouseMarkEffectConfig::save()
 {
-    qDebug() << "Saving config of MouseMark" ;
+    qDebug() << "Saving config of MouseMark";
     KCModule::save();
 
     m_actionCollection->writeSettings();
-    m_ui->editor->save();   // undo() will restore to this state from now on
+    m_ui->editor->save(); // undo() will restore to this state from now on
 
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
     interface.reconfigureEffect(QStringLiteral("mousemark"));
+}
+
+void MouseMarkEffectConfig::updateSpinBoxSuffix()
+{
+    m_ui->kcfg_LineWidth->setSuffix(i18ncp("Suffix", " pixel", " pixels", m_ui->kcfg_LineWidth->value()));
 }
 
 } // namespace

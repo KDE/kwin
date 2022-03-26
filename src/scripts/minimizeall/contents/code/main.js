@@ -30,6 +30,16 @@ function minimizeAllWindows() {
         relevantClients.push(allClients[i]);
     }
 
+    // Try to preserve last active window by sorting windows.
+    relevantClients.sort((a, b) => {
+        if (a.active) {
+            return 1;
+        } else if (b.active) {
+            return -1;
+        }
+        return a.stackingOrder - b.stackingOrder;
+    });
+
     for (var i = 0; i < relevantClients.length; ++i) {
         var wasMinimizedByScript = relevantClients[i].minimizedByScript;
         delete relevantClients[i].minimizedByScript;

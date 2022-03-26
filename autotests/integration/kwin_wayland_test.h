@@ -9,18 +9,23 @@
 #ifndef KWIN_WAYLAND_TEST_H
 #define KWIN_WAYLAND_TEST_H
 
+#include "abstract_client.h"
+#include "inputdevice.h"
 #include "main.h"
 
 // Qt
 #include <QtTest>
 
+#include <KWayland/Client/surface.h>
+
 #include "qwayland-idle-inhibit-unstable-v1.h"
-#include "qwayland-wlr-layer-shell-unstable-v1.h"
-#include "qwayland-text-input-unstable-v3.h"
-#include "qwayland-xdg-decoration-unstable-v1.h"
-#include "qwayland-xdg-shell.h"
+#include "qwayland-input-method-unstable-v1.h"
 #include "qwayland-kde-output-device-v2.h"
 #include "qwayland-kde-output-management-v2.h"
+#include "qwayland-text-input-unstable-v3.h"
+#include "qwayland-wlr-layer-shell-unstable-v1.h"
+#include "qwayland-xdg-decoration-unstable-v1.h"
+#include "qwayland-xdg-shell.h"
 
 namespace KWayland
 {
@@ -59,6 +64,10 @@ class Xwayland;
 }
 
 class AbstractClient;
+namespace Test
+{
+class VirtualInputDevice;
+}
 
 class WaylandTestApplication : public ApplicationWaylandAbstract
 {
@@ -67,9 +76,15 @@ public:
     WaylandTestApplication(OperationMode mode, int &argc, char **argv);
     ~WaylandTestApplication() override;
 
-    void setInputMethodServerToStart(const QString &inputMethodServer) {
+    void setInputMethodServerToStart(const QString &inputMethodServer)
+    {
         m_inputMethodServerToStart = inputMethodServer;
     }
+
+    Test::VirtualInputDevice *virtualPointer() const;
+    Test::VirtualInputDevice *virtualKeyboard() const;
+    Test::VirtualInputDevice *virtualTouch() const;
+
 protected:
     void performStartup() override;
 
@@ -78,8 +93,15 @@ private:
     void continueStartupWithScene();
     void finalizeStartup();
 
+    void createVirtualInputDevices();
+    void destroyVirtualInputDevices();
+
     Xwl::Xwayland *m_xwayland = nullptr;
     QString m_inputMethodServerToStart;
+
+    QScopedPointer<Test::VirtualInputDevice> m_virtualPointer;
+    QScopedPointer<Test::VirtualInputDevice> m_virtualKeyboard;
+    QScopedPointer<Test::VirtualInputDevice> m_virtualTouch;
 };
 
 namespace Test
@@ -90,12 +112,29 @@ class MockInputMethod;
 class TextInputManagerV3 : public QtWayland::zwp_text_input_manager_v3
 {
 public:
-    ~TextInputManagerV3() override { destroy(); }
+    ~TextInputManagerV3() override
+    {
+        destroy();
+    }
 };
 
-class TextInputV3 : public QtWayland::zwp_text_input_v3
+class TextInputV3 : public QObject, public QtWayland::zwp_text_input_v3
 {
-    ~TextInputV3() override { destroy(); }
+    Q_OBJECT
+public:
+    ~TextInputV3() override
+    {
+        destroy();
+    }
+
+Q_SIGNALS:
+    void preeditString(const QString &text, int cursor_begin, int cursor_end);
+
+protected:
+    void zwp_text_input_v3_preedit_string(const QString &text, int32_t cursor_begin, int32_t cursor_end) override
+    {
+        Q_EMIT preeditString(text, cursor_begin, cursor_end);
+    }
 };
 
 class LayerShellV1 : public QtWayland::zwlr_layer_shell_v1
@@ -166,10 +205,10 @@ class XdgToplevel : public QObject, public QtWayland::xdg_toplevel
 
 public:
     enum class State {
-        Maximized  = 1 << 0,
+        Maximized = 1 << 0,
         Fullscreen = 1 << 1,
-        Resizing   = 1 << 2,
-        Activated  = 1 << 3
+        Resizing = 1 << 2,
+        Activated = 1 << 3
     };
     Q_DECLARE_FLAGS(States, State)
 
@@ -393,6 +432,40 @@ private:
     uint32_t m_rgbRange;
 };
 
+class MockInputMethod : public QObject, QtWayland::zwp_input_method_v1
+{
+    Q_OBJECT
+public:
+    MockInputMethod(struct wl_registry *registry, int id, int version);
+    ~MockInputMethod();
+
+    AbstractClient *client() const
+    {
+        return m_client;
+    }
+    KWayland::Client::Surface *inputPanelSurface() const
+    {
+        return m_inputSurface;
+    }
+    auto *context() const
+    {
+        return m_context;
+    }
+
+Q_SIGNALS:
+    void activate();
+
+protected:
+    void zwp_input_method_v1_activate(struct ::zwp_input_method_context_v1 *context) override;
+    void zwp_input_method_v1_deactivate(struct ::zwp_input_method_context_v1 *context) override;
+
+private:
+    QPointer<KWayland::Client::Surface> m_inputSurface;
+    QtWayland::zwp_input_panel_surface_v1 *m_inputMethodSurface = nullptr;
+    QPointer<AbstractClient> m_client;
+    struct ::zwp_input_method_context_v1 *m_context = nullptr;
+};
+
 enum class AdditionalWaylandInterface {
     Seat = 1 << 0,
     Decoration = 1 << 1,
@@ -411,6 +484,63 @@ enum class AdditionalWaylandInterface {
     OutputDeviceV2 = 1 << 14,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
+
+class VirtualInputDevice : public InputDevice
+{
+    Q_OBJECT
+
+public:
+    explicit VirtualInputDevice(QObject *parent = nullptr);
+
+    void setPointer(bool set);
+    void setKeyboard(bool set);
+    void setTouch(bool set);
+    void setName(const QString &name);
+
+    QString sysName() const override;
+    QString name() const override;
+
+    bool isEnabled() const override;
+    void setEnabled(bool enabled) override;
+
+    LEDs leds() const override;
+    void setLeds(LEDs leds) override;
+
+    bool isKeyboard() const override;
+    bool isAlphaNumericKeyboard() const override;
+    bool isPointer() const override;
+    bool isTouchpad() const override;
+    bool isTouch() const override;
+    bool isTabletTool() const override;
+    bool isTabletPad() const override;
+    bool isTabletModeSwitch() const override;
+    bool isLidSwitch() const override;
+
+private:
+    QString m_name;
+    bool m_pointer = false;
+    bool m_keyboard = false;
+    bool m_touch = false;
+};
+
+void keyboardKeyPressed(quint32 key, quint32 time);
+void keyboardKeyReleased(quint32 key, quint32 time);
+void pointerAxisHorizontal(qreal delta,
+                           quint32 time,
+                           qint32 discreteDelta = 0,
+                           InputRedirection::PointerAxisSource source = InputRedirection::PointerAxisSourceUnknown);
+void pointerAxisVertical(qreal delta,
+                         quint32 time,
+                         qint32 discreteDelta = 0,
+                         InputRedirection::PointerAxisSource source = InputRedirection::PointerAxisSourceUnknown);
+void pointerButtonPressed(quint32 button, quint32 time);
+void pointerButtonReleased(quint32 button, quint32 time);
+void pointerMotion(const QPointF &position, quint32 time);
+void touchCancel();
+void touchDown(qint32 id, const QPointF &pos, quint32 time);
+void touchMotion(qint32 id, const QPointF &pos, quint32 time);
+void touchUp(qint32 id, quint32 time);
+
 /**
  * Creates a Wayland Connection in a dedicated thread and creates various
  * client side objects which can be used to create windows.
@@ -470,18 +600,20 @@ enum class CreationSetup {
 QtWayland::zwp_input_panel_surface_v1 *createInputPanelSurfaceV1(KWayland::Client::Surface *surface,
                                                                  KWayland::Client::Output *output);
 
-XdgToplevel *createXdgToplevelSurface(KWayland::Client::Surface *surface, QObject *parent = nullptr,
-                                      CreationSetup configureMode = CreationSetup::CreateAndConfigure);
+XdgToplevel *createXdgToplevelSurface(KWayland::Client::Surface *surface, QObject *parent = nullptr);
+XdgToplevel *createXdgToplevelSurface(KWayland::Client::Surface *surface,
+                                      CreationSetup configureMode,
+                                      QObject *parent = nullptr);
 
 XdgPositioner *createXdgPositioner();
 
 XdgPopup *createXdgPopupSurface(KWayland::Client::Surface *surface, XdgSurface *parentSurface,
-                                XdgPositioner *positioner, QObject *parent = nullptr,
-                                CreationSetup configureMode = CreationSetup::CreateAndConfigure);
+                                XdgPositioner *positioner,
+                                CreationSetup configureMode = CreationSetup::CreateAndConfigure,
+                                QObject *parent = nullptr);
 
 XdgToplevelDecorationV1 *createXdgToplevelDecorationV1(XdgToplevel *toplevel, QObject *parent = nullptr);
 IdleInhibitorV1 *createIdleInhibitorV1(KWayland::Client::Surface *surface);
-
 
 /**
  * Creates a shared memory buffer of @p size in @p color and attaches it to the @p surface.
@@ -525,6 +657,7 @@ bool unlockScreen();
 void initWaylandWorkspace();
 
 AbstractClient *inputPanelClient();
+MockInputMethod *inputMethod();
 KWayland::Client::Surface *inputPanelSurface();
 
 }
@@ -535,22 +668,22 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Test::AdditionalWaylandInterfaces)
 Q_DECLARE_METATYPE(KWin::Test::XdgToplevel::States)
 Q_DECLARE_METATYPE(QtWayland::zxdg_toplevel_decoration_v1::mode)
 
-#define WAYLANDTEST_MAIN_HELPER(TestObject, DPI, OperationMode) \
-int main(int argc, char *argv[]) \
-{ \
-    setenv("QT_QPA_PLATFORM", "wayland-org.kde.kwin.qpa", true); \
-    setenv("QT_QPA_PLATFORM_PLUGIN_PATH", QFileInfo(QString::fromLocal8Bit(argv[0])).absolutePath().toLocal8Bit().constData(), true); \
-    setenv("KWIN_FORCE_OWN_QPA", "1", true); \
-    qunsetenv("KDE_FULL_SESSION"); \
-    qunsetenv("KDE_SESSION_VERSION"); \
-    qunsetenv("XDG_SESSION_DESKTOP"); \
-    qunsetenv("XDG_CURRENT_DESKTOP"); \
-    DPI; \
-    KWin::WaylandTestApplication app(OperationMode, argc, argv); \
-    app.setAttribute(Qt::AA_Use96Dpi, true); \
-    TestObject tc; \
-    return QTest::qExec(&tc, argc, argv); \
-}
+#define WAYLANDTEST_MAIN_HELPER(TestObject, DPI, OperationMode)                                                                           \
+    int main(int argc, char *argv[])                                                                                                      \
+    {                                                                                                                                     \
+        setenv("QT_QPA_PLATFORM", "wayland-org.kde.kwin.qpa", true);                                                                      \
+        setenv("QT_QPA_PLATFORM_PLUGIN_PATH", QFileInfo(QString::fromLocal8Bit(argv[0])).absolutePath().toLocal8Bit().constData(), true); \
+        setenv("KWIN_FORCE_OWN_QPA", "1", true);                                                                                          \
+        qunsetenv("KDE_FULL_SESSION");                                                                                                    \
+        qunsetenv("KDE_SESSION_VERSION");                                                                                                 \
+        qunsetenv("XDG_SESSION_DESKTOP");                                                                                                 \
+        qunsetenv("XDG_CURRENT_DESKTOP");                                                                                                 \
+        DPI;                                                                                                                              \
+        KWin::WaylandTestApplication app(OperationMode, argc, argv);                                                                      \
+        app.setAttribute(Qt::AA_Use96Dpi, true);                                                                                          \
+        TestObject tc;                                                                                                                    \
+        return QTest::qExec(&tc, argc, argv);                                                                                             \
+    }
 
 #ifdef NO_XWAYLAND
 #define WAYLANDTEST_MAIN(TestObject) WAYLANDTEST_MAIN_HELPER(TestObject, QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps), KWin::Application::OperationModeWaylandOnly)

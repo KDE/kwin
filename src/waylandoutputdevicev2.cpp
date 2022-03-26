@@ -68,6 +68,7 @@ WaylandOutputDevice::WaylandOutputDevice(AbstractWaylandOutput *output, QObject 
     m_outputDeviceV2->setCapabilities(kwinCapabilitiesToOutputDeviceCapabilities(output->capabilities()));
     m_outputDeviceV2->setVrrPolicy(kwinVrrPolicyToOutputDeviceVrrPolicy(output->vrrPolicy()));
     m_outputDeviceV2->setRgbRange(kwinRgbRangeToOutputDeviceRgbRange(output->rgbRange()));
+    m_outputDeviceV2->setName(output->name());
 
     updateModes(output);
 

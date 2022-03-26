@@ -15,7 +15,8 @@
 
 #include <QEasingCurve>
 
-namespace KWin {
+namespace KWin
+{
 
 /**
  * Wraps effects->setActiveFullScreenEffect for the duration of it's lifespan
@@ -25,6 +26,7 @@ class FullScreenEffectLock
 public:
     FullScreenEffectLock(Effect *effect);
     ~FullScreenEffectLock();
+
 private:
     Q_DISABLE_COPY(FullScreenEffectLock)
 };
@@ -60,17 +62,19 @@ private:
 };
 typedef QSharedPointer<PreviousWindowPixmapLock> PreviousWindowPixmapLockPtr;
 
-class KWINEFFECTS_EXPORT AniData {
+class KWINEFFECTS_EXPORT AniData
+{
 public:
     AniData();
     AniData(AnimationEffect::Attribute a, int meta, const FPx2 &to,
             int delay, const FPx2 &from, bool waitAtSource,
-            FullScreenEffectLockPtr =FullScreenEffectLockPtr(),
+            FullScreenEffectLockPtr = FullScreenEffectLockPtr(),
             bool keepAlive = true, PreviousWindowPixmapLockPtr previousWindowPixmapLock = {});
 
     bool isActive() const;
 
-    inline bool isOneDimensional() const {
+    inline bool isOneDimensional() const
+    {
         return from[0] == from[1] && to[0] == to[1];
     }
 

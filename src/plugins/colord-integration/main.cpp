@@ -4,8 +4,8 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#include "colordintegration.h"
 #include "main.h"
+#include "colordintegration.h"
 
 #include <KPluginFactory>
 

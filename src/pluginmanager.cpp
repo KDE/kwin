@@ -8,11 +8,10 @@
 #include "dbusinterface.h"
 #include "main.h"
 #include "plugin.h"
-#include "utils.h"
+#include "utils/common.h"
 
 #include <KConfigGroup>
 #include <KPluginFactory>
-#include <KPluginLoader>
 #include <KPluginMetaData>
 
 namespace KWin
@@ -64,7 +63,7 @@ PluginManager::PluginManager(QObject *parent)
         }
     }
 
-    const QVector<KPluginMetaData> plugins = KPluginLoader::findPlugins(s_pluginDirectory);
+    const QVector<KPluginMetaData> plugins = KPluginMetaData::findPlugins(s_pluginDirectory);
     for (const KPluginMetaData &metadata : plugins) {
         if (m_plugins.contains(metadata.pluginId())) {
             qCWarning(KWIN_CORE) << "Conflicting plugin id" << metadata.pluginId();
@@ -92,7 +91,7 @@ QStringList PluginManager::availablePlugins() const
 {
     QStringList ret = m_staticPlugins.keys();
 
-    const QVector<KPluginMetaData> plugins = KPluginLoader::findPlugins(s_pluginDirectory);
+    const QVector<KPluginMetaData> plugins = KPluginMetaData::findPlugins(s_pluginDirectory);
     for (const KPluginMetaData &metadata : plugins) {
         ret.append(metadata.pluginId());
     }
@@ -144,7 +143,7 @@ bool PluginManager::loadDynamicPlugin(const KPluginMetaData &metadata)
     }
 
     const QString pluginId = metadata.pluginId();
-    KPluginLoader pluginLoader(metadata.fileName());
+    QPluginLoader pluginLoader(metadata.fileName());
     if (pluginLoader.metaData().value("IID").toString() != PluginFactory_iid) {
         qCWarning(KWIN_CORE) << pluginId << "has mismatching plugin version";
         return false;

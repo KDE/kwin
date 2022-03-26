@@ -12,13 +12,14 @@
 namespace KWin
 {
 
-static const struct {
+static const struct
+{
     Session::Type type;
     std::function<Session *(QObject *)> createFunc;
 } s_availableSessions[] = {
-    { Session::Type::Logind, &LogindSession::create },
-    { Session::Type::ConsoleKit, &ConsoleKitSession::create },
-    { Session::Type::Noop, &NoopSession::create },
+    {Session::Type::Logind, &LogindSession::create},
+    {Session::Type::ConsoleKit, &ConsoleKitSession::create},
+    {Session::Type::Noop, &NoopSession::create},
 };
 
 Session::Session(QObject *parent)

@@ -74,6 +74,10 @@ public:
     virtual void swipeGestureEnd(quint32 time);
     virtual void swipeGestureCancelled(quint32 time);
 
+    virtual void holdGestureBegin(int fingerCount, quint32 time);
+    virtual void holdGestureEnd(quint32 time);
+    virtual void holdGestureCancelled(quint32 time);
+
     virtual void switchEvent(SwitchEvent *event);
 
     virtual void tabletToolEvent(TabletEvent *event);
@@ -82,7 +86,6 @@ public:
     virtual void tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId);
     virtual void tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId);
 };
-
 
 } // namespace KWin
 

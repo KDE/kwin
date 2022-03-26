@@ -8,8 +8,8 @@
 // This class encapsulates all theme config values
 // it's a separate class as it's needed by both deco and config dialog
 
-#include <QString>
 #include <QColor>
+#include <QString>
 
 class KConfig;
 
@@ -20,315 +20,413 @@ class ThemeConfig
 public:
     ThemeConfig();
     void load(const KConfig &conf);
-    ~ThemeConfig() {};
+    ~ThemeConfig(){};
     // active window
     QColor activeTextColor(bool useTabs = false, bool focused = true) const;
     // inactive window
     QColor inactiveTextColor(bool useTabs = false, bool focused = true) const;
-    QColor activeTextShadowColor() const {
+    QColor activeTextShadowColor() const
+    {
         return m_activeTextShadowColor;
     }
-    QColor inactiveTextShadowColor() const {
+    QColor inactiveTextShadowColor() const
+    {
         return m_inactiveTextShadowColor;
     }
-    int textShadowOffsetX() const {
+    int textShadowOffsetX() const
+    {
         return m_textShadowOffsetX;
     }
-    int textShadowOffsetY() const {
+    int textShadowOffsetY() const
+    {
         return m_textShadowOffsetY;
     }
-    bool useTextShadow() const {
+    bool useTextShadow() const
+    {
         return m_useTextShadow;
     }
-    bool haloActive() const {
+    bool haloActive() const
+    {
         return m_haloActive;
     }
-    bool haloInactive() const {
+    bool haloInactive() const
+    {
         return m_haloInactive;
     }
     // Alignment
-    Qt::Alignment alignment() const {
+    Qt::Alignment alignment() const
+    {
         return m_alignment;
     };
-    Qt::Alignment verticalAlignment() const {
+    Qt::Alignment verticalAlignment() const
+    {
         return m_verticalAlignment;
     }
-    int animationTime() const {
+    int animationTime() const
+    {
         return m_animationTime;
     }
     // Borders
-    int borderLeft() const {
+    int borderLeft() const
+    {
         return m_borderLeft;
     }
-    int borderRight() const {
+    int borderRight() const
+    {
         return m_borderRight;
     }
-    int borderBottom() const {
+    int borderBottom() const
+    {
         return m_borderBottom;
     }
-    int borderTop() const {
+    int borderTop() const
+    {
         return m_borderTop;
     }
 
-    int titleEdgeTop() const {
+    int titleEdgeTop() const
+    {
         return m_titleEdgeTop;
     }
-    int titleEdgeBottom() const {
+    int titleEdgeBottom() const
+    {
         return m_titleEdgeBottom;
     }
-    int titleEdgeLeft() const {
+    int titleEdgeLeft() const
+    {
         return m_titleEdgeLeft;
     }
-    int titleEdgeRight() const {
+    int titleEdgeRight() const
+    {
         return m_titleEdgeRight;
     }
-    int titleEdgeTopMaximized() const {
+    int titleEdgeTopMaximized() const
+    {
         return m_titleEdgeTopMaximized;
     }
-    int titleEdgeBottomMaximized() const {
+    int titleEdgeBottomMaximized() const
+    {
         return m_titleEdgeBottomMaximized;
     }
-    int titleEdgeLeftMaximized() const {
+    int titleEdgeLeftMaximized() const
+    {
         return m_titleEdgeLeftMaximized;
     }
-    int titleEdgeRightMaximized() const {
+    int titleEdgeRightMaximized() const
+    {
         return m_titleEdgeRightMaximized;
     }
-    int titleBorderLeft() const {
+    int titleBorderLeft() const
+    {
         return m_titleBorderLeft;
     }
-    int titleBorderRight() const {
+    int titleBorderRight() const
+    {
         return m_titleBorderRight;
     }
-    int titleHeight() const {
+    int titleHeight() const
+    {
         return m_titleHeight;
     }
 
-    int buttonWidth() const {
+    int buttonWidth() const
+    {
         return m_buttonWidth;
     }
-    int buttonWidthMinimize() const {
+    int buttonWidthMinimize() const
+    {
         return m_buttonWidthMinimize;
     }
-    int buttonWidthMaximizeRestore() const {
+    int buttonWidthMaximizeRestore() const
+    {
         return m_buttonWidthMaximizeRestore;
     }
-    int buttonWidthClose() const {
+    int buttonWidthClose() const
+    {
         return m_buttonWidthClose;
     }
-    int buttonWidthAllDesktops() const {
+    int buttonWidthAllDesktops() const
+    {
         return m_buttonWidthAllDesktops;
     }
-    int buttonWidthKeepAbove() const {
+    int buttonWidthKeepAbove() const
+    {
         return m_buttonWidthKeepAbove;
     }
-    int buttonWidthKeepBelow() const {
+    int buttonWidthKeepBelow() const
+    {
         return m_buttonWidthKeepBelow;
     }
-    int buttonWidthShade() const {
+    int buttonWidthShade() const
+    {
         return m_buttonWidthShade;
     }
-    int buttonWidthHelp() const {
+    int buttonWidthHelp() const
+    {
         return m_buttonWidthHelp;
     }
-    int buttonWidthMenu() const {
+    int buttonWidthMenu() const
+    {
         return m_buttonWidthMenu;
     }
-    int buttonWidthAppMenu() const {
+    int buttonWidthAppMenu() const
+    {
         return m_buttonWidthAppMenu;
     }
-    int buttonHeight() const {
+    int buttonHeight() const
+    {
         return m_buttonHeight;
     }
-    int buttonSpacing() const {
+    int buttonSpacing() const
+    {
         return m_buttonSpacing;
     }
-    int buttonMarginTop() const {
+    int buttonMarginTop() const
+    {
         return m_buttonMarginTop;
     }
-    int explicitButtonSpacer() const {
+    int explicitButtonSpacer() const
+    {
         return m_explicitButtonSpacer;
     }
 
-    int paddingLeft() const {
+    int paddingLeft() const
+    {
         return m_paddingLeft;
     }
-    int paddingRight() const {
+    int paddingRight() const
+    {
         return m_paddingRight;
     }
-    int paddingTop() const {
+    int paddingTop() const
+    {
         return m_paddingTop;
     }
-    int paddingBottom() const {
+    int paddingBottom() const
+    {
         return m_paddingBottom;
     }
 
-    bool shadow() const {
+    bool shadow() const
+    {
         return m_shadow;
     }
 
-    int decorationPosition() const {
+    int decorationPosition() const
+    {
         return m_decorationPosition;
     }
 
-    static QColor defaultActiveTextColor() {
+    static QColor defaultActiveTextColor()
+    {
         return QColor(Qt::black);
     }
-    static QColor defaultActiveFocusedTextColor() {
+    static QColor defaultActiveFocusedTextColor()
+    {
         return QColor(Qt::black);
     }
-    static QColor defaultActiveUnfocusedTextColor() {
+    static QColor defaultActiveUnfocusedTextColor()
+    {
         return QColor(Qt::black);
     }
-    static QColor defaultInactiveTextColor() {
+    static QColor defaultInactiveTextColor()
+    {
         return QColor(Qt::black);
     }
-    static QColor defaultInactiveFocusedTextColor() {
+    static QColor defaultInactiveFocusedTextColor()
+    {
         return QColor(Qt::black);
     }
-    static QColor defaultInactiveUnfocusedTextColor() {
+    static QColor defaultInactiveUnfocusedTextColor()
+    {
         return QColor(Qt::black);
     }
-    static QColor defaultActiveTextShadowColor() {
+    static QColor defaultActiveTextShadowColor()
+    {
         return QColor(Qt::white);
     }
-    static QColor defaultInactiveTextShadowColor() {
+    static QColor defaultInactiveTextShadowColor()
+    {
         return QColor(Qt::white);
     }
-    static int defaultTextShadowOffsetX() {
+    static int defaultTextShadowOffsetX()
+    {
         return 0;
     }
-    static int defaultTextShadowOffsetY() {
+    static int defaultTextShadowOffsetY()
+    {
         return 0;
     }
-    static bool defaultUseTextShadow() {
+    static bool defaultUseTextShadow()
+    {
         return false;
     }
-    static bool defaultHaloActive() {
+    static bool defaultHaloActive()
+    {
         return false;
     }
-    static bool defaultHaloInactive() {
+    static bool defaultHaloInactive()
+    {
         return false;
     }
-    static Qt::Alignment defaultAlignment() {
+    static Qt::Alignment defaultAlignment()
+    {
         return Qt::AlignLeft;
     }
-    static Qt::Alignment defaultVerticalAlignment() {
+    static Qt::Alignment defaultVerticalAlignment()
+    {
         return Qt::AlignVCenter;
     }
     // borders
-    static int defaultBorderLeft() {
+    static int defaultBorderLeft()
+    {
         return 5;
     }
-    static int defaultBorderRight() {
+    static int defaultBorderRight()
+    {
         return 5;
     }
-    static int defaultBorderBottom() {
+    static int defaultBorderBottom()
+    {
         return 5;
     }
-    static int defaultBorderTop() {
+    static int defaultBorderTop()
+    {
         return 0;
     }
     // title
-    static int defaultTitleEdgeTop() {
+    static int defaultTitleEdgeTop()
+    {
         return 5;
     }
-    static int defaultTitleEdgeBottom() {
+    static int defaultTitleEdgeBottom()
+    {
         return 5;
     }
-    static int defaultTitleEdgeLeft() {
+    static int defaultTitleEdgeLeft()
+    {
         return 5;
     }
-    static int defaultTitleEdgeRight() {
+    static int defaultTitleEdgeRight()
+    {
         return 5;
     }
-    static int defaultTitleEdgeTopMaximized() {
+    static int defaultTitleEdgeTopMaximized()
+    {
         return 0;
     }
-    static int defaultTitleEdgeBottomMaximized() {
+    static int defaultTitleEdgeBottomMaximized()
+    {
         return 0;
     }
-    static int defaultTitleEdgeLeftMaximized() {
+    static int defaultTitleEdgeLeftMaximized()
+    {
         return 0;
     }
-    static int defaultTitleEdgeRightMaximized() {
+    static int defaultTitleEdgeRightMaximized()
+    {
         return 0;
     }
-    static int defaultTitleBorderLeft() {
+    static int defaultTitleBorderLeft()
+    {
         return 5;
     }
-    static int defaultTitleBorderRight() {
+    static int defaultTitleBorderRight()
+    {
         return 5;
     }
-    static int defaultTitleHeight() {
+    static int defaultTitleHeight()
+    {
         return 20;
     }
     // buttons
-    static int defaultButtonWidth() {
+    static int defaultButtonWidth()
+    {
         return 20;
     }
-    static int defaultButtonWidthMinimize() {
+    static int defaultButtonWidthMinimize()
+    {
         return defaultButtonWidth();
     }
-    static int defaultButtonWidthMaximizeRestore() {
+    static int defaultButtonWidthMaximizeRestore()
+    {
         return defaultButtonWidth();
     }
-    static int defaultButtonWidthClose() {
+    static int defaultButtonWidthClose()
+    {
         return defaultButtonWidth();
     }
-    static int defaultButtonWidthAllDesktops() {
+    static int defaultButtonWidthAllDesktops()
+    {
         return defaultButtonWidth();
     }
-    static int defaultButtonWidthKeepAbove() {
+    static int defaultButtonWidthKeepAbove()
+    {
         return defaultButtonWidth();
     }
-    static int defaultButtonWidthKeepBelow() {
+    static int defaultButtonWidthKeepBelow()
+    {
         return defaultButtonWidth();
     }
-    static int defaultButtonWidthShade() {
+    static int defaultButtonWidthShade()
+    {
         return defaultButtonWidth();
     }
-    static int defaultButtonWidthHelp() {
+    static int defaultButtonWidthHelp()
+    {
         return defaultButtonWidth();
     }
-    static int defaultButtonWidthMenu() {
+    static int defaultButtonWidthMenu()
+    {
         return defaultButtonWidth();
     }
-    static int defaultButtonWidthAppMenu() {
+    static int defaultButtonWidthAppMenu()
+    {
         return defaultButtonWidthMenu();
     }
-    static int defaultButtonHeight() {
+    static int defaultButtonHeight()
+    {
         return 20;
     }
-    static int defaultButtonSpacing() {
+    static int defaultButtonSpacing()
+    {
         return 5;
     }
-    static int defaultButtonMarginTop() {
+    static int defaultButtonMarginTop()
+    {
         return 0;
     }
-    static int defaultExplicitButtonSpacer() {
+    static int defaultExplicitButtonSpacer()
+    {
         return 10;
     }
     // padding
-    static int defaultPaddingLeft() {
+    static int defaultPaddingLeft()
+    {
         return 0;
     }
-    static int defaultPaddingRight() {
+    static int defaultPaddingRight()
+    {
         return 0;
     }
-    static int defaultPaddingTop() {
+    static int defaultPaddingTop()
+    {
         return 0;
     }
-    static int defaultPaddingBottom() {
+    static int defaultPaddingBottom()
+    {
         return 0;
     }
-    static int defaultAnimationTime() {
+    static int defaultAnimationTime()
+    {
         return 0;
     }
-    static bool defaultShadow() {
+    static bool defaultShadow()
+    {
         return true;
     }
-    static int defaultDecorationPosition() {
+    static int defaultDecorationPosition()
+    {
         return 0;
     }
 

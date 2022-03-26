@@ -28,9 +28,10 @@ public:
     void resizeWithChecks(const QSize &size) override;
     void killWindow() override;
     QByteArray windowRole() const override;
-    bool isShown(bool shaded_is_shown) const override;
+    bool isShown() const override;
     bool isHiddenInternal() const override;
-    void hideClient(bool hide) override;
+    void hideClient() override;
+    void showClient() override;
 
     virtual QRect frameRectToBufferRect(const QRect &rect) const;
     bool isHidden() const;
@@ -51,8 +52,6 @@ private:
     void updateClientOutputs();
     void updateIcon();
     void updateResourceName();
-    void internalShow();
-    void internalHide();
 
     QString m_captionNormal;
     QString m_captionSuffix;

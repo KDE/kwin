@@ -39,9 +39,11 @@ set(kwin_EFFECTSLIB_SRCS
     anidata.cpp
     kwinanimationeffect.cpp
     kwindeformeffect.cpp
-    kwineffectquickview.cpp
     kwineffects.cpp
+    kwinoffscreenquickview.cpp
+    kwinquickeffect.cpp
     logging.cpp
+    sharedqmlengine.cpp
 )
 
 add_library(kwineffects SHARED ${kwin_EFFECTSLIB_SRCS})
@@ -52,12 +54,14 @@ target_link_libraries(kwineffects
         KF5::CoreAddons
         KF5::WindowSystem
         XCB::XCB
-        Plasma::KWaylandServer
     PRIVATE
         Qt::Quick
-        KF5::Declarative
+        KF5::I18n
         kwinglutils
 )
+if (QT_MAJOR_VERSION EQUAL "6")
+    target_link_libraries(kwineffects PRIVATE Qt::GuiPrivate)
+endif()
 set_target_properties(kwineffects PROPERTIES
     VERSION ${KWINEFFECTS_VERSION}
     SOVERSION ${KWINEFFECTS_SOVERSION}
@@ -94,13 +98,14 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kwinxrenderutils_export.h
     kwinanimationeffect.h
     kwindeformeffect.h
-    kwineffectquickview.h
     kwineffects.h
     kwinglobals.h
     kwinglplatform.h
     kwingltexture.h
     kwinglutils.h
     kwinglutils_funcs.h
+    kwinoffscreenquickview.h
+    kwinquickeffect.h
     kwinxrenderutils.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR} COMPONENT Devel)
 

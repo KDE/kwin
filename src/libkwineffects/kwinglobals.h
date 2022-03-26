@@ -27,19 +27,19 @@ namespace KWin
 {
 KWIN_EXPORT Q_NAMESPACE
 
-enum CompositingType {
-    NoCompositing = 0,
-    /**
-     * Used as a flag whether OpenGL based compositing is used.
-     * The flag is or-ed to the enum values of the specific OpenGL types.
-     * The actual Compositors use the or @c OpenGLCompositing
-     * flags. If you need to know whether OpenGL is used, either and the flag or
-     * use EffectsHandler::isOpenGLCompositing().
-     */
-    OpenGLCompositing = 1,
-    /* XRenderCompositing = 1<<1, */
-    QPainterCompositing = 1<< 2,
-};
+    enum CompositingType {
+        NoCompositing = 0,
+        /**
+         * Used as a flag whether OpenGL based compositing is used.
+         * The flag is or-ed to the enum values of the specific OpenGL types.
+         * The actual Compositors use the or @c OpenGLCompositing
+         * flags. If you need to know whether OpenGL is used, either and the flag or
+         * use EffectsHandler::isOpenGLCompositing().
+         */
+        OpenGLCompositing = 1,
+        /* XRenderCompositing = 1<<1, */
+        QPainterCompositing = 1 << 2,
+    };
 
 enum OpenGLPlatformInterface {
     NoOpenGLPlatformInterface = 0,
@@ -48,15 +48,15 @@ enum OpenGLPlatformInterface {
 };
 
 enum clientAreaOption {
-    PlacementArea,         // geometry where a window will be initially placed after being mapped
-    MovementArea,          // ???  window movement snapping area?  ignore struts
-    MaximizeArea,          // geometry to which a window will be maximized
-    MaximizeFullArea,      // like MaximizeArea, but ignore struts - used e.g. for topmenu
-    FullScreenArea,        // area for fullscreen windows
+    PlacementArea, // geometry where a window will be initially placed after being mapped
+    MovementArea, // ???  window movement snapping area?  ignore struts
+    MaximizeArea, // geometry to which a window will be maximized
+    MaximizeFullArea, // like MaximizeArea, but ignore struts - used e.g. for topmenu
+    FullScreenArea, // area for fullscreen windows
     // these below don't depend on xinerama settings
-    WorkArea,              // whole workarea (all screens together)
-    FullArea,              // whole area (all screens together), ignore struts
-    ScreenArea,            // one whole screen, ignore struts
+    WorkArea, // whole workarea (all screens together)
+    FullArea, // whole area (all screens together), ignore struts
+    ScreenArea, // one whole screen, ignore struts
 };
 
 enum ElectricBorder {
@@ -71,16 +71,17 @@ enum ElectricBorder {
     ELECTRIC_COUNT,
     ElectricNone,
 };
+Q_ENUM_NS(ElectricBorder)
 
 // TODO: Hardcoding is bad, need to add some way of registering global actions to these.
 // When designing the new system we must keep in mind that we have conditional actions
 // such as "only when moving windows" desktop switching that the current global action
 // system doesn't support.
 enum ElectricBorderAction {
-    ElectricActionNone,          // No special action, not set, desktop switch or an effect
-    ElectricActionShowDesktop,   // Show desktop or restore
-    ElectricActionLockScreen,   // Lock screen
-    ElectricActionKRunner,       // Open KRunner
+    ElectricActionNone, // No special action, not set, desktop switch or an effect
+    ElectricActionShowDesktop, // Show desktop or restore
+    ElectricActionLockScreen, // Lock screen
+    ElectricActionKRunner, // Open KRunner
     ElectricActionActivityManager, // Activity Manager
     ElectricActionApplicationLauncher, // Application Launcher
     ELECTRIC_ACTION_COUNT,
@@ -90,12 +91,12 @@ enum ElectricBorderAction {
 //  or window were viewed.
 // DesktopListMode lists them in the order created.
 enum TabBoxMode {
-    TabBoxDesktopMode,                      // Focus chain of desktops
-    TabBoxDesktopListMode,                  // Static desktop order
-    TabBoxWindowsMode,                      // Primary window switching mode
-    TabBoxWindowsAlternativeMode,           // Secondary window switching mode
-    TabBoxCurrentAppWindowsMode,            // Same as primary window switching mode but only for windows of current application
-    TabBoxCurrentAppWindowsAlternativeMode,  // Same as secondary switching mode but only for windows of current application
+    TabBoxDesktopMode, // Focus chain of desktops
+    TabBoxDesktopListMode, // Static desktop order
+    TabBoxWindowsMode, // Primary window switching mode
+    TabBoxWindowsAlternativeMode, // Secondary window switching mode
+    TabBoxCurrentAppWindowsMode, // Same as primary window switching mode but only for windows of current application
+    TabBoxCurrentAppWindowsAlternativeMode, // Same as secondary switching mode but only for windows of current application
 };
 
 enum KWinOption {
@@ -126,6 +127,11 @@ enum class SwipeDirection {
     Right,
 };
 
+enum class PinchDirection {
+    Expanding,
+    Contracting
+};
+
 /**
  * Represents the state of the session running outside kwin
  * Under Plasma this is managed by ksmserver
@@ -137,20 +143,40 @@ enum class SessionState {
 };
 Q_ENUM_NS(SessionState)
 
-inline
-KWIN_EXPORT xcb_connection_t *connection()
+enum class LED {
+    NumLock = 1 << 0,
+    CapsLock = 1 << 1,
+    ScrollLock = 1 << 2
+};
+Q_DECLARE_FLAGS(LEDs, LED)
+Q_FLAG_NS(LEDs)
+
+/**
+ * The Gravity enum is used to specify the direction in which geometry changes during resize.
+ */
+enum class Gravity {
+    None,
+    Left,
+    Right,
+    Top,
+    Bottom,
+    TopLeft,
+    TopRight,
+    BottomLeft,
+    BottomRight,
+};
+
+inline KWIN_EXPORT xcb_connection_t *connection()
 {
-    return reinterpret_cast<xcb_connection_t*>(qApp->property("x11Connection").value<void*>());
+    return reinterpret_cast<xcb_connection_t *>(qApp->property("x11Connection").value<void *>());
 }
 
-inline
-KWIN_EXPORT xcb_window_t rootWindow()
+inline KWIN_EXPORT xcb_window_t rootWindow()
 {
     return qApp->property("x11RootWindow").value<quint32>();
 }
 
-inline
-KWIN_EXPORT xcb_timestamp_t xTime()
+inline KWIN_EXPORT xcb_timestamp_t xTime()
 {
     return qApp->property("x11Time").value<xcb_timestamp_t>();
 }
@@ -159,7 +185,8 @@ KWIN_EXPORT xcb_timestamp_t xTime()
  * Short wrapper for a cursor image provided by the Platform.
  * @since 5.9
  */
-class PlatformCursorImage {
+class PlatformCursorImage
+{
 public:
     explicit PlatformCursorImage()
         : m_image()
@@ -173,13 +200,16 @@ public:
     }
     virtual ~PlatformCursorImage() = default;
 
-    bool isNull() const {
+    bool isNull() const
+    {
         return m_image.isNull();
     }
-    QImage image() const {
+    QImage image() const
+    {
         return m_image;
     }
-    QPoint hotSpot() const {
+    QPoint hotSpot() const
+    {
         return m_hotSpot;
     }
 
@@ -193,24 +223,29 @@ private:
 Q_DECLARE_METATYPE(std::chrono::nanoseconds)
 
 #define KWIN_SINGLETON_VARIABLE(ClassName, variableName) \
-public: \
-    static ClassName *create(QObject *parent = nullptr);\
-    static ClassName *self() { return variableName; }\
-protected: \
-    explicit ClassName(QObject *parent = nullptr); \
-private: \
+public:                                                  \
+    static ClassName *create(QObject *parent = nullptr); \
+    static ClassName *self()                             \
+    {                                                    \
+        return variableName;                             \
+    }                                                    \
+                                                         \
+protected:                                               \
+    explicit ClassName(QObject *parent = nullptr);       \
+                                                         \
+private:                                                 \
     static ClassName *variableName;
 
 #define KWIN_SINGLETON(ClassName) KWIN_SINGLETON_VARIABLE(ClassName, s_self)
 
 #define KWIN_SINGLETON_FACTORY_VARIABLE_FACTORED(ClassName, FactoredClassName, variableName) \
-ClassName *ClassName::variableName = nullptr; \
-ClassName *ClassName::create(QObject *parent) \
-{ \
-    Q_ASSERT(!variableName); \
-    variableName = new FactoredClassName(parent); \
-    return variableName; \
-}
+    ClassName *ClassName::variableName = nullptr;                                            \
+    ClassName *ClassName::create(QObject *parent)                                            \
+    {                                                                                        \
+        Q_ASSERT(!variableName);                                                             \
+        variableName = new FactoredClassName(parent);                                        \
+        return variableName;                                                                 \
+    }
 #define KWIN_SINGLETON_FACTORY_VARIABLE(ClassName, variableName) KWIN_SINGLETON_FACTORY_VARIABLE_FACTORED(ClassName, ClassName, variableName)
 #define KWIN_SINGLETON_FACTORY_FACTORED(ClassName, FactoredClassName) KWIN_SINGLETON_FACTORY_VARIABLE_FACTORED(ClassName, FactoredClassName, s_self)
 #define KWIN_SINGLETON_FACTORY(ClassName) KWIN_SINGLETON_FACTORY_VARIABLE(ClassName, s_self)

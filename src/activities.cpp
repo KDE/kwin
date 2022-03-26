@@ -13,10 +13,10 @@
 // KDE
 #include <KConfigGroup>
 // Qt
-#include <QtConcurrentRun>
 #include <QDBusInterface>
 #include <QDBusPendingCall>
 #include <QFutureWatcher>
+#include <QtConcurrentRun>
 
 namespace KWin
 {
@@ -29,7 +29,7 @@ Activities::Activities(QObject *parent)
 {
     connect(m_controller, &KActivities::Controller::activityRemoved, this, &Activities::slotRemoved);
     connect(m_controller, &KActivities::Controller::activityRemoved, this, &Activities::removed);
-    connect(m_controller, &KActivities::Controller::activityAdded,   this, &Activities::added);
+    connect(m_controller, &KActivities::Controller::activityAdded, this, &Activities::added);
     connect(m_controller, &KActivities::Controller::currentActivityChanged, this, &Activities::slotCurrentChanged);
 }
 
@@ -61,43 +61,42 @@ void Activities::slotCurrentChanged(const QString &newActivity)
 void Activities::slotRemoved(const QString &activity)
 {
     const auto clients = Workspace::self()->allClientList();
-    for (auto * const client : clients) {
+    for (auto *const client : clients) {
         if (client->isDesktop())
             continue;
         client->setOnActivity(activity, false);
     }
-    //toss out any session data for it
+    // toss out any session data for it
     KConfigGroup cg(KSharedConfig::openConfig(), QByteArray("SubSession: ").append(activity.toUtf8()).constData());
     cg.deleteGroup();
 }
 
 void Activities::toggleClientOnActivity(AbstractClient *c, const QString &activity, bool dont_activate)
 {
-    //int old_desktop = c->desktop();
+    // int old_desktop = c->desktop();
     bool was_on_activity = c->isOnActivity(activity);
     bool was_on_all = c->isOnAllActivities();
-    //note: all activities === no activities
+    // note: all activities === no activities
     bool enable = was_on_all || !was_on_activity;
     c->setOnActivity(activity, enable);
-    if (c->isOnActivity(activity) == was_on_activity && c->isOnAllActivities() == was_on_all)   // No change
+    if (c->isOnActivity(activity) == was_on_activity && c->isOnAllActivities() == was_on_all) // No change
         return;
 
     Workspace *ws = Workspace::self();
     if (c->isOnCurrentActivity()) {
-        if (c->wantsTabFocus() && options->focusPolicyIsReasonable() &&
-                !was_on_activity && // for stickyness changes
-                //FIXME not sure if the line above refers to the correct activity
-                !dont_activate)
+        if (c->wantsTabFocus() && options->focusPolicyIsReasonable() && !was_on_activity && // for stickyness changes
+                                                                                            // FIXME not sure if the line above refers to the correct activity
+            !dont_activate)
             ws->requestFocus(c);
         else
             ws->restackClientUnderActive(c);
     } else
         ws->raiseClient(c);
 
-    //notifyWindowDesktopChanged( c, old_desktop );
+    // notifyWindowDesktopChanged( c, old_desktop );
 
     const auto transients_stacking_order = ws->ensureStackingOrder(c->transients());
-    for (auto * const c : transients_stacking_order) {
+    for (auto *const c : transients_stacking_order) {
         if (!c) {
             continue;
         }
@@ -110,11 +109,11 @@ bool Activities::start(const QString &id)
 {
     Workspace *ws = Workspace::self();
     if (ws->sessionManager()->state() == SessionState::Saving) {
-        return false; //ksmserver doesn't queue requests (yet)
+        return false; // ksmserver doesn't queue requests (yet)
     }
 
     if (!all().contains(id)) {
-        return false; //bogus id
+        return false; // bogus id
     }
 
     ws->loadSubSessionInfo(id);
@@ -132,13 +131,13 @@ bool Activities::start(const QString &id)
 bool Activities::stop(const QString &id)
 {
     if (Workspace::self()->sessionManager()->state() == SessionState::Saving) {
-        return false; //ksmserver doesn't queue requests (yet)
-        //FIXME what about session *loading*?
+        return false; // ksmserver doesn't queue requests (yet)
+        // FIXME what about session *loading*?
     }
 
-    //ugly hack to avoid dbus deadlocks
+    // ugly hack to avoid dbus deadlocks
     QMetaObject::invokeMethod(this, "reallyStop", Qt::QueuedConnection, Q_ARG(QString, id));
-    //then lie and assume it worked.
+    // then lie and assume it worked.
     return true;
 }
 
@@ -146,33 +145,33 @@ void Activities::reallyStop(const QString &id)
 {
     Workspace *ws = Workspace::self();
     if (ws->sessionManager()->state() == SessionState::Saving)
-        return; //ksmserver doesn't queue requests (yet)
+        return; // ksmserver doesn't queue requests (yet)
 
     qCDebug(KWIN_CORE) << id;
 
     QSet<QByteArray> saveSessionIds;
     QSet<QByteArray> dontCloseSessionIds;
     const auto clients = ws->allClientList();
-    for (auto * const c : clients) {
+    for (auto *const c : clients) {
         if (c->isDesktop())
             continue;
         const QByteArray sessionId = c->sessionId();
         if (sessionId.isEmpty()) {
-            continue; //TODO support old wm_command apps too?
+            continue; // TODO support old wm_command apps too?
         }
 
-        //qDebug() << sessionId;
+        // qDebug() << sessionId;
 
-        //if it's on the activity that's closing, it needs saving
-        //but if a process is on some other open activity, I don't wanna close it yet
-        //this is, of course, complicated by a process having many windows.
+        // if it's on the activity that's closing, it needs saving
+        // but if a process is on some other open activity, I don't wanna close it yet
+        // this is, of course, complicated by a process having many windows.
         if (c->isOnAllActivities()) {
             dontCloseSessionIds << sessionId;
             continue;
         }
 
         const QStringList activities = c->activities();
-        Q_FOREACH (const QString & activityId, activities) {
+        for (const QString &activityId : activities) {
             if (activityId == id) {
                 saveSessionIds << sessionId;
             } else if (running().contains(activityId)) {
@@ -185,7 +184,7 @@ void Activities::reallyStop(const QString &id)
 
     QStringList saveAndClose;
     QStringList saveOnly;
-    Q_FOREACH (const QByteArray & sessionId, saveSessionIds) {
+    for (const QByteArray &sessionId : qAsConst(saveSessionIds)) {
         if (dontCloseSessionIds.contains(sessionId)) {
             saveOnly << sessionId;
         } else {
@@ -195,7 +194,7 @@ void Activities::reallyStop(const QString &id)
 
     qCDebug(KWIN_CORE) << "saveActivity" << id << saveAndClose << saveOnly;
 
-    //pass off to ksmserver
+    // pass off to ksmserver
     QDBusInterface ksmserver("org.kde.ksmserver", "/KSMServer", "org.kde.KSMServerInterface");
     if (ksmserver.isValid()) {
         ksmserver.asyncCall("saveSubSession", id, saveAndClose, saveOnly);

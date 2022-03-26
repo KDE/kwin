@@ -65,4 +65,4 @@ ProvidersUrl=https://autoconfig.kde.org/ocs/providers.xml
 Categories=Window Decoration Aurorae
 TargetDir=aurorae/themes
 Uncompress=archive
-AdoptionCommand=@KDE_INSTALL_LIBEXECDIR@/kwin-applywindowdecoration %f
+AdoptionCommand=@KDE_INSTALL_FULL_LIBEXECDIR@/kwin-applywindowdecoration %f

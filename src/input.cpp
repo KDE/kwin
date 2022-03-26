@@ -9,25 +9,30 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "input.h"
+
+#include "backends/fakeinput/fakeinputbackend.h"
+#include "backends/libinput/connection.h"
+#include "backends/libinput/device.h"
 #include "effects.h"
 #include "gestures.h"
 #include "globalshortcuts.h"
+#include "hide_cursor_spy.h"
 #include "input_event.h"
 #include "input_event_spy.h"
+#include "inputbackend.h"
+#include "inputmethod.h"
 #include "keyboard_input.h"
 #include "main.h"
 #include "pointer_input.h"
 #include "session.h"
 #include "tablet_input.h"
-#include "touch_hide_cursor_spy.h"
 #include "touch_input.h"
 #include "x11client.h"
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
 #include "tabbox/tabbox.h"
 #endif
+#include "cursor.h"
 #include "internal_client.h"
-#include "libinput/connection.h"
-#include "libinput/device.h"
 #include "platform.h"
 #include "popup_input_filter.h"
 #include "screenedge.h"
@@ -37,24 +42,27 @@
 #include "wayland_server.h"
 #include "workspace.h"
 #include "xwl/xwayland_interface.h"
-#include "cursor.h"
 #include <KDecoration2/Decoration>
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <KWaylandServer/display.h>
-#include <KWaylandServer/fakeinput_interface.h>
-#include <KWaylandServer/relativepointer_v1_interface.h>
+#include <KWaylandServer/inputmethod_v1_interface.h>
 #include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/shmclientbuffer.h>
 #include <KWaylandServer/surface_interface.h>
 #include <KWaylandServer/tablet_v2_interface.h>
-#include <KWaylandServer/keyboard_interface.h>
 #include <decorations/decoratedclient.h>
 
-//screenlocker
+// screenlocker
+#if KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>
+#endif
 // Qt
+#include <QDBusConnection>
+#include <QDBusMessage>
+#include <QDBusPendingCall>
 #include <QKeyEvent>
+#include <QThread>
 #include <qpa/qwindowsysteminterface.h>
 
 #include <xkbcommon/xkbcommon.h>
@@ -184,6 +192,25 @@ bool InputEventFilter::swipeGestureCancelled(quint32 time)
     return false;
 }
 
+bool InputEventFilter::holdGestureBegin(int fingerCount, quint32 time)
+{
+    Q_UNUSED(fingerCount)
+    Q_UNUSED(time)
+    return false;
+}
+
+bool InputEventFilter::holdGestureEnd(quint32 time)
+{
+    Q_UNUSED(time)
+    return false;
+}
+
+bool InputEventFilter::holdGestureCancelled(quint32 time)
+{
+    Q_UNUSED(time)
+    return false;
+}
+
 bool InputEventFilter::switchEvent(SwitchEvent *event)
 {
     Q_UNUSED(event)
@@ -250,9 +277,30 @@ void InputEventFilter::passToWaylandServer(QKeyEvent *event)
     }
 }
 
-class VirtualTerminalFilter : public InputEventFilter {
+bool InputEventFilter::passToInputMethod(QKeyEvent *event)
+{
+    auto *inputmethod = InputMethod::self();
+
+    if (!inputmethod) {
+        return false;
+    }
+
+    if (auto keyboardGrab = inputmethod->keyboardGrab()) {
+        if (event->isAutoRepeat()) {
+            return true;
+        }
+        auto newState = event->type() == QEvent::KeyPress ? KWaylandServer::KeyboardKeyState::Pressed : KWaylandServer::KeyboardKeyState::Released;
+        keyboardGrab->sendKey(waylandServer()->display()->nextSerial(), event->timestamp(), event->nativeScanCode(), newState);
+        return true;
+    }
+    return false;
+}
+
+class VirtualTerminalFilter : public InputEventFilter
+{
 public:
-    bool keyEvent(QKeyEvent *event) override {
+    bool keyEvent(QKeyEvent *event) override
+    {
         // really on press and not on release? X11 switches on press.
         if (event->type() == QEvent::KeyPress && !event->isAutoRepeat()) {
             const xkb_keysym_t keysym = event->nativeVirtualKey();
@@ -265,9 +313,11 @@ public:
     }
 };
 
-class TerminateServerFilter : public InputEventFilter {
+class TerminateServerFilter : public InputEventFilter
+{
 public:
-    bool keyEvent(QKeyEvent *event) override {
+    bool keyEvent(QKeyEvent *event) override
+    {
         if (event->type() == QEvent::KeyPress && !event->isAutoRepeat()) {
             if (event->nativeVirtualKey() == XKB_KEY_Terminate_Server) {
                 qCWarning(KWIN_CORE) << "Request to terminate server";
@@ -279,9 +329,11 @@ public:
     }
 };
 
-class LockScreenFilter : public InputEventFilter {
+class LockScreenFilter : public InputEventFilter
+{
 public:
-    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override {
+    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
+    {
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
@@ -312,7 +364,8 @@ public:
         }
         return true;
     }
-    bool wheelEvent(QWheelEvent *event) override {
+    bool wheelEvent(QWheelEvent *event) override
+    {
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
@@ -327,7 +380,8 @@ public:
         }
         return true;
     }
-    bool keyEvent(QKeyEvent * event) override {
+    bool keyEvent(QKeyEvent *event) override
+    {
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
@@ -338,11 +392,13 @@ public:
         // send event to KSldApp for global accel
         // if event is set to accepted it means a whitelisted shortcut was triggered
         // in that case we filter it out and don't process it further
+#if KWIN_BUILD_SCREENLOCKER
         event->setAccepted(false);
         QCoreApplication::sendEvent(ScreenLocker::KSldApp::self(), event);
         if (event->isAccepted()) {
             return true;
         }
+#endif
 
         // continue normal processing
         input()->keyboard()->update();
@@ -364,7 +420,8 @@ public:
         }
         return true;
     }
-    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override {
+    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override
+    {
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
@@ -375,7 +432,8 @@ public:
         }
         return true;
     }
-    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
+    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override
+    {
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
@@ -386,7 +444,8 @@ public:
         }
         return true;
     }
-    bool touchUp(qint32 id, quint32 time) override {
+    bool touchUp(qint32 id, quint32 time) override
+    {
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
@@ -397,13 +456,15 @@ public:
         }
         return true;
     }
-    bool pinchGestureBegin(int fingerCount, quint32 time) override {
+    bool pinchGestureBegin(int fingerCount, quint32 time) override
+    {
         Q_UNUSED(fingerCount)
         Q_UNUSED(time)
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
-    bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time) override {
+    bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time) override
+    {
         Q_UNUSED(scale)
         Q_UNUSED(angleDelta)
         Q_UNUSED(delta)
@@ -411,41 +472,62 @@ public:
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
-    bool pinchGestureEnd(quint32 time) override {
+    bool pinchGestureEnd(quint32 time) override
+    {
         Q_UNUSED(time)
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
-    bool pinchGestureCancelled(quint32 time) override {
+    bool pinchGestureCancelled(quint32 time) override
+    {
         Q_UNUSED(time)
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
 
-    bool swipeGestureBegin(int fingerCount, quint32 time) override {
+    bool swipeGestureBegin(int fingerCount, quint32 time) override
+    {
         Q_UNUSED(fingerCount)
         Q_UNUSED(time)
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
-    bool swipeGestureUpdate(const QSizeF &delta, quint32 time) override {
+    bool swipeGestureUpdate(const QSizeF &delta, quint32 time) override
+    {
         Q_UNUSED(delta)
         Q_UNUSED(time)
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
-    bool swipeGestureEnd(quint32 time) override {
+    bool swipeGestureEnd(quint32 time) override
+    {
         Q_UNUSED(time)
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
-    bool swipeGestureCancelled(quint32 time) override {
+    bool swipeGestureCancelled(quint32 time) override
+    {
         Q_UNUSED(time)
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
+    bool holdGestureBegin(int fingerCount, quint32 time) override
+    {
+        Q_UNUSED(fingerCount)
+        Q_UNUSED(time)
+        // no touchpad multi-finger gestures on lock screen
+        return waylandServer()->isScreenLocked();
+    }
+    bool holdGestureEnd(quint32 time) override
+    {
+        Q_UNUSED(time)
+        // no touchpad multi-finger gestures on lock screen
+        return waylandServer()->isScreenLocked();
+    }
+
 private:
-    bool surfaceAllowed(KWaylandServer::SurfaceInterface *(KWaylandServer::SeatInterface::*method)() const) const {
+    bool surfaceAllowed(KWaylandServer::SurfaceInterface *(KWaylandServer::SeatInterface::*method)() const) const
+    {
         if (KWaylandServer::SurfaceInterface *s = (waylandServer()->seat()->*method)()) {
             if (Toplevel *t = waylandServer()->findClient(s)) {
                 return t->isLockScreen() || t->isInputMethod();
@@ -454,64 +536,111 @@ private:
         }
         return true;
     }
-    bool pointerSurfaceAllowed() const {
+    bool pointerSurfaceAllowed() const
+    {
         return surfaceAllowed(&KWaylandServer::SeatInterface::focusedPointerSurface);
     }
-    bool keyboardSurfaceAllowed() const {
+    bool keyboardSurfaceAllowed() const
+    {
         return surfaceAllowed(&KWaylandServer::SeatInterface::focusedKeyboardSurface);
     }
-    bool touchSurfaceAllowed() const {
+    bool touchSurfaceAllowed() const
+    {
         return surfaceAllowed(&KWaylandServer::SeatInterface::focusedTouchSurface);
     }
 };
 
-class EffectsFilter : public InputEventFilter {
+class EffectsFilter : public InputEventFilter
+{
 public:
-    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override {
+    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
+    {
         Q_UNUSED(nativeButton)
         if (!effects) {
             return false;
         }
-        return static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(event);
+        return static_cast<EffectsHandlerImpl *>(effects)->checkInputWindowEvent(event);
     }
-    bool wheelEvent(QWheelEvent *event) override {
+    bool wheelEvent(QWheelEvent *event) override
+    {
         if (!effects) {
             return false;
         }
-        return static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(event);
+        return static_cast<EffectsHandlerImpl *>(effects)->checkInputWindowEvent(event);
     }
-    bool keyEvent(QKeyEvent *event) override {
-        if (!effects || !static_cast< EffectsHandlerImpl* >(effects)->hasKeyboardGrab()) {
+    bool keyEvent(QKeyEvent *event) override
+    {
+        if (!effects || !static_cast<EffectsHandlerImpl *>(effects)->hasKeyboardGrab()) {
             return false;
         }
         waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
         passToWaylandServer(event);
-        static_cast< EffectsHandlerImpl* >(effects)->grabbedKeyboardEvent(event);
+        static_cast<EffectsHandlerImpl *>(effects)->grabbedKeyboardEvent(event);
         return true;
     }
-    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override {
+    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override
+    {
         if (!effects) {
             return false;
         }
-        return static_cast< EffectsHandlerImpl* >(effects)->touchDown(id, pos, time);
+        return static_cast<EffectsHandlerImpl *>(effects)->touchDown(id, pos, time);
     }
-    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
+    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override
+    {
         if (!effects) {
             return false;
         }
-        return static_cast< EffectsHandlerImpl* >(effects)->touchMotion(id, pos, time);
+        return static_cast<EffectsHandlerImpl *>(effects)->touchMotion(id, pos, time);
     }
-    bool touchUp(qint32 id, quint32 time) override {
+    bool touchUp(qint32 id, quint32 time) override
+    {
         if (!effects) {
             return false;
         }
-        return static_cast< EffectsHandlerImpl* >(effects)->touchUp(id, time);
+        return static_cast<EffectsHandlerImpl *>(effects)->touchUp(id, time);
+    }
+    bool tabletToolEvent(TabletEvent *event) override
+    {
+        if (!effects) {
+            return false;
+        }
+        return static_cast<EffectsHandlerImpl *>(effects)->tabletToolEvent(event);
+    }
+    bool tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId) override
+    {
+        if (!effects) {
+            return false;
+        }
+        return static_cast<EffectsHandlerImpl *>(effects)->tabletToolButtonEvent(button, pressed, tabletToolId);
+    }
+    bool tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId) override
+    {
+        if (!effects) {
+            return false;
+        }
+        return static_cast<EffectsHandlerImpl *>(effects)->tabletPadButtonEvent(button, pressed, tabletPadId);
+    }
+    bool tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId) override
+    {
+        if (!effects) {
+            return false;
+        }
+        return static_cast<EffectsHandlerImpl *>(effects)->tabletPadStripEvent(number, position, isFinger, tabletPadId);
+    }
+    bool tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId) override
+    {
+        if (!effects) {
+            return false;
+        }
+        return static_cast<EffectsHandlerImpl *>(effects)->tabletPadRingEvent(number, position, isFinger, tabletPadId);
     }
 };
 
-class MoveResizeFilter : public InputEventFilter {
+class MoveResizeFilter : public InputEventFilter
+{
 public:
-    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override {
+    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
+    {
         Q_UNUSED(nativeButton)
         AbstractClient *c = workspace()->moveResizeClient();
         if (!c) {
@@ -531,12 +660,14 @@ public:
         }
         return true;
     }
-    bool wheelEvent(QWheelEvent *event) override {
+    bool wheelEvent(QWheelEvent *event) override
+    {
         Q_UNUSED(event)
         // filter out while moving a window
         return workspace()->moveResizeClient() != nullptr;
     }
-    bool keyEvent(QKeyEvent *event) override {
+    bool keyEvent(QKeyEvent *event) override
+    {
         AbstractClient *c = workspace()->moveResizeClient();
         if (!c) {
             return false;
@@ -551,7 +682,8 @@ public:
         return true;
     }
 
-    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override {
+    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override
+    {
         Q_UNUSED(id)
         Q_UNUSED(pos)
         Q_UNUSED(time)
@@ -562,7 +694,8 @@ public:
         return true;
     }
 
-    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
+    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override
+    {
         Q_UNUSED(time)
         AbstractClient *c = workspace()->moveResizeClient();
         if (!c) {
@@ -578,7 +711,8 @@ public:
         return true;
     }
 
-    bool touchUp(qint32 id, quint32 time) override {
+    bool touchUp(qint32 id, quint32 time) override
+    {
         Q_UNUSED(time)
         AbstractClient *c = workspace()->moveResizeClient();
         if (!c) {
@@ -593,14 +727,37 @@ public:
         m_set = false;
         return true;
     }
+
+    bool tabletToolEvent(TabletEvent *event) override
+    {
+        AbstractClient *c = workspace()->moveResizeClient();
+        if (!c) {
+            return false;
+        }
+        switch (event->type()) {
+        case QEvent::TabletMove:
+            c->updateInteractiveMoveResize(event->globalPos());
+            break;
+        case QEvent::TabletRelease:
+            c->endInteractiveMoveResize();
+            break;
+        default:
+            break;
+        }
+        // Let TabletInputFilter receive the event, so the cursor position can be updated.
+        return false;
+    }
+
 private:
     qint32 m_id = 0;
     bool m_set = false;
 };
 
-class WindowSelectorFilter : public InputEventFilter {
+class WindowSelectorFilter : public InputEventFilter
+{
 public:
-    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override {
+    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
+    {
         Q_UNUSED(nativeButton)
         if (!m_active) {
             return false;
@@ -620,12 +777,14 @@ public:
         }
         return true;
     }
-    bool wheelEvent(QWheelEvent *event) override {
+    bool wheelEvent(QWheelEvent *event) override
+    {
         Q_UNUSED(event)
         // filter out while selecting a window
         return m_active;
     }
-    bool keyEvent(QKeyEvent *event) override {
+    bool keyEvent(QKeyEvent *event) override
+    {
         Q_UNUSED(event)
         if (!m_active) {
             return false;
@@ -637,9 +796,7 @@ public:
             // x11 variant does this on key press, so do the same
             if (event->key() == Qt::Key_Escape) {
                 cancel();
-            } else if (event->key() == Qt::Key_Enter ||
-                       event->key() == Qt::Key_Return ||
-                       event->key() == Qt::Key_Space) {
+            } else if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return || event->key() == Qt::Key_Space) {
                 accept(input()->globalPointer());
             }
             if (input()->supportsPointerWarping()) {
@@ -668,7 +825,8 @@ public:
         return true;
     }
 
-    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override {
+    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override
+    {
         Q_UNUSED(time)
         if (!isActive()) {
             return false;
@@ -677,7 +835,8 @@ public:
         return true;
     }
 
-    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
+    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override
+    {
         Q_UNUSED(time)
         if (!isActive()) {
             return false;
@@ -689,7 +848,8 @@ public:
         return true;
     }
 
-    bool touchUp(qint32 id, quint32 time) override {
+    bool touchUp(qint32 id, quint32 time) override
+    {
         Q_UNUSED(time)
         if (!isActive()) {
             return false;
@@ -705,33 +865,39 @@ public:
         return true;
     }
 
-    bool isActive() const {
+    bool isActive() const
+    {
         return m_active;
     }
-    void start(std::function<void(KWin::Toplevel*)> callback) {
+    void start(std::function<void(KWin::Toplevel *)> callback)
+    {
         Q_ASSERT(!m_active);
         m_active = true;
         m_callback = callback;
         input()->keyboard()->update();
-        input()->cancelTouch();
+        input()->touch()->cancel();
     }
-    void start(std::function<void(const QPoint &)> callback) {
+    void start(std::function<void(const QPoint &)> callback)
+    {
         Q_ASSERT(!m_active);
         m_active = true;
         m_pointSelectionFallback = callback;
         input()->keyboard()->update();
-        input()->cancelTouch();
+        input()->touch()->cancel();
     }
+
 private:
-    void deactivate() {
+    void deactivate()
+    {
         m_active = false;
-        m_callback = std::function<void(KWin::Toplevel*)>();
+        m_callback = std::function<void(KWin::Toplevel *)>();
         m_pointSelectionFallback = std::function<void(const QPoint &)>();
         input()->pointer()->removeWindowSelectionCursor();
         input()->keyboard()->update();
         m_touchPoints.clear();
     }
-    void cancel() {
+    void cancel()
+    {
         if (m_callback) {
             m_callback(nullptr);
         }
@@ -740,7 +906,8 @@ private:
         }
         deactivate();
     }
-    void accept(const QPoint &pos) {
+    void accept(const QPoint &pos)
+    {
         if (m_callback) {
             // TODO: this ignores shaped windows
             m_callback(input()->findToplevel(pos));
@@ -750,27 +917,32 @@ private:
         }
         deactivate();
     }
-    void accept(const QPointF &pos) {
+    void accept(const QPointF &pos)
+    {
         accept(pos.toPoint());
     }
     bool m_active = false;
-    std::function<void(KWin::Toplevel*)> m_callback;
+    std::function<void(KWin::Toplevel *)> m_callback;
     std::function<void(const QPoint &)> m_pointSelectionFallback;
     QMap<quint32, QPointF> m_touchPoints;
 };
 
-class GlobalShortcutFilter : public InputEventFilter {
+class GlobalShortcutFilter : public InputEventFilter
+{
 public:
-    GlobalShortcutFilter() {
+    GlobalShortcutFilter()
+    {
         m_powerDown = new QTimer;
         m_powerDown->setSingleShot(true);
         m_powerDown->setInterval(1000);
     }
-    ~GlobalShortcutFilter() {
+    ~GlobalShortcutFilter()
+    {
         delete m_powerDown;
     }
 
-    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override {
+    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
+    {
         Q_UNUSED(nativeButton);
         if (event->type() == QEvent::MouseButtonPress) {
             if (input()->shortcuts()->processPointerPressed(event->modifiers(), event->buttons())) {
@@ -779,7 +951,8 @@ public:
         }
         return false;
     }
-    bool wheelEvent(QWheelEvent *event) override {
+    bool wheelEvent(QWheelEvent *event) override
+    {
         if (event->modifiers() == Qt::NoModifier) {
             return false;
         }
@@ -795,9 +968,10 @@ public:
         }
         return input()->shortcuts()->processAxis(event->modifiers(), direction);
     }
-    bool keyEvent(QKeyEvent *event) override {
+    bool keyEvent(QKeyEvent *event) override
+    {
         if (event->key() == Qt::Key_PowerOff) {
-            const auto modifiers = static_cast<KeyEvent*>(event)->modifiersRelevantForGlobalShortcuts();
+            const auto modifiers = static_cast<KeyEvent *>(event)->modifiersRelevantForGlobalShortcuts();
             if (event->type() == QEvent::KeyPress && !event->isAutoRepeat()) {
                 QObject::connect(m_powerDown, &QTimer::timeout, input()->shortcuts(), [this, modifiers] {
                     QObject::disconnect(m_powerDown, &QTimer::timeout, input()->shortcuts(), nullptr);
@@ -813,38 +987,68 @@ public:
             }
         } else if (event->type() == QEvent::KeyPress) {
             if (!waylandServer()->isKeyboardShortcutsInhibited()) {
-                return input()->shortcuts()->processKey(static_cast<KeyEvent*>(event)->modifiersRelevantForGlobalShortcuts(), event->key());
+                return input()->shortcuts()->processKey(static_cast<KeyEvent *>(event)->modifiersRelevantForGlobalShortcuts(), event->key());
             }
         }
         return false;
     }
-    bool swipeGestureBegin(int fingerCount, quint32 time) override {
+    bool swipeGestureBegin(int fingerCount, quint32 time) override
+    {
         Q_UNUSED(time)
         input()->shortcuts()->processSwipeStart(fingerCount);
         return false;
     }
-    bool swipeGestureUpdate(const QSizeF &delta, quint32 time) override {
+    bool swipeGestureUpdate(const QSizeF &delta, quint32 time) override
+    {
         Q_UNUSED(time)
         input()->shortcuts()->processSwipeUpdate(delta);
         return false;
     }
-    bool swipeGestureCancelled(quint32 time) override {
+    bool swipeGestureCancelled(quint32 time) override
+    {
         Q_UNUSED(time)
         input()->shortcuts()->processSwipeCancel();
         return false;
     }
-    bool swipeGestureEnd(quint32 time) override {
+    bool swipeGestureEnd(quint32 time) override
+    {
         Q_UNUSED(time)
         input()->shortcuts()->processSwipeEnd();
         return false;
     }
+    bool pinchGestureBegin(int fingerCount, quint32 time) override
+    {
+        Q_UNUSED(time);
+        if (fingerCount >= 3) {
+            input()->shortcuts()->processPinchStart(fingerCount);
+        }
+        return false;
+    }
+    bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time) override
+    {
+        Q_UNUSED(time);
+        input()->shortcuts()->processPinchUpdate(scale, angleDelta, delta);
+        return false;
+    }
+    bool pinchGestureEnd(quint32 time) override
+    {
+        Q_UNUSED(time);
+        input()->shortcuts()->processPinchEnd();
+        return false;
+    }
+    bool pinchGestureCancelled(quint32 time) override
+    {
+        Q_UNUSED(time);
+        input()->shortcuts()->processPinchCancel();
+        return false;
+    }
 
 private:
-    QTimer* m_powerDown = nullptr;
+    QTimer *m_powerDown = nullptr;
 };
 
-
-namespace {
+namespace
+{
 
 enum class MouseAction {
     ModifierOnly,
@@ -854,7 +1058,7 @@ std::pair<bool, bool> performClientMouseAction(QMouseEvent *event, AbstractClien
 {
     Options::MouseCommand command = Options::MouseNothing;
     bool wasAction = false;
-    if (static_cast<MouseEvent*>(event)->modifiersRelevantForGlobalShortcuts() == options->commandAllModifier()) {
+    if (static_cast<MouseEvent *>(event)->modifiersRelevantForGlobalShortcuts() == options->commandAllModifier()) {
         if (!input()->pointer()->isConstrained() && !workspace()->globalShortcutsDisabled()) {
             wasAction = true;
             switch (event->button()) {
@@ -887,7 +1091,7 @@ std::pair<bool, bool> performClientWheelAction(QWheelEvent *event, AbstractClien
 {
     bool wasAction = false;
     Options::MouseCommand command = Options::MouseNothing;
-    if (static_cast<WheelEvent*>(event)->modifiersRelevantForGlobalShortcuts() == options->commandAllModifier()) {
+    if (static_cast<WheelEvent *>(event)->modifiersRelevantForGlobalShortcuts() == options->commandAllModifier()) {
         if (!input()->pointer()->isConstrained() && !workspace()->globalShortcutsDisabled()) {
             wasAction = true;
             command = options->operationWindowMouseWheel(-1 * event->angleDelta().y());
@@ -898,75 +1102,49 @@ std::pair<bool, bool> performClientWheelAction(QWheelEvent *event, AbstractClien
         }
     }
     if (wasAction) {
-        return std::make_pair(wasAction, !c->performMouseCommand(command, event->globalPos()));
+        return std::make_pair(wasAction, !c->performMouseCommand(command, event->globalPosition().toPoint()));
     }
     return std::make_pair(wasAction, false);
 }
 
 }
 
-class InternalWindowEventFilter : public InputEventFilter {
-    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override {
+class InternalWindowEventFilter : public InputEventFilter
+{
+    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
+    {
         Q_UNUSED(nativeButton)
-        auto internal = input()->pointer()->internalWindow();
-        if (!internal) {
+        if (!input()->pointer()->focus() || !input()->pointer()->focus()->isInternal()) {
             return false;
         }
-        // find client
-        switch (event->type())
-        {
-        case QEvent::MouseButtonPress:
-        case QEvent::MouseButtonRelease: {
-            auto s = qobject_cast<InternalClient *>(workspace()->findInternal(internal));
-            if (s && s->isDecorated()) {
-                // only perform mouse commands on decorated internal windows
-                const auto actionResult = performClientMouseAction(event, s);
-                if (actionResult.first) {
-                    return actionResult.second;
-                }
-            }
-            break;
-        }
-        default:
-            break;
-        }
-        QMouseEvent e(event->type(),
-                        event->pos() - internal->position(),
-                        event->globalPos(),
-                        event->button(), event->buttons(), event->modifiers());
-        e.setAccepted(false);
-        QCoreApplication::sendEvent(internal, &e);
-        return e.isAccepted();
+        QWindow *internal = static_cast<InternalClient *>(input()->pointer()->focus())->internalWindow();
+        QMouseEvent mouseEvent(event->type(),
+                               event->pos() - internal->position(),
+                               event->globalPos(),
+                               event->button(), event->buttons(), event->modifiers());
+        QCoreApplication::sendEvent(internal, &mouseEvent);
+        return mouseEvent.isAccepted();
     }
-    bool wheelEvent(QWheelEvent *event) override {
-        auto internal = input()->pointer()->internalWindow();
-        if (!internal) {
+    bool wheelEvent(QWheelEvent *event) override
+    {
+        if (!input()->pointer()->focus() || !input()->pointer()->focus()->isInternal()) {
             return false;
         }
-        if (event->angleDelta().y() != 0) {
-            auto s = qobject_cast<InternalClient *>(workspace()->findInternal(internal));
-            if (s && s->isDecorated()) {
-                // client window action only on vertical scrolling
-                const auto actionResult = performClientWheelAction(event, s);
-                if (actionResult.first) {
-                    return actionResult.second;
-                }
-            }
-        }
-        const QPointF localPos = event->globalPosF() - internal->position();
+        QWindow *internal = static_cast<InternalClient *>(input()->pointer()->focus())->internalWindow();
+        const QPointF localPos = event->globalPosition() - internal->position();
         const Qt::Orientation orientation = (event->angleDelta().x() != 0) ? Qt::Horizontal : Qt::Vertical;
         const int delta = event->angleDelta().x() != 0 ? event->angleDelta().x() : event->angleDelta().y();
-        QWheelEvent e(localPos, event->globalPosF(), QPoint(),
-                        event->angleDelta() * -1,
-                        delta * -1,
-                        orientation,
-                        event->buttons(),
-                        event->modifiers());
-        e.setAccepted(false);
-        QCoreApplication::sendEvent(internal, &e);
-        return e.isAccepted();
+        QWheelEvent wheelEvent(localPos, event->globalPosition(), QPoint(),
+                               event->angleDelta() * -1,
+                               event->buttons(),
+                               event->modifiers(),
+                               Qt::NoScrollPhase,
+                               false);
+        QCoreApplication::sendEvent(internal, &wheelEvent);
+        return wheelEvent.isAccepted();
     }
-    bool keyEvent(QKeyEvent *event) override {
+    bool keyEvent(QKeyEvent *event) override
+    {
         const QList<InternalClient *> &clients = workspace()->internalClients();
         QWindow *found = nullptr;
         for (auto it = clients.crbegin(); it != clients.crend(); ++it) {
@@ -997,10 +1175,10 @@ class InternalWindowEventFilter : public InputEventFilter {
             return false;
         }
         auto xkb = input()->keyboard()->xkb();
-        Qt::Key key = xkb->toQtKey( xkb->toKeysym(event->nativeScanCode()),
-                                    event->nativeScanCode(),
-                                    Qt::KeyboardModifiers(),
-                                    true /* workaround for QTBUG-62102 */ );
+        Qt::Key key = xkb->toQtKey(xkb->toKeysym(event->nativeScanCode()),
+                                   event->nativeScanCode(),
+                                   Qt::KeyboardModifiers(),
+                                   true /* workaround for QTBUG-62102 */);
         QKeyEvent internalEvent(event->type(), key,
                                 event->modifiers(), event->nativeScanCode(), event->nativeVirtualKey(),
                                 event->nativeModifiers(), event->text());
@@ -1013,7 +1191,8 @@ class InternalWindowEventFilter : public InputEventFilter {
         return false;
     }
 
-    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override {
+    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override
+    {
         auto seat = waylandServer()->seat();
         if (seat->isTouchSequence()) {
             // something else is getting the events
@@ -1027,12 +1206,12 @@ class InternalWindowEventFilter : public InputEventFilter {
         }
         // a new touch point
         seat->setTimestamp(time);
-        auto internal = touch->internalWindow();
-        if (!internal) {
+        if (!input()->touch()->focus() || !input()->touch()->focus()->isInternal()) {
             return false;
         }
         touch->setInternalPressId(id);
         // Qt's touch event API is rather complex, let's do fake mouse events instead
+        QWindow *internal = static_cast<InternalClient *>(input()->touch()->focus())->internalWindow();
         m_lastGlobalTouchPos = pos;
         m_lastLocalTouchPos = pos - internal->position();
 
@@ -1044,10 +1223,10 @@ class InternalWindowEventFilter : public InputEventFilter {
         QCoreApplication::sendEvent(internal, &e);
         return true;
     }
-    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
+    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override
+    {
         auto touch = input()->touch();
-        auto internal = touch->internalWindow();
-        if (!internal) {
+        if (!input()->touch()->focus() || !input()->touch()->focus()->isInternal()) {
             return false;
         }
         if (touch->internalPressId() == -1) {
@@ -1058,6 +1237,7 @@ class InternalWindowEventFilter : public InputEventFilter {
             // ignore, but filter out
             return true;
         }
+        QWindow *internal = static_cast<InternalClient *>(input()->touch()->focus())->internalWindow();
         m_lastGlobalTouchPos = pos;
         m_lastLocalTouchPos = pos - QPointF(internal->x(), internal->y());
 
@@ -1065,13 +1245,10 @@ class InternalWindowEventFilter : public InputEventFilter {
         QCoreApplication::instance()->sendEvent(internal, &e);
         return true;
     }
-    bool touchUp(qint32 id, quint32 time) override {
+    bool touchUp(qint32 id, quint32 time) override
+    {
         auto touch = input()->touch();
-        auto internal = touch->internalWindow();
         const bool removed = m_pressedIds.remove(id);
-        if (!internal) {
-            return removed;
-        }
         if (touch->internalPressId() == -1) {
             return removed;
         }
@@ -1080,6 +1257,10 @@ class InternalWindowEventFilter : public InputEventFilter {
             // ignore, but filter out
             return true;
         }
+        if (!input()->touch()->focus() || !input()->touch()->focus()->isInternal()) {
+            return removed;
+        }
+        QWindow *internal = static_cast<InternalClient *>(input()->touch()->focus())->internalWindow();
         // send mouse up
         QMouseEvent e(QEvent::MouseButtonRelease, m_lastLocalTouchPos, m_lastGlobalTouchPos, Qt::LeftButton, Qt::MouseButtons(), input()->keyboardModifiers());
         e.setAccepted(false);
@@ -1093,15 +1274,18 @@ class InternalWindowEventFilter : public InputEventFilter {
         input()->touch()->setInternalPressId(-1);
         return true;
     }
+
 private:
     QSet<qint32> m_pressedIds;
     QPointF m_lastGlobalTouchPos;
     QPointF m_lastLocalTouchPos;
 };
 
-class DecorationEventFilter : public InputEventFilter {
+class DecorationEventFilter : public InputEventFilter
+{
 public:
-    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override {
+    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
+    {
         Q_UNUSED(nativeButton)
         auto decoration = input()->pointer()->decoration();
         if (!decoration) {
@@ -1122,6 +1306,7 @@ public:
                 return actionResult.second;
             }
             QMouseEvent e(event->type(), p, event->globalPos(), event->button(), event->buttons(), event->modifiers());
+            e.setTimestamp(event->timestamp());
             e.setAccepted(false);
             QCoreApplication::sendEvent(decoration->decoration(), &e);
             if (!e.isAccepted() && event->type() == QEvent::MouseButtonPress) {
@@ -1137,7 +1322,8 @@ public:
         }
         return false;
     }
-    bool wheelEvent(QWheelEvent *event) override {
+    bool wheelEvent(QWheelEvent *event) override
+    {
         auto decoration = input()->pointer()->decoration();
         if (!decoration) {
             return false;
@@ -1149,15 +1335,15 @@ public:
                 return actionResult.second;
             }
         }
-        const QPointF localPos = event->globalPosF() - decoration->client()->pos();
+        const QPointF localPos = event->globalPosition() - decoration->client()->pos();
         const Qt::Orientation orientation = (event->angleDelta().x() != 0) ? Qt::Horizontal : Qt::Vertical;
         const int delta = event->angleDelta().x() != 0 ? event->angleDelta().x() : event->angleDelta().y();
-        QWheelEvent e(localPos, event->globalPosF(), QPoint(),
-                        event->angleDelta(),
-                        delta,
-                        orientation,
-                        event->buttons(),
-                        event->modifiers());
+        QWheelEvent e(localPos, event->globalPosition(), QPoint(),
+                      event->angleDelta(),
+                      event->buttons(),
+                      event->modifiers(),
+                      Qt::NoScrollPhase,
+                      false);
         e.setAccepted(false);
         QCoreApplication::sendEvent(decoration, &e);
         if (e.isAccepted()) {
@@ -1165,11 +1351,12 @@ public:
         }
         if ((orientation == Qt::Vertical) && decoration->client()->titlebarPositionUnderMouse()) {
             decoration->client()->performMouseCommand(options->operationTitlebarMouseWheel(delta * -1),
-                                                        event->globalPosF().toPoint());
+                                                      event->globalPosition().toPoint());
         }
         return true;
     }
-    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override {
+    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override
+    {
         auto seat = waylandServer()->seat();
         if (seat->isTouchSequence()) {
             return false;
@@ -1199,7 +1386,8 @@ public:
         }
         return true;
     }
-    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
+    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override
+    {
         Q_UNUSED(time)
         auto decoration = input()->touch()->decoration();
         if (!decoration) {
@@ -1220,7 +1408,8 @@ public:
         decoration->client()->processDecorationMove(m_lastLocalTouchPos.toPoint(), pos.toPoint());
         return true;
     }
-    bool touchUp(qint32 id, quint32 time) override {
+    bool touchUp(qint32 id, quint32 time) override
+    {
         Q_UNUSED(time);
         auto decoration = input()->touch()->decoration();
         if (!decoration) {
@@ -1229,6 +1418,7 @@ public:
                 m_lastGlobalTouchPos = QPointF();
                 m_lastLocalTouchPos = QPointF();
                 input()->touch()->setDecorationPressId(-1);
+                return true;
             }
             return false;
         }
@@ -1254,23 +1444,71 @@ public:
         input()->touch()->setDecorationPressId(-1);
         return true;
     }
+    bool tabletToolEvent(TabletEvent *event) override
+    {
+        auto decoration = input()->tablet()->decoration();
+        if (!decoration) {
+            return false;
+        }
+        const QPointF p = event->globalPos() - decoration->client()->pos();
+        switch (event->type()) {
+        case QEvent::TabletMove:
+        case QEvent::TabletEnterProximity: {
+            QHoverEvent e(QEvent::HoverMove, p, p);
+            QCoreApplication::instance()->sendEvent(decoration->decoration(), &e);
+            decoration->client()->processDecorationMove(p.toPoint(), event->globalPos());
+            break;
+        }
+        case QEvent::TabletPress:
+        case QEvent::TabletRelease: {
+            const bool isPressed = event->type() == QEvent::TabletPress;
+            QMouseEvent e(isPressed ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease,
+                          p,
+                          event->globalPos(),
+                          Qt::LeftButton,
+                          isPressed ? Qt::LeftButton : Qt::MouseButtons(),
+                          input()->keyboardModifiers());
+            e.setAccepted(false);
+            QCoreApplication::sendEvent(decoration->decoration(), &e);
+            if (!e.isAccepted() && isPressed) {
+                decoration->client()->processDecorationButtonPress(&e);
+            }
+            if (event->type() == QEvent::TabletRelease) {
+                decoration->client()->processDecorationButtonRelease(&e);
+            }
+            break;
+        }
+        case QEvent::TabletLeaveProximity: {
+            QHoverEvent leaveEvent(QEvent::HoverLeave, QPointF(), QPointF());
+            QCoreApplication::sendEvent(decoration->decoration(), &leaveEvent);
+            break;
+        }
+        default:
+            break;
+        }
+        // Let TabletInputFilter receive the event, so the tablet can be registered and the cursor position can be updated.
+        return false;
+    }
+
 private:
     QPointF m_lastGlobalTouchPos;
     QPointF m_lastLocalTouchPos;
 };
 
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
 class TabBoxInputFilter : public InputEventFilter
 {
 public:
-    bool pointerEvent(QMouseEvent *event, quint32 button) override {
+    bool pointerEvent(QMouseEvent *event, quint32 button) override
+    {
         Q_UNUSED(button)
         if (!TabBox::TabBox::self() || !TabBox::TabBox::self()->isGrabbed()) {
             return false;
         }
         return TabBox::TabBox::self()->handleMouseEvent(event);
     }
-    bool keyEvent(QKeyEvent *event) override {
+    bool keyEvent(QKeyEvent *event) override
+    {
         if (!TabBox::TabBox::self() || !TabBox::TabBox::self()->isGrabbed()) {
             return false;
         }
@@ -1283,12 +1521,13 @@ public:
 
         if (event->type() == QEvent::KeyPress) {
             TabBox::TabBox::self()->keyPress(event->modifiers() | event->key());
-        } else if (static_cast<KeyEvent*>(event)->modifiersRelevantForGlobalShortcuts() == Qt::NoModifier) {
+        } else if (static_cast<KeyEvent *>(event)->modifiersRelevantForGlobalShortcuts() == Qt::NoModifier) {
             TabBox::TabBox::self()->modifiersReleased();
         }
         return true;
     }
-    bool wheelEvent(QWheelEvent *event) override {
+    bool wheelEvent(QWheelEvent *event) override
+    {
         if (!TabBox::TabBox::self() || !TabBox::TabBox::self()->isGrabbed()) {
             return false;
         }
@@ -1300,13 +1539,15 @@ public:
 class ScreenEdgeInputFilter : public InputEventFilter
 {
 public:
-    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override {
+    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
+    {
         Q_UNUSED(nativeButton)
         ScreenEdges::self()->isEntered(event);
         // always forward
         return false;
     }
-    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override {
+    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override
+    {
         Q_UNUSED(time)
         // TODO: better check whether a touch sequence is in progress
         if (m_touchInProgress || waylandServer()->seat()->isTouchSequence()) {
@@ -1324,7 +1565,8 @@ public:
         }
         return false;
     }
-    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
+    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override
+    {
         Q_UNUSED(time)
         if (m_touchInProgress && m_id == id) {
             ScreenEdges::self()->gestureRecognizer()->updateSwipeGesture(QSizeF(pos.x() - m_lastPos.x(), pos.y() - m_lastPos.y()));
@@ -1333,7 +1575,8 @@ public:
         }
         return false;
     }
-    bool touchUp(qint32 id, quint32 time) override {
+    bool touchUp(qint32 id, quint32 time) override
+    {
         Q_UNUSED(time)
         if (m_touchInProgress && m_id == id) {
             ScreenEdges::self()->gestureRecognizer()->endSwipeGesture();
@@ -1342,6 +1585,7 @@ public:
         }
         return false;
     }
+
 private:
     bool m_touchInProgress = false;
     qint32 m_id = 0;
@@ -1355,12 +1599,13 @@ private:
 class WindowActionInputFilter : public InputEventFilter
 {
 public:
-    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override {
+    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
+    {
         Q_UNUSED(nativeButton)
         if (event->type() != QEvent::MouseButtonPress) {
             return false;
         }
-        AbstractClient *c = dynamic_cast<AbstractClient*>(input()->pointer()->focus());
+        AbstractClient *c = dynamic_cast<AbstractClient *>(input()->pointer()->focus());
         if (!c) {
             return false;
         }
@@ -1370,12 +1615,13 @@ public:
         }
         return false;
     }
-    bool wheelEvent(QWheelEvent *event) override {
+    bool wheelEvent(QWheelEvent *event) override
+    {
         if (event->angleDelta().y() == 0) {
             // only actions on vertical scroll
             return false;
         }
-        AbstractClient *c = dynamic_cast<AbstractClient*>(input()->pointer()->focus());
+        AbstractClient *c = dynamic_cast<AbstractClient *>(input()->pointer()->focus());
         if (!c) {
             return false;
         }
@@ -1385,14 +1631,15 @@ public:
         }
         return false;
     }
-    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override {
+    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override
+    {
         Q_UNUSED(id)
         Q_UNUSED(time)
         auto seat = waylandServer()->seat();
         if (seat->isTouchSequence()) {
             return false;
         }
-        AbstractClient *c = dynamic_cast<AbstractClient*>(input()->touch()->focus());
+        AbstractClient *c = dynamic_cast<AbstractClient *>(input()->touch()->focus());
         if (!c) {
             return false;
         }
@@ -1403,6 +1650,31 @@ public:
         }
         return false;
     }
+    bool tabletToolEvent(TabletEvent *event) override
+    {
+        if (event->type() != QEvent::TabletPress) {
+            return false;
+        }
+        AbstractClient *c = dynamic_cast<AbstractClient *>(input()->tablet()->focus());
+        if (!c) {
+            return false;
+        }
+        bool wasAction = false;
+        const Options::MouseCommand command = c->getMouseCommand(Qt::LeftButton, &wasAction);
+        if (wasAction) {
+            return !c->performMouseCommand(command, event->globalPos());
+        }
+        return false;
+    }
+};
+
+class InputKeyboardFilter : public InputEventFilter
+{
+public:
+    bool keyEvent(QKeyEvent *event) override
+    {
+        return passToInputMethod(event);
+    }
 };
 
 /**
@@ -1411,13 +1683,14 @@ public:
 class ForwardInputFilter : public InputEventFilter
 {
 public:
-    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override {
+    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
+    {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp());
         switch (event->type()) {
         case QEvent::MouseMove: {
             seat->notifyPointerMotion(event->globalPos());
-            MouseEvent *e = static_cast<MouseEvent*>(event);
+            MouseEvent *e = static_cast<MouseEvent *>(event);
             if (e->delta() != QSizeF()) {
                 seat->relativePointerMotion(e->delta(), e->deltaUnaccelerated(), e->timestampMicroseconds());
             }
@@ -1437,7 +1710,8 @@ public:
         }
         return true;
     }
-    bool wheelEvent(QWheelEvent *event) override {
+    bool wheelEvent(QWheelEvent *event) override
+    {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp());
         auto _event = static_cast<WheelEvent *>(event);
@@ -1446,10 +1720,8 @@ public:
         seat->notifyPointerFrame();
         return true;
     }
-    bool keyEvent(QKeyEvent *event) override {
-        if (!workspace()) {
-            return false;
-        }
+    bool keyEvent(QKeyEvent *event) override
+    {
         if (event->isAutoRepeat()) {
             // handled by Wayland client
             return false;
@@ -1460,104 +1732,103 @@ public:
         passToWaylandServer(event);
         return true;
     }
-    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override {
-        if (!workspace()) {
-            return false;
-        }
+    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override
+    {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         seat->notifyTouchDown(id, pos);
         return true;
     }
-    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
-        if (!workspace()) {
-            return false;
-        }
+    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override
+    {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         seat->notifyTouchMotion(id, pos);
         return true;
     }
-    bool touchUp(qint32 id, quint32 time) override {
-        if (!workspace()) {
-            return false;
-        }
+    bool touchUp(qint32 id, quint32 time) override
+    {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         seat->notifyTouchUp(id);
         return true;
     }
-    bool pinchGestureBegin(int fingerCount, quint32 time) override {
-        if (!workspace()) {
-            return false;
-        }
+    bool pinchGestureBegin(int fingerCount, quint32 time) override
+    {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         seat->startPointerPinchGesture(fingerCount);
         return true;
     }
-    bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time) override {
-        if (!workspace()) {
-            return false;
-        }
+    bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time) override
+    {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         seat->updatePointerPinchGesture(delta, scale, angleDelta);
         return true;
     }
-    bool pinchGestureEnd(quint32 time) override {
-        if (!workspace()) {
-            return false;
-        }
+    bool pinchGestureEnd(quint32 time) override
+    {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         seat->endPointerPinchGesture();
         return true;
     }
-    bool pinchGestureCancelled(quint32 time) override {
-        if (!workspace()) {
-            return false;
-        }
+    bool pinchGestureCancelled(quint32 time) override
+    {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         seat->cancelPointerPinchGesture();
         return true;
     }
 
-    bool swipeGestureBegin(int fingerCount, quint32 time) override {
-        if (!workspace()) {
-            return false;
-        }
+    bool swipeGestureBegin(int fingerCount, quint32 time) override
+    {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         seat->startPointerSwipeGesture(fingerCount);
         return true;
     }
-    bool swipeGestureUpdate(const QSizeF &delta, quint32 time) override {
-        if (!workspace()) {
-            return false;
-        }
+    bool swipeGestureUpdate(const QSizeF &delta, quint32 time) override
+    {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         seat->updatePointerSwipeGesture(delta);
         return true;
     }
-    bool swipeGestureEnd(quint32 time) override {
-        if (!workspace()) {
-            return false;
-        }
+    bool swipeGestureEnd(quint32 time) override
+    {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         seat->endPointerSwipeGesture();
         return true;
     }
-    bool swipeGestureCancelled(quint32 time) override {
-        if (!workspace()) {
-            return false;
-        }
+    bool swipeGestureCancelled(quint32 time) override
+    {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         seat->cancelPointerSwipeGesture();
+        return true;
+    }
+    bool holdGestureBegin(int fingerCount, quint32 time) override
+    {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        seat->startPointerHoldGesture(fingerCount);
+        return true;
+    }
+    bool holdGestureEnd(quint32 time) override
+    {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        seat->endPointerHoldGesture();
+        return true;
+    }
+    bool holdGestureCancelled(quint32 time) override
+    {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        seat->cancelPointerHoldGesture();
         return true;
     }
 };
@@ -1574,10 +1845,13 @@ static KWaylandServer::SeatInterface *findSeat()
 class SurfaceCursor : public Cursor
 {
 public:
-    explicit SurfaceCursor(QObject *parent) : Cursor(parent)
-    {}
+    explicit SurfaceCursor(QObject *parent)
+        : Cursor(parent)
+    {
+    }
 
-    void updateCursorSurface(KWaylandServer::SurfaceInterface *surface, const QPoint &hotspot) {
+    void updateCursorSurface(KWaylandServer::SurfaceInterface *surface, const QPoint &hotspot)
+    {
         if (m_surface == surface && hotspot == m_hotspot) {
             return;
         }
@@ -1586,6 +1860,7 @@ public:
             disconnect(m_surface, nullptr, this, nullptr);
         }
         m_surface = surface;
+        m_hotspot = hotspot;
         connect(m_surface, &KWaylandServer::SurfaceInterface::committed, this, &SurfaceCursor::refresh);
 
         refresh();
@@ -1618,6 +1893,12 @@ class TabletInputFilter : public QObject, public InputEventFilter
 public:
     TabletInputFilter()
     {
+        const auto devices = input()->devices();
+        for (InputDevice *device : devices) {
+            integrateDevice(device);
+        }
+        connect(input(), &InputRedirection::deviceAdded, this, &TabletInputFilter::integrateDevice);
+        connect(input(), &InputRedirection::deviceRemoved, this, &TabletInputFilter::removeDevice);
     }
 
     static KWaylandServer::TabletSeatV2Interface *findTabletSeat()
@@ -1630,9 +1911,10 @@ public:
         return manager->seat(findSeat());
     }
 
-    void integrateDevice(LibInput::Device *device)
+    void integrateDevice(InputDevice *inputDevice)
     {
-        if (!device->isTabletTool() && !device->isTabletPad()) {
+        auto device = qobject_cast<LibInput::Device *>(inputDevice);
+        if (!device || (!device->isTabletTool() && !device->isTabletPad())) {
             return;
         }
 
@@ -1662,22 +1944,24 @@ public:
         }
     }
 
-    void removeDevice(LibInput::Device *device)
+    void removeDevice(InputDevice *inputDevice)
     {
-        auto deviceGroup = libinput_device_get_device_group(device->device());
-        libinput_device_group_set_user_data(deviceGroup, nullptr);
+        auto device = qobject_cast<LibInput::Device *>(inputDevice);
+        if (device) {
+            auto deviceGroup = libinput_device_get_device_group(device->device());
+            libinput_device_group_set_user_data(deviceGroup, nullptr);
+
+            KWaylandServer::TabletSeatV2Interface *tabletSeat = findTabletSeat();
+            if (tabletSeat) {
+                tabletSeat->removeDevice(device->sysName());
+            } else {
+                qCCritical(KWIN_CORE) << "Could not find tablet to remove" << device->sysName();
+            }
+        }
     }
 
-    void removeDeviceBySysName(const QString &sysname)
+    KWaylandServer::TabletToolV2Interface::Type getType(const KWin::TabletToolId &tabletToolId)
     {
-        KWaylandServer::TabletSeatV2Interface *tabletSeat = findTabletSeat();
-        if (tabletSeat)
-            tabletSeat->removeDevice(sysname);
-        else
-            qCCritical(KWIN_CORE) << "Could not find tablet to remove" << sysname;
-    }
-
-    KWaylandServer::TabletToolV2Interface::Type getType(const KWin::TabletToolId &tabletToolId) {
         using Type = KWaylandServer::TabletToolV2Interface::Type;
         switch (tabletToolId.m_toolType) {
         case InputRedirection::Pen:
@@ -1734,7 +2018,7 @@ public:
         Cursors::self()->addCursor(cursor);
         m_cursorByTool[tool] = cursor;
 
-        connect(tool, &TabletToolV2Interface::cursorChanged, cursor, [cursor] (TabletCursorV2 *tcursor) {
+        connect(tool, &TabletToolV2Interface::cursorChanged, cursor, [cursor](TabletCursorV2 *tcursor) {
             static const auto createDefaultCursor = [] {
                 WaylandCursorImage defaultCursor;
                 WaylandCursorImage::Image ret;
@@ -1796,10 +2080,15 @@ public:
             tool->sendMotion(pos);
             m_cursorByTool[tool]->setPos(event->globalPos());
             break;
-        } case QEvent::TabletEnterProximity: {
+        }
+        case QEvent::TabletEnterProximity: {
+            const QPoint pos = event->globalPos();
+            m_cursorByTool[tool]->setPos(pos);
             tool->sendProximityIn(tablet);
+            tool->sendMotion(toplevel->mapToLocal(event->globalPosF()));
             break;
-        } case QEvent::TabletLeaveProximity:
+        }
+        case QEvent::TabletLeaveProximity:
             tool->sendProximityOut();
             break;
         case QEvent::TabletPress: {
@@ -1819,7 +2108,6 @@ public:
         const quint32 MAX_VAL = 65535;
         tool->sendPressure(MAX_VAL * event->pressure());
         tool->sendFrame(event->timestamp());
-        waylandServer()->simulateUserActivity();
         return true;
     }
 
@@ -1832,7 +2120,7 @@ public:
         switch (event->type()) {
         case QEvent::TabletMove:
         case QEvent::TabletEnterProximity:
-            input()->pointer()->processMotion(event->globalPosF(), event->timestamp());
+            input()->pointer()->processMotionAbsolute(event->globalPosF(), event->timestamp());
             break;
         case QEvent::TabletPress:
             input()->pointer()->processButton(KWin::qtMouseButtonToButton(Qt::LeftButton),
@@ -1848,7 +2136,6 @@ public:
             qCWarning(KWIN_CORE) << "Unexpected tablet event type" << event;
             break;
         }
-        waylandServer()->simulateUserActivity();
         return true;
     }
 
@@ -1858,6 +2145,9 @@ public:
         auto tool = tabletSeat->toolByHardwareSerial(tabletToolId.m_serialId, getType(tabletToolId));
         if (!tool) {
             tool = createTool(tabletToolId);
+        }
+        if (!tool->isClientSupported()) {
+            return false;
         }
         tool->sendButton(button, pressed);
         return true;
@@ -1923,7 +2213,7 @@ public:
         return true;
     }
 
-    QHash<KWaylandServer::TabletToolV2Interface*, Cursor*> m_cursorByTool;
+    QHash<KWaylandServer::TabletToolV2Interface *, Cursor *> m_cursorByTool;
 };
 
 static KWaylandServer::AbstractDropHandler *dropHandler(Toplevel *toplevel)
@@ -1934,9 +2224,11 @@ static KWaylandServer::AbstractDropHandler *dropHandler(Toplevel *toplevel)
     }
     auto seat = waylandServer()->seat();
     auto dropTarget = seat->dropHandlerForSurface(surface);
-    if (dropTarget) {return dropTarget;}
+    if (dropTarget) {
+        return dropTarget;
+    }
 
-    if (qobject_cast<X11Client*>(toplevel) && xwayland()) {
+    if (qobject_cast<X11Client *>(toplevel) && xwayland()) {
         return xwayland()->xwlDropHandler();
     }
 
@@ -1954,7 +2246,8 @@ public:
         connect(&m_raiseTimer, &QTimer::timeout, this, &DragAndDropInputFilter::raiseDragTarget);
     }
 
-    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override {
+    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
+    {
         auto seat = waylandServer()->seat();
         if (!seat->isDragPointer()) {
             return false;
@@ -1972,7 +2265,7 @@ public:
             const auto eventPos = event->globalPos();
             // TODO: use InputDeviceHandler::at() here and check isClient()?
             Toplevel *t = input()->findManagedToplevel(eventPos);
-            const auto dragTarget = qobject_cast<AbstractClient*>(t);
+            const auto dragTarget = qobject_cast<AbstractClient *>(t);
             if (dragTarget) {
                 if (dragTarget != m_dragTarget) {
                     workspace()->takeActivity(dragTarget, Workspace::ActivityFlag::ActivityFocus);
@@ -2024,7 +2317,8 @@ public:
         return true;
     }
 
-    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override {
+    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override
+    {
         auto seat = waylandServer()->seat();
         if (seat->isDragPointer()) {
             return true;
@@ -2040,7 +2334,8 @@ public:
         m_lastPos = pos;
         return true;
     }
-    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
+    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override
+    {
         auto seat = waylandServer()->seat();
         if (seat->isDragPointer()) {
             return true;
@@ -2063,7 +2358,7 @@ public:
         if (Toplevel *t = input()->findToplevel(pos.toPoint())) {
             // TODO: consider decorations
             if (t->surface() != seat->dragSurface()) {
-                if ((m_dragTarget = qobject_cast<AbstractClient*>(t))) {
+                if ((m_dragTarget = qobject_cast<AbstractClient *>(t))) {
                     workspace()->takeActivity(m_dragTarget, Workspace::ActivityFlag::ActivityFocus);
                     m_raiseTimer.start();
                 }
@@ -2081,7 +2376,8 @@ public:
         }
         return true;
     }
-    bool touchUp(qint32 id, quint32 time) override {
+    bool touchUp(qint32 id, quint32 time) override
+    {
         auto seat = waylandServer()->seat();
         if (!seat->isDragTouch()) {
             return false;
@@ -2094,6 +2390,23 @@ public:
         }
         return true;
     }
+    bool keyEvent(QKeyEvent *event) override
+    {
+        if (event->key() != Qt::Key_Escape) {
+            return false;
+        }
+
+        auto seat = waylandServer()->seat();
+        if (!seat->isDrag()) {
+            return false;
+        }
+        seat->setTimestamp(event->timestamp());
+
+        seat->cancelDrag();
+
+        return true;
+    }
+
 private:
     void raiseDragTarget()
     {
@@ -2123,14 +2436,16 @@ InputRedirection::InputRedirection(QObject *parent)
     qRegisterMetaType<KWin::InputRedirection::KeyboardKeyState>();
     qRegisterMetaType<KWin::InputRedirection::PointerButtonState>();
     qRegisterMetaType<KWin::InputRedirection::PointerAxis>();
-    if (Application::usesLibinput()) {
-        setupLibInput();
-    }
+    setupInputBackends();
     connect(kwinApp(), &Application::workspaceCreated, this, &InputRedirection::setupWorkspace);
 }
 
 InputRedirection::~InputRedirection()
 {
+    qDeleteAll(m_inputBackends);
+    m_inputBackends.clear();
+    m_inputDevices.clear();
+
     s_self = nullptr;
     qDeleteAll(m_filters);
     qDeleteAll(m_spies);
@@ -2165,343 +2480,427 @@ void InputRedirection::uninstallInputEventSpy(InputEventSpy *spy)
 
 void InputRedirection::init()
 {
+    m_inputConfigWatcher = KConfigWatcher::create(InputConfig::self()->inputConfig());
+    connect(m_inputConfigWatcher.data(), &KConfigWatcher::configChanged,
+            this, &InputRedirection::handleInputConfigChanged);
+
     m_shortcuts->init();
 }
 
 void InputRedirection::setupWorkspace()
 {
     if (waylandServer()) {
-        using namespace KWaylandServer;
-        FakeInputInterface *fakeInput = new FakeInputInterface(waylandServer()->display(), this);
-        connect(fakeInput, &FakeInputInterface::deviceCreated, this,
-            [this] (FakeInputDevice *device) {
-                connect(device, &FakeInputDevice::authenticationRequested, this,
-                    [device] (const QString &application, const QString &reason) {
-                        Q_UNUSED(application)
-                        Q_UNUSED(reason)
-                        // TODO: make secure
-                        device->setAuthentication(true);
-                    }
-                );
-                connect(device, &FakeInputDevice::pointerMotionRequested, this,
-                    [this] (const QSizeF &delta) {
-                        // TODO: Fix time
-                        m_pointer->processMotion(globalPointer() + QPointF(delta.width(), delta.height()), 0);
-                        waylandServer()->simulateUserActivity();
-                    }
-                );
-               connect(device, &FakeInputDevice::pointerMotionAbsoluteRequested, this,
-                    [this] (const QPointF &pos) {
-                        // TODO: Fix time
-                        m_pointer->processMotion(pos, 0);
-                        waylandServer()->simulateUserActivity();
-                    }
-                );
-                connect(device, &FakeInputDevice::pointerButtonPressRequested, this,
-                    [this] (quint32 button) {
-                        // TODO: Fix time
-                        m_pointer->processButton(button, InputRedirection::PointerButtonPressed, 0);
-                        waylandServer()->simulateUserActivity();
-                    }
-                );
-                connect(device, &FakeInputDevice::pointerButtonReleaseRequested, this,
-                    [this] (quint32 button) {
-                        // TODO: Fix time
-                        m_pointer->processButton(button, InputRedirection::PointerButtonReleased, 0);
-                        waylandServer()->simulateUserActivity();
-                    }
-                );
-                connect(device, &FakeInputDevice::pointerAxisRequested, this,
-                    [this] (Qt::Orientation orientation, qreal delta) {
-                        // TODO: Fix time
-                        InputRedirection::PointerAxis axis;
-                        switch (orientation) {
-                        case Qt::Horizontal:
-                            axis = InputRedirection::PointerAxisHorizontal;
-                            break;
-                        case Qt::Vertical:
-                            axis = InputRedirection::PointerAxisVertical;
-                            break;
-                        default:
-                            Q_UNREACHABLE();
-                            break;
-                        }
-                        // TODO: Fix time
-                        m_pointer->processAxis(axis, delta, 0, InputRedirection::PointerAxisSourceUnknown, 0);
-                        waylandServer()->simulateUserActivity();
-                    }
-                );
-                connect(device, &FakeInputDevice::touchDownRequested, this,
-                   [this] (qint32 id, const QPointF &pos) {
-                       // TODO: Fix time
-                       m_touch->processDown(id, pos, 0);
-                        waylandServer()->simulateUserActivity();
-                   }
-                );
-                connect(device, &FakeInputDevice::touchMotionRequested, this,
-                   [this] (qint32 id, const QPointF &pos) {
-                       // TODO: Fix time
-                       m_touch->processMotion(id, pos, 0);
-                        waylandServer()->simulateUserActivity();
-                   }
-                );
-                connect(device, &FakeInputDevice::touchUpRequested, this,
-                    [this] (qint32 id) {
-                        // TODO: Fix time
-                        m_touch->processUp(id, 0);
-                        waylandServer()->simulateUserActivity();
-                    }
-                );
-                connect(device, &FakeInputDevice::touchCancelRequested, this,
-                    [this] () {
-                        m_touch->cancel();
-                    }
-                );
-                connect(device, &FakeInputDevice::touchFrameRequested, this,
-                   [this] () {
-                       m_touch->frame();
-                   }
-                );
-                connect(device, &FakeInputDevice::keyboardKeyPressRequested, this,
-                    [this] (quint32 button) {
-                        // TODO: Fix time
-                        m_keyboard->processKey(button, InputRedirection::KeyboardKeyPressed, 0);
-                        waylandServer()->simulateUserActivity();
-                    }
-                );
-                connect(device, &FakeInputDevice::keyboardKeyReleaseRequested, this,
-                    [this] (quint32 button) {
-                        // TODO: Fix time
-                        m_keyboard->processKey(button, InputRedirection::KeyboardKeyReleased, 0);
-                        waylandServer()->simulateUserActivity();
-                    }
-                );
-            }
-        );
-
         m_keyboard->init();
         m_pointer->init();
         m_touch->init();
         m_tablet->init();
+
+        updateLeds(m_keyboard->xkb()->leds());
+        connect(m_keyboard, &KeyboardInputRedirection::ledsChanged, this, &InputRedirection::updateLeds);
+
+        setupTouchpadShortcuts();
+        setupInputFilters();
     }
-    setupTouchpadShortcuts();
-    setupInputFilters();
 }
+
+QObject *InputRedirection::lastInputHandler() const
+{
+    return m_lastInputDevice;
+}
+
+void InputRedirection::setLastInputHandler(QObject *device)
+{
+    m_lastInputDevice = device;
+}
+
+class UserActivitySpy : public InputEventSpy
+{
+public:
+    void pointerEvent(MouseEvent *event) override
+    {
+        Q_UNUSED(event)
+        notifyActivity();
+    }
+    void wheelEvent(WheelEvent *event) override
+    {
+        Q_UNUSED(event)
+        notifyActivity();
+    }
+
+    void keyEvent(KeyEvent *event) override
+    {
+        Q_UNUSED(event)
+        notifyActivity();
+    }
+
+    void touchDown(qint32 id, const QPointF &pos, quint32 time) override
+    {
+        Q_UNUSED(id)
+        Q_UNUSED(pos)
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+    void touchMotion(qint32 id, const QPointF &pos, quint32 time) override
+    {
+        Q_UNUSED(id)
+        Q_UNUSED(pos)
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+    void touchUp(qint32 id, quint32 time) override
+    {
+        Q_UNUSED(id)
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+
+    void pinchGestureBegin(int fingerCount, quint32 time) override
+    {
+        Q_UNUSED(fingerCount)
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+    void pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time) override
+    {
+        Q_UNUSED(scale)
+        Q_UNUSED(angleDelta)
+        Q_UNUSED(delta)
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+    void pinchGestureEnd(quint32 time) override
+    {
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+    void pinchGestureCancelled(quint32 time) override
+    {
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+
+    void swipeGestureBegin(int fingerCount, quint32 time) override
+    {
+        Q_UNUSED(fingerCount)
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+    void swipeGestureUpdate(const QSizeF &delta, quint32 time) override
+    {
+        Q_UNUSED(delta)
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+    void swipeGestureEnd(quint32 time) override
+    {
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+    void swipeGestureCancelled(quint32 time) override
+    {
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+
+    void holdGestureBegin(int fingerCount, quint32 time) override
+    {
+        Q_UNUSED(fingerCount)
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+    void holdGestureEnd(quint32 time) override
+    {
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+    void holdGestureCancelled(quint32 time) override
+    {
+        Q_UNUSED(time)
+        notifyActivity();
+    }
+
+    void tabletToolEvent(TabletEvent *event) override
+    {
+        Q_UNUSED(event)
+        notifyActivity();
+    }
+    void tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId) override
+    {
+        Q_UNUSED(button)
+        Q_UNUSED(pressed)
+        Q_UNUSED(tabletToolId)
+        notifyActivity();
+    }
+    void tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId) override
+    {
+        Q_UNUSED(button)
+        Q_UNUSED(pressed)
+        Q_UNUSED(tabletPadId)
+        notifyActivity();
+    }
+    void tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId) override
+    {
+        Q_UNUSED(number)
+        Q_UNUSED(position)
+        Q_UNUSED(isFinger)
+        Q_UNUSED(tabletPadId)
+        notifyActivity();
+    }
+    void tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId) override
+    {
+        Q_UNUSED(number)
+        Q_UNUSED(position)
+        Q_UNUSED(isFinger)
+        Q_UNUSED(tabletPadId)
+        notifyActivity();
+    }
+
+private:
+    void notifyActivity()
+    {
+        waylandServer()->simulateUserActivity();
+    }
+};
 
 void InputRedirection::setupInputFilters()
 {
-    const bool hasGlobalShortcutSupport = !waylandServer() || waylandServer()->hasGlobalShortcutSupport();
+    const bool hasGlobalShortcutSupport = waylandServer()->hasGlobalShortcutSupport();
     if ((kwinApp()->platform()->session()->capabilities() & Session::Capability::SwitchTerminal)
-            && hasGlobalShortcutSupport) {
+        && hasGlobalShortcutSupport) {
         installInputEventFilter(new VirtualTerminalFilter);
     }
-    if (waylandServer()) {
-        installInputEventSpy(new TouchHideCursorSpy);
-        if (hasGlobalShortcutSupport) {
-            installInputEventFilter(new TerminateServerFilter);
-        }
-        installInputEventFilter(new DragAndDropInputFilter);
-        installInputEventFilter(new LockScreenFilter);
-        m_windowSelector = new WindowSelectorFilter;
-        installInputEventFilter(m_windowSelector);
+    installInputEventSpy(new HideCursorSpy);
+    installInputEventSpy(new UserActivitySpy);
+    if (hasGlobalShortcutSupport) {
+        installInputEventFilter(new TerminateServerFilter);
     }
+    installInputEventFilter(new DragAndDropInputFilter);
+    installInputEventFilter(new LockScreenFilter);
+    m_windowSelector = new WindowSelectorFilter;
+    installInputEventFilter(m_windowSelector);
     if (hasGlobalShortcutSupport) {
         installInputEventFilter(new ScreenEdgeInputFilter);
     }
     installInputEventFilter(new EffectsFilter);
     installInputEventFilter(new MoveResizeFilter);
-#ifdef KWIN_BUILD_TABBOX
+#if KWIN_BUILD_TABBOX
     installInputEventFilter(new TabBoxInputFilter);
 #endif
     if (hasGlobalShortcutSupport) {
         installInputEventFilter(new GlobalShortcutFilter);
     }
-    if (waylandServer()) {
-        installInputEventFilter(new PopupInputFilter);
-    }
+    installInputEventFilter(new PopupInputFilter);
     installInputEventFilter(new DecorationEventFilter);
+    installInputEventFilter(new WindowActionInputFilter);
     installInputEventFilter(new InternalWindowEventFilter);
-    if (waylandServer()) {
-        installInputEventFilter(new WindowActionInputFilter);
-        installInputEventFilter(new ForwardInputFilter);
-
-        if (m_libInput) {
-            m_tabletSupport = new TabletInputFilter;
-            const QVector<LibInput::Device *> devices = m_libInput->devices();
-            for (LibInput::Device *dev : devices) {
-                m_tabletSupport->integrateDevice(dev);
-            }
-            connect(m_libInput, &LibInput::Connection::deviceAdded, m_tabletSupport, &TabletInputFilter::integrateDevice);
-            connect(m_libInput, &LibInput::Connection::deviceRemoved, m_tabletSupport, &TabletInputFilter::removeDevice);
-
-            connect(m_libInput, &LibInput::Connection::deviceRemovedSysName, m_tabletSupport, &TabletInputFilter::removeDeviceBySysName);
-            installInputEventFilter(m_tabletSupport);
-        }
-    }
+    installInputEventFilter(new InputKeyboardFilter);
+    installInputEventFilter(new ForwardInputFilter);
+    installInputEventFilter(new TabletInputFilter);
 }
 
 void InputRedirection::handleInputConfigChanged(const KConfigGroup &group)
 {
     if (group.name() == QLatin1String("Keyboard")) {
-        reconfigure();
+        m_keyboard->reconfigure();
     }
 }
 
-void InputRedirection::reconfigure()
+void InputRedirection::updateLeds(LEDs leds)
 {
-    if (Application::usesLibinput()) {
-        auto inputConfig = m_inputConfigWatcher->config();
-        const auto config = inputConfig->group(QStringLiteral("Keyboard"));
-        const int delay = config.readEntry("RepeatDelay", 660);
-        const int rate = config.readEntry("RepeatRate", 25);
-        const QString repeatMode = config.readEntry("KeyRepeat", "repeat");
-        // when the clients will repeat the character or turn repeat key events into an accent character selection, we want
-        // to tell the clients that we are indeed repeating keys.
-        const bool enabled = repeatMode == QLatin1String("accent") || repeatMode == QLatin1String("repeat");
+    if (m_leds != leds) {
+        m_leds = leds;
 
-        waylandServer()->seat()->keyboard()->setRepeatInfo(enabled ? rate : 0, delay);
+        for (InputDevice *device : qAsConst(m_inputDevices)) {
+            device->setLeds(leds);
+        }
     }
 }
 
-void InputRedirection::setupLibInput()
+void InputRedirection::addInputDevice(InputDevice *device)
 {
-    if (!Application::usesLibinput()) {
-        return;
+    connect(device, &InputDevice::keyChanged, m_keyboard, &KeyboardInputRedirection::processKey);
+
+    connect(device, &InputDevice::pointerMotionAbsolute,
+            m_pointer, &PointerInputRedirection::processMotionAbsolute);
+    connect(device, &InputDevice::pointerMotion,
+            m_pointer, &PointerInputRedirection::processMotion);
+    connect(device, &InputDevice::pointerButtonChanged,
+            m_pointer, &PointerInputRedirection::processButton);
+    connect(device, &InputDevice::pointerAxisChanged,
+            m_pointer, &PointerInputRedirection::processAxis);
+    connect(device, &InputDevice::pinchGestureBegin,
+            m_pointer, &PointerInputRedirection::processPinchGestureBegin);
+    connect(device, &InputDevice::pinchGestureUpdate,
+            m_pointer, &PointerInputRedirection::processPinchGestureUpdate);
+    connect(device, &InputDevice::pinchGestureEnd,
+            m_pointer, &PointerInputRedirection::processPinchGestureEnd);
+    connect(device, &InputDevice::pinchGestureCancelled,
+            m_pointer, &PointerInputRedirection::processPinchGestureCancelled);
+    connect(device, &InputDevice::swipeGestureBegin,
+            m_pointer, &PointerInputRedirection::processSwipeGestureBegin);
+    connect(device, &InputDevice::swipeGestureUpdate,
+            m_pointer, &PointerInputRedirection::processSwipeGestureUpdate);
+    connect(device, &InputDevice::swipeGestureEnd,
+            m_pointer, &PointerInputRedirection::processSwipeGestureEnd);
+    connect(device, &InputDevice::swipeGestureCancelled,
+            m_pointer, &PointerInputRedirection::processSwipeGestureCancelled);
+    connect(device, &InputDevice::holdGestureBegin,
+            m_pointer, &PointerInputRedirection::processHoldGestureBegin);
+    connect(device, &InputDevice::holdGestureEnd,
+            m_pointer, &PointerInputRedirection::processHoldGestureEnd);
+    connect(device, &InputDevice::holdGestureCancelled,
+            m_pointer, &PointerInputRedirection::processHoldGestureCancelled);
+
+    connect(device, &InputDevice::touchDown, m_touch, &TouchInputRedirection::processDown);
+    connect(device, &InputDevice::touchUp, m_touch, &TouchInputRedirection::processUp);
+    connect(device, &InputDevice::touchMotion, m_touch, &TouchInputRedirection::processMotion);
+    connect(device, &InputDevice::touchCanceled, m_touch, &TouchInputRedirection::cancel);
+    connect(device, &InputDevice::touchFrame, m_touch, &TouchInputRedirection::frame);
+
+    auto handleSwitchEvent = [this](SwitchEvent::State state, quint32 time, quint64 timeMicroseconds, InputDevice *device) {
+        SwitchEvent event(state, time, timeMicroseconds, device);
+        processSpies(std::bind(&InputEventSpy::switchEvent, std::placeholders::_1, &event));
+        processFilters(std::bind(&InputEventFilter::switchEvent, std::placeholders::_1, &event));
+    };
+    connect(device, &InputDevice::switchToggledOn, this,
+            std::bind(handleSwitchEvent, SwitchEvent::State::On, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+    connect(device, &InputDevice::switchToggledOff, this,
+            std::bind(handleSwitchEvent, SwitchEvent::State::Off, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+
+    connect(device, &InputDevice::tabletToolEvent,
+            m_tablet, &TabletInputRedirection::tabletToolEvent);
+    connect(device, &InputDevice::tabletToolButtonEvent,
+            m_tablet, &TabletInputRedirection::tabletToolButtonEvent);
+    connect(device, &InputDevice::tabletPadButtonEvent,
+            m_tablet, &TabletInputRedirection::tabletPadButtonEvent);
+    connect(device, &InputDevice::tabletPadRingEvent,
+            m_tablet, &TabletInputRedirection::tabletPadRingEvent);
+    connect(device, &InputDevice::tabletPadStripEvent,
+            m_tablet, &TabletInputRedirection::tabletPadStripEvent);
+
+    device->setLeds(m_leds);
+
+    m_inputDevices.append(device);
+    Q_EMIT deviceAdded(device);
+
+    updateAvailableInputDevices();
+}
+
+void InputRedirection::removeInputDevice(InputDevice *device)
+{
+    m_inputDevices.removeOne(device);
+    Q_EMIT deviceRemoved(device);
+
+    updateAvailableInputDevices();
+}
+
+void InputRedirection::updateAvailableInputDevices()
+{
+    const bool hasKeyboard = std::any_of(m_inputDevices.constBegin(), m_inputDevices.constEnd(), [](InputDevice *device) {
+        return device->isKeyboard();
+    });
+    if (m_hasKeyboard != hasKeyboard) {
+        m_hasKeyboard = hasKeyboard;
+        Q_EMIT hasKeyboardChanged(hasKeyboard);
     }
-    if (m_libInput) {
-        return;
+
+    const bool hasAlphaNumericKeyboard = std::any_of(m_inputDevices.constBegin(), m_inputDevices.constEnd(), [](InputDevice *device) {
+        return device->isAlphaNumericKeyboard();
+    });
+    if (m_hasAlphaNumericKeyboard != hasAlphaNumericKeyboard) {
+        m_hasAlphaNumericKeyboard = hasAlphaNumericKeyboard;
+        Q_EMIT hasAlphaNumericKeyboardChanged(hasAlphaNumericKeyboard);
     }
-    LibInput::Connection *conn = LibInput::Connection::create(this);
-    m_libInput = conn;
-    if (conn) {
 
-        if (waylandServer()) {
-            // create relative pointer manager
-            new KWaylandServer::RelativePointerManagerV1Interface(waylandServer()->display(),
-                                                                  waylandServer()->display());
+    const bool hasPointer = std::any_of(m_inputDevices.constBegin(), m_inputDevices.constEnd(), [](InputDevice *device) {
+        return device->isPointer();
+    });
+    if (m_hasPointer != hasPointer) {
+        m_hasPointer = hasPointer;
+        Q_EMIT hasPointerChanged(hasPointer);
+    }
+
+    const bool hasTouch = std::any_of(m_inputDevices.constBegin(), m_inputDevices.constEnd(), [](InputDevice *device) {
+        return device->isTouch();
+    });
+    if (m_hasTouch != hasTouch) {
+        m_hasTouch = hasTouch;
+        Q_EMIT hasTouchChanged(hasTouch);
+    }
+
+    const bool hasTabletModeSwitch = std::any_of(m_inputDevices.constBegin(), m_inputDevices.constEnd(), [](InputDevice *device) {
+        return device->isTabletModeSwitch();
+    });
+    if (m_hasTabletModeSwitch != hasTabletModeSwitch) {
+        m_hasTabletModeSwitch = hasTabletModeSwitch;
+        Q_EMIT hasTabletModeSwitchChanged(hasTabletModeSwitch);
+    }
+}
+
+void InputRedirection::toggleTouchpads()
+{
+    bool changed = false;
+    m_touchpadsEnabled = !m_touchpadsEnabled;
+    for (InputDevice *device : qAsConst(m_inputDevices)) {
+        if (!device->isTouchpad()) {
+            continue;
         }
-
-        conn->setInputConfig(InputConfig::self()->inputConfig());
-        conn->updateLEDs(m_keyboard->xkb()->leds());
-        waylandServer()->updateKeyState(m_keyboard->xkb()->leds());
-        connect(m_keyboard, &KeyboardInputRedirection::ledsChanged, waylandServer(), &WaylandServer::updateKeyState);
-        connect(m_keyboard, &KeyboardInputRedirection::ledsChanged, conn, &LibInput::Connection::updateLEDs);
-        connect(conn, &LibInput::Connection::eventsRead, this,
-            [this] {
-                m_libInput->processEvents();
-            }, Qt::QueuedConnection
-        );
-        conn->setup();
-        connect(conn, &LibInput::Connection::pointerButtonChanged, m_pointer, &PointerInputRedirection::processButton);
-        connect(conn, &LibInput::Connection::pointerAxisChanged, m_pointer, &PointerInputRedirection::processAxis);
-        connect(conn, &LibInput::Connection::pinchGestureBegin, m_pointer, &PointerInputRedirection::processPinchGestureBegin);
-        connect(conn, &LibInput::Connection::pinchGestureUpdate, m_pointer, &PointerInputRedirection::processPinchGestureUpdate);
-        connect(conn, &LibInput::Connection::pinchGestureEnd, m_pointer, &PointerInputRedirection::processPinchGestureEnd);
-        connect(conn, &LibInput::Connection::pinchGestureCancelled, m_pointer, &PointerInputRedirection::processPinchGestureCancelled);
-        connect(conn, &LibInput::Connection::swipeGestureBegin, m_pointer, &PointerInputRedirection::processSwipeGestureBegin);
-        connect(conn, &LibInput::Connection::swipeGestureUpdate, m_pointer, &PointerInputRedirection::processSwipeGestureUpdate);
-        connect(conn, &LibInput::Connection::swipeGestureEnd, m_pointer, &PointerInputRedirection::processSwipeGestureEnd);
-        connect(conn, &LibInput::Connection::swipeGestureCancelled, m_pointer, &PointerInputRedirection::processSwipeGestureCancelled);
-        connect(conn, &LibInput::Connection::keyChanged, m_keyboard, &KeyboardInputRedirection::processKey);
-        connect(conn, &LibInput::Connection::pointerMotion, this,
-            [this] (const QSizeF &delta, const QSizeF &deltaNonAccel, uint32_t time, quint64 timeMicroseconds, LibInput::Device *device) {
-                m_pointer->processMotion(m_pointer->pos() + QPointF(delta.width(), delta.height()), delta, deltaNonAccel, time, timeMicroseconds, device);
-            }
-        );
-        connect(conn, &LibInput::Connection::pointerMotionAbsolute, this,
-            [this] (QPointF orig, QPointF screen, uint32_t time, LibInput::Device *device) {
-                Q_UNUSED(orig)
-                m_pointer->processMotion(screen, time, device);
-            }
-        );
-        connect(conn, &LibInput::Connection::touchDown, m_touch, &TouchInputRedirection::processDown);
-        connect(conn, &LibInput::Connection::touchUp, m_touch, &TouchInputRedirection::processUp);
-        connect(conn, &LibInput::Connection::touchMotion, m_touch, &TouchInputRedirection::processMotion);
-        connect(conn, &LibInput::Connection::touchCanceled, m_touch, &TouchInputRedirection::cancel);
-        connect(conn, &LibInput::Connection::touchFrame, m_touch, &TouchInputRedirection::frame);
-        auto handleSwitchEvent = [this] (SwitchEvent::State state, quint32 time, quint64 timeMicroseconds, LibInput::Device *device) {
-            SwitchEvent event(state, time, timeMicroseconds, device);
-            processSpies(std::bind(&InputEventSpy::switchEvent, std::placeholders::_1, &event));
-            processFilters(std::bind(&InputEventFilter::switchEvent, std::placeholders::_1, &event));
-        };
-        connect(conn, &LibInput::Connection::switchToggledOn, this,
-                std::bind(handleSwitchEvent, SwitchEvent::State::On, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-        connect(conn, &LibInput::Connection::switchToggledOff, this,
-                std::bind(handleSwitchEvent, SwitchEvent::State::Off, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-
-        connect(conn, &LibInput::Connection::tabletToolEvent,
-                m_tablet, &TabletInputRedirection::tabletToolEvent);
-        connect(conn, &LibInput::Connection::tabletToolButtonEvent,
-                m_tablet, &TabletInputRedirection::tabletToolButtonEvent);
-        connect(conn, &LibInput::Connection::tabletPadButtonEvent,
-                m_tablet, &TabletInputRedirection::tabletPadButtonEvent);
-        connect(conn, &LibInput::Connection::tabletPadRingEvent,
-                m_tablet, &TabletInputRedirection::tabletPadRingEvent);
-        connect(conn, &LibInput::Connection::tabletPadStripEvent,
-                m_tablet, &TabletInputRedirection::tabletPadStripEvent);
-
-        if (screens()) {
-            setupLibInputWithScreens();
-        } else {
-            connect(kwinApp(), &Application::screensCreated, this, &InputRedirection::setupLibInputWithScreens);
+        const bool old = device->isEnabled();
+        device->setEnabled(m_touchpadsEnabled);
+        if (old != device->isEnabled()) {
+            changed = true;
         }
-        if (auto s = findSeat()) {
-            // Workaround for QTBUG-54371: if there is no real keyboard Qt doesn't request virtual keyboard
-            s->setHasKeyboard(true);
-            s->setHasPointer(conn->hasPointer());
-            s->setHasTouch(conn->hasTouch());
-            connect(conn, &LibInput::Connection::hasAlphaNumericKeyboardChanged, this,
-                [this] (bool set) {
-                    if (m_libInput->isSuspended()) {
-                        return;
-                    }
-                    // TODO: this should update the seat, only workaround for QTBUG-54371
-                    Q_EMIT hasAlphaNumericKeyboardChanged(set);
-                }
-            );
-            connect(conn, &LibInput::Connection::hasTabletModeSwitchChanged, this,
-                [this] (bool set) {
-                    if (m_libInput->isSuspended()) {
-                        return;
-                    }
-                    Q_EMIT hasTabletModeSwitchChanged(set);
-                }
-            );
-            connect(conn, &LibInput::Connection::hasPointerChanged, this,
-                [this, s] (bool set) {
-                    if (m_libInput->isSuspended()) {
-                        return;
-                    }
-                    s->setHasPointer(set);
-                }
-            );
-            connect(conn, &LibInput::Connection::hasTouchChanged, this,
-                [this, s] (bool set) {
-                    if (m_libInput->isSuspended()) {
-                        return;
-                    }
-                    s->setHasTouch(set);
-                }
-            );
-        }
-        connect(kwinApp()->platform()->session(), &Session::activeChanged, m_libInput, [this](bool active) {
-            if (!active) {
-                m_libInput->deactivate();
-            }
-        });
+    }
+    if (changed) {
+        // send OSD message
+        QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.plasmashell"),
+                                                          QStringLiteral("/org/kde/osdService"),
+                                                          QStringLiteral("org.kde.osdService"),
+                                                          QStringLiteral("touchpadEnabledChanged"));
+        msg.setArguments({m_touchpadsEnabled});
+        QDBusConnection::sessionBus().asyncCall(msg);
+    }
+}
 
-        m_inputConfigWatcher = KConfigWatcher::create(InputConfig::self()->inputConfig());
-        connect(m_inputConfigWatcher.data(), &KConfigWatcher::configChanged,
-                this, &InputRedirection::handleInputConfigChanged);
-        reconfigure();
+void InputRedirection::enableTouchpads()
+{
+    if (!m_touchpadsEnabled) {
+        toggleTouchpads();
+    }
+}
+
+void InputRedirection::disableTouchpads()
+{
+    if (m_touchpadsEnabled) {
+        toggleTouchpads();
+    }
+}
+
+void InputRedirection::addInputBackend(InputBackend *inputBackend)
+{
+    Q_ASSERT(!m_inputBackends.contains(inputBackend));
+    m_inputBackends.append(inputBackend);
+
+    connect(inputBackend, &InputBackend::deviceAdded, this, &InputRedirection::addInputDevice);
+    connect(inputBackend, &InputBackend::deviceRemoved, this, &InputRedirection::removeInputDevice);
+
+    inputBackend->setConfig(InputConfig::self()->inputConfig());
+    inputBackend->initialize();
+}
+
+void InputRedirection::setupInputBackends()
+{
+    InputBackend *inputBackend = kwinApp()->platform()->createInputBackend();
+    if (inputBackend) {
+        addInputBackend(inputBackend);
+    }
+    if (waylandServer()) {
+        addInputBackend(new FakeInputBackend());
     }
 }
 
 void InputRedirection::setupTouchpadShortcuts()
 {
-    if (!m_libInput) {
-        return;
-    }
     QAction *touchpadToggleAction = new QAction(this);
     QAction *touchpadOnAction = new QAction(this);
     QAction *touchpadOffAction = new QAction(this);
@@ -2528,105 +2927,29 @@ void InputRedirection::setupTouchpadShortcuts()
     registerShortcut(Qt::Key_TouchpadOn, touchpadOnAction);
     registerShortcut(Qt::Key_TouchpadOff, touchpadOffAction);
 #endif
-    connect(touchpadToggleAction, &QAction::triggered, m_libInput, &LibInput::Connection::toggleTouchpads);
-    connect(touchpadOnAction, &QAction::triggered, m_libInput, &LibInput::Connection::enableTouchpads);
-    connect(touchpadOffAction, &QAction::triggered, m_libInput, &LibInput::Connection::disableTouchpads);
+    connect(touchpadToggleAction, &QAction::triggered, this, &InputRedirection::toggleTouchpads);
+    connect(touchpadOnAction, &QAction::triggered, this, &InputRedirection::enableTouchpads);
+    connect(touchpadOffAction, &QAction::triggered, this, &InputRedirection::disableTouchpads);
 }
 
 bool InputRedirection::hasAlphaNumericKeyboard()
 {
-    if (m_libInput) {
-        return m_libInput->hasAlphaNumericKeyboard();
-    }
-    return true;
+    return m_hasAlphaNumericKeyboard;
+}
+
+bool InputRedirection::hasPointer() const
+{
+    return m_hasPointer;
+}
+
+bool InputRedirection::hasTouch() const
+{
+    return m_hasTouch;
 }
 
 bool InputRedirection::hasTabletModeSwitch()
 {
-    if (m_libInput) {
-        return m_libInput->hasTabletModeSwitch();
-    }
-    return false;
-}
-
-void InputRedirection::setupLibInputWithScreens()
-{
-    if (!screens() || !m_libInput) {
-        return;
-    }
-    m_libInput->setScreenSize(screens()->size());
-    m_libInput->updateScreens();
-    connect(screens(), &Screens::sizeChanged, this,
-        [this] {
-            m_libInput->setScreenSize(screens()->size());
-        }
-    );
-    connect(screens(), &Screens::changed, m_libInput, &LibInput::Connection::updateScreens);
-}
-
-void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
-{
-    m_pointer->processMotion(pos, time);
-}
-
-void InputRedirection::processPointerButton(uint32_t button, InputRedirection::PointerButtonState state, uint32_t time)
-{
-    m_pointer->processButton(button, state, time);
-}
-
-void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qreal delta, qint32 discreteDelta, PointerAxisSource source, uint32_t time)
-{
-    m_pointer->processAxis(axis, delta, discreteDelta, source, time);
-}
-
-void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time)
-{
-    m_keyboard->processKey(key, state, time);
-}
-
-void InputRedirection::processKeyboardModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
-{
-    m_keyboard->processModifiers(modsDepressed, modsLatched, modsLocked, group);
-}
-
-void InputRedirection::processKeymapChange(int fd, uint32_t size)
-{
-    m_keyboard->processKeymapChange(fd, size);
-}
-
-void InputRedirection::processTouchDown(qint32 id, const QPointF &pos, quint32 time)
-{
-    m_touch->processDown(id, pos, time);
-}
-
-void InputRedirection::processTouchUp(qint32 id, quint32 time)
-{
-    m_touch->processUp(id, time);
-}
-
-void InputRedirection::processTouchMotion(qint32 id, const QPointF &pos, quint32 time)
-{
-    m_touch->processMotion(id, pos, time);
-}
-
-void InputRedirection::cancelTouchSequence()
-{
-    m_touch->cancel();
-}
-
-void InputRedirection::cancelTouch()
-{
-    m_touch->cancel();
-}
-
-void InputRedirection::touchFrame()
-{
-    m_touch->frame();
-}
-
-int InputRedirection::touchPointCount()
-{
-    return m_touch->touchPointCount();
+    return m_hasTabletModeSwitch;
 }
 
 Qt::MouseButtons InputRedirection::qtButtonStates() const
@@ -2643,11 +2966,11 @@ Toplevel *InputRedirection::findToplevel(const QPoint &pos)
     // TODO: check whether the unmanaged wants input events at all
     if (!isScreenLocked) {
         // if an effect overrides the cursor we don't have a window to focus
-        if (effects && static_cast<EffectsHandlerImpl*>(effects)->isMouseInterception()) {
+        if (effects && static_cast<EffectsHandlerImpl *>(effects)->isMouseInterception()) {
             return nullptr;
         }
         const QList<Unmanaged *> &unmanaged = Workspace::self()->unmanagedList();
-        Q_FOREACH (Unmanaged *u, unmanaged) {
+        for (Unmanaged *u : unmanaged) {
             if (u->hitTest(pos)) {
                 return u;
             }
@@ -2674,7 +2997,7 @@ Toplevel *InputRedirection::findManagedToplevel(const QPoint &pos)
             // a deleted window doesn't get mouse events
             continue;
         }
-        if (AbstractClient *c = dynamic_cast<AbstractClient*>(t)) {
+        if (AbstractClient *c = dynamic_cast<AbstractClient *>(t)) {
             if (!c->isOnCurrentActivity() || !c->isOnCurrentDesktop() || c->isMinimized() || c->isHiddenInternal()) {
                 continue;
             }
@@ -2720,14 +3043,24 @@ void InputRedirection::registerAxisShortcut(Qt::KeyboardModifiers modifiers, Poi
     m_shortcuts->registerAxisShortcut(action, modifiers, axis);
 }
 
-void InputRedirection::registerRealtimeTouchpadSwipeShortcut(SwipeDirection direction, QAction *action, std::function<void(qreal)> cb)
+void InputRedirection::registerRealtimeTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> cb)
 {
-    m_shortcuts->registerRealtimeTouchpadSwipe(action, cb, direction);
+    m_shortcuts->registerRealtimeTouchpadSwipe(action, cb, direction, fingerCount);
 }
 
-void InputRedirection::registerTouchpadSwipeShortcut(SwipeDirection direction, QAction *action)
+void InputRedirection::registerTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action)
 {
-    m_shortcuts->registerTouchpadSwipe(action, direction);
+    m_shortcuts->registerTouchpadSwipe(action, direction, fingerCount);
+}
+
+void InputRedirection::registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *action)
+{
+    m_shortcuts->registerTouchpadPinch(action, direction, fingerCount);
+}
+
+void InputRedirection::registerRealtimeTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
+{
+    m_shortcuts->registerRealtimeTouchpadPinch(onUp, progressCallback, direction, fingerCount);
 }
 
 void InputRedirection::registerGlobalAccel(KGlobalAccelInterface *interface)
@@ -2750,7 +3083,7 @@ QPointF InputRedirection::globalPointer() const
     return m_pointer->pos();
 }
 
-void InputRedirection::startInteractiveWindowSelection(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName)
+void InputRedirection::startInteractiveWindowSelection(std::function<void(KWin::Toplevel *)> callback, const QByteArray &cursorName)
 {
     if (!m_windowSelector || m_windowSelector->isActive()) {
         callback(nullptr);
@@ -2789,90 +3122,69 @@ void InputDeviceHandler::init()
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, this, &InputDeviceHandler::update);
 }
 
-bool InputDeviceHandler::setAt(Toplevel *toplevel)
+bool InputDeviceHandler::setHover(Toplevel *toplevel)
 {
-    if (m_at.at == toplevel) {
+    if (m_hover.window == toplevel) {
         return false;
     }
-    auto old = m_at.at;
-    disconnect(m_at.surfaceCreatedConnection);
-    m_at.surfaceCreatedConnection = QMetaObject::Connection();
+    auto old = m_hover.window;
+    disconnect(m_hover.surfaceCreatedConnection);
+    m_hover.surfaceCreatedConnection = QMetaObject::Connection();
 
-    m_at.at = toplevel;
-    Q_EMIT atChanged(old, toplevel);
+    m_hover.window = toplevel;
     return true;
 }
 
 void InputDeviceHandler::setFocus(Toplevel *toplevel)
 {
-    m_focus.focus = toplevel;
-    //TODO: call focusUpdate?
+    if (m_focus.window != toplevel) {
+        Toplevel *oldFocus = m_focus.window;
+        m_focus.window = toplevel;
+        focusUpdate(oldFocus, m_focus.window);
+    }
 }
 
 void InputDeviceHandler::setDecoration(Decoration::DecoratedClientImpl *decoration)
 {
-    auto oldDeco = m_focus.decoration;
-    m_focus.decoration = decoration;
-    cleanupDecoration(oldDeco.data(), m_focus.decoration.data());
-    Q_EMIT decorationChanged();
-}
-
-void InputDeviceHandler::setInternalWindow(QWindow *window)
-{
-    m_focus.internalWindow = window;
-    //TODO: call internalWindowUpdate?
+    if (m_focus.decoration != decoration) {
+        auto oldDeco = m_focus.decoration;
+        m_focus.decoration = decoration;
+        cleanupDecoration(oldDeco.data(), m_focus.decoration.data());
+        Q_EMIT decorationChanged();
+    }
 }
 
 void InputDeviceHandler::updateFocus()
 {
-    auto oldFocus = m_focus.focus;
+    Toplevel *focus = m_hover.window;
 
-    if (m_at.at && !m_at.at->surface()) {
+    if (m_focus.decoration) {
+        focus = nullptr;
+    } else if (m_hover.window && !m_hover.window->surface() && !m_hover.window->isInternal()) {
         // The surface has not yet been created (special XWayland case).
         // Therefore listen for its creation.
-        if (!m_at.surfaceCreatedConnection) {
-            m_at.surfaceCreatedConnection = connect(m_at.at, &Toplevel::surfaceChanged,
-                                                    this, &InputDeviceHandler::update);
+        if (!m_hover.surfaceCreatedConnection) {
+            m_hover.surfaceCreatedConnection = connect(m_hover.window, &Toplevel::surfaceChanged,
+                                                       this, &InputDeviceHandler::update);
         }
-        m_focus.focus = nullptr;
-    } else {
-        m_focus.focus = m_at.at;
+        focus = nullptr;
     }
 
-    focusUpdate(oldFocus, m_focus.focus);
+    setFocus(focus);
 }
 
-bool InputDeviceHandler::updateDecoration()
+void InputDeviceHandler::updateDecoration()
 {
-    const auto oldDeco = m_focus.decoration;
-    m_focus.decoration = nullptr;
-
-    auto *ac = qobject_cast<AbstractClient*>(m_at.at);
+    Decoration::DecoratedClientImpl *decoration = nullptr;
+    auto *ac = qobject_cast<AbstractClient *>(m_hover.window);
     if (ac && ac->decoratedClient()) {
         if (!ac->clientGeometry().contains(position().toPoint())) {
             // input device above decoration
-            m_focus.decoration = ac->decoratedClient();
+            decoration = ac->decoratedClient();
         }
     }
 
-    if (m_focus.decoration == oldDeco) {
-        // no change to decoration
-        return false;
-    }
-    cleanupDecoration(oldDeco.data(), m_focus.decoration.data());
-    Q_EMIT decorationChanged();
-    return true;
-}
-
-void InputDeviceHandler::updateInternalWindow(QWindow *window)
-{
-    if (m_focus.internalWindow == window) {
-        // no change
-        return;
-    }
-    const auto oldInternal = m_focus.internalWindow;
-    m_focus.internalWindow = window;
-    cleanupInternalWindow(oldInternal, window);
+    setDecoration(decoration);
 }
 
 void InputDeviceHandler::update()
@@ -2886,58 +3198,32 @@ void InputDeviceHandler::update()
         toplevel = input()->findToplevel(position().toPoint());
     }
     // Always set the toplevel at the position of the input device.
-    setAt(toplevel);
+    setHover(toplevel);
 
     if (focusUpdatesBlocked()) {
         workspace()->updateFocusMousePosition(position().toPoint());
         return;
     }
 
-    if (auto client = qobject_cast<InternalClient *>(toplevel)) {
-        QWindow *handle = client->internalWindow();
-        if (m_focus.internalWindow != handle) {
-            // changed internal window
-            updateDecoration();
-            updateInternalWindow(handle);
-            updateFocus();
-        } else if (updateDecoration()) {
-            // went onto or off from decoration, update focus
-            updateFocus();
-        }
-    } else {
-        updateInternalWindow(nullptr);
-
-        if (m_focus.focus != m_at.at) {
-            // focus change
-            updateDecoration();
-            updateFocus();
-        } else if (updateDecoration()) {
-            // went onto or off from decoration, update focus
-            updateFocus();
-        }
-    }
+    updateDecoration();
+    updateFocus();
 
     workspace()->updateFocusMousePosition(position().toPoint());
 }
 
-Toplevel *InputDeviceHandler::at() const
+Toplevel *InputDeviceHandler::hover() const
 {
-    return m_at.at.data();
+    return m_hover.window.data();
 }
 
 Toplevel *InputDeviceHandler::focus() const
 {
-    return m_focus.focus.data();
+    return m_focus.window.data();
 }
 
 Decoration::DecoratedClientImpl *InputDeviceHandler::decoration() const
 {
     return m_focus.decoration;
-}
-
-QWindow *InputDeviceHandler::internalWindow() const
-{
-    return m_focus.internalWindow;
 }
 
 } // namespace

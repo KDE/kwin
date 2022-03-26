@@ -36,7 +36,7 @@ class VirtualDesktopManager;
  *
  * @author Martin Gräßlin <mgraesslin@kde.org>
  */
-class DBusInterface: public QObject, protected QDBusContext
+class DBusInterface : public QObject, protected QDBusContext
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.KWin")
@@ -58,9 +58,31 @@ public Q_SLOTS: // METHODS
     QString supportInformation();
     Q_NOREPLY void unclutterDesktop();
     Q_NOREPLY void showDebugConsole();
+
+    /**
+     * Instructs kwin_wayland to restart itself.
+     *
+     * This acts as an implementation detail of: kwin_wayland --replace
+     */
     Q_NOREPLY void replace();
 
+    /**
+     * Allows the user to pick a window and get info on it.
+     *
+     * When called the user's mouse cursor will become a targeting reticule.
+     * On clicking a window with the target a map will be returned
+     * with various information about the picked window, such as:
+     * height, width, minimized, fullscreen, etc.
+     */
     QVariantMap queryWindowInfo();
+
+    /**
+     * Returns a map with information about the window.
+     *
+     * The map includes entries such as position, size, status, and more.
+     *
+     * @param uuid is a QUuid from Toplevel::internalId().
+     */
     QVariantMap getWindowInfo(const QString &uuid);
 
 private Q_SLOTS:
@@ -76,24 +98,29 @@ class CompositorDBusInterface : public QObject
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Compositing")
+
     /**
      * @brief Whether the Compositor is active. That is a Scene is present and the Compositor is
      * not shutting down itself.
      */
     Q_PROPERTY(bool active READ isActive)
+
     /**
      * @brief Whether compositing is possible. Mostly means whether the required X extensions
      * are available.
      */
     Q_PROPERTY(bool compositingPossible READ isCompositingPossible)
+
     /**
      * @brief The reason why compositing is not possible. Empty String if compositing is possible.
      */
     Q_PROPERTY(QString compositingNotPossibleReason READ compositingNotPossibleReason)
+
     /**
      * @brief Whether OpenGL has failed badly in the past (crash) and is considered as broken.
      */
     Q_PROPERTY(bool openGLIsBroken READ isOpenGLBroken)
+
     /**
      * The type of the currently used Scene:
      * @li @c none No Compositing
@@ -102,6 +129,7 @@ class CompositorDBusInterface : public QObject
      * @li @c gles OpenGL ES 2
      */
     Q_PROPERTY(QString compositingType READ compositingType)
+
     /**
      * @brief All currently supported OpenGLPlatformInterfaces.
      *
@@ -112,6 +140,7 @@ class CompositorDBusInterface : public QObject
      * Values depend on operation mode and compile time options.
      */
     Q_PROPERTY(QStringList supportedOpenGLPlatformInterfaces READ supportedOpenGLPlatformInterfaces)
+
     Q_PROPERTY(bool platformRequiresCompositing READ platformRequiresCompositing)
 public:
     explicit CompositorDBusInterface(Compositor *parent);
@@ -137,6 +166,7 @@ public Q_SLOTS:
      * @see isActive
      */
     void suspend();
+
     /**
      * @brief Resumes the Compositor if it is currently suspended.
      *
@@ -155,6 +185,7 @@ public Q_SLOTS:
      * @see isOpenGLBroken
      */
     void resume();
+
     /**
      * @brief Used by Compositing KCM after settings change.
      *
@@ -169,7 +200,7 @@ private:
     Compositor *m_compositor;
 };
 
-//TODO: disable all of this in case of kiosk?
+// TODO: disable all of this in case of kiosk?
 
 class VirtualDesktopManagerDBusInterface : public QObject
 {
@@ -181,14 +212,17 @@ class VirtualDesktopManagerDBusInterface : public QObject
      * The ids of the virtual desktops are in the range [1, VirtualDesktopManager::maximum()].
      */
     Q_PROPERTY(uint count READ count NOTIFY countChanged)
+
     /**
      * The number of rows the virtual desktops will be laid out in
      */
     Q_PROPERTY(uint rows READ rows WRITE setRows NOTIFY rowsChanged)
+
     /**
      * The id of the virtual desktop which is currently in use.
      */
     Q_PROPERTY(QString current READ current WRITE setCurrent NOTIFY currentChanged)
+
     /**
      * Whether navigation in the desktop layout wraps around at the borders.
      */

@@ -31,19 +31,26 @@ class ScreenShotSource2;
 class ScreenShotDBusInterface2 : public QObject, public QDBusContext
 {
     Q_OBJECT
+    Q_PROPERTY(int Version READ version CONSTANT)
 
 public:
     explicit ScreenShotDBusInterface2(ScreenShotEffect *effect);
     ~ScreenShotDBusInterface2() override;
 
+    int version() const;
+
 public Q_SLOTS:
     QVariantMap CaptureWindow(const QString &handle, const QVariantMap &options,
                               QDBusUnixFileDescriptor pipe);
+    QVariantMap CaptureActiveWindow(const QVariantMap &options,
+                                    QDBusUnixFileDescriptor pipe);
     QVariantMap CaptureArea(int x, int y, int width, int height,
                             const QVariantMap &options,
                             QDBusUnixFileDescriptor pipe);
     QVariantMap CaptureScreen(const QString &name, const QVariantMap &options,
                               QDBusUnixFileDescriptor pipe);
+    QVariantMap CaptureActiveScreen(const QVariantMap &options,
+                                    QDBusUnixFileDescriptor pipe);
     QVariantMap CaptureInteractive(uint kind, const QVariantMap &options,
                                    QDBusUnixFileDescriptor pipe);
 

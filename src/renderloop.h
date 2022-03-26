@@ -14,7 +14,7 @@ namespace KWin
 {
 
 class RenderLoopPrivate;
-class SurfaceItem;
+class Item;
 
 /**
  * The RenderLoop class represents the compositing scheduler on a particular output.
@@ -71,7 +71,7 @@ public:
     /**
      * Schedules a compositing cycle at the next available moment.
      */
-    void scheduleRepaint();
+    void scheduleRepaint(Item *item = nullptr);
 
     /**
      * Returns the timestamp of the last frame that has been presented on the screen.
@@ -90,7 +90,7 @@ public:
      * Sets the surface that currently gets scanned out,
      * so that this RenderLoop can adjust its timing behavior to that surface
      */
-    void setFullscreenSurface(SurfaceItem *surface);
+    void setFullscreenSurface(Item *surface);
 
     enum class VrrPolicy : uint32_t {
         Never = 0,

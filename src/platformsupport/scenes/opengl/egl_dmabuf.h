@@ -46,7 +46,10 @@ public:
     void addImage(EGLImage image);
     void removeImages();
 
-    QVector<EGLImage> images() const { return m_images; }
+    QVector<EGLImage> images() const
+    {
+        return m_images;
+    }
 
 private:
     QVector<EGLImage> m_images;
@@ -57,7 +60,7 @@ private:
 class EglDmabuf : public LinuxDmaBufV1RendererInterface
 {
 public:
-    static EglDmabuf* factory(AbstractEglBackend *backend);
+    static EglDmabuf *factory(AbstractEglBackend *backend);
 
     explicit EglDmabuf(AbstractEglBackend *backend);
     ~EglDmabuf() override;
@@ -66,6 +69,11 @@ public:
                                                             quint32 format,
                                                             const QSize &size,
                                                             quint32 flags) override;
+
+    QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> tranches() const
+    {
+        return m_tranches;
+    }
 
 private:
     EGLImage createImage(const QVector<KWaylandServer::LinuxDmaBufV1Plane> &planes,
@@ -80,6 +88,7 @@ private:
     void setSupportedFormatsAndModifiers();
 
     AbstractEglBackend *m_backend;
+    QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> m_tranches;
 
     friend class EglDmabufBuffer;
 };

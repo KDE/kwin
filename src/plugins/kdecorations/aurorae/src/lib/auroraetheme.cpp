@@ -18,11 +18,12 @@
 
 Q_LOGGING_CATEGORY(AURORAE, "aurorae", QtWarningMsg)
 
-namespace Aurorae {
+namespace Aurorae
+{
 
 /************************************************
-* AuroraeThemePrivate
-************************************************/
+ * AuroraeThemePrivate
+ ************************************************/
 class AuroraeThemePrivate
 {
 public:
@@ -31,7 +32,7 @@ public:
     void initButtonFrame(AuroraeButtonType type);
     QString themeName;
     Aurorae::ThemeConfig themeConfig;
-    QHash< AuroraeButtonType, QString > pathes;
+    QHash<AuroraeButtonType, QString> pathes;
     bool activeCompositing;
     KDecoration2::BorderSize borderSize;
     KDecoration2::BorderSize buttonSize;
@@ -40,7 +41,7 @@ public:
 };
 
 AuroraeThemePrivate::AuroraeThemePrivate()
-    :activeCompositing(true)
+    : activeCompositing(true)
     , borderSize(KDecoration2::BorderSize::Normal)
     , buttonSize(KDecoration2::BorderSize::Normal)
 {
@@ -60,16 +61,16 @@ void AuroraeThemePrivate::initButtonFrame(AuroraeButtonType type)
         path = QStandardPaths::locate(QStandardPaths::GenericDataLocation, file);
     }
     if (!path.isEmpty()) {
-        pathes[ type ] = path;
+        pathes[type] = path;
     } else {
         qCDebug(AURORAE) << "No button for: " << AuroraeTheme::mapButtonToName(type);
     }
 }
 
 /************************************************
-* AuroraeTheme
-************************************************/
-AuroraeTheme::AuroraeTheme(QObject* parent)
+ * AuroraeTheme
+ ************************************************/
+AuroraeTheme::AuroraeTheme(QObject *parent)
     : QObject(parent)
     , d(new AuroraeThemePrivate)
 {
@@ -134,7 +135,7 @@ bool AuroraeTheme::hasButton(AuroraeButtonType button) const
 
 QLatin1String AuroraeTheme::mapButtonToName(AuroraeButtonType type)
 {
-    switch(type) {
+    switch (type) {
     case MinimizeButton:
         return QLatin1String("minimize");
     case MaximizeButton:
@@ -167,11 +168,10 @@ const QString &AuroraeTheme::themeName() const
     return d->themeName;
 }
 
-void AuroraeTheme::borders(int& left, int& top, int& right, int& bottom, bool maximized) const
+void AuroraeTheme::borders(int &left, int &top, int &right, int &bottom, bool maximized) const
 {
     const qreal titleHeight = qMax((qreal)d->themeConfig.titleHeight(),
-                                   d->themeConfig.buttonHeight()*buttonSizeFactor() +
-                                   d->themeConfig.buttonMarginTop());
+                                   d->themeConfig.buttonHeight() * buttonSizeFactor() + d->themeConfig.buttonMarginTop());
     if (maximized) {
         const qreal title = titleHeight + d->themeConfig.titleEdgeTopMaximized() + d->themeConfig.titleEdgeBottomMaximized();
         switch ((DecorationPosition)d->themeConfig.decorationPosition()) {
@@ -249,16 +249,16 @@ void AuroraeTheme::borders(int& left, int& top, int& right, int& bottom, bool ma
         const qreal title = titleHeight + d->themeConfig.titleEdgeTop() + d->themeConfig.titleEdgeBottom();
         switch ((DecorationPosition)d->themeConfig.decorationPosition()) {
         case DecorationTop:
-            top     = title;
+            top = title;
             break;
         case DecorationBottom:
-            bottom  = title;
+            bottom = title;
             break;
         case DecorationLeft:
-            left    = title;
+            left = title;
             break;
         case DecorationRight:
-            right   = title;
+            right = title;
             break;
         default:
             left = right = bottom = top = 0;
@@ -331,19 +331,19 @@ int AuroraeTheme::topBorderMaximized() const
     return top;
 }
 
-void AuroraeTheme::padding(int& left, int& top, int& right, int& bottom) const
+void AuroraeTheme::padding(int &left, int &top, int &right, int &bottom) const
 {
-    left   = d->themeConfig.paddingLeft();
-    top    = d->themeConfig.paddingTop();
-    right  = d->themeConfig.paddingRight();
+    left = d->themeConfig.paddingLeft();
+    top = d->themeConfig.paddingTop();
+    right = d->themeConfig.paddingRight();
     bottom = d->themeConfig.paddingBottom();
 }
 
-#define THEME_CONFIG( prototype ) \
-int AuroraeTheme::prototype ( ) const \
-{ \
-    return d->themeConfig.prototype( ); \
-}
+#define THEME_CONFIG(prototype)            \
+    int AuroraeTheme::prototype() const    \
+    {                                      \
+        return d->themeConfig.prototype(); \
+    }
 
 THEME_CONFIG(paddingBottom)
 THEME_CONFIG(paddingLeft)
@@ -377,11 +377,11 @@ THEME_CONFIG(titleHeight)
 
 #undef THEME_CONFIG
 
-#define THEME_CONFIG_TYPE( rettype, prototype ) \
-rettype AuroraeTheme::prototype ( ) const \
-{\
-    return d->themeConfig.prototype(); \
-}
+#define THEME_CONFIG_TYPE(rettype, prototype) \
+    rettype AuroraeTheme::prototype() const   \
+    {                                         \
+        return d->themeConfig.prototype();    \
+    }
 
 THEME_CONFIG_TYPE(QColor, activeTextColor)
 THEME_CONFIG_TYPE(QColor, inactiveTextColor)
@@ -395,15 +395,15 @@ QString AuroraeTheme::decorationPath() const
     return d->decorationPath;
 }
 
-#define BUTTON_PATH( prototype, buttonType ) \
-QString AuroraeTheme::prototype ( ) const \
-{ \
-    if (hasButton( buttonType )) { \
-        return d->pathes[ buttonType ]; \
-    } else { \
-        return QString(); \
-    } \
-}\
+#define BUTTON_PATH(prototype, buttonType)  \
+    QString AuroraeTheme::prototype() const \
+    {                                       \
+        if (hasButton(buttonType)) {        \
+            return d->pathes[buttonType];   \
+        } else {                            \
+            return QString();               \
+        }                                   \
+    }
 
 BUTTON_PATH(minimizeButtonPath, MinimizeButton)
 BUTTON_PATH(maximizeButtonPath, MaximizeButton)
@@ -420,14 +420,14 @@ BUTTON_PATH(helpButtonPath, HelpButton)
 void AuroraeTheme::titleEdges(int &left, int &top, int &right, int &bottom, bool maximized) const
 {
     if (maximized) {
-        left   = d->themeConfig.titleEdgeLeftMaximized();
-        top    = d->themeConfig.titleEdgeTopMaximized();
-        right  = d->themeConfig.titleEdgeRightMaximized();
+        left = d->themeConfig.titleEdgeLeftMaximized();
+        top = d->themeConfig.titleEdgeTopMaximized();
+        right = d->themeConfig.titleEdgeRightMaximized();
         bottom = d->themeConfig.titleEdgeBottomMaximized();
     } else {
-        left   = d->themeConfig.titleEdgeLeft();
-        top    = d->themeConfig.titleEdgeTop();
-        right  = d->themeConfig.titleEdgeRight();
+        left = d->themeConfig.titleEdgeLeft();
+        top = d->themeConfig.titleEdgeTop();
+        right = d->themeConfig.titleEdgeRight();
         bottom = d->themeConfig.titleEdgeBottom();
     }
 }

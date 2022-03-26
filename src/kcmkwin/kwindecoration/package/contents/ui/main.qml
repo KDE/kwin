@@ -61,55 +61,65 @@ Kirigami.Page {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
+            // Note: StackLayout does not support neither anchor.margins, not Layout.margins properties.
             StackLayout {
                 anchors.fill: parent
 
                 currentIndex: tabBar.currentIndex
 
-                Item {
-                    KCM.SettingStateBinding {
-                        target: themes
-                        configObject: kcm.settings
-                        settingName: "pluginName"
+                ColumnLayout {
+                    spacing: 0
+
+                    Themes {
+                        id: themes
+
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+
+                        KCM.SettingStateBinding {
+                            target: themes
+                            configObject: kcm.settings
+                            settingName: "pluginName"
+                        }
                     }
 
-                    ColumnLayout {
-                        anchors.fill: parent
+                    RowLayout {
+                        // default bottom padding of a Frame is fine.
+                        Layout.topMargin: Kirigami.Units.smallSpacing
+                        // no right margin is OK for button, but bad for text label on the left.
+                        Layout.leftMargin: Kirigami.Units.smallSpacing
 
-                        Themes {
-                            id: themes
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
+                        QQC2.Label {
+                            text: i18nc("Selector label", "Window border size:")
                         }
 
-                        RowLayout {
-                            QQC2.Label {
-                                text: i18nc("Selector label", "Window border size:")
+                        QQC2.ComboBox {
+                            id: borderSizeComboBox
+                            model: kcm.borderSizesModel
+                            currentIndex: kcm.borderIndex
+                            onActivated: {
+                                kcm.borderIndex = currentIndex
                             }
-                            QQC2.ComboBox {
-                                id: borderSizeComboBox
-                                model: kcm.borderSizesModel
-                                currentIndex: kcm.borderIndex
-                                onActivated: {
-                                    kcm.borderIndex = currentIndex
-                                }
-                                KCM.SettingHighlighter {
-                                    highlight: kcm.borderIndex != 0
-                                }
+                            KCM.SettingHighlighter {
+                                highlight: kcm.borderIndex != 0
                             }
-                            Item {
-                                Layout.fillWidth: true
-                            }
-                            NewStuff.Button {
-                                id: newstuffButton
-                                text: i18nc("button text", "Get New Window Decorations...")
-                                icon.name: "get-hot-new-stuff"
-                                visible: KAuthorized.authorize("ghns")
-                                configFile: "window-decorations.knsrc"
-                                onEntryEvent: function (entry, event) {
-                                    if (event == 1) { // StatusChangedEvent
-                                        kcm.reloadKWinSettings()
-                                    }
+                        }
+
+                        Item {
+                            Layout.fillWidth: true
+                        }
+
+                        NewStuff.Button {
+                            id: newstuffButton
+                            text: i18nc("button text", "Get New Window Decorations...")
+                            icon.name: "get-hot-new-stuff"
+                            visible: KAuthorized.authorize("ghns")
+                            configFile: "window-decorations.knsrc"
+                            onEntryEvent: function (entry, event) {
+                                if (event == 1) { // StatusChangedEvent
+                                    kcm.reloadKWinSettings()
+                                } else if (event == 2) { // EntryAdoptedEvent
+                                    kcm.load()
                                 }
                             }
                         }
@@ -117,45 +127,51 @@ Kirigami.Page {
                 }
 
                 ColumnLayout {
+                    spacing: 0
+
                     Buttons {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         Layout.margins: Kirigami.Units.smallSpacing
                     }
 
-                    QQC2.CheckBox {
-                        id: closeOnDoubleClickOnMenuCheckBox
-                        text: i18nc("checkbox label", "Close windows by double clicking the menu button")
-                        checked: kcm.settings.closeOnDoubleClickOnMenu
-                        onToggled: {
-                            kcm.settings.closeOnDoubleClickOnMenu = checked
-                            infoLabel.visible = checked
+                    ColumnLayout {
+                        Layout.margins: Kirigami.Units.smallSpacing
+
+                        QQC2.CheckBox {
+                            id: closeOnDoubleClickOnMenuCheckBox
+                            text: i18nc("checkbox label", "Close windows by double clicking the menu button")
+                            checked: kcm.settings.closeOnDoubleClickOnMenu
+                            onToggled: {
+                                kcm.settings.closeOnDoubleClickOnMenu = checked
+                                infoLabel.visible = checked
+                            }
+
+                            KCM.SettingStateBinding {
+                                configObject: kcm.settings
+                                settingName: "closeOnDoubleClickOnMenu"
+                            }
                         }
 
-                        KCM.SettingStateBinding {
-                            configObject: kcm.settings
-                            settingName: "closeOnDoubleClickOnMenu"
+                        Kirigami.InlineMessage {
+                            Layout.fillWidth: true
+                            id: infoLabel
+                            type: Kirigami.MessageType.Information
+                            text: i18nc("popup tip", "Click and hold on the menu button to show the menu.")
+                            showCloseButton: true
+                            visible: false
                         }
-                    }
 
-                    Kirigami.InlineMessage {
-                        Layout.fillWidth: true
-                        id: infoLabel
-                        type: Kirigami.MessageType.Information
-                        text: i18nc("popup tip", "Click and hold on the menu button to show the menu.")
-                        showCloseButton: true
-                        visible: false
-                    }
+                        QQC2.CheckBox {
+                            id: showToolTipsCheckBox
+                            text: i18nc("checkbox label", "Show titlebar button tooltips")
+                            checked: kcm.settings.showToolTips
+                            onToggled: kcm.settings.showToolTips = checked
 
-                    QQC2.CheckBox {
-                        id: showToolTipsCheckBox
-                        text: i18nc("checkbox label", "Show titlebar button tooltips")
-                        checked: kcm.settings.showToolTips
-                        onToggled: kcm.settings.showToolTips = checked
-
-                        KCM.SettingStateBinding {
-                            configObject: kcm.settings
-                            settingName: "showToolTips"
+                            KCM.SettingStateBinding {
+                                configObject: kcm.settings
+                                settingName: "showToolTips"
+                            }
                         }
                     }
                 }

@@ -10,22 +10,21 @@
 */
 
 #include "touch.h"
-#include <effect_builtins.h>
 #include <kwin_effects_interface.h>
 
 #include <KAboutData>
 #include <KConfigGroup>
 #include <KLocalizedString>
-#include <KPluginFactory>
 #include <KPackage/Package>
 #include <KPackage/PackageLoader>
-#include <QtDBus>
+#include <KPluginFactory>
 #include <QVBoxLayout>
+#include <QtDBus>
 
-#include "kwintouchscreenedgeconfigform.h"
 #include "kwintouchscreendata.h"
-#include "kwintouchscreensettings.h"
+#include "kwintouchscreenedgeconfigform.h"
 #include "kwintouchscreenscriptsettings.h"
+#include "kwintouchscreensettings.h"
 
 K_PLUGIN_FACTORY(KWinScreenEdgesConfigFactory, registerPlugin<KWin::KWinScreenEdgesConfig>(); registerPlugin<KWin::KWinTouchScreenData>();)
 
@@ -38,7 +37,7 @@ KWinScreenEdgesConfig::KWinScreenEdgesConfig(QWidget *parent, const QVariantList
     , m_config(KSharedConfig::openConfig("kwinrc"))
     , m_data(new KWinTouchScreenData(this))
 {
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(m_form);
 
     monitorInit();
@@ -81,11 +80,11 @@ void KWinScreenEdgesConfig::save()
     QDBusConnection::sessionBus().send(message);
     // and reconfigure the effects
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
-                                             QStringLiteral("/Effects"),
-                                             QDBusConnection::sessionBus());
-    interface.reconfigureEffect(BuiltInEffects::nameForEffect(BuiltInEffect::Overview));
-    interface.reconfigureEffect(BuiltInEffects::nameForEffect(BuiltInEffect::PresentWindows));
-    interface.reconfigureEffect(BuiltInEffects::nameForEffect(BuiltInEffect::DesktopGrid));
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+    interface.reconfigureEffect(QStringLiteral("overview"));
+    interface.reconfigureEffect(QStringLiteral("presentwindows"));
+    interface.reconfigureEffect(QStringLiteral("desktopgrid"));
 
     KCModule::save();
 }
@@ -97,17 +96,11 @@ void KWinScreenEdgesConfig::defaults()
     KCModule::defaults();
 }
 
-void KWinScreenEdgesConfig::showEvent(QShowEvent* e)
+void KWinScreenEdgesConfig::showEvent(QShowEvent *e)
 {
     KCModule::showEvent(e);
 
     monitorShowEvent();
-}
-
-// Copied from kcmkwin/kwincompositing/main.cpp
-bool KWinScreenEdgesConfig::effectEnabled(const BuiltInEffect& effect, const KConfigGroup& cfg) const
-{
-    return cfg.readEntry(BuiltInEffects::nameForEffect(effect) + "Enabled", BuiltInEffects::enabledByDefault(effect));
 }
 
 //-----------------------------------------------------------------------------
@@ -127,12 +120,13 @@ void KWinScreenEdgesConfig::monitorInit()
     m_form->monitorAddItem(i18n("Activity Manager"));
     m_form->monitorAddItem(i18n("Application Launcher"));
 
-    // Add the effects
-    const QString presentWindowsName = BuiltInEffects::effectData(BuiltInEffect::PresentWindows).displayName;
+    // TODO: Find a better way to get the display name of the present windows, the
+    // desktop grid, and the overview effect. Maybe install metadata.json files?
+    const QString presentWindowsName = i18n("Present Windows");
     m_form->monitorAddItem(i18n("%1 - All Desktops", presentWindowsName));
     m_form->monitorAddItem(i18n("%1 - Current Desktop", presentWindowsName));
     m_form->monitorAddItem(i18n("%1 - Current Application", presentWindowsName));
-    m_form->monitorAddItem(BuiltInEffects::effectData(BuiltInEffect::DesktopGrid).displayName);
+    m_form->monitorAddItem(i18n("Desktop Grid"));
 
     m_form->monitorAddItem(i18n("Toggle window switching"));
     m_form->monitorAddItem(i18n("Toggle alternative window switching"));
@@ -143,7 +137,7 @@ void KWinScreenEdgesConfig::monitorInit()
     const auto scripts = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Script"), scriptFolder);
 
     KConfigGroup config(m_config, "Plugins");
-    for (const KPluginMetaData &script: scripts) {
+    for (const KPluginMetaData &script : scripts) {
         if (script.value(QStringLiteral("X-KWin-Border-Activate")) != QLatin1String("true")) {
             continue;
         }
@@ -188,7 +182,7 @@ void KWinScreenEdgesConfig::monitorLoadSettings()
     m_form->monitorChangeEdge(m_data->settings()->touchBorderActivateOverview(), Overview);
 
     // Scripts
-    for (int i=0; i < m_scripts.size(); i++) {
+    for (int i = 0; i < m_scripts.size(); i++) {
         int index = EffectCount + i;
         m_form->monitorChangeEdge(m_scriptSettings[m_scripts[i]]->touchBorderActivate(), index);
     }
@@ -258,16 +252,16 @@ void KWinScreenEdgesConfig::monitorShowEvent()
     KConfigGroup config(m_config, "Plugins");
 
     // Present Windows
-    bool enabled = effectEnabled(BuiltInEffect::PresentWindows, config);
+    bool enabled = config.readEntry("presentwindowsEnabled", true);
     m_form->monitorItemSetEnabled(PresentWindowsCurrent, enabled);
     m_form->monitorItemSetEnabled(PresentWindowsAll, enabled);
 
     // Desktop Grid
-    enabled = effectEnabled(BuiltInEffect::DesktopGrid, config);
+    enabled = config.readEntry("desktopgridEnabled", true);
     m_form->monitorItemSetEnabled(DesktopGrid, enabled);
 
     // Overview
-    enabled = effectEnabled(BuiltInEffect::Overview, config);
+    enabled = config.readEntry("overviewEnabled", true);
     m_form->monitorItemSetEnabled(Overview, enabled);
 
     // tabbox, depends on reasonable focus policy.

@@ -96,12 +96,10 @@ TransferWltoX::~TransferWltoX()
 void TransferWltoX::startTransferFromSource()
 {
     createSocketNotifier(QSocketNotifier::Read);
-    connect(socketNotifier(), &QSocketNotifier::activated, this,
-            [this](int socket) {
-                Q_UNUSED(socket);
-                readWlSource();
-            }
-    );
+    connect(socketNotifier(), &QSocketNotifier::activated, this, [this](int socket) {
+        Q_UNUSED(socket);
+        readWlSource();
+    });
 }
 
 int TransferWltoX::flushSourceData()
@@ -132,10 +130,10 @@ void TransferWltoX::startIncr()
 
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
 
-    uint32_t mask[] = { XCB_EVENT_MASK_PROPERTY_CHANGE };
-    xcb_change_window_attributes (xcbConn,
-                                  m_request->requestor,
-                                  XCB_CW_EVENT_MASK, mask);
+    uint32_t mask[] = {XCB_EVENT_MASK_PROPERTY_CHANGE};
+    xcb_change_window_attributes(xcbConn,
+                                 m_request->requestor,
+                                 XCB_CW_EVENT_MASK, mask);
 
     // spec says to make the available space larger
     const uint32_t chunkSpace = 1024 + s_incrChunkSize;
@@ -157,8 +155,7 @@ void TransferWltoX::startIncr()
 
 void TransferWltoX::readWlSource()
 {
-    if (m_chunks.size() == 0 ||
-            m_chunks.last().second == s_incrChunkSize) {
+    if (m_chunks.size() == 0 || m_chunks.last().second == s_incrChunkSize) {
         // append new chunk
         auto next = QPair<QByteArray, int>();
         next.first.resize(s_incrChunkSize);
@@ -218,8 +215,7 @@ void TransferWltoX::readWlSource()
 bool TransferWltoX::handlePropertyNotify(xcb_property_notify_event_t *event)
 {
     if (event->window == m_request->requestor) {
-        if (event->state == XCB_PROPERTY_DELETE &&
-                event->atom == m_request->property) {
+        if (event->state == XCB_PROPERTY_DELETE && event->atom == m_request->property) {
             handlePropertyDelete();
         }
         return true;
@@ -241,9 +237,9 @@ void TransferWltoX::handlePropertyDelete()
             xcb_connection_t *xcbConn = kwinApp()->x11Connection();
 
             uint32_t mask[] = {0};
-            xcb_change_window_attributes (xcbConn,
-                                          m_request->requestor,
-                                          XCB_CW_EVENT_MASK, mask);
+            xcb_change_window_attributes(xcbConn,
+                                         m_request->requestor,
+                                         XCB_CW_EVENT_MASK, mask);
 
             xcb_change_property(xcbConn,
                                 XCB_PROP_MODE_REPLACE,
@@ -268,8 +264,7 @@ TransferXtoWl::TransferXtoWl(xcb_atom_t selection, xcb_atom_t target, qint32 fd,
     // create transfer window
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     m_window = xcb_generate_id(xcbConn);
-    const uint32_t values[] = { XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |
-                                   XCB_EVENT_MASK_PROPERTY_CHANGE };
+    const uint32_t values[] = {XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY | XCB_EVENT_MASK_PROPERTY_CHANGE};
     xcb_create_window(xcbConn,
                       XCB_COPY_FROM_PARENT,
                       m_window,
@@ -304,8 +299,7 @@ TransferXtoWl::~TransferXtoWl()
 bool TransferXtoWl::handlePropertyNotify(xcb_property_notify_event_t *event)
 {
     if (event->window == m_window) {
-        if (event->state == XCB_PROPERTY_NEW_VALUE &&
-                event->atom == atoms->wl_selection) {
+        if (event->state == XCB_PROPERTY_NEW_VALUE && event->atom == atoms->wl_selection) {
             getIncrChunk();
         }
         return true;
@@ -357,8 +351,7 @@ void TransferXtoWl::startTransfer()
                                    atoms->wl_selection,
                                    XCB_GET_PROPERTY_TYPE_ANY,
                                    0,
-                                   0x1fffffff
-                                   );
+                                   0x1fffffff);
 
     auto *reply = xcb_get_property_reply(xcbConn, cookie, nullptr);
     if (reply == nullptr) {
@@ -564,12 +557,10 @@ void TransferXtoWl::dataSourceWrite()
     } else {
         if (!socketNotifier()) {
             createSocketNotifier(QSocketNotifier::Write);
-            connect(socketNotifier(), &QSocketNotifier::activated, this,
-                [this](int socket) {
-                    Q_UNUSED(socket);
-                    dataSourceWrite();
-                }
-            );
+            connect(socketNotifier(), &QSocketNotifier::activated, this, [this](int socket) {
+                Q_UNUSED(socket);
+                dataSourceWrite();
+            });
         }
     }
     resetTimeout();

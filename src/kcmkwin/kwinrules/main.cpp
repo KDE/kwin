@@ -15,7 +15,7 @@
 #include <KLocalizedString>
 #include <KPluginMetaData>
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
@@ -25,6 +25,7 @@ int main(int argc, char* argv[])
     app.setApplicationName("kwin_rules_dialog");
     app.setWindowIcon(QIcon::fromTheme("preferences-system-windows-actions"));
     app.setApplicationVersion("2.0");
+    app.setDesktopFileName(QStringLiteral("org.kde.kwin_rules_dialog"));
 
     QCommandLineParser parser;
     parser.setApplicationDescription(i18n("KWinRules KCM launcher"));

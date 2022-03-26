@@ -23,7 +23,8 @@ public:
     HighlightWindowEffect();
     ~HighlightWindowEffect() override;
 
-    int requestedEffectChainPosition() const override {
+    int requestedEffectChainPosition() const override
+    {
         return 70;
     }
 
@@ -32,14 +33,14 @@ public:
     Q_SCRIPTABLE void highlightWindows(const QStringList &windows);
 
 public Q_SLOTS:
-    void slotWindowAdded(KWin::EffectWindow* w);
+    void slotWindowAdded(KWin::EffectWindow *w);
     void slotWindowClosed(KWin::EffectWindow *w);
     void slotWindowDeleted(KWin::EffectWindow *w);
-    void slotPropertyNotify(KWin::EffectWindow* w, long atom, EffectWindow *addedWindow = nullptr);
+    void slotPropertyNotify(KWin::EffectWindow *w, long atom, EffectWindow *addedWindow = nullptr);
 
 private:
-    void startGhostAnimation(EffectWindow *window, int duration = -1);
-    void startHighlightAnimation(EffectWindow *window, int duration = -1);
+    quint64 startGhostAnimation(EffectWindow *window);
+    quint64 startHighlightAnimation(EffectWindow *window);
     void startRevertAnimation(EffectWindow *window);
 
     bool isHighlighted(EffectWindow *window) const;

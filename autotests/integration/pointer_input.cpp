@@ -7,14 +7,15 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
-#include "abstract_output.h"
-#include "platform.h"
+
 #include "abstract_client.h"
+#include "abstract_output.h"
 #include "cursor.h"
 #include "deleted.h"
 #include "effects.h"
-#include "pointer_input.h"
 #include "options.h"
+#include "platform.h"
+#include "pointer_input.h"
 #include "screenedge.h"
 #include "screens.h"
 #include "virtualdesktops.h"
@@ -24,8 +25,8 @@
 #include <kwineffects.h>
 
 #include <KWayland/Client/buffer.h>
-#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
+#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/pointer.h>
 #include <KWayland/Client/region.h>
 #include <KWayland/Client/seat.h>
@@ -56,9 +57,7 @@ static PlatformCursorImage loadReferenceThemeCursor(const QByteArray &name)
 {
     const Cursor *pointerCursor = Cursors::self()->mouse();
 
-    const KXcursorTheme theme = KXcursorTheme::fromTheme(pointerCursor->themeName(),
-                                                         pointerCursor->themeSize(),
-                                                         screens()->maxScale());
+    const KXcursorTheme theme(pointerCursor->themeName(), pointerCursor->themeSize(), screens()->maxScale());
     if (theme.isEmpty()) {
         return PlatformCursorImage();
     }
@@ -96,7 +95,9 @@ private Q_SLOTS:
     void testWarpingUpdatesFocus();
     void testWarpingGeneratesPointerMotion();
     void testWarpingDuringFilter();
+    void testWarpingBetweenWindows();
     void testUpdateFocusAfterScreenChange();
+    void testUpdateFocusOnDecorationDestroy();
     void testModifierClickUnrestrictedMove_data();
     void testModifierClickUnrestrictedMove();
     void testModifierClickUnrestrictedMoveGlobalShortcutsDisabled();
@@ -131,8 +132,8 @@ private:
 
 void PointerInputTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
-    qRegisterMetaType<KWin::Deleted*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -162,7 +163,7 @@ void PointerInputTest::initTestCase()
 
 void PointerInputTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::Decoration));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::Decoration | Test::AdditionalWaylandInterface::XdgDecorationV1));
     QVERIFY(Test::waitForWaylandPointer());
     m_compositor = Test::waylandCompositor();
     m_seat = Test::waylandSeat();
@@ -222,7 +223,7 @@ void PointerInputTest::testWarpingUpdatesFocus()
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), window->surface());
 
     // and out again
-    Cursors::self()->mouse()->setPos(QPoint(250, 250));;
+    Cursors::self()->mouse()->setPos(QPoint(250, 250));
     QVERIFY(leftSpy.wait());
     QCOMPARE(leftSpy.count(), 1);
     // there should not be a focused pointer surface anymore
@@ -256,7 +257,7 @@ void PointerInputTest::testWarpingGeneratesPointerMotion()
     QVERIFY(window);
 
     // enter
-    kwinApp()->platform()->pointerMotion(QPointF(25, 25), 1);
+    Test::pointerMotion(QPointF(25, 25), 1);
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.first().at(1).toPointF(), QPointF(25, 25));
 
@@ -299,16 +300,59 @@ void PointerInputTest::testWarpingDuringFilter()
     QVERIFY(window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
 
     // is PresentWindows effect for top left screen edge loaded
-    QVERIFY(static_cast<EffectsHandlerImpl*>(effects)->isEffectLoaded("presentwindows"));
+    QVERIFY(static_cast<EffectsHandlerImpl *>(effects)->isEffectLoaded("presentwindows"));
     QVERIFY(movedSpy.isEmpty());
     quint32 timestamp = 0;
-    kwinApp()->platform()->pointerMotion(QPoint(0, 0), timestamp++);
+    Test::pointerMotion(QPoint(0, 0), timestamp++);
     // screen edges push back
     QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(1, 1));
     QVERIFY(movedSpy.wait());
     QCOMPARE(movedSpy.count(), 2);
     QCOMPARE(movedSpy.at(0).first().toPoint(), QPoint(0, 0));
     QCOMPARE(movedSpy.at(1).first().toPoint(), QPoint(1, 1));
+}
+
+void PointerInputTest::testWarpingBetweenWindows()
+{
+    // This test verifies that the compositor will send correct events when the pointer
+    // leaves one window and enters another window.
+
+    QScopedPointer<KWayland::Client::Pointer> pointer(m_seat->createPointer(m_seat));
+    QSignalSpy enteredSpy(pointer.data(), &KWayland::Client::Pointer::entered);
+    QSignalSpy leftSpy(pointer.data(), &KWayland::Client::Pointer::left);
+    QSignalSpy motionSpy(pointer.data(), &KWayland::Client::Pointer::motion);
+
+    // create windows
+    QScopedPointer<KWayland::Client::Surface> surface1(Test::createSurface());
+    QScopedPointer<Test::XdgToplevel> shellSurface1(Test::createXdgToplevelSurface(surface1.data()));
+    auto client1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::cyan);
+    QScopedPointer<KWayland::Client::Surface> surface2(Test::createSurface());
+    QScopedPointer<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.data()));
+    auto client2 = Test::renderAndWaitForShown(surface2.data(), QSize(200, 100), Qt::red);
+
+    // place windows side by side
+    client1->move(QPoint(0, 0));
+    client2->move(QPoint(100, 0));
+
+    quint32 timestamp = 0;
+
+    // put the pointer at the center of the first window
+    Test::pointerMotion(client1->frameGeometry().center(), timestamp++);
+    QVERIFY(enteredSpy.wait());
+    QCOMPARE(enteredSpy.count(), 1);
+    QCOMPARE(enteredSpy.last().at(1).toPointF(), QPointF(49, 24));
+    QCOMPARE(leftSpy.count(), 0);
+    QCOMPARE(motionSpy.count(), 0);
+    QCOMPARE(pointer->enteredSurface(), surface1.data());
+
+    // put the pointer at the center of the second window
+    Test::pointerMotion(client2->frameGeometry().center(), timestamp++);
+    QVERIFY(enteredSpy.wait());
+    QCOMPARE(enteredSpy.count(), 2);
+    QCOMPARE(enteredSpy.last().at(1).toPointF(), QPointF(99, 49));
+    QCOMPARE(leftSpy.count(), 1);
+    QCOMPARE(motionSpy.count(), 0);
+    QCOMPARE(pointer->enteredSurface(), surface2.data());
 }
 
 void PointerInputTest::testUpdateFocusAfterScreenChange()
@@ -365,6 +409,97 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     QCOMPARE(enteredSpy.count(), 2);
 }
 
+void PointerInputTest::testUpdateFocusOnDecorationDestroy()
+{
+    // This test verifies that a maximized client gets it's pointer focus
+    // if decoration was focused and then destroyed on maximize with BorderlessMaximizedWindows option.
+
+    // create pointer for focus tracking
+    auto pointer = m_seat->createPointer(m_seat);
+    QVERIFY(pointer);
+    QVERIFY(pointer->isValid());
+    QSignalSpy buttonStateChangedSpy(pointer, &KWayland::Client::Pointer::buttonStateChanged);
+    QVERIFY(buttonStateChangedSpy.isValid());
+
+    // Enable the borderless maximized windows option.
+    auto group = kwinApp()->config()->group("Windows");
+    group.writeEntry("BorderlessMaximizedWindows", true);
+    group.sync();
+    Workspace::self()->slotReconfigure();
+    QCOMPARE(options->borderlessMaximizedWindows(), true);
+
+    // Create the test client.
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<Test::XdgToplevelDecorationV1> decoration(Test::createXdgToplevelDecorationV1(shellSurface.data()));
+
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QSignalSpy decorationConfigureRequestedSpy(decoration.data(), &Test::XdgToplevelDecorationV1::configureRequested);
+    decoration->set_mode(Test::XdgToplevelDecorationV1::mode_server_side);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+
+    // Wait for the initial configure event.
+    Test::XdgToplevel::States states;
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), QSize(0, 0));
+    states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(!states.testFlag(Test::XdgToplevel::State::Activated));
+    QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
+
+    // Map the client.
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(client->isDecorated(), true);
+
+    // We should receive a configure event when the client becomes active.
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
+    states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
+    QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
+
+    // Simulate decoration hover
+    quint32 timestamp = 0;
+    Test::pointerMotion(client->frameGeometry().topLeft(), timestamp++);
+    QVERIFY(input()->pointer()->decoration());
+
+    // Maximize when on decoration
+    workspace()->slotWindowMaximize();
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), QSize(1280, 1024));
+    states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
+    QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
+
+    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
+    QVERIFY(frameGeometryChangedSpy.isValid());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.data(), QSize(1280, 1024), Qt::blue);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(client->frameGeometry(), QRect(0, 0, 1280, 1024));
+    QCOMPARE(client->maximizeMode(), MaximizeFull);
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeFull);
+    QCOMPARE(client->isDecorated(), false);
+
+    // Window should have focus, BUG 411884
+    QVERIFY(!input()->pointer()->decoration());
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+    QVERIFY(buttonStateChangedSpy.wait());
+    QCOMPARE(pointer->enteredSurface(), surface.data());
+
+    // Destroy the client.
+    shellSurface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
 void PointerInputTest::testModifierClickUnrestrictedMove_data()
 {
     QTest::addColumn<int>("modifierKey");
@@ -375,33 +510,33 @@ void PointerInputTest::testModifierClickUnrestrictedMove_data()
     const QString alt = QStringLiteral("Alt");
     const QString meta = QStringLiteral("Meta");
 
-    QTest::newRow("Left Alt + Left Click")    << KEY_LEFTALT  << BTN_LEFT   << alt << false;
-    QTest::newRow("Left Alt + Right Click")   << KEY_LEFTALT  << BTN_RIGHT  << alt << false;
-    QTest::newRow("Left Alt + Middle Click")  << KEY_LEFTALT  << BTN_MIDDLE << alt << false;
-    QTest::newRow("Right Alt + Left Click")   << KEY_RIGHTALT << BTN_LEFT   << alt << false;
-    QTest::newRow("Right Alt + Right Click")  << KEY_RIGHTALT << BTN_RIGHT  << alt << false;
+    QTest::newRow("Left Alt + Left Click") << KEY_LEFTALT << BTN_LEFT << alt << false;
+    QTest::newRow("Left Alt + Right Click") << KEY_LEFTALT << BTN_RIGHT << alt << false;
+    QTest::newRow("Left Alt + Middle Click") << KEY_LEFTALT << BTN_MIDDLE << alt << false;
+    QTest::newRow("Right Alt + Left Click") << KEY_RIGHTALT << BTN_LEFT << alt << false;
+    QTest::newRow("Right Alt + Right Click") << KEY_RIGHTALT << BTN_RIGHT << alt << false;
     QTest::newRow("Right Alt + Middle Click") << KEY_RIGHTALT << BTN_MIDDLE << alt << false;
     // now everything with meta
-    QTest::newRow("Left Meta + Left Click")    << KEY_LEFTMETA  << BTN_LEFT   << meta << false;
-    QTest::newRow("Left Meta + Right Click")   << KEY_LEFTMETA  << BTN_RIGHT  << meta << false;
-    QTest::newRow("Left Meta + Middle Click")  << KEY_LEFTMETA  << BTN_MIDDLE << meta << false;
-    QTest::newRow("Right Meta + Left Click")   << KEY_RIGHTMETA << BTN_LEFT   << meta << false;
-    QTest::newRow("Right Meta + Right Click")  << KEY_RIGHTMETA << BTN_RIGHT  << meta << false;
+    QTest::newRow("Left Meta + Left Click") << KEY_LEFTMETA << BTN_LEFT << meta << false;
+    QTest::newRow("Left Meta + Right Click") << KEY_LEFTMETA << BTN_RIGHT << meta << false;
+    QTest::newRow("Left Meta + Middle Click") << KEY_LEFTMETA << BTN_MIDDLE << meta << false;
+    QTest::newRow("Right Meta + Left Click") << KEY_RIGHTMETA << BTN_LEFT << meta << false;
+    QTest::newRow("Right Meta + Right Click") << KEY_RIGHTMETA << BTN_RIGHT << meta << false;
     QTest::newRow("Right Meta + Middle Click") << KEY_RIGHTMETA << BTN_MIDDLE << meta << false;
 
     // and with capslock
-    QTest::newRow("Left Alt + Left Click/CapsLock")    << KEY_LEFTALT  << BTN_LEFT   << alt << true;
-    QTest::newRow("Left Alt + Right Click/CapsLock")   << KEY_LEFTALT  << BTN_RIGHT  << alt << true;
-    QTest::newRow("Left Alt + Middle Click/CapsLock")  << KEY_LEFTALT  << BTN_MIDDLE << alt << true;
-    QTest::newRow("Right Alt + Left Click/CapsLock")   << KEY_RIGHTALT << BTN_LEFT   << alt << true;
-    QTest::newRow("Right Alt + Right Click/CapsLock")  << KEY_RIGHTALT << BTN_RIGHT  << alt << true;
+    QTest::newRow("Left Alt + Left Click/CapsLock") << KEY_LEFTALT << BTN_LEFT << alt << true;
+    QTest::newRow("Left Alt + Right Click/CapsLock") << KEY_LEFTALT << BTN_RIGHT << alt << true;
+    QTest::newRow("Left Alt + Middle Click/CapsLock") << KEY_LEFTALT << BTN_MIDDLE << alt << true;
+    QTest::newRow("Right Alt + Left Click/CapsLock") << KEY_RIGHTALT << BTN_LEFT << alt << true;
+    QTest::newRow("Right Alt + Right Click/CapsLock") << KEY_RIGHTALT << BTN_RIGHT << alt << true;
     QTest::newRow("Right Alt + Middle Click/CapsLock") << KEY_RIGHTALT << BTN_MIDDLE << alt << true;
     // now everything with meta
-    QTest::newRow("Left Meta + Left Click/CapsLock")    << KEY_LEFTMETA  << BTN_LEFT   << meta << true;
-    QTest::newRow("Left Meta + Right Click/CapsLock")   << KEY_LEFTMETA  << BTN_RIGHT  << meta << true;
-    QTest::newRow("Left Meta + Middle Click/CapsLock")  << KEY_LEFTMETA  << BTN_MIDDLE << meta << true;
-    QTest::newRow("Right Meta + Left Click/CapsLock")   << KEY_RIGHTMETA << BTN_LEFT   << meta << true;
-    QTest::newRow("Right Meta + Right Click/CapsLock")  << KEY_RIGHTMETA << BTN_RIGHT  << meta << true;
+    QTest::newRow("Left Meta + Left Click/CapsLock") << KEY_LEFTMETA << BTN_LEFT << meta << true;
+    QTest::newRow("Left Meta + Right Click/CapsLock") << KEY_LEFTMETA << BTN_RIGHT << meta << true;
+    QTest::newRow("Left Meta + Middle Click/CapsLock") << KEY_LEFTMETA << BTN_MIDDLE << meta << true;
+    QTest::newRow("Right Meta + Left Click/CapsLock") << KEY_RIGHTMETA << BTN_LEFT << meta << true;
+    QTest::newRow("Right Meta + Right Click/CapsLock") << KEY_RIGHTMETA << BTN_RIGHT << meta << true;
     QTest::newRow("Right Meta + Middle Click/CapsLock") << KEY_RIGHTMETA << BTN_MIDDLE << meta << true;
 }
 
@@ -449,22 +584,22 @@ void PointerInputTest::testModifierClickUnrestrictedMove()
     quint32 timestamp = 1;
     QFETCH(bool, capsLock);
     if (capsLock) {
-        kwinApp()->platform()->keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
+        Test::keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
     }
     QFETCH(int, modifierKey);
     QFETCH(int, mouseButton);
-    kwinApp()->platform()->keyboardKeyPressed(modifierKey, timestamp++);
+    Test::keyboardKeyPressed(modifierKey, timestamp++);
     QVERIFY(!window->isInteractiveMove());
-    kwinApp()->platform()->pointerButtonPressed(mouseButton, timestamp++);
+    Test::pointerButtonPressed(mouseButton, timestamp++);
     QVERIFY(window->isInteractiveMove());
     // release modifier should not change it
-    kwinApp()->platform()->keyboardKeyReleased(modifierKey, timestamp++);
+    Test::keyboardKeyReleased(modifierKey, timestamp++);
     QVERIFY(window->isInteractiveMove());
     // but releasing the key should end move/resize
-    kwinApp()->platform()->pointerButtonReleased(mouseButton, timestamp++);
+    Test::pointerButtonReleased(mouseButton, timestamp++);
     QVERIFY(!window->isInteractiveMove());
     if (capsLock) {
-        kwinApp()->platform()->keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
+        Test::keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
     }
 
     // all of that should not have triggered button events on the surface
@@ -519,14 +654,14 @@ void PointerInputTest::testModifierClickUnrestrictedMoveGlobalShortcutsDisabled(
 
     // simulate modifier+click
     quint32 timestamp = 1;
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
     QVERIFY(!window->isInteractiveMove());
-    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(!window->isInteractiveMove());
     // release modifier should not change it
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
     QVERIFY(!window->isInteractiveMove());
-    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
 
     workspace()->disableGlobalShortcutsForClient(false);
 }
@@ -540,13 +675,13 @@ void PointerInputTest::testModifierScrollOpacity_data()
     const QString alt = QStringLiteral("Alt");
     const QString meta = QStringLiteral("Meta");
 
-    QTest::newRow("Left Alt")   << KEY_LEFTALT  << alt << false;
-    QTest::newRow("Right Alt")  << KEY_RIGHTALT << alt << false;
-    QTest::newRow("Left Meta")  << KEY_LEFTMETA  << meta << false;
+    QTest::newRow("Left Alt") << KEY_LEFTALT << alt << false;
+    QTest::newRow("Right Alt") << KEY_RIGHTALT << alt << false;
+    QTest::newRow("Left Meta") << KEY_LEFTMETA << meta << false;
     QTest::newRow("Right Meta") << KEY_RIGHTMETA << meta << false;
-    QTest::newRow("Left Alt/CapsLock")   << KEY_LEFTALT  << alt << true;
-    QTest::newRow("Right Alt/CapsLock")  << KEY_RIGHTALT << alt << true;
-    QTest::newRow("Left Meta/CapsLock")  << KEY_LEFTMETA  << meta << true;
+    QTest::newRow("Left Alt/CapsLock") << KEY_LEFTALT << alt << true;
+    QTest::newRow("Right Alt/CapsLock") << KEY_RIGHTALT << alt << true;
+    QTest::newRow("Left Meta/CapsLock") << KEY_LEFTMETA << meta << true;
     QTest::newRow("Right Meta/CapsLock") << KEY_RIGHTMETA << meta << true;
 }
 
@@ -592,17 +727,17 @@ void PointerInputTest::testModifierScrollOpacity()
     quint32 timestamp = 1;
     QFETCH(bool, capsLock);
     if (capsLock) {
-        kwinApp()->platform()->keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
+        Test::keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
     }
     QFETCH(int, modifierKey);
-    kwinApp()->platform()->keyboardKeyPressed(modifierKey, timestamp++);
-    kwinApp()->platform()->pointerAxisVertical(-5, timestamp++);
+    Test::keyboardKeyPressed(modifierKey, timestamp++);
+    Test::pointerAxisVertical(-5, timestamp++);
     QCOMPARE(window->opacity(), 0.6);
-    kwinApp()->platform()->pointerAxisVertical(5, timestamp++);
+    Test::pointerAxisVertical(5, timestamp++);
     QCOMPARE(window->opacity(), 0.5);
-    kwinApp()->platform()->keyboardKeyReleased(modifierKey, timestamp++);
+    Test::keyboardKeyReleased(modifierKey, timestamp++);
     if (capsLock) {
-        kwinApp()->platform()->keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
+        Test::keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
     }
 
     // axis should have been filtered out
@@ -654,17 +789,17 @@ void PointerInputTest::testModifierScrollOpacityGlobalShortcutsDisabled()
 
     // simulate modifier+wheel
     quint32 timestamp = 1;
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
-    kwinApp()->platform()->pointerAxisVertical(-5, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
+    Test::pointerAxisVertical(-5, timestamp++);
     QCOMPARE(window->opacity(), 0.5);
-    kwinApp()->platform()->pointerAxisVertical(5, timestamp++);
+    Test::pointerAxisVertical(5, timestamp++);
     QCOMPARE(window->opacity(), 0.5);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
 
     workspace()->disableGlobalShortcutsForClient(false);
 }
 
-void  PointerInputTest::testScrollAction()
+void PointerInputTest::testScrollAction()
 {
     // this test verifies that scroll on inactive window performs a mouse action
     using namespace KWayland::Client;
@@ -705,7 +840,7 @@ void  PointerInputTest::testScrollAction()
 
     quint32 timestamp = 1;
     QVERIFY(!window1->isActive());
-    kwinApp()->platform()->pointerAxisVertical(5, timestamp++);
+    Test::pointerAxisVertical(5, timestamp++);
     QVERIFY(window1->isActive());
 
     // but also the wheel event should be passed to the window
@@ -803,9 +938,9 @@ void PointerInputTest::testMouseActionInactiveWindow_data()
 {
     QTest::addColumn<quint32>("button");
 
-    QTest::newRow("Left")   << quint32(BTN_LEFT);
+    QTest::newRow("Left") << quint32(BTN_LEFT);
     QTest::newRow("Middle") << quint32(BTN_MIDDLE);
-    QTest::newRow("Right")  << quint32(BTN_RIGHT);
+    QTest::newRow("Right") << quint32(BTN_RIGHT);
 }
 
 void PointerInputTest::testMouseActionInactiveWindow()
@@ -870,7 +1005,7 @@ void PointerInputTest::testMouseActionInactiveWindow()
     // and click
     quint32 timestamp = 1;
     QFETCH(quint32, button);
-    kwinApp()->platform()->pointerButtonPressed(button, timestamp++);
+    Test::pointerButtonPressed(button, timestamp++);
     // should raise window1 and activate it
     QCOMPARE(stackingOrderChangedSpy.count(), 1);
     QVERIFY(!activeWindowChangedSpy.isEmpty());
@@ -879,7 +1014,7 @@ void PointerInputTest::testMouseActionInactiveWindow()
     QVERIFY(!window2->isActive());
 
     // release again
-    kwinApp()->platform()->pointerButtonReleased(button, timestamp++);
+    Test::pointerButtonReleased(button, timestamp++);
 }
 
 void PointerInputTest::testMouseActionActiveWindow_data()
@@ -887,7 +1022,7 @@ void PointerInputTest::testMouseActionActiveWindow_data()
     QTest::addColumn<bool>("clickRaise");
     QTest::addColumn<quint32>("button");
 
-    for (quint32 i=BTN_LEFT; i < BTN_JOYSTICK; i++) {
+    for (quint32 i = BTN_LEFT; i < BTN_JOYSTICK; i++) {
         QByteArray number = QByteArray::number(i, 16);
         QTest::newRow(QByteArrayLiteral("click raise/").append(number).constData()) << true << i;
         QTest::newRow(QByteArrayLiteral("no click raise/").append(number).constData()) << false << i;
@@ -958,7 +1093,7 @@ void PointerInputTest::testMouseActionActiveWindow()
     // and click
     quint32 timestamp = 1;
     QFETCH(quint32, button);
-    kwinApp()->platform()->pointerButtonPressed(button, timestamp++);
+    Test::pointerButtonPressed(button, timestamp++);
     QVERIFY(buttonSpy.wait());
     if (clickRaise) {
         QCOMPARE(stackingOrderChangedSpy.count(), 1);
@@ -970,7 +1105,7 @@ void PointerInputTest::testMouseActionActiveWindow()
     }
 
     // release again
-    kwinApp()->platform()->pointerButtonReleased(button, timestamp++);
+    Test::pointerButtonReleased(button, timestamp++);
 
     delete surface1;
     QVERIFY(window1DestroyedSpy.wait());
@@ -1057,7 +1192,7 @@ void PointerInputTest::testCursorImage()
     cursorSurface->commit();
     QVERIFY(cursorRenderedSpy.wait());
     QTRY_COMPARE(cursor->image(), blueScaled);
-    QCOMPARE(cursor->hotspot(), QPoint(6, 6)); //surface-local (so not changed)
+    QCOMPARE(cursor->hotspot(), QPoint(6, 6)); // surface-local (so not changed)
 
     // hide the cursor
     pointer->setCursor(nullptr);
@@ -1075,8 +1210,12 @@ class HelperEffect : public Effect
 {
     Q_OBJECT
 public:
-    HelperEffect() {}
-    ~HelperEffect() override {}
+    HelperEffect()
+    {
+    }
+    ~HelperEffect() override
+    {
+    }
 };
 
 void PointerInputTest::testEffectOverrideCursorImage()
@@ -1192,8 +1331,8 @@ void PointerInputTest::testPopup()
     QVERIFY(enteredSpy.wait());
     // click inside window to create serial
     quint32 timestamp = 0;
-    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
-    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     QVERIFY(buttonStateChangedSpy.wait());
 
     // now create the popup surface
@@ -1233,9 +1372,9 @@ void PointerInputTest::testPopup()
     QCOMPARE(leftSpy.count(), 2);
     QVERIFY(doneReceivedSpy.isEmpty());
     // now click, should trigger popupDone
-    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(doneReceivedSpy.wait());
-    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
 }
 
 void PointerInputTest::testDecoCancelsPopup()
@@ -1258,23 +1397,17 @@ void PointerInputTest::testDecoCancelsPopup()
     QVERIFY(motionSpy.isValid());
 
     Cursors::self()->mouse()->setPos(800, 800);
-    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
-    QVERIFY(clientAddedSpy.isValid());
-    KWayland::Client::Surface *surface = Test::createSurface(m_compositor);
-    QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
-    QVERIFY(shellSurface);
 
-    auto deco = Test::waylandServerSideDecoration()->create(surface, surface);
-    QSignalSpy decoSpy(deco, &ServerSideDecoration::modeChanged);
-    QVERIFY(decoSpy.isValid());
-    QVERIFY(decoSpy.wait());
-    deco->requestMode(ServerSideDecoration::Mode::Server);
-    QVERIFY(decoSpy.wait());
-    QCOMPARE(deco->mode(), ServerSideDecoration::Mode::Server);
-    render(surface);
-    QVERIFY(clientAddedSpy.wait());
-    AbstractClient *window = workspace()->activeClient();
+    // create a decorated window
+    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<Test::XdgToplevelDecorationV1> decoration(Test::createXdgToplevelDecorationV1(shellSurface.data()));
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    decoration->set_mode(Test::XdgToplevelDecorationV1::mode_server_side);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QCOMPARE(window->hasPopupGrab(), false);
     QVERIFY(window->isDecorated());
@@ -1285,8 +1418,8 @@ void PointerInputTest::testDecoCancelsPopup()
     QVERIFY(enteredSpy.wait());
     // click inside window to create serial
     quint32 timestamp = 0;
-    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
-    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     QVERIFY(buttonStateChangedSpy.wait());
 
     // now create the popup surface
@@ -1302,9 +1435,7 @@ void PointerInputTest::testDecoCancelsPopup()
     QSignalSpy doneReceivedSpy(popupShellSurface, &Test::XdgPopup::doneReceived);
     QVERIFY(doneReceivedSpy.isValid());
     popupShellSurface->grab(*Test::waylandSeat(), 0); // FIXME: Serial.
-    render(popupSurface, QSize(100, 50));
-    QVERIFY(clientAddedSpy.wait());
-    auto popupClient = clientAddedSpy.last().first().value<AbstractClient *>();
+    auto popupClient = Test::renderAndWaitForShown(popupSurface, QSize(100, 50), Qt::red);
     QVERIFY(popupClient);
     QVERIFY(popupClient != window);
     QCOMPARE(window, workspace()->activeClient());
@@ -1315,9 +1446,9 @@ void PointerInputTest::testDecoCancelsPopup()
     // let's move the pointer into the center of the deco
     Cursors::self()->mouse()->setPos(window->frameGeometry().center().x(), window->y() + (window->height() - window->clientSize().height()) / 2);
 
-    kwinApp()->platform()->pointerButtonPressed(BTN_RIGHT, timestamp++);
+    Test::pointerButtonPressed(BTN_RIGHT, timestamp++);
     QVERIFY(doneReceivedSpy.wait());
-    kwinApp()->platform()->pointerButtonReleased(BTN_RIGHT, timestamp++);
+    Test::pointerButtonReleased(BTN_RIGHT, timestamp++);
 }
 
 void PointerInputTest::testWindowUnderCursorWhileButtonPressed()
@@ -1354,7 +1485,7 @@ void PointerInputTest::testWindowUnderCursorWhileButtonPressed()
     QVERIFY(enteredSpy.wait());
     // click inside window
     quint32 timestamp = 0;
-    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
 
     // now create a second window as transient
     QScopedPointer<Test::XdgPositioner> positioner(Test::createXdgPositioner());
@@ -1375,7 +1506,7 @@ void PointerInputTest::testWindowUnderCursorWhileButtonPressed()
     QVERIFY(popupClient->frameGeometry().contains(Cursors::self()->mouse()->pos()));
     QVERIFY(!leftSpy.wait());
 
-    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     // now that the button is no longer pressed we should get the leave event
     QVERIFY(leftSpy.wait());
     QCOMPARE(leftSpy.count(), 1);
@@ -1397,41 +1528,41 @@ void PointerInputTest::testConfineToScreenGeometry_data()
     //            +----------+
     //
 
-    QTest::newRow("move top-left - left screen")       << QPoint(640, 512)   << QPoint(-100, -100) << QPoint(0, 0);
-    QTest::newRow("move top - left screen")            << QPoint(640, 512)   << QPoint(640, -100)  << QPoint(640, 0);
-    QTest::newRow("move top-right - left screen")      << QPoint(640, 512)   << QPoint(1380, -100) << QPoint(1380, 0);
-    QTest::newRow("move right - left screen")          << QPoint(640, 512)   << QPoint(1380, 512)  << QPoint(1380, 512);
-    QTest::newRow("move bottom-right - left screen")   << QPoint(640, 512)   << QPoint(1380, 1124) << QPoint(1380, 1124);
-    QTest::newRow("move bottom - left screen")         << QPoint(640, 512)   << QPoint(640, 1124)  << QPoint(640, 1023);
-    QTest::newRow("move bottom-left - left screen")    << QPoint(640, 512)   << QPoint(-100, 1124) << QPoint(0, 1023);
-    QTest::newRow("move left - left screen")           << QPoint(640, 512)   << QPoint(-100, 512)  << QPoint(0, 512);
+    QTest::newRow("move top-left - left screen") << QPoint(640, 512) << QPoint(-100, -100) << QPoint(0, 0);
+    QTest::newRow("move top - left screen") << QPoint(640, 512) << QPoint(640, -100) << QPoint(640, 0);
+    QTest::newRow("move top-right - left screen") << QPoint(640, 512) << QPoint(1380, -100) << QPoint(1380, 0);
+    QTest::newRow("move right - left screen") << QPoint(640, 512) << QPoint(1380, 512) << QPoint(1380, 512);
+    QTest::newRow("move bottom-right - left screen") << QPoint(640, 512) << QPoint(1380, 1124) << QPoint(1380, 1124);
+    QTest::newRow("move bottom - left screen") << QPoint(640, 512) << QPoint(640, 1124) << QPoint(640, 1023);
+    QTest::newRow("move bottom-left - left screen") << QPoint(640, 512) << QPoint(-100, 1124) << QPoint(0, 1023);
+    QTest::newRow("move left - left screen") << QPoint(640, 512) << QPoint(-100, 512) << QPoint(0, 512);
 
-    QTest::newRow("move top-left - top screen")        << QPoint(1920, 512)  << QPoint(1180, -100) << QPoint(1180, 0);
-    QTest::newRow("move top - top screen")             << QPoint(1920, 512)  << QPoint(1920, -100) << QPoint(1920, 0);
-    QTest::newRow("move top-right - top screen")       << QPoint(1920, 512)  << QPoint(2660, -100) << QPoint(2660, 0);
-    QTest::newRow("move right - top screen")           << QPoint(1920, 512)  << QPoint(2660, 512)  << QPoint(2660, 512);
-    QTest::newRow("move bottom-right - top screen")    << QPoint(1920, 512)  << QPoint(2660, 1124) << QPoint(2559, 1023);
-    QTest::newRow("move bottom - top screen")          << QPoint(1920, 512)  << QPoint(1920, 1124) << QPoint(1920, 1124);
-    QTest::newRow("move bottom-left - top screen")     << QPoint(1920, 512)  << QPoint(1180, 1124) << QPoint(1280, 1023);
-    QTest::newRow("move left - top screen")            << QPoint(1920, 512)  << QPoint(1180, 512)  << QPoint(1180, 512);
+    QTest::newRow("move top-left - top screen") << QPoint(1920, 512) << QPoint(1180, -100) << QPoint(1180, 0);
+    QTest::newRow("move top - top screen") << QPoint(1920, 512) << QPoint(1920, -100) << QPoint(1920, 0);
+    QTest::newRow("move top-right - top screen") << QPoint(1920, 512) << QPoint(2660, -100) << QPoint(2660, 0);
+    QTest::newRow("move right - top screen") << QPoint(1920, 512) << QPoint(2660, 512) << QPoint(2660, 512);
+    QTest::newRow("move bottom-right - top screen") << QPoint(1920, 512) << QPoint(2660, 1124) << QPoint(2559, 1023);
+    QTest::newRow("move bottom - top screen") << QPoint(1920, 512) << QPoint(1920, 1124) << QPoint(1920, 1124);
+    QTest::newRow("move bottom-left - top screen") << QPoint(1920, 512) << QPoint(1180, 1124) << QPoint(1280, 1023);
+    QTest::newRow("move left - top screen") << QPoint(1920, 512) << QPoint(1180, 512) << QPoint(1180, 512);
 
-    QTest::newRow("move top-left - right screen")      << QPoint(3200, 512)  << QPoint(2460, -100) << QPoint(2460, 0);
-    QTest::newRow("move top - right screen")           << QPoint(3200, 512)  << QPoint(3200, -100) << QPoint(3200, 0);
-    QTest::newRow("move top-right - right screen")     << QPoint(3200, 512)  << QPoint(3940, -100) << QPoint(3839, 0);
-    QTest::newRow("move right - right screen")         << QPoint(3200, 512)  << QPoint(3940, 512)  << QPoint(3839, 512);
-    QTest::newRow("move bottom-right - right screen")  << QPoint(3200, 512)  << QPoint(3940, 1124) << QPoint(3839, 1023);
-    QTest::newRow("move bottom - right screen")        << QPoint(3200, 512)  << QPoint(3200, 1124) << QPoint(3200, 1023);
-    QTest::newRow("move bottom-left - right screen")   << QPoint(3200, 512)  << QPoint(2460, 1124) << QPoint(2460, 1124);
-    QTest::newRow("move left - right screen")          << QPoint(3200, 512)  << QPoint(2460, 512)  << QPoint(2460, 512);
+    QTest::newRow("move top-left - right screen") << QPoint(3200, 512) << QPoint(2460, -100) << QPoint(2460, 0);
+    QTest::newRow("move top - right screen") << QPoint(3200, 512) << QPoint(3200, -100) << QPoint(3200, 0);
+    QTest::newRow("move top-right - right screen") << QPoint(3200, 512) << QPoint(3940, -100) << QPoint(3839, 0);
+    QTest::newRow("move right - right screen") << QPoint(3200, 512) << QPoint(3940, 512) << QPoint(3839, 512);
+    QTest::newRow("move bottom-right - right screen") << QPoint(3200, 512) << QPoint(3940, 1124) << QPoint(3839, 1023);
+    QTest::newRow("move bottom - right screen") << QPoint(3200, 512) << QPoint(3200, 1124) << QPoint(3200, 1023);
+    QTest::newRow("move bottom-left - right screen") << QPoint(3200, 512) << QPoint(2460, 1124) << QPoint(2460, 1124);
+    QTest::newRow("move left - right screen") << QPoint(3200, 512) << QPoint(2460, 512) << QPoint(2460, 512);
 
-    QTest::newRow("move top-left - bottom screen")     << QPoint(1920, 1536) << QPoint(1180, 924)  << QPoint(1180, 924);
-    QTest::newRow("move top - bottom screen")          << QPoint(1920, 1536) << QPoint(1920, 924)  << QPoint(1920, 924);
-    QTest::newRow("move top-right - bottom screen")    << QPoint(1920, 1536) << QPoint(2660, 924)  << QPoint(2660, 924);
-    QTest::newRow("move right - bottom screen")        << QPoint(1920, 1536) << QPoint(2660, 1536) << QPoint(2559, 1536);
+    QTest::newRow("move top-left - bottom screen") << QPoint(1920, 1536) << QPoint(1180, 924) << QPoint(1180, 924);
+    QTest::newRow("move top - bottom screen") << QPoint(1920, 1536) << QPoint(1920, 924) << QPoint(1920, 924);
+    QTest::newRow("move top-right - bottom screen") << QPoint(1920, 1536) << QPoint(2660, 924) << QPoint(2660, 924);
+    QTest::newRow("move right - bottom screen") << QPoint(1920, 1536) << QPoint(2660, 1536) << QPoint(2559, 1536);
     QTest::newRow("move bottom-right - bottom screen") << QPoint(1920, 1536) << QPoint(2660, 2148) << QPoint(2559, 2047);
-    QTest::newRow("move bottom - bottom screen")       << QPoint(1920, 1536) << QPoint(1920, 2148) << QPoint(1920, 2047);
-    QTest::newRow("move bottom-left - bottom screen")  << QPoint(1920, 1536) << QPoint(1180, 2148) << QPoint(1280, 2047);
-    QTest::newRow("move left - bottom screen")         << QPoint(1920, 1536) << QPoint(1180, 1536) << QPoint(1280, 1536);
+    QTest::newRow("move bottom - bottom screen") << QPoint(1920, 1536) << QPoint(1920, 2148) << QPoint(1920, 2047);
+    QTest::newRow("move bottom-left - bottom screen") << QPoint(1920, 1536) << QPoint(1180, 2148) << QPoint(1280, 2047);
+    QTest::newRow("move left - bottom screen") << QPoint(1920, 1536) << QPoint(1180, 1536) << QPoint(1280, 1536);
 }
 
 void PointerInputTest::testConfineToScreenGeometry()
@@ -1441,15 +1572,14 @@ void PointerInputTest::testConfineToScreenGeometry()
 
     // unload the Present Windows effect because it pushes back
     // pointer if it's at (0, 0)
-    static_cast<EffectsHandlerImpl*>(effects)->unloadEffect(QStringLiteral("presentwindows"));
+    static_cast<EffectsHandlerImpl *>(effects)->unloadEffect(QStringLiteral("presentwindows"));
 
     // setup screen layout
-    const QVector<QRect> geometries {
+    const QVector<QRect> geometries{
         QRect(0, 0, 1280, 1024),
         QRect(1280, 0, 1280, 1024),
         QRect(2560, 0, 1280, 1024),
-        QRect(1280, 1024, 1280, 1024)
-    };
+        QRect(1280, 1024, 1280, 1024)};
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs",
                               Qt::DirectConnection,
                               Q_ARG(int, geometries.count()),
@@ -1467,7 +1597,7 @@ void PointerInputTest::testConfineToScreenGeometry()
 
     // perform movement
     QFETCH(QPoint, targetPos);
-    kwinApp()->platform()->pointerMotion(targetPos, 1);
+    Test::pointerMotion(targetPos, 1);
 
     QFETCH(QPoint, expectedPos);
     QCOMPARE(Cursors::self()->mouse()->pos(), expectedPos);
@@ -1478,14 +1608,14 @@ void PointerInputTest::testResizeCursor_data()
     QTest::addColumn<Qt::Edges>("edges");
     QTest::addColumn<KWin::CursorShape>("cursorShape");
 
-    QTest::newRow("top-left")     << Qt::Edges(Qt::TopEdge | Qt::LeftEdge)     << CursorShape(ExtendedCursor::SizeNorthWest);
-    QTest::newRow("top")          << Qt::Edges(Qt::TopEdge)                    << CursorShape(ExtendedCursor::SizeNorth);
-    QTest::newRow("top-right")    << Qt::Edges(Qt::TopEdge | Qt::RightEdge)    << CursorShape(ExtendedCursor::SizeNorthEast);
-    QTest::newRow("right")        << Qt::Edges(Qt::RightEdge)                  << CursorShape(ExtendedCursor::SizeEast);
+    QTest::newRow("top-left") << Qt::Edges(Qt::TopEdge | Qt::LeftEdge) << CursorShape(ExtendedCursor::SizeNorthWest);
+    QTest::newRow("top") << Qt::Edges(Qt::TopEdge) << CursorShape(ExtendedCursor::SizeNorth);
+    QTest::newRow("top-right") << Qt::Edges(Qt::TopEdge | Qt::RightEdge) << CursorShape(ExtendedCursor::SizeNorthEast);
+    QTest::newRow("right") << Qt::Edges(Qt::RightEdge) << CursorShape(ExtendedCursor::SizeEast);
     QTest::newRow("bottom-right") << Qt::Edges(Qt::BottomEdge | Qt::RightEdge) << CursorShape(ExtendedCursor::SizeSouthEast);
-    QTest::newRow("bottom")       << Qt::Edges(Qt::BottomEdge)                 << CursorShape(ExtendedCursor::SizeSouth);
-    QTest::newRow("bottom-left")  << Qt::Edges(Qt::BottomEdge | Qt::LeftEdge)  << CursorShape(ExtendedCursor::SizeSouthWest);
-    QTest::newRow("left")         << Qt::Edges(Qt::LeftEdge)                   << CursorShape(ExtendedCursor::SizeWest);
+    QTest::newRow("bottom") << Qt::Edges(Qt::BottomEdge) << CursorShape(ExtendedCursor::SizeSouth);
+    QTest::newRow("bottom-left") << Qt::Edges(Qt::BottomEdge | Qt::LeftEdge) << CursorShape(ExtendedCursor::SizeSouthWest);
+    QTest::newRow("left") << Qt::Edges(Qt::LeftEdge) << CursorShape(ExtendedCursor::SizeWest);
 }
 
 void PointerInputTest::testResizeCursor()
@@ -1559,8 +1689,8 @@ void PointerInputTest::testResizeCursor()
 
     // start resizing the client
     int timestamp = 1;
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
-    kwinApp()->platform()->pointerButtonPressed(BTN_RIGHT, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
+    Test::pointerButtonPressed(BTN_RIGHT, timestamp++);
     QVERIFY(c->isInteractiveResize());
 
     QFETCH(KWin::CursorShape, cursorShape);
@@ -1570,8 +1700,8 @@ void PointerInputTest::testResizeCursor()
     QCOMPARE(kwinApp()->platform()->cursorImage().hotSpot(), resizeCursor.hotSpot());
 
     // finish resizing the client
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
-    kwinApp()->platform()->pointerButtonReleased(BTN_RIGHT, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+    Test::pointerButtonReleased(BTN_RIGHT, timestamp++);
     QVERIFY(!c->isInteractiveResize());
 
     QCOMPARE(kwinApp()->platform()->cursorImage().image(), arrowCursor.image());
@@ -1630,8 +1760,8 @@ void PointerInputTest::testMoveCursor()
 
     // start moving the client
     int timestamp = 1;
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
-    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(c->isInteractiveMove());
 
     const PlatformCursorImage sizeAllCursor = loadReferenceThemeCursor(Qt::SizeAllCursor);
@@ -1640,8 +1770,8 @@ void PointerInputTest::testMoveCursor()
     QCOMPARE(kwinApp()->platform()->cursorImage().hotSpot(), sizeAllCursor.hotSpot());
 
     // finish moving the client
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
-    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     QVERIFY(!c->isInteractiveMove());
 
     QCOMPARE(kwinApp()->platform()->cursorImage().image(), arrowCursor.image());
@@ -1650,27 +1780,27 @@ void PointerInputTest::testMoveCursor()
 
 void PointerInputTest::testHideShowCursor()
 {
-    QCOMPARE(kwinApp()->platform()->isCursorHidden(), false);
-    kwinApp()->platform()->hideCursor();
-    QCOMPARE(kwinApp()->platform()->isCursorHidden(), true);
-    kwinApp()->platform()->showCursor();
-    QCOMPARE(kwinApp()->platform()->isCursorHidden(), false);
+    QCOMPARE(Cursors::self()->isCursorHidden(), false);
+    Cursors::self()->hideCursor();
+    QCOMPARE(Cursors::self()->isCursorHidden(), true);
+    Cursors::self()->showCursor();
+    QCOMPARE(Cursors::self()->isCursorHidden(), false);
 
-    kwinApp()->platform()->hideCursor();
-    QCOMPARE(kwinApp()->platform()->isCursorHidden(), true);
-    kwinApp()->platform()->hideCursor();
-    kwinApp()->platform()->hideCursor();
-    kwinApp()->platform()->hideCursor();
-    QCOMPARE(kwinApp()->platform()->isCursorHidden(), true);
+    Cursors::self()->hideCursor();
+    QCOMPARE(Cursors::self()->isCursorHidden(), true);
+    Cursors::self()->hideCursor();
+    Cursors::self()->hideCursor();
+    Cursors::self()->hideCursor();
+    QCOMPARE(Cursors::self()->isCursorHidden(), true);
 
-    kwinApp()->platform()->showCursor();
-    QCOMPARE(kwinApp()->platform()->isCursorHidden(), true);
-    kwinApp()->platform()->showCursor();
-    QCOMPARE(kwinApp()->platform()->isCursorHidden(), true);
-    kwinApp()->platform()->showCursor();
-    QCOMPARE(kwinApp()->platform()->isCursorHidden(), true);
-    kwinApp()->platform()->showCursor();
-    QCOMPARE(kwinApp()->platform()->isCursorHidden(), false);
+    Cursors::self()->showCursor();
+    QCOMPARE(Cursors::self()->isCursorHidden(), true);
+    Cursors::self()->showCursor();
+    QCOMPARE(Cursors::self()->isCursorHidden(), true);
+    Cursors::self()->showCursor();
+    QCOMPARE(Cursors::self()->isCursorHidden(), true);
+    Cursors::self()->showCursor();
+    QCOMPARE(Cursors::self()->isCursorHidden(), false);
 }
 
 void PointerInputTest::testDefaultInputRegion()

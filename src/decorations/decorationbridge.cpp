@@ -7,6 +7,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "decorationbridge.h"
+
+#include <config-kwin.h>
+
 #include "decoratedclient.h"
 #include "decorations_logging.h"
 #include "settings.h"
@@ -14,11 +17,10 @@
 #include "abstract_client.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include <config-kwin.h>
 
 // KDecoration
-#include <KDecoration2/Decoration>
 #include <KDecoration2/DecoratedClient>
+#include <KDecoration2/Decoration>
 #include <KDecoration2/DecorationSettings>
 
 // KWayland
@@ -27,7 +29,6 @@
 // Frameworks
 #include <KPluginFactory>
 #include <KPluginMetaData>
-#include <KPluginLoader>
 
 // Qt
 #include <QMetaProperty>
@@ -51,17 +52,10 @@ KWIN_SINGLETON_FACTORY(DecorationBridge)
 DecorationBridge::DecorationBridge(QObject *parent)
     : KDecoration2::DecorationBridge(parent)
     , m_factory(nullptr)
-    , m_blur(false)
     , m_showToolTips(false)
     , m_settings()
     , m_noPlugin(false)
 {
-    KConfigGroup cg(KSharedConfig::openConfig(), "KDE");
-
-    // try to extract the proper defaults file from a lookandfeel package
-    const QString looknfeel = cg.readEntry(QStringLiteral("LookAndFeelPackage"), "org.kde.breeze.desktop");
-    m_lnfConfig = KSharedConfig::openConfig(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("plasma/look-and-feel/") + looknfeel + QStringLiteral("/contents/defaults")));
-
     readDecorationOptions();
 }
 
@@ -72,10 +66,7 @@ DecorationBridge::~DecorationBridge()
 
 QString DecorationBridge::readPlugin()
 {
-    //Try to get a default from look and feel
-    KConfigGroup cg(m_lnfConfig, "kwinrc");
-    cg = KConfigGroup(&cg, "org.kde.kdecoration2");
-    return kwinApp()->config()->group(s_pluginName).readEntry("library", cg.readEntry("library", s_defaultPlugin));
+    return kwinApp()->config()->group(s_pluginName).readEntry("library", s_defaultPlugin);
 }
 
 static bool readNoPlugin()
@@ -85,10 +76,7 @@ static bool readNoPlugin()
 
 QString DecorationBridge::readTheme() const
 {
-    //Try to get a default from look and feel
-    KConfigGroup cg(m_lnfConfig, "kwinrc");
-    cg = KConfigGroup(&cg, "org.kde.kdecoration2");
-    return kwinApp()->config()->group(s_pluginName).readEntry("theme", cg.readEntry("theme", m_defaultTheme));
+    return kwinApp()->config()->group(s_pluginName).readEntry("theme", m_defaultTheme);
 }
 
 void DecorationBridge::readDecorationOptions()
@@ -143,19 +131,20 @@ void DecorationBridge::initPlugin()
         return;
     }
     qCDebug(KWIN_DECORATIONS) << "Trying to load decoration plugin: " << metaData.fileName();
-    KPluginLoader loader(metaData.fileName());
-    KPluginFactory *factory = loader.factory();
-    if (!factory) {
-        qCWarning(KWIN_DECORATIONS) << "Error loading plugin:" << loader.errorString();
+    auto factoryResult = KPluginFactory::loadFactory(metaData);
+    if (!factoryResult) {
+        qCWarning(KWIN_DECORATIONS) << "Error loading plugin:" << factoryResult.errorText;
     } else {
-        m_factory = factory;
-        loadMetaData(loader.metaData().value(QStringLiteral("MetaData")).toObject());
+        m_factory = factoryResult.plugin;
+        loadMetaData(metaData.rawData());
     }
 }
 
 static void recreateDecorations()
 {
-    Workspace::self()->forEachAbstractClient([](AbstractClient *c) { c->updateDecoration(true, true); });
+    Workspace::self()->forEachAbstractClient([](AbstractClient *c) {
+        c->invalidateDecoration();
+    });
 }
 
 void DecorationBridge::reconfigure()
@@ -207,7 +196,6 @@ void DecorationBridge::reconfigure()
 void DecorationBridge::loadMetaData(const QJsonObject &object)
 {
     // reset all settings
-    m_blur = false;
     m_recommendedBorderSize = QString();
     m_theme = QString();
     m_defaultTheme = QString();
@@ -219,10 +207,6 @@ void DecorationBridge::loadMetaData(const QJsonObject &object)
         return;
     }
     const QVariantMap decoSettingsMap = decoSettings.toObject().toVariantMap();
-    auto blurIt = decoSettingsMap.find(QStringLiteral("blur"));
-    if (blurIt != decoSettingsMap.end()) {
-        m_blur = blurIt.value().toBool();
-    }
     auto recBorderSizeIt = decoSettingsMap.find(QStringLiteral("recommendedBorderSize"));
     if (recBorderSizeIt != decoSettingsMap.end()) {
         m_recommendedBorderSize = recBorderSizeIt.value().toString();
@@ -248,7 +232,7 @@ void DecorationBridge::findTheme(const QVariantMap &map)
 
 std::unique_ptr<KDecoration2::DecoratedClientPrivate> DecorationBridge::createClient(KDecoration2::DecoratedClient *client, KDecoration2::Decoration *decoration)
 {
-    return std::unique_ptr<DecoratedClientImpl>(new DecoratedClientImpl(static_cast<AbstractClient*>(decoration->parent()), client, decoration));
+    return std::unique_ptr<DecoratedClientImpl>(new DecoratedClientImpl(static_cast<AbstractClient *>(decoration->parent()), client, decoration));
 }
 
 std::unique_ptr<KDecoration2::DecorationSettingsPrivate> DecorationBridge::settings(KDecoration2::DecorationSettings *parent)
@@ -264,7 +248,7 @@ KDecoration2::Decoration *DecorationBridge::createDecoration(AbstractClient *cli
     if (!m_factory) {
         return nullptr;
     }
-    QVariantMap args({ {QStringLiteral("bridge"), QVariant::fromValue(this)} });
+    QVariantMap args({{QStringLiteral("bridge"), QVariant::fromValue(this)}});
 
     if (!m_theme.isEmpty()) {
         args.insert(QStringLiteral("theme"), m_theme);
@@ -275,8 +259,7 @@ KDecoration2::Decoration *DecorationBridge::createDecoration(AbstractClient *cli
     return deco;
 }
 
-static
-QString settingsProperty(const QVariant &variant)
+static QString settingsProperty(const QVariant &variant)
 {
     if (QLatin1String(variant.typeName()) == QLatin1String("KDecoration2::BorderSize")) {
         return QString::number(variant.toInt());
@@ -303,9 +286,8 @@ QString DecorationBridge::supportInformation() const
         b.append(QStringLiteral("Plugin: %1\n").arg(m_plugin));
         b.append(QStringLiteral("Theme: %1\n").arg(m_theme));
         b.append(QStringLiteral("Plugin recommends border size: %1\n").arg(m_recommendedBorderSize.isNull() ? "No" : m_recommendedBorderSize));
-        b.append(QStringLiteral("Blur: %1\n").arg(m_blur));
         const QMetaObject *metaOptions = m_settings->metaObject();
-        for (int i=0; i<metaOptions->propertyCount(); ++i) {
+        for (int i = 0; i < metaOptions->propertyCount(); ++i) {
             const QMetaProperty property = metaOptions->property(i);
             if (QLatin1String(property.name()) == QLatin1String("objectName")) {
                 continue;

@@ -8,10 +8,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
+
 #include "abstract_client.h"
 #include "abstract_output.h"
 #include "platform.h"
-#include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "xwl/databridge.h"
@@ -25,7 +25,8 @@ using namespace KWin;
 
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_xwayland_selections-0");
 
-struct ProcessKillBeforeDeleter {
+struct ProcessKillBeforeDeleter
+{
     static inline void cleanup(QProcess *pointer)
     {
         if (pointer)
@@ -45,14 +46,14 @@ private Q_SLOTS:
 
 void XwaylandSelectionsTest::initTestCase()
 {
-//    QSKIP("Skipped as it fails for unknown reasons on build.kde.org");
-    qRegisterMetaType<KWin::AbstractClient*>();
+    //    QSKIP("Skipped as it fails for unknown reasons on build.kde.org");
+    qRegisterMetaType<KWin::AbstractClient *>();
     qRegisterMetaType<QProcess::ExitStatus>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
-//    QSignalSpy clipboardSyncDevicedCreated{waylandServer(), &WaylandServer::xclipboardSyncDataDeviceCreated};
-//    QVERIFY(clipboardSyncDevicedCreated.isValid());
+    //    QSignalSpy clipboardSyncDevicedCreated{waylandServer(), &WaylandServer::xclipboardSyncDataDeviceCreated};
+    //    QVERIFY(clipboardSyncDevicedCreated.isValid());
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
 
@@ -63,10 +64,10 @@ void XwaylandSelectionsTest::initTestCase()
     QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));
     QCOMPARE(outputs[1]->geometry(), QRect(1280, 0, 1280, 1024));
     Test::initWaylandWorkspace();
-//    // wait till the xclipboard sync data device is created
-//    if (clipboardSyncDevicedCreated.empty()) {
-//        QVERIFY(clipboardSyncDevicedCreated.wait());
-//    }
+    //    // wait till the xclipboard sync data device is created
+    //    if (clipboardSyncDevicedCreated.empty()) {
+    //        QVERIFY(clipboardSyncDevicedCreated.wait());
+    //    }
 }
 
 void XwaylandSelectionsTest::testSync_data()
@@ -116,7 +117,7 @@ void XwaylandSelectionsTest::testSync()
 
     // start the paste process
     QScopedPointer<QProcess, ProcessKillBeforeDeleter> pasteProcess(new QProcess());
-    QSignalSpy finishedSpy(pasteProcess.data(), static_cast<void(QProcess::*)(int,QProcess::ExitStatus)>(&QProcess::finished));
+    QSignalSpy finishedSpy(pasteProcess.data(), static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished));
     QVERIFY(finishedSpy.isValid());
     QFETCH(QString, pastePlatform);
     environment.insert(QStringLiteral("QT_QPA_PLATFORM"), pastePlatform);

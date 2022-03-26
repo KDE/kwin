@@ -11,6 +11,8 @@
 #include <QObject>
 #include <QString>
 
+#include <sys/types.h>
+
 namespace KWin
 {
 
@@ -92,6 +94,20 @@ Q_SIGNALS:
      * This signal is emitted when the active state of the session has changed.
      */
     void activeChanged(bool active);
+
+    /**
+     * This signal is emitted when the specified device can be used again.
+     */
+    void deviceResumed(dev_t deviceId);
+
+    /**
+     * This signal is emitted when the given device cannot be used by the compositor
+     * anymore. For example, this normally occurs when switching between VTs.
+     *
+     * Note that when this signal is emitted for a DRM device, master permissions can
+     * be already revoked.
+     */
+    void devicePaused(dev_t deviceId);
 
 protected:
     explicit Session(QObject *parent = nullptr);

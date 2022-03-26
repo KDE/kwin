@@ -40,7 +40,7 @@ Name[x-test]=xxAurorae Window Decorationsxx
 Name[zh_CN]=Aurorae 极光窗口装饰
 Name[zh_TW]=Aurorae 視窗裝飾
 
-ProvidersUrl=https://download.kde.org/ocs/providers.xml
+ProvidersUrl=https://autoconfig.kde.org/ocs/providers.xml
 Categories=Window Decoration Aurorae
 Uncompress=archive
 TargetDir=aurorae/themes

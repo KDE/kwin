@@ -7,13 +7,13 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
+
 #include "abstract_client.h"
 #include "abstract_output.h"
 #include "cursor.h"
 #include "keyboard_input.h"
 #include "platform.h"
 #include "pointer_input.h"
-#include "screens.h"
 #include "useractions.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -46,7 +46,7 @@ private Q_SLOTS:
 
 void TestDontCrashUseractionsMenu::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -91,8 +91,8 @@ void TestDontCrashUseractionsMenu::testShowHideShowUseractionsMenu()
     QTRY_VERIFY(userActionsMenu->isShown());
     QVERIFY(userActionsMenu->hasClient());
 
-    kwinApp()->platform()->keyboardKeyPressed(KEY_ESC, 0);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_ESC, 1);
+    Test::keyboardKeyPressed(KEY_ESC, 0);
+    Test::keyboardKeyReleased(KEY_ESC, 1);
     QTRY_VERIFY(!userActionsMenu->isShown());
     QVERIFY(!userActionsMenu->hasClient());
 

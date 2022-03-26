@@ -6,33 +6,45 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-
 #include "genericscriptedconfig.h"
+
 #include "config-kwin.h"
+
 #include <kwineffects_interface.h>
+
 #include <KAboutData>
 #define TRANSLATION_DOMAIN "kwin_scripting"
+#include <KDesktopFile>
 #include <KLocalizedString>
 #include <KLocalizedTranslator>
 #include <kconfigloader.h>
-#include <KDesktopFile>
 
 #include <QFile>
 #include <QLabel>
+#include <QStandardPaths>
 #include <QUiLoader>
 #include <QVBoxLayout>
-#include <QStandardPaths>
 
-namespace KWin {
+namespace KWin
+{
 
 QObject *GenericScriptedConfigFactory::create(const char *iface, QWidget *parentWidget, QObject *parent, const QVariantList &args, const QString &keyword)
 {
     Q_UNUSED(iface)
     Q_UNUSED(parent)
     Q_UNUSED(keyword)
-    Q_ASSERT(!args.isEmpty());
 
-    const QString pluginId = args.first().toString();
+    // the plugin id is in the args when created by desktop effects kcm or EffectsModel in general
+    QString pluginId = args.isEmpty() ? QString() : args.first().toString();
+
+    // If we do not get the id of the effect we want to load from the args, we have to check our metadata.
+    // This can be the case if the factory gets loaded from a KPluginSelector
+    // the plugin id is in plugin factory metadata when created by scripts kcm
+    // (because it uses kpluginselector, which doesn't pass the plugin id as the first arg),
+    // can be dropped once the scripts kcm is ported to qtquick (because then we could pass the plugin id via the args)
+    if (pluginId.isEmpty()) {
+        pluginId = metaData().pluginId();
+    }
     if (pluginId.startsWith(QLatin1String("kwin4_effect_"))) {
         return new ScriptedEffectConfig(pluginId, parentWidget, args);
     } else {
@@ -54,22 +66,12 @@ GenericScriptedConfig::~GenericScriptedConfig()
 
 void GenericScriptedConfig::createUi()
 {
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
     const QString kconfigXTFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                        QLatin1String(KWIN_NAME) +
-                                                        QLatin1Char('/') +
-                                                        typeName() +
-                                                        QLatin1Char('/') +
-                                                        m_packageName +
-                                                        QLatin1String("/contents/config/main.xml"));
+                                                         QLatin1String(KWIN_NAME) + QLatin1Char('/') + typeName() + QLatin1Char('/') + m_packageName + QLatin1String("/contents/config/main.xml"));
     const QString uiPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                 QLatin1String(KWIN_NAME) +
-                                                 QLatin1Char('/') +
-                                                 typeName() +
-                                                 QLatin1Char('/') +
-                                                 m_packageName +
-                                                 QLatin1String("/contents/ui/config.ui"));
+                                                  QLatin1String(KWIN_NAME) + QLatin1Char('/') + typeName() + QLatin1Char('/') + m_packageName + QLatin1String("/contents/ui/config.ui"));
     if (kconfigXTFile.isEmpty() || uiPath.isEmpty()) {
         layout->addWidget(new QLabel(i18nc("Error message", "Plugin does not provide configuration file in expected location")));
         return;
@@ -164,6 +166,5 @@ void ScriptingConfig::reload()
 {
     // TODO: what to call
 }
-
 
 } // namespace

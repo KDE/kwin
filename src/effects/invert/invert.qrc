@@ -1,0 +1,6 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/effects/invert/">
+  <file>shaders/invert.frag</file>
+  <file>shaders/invert_core.frag</file>
+</qresource>
+</RCC>

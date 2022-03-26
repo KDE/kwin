@@ -10,18 +10,11 @@
 #define POLLER_H
 
 #include <KIdleTime/private/abstractsystempoller.h>
-
 #include <QHash>
+#include <QTimer>
 
-namespace KWayland
+namespace KWin
 {
-namespace Client
-{
-class Seat;
-class Idle;
-class IdleTimeout;
-}
-}
 
 class KWinIdleTimePoller : public AbstractSystemPoller
 {
@@ -46,11 +39,16 @@ public Q_SLOTS:
     void stopCatchingIdleEvents() override;
     void simulateUserActivity() override;
 
+private Q_SLOTS:
+    void onInhibitedChanged();
+    void onTimestampChanged();
+
 private:
-    KWayland::Client::Seat *m_seat = nullptr;
-    KWayland::Client::Idle *m_idle = nullptr;
-    KWayland::Client::IdleTimeout *m_catchResumeTimeout = nullptr;
-    QHash<int, KWayland::Client::IdleTimeout*> m_timeouts;
+    void processActivity();
+    QHash<int, QTimer *> m_timeouts;
+    bool m_idling = false;
 };
+
+}
 
 #endif

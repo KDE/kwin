@@ -2,7 +2,15 @@
 # Effect
 
 # Source files
-set(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-    backgroundcontrast/contrast.cpp
-    backgroundcontrast/contrastshader.cpp
+set(contrast_SOURCES
+    contrast.cpp
+    contrastshader.cpp
+    main.cpp
+)
+kwin4_add_effect_module(kwin4_effect_contrast ${contrast_SOURCES})
+target_link_libraries(kwin4_effect_contrast PRIVATE
+    kwineffects
+    kwinglutils
+
+    Plasma::KWaylandServer
 )

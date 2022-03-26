@@ -56,11 +56,13 @@ public:
     enum EasingCurve {
         GaussianCurve = 128
     };
-    const QString &scriptFile() const {
+    const QString &scriptFile() const
+    {
         return m_scriptFile;
     }
     void reconfigure(ReconfigureFlags flags) override;
-    int requestedEffectChainPosition() const override {
+    int requestedEffectChainPosition() const override
+    {
         return m_chainPosition;
     }
     QString activeConfig() const;
@@ -146,7 +148,8 @@ public:
     Q_SCRIPTABLE bool cancel(quint64 animationId);
     Q_SCRIPTABLE bool cancel(const QList<quint64> &animationIds);
 
-    QHash<int, QJSValueList> &screenEdgeCallbacks() {
+    QHash<int, QJSValueList> &screenEdgeCallbacks()
+    {
         return m_screenEdgeCallbacks;
     }
 
@@ -184,7 +187,7 @@ private:
     QHash<int, QJSValueList> m_screenEdgeCallbacks;
     KConfigLoader *m_config;
     int m_chainPosition;
-    QHash<int, QAction*> m_touchScreenEdgeCallbacks;
+    QHash<int, QAction *> m_touchScreenEdgeCallbacks;
     Effect *m_activeFullScreenEffect = nullptr;
 };
 

@@ -9,8 +9,8 @@
 #ifndef KWIN_XWL_DRAG
 #define KWIN_XWL_DRAG
 
-#include <QPoint>
 #include <QObject>
+#include <QPoint>
 
 #include <xcb/xcb.h>
 
@@ -37,8 +37,6 @@ public:
 
     virtual bool handleClientMessage(xcb_client_message_event_t *event) = 0;
     virtual DragEventReply moveFilter(Toplevel *target, const QPoint &pos) = 0;
-
-    virtual bool end() = 0;
 
 Q_SIGNALS:
     void finish(Drag *self);

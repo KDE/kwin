@@ -23,21 +23,24 @@ class MouseMarkEffectConfigForm : public QWidget, public Ui::MouseMarkEffectConf
 {
     Q_OBJECT
 public:
-    explicit MouseMarkEffectConfigForm(QWidget* parent);
+    explicit MouseMarkEffectConfigForm(QWidget *parent);
 };
 
 class MouseMarkEffectConfig : public KCModule
 {
     Q_OBJECT
 public:
-    explicit MouseMarkEffectConfig(QWidget* parent = nullptr, const QVariantList& args = QVariantList());
+    explicit MouseMarkEffectConfig(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
     ~MouseMarkEffectConfig() override;
 
+    void load() override;
     void save() override;
 
 private:
-    MouseMarkEffectConfigForm* m_ui;
-    KActionCollection* m_actionCollection;
+    void updateSpinBoxSuffix();
+
+    MouseMarkEffectConfigForm *m_ui;
+    KActionCollection *m_actionCollection;
 };
 
 } // namespace

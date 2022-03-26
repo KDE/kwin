@@ -1,5 +1,6 @@
 [KNewStuff3]
 Name=Window Manager Switching Layouts
+Name[ar]=مدير النوافذ تبديل التخطيطات
 Name[az]=Pəncrərə meneceri üçün pəncərə dəyişdirici sxemi
 Name[ca]=Disposicions del commutador del gestor de finestres
 Name[ca@valencia]=Disposicions del commutador del gestor de finestres
@@ -18,7 +19,7 @@ Name[he]=מחליף פריסות של מנהל החלונות
 Name[hu]=Ablakkezelő-váltó elrendezések
 Name[ia]=Disposition de commutator de gerente de fenestra
 Name[id]=Tataletak Pengalihan Pengelola Window
-Name[it]=Disposizione scambiafinestre del gestore delle finestre
+Name[it]=Disposizioni selettore del gestore delle finestre
 Name[ko]=창 관리자 전환기 레이아웃
 Name[lt]=Langų tvarkytuvės perjungimo išdėstymai
 Name[nl]=Omschakelende indelingen van vensterbeheerder
@@ -36,6 +37,7 @@ Name[sr@ijekavian]=Распореди пребацивања менаџера п
 Name[sr@ijekavianlatin]=Rasporedi prebacivanja menadžera prozora
 Name[sr@latin]=Rasporedi prebacivanja menadžera prozora
 Name[sv]=Fönsterbyteslayouter
+Name[ta]=சாளர மாற்றியின் தளவமைப்பு
 Name[tr]=Pencere Yöneticisi Geçiş Düzenleri
 Name[uk]=Компонування засобу перемикання вікон
 Name[vi]=Bố cục chuyển đổi của trình quản lí cửa sổ
@@ -43,7 +45,7 @@ Name[x-test]=xxWindow Manager Switching Layoutsxx
 Name[zh_CN]=窗口管理器切换布局
 Name[zh_TW]=視窗切換器佈局
 
-ProvidersUrl=https://download.kde.org/ocs/providers.xml
+ProvidersUrl=https://autoconfig.kde.org/ocs/providers.xml
 Categories=KWin Switching Layouts
 StandardResource=tmp
 Uncompress=kpackage

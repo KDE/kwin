@@ -33,8 +33,7 @@ OffscreenSurface::OffscreenSurface(QOffscreenSurface *surface)
     const EGLint attributes[] = {
         EGL_WIDTH, size.width(),
         EGL_HEIGHT, size.height(),
-        EGL_NONE
-    };
+        EGL_NONE};
 
     m_surface = eglCreatePbufferSurface(m_eglDisplay, config, attributes);
     if (m_surface == EGL_NO_SURFACE) {

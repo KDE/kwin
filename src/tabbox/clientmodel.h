@@ -25,7 +25,6 @@ namespace KWin
 namespace TabBox
 {
 
-
 /**
  * The model for TabBoxClients used in TabBox.
  *
@@ -46,13 +45,13 @@ public:
         MinimizedRole = Qt::UserRole + 6, ///< TabBoxClient is minimized
         CloseableRole = Qt::UserRole + 7 ///< TabBoxClient can be closed
     };
-    explicit ClientModel(QObject* parent = nullptr);
+    explicit ClientModel(QObject *parent = nullptr);
     ~ClientModel() override;
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
-    int columnCount(const QModelIndex& parent = QModelIndex()) const override;
-    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
-    QModelIndex parent(const QModelIndex& child) const override;
-    QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    QModelIndex parent(const QModelIndex &child) const override;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
     QHash<int, QByteArray> roleNames() const override;
     Q_INVOKABLE QString longestCaption() const;
 
@@ -81,7 +80,8 @@ public:
     /**
      * @return Returns the current list of TabBoxClients.
      */
-    TabBoxClientList clientList() const {
+    TabBoxClientList clientList() const
+    {
         return m_clientList;
     }
 

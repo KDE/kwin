@@ -92,7 +92,7 @@ WaylandOutput::WaylandOutput(AbstractWaylandOutput *output, QObject *parent)
     : QObject(parent)
     , m_platformOutput(output)
     , m_waylandOutput(new KWaylandServer::OutputInterface(waylandServer()->display()))
-    , m_xdgOutputV1(waylandServer()->xdgOutputManagerV1()->createXdgOutput(m_waylandOutput.data(), this))
+    , m_xdgOutputV1(waylandServer()->xdgOutputManagerV1()->createXdgOutput(m_waylandOutput.data(), m_waylandOutput.data()))
 {
     const QRect geometry = m_platformOutput->geometry();
 
@@ -125,6 +125,7 @@ WaylandOutput::WaylandOutput(AbstractWaylandOutput *output, QObject *parent)
     m_updateTimer.setSingleShot(true);
     connect(&m_updateTimer, &QTimer::timeout, this, &WaylandOutput::update);
 
+    connect(output, &AbstractWaylandOutput::currentModeChanged, this, &WaylandOutput::scheduleUpdate);
     connect(output, &AbstractWaylandOutput::geometryChanged, this, &WaylandOutput::scheduleUpdate);
     connect(output, &AbstractWaylandOutput::transformChanged, this, &WaylandOutput::scheduleUpdate);
     connect(output, &AbstractWaylandOutput::scaleChanged, this, &WaylandOutput::scheduleUpdate);

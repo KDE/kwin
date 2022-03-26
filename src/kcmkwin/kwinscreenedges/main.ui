@@ -152,7 +152,7 @@
       </widget>
      </item>
      <item row="4" column="1">
-      <widget class="KComboBox" name="kcfg_ElectricBorders">
+      <widget class="QComboBox" name="kcfg_ElectricBorders">
        <item>
         <property name="text">
          <string comment="Switch desktop on edge">Disabled</string>
@@ -265,11 +265,6 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
-  </customwidget>
   <customwidget>
    <class>KWin::Monitor</class>
    <extends>QWidget</extends>

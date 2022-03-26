@@ -8,7 +8,6 @@
 */
 // own
 #include "screentransform.h"
-#include "kscreenconfig.h"
 #include "kwinglutils.h"
 #include <QDebug>
 
@@ -17,9 +16,6 @@ namespace KWin
 ScreenTransformEffect::ScreenTransformEffect()
     : Effect()
 {
-    initConfig<KscreenConfig>();
-    reconfigure(ReconfigureAll);
-
     const QList<EffectScreen *> screens = effects->screens();
     for (auto screen : screens) {
         addScreen(screen);
@@ -38,7 +34,8 @@ bool ScreenTransformEffect::supported()
 qreal transformAngle(EffectScreen::Transform current, EffectScreen::Transform old)
 {
     auto ensureShort = [](int angle) {
-        return angle > 180 ? angle - 360 : angle < -180 ? angle + 360 : angle;
+        return angle > 180 ? angle - 360 : angle < -180 ? angle + 360
+                                                        : angle;
     };
     // % 4 to ignore flipped cases (for now)
     return ensureShort((int(current) % 4 - int(old) % 4) * 90);
@@ -53,7 +50,7 @@ void ScreenTransformEffect::addScreen(EffectScreen *screen)
             m_states.remove(screen);
             return;
         }
-        state.m_timeLine.setDuration(std::chrono::milliseconds(animationTime<KscreenConfig>(250)));
+        state.m_timeLine.setDuration(std::chrono::milliseconds(long(animationTime(250))));
         state.m_timeLine.setEasingCurve(QEasingCurve::OutCirc);
         state.m_lastPresentTime = std::chrono::milliseconds::zero();
         state.m_angle = transformAngle(screen->transform(), state.m_oldTransform);
@@ -69,13 +66,8 @@ void ScreenTransformEffect::addScreen(EffectScreen *screen)
         // Rendering the current scene into a texture
         const bool c = state.m_texture->create();
         Q_ASSERT(c);
-        GLRenderTarget renderTarget(*state.m_texture);
+        GLRenderTarget renderTarget(state.m_texture.data());
         GLRenderTarget::pushRenderTarget(&renderTarget);
-
-        GLVertexBuffer::setVirtualScreenGeometry(screen->geometry());
-        GLRenderTarget::setVirtualScreenGeometry(screen->geometry());
-        GLVertexBuffer::setVirtualScreenScale(screen->devicePixelRatio());
-        GLRenderTarget::setVirtualScreenScale(screen->devicePixelRatio());
 
         effects->renderScreen(screen);
         state.m_captured = true;
@@ -88,12 +80,6 @@ void ScreenTransformEffect::removeScreen(EffectScreen *screen)
     effects->makeOpenGLContextCurrent();
     m_states.remove(screen);
     effects->doneOpenGLContextCurrent();
-}
-
-void ScreenTransformEffect::reconfigure(ReconfigureFlags flags)
-{
-    Q_UNUSED(flags)
-    KscreenConfig::self()->read();
 }
 
 void ScreenTransformEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
@@ -156,7 +142,7 @@ void ScreenTransformEffect::paintScreen(int mask, const QRegion &region, KWin::S
             shader->setUniform(GLShader::ModelViewProjectionMatrix, matrix);
 
             state.m_texture->bind();
-            state.m_texture->render(screen->geometry(), textureRect);
+            state.m_texture->render(textureRect);
             state.m_texture->unbind();
         }
         effects->addRepaintFull();
@@ -165,7 +151,7 @@ void ScreenTransformEffect::paintScreen(int mask, const QRegion &region, KWin::S
 
 void ScreenTransformEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
-    auto screen = effects->findScreen(w->screen());
+    auto screen = w->screen();
     if (isScreenTransforming(screen)) {
         auto &state = m_states[screen];
         if (!state.isSecondHalf()) {
@@ -177,7 +163,7 @@ void ScreenTransformEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &
 
 void ScreenTransformEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
-    auto screen = effects->findScreen(w->screen());
+    auto screen = w->screen();
     if (isScreenTransforming(screen)) {
         auto &state = m_states[screen];
         if (!state.isSecondHalf()) {

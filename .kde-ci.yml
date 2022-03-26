@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: None
+# SPDX-License-Identifier: CC0-1.0
+
+Dependencies:
+- 'on': ['@all']
+  'require':
+    'frameworks/breeze-icons': '@stable'
+    'frameworks/extra-cmake-modules': '@stable'
+    'frameworks/kconfig': '@stable'
+    'frameworks/kconfigwidgets': '@stable'
+    'frameworks/kcoreaddons': '@stable'
+    'frameworks/kcrash': '@stable'
+    'frameworks/kglobalaccel': '@stable'
+    'frameworks/ki18n': '@stable'
+    'frameworks/kidletime': '@stable'
+    'frameworks/knotifications': '@stable'
+    'frameworks/kpackage': '@stable'
+    'frameworks/plasma-framework': '@stable'
+    'frameworks/kwayland': '@stable'
+    'frameworks/kwidgetsaddons': '@stable'
+    'frameworks/kwindowsystem': '@stable'
+    'frameworks/kcompletion': '@stable'
+    'frameworks/kdeclarative': '@stable'
+    'frameworks/kcmutils': '@stable'
+    'frameworks/knewstuff': '@stable'
+    'frameworks/kservice': '@stable'
+    'frameworks/ktextwidgets': '@stable'
+    'frameworks/kxmlgui': '@stable'
+    'frameworks/kactivities': '@stable'
+    'frameworks/kdoctools': '@stable'
+    'frameworks/krunner': '@stable'
+    'frameworks/kirigami': '@stable'
+    'plasma/breeze': '@same'
+    'plasma/kdecoration': '@same'
+    'plasma/kscreenlocker': '@same'
+    'plasma/kwayland-server': '@same'

@@ -4,19 +4,17 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-
 #include "glide_config.h"
-// KConfigSkeleton
-#include "glideconfig.h"
+
 #include <config-kwin.h>
 
-#include <kwineffects_interface.h>
-#include <KAboutData>
-#include <KPluginFactory>
+// KConfigSkeleton
+#include "glideconfig.h"
 
-K_PLUGIN_FACTORY_WITH_JSON(GlideEffectConfigFactory,
-                           "glide_config.json",
-                           registerPlugin<KWin::GlideEffectConfig>();)
+#include <KPluginFactory>
+#include <kwineffects_interface.h>
+
+K_PLUGIN_CLASS(KWin::GlideEffectConfig)
 
 namespace KWin
 {
@@ -27,7 +25,6 @@ GlideEffectConfig::GlideEffectConfig(QWidget *parent, const QVariantList &args)
     ui.setupUi(this);
     GlideConfig::instance(KWIN_CONFIG);
     addConfig(GlideConfig::self(), this);
-    load();
 }
 
 GlideEffectConfig::~GlideEffectConfig()

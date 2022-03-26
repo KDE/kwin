@@ -42,7 +42,7 @@ public:
     explicit Dnd(xcb_atom_t atom, QObject *parent);
 
     static uint32_t version();
-    XwlDropHandler* dropHandler() const;
+    XwlDropHandler *dropHandler() const;
 
     void doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event) override;
     void x11OffersChanged(const QStringList &added, const QStringList &removed) override;

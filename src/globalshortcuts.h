@@ -22,6 +22,7 @@ namespace KWin
 {
 class GlobalShortcut;
 class SwipeGesture;
+class PinchGesture;
 class GestureRecognizer;
 
 /**
@@ -58,9 +59,13 @@ public:
      */
     void registerAxisShortcut(QAction *action, Qt::KeyboardModifiers modifiers, PointerAxisDirection axis);
 
-    void registerTouchpadSwipe(QAction *action, SwipeDirection direction);
+    void registerTouchpadSwipe(QAction *action, SwipeDirection direction, uint fingerCount = 4);
 
-    void registerRealtimeTouchpadSwipe(QAction *onUp, std::function<void(qreal)> progressCallback, SwipeDirection direction);
+    void registerRealtimeTouchpadSwipe(QAction *onUp, std::function<void(qreal)> progressCallback, SwipeDirection direction, uint fingerCount = 4);
+
+    void registerTouchpadPinch(QAction *action, PinchDirection direction, uint fingerCount = 4);
+
+    void registerRealtimeTouchpadPinch(QAction *onUp, std::function<void(qreal)> progressCallback, PinchDirection direction, uint fingerCount = 4);
 
     /**
      * @brief Processes a key event to decide whether a shortcut needs to be triggered.
@@ -92,6 +97,11 @@ public:
     void processSwipeUpdate(const QSizeF &delta);
     void processSwipeCancel();
     void processSwipeEnd();
+
+    void processPinchStart(uint fingerCount);
+    void processPinchUpdate(qreal scale, qreal angleDelta, const QSizeF &delta);
+    void processPinchCancel();
+    void processPinchEnd();
 
     void setKGlobalAccelInterface(KGlobalAccelInterface *interface)
     {
@@ -135,27 +145,52 @@ struct PointerAxisShortcut
         return axisModifiers == rhs.axisModifiers && axisDirection == rhs.axisDirection;
     }
 };
-struct FourFingerSwipeShortcut
+struct SwipeShortcut
 {
-    SwipeDirection swipeDirection;
-    bool operator==(const FourFingerSwipeShortcut &rhs) const
+    SwipeDirection direction;
+    uint fingerCount;
+    bool operator==(const SwipeShortcut &rhs) const
     {
-        return swipeDirection == rhs.swipeDirection;
+        return direction == rhs.direction && fingerCount == rhs.fingerCount;
     }
 };
-struct FourFingerRealtimeFeedbackSwipeShortcut
+struct RealtimeFeedbackSwipeShortcut
 {
-    SwipeDirection swipeDirection;
+    SwipeDirection direction;
     std::function<void(qreal)> progressCallback;
+    uint fingerCount;
 
     template<typename T>
-    bool operator==(const T& rhs) const
+    bool operator==(const T &rhs) const
     {
-        return swipeDirection == rhs.swipeDirection;
+        return direction == rhs.direction && fingerCount == rhs.fingerCount;
     }
 };
 
-using Shortcut = std::variant<KeyboardShortcut, PointerButtonShortcut, PointerAxisShortcut, FourFingerSwipeShortcut, FourFingerRealtimeFeedbackSwipeShortcut>;
+struct PinchShortcut
+{
+    PinchDirection direction;
+    uint fingerCount;
+    bool operator==(const PinchShortcut &rhs) const
+    {
+        return direction == rhs.direction && fingerCount == rhs.fingerCount;
+    }
+};
+
+struct RealtimeFeedbackPinchShortcut
+{
+    PinchDirection direction;
+    std::function<void(qreal)> scaleCallback;
+    uint fingerCount;
+
+    template<typename T>
+    bool operator==(const T &rhs) const
+    {
+        return direction == rhs.direction && fingerCount == rhs.fingerCount;
+    }
+};
+
+using Shortcut = std::variant<KeyboardShortcut, PointerButtonShortcut, PointerAxisShortcut, SwipeShortcut, RealtimeFeedbackSwipeShortcut, PinchShortcut, RealtimeFeedbackPinchShortcut>;
 
 class GlobalShortcut
 {
@@ -167,9 +202,11 @@ public:
     QAction *action() const;
     const Shortcut &shortcut() const;
     SwipeGesture *swipeGesture() const;
+    PinchGesture *pinchGesture() const;
 
 private:
-    QSharedPointer<SwipeGesture> m_gesture;
+    QSharedPointer<SwipeGesture> m_swipeGesture;
+    QSharedPointer<PinchGesture> m_pinchGesture;
     Shortcut m_shortcut = {};
     QAction *m_action = nullptr;
 };

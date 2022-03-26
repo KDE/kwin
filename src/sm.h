@@ -12,10 +12,10 @@
 #define KWIN_SM_H
 
 #include <QDataStream>
-#include <kwinglobals.h>
-#include <QStringList>
-#include <netwm_def.h>
 #include <QRect>
+#include <QStringList>
+#include <kwinglobals.h>
+#include <netwm_def.h>
 
 namespace KWin
 {
@@ -50,7 +50,8 @@ private:
     SessionState m_sessionState = SessionState::Normal;
 };
 
-struct SessionInfo {
+struct SessionInfo
+{
     QByteArray sessionId;
     QByteArray windowRole;
     QByteArray wmCommand;
@@ -82,10 +83,9 @@ struct SessionInfo {
     QStringList activities;
 };
 
-
 enum SMSavePhase {
-    SMSavePhase0,     // saving global state in "phase 0"
-    SMSavePhase2,     // saving window state in phase 2
+    SMSavePhase0, // saving global state in "phase 0"
+    SMSavePhase2, // saving window state in phase 2
     SMSavePhase2Full, // complete saving in phase2, there was no phase 0
 };
 

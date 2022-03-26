@@ -7,11 +7,11 @@
 
 #include "onscreennotificationtest.h"
 
-#include "onscreennotification.h"
 #include "input.h"
+#include "onscreennotification.h"
 
-#include <KSharedConfig>
 #include <KConfigGroup>
+#include <KSharedConfig>
 
 #include <QQmlEngine>
 #include <QSignalSpy>

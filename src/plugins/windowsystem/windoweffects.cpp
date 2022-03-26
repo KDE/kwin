@@ -4,7 +4,6 @@
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 #include "windoweffects.h"
-#include "effect_builtins.h"
 #include "effects.h"
 
 #include <QGuiApplication>
@@ -17,20 +16,23 @@ namespace KWin
 {
 
 WindowEffects::WindowEffects()
-    : QObject(),
-      KWindowEffectsPrivate()
+    : QObject()
+    , KWindowEffectsPrivate()
 {
 }
 
 WindowEffects::~WindowEffects()
-{}
+{
+}
 
 namespace
 {
 QWindow *findWindow(WId win)
 {
     const auto windows = qApp->allWindows();
-    auto it = std::find_if(windows.begin(), windows.end(), [win] (QWindow *w) { return w->winId() == win; });
+    auto it = std::find_if(windows.begin(), windows.end(), [win](QWindow *w) {
+        return w->winId() == win;
+    });
     if (it == windows.end()) {
         return nullptr;
     }
@@ -43,14 +45,14 @@ bool WindowEffects::isEffectAvailable(KWindowEffects::Effect effect)
     if (!effects) {
         return false;
     }
-    auto e = static_cast<EffectsHandlerImpl*>(effects);
+    auto e = static_cast<EffectsHandlerImpl *>(effects);
     switch (effect) {
     case KWindowEffects::BackgroundContrast:
-        return e->isEffectLoaded(BuiltInEffects::nameForEffect(BuiltInEffect::Contrast));
+        return e->isEffectLoaded(QStringLiteral("contrast"));
     case KWindowEffects::BlurBehind:
-        return e->isEffectLoaded(BuiltInEffects::nameForEffect(BuiltInEffect::Blur));
+        return e->isEffectLoaded(QStringLiteral("blur"));
     case KWindowEffects::Slide:
-        return e->isEffectLoaded(BuiltInEffects::nameForEffect(BuiltInEffect::SlidingPopups));
+        return e->isEffectLoaded(QStringLiteral("slidingpopups"));
     default:
         // plugin does not provide integration for other effects
         return false;

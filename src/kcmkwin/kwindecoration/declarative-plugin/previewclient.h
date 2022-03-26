@@ -44,9 +44,9 @@ class PreviewClient : public QObject, public ApplicationMenuEnabledDecoratedClie
     Q_PROPERTY(bool providesContextHelp READ providesContextHelp WRITE setProvidesContextHelp NOTIFY providesContextHelpChanged)
     Q_PROPERTY(int width READ width WRITE setWidth NOTIFY widthChanged)
     Q_PROPERTY(int height READ height WRITE setHeight NOTIFY heightChanged)
-    Q_PROPERTY(bool bordersTopEdge    READ bordersTopEdge    WRITE setBordersTopEdge    NOTIFY bordersTopEdgeChanged)
-    Q_PROPERTY(bool bordersLeftEdge   READ bordersLeftEdge   WRITE setBordersLeftEdge   NOTIFY bordersLeftEdgeChanged)
-    Q_PROPERTY(bool bordersRightEdge  READ bordersRightEdge  WRITE setBordersRightEdge  NOTIFY bordersRightEdgeChanged)
+    Q_PROPERTY(bool bordersTopEdge READ bordersTopEdge WRITE setBordersTopEdge NOTIFY bordersTopEdgeChanged)
+    Q_PROPERTY(bool bordersLeftEdge READ bordersLeftEdge WRITE setBordersLeftEdge NOTIFY bordersLeftEdgeChanged)
+    Q_PROPERTY(bool bordersRightEdge READ bordersRightEdge WRITE setBordersRightEdge NOTIFY bordersRightEdgeChanged)
     Q_PROPERTY(bool bordersBottomEdge READ bordersBottomEdge WRITE setBordersBottomEdge NOTIFY bordersBottomEdgeChanged)
 public:
     explicit PreviewClient(DecoratedClient *client, Decoration *decoration);
@@ -156,7 +156,7 @@ Q_SIGNALS:
     void desktopChanged(int);
     void widthChanged(int);
     void heightChanged(int);
-    void paletteChanged(const QPalette&);
+    void paletteChanged(const QPalette &);
     void bordersTopEdgeChanged(bool);
     void bordersLeftEdgeChanged(bool);
     void bordersRightEdgeChanged(bool);

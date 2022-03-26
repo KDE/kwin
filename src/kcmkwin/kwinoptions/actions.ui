@@ -34,7 +34,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="KComboBox" name="kcfg_CommandWindow1">
+       <widget class="QComboBox" name="kcfg_CommandWindow1">
         <property name="whatsThis">
          <string>In this row you can customize left click behavior when clicking into an inactive inner window ('inner' means: not titlebar, not frame).</string>
         </property>
@@ -74,7 +74,7 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="KComboBox" name="kcfg_CommandWindow2">
+       <widget class="QComboBox" name="kcfg_CommandWindow2">
         <property name="whatsThis">
          <string>In this row you can customize middle click behavior when clicking into an inactive inner window ('inner' means: not titlebar, not frame).</string>
         </property>
@@ -114,7 +114,7 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="KComboBox" name="kcfg_CommandWindow3">
+       <widget class="QComboBox" name="kcfg_CommandWindow3">
         <property name="whatsThis">
          <string>In this row you can customize right click behavior when clicking into an inactive inner window ('inner' means: not titlebar, not frame).</string>
         </property>
@@ -154,7 +154,7 @@
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="KComboBox" name="kcfg_CommandWindowWheel">
+       <widget class="QComboBox" name="kcfg_CommandWindowWheel">
         <property name="whatsThis">
          <string>In this row you can customize behavior when scrolling into an inactive inner window ('inner' means: not titlebar, not frame).</string>
         </property>
@@ -200,7 +200,7 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="KComboBox" name="kcfg_CommandAllKey">
+         <widget class="QComboBox" name="kcfg_CommandAllKey">
           <property name="whatsThis">
            <string>Here you select whether holding the Meta key or Alt key will allow you to perform the following actions.</string>
           </property>
@@ -256,7 +256,7 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="KComboBox" name="kcfg_CommandAll1">
+         <widget class="QComboBox" name="kcfg_CommandAll1">
           <property name="whatsThis">
            <string>In this row you can customize left click behavior when clicking into the titlebar or the frame.</string>
           </property>
@@ -326,7 +326,7 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="KComboBox" name="kcfg_CommandAll2">
+         <widget class="QComboBox" name="kcfg_CommandAll2">
           <property name="whatsThis">
            <string>In this row you can customize middle click behavior when clicking into the titlebar or the frame.</string>
           </property>
@@ -396,7 +396,7 @@
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="KComboBox" name="kcfg_CommandAll3">
+         <widget class="QComboBox" name="kcfg_CommandAll3">
           <property name="whatsThis">
            <string>In this row you can customize right click behavior when clicking into the titlebar or the frame.</string>
           </property>
@@ -466,7 +466,7 @@
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="KComboBox" name="kcfg_CommandAllWheel">
+         <widget class="QComboBox" name="kcfg_CommandAllWheel">
           <property name="whatsThis">
            <string>Here you can customize KDE's behavior when scrolling with the mouse wheel in a window while pressing the modifier key.</string>
           </property>
@@ -527,13 +527,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

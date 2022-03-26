@@ -7,10 +7,11 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
+#include "kwin_wayland_test.h"
+
 #include "abstract_client.h"
 #include "abstract_output.h"
 #include "cursor.h"
-#include "kwin_wayland_test.h"
 #include "platform.h"
 #include "screens.h"
 #include "wayland_server.h"
@@ -77,7 +78,7 @@ void TestPlacement::cleanup()
 
 void TestPlacement::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -109,7 +110,7 @@ PlaceWindowResult TestPlacement::createAndPlaceWindow(const QSize &defaultSize, 
 
     // create a new window
     auto surface = Test::createSurface(parent);
-    auto shellSurface = Test::createXdgToplevelSurface(surface, surface, Test::CreationSetup::CreateOnly);
+    auto shellSurface = Test::createXdgToplevelSurface(surface, Test::CreationSetup::CreateOnly, surface);
 
     QSignalSpy toplevelConfigureRequestedSpy(shellSurface, &Test::XdgToplevel::configureRequested);
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
@@ -136,7 +137,7 @@ void TestPlacement::testPlaceSmart()
 {
     setPlacementPolicy(Placement::Smart);
 
-    QScopedPointer<QObject> testParent(new QObject); //dumb QObject just for scoping surfaces to the test
+    QScopedPointer<QObject> testParent(new QObject); // dumb QObject just for scoping surfaces to the test
 
     QRegion usedArea;
 
@@ -166,7 +167,7 @@ void TestPlacement::testPlaceZeroCornered()
         QCOMPARE(windowPlacement.initiallyConfiguredSize, QSize(0, 0));
         // size should match our buffer
         QCOMPARE(windowPlacement.finalGeometry.size(), QSize(600, 500));
-        //and it should be in the corner
+        // and it should be in the corner
         QCOMPARE(windowPlacement.finalGeometry.topLeft(), QPoint(0, 0));
     }
 }
@@ -211,7 +212,7 @@ void TestPlacement::testPlaceMaximizedLeavesFullscreen()
     // all windows should be initially fullscreen with an initial configure size sent, despite the policy
     for (int i = 0; i < 4; i++) {
         auto surface = Test::createSurface(testParent.data());
-        auto shellSurface = Test::createXdgToplevelSurface(surface, surface, Test::CreationSetup::CreateOnly);
+        auto shellSurface = Test::createXdgToplevelSurface(surface, Test::CreationSetup::CreateOnly, surface);
         shellSurface->set_fullscreen(nullptr);
         QSignalSpy toplevelConfigureRequestedSpy(shellSurface, &Test::XdgToplevel::configureRequested);
         QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
@@ -225,7 +226,7 @@ void TestPlacement::testPlaceMaximizedLeavesFullscreen()
         auto c = Test::renderAndWaitForShown(surface, initiallyConfiguredSize, Qt::red);
 
         QVERIFY(initiallyConfiguredStates & Test::XdgToplevel::State::Fullscreen);
-        QCOMPARE(initiallyConfiguredSize, QSize(1280, 1024 ));
+        QCOMPARE(initiallyConfiguredSize, QSize(1280, 1024));
         QCOMPARE(c->frameGeometry(), QRect(0, 0, 1280, 1024));
     }
 }

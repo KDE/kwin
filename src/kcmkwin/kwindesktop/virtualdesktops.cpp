@@ -8,8 +8,8 @@
 #include "virtualdesktops.h"
 #include "animationsmodel.h"
 #include "desktopsmodel.h"
-#include "virtualdesktopssettings.h"
 #include "virtualdesktopsdata.h"
+#include "virtualdesktopssettings.h"
 
 #include <KAboutApplicationDialog>
 #include <KAboutData>
@@ -30,20 +30,20 @@ VirtualDesktops::VirtualDesktops(QObject *parent, const QVariantList &args)
     , m_data(new VirtualDesktopsData(this))
 {
     KAboutData *about = new KAboutData(QStringLiteral("kcm_kwin_virtualdesktops"),
-        i18n("Virtual Desktops"),
-        QStringLiteral("2.0"), QString(), KAboutLicense::GPL);
+                                       i18n("Virtual Desktops"),
+                                       QStringLiteral("2.0"), QString(), KAboutLicense::GPL);
     setAboutData(about);
 
-    qmlRegisterType<VirtualDesktopsSettings>();
+    qmlRegisterAnonymousType<VirtualDesktopsSettings>("org.kde.kwin.kcm.desktop", 0);
 
     setButtons(Apply | Default);
 
     QObject::connect(m_data->desktopsModel(), &KWin::DesktopsModel::userModifiedChanged,
-        this, &VirtualDesktops::settingsChanged);
+                     this, &VirtualDesktops::settingsChanged);
     connect(m_data->animationsModel(), &AnimationsModel::animationEnabledChanged,
-        this, &VirtualDesktops::settingsChanged);
+            this, &VirtualDesktops::settingsChanged);
     connect(m_data->animationsModel(), &AnimationsModel::animationIndexChanged,
-        this, &VirtualDesktops::settingsChanged);
+            this, &VirtualDesktops::settingsChanged);
 }
 
 VirtualDesktops::~VirtualDesktops()
@@ -81,7 +81,7 @@ void VirtualDesktops::save()
     m_data->animationsModel()->save();
 
     QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/KWin"),
-        QStringLiteral("org.kde.KWin"), QStringLiteral("reloadConfig"));
+                                                      QStringLiteral("org.kde.KWin"), QStringLiteral("reloadConfig"));
     QDBusConnection::sessionBus().send(message);
 }
 
@@ -115,25 +115,25 @@ void VirtualDesktops::showAboutAnimation()
         return;
     }
 
-    const QString name    = index.data(AnimationsModel::NameRole).toString();
+    const QString name = index.data(AnimationsModel::NameRole).toString();
     const QString comment = index.data(AnimationsModel::DescriptionRole).toString();
-    const QString author  = index.data(AnimationsModel::AuthorNameRole).toString();
-    const QString email   = index.data(AnimationsModel::AuthorEmailRole).toString();
+    const QString author = index.data(AnimationsModel::AuthorNameRole).toString();
+    const QString email = index.data(AnimationsModel::AuthorEmailRole).toString();
     const QString website = index.data(AnimationsModel::WebsiteRole).toString();
     const QString version = index.data(AnimationsModel::VersionRole).toString();
     const QString license = index.data(AnimationsModel::LicenseRole).toString();
-    const QString icon    = index.data(AnimationsModel::IconNameRole).toString();
+    const QString icon = index.data(AnimationsModel::IconNameRole).toString();
 
     const KAboutLicense::LicenseKey licenseType = KAboutLicense::byKeyword(license).key();
 
     KAboutData aboutData(
-        name,              // Plugin name
-        name,              // Display name
-        version,           // Version
-        comment,           // Short description
-        licenseType,       // License
-        QString(),         // Copyright statement
-        QString(),         // Other text
+        name, // Plugin name
+        name, // Display name
+        version, // Version
+        comment, // Short description
+        licenseType, // License
+        QString(), // Copyright statement
+        QString(), // Other text
         website.toLatin1() // Home page
     );
     aboutData.setProgramLogo(icon);
@@ -164,4 +164,5 @@ bool VirtualDesktops::isSaveNeeded() const
 
 }
 
+#include "moc_virtualdesktops.cpp"
 #include "virtualdesktops.moc"

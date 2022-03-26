@@ -21,11 +21,12 @@ class BrightnessSaturationShader : public QSGMaterialShader
 {
 public:
     BrightnessSaturationShader();
-    const char* vertexShader() const override;
-    const char* fragmentShader() const override;
-    const char*const* attributeNames() const override;
-    void updateState(const RenderState& state, QSGMaterial* newMaterial, QSGMaterial* oldMaterial) override;
+    const char *vertexShader() const override;
+    const char *fragmentShader() const override;
+    const char *const *attributeNames() const override;
+    void updateState(const RenderState &state, QSGMaterial *newMaterial, QSGMaterial *oldMaterial) override;
     void initialize() override;
+
 private:
     int m_id_matrix;
     int m_id_opacity;
@@ -36,10 +37,12 @@ private:
 class BrightnessSaturationMaterial : public QSGTextureMaterial
 {
 public:
-    QSGMaterialShader* createShader() const override {
+    QSGMaterialShader *createShader() const override
+    {
         return new BrightnessSaturationShader;
     }
-    QSGMaterialType *type() const override {
+    QSGMaterialType *type() const override
+    {
         static QSGMaterialType type;
         return &type;
     }
@@ -54,35 +57,43 @@ class WindowThumbnailItem : public QQuickItem
     Q_PROPERTY(QQuickItem *clipTo READ clipTo WRITE setClipTo NOTIFY clipToChanged)
     Q_PROPERTY(qreal brightness READ brightness WRITE setBrightness NOTIFY brightnessChanged)
     Q_PROPERTY(qreal saturation READ saturation WRITE setSaturation NOTIFY saturationChanged)
+    Q_PROPERTY(QSize sourceSize READ sourceSize WRITE setSourceSize NOTIFY sourceSizeChanged)
 public:
     explicit WindowThumbnailItem(QQuickItem *parent = nullptr);
     ~WindowThumbnailItem() override;
 
-    qulonglong wId() const {
+    qulonglong wId() const
+    {
         return m_wId;
     }
-    QQuickItem *clipTo() const {
+    QQuickItem *clipTo() const
+    {
         return m_clipToItem;
     }
     qreal brightness() const;
     qreal saturation() const;
+    QSize sourceSize() const;
     void setWId(qulonglong wId);
     void setClipTo(QQuickItem *clip);
     void setBrightness(qreal brightness);
     void setSaturation(qreal saturation);
+    void setSourceSize(const QSize &size);
     QSGNode *updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *updatePaintNodeData) override;
 
     enum Thumbnail {
         Konqueror = 1,
         KMail,
         Systemsettings,
-        Dolphin
+        Dolphin,
+        Desktop,
     };
 Q_SIGNALS:
     void wIdChanged(qulonglong wid);
     void clipToChanged();
     void brightnessChanged();
     void saturationChanged();
+    void sourceSizeChanged();
+
 private:
     void findImage();
     qulonglong m_wId;
@@ -90,6 +101,7 @@ private:
     QQuickItem *m_clipToItem;
     qreal m_brightness;
     qreal m_saturation;
+    QSize m_sourceSize;
 };
 
 } // KWin

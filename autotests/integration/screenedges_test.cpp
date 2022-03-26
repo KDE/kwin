@@ -14,12 +14,10 @@
 #include "cursor.h"
 #include "effectloader.h"
 #include "main.h"
-#include "screenedge.h"
 #include "platform.h"
+#include "screenedge.h"
 #include "wayland_server.h"
 #include "workspace.h"
-
-#include "effect_builtins.h"
 
 #include <KConfigGroup>
 #include <KWayland/Client/surface.h>
@@ -77,8 +75,7 @@ void ScreenEdgesTest::initTestCase()
     // Disable effects, in particular present windows, which reserves a screen edge.
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     KConfigGroup plugins(config, QStringLiteral("Plugins"));
-    ScriptedEffectLoader loader;
-    const auto builtinNames = BuiltInEffects::availableEffectNames() << loader.listOfKnownEffects();
+    const auto builtinNames = EffectLoader().listOfKnownEffects();
     for (const QString &name : builtinNames) {
         plugins.writeEntry(name + QStringLiteral("Enabled"), false);
     }
@@ -159,16 +156,16 @@ void ScreenEdgesTest::testTouchCallback()
 
     // press the finger
     QFETCH(QPointF, startPos);
-    kwinApp()->platform()->touchDown(1, startPos, timestamp++);
+    Test::touchDown(1, startPos, timestamp++);
     QVERIFY(actionTriggeredSpy.isEmpty());
 
     // move the finger
     QFETCH(QPointF, delta);
-    kwinApp()->platform()->touchMotion(1, startPos + delta, timestamp++);
+    Test::touchMotion(1, startPos + delta, timestamp++);
     QVERIFY(actionTriggeredSpy.isEmpty());
 
     // release the finger
-    kwinApp()->platform()->touchUp(1, timestamp++);
+    Test::touchUp(1, timestamp++);
     QVERIFY(actionTriggeredSpy.wait());
     QCOMPARE(actionTriggeredSpy.count(), 1);
 
@@ -236,7 +233,7 @@ void ScreenEdgesTest::testPushBack()
     s->reserve(border, &callback, "callback");
 
     QFETCH(QPoint, trigger);
-    kwinApp()->platform()->pointerMotion(trigger, 0);
+    Test::pointerMotion(trigger, 0);
     QVERIFY(spy.isEmpty());
     QTEST(Cursors::self()->mouse()->pos(), "expected");
 }
@@ -270,17 +267,17 @@ void ScreenEdgesTest::testClientEdge()
     ScreenEdges::self()->reserve(client, border);
 
     // Hide the window.
-    client->hideClient(true);
+    client->hideClient();
     QVERIFY(client->isHiddenInternal());
 
     // Trigger the screen edge.
     QFETCH(QPointF, triggerPoint);
     quint32 timestamp = 0;
-    kwinApp()->platform()->pointerMotion(triggerPoint, timestamp);
+    Test::pointerMotion(triggerPoint, timestamp);
     QVERIFY(client->isHiddenInternal());
 
     timestamp += 150 + 1;
-    kwinApp()->platform()->pointerMotion(triggerPoint, timestamp);
+    Test::pointerMotion(triggerPoint, timestamp);
     QTRY_VERIFY(!client->isHiddenInternal());
 }
 
@@ -312,37 +309,37 @@ void ScreenEdgesTest::testObjectEdge()
 
     // doesn't trigger as the edge was not triggered yet
     qint64 timestamp = 0;
-    kwinApp()->platform()->pointerMotion(triggerPoint + delta, timestamp);
+    Test::pointerMotion(triggerPoint + delta, timestamp);
     QVERIFY(spy.isEmpty());
 
     // test doesn't trigger due to too much offset
     timestamp += 160;
-    kwinApp()->platform()->pointerMotion(triggerPoint, timestamp);
+    Test::pointerMotion(triggerPoint, timestamp);
     QVERIFY(spy.isEmpty());
 
     // doesn't activate as we are waiting too short
     timestamp += 50;
-    kwinApp()->platform()->pointerMotion(triggerPoint, timestamp);
+    Test::pointerMotion(triggerPoint, timestamp);
     QVERIFY(spy.isEmpty());
 
     // and this one triggers
     timestamp += 110;
-    kwinApp()->platform()->pointerMotion(triggerPoint, timestamp);
+    Test::pointerMotion(triggerPoint, timestamp);
     QVERIFY(!spy.isEmpty());
 
     // now let's try to trigger again
     timestamp += 351;
-    kwinApp()->platform()->pointerMotion(triggerPoint, timestamp);
+    Test::pointerMotion(triggerPoint, timestamp);
     QCOMPARE(spy.count(), 1);
 
     // it's still under the reactivation
     timestamp += 50;
-    kwinApp()->platform()->pointerMotion(triggerPoint, timestamp);
+    Test::pointerMotion(triggerPoint, timestamp);
     QCOMPARE(spy.count(), 1);
 
     // now it should trigger again
     timestamp += 250;
-    kwinApp()->platform()->pointerMotion(triggerPoint, timestamp);
+    Test::pointerMotion(triggerPoint, timestamp);
     QCOMPARE(spy.count(), 2);
 }
 

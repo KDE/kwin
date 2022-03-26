@@ -23,7 +23,7 @@ class VirtualDesktops : public KQuickAddons::ManagedConfigModule
 {
     Q_OBJECT
 
-    Q_PROPERTY(QAbstractItemModel* desktopsModel READ desktopsModel CONSTANT)
+    Q_PROPERTY(QAbstractItemModel *desktopsModel READ desktopsModel CONSTANT)
     Q_PROPERTY(QAbstractItemModel *animationsModel READ animationsModel CONSTANT)
     Q_PROPERTY(VirtualDesktopsSettings *virtualDesktopsSettings READ virtualDesktopsSettings CONSTANT)
 

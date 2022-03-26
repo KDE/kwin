@@ -21,8 +21,6 @@
 
 #include "decorations/decoratedclient.h"
 
-#include "effect_builtins.h"
-
 #include <KWayland/Client/surface.h>
 
 #include <linux/input.h>
@@ -59,8 +57,7 @@ void PopupOpenCloseAnimationTest::initTestCase()
 
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     KConfigGroup plugins(config, QStringLiteral("Plugins"));
-    ScriptedEffectLoader loader;
-    const auto builtinNames = BuiltInEffects::availableEffectNames() << loader.listOfKnownEffects();
+    const auto builtinNames = EffectLoader().listOfKnownEffects();
     for (const QString &name : builtinNames) {
         plugins.writeEntry(name + QStringLiteral("Enabled"), false);
     }
@@ -189,8 +186,8 @@ void PopupOpenCloseAnimationTest::testAnimateUserActionsPopup()
     QTRY_VERIFY(!effect->isActive());
 
     // Close the user actions popup.
-    kwinApp()->platform()->keyboardKeyPressed(KEY_ESC, 0);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_ESC, 1);
+    Test::keyboardKeyPressed(KEY_ESC, 0);
+    Test::keyboardKeyReleased(KEY_ESC, 1);
     QTRY_VERIFY(!userActionsMenu->isShown());
     QVERIFY(!userActionsMenu->hasClient());
     QVERIFY(effect->isActive());
@@ -216,11 +213,17 @@ void PopupOpenCloseAnimationTest::testAnimateDecorationTooltips()
     using namespace KWayland::Client;
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QVERIFY(!shellSurface.isNull());
     QScopedPointer<Test::XdgToplevelDecorationV1> deco(Test::createXdgToplevelDecorationV1(shellSurface.data()));
     QVERIFY(!deco.isNull());
+
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     deco->set_mode(Test::XdgToplevelDecorationV1::mode_server_side);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
     QVERIFY(client->isDecorated());

@@ -3,139 +3,38 @@ add_definitions(-DTRANSLATION_DOMAIN=\"kwin_effects\" -DEFFECT_BUILTINS)
 
 include_directories(${KWin_SOURCE_DIR}/src) # for xcbutils.h
 
-if (HAVE_ACCESSIBILITY)
-    include_directories(${QACCESSIBILITYCLIENT_INCLUDE_DIR})
-endif()
+function(kwin_add_effect_config name)
+    list(REMOVE_ITEM ARGV ${name})
+    kcoreaddons_add_plugin(${name} INSTALL_NAMESPACE "kwin/effects/configs" SOURCES ${ARGV})
+endfunction()
 
-set(kwin_effect_OWN_LIBS
-    kwineffects
-)
+# Add a CMake-time check for python3 to avoid failures during build.
+find_package (Python3 COMPONENTS Interpreter)
+add_feature_info("Python3" Python3_Interpreter_FOUND "Required to strip effects metadata")
+set(KSEM_EXE "${CMAKE_CURRENT_SOURCE_DIR}/strip-effect-metadata.py")
 
-set(kwin_effect_KDE_LIBS
-    KF5::ConfigGui
-    KF5::ConfigWidgets
-    KF5::GlobalAccel
-    KF5::I18n
-    KF5::Notifications # screenshot effect
-    KF5::Plasma # screenedge effect
-    KF5::WindowSystem
-    KF5::Service # utils / screenshot effect
-)
+function (kwin_strip_builtin_effect_metadata target metadata)
+    set(stripped_metadata "${CMAKE_CURRENT_BINARY_DIR}/${metadata}.stripped")
 
-if (HAVE_ACCESSIBILITY)
-    set(kwin_effect_KDE_LIBS ${kwin_effect_KDE_LIBS} ${QACCESSIBILITYCLIENT_LIBRARY})
-endif()
-
-set(kwin_effect_QT_LIBS
-    Qt::Concurrent
-    Qt::DBus
-    Qt::Quick
-    Qt::X11Extras
-)
-
-set(kwin_effect_XLIB_LIBS
-    ${X11_X11_LIB}
-)
-
-set(kwin_effect_XCB_LIBS
-    XCB::IMAGE
-    XCB::XCB
-    XCB::XFIXES
-)
-
-set(kwin_effect_OWN_LIBS ${kwin_effect_OWN_LIBS} kwinglutils)
-
-macro(KWIN4_ADD_EFFECT_BACKEND name)
-    add_library(${name} SHARED ${ARGN})
-    target_link_libraries(${name} PRIVATE
-        ${kwin_effect_KDE_LIBS}
-        ${kwin_effect_OWN_LIBS}
-        ${kwin_effect_QT_LIBS}
-        ${kwin_effect_XCB_LIBS}
-        ${kwin_effect_XLIB_LIBS}
+    set(command ${KSEM_EXE} --source=${metadata} --output=${stripped_metadata})
+    add_custom_command(
+        OUTPUT ${stripped_metadata}
+        COMMAND ${command}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        DEPENDS ${metadata}
+        COMMENT "Stripping ${metadata}..."
     )
-endmacro()
+    set_property(TARGET ${target} APPEND PROPERTY AUTOGEN_TARGET_DEPENDS ${stripped_metadata})
+endfunction()
 
-# Adds effect plugin with given name. Sources are given after the name
-macro(KWIN4_ADD_EFFECT name)
-    kwin4_add_effect_backend(kwin4_effect_${name} ${ARGN})
-
-    set_target_properties(kwin4_effect_${name} PROPERTIES VERSION 1.0.0 SOVERSION 1)
-    set_target_properties(kwin4_effect_${name} PROPERTIES OUTPUT_NAME ${KWIN_NAME}4_effect_${name})
-    install(TARGETS kwin4_effect_${name} ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+macro(KWIN4_ADD_EFFECT_MODULE name)
+    kcoreaddons_add_plugin(${name} STATIC SOURCES ${ARGN} INSTALL_NAMESPACE "kwin/effects/plugins")
+    kwin_strip_builtin_effect_metadata(${name} metadata.json)
+    install(FILES metadata.json DESTINATION ${KDE_INSTALL_DATADIR}/${KWIN_NAME}/builtin-effects/${name}/)
 endmacro()
 
 # Install the KWin/Effect service type
-install(FILES kwineffect.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPES5DIR})
-
-# Create initial variables
-set(kwin4_effect_include_directories)
-
-set(kwin4_effect_builtins_sources
-    blur/blur.cpp
-    blur/blurshader.cpp
-    colorpicker/colorpicker.cpp
-    desktopgrid/desktopgrid.cpp
-    diminactive/diminactive.cpp
-    effect_builtins.cpp
-    glide/glide.cpp
-    invert/invert.cpp
-    logging.cpp
-    lookingglass/lookingglass.cpp
-    magiclamp/magiclamp.cpp
-    magnifier/magnifier.cpp
-    mouseclick/mouseclick.cpp
-    mousemark/mousemark.cpp
-    overview/expoarea.cpp
-    overview/expolayout.cpp
-    overview/overvieweffect.cpp
-    presentwindows/presentwindows.cpp
-    presentwindows/presentwindows_proxy.cpp
-    resize/resize.cpp
-    showfps/showfps.cpp
-    showpaint/showpaint.cpp
-    slide/slide.cpp
-    thumbnailaside/thumbnailaside.cpp
-    touchpoints/touchpoints.cpp
-    trackmouse/trackmouse.cpp
-    windowgeometry/windowgeometry.cpp
-    wobblywindows/wobblywindows.cpp
-    zoom/zoom.cpp
-    ../service_utils.cpp
-)
-
-if (HAVE_ACCESSIBILITY)
-    set(kwin4_effect_builtins_sources
-        zoom/accessibilityintegration.cpp
-        ${kwin4_effect_builtins_sources}
-    )
-endif()
-
-qt5_add_resources(kwin4_effect_builtins_sources shaders.qrc)
-
-kconfig_add_kcfg_files(kwin4_effect_builtins_sources
-    blur/blurconfig.kcfgc
-    desktopgrid/desktopgridconfig.kcfgc
-    diminactive/diminactiveconfig.kcfgc
-    fallapart/fallapartconfig.kcfgc
-    glide/glideconfig.kcfgc
-    lookingglass/lookingglassconfig.kcfgc
-    magiclamp/magiclampconfig.kcfgc
-    magnifier/magnifierconfig.kcfgc
-    mouseclick/mouseclickconfig.kcfgc
-    mousemark/mousemarkconfig.kcfgc
-    overview/overviewconfig.kcfgc
-    presentwindows/presentwindowsconfig.kcfgc
-    resize/resizeconfig.kcfgc
-    showfps/showfpsconfig.kcfgc
-    slide/slideconfig.kcfgc
-    slidingpopups/slidingpopupsconfig.kcfgc
-    thumbnailaside/thumbnailasideconfig.kcfgc
-    trackmouse/trackmouseconfig.kcfgc
-    windowgeometry/windowgeometryconfig.kcfgc
-    wobblywindows/wobblywindowsconfig.kcfgc
-    zoom/zoomconfig.kcfgc
-)
+install(FILES kwineffect.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPESDIR})
 
 # scripted effects
 function(install_scripted_effect name)
@@ -166,43 +65,38 @@ install_scripted_effect(sessionquit)
 # Built-in effects go here
 
 # Common effects
+add_subdirectory(colorpicker)
 add_subdirectory(desktopgrid)
 add_subdirectory(diminactive)
-include(fallapart/CMakeLists.txt)
-include(highlightwindow/CMakeLists.txt)
-include(kscreen/CMakeLists.txt)
-include(screentransform/CMakeLists.txt)
+add_subdirectory(fallapart)
+add_subdirectory(highlightwindow)
+add_subdirectory(kscreen)
+add_subdirectory(screentransform)
 add_subdirectory(magiclamp)
 add_subdirectory(overview)
 add_subdirectory(presentwindows)
-add_subdirectory(resize)
-include(screenedge/CMakeLists.txt)
+add_subdirectory(screenedge)
 add_subdirectory(showfps)
 add_subdirectory(showpaint)
 add_subdirectory(slide)
-include(slideback/CMakeLists.txt)
-include(slidingpopups/CMakeLists.txt)
+add_subdirectory(slideback)
+add_subdirectory(slidingpopups)
 add_subdirectory(thumbnailaside)
-add_subdirectory(windowgeometry)
+add_subdirectory(touchpoints)
 add_subdirectory(zoom)
 
 # OpenGL-specific effects
 add_subdirectory(blur)
-include(backgroundcontrast/CMakeLists.txt)
+add_subdirectory(backgroundcontrast)
 add_subdirectory(glide)
 add_subdirectory(invert)
 add_subdirectory(lookingglass)
 add_subdirectory(magnifier)
 add_subdirectory(mouseclick)
 add_subdirectory(mousemark)
-include(screenshot/CMakeLists.txt)
-include(sheet/CMakeLists.txt)
-include(snaphelper/CMakeLists.txt)
-include(startupfeedback/CMakeLists.txt)
+add_subdirectory(screenshot)
+add_subdirectory(sheet)
+add_subdirectory(snaphelper)
+add_subdirectory(startupfeedback)
 add_subdirectory(trackmouse)
 add_subdirectory(wobblywindows)
-
-###############################################################################
-
-# Add the builtins plugin
-kwin4_add_effect(builtins ${kwin4_effect_builtins_sources})

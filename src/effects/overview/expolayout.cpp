@@ -282,9 +282,6 @@ void ExpoLayout::updatePolish()
         case LayoutClosest:
             calculateWindowTransformationsClosest();
             break;
-        case LayoutKompose:
-            calculateWindowTransformationsKompose();
-            break;
         case LayoutNatural:
             calculateWindowTransformationsNatural();
             break;
@@ -307,12 +304,20 @@ void ExpoLayout::removeCell(ExpoCell *cell)
     polish();
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void ExpoLayout::geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry)
+#else
+void ExpoLayout::geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry)
+#endif
 {
     if (newGeometry.size() != oldGeometry.size()) {
         polish();
     }
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QQuickItem::geometryChanged(newGeometry, oldGeometry);
+#else
+    QQuickItem::geometryChange(newGeometry, oldGeometry);
+#endif
 }
 
 static int distance(const QPoint &a, const QPoint &b)
@@ -325,7 +330,7 @@ static int distance(const QPoint &a, const QPoint &b)
 static QRect centered(ExpoCell *cell, const QRect &bounds)
 {
     const QSize scaled = QSize(cell->naturalWidth(), cell->naturalHeight())
-            .scaled(bounds.size(), Qt::KeepAspectRatio);
+                             .scaled(bounds.size(), Qt::KeepAspectRatio);
 
     return QRect(bounds.center().x() - scaled.width() / 2,
                  bounds.center().y() - scaled.height() / 2,
@@ -362,7 +367,7 @@ void ExpoLayout::calculateWindowTransformationsClosest()
         int slotCandidate = -1, slotCandidateDistance = INT_MAX;
         const QPoint pos = cell->naturalRect().center();
 
-        for (int i = 0; i < columns*rows; ++i) { // all slots
+        for (int i = 0; i < columns * rows; ++i) { // all slots
             const int dist = distance(pos, slotCenters[i]);
             if (dist < slotCandidateDistance) { // window is interested in this slot
                 ExpoCell *occupier = takenSlots[i];
@@ -392,7 +397,7 @@ void ExpoLayout::calculateWindowTransformationsClosest()
         QRect target(area.x() + (slot % columns) * slotWidth,
                      area.y() + (slot / columns) * slotHeight,
                      slotWidth, slotHeight);
-        target.adjust(m_spacing, m_spacing, -m_spacing, -m_spacing);   // Borders
+        target.adjust(m_spacing, m_spacing, -m_spacing, -m_spacing); // Borders
         target = target.marginsRemoved(cell->margins());
 
         qreal scale;
@@ -411,9 +416,9 @@ void ExpoLayout::calculateWindowTransformationsClosest()
         if (scale > 2.0 || (scale > 1.0 && (cell->naturalWidth() > 300 || cell->naturalHeight() > 300))) {
             scale = (cell->naturalWidth() > 300 || cell->naturalHeight() > 300) ? 1.0 : 2.0;
             target = QRect(
-                         target.center().x() - int(cell->naturalWidth() * scale) / 2,
-                         target.center().y() - int(cell->naturalHeight() * scale) / 2,
-                         scale * cell->naturalWidth(), scale * cell->naturalHeight());
+                target.center().x() - int(cell->naturalWidth() * scale) / 2,
+                target.center().y() - int(cell->naturalHeight() * scale) / 2,
+                scale * cell->naturalWidth(), scale * cell->naturalHeight());
         }
 
         cell->setX(target.x());
@@ -423,156 +428,9 @@ void ExpoLayout::calculateWindowTransformationsClosest()
     }
 }
 
-static inline qreal aspectRatio(ExpoCell *cell)
-{
-    return cell->naturalWidth() / qreal(cell->naturalHeight());
-}
-
-static inline int widthForHeight(ExpoCell *cell, int height)
-{
-    return int((height / qreal(cell->naturalHeight())) * cell->naturalWidth());
-}
-
 static inline int heightForWidth(ExpoCell *cell, int width)
 {
     return int((width / qreal(cell->naturalWidth())) * cell->naturalHeight());
-}
-
-void ExpoLayout::calculateWindowTransformationsKompose()
-{
-    const QRect availRect = QRect(0, 0, width(), height());
-    std::sort(m_cells.begin(), m_cells.end(), [](const ExpoCell *a, const ExpoCell *b) {
-        return a->persistentKey() < b->persistentKey();
-    });   // The location of the windows should not depend on the stacking order
-
-    // Following code is taken from Kompose 0.5.4, src/komposelayout.cpp
-    int rows, columns;
-    qreal parentRatio = availRect.width() / qreal(availRect.height());
-    // Use more columns than rows when parent's width > parent's height
-    if (parentRatio > 1) {
-        columns = std::ceil(std::sqrt(qreal(m_cells.count())));
-        rows = std::ceil(qreal(m_cells.count()) / columns);
-    } else {
-        rows = std::ceil(sqrt(qreal(m_cells.count())));
-        columns = std::ceil(qreal(m_cells.count()) / rows);
-    }
-    //qCDebug(KWINEFFECTS) << "Using " << rows << " rows & " << columns << " columns for " << windowlist.count() << " clients";
-
-    // Calculate width & height
-    int w = (availRect.width() - (columns + 1) * m_spacing) / columns;
-    int h = (availRect.height() - (rows + 1) * m_spacing) / rows;
-
-    QList<ExpoCell *>::iterator it(m_cells.begin());
-    QList<QRect> geometryRects;
-    QList<int> maxRowHeights;
-    // Process rows
-    for (int i = 0; i < rows; ++i) {
-        int xOffsetFromLastCol = 0;
-        int maxHeightInRow = 0;
-        // Process columns
-        for (int j = 0; j < columns; ++j) {
-            ExpoCell *cell;
-
-            // Check for end of List
-            if (it == m_cells.end()) {
-                break;
-            }
-            cell = *it;
-
-            // Calculate width and height of widget
-            qreal ratio = aspectRatio(cell);
-
-            int widgetWidth = 100;
-            int widgetHeight = 100;
-            int usableWidth = w;
-            int usableHeight = h;
-
-            // use width of two boxes if there is no right neighbour
-            if (cell == m_cells.last() && j != columns - 1) {
-                usableWidth = 2 * w;
-            }
-            ++it; // We need access to the neighbour in the following
-            // expand if right neighbour has ratio < 1
-            if (j != columns - 1 && it != m_cells.end() && aspectRatio(*it) < 1) {
-                int addW = w - widthForHeight(*it, h);
-                if (addW > 0) {
-                    usableWidth = w + addW;
-                }
-            }
-
-            if (ratio == -1) {
-                widgetWidth = w;
-                widgetHeight = h;
-            } else {
-                qreal widthByHeight = widthForHeight(cell, usableHeight);
-                qreal heightByWidth = heightForWidth(cell, usableWidth);
-                if ((ratio >= 1.0 && heightByWidth <= usableHeight) ||
-                        (ratio < 1.0 && widthByHeight > usableWidth)) {
-                    widgetWidth = usableWidth;
-                    widgetHeight = (int)heightByWidth;
-                } else if ((ratio < 1.0 && widthByHeight <= usableWidth) ||
-                           (ratio >= 1.0 && heightByWidth > usableHeight)) {
-                    widgetHeight = usableHeight;
-                    widgetWidth = (int)widthByHeight;
-                }
-                // Don't upscale large-ish windows
-                if (widgetWidth > cell->naturalWidth() && (cell->naturalWidth() > 300 || cell->naturalHeight() > 300)) {
-                    widgetWidth = cell->naturalWidth();
-                    widgetHeight = cell->naturalHeight();
-                }
-            }
-
-            // Set the Widget's size
-
-            int alignmentXoffset = 0;
-            int alignmentYoffset = 0;
-            if (i == 0 && h > widgetHeight) {
-                alignmentYoffset = h - widgetHeight;
-            }
-            if (j == 0 && w > widgetWidth) {
-                alignmentXoffset = w - widgetWidth;
-            }
-            QRect geom(availRect.x() + j *(w + m_spacing) + m_spacing + alignmentXoffset + xOffsetFromLastCol,
-                       availRect.y() + i *(h + m_spacing) + m_spacing + alignmentYoffset,
-                       widgetWidth, widgetHeight);
-            geometryRects.append(geom);
-
-            // Set the x offset for the next column
-            if (alignmentXoffset == 0) {
-                xOffsetFromLastCol += widgetWidth - w;
-            }
-            if (maxHeightInRow < widgetHeight) {
-                maxHeightInRow = widgetHeight;
-            }
-        }
-        maxRowHeights.append(maxHeightInRow);
-    }
-
-    int topOffset = 0;
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < columns; j++) {
-            const int pos = i * columns + j;
-            if (pos >= m_cells.count()) {
-                break;
-            }
-
-            ExpoCell *cell = m_cells[pos];
-            QRect target = geometryRects[pos];
-            target.setY(target.y() + topOffset);
-            // @Marrtin: any idea what this is good for?
-//             DataHash::iterator winData = m_windowData.find(window);
-//             if (winData != m_windowData.end())
-//                 winData->slot = pos;
-
-            cell->setX(target.x());
-            cell->setY(target.y());
-            cell->setWidth(target.width());
-            cell->setHeight(target.height());
-        }
-        if (maxRowHeights[i] - h > 0) {
-            topOffset += maxRowHeights[i] - h;
-        }
-    }
 }
 
 static bool isOverlappingAny(ExpoCell *w, const QHash<ExpoCell *, QRect> &targets, const QRegion &border, int spacing)
@@ -601,18 +459,7 @@ static bool isOverlappingAny(ExpoCell *w, const QHash<ExpoCell *, QRect> &target
 
 void ExpoLayout::calculateWindowTransformationsNatural()
 {
-    QRect area = QRect(0, 0, width(), height());
-    if (m_cells.count() == 1) {
-        // Just move the window to its original location to save time
-        ExpoCell *cell = m_cells.constFirst();
-        if (area.contains(cell->naturalRect().marginsAdded(cell->margins()))) {
-            cell->setX(cell->naturalX());
-            cell->setY(cell->naturalY());
-            cell->setWidth(cell->naturalWidth());
-            cell->setHeight(cell->naturalHeight());
-            return;
-        }
-    }
+    const QRect area = QRect(0, 0, width(), height());
 
     // As we are using pseudo-random movement (See "slot") we need to make sure the list
     // is always sorted the same way no matter which window is currently active.
@@ -620,7 +467,7 @@ void ExpoLayout::calculateWindowTransformationsNatural()
         return a->persistentKey() < b->persistentKey();
     });
 
-    QRect bounds = area;
+    QRect bounds;
     int direction = 0;
     QHash<ExpoCell *, QRect> targets;
     QHash<ExpoCell *, int> directions;
@@ -663,9 +510,9 @@ void ExpoLayout::calculateWindowTransformationsNatural()
                         diff.setX(1);
                     }
                     // Try to keep screen aspect ratio
-                    //if (bounds.height() / bounds.width() > area.height() / area.width())
+                    // if (bounds.height() / bounds.width() > area.height() / area.width())
                     //    diff.setY(diff.y() / 2);
-                    //else
+                    // else
                     //    diff.setX(diff.x() / 2);
                     // Approximate a vector of between 10px and 20px in magnitude in the same direction
                     diff *= m_accuracy / qreal(diff.manhattanLength());
@@ -719,11 +566,10 @@ void ExpoLayout::calculateWindowTransformationsNatural()
         }
     } while (overlap);
 
-    // Work out scaling by getting the most top-left and most bottom-right window coords.
-    // The 20's and 10's are so that the windows don't touch the edge of the screen.
+    // Compute the scale factor so the bounding rect fits the target area.
     qreal scale;
-    if (bounds == area) {
-        scale = 1.0; // Don't add borders to the screen
+    if (bounds.width() <= area.width() && bounds.height() <= area.height()) {
+        scale = 1.0;
     } else if (area.width() / qreal(bounds.width()) < area.height() / qreal(bounds.height())) {
         scale = area.width() / qreal(bounds.width());
     } else {
@@ -760,7 +606,7 @@ void ExpoLayout::calculateWindowTransformationsNatural()
                 // This may cause some slight distortion if the windows are enlarged a large amount
                 int widthDiff = m_accuracy;
                 int heightDiff = heightForWidth(cell, target->width() + widthDiff) - target->height();
-                int xDiff = widthDiff / 2;  // Also move a bit in the direction of the enlarge, allows the
+                int xDiff = widthDiff / 2; // Also move a bit in the direction of the enlarge, allows the
                 int yDiff = heightDiff / 2; // center windows to be enlarged if there is gaps on the side.
 
                 // heightDiff (and yDiff) will be re-computed after each successful enlargement attempt

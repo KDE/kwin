@@ -101,5 +101,5 @@ endif()
 include(FeatureSummary)
 set_package_properties(Libdrm PROPERTIES
     URL "https://wiki.freedesktop.org/dri/"
-    DESCRIPTION "Userspace interface to kernel DRM services."
+    DESCRIPTION "Userspace interface to kernel DRM services"
 )

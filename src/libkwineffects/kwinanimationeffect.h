@@ -20,20 +20,69 @@
 namespace KWin
 {
 
-class KWINEFFECTS_EXPORT FPx2 {
+class KWINEFFECTS_EXPORT FPx2
+{
 public:
-    FPx2() { f[0] = f[1] = 0.0; valid = false; }
-    explicit FPx2(float v) { f[0] = f[1] = v; valid = true; }
-    FPx2(float v1, float v2) { f[0] = v1; f[1] = v2; valid = true; }
-    FPx2(const FPx2 &other) { f[0] = other.f[0]; f[1] = other.f[1]; valid = other.valid; }
-    explicit FPx2(const QPoint &other) { f[0] = other.x(); f[1] = other.y(); valid = true; }
-    explicit FPx2(const QPointF &other) { f[0] = other.x(); f[1] = other.y(); valid = true; }
-    explicit FPx2(const QSize &other) { f[0] = other.width(); f[1] = other.height(); valid = true; }
-    explicit FPx2(const QSizeF &other) { f[0] = other.width(); f[1] = other.height(); valid = true; }
-    inline void invalidate() { valid = false; }
-    inline bool isValid() const { return valid; }
-    inline float operator[](int n) const { return f[n]; }
-    inline QString toString() const {
+    FPx2()
+    {
+        f[0] = f[1] = 0.0;
+        valid = false;
+    }
+    explicit FPx2(float v)
+    {
+        f[0] = f[1] = v;
+        valid = true;
+    }
+    FPx2(float v1, float v2)
+    {
+        f[0] = v1;
+        f[1] = v2;
+        valid = true;
+    }
+    FPx2(const FPx2 &other)
+    {
+        f[0] = other.f[0];
+        f[1] = other.f[1];
+        valid = other.valid;
+    }
+    explicit FPx2(const QPoint &other)
+    {
+        f[0] = other.x();
+        f[1] = other.y();
+        valid = true;
+    }
+    explicit FPx2(const QPointF &other)
+    {
+        f[0] = other.x();
+        f[1] = other.y();
+        valid = true;
+    }
+    explicit FPx2(const QSize &other)
+    {
+        f[0] = other.width();
+        f[1] = other.height();
+        valid = true;
+    }
+    explicit FPx2(const QSizeF &other)
+    {
+        f[0] = other.width();
+        f[1] = other.height();
+        valid = true;
+    }
+    inline void invalidate()
+    {
+        valid = false;
+    }
+    inline bool isValid() const
+    {
+        return valid;
+    }
+    inline float operator[](int n) const
+    {
+        return f[n];
+    }
+    inline QString toString() const
+    {
         QString ret;
         if (valid)
             ret = QString::number(f[0]) + QLatin1Char(',') + QString::number(f[1]);
@@ -43,35 +92,81 @@ public:
     }
 
     inline FPx2 &operator=(const FPx2 &other)
-        { f[0] = other.f[0]; f[1] = other.f[1]; valid = other.valid; return *this; }
+    {
+        f[0] = other.f[0];
+        f[1] = other.f[1];
+        valid = other.valid;
+        return *this;
+    }
     inline FPx2 &operator+=(const FPx2 &other)
-        { f[0] += other[0]; f[1] += other[1]; return *this; }
+    {
+        f[0] += other[0];
+        f[1] += other[1];
+        return *this;
+    }
     inline FPx2 &operator-=(const FPx2 &other)
-        { f[0] -= other[0]; f[1] -= other[1]; return *this; }
+    {
+        f[0] -= other[0];
+        f[1] -= other[1];
+        return *this;
+    }
     inline FPx2 &operator*=(float fl)
-        { f[0] *= fl; f[1] *= fl; return *this; }
+    {
+        f[0] *= fl;
+        f[1] *= fl;
+        return *this;
+    }
     inline FPx2 &operator/=(float fl)
-        { f[0] /= fl; f[1] /= fl; return *this; }
+    {
+        f[0] /= fl;
+        f[1] /= fl;
+        return *this;
+    }
 
     friend inline bool operator==(const FPx2 &f1, const FPx2 &f2)
-        { return f1[0] == f2[0] && f1[1] == f2[1]; }
+    {
+        return f1[0] == f2[0] && f1[1] == f2[1];
+    }
     friend inline bool operator!=(const FPx2 &f1, const FPx2 &f2)
-        { return f1[0] != f2[0] || f1[1] != f2[1]; }
+    {
+        return f1[0] != f2[0] || f1[1] != f2[1];
+    }
     friend inline const FPx2 operator+(const FPx2 &f1, const FPx2 &f2)
-        { return FPx2( f1[0] + f2[0], f1[1] + f2[1] ); }
+    {
+        return FPx2(f1[0] + f2[0], f1[1] + f2[1]);
+    }
     friend inline const FPx2 operator-(const FPx2 &f1, const FPx2 &f2)
-        { return FPx2( f1[0] - f2[0], f1[1] - f2[1] ); }
+    {
+        return FPx2(f1[0] - f2[0], f1[1] - f2[1]);
+    }
     friend inline const FPx2 operator*(const FPx2 &f, float fl)
-        { return FPx2( f[0] * fl, f[1] * fl ); }
+    {
+        return FPx2(f[0] * fl, f[1] * fl);
+    }
     friend inline const FPx2 operator*(float fl, const FPx2 &f)
-        { return FPx2( f[0] * fl, f[1] *fl ); }
+    {
+        return FPx2(f[0] * fl, f[1] * fl);
+    }
     friend inline const FPx2 operator-(const FPx2 &f)
-        { return FPx2( -f[0], -f[1] ); }
+    {
+        return FPx2(-f[0], -f[1]);
+    }
     friend inline const FPx2 operator/(const FPx2 &f, float fl)
-        { return FPx2( f[0] / fl, f[1] / fl ); }
+    {
+        return FPx2(f[0] / fl, f[1] / fl);
+    }
 
-    inline void set(float v) { f[0] = v; valid = true; }
-    inline void set(float v1, float v2) { f[0] = v1; f[1] = v2; valid = true; }
+    inline void set(float v)
+    {
+        f[0] = v;
+        valid = true;
+    }
+    inline void set(float v1, float v2)
+    {
+        f[0] = v1;
+        f[1] = v2;
+        valid = true;
+    }
 
 private:
     float f[2];
@@ -100,19 +195,38 @@ class KWINEFFECTS_EXPORT AnimationEffect : public Effect
     Q_OBJECT
 
 public:
-    enum Anchor { Left = 1<<0, Top = 1<<1, Right = 1<<2, Bottom = 1<<3,
-                  Horizontal = Left|Right, Vertical = Top|Bottom, Mouse = 1<<4  };
+    enum Anchor { Left = 1 << 0,
+                  Top = 1 << 1,
+                  Right = 1 << 2,
+                  Bottom = 1 << 3,
+                  Horizontal = Left | Right,
+                  Vertical = Top | Bottom,
+                  Mouse = 1 << 4 };
     Q_ENUM(Anchor)
 
     enum Attribute {
-        Opacity = 0, Brightness, Saturation, Scale, Rotation,
-        Position, Size, Translation, Clip, Generic, CrossFadePrevious,
+        Opacity = 0,
+        Brightness,
+        Saturation,
+        Scale,
+        Rotation,
+        Position,
+        Size,
+        Translation,
+        Clip,
+        Generic,
+        CrossFadePrevious,
         NonFloatBase = Position
     };
     Q_ENUM(Attribute)
 
-    enum MetaType { SourceAnchor, TargetAnchor,
-                    RelativeSourceX, RelativeSourceY, RelativeTargetX, RelativeTargetY, Axis };
+    enum MetaType { SourceAnchor,
+                    TargetAnchor,
+                    RelativeSourceX,
+                    RelativeSourceY,
+                    RelativeTargetX,
+                    RelativeTargetY,
+                    Axis };
     Q_ENUM(MetaType)
 
     /**
@@ -135,7 +249,7 @@ public:
         /**
          * Don't terminate the animation when it reaches source or target position.
          */
-        DontTerminate     = 0x00,
+        DontTerminate = 0x00,
         /**
          * Terminate the animation when it reaches the source position. An animation
          * can reach the source position if its direction was changed to go backward
@@ -184,7 +298,7 @@ public:
      * @returns Stored metadata.
      * @since 4.8
      */
-    static int metaData(MetaType type, uint meta );
+    static int metaData(MetaType type, uint meta);
 
     /**
      * Sets metadata.
@@ -194,13 +308,13 @@ public:
      * @param meta Where the metadata will be stored.
      * @since 4.8
      */
-    static void setMetaData(MetaType type, uint value, uint &meta );
+    static void setMetaData(MetaType type, uint value, uint &meta);
 
     // Reimplemented from KWin::Effect.
     QString debug(const QString &parameter) const override;
-    void prePaintScreen( ScreenPrePaintData& data, std::chrono::milliseconds presentTime ) override;
-    void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime ) override;
-    void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data ) override;
+    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
     void postPaintScreen() override;
 
     /**
@@ -210,15 +324,16 @@ public:
      */
     static qreal qecGaussian(qreal progress)
     {
-        progress = 2*progress - 1;
-        progress *= -5*progress;
+        progress = 2 * progress - 1;
+        progress *= -5 * progress;
         return qExp(progress);
     }
 
     /**
      * @since 4.8
      */
-    static inline qint64 clock() {
+    static inline qint64 clock()
+    {
         return s_clock.elapsed();
     }
 
@@ -247,8 +362,10 @@ protected:
      * @returns An ID that you can use to cancel a running animation.
      * @since 4.8
      */
-    quint64 animate( EffectWindow *w, Attribute a, uint meta, int ms, const FPx2 &to, const QEasingCurve &curve = QEasingCurve(), int delay = 0, const FPx2 &from = FPx2(), bool fullScreen = false, bool keepAlive = true)
-    { return p_animate(w, a, meta, ms, to, curve, delay, from, false, fullScreen, keepAlive); }
+    quint64 animate(EffectWindow *w, Attribute a, uint meta, int ms, const FPx2 &to, const QEasingCurve &curve = QEasingCurve(), int delay = 0, const FPx2 &from = FPx2(), bool fullScreen = false, bool keepAlive = true)
+    {
+        return p_animate(w, a, meta, ms, to, curve, delay, from, false, fullScreen, keepAlive);
+    }
 
     /**
      * Starts a persistent animated transition of any supported attribute.
@@ -277,8 +394,10 @@ protected:
      * @returns An ID that you need to use to cancel this manipulation.
      * @since 4.11
      */
-    quint64 set( EffectWindow *w, Attribute a, uint meta, int ms, const FPx2 &to, const QEasingCurve &curve = QEasingCurve(), int delay = 0, const FPx2 &from = FPx2(), bool fullScreen = false, bool keepAlive = true)
-    { return p_animate(w, a, meta, ms, to, curve, delay, from, true, fullScreen, keepAlive); }
+    quint64 set(EffectWindow *w, Attribute a, uint meta, int ms, const FPx2 &to, const QEasingCurve &curve = QEasingCurve(), int delay = 0, const FPx2 &from = FPx2(), bool fullScreen = false, bool keepAlive = true)
+    {
+        return p_animate(w, a, meta, ms, to, curve, delay, from, true, fullScreen, keepAlive);
+    }
 
     /**
      * Changes the target (but not type or curve) of a running animation.
@@ -333,7 +452,11 @@ protected:
      * @since 4.8
      */
     virtual void animationEnded(EffectWindow *w, Attribute a, uint meta)
-    {Q_UNUSED(w); Q_UNUSED(a); Q_UNUSED(meta);}
+    {
+        Q_UNUSED(w);
+        Q_UNUSED(a);
+        Q_UNUSED(meta);
+    }
 
     /**
      * Cancels a running animation.
@@ -361,13 +484,18 @@ protected:
      * @param meta The metadata.
      * @since 4.8
      */
-    virtual void genericAnimation( EffectWindow *w, WindowPaintData &data, float progress, uint meta )
-    {Q_UNUSED(w); Q_UNUSED(data); Q_UNUSED(progress); Q_UNUSED(meta);}
+    virtual void genericAnimation(EffectWindow *w, WindowPaintData &data, float progress, uint meta)
+    {
+        Q_UNUSED(w);
+        Q_UNUSED(data);
+        Q_UNUSED(progress);
+        Q_UNUSED(meta);
+    }
 
     /**
      * @internal
      */
-    typedef QMap<EffectWindow *, QPair<QList<AniData>, QRect> > AniMap;
+    typedef QMap<EffectWindow *, QPair<QList<AniData>, QRect>> AniMap;
 
     /**
      * @internal
@@ -376,9 +504,9 @@ protected:
 
 private:
     quint64 p_animate(EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, const QEasingCurve &curve, int delay, FPx2 from, bool keepAtTarget, bool fullScreenEffect, bool keepAlive);
-    QRect clipRect(const QRect &windowRect, const AniData&) const;
-    float interpolated( const AniData&, int i = 0 ) const;
-    float progress( const AniData& ) const;
+    QRect clipRect(const QRect &windowRect, const AniData &) const;
+    float interpolated(const AniData &, int i = 0) const;
+    float progress(const AniData &) const;
     void disconnectGeometryChanges();
     void updateLayerRepaints();
     void validate(Attribute a, uint &meta, FPx2 *from, FPx2 *to, const EffectWindow *w) const;
@@ -386,13 +514,13 @@ private:
 private Q_SLOTS:
     void init();
     void triggerRepaint();
-    void _windowClosed( KWin::EffectWindow* w );
-    void _windowDeleted( KWin::EffectWindow* w );
+    void _windowClosed(KWin::EffectWindow *w);
+    void _windowDeleted(KWin::EffectWindow *w);
     void _windowExpandedGeometryChanged(KWin::EffectWindow *w);
 
 private:
     static QElapsedTimer s_clock;
-    AnimationEffectPrivate * const d_ptr;
+    AnimationEffectPrivate *const d_ptr;
     Q_DECLARE_PRIVATE(AnimationEffect)
     Q_DISABLE_COPY(AnimationEffect)
 };

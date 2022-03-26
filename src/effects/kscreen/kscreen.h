@@ -30,7 +30,8 @@ public:
     void reconfigure(ReconfigureFlags flags) override;
     bool isActive() const override;
 
-    int requestedEffectChainPosition() const override {
+    int requestedEffectChainPosition() const override
+    {
         return 99;
     }
 
@@ -45,7 +46,8 @@ private:
         StateFadingIn,
         LastState
     };
-    struct ScreenState {
+    struct ScreenState
+    {
         TimeLine m_timeLine;
         std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
         FadeOutState m_state = StateNormal;
@@ -61,7 +63,6 @@ private:
     EffectScreen *m_currentScreen = nullptr;
     xcb_atom_t m_atom;
 };
-
 
 } // namespace KWin
 #endif // KWIN_KSCREEN_H

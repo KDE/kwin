@@ -163,12 +163,12 @@ void TimeLineTest::testSetElapsed_data()
     QTest::addColumn<bool>("expectedDone");
     QTest::addColumn<bool>("initiallyDone");
 
-    QTest::newRow("Less than duration, not finished")    << 1000ms << 300ms  << 300ms  << false << false;
-    QTest::newRow("Less than duration, finished")        << 1000ms << 300ms  << 300ms  << false << true;
-    QTest::newRow("Greater than duration, not finished") << 1000ms << 3000ms << 1000ms << true  << false;
-    QTest::newRow("Greater than duration, finished")     << 1000ms << 3000ms << 1000ms << true  << true;
-    QTest::newRow("Equal to duration, not finished")     << 1000ms << 1000ms << 1000ms << true  << false;
-    QTest::newRow("Equal to duration, finished")         << 1000ms << 1000ms << 1000ms << true  << true;
+    QTest::newRow("Less than duration, not finished") << 1000ms << 300ms << 300ms << false << false;
+    QTest::newRow("Less than duration, finished") << 1000ms << 300ms << 300ms << false << true;
+    QTest::newRow("Greater than duration, not finished") << 1000ms << 3000ms << 1000ms << true << false;
+    QTest::newRow("Greater than duration, finished") << 1000ms << 3000ms << 1000ms << true << true;
+    QTest::newRow("Equal to duration, not finished") << 1000ms << 1000ms << 1000ms << true << false;
+    QTest::newRow("Equal to duration, finished") << 1000ms << 1000ms << 1000ms << true << true;
 }
 
 void TimeLineTest::testSetElapsed()
@@ -255,8 +255,8 @@ void TimeLineTest::testStrictRedirectSourceMode_data()
     QTest::addColumn<KWin::TimeLine::Direction>("finalDirection");
     QTest::addColumn<qreal>("finalValue");
 
-    QTest::newRow("forward -> backward") << KWin::TimeLine::Forward  << 0.0 << KWin::TimeLine::Backward << 0.0;
-    QTest::newRow("backward -> forward") << KWin::TimeLine::Backward << 1.0 << KWin::TimeLine::Forward  << 1.0;
+    QTest::newRow("forward -> backward") << KWin::TimeLine::Forward << 0.0 << KWin::TimeLine::Backward << 0.0;
+    QTest::newRow("backward -> forward") << KWin::TimeLine::Backward << 1.0 << KWin::TimeLine::Forward << 1.0;
 }
 
 void TimeLineTest::testStrictRedirectSourceMode()
@@ -289,8 +289,8 @@ void TimeLineTest::testRelaxedRedirectSourceMode_data()
     QTest::addColumn<KWin::TimeLine::Direction>("finalDirection");
     QTest::addColumn<qreal>("finalValue");
 
-    QTest::newRow("forward -> backward") << KWin::TimeLine::Forward  << 0.0 << KWin::TimeLine::Backward << 1.0;
-    QTest::newRow("backward -> forward") << KWin::TimeLine::Backward << 1.0 << KWin::TimeLine::Forward  << 0.0;
+    QTest::newRow("forward -> backward") << KWin::TimeLine::Forward << 0.0 << KWin::TimeLine::Backward << 1.0;
+    QTest::newRow("backward -> forward") << KWin::TimeLine::Backward << 1.0 << KWin::TimeLine::Forward << 0.0;
 }
 
 void TimeLineTest::testRelaxedRedirectSourceMode()
@@ -323,8 +323,8 @@ void TimeLineTest::testStrictRedirectTargetMode_data()
     QTest::addColumn<KWin::TimeLine::Direction>("finalDirection");
     QTest::addColumn<qreal>("finalValue");
 
-    QTest::newRow("forward -> backward") << KWin::TimeLine::Forward  << 0.0 << KWin::TimeLine::Backward << 1.0;
-    QTest::newRow("backward -> forward") << KWin::TimeLine::Backward << 1.0 << KWin::TimeLine::Forward  << 0.0;
+    QTest::newRow("forward -> backward") << KWin::TimeLine::Forward << 0.0 << KWin::TimeLine::Backward << 1.0;
+    QTest::newRow("backward -> forward") << KWin::TimeLine::Backward << 1.0 << KWin::TimeLine::Forward << 0.0;
 }
 
 void TimeLineTest::testStrictRedirectTargetMode()
@@ -361,8 +361,8 @@ void TimeLineTest::testRelaxedRedirectTargetMode_data()
     QTest::addColumn<KWin::TimeLine::Direction>("finalDirection");
     QTest::addColumn<qreal>("finalValue");
 
-    QTest::newRow("forward -> backward") << KWin::TimeLine::Forward  << 0.0 << KWin::TimeLine::Backward << 1.0;
-    QTest::newRow("backward -> forward") << KWin::TimeLine::Backward << 1.0 << KWin::TimeLine::Forward  << 0.0;
+    QTest::newRow("forward -> backward") << KWin::TimeLine::Forward << 0.0 << KWin::TimeLine::Backward << 1.0;
+    QTest::newRow("backward -> forward") << KWin::TimeLine::Backward << 1.0 << KWin::TimeLine::Forward << 0.0;
 }
 
 void TimeLineTest::testRelaxedRedirectTargetMode()

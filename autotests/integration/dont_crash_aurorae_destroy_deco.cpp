@@ -7,16 +7,15 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
+
 #include "abstract_output.h"
-#include "platform.h"
-#include "x11client.h"
 #include "composite.h"
 #include "cursor.h"
-#include "screenedge.h"
-#include "screens.h"
+#include "platform.h"
+#include "renderbackend.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "scene.h"
+#include "x11client.h"
 #include <kwineffects.h>
 
 #include <KDecoration2/Decoration>
@@ -37,13 +36,12 @@ private Q_SLOTS:
     void initTestCase();
     void init();
     void testBorderlessMaximizedWindows();
-
 };
 
 void DontCrashAuroraeDestroyDecoTest::initTestCase()
 {
     qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -66,9 +64,7 @@ void DontCrashAuroraeDestroyDecoTest::initTestCase()
     setenv("QT_QPA_PLATFORM", "wayland", true);
     Test::initWaylandWorkspace();
 
-    auto scene = KWin::Compositor::self()->scene();
-    QVERIFY(scene);
-    QCOMPARE(scene->compositingType(), KWin::OpenGLCompositing);
+    QCOMPARE(Compositor::self()->backend()->compositingType(), KWin::OpenGLCompositing);
 }
 
 void DontCrashAuroraeDestroyDecoTest::init()
@@ -112,7 +108,7 @@ void DontCrashAuroraeDestroyDecoTest::testBorderlessMaximizedWindows()
     // verify that the deco is Aurorae
     QCOMPARE(qstrcmp(client->decoration()->metaObject()->className(), "Aurorae::Decoration"), 0);
     // find the maximize button
-    QQuickItem *item = client->decoration()->findChild<QQuickItem*>("maximizeButton");
+    QQuickItem *item = client->decoration()->findChild<QQuickItem *>("maximizeButton");
     QVERIFY(item);
     const QPointF scenePoint = item->mapToScene(QPoint(0, 0));
 
@@ -121,12 +117,12 @@ void DontCrashAuroraeDestroyDecoTest::testBorderlessMaximizedWindows()
     QVERIFY(client->readyForPainting());
 
     // simulate click on maximize button
-    QSignalSpy maximizedStateChangedSpy(client, static_cast<void (AbstractClient::*)(KWin::AbstractClient*, MaximizeMode)>(&AbstractClient::clientMaximizedStateChanged));
+    QSignalSpy maximizedStateChangedSpy(client, static_cast<void (AbstractClient::*)(KWin::AbstractClient *, MaximizeMode)>(&AbstractClient::clientMaximizedStateChanged));
     QVERIFY(maximizedStateChangedSpy.isValid());
     quint32 timestamp = 1;
-    kwinApp()->platform()->pointerMotion(client->frameGeometry().topLeft() + scenePoint.toPoint(), timestamp++);
-    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
-    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    Test::pointerMotion(client->frameGeometry().topLeft() + scenePoint.toPoint(), timestamp++);
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     QVERIFY(maximizedStateChangedSpy.wait());
     QCOMPARE(client->maximizeMode(), MaximizeFull);
     QCOMPARE(client->noBorder(), true);

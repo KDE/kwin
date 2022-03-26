@@ -7,10 +7,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "dpmsinputeventfilter.h"
-#include "platform.h"
 #include "abstract_wayland_output.h"
-#include "wayland_server.h"
 #include "main.h"
+#include "platform.h"
+#include "wayland_server.h"
 
 #include <QGuiApplication>
 #include <QKeyEvent>

@@ -9,50 +9,47 @@
 
 // read additional window rules and add them to kwinrulesrc
 
+#include <QDebug>
+#include <QStandardPaths>
+#include <QtDBus>
 #include <kconfig.h>
 #include <kconfiggroup.h>
-#include <QtDBus>
-#include <QStandardPaths>
-#include <QDebug>
 
-int main( int argc, char* argv[] )
-    {
-    if( argc != 2 )
+int main(int argc, char *argv[])
+{
+    if (argc != 2)
         return 1;
 
-    QCoreApplication::setApplicationName ("kwin_update_default_rules");
+    QCoreApplication::setApplicationName("kwin_update_default_rules");
 
-    QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QString( "kwin/default_rules/%1" ).arg(argv[ 1 ] ));
-    if( file.isEmpty())
-        {
-        qWarning() << "File " << argv[ 1 ] << " not found!" ;
+    QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QString("kwin/default_rules/%1").arg(argv[1]));
+    if (file.isEmpty()) {
+        qWarning() << "File " << argv[1] << " not found!";
         return 1;
-        }
-    KConfig src_cfg( file );
+    }
+    KConfig src_cfg(file);
     KConfig dest_cfg("kwinrulesrc", KConfig::NoGlobals);
-	KConfigGroup scg(&src_cfg, "General");
-	KConfigGroup dcg(&dest_cfg, "General");
-    int count = scg.readEntry( "count", 0 );
-    int pos = dcg.readEntry( "count", 0 );
-    for( int group = 1;
+    KConfigGroup scg(&src_cfg, "General");
+    KConfigGroup dcg(&dest_cfg, "General");
+    int count = scg.readEntry("count", 0);
+    int pos = dcg.readEntry("count", 0);
+    for (int group = 1;
          group <= count;
-         ++group )
-        {
-        QMap< QString, QString > entries = src_cfg.entryMap( QString::number( group ));
+         ++group) {
+        QMap<QString, QString> entries = src_cfg.entryMap(QString::number(group));
         ++pos;
-        dest_cfg.deleteGroup( QString::number( pos ));
-		KConfigGroup dcg2 (&dest_cfg, QString::number( pos ));
-        for( QMap< QString, QString >::ConstIterator it = entries.constBegin();
+        dest_cfg.deleteGroup(QString::number(pos));
+        KConfigGroup dcg2(&dest_cfg, QString::number(pos));
+        for (QMap<QString, QString>::ConstIterator it = entries.constBegin();
              it != entries.constEnd();
-             ++it )
-            dcg2.writeEntry( it.key(), *it );
-        }
-    dcg.writeEntry( "count", pos );
+             ++it)
+            dcg2.writeEntry(it.key(), *it);
+    }
+    dcg.writeEntry("count", pos);
     scg.sync();
     dcg.sync();
     // Send signal to all kwin instances
     QDBusMessage message =
         QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
     QDBusConnection::sessionBus().send(message);
-
-    }
+}

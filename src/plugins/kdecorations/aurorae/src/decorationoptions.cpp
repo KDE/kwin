@@ -4,9 +4,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "decorationoptions.h"
+#include <KConfigGroup>
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/DecorationSettings>
-#include <KConfigGroup>
 #include <KSharedConfig>
 #include <QGuiApplication>
 #include <QStyleHints>
@@ -28,20 +28,19 @@ void ColorSettings::init(const QPalette &pal)
 {
     m_palette = pal;
     KConfigGroup wmConfig(KSharedConfig::openConfig(QStringLiteral("kdeglobals")), QStringLiteral("WM"));
-    m_activeFrameColor      = wmConfig.readEntry("frame", pal.color(QPalette::Active, QPalette::Window));
-    m_inactiveFrameColor    = wmConfig.readEntry("inactiveFrame", m_activeFrameColor);
-    m_activeTitleBarColor   = wmConfig.readEntry("activeBackground", pal.color(QPalette::Active, QPalette::Highlight));
+    m_activeFrameColor = wmConfig.readEntry("frame", pal.color(QPalette::Active, QPalette::Window));
+    m_inactiveFrameColor = wmConfig.readEntry("inactiveFrame", m_activeFrameColor);
+    m_activeTitleBarColor = wmConfig.readEntry("activeBackground", pal.color(QPalette::Active, QPalette::Highlight));
     m_inactiveTitleBarColor = wmConfig.readEntry("inactiveBackground", m_inactiveFrameColor);
     m_activeTitleBarBlendColor = wmConfig.readEntry("activeBlend", m_activeTitleBarColor.darker(110));
     m_inactiveTitleBarBlendColor = wmConfig.readEntry("inactiveBlend", m_inactiveTitleBarColor.darker(110));
-    m_activeFontColor       = wmConfig.readEntry("activeForeground", pal.color(QPalette::Active, QPalette::HighlightedText));
-    m_inactiveFontColor     = wmConfig.readEntry("inactiveForeground", m_activeFontColor.darker());
+    m_activeFontColor = wmConfig.readEntry("activeForeground", pal.color(QPalette::Active, QPalette::HighlightedText));
+    m_inactiveFontColor = wmConfig.readEntry("inactiveForeground", m_activeFontColor.darker());
     m_activeButtonColor = wmConfig.readEntry("activeTitleBtnBg", m_activeFrameColor.lighter(130));
     m_inactiveButtonColor = wmConfig.readEntry("inactiveTitleBtnBg", m_inactiveFrameColor.lighter(130));
     m_activeHandle = wmConfig.readEntry("handle", m_activeFrameColor);
     m_inactiveHandle = wmConfig.readEntry("inactiveHandle", m_activeHandle);
 }
-
 
 DecorationOptions::DecorationOptions(QObject *parent)
     : QObject(parent)
@@ -165,12 +164,10 @@ void DecorationOptions::setDecoration(KDecoration2::Decoration *decoration)
     }
     m_decoration = decoration;
     connect(m_decoration->client().toStrongRef().data(), &KDecoration2::DecoratedClient::activeChanged, this, &DecorationOptions::slotActiveChanged);
-    m_paletteConnection = connect(m_decoration->client().toStrongRef().data(), &KDecoration2::DecoratedClient::paletteChanged, this,
-        [this] (const QPalette &pal) {
-            m_colors.update(pal);
-            Q_EMIT colorsChanged();
-        }
-    );
+    m_paletteConnection = connect(m_decoration->client().toStrongRef().data(), &KDecoration2::DecoratedClient::paletteChanged, this, [this](const QPalette &pal) {
+        m_colors.update(pal);
+        Q_EMIT colorsChanged();
+    });
     auto s = m_decoration->settings();
     connect(s.data(), &KDecoration2::DecorationSettings::fontChanged, this, &DecorationOptions::fontChanged);
     connect(s.data(), &KDecoration2::DecorationSettings::decorationButtonsLeftChanged, this, &DecorationOptions::titleButtonsChanged);
@@ -209,15 +206,15 @@ Borders::~Borders()
 {
 }
 
-#define SETTER( methodName, name ) \
-void Borders::methodName(int name) \
-{ \
-    if (m_##name == name) { \
-        return; \
-    } \
-    m_##name = name; \
-    Q_EMIT name##Changed(); \
-}
+#define SETTER(methodName, name)       \
+    void Borders::methodName(int name) \
+    {                                  \
+        if (m_##name == name) {        \
+            return;                    \
+        }                              \
+        m_##name = name;               \
+        Q_EMIT name##Changed();        \
+    }
 
 SETTER(setLeft, left)
 SETTER(setRight, right)
@@ -255,4 +252,3 @@ Borders::operator QMargins() const
 }
 
 } // namespace
-

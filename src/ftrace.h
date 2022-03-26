@@ -43,7 +43,8 @@ public:
      * Main log function
      * Takes any number of arguments that can be written into QTextStream
      */
-    template<typename... Args> void trace(Args... args)
+    template<typename... Args>
+    void trace(Args... args)
     {
         Q_ASSERT(isEnabled());
         QMutexLocker lock(&m_mutex);
@@ -71,7 +72,8 @@ private:
 class KWIN_EXPORT FTraceDuration
 {
 public:
-    template<typename... Args> FTraceDuration(Args... args)
+    template<typename... Args>
+    FTraceDuration(Args... args)
     {
         static QAtomicInteger<quint32> s_context = 0;
         QTextStream stream(&m_message);
@@ -93,13 +95,13 @@ private:
 /**
  * Optimised macro, arguments are only copied if tracing is enabled
  */
-#define fTrace(...)                                                                                                                                            \
-    if (KWin::FTraceLogger::self()->isEnabled())                                                                                                               \
+#define fTrace(...)                              \
+    if (KWin::FTraceLogger::self()->isEnabled()) \
         KWin::FTraceLogger::self()->trace(__VA_ARGS__);
 
 /**
  * Will insert two markers into the log. Once when called, and the second at the end of the relevant block
  * In GPUVis this will appear as a timed block with begin_ctx and end_ctx markers
  */
-#define fTraceDuration(...)                                                                                                                                    \
+#define fTraceDuration(...) \
     QScopedPointer<KWin::FTraceDuration> _duration(KWin::FTraceLogger::self()->isEnabled() ? new KWin::FTraceDuration(__VA_ARGS__) : nullptr);

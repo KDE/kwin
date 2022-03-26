@@ -10,12 +10,12 @@
 #include "xdgactivationv1.h"
 #include "abstract_client.h"
 #include "effects.h"
-#include "utils.h"
+#include "utils/common.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include <KWaylandServer/display.h>
-#include <KWaylandServer/surface_interface.h>
 #include <KWaylandServer/plasmawindowmanagement_interface.h>
+#include <KWaylandServer/surface_interface.h>
 #include <KWaylandServer/xdgactivation_v1_interface.h>
 
 using namespace KWaylandServer;
@@ -85,7 +85,7 @@ void XdgActivationV1Integration::activateSurface(SurfaceInterface *surface, cons
         ws->activateClient(client);
     } else {
         qCWarning(KWIN_CORE) << "Activation requested while owner isn't active" << ownerSurfaceClient->desktopFileName()
-                                      << m_currentActivationToken->applicationId;
+                             << m_currentActivationToken->applicationId;
         client->demandAttention();
         clear();
     }

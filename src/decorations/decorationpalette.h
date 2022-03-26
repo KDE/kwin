@@ -12,12 +12,12 @@
 #ifndef KWIN_DECORATION_PALETTE_H
 #define KWIN_DECORATION_PALETTE_H
 
-#include <KDecoration2/DecorationSettings>
-#include <QFileSystemWatcher>
-#include <QPalette>
-#include <KSharedConfig>
 #include <KColorScheme>
 #include <KConfigWatcher>
+#include <KDecoration2/DecorationSettings>
+#include <KSharedConfig>
+#include <QFileSystemWatcher>
+#include <QPalette>
 
 #include <optional>
 
@@ -39,13 +39,15 @@ public:
 
 Q_SIGNALS:
     void changed();
+
 private:
     void update();
 
     QString m_colorScheme;
     KConfigWatcher::Ptr m_watcher;
 
-    struct LegacyPalette {
+    struct LegacyPalette
+    {
         QPalette palette;
 
         QColor activeTitleBarColor;
@@ -59,7 +61,8 @@ private:
         QColor warningForegroundColor;
     };
 
-    struct ModernPalette {
+    struct ModernPalette
+    {
         KColorScheme active;
         KColorScheme inactive;
     };
@@ -68,6 +71,7 @@ private:
     KSharedConfig::Ptr m_colorSchemeConfig;
 
     ModernPalette m_palette;
+    QPalette m_applicationPalette;
 };
 
 }

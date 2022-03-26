@@ -12,8 +12,9 @@
 
 #include <epoxy/egl.h>
 
-#include <qpa/qplatformintegration.h>
 #include <QObject>
+#include <QtServiceSupport/private/qgenericunixservices_p.h>
+#include <qpa/qplatformintegration.h>
 
 namespace KWin
 {
@@ -41,8 +42,10 @@ public:
     QStringList themeNames() const override;
     QPlatformTheme *createPlatformTheme(const QString &name) const override;
     QPlatformOpenGLContext *createPlatformOpenGLContext(QOpenGLContext *context) const override;
-
+    QPlatformServices *services() const override;
     void initialize() override;
+
+    QHash<AbstractOutput *, Screen *> screens() const;
 
 private Q_SLOTS:
     void handleOutputEnabled(AbstractOutput *output);
@@ -54,6 +57,7 @@ private:
     QPlatformNativeInterface *m_nativeInterface;
     QPlatformPlaceholderScreen *m_dummyScreen = nullptr;
     QHash<AbstractOutput *, Screen *> m_screens;
+    QScopedPointer<QGenericUnixServices> m_services;
 };
 
 }

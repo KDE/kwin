@@ -9,6 +9,7 @@
 
 #include <QCoreApplication>
 #include <QFile>
+#include <QScopeGuard>
 
 #include <errno.h>
 #include <signal.h>
@@ -42,19 +43,18 @@ UnixSocketAddress::UnixSocketAddress(const QString &socketPath, Type type)
     const QByteArray encodedSocketPath = QFile::encodeName(socketPath);
 
     int byteCount = offsetof(sockaddr_un, sun_path) + encodedSocketPath.size() + 1;
-    if (type == Type::Abstract) {
-        byteCount++; // For the first '\0'.
-    }
     m_buffer.resize(byteCount);
 
     sockaddr_un *address = reinterpret_cast<sockaddr_un *>(m_buffer.data());
     address->sun_family = AF_UNIX;
 
     if (type == Type::Unix) {
-        qstrcpy(address->sun_path, encodedSocketPath);
+        memcpy(address->sun_path, encodedSocketPath.data(), encodedSocketPath.size());
+        address->sun_path[encodedSocketPath.size()] = '\0';
     } else {
+        // Abstract domain socket does not need the NUL-termination byte.
         *address->sun_path = '\0';
-        qstrcpy(address->sun_path + 1, encodedSocketPath);
+        memcpy(address->sun_path + 1, encodedSocketPath.data(), encodedSocketPath.size());
     }
 }
 
@@ -177,24 +177,36 @@ XwaylandSocket::XwaylandSocket(OperationMode mode)
             continue;
         }
 
+        QVector<int> fileDescriptors;
+        auto socketCleanup = qScopeGuard([&fileDescriptors]() {
+            for (const int &fileDescriptor : qAsConst(fileDescriptors)) {
+                close(fileDescriptor);
+            }
+        });
+
+        QFile::remove(socketFilePath);
         const int unixFileDescriptor = listen_helper(socketFilePath, UnixSocketAddress::Type::Unix, mode);
         if (unixFileDescriptor == -1) {
             QFile::remove(lockFilePath);
             continue;
         }
+        fileDescriptors << unixFileDescriptor;
 
+#if defined(Q_OS_LINUX)
         const int abstractFileDescriptor = listen_helper(socketFilePath, UnixSocketAddress::Type::Abstract, mode);
         if (abstractFileDescriptor == -1) {
             QFile::remove(lockFilePath);
             QFile::remove(socketFilePath);
-            close(unixFileDescriptor);
             continue;
         }
+        fileDescriptors << abstractFileDescriptor;
+#endif
+
+        m_fileDescriptors = fileDescriptors;
+        socketCleanup.dismiss();
 
         m_socketFilePath = socketFilePath;
         m_lockFilePath = lockFilePath;
-        m_unixFileDescriptor = unixFileDescriptor;
-        m_abstractFileDescriptor = abstractFileDescriptor;
         m_display = display;
         return;
     }
@@ -204,11 +216,8 @@ XwaylandSocket::XwaylandSocket(OperationMode mode)
 
 XwaylandSocket::~XwaylandSocket()
 {
-    if (m_unixFileDescriptor != -1) {
-        close(m_unixFileDescriptor);
-    }
-    if (m_abstractFileDescriptor != -1) {
-        close(m_abstractFileDescriptor);
+    for (const int &fileDescriptor : qAsConst(m_fileDescriptors)) {
+        close(fileDescriptor);
     }
     if (!m_socketFilePath.isEmpty()) {
         QFile::remove(m_socketFilePath);
@@ -223,14 +232,9 @@ bool XwaylandSocket::isValid() const
     return m_display != -1;
 }
 
-int XwaylandSocket::unixFileDescriptor() const
+QVector<int> XwaylandSocket::fileDescriptors() const
 {
-    return m_unixFileDescriptor;
-}
-
-int XwaylandSocket::abstractFileDescriptor() const
-{
-    return m_abstractFileDescriptor;
+    return m_fileDescriptors;
 }
 
 int XwaylandSocket::display() const

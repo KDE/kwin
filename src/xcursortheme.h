@@ -85,6 +85,13 @@ public:
     KXcursorTheme();
 
     /**
+     * Loads the Xcursor theme with the given @ themeName and the desired @a size.
+     * The @a dpr specifies the desired scale factor. If no theme with the provided
+     * name exists, the cursor theme will be empty.
+     */
+    KXcursorTheme(const QString &theme, int size, qreal devicePixelRatio);
+
+    /**
      * Constructs a copy of the KXcursorTheme object @a other.
      */
     KXcursorTheme(const KXcursorTheme &other);
@@ -109,15 +116,7 @@ public:
      */
     QVector<KXcursorSprite> shape(const QByteArray &name) const;
 
-    /**
-     * Loads the Xcursor theme with the given @ themeName and the desired @a size.
-     * The @a dpr specifies the desired scale factor. If no theme with the provided
-     * name exists, an empty KXcursorTheme is returned.
-     */
-    static KXcursorTheme fromTheme(const QString &themeName, int size, qreal dpr);
-
 private:
-    KXcursorTheme(const QMap<QByteArray, QVector<KXcursorSprite>> &registry);
     QSharedDataPointer<KXcursorThemePrivate> d;
 };
 

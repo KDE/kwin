@@ -15,9 +15,9 @@
 #include "cursor.h"
 #include "platform.h"
 #include "rules.h"
-#include "screens.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
+#include "waylandoutputconfig.h"
 #include "workspace.h"
 
 #include <KWayland/Client/surface.h>
@@ -130,7 +130,28 @@ private Q_SLOTS:
     void testInactiveOpacityForce();
     void testInactiveOpacityForceTemporarily();
 
+    void testNoBorderDontAffect();
+    void testNoBorderApply();
+    void testNoBorderRemember();
+    void testNoBorderForce();
+    void testNoBorderApplyNow();
+    void testNoBorderForceTemporarily();
+
+    void testScreenDontAffect();
+    void testScreenApply();
+    void testScreenRemember();
+    void testScreenForce();
+    void testScreenApplyNow();
+    void testScreenForceTemporarily();
+
     void testMatchAfterNameChange();
+
+private:
+    template<typename T>
+    void setWindowRule(const QString &property, const T &value, int policy);
+
+private:
+    KSharedConfig::Ptr m_config;
 };
 
 void TestXdgShellClientRules::initTestCase()
@@ -150,12 +171,15 @@ void TestXdgShellClientRules::initTestCase()
     QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));
     QCOMPARE(outputs[1]->geometry(), QRect(1280, 0, 1280, 1024));
     Test::initWaylandWorkspace();
+
+    m_config = KSharedConfig::openConfig(QStringLiteral("kwinrulesrc"), KConfig::SimpleConfig);
+    RuleBook::self()->setConfig(m_config);
 }
 
 void TestXdgShellClientRules::init()
 {
     VirtualDesktopManager::self()->setCurrent(VirtualDesktopManager::self()->desktops().first());
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::XdgDecorationV1));
 
     workspace()->setActiveOutput(QPoint(640, 512));
 }
@@ -164,8 +188,10 @@ void TestXdgShellClientRules::cleanup()
 {
     Test::destroyWaylandConnection();
 
-    // Unreference the previous config.
-    RuleBook::self()->setConfig({});
+    // Wipe the window rule config clean.
+    for (const QString &group : m_config->groupList()) {
+        m_config->deleteGroup(group);
+    }
     workspace()->slotReconfigure();
 
     // Restore virtual desktops to the initial state.
@@ -173,14 +199,15 @@ void TestXdgShellClientRules::cleanup()
     QCOMPARE(VirtualDesktopManager::self()->count(), 1u);
 }
 
-std::tuple<AbstractClient *, KWayland::Client::Surface *, Test::XdgToplevel *> createWindow(const QString &appId)
+std::tuple<AbstractClient *, KWayland::Client::Surface *, Test::XdgToplevel *> createWindow(const QString &appId, Test::XdgToplevelDecorationV1::mode decorationMode = Test::XdgToplevelDecorationV1::mode_client_side)
 {
     // Create an xdg surface.
     KWayland::Client::Surface *surface = Test::createSurface();
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface, Test::CreationSetup::CreateOnly);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, Test::CreationSetup::CreateOnly, surface);
+    Test::XdgToplevelDecorationV1 *decoration = Test::createXdgToplevelDecorationV1(shellSurface, shellSurface);
 
-    // Assign the desired app id.
     shellSurface->set_app_id(appId);
+    decoration->set_mode(decorationMode);
 
     // Wait for the initial configure event.
     QSignalSpy configureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
@@ -194,20 +221,27 @@ std::tuple<AbstractClient *, KWayland::Client::Surface *, Test::XdgToplevel *> c
     return {client, surface, shellSurface};
 }
 
-void TestXdgShellClientRules::testPositionDontAffect()
+template<typename T>
+void TestXdgShellClientRules::setWindowRule(const QString &property, const T &value, int policy)
 {
     // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("position", QPoint(42, 42));
-    group.writeEntry("positionrule", int(Rules::DontAffect));
+    m_config->group("General").writeEntry("count", 1);
+    KConfigGroup group = m_config->group("1");
+
+    group.writeEntry(property, value);
+    group.writeEntry(QStringLiteral("%1rule").arg(property), policy);
+
     group.writeEntry("wmclass", "org.kde.foo");
     group.writeEntry("wmclasscomplete", false);
     group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
     group.sync();
-    RuleBook::self()->setConfig(config);
+
     workspace()->slotReconfigure();
+}
+
+void TestXdgShellClientRules::testPositionDontAffect()
+{
+    setWindowRule("position", QPoint(42, 42), int(Rules::DontAffect));
 
     // Create the test client.
     AbstractClient *client;
@@ -231,18 +265,7 @@ void TestXdgShellClientRules::testPositionDontAffect()
 
 void TestXdgShellClientRules::testPositionApply()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("position", QPoint(42, 42));
-    group.writeEntry("positionrule", int(Rules::Apply));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("position", QPoint(42, 42), int(Rules::Apply));
 
     // Create the test client.
     AbstractClient *client;
@@ -308,17 +331,7 @@ void TestXdgShellClientRules::testPositionApply()
 void TestXdgShellClientRules::testPositionRemember()
 {
     // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("position", QPoint(42, 42));
-    group.writeEntry("positionrule", int(Rules::Remember));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("position", QPoint(42, 42), int(Rules::Remember));
 
     // Create the test client.
     AbstractClient *client;
@@ -383,18 +396,7 @@ void TestXdgShellClientRules::testPositionRemember()
 
 void TestXdgShellClientRules::testPositionForce()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("position", QPoint(42, 42));
-    group.writeEntry("positionrule", int(Rules::Force));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("position", QPoint(42, 42), int(Rules::Force));
 
     // Create the test client.
     AbstractClient *client;
@@ -454,22 +456,12 @@ void TestXdgShellClientRules::testPositionApplyNow()
     QVERIFY(client->isMovableAcrossScreens());
     QCOMPARE(client->pos(), QPoint(0, 0));
 
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("position", QPoint(42, 42));
-    group.writeEntry("positionrule", int(Rules::ApplyNow));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-
-    // The client should be moved to the position specified by the rule.
     QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
-    workspace()->slotReconfigure();
+
+    setWindowRule("position", QPoint(42, 42), int(Rules::ApplyNow));
+
+    // The client should be moved to the position specified by the rule.
     QCOMPARE(frameGeometryChangedSpy.count(), 1);
     QCOMPARE(client->pos(), QPoint(42, 42));
 
@@ -518,18 +510,7 @@ void TestXdgShellClientRules::testPositionApplyNow()
 
 void TestXdgShellClientRules::testPositionForceTemporarily()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("position", QPoint(42, 42));
-    group.writeEntry("positionrule", int(Rules::ForceTemporarily));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("position", QPoint(42, 42), int(Rules::ForceTemporarily));
 
     // Create the test client.
     AbstractClient *client;
@@ -575,24 +556,13 @@ void TestXdgShellClientRules::testPositionForceTemporarily()
 
 void TestXdgShellClientRules::testSizeDontAffect()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("size", QSize(480, 640));
-    group.writeEntry("sizerule", int(Rules::DontAffect));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("size", QSize(480, 640), int(Rules::DontAffect));
 
     // Create the test client.
     QScopedPointer<KWayland::Client::Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface;
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<QSignalSpy> toplevelConfigureRequestedSpy;
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     QScopedPointer<QSignalSpy> surfaceConfigureRequestedSpy;
@@ -627,24 +597,13 @@ void TestXdgShellClientRules::testSizeDontAffect()
 
 void TestXdgShellClientRules::testSizeApply()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("size", QSize(480, 640));
-    group.writeEntry("sizerule", int(Rules::Apply));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("size", QSize(480, 640), int(Rules::Apply));
 
     // Create the test client.
     QScopedPointer<KWayland::Client::Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface;
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<QSignalSpy> toplevelConfigureRequestedSpy;
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     QScopedPointer<QSignalSpy> surfaceConfigureRequestedSpy;
@@ -715,7 +674,7 @@ void TestXdgShellClientRules::testSizeApply()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
     QCOMPARE(toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(488, 640));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 0);
+    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
     Test::render(surface.data(), QSize(488, 640), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
@@ -728,7 +687,7 @@ void TestXdgShellClientRules::testSizeApply()
     QVERIFY(!client->isInteractiveMove());
     QVERIFY(!client->isInteractiveResize());
 
-    QVERIFY(surfaceConfigureRequestedSpy->wait(10));
+    QVERIFY(surfaceConfigureRequestedSpy->wait());
     QCOMPARE(surfaceConfigureRequestedSpy->count(), 5);
     QCOMPARE(toplevelConfigureRequestedSpy->count(), 5);
 
@@ -737,7 +696,7 @@ void TestXdgShellClientRules::testSizeApply()
     surface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));
     surface.reset(Test::createSurface());
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     surfaceConfigureRequestedSpy.reset(new QSignalSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested));
     shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
@@ -767,24 +726,13 @@ void TestXdgShellClientRules::testSizeApply()
 
 void TestXdgShellClientRules::testSizeRemember()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("size", QSize(480, 640));
-    group.writeEntry("sizerule", int(Rules::Remember));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("size", QSize(480, 640), int(Rules::Remember));
 
     // Create the test client.
     QScopedPointer<KWayland::Client::Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface;
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<QSignalSpy> toplevelConfigureRequestedSpy;
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     QScopedPointer<QSignalSpy> surfaceConfigureRequestedSpy;
@@ -855,7 +803,7 @@ void TestXdgShellClientRules::testSizeRemember()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
     QCOMPARE(toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(488, 640));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 0);
+    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
     Test::render(surface.data(), QSize(488, 640), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
@@ -868,7 +816,7 @@ void TestXdgShellClientRules::testSizeRemember()
     QVERIFY(!client->isInteractiveMove());
     QVERIFY(!client->isInteractiveResize());
 
-    QVERIFY(surfaceConfigureRequestedSpy->wait(10));
+    QVERIFY(surfaceConfigureRequestedSpy->wait());
     QCOMPARE(surfaceConfigureRequestedSpy->count(), 5);
     QCOMPARE(toplevelConfigureRequestedSpy->count(), 5);
 
@@ -877,7 +825,7 @@ void TestXdgShellClientRules::testSizeRemember()
     surface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));
     surface.reset(Test::createSurface());
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     surfaceConfigureRequestedSpy.reset(new QSignalSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested));
     shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
@@ -907,24 +855,13 @@ void TestXdgShellClientRules::testSizeRemember()
 
 void TestXdgShellClientRules::testSizeForce()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("size", QSize(480, 640));
-    group.writeEntry("sizerule", int(Rules::Force));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("size", QSize(480, 640), int(Rules::Force));
 
     // Create the test client.
     QScopedPointer<KWayland::Client::Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface;
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<QSignalSpy> toplevelConfigureRequestedSpy;
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     QScopedPointer<QSignalSpy> surfaceConfigureRequestedSpy;
@@ -969,7 +906,7 @@ void TestXdgShellClientRules::testSizeForce()
     surface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));
     surface.reset(Test::createSurface());
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     surfaceConfigureRequestedSpy.reset(new QSignalSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested));
     shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
@@ -1003,7 +940,7 @@ void TestXdgShellClientRules::testSizeApplyNow()
     QScopedPointer<KWayland::Client::Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface;
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<QSignalSpy> toplevelConfigureRequestedSpy;
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     QScopedPointer<QSignalSpy> surfaceConfigureRequestedSpy;
@@ -1030,18 +967,7 @@ void TestXdgShellClientRules::testSizeApplyNow()
     QCOMPARE(surfaceConfigureRequestedSpy->count(), 2);
     QCOMPARE(toplevelConfigureRequestedSpy->count(), 2);
 
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("size", QSize(480, 640));
-    group.writeEntry("sizerule", int(Rules::ApplyNow));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("size", QSize(480, 640), int(Rules::ApplyNow));
 
     // The compositor should send a configure event with a new size.
     QVERIFY(surfaceConfigureRequestedSpy->wait());
@@ -1070,24 +996,13 @@ void TestXdgShellClientRules::testSizeApplyNow()
 
 void TestXdgShellClientRules::testSizeForceTemporarily()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("size", QSize(480, 640));
-    group.writeEntry("sizerule", int(Rules::ForceTemporarily));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("size", QSize(480, 640), int(Rules::ForceTemporarily));
 
     // Create the test client.
     QScopedPointer<KWayland::Client::Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface;
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<QSignalSpy> toplevelConfigureRequestedSpy;
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     QScopedPointer<QSignalSpy> surfaceConfigureRequestedSpy;
@@ -1132,7 +1047,7 @@ void TestXdgShellClientRules::testSizeForceTemporarily()
     surface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));
     surface.reset(Test::createSurface());
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     surfaceConfigureRequestedSpy.reset(new QSignalSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested));
     shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
@@ -1162,26 +1077,14 @@ void TestXdgShellClientRules::testSizeForceTemporarily()
 
 void TestXdgShellClientRules::testMaximizeDontAffect()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("maximizehoriz", true);
-    group.writeEntry("maximizehorizrule", int(Rules::DontAffect));
-    group.writeEntry("maximizevert", true);
-    group.writeEntry("maximizevertrule", int(Rules::DontAffect));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("maximizehoriz", true, int(Rules::DontAffect));
+    setWindowRule("maximizevert", true, int(Rules::DontAffect));
 
     // Create the test client.
     QScopedPointer<KWayland::Client::Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface;
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<QSignalSpy> toplevelConfigureRequestedSpy;
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     QScopedPointer<QSignalSpy> surfaceConfigureRequestedSpy;
@@ -1225,26 +1128,14 @@ void TestXdgShellClientRules::testMaximizeDontAffect()
 
 void TestXdgShellClientRules::testMaximizeApply()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("maximizehoriz", true);
-    group.writeEntry("maximizehorizrule", int(Rules::Apply));
-    group.writeEntry("maximizevert", true);
-    group.writeEntry("maximizevertrule", int(Rules::Apply));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("maximizehoriz", true, int(Rules::Apply));
+    setWindowRule("maximizevert", true, int(Rules::Apply));
 
     // Create the test client.
     QScopedPointer<KWayland::Client::Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface;
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<QSignalSpy> toplevelConfigureRequestedSpy;
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     QScopedPointer<QSignalSpy> surfaceConfigureRequestedSpy;
@@ -1285,7 +1176,6 @@ void TestXdgShellClientRules::testMaximizeApply()
     QVERIFY(surfaceConfigureRequestedSpy->wait());
     QCOMPARE(surfaceConfigureRequestedSpy->count(), 3);
     QCOMPARE(toplevelConfigureRequestedSpy->count(), 3);
-    QEXPECT_FAIL("", "Geometry restore is set to the first valid geometry", Continue);
     QCOMPARE(toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(0, 0));
     states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
@@ -1305,7 +1195,7 @@ void TestXdgShellClientRules::testMaximizeApply()
     surface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));
     surface.reset(Test::createSurface());
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     surfaceConfigureRequestedSpy.reset(new QSignalSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested));
     shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
@@ -1343,26 +1233,14 @@ void TestXdgShellClientRules::testMaximizeApply()
 
 void TestXdgShellClientRules::testMaximizeRemember()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("maximizehoriz", true);
-    group.writeEntry("maximizehorizrule", int(Rules::Remember));
-    group.writeEntry("maximizevert", true);
-    group.writeEntry("maximizevertrule", int(Rules::Remember));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("maximizehoriz", true, int(Rules::Remember));
+    setWindowRule("maximizevert", true, int(Rules::Remember));
 
     // Create the test client.
     QScopedPointer<KWayland::Client::Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface;
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<QSignalSpy> toplevelConfigureRequestedSpy;
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     QScopedPointer<QSignalSpy> surfaceConfigureRequestedSpy;
@@ -1403,7 +1281,6 @@ void TestXdgShellClientRules::testMaximizeRemember()
     QVERIFY(surfaceConfigureRequestedSpy->wait());
     QCOMPARE(surfaceConfigureRequestedSpy->count(), 3);
     QCOMPARE(toplevelConfigureRequestedSpy->count(), 3);
-    QEXPECT_FAIL("", "Geometry restore is set to the first valid geometry", Continue);
     QCOMPARE(toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(0, 0));
     states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
@@ -1423,7 +1300,7 @@ void TestXdgShellClientRules::testMaximizeRemember()
     surface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));
     surface.reset(Test::createSurface());
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     surfaceConfigureRequestedSpy.reset(new QSignalSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested));
     shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
@@ -1461,26 +1338,14 @@ void TestXdgShellClientRules::testMaximizeRemember()
 
 void TestXdgShellClientRules::testMaximizeForce()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("maximizehoriz", true);
-    group.writeEntry("maximizehorizrule", int(Rules::Force));
-    group.writeEntry("maximizevert", true);
-    group.writeEntry("maximizevertrule", int(Rules::Force));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("maximizehoriz", true, int(Rules::Force));
+    setWindowRule("maximizevert", true, int(Rules::Force));
 
     // Create the test client.
     QScopedPointer<KWayland::Client::Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface;
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<QSignalSpy> toplevelConfigureRequestedSpy;
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     QScopedPointer<QSignalSpy> surfaceConfigureRequestedSpy;
@@ -1529,7 +1394,7 @@ void TestXdgShellClientRules::testMaximizeForce()
     surface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));
     surface.reset(Test::createSurface());
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     surfaceConfigureRequestedSpy.reset(new QSignalSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested));
     shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
@@ -1571,7 +1436,7 @@ void TestXdgShellClientRules::testMaximizeApplyNow()
     QScopedPointer<KWayland::Client::Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface;
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<QSignalSpy> toplevelConfigureRequestedSpy;
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     QScopedPointer<QSignalSpy> surfaceConfigureRequestedSpy;
@@ -1607,20 +1472,8 @@ void TestXdgShellClientRules::testMaximizeApplyNow()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
 
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("maximizehoriz", true);
-    group.writeEntry("maximizehorizrule", int(Rules::ApplyNow));
-    group.writeEntry("maximizevert", true);
-    group.writeEntry("maximizevertrule", int(Rules::ApplyNow));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("maximizehoriz", true, int(Rules::ApplyNow));
+    setWindowRule("maximizevert", true, int(Rules::ApplyNow));
 
     // We should receive a configure event with a new surface size.
     QVERIFY(surfaceConfigureRequestedSpy->wait());
@@ -1677,26 +1530,14 @@ void TestXdgShellClientRules::testMaximizeApplyNow()
 
 void TestXdgShellClientRules::testMaximizeForceTemporarily()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("maximizehoriz", true);
-    group.writeEntry("maximizehorizrule", int(Rules::ForceTemporarily));
-    group.writeEntry("maximizevert", true);
-    group.writeEntry("maximizevertrule", int(Rules::ForceTemporarily));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("maximizehoriz", true, int(Rules::ForceTemporarily));
+    setWindowRule("maximizevert", true, int(Rules::ForceTemporarily));
 
     // Create the test client.
     QScopedPointer<KWayland::Client::Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface;
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<QSignalSpy> toplevelConfigureRequestedSpy;
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     QScopedPointer<QSignalSpy> surfaceConfigureRequestedSpy;
@@ -1745,7 +1586,7 @@ void TestXdgShellClientRules::testMaximizeForceTemporarily()
     surface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));
     surface.reset(Test::createSurface());
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
     surfaceConfigureRequestedSpy.reset(new QSignalSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested));
     shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
@@ -1789,18 +1630,7 @@ void TestXdgShellClientRules::testDesktopDontAffect()
     VirtualDesktopManager::self()->setCurrent(1);
     QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("desktops", {VirtualDesktopManager::self()->desktopForX11Id(2)->id()});
-    group.writeEntry("desktopsrule", int(Rules::DontAffect));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("desktops", QStringList{VirtualDesktopManager::self()->desktopForX11Id(2)->id()}, int(Rules::DontAffect));
 
     // Create the test client.
     AbstractClient *client;
@@ -1827,18 +1657,7 @@ void TestXdgShellClientRules::testDesktopApply()
     VirtualDesktopManager::self()->setCurrent(1);
     QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("desktops", {VirtualDesktopManager::self()->desktopForX11Id(2)->id()});
-    group.writeEntry("desktopsrule", int(Rules::Apply));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("desktops", QStringList{VirtualDesktopManager::self()->desktopForX11Id(2)->id()}, int(Rules::Apply));
 
     // Create the test client.
     AbstractClient *client;
@@ -1881,18 +1700,7 @@ void TestXdgShellClientRules::testDesktopRemember()
     VirtualDesktopManager::self()->setCurrent(1);
     QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("desktops", {VirtualDesktopManager::self()->desktopForX11Id(2)->id()});
-    group.writeEntry("desktopsrule", int(Rules::Remember));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("desktops", QStringList{VirtualDesktopManager::self()->desktopForX11Id(2)->id()}, int(Rules::Remember));
 
     // Create the test client.
     AbstractClient *client;
@@ -1931,19 +1739,7 @@ void TestXdgShellClientRules::testDesktopForce()
     VirtualDesktopManager::self()->setCurrent(1);
     QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("desktops", {VirtualDesktopManager::self()->desktopForX11Id(2)->id()});
-    group.writeEntry("desktopsrule", int(Rules::Force));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
-
+    setWindowRule("desktops", QStringList{VirtualDesktopManager::self()->desktopForX11Id(2)->id()}, int(Rules::Force));
 
     // Create the test client.
     AbstractClient *client;
@@ -1995,18 +1791,7 @@ void TestXdgShellClientRules::testDesktopApplyNow()
     QCOMPARE(client->desktop(), 1);
     QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("desktops", {VirtualDesktopManager::self()->desktopForX11Id(2)->id()});
-    group.writeEntry("desktopsrule", int(Rules::ApplyNow));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("desktops", QStringList{VirtualDesktopManager::self()->desktopForX11Id(2)->id()}, int(Rules::ApplyNow));
 
     // The client should have been moved to the second virtual desktop.
     QCOMPARE(client->desktop(), 2);
@@ -2036,18 +1821,7 @@ void TestXdgShellClientRules::testDesktopForceTemporarily()
     VirtualDesktopManager::self()->setCurrent(1);
     QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("desktops", {VirtualDesktopManager::self()->desktopForX11Id(2)->id()});
-    group.writeEntry("desktopsrule", int(Rules::ForceTemporarily));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("desktops", QStringList{VirtualDesktopManager::self()->desktopForX11Id(2)->id()}, int(Rules::ForceTemporarily));
 
     // Create the test client.
     AbstractClient *client;
@@ -2092,18 +1866,7 @@ void TestXdgShellClientRules::testDesktopForceTemporarily()
 
 void TestXdgShellClientRules::testMinimizeDontAffect()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("minimize", true);
-    group.writeEntry("minimizerule", int(Rules::DontAffect));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("minimize", true, int(Rules::DontAffect));
 
     // Create the test client.
     AbstractClient *client;
@@ -2124,18 +1887,7 @@ void TestXdgShellClientRules::testMinimizeDontAffect()
 
 void TestXdgShellClientRules::testMinimizeApply()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("minimize", true);
-    group.writeEntry("minimizerule", int(Rules::Apply));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("minimize", true, int(Rules::Apply));
 
     // Create the test client.
     AbstractClient *client;
@@ -2169,18 +1921,7 @@ void TestXdgShellClientRules::testMinimizeApply()
 
 void TestXdgShellClientRules::testMinimizeRemember()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("minimize", false);
-    group.writeEntry("minimizerule", int(Rules::Remember));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("minimize", false, int(Rules::Remember));
 
     // Create the test client.
     AbstractClient *client;
@@ -2212,18 +1953,7 @@ void TestXdgShellClientRules::testMinimizeRemember()
 
 void TestXdgShellClientRules::testMinimizeForce()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("minimize", false);
-    group.writeEntry("minimizerule", int(Rules::Force));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("minimize", false, int(Rules::Force));
 
     // Create the test client.
     AbstractClient *client;
@@ -2266,18 +1996,7 @@ void TestXdgShellClientRules::testMinimizeApplyNow()
     QVERIFY(client->isMinimizable());
     QVERIFY(!client->isMinimized());
 
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("minimize", true);
-    group.writeEntry("minimizerule", int(Rules::ApplyNow));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("minimize", true, int(Rules::ApplyNow));
 
     // The client should be minimized now.
     QVERIFY(client->isMinimizable());
@@ -2300,18 +2019,7 @@ void TestXdgShellClientRules::testMinimizeApplyNow()
 
 void TestXdgShellClientRules::testMinimizeForceTemporarily()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("minimize", false);
-    group.writeEntry("minimizerule", int(Rules::ForceTemporarily));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("minimize", false, int(Rules::ForceTemporarily));
 
     // Create the test client.
     AbstractClient *client;
@@ -2345,18 +2053,7 @@ void TestXdgShellClientRules::testMinimizeForceTemporarily()
 
 void TestXdgShellClientRules::testSkipTaskbarDontAffect()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("skiptaskbar", true);
-    group.writeEntry("skiptaskbarrule", int(Rules::DontAffect));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("skiptaskbar", true, int(Rules::DontAffect));
 
     // Create the test client.
     AbstractClient *client;
@@ -2376,18 +2073,7 @@ void TestXdgShellClientRules::testSkipTaskbarDontAffect()
 
 void TestXdgShellClientRules::testSkipTaskbarApply()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("skiptaskbar", true);
-    group.writeEntry("skiptaskbarrule", int(Rules::Apply));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("skiptaskbar", true, int(Rules::Apply));
 
     // Create the test client.
     AbstractClient *client;
@@ -2419,18 +2105,7 @@ void TestXdgShellClientRules::testSkipTaskbarApply()
 
 void TestXdgShellClientRules::testSkipTaskbarRemember()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("skiptaskbar", true);
-    group.writeEntry("skiptaskbarrule", int(Rules::Remember));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("skiptaskbar", true, int(Rules::Remember));
 
     // Create the test client.
     AbstractClient *client;
@@ -2464,18 +2139,7 @@ void TestXdgShellClientRules::testSkipTaskbarRemember()
 
 void TestXdgShellClientRules::testSkipTaskbarForce()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("skiptaskbar", true);
-    group.writeEntry("skiptaskbarrule", int(Rules::Force));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("skiptaskbar", true, int(Rules::Force));
 
     // Create the test client.
     AbstractClient *client;
@@ -2517,18 +2181,7 @@ void TestXdgShellClientRules::testSkipTaskbarApplyNow()
     QVERIFY(client);
     QVERIFY(!client->skipTaskbar());
 
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("skiptaskbar", true);
-    group.writeEntry("skiptaskbarrule", int(Rules::ApplyNow));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("skiptaskbar", true, int(Rules::ApplyNow));
 
     // The client should not be on a taskbar now.
     QVERIFY(client->skipTaskbar());
@@ -2549,18 +2202,7 @@ void TestXdgShellClientRules::testSkipTaskbarApplyNow()
 
 void TestXdgShellClientRules::testSkipTaskbarForceTemporarily()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("skiptaskbar", true);
-    group.writeEntry("skiptaskbarrule", int(Rules::ForceTemporarily));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("skiptaskbar", true, int(Rules::ForceTemporarily));
 
     // Create the test client.
     AbstractClient *client;
@@ -2596,18 +2238,7 @@ void TestXdgShellClientRules::testSkipTaskbarForceTemporarily()
 
 void TestXdgShellClientRules::testSkipPagerDontAffect()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("skippager", true);
-    group.writeEntry("skippagerrule", int(Rules::DontAffect));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("skippager", true, int(Rules::DontAffect));
 
     // Create the test client.
     AbstractClient *client;
@@ -2627,18 +2258,7 @@ void TestXdgShellClientRules::testSkipPagerDontAffect()
 
 void TestXdgShellClientRules::testSkipPagerApply()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("skippager", true);
-    group.writeEntry("skippagerrule", int(Rules::Apply));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("skippager", true, int(Rules::Apply));
 
     // Create the test client.
     AbstractClient *client;
@@ -2670,18 +2290,7 @@ void TestXdgShellClientRules::testSkipPagerApply()
 
 void TestXdgShellClientRules::testSkipPagerRemember()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("skippager", true);
-    group.writeEntry("skippagerrule", int(Rules::Remember));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("skippager", true, int(Rules::Remember));
 
     // Create the test client.
     AbstractClient *client;
@@ -2715,18 +2324,7 @@ void TestXdgShellClientRules::testSkipPagerRemember()
 
 void TestXdgShellClientRules::testSkipPagerForce()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("skippager", true);
-    group.writeEntry("skippagerrule", int(Rules::Force));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("skippager", true, int(Rules::Force));
 
     // Create the test client.
     AbstractClient *client;
@@ -2768,18 +2366,7 @@ void TestXdgShellClientRules::testSkipPagerApplyNow()
     QVERIFY(client);
     QVERIFY(!client->skipPager());
 
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("skippager", true);
-    group.writeEntry("skippagerrule", int(Rules::ApplyNow));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("skippager", true, int(Rules::ApplyNow));
 
     // The client should not be on a pager now.
     QVERIFY(client->skipPager());
@@ -2800,18 +2387,7 @@ void TestXdgShellClientRules::testSkipPagerApplyNow()
 
 void TestXdgShellClientRules::testSkipPagerForceTemporarily()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("skippager", true);
-    group.writeEntry("skippagerrule", int(Rules::ForceTemporarily));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("skippager", true, int(Rules::ForceTemporarily));
 
     // Create the test client.
     AbstractClient *client;
@@ -2847,18 +2423,7 @@ void TestXdgShellClientRules::testSkipPagerForceTemporarily()
 
 void TestXdgShellClientRules::testSkipSwitcherDontAffect()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("skipswitcher", true);
-    group.writeEntry("skipswitcherrule", int(Rules::DontAffect));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("skipswitcher", true, int(Rules::DontAffect));
 
     // Create the test client.
     AbstractClient *client;
@@ -2878,18 +2443,7 @@ void TestXdgShellClientRules::testSkipSwitcherDontAffect()
 
 void TestXdgShellClientRules::testSkipSwitcherApply()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("skipswitcher", true);
-    group.writeEntry("skipswitcherrule", int(Rules::Apply));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("skipswitcher", true, int(Rules::Apply));
 
     // Create the test client.
     AbstractClient *client;
@@ -2921,18 +2475,7 @@ void TestXdgShellClientRules::testSkipSwitcherApply()
 
 void TestXdgShellClientRules::testSkipSwitcherRemember()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("skipswitcher", true);
-    group.writeEntry("skipswitcherrule", int(Rules::Remember));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("skipswitcher", true, int(Rules::Remember));
 
     // Create the test client.
     AbstractClient *client;
@@ -2966,18 +2509,7 @@ void TestXdgShellClientRules::testSkipSwitcherRemember()
 
 void TestXdgShellClientRules::testSkipSwitcherForce()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("skipswitcher", true);
-    group.writeEntry("skipswitcherrule", int(Rules::Force));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("skipswitcher", true, int(Rules::Force));
 
     // Create the test client.
     AbstractClient *client;
@@ -3019,18 +2551,7 @@ void TestXdgShellClientRules::testSkipSwitcherApplyNow()
     QVERIFY(client);
     QVERIFY(!client->skipSwitcher());
 
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("skipswitcher", true);
-    group.writeEntry("skipswitcherrule", int(Rules::ApplyNow));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("skipswitcher", true, int(Rules::ApplyNow));
 
     // The client should be excluded from window switching effects now.
     QVERIFY(client->skipSwitcher());
@@ -3051,18 +2572,7 @@ void TestXdgShellClientRules::testSkipSwitcherApplyNow()
 
 void TestXdgShellClientRules::testSkipSwitcherForceTemporarily()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("skipswitcher", true);
-    group.writeEntry("skipswitcherrule", int(Rules::ForceTemporarily));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("skipswitcher", true, int(Rules::ForceTemporarily));
 
     // Create the test client.
     AbstractClient *client;
@@ -3098,18 +2608,7 @@ void TestXdgShellClientRules::testSkipSwitcherForceTemporarily()
 
 void TestXdgShellClientRules::testKeepAboveDontAffect()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("above", true);
-    group.writeEntry("aboverule", int(Rules::DontAffect));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("above", true, int(Rules::DontAffect));
 
     // Create the test client.
     AbstractClient *client;
@@ -3129,18 +2628,7 @@ void TestXdgShellClientRules::testKeepAboveDontAffect()
 
 void TestXdgShellClientRules::testKeepAboveApply()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("above", true);
-    group.writeEntry("aboverule", int(Rules::Apply));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("above", true, int(Rules::Apply));
 
     // Create the test client.
     AbstractClient *client;
@@ -3172,18 +2660,7 @@ void TestXdgShellClientRules::testKeepAboveApply()
 
 void TestXdgShellClientRules::testKeepAboveRemember()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("above", true);
-    group.writeEntry("aboverule", int(Rules::Remember));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("above", true, int(Rules::Remember));
 
     // Create the test client.
     AbstractClient *client;
@@ -3215,18 +2692,7 @@ void TestXdgShellClientRules::testKeepAboveRemember()
 
 void TestXdgShellClientRules::testKeepAboveForce()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("above", true);
-    group.writeEntry("aboverule", int(Rules::Force));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("above", true, int(Rules::Force));
 
     // Create the test client.
     AbstractClient *client;
@@ -3266,18 +2732,7 @@ void TestXdgShellClientRules::testKeepAboveApplyNow()
     QVERIFY(client);
     QVERIFY(!client->keepAbove());
 
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("above", true);
-    group.writeEntry("aboverule", int(Rules::ApplyNow));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("above", true, int(Rules::ApplyNow));
 
     // The client should now be kept above other clients.
     QVERIFY(client->keepAbove());
@@ -3298,18 +2753,7 @@ void TestXdgShellClientRules::testKeepAboveApplyNow()
 
 void TestXdgShellClientRules::testKeepAboveForceTemporarily()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("above", true);
-    group.writeEntry("aboverule", int(Rules::ForceTemporarily));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("above", true, int(Rules::ForceTemporarily));
 
     // Create the test client.
     AbstractClient *client;
@@ -3347,18 +2791,7 @@ void TestXdgShellClientRules::testKeepAboveForceTemporarily()
 
 void TestXdgShellClientRules::testKeepBelowDontAffect()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("below", true);
-    group.writeEntry("belowrule", int(Rules::DontAffect));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("below", true, int(Rules::DontAffect));
 
     // Create the test client.
     AbstractClient *client;
@@ -3378,18 +2811,7 @@ void TestXdgShellClientRules::testKeepBelowDontAffect()
 
 void TestXdgShellClientRules::testKeepBelowApply()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("below", true);
-    group.writeEntry("belowrule", int(Rules::Apply));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("below", true, int(Rules::Apply));
 
     // Create the test client.
     AbstractClient *client;
@@ -3421,18 +2843,7 @@ void TestXdgShellClientRules::testKeepBelowApply()
 
 void TestXdgShellClientRules::testKeepBelowRemember()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("below", true);
-    group.writeEntry("belowrule", int(Rules::Remember));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("below", true, int(Rules::Remember));
 
     // Create the test client.
     AbstractClient *client;
@@ -3464,18 +2875,7 @@ void TestXdgShellClientRules::testKeepBelowRemember()
 
 void TestXdgShellClientRules::testKeepBelowForce()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("below", true);
-    group.writeEntry("belowrule", int(Rules::Force));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("below", true, int(Rules::Force));
 
     // Create the test client.
     AbstractClient *client;
@@ -3515,18 +2915,7 @@ void TestXdgShellClientRules::testKeepBelowApplyNow()
     QVERIFY(client);
     QVERIFY(!client->keepBelow());
 
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("below", true);
-    group.writeEntry("belowrule", int(Rules::ApplyNow));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("below", true, int(Rules::ApplyNow));
 
     // The client should now be kept below other clients.
     QVERIFY(client->keepBelow());
@@ -3547,18 +2936,7 @@ void TestXdgShellClientRules::testKeepBelowApplyNow()
 
 void TestXdgShellClientRules::testKeepBelowForceTemporarily()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("below", true);
-    group.writeEntry("belowrule", int(Rules::ForceTemporarily));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("below", true, int(Rules::ForceTemporarily));
 
     // Create the test client.
     AbstractClient *client;
@@ -3596,18 +2974,7 @@ void TestXdgShellClientRules::testKeepBelowForceTemporarily()
 
 void TestXdgShellClientRules::testShortcutDontAffect()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("shortcut", "Ctrl+Alt+1");
-    group.writeEntry("shortcutrule", int(Rules::DontAffect));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("shortcut", "Ctrl+Alt+1", int(Rules::DontAffect));
 
     // Create the test client.
     AbstractClient *client;
@@ -3623,12 +2990,12 @@ void TestXdgShellClientRules::testShortcutDontAffect()
     QSignalSpy clientUnminimizedSpy(client, &AbstractClient::clientUnminimized);
     QVERIFY(clientUnminimizedSpy.isValid());
     quint32 timestamp = 1;
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_1, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_1, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyPressed(KEY_1, timestamp++);
+    Test::keyboardKeyReleased(KEY_1, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(!clientUnminimizedSpy.wait(100));
     QVERIFY(client->isMinimized());
 
@@ -3640,18 +3007,7 @@ void TestXdgShellClientRules::testShortcutDontAffect()
 
 void TestXdgShellClientRules::testShortcutApply()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("shortcut", "Ctrl+Alt+1");
-    group.writeEntry("shortcutrule", int(Rules::Apply));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("shortcut", "Ctrl+Alt+1", int(Rules::Apply));
 
     // Create the test client.
     AbstractClient *client;
@@ -3664,41 +3020,41 @@ void TestXdgShellClientRules::testShortcutApply()
     QSignalSpy clientUnminimizedSpy(client, &AbstractClient::clientUnminimized);
     QVERIFY(clientUnminimizedSpy.isValid());
     quint32 timestamp = 1;
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL + Qt::ALT + Qt::Key_1}));
+    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
     client->minimize();
     QVERIFY(client->isMinimized());
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_1, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_1, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyPressed(KEY_1, timestamp++);
+    Test::keyboardKeyReleased(KEY_1, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(clientUnminimizedSpy.wait());
     QVERIFY(!client->isMinimized());
 
     // One can also change the shortcut.
     client->setShortcut(QStringLiteral("Ctrl+Alt+2"));
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL + Qt::ALT + Qt::Key_2}));
+    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_2}));
     client->minimize();
     QVERIFY(client->isMinimized());
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_2, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_2, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyPressed(KEY_2, timestamp++);
+    Test::keyboardKeyReleased(KEY_2, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(clientUnminimizedSpy.wait());
     QVERIFY(!client->isMinimized());
 
     // The old shortcut should do nothing.
     client->minimize();
     QVERIFY(client->isMinimized());
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_1, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_1, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyPressed(KEY_1, timestamp++);
+    Test::keyboardKeyReleased(KEY_1, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(!clientUnminimizedSpy.wait(100));
     QVERIFY(client->isMinimized());
 
@@ -3710,7 +3066,7 @@ void TestXdgShellClientRules::testShortcutApply()
     QVERIFY(client);
 
     // The window shortcut should be set back to Ctrl+Alt+1.
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL + Qt::ALT + Qt::Key_1}));
+    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
 
     // Destroy the client.
     delete shellSurface;
@@ -3722,18 +3078,7 @@ void TestXdgShellClientRules::testShortcutRemember()
 {
     QSKIP("KWin core doesn't try to save the last used window shortcut");
 
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("shortcut", "Ctrl+Alt+1");
-    group.writeEntry("shortcutrule", int(Rules::Remember));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("shortcut", "Ctrl+Alt+1", int(Rules::Remember));
 
     // Create the test client.
     AbstractClient *client;
@@ -3746,29 +3091,29 @@ void TestXdgShellClientRules::testShortcutRemember()
     QSignalSpy clientUnminimizedSpy(client, &AbstractClient::clientUnminimized);
     QVERIFY(clientUnminimizedSpy.isValid());
     quint32 timestamp = 1;
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL + Qt::ALT + Qt::Key_1}));
+    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
     client->minimize();
     QVERIFY(client->isMinimized());
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_1, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_1, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyPressed(KEY_1, timestamp++);
+    Test::keyboardKeyReleased(KEY_1, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(clientUnminimizedSpy.wait());
     QVERIFY(!client->isMinimized());
 
     // Change the window shortcut to Ctrl+Alt+2.
     client->setShortcut(QStringLiteral("Ctrl+Alt+2"));
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL + Qt::ALT + Qt::Key_2}));
+    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_2}));
     client->minimize();
     QVERIFY(client->isMinimized());
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_2, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_2, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyPressed(KEY_2, timestamp++);
+    Test::keyboardKeyReleased(KEY_2, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(clientUnminimizedSpy.wait());
     QVERIFY(!client->isMinimized());
 
@@ -3780,7 +3125,7 @@ void TestXdgShellClientRules::testShortcutRemember()
     QVERIFY(client);
 
     // The window shortcut should be set to the last known value.
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL + Qt::ALT + Qt::Key_2}));
+    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_2}));
 
     // Destroy the client.
     delete shellSurface;
@@ -3792,18 +3137,7 @@ void TestXdgShellClientRules::testShortcutForce()
 {
     QSKIP("KWin core can't release forced window shortcuts");
 
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("shortcut", "Ctrl+Alt+1");
-    group.writeEntry("shortcutrule", int(Rules::Force));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("shortcut", "Ctrl+Alt+1", int(Rules::Force));
 
     // Create the test client.
     AbstractClient *client;
@@ -3816,29 +3150,29 @@ void TestXdgShellClientRules::testShortcutForce()
     QSignalSpy clientUnminimizedSpy(client, &AbstractClient::clientUnminimized);
     QVERIFY(clientUnminimizedSpy.isValid());
     quint32 timestamp = 1;
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL + Qt::ALT + Qt::Key_1}));
+    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
     client->minimize();
     QVERIFY(client->isMinimized());
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_1, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_1, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyPressed(KEY_1, timestamp++);
+    Test::keyboardKeyReleased(KEY_1, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(clientUnminimizedSpy.wait());
     QVERIFY(!client->isMinimized());
 
     // Any attempt to change the window shortcut should not succeed.
     client->setShortcut(QStringLiteral("Ctrl+Alt+2"));
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL + Qt::ALT + Qt::Key_1}));
+    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
     client->minimize();
     QVERIFY(client->isMinimized());
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_2, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_2, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyPressed(KEY_2, timestamp++);
+    Test::keyboardKeyReleased(KEY_2, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(!clientUnminimizedSpy.wait(100));
     QVERIFY(client->isMinimized());
 
@@ -3850,7 +3184,7 @@ void TestXdgShellClientRules::testShortcutForce()
     QVERIFY(client);
 
     // The window shortcut should still be forced.
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL + Qt::ALT + Qt::Key_1}));
+    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
 
     // Destroy the client.
     delete shellSurface;
@@ -3868,52 +3202,41 @@ void TestXdgShellClientRules::testShortcutApplyNow()
     QVERIFY(client);
     QVERIFY(client->shortcut().isEmpty());
 
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("shortcut", "Ctrl+Alt+1");
-    group.writeEntry("shortcutrule", int(Rules::ApplyNow));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("shortcut", "Ctrl+Alt+1", int(Rules::ApplyNow));
 
     // The client should now have a window shortcut assigned.
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL + Qt::ALT + Qt::Key_1}));
+    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
     QSignalSpy clientUnminimizedSpy(client, &AbstractClient::clientUnminimized);
     QVERIFY(clientUnminimizedSpy.isValid());
     quint32 timestamp = 1;
     client->minimize();
     QVERIFY(client->isMinimized());
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_1, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_1, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyPressed(KEY_1, timestamp++);
+    Test::keyboardKeyReleased(KEY_1, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(clientUnminimizedSpy.wait());
     QVERIFY(!client->isMinimized());
 
     // Assign a different shortcut.
     client->setShortcut(QStringLiteral("Ctrl+Alt+2"));
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL + Qt::ALT + Qt::Key_2}));
+    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_2}));
     client->minimize();
     QVERIFY(client->isMinimized());
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_2, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_2, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyPressed(KEY_2, timestamp++);
+    Test::keyboardKeyReleased(KEY_2, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(clientUnminimizedSpy.wait());
     QVERIFY(!client->isMinimized());
 
     // The rule should not be applied again.
     client->evaluateWindowRules();
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL + Qt::ALT + Qt::Key_2}));
+    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_2}));
 
     // Destroy the client.
     delete shellSurface;
@@ -3925,18 +3248,7 @@ void TestXdgShellClientRules::testShortcutForceTemporarily()
 {
     QSKIP("KWin core can't release forced window shortcuts");
 
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("shortcut", "Ctrl+Alt+1");
-    group.writeEntry("shortcutrule", int(Rules::ForceTemporarily));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("shortcut", "Ctrl+Alt+1", int(Rules::ForceTemporarily));
 
     // Create the test client.
     AbstractClient *client;
@@ -3949,29 +3261,29 @@ void TestXdgShellClientRules::testShortcutForceTemporarily()
     QSignalSpy clientUnminimizedSpy(client, &AbstractClient::clientUnminimized);
     QVERIFY(clientUnminimizedSpy.isValid());
     quint32 timestamp = 1;
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL + Qt::ALT + Qt::Key_1}));
+    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
     client->minimize();
     QVERIFY(client->isMinimized());
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_1, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_1, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyPressed(KEY_1, timestamp++);
+    Test::keyboardKeyReleased(KEY_1, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(clientUnminimizedSpy.wait());
     QVERIFY(!client->isMinimized());
 
     // Any attempt to change the window shortcut should not succeed.
     client->setShortcut(QStringLiteral("Ctrl+Alt+2"));
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL + Qt::ALT + Qt::Key_1}));
+    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
     client->minimize();
     QVERIFY(client->isMinimized());
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->keyboardKeyPressed(KEY_2, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_2, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyPressed(KEY_2, timestamp++);
+    Test::keyboardKeyReleased(KEY_2, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(!clientUnminimizedSpy.wait(100));
     QVERIFY(client->isMinimized());
 
@@ -4039,18 +3351,7 @@ void TestXdgShellClientRules::testDesktopFileForceTemporarily()
 
 void TestXdgShellClientRules::testActiveOpacityDontAffect()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("opacityactive", 90);
-    group.writeEntry("opacityactiverule", int(Rules::DontAffect));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("opacityactive", 90, int(Rules::DontAffect));
 
     // Create the test client.
     AbstractClient *client;
@@ -4071,18 +3372,7 @@ void TestXdgShellClientRules::testActiveOpacityDontAffect()
 
 void TestXdgShellClientRules::testActiveOpacityForce()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("opacityactive", 90);
-    group.writeEntry("opacityactiverule", int(Rules::Force));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("opacityactive", 90, int(Rules::Force));
 
     // Create the test client.
     AbstractClient *client;
@@ -4101,18 +3391,7 @@ void TestXdgShellClientRules::testActiveOpacityForce()
 
 void TestXdgShellClientRules::testActiveOpacityForceTemporarily()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("opacityactive", 90);
-    group.writeEntry("opacityactiverule", int(Rules::ForceTemporarily));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("opacityactive", 90, int(Rules::ForceTemporarily));
 
     // Create the test client.
     AbstractClient *client;
@@ -4140,18 +3419,7 @@ void TestXdgShellClientRules::testActiveOpacityForceTemporarily()
 
 void TestXdgShellClientRules::testInactiveOpacityDontAffect()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("opacityinactive", 80);
-    group.writeEntry("opacityinactiverule", int(Rules::DontAffect));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("opacityinactive", 80, int(Rules::DontAffect));
 
     // Create the test client.
     AbstractClient *client;
@@ -4176,18 +3444,7 @@ void TestXdgShellClientRules::testInactiveOpacityDontAffect()
 
 void TestXdgShellClientRules::testInactiveOpacityForce()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("opacityinactive", 80);
-    group.writeEntry("opacityinactiverule", int(Rules::Force));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("opacityinactive", 80, int(Rules::Force));
 
     // Create the test client.
     AbstractClient *client;
@@ -4213,18 +3470,7 @@ void TestXdgShellClientRules::testInactiveOpacityForce()
 
 void TestXdgShellClientRules::testInactiveOpacityForceTemporarily()
 {
-    // Initialize RuleBook with the test rule.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-    KConfigGroup group = config->group("1");
-    group.writeEntry("opacityinactive", 80);
-    group.writeEntry("opacityinactiverule", int(Rules::ForceTemporarily));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("opacityinactive", 80, int(Rules::ForceTemporarily));
 
     // Create the test client.
     AbstractClient *client;
@@ -4259,21 +3505,412 @@ void TestXdgShellClientRules::testInactiveOpacityForceTemporarily()
     QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
+void TestXdgShellClientRules::testNoBorderDontAffect()
+{
+    // Initialize RuleBook with the test rule.
+    setWindowRule("noborder", true, int(Rules::DontAffect));
+
+    // Create the test client.
+    AbstractClient *client;
+    KWayland::Client::Surface *surface;
+    Test::XdgToplevel *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"), Test::XdgToplevelDecorationV1::mode_server_side);
+    QVERIFY(client);
+
+    // The client should not be affected by the rule.
+    QVERIFY(!client->noBorder());
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClientRules::testNoBorderApply()
+{
+    setWindowRule("noborder", true, int(Rules::Apply));
+
+    // Create the test client.
+    AbstractClient *client;
+    KWayland::Client::Surface *surface;
+    Test::XdgToplevel *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"), Test::XdgToplevelDecorationV1::mode_server_side);
+    QVERIFY(client);
+
+    // Initially, the client should not be decorated.
+    QVERIFY(client->noBorder());
+    QVERIFY(!client->isDecorated());
+
+    // But you should be able to change "no border" property afterwards.
+    QVERIFY(client->userCanSetNoBorder());
+    client->setNoBorder(false);
+    QVERIFY(!client->noBorder());
+
+    // If one re-opens the client, it should have no border again.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"), Test::XdgToplevelDecorationV1::mode_server_side);
+    QVERIFY(client);
+    QVERIFY(client->noBorder());
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClientRules::testNoBorderRemember()
+{
+    setWindowRule("noborder", true, int(Rules::Remember));
+
+    // Create the test client.
+    AbstractClient *client;
+    KWayland::Client::Surface *surface;
+    Test::XdgToplevel *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"), Test::XdgToplevelDecorationV1::mode_server_side);
+    QVERIFY(client);
+
+    // Initially, the client should not be decorated.
+    QVERIFY(client->noBorder());
+    QVERIFY(!client->isDecorated());
+
+    // Unset the "no border" property.
+    QVERIFY(client->userCanSetNoBorder());
+    client->setNoBorder(false);
+    QVERIFY(!client->noBorder());
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+
+    // Re-open the client, it should be decorated.
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"), Test::XdgToplevelDecorationV1::mode_server_side);
+    QVERIFY(client);
+    QVERIFY(client->isDecorated());
+    QVERIFY(!client->noBorder());
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClientRules::testNoBorderForce()
+{
+    setWindowRule("noborder", true, int(Rules::Force));
+
+    // Create the test client.
+    AbstractClient *client;
+    KWayland::Client::Surface *surface;
+    Test::XdgToplevel *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"), Test::XdgToplevelDecorationV1::mode_server_side);
+    QVERIFY(client);
+
+    // The client should not be decorated.
+    QVERIFY(client->noBorder());
+    QVERIFY(!client->isDecorated());
+
+    // And the user should not be able to change the "no border" property.
+    client->setNoBorder(false);
+    QVERIFY(client->noBorder());
+
+    // Reopen the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"), Test::XdgToplevelDecorationV1::mode_server_side);
+    QVERIFY(client);
+
+    // The "no border" property should be still forced.
+    QVERIFY(client->noBorder());
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClientRules::testNoBorderApplyNow()
+{
+    // Create the test client.
+    AbstractClient *client;
+    KWayland::Client::Surface *surface;
+    Test::XdgToplevel *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"), Test::XdgToplevelDecorationV1::mode_server_side);
+    QVERIFY(client);
+    QVERIFY(!client->noBorder());
+
+    // Initialize RuleBook with the test rule.
+    setWindowRule("noborder", true, int(Rules::ApplyNow));
+
+    // The "no border" property should be set now.
+    QVERIFY(client->noBorder());
+
+    // One should be still able to change the "no border" property.
+    client->setNoBorder(false);
+    QVERIFY(!client->noBorder());
+
+    // The rule should not be applied again.
+    client->evaluateWindowRules();
+    QVERIFY(!client->noBorder());
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClientRules::testNoBorderForceTemporarily()
+{
+    setWindowRule("noborder", true, int(Rules::ForceTemporarily));
+
+    // Create the test client.
+    AbstractClient *client;
+    KWayland::Client::Surface *surface;
+    Test::XdgToplevel *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"), Test::XdgToplevelDecorationV1::mode_server_side);
+    QVERIFY(client);
+
+    // The "no border" property should be set.
+    QVERIFY(client->noBorder());
+
+    // And you should not be able to change it.
+    client->setNoBorder(false);
+    QVERIFY(client->noBorder());
+
+    // The rule should be discarded when the client is closed.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"), Test::XdgToplevelDecorationV1::mode_server_side);
+    QVERIFY(client);
+    QVERIFY(!client->noBorder());
+
+    // The "no border" property is no longer forced.
+    client->setNoBorder(true);
+    QVERIFY(client->noBorder());
+    client->setNoBorder(false);
+    QVERIFY(!client->noBorder());
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClientRules::testScreenDontAffect()
+{
+    const KWin::Outputs outputs = kwinApp()->platform()->enabledOutputs();
+
+    setWindowRule("screen", int(1), int(Rules::DontAffect));
+
+    // Create the test client.
+    AbstractClient *client;
+    KWayland::Client::Surface *surface;
+    Test::XdgToplevel *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"));
+    QVERIFY(client);
+
+    // The client should not be affected by the rule.
+    QCOMPARE(client->output()->name(), outputs.at(0)->name());
+
+    // The user can still move the client to another screen.
+    workspace()->sendClientToOutput(client, outputs.at(1));
+    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClientRules::testScreenApply()
+{
+    const KWin::Outputs outputs = kwinApp()->platform()->enabledOutputs();
+
+    setWindowRule("screen", int(1), int(Rules::Apply));
+
+    // Create the test client.
+    AbstractClient *client;
+    KWayland::Client::Surface *surface;
+    Test::XdgToplevel *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"));
+    QVERIFY(client);
+
+    // The client should be in the screen specified by the rule.
+    QEXPECT_FAIL("", "Applying a screen rule on a new client fails on Wayland", Continue);
+    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+
+    // The user can move the client to another screen.
+    workspace()->sendClientToOutput(client, outputs.at(0));
+    QCOMPARE(client->output()->name(), outputs.at(0)->name());
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClientRules::testScreenRemember()
+{
+    const KWin::Outputs outputs = kwinApp()->platform()->enabledOutputs();
+
+    setWindowRule("screen", int(1), int(Rules::Remember));
+
+    // Create the test client.
+    AbstractClient *client;
+    KWayland::Client::Surface *surface;
+    Test::XdgToplevel *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"));
+    QVERIFY(client);
+
+    // Initially, the client should be in the first screen
+    QCOMPARE(client->output()->name(), outputs.at(0)->name());
+
+    // Move the client to the second screen.
+    workspace()->sendClientToOutput(client, outputs.at(1));
+    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+
+    // Close and reopen the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"));
+    QVERIFY(client);
+
+    QEXPECT_FAIL("", "Applying a screen rule on a new client fails on Wayland", Continue);
+    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClientRules::testScreenForce()
+{
+    const KWin::Outputs outputs = kwinApp()->platform()->enabledOutputs();
+
+    // Create the test client.
+    AbstractClient *client;
+    KWayland::Client::Surface *surface;
+    Test::XdgToplevel *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"));
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+
+    setWindowRule("screen", int(1), int(Rules::Force));
+
+    // The client should be forced to the screen specified by the rule.
+    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+
+    // User should not be able to move the client to another screen.
+    workspace()->sendClientToOutput(client, outputs.at(0));
+    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+
+    // Disable the output where the window is on, so the client is moved the other screen
+    WaylandOutputConfig config;
+    auto changeSet = config.changeSet(static_cast<AbstractWaylandOutput *>(outputs.at(1)));
+    changeSet->enabled = false;
+    kwinApp()->platform()->applyOutputChanges(config);
+
+    QVERIFY(!outputs.at(1)->isEnabled());
+    QCOMPARE(client->output()->name(), outputs.at(0)->name());
+
+    // Enable the output and check that the client is moved there again
+    changeSet->enabled = true;
+    kwinApp()->platform()->applyOutputChanges(config);
+
+    QVERIFY(outputs.at(1)->isEnabled());
+    QEXPECT_FAIL("", "Disabling and enabling an output does not move the client to the Forced screen", Continue);
+    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+
+    // Close and reopen the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"));
+    QVERIFY(client);
+
+    QEXPECT_FAIL("", "Applying a screen rule on a new client fails on Wayland", Continue);
+    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClientRules::testScreenApplyNow()
+{
+    const KWin::Outputs outputs = kwinApp()->platform()->enabledOutputs();
+
+    // Create the test client.
+    AbstractClient *client;
+    KWayland::Client::Surface *surface;
+    Test::XdgToplevel *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"));
+    QVERIFY(client);
+
+    QCOMPARE(client->output()->name(), outputs.at(0)->name());
+
+    // Set the rule so the client should move to the screen specified by the rule.
+    setWindowRule("screen", int(1), int(Rules::ApplyNow));
+    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+
+    // The user can move the client to another screen.
+    workspace()->sendClientToOutput(client, outputs.at(0));
+    QCOMPARE(client->output()->name(), outputs.at(0)->name());
+
+    // The rule should not be applied again.
+    client->evaluateWindowRules();
+    QCOMPARE(client->output()->name(), outputs.at(0)->name());
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClientRules::testScreenForceTemporarily()
+{
+    const KWin::Outputs outputs = kwinApp()->platform()->enabledOutputs();
+
+    // Create the test client.
+    AbstractClient *client;
+    KWayland::Client::Surface *surface;
+    Test::XdgToplevel *shellSurface;
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"));
+    QVERIFY(client);
+
+    setWindowRule("screen", int(1), int(Rules::ForceTemporarily));
+
+    // The client should be forced the second screen
+    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+
+    // User is not allowed to move it
+    workspace()->sendClientToOutput(client, outputs.at(0));
+    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+
+    // Close and reopen the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    std::tie(client, surface, shellSurface) = createWindow(QStringLiteral("org.kde.foo"));
+    QVERIFY(client);
+
+    // The rule should be discarded now
+    QCOMPARE(client->output()->name(), outputs.at(0)->name());
+
+    // Destroy the client.
+    delete shellSurface;
+    delete surface;
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
 void TestXdgShellClientRules::testMatchAfterNameChange()
 {
-    KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("General").writeEntry("count", 1);
-
-    KConfigGroup group = config->group("1");
-    group.writeEntry("above", true);
-    group.writeEntry("aboverule", int(Rules::Force));
-    group.writeEntry("wmclass", "org.kde.foo");
-    group.writeEntry("wmclasscomplete", false);
-    group.writeEntry("wmclassmatch", int(Rules::ExactMatch));
-    group.sync();
-
-    RuleBook::self()->setConfig(config);
-    workspace()->slotReconfigure();
+    setWindowRule("above", true, int(Rules::Force));
 
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));

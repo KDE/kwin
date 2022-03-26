@@ -11,13 +11,14 @@
 #include <QObject>
 #include <kwinglobals.h>
 
-namespace KWin {
+namespace KWin
+{
 
 class TabletModeManager : public QObject
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.KWin.TabletModeManager")
-    //assuming such a switch is not pluggable for now
+    // assuming such a switch is not pluggable for now
     Q_PROPERTY(bool tabletModeAvailable READ isTabletModeAvailable NOTIFY tabletModeAvailableChanged)
     Q_PROPERTY(bool tabletMode READ isTablet NOTIFY tabletModeChanged)
 

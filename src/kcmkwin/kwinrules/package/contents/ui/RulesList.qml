@@ -4,7 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 
-import QtQuick 2.14
+import QtQuick 2.15
 import QtQuick.Layouts 1.14
 import QtQuick.Controls 2.14 as QQC2
 import QtQml.Models 2.14
@@ -43,10 +43,8 @@ ScrollViewKCM {
 
         model: kcm.ruleBookModel
         currentIndex: kcm.editIndex
-        delegate: Kirigami.DelegateRecycler {
-            width: ruleBookView.width
-            sourceComponent: ruleBookDelegate
-        }
+        delegate: RuleBookDelegate {}
+        reuseItems: true
 
         highlightMoveDuration: Kirigami.Units.longDuration
 
@@ -127,13 +125,22 @@ ScrollViewKCM {
         }
     }
 
-    Component {
-        id: ruleBookDelegate
+    component RuleBookDelegate : Item {
+        // External item required to make Kirigami.ListItemDragHandle work
+        width : ruleBookView.width
+        implicitHeight : ruleBookItem.implicitHeight
+
+        ListView.onPooled: {
+            if (descriptionField.activeFocus) {
+                // If the description was being edited when the item is pooled, finish the edition
+                ruleBookItem.forceActiveFocus();
+            }
+        }
+
         Kirigami.SwipeListItem {
             id: ruleBookItem
 
             RowLayout {
-                //FIXME: If not used within DelegateRecycler, item goes on top of the first item when clicked
                 Kirigami.ListItemDragHandle {
                     visible: !exportInfo.visible
                     listItem: ruleBookItem

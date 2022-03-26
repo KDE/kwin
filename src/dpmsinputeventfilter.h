@@ -42,6 +42,4 @@ private:
 
 }
 
-
 #endif
-

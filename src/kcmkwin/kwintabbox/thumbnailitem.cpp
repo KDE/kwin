@@ -9,9 +9,9 @@
 
 #include "thumbnailitem.h"
 // Qt
-#include <QStandardPaths>
 #include <QQuickWindow>
 #include <QSGSimpleTextureNode>
+#include <QStandardPaths>
 
 namespace KWin
 {
@@ -27,38 +27,36 @@ BrightnessSaturationShader::BrightnessSaturationShader()
 
 const char *BrightnessSaturationShader::vertexShader() const
 {
-    return
-    "attribute highp vec4 vertex;          \n"
-    "attribute highp vec2 texCoord;        \n"
-    "uniform highp mat4 u_matrix;          \n"
-    "varying highp vec2 v_coord;           \n"
-    "void main() {                         \n"
-    "    v_coord = texCoord;               \n"
-    "    gl_Position = u_matrix * vertex;  \n"
-    "}";
+    return "attribute highp vec4 vertex;          \n"
+           "attribute highp vec2 texCoord;        \n"
+           "uniform highp mat4 u_matrix;          \n"
+           "varying highp vec2 v_coord;           \n"
+           "void main() {                         \n"
+           "    v_coord = texCoord;               \n"
+           "    gl_Position = u_matrix * vertex;  \n"
+           "}";
 }
 
 const char *BrightnessSaturationShader::fragmentShader() const
 {
-    return
-    "uniform sampler2D qt_Texture;                          \n"
-    "uniform lowp float u_opacity;                          \n"
-    "uniform highp float u_saturation;                      \n"
-    "uniform highp float u_brightness;                      \n"
-    "varying highp vec2 v_coord;                            \n"
-    "void main() {                                          \n"
-            "    lowp vec4 tex = texture2D(qt_Texture, v_coord); \n"
-            "    if (u_saturation != 1.0) {                      \n"
-            "        tex.rgb = mix(vec3(dot( vec3( 0.30, 0.59, 0.11 ), tex.rgb )), tex.rgb, u_saturation); \n"
-            "    }                                               \n"
-            "    tex.rgb = tex.rgb * u_brightness;               \n"
-            "    gl_FragColor = tex * u_opacity; \n"
-    "}";
+    return "uniform sampler2D qt_Texture;                          \n"
+           "uniform lowp float u_opacity;                          \n"
+           "uniform highp float u_saturation;                      \n"
+           "uniform highp float u_brightness;                      \n"
+           "varying highp vec2 v_coord;                            \n"
+           "void main() {                                          \n"
+           "    lowp vec4 tex = texture2D(qt_Texture, v_coord); \n"
+           "    if (u_saturation != 1.0) {                      \n"
+           "        tex.rgb = mix(vec3(dot( vec3( 0.30, 0.59, 0.11 ), tex.rgb )), tex.rgb, u_saturation); \n"
+           "    }                                               \n"
+           "    tex.rgb = tex.rgb * u_brightness;               \n"
+           "    gl_FragColor = tex * u_opacity; \n"
+           "}";
 }
 
-const char* const *BrightnessSaturationShader::attributeNames() const
+const char *const *BrightnessSaturationShader::attributeNames() const
 {
-    static char const *const names[] = { "vertex", "texCoord", nullptr };
+    static char const *const names[] = {"vertex", "texCoord", nullptr};
     return names;
 }
 
@@ -87,19 +85,20 @@ void BrightnessSaturationShader::updateState(const QSGMaterialShader::RenderStat
 void BrightnessSaturationShader::initialize()
 {
     QSGMaterialShader::initialize();
-    m_id_matrix     = program()->uniformLocation("u_matrix");
-    m_id_opacity    = program()->uniformLocation("u_opacity");
+    m_id_matrix = program()->uniformLocation("u_matrix");
+    m_id_opacity = program()->uniformLocation("u_opacity");
     m_id_saturation = program()->uniformLocation("u_saturation");
     m_id_brightness = program()->uniformLocation("u_brightness");
 }
 
-WindowThumbnailItem::WindowThumbnailItem(QQuickItem* parent)
+WindowThumbnailItem::WindowThumbnailItem(QQuickItem *parent)
     : QQuickItem(parent)
     , m_wId(0)
     , m_image()
     , m_clipToItem(nullptr)
     , m_brightness(1.0)
     , m_saturation(1.0)
+    , m_sourceSize(QSize())
 {
     setFlag(ItemHasContents);
 }
@@ -140,6 +139,12 @@ void WindowThumbnailItem::findImage()
     case Dolphin:
         imagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin/kcm_kwintabbox/dolphin.png");
         break;
+    case Desktop:
+        imagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "wallpapers/Next/contents/screenshot.png");
+        if (imagePath.isNull()) {
+            imagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin/kcm_kwintabbox/desktop.png");
+        }
+        break;
     default:
         // ignore
         break;
@@ -149,12 +154,14 @@ void WindowThumbnailItem::findImage()
     } else {
         m_image = QImage(imagePath);
     }
+
+    setImplicitSize(m_image.width(), m_image.height());
 }
 
 QSGNode *WindowThumbnailItem::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *updatePaintNodeData)
 {
     Q_UNUSED(updatePaintNodeData)
-    QSGGeometryNode *node = static_cast<QSGGeometryNode*>(oldNode);
+    QSGGeometryNode *node = static_cast<QSGGeometryNode *>(oldNode);
     if (!node) {
         node = new QSGGeometryNode();
         auto *material = new BrightnessSaturationMaterial;
@@ -164,10 +171,10 @@ QSGNode *WindowThumbnailItem::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeD
         QSGGeometry *geometry = new QSGGeometry(QSGGeometry::defaultAttributes_TexturedPoint2D(), 4);
         node->setGeometry(geometry);
     }
-    auto *material = static_cast<BrightnessSaturationMaterial*>(node->material());
+    auto *material = static_cast<BrightnessSaturationMaterial *>(node->material());
     const QSize size(material->texture()->textureSize().scaled(boundingRect().size().toSize(), Qt::KeepAspectRatio));
-    const qreal x = boundingRect().x() + (boundingRect().width() - size.width())/2;
-    const qreal y = boundingRect().y() + (boundingRect().height() - size.height())/2;
+    const qreal x = boundingRect().x() + (boundingRect().width() - size.width()) / 2;
+    const qreal y = boundingRect().y() + (boundingRect().height() - size.height()) / 2;
     QSGGeometry::updateTexturedRectGeometry(node->geometry(), QRectF(QPointF(x, y), size), QRectF(0.0, 0.0, 1.0, 1.0));
     material->brightness = m_brightness;
     material->saturation = m_saturation;
@@ -183,6 +190,11 @@ qreal WindowThumbnailItem::brightness() const
 qreal WindowThumbnailItem::saturation() const
 {
     return m_saturation;
+}
+
+QSize WindowThumbnailItem::sourceSize() const
+{
+    return m_sourceSize;
 }
 
 void WindowThumbnailItem::setBrightness(qreal brightness)
@@ -203,6 +215,16 @@ void WindowThumbnailItem::setSaturation(qreal saturation)
     m_saturation = saturation;
     update();
     Q_EMIT saturationChanged();
+}
+
+void WindowThumbnailItem::setSourceSize(const QSize &size)
+{
+    if (m_sourceSize == size) {
+        return;
+    }
+    m_sourceSize = size;
+    update();
+    Q_EMIT sourceSizeChanged();
 }
 
 } // namespace KWin

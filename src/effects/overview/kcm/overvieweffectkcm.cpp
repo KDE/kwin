@@ -3,14 +3,14 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-
 #include "overvieweffectkcm.h"
-#include "overviewconfig.h"
 
 #include <config-kwin.h>
+
+#include "overviewconfig.h"
+
 #include <kwineffects_interface.h>
 
-#include <KAboutData>
 #include <KActionCollection>
 #include <KGlobalAccel>
 #include <KLocalizedString>
@@ -18,9 +18,7 @@
 
 #include <QAction>
 
-K_PLUGIN_FACTORY_WITH_JSON(OverviewEffectConfigFactory,
-                           "overvieweffectkcm.json",
-                           registerPlugin<KWin::OverviewEffectConfig>();)
+K_PLUGIN_CLASS(KWin::OverviewEffectConfig)
 
 namespace KWin
 {
@@ -38,7 +36,7 @@ OverviewEffectConfig::OverviewEffectConfig(QWidget *parent, const QVariantList &
     actionCollection->setConfigGroup(QStringLiteral("Overview"));
     actionCollection->setConfigGlobal(true);
 
-    const QKeySequence defaultToggleShortcut = Qt::CTRL + Qt::META + Qt::Key_D;
+    const QKeySequence defaultToggleShortcut = Qt::META | Qt::Key_W;
     QAction *toggleAction = actionCollection->addAction(QStringLiteral("Overview"));
     toggleAction->setText(i18n("Toggle Overview"));
     toggleAction->setProperty("isConfigurationAction", true);
@@ -47,8 +45,6 @@ OverviewEffectConfig::OverviewEffectConfig(QWidget *parent, const QVariantList &
 
     ui.shortcutsEditor->addCollection(actionCollection);
     connect(ui.shortcutsEditor, &KShortcutsEditor::keyChange, this, &OverviewEffectConfig::markAsChanged);
-
-    load();
 }
 
 OverviewEffectConfig::~OverviewEffectConfig()

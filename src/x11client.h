@@ -11,14 +11,14 @@
 #pragma once
 
 // kwin
-#include "decorationitem.h"
 #include "abstract_client.h"
-#include "xcbutils.h"
+#include "decorationitem.h"
+#include "utils/xcbutils.h"
 // Qt
 #include <QElapsedTimer>
 #include <QFlags>
-#include <QPointer>
 #include <QPixmap>
+#include <QPointer>
 #include <QWindow>
 // X
 #include <xcb/sync.h>
@@ -31,7 +31,6 @@ class KStartupInfoId;
 
 namespace KWin
 {
-
 
 /**
  * @brief Defines Predicates on how to search for a Client.
@@ -98,7 +97,10 @@ public:
     ~X11Client() override; ///< Use destroyClient() or releaseWindow()
 
     xcb_window_t wrapperId() const;
-    xcb_window_t inputId() const { return m_decoInputExtent; }
+    xcb_window_t inputId() const
+    {
+        return m_decoInputExtent;
+    }
     xcb_window_t frameId() const override;
 
     QRect inputGeometry() const override;
@@ -114,14 +116,14 @@ public:
     bool isTransient() const override;
     bool groupTransient() const override;
     bool wasOriginallyGroupTransient() const;
-    QList<AbstractClient*> mainClients() const override; // Call once before loop , is not indirect
-    bool hasTransient(const AbstractClient* c, bool indirect) const override;
+    QList<AbstractClient *> mainClients() const override; // Call once before loop , is not indirect
+    bool hasTransient(const AbstractClient *c, bool indirect) const override;
     void checkTransient(xcb_window_t w);
-    AbstractClient* findModal(bool allow_itself = false) override;
-    const Group* group() const override;
-    Group* group() override;
-    void checkGroup(Group* gr = nullptr, bool force = false);
-    void changeClientLeaderGroup(Group* gr);
+    AbstractClient *findModal(bool allow_itself = false) override;
+    const Group *group() const override;
+    Group *group() override;
+    void checkGroup(Group *gr = nullptr, bool force = false);
+    void changeClientLeaderGroup(Group *gr);
     bool supportsWindowRules() const override;
     void updateWindowRules(Rules::Types selection) override;
     void applyWindowRules() override;
@@ -132,7 +134,10 @@ public:
     QSize minSize() const override;
     QSize maxSize() const override;
     QSize basicUnit() const;
-    QPoint inputPos() const { return input_offset; } // Inside of geometry()
+    QPoint inputPos() const
+    {
+        return input_offset;
+    } // Inside of geometry()
 
     bool windowEvent(xcb_generic_event_t *e);
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
@@ -146,7 +151,7 @@ public:
     void updateActivities(bool includeTransients) override;
 
     /// Is not minimized and not hidden. I.e. normally visible on some virtual desktop.
-    bool isShown(bool shaded_is_shown) const override;
+    bool isShown() const override;
     bool isHiddenInternal() const override; // For compositing
 
     bool isShadeable() const override;
@@ -160,8 +165,9 @@ public:
     void setFullScreen(bool set, bool user = true) override;
     bool isFullScreen() const override;
     bool userCanSetFullScreen() const override;
-    int fullScreenMode() const {
-        return m_fullscreenMode;    // only for session saving
+    int fullScreenMode() const
+    {
+        return m_fullscreenMode; // only for session saving
     }
 
     bool userNoBorder() const;
@@ -182,14 +188,14 @@ public:
 
     bool takeFocus() override;
 
-    void updateDecoration(bool check_workspace_pos, bool force = false) override;
+    void invalidateDecoration() override;
 
     void updateShape();
 
     /// resizeWithChecks() resizes according to gravity, and checks workarea position
     void resizeWithChecks(const QSize &size) override;
     void resizeWithChecks(int w, int h, xcb_gravity_t gravity);
-    void resizeWithChecks(const QSize& s, xcb_gravity_t gravity);
+    void resizeWithChecks(const QSize &s, xcb_gravity_t gravity);
     QSize constrainClientSize(const QSize &size, SizeMode mode = SizeModeAny) const override;
 
     bool providesContextHelp() const override;
@@ -199,23 +205,29 @@ public:
     /// Updates visibility depending on being shaded, virtual desktop, etc.
     void updateVisibility();
     /// Hides a client - Basically like minimize, but without effects, it's simply hidden
-    void hideClient(bool hide) override;
+    void hideClient() override;
+    void showClient() override;
     bool hiddenPreview() const; ///< Window is mapped in order to get a window pixmap
 
     bool setupCompositing() override;
     void finishCompositing(ReleaseReason releaseReason = ReleaseReason::Release) override;
     void setBlockingCompositing(bool block);
-    inline bool isBlockingCompositing() { return blocks_compositing; }
+    inline bool isBlockingCompositing()
+    {
+        return blocks_compositing;
+    }
 
-    QString captionNormal() const override {
+    QString captionNormal() const override
+    {
         return cap_normal;
     }
-    QString captionSuffix() const override {
+    QString captionSuffix() const override
+    {
         return cap_suffix;
     }
 
     using AbstractClient::keyPressEvent;
-    void keyPressEvent(uint key_code, xcb_timestamp_t time);   // FRAME ??
+    void keyPressEvent(uint key_code, xcb_timestamp_t time); // FRAME ??
     void updateMouseGrab() override;
     xcb_window_t moveResizeGrabWindow() const;
 
@@ -263,7 +275,7 @@ public:
     QString readPreferredColorScheme(Xcb::StringProperty &property) const;
     QString preferredColorScheme() const override;
 
-    //sets whether the client should be faked as being on all activities (and be shown during session save)
+    // sets whether the client should be faked as being on all activities (and be shown during session save)
     void setSessionActivityOverride(bool needed);
     bool isClient() const override;
 
@@ -283,15 +295,18 @@ public:
     void readApplicationMenuObjectPath(Xcb::StringProperty &property);
     void checkApplicationMenuObjectPath();
 
-    struct SyncRequest {
+    struct SyncRequest
+    {
         xcb_sync_counter_t counter;
         xcb_sync_int64_t value;
         xcb_sync_alarm_t alarm;
         xcb_timestamp_t lastTimestamp;
         QTimer *timeout, *failsafeTimeout;
         bool isPending;
+        bool interactiveResize;
     };
-    const SyncRequest &syncRequest() const {
+    const SyncRequest &syncRequest() const
+    {
         return m_syncRequest;
     }
     virtual bool wantsSyncCounter() const;
@@ -342,10 +357,10 @@ protected:
     bool acceptsFocus() const override;
     void moveResizeInternal(const QRect &rect, MoveResizeMode mode) override;
 
-    //Signals for the scripting interface
-    //Signals make an excellent way for communication
-    //in between objects as compared to simple function
-    //calls
+    // Signals for the scripting interface
+    // Signals make an excellent way for communication
+    // in between objects as compared to simple function
+    // calls
 Q_SIGNALS:
     void clientManaging(KWin::X11Client *);
     void clientFullScreenSet(KWin::X11Client *, bool, bool);
@@ -374,7 +389,7 @@ Q_SIGNALS:
     void clientSideDecoratedChanged();
 
 private:
-    void exportMappingState(int s);   // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1
+    void exportMappingState(int s); // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1
     bool isManaged() const; ///< Returns false if this client is not yet managed
     void updateAllowedActions(bool force = false);
     QRect fullscreenMonitorsArea(NETFullscreenMonitors topology) const;
@@ -385,7 +400,7 @@ private:
     void fetchName();
     void fetchIconicName();
     QString readName() const;
-    void setCaption(const QString& s, bool force = false);
+    void setCaption(const QString &s, bool force = false);
     bool hasTransientInternal(const X11Client *c, bool indirect, QList<const X11Client *> &set) const;
     void setShortcutInternal() override;
 
@@ -395,11 +410,10 @@ private:
     void getSyncCounter();
     void sendSyncRequest();
     void leaveInteractiveMoveResize() override;
-    void positionGeometryTip() override;
+    void performInteractiveResize();
     void establishCommandWindowGrab(uint8_t button);
     void establishCommandAllGrab(uint8_t button);
     void resizeDecoration();
-    void createDecoration(const QRect &oldgeom) override;
 
     void pingWindow();
     void killProcess(bool ask, xcb_timestamp_t timestamp = XCB_TIME_CURRENT_TIME);
@@ -409,7 +423,6 @@ private:
 
     void embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colormap_t colormap, uint8_t depth);
     void detectNoBorder();
-    void destroyDecoration() override;
     void updateFrameExtents();
     void setClientFrameExtents(const NETStrut &strut);
 
@@ -425,8 +438,8 @@ private:
     void discardWindowPixmap();
     void updateWindowPixmap();
 
-    xcb_timestamp_t readUserTimeMapTimestamp(const KStartupInfoId* asn_id, const KStartupInfoData* asn_data,
-                                  bool session) const;
+    xcb_timestamp_t readUserTimeMapTimestamp(const KStartupInfoId *asn_id, const KStartupInfoData *asn_data,
+                                             bool session) const;
     xcb_timestamp_t readUserCreationTime() const;
     void startupIdChanged();
 
@@ -442,11 +455,13 @@ private:
 
     void maybeCreateX11DecorationRenderer();
     void maybeDestroyX11DecorationRenderer();
+    void updateDecoration(bool check_workspace_pos, bool force = false);
+    void createDecoration(const QRect &oldgeom);
+    void destroyDecoration();
 
     Xcb::Window m_client;
     Xcb::Window m_wrapper;
     Xcb::Window m_frame;
-    QStringList activityList;
     int m_activityUpdatesBlocked;
     bool m_blockedActivityUpdatesRequireTransients;
     Xcb::Window m_moveResizeGrabWindow;
@@ -467,8 +482,8 @@ private:
     void readTransientProperty(Xcb::TransientFor &transientFor);
     void readTransient();
     xcb_window_t verifyTransientFor(xcb_window_t transient_for, bool set);
-    void addTransient(AbstractClient* cl) override;
-    void removeTransient(AbstractClient* cl) override;
+    void addTransient(AbstractClient *cl) override;
+    void removeTransient(AbstractClient *cl) override;
     void removeFromMainClients();
     void cleanGrouping();
     void checkGroupTransients();
@@ -491,8 +506,8 @@ private:
     MaximizeMode max_mode;
     xcb_colormap_t m_colormap;
     QString cap_normal, cap_iconic, cap_suffix;
-    Group* in_group;
-    QTimer* ping_timer;
+    Group *in_group;
+    QTimer *ping_timer;
     qint64 m_killHelperPID;
     xcb_timestamp_t m_pingTimestamp;
     xcb_timestamp_t m_userTime;
@@ -508,7 +523,7 @@ private:
     Xcb::StringProperty fetchActivities() const;
     void readActivities(Xcb::StringProperty &property);
     void checkActivities();
-    bool activitiesDefined; //whether the x property was actually set
+    bool activitiesDefined; // whether the x property was actually set
 
     bool sessionActivityOverride;
     bool needsXWindowMove;
@@ -540,14 +555,14 @@ inline bool X11Client::isClientSideDecorated() const
 
 inline bool X11Client::groupTransient() const
 {
-    return m_transientForId == rootWindow();
+    return m_transientForId == kwinApp()->x11RootWindow();
 }
 
 // Needed because verifyTransientFor() may set transient_for_id to root window,
 // if the original value has a problem (window doesn't exist, etc.)
 inline bool X11Client::wasOriginallyGroupTransient() const
 {
-    return m_originalTransientForId == rootWindow();
+    return m_originalTransientForId == kwinApp()->x11RootWindow();
 }
 
 inline bool X11Client::isTransient() const
@@ -555,19 +570,19 @@ inline bool X11Client::isTransient() const
     return m_transientForId != XCB_WINDOW_NONE;
 }
 
-inline const Group* X11Client::group() const
+inline const Group *X11Client::group() const
 {
     return in_group;
 }
 
-inline Group* X11Client::group()
+inline Group *X11Client::group()
 {
     return in_group;
 }
 
-inline bool X11Client::isShown(bool shaded_is_shown) const
+inline bool X11Client::isShown() const
 {
-    return !isMinimized() && (!isShade() || shaded_is_shown) && !hidden;
+    return !isMinimized() && !hidden;
 }
 
 inline bool X11Client::isHiddenInternal() const
@@ -610,7 +625,7 @@ inline void X11Client::resizeWithChecks(const QSize &s)
     resizeWithChecks(s.width(), s.height(), XCB_GRAVITY_BIT_FORGET);
 }
 
-inline void X11Client::resizeWithChecks(const QSize& s, xcb_gravity_t gravity)
+inline void X11Client::resizeWithChecks(const QSize &s, xcb_gravity_t gravity)
 {
     resizeWithChecks(s.width(), s.height(), gravity);
 }

@@ -36,6 +36,7 @@ class Primary : public Selection
 public:
     Primary(xcb_atom_t atom, QObject *parent);
     ~Primary() override;
+
 private:
     void doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event) override;
     void x11OffersChanged(const QStringList &added, const QStringList &removed) override;
@@ -65,4 +66,3 @@ private:
 } // namespace KWin
 
 #endif
-

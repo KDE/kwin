@@ -73,7 +73,7 @@ private:
     int m_texStartPosLocationNoisesample;
     int m_halfpixelLocationNoisesample;
 
-    //Caching uniform values to aviod unnecessary setUniform calls
+    // Caching uniform values to aviod unnecessary setUniform calls
     int m_activeSampleType = -1;
 
     float m_offsetDownsample = 0.0;

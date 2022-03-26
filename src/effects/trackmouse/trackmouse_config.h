@@ -24,14 +24,14 @@ class TrackMouseEffectConfigForm : public QWidget, public Ui::TrackMouseEffectCo
 {
     Q_OBJECT
 public:
-    explicit TrackMouseEffectConfigForm(QWidget* parent);
+    explicit TrackMouseEffectConfigForm(QWidget *parent);
 };
 
 class TrackMouseEffectConfig : public KCModule
 {
     Q_OBJECT
 public:
-    explicit TrackMouseEffectConfig(QWidget* parent = nullptr, const QVariantList& args = QVariantList());
+    explicit TrackMouseEffectConfig(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
     ~TrackMouseEffectConfig() override;
 
 public Q_SLOTS:
@@ -40,9 +40,10 @@ public Q_SLOTS:
     void defaults() override;
 private Q_SLOTS:
     void shortcutChanged(const QKeySequence &seq);
+
 private:
-    TrackMouseEffectConfigForm* m_ui;
-    KActionCollection* m_actionCollection;
+    TrackMouseEffectConfigForm *m_ui;
+    KActionCollection *m_actionCollection;
 };
 
 } // namespace

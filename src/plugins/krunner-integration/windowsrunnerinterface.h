@@ -13,16 +13,16 @@
 
 #pragma once
 
-#include "plugin.h"
 #include "dbusutils_p.h"
+#include "plugin.h"
 
 #include <KRunner/QueryMatch>
 
-#include <QObject>
+#include <QDBusArgument>
 #include <QDBusContext>
 #include <QDBusMessage>
+#include <QObject>
 #include <QString>
-#include <QDBusArgument>
 
 namespace KWin
 {
@@ -57,8 +57,8 @@ private:
     };
 
     void initialize();
-    RemoteMatch desktopMatch(const VirtualDesktop *desktop, const WindowsRunnerAction action = ActivateDesktopAction,  qreal relevance = 1.0) const;
-    RemoteMatch windowsMatch(const AbstractClient *client,  const WindowsRunnerAction action = ActivateAction, qreal relevance = 1.0, Plasma::QueryMatch::Type type = Plasma::QueryMatch::ExactMatch) const;
+    RemoteMatch desktopMatch(const VirtualDesktop *desktop, const WindowsRunnerAction action = ActivateDesktopAction, qreal relevance = 1.0) const;
+    RemoteMatch windowsMatch(const AbstractClient *client, const WindowsRunnerAction action = ActivateAction, qreal relevance = 1.0, Plasma::QueryMatch::Type type = Plasma::QueryMatch::ExactMatch) const;
     bool actionSupported(const AbstractClient *client, const WindowsRunnerAction action) const;
 };
 }

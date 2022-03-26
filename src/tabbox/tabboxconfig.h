@@ -106,20 +106,20 @@ public:
      * TabBoxDesktopModel.
      */
     enum DesktopSwitchingMode {
-        MostRecentlyUsedDesktopSwitching,///< Sort by recently used. Most recently used desktop is the first
-        StaticDesktopSwitching///< Static sorting in numerical ascending order
+        MostRecentlyUsedDesktopSwitching, ///< Sort by recently used. Most recently used desktop is the first
+        StaticDesktopSwitching ///< Static sorting in numerical ascending order
     };
     /**
      * TabBoxMode defines what kind of items the TabBox is displaying and which
      * Model is used
      */
     enum TabBoxMode {
-        ClientTabBox,///< TabBox uses TabBoxClientModel
-        DesktopTabBox///< TabBox uses TabBoxDesktopModel
+        ClientTabBox, ///< TabBox uses TabBoxClientModel
+        DesktopTabBox ///< TabBox uses TabBoxDesktopModel
     };
     TabBoxConfig();
     ~TabBoxConfig();
-    TabBoxConfig& operator=(const TabBoxConfig& object);
+    TabBoxConfig &operator=(const TabBoxConfig &object);
 
     // getters
     /**
@@ -200,7 +200,7 @@ public:
      * @return Then name of the current ItemLayout
      * @see setlayoutName
      */
-    QString& layoutName() const;
+    QString &layoutName() const;
 
     // setters
     /**
@@ -272,41 +272,52 @@ public:
      * @param name The new ItemLayout config name
      * @see layoutName
      */
-    void setLayoutName(const QString& name);
+    void setLayoutName(const QString &name);
 
     // some static methods to access default values
-    static ClientDesktopMode defaultDesktopMode() {
+    static ClientDesktopMode defaultDesktopMode()
+    {
         return OnlyCurrentDesktopClients;
     }
-    static ClientActivitiesMode defaultActivitiesMode() {
+    static ClientActivitiesMode defaultActivitiesMode()
+    {
         return OnlyCurrentActivityClients;
     }
-    static ClientApplicationsMode defaultApplicationsMode() {
+    static ClientApplicationsMode defaultApplicationsMode()
+    {
         return AllWindowsAllApplications;
     }
-    static ClientMinimizedMode defaultMinimizedMode() {
+    static ClientMinimizedMode defaultMinimizedMode()
+    {
         return IgnoreMinimizedStatus;
     }
-    static ShowDesktopMode defaultShowDesktopMode() {
+    static ShowDesktopMode defaultShowDesktopMode()
+    {
         return DoNotShowDesktopClient;
     }
-    static ClientMultiScreenMode defaultMultiScreenMode() {
+    static ClientMultiScreenMode defaultMultiScreenMode()
+    {
         return IgnoreMultiScreen;
     }
-    static ClientSwitchingMode defaultSwitchingMode() {
+    static ClientSwitchingMode defaultSwitchingMode()
+    {
         return FocusChainSwitching;
     }
-    static bool defaultShowTabBox() {
+    static bool defaultShowTabBox()
+    {
         return true;
     }
-    static bool defaultHighlightWindow() {
+    static bool defaultHighlightWindow()
+    {
         return true;
     }
-    static QString defaultLayoutName() {
+    static QString defaultLayoutName()
+    {
         return QStringLiteral("org.kde.breeze.desktop");
     }
+
 private:
-    TabBoxConfigPrivate* d;
+    TabBoxConfigPrivate *d;
 };
 
 } // namespace TabBox

@@ -6,7 +6,7 @@
     <kcfgfile name="kwinrc" />
     <group name="Plugins">
         <entry key="highlightwindowEnabled" type="Bool">
-            <default code="true">BuiltInEffects::enabledByDefault(BuiltInEffect::HighlightWindow)</default>
+            <default>true</default>
         </entry>
     </group>
 </kcfg>

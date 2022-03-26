@@ -12,7 +12,6 @@
 
 // own
 #include "glide.h"
-#include "kwinglutils.h"
 
 // KConfigSkeleton
 #include "glideconfig.h"
@@ -24,7 +23,7 @@
 namespace KWin
 {
 
-static const QSet<QString> s_blacklist {
+static const QSet<QString> s_blacklist{
     QStringLiteral("ksmserver ksmserver"),
     QStringLiteral("ksmserver-logout-greeter ksmserver-logout-greeter"),
     QStringLiteral("ksplashqml ksplashqml"),
@@ -121,7 +120,7 @@ void GlideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowP
     data.setProjectionMatrix(invOffsetMatrix * oldProjMatrix);
 
     // Move the center of the window to the origin.
-    const QRectF screenGeo = GLRenderTarget::virtualScreenGeometry();
+    const QRectF screenGeo = effects->renderTargetRect();
     const QPointF offset = screenGeo.center() - windowGeo.center();
     data.translate(offset.x(), offset.y());
 
@@ -211,12 +210,12 @@ void GlideEffect::windowAdded(EffectWindow *w)
         return;
     }
 
-    const void *addGrab = w->data(WindowAddedGrabRole).value<void*>();
+    const void *addGrab = w->data(WindowAddedGrabRole).value<void *>();
     if (addGrab && addGrab != this) {
         return;
     }
 
-    w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
+    w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
 
     GlideAnimation &animation = m_animations[w];
     animation.timeLine.reset();
@@ -237,17 +236,17 @@ void GlideEffect::windowClosed(EffectWindow *w)
         return;
     }
 
-    if (!w->isVisible()) {
+    if (!w->isVisible() || w->skipsCloseAnimation()) {
         return;
     }
 
-    const void *closeGrab = w->data(WindowClosedGrabRole).value<void*>();
+    const void *closeGrab = w->data(WindowClosedGrabRole).value<void *>();
     if (closeGrab && closeGrab != this) {
         return;
     }
 
     w->refWindow();
-    w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
+    w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
 
     GlideAnimation &animation = m_animations[w];
     animation.timeLine.reset();
@@ -269,7 +268,7 @@ void GlideEffect::windowDataChanged(EffectWindow *w, int role)
         return;
     }
 
-    if (w->data(role).value<void*>() == this) {
+    if (w->data(role).value<void *>() == this) {
         return;
     }
 
@@ -294,7 +293,7 @@ bool GlideEffect::isGlideWindow(EffectWindow *w) const
     // to use a heuristic: if a window has decoration, then it's most
     // likely a dialog or a settings window so we have to animate it.
     if (w->windowClass() == QLatin1String("plasmashell plasmashell")
-            || w->windowClass() == QLatin1String("plasmashell org.kde.plasmashell")) {
+        || w->windowClass() == QLatin1String("plasmashell org.kde.plasmashell")) {
         return w->hasDecoration();
     }
 

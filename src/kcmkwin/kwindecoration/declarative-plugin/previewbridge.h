@@ -6,8 +6,8 @@
 #ifndef KDECOARTIONS_PREVIEW_BRIDGE_H
 #define KDECOARTIONS_PREVIEW_BRIDGE_H
 
-#include <KDecoration2/Private/DecorationBridge>
 #include <KDecoration2/DecorationButton>
+#include <KDecoration2/Private/DecorationBridge>
 
 #include <QList>
 #include <QPointer>
@@ -37,10 +37,12 @@ public:
     std::unique_ptr<DecoratedClientPrivate> createClient(DecoratedClient *client, Decoration *decoration) override;
     std::unique_ptr<DecorationSettingsPrivate> settings(DecorationSettings *parent) override;
 
-    PreviewClient *lastCreatedClient() {
+    PreviewClient *lastCreatedClient()
+    {
         return m_lastCreatedClient;
     }
-    PreviewSettings *lastCreatedSettings() {
+    PreviewSettings *lastCreatedSettings()
+    {
         return m_lastCreatedSettings;
     }
 
@@ -69,7 +71,7 @@ private:
     void setValid(bool valid);
     PreviewClient *m_lastCreatedClient;
     PreviewSettings *m_lastCreatedSettings;
-    QList<PreviewItem*> m_previewItems;
+    QList<PreviewItem *> m_previewItems;
     QString m_plugin;
     QString m_theme;
     QPointer<KPluginFactory> m_factory;
@@ -88,23 +90,29 @@ public:
     explicit BridgeItem(QObject *parent = nullptr);
     ~BridgeItem() override;
 
-    void setPlugin(const QString &plugin) {
+    void setPlugin(const QString &plugin)
+    {
         m_bridge->setPlugin(plugin);
     }
-    QString plugin() const {
+    QString plugin() const
+    {
         return m_bridge->plugin();
     }
-    void setTheme(const QString &theme) {
+    void setTheme(const QString &theme)
+    {
         m_bridge->setTheme(theme);
     }
-    QString theme() const {
+    QString theme() const
+    {
         return m_bridge->theme();
     }
-    bool isValid() const {
+    bool isValid() const
+    {
         return m_bridge->isValid();
     }
 
-    PreviewBridge *bridge() const {
+    PreviewBridge *bridge() const
+    {
         return m_bridge;
     }
 
@@ -115,7 +123,6 @@ Q_SIGNALS:
 
 private:
     PreviewBridge *m_bridge;
-
 };
 
 }

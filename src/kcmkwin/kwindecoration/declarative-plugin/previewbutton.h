@@ -6,10 +6,10 @@
 #ifndef KDECOARTIONS_PREVIEW_BUTTON_ITEM_H
 #define KDECOARTIONS_PREVIEW_BUTTON_ITEM_H
 
-#include <QQuickPaintedItem>
+#include <KDecoration2/DecorationButton>
 #include <QColor>
 #include <QPointer>
-#include <KDecoration2/DecorationButton>
+#include <QQuickPaintedItem>
 
 namespace KDecoration2
 {
@@ -44,7 +44,10 @@ public:
     void setType(KDecoration2::DecorationButtonType type);
     void setType(int type);
 
-    const QColor &color() const { return m_color; }
+    const QColor &color() const
+    {
+        return m_color;
+    }
     void setColor(const QColor &color);
 
 Q_SIGNALS:
@@ -64,7 +67,6 @@ private:
     KDecoration2::Decoration *m_decoration = nullptr;
     KDecoration2::DecorationButton *m_button = nullptr;
     KDecoration2::DecorationButtonType m_type = KDecoration2::DecorationButtonType::Custom;
-
 };
 
 } // Preview

@@ -92,7 +92,7 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="KComboBox" name="desktopNameAlignmentCombo">
+       <widget class="QComboBox" name="desktopNameAlignmentCombo">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -115,7 +115,7 @@
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="KComboBox" name="kcfg_LayoutMode">
+       <widget class="QComboBox" name="kcfg_LayoutMode">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -255,11 +255,6 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
-  </customwidget>
   <customwidget>
    <class>KShortcutsEditor</class>
    <extends>QWidget</extends>

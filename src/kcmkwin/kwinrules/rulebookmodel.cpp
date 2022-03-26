@@ -21,9 +21,8 @@ RuleBookModel::~RuleBookModel()
 
 QHash<int, QByteArray> RuleBookModel::roleNames() const
 {
-    static auto roles = QHash<int, QByteArray> {
-        { DescriptionRole, QByteArray("display") },
-    }.unite(QAbstractListModel::roleNames());
+    auto roles = QAbstractListModel::roleNames();
+    roles.insert(DescriptionRole, QByteArray("display"));
     return roles;
 }
 
@@ -111,7 +110,7 @@ bool RuleBookModel::removeRows(int row, int count, const QModelIndex &parent)
 bool RuleBookModel::moveRows(const QModelIndex &sourceParent, int sourceRow, int count,
                              const QModelIndex &destinationParent, int destinationChild)
 {
-    if (sourceParent != destinationParent || sourceParent != QModelIndex()){
+    if (sourceParent != destinationParent || sourceParent != QModelIndex()) {
         return false;
     }
 
@@ -130,7 +129,6 @@ bool RuleBookModel::moveRows(const QModelIndex &sourceParent, int sourceRow, int
     endMoveRows();
     return true;
 }
-
 
 QString RuleBookModel::descriptionAt(int row) const
 {

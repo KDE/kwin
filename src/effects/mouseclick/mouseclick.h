@@ -10,10 +10,11 @@
 #ifndef KWIN_MOUSECLICK_H
 #define KWIN_MOUSECLICK_H
 
-#include <kwineffects.h>
-#include <kwinglutils.h>
 #include <KLocalizedString>
 #include <QFont>
+#include <QHash>
+#include <kwineffects.h>
+#include <kwinglutils.h>
 
 namespace KWin
 {
@@ -26,21 +27,30 @@ public:
     int m_button;
     QPoint m_pos;
     int m_time;
-    EffectFrame* m_frame;
+    EffectFrame *m_frame;
     bool m_press;
+
 public:
-    MouseEvent(int button, QPoint point, int time, EffectFrame* frame, bool press)
-        : m_button(button),
-          m_pos(point),
-          m_time(time),
-          m_frame(frame),
-          m_press(press)
-    {};
+    MouseEvent(int button, QPoint point, int time, EffectFrame *frame, bool press)
+        : m_button(button)
+        , m_pos(point)
+        , m_time(time)
+        , m_frame(frame)
+        , m_press(press){};
 
     ~MouseEvent()
     {
         delete m_frame;
     }
+};
+
+class TabletToolEvent
+{
+public:
+    QPointF m_globalPosition;
+    bool m_pressed = false;
+    qreal m_pressure = 0;
+    QColor m_color;
 };
 
 class MouseButton
@@ -51,13 +61,14 @@ public:
     Qt::MouseButtons m_button;
     bool m_isPressed;
     int m_time;
+
 public:
     MouseButton(QString label, Qt::MouseButtons button)
-        : m_labelUp(label),
-          m_labelDown(label),
-          m_button(button),
-          m_isPressed(false),
-          m_time(0)
+        : m_labelUp(label)
+        , m_labelDown(label)
+        , m_button(button)
+        , m_isPressed(false)
+        , m_time(0)
     {
         m_labelDown.append(i18n("↓"));
         m_labelUp.append(i18n("↑"));
@@ -91,66 +102,79 @@ public:
     MouseClickEffect();
     ~MouseClickEffect() override;
     void reconfigure(ReconfigureFlags) override;
-    void prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(int mask, const QRegion &region, ScreenPaintData& data) override;
+    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
     void postPaintScreen() override;
     bool isActive() const override;
 
     // for properties
-    QColor color1() const {
+    QColor color1() const
+    {
         return m_colors[0];
     }
-    QColor color2() const {
+    QColor color2() const
+    {
         return m_colors[1];
     }
-    QColor color3() const {
+    QColor color3() const
+    {
         return m_colors[2];
     }
-    qreal lineWidth() const {
+    qreal lineWidth() const
+    {
         return m_lineWidth;
     }
-    int ringLife() const {
+    int ringLife() const
+    {
         return m_ringLife;
     }
-    int ringSize() const {
+    int ringSize() const
+    {
         return m_ringMaxSize;
     }
-    int ringCount() const {
+    int ringCount() const
+    {
         return m_ringCount;
     }
-    bool isShowText() const {
+    bool isShowText() const
+    {
         return m_showText;
     }
-    QFont font() const {
+    QFont font() const
+    {
         return m_font;
     }
-    bool isEnabled() const {
+    bool isEnabled() const
+    {
         return m_enabled;
     }
 
+    bool tabletToolEvent(QTabletEvent *event) override;
+
 private Q_SLOTS:
     void toggleEnabled();
-    void slotMouseChanged(const QPoint& pos, const QPoint& old,
+    void slotMouseChanged(const QPoint &pos, const QPoint &old,
                           Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
                           Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
+
 private:
-    EffectFrame* createEffectFrame(const QPoint& pos, const QString& text);
-    inline void drawCircle(const QColor& color, float cx, float cy, float r);
-    inline void paintScreenSetup(int mask, QRegion region, ScreenPaintData& data);
-    inline void paintScreenFinish(int mask, QRegion region, ScreenPaintData& data);
+    EffectFrame *createEffectFrame(const QPoint &pos, const QString &text);
+    inline void drawCircle(const QColor &color, float cx, float cy, float r);
+    inline void paintScreenSetup(int mask, QRegion region, ScreenPaintData &data);
+    inline void paintScreenFinish(int mask, QRegion region, ScreenPaintData &data);
 
     inline bool isReleased(Qt::MouseButtons button, Qt::MouseButtons buttons, Qt::MouseButtons oldButtons);
     inline bool isPressed(Qt::MouseButtons button, Qt::MouseButtons buttons, Qt::MouseButtons oldButtons);
 
-    inline float computeRadius(const MouseEvent* click, int ring);
-    inline float computeAlpha(const MouseEvent* click, int ring);
+    inline float computeRadius(const MouseEvent *click, int ring);
+    inline float computeAlpha(const MouseEvent *click, int ring);
 
     void repaint();
 
-    void drawCircleGl(const QColor& color, float cx, float cy, float r);
-    void drawCircleQPainter(const QColor& color, float cx, float cy, float r);
-    void paintScreenSetupGl(int mask, QRegion region, ScreenPaintData& data);
-    void paintScreenFinishGl(int mask, QRegion region, ScreenPaintData& data);
+    void drawCircleGl(const QColor &color, float cx, float cy, float r);
+    void drawCircleQPainter(const QColor &color, float cx, float cy, float r);
+    void paintScreenSetupGl(int mask, QRegion region, ScreenPaintData &data);
+    void paintScreenFinishGl(int mask, QRegion region, ScreenPaintData &data);
 
     QColor m_colors[BUTTON_COUNT];
     int m_ringCount;
@@ -161,11 +185,11 @@ private:
     QFont m_font;
     std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
 
-    QList<MouseEvent*> m_clicks;
-    MouseButton* m_buttons[BUTTON_COUNT];
+    QList<MouseEvent *> m_clicks;
+    MouseButton *m_buttons[BUTTON_COUNT];
+    QHash<quint64, TabletToolEvent> m_tabletTools;
 
     bool m_enabled;
-
 };
 
 } // namespace

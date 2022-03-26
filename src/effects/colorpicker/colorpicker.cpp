@@ -7,15 +7,15 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "colorpicker.h"
+#include <KLocalizedString>
+#include <QDBusConnection>
+#include <QDBusMetaType>
 #include <kwinglutils.h>
 #include <kwinglutils_funcs.h>
-#include <QDBusConnection>
-#include <KLocalizedString>
-#include <QDBusMetaType>
 
 Q_DECLARE_METATYPE(QColor)
 
-QDBusArgument &operator<< (QDBusArgument &argument, const QColor &color)
+QDBusArgument &operator<<(QDBusArgument &argument, const QColor &color)
 {
     argument.beginStructure();
     argument << color.rgba();
@@ -52,19 +52,13 @@ ColorPickerEffect::~ColorPickerEffect() = default;
 
 void ColorPickerEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
-    m_paintedScreen = data.screen();
     effects->paintScreen(mask, region, data);
-}
 
-void ColorPickerEffect::postPaintScreen()
-{
-    effects->postPaintScreen();
-
-    if (m_scheduledPosition != QPoint(-1, -1) && (!m_paintedScreen || m_paintedScreen->geometry().contains(m_scheduledPosition))) {
+    if (m_scheduledPosition != QPoint(-1, -1) && effects->renderTargetRect().contains(m_scheduledPosition)) {
         uint8_t data[3];
-        const QRect geo = GLRenderTarget::virtualScreenGeometry();
+        const QRect geo = effects->renderTargetRect();
         const QPoint screenPosition(m_scheduledPosition.x() - geo.x(), m_scheduledPosition.y() - geo.y());
-        const QPoint texturePosition(screenPosition.x() * GLRenderTarget::virtualScreenScale(), (geo.height() - screenPosition.y()) * GLRenderTarget::virtualScreenScale());
+        const QPoint texturePosition(screenPosition.x() * effects->renderTargetScale(), (geo.height() - screenPosition.y()) * effects->renderTargetScale());
 
         glReadnPixels(texturePosition.x(), texturePosition.y(), 1, 1, GL_RGB, GL_UNSIGNED_BYTE, 3, data);
         QDBusConnection::sessionBus().send(m_replyMessage.createReply(QColor(data[0], data[1], data[2])));
@@ -87,7 +81,7 @@ QColor ColorPickerEffect::pick()
     setDelayedReply(true);
     showInfoMessage();
     effects->startInteractivePositionSelection(
-        [this] (const QPoint &p) {
+        [this](const QPoint &p) {
             hideInfoMessage();
             if (p == QPoint(-1, -1)) {
                 // error condition
@@ -97,8 +91,7 @@ QColor ColorPickerEffect::pick()
                 m_scheduledPosition = p;
                 effects->addRepaintFull();
             }
-        }
-    );
+        });
     return QColor();
 }
 

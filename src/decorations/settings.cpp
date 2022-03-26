@@ -6,19 +6,17 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "settings.h"
-// KWin
-#include "decorationbridge.h"
-#include "composite.h"
-#include "virtualdesktops.h"
-#include "workspace.h"
-#include "appmenu.h"
-
 #include <config-kwin.h>
 
-#include <KDecoration2/DecorationSettings>
+#include "appmenu.h"
+#include "composite.h"
+#include "decorationbridge.h"
+#include "settings.h"
+#include "virtualdesktops.h"
+#include "workspace.h"
 
 #include <KConfigGroup>
+#include <KDecoration2/DecorationSettings>
 
 #include <QFontDatabase>
 
@@ -34,19 +32,17 @@ SettingsImpl::SettingsImpl(KDecoration2::DecorationSettings *parent)
     readSettings();
 
     auto c = connect(Compositor::self(), &Compositor::compositingToggled,
-            parent, &KDecoration2::DecorationSettings::alphaChannelSupportedChanged);
-    connect(VirtualDesktopManager::self(), &VirtualDesktopManager::countChanged, this,
-        [parent](uint previous, uint current) {
-            if (previous != 1 && current != 1) {
-                return;
-            }
-            Q_EMIT parent->onAllDesktopsAvailableChanged(current > 1);
+                     parent, &KDecoration2::DecorationSettings::alphaChannelSupportedChanged);
+    connect(VirtualDesktopManager::self(), &VirtualDesktopManager::countChanged, this, [parent](uint previous, uint current) {
+        if (previous != 1 && current != 1) {
+            return;
         }
-    );
+        Q_EMIT parent->onAllDesktopsAvailableChanged(current > 1);
+    });
     // prevent changes in Decoration due to Compositor being destroyed
-    connect(Compositor::self(), &Compositor::aboutToDestroy, this,
-        [c] { disconnect(c); }
-    );
+    connect(Compositor::self(), &Compositor::aboutToDestroy, this, [c]() {
+        disconnect(c);
+    });
     connect(Workspace::self(), &Workspace::configChanged, this, &SettingsImpl::readSettings);
     connect(DecorationBridge::self(), &DecorationBridge::metaDataLoaded, this, &SettingsImpl::readSettings);
 }
@@ -74,16 +70,16 @@ static void initButtons()
     if (!s_buttonNames.isEmpty()) {
         return;
     }
-    s_buttonNames[KDecoration2::DecorationButtonType::Menu]            = QChar('M');
+    s_buttonNames[KDecoration2::DecorationButtonType::Menu] = QChar('M');
     s_buttonNames[KDecoration2::DecorationButtonType::ApplicationMenu] = QChar('N');
-    s_buttonNames[KDecoration2::DecorationButtonType::OnAllDesktops]   = QChar('S');
-    s_buttonNames[KDecoration2::DecorationButtonType::ContextHelp]     = QChar('H');
-    s_buttonNames[KDecoration2::DecorationButtonType::Minimize]        = QChar('I');
-    s_buttonNames[KDecoration2::DecorationButtonType::Maximize]        = QChar('A');
-    s_buttonNames[KDecoration2::DecorationButtonType::Close]           = QChar('X');
-    s_buttonNames[KDecoration2::DecorationButtonType::KeepAbove]       = QChar('F');
-    s_buttonNames[KDecoration2::DecorationButtonType::KeepBelow]       = QChar('B');
-    s_buttonNames[KDecoration2::DecorationButtonType::Shade]           = QChar('L');
+    s_buttonNames[KDecoration2::DecorationButtonType::OnAllDesktops] = QChar('S');
+    s_buttonNames[KDecoration2::DecorationButtonType::ContextHelp] = QChar('H');
+    s_buttonNames[KDecoration2::DecorationButtonType::Minimize] = QChar('I');
+    s_buttonNames[KDecoration2::DecorationButtonType::Maximize] = QChar('A');
+    s_buttonNames[KDecoration2::DecorationButtonType::Close] = QChar('X');
+    s_buttonNames[KDecoration2::DecorationButtonType::KeepAbove] = QChar('F');
+    s_buttonNames[KDecoration2::DecorationButtonType::KeepBelow] = QChar('B');
+    s_buttonNames[KDecoration2::DecorationButtonType::Shade] = QChar('L');
 }
 
 static QString buttonsToString(const QVector<KDecoration2::DecorationButtonType> &buttons)
@@ -102,9 +98,9 @@ static QString buttonsToString(const QVector<KDecoration2::DecorationButtonType>
     return ret;
 }
 
-QVector< KDecoration2::DecorationButtonType > SettingsImpl::readDecorationButtons(const KConfigGroup &config,
-                                                                                    const char *key,
-                                                                                    const QVector< KDecoration2::DecorationButtonType > &defaultValue) const
+QVector<KDecoration2::DecorationButtonType> SettingsImpl::readDecorationButtons(const KConfigGroup &config,
+                                                                                const char *key,
+                                                                                const QVector<KDecoration2::DecorationButtonType> &defaultValue) const
 {
     initButtons();
     auto buttonsFromString = [](const QString &buttons) -> QVector<KDecoration2::DecorationButtonType> {
@@ -123,17 +119,15 @@ QVector< KDecoration2::DecorationButtonType > SettingsImpl::readDecorationButton
 
 static KDecoration2::BorderSize stringToSize(const QString &name)
 {
-    static const QMap<QString, KDecoration2::BorderSize> s_sizes = QMap<QString, KDecoration2::BorderSize>({
-        {QStringLiteral("None"), KDecoration2::BorderSize::None},
-        {QStringLiteral("NoSides"), KDecoration2::BorderSize::NoSides},
-        {QStringLiteral("Tiny"), KDecoration2::BorderSize::Tiny},
-        {QStringLiteral("Normal"), KDecoration2::BorderSize::Normal},
-        {QStringLiteral("Large"), KDecoration2::BorderSize::Large},
-        {QStringLiteral("VeryLarge"), KDecoration2::BorderSize::VeryLarge},
-        {QStringLiteral("Huge"), KDecoration2::BorderSize::Huge},
-        {QStringLiteral("VeryHuge"), KDecoration2::BorderSize::VeryHuge},
-        {QStringLiteral("Oversized"), KDecoration2::BorderSize::Oversized}
-    });
+    static const QMap<QString, KDecoration2::BorderSize> s_sizes = QMap<QString, KDecoration2::BorderSize>({{QStringLiteral("None"), KDecoration2::BorderSize::None},
+                                                                                                            {QStringLiteral("NoSides"), KDecoration2::BorderSize::NoSides},
+                                                                                                            {QStringLiteral("Tiny"), KDecoration2::BorderSize::Tiny},
+                                                                                                            {QStringLiteral("Normal"), KDecoration2::BorderSize::Normal},
+                                                                                                            {QStringLiteral("Large"), KDecoration2::BorderSize::Large},
+                                                                                                            {QStringLiteral("VeryLarge"), KDecoration2::BorderSize::VeryLarge},
+                                                                                                            {QStringLiteral("Huge"), KDecoration2::BorderSize::Huge},
+                                                                                                            {QStringLiteral("VeryHuge"), KDecoration2::BorderSize::VeryHuge},
+                                                                                                            {QStringLiteral("Oversized"), KDecoration2::BorderSize::Oversized}});
     auto it = s_sizes.constFind(name);
     if (it == s_sizes.constEnd()) {
         // non sense values are interpreted just like normal
@@ -145,20 +139,12 @@ static KDecoration2::BorderSize stringToSize(const QString &name)
 void SettingsImpl::readSettings()
 {
     KConfigGroup config = kwinApp()->config()->group(QStringLiteral("org.kde.kdecoration2"));
-    const auto &left = readDecorationButtons(config, "ButtonsOnLeft", QVector<KDecoration2::DecorationButtonType >({
-        KDecoration2::DecorationButtonType::Menu,
-        KDecoration2::DecorationButtonType::OnAllDesktops
-    }));
+    const auto &left = readDecorationButtons(config, "ButtonsOnLeft", QVector<KDecoration2::DecorationButtonType>({KDecoration2::DecorationButtonType::Menu, KDecoration2::DecorationButtonType::OnAllDesktops}));
     if (left != m_leftButtons) {
         m_leftButtons = left;
         Q_EMIT decorationSettings()->decorationButtonsLeftChanged(m_leftButtons);
     }
-    const auto &right = readDecorationButtons(config, "ButtonsOnRight", QVector<KDecoration2::DecorationButtonType >({
-        KDecoration2::DecorationButtonType::ContextHelp,
-        KDecoration2::DecorationButtonType::Minimize,
-        KDecoration2::DecorationButtonType::Maximize,
-        KDecoration2::DecorationButtonType::Close
-    }));
+    const auto &right = readDecorationButtons(config, "ButtonsOnRight", QVector<KDecoration2::DecorationButtonType>({KDecoration2::DecorationButtonType::ContextHelp, KDecoration2::DecorationButtonType::Minimize, KDecoration2::DecorationButtonType::Maximize, KDecoration2::DecorationButtonType::Close}));
     if (right != m_rightButtons) {
         m_rightButtons = right;
         Q_EMIT decorationSettings()->decorationButtonsRightChanged(m_rightButtons);

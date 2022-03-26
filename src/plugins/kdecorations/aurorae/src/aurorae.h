@@ -24,7 +24,7 @@ class KConfigLoader;
 namespace KWin
 {
 class Borders;
-class EffectQuickView;
+class OffscreenQuickView;
 }
 
 namespace Aurorae
@@ -33,7 +33,7 @@ namespace Aurorae
 class Decoration : public KDecoration2::Decoration
 {
     Q_OBJECT
-    Q_PROPERTY(KDecoration2::DecoratedClient* client READ clientPointer CONSTANT)
+    Q_PROPERTY(KDecoration2::DecoratedClient *client READ clientPointer CONSTANT)
 public:
     explicit Decoration(QObject *parent = nullptr, const QVariantList &args = QVariantList());
     ~Decoration() override;
@@ -49,6 +49,7 @@ public Q_SLOTS:
     void installTitleItem(QQuickItem *item);
 
     void updateShadow();
+    void updateBlur();
 
 Q_SIGNALS:
     void configChanged();
@@ -67,7 +68,9 @@ private:
     void updateBuffer();
     void updateExtendedBorders();
 
-    QRect m_contentRect; //the geometry of the part of the buffer that is not a shadow when buffer was created.
+    bool m_supportsMask{false};
+
+    QRect m_contentRect; // the geometry of the part of the buffer that is not a shadow when buffer was created.
     QQuickItem *m_item = nullptr;
     QQmlContext *m_qmlContext = nullptr;
     KWin::Borders *m_borders;
@@ -76,8 +79,7 @@ private:
     KWin::Borders *m_padding;
     QString m_themeName;
 
-    KWin::EffectQuickView *m_view;
-    QElapsedTimer m_doubleClickTimer;
+    KWin::OffscreenQuickView *m_view;
 };
 
 class ThemeProvider : public KDecoration2::DecorationThemeProvider

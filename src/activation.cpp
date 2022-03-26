@@ -15,20 +15,20 @@
 
 */
 
-#include "x11client.h"
 #include "cursor.h"
 #include "focuschain.h"
 #include "netinfo.h"
 #include "platform.h"
 #include "workspace.h"
-#ifdef KWIN_BUILD_ACTIVITIES
+#include "x11client.h"
+#if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
 #include "virtualdesktops.h"
 
+#include <KLocalizedString>
 #include <kstartupinfo.h>
 #include <kstringhandler.h>
-#include <KLocalizedString>
 
 #include "atoms.h"
 #include "group.h"
@@ -203,11 +203,9 @@ namespace KWin
  data.l[1]= timestamp
 */
 
-
 //****************************************
 // Workspace
 //****************************************
-
 
 /**
  * Informs the workspace about the active client, i.e. the client that
@@ -217,7 +215,7 @@ namespace KWin
  * activeClient(). And of course, to propagate the active client to the
  * world.
  */
-void Workspace::setActiveClient(AbstractClient* c)
+void Workspace::setActiveClient(AbstractClient *c)
 {
     if (active_client == c)
         return;
@@ -280,7 +278,7 @@ void Workspace::setActiveClient(AbstractClient* c)
  * @see setActiveClient
  * @see requestFocus
  */
-void Workspace::activateClient(AbstractClient* c, bool force)
+void Workspace::activateClient(AbstractClient *c, bool force)
 {
     if (c == nullptr) {
         focusToNull();
@@ -293,11 +291,11 @@ void Workspace::activateClient(AbstractClient* c, bool force)
         VirtualDesktopManager::self()->setCurrent(c->desktops().constLast());
         --block_focus;
     }
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     if (!c->isOnCurrentActivity()) {
         ++block_focus;
-        //DBUS!
-        Activities::self()->setCurrent(c->activities().constFirst()); //first isn't necessarily best, but it's easiest
+        // DBUS!
+        Activities::self()->setCurrent(c->activities().constFirst()); // first isn't necessarily best, but it's easiest
         --block_focus;
     }
 #endif
@@ -305,9 +303,9 @@ void Workspace::activateClient(AbstractClient* c, bool force)
         c->unminimize();
 
     // ensure the window is really visible - could eg. be a hidden utility window, see bug #348083
-    c->hideClient(false);
+    c->showClient();
 
-// TODO force should perhaps allow this only if the window already contains the mouse
+    // TODO force should perhaps allow this only if the window already contains the mouse
     if (options->focusPolicyIsReasonable() || force)
         requestFocus(c, force);
 
@@ -331,12 +329,12 @@ void Workspace::activateClient(AbstractClient* c, bool force)
  *
  * @see activateClient
  */
-bool Workspace::requestFocus(AbstractClient* c, bool force)
+bool Workspace::requestFocus(AbstractClient *c, bool force)
 {
     return takeActivity(c, force ? ActivityFocusForce : ActivityFocus);
 }
 
-bool Workspace::takeActivity(AbstractClient* c, ActivityFlags flags)
+bool Workspace::takeActivity(AbstractClient *c, ActivityFlags flags)
 {
     // the 'if ( c == active_client ) return;' optimization mustn't be done here
     if (!focusChangeEnabled() && (c != active_client))
@@ -348,13 +346,13 @@ bool Workspace::takeActivity(AbstractClient* c, ActivityFlags flags)
     }
 
     if (flags & ActivityFocus) {
-        AbstractClient* modal = c->findModal();
+        AbstractClient *modal = c->findModal();
         if (modal != nullptr && modal != c) {
             if (modal->desktops() != c->desktops()) {
                 modal->setDesktops(c->desktops());
             }
-            if (!modal->isShown(true) && !modal->isMinimized())  // forced desktop or utility window
-                activateClient(modal);   // activating a minimized blocked window will unminimize its modal implicitly
+            if (!modal->isShown() && !modal->isMinimized()) // forced desktop or utility window
+                activateClient(modal); // activating a minimized blocked window will unminimize its modal implicitly
             // if the click was inside the window (i.e. handled is set),
             // but it has a modal, there's no need to use handled mode, because
             // the modal doesn't get the click anyway
@@ -368,9 +366,9 @@ bool Workspace::takeActivity(AbstractClient* c, ActivityFlags flags)
     if (!flags.testFlag(ActivityFocusForce) && (c->isDock() || c->isSplash())) {
         // toplevel menus and dock windows don't take focus if not forced
         // and don't have a flag that they take focus
-	if (!c->dockWantsInput()) {
-	    flags &= ~ActivityFocus;
-	}
+        if (!c->dockWantsInput()) {
+            flags &= ~ActivityFocus;
+        }
     }
     if (c->isShade()) {
         if (c->wantsInput() && (flags & ActivityFocus)) {
@@ -380,8 +378,8 @@ bool Workspace::takeActivity(AbstractClient* c, ActivityFlags flags)
         }
         flags &= ~ActivityFocus;
     }
-    if (!c->isShown(true)) {  // shouldn't happen, call activateClient() if needed
-        qCWarning(KWIN_CORE) << "takeActivity: not shown" ;
+    if (!c->isShown()) { // shouldn't happen, call activateClient() if needed
+        qCWarning(KWIN_CORE) << "takeActivity: not shown";
         return false;
     }
 
@@ -406,9 +404,9 @@ bool Workspace::takeActivity(AbstractClient* c, ActivityFlags flags)
  *
  * @note @p c may already be destroyed.
  */
-void Workspace::clientHidden(AbstractClient* c)
+void Workspace::clientHidden(AbstractClient *c)
 {
-    Q_ASSERT(!c->isShown(true) || !c->isOnCurrentDesktop() || !c->isOnCurrentActivity());
+    Q_ASSERT(!c->isShown() || !c->isOnCurrentDesktop() || !c->isOnCurrentActivity());
     activateNextClient(c);
 }
 
@@ -416,15 +414,14 @@ AbstractClient *Workspace::clientUnderMouse(AbstractOutput *output) const
 {
     auto it = stackingOrder().constEnd();
     while (it != stackingOrder().constBegin()) {
-        AbstractClient *client = qobject_cast<AbstractClient*>(*(--it));
+        AbstractClient *client = qobject_cast<AbstractClient *>(*(--it));
         if (!client) {
             continue;
         }
 
         // rule out clients which are not really visible.
         // the screen test is rather superfluous for xrandr & twinview since the geometry would differ -> TODO: might be dropped
-        if (!(client->isShown(false) && client->isOnCurrentDesktop() &&
-                client->isOnCurrentActivity() && client->isOnOutput(output)))
+        if (!(client->isShown() && client->isOnCurrentDesktop() && client->isOnCurrentActivity() && client->isOnOutput(output) && !client->isShade()))
             continue;
 
         if (client->frameGeometry().contains(Cursors::self()->mouse()->pos())) {
@@ -435,7 +432,7 @@ AbstractClient *Workspace::clientUnderMouse(AbstractOutput *output) const
 }
 
 // deactivates 'c' and activates next client
-bool Workspace::activateNextClient(AbstractClient* c)
+bool Workspace::activateNextClient(AbstractClient *c)
 {
     // if 'c' is not the active or the to-become active one, do nothing
     if (!(c == active_client || (should_get_focus.count() > 0 && c == should_get_focus.last())))
@@ -459,7 +456,7 @@ bool Workspace::activateNextClient(AbstractClient* c)
     if (!options->focusPolicyIsReasonable())
         return false;
 
-    AbstractClient* get_focus = nullptr;
+    AbstractClient *get_focus = nullptr;
 
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
 
@@ -480,7 +477,7 @@ bool Workspace::activateNextClient(AbstractClient* c)
             auto leaders = c->mainClients();
             if (leaders.count() == 1 && FocusChain::self()->isUsableFocusCandidate(leaders.at(0), c)) {
                 get_focus = leaders.at(0);
-                raiseClient(get_focus);   // also raise - we don't know where it came from
+                raiseClient(get_focus); // also raise - we don't know where it came from
             }
         }
         if (!get_focus) {
@@ -489,7 +486,7 @@ bool Workspace::activateNextClient(AbstractClient* c)
         }
     }
 
-    if (get_focus == nullptr)   // last chance: focus the desktop
+    if (get_focus == nullptr) // last chance: focus the desktop
         get_focus = findDesktop(true, desktop);
 
     if (get_focus != nullptr)
@@ -498,7 +495,6 @@ bool Workspace::activateNextClient(AbstractClient* c)
         focusToNull();
 
     return true;
-
 }
 
 void Workspace::switchToOutput(AbstractOutput *output)
@@ -515,9 +511,9 @@ void Workspace::switchToOutput(AbstractOutput *output)
     setActiveOutput(output);
 }
 
-void Workspace::gotFocusIn(const AbstractClient* c)
+void Workspace::gotFocusIn(const AbstractClient *c)
 {
-    if (should_get_focus.contains(const_cast< AbstractClient* >(c))) {
+    if (should_get_focus.contains(const_cast<AbstractClient *>(c))) {
         // remove also all sooner elements that should have got FocusIn,
         // but didn't for some reason (and also won't anymore, because they were sooner)
         while (should_get_focus.first() != c)
@@ -526,15 +522,21 @@ void Workspace::gotFocusIn(const AbstractClient* c)
     }
 }
 
-void Workspace::setShouldGetFocus(AbstractClient* c)
+void Workspace::setShouldGetFocus(AbstractClient *c)
 {
     should_get_focus.append(c);
     updateStackingOrder(); // e.g. fullscreens have different layer when active/not-active
 }
 
-
-namespace FSP {
-    enum Level { None = 0, Low, Medium, High, Extreme };
+namespace FSP
+{
+enum Level {
+    None = 0,
+    Low,
+    Medium,
+    High,
+    Extreme,
+};
 }
 
 // focus_in -> the window got FocusIn event
@@ -556,15 +558,15 @@ bool Workspace::allowClientActivation(const KWin::AbstractClient *c, xcb_timesta
     if (sessionManager()->state() == SessionState::Saving && level <= FSP::Medium) { // <= normal
         return true;
     }
-    AbstractClient* ac = mostRecentlyActivatedClient();
+    AbstractClient *ac = mostRecentlyActivatedClient();
     if (focus_in) {
-        if (should_get_focus.contains(const_cast< AbstractClient* >(c)))
+        if (should_get_focus.contains(const_cast<AbstractClient *>(c)))
             return true; // FocusIn was result of KWin's action
         // Before getting FocusIn, the active Client already
         // got FocusOut, and therefore got deactivated.
         ac = last_active_client;
     }
-    if (time == 0) {   // explicitly asked not to get focus
+    if (time == 0) { // explicitly asked not to get focus
         if (!c->rules()->checkAcceptFocus(false))
             return false;
     }
@@ -605,7 +607,7 @@ bool Workspace::allowClientActivation(const KWin::AbstractClient *c, xcb_timesta
     if (level > FSP::Medium && protection > FSP::Low)
         return false;
 
-    if (time == -1U) {  // no time known
+    if (time == -1U) { // no time known
         qCDebug(KWIN_CORE) << "Activation: No timestamp at all";
         // Only allow for Low protection unless active client has High interest in focus
         if (level < FSP::Medium && protection < FSP::High)
@@ -619,8 +621,8 @@ bool Workspace::allowClientActivation(const KWin::AbstractClient *c, xcb_timesta
     // Low or medium FSP, usertime comparism is possible
     const xcb_timestamp_t user_time = ac->userTime();
     qCDebug(KWIN_CORE) << "Activation, compared:" << c << ":" << time << ":" << user_time
-                 << ":" << (NET::timestampCompare(time, user_time) >= 0);
-    return NET::timestampCompare(time, user_time) >= 0;   // time >= user_time
+                       << ":" << (NET::timestampCompare(time, user_time) >= 0);
+    return NET::timestampCompare(time, user_time) >= 0; // time >= user_time
 }
 
 // basically the same like allowClientActivation(), this time allowing
@@ -633,10 +635,10 @@ bool Workspace::allowFullClientRaising(const KWin::AbstractClient *c, xcb_timest
     if (sessionManager()->state() == SessionState::Saving && level <= 2) { // <= normal
         return true;
     }
-    AbstractClient* ac = mostRecentlyActivatedClient();
-    if (level == 0)   // none
+    AbstractClient *ac = mostRecentlyActivatedClient();
+    if (level == 0) // none
         return true;
-    if (level == 4)   // extreme
+    if (level == 4) // extreme
         return false;
     if (ac == nullptr || ac->isDesktop()) {
         qCDebug(KWIN_CORE) << "Raising: No client active, allowing";
@@ -647,12 +649,12 @@ bool Workspace::allowFullClientRaising(const KWin::AbstractClient *c, xcb_timest
         qCDebug(KWIN_CORE) << "Raising: Belongs to active application";
         return true;
     }
-    if (level == 3)   // high
+    if (level == 3) // high
         return false;
     xcb_timestamp_t user_time = ac->userTime();
     qCDebug(KWIN_CORE) << "Raising, compared:" << time << ":" << user_time
-                 << ":" << (NET::timestampCompare(time, user_time) >= 0);
-    return NET::timestampCompare(time, user_time) >= 0;   // time >= user_time
+                       << ":" << (NET::timestampCompare(time, user_time) >= 0);
+    return NET::timestampCompare(time, user_time) >= 0; // time >= user_time
 }
 
 /**
@@ -675,7 +677,7 @@ bool Workspace::restoreFocus()
     return true;
 }
 
-void Workspace::clientAttentionChanged(AbstractClient* c, bool set)
+void Workspace::clientAttentionChanged(AbstractClient *c, bool set)
 {
     if (set) {
         attention_chain.removeAll(c);
@@ -703,8 +705,8 @@ void X11Client::updateUserTime(xcb_timestamp_t time)
         time = xTime();
     }
     if (time != -1U
-            && (m_userTime == XCB_TIME_CURRENT_TIME
-                || NET::timestampCompare(time, m_userTime) > 0)) {    // time > user_time
+        && (m_userTime == XCB_TIME_CURRENT_TIME
+            || NET::timestampCompare(time, m_userTime) > 0)) { // time > user_time
         m_userTime = time;
         shade_below = nullptr; // do not hover re-shade a window after it got interaction
     }
@@ -718,17 +720,17 @@ xcb_timestamp_t X11Client::readUserCreationTime() const
 }
 
 xcb_timestamp_t X11Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id, const KStartupInfoData *asn_data,
-                                                 bool session) const
+                                                    bool session) const
 {
     xcb_timestamp_t time = info->userTime();
-    //qDebug() << "User timestamp, initial:" << time;
+    // qDebug() << "User timestamp, initial:" << time;
     //^^ this deadlocks kwin --replace sometimes.
 
     // newer ASN timestamp always replaces user timestamp, unless user timestamp is 0
     // helps e.g. with konqy reusing
     if (asn_data != nullptr && time != 0) {
         if (asn_id->timestamp() != 0
-                && (time == -1U || NET::timestampCompare(asn_id->timestamp(), time) > 0)) {
+            && (time == -1U || NET::timestampCompare(asn_id->timestamp(), time) > 0)) {
             time = asn_id->timestamp();
         }
     }
@@ -748,14 +750,14 @@ xcb_timestamp_t X11Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id
                 // ignore already existing splashes, toolbars, utilities and menus,
                 // as the app may show those before the main window
                 return !cl->isSplash() && !cl->isToolbar() && !cl->isUtility() && !cl->isMenu()
-                        && cl != this && X11Client::belongToSameApplication(cl, this, SameApplicationCheck::RelaxedForActive);
+                    && cl != this && X11Client::belongToSameApplication(cl, this, SameApplicationCheck::RelaxedForActive);
             };
             if (isTransient()) {
                 auto clientMainClients = [this]() {
                     QList<X11Client *> ret;
                     const auto mcs = mainClients();
-                    for (auto mc: mcs) {
-                        if (X11Client *c  = dynamic_cast<X11Client *>(mc)) {
+                    for (auto mc : mcs) {
+                        if (X11Client *c = dynamic_cast<X11Client *>(mc)) {
                             ret << c;
                         }
                     }
@@ -764,8 +766,7 @@ xcb_timestamp_t X11Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id
                 if (act->hasTransient(this, true))
                     ; // is transient for currently active window, even though it's not
                 // the same app (e.g. kcookiejar dialog) -> allow activation
-                else if (groupTransient() &&
-                        findInList<X11Client, X11Client>(clientMainClients(), sameApplicationActiveHackPredicate) == nullptr)
+                else if (groupTransient() && findInList<X11Client, X11Client>(clientMainClients(), sameApplicationActiveHackPredicate) == nullptr)
                     ; // standalone transient
                 else
                     first_window = false;
@@ -799,12 +800,12 @@ xcb_timestamp_t X11Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id
 xcb_timestamp_t X11Client::userTime() const
 {
     xcb_timestamp_t time = m_userTime;
-    if (time == 0)   // doesn't want focus after showing
+    if (time == 0) // doesn't want focus after showing
         return 0;
     Q_ASSERT(group() != nullptr);
     if (time == -1U
-            || (group()->userTime() != -1U
-                && NET::timestampCompare(group()->userTime(), time) > 0))
+        || (group()->userTime() != -1U
+            && NET::timestampCompare(group()->userTime(), time) > 0))
         time = group()->userTime();
     return time;
 }
@@ -866,7 +867,7 @@ void Group::startupIdChanged()
     if (!asn_valid)
         return;
     if (asn_id.timestamp() != 0 && user_time != -1U
-            && NET::timestampCompare(asn_id.timestamp(), user_time) > 0) {
+        && NET::timestampCompare(asn_id.timestamp(), user_time) > 0) {
         user_time = asn_id.timestamp();
     }
 }
@@ -879,8 +880,8 @@ void Group::updateUserTime(xcb_timestamp_t time)
         time = xTime();
     }
     if (time != -1U
-            && (user_time == XCB_CURRENT_TIME
-                || NET::timestampCompare(time, user_time) > 0))    // time > user_time
+        && (user_time == XCB_CURRENT_TIME
+            || NET::timestampCompare(time, user_time) > 0)) // time > user_time
         user_time = time;
 }
 

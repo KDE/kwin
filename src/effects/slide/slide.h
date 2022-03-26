@@ -40,11 +40,13 @@ public:
     void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
 
-    bool isActive() const override {
+    bool isActive() const override
+    {
         return m_active;
     }
 
-    int requestedEffectChainPosition() const override {
+    int requestedEffectChainPosition() const override
+    {
         return 50;
     }
 
@@ -87,12 +89,15 @@ private:
     EffectWindow *m_movingWindow = nullptr;
     std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
 
-    struct {
+    struct
+    {
         int desktop;
         bool firstPass;
         bool lastPass;
         QPoint translation;
 
+        QPoint currentPos;
+        QVector<int> visibleDesktops;
         EffectWindowList fullscreenWindows;
     } m_paintCtx;
 

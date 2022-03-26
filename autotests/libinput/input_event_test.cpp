@@ -8,7 +8,7 @@
 */
 #include "mock_libinput.h"
 
-#include "libinput/device.h"
+#include "backends/libinput/device.h"
 #include "input_event.h"
 
 #include <QtTest>
@@ -115,7 +115,7 @@ void InputEventsTest::testInitWheelEvent_data()
     QTest::addColumn<QPoint>("expectedAngleDelta");
 
     QTest::newRow("horiz") << Qt::Horizontal << 3.3 << 1 << QPoint(3, 0);
-    QTest::newRow("vert")  << Qt::Vertical   << 2.4 << 2 << QPoint(0, 2);
+    QTest::newRow("vert") << Qt::Vertical << 2.4 << 2 << QPoint(0, 2);
 }
 
 void InputEventsTest::testInitWheelEvent()
@@ -134,8 +134,8 @@ void InputEventsTest::testInitWheelEvent()
                      Qt::ShiftModifier | Qt::ControlModifier, InputRedirection::PointerAxisSourceWheel, 300, &d);
     // compare QWheelEvent contract
     QCOMPARE(event.type(), QEvent::Wheel);
-    QCOMPARE(event.posF(), QPointF(100, 200));
-    QCOMPARE(event.globalPosF(), QPointF(100, 200));
+    QCOMPARE(event.position(), QPointF(100, 200));
+    QCOMPARE(event.globalPosition(), QPointF(100, 200));
     QCOMPARE(event.buttons(), Qt::LeftButton | Qt::RightButton);
     QCOMPARE(event.modifiers(), Qt::ShiftModifier | Qt::ControlModifier);
     QCOMPARE(event.timestamp(), 300ul);
@@ -146,7 +146,6 @@ void InputEventsTest::testInitWheelEvent()
     QCOMPARE(event.axisSource(), InputRedirection::PointerAxisSourceWheel);
     // and our custom argument
     QCOMPARE(event.device(), &d);
-
 }
 
 void InputEventsTest::testInitSwitchEvent_data()

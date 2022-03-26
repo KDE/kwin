@@ -51,64 +51,12 @@ public:
 
 public Q_SLOTS:
     /**
-     * @brief Gives information about the current state of Night Color.
-     *
-     * The returned variant hash has always the fields:
-     * - ActiveEnabled
-     * - Active
-     * - Mode
-     * - NightTemperatureEnabled
-     * - NightTemperature
-     * - Running
-     * - CurrentColorTemperature
-     * - LatitudeAuto
-     * - LongitudeAuto
-     * - LocationEnabled
-     * - LatitudeFixed
-     * - LongitudeFixed
-     * - TimingsEnabled
-     * - MorningBeginFixed
-     * - EveningBeginFixed
-     * - TransitionTime
-     *
-     * @return QHash<QString, QVariant>
-     * @see nightColorConfigChange
-     * @see signalNightColorConfigChange
-     * @since 5.12
-     */
-    QHash<QString, QVariant> nightColorInfo();
-    /**
-     * @brief Allows changing the Night Color configuration.
-     *
-     * The provided variant hash can have the following fields:
-     * - Active
-     * - Mode
-     * - NightTemperature
-     * - LatitudeAuto
-     * - LongitudeAuto
-     * - LatitudeFixed
-     * - LongitudeFixed
-     * - MorningBeginFixed
-     * - EveningBeginFixed
-     * - TransitionTime
-     *
-     * It returns true if the configuration change was successful, otherwise false.
-     * A change request for the location or timings needs to provide all relevant fields at the same time
-     * to be successful. Otherwise the whole change request will get ignored. A change request will be ignored
-     * as a whole as well, if one of the provided information has been sent in a wrong format.
-     *
-     * @return bool
-     * @see nightColorInfo
-     * @see signalNightColorConfigChange
-     * @since 5.12
-     */
-    bool setNightColorConfig(QHash<QString, QVariant> data);
-    /**
      * @brief For receiving auto location updates, primarily through the KDE Daemon
      * @return void
      * @since 5.12
      */
     void nightColorAutoLocationUpdate(double latitude, double longitude);
+
     /**
      * @brief Temporarily blocks Night Color.
      * @since 5.18
@@ -119,19 +67,6 @@ public Q_SLOTS:
      * @since 5.18
      */
     void uninhibit(uint cookie);
-
-Q_SIGNALS:
-    /**
-     * @brief Emits that the Night Color configuration has been changed.
-     *
-     * The provided variant hash provides the same fields as nightColorInfo
-     *
-     * @return void
-     * @see nightColorInfo
-     * @see nightColorConfigChange
-     * @since 5.12
-     */
-    void nightColorConfigChanged(QHash<QString, QVariant> data);
 
 private Q_SLOTS:
     void removeInhibitorService(const QString &serviceName);

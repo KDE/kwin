@@ -73,7 +73,8 @@ public:
     ~ScreenEdgeItem() override;
     bool isEnabled() const;
     Edge edge() const;
-    Mode mode() const {
+    Mode mode() const
+    {
         return m_mode;
     }
 
@@ -91,6 +92,7 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     bool borderActivated(ElectricBorder edge);
+
 private:
     void enableEdge();
     void disableEdge();

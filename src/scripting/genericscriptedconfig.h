@@ -11,8 +11,8 @@
 #define KWIN_GENERICSCRIPTEDCONFIG_H
 
 #include <KCModule>
-#include <KPluginFactory>
 #include <KConfigGroup>
+#include <KPluginFactory>
 
 class KLocalizedTranslator;
 
@@ -22,7 +22,7 @@ namespace KWin
 class GenericScriptedConfigFactory : public KPluginFactory
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.kde.KPluginFactory"  FILE "genericscriptedconfig.json" )
+    Q_PLUGIN_METADATA(IID "org.kde.KPluginFactory" FILE "genericscriptedconfig.json")
     Q_INTERFACES(KPluginFactory)
 
 protected:
@@ -58,6 +58,7 @@ class ScriptedEffectConfig : public GenericScriptedConfig
 public:
     ScriptedEffectConfig(const QString &keyword, QWidget *parent, const QVariantList &args);
     ~ScriptedEffectConfig() override;
+
 protected:
     QString typeName() const override;
     KConfigGroup configGroup() override;
@@ -77,8 +78,7 @@ protected:
     void reload() override;
 };
 
-inline
-const QString &GenericScriptedConfig::packageName() const
+inline const QString &GenericScriptedConfig::packageName() const
 {
     return m_packageName;
 }

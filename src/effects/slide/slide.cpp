@@ -33,7 +33,9 @@ SlideEffect::SlideEffect()
             this, &SlideEffect::windowDeleted);
     connect(effects, &EffectsHandler::numberDesktopsChanged,
             this, &SlideEffect::stop);
-    connect(effects, &EffectsHandler::numberScreensChanged,
+    connect(effects, &EffectsHandler::screenAdded,
+            this, &SlideEffect::stop);
+    connect(effects, &EffectsHandler::screenRemoved,
             this, &SlideEffect::stop);
 }
 
@@ -60,6 +62,25 @@ void SlideEffect::reconfigure(ReconfigureFlags)
     m_slideBackground = SlideConfig::slideBackground();
 }
 
+inline QRegion buildClipRegion(const QPoint &pos, int w, int h)
+{
+    const QSize screenSize = effects->virtualScreenSize();
+    QRegion r = QRect(pos, screenSize);
+    if (effects->optionRollOverDesktops()) {
+        r |= (r & QRect(-w, 0, w, h)).translated(w, 0); // W
+        r |= (r & QRect(w, 0, w, h)).translated(-w, 0); // E
+
+        r |= (r & QRect(0, -h, w, h)).translated(0, h); // N
+        r |= (r & QRect(0, h, w, h)).translated(0, -h); // S
+
+        r |= (r & QRect(-w, -h, w, h)).translated(w, h); // NW
+        r |= (r & QRect(w, -h, w, h)).translated(-w, h); // NE
+        r |= (r & QRect(w, h, w, h)).translated(-w, -h); // SE
+        r |= (r & QRect(-w, h, w, h)).translated(w, -h); // SW
+    }
+    return r;
+}
+
 void SlideEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     std::chrono::milliseconds delta = std::chrono::milliseconds::zero();
@@ -67,11 +88,31 @@ void SlideEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::millisec
         delta = presentTime - m_lastPresentTime;
     }
     m_lastPresentTime = presentTime;
-
     m_timeLine.update(delta);
 
-    data.mask |= PAINT_SCREEN_TRANSFORMED
-              |  PAINT_SCREEN_BACKGROUND_FIRST;
+    const int w = workspaceWidth();
+    const int h = workspaceHeight();
+
+    // When "Desktop navigation wraps around" checkbox is checked, currentPos
+    // can be outside the rectangle Rect{x:-w, y:-h, width:2*w, height: 2*h},
+    // so we map currentPos back to the rect.
+    m_paintCtx.currentPos = m_startPos + m_diff * m_timeLine.value();
+    if (effects->optionRollOverDesktops()) {
+        m_paintCtx.currentPos.setX(m_paintCtx.currentPos.x() % w);
+        m_paintCtx.currentPos.setY(m_paintCtx.currentPos.y() % h);
+    }
+
+    m_paintCtx.visibleDesktops.clear();
+    const QRegion clipRegion = buildClipRegion(m_paintCtx.currentPos, w, h);
+    for (int i = 1; i <= effects->numberOfDesktops(); i++) {
+        const QRect desktopGeo = desktopGeometry(i);
+        if (!clipRegion.contains(desktopGeo)) {
+            continue;
+        }
+        m_paintCtx.visibleDesktops << i;
+    }
+
+    data.mask |= PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_BACKGROUND_FIRST;
 
     effects->prePaintScreen(data, presentTime);
 }
@@ -89,36 +130,17 @@ void SlideEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::millisec
  */
 inline void wrapDiff(QPoint &diff, int w, int h)
 {
-    if (diff.x() > w/2) {
+    if (diff.x() > w / 2) {
         diff.setX(diff.x() - w);
-    } else if (diff.x() < -w/2) {
+    } else if (diff.x() < -w / 2) {
         diff.setX(diff.x() + w);
     }
 
-    if (diff.y() > h/2) {
+    if (diff.y() > h / 2) {
         diff.setY(diff.y() - h);
-    } else if (diff.y() < -h/2) {
+    } else if (diff.y() < -h / 2) {
         diff.setY(diff.y() + h);
     }
-}
-
-inline QRegion buildClipRegion(const QPoint &pos, int w, int h)
-{
-    const QSize screenSize = effects->virtualScreenSize();
-    QRegion r = QRect(pos, screenSize);
-    if (effects->optionRollOverDesktops()) {
-        r |= (r & QRect(-w, 0, w, h)).translated(w, 0);  // W
-        r |= (r & QRect(w, 0, w, h)).translated(-w, 0);  // E
-
-        r |= (r & QRect(0, -h, w, h)).translated(0, h);  // N
-        r |= (r & QRect(0, h, w, h)).translated(0, -h);  // S
-
-        r |= (r & QRect(-w, -h, w, h)).translated(w, h); // NW
-        r |= (r & QRect(w, -h, w, h)).translated(-w, h); // NE
-        r |= (r & QRect(w, h, w, h)).translated(-w, -h); // SE
-        r |= (r & QRect(-w, h, w, h)).translated(w, -h); // SW
-    }
-    return r;
 }
 
 void SlideEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
@@ -126,27 +148,6 @@ void SlideEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &
     const bool wrap = effects->optionRollOverDesktops();
     const int w = workspaceWidth();
     const int h = workspaceHeight();
-
-    QPoint currentPos = m_startPos + m_diff * m_timeLine.value();
-
-    // When "Desktop navigation wraps around" checkbox is checked, currentPos
-    // can be outside the rectangle Rect{x:-w, y:-h, width:2*w, height: 2*h},
-    // so we map currentPos back to the rect.
-    if (wrap) {
-        currentPos.setX(currentPos.x() % w);
-        currentPos.setY(currentPos.y() % h);
-    }
-
-    QVector<int> visibleDesktops;
-    visibleDesktops.reserve(4); // 4 - maximum number of visible desktops
-    const QRegion clipRegion = buildClipRegion(currentPos, w, h);
-    for (int i = 1; i <= effects->numberOfDesktops(); i++) {
-        const QRect desktopGeo = desktopGeometry(i);
-        if (!clipRegion.contains(desktopGeo)) {
-            continue;
-        }
-        visibleDesktops << i;
-    }
 
     // When we enter a virtual desktop that has a window in fullscreen mode,
     // stacking order is fine. When we leave a virtual desktop that has
@@ -171,11 +172,11 @@ void SlideEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &
     // Windows, such as docks or keep-above windows, are painted in
     // the last pass so they are above other windows.
     m_paintCtx.firstPass = true;
-    const int lastDesktop = visibleDesktops.last();
-    for (int desktop : qAsConst(visibleDesktops)) {
+    const int lastDesktop = m_paintCtx.visibleDesktops.last();
+    for (int desktop : qAsConst(m_paintCtx.visibleDesktops)) {
         m_paintCtx.desktop = desktop;
         m_paintCtx.lastPass = (lastDesktop == desktop);
-        m_paintCtx.translation = desktopCoords(desktop) - currentPos;
+        m_paintCtx.translation = desktopCoords(desktop) - m_paintCtx.currentPos;
         if (wrap) {
             wrapDiff(m_paintCtx.translation, w, h);
         }
@@ -200,10 +201,8 @@ bool SlideEffect::isTranslated(const EffectWindow *w) const
         return false;
     } else if (w == m_movingWindow) {
         return false;
-    } else if (w->isOnDesktop(m_paintCtx.desktop)) {
-        return true;
     }
-    return false;
+    return true;
 }
 
 /**
@@ -249,20 +248,22 @@ bool SlideEffect::isPainted(const EffectWindow *w) const
 
 void SlideEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
-    const bool painted = isPainted(w);
-    if (painted) {
-        w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
-    } else {
-        w->disablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
+    for (const auto &desktop : std::as_const(m_paintCtx.visibleDesktops)) {
+        if (w->isOnDesktop(desktop)) {
+            w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
+            data.setTransformed();
+            break;
+        }
     }
-    if (painted && isTranslated(w)) {
-        data.setTransformed();
-    }
+
     effects->prePaintWindow(w, data, presentTime);
 }
 
 void SlideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
+    if (!isPainted(w)) {
+        return;
+    }
     if (isTranslated(w)) {
         data += m_paintCtx.translation;
     }

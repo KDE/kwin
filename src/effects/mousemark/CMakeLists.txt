@@ -1,25 +1,40 @@
 #######################################
-# Config
-set(kwin_mousemark_config_SRCS mousemark_config.cpp)
-ki18n_wrap_ui(kwin_mousemark_config_SRCS mousemark_config.ui)
-kconfig_add_kcfg_files(kwin_mousemark_config_SRCS mousemarkconfig.kcfgc)
+# Effect
 
-add_library(kwin_mousemark_config MODULE ${kwin_mousemark_config_SRCS})
+set(mousemark_SOURCES
+    main.cpp
+    mousemark.cpp
+)
 
-target_link_libraries(kwin_mousemark_config
-    KF5::ConfigWidgets
+kconfig_add_kcfg_files(mousemark_SOURCES
+    mousemarkconfig.kcfgc
+)
+
+kwin4_add_effect_module(kwin4_effect_mousemark ${mousemark_SOURCES})
+target_link_libraries(kwin4_effect_mousemark PRIVATE
+    kwineffects
+    kwinglutils
+
+    KF5::ConfigGui
     KF5::GlobalAccel
     KF5::I18n
-    KF5::TextWidgets
-    KF5::XmlGui
-    KWinEffectsInterface
 )
 
-kcoreaddons_desktop_to_json(kwin_mousemark_config mousemark_config.desktop SERVICE_TYPES kcmodule.desktop)
+#######################################
+# Config
+if (KWIN_BUILD_KCMS)
+    set(kwin_mousemark_config_SRCS mousemark_config.cpp)
+    ki18n_wrap_ui(kwin_mousemark_config_SRCS mousemark_config.ui)
+    kconfig_add_kcfg_files(kwin_mousemark_config_SRCS mousemarkconfig.kcfgc)
 
-install(
-    TARGETS
-        kwin_mousemark_config
-    DESTINATION
-        ${KDE_INSTALL_PLUGINDIR}/kwin/effects/configs
-)
+    kwin_add_effect_config(kwin_mousemark_config ${kwin_mousemark_config_SRCS})
+
+    target_link_libraries(kwin_mousemark_config
+        KF5::ConfigWidgets
+        KF5::CoreAddons
+        KF5::GlobalAccel
+        KF5::I18n
+        KF5::XmlGui
+        KWinEffectsInterface
+    )
+endif()

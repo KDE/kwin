@@ -10,11 +10,11 @@
 
 #include <KLocalizedString>
 
-#include <QCoreApplication>
 #include <QCommandLineParser>
-#include <QDebug>
-#include <QDBusMessage>
+#include <QCoreApplication>
 #include <QDBusConnection>
+#include <QDBusMessage>
+#include <QDebug>
 #include <QFileInfo>
 #include <QTimer>
 
@@ -68,18 +68,18 @@ int main(int argc, char **argv)
                     }
                 }
             } else {
-                ts << i18n("You attempted to pass a file path, but this could not be resolved to a theme, and we will have to abort, due to having no theme to set") << endl;
+                ts << i18n("You attempted to pass a file path, but this could not be resolved to a theme, and we will have to abort, due to having no theme to set") << Qt::endl;
                 exitCode = -1;
             }
         }
 
         if (settings->theme() == requestedTheme) {
-            ts << i18n("The requested theme \"%1\" is already set as the window decoration theme.", requestedTheme) << endl;
+            ts << i18n("The requested theme \"%1\" is already set as the window decoration theme.", requestedTheme) << Qt::endl;
             // not an error condition, just nothing happens
         } else if (themeResolved) {
             int index{-1};
             QStringList availableThemes;
-            for (int i = 0 ; i < model->rowCount(); ++i) {
+            for (int i = 0; i < model->rowCount(); ++i) {
                 const QString themeName = model->data(model->index(i), KDecoration2::Configuration::DecorationsModel::ThemeNameRole).toString();
                 if (requestedTheme == themeName) {
                     index = i;
@@ -93,23 +93,24 @@ int main(int argc, char **argv)
                 if (settings->save()) {
                     // Send a signal to all kwin instances
                     QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/KWin"),
-                                                                    QStringLiteral("org.kde.KWin"),
-                                                                    QStringLiteral("reloadConfig"));
+                                                                      QStringLiteral("org.kde.KWin"),
+                                                                      QStringLiteral("reloadConfig"));
                     QDBusConnection::sessionBus().send(message);
                     ts << i18n("Successfully applied the cursor theme %1 to your current Plasma session",
-                                model->data(model->index(index), KDecoration2::Configuration::DecorationsModel::ThemeNameRole).toString()) << endl;
+                               model->data(model->index(index), KDecoration2::Configuration::DecorationsModel::ThemeNameRole).toString())
+                       << Qt::endl;
                 } else {
                     ts << i18n("Failed to save your theme settings - the reason is unknown, but this is an unrecoverable error. You may find that simply trying again will work.");
                     exitCode = -1;
                 }
             } else {
-                ts << i18n("Could not find theme \"%1\". The theme should be one of the following options: %2", requestedTheme, availableThemes.join(QStringLiteral(", "))) << endl;
+                ts << i18n("Could not find theme \"%1\". The theme should be one of the following options: %2", requestedTheme, availableThemes.join(QStringLiteral(", "))) << Qt::endl;
                 exitCode = -1;
             }
         }
     } else if (parser->isSet(QStringLiteral("list-themes"))) {
-        ts << i18n("You have the following KWin window decoration themes on your system:") << endl;
-        for (int i = 0 ; i < model->rowCount(); ++i) {
+        ts << i18n("You have the following KWin window decoration themes on your system:") << Qt::endl;
+        for (int i = 0; i < model->rowCount(); ++i) {
             const QString displayName = model->data(model->index(i), Qt::DisplayRole).toString();
             const QString themeName = model->data(model->index(i), KDecoration2::Configuration::DecorationsModel::ThemeNameRole).toString();
             if (settings->theme() == themeName) {
@@ -121,7 +122,9 @@ int main(int argc, char **argv)
     } else {
         parser->showHelp();
     }
-    QTimer::singleShot(0, &app, [&app,&exitCode](){ app.exit(exitCode); });
+    QTimer::singleShot(0, &app, [&app, &exitCode]() {
+        app.exit(exitCode);
+    });
 
     return app.exec();
 }

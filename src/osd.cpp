@@ -5,10 +5,10 @@
 
 */
 #include "osd.h"
-#include "onscreennotification.h"
 #include "main.h"
-#include "workspace.h"
+#include "onscreennotification.h"
 #include "scripting/scripting.h"
+#include "workspace.h"
 
 #include <QQmlEngine>
 

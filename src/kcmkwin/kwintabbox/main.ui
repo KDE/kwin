@@ -43,7 +43,7 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="KComboBox" name="switchingModeCombo">
+         <widget class="QComboBox" name="switchingModeCombo">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -585,11 +585,6 @@
    <class>KKeySequenceWidget</class>
    <extends>QWidget</extends>
    <header>kkeysequencewidget.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

@@ -7,17 +7,21 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "test_tabbox_clientmodel.h"
-#include "mock_tabboxhandler.h"
-#include "clientmodel.h"
 #include "../testutils.h"
+#include "clientmodel.h"
+#include "mock_tabboxhandler.h"
 
 #include <QtTest>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <private/qtx11extras_p.h>
+#else
 #include <QX11Info>
+#endif
 using namespace KWin;
 
 void TestTabBoxClientModel::initTestCase()
 {
-    qApp->setProperty("x11Connection", QVariant::fromValue<void*>(QX11Info::connection()));
+    qApp->setProperty("x11Connection", QVariant::fromValue<void *>(QX11Info::connection()));
 }
 
 void TestTabBoxClientModel::testLongestCaptionWithNullClient()
@@ -33,7 +37,7 @@ void TestTabBoxClientModel::testLongestCaptionWithNullClient()
     // delete the one client in the list
     QModelIndex index = clientModel->index(0, 0);
     QVERIFY(index.isValid());
-    TabBox::TabBoxClient *client = static_cast<TabBox::TabBoxClient *>(clientModel->data(index, TabBox::ClientModel::ClientRole).value<void*>());
+    TabBox::TabBoxClient *client = static_cast<TabBox::TabBoxClient *>(clientModel->data(index, TabBox::ClientModel::ClientRole).value<void *>());
     client->close();
     // internal model of ClientModel now contains a deleted pointer
     // longestCaption should behave just as if the window were not in the list

@@ -13,15 +13,15 @@
 
 class GenericSceneOpenGLTest : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 public:
     ~GenericSceneOpenGLTest() override;
+
 protected:
     GenericSceneOpenGLTest(const QByteArray &envVariable);
 private Q_SLOTS:
     void initTestCase();
     void cleanup();
-    void testRestart_data();
     void testRestart();
 
 private:

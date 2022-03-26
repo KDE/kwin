@@ -7,25 +7,19 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "poller.h"
-#include "wayland_server.h"
 
-#include <KWayland/Client/idle.h>
-#include <KWayland/Client/registry.h>
-#include <KWayland/Client/seat.h>
+#include <KIdleTime>
+
+#include "wayland_server.h"
+#include <KWaylandServer/idle_interface.h>
+#include <KWaylandServer/seat_interface.h>
+
+namespace KWin
+{
 
 KWinIdleTimePoller::KWinIdleTimePoller(QObject *parent)
     : AbstractSystemPoller(parent)
 {
-    connect(KWin::waylandServer(), &KWin::WaylandServer::terminatingInternalClientConnection, this,
-        [this] {
-            qDeleteAll(m_timeouts);
-            m_timeouts.clear();
-            delete m_seat;
-            m_seat = nullptr;
-            delete m_idle;
-            m_idle = nullptr;
-        }
-    );
 }
 
 KWinIdleTimePoller::~KWinIdleTimePoller() = default;
@@ -37,77 +31,110 @@ bool KWinIdleTimePoller::isAvailable()
 
 bool KWinIdleTimePoller::setUpPoller()
 {
-    auto registry = KWin::waylandServer()->internalClientRegistry();
-    if (!m_seat) {
-        const auto iface = registry->interface(KWayland::Client::Registry::Interface::Seat);
-        m_seat = registry->createSeat(iface.name, iface.version, this);
-    }
-    if (!m_idle) {
-        const auto iface = registry->interface(KWayland::Client::Registry::Interface::Idle);
-        m_idle = registry->createIdle(iface.name, iface.version, this);
-    }
-    return m_seat->isValid() && m_idle->isValid();
+    connect(waylandServer()->idle(), &KWaylandServer::IdleInterface::inhibitedChanged, this, &KWinIdleTimePoller::onInhibitedChanged);
+    connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::timestampChanged, this, &KWinIdleTimePoller::onTimestampChanged);
+
+    return true;
 }
 
 void KWinIdleTimePoller::unloadPoller()
 {
+    if (waylandServer() && waylandServer()->idle()) {
+        disconnect(waylandServer()->idle(), &KWaylandServer::IdleInterface::inhibitedChanged, this, &KWinIdleTimePoller::onInhibitedChanged);
+        disconnect(waylandServer()->seat(), &KWaylandServer::SeatInterface::timestampChanged, this, &KWinIdleTimePoller::onTimestampChanged);
+    }
+
+    qDeleteAll(m_timeouts);
+    m_timeouts.clear();
+
+    m_idling = false;
 }
 
-void KWinIdleTimePoller::addTimeout(int nextTimeout)
+void KWinIdleTimePoller::addTimeout(int newTimeout)
 {
-    if (m_timeouts.contains(nextTimeout)) {
+    if (m_timeouts.contains(newTimeout)) {
         return;
     }
-    if (!m_idle) {
-        return;
+
+    auto timer = new QTimer();
+    timer->setInterval(newTimeout);
+    timer->setSingleShot(true);
+    timer->callOnTimeout(this, [newTimeout, this]() {
+        m_idling = true;
+        Q_EMIT timeoutReached(newTimeout);
+    });
+
+    m_timeouts.insert(newTimeout, timer);
+
+    if (!waylandServer()->idle()->isInhibited()) {
+        timer->start();
     }
-    auto timeout = m_idle->getTimeout(nextTimeout, m_seat, this);
-    m_timeouts.insert(nextTimeout, timeout);
-    connect(timeout, &KWayland::Client::IdleTimeout::idle, this,
-        [this, nextTimeout] {
-            Q_EMIT timeoutReached(nextTimeout);
-        }
-    );
-    connect(timeout, &KWayland::Client::IdleTimeout::resumeFromIdle, this, &KWinIdleTimePoller::resumingFromIdle);
 }
 
-void KWinIdleTimePoller::removeTimeout(int nextTimeout)
+void KWinIdleTimePoller::processActivity()
 {
-    auto it = m_timeouts.find(nextTimeout);
-    if (it == m_timeouts.end()) {
-        return;
+    if (m_idling) {
+        Q_EMIT resumingFromIdle();
+        m_idling = false;
     }
-    delete it.value();
-    m_timeouts.erase(it);
+
+    for (QTimer *timer : qAsConst(m_timeouts)) {
+        timer->start();
+    }
 }
 
-QList< int > KWinIdleTimePoller::timeouts() const
+void KWinIdleTimePoller::onInhibitedChanged()
 {
-    return QList<int>();
+    if (waylandServer()->idle()->isInhibited()) {
+        // must stop the timers
+        stopCatchingIdleEvents();
+    } else {
+        // resume the timers
+        catchIdleEvent();
+
+        // register some activity
+        Q_EMIT resumingFromIdle();
+    }
+}
+
+void KWinIdleTimePoller::onTimestampChanged()
+{
+    if (!waylandServer()->idle()->isInhibited()) {
+        processActivity();
+    }
 }
 
 void KWinIdleTimePoller::catchIdleEvent()
 {
-    if (m_catchResumeTimeout) {
-        // already setup
-        return;
+    for (QTimer *timer : qAsConst(m_timeouts)) {
+        timer->start();
     }
-    if (!m_idle) {
-        return;
-    }
-    m_catchResumeTimeout = m_idle->getTimeout(0, m_seat, this);
-    connect(m_catchResumeTimeout, &KWayland::Client::IdleTimeout::resumeFromIdle, this,
-        [this] {
-            stopCatchingIdleEvents();
-            Q_EMIT resumingFromIdle();
-        }
-    );
 }
 
 void KWinIdleTimePoller::stopCatchingIdleEvents()
 {
-    delete m_catchResumeTimeout;
-    m_catchResumeTimeout = nullptr;
+    for (QTimer *timer : qAsConst(m_timeouts)) {
+        timer->stop();
+    }
+}
+
+void KWinIdleTimePoller::simulateUserActivity()
+{
+    if (waylandServer()->idle()->isInhibited()) {
+        return;
+    }
+    processActivity();
+    waylandServer()->simulateUserActivity();
+}
+
+void KWinIdleTimePoller::removeTimeout(int nextTimeout)
+{
+    delete m_timeouts.take(nextTimeout);
+}
+
+QList<int> KWinIdleTimePoller::timeouts() const
+{
+    return m_timeouts.keys();
 }
 
 int KWinIdleTimePoller::forcePollRequest()
@@ -115,9 +142,6 @@ int KWinIdleTimePoller::forcePollRequest()
     return 0;
 }
 
-void KWinIdleTimePoller::simulateUserActivity()
-{
-    for (auto it = m_timeouts.constBegin(); it != m_timeouts.constEnd(); ++it) {
-        it.value()->simulateUserActivity();
-    }
 }
+
+#include "poller.moc"

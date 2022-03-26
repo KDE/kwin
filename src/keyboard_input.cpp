@@ -7,26 +7,34 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "keyboard_input.h"
+
+#include <config-kwin.h>
+
+#include "abstract_client.h"
 #include "input_event.h"
 #include "input_event_spy.h"
+#include "inputmethod.h"
 #include "keyboard_layout.h"
 #include "keyboard_repeat.h"
-#include "abstract_client.h"
 #include "modifier_only_shortcuts.h"
-#include "utils.h"
-#include "screenlockerwatcher.h"
 #include "toplevel.h"
+#include "utils/common.h"
 #include "wayland_server.h"
 #include "workspace.h"
 // KWayland
 #include <KWaylandServer/datadevice_interface.h>
+#include <KWaylandServer/keyboard_interface.h>
 #include <KWaylandServer/seat_interface.h>
-//screenlocker
+// screenlocker
+#if KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>
+#endif
 // Frameworks
 #include <KGlobalAccel>
 // Qt
 #include <QKeyEvent>
+
+#include <cmath>
 
 namespace KWin
 {
@@ -103,6 +111,11 @@ void KeyboardInputRedirection::init()
     m_xkb->setNumLockConfig(InputConfig::self()->inputConfig());
     m_xkb->setConfig(config);
 
+    // Workaround for QTBUG-54371: if there is no real keyboard Qt doesn't request virtual keyboard
+    waylandServer()->seat()->setHasKeyboard(true);
+    // connect(m_input, &InputRedirection::hasAlphaNumericKeyboardChanged,
+    //         waylandServer()->seat(), &KWaylandServer::SeatInterface::setHasKeyboard);
+
     m_input->installInputEventSpy(new KeyStateChangedSpy(m_input));
     m_modifiersChangedSpy = new ModifiersChangedSpy(m_input);
     m_input->installInputEventSpy(m_modifiersChangedSpy);
@@ -116,24 +129,45 @@ void KeyboardInputRedirection::init()
 
     KeyboardRepeat *keyRepeatSpy = new KeyboardRepeat(m_xkb.data());
     connect(keyRepeatSpy, &KeyboardRepeat::keyRepeat, this,
-        std::bind(&KeyboardInputRedirection::processKey, this, std::placeholders::_1, InputRedirection::KeyboardKeyAutoRepeat, std::placeholders::_2, nullptr));
+            std::bind(&KeyboardInputRedirection::processKey, this, std::placeholders::_1, InputRedirection::KeyboardKeyAutoRepeat, std::placeholders::_2, nullptr));
     m_input->installInputEventSpy(keyRepeatSpy);
 
-    connect(workspace(), &QObject::destroyed, this, [this] { m_inited = false; });
-    connect(waylandServer(), &QObject::destroyed, this, [this] { m_inited = false; });
-    connect(workspace(), &Workspace::clientActivated, this,
-        [this] {
-            disconnect(m_activeClientSurfaceChangedConnection);
-            if (auto c = workspace()->activeClient()) {
-                m_activeClientSurfaceChangedConnection = connect(c, &Toplevel::surfaceChanged, this, &KeyboardInputRedirection::update);
-            } else {
-                m_activeClientSurfaceChangedConnection = QMetaObject::Connection();
-            }
-            update();
+    connect(workspace(), &QObject::destroyed, this, [this] {
+        m_inited = false;
+    });
+    connect(waylandServer(), &QObject::destroyed, this, [this] {
+        m_inited = false;
+    });
+    connect(workspace(), &Workspace::clientActivated, this, [this] {
+        disconnect(m_activeClientSurfaceChangedConnection);
+        if (auto c = workspace()->activeClient()) {
+            m_activeClientSurfaceChangedConnection = connect(c, &Toplevel::surfaceChanged, this, &KeyboardInputRedirection::update);
+        } else {
+            m_activeClientSurfaceChangedConnection = QMetaObject::Connection();
         }
-    );
+        update();
+    });
+#if KWIN_BUILD_SCREENLOCKER
     if (waylandServer()->hasScreenLockerIntegration()) {
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &KeyboardInputRedirection::update);
+    }
+#endif
+
+    reconfigure();
+}
+
+void KeyboardInputRedirection::reconfigure()
+{
+    if (waylandServer()->seat()->keyboard()) {
+        const auto config = InputConfig::self()->inputConfig()->group(QStringLiteral("Keyboard"));
+        const int delay = config.readEntry("RepeatDelay", 660);
+        const int rate = std::ceil(config.readEntry("RepeatRate", 25.0));
+        const QString repeatMode = config.readEntry("KeyRepeat", "repeat");
+        // when the clients will repeat the character or turn repeat key events into an accent character selection, we want
+        // to tell the clients that we are indeed repeating keys.
+        const bool enabled = repeatMode == QLatin1String("accent") || repeatMode == QLatin1String("repeat");
+
+        waylandServer()->seat()->keyboard()->setRepeatInfo(enabled ? rate : 0, delay);
     }
 }
 
@@ -178,7 +212,7 @@ void KeyboardInputRedirection::update()
     }
 }
 
-void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time, LibInput::Device *device)
+void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time, InputDevice *device)
 {
     QEvent::Type type;
     bool autoRepeat = false;
@@ -218,9 +252,13 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
     if (!m_inited) {
         return;
     }
+    input()->setLastInputHandler(this);
     m_input->processFilters(std::bind(&InputEventFilter::keyEvent, std::placeholders::_1, &event));
 
     m_xkb->forwardModifiers();
+    if (auto *inputmethod = InputMethod::self()) {
+        inputmethod->forwardModifiers(InputMethod::NoForce);
+    }
 
     if (event.modifiersRelevantForGlobalShortcuts() == Qt::KeyboardModifier::NoModifier && type != QEvent::KeyRelease) {
         m_keyboardLayout->checkLayoutChange(previousLayout);

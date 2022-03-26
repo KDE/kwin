@@ -7,13 +7,13 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
+
 #include "abstract_client.h"
 #include "abstract_output.h"
 #include "cursor.h"
 #include "keyboard_input.h"
 #include "platform.h"
 #include "pointer_input.h"
-#include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -35,7 +35,7 @@
 using namespace KWin;
 using namespace KWayland::Client;
 
-typedef std::function<QPoint(const QRect&)> PointerFunc;
+typedef std::function<QPoint(const QRect &)> PointerFunc;
 Q_DECLARE_METATYPE(PointerFunc)
 
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_pointer_constraints-0");
@@ -57,7 +57,7 @@ private Q_SLOTS:
 void TestPointerConstraints::initTestCase()
 {
     qRegisterMetaType<PointerFunc>();
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -71,7 +71,6 @@ void TestPointerConstraints::initTestCase()
     group.sync();
 
     kwinApp()->setConfig(config);
-
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
@@ -106,10 +105,10 @@ void TestPointerConstraints::testConfinedPointer_data()
     PointerFunc topRight = &QRect::topRight;
     PointerFunc topLeft = &QRect::topLeft;
 
-    QTest::newRow("XdgWmBase - bottomLeft")   << bottomLeft  << -1 << 1;
-    QTest::newRow("XdgWmBase - bottomRight")  << bottomRight << 1  << 1;
-    QTest::newRow("XdgWmBase - topLeft")      << topLeft  << -1 << -1;
-    QTest::newRow("XdgWmBase - topRight")     << topRight << 1  << -1;
+    QTest::newRow("XdgWmBase - bottomLeft") << bottomLeft << -1 << 1;
+    QTest::newRow("XdgWmBase - bottomRight") << bottomRight << 1 << 1;
+    QTest::newRow("XdgWmBase - topLeft") << topLeft << -1 << -1;
+    QTest::newRow("XdgWmBase - topRight") << topRight << 1 << -1;
 }
 
 void TestPointerConstraints::testConfinedPointer()
@@ -179,22 +178,22 @@ void TestPointerConstraints::testConfinedPointer()
     QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedMove);
 
     quint32 timestamp = 1;
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(!c->isInteractiveMove());
-    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
+    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
 
     // set the opacity to 0.5
     c->setOpacity(0.5);
     QCOMPARE(c->opacity(), 0.5);
 
     // pointer is confined so shortcut should not work
-    kwinApp()->platform()->pointerAxisVertical(-5, timestamp++);
+    Test::pointerAxisVertical(-5, timestamp++);
     QCOMPARE(c->opacity(), 0.5);
-    kwinApp()->platform()->pointerAxisVertical(5, timestamp++);
+    Test::pointerAxisVertical(5, timestamp++);
     QCOMPARE(c->opacity(), 0.5);
 
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
 
     // deactivate the client, this should unconfine
     workspace()->activateClient(nullptr);
@@ -209,7 +208,7 @@ void TestPointerConstraints::testConfinedPointer()
     QVERIFY(unconfinedSpy2.isValid());
 
     // activate it again, this confines again
-    workspace()->activateClient(static_cast<AbstractClient*>(input()->pointer()->focus()));
+    workspace()->activateClient(static_cast<AbstractClient *>(input()->pointer()->focus()));
     QVERIFY(confinedSpy2.wait());
     QCOMPARE(input()->pointer()->isConstrained(), true);
 
@@ -218,7 +217,7 @@ void TestPointerConstraints::testConfinedPointer()
     QVERIFY(unconfinedSpy2.wait());
     QCOMPARE(input()->pointer()->isConstrained(), false);
     // activate it again, this confines again
-    workspace()->activateClient(static_cast<AbstractClient*>(input()->pointer()->focus()));
+    workspace()->activateClient(static_cast<AbstractClient *>(input()->pointer()->focus()));
     QVERIFY(confinedSpy2.wait());
     QCOMPARE(input()->pointer()->isConstrained(), true);
 
@@ -315,7 +314,7 @@ void TestPointerConstraints::testLockedPointer()
     QVERIFY(lockedSpy2.isValid());
 
     // activate the client again, this should lock again
-    workspace()->activateClient(static_cast<AbstractClient*>(input()->pointer()->focus()));
+    workspace()->activateClient(static_cast<AbstractClient *>(input()->pointer()->focus()));
     QVERIFY(lockedSpy2.wait());
     QCOMPARE(input()->pointer()->isConstrained(), true);
 

@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Video Wall
-Name[ar]=جدار الفيديو
+Name[ar]=حائط الفيديو
 Name[az]=Videolu Divar Kağızı
 Name[bs]=Video zid
 Name[ca]=Mur de vídeo
@@ -44,6 +44,7 @@ Name[sr@ijekavian]=Видео зид
 Name[sr@ijekavianlatin]=Video zid
 Name[sr@latin]=Video zid
 Name[sv]=Videovägg
+Name[ta]=ஒளிக்காட்சி சுவர்
 Name[tr]=Video Duvarı
 Name[uk]=Відеостіна
 Name[vi]=Màn hình ghép
@@ -51,10 +52,11 @@ Name[x-test]=xxVideo Wallxx
 Name[zh_CN]=视频墙
 Name[zh_TW]=影像牆
 Comment=Spans fullscreen video player over all attached screens to create a Video Wall
+Comment[ar]=يمتد مشغل الفيديو بملء الشاشة على جميع الشاشات المرفقة لإنشاء حائط فيديو
 Comment[az]=Ekranda fon şəkili əvəzinə seçilmiş videonu tam ekran göstərir.
 Comment[bs]=Proteže punog zaslona gledanje videa nad svim priloženim ekranima stvoriti video zidu
-Comment[ca]=Expandeix el reproductor de vídeo a pantalla completa per a totes les pantalles adjuntades per a crear un mur de vídeo.
-Comment[ca@valencia]=Expandeix el reproductor de vídeo a pantalla completa per a totes les pantalles adjuntades per a crear un mur de vídeo.
+Comment[ca]=Expandeix el reproductor de vídeo a pantalla completa per a totes les pantalles adjuntades per a crear un mur de vídeo
+Comment[ca@valencia]=Expandeix el reproductor de vídeo a pantalla completa per a totes les pantalles adjuntades per a crear un mur de vídeo
 Comment[da]=Udfolder videoafspiller i fuldskærm over alle tilsluttede skærme og danner derved en videovæg
 Comment[de]=Erweitert einen Videospieler im Vollbildmodus über alle Bildschirme, um eine Video-Wand zu erzeugen
 Comment[el]=Απλώνει πλήρη οθόνη για το πρόγραμμα αναπαραγωγής βίντεο σε όλες τις προσαρτημένες οθόνες για να δημιουργήσει ένα Video Wall
@@ -90,6 +92,7 @@ Comment[sr@ijekavian]=Видео плејер преко целог екрана
 Comment[sr@ijekavianlatin]=Video plejer preko celog ekrana biva proširen na sve priključene ekrane, stvarajući video zid
 Comment[sr@latin]=Video plejer preko celog ekrana biva proširen na sve priključene ekrane, stvarajući video zid
 Comment[sv]=Utökar en videospelare med fullskärm över alla anslutna bildskärmar för att skapa en videovägg
+Comment[ta]=முழுத்திரை நிகழ்படத்தை பல திரைகளில் பரப்பி ஒரே திரையை போல் காட்டும்
 Comment[tr]=Bir Video Duvarı oluşturmak için tüm ekranlara iliştirilen tam ekran video oynatıcıları koparır
 Comment[uk]=Розподіл зображення відеопрогравача у повноекранному режимі на всі екрани з метою створення відеостіни
 Comment[vi]=Trải trình phát phim toàn màn hình ra tất cả các màn hình đang được gắn vào để tạo nên một màn hình ghép
@@ -109,8 +112,7 @@ X-KDE-PluginInfo-Version=1.0
 X-KDE-PluginInfo-License=GPL
 X-KDE-ServiceTypes=KWin/Script,KCModule
 
-X-KDE-Library=kwin/effects/configs/kcm_kwin4_genericscripted
+X-KDE-ConfigModule=kwin/effects/configs/kcm_kwin4_genericscripted
 X-KDE-PluginKeyword=videowall
-X-KDE-ParentComponents=videowall
 
 Type=Service

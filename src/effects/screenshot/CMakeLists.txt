@@ -2,11 +2,34 @@
 # Effect
 
 # Source files
-set(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-    ../service_utils.cpp
-    screenshot/screenshot.cpp
-    screenshot/screenshotdbusinterface1.cpp
-    screenshot/screenshotdbusinterface2.cpp
+set(screenshot_SOURCES
+    main.cpp
+    screenshot.cpp
+    screenshotdbusinterface1.cpp
+    screenshotdbusinterface2.cpp
 )
 
-qt_add_dbus_adaptor(kwin4_effect_builtins_sources screenshot/org.kde.KWin.ScreenShot2.xml screenshot/screenshotdbusinterface2.h KWin::ScreenShotDBusInterface2)
+qt_add_dbus_adaptor(screenshot_SOURCES org.kde.KWin.ScreenShot2.xml screenshotdbusinterface2.h KWin::ScreenShotDBusInterface2)
+
+kwin4_add_effect_module(kwin4_effect_screenshot ${screenshot_SOURCES})
+target_link_libraries(kwin4_effect_screenshot PRIVATE
+    kwineffects
+    kwinglutils
+
+    KF5::Service
+    KF5::I18n
+
+    Qt::Concurrent
+    Qt::DBus
+)
+
+if (KWIN_BUILD_NOTIFICATIONS)
+    target_link_libraries(kwin4_effect_screenshot PRIVATE KF5::Notifications)
+endif()
+
+ecm_qt_declare_logging_category(kwin4_effect_screenshot
+    HEADER screenshotlogging.h
+    IDENTIFIER KWIN_SCREENSHOT
+    CATEGORY_NAME kwin_effect_screenshot
+    DEFAULT_SEVERITY Warning
+)

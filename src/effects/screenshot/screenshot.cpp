@@ -64,12 +64,11 @@ static void convertFromGLImage(QImage &img, int w, int h)
             for (int x = 0; x < w; ++x) {
                 const uint pixel = *q;
                 *q = ((pixel << 16) & 0xff0000) | ((pixel >> 16) & 0xff)
-                     | (pixel & 0xff00ff00);
+                    | (pixel & 0xff00ff00);
 
                 q++;
             }
         }
-
     }
     img = img.mirrored();
 }
@@ -200,6 +199,23 @@ void ScreenShotEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
 {
     m_paintedScreen = data.screen();
     effects->paintScreen(mask, region, data);
+
+    while (!m_windowScreenShots.isEmpty()) {
+        ScreenShotWindowData screenshot = m_windowScreenShots.takeLast();
+        takeScreenShot(&screenshot);
+    }
+
+    for (int i = m_areaScreenShots.count() - 1; i >= 0; --i) {
+        if (takeScreenShot(&m_areaScreenShots[i])) {
+            m_areaScreenShots.removeAt(i);
+        }
+    }
+
+    for (int i = m_screenScreenShots.count() - 1; i >= 0; --i) {
+        if (takeScreenShot(&m_screenScreenShots[i])) {
+            m_screenScreenShots.removeAt(i);
+        }
+    }
 }
 
 void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
@@ -213,7 +229,7 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
         geometry = window->clientGeometry();
     }
     if (screenshot->flags & ScreenShotNativeResolution) {
-        if (const EffectScreen *screen = effects->findScreen(window->screen())) {
+        if (const EffectScreen *screen = window->screen()) {
             devicePixelRatio = screen->devicePixelRatio();
         }
     }
@@ -224,7 +240,7 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
         offscreenTexture.reset(new GLTexture(GL_RGBA8, geometry.size() * devicePixelRatio));
         offscreenTexture->setFilter(GL_LINEAR);
         offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
-        target.reset(new GLRenderTarget(*offscreenTexture));
+        target.reset(new GLRenderTarget(offscreenTexture.data()));
         validTarget = target->valid();
     }
     if (validTarget) {
@@ -268,7 +284,7 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
 
 bool ScreenShotEffect::takeScreenShot(ScreenShotAreaData *screenshot)
 {
-    if (!m_paintedScreen) {
+    if (!effects->waylandDisplay()) {
         // On X11, all screens are painted simultaneously and there is no native HiDPI support.
         QImage snapshot = blitScreenshot(screenshot->area);
         if (screenshot->flags & ScreenShotIncludeCursor) {
@@ -331,28 +347,6 @@ bool ScreenShotEffect::takeScreenShot(ScreenShotScreenData *screenshot)
     return screenshot->promise.isFinished();
 }
 
-void ScreenShotEffect::postPaintScreen()
-{
-    effects->postPaintScreen();
-
-    while (!m_windowScreenShots.isEmpty()) {
-        ScreenShotWindowData screenshot = m_windowScreenShots.takeLast();
-        takeScreenShot(&screenshot);
-    }
-
-    for (int i = m_areaScreenShots.count() - 1; i >= 0; --i) {
-        if (takeScreenShot(&m_areaScreenShots[i])) {
-            m_areaScreenShots.removeAt(i);
-        }
-    }
-
-    for (int i = m_screenScreenShots.count() - 1; i >= 0; --i) {
-        if (takeScreenShot(&m_screenScreenShots[i])) {
-            m_screenScreenShots.removeAt(i);
-        }
-    }
-}
-
 QImage ScreenShotEffect::blitScreenshot(const QRect &geometry, qreal devicePixelRatio) const
 {
     QImage image;
@@ -363,8 +357,8 @@ QImage ScreenShotEffect::blitScreenshot(const QRect &geometry, qreal devicePixel
         if (GLRenderTarget::blitSupported() && !GLPlatform::instance()->isGLES()) {
             image = QImage(nativeSize.width(), nativeSize.height(), QImage::Format_ARGB32);
             GLTexture texture(GL_RGBA8, nativeSize.width(), nativeSize.height());
-            GLRenderTarget target(texture);
-            target.blitFromFramebuffer(geometry);
+            GLRenderTarget target(&texture);
+            target.blitFromFramebuffer(effects->mapToRenderTarget(geometry));
             // copy content from framebuffer into image
             texture.bind();
             glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE,
@@ -390,18 +384,19 @@ void ScreenShotEffect::grabPointerImage(QImage &snapshot, int xOffset, int yOffs
     }
 
     QPainter painter(&snapshot);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform);
     painter.drawImage(effects->cursorPos() - cursor.hotSpot() - QPoint(xOffset, yOffset), cursor.image());
 }
 
 bool ScreenShotEffect::isActive() const
 {
     return (!m_windowScreenShots.isEmpty() || !m_areaScreenShots.isEmpty() || !m_screenScreenShots.isEmpty())
-            && !effects->isScreenLocked();
+        && !effects->isScreenLocked();
 }
 
 int ScreenShotEffect::requestedEffectChainPosition() const
 {
-    return 50;
+    return 0;
 }
 
 void ScreenShotEffect::handleScreenAdded()

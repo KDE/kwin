@@ -42,7 +42,7 @@ void Window::focusInEvent(QFocusEvent *event)
 {
     QRasterWindow::focusInEvent(event);
     // TODO: make it work without singleshot
-    QTimer::singleShot(100,[] {
+    QTimer::singleShot(100, [] {
         qApp->clipboard()->setText(QStringLiteral("test"));
     });
 }

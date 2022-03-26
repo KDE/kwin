@@ -2,6 +2,14 @@
 # Effect
 
 # Source files
-set(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-    highlightwindow/highlightwindow.cpp
+set(highlightwindow_SOURCES
+    highlightwindow.cpp
+    main.cpp
+)
+
+kwin4_add_effect_module(kwin4_effect_highlightwindow ${highlightwindow_SOURCES})
+target_link_libraries(kwin4_effect_highlightwindow PRIVATE
+    kwineffects
+
+    Qt::DBus
 )

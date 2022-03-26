@@ -13,9 +13,9 @@
 #include "inputmethod.h"
 #include "platform.h"
 #include "pluginmanager.h"
+#include "utils/xcbutils.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "xcbutils.h"
 #include "xwl/xwayland.h"
 
 #include <KPluginMetaData>
@@ -23,14 +23,13 @@
 #include <QAbstractEventDispatcher>
 #include <QPluginLoader>
 #include <QSocketNotifier>
-#include <QStyle>
 #include <QThread>
 #include <QtConcurrentRun>
 
 // system
-#include <unistd.h>
-#include <sys/socket.h>
 #include <iostream>
+#include <sys/socket.h>
+#include <unistd.h>
 
 Q_IMPORT_PLUGIN(KWinIntegrationPlugin)
 Q_IMPORT_PLUGIN(KGlobalAccelImpl)
@@ -47,7 +46,7 @@ WaylandTestApplication::WaylandTestApplication(OperationMode mode, int &argc, ch
     // TODO: add a test move to kglobalaccel instead?
     QFile{QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("kglobalshortcutsrc"))}.remove();
     QIcon::setThemeName(QStringLiteral("breeze"));
-#ifdef KWIN_BUILD_ACTIVITIES
+#if KWIN_BUILD_ACTIVITIES
     setUseKActivities(false);
 #endif
     qputenv("KWIN_COMPOSE", QByteArrayLiteral("Q"));
@@ -57,6 +56,12 @@ WaylandTestApplication::WaylandTestApplication(OperationMode mode, int &argc, ch
     qunsetenv("XKB_DEFAULT_LAYOUT");
     qunsetenv("XKB_DEFAULT_VARIANT");
     qunsetenv("XKB_DEFAULT_OPTIONS");
+
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    KConfigGroup windowsGroup = config->group("Windows");
+    windowsGroup.writeEntry("Placement", Placement::policyToString(Placement::Smart));
+    windowsGroup.sync();
+    setConfig(config);
 
     const auto ownPath = libraryPaths().last();
     removeLibraryPath(ownPath);
@@ -78,17 +83,41 @@ WaylandTestApplication::~WaylandTestApplication()
     // need to unload all effects prior to destroying X connection as they might do X calls
     // also before destroy Workspace, as effects might call into Workspace
     if (effects) {
-        static_cast<EffectsHandlerImpl*>(effects)->unloadAllEffects();
+        static_cast<EffectsHandlerImpl *>(effects)->unloadAllEffects();
     }
     delete m_xwayland;
     m_xwayland = nullptr;
+    destroyVirtualInputDevices();
     destroyWorkspace();
-    waylandServer()->dispatch();
-    if (QStyle *s = style()) {
-        s->unpolish(this);
-    }
-    waylandServer()->terminateClientConnections();
+    destroyInputMethod();
     destroyCompositor();
+    destroyInput();
+}
+
+void WaylandTestApplication::createVirtualInputDevices()
+{
+    m_virtualKeyboard.reset(new Test::VirtualInputDevice());
+    m_virtualKeyboard->setName(QStringLiteral("Virtual Keyboard 1"));
+    m_virtualKeyboard->setKeyboard(true);
+
+    m_virtualPointer.reset(new Test::VirtualInputDevice());
+    m_virtualPointer->setName(QStringLiteral("Virtual Pointer 1"));
+    m_virtualPointer->setPointer(true);
+
+    m_virtualTouch.reset(new Test::VirtualInputDevice());
+    m_virtualTouch->setName(QStringLiteral("Virtual Touch 1"));
+    m_virtualTouch->setTouch(true);
+
+    input()->addInputDevice(m_virtualPointer.get());
+    input()->addInputDevice(m_virtualTouch.get());
+    input()->addInputDevice(m_virtualKeyboard.get());
+}
+
+void WaylandTestApplication::destroyVirtualInputDevices()
+{
+    input()->removeInputDevice(m_virtualPointer.get());
+    input()->removeInputDevice(m_virtualTouch.get());
+    input()->removeInputDevice(m_virtualKeyboard.get());
 }
 
 void WaylandTestApplication::performStartup()
@@ -108,11 +137,11 @@ void WaylandTestApplication::performStartup()
     }
     waylandServer()->initPlatform();
     createColorManager();
-    waylandServer()->createInternalConnection();
 
     // try creating the Wayland Backend
     createInput();
     createPlugins();
+    createVirtualInputDevices();
 
     if (!platform()->enabledOutputs().isEmpty()) {
         continueStartupWithScreens();
@@ -159,4 +188,18 @@ void WaylandTestApplication::continueStartupWithScene()
     m_xwayland->start();
 }
 
+Test::VirtualInputDevice *WaylandTestApplication::virtualPointer() const
+{
+    return m_virtualPointer.get();
+}
+
+Test::VirtualInputDevice *WaylandTestApplication::virtualKeyboard() const
+{
+    return m_virtualKeyboard.get();
+}
+
+Test::VirtualInputDevice *WaylandTestApplication::virtualTouch() const
+{
+    return m_virtualTouch.get();
+}
 }

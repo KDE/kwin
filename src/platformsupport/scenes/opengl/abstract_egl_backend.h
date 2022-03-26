@@ -19,9 +19,9 @@ struct wl_resource;
 namespace KWin
 {
 
-typedef GLboolean(*eglBindWaylandDisplayWL_func)(EGLDisplay dpy, wl_display *display);
-typedef GLboolean(*eglUnbindWaylandDisplayWL_func)(EGLDisplay dpy, wl_display *display);
-typedef GLboolean(*eglQueryWaylandBufferWL_func)(EGLDisplay dpy, struct wl_resource *buffer, EGLint attribute, EGLint *value);
+typedef GLboolean (*eglBindWaylandDisplayWL_func)(EGLDisplay dpy, wl_display *display);
+typedef GLboolean (*eglUnbindWaylandDisplayWL_func)(EGLDisplay dpy, wl_display *display);
+typedef GLboolean (*eglQueryWaylandBufferWL_func)(EGLDisplay dpy, struct wl_resource *buffer, EGLint attribute, EGLint *value);
 
 struct AbstractEglBackendFunctions
 {
@@ -41,37 +41,35 @@ public:
     bool makeCurrent() override;
     void doneCurrent() override;
 
-    const AbstractEglBackendFunctions *functions() const {
+    const AbstractEglBackendFunctions *functions() const
+    {
         return &m_functions;
     }
-    EGLDisplay eglDisplay() const {
+    EGLDisplay eglDisplay() const
+    {
         return m_display;
     }
-    EGLContext context() const {
+    EGLContext context() const
+    {
         return m_context;
     }
-    EGLSurface surface() const {
+    EGLSurface surface() const
+    {
         return m_surface;
     }
-    EGLConfig config() const {
+    EGLConfig config() const
+    {
         return m_config;
     }
 
     QSharedPointer<GLTexture> textureForOutput(AbstractOutput *output) const override;
 
-    static void setPrimaryBackend(AbstractEglBackend *primaryBackend) {
-        s_primaryBackend = primaryBackend;
-    }
-    static AbstractEglBackend *primaryBackend() {
-        return s_primaryBackend;
-    }
-
-    bool isPrimary() const {
-        return this == s_primaryBackend;
-    }
+    dev_t deviceId() const;
+    virtual bool prefer10bpc() const;
+    EglDmabuf *dmabuf() const;
 
 protected:
-    AbstractEglBackend();
+    AbstractEglBackend(dev_t deviceId = 0);
     void setEglDisplay(const EGLDisplay &display);
     void setSurface(const EGLSurface &surface);
     void setConfig(const EGLConfig &config);
@@ -87,6 +85,10 @@ protected:
     bool createContext();
 
 private:
+    EGLContext ensureGlobalShareContext();
+    void destroyGlobalShareContext();
+    EGLContext createContextInternal(EGLContext sharedContext);
+
     void teardown();
 
     AbstractEglBackendFunctions m_functions;
@@ -97,8 +99,9 @@ private:
     // note: m_dmaBuf is nullptr if this is not the primary backend
     EglDmabuf *m_dmaBuf = nullptr;
     QList<QByteArray> m_clientExtensions;
+    const dev_t m_deviceId;
 
-    static AbstractEglBackend * s_primaryBackend;
+    static AbstractEglBackend *s_primaryBackend;
 };
 
 }

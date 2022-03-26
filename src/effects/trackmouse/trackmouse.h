@@ -29,24 +29,27 @@ class TrackMouseEffect
 public:
     TrackMouseEffect();
     ~TrackMouseEffect() override;
-    void prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(int mask, const QRegion &region, ScreenPaintData& data) override;
+    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
     void postPaintScreen() override;
     void reconfigure(ReconfigureFlags) override;
     bool isActive() const override;
 
     // for properties
-    Qt::KeyboardModifiers modifiers() const {
+    Qt::KeyboardModifiers modifiers() const
+    {
         return m_modifiers;
     }
-    bool isMousePolling() const {
+    bool isMousePolling() const
+    {
         return m_mousePolling;
     }
 private Q_SLOTS:
     void toggle();
-    void slotMouseChanged(const QPoint& pos, const QPoint& old,
-                              Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
-                              Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
+    void slotMouseChanged(const QPoint &pos, const QPoint &old,
+                          Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
+                          Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
+
 private:
     bool init();
     void loadTexture();
@@ -54,8 +57,8 @@ private:
     bool m_mousePolling;
     float m_angle;
     float m_angleBase;
-    GLTexture* m_texture[2];
-    QAction* m_action;
+    GLTexture *m_texture[2];
+    QAction *m_action;
     QImage m_image[2];
     Qt::KeyboardModifiers m_modifiers;
 

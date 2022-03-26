@@ -60,7 +60,6 @@ target_link_libraries(testClientMachine
     Qt::Concurrent
     Qt::Test
     Qt::Widgets
-    Qt::X11Extras
 
     KF5::ConfigCore
     KF5::WindowSystem
@@ -70,6 +69,11 @@ target_link_libraries(testClientMachine
 
     ${X11_X11_LIB} # to make jenkins happy
 )
+if (QT_MAJOR_VERSION EQUAL "5")
+    target_link_libraries(testClientMachine Qt::X11Extras)
+else()
+    target_link_libraries(testClientMachine Qt::GuiPrivate)
+endif()
 add_test(NAME kwin-testClientMachine COMMAND testClientMachine)
 ecm_mark_as_test(testClientMachine)
 
@@ -84,13 +88,17 @@ add_executable(testXcbWrapper ${testXcbWrapper_SRCS})
 target_link_libraries(testXcbWrapper
     Qt::Test
     Qt::Widgets
-    Qt::X11Extras
 
     KF5::ConfigCore
     KF5::WindowSystem
 
     XCB::XCB
 )
+if (QT_MAJOR_VERSION EQUAL "5")
+    target_link_libraries(testXcbWrapper Qt::X11Extras)
+else()
+    target_link_libraries(testXcbWrapper Qt::GuiPrivate)
+endif()
 add_test(NAME kwin-testXcbWrapper COMMAND testXcbWrapper)
 ecm_mark_as_test(testXcbWrapper)
 
@@ -100,7 +108,6 @@ if (XCB_ICCCM_FOUND)
     target_link_libraries(testXcbSizeHints
         Qt::Test
         Qt::Widgets
-        Qt::X11Extras
 
         KF5::ConfigCore
         KF5::WindowSystem
@@ -108,6 +115,11 @@ if (XCB_ICCCM_FOUND)
         XCB::ICCCM
         XCB::XCB
     )
+    if (QT_MAJOR_VERSION EQUAL "5")
+        target_link_libraries(testXcbSizeHints Qt::X11Extras)
+    else()
+        target_link_libraries(testXcbSizeHints Qt::GuiPrivate)
+    endif()
     add_test(NAME kwin-testXcbSizeHints COMMAND testXcbSizeHints)
     ecm_mark_as_test(testXcbSizeHints)
 endif()
@@ -123,120 +135,21 @@ add_executable(testXcbWindow ${testXcbWindow_SRCS})
 target_link_libraries(testXcbWindow
     Qt::Test
     Qt::Widgets
-    Qt::X11Extras
 
     KF5::ConfigCore
     KF5::WindowSystem
 
     XCB::XCB
 )
+if (QT_MAJOR_VERSION EQUAL "5")
+    target_link_libraries(testXcbWindow Qt::X11Extras)
+else()
+    target_link_libraries(testXcbWindow Qt::GuiPrivate)
+endif()
 add_test(NAME kwin-testXcbWindow COMMAND testXcbWindow)
 ecm_mark_as_test(testXcbWindow)
 
-########################################################
-# Test BuiltInEffectLoader
-########################################################
-set(testBuiltInEffectLoader_SRCS
-    ../src/effectloader.cpp
-    mock_effectshandler.cpp
-    test_builtin_effectloader.cpp
-)
-add_executable(testBuiltInEffectLoader ${testBuiltInEffectLoader_SRCS})
-set_target_properties(testBuiltInEffectLoader PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
-
-target_link_libraries(testBuiltInEffectLoader
-    Qt::Concurrent
-    Qt::Qml
-    Qt::Test
-    Qt::X11Extras
-
-    KF5::Package
-
-    kwineffects
-    kwin4_effect_builtins
-)
-
-add_test(NAME kwin-testBuiltInEffectLoader COMMAND testBuiltInEffectLoader)
-ecm_mark_as_test(testBuiltInEffectLoader)
-
-########################################################
-# Test ScriptedEffectLoader
-########################################################
 include_directories(${KWin_SOURCE_DIR}/src)
-set(testScriptedEffectLoader_SRCS
-    ../src/effectloader.cpp
-    ../src/cursor.cpp
-    ../src/screens.cpp
-    ../src/scripting/scriptedeffect.cpp
-    ../src/scripting/scripting_logging.cpp
-    ../src/scripting/scriptingutils.cpp
-    mock_abstract_client.cpp
-    mock_effectshandler.cpp
-    mock_workspace.cpp
-    test_scripted_effectloader.cpp
-)
-kconfig_add_kcfg_files(testScriptedEffectLoader_SRCS ../src/settings.kcfgc)
-add_executable(testScriptedEffectLoader ${testScriptedEffectLoader_SRCS})
-
-target_link_libraries(testScriptedEffectLoader
-    Qt::Concurrent
-    Qt::Qml
-    Qt::Test
-    Qt::X11Extras
-
-    KF5::ConfigGui
-    KF5::GlobalAccel
-    KF5::I18n
-    KF5::Notifications
-    KF5::Package
-
-    XCB::CURSOR
-
-    kwineffects
-    kwin4_effect_builtins
-)
-
-add_test(NAME kwin-testScriptedEffectLoader COMMAND testScriptedEffectLoader)
-ecm_mark_as_test(testScriptedEffectLoader)
-
-########################################################
-# Test PluginEffectLoader
-########################################################
-set(testPluginEffectLoader_SRCS
-    ../src/effectloader.cpp
-    mock_effectshandler.cpp
-    test_plugin_effectloader.cpp
-)
-add_executable(testPluginEffectLoader ${testPluginEffectLoader_SRCS})
-
-target_link_libraries(testPluginEffectLoader
-    Qt::Concurrent
-    Qt::Qml
-    Qt::Test
-    Qt::X11Extras
-
-    KF5::Package
-
-    kwineffects
-    kwin4_effect_builtins
-)
-
-add_test(NAME kwin-testPluginEffectLoader COMMAND testPluginEffectLoader)
-ecm_mark_as_test(testPluginEffectLoader)
-
-########################################################
-# FakeEffectPlugin
-########################################################
-add_library(fakeeffectplugin MODULE fakeeffectplugin.cpp)
-set_target_properties(fakeeffectplugin PROPERTIES PREFIX "")
-target_link_libraries(fakeeffectplugin kwineffects)
-
-########################################################
-# FakeEffectPlugin-Version
-########################################################
-add_library(effectversionplugin MODULE fakeeffectplugin_version.cpp)
-set_target_properties(effectversionplugin PROPERTIES PREFIX "")
-target_link_libraries(effectversionplugin kwineffects)
 
 ########################################################
 # Test OnScreenNotification
@@ -289,13 +202,13 @@ add_test(NAME kwin-testX11TimestampUpdate COMMAND testX11TimestampUpdate)
 ecm_mark_as_test(testX11TimestampUpdate)
 
 set(testOpenGLContextAttributeBuilder_SRCS
-    ../src/abstract_opengl_context_attribute_builder.cpp
-    ../src/egl_context_attribute_builder.cpp
+    ../src/utils/abstract_opengl_context_attribute_builder.cpp
+    ../src/utils/egl_context_attribute_builder.cpp
     opengl_context_attribute_builder_test.cpp
 )
 
 if (HAVE_EPOXY_GLX)
-    set(testOpenGLContextAttributeBuilder_SRCS ${testOpenGLContextAttributeBuilder_SRCS} ../src/plugins/platforms/x11/standalone/glx_context_attribute_builder.cpp)
+    set(testOpenGLContextAttributeBuilder_SRCS ${testOpenGLContextAttributeBuilder_SRCS} ../src/backends/x11/standalone/glx_context_attribute_builder.cpp)
 endif()
 add_executable(testOpenGLContextAttributeBuilder ${testOpenGLContextAttributeBuilder_SRCS})
 target_link_libraries(testOpenGLContextAttributeBuilder Qt::Test)
@@ -316,9 +229,13 @@ target_link_libraries(testXkb
     Plasma::KWaylandServer
     KF5::WindowSystem
 
+    kwineffects
+
     XKB::XKB
-    Qt5::XkbCommonSupportPrivate
 )
+if (QT_MAJOR_VERSION EQUAL "5")
+    target_link_libraries(testXkb Qt5::XkbCommonSupportPrivate)
+endif()
 add_test(NAME kwin-testXkb COMMAND testXkb)
 ecm_mark_as_test(testXkb)
 

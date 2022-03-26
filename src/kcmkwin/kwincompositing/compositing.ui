@@ -73,21 +73,40 @@ you can reset this protection but be aware that this might result in an immediat
      </item>
     </layout>
    </item>
-   <item row="2" column="1">
-    <widget class="QCheckBox" name="kcfg_Enabled">
+   <item row="2" column="0">
+    <widget class="QLabel" name="compositingLabel">
      <property name="text">
-      <string>Enable compositor on startup</string>
+      <string>Compositing:</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
+   <item row="2" column="1">
+    <widget class="QCheckBox" name="kcfg_Enabled">
+     <property name="text">
+      <string>Enable on startup</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QCheckBox" name="kcfg_WindowsBlockCompositing">
+     <property name="toolTip">
+      <string>Applications can set a hint to block compositing when the window is open.
+ This brings performance improvements for e.g. games.
+ The setting can be overruled by window-specific rules.</string>
+     </property>
+     <property name="text">
+      <string>Allow applications to block compositing</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
     <widget class="QLabel" name="animationSpeedLabel">
      <property name="text">
       <string>Animation speed:</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
+   <item row="4" column="1">
     <widget class="QWidget" name="animationSpeedControls" native="true">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -149,14 +168,14 @@ you can reset this protection but be aware that this might result in an immediat
      </layout>
     </widget>
    </item>
-   <item row="5" column="0">
+   <item row="6" column="0">
     <widget class="QLabel" name="scaleMethodLabel">
      <property name="text">
       <string>Scale method:</string>
      </property>
     </widget>
    </item>
-   <item row="5" column="1">
+   <item row="6" column="1">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QComboBox" name="kcfg_glTextureFilter">
@@ -174,24 +193,14 @@ you can reset this protection but be aware that this might result in an immediat
      </item>
     </layout>
    </item>
-   <item row="8" column="0">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Rendering backend:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="1">
-    <widget class="QComboBox" name="backend"/>
-   </item>
-   <item row="12" column="0">
+   <item row="13" column="0">
     <widget class="QLabel" name="label_5">
      <property name="text">
       <string>Tearing prevention (&quot;vsync&quot;):</string>
      </property>
     </widget>
    </item>
-   <item row="12" column="1">
+   <item row="13" column="1">
     <widget class="QComboBox" name="kcfg_glPreferBufferSwap">
      <item>
       <property name="text">
@@ -215,14 +224,14 @@ you can reset this protection but be aware that this might result in an immediat
      </item>
     </widget>
    </item>
-   <item row="13" column="0">
+   <item row="14" column="0">
     <widget class="QLabel" name="label_HiddenPreviews">
      <property name="text">
       <string>Keep window thumbnails:</string>
      </property>
     </widget>
    </item>
-   <item row="13" column="1">
+   <item row="14" column="1">
     <widget class="QComboBox" name="kcfg_HiddenPreviews">
      <item>
       <property name="text">
@@ -241,26 +250,14 @@ you can reset this protection but be aware that this might result in an immediat
      </item>
     </widget>
    </item>
-   <item row="15" column="1">
-    <widget class="QCheckBox" name="kcfg_WindowsBlockCompositing">
-     <property name="toolTip">
-      <string>Applications can set a hint to block compositing when the window is open.
- This brings performance improvements for e.g. games.
- The setting can be overruled by window-specific rules.</string>
-     </property>
-     <property name="text">
-      <string>Allow applications to block compositing</string>
-     </property>
-    </widget>
-   </item>
-   <item row="11" column="0">
+   <item row="12" column="0">
     <widget class="QLabel" name="latencyLabel">
      <property name="text">
       <string>Latency:</string>
      </property>
     </widget>
    </item>
-   <item row="11" column="1">
+   <item row="12" column="1">
     <widget class="QComboBox" name="kcfg_LatencyPolicy">
      <item>
       <property name="text">

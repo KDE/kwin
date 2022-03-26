@@ -18,7 +18,9 @@ class VirtualKeyboardsModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    enum Roles { DesktopFileNameRole = Qt::UserRole + 1 };
+    enum Roles {
+        DesktopFileNameRole = Qt::UserRole + 1,
+    };
     Q_ENUM(Roles);
 
     VirtualKeyboardsModel(QObject *parent = nullptr);

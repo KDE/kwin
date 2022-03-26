@@ -13,21 +13,28 @@
 
 #include <QGuiApplication>
 #include <QMatrix4x4>
-#include <QScreen> // for QGuiApplication
+#include <QScreen>
 #include <QTime>
+#include <QTimer>
 #include <QWindow>
 #include <cmath> // for ceil()
+#include <cstdlib>
 
-#include <KWaylandServer/surface_interface.h>
-#include <KWaylandServer/shadow_interface.h>
-#include <KWaylandServer/display.h>
-#include <KSharedConfig>
 #include <KConfigGroup>
+#include <KSharedConfig>
+#include <KWaylandServer/display.h>
+#include <KWaylandServer/shadow_interface.h>
+#include <KWaylandServer/surface_interface.h>
+
+#include <KDecoration2/Decoration>
 
 namespace KWin
 {
 
 static const QByteArray s_blurAtomName = QByteArrayLiteral("_KDE_NET_WM_BLUR_BEHIND_REGION");
+
+KWaylandServer::BlurManagerInterface *BlurEffect::s_blurManager = nullptr;
+QTimer *BlurEffect::s_blurManagerRemoveTimer = nullptr;
 
 BlurEffect::BlurEffect()
 {
@@ -40,34 +47,49 @@ BlurEffect::BlurEffect()
     // ### Hackish way to announce support.
     //     Should be included in _NET_SUPPORTED instead.
     if (m_shader && m_shader->isValid() && m_renderTargetsValid) {
-        net_wm_blur_region = effects->announceSupportProperty(s_blurAtomName, this);
-        KWaylandServer::Display *display = effects->waylandDisplay();
-        if (display) {
-            m_blurManager.reset(new KWaylandServer::BlurManagerInterface(display));
+        if (effects->xcbConnection()) {
+            net_wm_blur_region = effects->announceSupportProperty(s_blurAtomName, this);
         }
-    } else {
-        net_wm_blur_region = 0;
+        if (effects->waylandDisplay()) {
+            if (!s_blurManagerRemoveTimer) {
+                s_blurManagerRemoveTimer = new QTimer(QCoreApplication::instance());
+                s_blurManagerRemoveTimer->setSingleShot(true);
+                s_blurManagerRemoveTimer->callOnTimeout([]() {
+                    s_blurManager->remove();
+                    s_blurManager = nullptr;
+                });
+            }
+            s_blurManagerRemoveTimer->stop();
+            if (!s_blurManager) {
+                s_blurManager = new KWaylandServer::BlurManagerInterface(effects->waylandDisplay(), s_blurManagerRemoveTimer);
+            }
+        }
     }
 
     connect(effects, &EffectsHandler::windowAdded, this, &BlurEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::windowDeleted, this, &BlurEffect::slotWindowDeleted);
+    connect(effects, &EffectsHandler::windowDecorationChanged, this, &BlurEffect::setupDecorationConnections);
     connect(effects, &EffectsHandler::propertyNotify, this, &BlurEffect::slotPropertyNotify);
     connect(effects, &EffectsHandler::virtualScreenGeometryChanged, this, &BlurEffect::slotScreenGeometryChanged);
-    connect(effects, &EffectsHandler::xcbConnectionChanged, this,
-        [this] {
-            if (m_shader && m_shader->isValid() && m_renderTargetsValid) {
-                net_wm_blur_region = effects->announceSupportProperty(s_blurAtomName, this);
-            }
+    connect(effects, &EffectsHandler::xcbConnectionChanged, this, [this]() {
+        if (m_shader && m_shader->isValid() && m_renderTargetsValid) {
+            net_wm_blur_region = effects->announceSupportProperty(s_blurAtomName, this);
         }
-    );
+    });
 
     // Fetch the blur regions for all windows
-    Q_FOREACH (EffectWindow *window, effects->stackingOrder())
-        updateBlurRegion(window);
+    const auto stackingOrder = effects->stackingOrder();
+    for (EffectWindow *window : stackingOrder) {
+        slotWindowAdded(window);
+    }
 }
 
 BlurEffect::~BlurEffect()
 {
+    // When compositing is restarted, avoid removing the manager immediately.
+    if (s_blurManager) {
+        s_blurManagerRemoveTimer->start(1000);
+    }
     deleteFBOs();
 }
 
@@ -77,22 +99,25 @@ void BlurEffect::slotScreenGeometryChanged()
     updateTexture();
 
     // Fetch the blur regions for all windows
-    Q_FOREACH (EffectWindow *window, effects->stackingOrder())
+    const auto stackingOrder = effects->stackingOrder();
+    for (EffectWindow *window : stackingOrder) {
         updateBlurRegion(window);
+    }
     effects->doneOpenGLContextCurrent();
 }
 
 bool BlurEffect::renderTargetsValid() const
 {
-    return !m_renderTargets.isEmpty() && std::find_if(m_renderTargets.cbegin(), m_renderTargets.cend(),
-        [](const GLRenderTarget *target) {
-            return !target->valid();
-        }) == m_renderTargets.cend();
+    return !m_renderTargets.isEmpty() && std::find_if(m_renderTargets.cbegin(), m_renderTargets.cend(), [](const GLRenderTarget *target) {
+                                             return !target->valid();
+                                         })
+        == m_renderTargets.cend();
 }
 
 void BlurEffect::deleteFBOs()
 {
     qDeleteAll(m_renderTargets);
+    qDeleteAll(m_renderTextures);
 
     m_renderTargets.clear();
     m_renderTextures.clear();
@@ -136,19 +161,19 @@ void BlurEffect::updateTexture()
     }
 
     for (int i = 0; i <= m_downSampleIterations; i++) {
-        m_renderTextures.append(GLTexture(textureFormat, effects->virtualScreenSize() / (1 << i)));
-        m_renderTextures.last().setFilter(GL_LINEAR);
-        m_renderTextures.last().setWrapMode(GL_CLAMP_TO_EDGE);
+        m_renderTextures.append(new GLTexture(textureFormat, effects->virtualScreenSize() / (1 << i)));
+        m_renderTextures.constLast()->setFilter(GL_LINEAR);
+        m_renderTextures.constLast()->setWrapMode(GL_CLAMP_TO_EDGE);
 
-        m_renderTargets.append(new GLRenderTarget(m_renderTextures.last()));
+        m_renderTargets.append(new GLRenderTarget(m_renderTextures.constLast()));
     }
 
     // This last set is used as a temporary helper texture
-    m_renderTextures.append(GLTexture(textureFormat, effects->virtualScreenSize()));
-    m_renderTextures.last().setFilter(GL_LINEAR);
-    m_renderTextures.last().setWrapMode(GL_CLAMP_TO_EDGE);
+    m_renderTextures.append(new GLTexture(textureFormat, effects->virtualScreenSize()));
+    m_renderTextures.constLast()->setFilter(GL_LINEAR);
+    m_renderTextures.constLast()->setWrapMode(GL_CLAMP_TO_EDGE);
 
-    m_renderTargets.append(new GLRenderTarget(m_renderTextures.last()));
+    m_renderTargets.append(new GLRenderTarget(m_renderTextures.constLast()));
 
     m_renderTargetsValid = renderTargetsValid();
 
@@ -201,12 +226,12 @@ void BlurEffect::initBlurStrengthValues()
      */
 
     // {minOffset, maxOffset, expandSize}
-    blurOffsets.append({1.0, 2.0, 10});     // Down sample size / 2
-    blurOffsets.append({2.0, 3.0, 20});     // Down sample size / 4
-    blurOffsets.append({2.0, 5.0, 50});     // Down sample size / 8
-    blurOffsets.append({3.0, 8.0, 150});    // Down sample size / 16
-    //blurOffsets.append({5.0, 10.0, 400}); // Down sample size / 32
-    //blurOffsets.append({7.0, ?.0});       // Down sample size / 64
+    blurOffsets.append({1.0, 2.0, 10}); // Down sample size / 2
+    blurOffsets.append({2.0, 3.0, 20}); // Down sample size / 4
+    blurOffsets.append({2.0, 5.0, 50}); // Down sample size / 8
+    blurOffsets.append({3.0, 8.0, 150}); // Down sample size / 16
+    // blurOffsets.append({5.0, 10.0, 400}); // Down sample size / 32
+    // blurOffsets.append({7.0, ?.0});       // Down sample size / 64
 
     float offsetSum = 0;
 
@@ -247,11 +272,6 @@ void BlurEffect::reconfigure(ReconfigureFlags flags)
 
     updateTexture();
 
-    if (!m_shader || !m_shader->isValid()) {
-        effects->removeSupportProperty(s_blurAtomName, this);
-        m_blurManager.reset();
-    }
-
     // Update all windows for the blur to take effect
     effects->addRepaintFull();
 }
@@ -264,7 +284,7 @@ void BlurEffect::updateBlurRegion(EffectWindow *w) const
     if (net_wm_blur_region != XCB_ATOM_NONE) {
         const QByteArray value = w->readProperty(net_wm_blur_region, XCB_ATOM_CARDINAL, 32);
         if (value.size() > 0 && !(value.size() % (4 * sizeof(uint32_t)))) {
-            const uint32_t *cardinals = reinterpret_cast<const uint32_t*>(value.constData());
+            const uint32_t *cardinals = reinterpret_cast<const uint32_t *>(value.constData());
             for (unsigned int i = 0; i < value.size() / sizeof(uint32_t);) {
                 int x = cardinals[i++];
                 int y = cardinals[i++];
@@ -307,7 +327,7 @@ void BlurEffect::slotWindowAdded(EffectWindow *w)
     KWaylandServer::SurfaceInterface *surf = w->surface();
 
     if (surf) {
-        windowBlurChangedConnections[w] = connect(surf, &KWaylandServer::SurfaceInterface::blurChanged, this, [this, w] () {
+        windowBlurChangedConnections[w] = connect(surf, &KWaylandServer::SurfaceInterface::blurChanged, this, [this, w]() {
             if (w) {
                 updateBlurRegion(w);
             }
@@ -317,6 +337,7 @@ void BlurEffect::slotWindowAdded(EffectWindow *w)
         internal->installEventFilter(this);
     }
 
+    setupDecorationConnections(w);
     updateBlurRegion(w);
 }
 
@@ -337,11 +358,22 @@ void BlurEffect::slotPropertyNotify(EffectWindow *w, long atom)
     }
 }
 
+void BlurEffect::setupDecorationConnections(EffectWindow *w)
+{
+    if (!w->decoration()) {
+        return;
+    }
+
+    connect(w->decoration(), &KDecoration2::Decoration::blurRegionChanged, this, [this, w]() {
+        updateBlurRegion(w);
+    });
+}
+
 bool BlurEffect::eventFilter(QObject *watched, QEvent *event)
 {
-    auto internal = qobject_cast<QWindow*>(watched);
+    auto internal = qobject_cast<QWindow *>(watched);
     if (internal && event->type() == QEvent::DynamicPropertyChange) {
-        QDynamicPropertyChangeEvent *pe = static_cast<QDynamicPropertyChangeEvent*>(event);
+        QDynamicPropertyChangeEvent *pe = static_cast<QDynamicPropertyChangeEvent *>(event);
         if (pe->propertyName() == "kwin_blur") {
             if (auto w = effects->findWindow(internal)) {
                 updateBlurRegion(w);
@@ -382,6 +414,22 @@ bool BlurEffect::supported()
     return supported;
 }
 
+bool BlurEffect::decorationSupportsBlurBehind(const EffectWindow *w) const
+{
+    return w->decoration() && !w->decoration()->blurRegion().isNull();
+}
+
+QRegion BlurEffect::decorationBlurRegion(const EffectWindow *w) const
+{
+    if (!decorationSupportsBlurBehind(w)) {
+        return QRegion();
+    }
+
+    QRegion decorationRegion = QRegion(w->decoration()->rect()) - w->decorationInnerRect();
+    //! we return only blurred regions that belong to decoration region
+    return decorationRegion.intersected(w->decoration()->blurRegion());
+}
+
 QRect BlurEffect::expand(const QRect &rect) const
 {
     return rect.adjusted(-m_expandSize, -m_expandSize, m_expandSize, m_expandSize);
@@ -406,20 +454,19 @@ QRegion BlurEffect::blurRegion(const EffectWindow *w) const
     if (value.isValid()) {
         const QRegion appRegion = qvariant_cast<QRegion>(value);
         if (!appRegion.isEmpty()) {
-            if (w->decorationHasAlpha() && effects->decorationSupportsBlurBehind()) {
-                region = QRegion(w->rect()) - w->decorationInnerRect();
+            if (w->decorationHasAlpha() && decorationSupportsBlurBehind(w)) {
+                region = decorationBlurRegion(w);
             }
-            region |= appRegion.translated(w->contentsRect().topLeft()) &
-                      w->decorationInnerRect();
+            region |= appRegion.translated(w->contentsRect().topLeft()) & w->decorationInnerRect();
         } else {
             // An empty region means that the blur effect should be enabled
             // for the whole window.
             region = w->rect();
         }
-    } else if (w->decorationHasAlpha() && effects->decorationSupportsBlurBehind()) {
+    } else if (w->decorationHasAlpha() && decorationSupportsBlurBehind(w)) {
         // If the client hasn't specified a blur region, we'll only enable
         // the effect behind the decoration.
-        region = QRegion(w->rect()) - w->decorationInnerRect();
+        region = decorationBlurRegion(w);
     }
 
     return region;
@@ -431,9 +478,9 @@ void BlurEffect::uploadRegion(QVector2D *&map, const QRegion &region, const int 
         const int divisionRatio = (1 << i);
 
         for (const QRect &r : region) {
-            const QVector2D topLeft(     r.x() / divisionRatio,               r.y() / divisionRatio);
-            const QVector2D topRight(   (r.x() + r.width()) / divisionRatio,  r.y() / divisionRatio);
-            const QVector2D bottomLeft(  r.x() / divisionRatio,              (r.y() + r.height()) / divisionRatio);
+            const QVector2D topLeft(r.x() / divisionRatio, r.y() / divisionRatio);
+            const QVector2D topRight((r.x() + r.width()) / divisionRatio, r.y() / divisionRatio);
+            const QVector2D bottomLeft(r.x() / divisionRatio, (r.y() + r.height()) / divisionRatio);
             const QVector2D bottomRight((r.x() + r.width()) / divisionRatio, (r.y() + r.height()) / divisionRatio);
 
             // First triangle
@@ -456,7 +503,7 @@ void BlurEffect::uploadGeometry(GLVertexBuffer *vbo, const QRegion &blurRegion, 
     if (!vertexCount)
         return;
 
-    QVector2D *map = (QVector2D *) vbo->map(vertexCount * sizeof(QVector2D));
+    QVector2D *map = (QVector2D *)vbo->map(vertexCount * sizeof(QVector2D));
 
     uploadRegion(map, blurRegion, m_downSampleIterations);
     uploadRegion(map, windowRegion, 0);
@@ -464,9 +511,8 @@ void BlurEffect::uploadGeometry(GLVertexBuffer *vbo, const QRegion &blurRegion, 
     vbo->unmap();
 
     const GLVertexAttrib layout[] = {
-        { VA_Position, 2, GL_FLOAT, 0 },
-        { VA_TexCoord, 2, GL_FLOAT, 0 }
-    };
+        {VA_Position, 2, GL_FLOAT, 0},
+        {VA_TexCoord, 2, GL_FLOAT, 0}};
 
     vbo->setAttribLayout(layout, 2, sizeof(QVector2D));
 }
@@ -479,7 +525,7 @@ void BlurEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
     effects->prePaintScreen(data, presentTime);
 }
 
-void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime)
+void BlurEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     // this effect relies on prePaintWindow being called in the bottom to top order
 
@@ -492,19 +538,22 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::
         return;
     }
 
-    // to blur an area partially we have to shrink the opaque area of a window
-    QRegion newClip;
-    const QRegion oldClip = data.clip;
-    for (const QRect &rect : data.clip) {
-        newClip |= rect.adjusted(m_expandSize, m_expandSize, -m_expandSize, -m_expandSize);
-    }
-    data.clip = newClip;
+    const QRegion oldOpaque = data.opaque;
+    if (data.opaque.intersects(m_currentBlur)) {
+        // to blur an area partially we have to shrink the opaque area of a window
+        QRegion newOpaque;
+        for (const QRect &rect : data.opaque) {
+            newOpaque |= rect.adjusted(m_expandSize, m_expandSize, -m_expandSize, -m_expandSize);
+        }
+        data.opaque = newOpaque;
 
-    // we don't have to blur a region we don't see
-    m_currentBlur -= newClip;
+        // we don't have to blur a region we don't see
+        m_currentBlur -= newOpaque;
+    }
+
     // if we have to paint a non-opaque part of this window that intersects with the
     // currently blurred region we have to redraw the whole region
-    if ((data.paint - oldClip).intersects(m_currentBlur)) {
+    if ((data.paint - oldOpaque).intersects(m_currentBlur)) {
         data.paint |= m_currentBlur;
     }
 
@@ -526,7 +575,7 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::
 
     m_currentBlur |= expandedBlur;
 
-    m_paintedArea -= data.clip;
+    m_paintedArea -= data.opaque;
     m_paintedArea |= data.paint;
 }
 
@@ -547,8 +596,7 @@ bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintDa
     if ((scaled || (translated || (mask & PAINT_WINDOW_TRANSFORMED))) && !w->data(WindowForceBlurRole).toBool())
         return false;
 
-    bool blurBehindDecos = effects->decorationsHaveAlpha() &&
-                effects->decorationSupportsBlurBehind();
+    bool blurBehindDecos = effects->decorationsHaveAlpha() && decorationSupportsBlurBehind(w);
 
     if (!w->hasAlpha() && w->opacity() >= 1.0 && !(blurBehindDecos && w->hasDecoration()))
         return false;
@@ -558,8 +606,8 @@ bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintDa
 
 void BlurEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
 {
-    const QRect screen = GLRenderTarget::virtualScreenGeometry();
     if (shouldBlur(w, mask, data)) {
+        const QRect screen = effects->renderTargetRect();
         QRegion shape = region & blurRegion(w).translated(w->pos()) & screen;
 
         // let's do the evil parts - someone wants to blur behind a transformed window
@@ -570,20 +618,20 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region, Wi
             QRegion scaledShape;
             for (QRect r : shape) {
                 r.moveTo(pt.x() + (r.x() - pt.x()) * data.xScale() + data.xTranslation(),
-                            pt.y() + (r.y() - pt.y()) * data.yScale() + data.yTranslation());
+                         pt.y() + (r.y() - pt.y()) * data.yScale() + data.yTranslation());
                 r.setWidth(r.width() * data.xScale());
                 r.setHeight(r.height() * data.yScale());
                 scaledShape |= r;
             }
             shape = scaledShape & region;
 
-        //Only translated, not scaled
+            // Only translated, not scaled
         } else if (translated) {
             shape = shape.translated(data.xTranslation(), data.yTranslation());
             shape = shape & region;
         }
 
-        EffectWindow* modal = w->transientFor();
+        EffectWindow *modal = w->transientFor();
         const bool transientForIsDock = (modal ? modal->isDock() : false);
 
         if (!shape.isEmpty()) {
@@ -615,15 +663,15 @@ void BlurEffect::generateNoiseTexture()
     }
 
     // Init randomness based on time
-    qsrand((uint)QTime::currentTime().msec());
+    std::srand((uint)QTime::currentTime().msec());
 
     QImage noiseImage(QSize(256, 256), QImage::Format_Grayscale8);
 
     for (int y = 0; y < noiseImage.height(); y++) {
-        uint8_t *noiseImageLine = (uint8_t *) noiseImage.scanLine(y);
+        uint8_t *noiseImageLine = (uint8_t *)noiseImage.scanLine(y);
 
         for (int x = 0; x < noiseImage.width(); x++) {
-            noiseImageLine[x] = qrand() % m_noiseStrength;
+            noiseImageLine[x] = std::rand() % m_noiseStrength;
         }
     }
 
@@ -635,7 +683,7 @@ void BlurEffect::generateNoiseTexture()
     m_noiseTexture->setWrapMode(GL_REPEAT);
 }
 
-void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float opacity, const QMatrix4x4 &screenProjection, bool isDock, QRect windowRect)
+void BlurEffect::doBlur(const QRegion &shape, const QRect &screen, const float opacity, const QMatrix4x4 &screenProjection, bool isDock, QRect windowRect)
 {
     // Blur would not render correctly on a secondary monitor because of wrong coordinates
     // BUG: 393723
@@ -644,7 +692,7 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
 
     const QRegion expandedBlurRegion = expand(shape) & expand(screen);
 
-    const bool useSRGB = m_renderTextures.first().internalFormat() == GL_SRGB8_ALPHA8;
+    const bool useSRGB = m_renderTextures.constFirst()->internalFormat() == GL_SRGB8_ALPHA8;
 
     // Upload geometry for the down and upsample iterations
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
@@ -655,8 +703,6 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
 
     const QRect sourceRect = expandedBlurRegion.boundingRect() & screen;
     const QRect destRect = sourceRect.translated(xTranslate, yTranslate);
-
-    GLRenderTarget::pushRenderTargets(m_renderTargetStack);
     int blurRectCount = expandedBlurRegion.rectCount() * 6;
 
     /*
@@ -667,7 +713,8 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
      * when maximized windows or windows near the panel affect the dock blur.
      */
     if (isDock) {
-        m_renderTargets.last()->blitFromFramebuffer(sourceRect, destRect);
+        m_renderTargets.last()->blitFromFramebuffer(effects->mapToRenderTarget(sourceRect), destRect);
+        GLRenderTarget::pushRenderTargets(m_renderTargetStack);
 
         if (useSRGB) {
             glEnable(GL_FRAMEBUFFER_SRGB);
@@ -678,7 +725,8 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
         mvp.ortho(0, screenRect.width(), screenRect.height(), 0, 0, 65535);
         copyScreenSampleTexture(vbo, blurRectCount, shape.translated(xTranslate, yTranslate), mvp);
     } else {
-        m_renderTargets.first()->blitFromFramebuffer(sourceRect, destRect);
+        m_renderTargets.first()->blitFromFramebuffer(effects->mapToRenderTarget(sourceRect), destRect);
+        GLRenderTarget::pushRenderTargets(m_renderTargetStack);
 
         if (useSRGB) {
             glEnable(GL_FRAMEBUFFER_SRGB);
@@ -695,10 +743,10 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
     if (opacity < 1.0) {
         glEnable(GL_BLEND);
 #if 1 // bow shape, always above y = x
-        float o = 1.0f-opacity;
-        o = 1.0f - o*o;
+        float o = 1.0f - opacity;
+        o = 1.0f - o * o;
 #else // sigmoid shape, above y = x for x > 0.5, below y = x for x < 0.5
-        float o = 2.0f*opacity - 1.0f;
+        float o = 2.0f * opacity - 1.0f;
         o = 0.5f + o / (1.0f + qAbs(o));
 #endif
         glBlendColor(0, 0, 0, o);
@@ -741,15 +789,15 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
 
 void BlurEffect::upscaleRenderToScreen(GLVertexBuffer *vbo, int vboStart, int blurRectCount, const QMatrix4x4 &screenProjection, QPoint windowPosition)
 {
-    m_renderTextures[1].bind();
+    m_renderTextures[1]->bind();
 
     m_shader->bind(BlurShader::UpSampleType);
-    m_shader->setTargetTextureSize(m_renderTextures[0].size() * GLRenderTarget::virtualScreenScale());
+    m_shader->setTargetTextureSize(m_renderTextures[0]->size() * effects->renderTargetScale());
 
     m_shader->setOffset(m_offset);
     m_shader->setModelViewProjectionMatrix(screenProjection);
 
-    //Render to the screen
+    // Render to the screen
     vbo->draw(GL_TRIANGLES, vboStart, blurRectCount);
     m_shader->unbind();
 }
@@ -757,9 +805,9 @@ void BlurEffect::upscaleRenderToScreen(GLVertexBuffer *vbo, int vboStart, int bl
 void BlurEffect::applyNoise(GLVertexBuffer *vbo, int vboStart, int blurRectCount, const QMatrix4x4 &screenProjection, QPoint windowPosition)
 {
     m_shader->bind(BlurShader::NoiseSampleType);
-    m_shader->setTargetTextureSize(m_renderTextures[0].size() * GLRenderTarget::virtualScreenScale());
-    m_shader->setNoiseTextureSize(m_noiseTexture->size() * GLRenderTarget::virtualScreenScale());
-    m_shader->setTexturePosition(windowPosition * GLRenderTarget::virtualScreenScale());
+    m_shader->setTargetTextureSize(m_renderTextures[0]->size() * effects->renderTargetScale());
+    m_shader->setNoiseTextureSize(m_noiseTexture->size() * effects->renderTargetScale());
+    m_shader->setTexturePosition(windowPosition * effects->renderTargetScale());
 
     m_noiseTexture->bind();
 
@@ -779,13 +827,13 @@ void BlurEffect::downSampleTexture(GLVertexBuffer *vbo, int blurRectCount)
 
     for (int i = 1; i <= m_downSampleIterations; i++) {
         modelViewProjectionMatrix.setToIdentity();
-        modelViewProjectionMatrix.ortho(0, m_renderTextures[i].width(), m_renderTextures[i].height(), 0 , 0, 65535);
+        modelViewProjectionMatrix.ortho(0, m_renderTextures[i]->width(), m_renderTextures[i]->height(), 0, 0, 65535);
 
         m_shader->setModelViewProjectionMatrix(modelViewProjectionMatrix);
-        m_shader->setTargetTextureSize(m_renderTextures[i].size());
+        m_shader->setTargetTextureSize(m_renderTextures[i]->size());
 
-        //Copy the image from this texture
-        m_renderTextures[i - 1].bind();
+        // Copy the image from this texture
+        m_renderTextures[i - 1]->bind();
 
         vbo->draw(GL_TRIANGLES, blurRectCount * i, blurRectCount);
         GLRenderTarget::popRenderTarget();
@@ -803,13 +851,13 @@ void BlurEffect::upSampleTexture(GLVertexBuffer *vbo, int blurRectCount)
 
     for (int i = m_downSampleIterations - 1; i >= 1; i--) {
         modelViewProjectionMatrix.setToIdentity();
-        modelViewProjectionMatrix.ortho(0, m_renderTextures[i].width(), m_renderTextures[i].height(), 0 , 0, 65535);
+        modelViewProjectionMatrix.ortho(0, m_renderTextures[i]->width(), m_renderTextures[i]->height(), 0, 0, 65535);
 
         m_shader->setModelViewProjectionMatrix(modelViewProjectionMatrix);
-        m_shader->setTargetTextureSize(m_renderTextures[i].size());
+        m_shader->setTargetTextureSize(m_renderTextures[i]->size());
 
-        //Copy the image from this texture
-        m_renderTextures[i + 1].bind();
+        // Copy the image from this texture
+        m_renderTextures[i + 1]->bind();
 
         vbo->draw(GL_TRIANGLES, blurRectCount * i, blurRectCount);
         GLRenderTarget::popRenderTarget();
@@ -830,7 +878,7 @@ void BlurEffect::copyScreenSampleTexture(GLVertexBuffer *vbo, int blurRectCount,
      * right next to this window.
      */
     m_shader->setBlurRect(blurShape.boundingRect().adjusted(1, 1, -1, -1), effects->virtualScreenSize());
-    m_renderTextures.last().bind();
+    m_renderTextures.last()->bind();
 
     vbo->draw(GL_TRIANGLES, 0, blurRectCount);
     GLRenderTarget::popRenderTarget();
@@ -849,4 +897,3 @@ bool BlurEffect::blocksDirectScanout() const
 }
 
 } // namespace KWin
-

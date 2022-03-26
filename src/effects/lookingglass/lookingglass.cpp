@@ -14,18 +14,26 @@
 #include "lookingglassconfig.h"
 
 #include <QAction>
-#include <kwinglutils.h>
 #include <kwinglplatform.h>
+#include <kwinglutils.h>
 
-#include <KStandardAction>
 #include <KGlobalAccel>
 #include <KLocalizedString>
-#include <QVector2D>
+#include <KStandardAction>
 #include <QFile>
+#include <QVector2D>
 
 #include <kmessagebox.h>
 
 #include <cmath>
+
+Q_LOGGING_CATEGORY(KWIN_LOOKINGGLASS, "kwin_effect_lookingglass", QtWarningMsg)
+
+static void ensureResources()
+{
+    // Must initialize resources manually because the effect is a static lib.
+    Q_INIT_RESOURCE(lookingglass);
+}
 
 namespace KWin
 {
@@ -43,21 +51,21 @@ LookingGlassEffect::LookingGlassEffect()
     , m_valid(false)
 {
     initConfig<LookingGlassConfig>();
-    QAction* a;
+    QAction *a;
     a = KStandardAction::zoomIn(this, SLOT(zoomIn()), this);
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Equal);
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Equal);
-    effects->registerGlobalShortcut(Qt::META + Qt::Key_Equal, a);
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Equal));
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Equal));
+    effects->registerGlobalShortcut(Qt::META | Qt::Key_Equal, a);
 
     a = KStandardAction::zoomOut(this, SLOT(zoomOut()), this);
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Minus);
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Minus);
-    effects->registerGlobalShortcut(Qt::META + Qt::Key_Minus, a);
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Minus));
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Minus));
+    effects->registerGlobalShortcut(Qt::META | Qt::Key_Minus, a);
 
     a = KStandardAction::actualSize(this, SLOT(toggle()), this);
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_0);
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_0);
-    effects->registerGlobalShortcut(Qt::META + Qt::Key_0, a);
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_0));
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_0));
+    effects->registerGlobalShortcut(Qt::META | Qt::Key_0, a);
 
     connect(effects, &EffectsHandler::mouseChanged, this, &LookingGlassEffect::slotMouseChanged);
     connect(effects, &EffectsHandler::windowDamaged, this, &LookingGlassEffect::slotWindowDamaged);
@@ -83,12 +91,14 @@ void LookingGlassEffect::reconfigure(ReconfigureFlags)
     LookingGlassConfig::self()->read();
     initialradius = LookingGlassConfig::radius();
     radius = initialradius;
-    qCDebug(KWINEFFECTS) << "Radius from config:" << radius;
+    qCDebug(KWIN_LOOKINGGLASS) << "Radius from config:" << radius;
     m_valid = loadData();
 }
 
 bool LookingGlassEffect::loadData()
 {
+    ensureResources();
+
     const QSize screenSize = effects->virtualScreenSize();
     int texw = screenSize.width();
     int texh = screenSize.height();
@@ -99,17 +109,17 @@ bool LookingGlassEffect::loadData()
     m_texture->setFilter(GL_LINEAR_MIPMAP_LINEAR);
     m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
 
-    m_fbo = new GLRenderTarget(*m_texture);
+    m_fbo = new GLRenderTarget(m_texture);
     if (!m_fbo->valid()) {
         return false;
     }
 
-    m_shader = ShaderManager::instance()->generateShaderFromResources(ShaderTrait::MapTexture, QString(), QStringLiteral("lookingglass.frag"));
+    m_shader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), QStringLiteral(":/effects/lookingglass/shaders/lookingglass.frag"));
     if (m_shader->isValid()) {
         ShaderBinder binder(m_shader);
         m_shader->setUniform("u_textureSize", QVector2D(screenSize.width(), screenSize.height()));
     } else {
-        qCCritical(KWINEFFECTS) << "The shader failed to load!";
+        qCCritical(KWIN_LOOKINGGLASS) << "The shader failed to load!";
         return false;
     }
 
@@ -186,7 +196,7 @@ QRect LookingGlassEffect::magnifierArea() const
     return QRect(cursorPos().x() - radius, cursorPos().y() - radius, 2 * radius, 2 * radius);
 }
 
-void LookingGlassEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime)
+void LookingGlassEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     const int time = m_lastPresentTime.count() ? (presentTime - m_lastPresentTime).count() : 0;
     if (zoom != target_zoom) {
@@ -195,7 +205,7 @@ void LookingGlassEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::m
             zoom = qMin(zoom * qMax(1.0 + diff, 1.2), target_zoom);
         else
             zoom = qMax(zoom * qMin(1.0 - diff, 0.8), target_zoom);
-        qCDebug(KWINEFFECTS) << "zoom is now " << zoom;
+        qCDebug(KWIN_LOOKINGGLASS) << "zoom is now " << zoom;
         radius = qBound((double)initialradius, initialradius * zoom, 3.5 * initialradius);
 
         if (zoom <= 1.0f) {
@@ -218,8 +228,8 @@ void LookingGlassEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::m
     effects->prePaintScreen(data, presentTime);
 }
 
-void LookingGlassEffect::slotMouseChanged(const QPoint& pos, const QPoint& old, Qt::MouseButtons,
-                                      Qt::MouseButtons, Qt::KeyboardModifiers, Qt::KeyboardModifiers)
+void LookingGlassEffect::slotMouseChanged(const QPoint &pos, const QPoint &old, Qt::MouseButtons,
+                                          Qt::MouseButtons, Qt::KeyboardModifiers, Qt::KeyboardModifiers)
 {
     if (pos != old && m_enabled) {
         effects->addRepaint(pos.x() - radius, pos.y() - radius, 2 * radius, 2 * radius);
@@ -240,7 +250,7 @@ void LookingGlassEffect::paintScreen(int mask, const QRegion &region, ScreenPain
     effects->paintScreen(mask, region, data);
     if (m_valid && m_enabled) {
         // Disable render texture
-        GLRenderTarget* target = GLRenderTarget::popRenderTarget();
+        GLRenderTarget *target = GLRenderTarget::popRenderTarget();
         Q_ASSERT(target == m_fbo);
         Q_UNUSED(target);
         m_texture->bind();
@@ -263,4 +273,3 @@ bool LookingGlassEffect::isActive() const
 }
 
 } // namespace
-

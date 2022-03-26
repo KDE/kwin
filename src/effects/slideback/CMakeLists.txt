@@ -2,6 +2,12 @@
 # Effect
 
 # Source files
-set(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-    slideback/slideback.cpp
+set(slideback_SOURCES
+    main.cpp
+    slideback.cpp
+)
+
+kwin4_add_effect_module(kwin4_effect_slideback ${slideback_SOURCES})
+target_link_libraries(kwin4_effect_slideback PRIVATE
+    kwineffects
 )

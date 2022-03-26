@@ -4,8 +4,8 @@
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 #include "previewsettings.h"
-#include "previewbridge.h"
 #include "buttonsmodel.h"
+#include "previewbridge.h"
 
 #include <KLocalizedString>
 
@@ -43,7 +43,7 @@ int BorderSizesModel::rowCount(const QModelIndex &parent) const
     return m_borders.count();
 }
 
-QHash< int, QByteArray > BorderSizesModel::roleNames() const
+QHash<int, QByteArray> BorderSizesModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
     roles.insert(Qt::DisplayRole, QByteArrayLiteral("display"));
@@ -56,29 +56,26 @@ PreviewSettings::PreviewSettings(DecorationSettings *parent)
     , m_alphaChannelSupported(true)
     , m_onAllDesktopsAvailable(true)
     , m_closeOnDoubleClick(false)
-    , m_leftButtons(new ButtonsModel(QVector<DecorationButtonType>({
-            DecorationButtonType::Menu,
-            DecorationButtonType::ApplicationMenu,
-            DecorationButtonType::OnAllDesktops
-        }), this))
-    , m_rightButtons(new ButtonsModel(QVector<DecorationButtonType>({
-            DecorationButtonType::ContextHelp,
-            DecorationButtonType::Minimize,
-            DecorationButtonType::Maximize,
-            DecorationButtonType::Close
-        }), this))
-    , m_availableButtons(new ButtonsModel(QVector<DecorationButtonType>({
-            DecorationButtonType::Menu,
-            DecorationButtonType::ApplicationMenu,
-            DecorationButtonType::OnAllDesktops,
-            DecorationButtonType::Minimize,
-            DecorationButtonType::Maximize,
-            DecorationButtonType::Close,
-            DecorationButtonType::ContextHelp,
-            DecorationButtonType::Shade,
-            DecorationButtonType::KeepBelow,
-            DecorationButtonType::KeepAbove
-        }), this))
+    , m_leftButtons(new ButtonsModel(QVector<DecorationButtonType>({DecorationButtonType::Menu,
+                                                                    DecorationButtonType::ApplicationMenu,
+                                                                    DecorationButtonType::OnAllDesktops}),
+                                     this))
+    , m_rightButtons(new ButtonsModel(QVector<DecorationButtonType>({DecorationButtonType::ContextHelp,
+                                                                     DecorationButtonType::Minimize,
+                                                                     DecorationButtonType::Maximize,
+                                                                     DecorationButtonType::Close}),
+                                      this))
+    , m_availableButtons(new ButtonsModel(QVector<DecorationButtonType>({DecorationButtonType::Menu,
+                                                                         DecorationButtonType::ApplicationMenu,
+                                                                         DecorationButtonType::OnAllDesktops,
+                                                                         DecorationButtonType::Minimize,
+                                                                         DecorationButtonType::Maximize,
+                                                                         DecorationButtonType::Close,
+                                                                         DecorationButtonType::ContextHelp,
+                                                                         DecorationButtonType::Shade,
+                                                                         DecorationButtonType::KeepBelow,
+                                                                         DecorationButtonType::KeepAbove}),
+                                          this))
     , m_borderSizes(new BorderSizesModel(this))
     , m_borderSize(int(BorderSize::Normal))
     , m_font(QFontDatabase::systemFont(QFontDatabase::TitleFont))
@@ -93,11 +90,11 @@ PreviewSettings::PreviewSettings(DecorationSettings *parent)
     auto updateRight = [this, parent]() {
         Q_EMIT parent->decorationButtonsRightChanged(decorationButtonsRight());
     };
-    connect(m_leftButtons,  &QAbstractItemModel::rowsRemoved,  this, updateLeft);
-    connect(m_leftButtons,  &QAbstractItemModel::rowsMoved,    this, updateLeft);
-    connect(m_leftButtons,  &QAbstractItemModel::rowsInserted, this, updateLeft);
-    connect(m_rightButtons, &QAbstractItemModel::rowsRemoved,  this, updateRight);
-    connect(m_rightButtons, &QAbstractItemModel::rowsMoved,    this, updateRight);
+    connect(m_leftButtons, &QAbstractItemModel::rowsRemoved, this, updateLeft);
+    connect(m_leftButtons, &QAbstractItemModel::rowsMoved, this, updateLeft);
+    connect(m_leftButtons, &QAbstractItemModel::rowsInserted, this, updateLeft);
+    connect(m_rightButtons, &QAbstractItemModel::rowsRemoved, this, updateRight);
+    connect(m_rightButtons, &QAbstractItemModel::rowsMoved, this, updateRight);
     connect(m_rightButtons, &QAbstractItemModel::rowsInserted, this, updateRight);
 }
 
@@ -155,12 +152,12 @@ void PreviewSettings::setCloseOnDoubleClickOnMenu(bool enabled)
     Q_EMIT closeOnDoubleClickOnMenuChanged(enabled);
 }
 
-QVector< DecorationButtonType > PreviewSettings::decorationButtonsLeft() const
+QVector<DecorationButtonType> PreviewSettings::decorationButtonsLeft() const
 {
     return m_leftButtons->buttons();
 }
 
-QVector< DecorationButtonType > PreviewSettings::decorationButtonsRight() const
+QVector<DecorationButtonType> PreviewSettings::decorationButtonsRight() const
 {
     return m_rightButtons->buttons();
 }

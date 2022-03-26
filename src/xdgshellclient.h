@@ -18,6 +18,8 @@
 #include <QQueue>
 #include <QTimer>
 
+#include <optional>
+
 namespace KWaylandServer
 {
 class AppMenuInterface;
@@ -34,14 +36,17 @@ class AbstractOutput;
 class XdgSurfaceConfigure
 {
 public:
-    virtual ~XdgSurfaceConfigure() {}
+    virtual ~XdgSurfaceConfigure()
+    {
+    }
 
     enum ConfigureFlag {
         ConfigurePosition = 0x1,
     };
     Q_DECLARE_FLAGS(ConfigureFlags, ConfigureFlag)
 
-    QPoint position;
+    QRect bounds;
+    Gravity gravity;
     qreal serial;
     ConfigureFlags flags;
 };
@@ -54,18 +59,20 @@ public:
     explicit XdgSurfaceClient(KWaylandServer::XdgSurfaceInterface *shellSurface);
     ~XdgSurfaceClient() override;
 
+    NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     QRect frameRectToBufferRect(const QRect &rect) const override;
     QRect inputGeometry() const override;
     QMatrix4x4 inputTransformation() const override;
     void destroyClient() override;
 
-    virtual void installPlasmaShellSurface(KWaylandServer::PlasmaShellSurfaceInterface *shellSurface) = 0;
+    void installPlasmaShellSurface(KWaylandServer::PlasmaShellSurfaceInterface *shellSurface);
 
 protected:
     void moveResizeInternal(const QRect &rect, MoveResizeMode mode) override;
 
     virtual XdgSurfaceConfigure *sendRoleConfigure() const = 0;
     virtual void handleRoleCommit();
+    virtual void handleRolePrecommit();
 
     XdgSurfaceConfigure *lastAcknowledgedConfigure() const;
     void scheduleConfigure();
@@ -73,15 +80,19 @@ protected:
 
     QPointer<KWaylandServer::PlasmaShellSurfaceInterface> m_plasmaShellSurface;
 
+    NET::WindowType m_windowType = NET::Normal;
+    Gravity m_nextGravity = Gravity::None;
+
 private:
+    void setupPlasmaShellIntegration();
+    void updateClientArea();
+    void updateShowOnScreenEdge();
     void handleConfigureAcknowledged(quint32 serial);
     void handleCommit();
     void handleNextWindowGeometry();
     bool haveNextWindowGeometry() const;
     void setHaveNextWindowGeometry();
     void resetHaveNextWindowGeometry();
-    QRect adjustMoveResizeGeometry(const QRect &rect) const;
-    void updateGeometryRestoreHack();
     void maybeUpdateMoveResizeGeometry(const QRect &rect);
 
     KWaylandServer::XdgSurfaceInterface *m_shellSurface;
@@ -89,6 +100,7 @@ private:
     XdgSurfaceConfigure::ConfigureFlags m_configureFlags;
     QQueue<XdgSurfaceConfigure *> m_configureEvents;
     QScopedPointer<XdgSurfaceConfigure> m_lastAcknowledgedConfigure;
+    std::optional<quint32> m_lastAcknowledgedConfigureSerial;
     QRect m_windowGeometry;
     bool m_haveNextWindowGeometry = false;
 };
@@ -96,6 +108,7 @@ private:
 class XdgToplevelConfigure final : public XdgSurfaceConfigure
 {
 public:
+    QSharedPointer<KDecoration2::Decoration> decoration;
     KWaylandServer::XdgToplevelInterface::States states;
 };
 
@@ -108,13 +121,18 @@ class XdgToplevelClient final : public XdgSurfaceClient
         FocusWindow,
     };
 
+    enum class DecorationMode {
+        None,
+        Client,
+        Server,
+    };
+
 public:
     explicit XdgToplevelClient(KWaylandServer::XdgToplevelInterface *shellSurface);
     ~XdgToplevelClient() override;
 
     KWaylandServer::XdgToplevelInterface *shellSurface() const;
 
-    NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     MaximizeMode maximizeMode() const override;
     MaximizeMode requestedMaximizeMode() const override;
     QSize minSize() const override;
@@ -134,7 +152,7 @@ public:
     bool userCanSetNoBorder() const override;
     bool noBorder() const override;
     void setNoBorder(bool set) override;
-    void updateDecoration(bool check_workspace_pos, bool force = false) override;
+    void invalidateDecoration() override;
     QString preferredColorScheme() const override;
     bool supportsWindowRules() const override;
     bool takeFocus() override;
@@ -149,12 +167,12 @@ public:
     void installAppMenu(KWaylandServer::AppMenuInterface *appMenu);
     void installServerDecoration(KWaylandServer::ServerSideDecorationInterface *decoration);
     void installPalette(KWaylandServer::ServerSideDecorationPaletteInterface *palette);
-    void installPlasmaShellSurface(KWaylandServer::PlasmaShellSurfaceInterface *shellSurface) override;
     void installXdgDecoration(KWaylandServer::XdgToplevelDecorationV1Interface *decoration);
 
 protected:
     XdgSurfaceConfigure *sendRoleConfigure() const override;
     void handleRoleCommit() override;
+    void handleRolePrecommit() override;
     void doMinimize() override;
     void doInteractiveResizeSync() override;
     void doSetActive() override;
@@ -173,7 +191,7 @@ private:
     void handleWindowMenuRequested(KWaylandServer::SeatInterface *seat,
                                    const QPoint &surfacePos, quint32 serial);
     void handleMoveRequested(KWaylandServer::SeatInterface *seat, quint32 serial);
-    void handleResizeRequested(KWaylandServer::SeatInterface *seat, Qt::Edges, quint32 serial);
+    void handleResizeRequested(KWaylandServer::SeatInterface *seat, KWaylandServer::XdgToplevelInterface::ResizeAnchor anchor, quint32 serial);
     void handleStatesAcknowledged(const KWaylandServer::XdgToplevelInterface::States &states);
     void handleMaximizeRequested();
     void handleUnmaximizeRequested();
@@ -190,23 +208,24 @@ private:
     void initialize();
     void updateMaximizeMode(MaximizeMode maximizeMode);
     void updateFullScreenMode(bool set);
-    void updateShowOnScreenEdge();
-    void updateClientArea();
-    void setupPlasmaShellIntegration();
     void sendPing(PingReason reason);
     MaximizeMode initialMaximizeMode() const;
     bool initialFullScreenMode() const;
+    DecorationMode preferredDecorationMode() const;
+    void configureDecoration();
+    void configureXdgDecoration(DecorationMode decorationMode);
+    void configureServerDecoration(DecorationMode decorationMode);
+    void clearDecoration();
 
     QPointer<KWaylandServer::AppMenuInterface> m_appMenuInterface;
     QPointer<KWaylandServer::ServerSideDecorationPaletteInterface> m_paletteInterface;
     QPointer<KWaylandServer::ServerSideDecorationInterface> m_serverDecoration;
     QPointer<KWaylandServer::XdgToplevelDecorationV1Interface> m_xdgDecoration;
     KWaylandServer::XdgToplevelInterface *m_shellSurface;
-    KWaylandServer::XdgToplevelInterface::States m_requestedStates;
+    KWaylandServer::XdgToplevelInterface::States m_nextStates;
     KWaylandServer::XdgToplevelInterface::States m_acknowledgedStates;
     KWaylandServer::XdgToplevelInterface::States m_initialStates;
     QMap<quint32, PingReason> m_pings;
-    NET::WindowType m_windowType = NET::Normal;
     MaximizeMode m_maximizeMode = MaximizeRestore;
     MaximizeMode m_requestedMaximizeMode = MaximizeRestore;
     bool m_isFullScreen = false;
@@ -215,6 +234,7 @@ private:
     bool m_userNoBorder = false;
     bool m_isTransient = false;
     QPointer<AbstractOutput> m_fullScreenRequestedOutput;
+    QSharedPointer<KDecoration2::Decoration> m_nextDecoration;
 };
 
 class XdgPopupClient final : public XdgSurfaceClient
@@ -225,7 +245,6 @@ public:
     explicit XdgPopupClient(KWaylandServer::XdgPopupInterface *shellSurface);
     ~XdgPopupClient() override;
 
-    NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     bool hasPopupGrab() const override;
     void popupDone() override;
     bool isPopupWindow() const override;
@@ -239,7 +258,6 @@ public:
     void closeWindow() override;
     bool wantsInput() const override;
     bool takeFocus() override;
-    void installPlasmaShellSurface(KWaylandServer::PlasmaShellSurfaceInterface *shellSurface) override;
 
 protected:
     bool acceptsFocus() const override;

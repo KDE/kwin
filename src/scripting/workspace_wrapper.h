@@ -12,10 +12,10 @@
 #define KWIN_SCRIPTING_WORKSPACE_WRAPPER_H
 
 #include <QObject>
+#include <QQmlListProperty>
+#include <QRect>
 #include <QSize>
 #include <QStringList>
-#include <QRect>
-#include <QQmlListProperty>
 #include <kwinglobals.h>
 
 namespace KWin
@@ -166,8 +166,8 @@ Q_SIGNALS:
     void currentVirtualDesktopChanged();
 
 public:
-//------------------------------------------------------------------
-//enums copy&pasted from kwinglobals.h because qtscript is evil
+    //------------------------------------------------------------------
+    // enums copy&pasted from kwinglobals.h because qtscript is evil
 
     enum ClientAreaOption {
         ///< geometry where a window will be initially placed after being mapped
@@ -203,16 +203,16 @@ public:
     Q_ENUM(ElectricBorder)
 
 protected:
-    explicit WorkspaceWrapper(QObject* parent = nullptr);
+    explicit WorkspaceWrapper(QObject *parent = nullptr);
 
 public:
-#define GETTERSETTERDEF( rettype, getter, setter ) \
-rettype getter() const; \
-void setter( rettype val );
+#define GETTERSETTERDEF(rettype, getter, setter) \
+    rettype getter() const;                      \
+    void setter(rettype val);
     GETTERSETTERDEF(int, numberOfDesktops, setNumberOfDesktops)
     GETTERSETTERDEF(int, currentDesktop, setCurrentDesktop)
     GETTERSETTERDEF(QString, currentActivity, setCurrentActivity)
-    GETTERSETTERDEF(KWin::AbstractClient*, activeClient, setActiveClient)
+    GETTERSETTERDEF(KWin::AbstractClient *, activeClient, setActiveClient)
 #undef GETTERSETTERDEF
     QSize desktopGridSize() const;
     int desktopGridWidth() const;
@@ -250,7 +250,7 @@ void setter( rettype val );
      * @param desktop The desktop for which the area should be considered, in general there should not be a difference
      * @returns The specified screen geometry
      */
-    Q_SCRIPTABLE QRect clientArea(ClientAreaOption option, const QPoint& point, int desktop) const;
+    Q_SCRIPTABLE QRect clientArea(ClientAreaOption option, const QPoint &point, int desktop) const;
     /**
      * Overloaded method for convenience.
      * @param client The Client for which the area should be retrieved
@@ -306,12 +306,56 @@ public Q_SLOTS:
     void slotWindowLower();
     void slotWindowRaiseOrLower();
     void slotActivateAttentionWindow();
-    void slotWindowPackLeft();
-    void slotWindowPackRight();
-    void slotWindowPackUp();
-    void slotWindowPackDown();
-    void slotWindowGrowHorizontal();
-    void slotWindowGrowVertical();
+
+    /**
+     * @deprecated since 5.24 use slotWindowMoveLeft()
+     */
+    void slotWindowPackLeft()
+    {
+        slotWindowMoveLeft();
+    }
+    /**
+     * @deprecated since 5.24 use slotWindowMoveRight()
+     */
+    void slotWindowPackRight()
+    {
+        slotWindowMoveRight();
+    }
+    /**
+     * @deprecated since 5.24 use slotWindowMoveUp()
+     */
+    void slotWindowPackUp()
+    {
+        slotWindowMoveUp();
+    }
+    /**
+     * @deprecated since 5.24 use slotWindowMoveDown()
+     */
+    void slotWindowPackDown()
+    {
+        slotWindowMoveDown();
+    }
+    /**
+     * @deprecated since 5.24 use slotWindowExpandHorizontal()
+     */
+    void slotWindowGrowHorizontal()
+    {
+        slotWindowExpandHorizontal();
+    }
+    /**
+     * @deprecated since 5.24 use slotWindowExpandVertical()
+     */
+    void slotWindowGrowVertical()
+    {
+        slotWindowExpandVertical();
+    }
+
+    void slotWindowMoveLeft();
+    void slotWindowMoveRight();
+    void slotWindowMoveUp();
+    void slotWindowMoveDown();
+    void slotWindowExpandHorizontal();
+    void slotWindowExpandVertical();
     void slotWindowShrinkHorizontal();
     void slotWindowShrinkVertical();
     void slotWindowQuickTileLeft();
@@ -381,7 +425,7 @@ public:
      */
     Q_INVOKABLE QList<KWin::AbstractClient *> clientList() const;
 
-    explicit QtScriptWorkspaceWrapper(QObject* parent = nullptr);
+    explicit QtScriptWorkspaceWrapper(QObject *parent = nullptr);
 };
 
 class DeclarativeScriptWorkspaceWrapper : public WorkspaceWrapper
@@ -391,10 +435,15 @@ class DeclarativeScriptWorkspaceWrapper : public WorkspaceWrapper
     Q_PROPERTY(QQmlListProperty<KWin::AbstractClient> clients READ clients)
 public:
     QQmlListProperty<KWin::AbstractClient> clients();
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     static int countClientList(QQmlListProperty<KWin::AbstractClient> *clients);
     static KWin::AbstractClient *atClientList(QQmlListProperty<KWin::AbstractClient> *clients, int index);
+#else
+    static qsizetype countClientList(QQmlListProperty<KWin::AbstractClient> *clients);
+    static KWin::AbstractClient *atClientList(QQmlListProperty<KWin::AbstractClient> *clients, qsizetype index);
+#endif
 
-    explicit DeclarativeScriptWorkspaceWrapper(QObject* parent = nullptr);
+    explicit DeclarativeScriptWorkspaceWrapper(QObject *parent = nullptr);
 };
 
 }

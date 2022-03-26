@@ -25,7 +25,8 @@ class OutputChangeSetV2;
 
 namespace KWin
 {
-
+class EffectScreenImpl;
+class OutputLayer;
 class RenderLoop;
 
 class KWIN_EXPORT GammaRamp
@@ -94,6 +95,15 @@ public:
     ~AbstractOutput() override;
 
     /**
+     * Returns a dummy OutputLayer corresponding to the primary plane.
+     *
+     * TODO: remove this. The Compositor should allocate and deallocate hardware planes
+     * after the pre paint pass. Planes must be allocated based on the bounding rect, transform,
+     * and visibility (for the cursor plane).
+     */
+    OutputLayer *layer() const;
+
+    /**
      * Returns a short identifiable name of this output.
      */
     virtual QString name() const = 0;
@@ -116,13 +126,6 @@ public:
      * Default implementation does nothing
      */
     virtual void setEnabled(bool enable);
-
-    /**
-     * This sets the changes and tests them against the specific output.
-     *
-     * Default implementation does nothing
-     */
-    virtual void applyChanges(const KWaylandServer::OutputChangeSetV2 *changeSet);
 
     /**
      * Returns geometry of this output in device independent pixels.
@@ -187,10 +190,10 @@ public:
     virtual QString serialNumber() const;
 
     /**
-     * Returns the RenderLoop for this output. This function returns @c null if the
-     * underlying platform doesn't support per-screen rendering mode.
+     * Returns the RenderLoop for this output. If the platform does not support per screen
+     * rendering, all outputs will share the same render loop.
      */
-    virtual RenderLoop *renderLoop() const;
+    virtual RenderLoop *renderLoop() const = 0;
 
     void inhibitDirectScanout();
     void uninhibitDirectScanout();
@@ -218,7 +221,12 @@ public:
         Flipped270
     };
     Q_ENUM(Transform)
-    virtual Transform transform() const { return Transform::Normal; }
+    virtual Transform transform() const
+    {
+        return Transform::Normal;
+    }
+
+    virtual bool usesSoftwareCursor() const;
 
 Q_SIGNALS:
     /**
@@ -266,7 +274,10 @@ Q_SIGNALS:
 
 private:
     Q_DISABLE_COPY(AbstractOutput)
+    EffectScreenImpl *m_effectScreen = nullptr;
+    OutputLayer *m_layer;
     int m_directScanoutCount = 0;
+    friend class EffectScreenImpl; // to access m_effectScreen
 };
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const AbstractOutput *output);

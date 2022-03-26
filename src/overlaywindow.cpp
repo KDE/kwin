@@ -9,7 +9,8 @@
 
 #include "overlaywindow.h"
 
-namespace KWin {
+namespace KWin
+{
 OverlayWindow::OverlayWindow()
 {
 }

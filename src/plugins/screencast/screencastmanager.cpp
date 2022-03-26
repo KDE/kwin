@@ -13,10 +13,13 @@
 #include "deleted.h"
 #include "effects.h"
 #include "kwingltexture.h"
-#include "pipewirestream.h"
+#include "outputscreencastsource.h"
 #include "platform.h"
+#include "regionscreencastsource.h"
 #include "scene.h"
+#include "screencaststream.h"
 #include "wayland_server.h"
+#include "windowscreencastsource.h"
 #include "workspace.h"
 
 #include <KLocalizedString>
@@ -33,27 +36,28 @@ ScreencastManager::ScreencastManager(QObject *parent)
 {
     connect(m_screencast, &KWaylandServer::ScreencastV1Interface::windowScreencastRequested,
             this, &ScreencastManager::streamWindow);
-    connect(m_screencast, &KWaylandServer::ScreencastV1Interface::outputScreencastRequested,
-            this, &ScreencastManager::streamOutput);
+    connect(m_screencast, &KWaylandServer::ScreencastV1Interface::outputScreencastRequested, this, &ScreencastManager::streamWaylandOutput);
+    connect(m_screencast, &KWaylandServer::ScreencastV1Interface::virtualOutputScreencastRequested, this, &ScreencastManager::streamVirtualOutput);
+    connect(m_screencast, &KWaylandServer::ScreencastV1Interface::regionScreencastRequested, this, &ScreencastManager::streamRegion);
 }
 
-class WindowStream : public PipeWireStream
+class WindowStream : public ScreenCastStream
 {
 public:
     WindowStream(Toplevel *toplevel, QObject *parent)
-        : PipeWireStream(toplevel->hasAlpha(), toplevel->bufferGeometry().size() * toplevel->bufferScale(), parent)
+        : ScreenCastStream(new WindowScreenCastSource(toplevel), parent)
         , m_toplevel(toplevel)
     {
         if (AbstractClient *client = qobject_cast<AbstractClient *>(toplevel)) {
             setObjectName(client->desktopFileName());
         }
-        connect(toplevel, &Toplevel::windowClosed, this, &PipeWireStream::stopStreaming);
-        connect(this, &PipeWireStream::startStreaming, this, &WindowStream::startFeeding);
-        connect(this, &PipeWireStream::stopStreaming, this, &WindowStream::stopFeeding);
+        connect(this, &ScreenCastStream::startStreaming, this, &WindowStream::startFeeding);
+        connect(this, &ScreenCastStream::stopStreaming, this, &WindowStream::stopFeeding);
     }
 
 private:
-    void startFeeding() {
+    void startFeeding()
+    {
         connect(Compositor::self()->scene(), &Scene::frameRendered, this, &WindowStream::bufferToStream);
 
         connect(m_toplevel, &Toplevel::damaged, this, &WindowStream::includeDamage);
@@ -61,26 +65,23 @@ private:
         m_toplevel->addRepaintFull();
     }
 
-    void stopFeeding() {
+    void stopFeeding()
+    {
         disconnect(Compositor::self()->scene(), &Scene::frameRendered, this, &WindowStream::bufferToStream);
     }
 
-    void includeDamage(Toplevel *toplevel, const QRegion &damage) {
+    void includeDamage(Toplevel *toplevel, const QRegion &damage)
+    {
         Q_ASSERT(m_toplevel == toplevel);
         m_damagedRegion |= damage;
     }
 
-    void bufferToStream () {
-        if (m_damagedRegion.isEmpty()) {
-            return;
+    void bufferToStream()
+    {
+        if (!m_damagedRegion.isEmpty()) {
+            recordFrame(m_damagedRegion);
+            m_damagedRegion = {};
         }
-        QSharedPointer<GLTexture> frameTexture(m_toplevel->effectWindow()->sceneWindow()->windowTexture());
-        const bool wasYInverted = frameTexture->isYInverted();
-        frameTexture->setYInverted(false);
-
-        recordFrame(frameTexture.data(), m_damagedRegion);
-        frameTexture->setYInverted(wasYInverted);
-        m_damagedRegion = {};
     }
 
     QRegion m_damagedRegion;
@@ -89,7 +90,7 @@ private:
 
 void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamV1Interface *waylandStream, const QString &winid)
 {
-    auto *toplevel = Workspace::self()->findToplevel(winid);
+    auto *toplevel = Workspace::self()->findToplevel(QUuid(winid));
 
     if (!toplevel) {
         waylandStream->sendFailed(i18n("Could not find window id %1", winid));
@@ -100,48 +101,103 @@ void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamV1Interface
     integrateStreams(waylandStream, stream);
 }
 
+void ScreencastManager::streamVirtualOutput(KWaylandServer::ScreencastStreamV1Interface *stream,
+                                            const QString &name,
+                                            const QSize &size,
+                                            double scale,
+                                            KWaylandServer::ScreencastV1Interface::CursorMode mode)
+{
+    auto output = qobject_cast<AbstractWaylandOutput *>(kwinApp()->platform()->createVirtualOutput(name, size, scale));
+    streamOutput(stream, output, mode);
+    connect(stream, &KWaylandServer::ScreencastStreamV1Interface::finished, output, [output] {
+        kwinApp()->platform()->removeVirtualOutput(output);
+    });
+}
+
+void ScreencastManager::streamWaylandOutput(KWaylandServer::ScreencastStreamV1Interface *waylandStream,
+                                            KWaylandServer::OutputInterface *output,
+                                            KWaylandServer::ScreencastV1Interface::CursorMode mode)
+{
+    streamOutput(waylandStream, waylandServer()->findOutput(output), mode);
+}
+
 void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamV1Interface *waylandStream,
-                                     KWaylandServer::OutputInterface *output,
+                                     AbstractWaylandOutput *streamOutput,
                                      KWaylandServer::ScreencastV1Interface::CursorMode mode)
 {
-    AbstractWaylandOutput *streamOutput = waylandServer()->findOutput(output);
-
     if (!streamOutput) {
         waylandStream->sendFailed(i18n("Could not find output"));
         return;
     }
 
-    auto stream = new PipeWireStream(true, streamOutput->pixelSize(), this);
+    auto stream = new ScreenCastStream(new OutputScreenCastSource(streamOutput), this);
     stream->setObjectName(streamOutput->name());
     stream->setCursorMode(mode, streamOutput->scale(), streamOutput->geometry());
-    connect(streamOutput, &QObject::destroyed, stream, &PipeWireStream::stopStreaming);
-    auto bufferToStream = [streamOutput, stream] (const QRegion &damagedRegion) {
-        auto scene = Compositor::self()->scene();
-        auto texture = scene->textureForOutput(streamOutput);
+    auto bufferToStream = [streamOutput, stream](const QRegion &damagedRegion) {
+        if (damagedRegion.isEmpty()) {
+            return;
+        }
 
         const QRect frame({}, streamOutput->modeSize());
-        const QRegion region = damagedRegion.isEmpty() || streamOutput->pixelSize() != streamOutput->modeSize() ? frame : damagedRegion.translated(-streamOutput->geometry().topLeft()).intersected(frame);
-        stream->recordFrame(texture.data(), region);
+        const QRegion region = streamOutput->pixelSize() != streamOutput->modeSize() ? frame : damagedRegion.translated(-streamOutput->geometry().topLeft()).intersected(frame);
+        stream->recordFrame(region);
     };
-    connect(stream, &PipeWireStream::startStreaming, waylandStream, [streamOutput, stream, bufferToStream] {
-        Compositor::self()->addRepaint(streamOutput->geometry());
-        streamOutput->recordingStarted();
+    connect(stream, &ScreenCastStream::startStreaming, waylandStream, [streamOutput, stream, bufferToStream] {
+        Compositor::self()->scene()->addRepaint(streamOutput->geometry());
         connect(streamOutput, &AbstractWaylandOutput::outputChange, stream, bufferToStream);
-    });
-    connect(stream, &PipeWireStream::stopStreaming, waylandStream, [streamOutput]{
-        streamOutput->recordingStopped();
     });
     integrateStreams(waylandStream, stream);
 }
 
-void ScreencastManager::integrateStreams(KWaylandServer::ScreencastStreamV1Interface *waylandStream, PipeWireStream *stream)
+static QString rectToString(const QRect &rect)
 {
-    connect(waylandStream, &KWaylandServer::ScreencastStreamV1Interface::finished, stream, &PipeWireStream::stop);
-    connect(stream, &PipeWireStream::stopStreaming, waylandStream, [stream, waylandStream] {
+    return QStringLiteral("%1,%2 %3x%4").arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height());
+}
+
+void ScreencastManager::streamRegion(KWaylandServer::ScreencastStreamV1Interface *waylandStream, const QRect &geometry, qreal scale, KWaylandServer::ScreencastV1Interface::CursorMode mode)
+{
+    if (!geometry.isValid()) {
+        waylandStream->sendFailed(i18n("Invalid region"));
+        return;
+    }
+
+    auto source = new RegionScreenCastSource(geometry, scale);
+    auto stream = new ScreenCastStream(source, this);
+    stream->setObjectName(rectToString(geometry));
+    stream->setCursorMode(mode, scale, geometry);
+
+    connect(stream, &ScreenCastStream::startStreaming, waylandStream, [geometry, stream, source] {
+        Compositor::self()->scene()->addRepaint(geometry);
+
+        const auto allOutputs = kwinApp()->platform()->enabledOutputs();
+        for (auto output : allOutputs) {
+            AbstractWaylandOutput *streamOutput = qobject_cast<AbstractWaylandOutput *>(output);
+            if (streamOutput->geometry().intersects(geometry)) {
+                auto bufferToStream = [streamOutput, stream, source](const QRegion &damagedRegion) {
+                    if (damagedRegion.isEmpty()) {
+                        return;
+                    }
+
+                    const QRect streamRegion = source->region();
+                    const QRegion region = streamOutput->pixelSize() != streamOutput->modeSize() ? streamOutput->geometry() : damagedRegion;
+                    source->updateOutput(streamOutput);
+                    stream->recordFrame(region.translated(-streamRegion.topLeft()).intersected(streamRegion));
+                };
+                connect(streamOutput, &AbstractWaylandOutput::outputChange, stream, bufferToStream);
+            }
+        }
+    });
+    integrateStreams(waylandStream, stream);
+}
+
+void ScreencastManager::integrateStreams(KWaylandServer::ScreencastStreamV1Interface *waylandStream, ScreenCastStream *stream)
+{
+    connect(waylandStream, &KWaylandServer::ScreencastStreamV1Interface::finished, stream, &ScreenCastStream::stop);
+    connect(stream, &ScreenCastStream::stopStreaming, waylandStream, [stream, waylandStream] {
         waylandStream->sendClosed();
         stream->deleteLater();
     });
-    connect(stream, &PipeWireStream::streamReady, stream, [waylandStream] (uint nodeid) {
+    connect(stream, &ScreenCastStream::streamReady, stream, [waylandStream](uint nodeid) {
         waylandStream->sendCreated(nodeid);
     });
     if (!stream->init()) {

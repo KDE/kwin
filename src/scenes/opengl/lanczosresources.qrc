@@ -1,0 +1,6 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/scenes/opengl">
+  <file>shaders/lanczos.frag</file>
+  <file>shaders/lanczos_core.frag</file>
+</qresource>
+</RCC>

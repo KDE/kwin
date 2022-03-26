@@ -23,22 +23,22 @@ class MagnifierEffectConfigForm : public QWidget, public Ui::MagnifierEffectConf
 {
     Q_OBJECT
 public:
-    explicit MagnifierEffectConfigForm(QWidget* parent);
+    explicit MagnifierEffectConfigForm(QWidget *parent);
 };
 
 class MagnifierEffectConfig : public KCModule
 {
     Q_OBJECT
 public:
-    explicit MagnifierEffectConfig(QWidget* parent = nullptr, const QVariantList& args = QVariantList());
+    explicit MagnifierEffectConfig(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
     ~MagnifierEffectConfig() override;
 
     void save() override;
     void defaults() override;
 
 private:
-    MagnifierEffectConfigForm* m_ui;
-    KActionCollection* m_actionCollection;
+    MagnifierEffectConfigForm *m_ui;
+    KActionCollection *m_actionCollection;
 };
 
 } // namespace

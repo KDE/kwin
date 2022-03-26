@@ -8,6 +8,7 @@
 
 #include "pipewirecore.h"
 #include "kwinscreencast_logging.h"
+#include <cerrno>
 
 #include <KLocalizedString>
 
@@ -42,13 +43,13 @@ PipeWireCore::~PipeWireCore()
     }
 }
 
-void PipeWireCore::onCoreError(void* data, uint32_t id, int seq, int res, const char* message)
+void PipeWireCore::onCoreError(void *data, uint32_t id, int seq, int res, const char *message)
 {
     Q_UNUSED(seq)
 
     qCWarning(KWIN_SCREENCAST) << "PipeWire remote error: " << message;
     if (id == PW_ID_CORE && res == -EPIPE) {
-        PipeWireCore *pw = static_cast<PipeWireCore*>(data);
+        PipeWireCore *pw = static_cast<PipeWireCore *>(data);
         Q_EMIT pw->pipewireFailed(QString::fromUtf8(message));
     }
 }
@@ -65,11 +66,10 @@ bool PipeWireCore::init()
 
     QSocketNotifier *notifier = new QSocketNotifier(pw_loop_get_fd(pwMainLoop), QSocketNotifier::Read, this);
     connect(notifier, &QSocketNotifier::activated, this, [this] {
-            int result = pw_loop_iterate (pwMainLoop, 0);
-            if (result < 0)
-                qCWarning(KWIN_SCREENCAST) << "pipewire_loop_iterate failed: " << result;
-        }
-    );
+        int result = pw_loop_iterate(pwMainLoop, 0);
+        if (result < 0)
+            qCWarning(KWIN_SCREENCAST) << "pipewire_loop_iterate failed: " << result;
+    });
 
     pwContext = pw_context_new(pwMainLoop, nullptr, 0);
     if (!pwContext) {
@@ -95,7 +95,7 @@ bool PipeWireCore::init()
     return true;
 }
 
-QSharedPointer< PipeWireCore > PipeWireCore::self()
+QSharedPointer<PipeWireCore> PipeWireCore::self()
 {
     static QWeakPointer<PipeWireCore> global;
     QSharedPointer<PipeWireCore> ret;

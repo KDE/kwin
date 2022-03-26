@@ -9,9 +9,9 @@
 #ifndef KWIN_KEYBOARD_LAYOUT_SWITCHING_H
 #define KWIN_KEYBOARD_LAYOUT_SWITCHING_H
 
-#include <QObject>
-#include <QHash>
 #include <KConfigGroup>
+#include <QHash>
+#include <QObject>
 
 namespace KWin
 {
@@ -59,13 +59,19 @@ public:
     explicit GlobalPolicy(Xkb *xkb, KeyboardLayout *layout, const KConfigGroup &config);
     ~GlobalPolicy() override;
 
-    QString name() const override {
+    QString name() const override
+    {
         return QStringLiteral("Global");
     }
 
 protected:
-    void clearCache() override {}
-    void layoutChanged(uint index) override {Q_UNUSED(index)}
+    void clearCache() override
+    {
+    }
+    void layoutChanged(uint index) override
+    {
+        Q_UNUSED(index)
+    }
 
 private:
     const QString defaultLayoutEntryKey() const override;
@@ -78,7 +84,8 @@ public:
     explicit VirtualDesktopPolicy(Xkb *xkb, KeyboardLayout *layout, const KConfigGroup &config);
     ~VirtualDesktopPolicy() override;
 
-    QString name() const override {
+    QString name() const override
+    {
         return QStringLiteral("Desktop");
     }
 
@@ -98,7 +105,8 @@ public:
     explicit WindowPolicy(Xkb *xkb, KeyboardLayout *layout);
     ~WindowPolicy() override;
 
-    QString name() const override {
+    QString name() const override
+    {
         return QStringLiteral("Window");
     }
 
@@ -107,7 +115,7 @@ protected:
     void layoutChanged(uint index) override;
 
 private:
-    QHash<AbstractClient*, quint32> m_layouts;
+    QHash<AbstractClient *, quint32> m_layouts;
 };
 
 class ApplicationPolicy : public Policy
@@ -117,7 +125,8 @@ public:
     explicit ApplicationPolicy(Xkb *xkb, KeyboardLayout *layout, const KConfigGroup &config);
     ~ApplicationPolicy() override;
 
-    QString name() const override {
+    QString name() const override
+    {
         return QStringLiteral("WinClass");
     }
 
@@ -127,7 +136,7 @@ protected:
 
 private:
     void clientActivated(AbstractClient *c);
-    QHash<AbstractClient*, quint32> m_layouts;
+    QHash<AbstractClient *, quint32> m_layouts;
     QHash<QByteArray, quint32> m_layoutsRestored;
 };
 

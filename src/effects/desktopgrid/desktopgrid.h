@@ -11,13 +11,13 @@
 #ifndef KWIN_DESKTOPGRID_H
 #define KWIN_DESKTOPGRID_H
 
-#include <kwineffects.h>
 #include <QObject>
 #include <QTimeLine>
+#include <kwineffects.h>
 
 class QTimer;
 
-#include "kwineffectquickview.h"
+#include "kwinoffscreenquickview.h"
 
 namespace KWin
 {
@@ -39,17 +39,18 @@ public:
     DesktopGridEffect();
     ~DesktopGridEffect() override;
     void reconfigure(ReconfigureFlags) override;
-    void prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(int mask, const QRegion &region, ScreenPaintData& data) override;
+    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
     void postPaintScreen() override;
-    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime) override;
-    void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;
-    void windowInputMouseEvent(QEvent* e) override;
-    void grabbedKeyboardEvent(QKeyEvent* e) override;
+    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
+    void windowInputMouseEvent(QEvent *e) override;
+    void grabbedKeyboardEvent(QKeyEvent *e) override;
     bool borderActivated(ElectricBorder border) override;
     bool isActive() const override;
 
-    int requestedEffectChainPosition() const override {
+    int requestedEffectChainPosition() const override
+    {
         return 50;
     }
 
@@ -64,41 +65,47 @@ public:
     }; // Click behavior
 
     // for properties
-    int configuredZoomDuration() const {
+    int configuredZoomDuration() const
+    {
         return zoomDuration;
     }
-    int configuredBorder() const {
+    int configuredBorder() const
+    {
         return border;
     }
-    Qt::Alignment configuredDesktopNameAlignment() const {
+    Qt::Alignment configuredDesktopNameAlignment() const
+    {
         return desktopNameAlignment;
     }
-    int configuredLayoutMode() const {
+    int configuredLayoutMode() const
+    {
         return layoutMode;
     }
-    int configuredCustomLayoutRows() const {
+    int configuredCustomLayoutRows() const
+    {
         return customLayoutRows;
     }
-    bool isUsePresentWindows() const {
+    bool isUsePresentWindows() const
+    {
         return clickBehavior == SwitchDesktopAndActivateWindow;
     }
 private Q_SLOTS:
     // slots for global shortcut changed
     // needed to toggle the effect
-    void globalShortcutChanged(QAction *action, const QKeySequence& seq);
+    void globalShortcutChanged(QAction *action, const QKeySequence &seq);
     void slotAddDesktop();
     void slotRemoveDesktop();
-    void slotWindowAdded(KWin::EffectWindow* w);
+    void slotWindowAdded(KWin::EffectWindow *w);
     void slotWindowClosed(KWin::EffectWindow *w);
     void slotWindowDeleted(KWin::EffectWindow *w);
     void slotNumberDesktopsChanged(uint old);
     void slotWindowFrameGeometryChanged(KWin::EffectWindow *w, const QRect &old);
 
 private:
-    QPointF scalePos(const QPoint& pos, int desktop, int screen = -1) const;
-    QPoint unscalePos(const QPoint& pos, int* desktop = nullptr) const;
-    int posToDesktop(const QPoint& pos) const;
-    EffectWindow* windowAt(QPoint pos) const;
+    QPointF scalePos(const QPoint &pos, int desktop, EffectScreen *screen) const;
+    QPoint unscalePos(const QPoint &pos, int *desktop = nullptr) const;
+    int posToDesktop(const QPoint &pos) const;
+    EffectWindow *windowAt(QPoint pos) const;
     void setCurrentDesktop(int desktop);
     void setHighlightedDesktop(int desktop);
     int desktopToRight(int desktop, bool wrap = true) const;
@@ -140,39 +147,38 @@ private:
     int m_originalMovingDesktop;
     bool keyboardGrab;
     bool wasWindowMove, wasWindowCopy, wasDesktopMove, isValidMove;
-    EffectWindow* windowMove;
+    EffectWindow *windowMove;
     QPoint windowMoveDiff;
     QPoint dragStartPos;
     QTimer *windowMoveElevateTimer;
     std::chrono::milliseconds lastPresentTime;
 
     // Soft highlighting
-    QList<QTimeLine*> hoverTimeline;
+    QList<QTimeLine *> hoverTimeline;
 
-    QList< EffectFrame* > desktopNames;
+    QList<EffectFrame *> desktopNames;
 
     QSize gridSize;
     Qt::Orientation orientation;
     QPoint activeCell;
     // Per screen variables
-    QList<double> scale; // Because the border isn't a ratio each screen is different
-    QList<double> unscaledBorder;
-    QList<QSizeF> scaledSize;
-    QList<QPointF> scaledOffset;
+    QMap<EffectScreen *, double> scale; // Because the border isn't a ratio each screen is different
+    QMap<EffectScreen *, double> unscaledBorder;
+    QMap<EffectScreen *, QSizeF> scaledSize;
+    QMap<EffectScreen *, QPointF> scaledOffset;
 
     // Shortcut - needed to toggle the effect
     QList<QKeySequence> shortcut;
 
-    PresentWindowsEffectProxy* m_proxy;
-    QList<WindowMotionManager> m_managers;
+    PresentWindowsEffectProxy *m_proxy;
+    QMap<EffectScreen *, QList<WindowMotionManager>> m_managers;
     QRect m_windowMoveGeometry;
     QPoint m_windowMoveStartPoint;
 
-    QVector<EffectQuickScene*> m_desktopButtons;
+    QVector<OffscreenQuickScene *> m_desktopButtons;
 
     QAction *m_gestureAction;
     QAction *m_shortcutAction;
-
 };
 
 } // namespace

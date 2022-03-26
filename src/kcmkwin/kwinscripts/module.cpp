@@ -4,40 +4,40 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-
 #include "module.h"
+
+#include "config-kwin.h"
+
+#include "kwinscriptsdata.h"
 #include "ui_module.h"
 
-#include <QFileDialog>
-#include <QStringList>
-#include <QStandardPaths>
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDBusPendingCall>
+#include <QFileDialog>
+#include <QStandardPaths>
+#include <QStringList>
 
 #include <KAboutData>
+#include <KConfigGroup>
 #include <KLocalizedString>
-#include <KPluginFactory>
 #include <KMessageBox>
 #include <KMessageWidget>
-#include <KPackage/PackageLoader>
+#include <KNSWidgets/Button>
 #include <KPackage/Package>
+#include <KPackage/PackageLoader>
 #include <KPackage/PackageStructure>
+#include <KPluginFactory>
 
-#include <KNewStuff3/KNS3/Button>
-
-#include "version.h"
-#include "kwinscriptsdata.h"
-
-Module::Module(QWidget *parent, const QVariantList &args) :
-    KCModule(parent, args),
-    ui(new Ui::Module),
-    m_kwinConfig(KSharedConfig::openConfig("kwinrc")),
-    m_kwinScriptsData(new KWinScriptsData(this))
+Module::Module(QWidget *parent, const QVariantList &args)
+    : KCModule(parent, args)
+    , ui(new Ui::Module)
+    , m_kwinConfig(KSharedConfig::openConfig("kwinrc"))
+    , m_kwinScriptsData(new KWinScriptsData(this))
 {
     KAboutData *about = new KAboutData("kwin-scripts",
                                        i18n("KWin Scripts"),
-                                       global_s_versionStringFull,
+                                       KWIN_VERSION_STRING,
                                        i18n("Configure KWin scripts"),
                                        KAboutLicense::GPL_V2);
 
@@ -52,26 +52,27 @@ Module::Module(QWidget *parent, const QVariantList &args) :
     ui->messageWidget->hide();
 
     ui->ghnsButton->setConfigFile(QStringLiteral("kwinscripts.knsrc"));
-    connect(ui->ghnsButton, &KNS3::Button::dialogFinished, this, [this](const KNS3::Entry::List &changedEntries) {
+    connect(ui->ghnsButton, &KNSWidgets::Button::dialogFinished, this, [this](const KNSCore::Entry::List &changedEntries) {
         if (!changedEntries.isEmpty()) {
-            ui->scriptSelector->clearPlugins();
+            ui->scriptSelector->clear();
             updateListViewContents();
         }
     });
 
-    connect(ui->scriptSelector, &KPluginSelector::changed, this, [this](bool isChanged){
+    ui->scriptSelector->setConfig(m_kwinConfig->group("Plugins"));
+    connect(ui->scriptSelector, &KPluginWidget::changed, this, [this](bool isChanged) {
         Q_EMIT changed(isChanged || !m_pendingDeletions.isEmpty());
     });
-    connect(ui->scriptSelector, &KPluginSelector::defaulted, this, [this](bool isDefaulted){
+    connect(ui->scriptSelector, &KPluginWidget::defaulted, this, [this](bool isDefaulted) {
         Q_EMIT defaulted(isDefaulted && m_pendingDeletions.isEmpty());
     });
-    connect(this, &Module::defaultsIndicatorsVisibleChanged, ui->scriptSelector, &KPluginSelector::setDefaultsIndicatorsVisible);
+    connect(this, &Module::defaultsIndicatorsVisibleChanged, ui->scriptSelector, &KPluginWidget::setDefaultsIndicatorsVisible);
     connect(ui->importScriptButton, &QPushButton::clicked, this, &Module::importScript);
 
-    ui->scriptSelector->setAdditionalButtonHandler([this](const KPluginInfo &info) {
+    ui->scriptSelector->setAdditionalButtonHandler([this](const KPluginMetaData &info) {
         QPushButton *button = new QPushButton(ui->scriptSelector);
         button->setIcon(QIcon::fromTheme(QStringLiteral("delete")));
-        button->setEnabled(QFileInfo(info.entryPath()).isWritable());
+        button->setEnabled(QFileInfo(info.fileName()).isWritable());
         connect(button, &QPushButton::clicked, this, [this, info]() {
             if (m_pendingDeletions.contains(info)) {
                 m_pendingDeletions.removeOne(info);
@@ -145,7 +146,8 @@ void Module::importScriptInstallFinished(KJob *job)
 
 void Module::updateListViewContents()
 {
-    ui->scriptSelector->addPlugins(m_kwinScriptsData->pluginInfoList(), KPluginSelector::ReadConfigFile, QString(), QString(), m_kwinConfig);
+    ui->scriptSelector->clear();
+    ui->scriptSelector->addPlugins(m_kwinScriptsData->pluginMetaDataList(), QString());
 }
 
 void Module::defaults()
@@ -160,7 +162,6 @@ void Module::load()
     m_pendingDeletions.clear();
     Q_EMIT pendingDeletionsChanged();
     updateListViewContents();
-    ui->scriptSelector->load();
 
     Q_EMIT changed(false);
 }
@@ -169,13 +170,12 @@ void Module::save()
 {
     using namespace KPackage;
     PackageStructure *structure = PackageLoader::self()->loadPackageStructure(QStringLiteral("KWin/Script"));
-    for (const KPluginInfo &info : qAsConst(m_pendingDeletions)) {
+    for (const KPluginMetaData &info : qAsConst(m_pendingDeletions)) {
         // We can get the package root from the entry path
-        QDir root = QFileInfo(info.entryPath()).dir();
+        QDir root = QFileInfo(info.fileName()).dir();
         root.cdUp();
-        KJob *uninstallJob = Package(structure).uninstall(info.pluginName(), root.absolutePath());
-        connect(uninstallJob, &KJob::result, this, [this, uninstallJob](){
-            ui->scriptSelector->clearPlugins();
+        KJob *uninstallJob = Package(structure).uninstall(info.pluginId(), root.absolutePath());
+        connect(uninstallJob, &KJob::result, this, [this, uninstallJob]() {
             updateListViewContents();
             // If the uninstallation is successful the entry will be immediately removed
             if (!uninstallJob->errorString().isEmpty()) {

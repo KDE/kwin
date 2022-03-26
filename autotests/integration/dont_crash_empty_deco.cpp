@@ -7,16 +7,15 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
+
 #include "abstract_output.h"
-#include "platform.h"
-#include "x11client.h"
 #include "composite.h"
 #include "cursor.h"
-#include "scene.h"
-#include "screenedge.h"
-#include "screens.h"
+#include "platform.h"
+#include "renderbackend.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11client.h"
 #include <kwineffects.h>
 
 #include <KDecoration2/Decoration>
@@ -39,7 +38,7 @@ private Q_SLOTS:
 
 void DontCrashEmptyDecorationTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -57,9 +56,7 @@ void DontCrashEmptyDecorationTest::initTestCase()
     setenv("QT_QPA_PLATFORM", "wayland", true);
     Test::initWaylandWorkspace();
 
-    auto scene = KWin::Compositor::self()->scene();
-    QVERIFY(scene);
-    QCOMPARE(scene->compositingType(), KWin::OpenGLCompositing);
+    QCOMPARE(Compositor::self()->backend()->compositingType(), KWin::OpenGLCompositing);
 }
 
 void DontCrashEmptyDecorationTest::init()

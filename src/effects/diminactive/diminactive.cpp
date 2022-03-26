@@ -391,8 +391,7 @@ void DimInactiveEffect::activeFullScreenEffectChanged()
     m_fullScreenTransition.timeLine.setDirection(
         effects->activeFullScreenEffect()
             ? TimeLine::Forward
-            : TimeLine::Backward
-    );
+            : TimeLine::Backward);
     m_fullScreenTransition.active = true;
 
     effects->addRepaintFull();

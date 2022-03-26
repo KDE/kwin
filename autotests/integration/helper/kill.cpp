@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     w.show();
 
     auto freezeHandler = [](int) {
-        while(true) {
+        while (true) {
             sleep(10000);
         }
     };

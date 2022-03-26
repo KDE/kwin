@@ -8,8 +8,8 @@
 
 #include "kwinglutils.h"
 
-#include <xcb/xcb.h>
 #include <xcb/sync.h>
+#include <xcb/xcb.h>
 
 namespace KWin
 {
@@ -21,12 +21,21 @@ namespace KWin
 class X11SyncObject
 {
 public:
-    enum State { Ready, TriggerSent, Waiting, Done, Resetting, };
+    enum State {
+        Ready,
+        TriggerSent,
+        Waiting,
+        Done,
+        Resetting,
+    };
 
     X11SyncObject();
     ~X11SyncObject();
 
-    State state() const { return m_state; }
+    State state() const
+    {
+        return m_state;
+    }
 
     void trigger();
     void wait();
@@ -48,7 +57,9 @@ private:
 class X11SyncManager
 {
 public:
-    enum { MaxFences = 4 };
+    enum {
+        MaxFences = 4,
+    };
 
     static X11SyncManager *create();
     ~X11SyncManager();

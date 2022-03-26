@@ -13,8 +13,12 @@
 
 #include <KWaylandServer/datadevice_interface.h>
 
-namespace KWin {
-namespace Xwl {
+#include <xcb/xcb.h>
+
+namespace KWin
+{
+namespace Xwl
+{
 
 class Xvisit;
 
@@ -26,6 +30,7 @@ public:
 
     void updateDragTarget(KWaylandServer::SurfaceInterface *surface, quint32 serial) override;
     bool handleClientMessage(xcb_client_message_event_t *event);
+
 private:
     void drop() override;
     Xvisit *m_xvisit = nullptr;

@@ -9,8 +9,8 @@
 #include "abstract_wayland_output.h"
 
 #include <KWaylandServer/output_interface.h>
-#include <KWaylandServer/xdgoutput_v1_interface.h>
 #include <KWaylandServer/utils.h>
+#include <KWaylandServer/xdgoutput_v1_interface.h>
 
 namespace KWin
 {

@@ -7,14 +7,13 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "kwinglutils.h"
 #include "kwinglplatform.h"
-
+#include "kwinglutils.h"
 
 // Resolves given function, using getProcAddress
 // Useful when functionality is defined in an extension with a different name
-#define GL_RESOLVE_WITH_EXT( function, symbolName ) \
-        function = (function ## _func)resolveFunction( #symbolName );
+#define GL_RESOLVE_WITH_EXT(function, symbolName) \
+    function = (function##_func)resolveFunction(#symbolName);
 
 namespace KWin
 {
@@ -26,10 +25,10 @@ static void GetnUniformfv(GLuint program, GLint location, GLsizei bufSize, GLflo
 
 // GL_ARB_robustness / GL_EXT_robustness
 glGetGraphicsResetStatus_func glGetGraphicsResetStatus;
-glReadnPixels_func            glReadnPixels;
-glGetnUniformfv_func          glGetnUniformfv;
+glReadnPixels_func glReadnPixels;
+glGetnUniformfv_func glGetnUniformfv;
 
-void glResolveFunctions(const std::function<resolveFuncPtr(const char*)> &resolveFunction)
+void glResolveFunctions(const std::function<resolveFuncPtr(const char *)> &resolveFunction)
 {
     const bool haveArbRobustness = hasGLExtension(QByteArrayLiteral("GL_ARB_robustness"));
     const bool haveExtRobustness = hasGLExtension(QByteArrayLiteral("GL_EXT_robustness"));
@@ -56,17 +55,17 @@ void glResolveFunctions(const std::function<resolveFuncPtr(const char*)> &resolv
     if (robustContext && haveArbRobustness) {
         // See https://www.opengl.org/registry/specs/ARB/robustness.txt
         GL_RESOLVE_WITH_EXT(glGetGraphicsResetStatus, glGetGraphicsResetStatusARB);
-        GL_RESOLVE_WITH_EXT(glReadnPixels,            glReadnPixelsARB);
-        GL_RESOLVE_WITH_EXT(glGetnUniformfv,          glGetnUniformfvARB);
+        GL_RESOLVE_WITH_EXT(glReadnPixels, glReadnPixelsARB);
+        GL_RESOLVE_WITH_EXT(glGetnUniformfv, glGetnUniformfvARB);
     } else if (robustContext && haveExtRobustness) {
         // See https://www.khronos.org/registry/gles/extensions/EXT/EXT_robustness.txt
-        glGetGraphicsResetStatus = (glGetGraphicsResetStatus_func) resolveFunction("glGetGraphicsResetStatusEXT");
-        glReadnPixels            = (glReadnPixels_func)            resolveFunction("glReadnPixelsEXT");
-        glGetnUniformfv          = (glGetnUniformfv_func)          resolveFunction("glGetnUniformfvEXT");
+        glGetGraphicsResetStatus = (glGetGraphicsResetStatus_func)resolveFunction("glGetGraphicsResetStatusEXT");
+        glReadnPixels = (glReadnPixels_func)resolveFunction("glReadnPixelsEXT");
+        glGetnUniformfv = (glGetnUniformfv_func)resolveFunction("glGetnUniformfvEXT");
     } else {
         glGetGraphicsResetStatus = KWin::GetGraphicsResetStatus;
-        glReadnPixels            = KWin::ReadnPixels;
-        glGetnUniformfv          = KWin::GetnUniformfv;
+        glReadnPixels = KWin::ReadnPixels;
+        glGetnUniformfv = KWin::GetnUniformfv;
     }
 }
 

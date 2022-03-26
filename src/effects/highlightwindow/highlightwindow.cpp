@@ -12,6 +12,8 @@
 
 #include <QDBusConnection>
 
+Q_LOGGING_CATEGORY(KWIN_HIGHLIGHTWINDOW, "kwin_effect_highlightwindow", QtWarningMsg)
+
 namespace KWin
 {
 
@@ -25,16 +27,12 @@ HighlightWindowEffect::HighlightWindowEffect()
     connect(effects, &EffectsHandler::windowAdded, this, &HighlightWindowEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::windowClosed, this, &HighlightWindowEffect::slotWindowClosed);
     connect(effects, &EffectsHandler::windowDeleted, this, &HighlightWindowEffect::slotWindowDeleted);
-    connect(effects, &EffectsHandler::propertyNotify, this,
-        [this](EffectWindow *w, long atom) {
-            slotPropertyNotify(w, atom, nullptr);
-        }
-    );
-    connect(effects, &EffectsHandler::xcbConnectionChanged, this,
-        [this] {
-            m_atom = effects->announceSupportProperty("_KDE_WINDOW_HIGHLIGHT", this);
-        }
-    );
+    connect(effects, &EffectsHandler::propertyNotify, this, [this](EffectWindow *w, long atom) {
+        slotPropertyNotify(w, atom, nullptr);
+    });
+    connect(effects, &EffectsHandler::xcbConnectionChanged, this, [this]() {
+        m_atom = effects->announceSupportProperty("_KDE_WINDOW_HIGHLIGHT", this);
+    });
 
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin/HighlightWindow"),
                                                  QStringLiteral("org.kde.KWin.HighlightWindow"),
@@ -48,7 +46,7 @@ HighlightWindowEffect::~HighlightWindowEffect()
     QDBusConnection::sessionBus().unregisterService(QStringLiteral("org.kde.KWin.HighlightWindow"));
 }
 
-static bool isInitiallyHidden(EffectWindow* w)
+static bool isInitiallyHidden(EffectWindow *w)
 {
     // Is the window initially hidden until it is highlighted?
     return w->isMinimized() || !w->isOnCurrentDesktop();
@@ -61,19 +59,19 @@ static bool isHighlightWindow(EffectWindow *window)
 
 void HighlightWindowEffect::highlightWindows(const QStringList &windows)
 {
-    QVector<EffectWindow*> effectWindows;
+    QVector<EffectWindow *> effectWindows;
     effectWindows.reserve(windows.count());
     for (const auto &window : windows) {
         if (auto effectWindow = effects->findWindow(QUuid(window)); effectWindow) {
             effectWindows.append(effectWindow);
         } else if (auto effectWindow = effects->findWindow(window.toLong()); effectWindow) {
-             effectWindows.append(effectWindow);
+            effectWindows.append(effectWindow);
         }
     }
     highlightWindows(effectWindows);
 }
 
-void HighlightWindowEffect::slotWindowAdded(EffectWindow* w)
+void HighlightWindowEffect::slotWindowAdded(EffectWindow *w)
 {
     if (!m_highlightedWindows.isEmpty()) {
         // On X11, the tabbox may ask us to highlight itself before the windowAdded signal
@@ -84,43 +82,44 @@ void HighlightWindowEffect::slotWindowAdded(EffectWindow* w)
         // This window was demanded to be highlighted before it appeared on the screen.
         for (const WId &id : qAsConst(m_highlightedIds)) {
             if (w == effects->findWindow(id)) {
-                startHighlightAnimation(w, 0);
+                const quint64 animationId = startHighlightAnimation(w);
+                complete(animationId);
                 return;
             }
         }
         if (isHighlightWindow(w)) {
-            startGhostAnimation(w, 0); // this window is not currently highlighted
+            const quint64 animationId = startGhostAnimation(w); // this window is not currently highlighted
+            complete(animationId);
         }
     }
-    slotPropertyNotify(w, m_atom, w);   // Check initial value
+    slotPropertyNotify(w, m_atom, w); // Check initial value
 }
 
-void HighlightWindowEffect::slotWindowClosed(EffectWindow* w)
+void HighlightWindowEffect::slotWindowClosed(EffectWindow *w)
 {
-    if (m_monitorWindow == w)   // The monitoring window was destroyed
+    if (m_monitorWindow == w) // The monitoring window was destroyed
         finishHighlighting();
 }
 
-void HighlightWindowEffect::slotWindowDeleted(EffectWindow* w)
+void HighlightWindowEffect::slotWindowDeleted(EffectWindow *w)
 {
     m_animations.remove(w);
 }
 
-void HighlightWindowEffect::slotPropertyNotify(EffectWindow* w, long a, EffectWindow *addedWindow)
+void HighlightWindowEffect::slotPropertyNotify(EffectWindow *w, long a, EffectWindow *addedWindow)
 {
     if (a != m_atom || m_atom == XCB_ATOM_NONE)
         return; // Not our atom
 
     // if the window is null, the property was set on the root window - see events.cpp
-    QByteArray byteData = w ? w->readProperty(m_atom, m_atom, 32) :
-                          effects->readRootProperty(m_atom, m_atom, 32);
+    QByteArray byteData = w ? w->readProperty(m_atom, m_atom, 32) : effects->readRootProperty(m_atom, m_atom, 32);
     if (byteData.length() < 1) {
         // Property was removed, clearing highlight
         if (!addedWindow || w != addedWindow)
             finishHighlighting();
         return;
     }
-    auto* data = reinterpret_cast<uint32_t*>(byteData.data());
+    auto *data = reinterpret_cast<uint32_t *>(byteData.data());
 
     if (!data[0]) {
         // Purposely clearing highlight by issuing a NULL target
@@ -130,21 +129,21 @@ void HighlightWindowEffect::slotPropertyNotify(EffectWindow* w, long a, EffectWi
     m_monitorWindow = w;
     bool found = false;
     int length = byteData.length() / sizeof(data[0]);
-    //foreach ( EffectWindow* e, m_highlightedWindows )
-    //    effects->setElevatedWindow( e, false );
+    // foreach ( EffectWindow* e, m_highlightedWindows )
+    //     effects->setElevatedWindow( e, false );
     m_highlightedWindows.clear();
     m_highlightedIds.clear();
     for (int i = 0; i < length; i++) {
         m_highlightedIds << data[i];
-        EffectWindow* foundWin = effects->findWindow(data[i]);
+        EffectWindow *foundWin = effects->findWindow(data[i]);
         if (!foundWin) {
-            qCDebug(KWINEFFECTS) << "Invalid window targetted for highlight. Requested:" << data[i];
+            qCDebug(KWIN_HIGHLIGHTWINDOW) << "Invalid window targetted for highlight. Requested:" << data[i];
             continue; // might come in later.
         }
         m_highlightedWindows.append(foundWin);
         // TODO: We cannot just simply elevate the window as this will elevate it over
         // Plasma tooltips and other such windows as well
-        //effects->setElevatedWindow( foundWin, true );
+        // effects->setElevatedWindow( foundWin, true );
         found = true;
     }
     if (!found) {
@@ -206,11 +205,8 @@ void HighlightWindowEffect::highlightWindows(const QVector<KWin::EffectWindow *>
     prepareHighlighting();
 }
 
-void HighlightWindowEffect::startGhostAnimation(EffectWindow *window, int duration)
+quint64 HighlightWindowEffect::startGhostAnimation(EffectWindow *window)
 {
-    if (duration == -1) {
-        duration = m_fadeDuration;
-    }
     quint64 &animationId = m_animations[window];
     if (animationId) {
         retarget(animationId, FPx2(m_ghostOpacity, m_ghostOpacity), m_fadeDuration);
@@ -219,13 +215,11 @@ void HighlightWindowEffect::startGhostAnimation(EffectWindow *window, int durati
         animationId = set(window, Opacity, 0, m_fadeDuration, FPx2(m_ghostOpacity, m_ghostOpacity),
                           m_easingCurve, 0, FPx2(startOpacity, startOpacity), false, false);
     }
+    return animationId;
 }
 
-void HighlightWindowEffect::startHighlightAnimation(EffectWindow *window, int duration)
+quint64 HighlightWindowEffect::startHighlightAnimation(EffectWindow *window)
 {
-    if (duration == -1) {
-        duration = m_fadeDuration;
-    }
     quint64 &animationId = m_animations[window];
     if (animationId) {
         retarget(animationId, FPx2(1.0, 1.0), m_fadeDuration);
@@ -234,6 +228,7 @@ void HighlightWindowEffect::startHighlightAnimation(EffectWindow *window, int du
         animationId = set(window, Opacity, 0, m_fadeDuration, FPx2(1.0, 1.0),
                           m_easingCurve, 0, FPx2(startOpacity, startOpacity), false, false);
     }
+    return animationId;
 }
 
 void HighlightWindowEffect::startRevertAnimation(EffectWindow *window)
@@ -271,7 +266,7 @@ bool HighlightWindowEffect::perform(Feature feature, const QVariantList &argumen
     if (arguments.size() != 1) {
         return false;
     }
-    highlightWindows(arguments.first().value<QVector<EffectWindow*>>());
+    highlightWindows(arguments.first().value<QVector<EffectWindow *>>());
     return true;
 }
 

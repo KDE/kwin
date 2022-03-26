@@ -7,38 +7,50 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "composite.h"
+
+#include <config-kwin.h>
+
 #include "abstract_output.h"
+#include "cursorview_opengl.h"
+#include "cursorview_qpainter.h"
 #include "dbusinterface.h"
-#include "x11client.h"
 #include "decorations/decoratedclient.h"
 #include "deleted.h"
 #include "effects.h"
 #include "ftrace.h"
 #include "internal_client.h"
+#include "openglbackend.h"
+#include "outputlayer.h"
 #include "overlaywindow.h"
 #include "platform.h"
+#include "qpainterbackend.h"
+#include "renderlayer.h"
 #include "renderloop.h"
 #include "scene.h"
+#include "scenes/opengl/scene_opengl.h"
+#include "scenes/qpainter/scene_qpainter.h"
 #include "screens.h"
 #include "shadow.h"
 #include "surfaceitem_x11.h"
 #include "unmanaged.h"
 #include "useractions.h"
-#include "utils.h"
+#include "utils/common.h"
+#include "utils/xcbutils.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11client.h"
 #include "x11syncmanager.h"
-#include "xcbutils.h"
 
+#include <kwinglplatform.h>
 #include <kwingltexture.h>
 
 #include <KWaylandServer/surface_interface.h>
 
 #include <KGlobalAccel>
 #include <KLocalizedString>
-#include <KPluginLoader>
-#include <KPluginMetaData>
+#if KWIN_BUILD_NOTIFICATIONS
 #include <KNotification>
+#endif
 #include <KSelectionOwner>
 
 #include <QDateTime>
@@ -46,9 +58,9 @@
 #include <QMenu>
 #include <QOpenGLContext>
 #include <QQuickWindow>
-#include <QtConcurrentRun>
 #include <QTextStream>
 #include <QTimerEvent>
+#include <QtConcurrentRun>
 
 #include <xcb/composite.h>
 #include <xcb/damage.h>
@@ -91,27 +103,29 @@ class CompositorSelectionOwner : public KSelectionOwner
     Q_OBJECT
 public:
     CompositorSelectionOwner(const char *selection)
-        : KSelectionOwner(selection, connection(), rootWindow())
+        : KSelectionOwner(selection, kwinApp()->x11Connection(), kwinApp()->x11RootWindow())
         , m_owning(false)
     {
-        connect (this, &CompositorSelectionOwner::lostOwnership,
-                 this, [this]() { m_owning = false; });
+        connect(this, &CompositorSelectionOwner::lostOwnership,
+                this, [this]() {
+                    m_owning = false;
+                });
     }
-    bool owning() const {
+    bool owning() const
+    {
         return m_owning;
     }
-    void setOwning(bool own) {
+    void setOwning(bool own)
+    {
         m_owning = own;
     }
+
 private:
     bool m_owning;
 };
 
-Compositor::Compositor(QObject* workspace)
+Compositor::Compositor(QObject *workspace)
     : QObject(workspace)
-    , m_state(State::Off)
-    , m_selectionOwner(nullptr)
-    , m_scene(nullptr)
 {
     connect(options, &Options::configChanged, this, &Compositor::configChanged);
     connect(options, &Options::animationSpeedChanged, this, &Compositor::configChanged);
@@ -136,15 +150,15 @@ Compositor::Compositor(QObject* workspace)
     if (kwinApp()->platform()->isReady()) {
         QTimer::singleShot(0, this, &Compositor::start);
     }
-    connect(kwinApp()->platform(), &Platform::readyChanged, this,
-        [this] (bool ready) {
+    connect(
+        kwinApp()->platform(), &Platform::readyChanged, this, [this](bool ready) {
             if (ready) {
                 start();
             } else {
                 stop();
             }
-        }, Qt::QueuedConnection
-    );
+        },
+        Qt::QueuedConnection);
 
     // register DBus
     new CompositorDBusInterface(this);
@@ -156,6 +170,68 @@ Compositor::~Compositor()
     deleteUnusedSupportProperties();
     destroyCompositorSelection();
     s_compositor = nullptr;
+}
+
+bool Compositor::attemptOpenGLCompositing()
+{
+    // Some broken drivers crash on glXQuery() so to prevent constant KWin crashes:
+    if (kwinApp()->platform()->openGLCompositingIsBroken()) {
+        qCWarning(KWIN_CORE) << "KWin has detected that your OpenGL library is unsafe to use";
+        return false;
+    }
+
+    kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PreInit);
+    auto safePointScope = qScopeGuard([]() {
+        kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostInit);
+    });
+
+    QScopedPointer<OpenGLBackend> backend(kwinApp()->platform()->createOpenGLBackend());
+    if (!backend) {
+        return false;
+    }
+    if (!backend->isFailed()) {
+        backend->init();
+    }
+    if (backend->isFailed()) {
+        return false;
+    }
+
+    QScopedPointer<Scene> scene(SceneOpenGL::createScene(backend.data(), this));
+    if (!scene || scene->initFailed()) {
+        return false;
+    }
+
+    m_backend = backend.take();
+    m_scene = scene.take();
+    m_cursorView = new OpenGLCursorView();
+
+    // set strict binding
+    if (options->isGlStrictBindingFollowsDriver()) {
+        options->setGlStrictBinding(!GLPlatform::instance()->supports(LooseBinding));
+    }
+
+    qCDebug(KWIN_CORE) << "OpenGL compositing has been successfully initialized";
+    return true;
+}
+
+bool Compositor::attemptQPainterCompositing()
+{
+    QScopedPointer<QPainterBackend> backend(kwinApp()->platform()->createQPainterBackend());
+    if (!backend || backend->isFailed()) {
+        return false;
+    }
+
+    QScopedPointer<Scene> scene(SceneQPainter::createScene(backend.data(), this));
+    if (!scene || scene->initFailed()) {
+        return false;
+    }
+
+    m_backend = backend.take();
+    m_scene = scene.take();
+    m_cursorView = new QPainterCursorView();
+
+    qCDebug(KWIN_CORE) << "QPainter compositing has been successfully initialized";
+    return true;
 }
 
 bool Compositor::setupStart()
@@ -193,64 +269,38 @@ bool Compositor::setupStart()
         supportedCompositors.prepend(options->compositingMode());
     } else {
         qCWarning(KWIN_CORE)
-                << "Configured compositor not supported by Platform. Falling back to defaults";
-    }
-
-    const auto availablePlugins = KPluginLoader::findPlugins(QStringLiteral("org.kde.kwin.scenes"));
-
-    for (const KPluginMetaData &pluginMetaData : availablePlugins) {
-        qCDebug(KWIN_CORE) << "Available scene plugin:" << pluginMetaData.fileName();
+            << "Configured compositor not supported by Platform. Falling back to defaults";
     }
 
     for (auto type : qAsConst(supportedCompositors)) {
+        bool stop = false;
         switch (type) {
         case OpenGLCompositing:
             qCDebug(KWIN_CORE) << "Attempting to load the OpenGL scene";
+            stop = attemptOpenGLCompositing();
             break;
         case QPainterCompositing:
             qCDebug(KWIN_CORE) << "Attempting to load the QPainter scene";
+            stop = attemptQPainterCompositing();
             break;
         case NoCompositing:
             qCDebug(KWIN_CORE) << "Starting without compositing...";
+            stop = true;
             break;
         }
-        const auto pluginIt = std::find_if(availablePlugins.begin(), availablePlugins.end(),
-            [type] (const auto &plugin) {
-                const auto &metaData = plugin.rawData();
-                auto it = metaData.find(QStringLiteral("CompositingType"));
-                if (it != metaData.end()) {
-                    if ((*it).toInt() == int{type}) {
-                        return true;
-                    }
-                }
-                return false;
-            });
-        if (pluginIt != availablePlugins.end()) {
-            std::unique_ptr<SceneFactory>
-                    factory{ qobject_cast<SceneFactory*>(pluginIt->instantiate()) };
-            if (factory) {
-                m_scene = factory->create(this);
-                if (m_scene) {
-                    if (!m_scene->initFailed()) {
-                        qCDebug(KWIN_CORE) << "Instantiated compositing plugin:"
-                                           << pluginIt->name();
-                        break;
-                    } else {
-                        delete m_scene;
-                        m_scene = nullptr;
-                    }
-                }
-            }
+
+        if (stop) {
+            break;
         }
     }
 
-    if (m_scene == nullptr || m_scene->initFailed()) {
-        qCCritical(KWIN_CORE) << "Failed to initialize compositing, compositing disabled";
+    if (!m_backend) {
         m_state = State::Off;
 
-        delete m_scene;
-        m_scene = nullptr;
-
+        if (auto *con = kwinApp()->x11Connection()) {
+            xcb_composite_unredirect_subwindows(con, kwinApp()->x11RootWindow(),
+                                                XCB_COMPOSITE_REDIRECT_MANUAL);
+        }
         if (m_selectionOwner) {
             m_selectionOwner->setOwning(false);
             m_selectionOwner->release();
@@ -263,14 +313,17 @@ bool Compositor::setupStart()
         return false;
     }
 
-    kwinApp()->platform()->setSelectedCompositor(m_scene->compositingType());
+    kwinApp()->platform()->setSelectedCompositor(m_backend->compositingType());
 
-    if (!Workspace::self() && m_scene && m_scene->compositingType() == QPainterCompositing) {
+    if (!Workspace::self() && m_backend && m_backend->compositingType() == QPainterCompositing) {
         // Force Software QtQuick on first startup with QPainter.
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         QQuickWindow::setSceneGraphBackend(QSGRendererInterface::Software);
+#else
+        QQuickWindow::setGraphicsApi(QSGRendererInterface::Software);
+#endif
     }
 
-    connect(m_scene, &Scene::resetCompositing, this, &Compositor::reinitialize);
     Q_EMIT sceneCreated();
 
     return true;
@@ -284,7 +337,7 @@ void Compositor::initializeX11()
     }
 
     if (!m_selectionOwner) {
-        char selection_name[ 100 ];
+        char selection_name[100];
         sprintf(selection_name, "_NET_WM_CM_S%d", Application::x11ScreenNumber());
         m_selectionOwner = new CompositorSelectionOwner(selection_name);
         connect(m_selectionOwner, &CompositorSelectionOwner::lostOwnership,
@@ -316,86 +369,118 @@ void Compositor::startupWithWorkspace()
 
     Workspace::self()->markXStackingOrderAsDirty();
     Q_ASSERT(m_scene);
+    m_scene->initialize();
 
-    const Platform *platform = kwinApp()->platform();
-    if (platform->isPerScreenRenderingEnabled()) {
-        const QVector<AbstractOutput *> outputs = platform->enabledOutputs();
-        for (AbstractOutput *output : outputs) {
-            registerRenderLoop(output->renderLoop(), output);
-        }
-        connect(platform, &Platform::outputEnabled,
-                this, &Compositor::handleOutputEnabled);
-        connect(platform, &Platform::outputDisabled,
-                this, &Compositor::handleOutputDisabled);
+    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+    if (kwinApp()->operationMode() == Application::OperationModeX11) {
+        auto workspaceLayer = new RenderLayer(outputs.constFirst()->renderLoop());
+        workspaceLayer->setDelegate(new SceneDelegate(m_scene));
+        workspaceLayer->setGeometry(workspace()->geometry());
+        connect(workspace(), &Workspace::geometryChanged, workspaceLayer, [workspaceLayer]() {
+            workspaceLayer->setGeometry(workspace()->geometry());
+        });
+        addSuperLayer(workspaceLayer);
     } else {
-        registerRenderLoop(platform->renderLoop(), nullptr);
+        for (AbstractOutput *output : outputs) {
+            addOutput(output);
+        }
+        connect(kwinApp()->platform(), &Platform::outputEnabled, this, &Compositor::addOutput);
+        connect(kwinApp()->platform(), &Platform::outputDisabled, this, &Compositor::removeOutput);
     }
 
     m_state = State::On;
 
-    // Sets also the 'effects' pointer.
-    kwinApp()->platform()->createEffectsHandler(this, m_scene);
-    connect(Workspace::self(), &Workspace::deletedRemoved, m_scene, &Scene::removeToplevel);
-    connect(effects, &EffectsHandler::virtualScreenGeometryChanged, this, &Compositor::addRepaintFull);
-
     for (X11Client *c : Workspace::self()->clientList()) {
         c->setupCompositing();
-        c->updateShadow();
     }
     for (Unmanaged *c : Workspace::self()->unmanagedList()) {
         c->setupCompositing();
-        c->updateShadow();
     }
     for (InternalClient *client : workspace()->internalClients()) {
         client->setupCompositing();
-        client->updateShadow();
     }
 
     if (auto *server = waylandServer()) {
         const auto clients = server->clients();
         for (AbstractClient *c : clients) {
             c->setupCompositing();
-            c->updateShadow();
         }
     }
+
+    // Sets also the 'effects' pointer.
+    kwinApp()->platform()->createEffectsHandler(this, m_scene);
 
     Q_EMIT compositingToggled(true);
 
     if (m_releaseSelectionTimer.isActive()) {
         m_releaseSelectionTimer.stop();
     }
-
-    // Render at least once.
-    addRepaintFull();
 }
 
-void Compositor::registerRenderLoop(RenderLoop *renderLoop, AbstractOutput *output)
+AbstractOutput *Compositor::findOutput(RenderLoop *loop) const
 {
-    Q_ASSERT(!m_renderLoops.contains(renderLoop));
-    m_renderLoops.insert(renderLoop, output);
-    connect(renderLoop, &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    for (AbstractOutput *output : outputs) {
+        if (output->renderLoop() == loop) {
+            return output;
+        }
+    }
+    return nullptr;
 }
 
-void Compositor::unregisterRenderLoop(RenderLoop *renderLoop)
+void Compositor::addOutput(AbstractOutput *output)
 {
-    Q_ASSERT(m_renderLoops.contains(renderLoop));
-    m_renderLoops.remove(renderLoop);
-    disconnect(renderLoop, &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
+    Q_ASSERT(kwinApp()->operationMode() != Application::OperationModeX11);
+
+    auto workspaceLayer = new RenderLayer(output->renderLoop());
+    workspaceLayer->setDelegate(new SceneDelegate(m_scene, output));
+    workspaceLayer->setGeometry(output->geometry());
+    connect(output, &AbstractOutput::geometryChanged, workspaceLayer, [output, workspaceLayer]() {
+        workspaceLayer->setGeometry(output->geometry());
+    });
+
+    auto cursorLayer = new RenderLayer(output->renderLoop());
+    cursorLayer->setVisible(false);
+    cursorLayer->setDelegate(new CursorDelegate(output, m_cursorView));
+    cursorLayer->setParent(workspaceLayer);
+    cursorLayer->setSuperlayer(workspaceLayer);
+
+    auto updateCursorLayer = [output, workspaceLayer, cursorLayer]() {
+        const Cursor *cursor = Cursors::self()->currentCursor();
+        cursorLayer->setVisible(cursor->isOnOutput(output) && output->usesSoftwareCursor());
+        cursorLayer->setGeometry(workspaceLayer->mapFromGlobal(cursor->geometry()));
+        cursorLayer->addRepaintFull();
+    };
+    updateCursorLayer();
+    connect(output, &AbstractOutput::geometryChanged, cursorLayer, updateCursorLayer);
+    connect(Cursors::self(), &Cursors::currentCursorChanged, cursorLayer, updateCursorLayer);
+    connect(Cursors::self(), &Cursors::hiddenChanged, cursorLayer, updateCursorLayer);
+    connect(Cursors::self(), &Cursors::positionChanged, cursorLayer, updateCursorLayer);
+
+    addSuperLayer(workspaceLayer);
 }
 
-void Compositor::handleOutputEnabled(AbstractOutput *output)
+void Compositor::removeOutput(AbstractOutput *output)
 {
-    registerRenderLoop(output->renderLoop(), output);
+    removeSuperLayer(m_superlayers[output->renderLoop()]);
 }
 
-void Compositor::handleOutputDisabled(AbstractOutput *output)
+void Compositor::addSuperLayer(RenderLayer *layer)
 {
-    unregisterRenderLoop(output->renderLoop());
+    m_superlayers.insert(layer->loop(), layer);
+    connect(layer->loop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
+}
+
+void Compositor::removeSuperLayer(RenderLayer *layer)
+{
+    m_superlayers.remove(layer->loop());
+    disconnect(layer->loop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
+    delete layer;
 }
 
 void Compositor::scheduleRepaint()
 {
-    for (auto it = m_renderLoops.constBegin(); it != m_renderLoops.constEnd(); ++it) {
+    for (auto it = m_superlayers.constBegin(); it != m_superlayers.constEnd(); ++it) {
         it.key()->scheduleRepaint();
     }
 }
@@ -455,17 +540,22 @@ void Compositor::stop()
         }
     }
 
-    while (!m_renderLoops.isEmpty()) {
-        unregisterRenderLoop(m_renderLoops.firstKey());
+    const auto superlayers = m_superlayers;
+    for (auto it = superlayers.begin(); it != superlayers.end(); ++it) {
+        removeSuperLayer(*it);
     }
 
-    disconnect(kwinApp()->platform(), &Platform::outputEnabled,
-               this, &Compositor::handleOutputEnabled);
-    disconnect(kwinApp()->platform(), &Platform::outputDisabled,
-               this, &Compositor::handleOutputDisabled);
+    disconnect(kwinApp()->platform(), &Platform::outputEnabled, this, &Compositor::addOutput);
+    disconnect(kwinApp()->platform(), &Platform::outputDisabled, this, &Compositor::removeOutput);
 
     delete m_scene;
     m_scene = nullptr;
+
+    delete m_cursorView;
+    m_cursorView = nullptr;
+
+    delete m_backend;
+    m_backend = nullptr;
 
     m_state = State::Off;
     Q_EMIT compositingToggled(false);
@@ -529,7 +619,6 @@ void Compositor::deleteUnusedSupportProperties()
 void Compositor::configChanged()
 {
     reinitialize();
-    addRepaintFull();
 }
 
 void Compositor::reinitialize()
@@ -546,99 +635,116 @@ void Compositor::reinitialize()
     }
 }
 
-void Compositor::addRepaint(int x, int y, int width, int height)
-{
-    addRepaint(QRegion(x, y, width, height));
-}
-
-void Compositor::addRepaint(const QRect &rect)
-{
-    addRepaint(QRegion(rect));
-}
-
-void Compositor::addRepaint(const QRegion &region)
-{
-    if (m_scene) {
-        m_scene->addRepaint(region);
-    }
-}
-
-void Compositor::addRepaintFull()
-{
-    addRepaint(screens()->geometry());
-}
-
 void Compositor::handleFrameRequested(RenderLoop *renderLoop)
 {
     composite(renderLoop);
 }
 
-QList<Toplevel *> Compositor::windowsToRender() const
-{
-    // Create a list of all windows in the stacking order
-    QList<Toplevel *> windows = Workspace::self()->xStackingOrder();
-
-    // Move elevated windows to the top of the stacking order
-    const QList<EffectWindow *> elevatedList = static_cast<EffectsHandlerImpl *>(effects)->elevatedWindows();
-    for (EffectWindow *c : elevatedList) {
-        Toplevel *t = static_cast<EffectWindowImpl *>(c)->window();
-        windows.removeAll(t);
-        windows.append(t);
-    }
-
-    // Skip windows that are not yet ready for being painted and if screen is locked skip windows
-    // that are neither lockscreen nor inputmethod windows.
-    //
-    // TODO? This cannot be used so carelessly - needs protections against broken clients, the
-    // window should not get focus before it's displayed, handle unredirected windows properly and
-    // so on.
-    for (Toplevel *win : windows) {
-        if (!win->readyForPainting()) {
-            windows.removeAll(win);
-        }
-        if (waylandServer() && waylandServer()->isScreenLocked()) {
-            if(!win->isLockScreen() && !win->isInputMethod()) {
-                windows.removeAll(win);
-            }
-        }
-    }
-    return windows;
-}
-
 void Compositor::composite(RenderLoop *renderLoop)
 {
-    const auto &output = m_renderLoops[renderLoop];
+    if (m_backend->checkGraphicsReset()) {
+        qCDebug(KWIN_CORE) << "Graphics reset occurred";
+#if KWIN_BUILD_NOTIFICATIONS
+        KNotification::event(QStringLiteral("graphicsreset"), i18n("Desktop effects were restarted due to a graphics reset"));
+#endif
+        reinitialize();
+        return;
+    }
 
-    fTraceDuration("Paint (", output ? output->name() : QStringLiteral("screens"), ")");
+    AbstractOutput *output = findOutput(renderLoop);
+    OutputLayer *outputLayer = output->layer();
+    fTraceDuration("Paint (", output->name(), ")");
 
-    const auto windows = windowsToRender();
+    RenderLayer *superLayer = m_superlayers[renderLoop];
+    prePaintPass(superLayer);
+    superLayer->setOutputLayer(outputLayer);
 
-    const QRegion repaints = m_scene->repaints(output);
-    m_scene->resetRepaints(output);
+    SurfaceItem *scanoutCandidate = superLayer->delegate()->scanoutCandidate();
+    renderLoop->setFullscreenSurface(scanoutCandidate);
 
-    m_scene->paint(output, repaints, windows, renderLoop);
+    renderLoop->beginFrame();
+    bool directScanout = false;
+    if (scanoutCandidate) {
+        const auto sublayers = superLayer->sublayers();
+        const bool scanoutPossible = std::none_of(sublayers.begin(), sublayers.end(), [](RenderLayer *sublayer) {
+            return sublayer->isVisible();
+        });
+        if (scanoutPossible && !output->directScanoutInhibited()) {
+            directScanout = m_backend->scanout(output, scanoutCandidate);
+        }
+    }
 
+    if (directScanout) {
+        renderLoop->endFrame();
+    } else {
+        QRegion surfaceDamage = outputLayer->repaints();
+        outputLayer->resetRepaints();
+        preparePaintPass(superLayer, &surfaceDamage);
+
+        const QRegion repair = m_backend->beginFrame(output);
+        const QRegion bufferDamage = surfaceDamage.united(repair);
+        m_backend->aboutToStartPainting(output, bufferDamage);
+
+        paintPass(superLayer, bufferDamage);
+        renderLoop->endFrame();
+        m_backend->endFrame(output, bufferDamage, surfaceDamage);
+    }
+
+    postPaintPass(superLayer);
+
+    // TODO: Put it inside the cursor layer once the cursor layer can be backed by a real output layer.
     if (waylandServer()) {
         const std::chrono::milliseconds frameTime =
-                std::chrono::duration_cast<std::chrono::milliseconds>(renderLoop->lastPresentationTimestamp());
+            std::chrono::duration_cast<std::chrono::milliseconds>(output->renderLoop()->lastPresentationTimestamp());
 
-        for (Toplevel *window : windows) {
-            if (!window->readyForPainting()) {
-                continue;
-            }
-            if (waylandServer()->isScreenLocked() &&
-                    !(window->isLockScreen() || window->isInputMethod())) {
-                continue;
-            }
-            if (!window->isOnOutput(output)) {
-                continue;
-            }
-            if (auto surface = window->surface()) {
-                surface->frameRendered(frameTime.count());
+        if (!Cursors::self()->isCursorHidden()) {
+            Cursor *cursor = Cursors::self()->currentCursor();
+            if (cursor->geometry().intersects(output->geometry())) {
+                cursor->markAsRendered(frameTime);
             }
         }
-        if (!kwinApp()->platform()->isCursorHidden()) {
-            Cursors::self()->currentCursor()->markAsRendered();
+    }
+}
+
+void Compositor::prePaintPass(RenderLayer *layer)
+{
+    layer->delegate()->prePaint();
+    const auto sublayers = layer->sublayers();
+    for (RenderLayer *sublayer : sublayers) {
+        prePaintPass(sublayer);
+    }
+}
+
+void Compositor::postPaintPass(RenderLayer *layer)
+{
+    layer->delegate()->postPaint();
+    const auto sublayers = layer->sublayers();
+    for (RenderLayer *sublayer : sublayers) {
+        postPaintPass(sublayer);
+    }
+}
+
+void Compositor::preparePaintPass(RenderLayer *layer, QRegion *repaint)
+{
+    // TODO: Cull opaque region.
+    *repaint += layer->mapToGlobal(layer->repaints() + layer->delegate()->repaints());
+    layer->resetRepaints();
+    const auto sublayers = layer->sublayers();
+    for (RenderLayer *sublayer : sublayers) {
+        if (sublayer->isVisible()) {
+            preparePaintPass(sublayer, repaint);
+        }
+    }
+}
+
+void Compositor::paintPass(RenderLayer *layer, const QRegion &region)
+{
+    layer->delegate()->paint(region);
+
+    const auto sublayers = layer->sublayers();
+    for (RenderLayer *sublayer : sublayers) {
+        if (sublayer->isVisible()) {
+            paintPass(sublayer, region);
         }
     }
 }
@@ -736,14 +842,16 @@ void X11Compositor::suspend(X11Compositor::SuspendReason reason)
     if (reason & ScriptSuspend) {
         // When disabled show a shortcut how the user can get back compositing.
         const auto shortcuts = KGlobalAccel::self()->shortcut(
-            workspace()->findChild<QAction*>(QStringLiteral("Suspend Compositing")));
+            workspace()->findChild<QAction *>(QStringLiteral("Suspend Compositing")));
         if (!shortcuts.isEmpty()) {
             // Display notification only if there is the shortcut.
             const QString message =
-                    i18n("Desktop effects have been suspended by another application.<br/>"
-                         "You can resume using the '%1' shortcut.",
-                         shortcuts.first().toString(QKeySequence::NativeText));
+                i18n("Desktop effects have been suspended by another application.<br/>"
+                     "You can resume using the '%1' shortcut.",
+                     shortcuts.first().toString(QKeySequence::NativeText));
+#if KWIN_BUILD_NOTIFICATIONS
             KNotification::event(QStringLiteral("compositingsuspendeddbus"), message);
+#endif
         }
     }
     stop();
@@ -791,7 +899,7 @@ void X11Compositor::stop()
 
 void X11Compositor::composite(RenderLoop *renderLoop)
 {
-    if (scene()->overlayWindow() && !isOverlayWindowVisible()) {
+    if (backend()->overlayWindow() && !isOverlayWindowVisible()) {
         // Return since nothing is visible.
         return;
     }
@@ -820,7 +928,7 @@ void X11Compositor::composite(RenderLoop *renderLoop)
         item->waitForDamage();
     }
 
-    if (m_framesToTestForSafety > 0 && (scene()->compositingType() & OpenGLCompositing)) {
+    if (m_framesToTestForSafety > 0 && (backend()->compositingType() & OpenGLCompositing)) {
         kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PreFrame);
     }
 
@@ -835,11 +943,11 @@ void X11Compositor::composite(RenderLoop *renderLoop)
     }
 
     if (m_framesToTestForSafety > 0) {
-        if (scene()->compositingType() & OpenGLCompositing) {
+        if (backend()->compositingType() & OpenGLCompositing) {
             kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostFrame);
         }
         m_framesToTestForSafety--;
-        if (m_framesToTestForSafety == 0 && (scene()->compositingType() & OpenGLCompositing)) {
+        if (m_framesToTestForSafety == 0 && (backend()->compositingType() & OpenGLCompositing)) {
             kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostLastGuardedFrame);
         }
     }
@@ -847,27 +955,27 @@ void X11Compositor::composite(RenderLoop *renderLoop)
 
 bool X11Compositor::checkForOverlayWindow(WId w) const
 {
-    if (!scene()) {
-        // No scene, so it cannot be the overlay window.
+    if (!backend()) {
+        // No backend, so it cannot be the overlay window.
         return false;
     }
-    if (!scene()->overlayWindow()) {
+    if (!backend()->overlayWindow()) {
         // No overlay window, it cannot be the overlay.
         return false;
     }
     // Compare the window ID's.
-    return w == scene()->overlayWindow()->window();
+    return w == backend()->overlayWindow()->window();
 }
 
 bool X11Compositor::isOverlayWindowVisible() const
 {
-    if (!scene()) {
+    if (!backend()) {
         return false;
     }
-    if (!scene()->overlayWindow()) {
+    if (!backend()->overlayWindow()) {
         return false;
     }
-    return scene()->overlayWindow()->isVisible();
+    return backend()->overlayWindow()->isVisible();
 }
 
 void X11Compositor::updateClientCompositeBlocking(X11Client *c)
@@ -876,12 +984,13 @@ void X11Compositor::updateClientCompositeBlocking(X11Client *c)
         if (c->isBlockingCompositing()) {
             // Do NOT attempt to call suspend(true) from within the eventchain!
             if (!(m_suspended & BlockRuleSuspend))
-                QMetaObject::invokeMethod(this, [this]() {
+                QMetaObject::invokeMethod(
+                    this, [this]() {
                         suspend(BlockRuleSuspend);
-                    }, Qt::QueuedConnection);
+                    },
+                    Qt::QueuedConnection);
         }
-    }
-    else if (m_suspended & BlockRuleSuspend) {
+    } else if (m_suspended & BlockRuleSuspend) {
         // If !c we just check if we can resume in case a blocking client was lost.
         bool shouldResume = true;
 
@@ -894,9 +1003,11 @@ void X11Compositor::updateClientCompositeBlocking(X11Client *c)
         }
         if (shouldResume) {
             // Do NOT attempt to call suspend(false) from within the eventchain!
-                QMetaObject::invokeMethod(this, [this]() {
-                        resume(BlockRuleSuspend);
-                    }, Qt::QueuedConnection);
+            QMetaObject::invokeMethod(
+                this, [this]() {
+                    resume(BlockRuleSuspend);
+                },
+                Qt::QueuedConnection);
         }
     }
 }
