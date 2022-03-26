@@ -13,6 +13,7 @@
 #include <QCoreApplication>
 #include <QImage>
 #include <QPoint>
+#include <QSet>
 #include <QVariant>
 
 #include <kwin_export.h>
@@ -115,21 +116,27 @@ enum PointerAxisDirection {
     PointerAxisRight,
 };
 
+static const QString DEFAULT_CONTEXT = "Default";
+
 /**
- * @brief Directions for swipe gestures
- * @since 5.10
+ * A generic configurable parameter.
  */
-enum class SwipeDirection {
-    Invalid,
-    Down,
-    Left,
-    Up,
-    Right,
+struct Parameter
+{
+    const QString humanReadableLabel;
+    const QString name;
+    const QMetaType::Type type;
+    const QVariant defaultValue;
+    //     label   value
+    QHash<QString, QVariant> possibleValues;
 };
 
-enum class PinchDirection {
-    Expanding,
-    Contracting
+/**
+ * @brief What device is this gesture using?
+ */
+enum class GestureDeviceType {
+    Touchpad,
+    Touchscreen,
 };
 
 /**
@@ -220,7 +227,74 @@ private:
 
 } // namespace
 
+/**
+ * @brief Directions for gestures
+ * @since 5.25
+ */
+enum class GestureDirection {
+    Down,
+    Left,
+    Right,
+    Up,
+    Expanding,
+    Contracting,
+    VerticalAxis,
+    HorizontalAxis,
+    DirectionlessSwipe,
+    BiDirectionalPinch,
+};
+
+static uint qHash(GestureDirection, uint seed)
+{
+    return seed;
+}
+
+static const QSet<GestureDirection> ALL_DIRECTIONS = {
+    GestureDirection::Down,
+    GestureDirection::Left,
+    GestureDirection::Right,
+    GestureDirection::Up,
+    GestureDirection::Expanding,
+    GestureDirection::Contracting,
+    GestureDirection::VerticalAxis,
+    GestureDirection::HorizontalAxis,
+    GestureDirection::DirectionlessSwipe,
+    GestureDirection::BiDirectionalPinch,
+};
+static const QSet<GestureDirection> SWIPE_DIRECTIONS = {
+    GestureDirection::Up,
+    GestureDirection::Down,
+    GestureDirection::Left,
+    GestureDirection::Right,
+    GestureDirection::HorizontalAxis,
+    GestureDirection::VerticalAxis,
+    GestureDirection::DirectionlessSwipe,
+};
+static const QSet<GestureDirection> PINCH_DIRECTIONS = {
+    GestureDirection::Expanding,
+    GestureDirection::Contracting,
+    GestureDirection::BiDirectionalPinch,
+};
+
+/**
+ * By the time you recieve this enum,
+ * settings for reversing the direction
+ * of the scroll have already been applied.
+ * The stuff on the screen should be moving:
+ */
+enum class AnimationDirection {
+    None,
+    Up,
+    Down,
+    Left,
+    Right,
+    Contracting,
+    Expanding,
+};
+
 Q_DECLARE_METATYPE(std::chrono::nanoseconds)
+Q_DECLARE_METATYPE(GestureDirection);
+Q_DECLARE_METATYPE(AnimationDirection);
 
 #define KWIN_SINGLETON_VARIABLE(ClassName, variableName) \
 public:                                                  \

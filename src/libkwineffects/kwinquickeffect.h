@@ -66,20 +66,17 @@ private:
 class KWINEFFECTS_EXPORT QuickSceneEffect : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(qreal partialActivationFactor READ partialActivationFactor NOTIFY partialActivationFactorChanged)
+    Q_PROPERTY(bool gestureInProgress READ gestureInProgress NOTIFY gestureInProgressChanged)
 
 public:
-    explicit QuickSceneEffect(QObject *parent = nullptr);
+    explicit QuickSceneEffect(const QString label, const QString name, QObject *parent = nullptr);
     ~QuickSceneEffect() override;
 
     /**
      * Returns @c true if the effect is running; otherwise returns @c false.
      */
     bool isRunning() const;
-
-    /**
-     * Starts or stops the effect depending on @a running.
-     */
-    void setRunning(bool running);
 
     /**
      * Returns all scene views managed by this effect. If the effect is not running,
@@ -101,6 +98,9 @@ public:
      * Returns the source URL.
      */
     QUrl source() const;
+
+    qreal partialActivationFactor() const;
+    bool gestureInProgress() const;
 
     /**
      * Sets the source url to @a url. Note that the QML component will be loaded the next
@@ -128,12 +128,24 @@ public:
 
     static bool supported();
 
+
     Q_INVOKABLE void checkItemDraggedOutOfScreen(QQuickItem *item);
     Q_INVOKABLE void checkItemDroppedOutOfScreen(const QPointF &globalPos, QQuickItem *item);
 
 Q_SIGNALS:
     void itemDraggedOutOfScreen(QQuickItem *item, QList<EffectScreen *> screens);
     void itemDroppedOutOfScreen(const QPointF &globalPos, QQuickItem *item, EffectScreen *screen);
+    void partialActivationFactorChanged();
+    void gestureInProgressChanged();
+
+public Q_SLOTS:
+    void ungrabActive();
+
+protected Q_SLOTS:
+    // These should only be triggered by the Context
+    void activated();
+    void partialActivate(qreal progress, AnimationDirection direction = AnimationDirection::None);
+    void deactivated();
 
 protected:
     /**
@@ -144,13 +156,22 @@ protected:
      */
     virtual QVariantMap initialProperties(EffectScreen *screen);
 
+    EffectContext::State state();
+    std::unique_ptr<EffectContext> p_context;
+    qreal p_partialActivationFactor = 0;
+
 private:
     void handleScreenAdded(EffectScreen *screen);
     void handleScreenRemoved(EffectScreen *screen);
 
     void addScreen(EffectScreen *screen);
     void startInternal();
-    void stopInternal();
+    void cleanupViews();
+
+    /**
+     * Starts or stops the effect depending on @a running.
+     */
+    void setRunning(bool running);
 
     QScopedPointer<QuickSceneEffectPrivate> d;
     friend class QuickSceneEffectPrivate;

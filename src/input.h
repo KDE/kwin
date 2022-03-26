@@ -12,6 +12,7 @@
 #define KWIN_INPUT_H
 #include <config-kwin.h>
 
+#include "globalshortcuts.h"
 #include <QAction>
 #include <QObject>
 #include <QPoint>
@@ -136,12 +137,8 @@ public:
     void registerShortcut(const QKeySequence &shortcut, QAction *action, T *receiver, Slot slot);
     void registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action);
     void registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action);
-    void registerTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action);
-    void registerRealtimeTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback);
-    void registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *action);
-    void registerRealtimeTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback);
-    void registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback);
-    void forceRegisterTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback);
+    void setContext(const QString activity);
+    void forceRegisterTouchscreenSwipeShortcut(GestureDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback);
     void registerGlobalAccel(KGlobalAccelInterface *interface);
 
     bool supportsPointerWarping() const;

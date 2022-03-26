@@ -15,15 +15,13 @@
 #include <QQuickItem>
 #include <QTimer>
 
+#include <algorithm>
+
 namespace KWin
 {
-
 OverviewEffect::OverviewEffect()
-    : m_shutdownTimer(new QTimer(this))
+    : QuickSceneEffect("Overview", "overview")
 {
-    m_shutdownTimer->setSingleShot(true);
-    connect(m_shutdownTimer, &QTimer::timeout, this, &OverviewEffect::realDeactivate);
-
     const QKeySequence defaultToggleShortcut = Qt::META | Qt::Key_W;
     m_toggleAction = new QAction(this);
     connect(m_toggleAction, &QAction::triggered, this, &OverviewEffect::toggle);
@@ -34,42 +32,18 @@ OverviewEffect::OverviewEffect()
     m_toggleShortcut = KGlobalAccel::self()->shortcut(m_toggleAction);
     effects->registerGlobalShortcut({defaultToggleShortcut}, m_toggleAction);
 
-    m_realtimeToggleAction = new QAction(this);
-    connect(m_realtimeToggleAction, &QAction::triggered, this, [this]() {
-        if (m_status == Status::Deactivating) {
-            if (m_partialActivationFactor < 0.5) {
-                deactivate();
-            } else {
-                cancelPartialDeactivate();
-            }
-        } else if (m_status == Status::Activating) {
-            if (m_partialActivationFactor > 0.5) {
-                activate();
-            } else {
-                cancelPartialActivate();
-            }
-        }
+    connect(p_context.get(), &EffectContext::activated, [this]() {
+        activated();
     });
-
-    auto progressCallback = [this](qreal progress) {
-        if (!effects->hasActiveFullScreenEffect() || effects->activeFullScreenEffect() == this) {
-            switch (m_status) {
-            case Status::Inactive:
-            case Status::Activating:
-                partialActivate(progress);
-                break;
-            case Status::Active:
-            case Status::Deactivating:
-                partialDeactivate(progress);
-                break;
-            }
-        }
-    };
-
-    effects->registerRealtimeTouchpadPinchShortcut(PinchDirection::Contracting, 4, m_realtimeToggleAction, progressCallback);
-    effects->registerTouchscreenSwipeShortcut(SwipeDirection::Up, 3, m_realtimeToggleAction, progressCallback);
-
-    connect(effects, &EffectsHandler::screenAboutToLock, this, &OverviewEffect::realDeactivate);
+    connect(p_context.get(), &EffectContext::activating, [this](qreal progress) {
+        partialActivate(std::clamp(progress, 0.0, 1.0));
+    });
+    connect(p_context.get(), &EffectContext::deactivating, [this](qreal progress) {
+        partialActivate(std::clamp(1 - progress, 0.0, 1.0));
+    });
+    connect(p_context.get(), &EffectContext::deactivated, [this]() {
+        deactivated();
+    });
 
     initConfig<OverviewConfig>();
     reconfigure(ReconfigureAll);
@@ -93,54 +67,18 @@ void OverviewEffect::reconfigure(ReconfigureFlags)
 {
     OverviewConfig::self()->read();
     setLayout(OverviewConfig::layoutMode());
-    setAnimationDuration(animationTime(200));
     setBlurBackground(OverviewConfig::blurBackground());
 
     for (const ElectricBorder &border : qAsConst(m_borderActivate)) {
         effects->unreserveElectricBorder(border, this);
     }
 
-    for (const ElectricBorder &border : qAsConst(m_touchBorderActivate)) {
-        effects->unregisterTouchBorder(border, m_toggleAction);
-    }
-
     m_borderActivate.clear();
-    m_touchBorderActivate.clear();
 
     const QList<int> activateBorders = OverviewConfig::borderActivate();
     for (const int &border : activateBorders) {
         m_borderActivate.append(ElectricBorder(border));
         effects->reserveElectricBorder(ElectricBorder(border), this);
-    }
-
-    const QList<int> touchActivateBorders = OverviewConfig::touchBorderActivate();
-    for (const int &border : touchActivateBorders) {
-        m_touchBorderActivate.append(ElectricBorder(border));
-        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_realtimeToggleAction, [this](ElectricBorder border, const QSizeF &deltaProgress, const EffectScreen *screen) {
-            Q_UNUSED(screen)
-            if (m_status == Status::Active) {
-                return;
-            }
-            const int maxDelta = 500; // Arbitrary logical pixels value seems to behave better than scaledScreenSize
-            if (border == ElectricTop || border == ElectricBottom) {
-                partialActivate(std::min(1.0, qAbs(deltaProgress.height()) / maxDelta));
-            } else {
-                partialActivate(std::min(1.0, qAbs(deltaProgress.width()) / maxDelta));
-            }
-        });
-    }
-}
-
-int OverviewEffect::animationDuration() const
-{
-    return m_animationDuration;
-}
-
-void OverviewEffect::setAnimationDuration(int duration)
-{
-    if (m_animationDuration != duration) {
-        m_animationDuration = duration;
-        Q_EMIT animationDurationChanged();
     }
 }
 
@@ -175,32 +113,6 @@ void OverviewEffect::setBlurBackground(bool blur)
     }
 }
 
-qreal OverviewEffect::partialActivationFactor() const
-{
-    return m_partialActivationFactor;
-}
-
-void OverviewEffect::setPartialActivationFactor(qreal factor)
-{
-    if (m_partialActivationFactor != factor) {
-        m_partialActivationFactor = factor;
-        Q_EMIT partialActivationFactorChanged();
-    }
-}
-
-bool OverviewEffect::gestureInProgress() const
-{
-    return m_gestureInProgress;
-}
-
-void OverviewEffect::setGestureInProgress(bool gesture)
-{
-    if (m_gestureInProgress != gesture) {
-        m_gestureInProgress = gesture;
-        Q_EMIT gestureInProgressChanged();
-    }
-}
-
 int OverviewEffect::requestedEffectChainPosition() const
 {
     return 70;
@@ -217,82 +129,15 @@ bool OverviewEffect::borderActivated(ElectricBorder border)
 
 void OverviewEffect::toggle()
 {
-    if (!isRunning() || m_partialActivationFactor > 0.5) {
-        activate();
+    if (state() == EffectContext::State::Active || state() == EffectContext::State::Activating) {
+        p_context->ungrabActive();
     } else {
-        deactivate();
-    }
-}
-
-void OverviewEffect::activate()
-{
-    if (effects->isScreenLocked()) {
-        return;
+        p_context->grabActive();
     }
 
-    m_status = Status::Active;
-
-    setGestureInProgress(false);
-    setPartialActivationFactor(0.0);
-
-    // This one should be the last.
-    setRunning(true);
-}
-
-void OverviewEffect::partialActivate(qreal factor)
-{
-    if (effects->isScreenLocked()) {
-        return;
-    }
-
-    m_status = Status::Activating;
-
-    setPartialActivationFactor(factor);
-    setGestureInProgress(true);
-
-    // This one should be the last.
-    setRunning(true);
-}
-
-void OverviewEffect::cancelPartialActivate()
-{
-    deactivate();
-}
-
-void OverviewEffect::deactivate()
-{
-    const auto screenViews = views();
-    for (QuickSceneView *view : screenViews) {
-        QMetaObject::invokeMethod(view->rootItem(), "stop");
-    }
-    m_shutdownTimer->start(animationDuration());
-
-    setGestureInProgress(false);
-    setPartialActivationFactor(0.0);
-}
-
-void OverviewEffect::partialDeactivate(qreal factor)
-{
-    m_status = Status::Deactivating;
-
-    setPartialActivationFactor(1.0 - factor);
-    setGestureInProgress(true);
-}
-
-void OverviewEffect::cancelPartialDeactivate()
-{
-    activate();
-}
-
-void OverviewEffect::realDeactivate()
-{
-    setRunning(false);
-    m_status = Status::Inactive;
-}
-
-void OverviewEffect::quickDeactivate()
-{
-    m_shutdownTimer->start(0);
+    p_partialActivationFactor = 0;
+    Q_EMIT gestureInProgressChanged();
+    Q_EMIT partialActivationFactorChanged();
 }
 
 void OverviewEffect::grabbedKeyboardEvent(QKeyEvent *keyEvent)

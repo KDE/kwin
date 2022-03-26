@@ -15,6 +15,8 @@
 #include <KGlobalAccel>
 #include <KLocalizedString>
 
+#include <iostream>
+
 namespace KWin
 {
 
@@ -22,7 +24,7 @@ static const QString s_dbusServiceName = QStringLiteral("org.kde.KWin.Effect.Win
 static const QString s_dbusObjectPath = QStringLiteral("/org/kde/KWin/Effect/WindowView1");
 
 WindowViewEffect::WindowViewEffect()
-    : m_shutdownTimer(new QTimer(this))
+    : QuickSceneEffect("Window View", "windowview")
     , m_exposeAction(new QAction(this))
     , m_exposeAllAction(new QAction(this))
     , m_exposeClassAction(new QAction(this))
@@ -34,11 +36,41 @@ WindowViewEffect::WindowViewEffect()
     QDBusConnection::sessionBus().registerObject(s_dbusObjectPath, this);
     QDBusConnection::sessionBus().registerService(s_dbusServiceName);
 
-    m_shutdownTimer->setSingleShot(true);
-    connect(m_shutdownTimer, &QTimer::timeout, this, &WindowViewEffect::realDeactivate);
-    connect(effects, &EffectsHandler::screenAboutToLock, this, &WindowViewEffect::realDeactivate);
-
     setSource(QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/effects/windowview/qml/main.qml"))));
+
+    connect(p_context.get(), &EffectContext::activated, [this]() {
+        QuickSceneEffect::activated();
+    });
+    connect(p_context.get(), &EffectContext::activating, [this](qreal progress) {
+        QuickSceneEffect::partialActivate(std::clamp(progress, 0.0, 1.0));
+    });
+    connect(p_context.get(), &EffectContext::deactivating, [this](qreal progress) {
+        QuickSceneEffect::partialActivate(std::clamp(1 - progress, 0.0, 1.0));
+    });
+    connect(p_context.get(), &EffectContext::deactivated, [this]() {
+        QuickSceneEffect::deactivated();
+    });
+
+    Parameter windows = Parameter{"Windows Shown", "windows", QMetaType::QString, "ModeAllDesktops"};
+    //                      Human readable label                    Values
+    windows.possibleValues["Present Windows - Current Desktop"] = "ModeCurrentDesktop";
+    windows.possibleValues["Present Windows - All Desktops"] = "ModeAllDesktops";
+    windows.possibleValues["Present Windows - Current Application"] = "ModeWindowClass";
+    p_context->addActivationParameter(windows);
+
+    connect(p_context.get(), &EffectContext::setActivationParameters, [this](const QHash<QString, QVariant> parameters) {
+        // All given parameters are guaranteed to be present in parameters
+        QString mode = parameters["windows"].toString();
+
+        std::cout << "PresentWindoes: " << mode.toStdString() << std::endl;
+        if (mode == "ModeCurrentDesktop") {
+            setMode(PresentWindowsMode::ModeCurrentDesktop);
+        } else if (mode == "ModeAllDesktops") {
+            setMode(PresentWindowsMode::ModeAllDesktops);
+        } else if (mode == "ModeWindowClass") {
+            setMode(PresentWindowsMode::ModeWindowClass);
+        }
+    });
 
     m_exposeAction->setObjectName(QStringLiteral("Expose"));
     m_exposeAction->setText(i18n("Toggle Present Windows (Current desktop)"));
@@ -81,40 +113,6 @@ WindowViewEffect::WindowViewEffect()
         }
     });
 
-    m_realtimeToggleAction = new QAction(this);
-    connect(m_realtimeToggleAction, &QAction::triggered, this, [this]() {
-        if (m_status == Status::Deactivating) {
-            if (m_partialActivationFactor < 0.5) {
-                deactivate(animationDuration());
-            } else {
-                cancelPartialDeactivate();
-            }
-        } else if (m_status == Status::Activating) {
-            if (m_partialActivationFactor > 0.5) {
-                activate();
-            } else {
-                cancelPartialActivate();
-            }
-        }
-    });
-
-    const auto gestureCallback = [this](qreal progress) {
-        if (!effects->hasActiveFullScreenEffect() || effects->activeFullScreenEffect() == this) {
-            switch (m_status) {
-            case Status::Inactive:
-            case Status::Activating:
-                partialActivate(progress);
-                break;
-            case Status::Active:
-            case Status::Deactivating:
-                partialDeactivate(progress);
-                break;
-            }
-        }
-    };
-    effects->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Down, 4, m_realtimeToggleAction, gestureCallback);
-    effects->registerTouchscreenSwipeShortcut(SwipeDirection::Down, 3, m_realtimeToggleAction, gestureCallback);
-
     reconfigure(ReconfigureAll);
 }
 
@@ -131,19 +129,6 @@ QVariantMap WindowViewEffect::initialProperties(EffectScreen *screen)
         {QStringLiteral("targetScreen"), QVariant::fromValue(screen)},
         {QStringLiteral("selectedIds"), QVariant::fromValue(m_windowIds)},
     };
-}
-
-int WindowViewEffect::animationDuration() const
-{
-    return m_animationDuration;
-}
-
-void WindowViewEffect::setAnimationDuration(int duration)
-{
-    if (m_animationDuration != duration) {
-        m_animationDuration = duration;
-        Q_EMIT animationDurationChanged();
-    }
 }
 
 int WindowViewEffect::layout() const
@@ -172,13 +157,15 @@ int WindowViewEffect::requestedEffectChainPosition() const
 void WindowViewEffect::reconfigure(ReconfigureFlags)
 {
     WindowViewConfig::self()->read();
-    setAnimationDuration(animationTime(200));
     setLayout(WindowViewConfig::layoutMode());
 
     for (ElectricBorder border : qAsConst(m_borderActivate)) {
         effects->unreserveElectricBorder(border, this);
     }
     for (ElectricBorder border : qAsConst(m_borderActivateAll)) {
+        effects->unreserveElectricBorder(border, this);
+    }
+    for (ElectricBorder border : qAsConst(m_borderActivateClass)) {
         effects->unreserveElectricBorder(border, this);
     }
 
@@ -201,42 +188,6 @@ void WindowViewEffect::reconfigure(ReconfigureFlags)
         m_borderActivateClass.append(ElectricBorder(i));
         effects->reserveElectricBorder(ElectricBorder(i), this);
     }
-
-    auto touchCallback = [this](ElectricBorder border, const QSizeF &deltaProgress, const EffectScreen *screen) {
-        Q_UNUSED(screen)
-        if (m_status == Status::Active) {
-            return;
-        }
-        if (m_touchBorderActivate.contains(border)) {
-            setMode(ModeCurrentDesktop);
-        } else if (m_touchBorderActivateAll.contains(border)) {
-            setMode(ModeAllDesktops);
-        } else if (m_touchBorderActivateClass.contains(border)) {
-            setMode(ModeWindowClass);
-        }
-        const int maxDelta = 500; // Arbitrary logical pixels value seems to behave better than scaledScreenSize
-        if (border == ElectricTop || border == ElectricBottom) {
-            partialActivate(std::min(1.0, qAbs(deltaProgress.height()) / maxDelta));
-        } else {
-            partialActivate(std::min(1.0, qAbs(deltaProgress.width()) / maxDelta));
-        }
-    };
-
-    QList<int> touchActivateBorders = WindowViewConfig::touchBorderActivate();
-    for (const int &border : touchActivateBorders) {
-        m_touchBorderActivate.append(ElectricBorder(border));
-        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_realtimeToggleAction, touchCallback);
-    }
-    touchActivateBorders = WindowViewConfig::touchBorderActivateAll();
-    for (const int &border : touchActivateBorders) {
-        m_touchBorderActivateAll.append(ElectricBorder(border));
-        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_realtimeToggleAction, touchCallback);
-    }
-    touchActivateBorders = WindowViewConfig::touchBorderActivateClass();
-    for (const int &border : touchActivateBorders) {
-        m_touchBorderActivateAll.append(ElectricBorder(border));
-        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_realtimeToggleAction, touchCallback);
-    }
 }
 
 void WindowViewEffect::grabbedKeyboardEvent(QKeyEvent *e)
@@ -254,36 +205,10 @@ void WindowViewEffect::grabbedKeyboardEvent(QKeyEvent *e)
             toggleMode(ModeWindowClass);
             return;
         } else if (e->key() == Qt::Key_Escape) {
-            deactivate(animationDuration());
+            p_context->ungrabActive();
         }
     }
     QuickSceneEffect::grabbedKeyboardEvent(e);
-}
-
-qreal WindowViewEffect::partialActivationFactor() const
-{
-    return m_partialActivationFactor;
-}
-
-void WindowViewEffect::setPartialActivationFactor(qreal factor)
-{
-    if (m_partialActivationFactor != factor) {
-        m_partialActivationFactor = factor;
-        Q_EMIT partialActivationFactorChanged();
-    }
-}
-
-bool WindowViewEffect::gestureInProgress() const
-{
-    return m_gestureInProgress;
-}
-
-void WindowViewEffect::setGestureInProgress(bool gesture)
-{
-    if (m_gestureInProgress != gesture) {
-        m_gestureInProgress = gesture;
-        Q_EMIT gestureInProgressChanged();
-    }
 }
 
 void WindowViewEffect::activate(const QStringList &windowIds)
@@ -308,77 +233,14 @@ void WindowViewEffect::activate(const QStringList &windowIds)
     if (!internalIds.isEmpty()) {
         m_windowIds = internalIds;
         m_searchText = "";
-        setRunning(true);
+        p_context->grabActive();
     }
 }
 
-void WindowViewEffect::activate()
+void WindowViewEffect::activated()
 {
-    if (effects->isScreenLocked()) {
-        return;
-    }
-
-    m_status = Status::Active;
-    m_windowIds.clear();
-
-    setGestureInProgress(false);
-    setPartialActivationFactor(0);
-
-    // This one should be the last.
     m_searchText = "";
-    setRunning(true);
-}
-
-void WindowViewEffect::partialActivate(qreal factor)
-{
-    if (effects->isScreenLocked()) {
-        return;
-    }
-
-    m_status = Status::Activating;
-
-    setPartialActivationFactor(factor);
-    setGestureInProgress(true);
-
-    // This one should be the last.
-    m_searchText = "";
-    setRunning(true);
-}
-
-void WindowViewEffect::cancelPartialActivate()
-{
-    deactivate(animationDuration());
-}
-
-void WindowViewEffect::deactivate(int timeout)
-{
-    const auto screenViews = views();
-    for (QuickSceneView *view : screenViews) {
-        QMetaObject::invokeMethod(view->rootItem(), "stop");
-    }
-    m_shutdownTimer->start(timeout);
-
-    setGestureInProgress(false);
-    setPartialActivationFactor(0.0);
-}
-
-void WindowViewEffect::partialDeactivate(qreal factor)
-{
-    m_status = Status::Deactivating;
-
-    setPartialActivationFactor(1.0 - factor);
-    setGestureInProgress(true);
-}
-
-void WindowViewEffect::cancelPartialDeactivate()
-{
-    activate();
-}
-
-void WindowViewEffect::realDeactivate()
-{
-    setRunning(false);
-    m_status = Status::Inactive;
+    p_context->grabActive();
 }
 
 void WindowViewEffect::setMode(WindowViewEffect::PresentWindowsMode mode)
@@ -397,14 +259,14 @@ void WindowViewEffect::setMode(WindowViewEffect::PresentWindowsMode mode)
 
 void WindowViewEffect::toggleMode(PresentWindowsMode mode)
 {
-    if (!isRunning()) {
+    if (state() == EffectContext::State::Inactive || state() == EffectContext::State::Deactivating) {
         setMode(mode);
-        activate();
+        p_context->grabActive();
     } else {
         if (m_mode != mode) {
             setMode(mode);
         } else {
-            deactivate(animationDuration());
+            p_context->ungrabActive();
         }
     }
 }
@@ -430,6 +292,7 @@ bool WindowViewEffect::borderActivated(ElectricBorder border)
         return false;
     }
 
+    p_context->grabActive();
     return true;
 }
 

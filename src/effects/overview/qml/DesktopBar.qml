@@ -68,6 +68,8 @@ Item {
                     Keys.onRightPressed: nextItemInFocusChain(!LayoutMirroring.enabled).forceActiveFocus(Qt.TabFocusReason);
 
                     function activate() {
+                        thumbnail.prescaledX = desktopRepeater.itemAt(index).x
+                        thumbnail.prescaledY = desktopRepeater.itemAt(index).y
                         thumbnail.state = "scaled";
                     }
 
@@ -100,6 +102,8 @@ Item {
                             id: thumbnail
 
                             property bool scaled: state === "scaled"
+                            property real prescaledX: 0
+                            property real prescaledY: 0
 
                             width: targetScreen.geometry.width
                             height: targetScreen.geometry.height
@@ -118,25 +122,18 @@ Item {
                                 ParentChange {
                                     target: thumbnail
                                     parent: container
-                                    x: 0
-                                    y: 0
-                                    scale: 1
+                                    x: prescaledX * effect.partialActivationFactor
+                                    y: prescaledY * effect.partialActivationFactor
+                                    scale: (bar.desktopHeight / targetScreen.geometry.height) * (effect.partialActivationFactor) + (1 -effect.partialActivationFactor)//1
                                 }
                             }
 
                             transitions: Transition {
                                 SequentialAnimation {
-                                    ParentAnimation {
-                                        NumberAnimation {
-                                            properties: "x,y,scale"
-                                            duration: effect.animationDuration
-                                            easing.type: Easing.OutCubic
-                                        }
-                                    }
                                     ScriptAction {
                                         script: {
                                             KWinComponents.Workspace.currentVirtualDesktop = delegate.desktop;
-                                            effect.quickDeactivate();
+                                            effect.ungrabActive();
                                         }
                                     }
                                 }

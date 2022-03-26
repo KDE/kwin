@@ -16,6 +16,7 @@
 #include "slideconfig.h"
 
 #include <cmath>
+#include <iostream>
 
 namespace KWin
 {
@@ -41,6 +42,14 @@ SlideEffect::SlideEffect()
             this, &SlideEffect::finishedSwitching);
     connect(effects, &EffectsHandler::screenRemoved,
             this, &SlideEffect::finishedSwitching);
+    connect(effects, &EffectsHandler::activeFullScreenEffectChanged, [this]() {
+        if (effects->hasActiveFullScreenEffect()) {
+            finishedSwitching();
+        }
+    });
+    connect(effects, &EffectsHandler::currentContextChanged, [this](QString context) {
+        m_allowedByContext = context == DEFAULT_CONTEXT;
+    });
 
     m_currentPosition = effects->desktopGridCoords(effects->currentDesktop());
 }
@@ -361,7 +370,6 @@ void SlideEffect::startAnimation(int old, int current, EffectWindow *movingWindo
     m_motionY.setAnchor(m_endPos.y() * virtualSpaceSize.height());
     m_motionY.setPosition(m_startPos.y() * virtualSpaceSize.height());
 
-    effects->setActiveFullScreenEffect(this);
     effects->addRepaintFull();
 }
 
@@ -405,13 +413,12 @@ void SlideEffect::finishedSwitching()
     m_movingWindow = nullptr;
     m_state = State::Inactive;
     m_lastPresentTime = std::chrono::milliseconds::zero();
-    effects->setActiveFullScreenEffect(nullptr);
     m_currentPosition = effects->desktopGridCoords(effects->currentDesktop());
 }
 
 void SlideEffect::desktopChanged(int old, int current, EffectWindow *with)
 {
-    if (effects->hasActiveFullScreenEffect() && effects->activeFullScreenEffect() != this) {
+    if (effects->hasActiveFullScreenEffect() || !m_allowedByContext) {
         m_currentPosition = effects->desktopGridCoords(effects->currentDesktop());
         return;
     }
@@ -421,7 +428,7 @@ void SlideEffect::desktopChanged(int old, int current, EffectWindow *with)
 
 void SlideEffect::desktopChanging(uint old, QPointF desktopOffset, EffectWindow *with)
 {
-    if (effects->hasActiveFullScreenEffect() && effects->activeFullScreenEffect() != this) {
+    if (effects->hasActiveFullScreenEffect() || !m_allowedByContext) {
         return;
     }
 
@@ -443,17 +450,18 @@ void SlideEffect::desktopChanging(uint old, QPointF desktopOffset, EffectWindow 
         m_currentPosition = moveInsideDesktopGrid(m_currentPosition);
     }
 
-    effects->setActiveFullScreenEffect(this);
     effects->addRepaintFull();
 }
 
 void SlideEffect::desktopChangingCancelled()
 {
+    if (effects->hasActiveFullScreenEffect() || !m_allowedByContext) {
+        m_currentPosition = effects->desktopGridCoords(effects->currentDesktop());
+        return;
+    }
     // If the fingers have been lifted and the current desktop didn't change, start animation
     // to move back to the original virtual desktop.
-    if (effects->activeFullScreenEffect() == this) {
-        startAnimation(effects->currentDesktop(), effects->currentDesktop(), nullptr);
-    }
+    startAnimation(effects->currentDesktop(), effects->currentDesktop(), nullptr);
 }
 
 QPointF SlideEffect::moveInsideDesktopGrid(QPointF p)

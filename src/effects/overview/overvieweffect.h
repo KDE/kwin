@@ -14,21 +14,11 @@ namespace KWin
 class OverviewEffect : public QuickSceneEffect
 {
     Q_OBJECT
-    Q_PROPERTY(int animationDuration READ animationDuration NOTIFY animationDurationChanged)
     Q_PROPERTY(int layout READ layout NOTIFY layoutChanged)
     Q_PROPERTY(bool ignoreMinimized READ ignoreMinimized NOTIFY ignoreMinimizedChanged)
     Q_PROPERTY(bool blurBackground READ blurBackground NOTIFY blurBackgroundChanged)
-    Q_PROPERTY(qreal partialActivationFactor READ partialActivationFactor NOTIFY partialActivationFactorChanged)
-    // More efficient from a property binding pov rather than binding to partialActivationFactor !== 0
-    Q_PROPERTY(bool gestureInProgress READ gestureInProgress NOTIFY gestureInProgressChanged)
 
 public:
-    enum class Status {
-        Inactive,
-        Activating,
-        Deactivating,
-        Active
-    };
     OverviewEffect();
     ~OverviewEffect() override;
 
@@ -37,17 +27,8 @@ public:
 
     bool ignoreMinimized() const;
 
-    int animationDuration() const;
-    void setAnimationDuration(int duration);
-
     bool blurBackground() const;
     void setBlurBackground(bool blur);
-
-    qreal partialActivationFactor() const;
-    void setPartialActivationFactor(qreal factor);
-
-    bool gestureInProgress() const;
-    void setGestureInProgress(bool gesture);
 
     int requestedEffectChainPosition() const override;
     bool borderActivated(ElectricBorder border) override;
@@ -63,31 +44,18 @@ Q_SIGNALS:
     void ignoreMinimizedChanged();
 
 public Q_SLOTS:
-    void activate();
-    void partialActivate(qreal factor);
-    void cancelPartialActivate();
-    void partialDeactivate(qreal factor);
-    void cancelPartialDeactivate();
-    void deactivate();
-    void quickDeactivate();
     void toggle();
 
 protected:
     QVariantMap initialProperties(EffectScreen *screen) override;
 
 private:
-    void realDeactivate();
 
-    QTimer *m_shutdownTimer;
     QAction *m_toggleAction = nullptr;
-    QAction *m_realtimeToggleAction = nullptr;
     QList<QKeySequence> m_toggleShortcut;
     QList<ElectricBorder> m_borderActivate;
-    QList<ElectricBorder> m_touchBorderActivate;
-    qreal m_partialActivationFactor = 0;
+    qreal p_partialActivationFactor = 0;
     bool m_blurBackground = false;
-    Status m_status = Status::Inactive;
-    int m_animationDuration = 200;
     int m_layout = 1;
     bool m_gestureInProgress = false;
 };

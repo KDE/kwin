@@ -19,13 +19,11 @@ Rectangle {
     required property QtObject effect
     required property QtObject targetScreen
 
-    property bool animationEnabled: false
     property bool organized: false
 
     color: "black"
 
     function start() {
-        container.animationEnabled = true;
         container.organized = true;
     }
 
@@ -40,7 +38,7 @@ Rectangle {
 
     Keys.onPressed: {
         if (event.key == Qt.Key_Escape) {
-            effect.deactivate(effect.animationDuration);
+            effect.ungrabActive()
         } else if (event.key == Qt.Key_Plus || event.key == Qt.Key_Equal) {
             addButton.clicked();
         } else if (event.key == Qt.Key_Minus) {
@@ -70,28 +68,6 @@ Rectangle {
         readonly property real targetScale : 1 / Math.max(rows, columns)
         property real panelOpacity
 
-        Behavior on x {
-            enabled: !container.effect.gestureInProgress
-            NumberAnimation {
-                duration: container.effect.animationDuration
-                easing.type: Easing.InOutCubic
-            }
-        }
-        Behavior on y {
-            enabled: !container.effect.gestureInProgress
-            NumberAnimation {
-                duration: container.effect.animationDuration
-                easing.type: Easing.InOutCubic
-            }
-        }
-        Behavior on scale {
-            enabled: !container.effect.gestureInProgress
-            NumberAnimation {
-                duration: container.effect.animationDuration
-                easing.type: Easing.InOutCubic
-            }
-        }
-
         width: parent.width * columns
         height: parent.height * rows
         rowSpacing: PlasmaCore.Units.largeSpacing
@@ -100,50 +76,11 @@ Rectangle {
         columns: container.effect.gridColumns
         transformOrigin: Item.TopLeft
 
-        states: [
-            State {
-                when: container.effect.gestureInProgress
-                PropertyChanges {
-                    target: grid
-                    x: Math.max(0, container.width / 2 - (width * targetScale) / 2) * container.effect.partialActivationFactor - grid.currentItem.x * (1 - container.effect.partialActivationFactor)
-                    y: Math.max(0, container.height / 2 - (height * targetScale) / 2) * container.effect.partialActivationFactor - grid.currentItem.y * (1 - container.effect.partialActivationFactor)
-                    scale: 1 - (1 - grid.targetScale) * container.effect.partialActivationFactor
-                    panelOpacity: 1 - container.effect.partialActivationFactor
-                }
-                PropertyChanges {
-                    target: buttonsLayout
-                    opacity: container.effect.partialActivationFactor
-                }
-            },
-            State {
-                when: container.organized
-                PropertyChanges {
-                    target: grid
-                    x: Math.max(0, container.width / 2 - (width * targetScale) / 2)
-                    y: Math.max(0, container.height / 2 - (height * targetScale) / 2)
-                    scale: grid.targetScale
-                    panelOpacity: 0
-                }
-                PropertyChanges {
-                    target: buttonsLayout
-                    opacity: 1
-                }
-            },
-            State {
-                when: !container.organized
-                PropertyChanges {
-                    target: grid
-                    x: -grid.currentItem.x
-                    y: -grid.currentItem.y
-                    scale: 1
-                    panelOpacity: 1
-                }
-                PropertyChanges {
-                    target: buttonsLayout
-                    opacity: 0
-                }
-            }
-        ]
+        x: Math.max(0, container.width / 2 - (width * targetScale) / 2) * container.effect.partialActivationFactor - grid.currentItem.x * (1 - container.effect.partialActivationFactor)
+        y: Math.max(0, container.height / 2 - (height * targetScale) / 2) * container.effect.partialActivationFactor - grid.currentItem.y * (1 - container.effect.partialActivationFactor)
+        scale: 1 - (1 - grid.targetScale) * container.effect.partialActivationFactor
+        panelOpacity: 1 - container.effect.partialActivationFactor
+
         Repeater {
             model: desktopModel
             DesktopView {
@@ -170,7 +107,7 @@ Rectangle {
                     acceptedButtons: Qt.LeftButton
                     onTapped: {
                         KWinComponents.Workspace.currentVirtualDesktop = thumbnail.desktop;
-                        container.effect.deactivate(container.effect.animationDuration);
+                        container.effect.ungrabActive()
                     }
                 }
             }
@@ -195,18 +132,12 @@ Rectangle {
             icon.name: "list-remove"
             onClicked: container.effect.removeDesktop()
         }
-        Behavior on opacity {
-            enabled: !container.effect.gestureInProgress
-            NumberAnimation {
-                duration: container.effect.animationDuration
-                easing.type: Easing.InOutCubic
-            }
-        }
+        opacity: container.effect.partialActivationFactor
     }
     TapHandler {
         acceptedButtons: Qt.LeftButton
         onTapped: {
-            container.effect.deactivate(container.effect.animationDuration);
+            container.effect.ungrabActive()
         }
     }
 

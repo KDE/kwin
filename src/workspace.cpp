@@ -981,6 +981,9 @@ void Workspace::slotReconfigure()
             }
         }
     }
+
+    // Update the Contexts
+    input()->shortcuts()->configChanged();
 }
 
 void Workspace::slotCurrentDesktopChanged(uint oldDesktop, uint newDesktop)

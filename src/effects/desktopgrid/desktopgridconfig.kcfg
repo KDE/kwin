@@ -11,7 +11,7 @@
     <kcfgfile arg="true"/>
     <group name="Effect-desktopgrid">
         <entry name="BorderActivate" type="IntList" />
-        <entry name="TouchBorderActivate" type="IntList" />
+        <!--<entry name="TouchBorderActivate" type="IntList" /> -->
 
         <entry name="DesktopNameAlignment" type="Int">
                 <default>0</default>

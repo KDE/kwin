@@ -13,6 +13,8 @@
 #include <QQuickWindow>
 #include <QWindow>
 
+#include <iostream>
+
 namespace KWin
 {
 
@@ -119,10 +121,12 @@ void QuickSceneView::scheduleRepaint()
     effects->addRepaint(geometry());
 }
 
-QuickSceneEffect::QuickSceneEffect(QObject *parent)
+QuickSceneEffect::QuickSceneEffect(const QString label, const QString name, QObject *parent)
     : Effect(parent)
+    , p_context(new EffectContext(label, name))
     , d(new QuickSceneEffectPrivate)
 {
+    connect(effects, &EffectsHandler::screenAboutToLock, this, &QuickSceneEffect::cleanupViews);
 }
 
 QuickSceneEffect::~QuickSceneEffect()
@@ -189,6 +193,62 @@ void QuickSceneEffect::setRunning(bool running)
     }
 }
 
+void QuickSceneEffect::ungrabActive()
+{
+    p_context->ungrabActive();
+}
+
+void QuickSceneEffect::activated()
+{
+    if (effects->isScreenLocked()) {
+        return;
+    }
+
+    setRunning(true);
+
+    const auto screenViews = views();
+    for (QuickSceneView *view : screenViews) {
+        QMetaObject::invokeMethod(view->rootItem(), "start");
+    }
+
+    p_partialActivationFactor = 1;
+    Q_EMIT gestureInProgressChanged();
+    Q_EMIT partialActivationFactorChanged();
+}
+
+void QuickSceneEffect::partialActivate(qreal progress, AnimationDirection)
+{
+    if (effects->isScreenLocked()) {
+        return;
+    }
+
+    if (effects->activeFullScreenEffect() == this) {
+        effects->setActiveFullScreenEffect(nullptr);
+    }
+
+    setRunning(true);
+
+    p_partialActivationFactor = progress;
+    Q_EMIT gestureInProgressChanged();
+    Q_EMIT partialActivationFactorChanged();
+}
+
+void QuickSceneEffect::deactivated()
+{
+    effects->setActiveFullScreenEffect(nullptr);
+
+    p_partialActivationFactor = 0;
+    Q_EMIT gestureInProgressChanged();
+    Q_EMIT partialActivationFactorChanged();
+
+    const auto screenViews = views();
+    for (QuickSceneView *view : screenViews) {
+        QMetaObject::invokeMethod(view->rootItem(), "stop");
+    }
+
+    cleanupViews();
+}
+
 QUrl QuickSceneEffect::source() const
 {
     return d->source;
@@ -204,6 +264,18 @@ void QuickSceneEffect::setSource(const QUrl &url)
         d->source = url;
         d->qmlComponent.reset();
     }
+}
+
+qreal QuickSceneEffect::partialActivationFactor() const
+{
+    return p_partialActivationFactor;
+}
+
+bool QuickSceneEffect::gestureInProgress() const
+{
+    // Context driven effects should always base their activity
+    // on the progress number given by the EffectContext
+    return true;
 }
 
 QHash<EffectScreen *, QuickSceneView *> QuickSceneEffect::views() const
@@ -285,6 +357,11 @@ QVariantMap QuickSceneEffect::initialProperties(EffectScreen *screen)
     return QVariantMap();
 }
 
+EffectContext::State QuickSceneEffect::state()
+{
+    return p_context->state();
+}
+
 void QuickSceneEffect::handleScreenAdded(EffectScreen *screen)
 {
     addScreen(screen);
@@ -343,7 +420,6 @@ void QuickSceneEffect::startInternal()
         }
     }
 
-    effects->setActiveFullScreenEffect(this);
     d->running = true;
 
     // Install an event filter to monitor cursor shape changes.
@@ -372,7 +448,7 @@ void QuickSceneEffect::startInternal()
     effects->startMouseInterception(this, Qt::ArrowCursor);
 }
 
-void QuickSceneEffect::stopInternal()
+void QuickSceneEffect::cleanupViews()
 {
     disconnect(effects, &EffectsHandler::screenAdded, this, &QuickSceneEffect::handleScreenAdded);
     disconnect(effects, &EffectsHandler::screenRemoved, this, &QuickSceneEffect::handleScreenRemoved);
@@ -384,7 +460,6 @@ void QuickSceneEffect::stopInternal()
     qApp->removeEventFilter(this);
     effects->ungrabKeyboard();
     effects->stopMouseInterception(this);
-    effects->setActiveFullScreenEffect(nullptr);
     effects->addRepaintFull();
 }
 

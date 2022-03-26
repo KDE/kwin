@@ -24,11 +24,9 @@ FocusScope {
                                                      PlasmaCore.ColorScope.backgroundColor.g,
                                                      PlasmaCore.ColorScope.backgroundColor.b) > 0.5
 
-    property bool animationEnabled: false
     property bool organized: false
 
     function start() {
-        container.animationEnabled = true;
         container.organized = true;
     }
 
@@ -36,7 +34,7 @@ FocusScope {
         container.organized = false;
     }
 
-    Keys.onEscapePressed: effect.deactivate();
+    Keys.onEscapePressed: effect.ungrabActive();
 
     Keys.priority: Keys.AfterItem
     Keys.forwardTo: searchField
@@ -46,77 +44,10 @@ FocusScope {
         activity: KWinComponents.Workspace.currentActivity
         desktop: KWinComponents.Workspace.currentVirtualDesktop
         outputName: targetScreen.name
-        property real blurRadius: 0
 
         layer.enabled: effect.blurBackground
         layer.effect: FastBlur {
-            radius: backgroundItem.blurRadius
-        }
-    }
-
-    state: {
-        if (effect.gestureInProgress) {
-            return "partial";
-        } else if (container.organized) {
-            return "active";
-        } else {
-            return "initial";
-        }
-    }
-
-    states: [
-        State {
-            name: "initial"
-            PropertyChanges {
-                target: underlay
-                opacity: 0
-            }
-            PropertyChanges {
-                target: topBar
-                opacity: 0
-            }
-            PropertyChanges {
-                target: backgroundItem
-                blurRadius: 0
-            }
-        },
-        State {
-            name: "partial"
-            PropertyChanges {
-                target: underlay
-                opacity: 0.75 * effect.partialActivationFactor
-            }
-            PropertyChanges {
-                target: topBar
-                opacity: effect.partialActivationFactor
-            }
-            PropertyChanges {
-                target: backgroundItem
-                blurRadius: 64 * effect.partialActivationFactor
-            }
-        },
-        State {
-            name: "active"
-            PropertyChanges {
-                target: underlay
-                opacity: 0.75
-            }
-            PropertyChanges {
-                target: topBar
-                opacity: 1
-            }
-            PropertyChanges {
-                target: backgroundItem
-                blurRadius: 64
-            }
-        }
-    ]
-    transitions: Transition {
-        to: "initial, active"
-        NumberAnimation {
-            duration: effect.animationDuration
-            properties: "opacity, blurRadius"
-            easing.type: Easing.OutCubic
+            radius: 64 * Math.constrain(effect.partialActivationFactor, 0.0, 1.0)
         }
     }
 
@@ -124,9 +55,10 @@ FocusScope {
         id: underlay
         anchors.fill: parent
         color: PlasmaCore.ColorScope.backgroundColor
+        opacity: 0.75 * effect.partialActivationFactor
 
         TapHandler {
-            onTapped: effect.deactivate();
+            onTapped: effect.ungrabActive();
         }
     }
 
@@ -137,6 +69,7 @@ FocusScope {
             id: topBar
             width: parent.width
             height: searchBar.height + desktopBar.height
+            opacity: effect.partialActivationFactor
 
             Rectangle {
                 id: desktopBar
@@ -161,6 +94,7 @@ FocusScope {
                 anchors.top: desktopBar.bottom
                 width: parent.width
                 height: searchField.height + 2 * PlasmaCore.Units.largeSpacing
+                opacity: effect.partialActivationFactor
 
                 PC3.TextField {
                     id: searchField
@@ -186,8 +120,8 @@ FocusScope {
                 anchors.fill: parent
                 layout.mode: effect.layout
                 padding: PlasmaCore.Units.largeSpacing
-                animationDuration: effect.animationDuration
-                animationEnabled: container.animationEnabled
+                animationDuration: 200
+                animationEnabled: true
                 organized: container.organized
                 onWindowClicked: {
                     if (eventPoint.event.button !== Qt.MiddleButton) {
@@ -205,7 +139,7 @@ FocusScope {
                             ~KWinComponents.ClientFilterModel.Desktop &
                             ~KWinComponents.ClientFilterModel.Notification;
                 }
-                onActivated: effect.deactivate();
+                onActivated: effect.ungrabActive();
                 delegate: WindowHeapDelegate {
                     windowHeap: heap
 
@@ -233,7 +167,7 @@ FocusScope {
                 visible: container.organized && searchField.text
 
                 onActivated: {
-                    effect.deactivate();
+                    effect.ungrabActive();
                 }
             }
         }
@@ -255,9 +189,7 @@ FocusScope {
             y: model.client.y - targetScreen.geometry.y
             width: model.client.width
             height: model.client.height
-            opacity: container.effect.gestureInProgress
-                ? 1 - container.effect.partialActivationFactor
-                : (model.client.hidden || container.organized) ? 0 : 1
+            opacity: container.effect.partialActivationFactor
 
             Behavior on opacity {
                 enabled: !container.effect.gestureInProgress

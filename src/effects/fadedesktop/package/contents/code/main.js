@@ -67,7 +67,7 @@ var fadeDesktopEffect = {
         });
     },
     slotDesktopChanged: function (oldDesktop, newDesktop, movingWindow) {
-        if (effects.hasActiveFullScreenEffect && !effect.isActiveFullScreenEffect) {
+        if (effects.hasActiveFullScreenEffect || effects.currentContext != "Default") {
             return;
         }
 

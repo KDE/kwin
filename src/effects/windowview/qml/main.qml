@@ -20,13 +20,9 @@ Item {
     required property QtObject targetScreen
     required property var selectedIds
 
-    property bool animationEnabled: false
     property bool organized: false
 
-    readonly property int animationDuration: PlasmaCore.Units.longDuration
-
     function start() {
-        container.animationEnabled = true;
         container.organized = true;
     }
 
@@ -34,7 +30,7 @@ Item {
         container.organized = false;
     }
 
-    Keys.onEscapePressed: effect.deactivate(animationDuration);
+    Keys.onEscapePressed: effect.ungrabActive();
 
     Keys.priority: Keys.AfterItem
     Keys.forwardTo: searchField
@@ -46,24 +42,17 @@ Item {
 
         layer.enabled: true
         layer.effect: FastBlur {
-            radius: container.organized ? 64 : 0
-            Behavior on radius {
-                NumberAnimation { duration: container.animationDuration; easing.type: Easing.OutCubic }
-            }
+            radius: 64 * Math.constrain(effect.partialActivationFactor)
         }
     }
 
     Rectangle {
         anchors.fill: parent
         color: PlasmaCore.ColorScope.backgroundColor
-        opacity: container.organized ? 0.75 : 0
+        opacity: 0.75 * effect.partialActivationFactor//container.organized ? 0.75 : 0
 
         TapHandler {
-            onTapped: effect.deactivate(animationDuration);
-        }
-
-        Behavior on opacity {
-            OpacityAnimator { duration: animationDuration; easing.type: Easing.OutCubic }
+            onTapped: effect.ungrabActive();
         }
     }
 
@@ -72,6 +61,7 @@ Item {
         height: targetScreen.geometry.height
         PlasmaExtras.SearchField {
             id: searchField
+            opacity: effect.partialActivationFactor
             Layout.alignment: Qt.AlignCenter
             Layout.topMargin: PlasmaCore.Units.gridUnit
             Layout.preferredWidth: Math.min(parent.width, 20 * PlasmaCore.Units.gridUnit)
@@ -119,8 +109,6 @@ Item {
             Layout.fillHeight: true
             focus: true
             padding: PlasmaCore.Units.largeSpacing
-            animationDuration: container.animationDuration
-            animationEnabled: container.animationEnabled
             organized: container.organized
             showOnly: container.effect.mode === WindowView.ModeWindowClass ? "activeClass" : selectedIds
             layout.mode: effect.layout
@@ -146,7 +134,7 @@ Item {
                 opacity: 1 - downGestureProgress
                 onDownGestureTriggered: client.closeWindow()
             }
-            onActivated: effect.deactivate(animationDuration);
+            onActivated: effect.ungrabActive();
         }
     }
     PlasmaExtras.PlaceholderMessage {
@@ -171,11 +159,7 @@ Item {
             x: model.client.x - targetScreen.geometry.x
             y: model.client.y - targetScreen.geometry.y
             visible: opacity > 0
-            opacity: (model.client.hidden || container.organized) ? 0 : 1
-
-            Behavior on opacity {
-                NumberAnimation { duration: animationDuration; easing.type: Easing.OutCubic }
-            }
+            opacity: (model.client.hidden || container.organized) ? 0 : effect.partialActivationFactor
         }
     }
 

@@ -9,6 +9,7 @@
 #ifndef KWIN_VIRTUAL_DESKTOPS_H
 #define KWIN_VIRTUAL_DESKTOPS_H
 // KWin
+#include "globalshortcuts.h"
 #include <kwin_export.h>
 #include <kwinglobals.h>
 // Qt includes
@@ -451,12 +452,6 @@ private Q_SLOTS:
      */
     void slotDown();
 
-    /* For gestured desktopSwitching
-     * Called when gesture ended, the thing that actually switches the desktop.
-     */
-    void gestureReleasedY();
-    void gestureReleasedX();
-
 private:
     /**
      * Generate a desktop layout from EWMH _NET_DESKTOP_LAYOUT property parameters.
@@ -501,8 +496,8 @@ private:
     KWaylandServer::PlasmaVirtualDesktopManagementInterface *m_virtualDesktopManagement = nullptr;
     KSharedConfig::Ptr m_config;
 
-    QScopedPointer<QAction> m_swipeGestureReleasedY;
-    QScopedPointer<QAction> m_swipeGestureReleasedX;
+    std::unique_ptr<Action> m_switchDesktopGesture;
+    std::unique_ptr<Action> m_switchDesktopOrderedGesture; // For next / previous type switching
     QPointF m_currentDesktopOffset = QPointF(0, 0);
 
     KWIN_SINGLETON_VARIABLE(VirtualDesktopManager, s_manager)

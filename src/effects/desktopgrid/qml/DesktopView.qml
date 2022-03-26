@@ -64,13 +64,6 @@ DropArea {
             height: model.client.height
             z: model.client.stackingOrder
             opacity: model.client.dock ? desktopView.panelOpacity : 1
-            Behavior on opacity {
-                enabled: !container.effect.gestureInProgress
-                OpacityAnimator {
-                    duration: container.effect.animationDuration
-                    easing.type: Easing.InOutCubic
-                }
-            }
         }
     }
 
@@ -100,9 +93,7 @@ DropArea {
         height: parent.height
         focus: true
         z: 9999
-        animationDuration: container.effect.animationDuration
         absolutePositioning: false
-        animationEnabled: container.animationEnabled
         organized: container.organized
         layout.mode: effect.layout
         model: KWinComponents.ClientFilterModel {
@@ -119,7 +110,7 @@ DropArea {
             closeButtonVisible: false
             windowTitleVisible: false
         }
-        onActivated: effect.deactivate(effect.animationDuration);
+        onActivated: container.effect.ungrabActive(true)
         onWindowClicked: {
             if (eventPoint.event.button === Qt.MiddleButton) {
                 window.closeWindow();
@@ -129,22 +120,6 @@ DropArea {
                 } else {
                     window.desktop = desktopView.desktop.x11DesktopNumber;
                 }
-            }
-        }
-        Behavior on x {
-            enabled: !dragHandler.active
-            XAnimator {
-                id: xAnim
-                duration: container.effect.animationDuration
-                easing.type: Easing.InOutCubic
-            }
-        }
-        Behavior on y {
-            enabled: !dragHandler.active
-            YAnimator {
-                id: yAnim
-                duration: container.effect.animationDuration
-                easing.type: Easing.InOutCubic
             }
         }
     }

@@ -1012,25 +1012,25 @@ public:
     bool swipeGestureBegin(int fingerCount, quint32 time) override
     {
         Q_UNUSED(time)
-        input()->shortcuts()->processSwipeStart(DeviceType::Touchpad, fingerCount);
+        input()->shortcuts()->processSwipeStart(GestureDeviceType::Touchpad, fingerCount);
         return false;
     }
     bool swipeGestureUpdate(const QSizeF &delta, quint32 time) override
     {
         Q_UNUSED(time)
-        input()->shortcuts()->processSwipeUpdate(DeviceType::Touchpad, delta);
+        input()->shortcuts()->processSwipeUpdate(GestureDeviceType::Touchpad, delta);
         return false;
     }
     bool swipeGestureCancelled(quint32 time) override
     {
         Q_UNUSED(time)
-        input()->shortcuts()->processSwipeCancel(DeviceType::Touchpad);
+        input()->shortcuts()->processSwipeCancel(GestureDeviceType::Touchpad);
         return false;
     }
     bool swipeGestureEnd(quint32 time) override
     {
         Q_UNUSED(time)
-        input()->shortcuts()->processSwipeEnd(DeviceType::Touchpad);
+        input()->shortcuts()->processSwipeEnd(GestureDeviceType::Touchpad);
         return false;
     }
     bool pinchGestureBegin(int fingerCount, quint32 time) override
@@ -1062,7 +1062,7 @@ public:
     bool touchDown(qint32 id, const QPointF &pos, quint32 time) override
     {
         if (m_gestureTaken) {
-            input()->shortcuts()->processSwipeCancel(DeviceType::Touchscreen);
+            input()->shortcuts()->processSwipeCancel(GestureDeviceType::Touchscreen);
             m_gestureCancelled = true;
             return true;
         } else {
@@ -1096,7 +1096,7 @@ public:
                 m_syntheticCancel = true;
                 input()->processFilters(std::bind(&InputEventFilter::touchCancel, std::placeholders::_1));
                 m_syntheticCancel = false;
-                input()->shortcuts()->processSwipeStart(DeviceType::Touchscreen, m_touchPoints.count());
+                input()->shortcuts()->processSwipeStart(GestureDeviceType::Touchscreen, m_touchPoints.count());
                 return true;
             }
         }
@@ -1117,7 +1117,7 @@ public:
             auto &point = m_touchPoints[id];
             const QPointF dist = pos - point;
             const QSizeF delta = QSizeF(xfactor * dist.x(), yfactor * dist.y());
-            input()->shortcuts()->processSwipeUpdate(DeviceType::Touchscreen, 5 * delta / m_touchPoints.size());
+            input()->shortcuts()->processSwipeUpdate(GestureDeviceType::Touchscreen, 5 * delta / m_touchPoints.size());
             point = pos;
             return true;
         }
@@ -1130,7 +1130,7 @@ public:
         m_touchPoints.remove(id);
         if (m_gestureTaken) {
             if (!m_gestureCancelled) {
-                input()->shortcuts()->processSwipeEnd(DeviceType::Touchscreen);
+                input()->shortcuts()->processSwipeEnd(GestureDeviceType::Touchscreen);
                 m_gestureCancelled = true;
             }
             m_gestureTaken &= m_touchPoints.count() > 0;
@@ -3274,24 +3274,9 @@ void InputRedirection::registerAxisShortcut(Qt::KeyboardModifiers modifiers, Poi
     m_shortcuts->registerAxisShortcut(action, modifiers, axis);
 }
 
-void InputRedirection::registerRealtimeTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> cb)
+void InputRedirection::setContext(const QString activity)
 {
-    m_shortcuts->registerRealtimeTouchpadSwipe(action, cb, direction, fingerCount);
-}
-
-void InputRedirection::registerTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action)
-{
-    m_shortcuts->registerTouchpadSwipe(action, direction, fingerCount);
-}
-
-void InputRedirection::registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *action)
-{
-    m_shortcuts->registerTouchpadPinch(action, direction, fingerCount);
-}
-
-void InputRedirection::registerRealtimeTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
-{
-    m_shortcuts->registerRealtimeTouchpadPinch(onUp, progressCallback, direction, fingerCount);
+    m_shortcuts->setContext(activity);
 }
 
 void InputRedirection::registerGlobalAccel(KGlobalAccelInterface *interface)
@@ -3299,12 +3284,7 @@ void InputRedirection::registerGlobalAccel(KGlobalAccelInterface *interface)
     m_shortcuts->setKGlobalAccelInterface(interface);
 }
 
-void InputRedirection::registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
-{
-    m_shortcuts->registerTouchscreenSwipe(action, progressCallback, direction, fingerCount);
-}
-
-void InputRedirection::forceRegisterTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
+void InputRedirection::forceRegisterTouchscreenSwipeShortcut(GestureDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
 {
     m_shortcuts->forceRegisterTouchscreenSwipe(action, progressCallback, direction, fingerCount);
 }

@@ -111,6 +111,7 @@ private:
     State m_state = State::Inactive;
     SpringMotion m_motionX;
     SpringMotion m_motionY;
+    bool m_allowedByContext;
 
     // When the desktop isn't desktopChanging(), these two variables are used to control the animation path.
     // They use desktops as a unit.

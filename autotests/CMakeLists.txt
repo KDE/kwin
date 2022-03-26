@@ -29,10 +29,13 @@ ecm_mark_as_test(testWindowPaintData)
 set(testVirtualDesktops_SRCS
     ../src/virtualdesktops.cpp
     test_virtual_desktops.cpp
+    ../src/globalshortcuts.cpp
+    ../src/gestures.cpp
 )
 add_executable(testVirtualDesktops ${testVirtualDesktops_SRCS})
 
 target_link_libraries(testVirtualDesktops
+    kwineffects
     kwin
 
     Qt::Test
@@ -178,6 +181,8 @@ set(testGestures_SRCS
 add_executable(testGestures ${testGestures_SRCS})
 
 target_link_libraries(testGestures
+    kwineffects
+
     Qt::Test
 )
 

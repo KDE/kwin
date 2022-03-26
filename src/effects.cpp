@@ -266,6 +266,8 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
 
     connect(InputMethod::self(), &InputMethod::panelChanged, this, &EffectsHandlerImpl::inputPanelChanged);
 
+    connect(input()->shortcuts(), &GlobalShortcutsManager::contextChanged, this, &EffectsHandler::currentContextChanged);
+
     reconfigure();
 }
 
@@ -788,29 +790,53 @@ void EffectsHandlerImpl::registerAxisShortcut(Qt::KeyboardModifiers modifiers, P
     input()->registerAxisShortcut(modifiers, axis, action);
 }
 
-void EffectsHandlerImpl::registerRealtimeTouchpadSwipeShortcut(SwipeDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
+void EffectsHandlerImpl::registerEffectAction(EffectAction *action)
 {
-    input()->registerRealtimeTouchpadSwipeShortcut(dir, fingerCount, onUp, progressCallback);
+    Action *a = new Action(action->humanReadableLabel, action->name);
+    connect(action, &QObject::destroyed, [a]() {
+        delete a;
+    });
+
+    connect(a, &Action::gestureReleased, action, &EffectAction::released);
+    connect(a, &Action::triggered, action, &EffectAction::releasedComplete);
+    connect(a, &Action::cancelled, action, &EffectAction::releasedCancelled);
+    connect(a, &Action::crossTriggerThreshold, action, &EffectAction::crossTriggerThreshold);
+    connect(a, &Action::semanticProgressUpdate, action, &EffectAction::semanticProgressUpdate);
+    connect(a, &Action::semanticAxisUpdate, action, &EffectAction::semanticAxisUpdate);
+    connect(a, &Action::semanticDeltaUpdate, action, &EffectAction::semanticDeltaUpdate);
+    connect(a, &Action::pixelDeltaUpdate, action, &EffectAction::pixelDeltaUpdate);
+    a->supportedGestureDirections = action->supportedDirections;
+
+    input()->shortcuts()->registerAction(a);
 }
 
-void EffectsHandlerImpl::registerTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action)
+void EffectsHandlerImpl::registerEffectContext(EffectContext *context)
 {
-    input()->registerTouchpadSwipeShortcut(direction, fingerCount, action);
+    Context *internalContext = new Context(context->humanReadableLabel, context->name);
+    connect(context, &QObject::destroyed, [internalContext]() {
+        delete internalContext;
+    });
+
+    connect(internalContext, &Context::activating, context, &EffectContext::activating);
+    connect(internalContext, &Context::deactivating, context, &EffectContext::deactivating);
+    connect(internalContext, &Context::deactivated, context, &EffectContext::deactivated);
+    connect(internalContext, &Context::activated, context, &EffectContext::activated);
+    connect(context, &EffectContext::grabActive_Internal, internalContext, &Context::grabActive);
+    connect(context, &EffectContext::ungrabActive_Internal, internalContext, &Context::ungrabActive);
+    connect(internalContext, &Context::setActivationParameters, context, &EffectContext::setActivationParameters);
+    internalContext->activationParameters = context->activationParameters;
+
+    input()->shortcuts()->registerContext(internalContext);
 }
 
-void EffectsHandlerImpl::registerRealtimeTouchpadPinchShortcut(PinchDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
+void EffectsHandlerImpl::setCurrentContext(const QString context)
 {
-    input()->registerRealtimeTouchpadPinchShortcut(dir, fingerCount, onUp, progressCallback);
+    input()->setContext(context);
 }
 
-void EffectsHandlerImpl::registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *action)
+QString EffectsHandlerImpl::getCurrentContext()
 {
-    input()->registerTouchpadPinchShortcut(direction, fingerCount, action);
-}
-
-void EffectsHandlerImpl::registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
-{
-    input()->registerTouchscreenSwipeShortcut(direction, fingerCount, action, progressCallback);
+    return input()->shortcuts()->currentContext();
 }
 
 void *EffectsHandlerImpl::getProxy(QString name)

@@ -795,6 +795,200 @@ public:
     KWIN_EFFECT_FACTORY_SUPPORTED_ENABLED(className, jsonFile, return true;, return true;)
 
 /**
+ * Gestures, unlike keyboard shortcuts, need more than a QAction to work properly.
+ * So we present to you the EffectAction
+ *
+ * Any gesture based action that an effect supports, like
+ * clearing the desktop for example, creates and registers
+ * a Gesture Action.
+ *
+ * Forcing all gesture actions to use this interface
+ * allows for user configurability. This class isn't specific to
+ * one kind of input; the user will get to pick what
+ * is used to trigger it.
+ *
+ * Please do not use a EffectAction to open a fullscreen activity, like overview effect.
+ * Instead, see EffectContext
+ */
+class KWINEFFECTS_EXPORT EffectAction : public QObject
+{
+    Q_OBJECT
+public:
+    /**
+     * Pick a unique name for your gesture and don't change it.
+     * @param label Human readable name of this action. Used in config menus.
+     * @param name Unique persisitent name for action used in configuration files
+     */
+    EffectAction(const QString label, const QString name);
+    const QString humanReadableLabel;
+    const QString name;
+
+    /**
+     * List of supported Gestures.
+     */
+    std::shared_ptr<QSet<GestureDirection>> supportedDirections;
+
+Q_SIGNALS:
+    // Called when a relevant gesture is ______
+    void released();
+    void releasedComplete(); // This will trigger the action
+    void releasedCancelled(); // This will not trigger the action
+
+    /**
+     * For lazy effects that don't animate their transitions.
+     * This will report crossing and uncrossing the trigger threshold.
+     */
+    void crossTriggerThreshold(bool triggered);
+
+    /**
+     * A [0, 1+] semantic scale. 0 = nothing happens, 1 = complete 1 of something.
+     * This range has no upward bound. Values above 1 should be treated as an indication
+     * to do something more than once if possible. If the action can only happen once,
+     * you could animate that something is being stretched past done.
+     *
+     * Supported by all gestures.
+     * @param GestureDirection The gesture that was bound to this slot that's currently the reason you're recieving an update.
+     */
+    void semanticProgressUpdate(qreal, GestureDirection);
+    /**
+     * [-1, 1] scale for Vertical, Horizontal and Pinches. Negative is down, left and contracting.
+     * This range is not constrained to [-1, 1].
+     *
+     * Supported by all gestures except Directionless Swipe.
+     */
+    void semanticAxisUpdate(qreal, GestureDirection);
+    /**
+     * Like the semantic axis but in both directions.
+     *
+     * Supported by all swipe gestures.
+     */
+    void semanticDeltaUpdate(const QSizeF, GestureDirection);
+    /**
+     * Just a pixel delta.
+     *
+     * Supported by all swipe gestures.
+     */
+    void pixelDeltaUpdate(const QSizeF, GestureDirection);
+};
+
+/**
+ * Some effects give the user a full screen menu (like Overivew).
+ * Such effects should create an EffectContext.
+ * The Context class provides a common interface fullscreen effects
+ * that provide their own menu/page, allowing for user configuration
+ * and better tracking of where the user is.
+ *
+ * If you register an EffectContext, gestures and touchborders will be supported for it's
+ * activation implicitly; there is no need to additionally register
+ * a GestureAction to open the Context.
+ *
+ * NOTE: With this framwork, entering and exiting the fullscreen effect should
+ * be entirely driven by this object. See the signals below.
+ */
+
+class KWINEFFECTS_EXPORT EffectContext : public QObject
+{
+    Q_OBJECT
+public:
+    /**
+     * EffectContexts are automatically registered when created.
+     * @param label Human readable label for Context, used in configuration menus
+     * @param name Unique persistent name for Context, used in config files
+     */
+    EffectContext(const QString label, const QString name);
+    const QString humanReadableLabel;
+    const QString name;
+
+    enum State {
+        Active,
+        Activating,
+        Deactivating,
+        Inactive,
+    };
+
+    State state() const;
+
+public Q_SLOTS:
+    /**
+     * Force kwin to enter this Context.
+     * If you're effect responds to keyboard shortcuts,
+     * it is imperative that you use these grab functions
+     * to activate your context. Not doing this will let
+     * kwin lose sync with what's happening.
+     *
+     * @param forceComplete will ensure that no other contexts can be activated until this one is activated.
+     */
+    void grabActive(bool forceComplete = false);
+    /**
+     * If your effect is being asked to activate and it can't,
+     * send back this to let kwin know.
+     *
+     * @param forceComplete will ensure that no other contexts can be activated until this one is deactivated.
+     */
+    void ungrabActive(bool forceComplete = false);
+
+    /**
+     * Contexts can take parameters.
+     * @example WindowView takes the "Windows" parameter
+     * and supplies the possibleValues:
+     *    "Show All Windows" "ModeAllDesktops"
+     *    "Show Windows from Current Desktop" "ModeCurrentDesktop"
+     *    "Show All Windows of the Active Application" "ModeWindowClass"
+     * It gives the type QString
+     *
+     * Parameters can be configured by the user.
+     * After adding all parameters, call registerEffectContext()
+     */
+    void addActivationParameter(Parameter);
+
+Q_SIGNALS:
+    /**
+     * Emmitted when entering or leaving the context. Use for animations.
+     * Be ready to recieve these at any time.
+     *
+     * IMPORTANT: immediately after recieving one of these, release activeFullscreenEffect
+     * so that other effects can animate the transition.
+     */
+    void deactivating(qreal progress, AnimationDirection); // [0, 1+] Semantic progress scale
+    void activating(qreal progress, AnimationDirection); // [0, 1+] Semantic progress scale
+
+    /**
+     * Deactivate the context immediately; no animation.
+     * This is usually called after the leaving animation is complete.
+     */
+    void deactivated();
+
+    /**
+     * If you've given activation parameters,
+     * the context will recieve the ones it
+     * should use to activate here before
+     * activation starts.
+     *
+     * All parameters added are guaranteed to
+     * be supplied here.
+     */
+    //                                Parameter Name  Value
+    void setActivationParameters(const QHash<QString, QVariant> &parameters);
+
+    /**
+     * This Context finished activating.
+     * Now you should capture activeFullscreenEffect.
+     */
+    void activated();
+
+    // Don't touch these
+    void grabActive_Internal(bool forceComplete);
+    void ungrabActive_Internal(bool forceComplete);
+
+public:
+    // Don't touch this
+    std::shared_ptr<QList<Parameter>> activationParameters;
+
+private:
+    State m_state = State::Inactive;
+};
+
+/**
  * @short Manager class that handles all the effects.
  *
  * This class creates Effect objects and calls it's appropriate methods.
@@ -839,6 +1033,7 @@ class KWINEFFECTS_EXPORT EffectsHandler : public QObject
     Q_PROPERTY(QSize virtualScreenSize READ virtualScreenSize NOTIFY virtualScreenSizeChanged)
     Q_PROPERTY(QRect virtualScreenGeometry READ virtualScreenGeometry NOTIFY virtualScreenGeometryChanged)
     Q_PROPERTY(bool hasActiveFullScreenEffect READ hasActiveFullScreenEffect NOTIFY hasActiveFullScreenEffectChanged)
+    Q_PROPERTY(QString currentContext READ getCurrentContext NOTIFY currentContextChanged)
 
     /**
      * The status of the session i.e if the user is logging out
@@ -920,28 +1115,34 @@ public:
     virtual void registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action) = 0;
 
     /**
-     * @brief Registers a global touchpad swipe gesture shortcut with the provided @p action.
+     * @brief Registers an EffectAction that the user can bind gestures to.
+     * @since 5.25
      *
-     * @param direction The direction for the swipe
-     * @param action The action which gets triggered when the gesture triggers
-     * @since 5.10
+     * NOTE: Manual regestration is not usually necessary. The EffectAction registers
+     * automatically on creation. If you add parameters, you will need to use this
+     * function to reregister.
      */
-    virtual void registerTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action) = 0;
-
-    virtual void registerRealtimeTouchpadSwipeShortcut(SwipeDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback) = 0;
-
-    virtual void registerRealtimeTouchpadPinchShortcut(PinchDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback) = 0;
-
-    virtual void registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *action) = 0;
+    virtual void registerEffectAction(EffectAction *action) = 0;
 
     /**
-     * @brief Registers a global touchscreen swipe gesture shortcut with the provided @p action.
+     * Some effects present a fullscreen activity for the user to interact with.
+     * They should create an EffectContext, which will allow the user to configure
+     * what triggers it.
      *
-     * @param direction The direction for the swipe
-     * @param action The action which gets triggered when the gesture triggers
+     * NOTE: Manual registration is not necessary. EffectContext is
+     * registered automatically when created. Don't use this function.
+     *
      * @since 5.25
      */
-    virtual void registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback) = 0;
+    virtual void registerEffectContext(EffectContext *context) = 0;
+
+    /**
+     * @brief Manually set the active Context. If the given
+     * contextName hasn't been registered, nothing will happen.
+     * @since 5.25
+     */
+    virtual void setCurrentContext(const QString contextName) = 0;
+    virtual QString getCurrentContext() = 0;
 
     /**
      * Retrieve the proxy class for an effect if it has one. Will return NULL if
@@ -1463,6 +1664,8 @@ public:
     virtual bool isInputPanelOverlay() const = 0;
 
 Q_SIGNALS:
+
+    void currentContextChanged(QString name);
     /**
      * This signal is emitted whenever a new @a screen is added to the system.
      */
