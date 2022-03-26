@@ -102,6 +102,23 @@ DesktopGridEffect::DesktopGridEffect()
         timeline.setCurrentTime(timeline.duration() * cb);
         effects->addRepaintFull();
     });
+    effects->registerRealtimeTouchpadPinchShortcut(PinchDirection::Contracting, 3, a, [this](qreal cb) {
+        if (activated) {
+            return;
+        }
+        if (effects->hasActiveFullScreenEffect() && effects->activeFullScreenEffect() != this) {
+            return;
+        }
+
+        if (timeline.currentValue() == 0) {
+            activated = true;
+            setup();
+            activated = false;
+        }
+
+        timeline.setCurrentTime(timeline.duration() * cb);
+        effects->addRepaintFull();
+    });
     connect(&timeline, &QTimeLine::frameChanged, this, []() {
         effects->addRepaintFull();
     });
