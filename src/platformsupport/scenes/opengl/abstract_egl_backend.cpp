@@ -370,7 +370,7 @@ void AbstractEglBackend::setSurface(const EGLSurface &surface)
     m_surface = surface;
 }
 
-QSharedPointer<GLTexture> AbstractEglBackend::textureForOutput(AbstractOutput *requestedOutput) const
+QSharedPointer<GLTexture> AbstractEglBackend::textureForOutput(RenderOutput *requestedOutput) const
 {
     QSharedPointer<GLTexture> texture(new GLTexture(GL_RGBA8, requestedOutput->pixelSize()));
     GLRenderTarget renderTarget(texture.data());

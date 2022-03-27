@@ -84,7 +84,7 @@ public:
         return m_havePlatformBase;
     }
 
-    QSharedPointer<KWin::GLTexture> textureForOutput(KWin::AbstractOutput *output) const override;
+    QSharedPointer<GLTexture> textureForOutput(RenderOutput *output) const override;
     void aboutToStartPainting(RenderOutput *output, const QRegion &damage) override;
 
 private:

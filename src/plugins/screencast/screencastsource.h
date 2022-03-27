@@ -6,12 +6,16 @@
 
 #pragma once
 
+#include <QHash>
 #include <QObject>
 
 namespace KWin
 {
 
 class GLRenderTarget;
+class AbstractOutput;
+class RenderOutput;
+class GLTexture;
 
 class ScreenCastSource : public QObject
 {
@@ -29,6 +33,9 @@ public:
 
 Q_SIGNALS:
     void closed();
+
+protected:
+    QHash<RenderOutput *, QSharedPointer<GLTexture>> getTextures(AbstractOutput *output) const;
 };
 
 } // namespace KWin

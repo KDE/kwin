@@ -706,6 +706,12 @@ SurfaceTexture *Scene::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
     return nullptr;
 }
 
+QSharedPointer<GLTexture> Scene::textureForOutput(RenderOutput *output) const
+{
+    Q_UNUSED(output);
+    return nullptr;
+}
+
 //****************************************
 // Scene::Window
 //****************************************

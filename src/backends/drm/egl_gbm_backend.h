@@ -72,7 +72,7 @@ public:
     QSharedPointer<DrmPipelineLayer> createDrmPipelineLayer(DrmPipeline *pipeline) override;
     QSharedPointer<DrmOutputLayer> createLayer(DrmVirtualOutput *output) override;
 
-    QSharedPointer<GLTexture> textureForOutput(AbstractOutput *requestedOutput) const override;
+    QSharedPointer<GLTexture> textureForOutput(RenderOutput *requestedOutput) const override;
 
     QSharedPointer<DrmBuffer> testBuffer(DrmAbstractOutput *output);
     EGLConfig config(uint32_t format) const;

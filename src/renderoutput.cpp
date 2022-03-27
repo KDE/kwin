@@ -29,6 +29,15 @@ QSize RenderOutput::pixelSize() const
     return geometry().size() * platformOutput()->scale();
 }
 
+QRect RenderOutput::relativePixelGeometry() const
+{
+    if (m_output) {
+        return QRect(QPoint(geometry().topLeft().x() * m_output->scale() / m_output->pixelSize().width(), geometry().topLeft().y() * m_output->scale() / m_output->pixelSize().height()), m_output->pixelSize());
+    } else {
+        return geometry();
+    }
+}
+
 AbstractOutput *RenderOutput::platformOutput() const
 {
     return m_output;

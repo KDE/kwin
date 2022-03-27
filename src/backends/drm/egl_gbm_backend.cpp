@@ -258,9 +258,9 @@ bool EglGbmBackend::scanout(RenderOutput *output, SurfaceItem *surfaceItem)
     }
 }
 
-QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(AbstractOutput *output) const
+QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(RenderOutput *output) const
 {
-    const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
+    const auto drmOutput = static_cast<DrmAbstractOutput *>(output->platformOutput());
     return static_cast<EglGbmLayer *>(drmOutput->outputLayer())->texture();
 }
 

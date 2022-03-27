@@ -28,6 +28,10 @@ public:
     virtual QRect geometry() const;
     virtual AbstractOutput *platformOutput() const;
     QSize pixelSize() const;
+    /**
+     * @returns the area that this RenderOutput fills within the AbstractOutput it belongs to
+     */
+    QRect relativePixelGeometry() const;
 
     /**
      * Returns a dummy OutputLayer corresponding to the primary plane.

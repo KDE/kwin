@@ -194,11 +194,7 @@ public:
      */
     virtual QVector<QByteArray> openGLPlatformInterfaceExtensions() const;
 
-    virtual QSharedPointer<GLTexture> textureForOutput(AbstractOutput *output) const
-    {
-        Q_UNUSED(output);
-        return {};
-    }
+    virtual QSharedPointer<GLTexture> textureForOutput(RenderOutput *output) const;
 
     virtual SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap);
     virtual SurfaceTexture *createSurfaceTextureX11(SurfacePixmapX11 *pixmap);
