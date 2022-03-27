@@ -13,7 +13,7 @@
 
 #include <QObject>
 
-class KGlobalAccelImpl : public KGlobalAccelInterface
+class KGlobalAccelImpl : public KGlobalAccelInterfaceV2
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID KGlobalAccelInterface_iid FILE "kwin.json")
@@ -28,6 +28,7 @@ public:
 
 public Q_SLOTS:
     bool checkKeyPressed(int keyQt);
+    bool checkKeyReleased(int keyQt);
 
 private:
     bool m_shuttingDown = false;
