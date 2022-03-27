@@ -394,6 +394,9 @@ void DrmOutput::applyQueuedChanges(const WaylandOutputConfig &config)
 
     auto props = config.constChangeSet(this);
     setEnabled(props->enabled && m_pipeline->pending.crtc);
+    if (!isEnabled() && m_pipeline->needsModeset()) {
+        m_gpu->maybeModeset();
+    }
     moveTo(props->pos);
     setScale(props->scale);
     setTransformInternal(props->transform);
