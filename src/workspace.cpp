@@ -2495,7 +2495,6 @@ QPoint Workspace::adjustClientPosition(AbstractClient *c, QPoint pos, bool unres
         const int snapX = borderSnapZone.width() * snapAdjust; // snap trigger
         const int snapY = borderSnapZone.height() * snapAdjust;
         if (snapX || snapY) {
-            QRect geo = c->frameGeometry();
             if ((sOWO ? (cx < xmin) : true) && (qAbs(xmin - cx) < snapX)) {
                 deltaX = xmin - cx;
                 nx = xmin;
