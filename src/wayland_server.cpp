@@ -15,6 +15,7 @@
 #include "inputpanelv1integration.h"
 #include "keyboard_input.h"
 #include "screens.h"
+#include "scene.h"
 #include "layershellv1integration.h"
 #include "main.h"
 #include "xdgshellintegration.h"
@@ -610,6 +611,7 @@ void WaylandServer::initScreenLocker()
                 connect(seat, &KWaylandServer::SeatInterface::timestampChanged,
                         screenLockerApp, &ScreenLocker::KSldApp::userActivity);
             }
+            Compositor::self()->scene()->addRepaintFull();
         }
     );
 
@@ -627,6 +629,7 @@ void WaylandServer::initScreenLocker()
                            screenLockerApp, &ScreenLocker::KSldApp::userActivity);
             }
             ScreenLocker::KSldApp::self()->setWaylandFd(-1);
+            Compositor::self()->scene()->addRepaintFull();
         }
     );
 
