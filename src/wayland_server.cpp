@@ -213,10 +213,6 @@ KWaylandServer::ClientConnection *WaylandServer::inputMethodConnection() const
 
 void WaylandServer::registerShellClient(AbstractClient *client)
 {
-    if (client->isLockScreen()) {
-        ScreenLocker::KSldApp::self()->lockScreenShown();
-    }
-
     if (client->readyForPainting()) {
         Q_EMIT shellClientAdded(client);
     } else {
@@ -623,6 +619,8 @@ void WaylandServer::initScreenLocker()
                 m_screenLockerClientConnection = nullptr;
             }
 
+            new LockScreenPresentationWatcher(this);
+
             const QVector<SeatInterface *> seatIfaces = m_display->seats();
             for (auto *seat : seatIfaces) {
                 disconnect(seat, &KWaylandServer::SeatInterface::timestampChanged,
@@ -797,4 +795,23 @@ QString WaylandServer::socketName() const
     return QString();
 }
 
+WaylandServer::LockScreenPresentationWatcher::LockScreenPresentationWatcher(WaylandServer *server)
+{
+    connect(server, &WaylandServer::shellClientAdded, this, [this](AbstractClient *client) {
+        if (client->isLockScreen()) {
+            connect(client->output()->renderLoop(), &RenderLoop::framePresented, this, [this, client]() {
+                // only signal lockScreenShown once all outputs have been presented at least once
+                m_signaledOutputs << client->output();
+                if (m_signaledOutputs.size() == kwinApp()->platform()->enabledOutputs().size()) {
+                    ScreenLocker::KSldApp::self()->lockScreenShown();
+                    delete this;
+                }
+            });
+        }
+    });
+    QTimer::singleShot(1000, this, [this]() {
+        ScreenLocker::KSldApp::self()->lockScreenShown();
+        delete this;
+    });
+}
 }
