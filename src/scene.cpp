@@ -615,11 +615,6 @@ void Scene::createStackingOrder()
         if (!win->readyForPainting()) {
             windows.removeAll(win);
         }
-        if (waylandServer() && waylandServer()->isScreenLocked()) {
-            if (!win->isLockScreen() && !win->isInputMethod()) {
-                windows.removeAll(win);
-            }
-        }
     }
 
     // TODO: cache the stacking_order in case it has not changed
@@ -658,9 +653,6 @@ void Scene::finalPaintWindow(EffectWindowImpl *w, int mask, const QRegion &regio
 // will be eventually called from drawWindow()
 void Scene::finalDrawWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
 {
-    if (waylandServer() && waylandServer()->isScreenLocked() && !w->window()->isLockScreen() && !w->window()->isInputMethod()) {
-        return;
-    }
     w->sceneWindow()->performPaint(mask, region, data);
 }
 

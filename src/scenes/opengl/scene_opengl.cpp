@@ -15,7 +15,6 @@
 #include "openglsurfacetexture.h"
 
 #include "platform.h"
-#include "wayland_server.h"
 
 #include <kwinglplatform.h>
 #include <kwinoffscreenquickview.h>
@@ -312,9 +311,6 @@ Scene::Window *SceneOpenGL::createWindow(Toplevel *t)
 
 void SceneOpenGL::finalDrawWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
 {
-    if (waylandServer() && waylandServer()->isScreenLocked() && !w->window()->isLockScreen() && !w->window()->isInputMethod()) {
-        return;
-    }
     performPaintWindow(w, mask, region, data);
 }
 
