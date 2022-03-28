@@ -581,12 +581,6 @@ void WaylandServer::initScreenLocker()
 
     ScreenLocker::KSldApp::self()->setGreeterEnvironment(kwinApp()->processStartupEnvironment());
 
-    connect(this, &WaylandServer::shellClientAdded, this, [](AbstractClient *client) {
-        if (client->isLockScreen()) {
-            ScreenLocker::KSldApp::self()->lockScreenShown();
-        }
-    });
-
     connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::aboutToLock, this, [this, screenLockerApp]() {
         if (m_screenLockerClientConnection) {
             // Already sent data to KScreenLocker.
@@ -597,6 +591,8 @@ void WaylandServer::initScreenLocker()
             return;
         }
         ScreenLocker::KSldApp::self()->setWaylandFd(clientFd);
+
+        new LockScreenPresentationWatcher(this);
 
         const QVector<SeatInterface *> seatIfaces = m_display->seats();
         for (auto *seat : seatIfaces) {
@@ -794,4 +790,25 @@ QString WaylandServer::socketName() const
     return QString();
 }
 
+#if KWIN_BUILD_SCREENLOCKER
+WaylandServer::LockScreenPresentationWatcher::LockScreenPresentationWatcher(WaylandServer *server)
+{
+    connect(server, &WaylandServer::shellClientAdded, this, [this](AbstractClient *client) {
+        if (client->isLockScreen()) {
+            connect(client->output()->renderLoop(), &RenderLoop::framePresented, this, [this, client]() {
+                // only signal lockScreenShown once all outputs have been presented at least once
+                m_signaledOutputs << client->output();
+                if (m_signaledOutputs.size() == kwinApp()->platform()->enabledOutputs().size()) {
+                    ScreenLocker::KSldApp::self()->lockScreenShown();
+                    delete this;
+                }
+            });
+        }
+    });
+    QTimer::singleShot(1000, this, [this]() {
+        ScreenLocker::KSldApp::self()->lockScreenShown();
+        delete this;
+    });
+}
+#endif
 }

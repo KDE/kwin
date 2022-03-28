@@ -252,6 +252,16 @@ private:
     void handleOutputRemoved(AbstractOutput *output);
     void handleOutputEnabled(AbstractOutput *output);
     void handleOutputDisabled(AbstractOutput *output);
+
+    class LockScreenPresentationWatcher : public QObject
+    {
+    public:
+        LockScreenPresentationWatcher(WaylandServer *server);
+
+    private:
+        QSet<AbstractOutput *> m_signaledOutputs;
+    };
+
     KWaylandServer::Display *m_display = nullptr;
     KWaylandServer::CompositorInterface *m_compositor = nullptr;
     KWaylandServer::SeatInterface *m_seat = nullptr;
