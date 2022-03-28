@@ -79,6 +79,16 @@ void Module::configure(const KPluginMetaData &data)
     dialog->show();
 }
 
+void Module::togglePendingDeletion(const KPluginMetaData &data)
+{
+    if (m_pendingDeletions.contains(data)) {
+        m_pendingDeletions.removeOne(data);
+    } else {
+        m_pendingDeletions.append(data);
+    }
+    Q_EMIT pendingDeletionsChanged();
+}
+
 void Module::importScriptInstallFinished(KJob *job)
 {
     // if the applet is already installed, just add it to the containment

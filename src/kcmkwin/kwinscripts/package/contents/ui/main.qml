@@ -6,7 +6,7 @@
 */
 
 import QtQuick 2.5
-import QtQuick.Controls 2.5 as QQC2
+import QtQuick.Controls 2.15 as QQC2
 import QtQuick.Layouts 1.1
 
 import org.kde.kcm 1.2
@@ -17,6 +17,15 @@ import org.kde.kcmutils 1.0 as KCMUtils
 
 KCMUtils.KPluginSelector {
     model: kcm.effectsModel
+    delegate: KCMUtils.KPluginDelegate {
+        additionalActions: [
+            Kirigami.Action {
+                    icon.name: "delete"
+                    tooltip: i18nc("@info:tooltip", "Configure...")
+                    onTriggered: ()=>{}
+            }
+        ]
+    }
     footer: ColumnLayout {
         RowLayout {
             Layout.alignment: Qt.AlignRight

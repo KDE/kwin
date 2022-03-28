@@ -12,6 +12,7 @@
 #include <KPluginModel>
 #include <KQuickAddons/ConfigModule>
 #include <KSharedConfig>
+#include <kpluginmetadata.h>
 
 class KJob;
 class KWinScriptsData;
@@ -21,6 +22,7 @@ class Module : public KQuickAddons::ConfigModule
     Q_OBJECT
         
     Q_PROPERTY(QAbstractItemModel *effectsModel READ effectsModel CONSTANT)
+    Q_PROPERTY(QList<KPluginMetaData> pendingDeletions READ pendingDeletions NOTIFY pendingDeletionsChanged)
 public:
     /**
      * Constructor.
@@ -37,9 +39,20 @@ public:
     void load() override;
     void save() override;
     void defaults() override;
+
     QAbstractItemModel *effectsModel() const
     {
         return m_model;
+    }
+
+    Q_INVOKABLE void togglePendingDeletion(const KPluginMetaData &data);
+    Q_INVOKABLE bool canDeleteEntry(const KPluginMetaData &data)
+    {
+        return QFileInfo(data.fileName()).isWritable();
+    }
+    QList<KPluginMetaData> pendingDeletions()
+    {
+        return m_pendingDeletions;
     }
 
 Q_SIGNALS:
