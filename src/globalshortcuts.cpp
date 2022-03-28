@@ -48,7 +48,7 @@ GlobalShortcut::GlobalShortcut(Shortcut &&sc, QAction *action)
     } else if (auto rtSwipeGesture = std::get_if<RealtimeFeedbackSwipeShortcut>(&sc)) {
         m_swipeGesture.reset(new SwipeGesture());
         m_swipeGesture->setDirection(swipeDirs[rtSwipeGesture->direction]);
-        m_swipeGesture->setMinimumDelta(QSizeF(200, 200));
+        m_swipeGesture->setMinimumDelta(QSizeF(700, 700));
         m_swipeGesture->setMaximumFingerCount(rtSwipeGesture->fingerCount);
         m_swipeGesture->setMinimumFingerCount(rtSwipeGesture->fingerCount);
         QObject::connect(m_swipeGesture.get(), &SwipeGesture::triggered, m_action, &QAction::trigger, Qt::QueuedConnection);
