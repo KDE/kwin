@@ -313,7 +313,7 @@ Scene::Window *SceneOpenGL::createWindow(Toplevel *t)
 
 void SceneOpenGL::finalDrawWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
 {
-    if (waylandServer() && waylandServer()->isScreenLocked() && !w->window()->isLockScreen() && !w->window()->isInputMethod()) {
+    if (!m_filter.filterAcceptsWindow(w->window())) {
         return;
     }
     performPaintWindow(w, mask, region, data);

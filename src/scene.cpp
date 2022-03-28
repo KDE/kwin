@@ -138,6 +138,7 @@ QRect SceneDelegate::viewport() const
 
 Scene::Scene(QObject *parent)
     : QObject(parent)
+    , m_filter(this)
 {
 }
 
@@ -611,10 +612,8 @@ void Scene::createStackingOrder()
         if (!win->readyForPainting()) {
             windows.removeAll(win);
         }
-        if (waylandServer() && waylandServer()->isScreenLocked()) {
-            if (!win->isLockScreen() && !win->isInputMethod()) {
-                windows.removeAll(win);
-            }
+        if (!m_filter.filterAcceptsWindow(win)) {
+            windows.removeAll(win);
         }
     }
 
@@ -654,7 +653,7 @@ void Scene::finalPaintWindow(EffectWindowImpl *w, int mask, const QRegion &regio
 // will be eventually called from drawWindow()
 void Scene::finalDrawWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
 {
-    if (waylandServer() && waylandServer()->isScreenLocked() && !w->window()->isLockScreen() && !w->window()->isInputMethod()) {
+    if (!m_filter.filterAcceptsWindow(w->window())) {
         return;
     }
     w->sceneWindow()->performPaint(mask, region, data);
@@ -869,6 +868,22 @@ Scene::EffectFrame::EffectFrame(EffectFrameImpl *frame)
 
 Scene::EffectFrame::~EffectFrame()
 {
+}
+
+//****************************************
+// ScreenLockerFilter
+//****************************************
+
+ScreenLockerFilter::ScreenLockerFilter(Scene *s)
+{
+    QObject::connect(waylandServer(), &WaylandServer::lockStateChanged, s, &Scene::addRepaintFull);
+}
+
+ScreenLockerFilter::~ScreenLockerFilter() = default;
+
+bool ScreenLockerFilter::filterAcceptsWindow(KWin::Toplevel *w) const
+{
+    return !waylandServer()->isScreenLocked() || (w->isLockScreen() || w->isInputMethod());
 }
 
 } // namespace

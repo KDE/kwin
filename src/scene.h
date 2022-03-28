@@ -15,6 +15,8 @@
 #include "toplevel.h"
 #include "utils/common.h"
 
+#include <optional>
+
 #include <QElapsedTimer>
 #include <QMatrix4x4>
 
@@ -43,6 +45,15 @@ class SurfacePixmapWayland;
 class SurfacePixmapX11;
 class SurfaceTexture;
 class WindowItem;
+
+class ScreenLockerFilter
+{
+public:
+    ScreenLockerFilter(Scene *scene);
+    ~ScreenLockerFilter();
+
+    bool filterAcceptsWindow(KWin::Toplevel *w) const;
+};
 
 class SceneDelegate : public RenderLayerDelegate
 {
@@ -264,6 +275,7 @@ protected:
 
     // windows in their stacking order
     QVector<Window *> stacking_order;
+    ScreenLockerFilter m_filter;
 
 private:
     std::chrono::milliseconds m_expectedPresentTimestamp = std::chrono::milliseconds::zero();

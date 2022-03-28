@@ -239,6 +239,7 @@ Q_SIGNALS:
     void shellClientRemoved(KWin::AbstractClient *);
     void initialized();
     void foreignTransientChanged(KWaylandServer::SurfaceInterface *child);
+    void lockStateChanged();
 
 private:
     int createScreenLockerConnection();

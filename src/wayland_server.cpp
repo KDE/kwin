@@ -600,6 +600,7 @@ void WaylandServer::initScreenLocker()
             connect(seat, &KWaylandServer::SeatInterface::timestampChanged,
                     screenLockerApp, &ScreenLocker::KSldApp::userActivity);
         }
+        Q_EMIT lockStateChanged();
     });
 
     connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::unlocked, this, [this, screenLockerApp]() {
@@ -615,7 +616,7 @@ void WaylandServer::initScreenLocker()
                        screenLockerApp, &ScreenLocker::KSldApp::userActivity);
         }
         ScreenLocker::KSldApp::self()->setWaylandFd(-1);
-        Compositor::self()->scene()->addRepaintFull();
+        Q_EMIT lockStateChanged();
     });
 
     ScreenLocker::KSldApp::self()->initialize();
