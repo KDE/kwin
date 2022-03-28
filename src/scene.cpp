@@ -165,11 +165,6 @@ void Scene::addRepaint(int x, int y, int width, int height)
     addRepaint(QRegion(x, y, width, height));
 }
 
-void Scene::addRepaint(const QRect &rect)
-{
-    addRepaint(QRegion(rect));
-}
-
 void Scene::addRepaint(const QRegion &region)
 {
     for (const auto &delegate : std::as_const(m_delegates)) {

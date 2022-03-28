@@ -80,7 +80,6 @@ public:
      * Schedules a repaint for the specified @a region.
      */
     void addRepaint(const QRegion &region);
-    void addRepaint(const QRect &rect);
     void addRepaint(int x, int y, int width, int height);
     void addRepaintFull();
     QRegion damage() const;
