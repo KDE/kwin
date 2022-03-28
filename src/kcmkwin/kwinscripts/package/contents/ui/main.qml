@@ -18,13 +18,15 @@ import org.kde.kcmutils 1.0 as KCMUtils
 KCMUtils.KPluginSelector {
     id: selector
     model: kcm.effectsModel
+
     delegate: KCMUtils.KPluginDelegate {
         aboutDialog: selector.aboutDialog
         additionalActions: [
             Kirigami.Action {
-                    icon.name: "delete"
+                    enabled: kcm.canDeleteEntry(model.metaData)
+                    icon.name: kcm.pendingDeletions.indexOf(model.metaData) === -1 ? "delete" : "edit-undo"
                     tooltip: i18nc("@info:tooltip", "Configure...")
-                    onTriggered: ()=>{}
+                    onTriggered: kcm.togglePendingDeletion(model.metaData)
             }
         ]
     }

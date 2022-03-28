@@ -72,7 +72,6 @@ void Module::importScript()
 
 void Module::configure(const KPluginMetaData &data)
 {
-    qWarning()<<Q_FUNC_INFO << data.fileName();
     auto dialog = new KCMultiDialog();
     dialog->addModule(data);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
@@ -86,6 +85,7 @@ void Module::togglePendingDeletion(const KPluginMetaData &data)
     } else {
         m_pendingDeletions.append(data);
     }
+    setNeedsSave(m_model->isSaveNeeded() || !m_pendingDeletions.isEmpty());
     Q_EMIT pendingDeletionsChanged();
 }
 
@@ -151,6 +151,7 @@ void Module::save()
         });
     }
     m_pendingDeletions.clear();
+    Q_EMIT pendingDeletionsChanged();
 
     m_kwinConfig->sync();
     QDBusMessage message = QDBusMessage::createMethodCall("org.kde.KWin", "/Scripting", "org.kde.kwin.Scripting", "start");

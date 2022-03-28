@@ -23,6 +23,7 @@ class Module : public KQuickAddons::ConfigModule
         
     Q_PROPERTY(QAbstractItemModel *effectsModel READ effectsModel CONSTANT)
     Q_PROPERTY(QList<KPluginMetaData> pendingDeletions READ pendingDeletions NOTIFY pendingDeletionsChanged)
+    Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
 public:
     /**
      * Constructor.
@@ -50,13 +51,23 @@ public:
     {
         return QFileInfo(data.fileName()).isWritable();
     }
+
+    Q_SIGNAL void pendingDeletionsChanged();
     QList<KPluginMetaData> pendingDeletions()
     {
         return m_pendingDeletions;
     }
 
-Q_SIGNALS:
-    void pendingDeletionsChanged();
+    Q_SIGNAL void errorMessageChanged();
+    QString errorMessage() const
+    {
+        return m_errorMessage;
+    }
+    void setErrorMessage(const QString &message)
+    {
+        m_errorMessage = message;
+        Q_EMIT errorMessageChanged();
+    }
 
 protected Q_SLOTS:
 
@@ -74,6 +85,7 @@ private:
     KWinScriptsData *m_kwinScriptsData;
     QList<KPluginMetaData> m_pendingDeletions;
     KPluginModel *m_model;
+    QString m_errorMessage;
 };
 
 #endif // MODULE_H
