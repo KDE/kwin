@@ -16,8 +16,10 @@ import org.kde.newstuff 1.62 as NewStuff
 import org.kde.kcmutils 1.0 as KCMUtils
 
 KCMUtils.KPluginSelector {
+    id: selector
     model: kcm.effectsModel
     delegate: KCMUtils.KPluginDelegate {
+        aboutDialog: selector.aboutDialog
         additionalActions: [
             Kirigami.Action {
                     icon.name: "delete"
