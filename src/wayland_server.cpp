@@ -18,6 +18,7 @@
 #include "layershellv1integration.h"
 #include "main.h"
 #include "platform.h"
+#include "scene.h"
 #include "screens.h"
 #include "unmanaged.h"
 #include "utils/serviceutils.h"
@@ -614,6 +615,7 @@ void WaylandServer::initScreenLocker()
                        screenLockerApp, &ScreenLocker::KSldApp::userActivity);
         }
         ScreenLocker::KSldApp::self()->setWaylandFd(-1);
+        Compositor::self()->scene()->addRepaintFull();
     });
 
     ScreenLocker::KSldApp::self()->initialize();
