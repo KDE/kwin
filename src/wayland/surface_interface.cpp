@@ -581,17 +581,27 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         } else {
             surfaceSize = implicitSurfaceSize;
         }
+
+        const QRect surfaceRect(QPoint(0, 0), surfaceSize);
+        inputRegion = current.input & surfaceRect;
+
+        if (!current.buffer->hasAlphaChannel()) {
+            opaqueRegion = surfaceRect;
+        } else {
+            opaqueRegion = current.opaque & surfaceRect;
+        }
     } else {
         surfaceSize = QSize();
         implicitSurfaceSize = QSize();
         bufferSize = QSize();
+        inputRegion = QRegion();
+        opaqueRegion = QRegion();
     }
 
     surfaceToBufferMatrix = buildSurfaceToBufferMatrix();
     bufferToSurfaceMatrix = surfaceToBufferMatrix.inverted();
-    inputRegion = current.input & QRect(QPoint(0, 0), surfaceSize);
     if (opaqueRegionChanged) {
-        Q_EMIT q->opaqueChanged(current.opaque);
+        Q_EMIT q->opaqueChanged(opaqueRegion);
     }
     if (oldInputRegion != inputRegion) {
         Q_EMIT q->inputChanged(inputRegion);
@@ -715,7 +725,7 @@ QRegion SurfaceInterface::damage() const
 
 QRegion SurfaceInterface::opaque() const
 {
-    return d->current.opaque;
+    return d->opaqueRegion;
 }
 
 QRegion SurfaceInterface::input() const

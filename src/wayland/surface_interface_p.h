@@ -107,6 +107,7 @@ public:
     QSize implicitSurfaceSize;
     QSize surfaceSize;
     QRegion inputRegion;
+    QRegion opaqueRegion;
     ClientBuffer *bufferRef = nullptr;
     bool mapped = false;
     bool hasCacheState = false;
