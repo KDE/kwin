@@ -276,7 +276,7 @@ QSharedPointer<GLTexture> EglGbmLayer::texture() const
             qCWarning(KWIN_DRM) << "Failed to record frame: Error creating EGLImageKHR - " << getEglErrorString();
             return QSharedPointer<EGLImageTexture>(nullptr);
         }
-        return QSharedPointer<EGLImageTexture>::create(m_eglBackend->eglDisplay(), image, GL_RGBA8, m_pipeline->sourceSize());
+        return QSharedPointer<EGLImageTexture>::create(m_eglBackend->eglDisplay(), image, GL_RGBA8, gbmBuffer->bufferSize());
     };
     if (m_scanoutBuffer) {
         return createImage(dynamic_cast<GbmBuffer *>(m_scanoutBuffer.data()));

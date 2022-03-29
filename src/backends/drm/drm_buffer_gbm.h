@@ -42,6 +42,7 @@ public:
     uint32_t stride() const;
     KWaylandServer::ClientBuffer *clientBuffer() const;
     gbm_bo *getBo() const;
+    QSize bufferSize() const;
 
 protected:
     GbmSurface *m_surface = nullptr;

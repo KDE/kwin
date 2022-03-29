@@ -129,6 +129,11 @@ uint32_t GbmBuffer::stride() const
     return m_stride;
 }
 
+QSize GbmBuffer::bufferSize() const
+{
+    return QSize(gbm_bo_get_width(m_bo), gbm_bo_get_height(m_bo));
+}
+
 DrmGbmBuffer::DrmGbmBuffer(DrmGpu *gpu, GbmSurface *surface, gbm_bo *bo)
     : DrmBuffer(gpu, gbm_bo_get_format(bo), gbm_bo_get_modifier(bo))
     , GbmBuffer(surface, bo)
@@ -157,7 +162,7 @@ void DrmGbmBuffer::initialize()
     if (!m_bo) {
         return;
     }
-    m_size = QSize(gbm_bo_get_width(m_bo), gbm_bo_get_height(m_bo));
+    m_size = bufferSize();
     uint32_t handles[4] = {};
     uint32_t strides[4] = {};
     uint32_t offsets[4] = {};
