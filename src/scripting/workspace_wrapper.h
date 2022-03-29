@@ -22,6 +22,7 @@ namespace KWin
 {
 // forward declarations
 class AbstractClient;
+class AbstractOutput;
 class VirtualDesktop;
 class X11Client;
 
@@ -241,16 +242,20 @@ public:
      * @param screen The screen for which the area should be considered
      * @param desktop The desktop for which the area should be considered, in general there should not be a difference
      * @returns The specified screen geometry
+     * @deprecated use clientArea(ClientAreaOption option, KWin::AbstractOutput *output, KWin::VirtualDesktop *desktop)
      */
-    Q_SCRIPTABLE QRect clientArea(ClientAreaOption option, int screen, int desktop) const;
+    Q_SCRIPTABLE QRect clientArea(ClientAreaOption option, int screen, int desktop) const; // TODO Plasma 6: Drop
+    Q_SCRIPTABLE QRect clientArea(ClientAreaOption option, KWin::AbstractOutput *output, KWin::VirtualDesktop *desktop) const;
     /**
      * Overloaded method for convenience.
      * @param option The type of area which should be considered
      * @param point The coordinates which have to be included in the area
      * @param desktop The desktop for which the area should be considered, in general there should not be a difference
      * @returns The specified screen geometry
+     * @deprecated use clientArea(ClientAreaOption option, const QPoint &point, KWin::VirtualDesktop *desktop)
      */
-    Q_SCRIPTABLE QRect clientArea(ClientAreaOption option, const QPoint &point, int desktop) const;
+    Q_SCRIPTABLE QRect clientArea(ClientAreaOption option, const QPoint &point, int desktop) const; // TODO Plasma 6: Drop
+    Q_SCRIPTABLE QRect clientArea(ClientAreaOption option, const QPoint &point, KWin::VirtualDesktop *desktop) const;
     /**
      * Overloaded method for convenience.
      * @param client The Client for which the area should be retrieved

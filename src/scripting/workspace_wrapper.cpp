@@ -270,6 +270,11 @@ QRect WorkspaceWrapper::clientArea(ClientAreaOption option, const QPoint &p, int
     return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), output, virtualDesktop);
 }
 
+QRect WorkspaceWrapper::clientArea(ClientAreaOption option, const QPoint &p, VirtualDesktop *desktop) const
+{
+    return workspace()->clientArea(static_cast<clientAreaOption>(option), kwinApp()->platform()->outputAt(p), desktop);
+}
+
 QRect WorkspaceWrapper::clientArea(ClientAreaOption option, const KWin::AbstractClient *c) const
 {
     return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), c);
@@ -300,6 +305,11 @@ QRect WorkspaceWrapper::clientArea(ClientAreaOption option, int screen, int desk
     }
 
     return workspace()->clientArea(static_cast<clientAreaOption>(option), output, virtualDesktop);
+}
+
+QRect WorkspaceWrapper::clientArea(ClientAreaOption option, AbstractOutput *output, VirtualDesktop *desktop) const
+{
+    return workspace()->clientArea(static_cast<clientAreaOption>(option), output, desktop);
 }
 
 QString WorkspaceWrapper::desktopName(int desktop) const
