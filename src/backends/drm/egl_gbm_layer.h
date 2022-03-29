@@ -29,6 +29,7 @@ class GbmSurface;
 class DumbSwapchain;
 class ShadowBuffer;
 class EglGbmBackend;
+class DrmGbmBuffer;
 
 class EglGbmLayer : public DrmPipelineLayer
 {
@@ -75,7 +76,7 @@ private:
         bool attemptedThisFrame = false;
     } m_scanoutCandidate;
 
-    QSharedPointer<DrmBuffer> m_scanoutBuffer;
+    QSharedPointer<DrmGbmBuffer> m_scanoutBuffer;
     QSharedPointer<DrmBuffer> m_currentBuffer;
     QRegion m_currentDamage;
     QSharedPointer<GbmSurface> m_gbmSurface;

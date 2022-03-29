@@ -13,6 +13,7 @@
 #include "drm_buffer.h"
 
 #include <QSharedPointer>
+#include <epoxy/egl.h>
 
 struct gbm_bo;
 
@@ -26,6 +27,7 @@ namespace KWin
 {
 
 class GbmSurface;
+class GLTexture;
 
 class GbmBuffer : public QObject
 {
@@ -42,6 +44,7 @@ public:
     uint32_t stride() const;
     KWaylandServer::ClientBuffer *clientBuffer() const;
     gbm_bo *getBo() const;
+    QSharedPointer<GLTexture> createTexture(EGLDisplay eglDisplay) const;
 
 protected:
     GbmSurface *m_surface = nullptr;
