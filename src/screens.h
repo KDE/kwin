@@ -62,7 +62,6 @@ public:
      * @see sizeChanged()
      */
     QSize size() const;
-    int number(const QPoint &pos) const;
 
 Q_SIGNALS:
     void countChanged(int previousCount, int newCount);

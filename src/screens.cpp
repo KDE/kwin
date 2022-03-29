@@ -109,11 +109,6 @@ void Screens::setCount(int count)
     Q_EMIT countChanged(previous, count);
 }
 
-int Screens::number(const QPoint &pos) const
-{
-    return kwinApp()->platform()->enabledOutputs().indexOf(kwinApp()->platform()->outputAt(pos));
-}
-
 AbstractOutput *Screens::findOutput(int screen) const
 {
     return kwinApp()->platform()->findOutput(screen);
