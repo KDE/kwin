@@ -478,14 +478,14 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     plasmaSurface->setPanelBehavior(PlasmaShellSurface::PanelBehavior::AlwaysVisible);
 
     // now render and map the window
-    QVERIFY(workspace()->clientArea(PlacementArea, 0, 1) == workspace()->clientArea(FullScreenArea, 0, 1));
     auto dock = Test::renderAndWaitForShown(surface.data(), QSize(1280, 50), Qt::blue);
     QVERIFY(dock);
     QCOMPARE(dock->windowType(), NET::Dock);
     QVERIFY(dock->isDock());
     QCOMPARE(dock->frameGeometry(), QRect(0, screens()->geometry(0).height() - 50, 1280, 50));
     QCOMPARE(dock->hasStrut(), true);
-    QVERIFY(workspace()->clientArea(PlacementArea, 0, 1) != workspace()->clientArea(FullScreenArea, 0, 1));
+    QCOMPARE(workspace()->clientArea(PlacementArea, dock), QRect(0, 0, 1280, 1024 - 50));
+    QCOMPARE(workspace()->clientArea(FullScreenArea, dock), QRect(0, 0, 1280, 1024));
 
     // create parent
     QScopedPointer<KWayland::Client::Surface> parentSurface(Test::createSurface());

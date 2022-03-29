@@ -141,11 +141,9 @@ public:
     Toplevel *findInternal(QWindow *w) const;
 
     QRect clientArea(clientAreaOption, const AbstractOutput *output, const VirtualDesktop *desktop) const;
-    QRect clientArea(clientAreaOption, const QPoint &p, int desktop) const;
     QRect clientArea(clientAreaOption, const Toplevel *window) const;
     QRect clientArea(clientAreaOption, const Toplevel *window, const AbstractOutput *output) const;
     QRect clientArea(clientAreaOption, const Toplevel *window, const QPoint &pos) const;
-    QRect clientArea(clientAreaOption, int screen, int desktop) const;
 
     /**
      * Returns the geometry of this Workspace, i.e. the bounding rectangle of all outputs.

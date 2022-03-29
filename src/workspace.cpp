@@ -2327,33 +2327,6 @@ QRect Workspace::clientArea(clientAreaOption opt, const AbstractOutput *output, 
     }
 }
 
-QRect Workspace::clientArea(clientAreaOption opt, int screen, int desktop) const
-{
-    VirtualDesktop *virtualDesktop;
-    AbstractOutput *output;
-
-    if (desktop == NETWinInfo::OnAllDesktops || desktop == 0) {
-        virtualDesktop = VirtualDesktopManager::self()->currentDesktop();
-    } else {
-        virtualDesktop = VirtualDesktopManager::self()->desktopForX11Id(desktop);
-        Q_ASSERT(virtualDesktop);
-    }
-
-    if (screen == -1) {
-        output = activeOutput();
-    } else {
-        output = kwinApp()->platform()->findOutput(screen);
-        Q_ASSERT(output);
-    }
-
-    return clientArea(opt, output, virtualDesktop);
-}
-
-QRect Workspace::clientArea(clientAreaOption opt, const QPoint &p, int desktop) const
-{
-    return clientArea(opt, screens()->number(p), desktop);
-}
-
 QRect Workspace::clientArea(clientAreaOption opt, const Toplevel *window) const
 {
     return clientArea(opt, window, window->frameGeometry().center());
@@ -2361,12 +2334,19 @@ QRect Workspace::clientArea(clientAreaOption opt, const Toplevel *window) const
 
 QRect Workspace::clientArea(clientAreaOption opt, const Toplevel *window, const AbstractOutput *output) const
 {
-    return clientArea(opt, window, output->geometry().center());
+    const VirtualDesktop *desktop;
+    if (window->isOnCurrentDesktop()) {
+        desktop = VirtualDesktopManager::self()->currentDesktop();
+    } else {
+        desktop = window->desktops().constLast();
+    }
+
+    return clientArea(opt, output, desktop);
 }
 
 QRect Workspace::clientArea(clientAreaOption opt, const Toplevel *window, const QPoint &pos) const
 {
-    return clientArea(opt, screens()->number(pos), window->desktop());
+    return clientArea(opt, window, kwinApp()->platform()->outputAt(pos));
 }
 
 QRect Workspace::geometry() const
