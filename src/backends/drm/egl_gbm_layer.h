@@ -9,6 +9,8 @@
 #pragma once
 #include "drm_layer.h"
 
+#include "egl_gbm_layer_surface.h"
+
 #include <QMap>
 #include <QPointer>
 #include <QRegion>
@@ -25,11 +27,9 @@ class LinuxDmaBufV1ClientBuffer;
 namespace KWin
 {
 
-class GbmSurface;
-class DumbSwapchain;
-class ShadowBuffer;
 class EglGbmBackend;
-class DrmPlane;
+class EglGbmLayerSurface;
+class DrmGbmBuffer;
 
 class EglGbmLayer : public DrmPipelineLayer
 {
@@ -49,26 +49,9 @@ public:
     QRect geometry() const override;
 
 private:
-    bool createGbmSurface(uint32_t format, const QVector<uint64_t> &modifiers);
-    bool createGbmSurface();
-    bool doesGbmSurfaceFit(GbmSurface *surf) const;
-    bool doesShadowBufferFit(ShadowBuffer *buffer) const;
-    bool doesSwapchainFit(DumbSwapchain *swapchain) const;
     void sendDmabufFeedback(KWaylandServer::LinuxDmaBufV1ClientBuffer *failedBuffer);
     bool renderTestBuffer();
     void destroyResources();
-
-    QSharedPointer<DrmBuffer> importBuffer();
-    QSharedPointer<DrmBuffer> importDmabuf();
-    QSharedPointer<DrmBuffer> importWithCpu();
-
-    enum class MultiGpuImportMode {
-        Dmabuf,
-        DumbBuffer,
-        DumbBufferXrgb8888,
-        Failed
-    };
-    MultiGpuImportMode m_importMode = MultiGpuImportMode::Dmabuf;
 
     struct
     {
@@ -77,17 +60,11 @@ private:
         bool attemptedThisFrame = false;
     } m_scanoutCandidate;
 
-    QSharedPointer<DrmBuffer> m_scanoutBuffer;
+    QSharedPointer<DrmGbmBuffer> m_scanoutBuffer;
     QSharedPointer<DrmBuffer> m_currentBuffer;
     QRegion m_currentDamage;
-    QSharedPointer<GbmSurface> m_gbmSurface;
-    QSharedPointer<GbmSurface> m_oldGbmSurface;
-    QSharedPointer<ShadowBuffer> m_shadowBuffer;
-    QSharedPointer<ShadowBuffer> m_oldShadowBuffer;
-    QSharedPointer<DumbSwapchain> m_importSwapchain;
-    QSharedPointer<DumbSwapchain> m_oldImportSwapchain;
 
-    EglGbmBackend *const m_eglBackend;
+    EglGbmLayerSurface m_surface;
 };
 
 }

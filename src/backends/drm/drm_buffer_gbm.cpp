@@ -11,6 +11,8 @@
 #include "gbm_surface.h"
 
 #include "drm_gpu.h"
+#include "kwineglimagetexture.h"
+#include "kwineglutils_p.h"
 #include "logging.h"
 
 // system
@@ -132,6 +134,19 @@ uint32_t GbmBuffer::stride() const
 QSize GbmBuffer::bufferSize() const
 {
     return QSize(gbm_bo_get_width(m_bo), gbm_bo_get_height(m_bo));
+}
+
+QSharedPointer<GLTexture> GbmBuffer::createTexture(EGLDisplay eglDisplay) const
+{
+    if (!m_bo) {
+        return nullptr;
+    }
+    EGLImageKHR image = eglCreateImageKHR(eglDisplay, nullptr, EGL_NATIVE_PIXMAP_KHR, m_bo, nullptr);
+    if (image == EGL_NO_IMAGE_KHR) {
+        qCWarning(KWIN_DRM) << "Failed to record frame: Error creating EGLImageKHR - " << getEglErrorString();
+        return nullptr;
+    }
+    return QSharedPointer<EGLImageTexture>::create(eglDisplay, image, GL_RGBA8, bufferSize());
 }
 
 DrmGbmBuffer::DrmGbmBuffer(DrmGpu *gpu, GbmSurface *surface, gbm_bo *bo)
