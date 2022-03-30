@@ -690,7 +690,13 @@ void SurfaceInterfacePrivate::commitFromCache()
 
 bool SurfaceInterfacePrivate::computeEffectiveMapped() const
 {
-    return bufferRef && (!subSurface || subSurface->parentSurface()->isMapped());
+    if (!bufferRef) {
+        return false;
+    }
+    if (subSurface) {
+        return subSurface->parentSurface() && subSurface->parentSurface()->isMapped();
+    }
+    return true;
 }
 
 void SurfaceInterfacePrivate::updateEffectiveMapped()
