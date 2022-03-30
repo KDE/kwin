@@ -60,14 +60,27 @@ FocusScope {
                 }
 
                 visible: opacity > 0
-                z: dragHandler.active ? 100 : client.stackingOrder
+                z: thumb.activeDragHandler.active ? 100 : client.stackingOrder
+
+                component TweenBehavior : Behavior {
+                    enabled: thumb.state !== "partial" && heap.animationEnabled && !thumb.activeDragHandler.active
+                    NumberAnimation {
+                        duration: effect.animationDuration
+                        easing.type: Easing.OutCubic
+                    }
+                }
+
+                TweenBehavior on x {}
+                TweenBehavior on y {}
+                TweenBehavior on width {}
+                TweenBehavior on height {}
 
                 KWinComponents.WindowThumbnailItem {
                     id: thumbSource
                     wId: thumb.client.internalId
-                    state: dragHandler.active ? "drag" : "normal"
+                    state: thumb.activeDragHandler.active ? "drag" : "normal"
 
-                    Drag.active: dragHandler.active
+                    Drag.active: thumb.activeDragHandler.active
                     Drag.source: thumb.client
                     Drag.hotSpot: Qt.point(width * 0.5, height * 0.5)
 
@@ -86,21 +99,39 @@ FocusScope {
                             name: "drag"
                             PropertyChanges {
                                 target: thumbSource
-                                x: -dragHandler.centroid.pressPosition.x * dragHandler.targetScale +
-                                        dragHandler.centroid.position.x
-                                y: -dragHandler.centroid.pressPosition.y * dragHandler.targetScale +
-                                        dragHandler.centroid.position.y
-                                width: cell.width * dragHandler.targetScale
-                                height: cell.height * dragHandler.targetScale
+                                x: -thumb.activeDragHandler.centroid.pressPosition.x * thumb.activeDragHandler.targetScale +
+                                        thumb.activeDragHandler.centroid.position.x
+                                y: -thumb.activeDragHandler.centroid.pressPosition.y * thumb.activeDragHandler.targetScale +
+                                        thumb.activeDragHandler.centroid.position.y
+                                width: cell.width * thumb.activeDragHandler.targetScale
+                                height: cell.height * thumb.activeDragHandler.targetScale
+                                opacity: thumb.activeDragHandler.targetOpacity
                             }
                         }
                     ]
+                    transitions: Transition {
+                        to: "normal"
+                        enabled: heap.animationEnabled
+                        NumberAnimation {
+                            duration: effect.animationDuration
+                            properties: "x, y, width, height, opacity"
+                            easing.type: Easing.OutCubic
+                        }
+                    }
 
                     MouseArea {
                         anchors.fill: parent
                         acceptedButtons: Qt.NoButton
-                        cursorShape: dragHandler.active ? Qt.ClosedHandCursor : Qt.ArrowCursor
+                        cursorShape: thumb.activeDragHandler.active ? Qt.ClosedHandCursor : Qt.ArrowCursor
                     }
+                }
+
+                PC3.Label {
+                    anchors.fill: thumbSource
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    text: i18nd("kwin_effects", "Drag Down To Close")
+                    opacity: 1 - thumbSource.opacity
                 }
 
                 PlasmaCore.IconItem {
@@ -111,7 +142,7 @@ FocusScope {
                     anchors.horizontalCenter: thumbSource.horizontalCenter
                     anchors.bottom: thumbSource.bottom
                     anchors.bottomMargin: -height / 4
-                    visible: !dragHandler.active
+                    visible: !activeDragHandler.active
 
 
                     PC3.Label {
@@ -151,6 +182,10 @@ FocusScope {
                             target: icon
                             opacity: 0
                         }
+                        PropertyChanges {
+                            target: closeButton
+                            opacity: 0
+                        }
                     },
                     State {
                         name: "partial"
@@ -166,6 +201,10 @@ FocusScope {
                             target: icon
                             opacity: effect.partialActivationFactor
                         }
+                        PropertyChanges {
+                            target: closeButton
+                            opacity: effect.partialActivationFactor
+                        }
                     },
                     State {
                         name: "initial-minimized"
@@ -176,6 +215,10 @@ FocusScope {
                         }
                         PropertyChanges {
                             target: icon
+                            opacity: 0
+                        }
+                        PropertyChanges {
+                            target: closeButton
                             opacity: 0
                         }
                     },
@@ -190,6 +233,10 @@ FocusScope {
                         }
                         PropertyChanges {
                             target: icon
+                            opacity: 1
+                        }
+                        PropertyChanges {
+                            target: closeButton
                             opacity: 1
                         }
                     }
@@ -212,7 +259,7 @@ FocusScope {
                     imagePath: "widgets/viewitem"
                     prefix: "hover"
                     z: -1
-                    visible: !dragHandler.active && (hoverHandler.hovered || selected)
+                    visible: !thumb.activeDragHandler.active && (hoverHandler.hovered || selected)
                 }
 
                 HoverHandler {
@@ -236,7 +283,7 @@ FocusScope {
                     onTapped: thumb.client.closeWindow()
                 }
 
-                DragHandler {
+                component DragManager : DragHandler {
                     id: dragHandler
                     target: null
 
@@ -251,25 +298,51 @@ FocusScope {
                     }
 
                     onActiveChanged: {
-                        if (!active) {
+                        if (active) {
+                            thumb.activeDragHandler = dragHandler;
+                        } else {
                             thumbSource.Drag.drop();
                         }
                     }
                 }
-
-                Loader {
-                    LayoutMirroring.enabled: Qt.application.layoutDirection == Qt.RightToLeft
-                    active: (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && thumb.client.closeable && !dragHandler.active
-                    anchors.right: thumbSource.right
-                    anchors.rightMargin: PlasmaCore.Units.largeSpacing
-                    anchors.top: thumbSource.top
-                    anchors.topMargin: PlasmaCore.Units.largeSpacing
-                    sourceComponent: PC3.Button {
-                        icon.name: "window-close"
-                        implicitWidth: PlasmaCore.Units.iconSizes.medium
-                        implicitHeight: implicitWidth
-                        onClicked: thumb.client.closeWindow();
+                property DragManager activeDragHandler: dragHandler
+                DragManager {
+                    id: dragHandler
+                    readonly property double targetOpacity: 1
+                    acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad | PointerDevice.Stylus
+                }
+                DragManager {
+                    id: touchDragHandler
+                    acceptedDevices: PointerDevice.TouchScreen
+                    readonly property double targetOpacity: {
+                        const startDistance = heap.Kirigami.ScenePosition.y + heap.height - centroid.scenePressPosition.y;
+                        const localPosition = heap.Kirigami.ScenePosition.y + heap.height - centroid.scenePosition.y;
+                        return Math.min(localPosition / startDistance, 1);
                     }
+
+                    onActiveChanged: {
+                        if (!active) {
+                            if (targetOpacity < 0.4) {
+                                thumb.client.closeWindow();
+                            }
+                        }
+                    }
+                }
+
+                PC3.Button {
+                    id: closeButton
+                    visible: (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && thumb.client.closeable && !dragHandler.active
+                    anchors {
+                        right: thumbSource.right
+                        rightMargin: PlasmaCore.Units.smallSpacing
+                        top: thumbSource.top
+                        topMargin: PlasmaCore.Units.smallSpacing
+                    }
+                    LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
+                    icon.name: "window-close"
+                    implicitWidth: PlasmaCore.Units.iconSizes.medium
+                    implicitHeight: implicitWidth
+                    onClicked: thumb.client.closeWindow();
                 }
 
                 Component.onDestruction: {
