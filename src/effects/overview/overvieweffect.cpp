@@ -40,8 +40,8 @@ OverviewEffect::OverviewEffect()
     m_toggleShortcut = KGlobalAccel::self()->shortcut(m_toggleAction);
     effects->registerGlobalShortcut({defaultToggleShortcut}, m_toggleAction);
     effects->registerTouchpadSwipeShortcut(SwipeDirection::Up, 4, m_toggleAction);
-    effects->registerTouchpadSwipeShortcut(SwipeDirection::Up, 3, m_toggleAction);
-    effects->registerTouchpadSwipeShortcut(SwipeDirection::Down, 3, m_toggleAction);
+    effects->registerTouchscreenSwipeShortcut(SwipeDirection::Up, 3, m_toggleAction);
+    effects->registerTouchscreenSwipeShortcut(SwipeDirection::Down, 3, m_toggleAction);
 
     connect(effects, &EffectsHandler::screenAboutToLock, this, &OverviewEffect::realDeactivate);
 
