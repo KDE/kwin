@@ -291,7 +291,7 @@ bool EglGbmBackend::prefer10bpc() const
 
 EGLConfig EglGbmBackend::config(uint32_t format) const
 {
-    return m_configs[format];
+    return m_configs.value(format, EGL_NO_CONFIG_KHR);
 }
 
 QSharedPointer<DrmPipelineLayer> EglGbmBackend::createDrmPipelineLayer(DrmPipeline *pipeline)

@@ -200,6 +200,9 @@ bool EglGbmLayer::createGbmSurface(uint32_t format, const QVector<uint64_t> &mod
 
     const auto size = m_pipeline->bufferSize();
     const auto config = m_eglBackend->config(format);
+    if (config == EGL_NO_CONFIG_KHR) {
+        return false;
+    }
 
     QSharedPointer<GbmSurface> gbmSurface;
 #if HAVE_GBM_BO_GET_FD_FOR_PLANE
