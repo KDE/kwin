@@ -9,6 +9,7 @@
 #pragma once
 #include "drm_layer.h"
 
+#include "dmabuf_feedback.h"
 #include "egl_gbm_layer_surface.h"
 
 #include <QMap>
@@ -28,7 +29,6 @@ namespace KWin
 {
 
 class EglGbmBackend;
-class EglGbmLayerSurface;
 class DrmGbmBuffer;
 
 class EglGbmLayer : public DrmPipelineLayer
@@ -49,22 +49,15 @@ public:
     QRect geometry() const override;
 
 private:
-    void sendDmabufFeedback(KWaylandServer::LinuxDmaBufV1ClientBuffer *failedBuffer);
     bool renderTestBuffer();
     void destroyResources();
-
-    struct
-    {
-        QPointer<KWaylandServer::SurfaceInterface> surface;
-        QMap<uint32_t, QVector<uint64_t>> attemptedFormats;
-        bool attemptedThisFrame = false;
-    } m_scanoutCandidate;
 
     QSharedPointer<DrmGbmBuffer> m_scanoutBuffer;
     QSharedPointer<DrmBuffer> m_currentBuffer;
     QRegion m_currentDamage;
 
     EglGbmLayerSurface m_surface;
+    DmabufFeedback m_dmabufFeedback;
 };
 
 }
