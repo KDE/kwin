@@ -29,27 +29,14 @@
 #include "kwinscriptsdata.h"
 #include "config-kwin.h"
 
-Module::Module(QObject *parent, const QVariantList &args)
-    : KQuickAddons::ConfigModule(parent, args)
+Module::Module(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
+    : KQuickAddons::ConfigModule(parent, data, args)
     , m_kwinConfig(KSharedConfig::openConfig("kwinrc"))
     , m_kwinScriptsData(new KWinScriptsData(this))
     , m_model(new KPluginModel(this))
 {
-    KAboutData *about = new KAboutData("kwin-scripts",
-                                       i18n("KWin Scripts"),
-                                       KWIN_VERSION_STRING,
-                                       i18n("Configure KWin scripts"),
-                                       KAboutLicense::GPL_V2);
-
-    about->addAuthor(i18n("Tamás Krutki"));
-    setAboutData(about);
-
     // Hide the help button, because there is no help
     setButtons(Apply | Default);
-}
-
-Module::~Module()
-{
 }
 
 void Module::importScript()
@@ -92,12 +79,10 @@ void Module::togglePendingDeletion(const KPluginMetaData &data)
 void Module::importScriptInstallFinished(KJob *job)
 {
     // if the applet is already installed, just add it to the containment
-    /*if (job->error() != KJob::NoError) {
-        ui->messageWidget->setText(i18nc("Placeholder is error message returned from the install service", "Cannot import selected script.\n%1", job->errorString()));
-        ui->messageWidget->setMessageType(KMessageWidget::Error);
-        ui->messageWidget->animatedShow();
+    if (job->error() != KJob::NoError) {
+        setErrorMessage(i18nc("Placeholder is error message returned from the install service", "Cannot import selected script.\n%1", job->errorString()));
         return;
-    }*/
+    }
 
     using namespace KPackage;
 
@@ -107,12 +92,12 @@ void Module::importScriptInstallFinished(KJob *job)
     package.setPath(job->property("packagePath").toString());
     Q_ASSERT(package.isValid());
 
-    /*ui->messageWidget->setText(i18nc("Placeholder is name of the script that was imported", "The script \"%1\" was successfully imported.", package.metadata().name()));
-    ui->messageWidget->setMessageType(KMessageWidget::Information);
-    ui->messageWidget->animatedShow();
+    m_infoMessage = i18nc("Placeholder is name of the script that was imported", "The script \"%1\" was successfully imported.", package.metadata().name());
+    m_errorMessage.clear();
+    Q_EMIT messageChanged();
 
-    updateListViewContents();
-     */
+    m_model->clear();
+    m_model->addPlugins(m_kwinScriptsData->pluginMetaDataList(), QString());
 
     setNeedsSave(false);
 }
@@ -125,7 +110,8 @@ void Module::defaults()
 
 void Module::load()
 {
-    m_model->addPlugins(m_kwinScriptsData->pluginMetaDataList(), QStringLiteral("bla :)"));
+    m_model->clear();
+    m_model->addPlugins(m_kwinScriptsData->pluginMetaDataList(), QString());
     m_pendingDeletions.clear();
     Q_EMIT pendingDeletionsChanged();
 
@@ -142,14 +128,16 @@ void Module::save()
         root.cdUp();
         KJob *uninstallJob = Package(structure).uninstall(info.pluginId(), root.absolutePath());
         connect(uninstallJob, &KJob::result, this, [this, uninstallJob]() {
-            // If the uninstallation is successful the entry will be immediately removed
-            /*if (!uninstallJob->errorString().isEmpty()) {
-                ui->messageWidget->setText(i18n("Error when uninstalling KWin Script: %1", uninstallJob->errorString()));
-                ui->messageWidget->setMessageType(KMessageWidget::Error);
-                ui->messageWidget->animatedShow();
-            }*/
+            if (!uninstallJob->errorString().isEmpty()) {
+                setErrorMessage(i18n("Error when uninstalling KWin Script: %1", uninstallJob->errorString()));
+            } else {
+                load(); // Make sure to reload the KCM to deleted entries to disappear
+            }
         });
     }
+
+    m_infoMessage.clear();
+    Q_EMIT messageChanged();
     m_pendingDeletions.clear();
     Q_EMIT pendingDeletionsChanged();
 

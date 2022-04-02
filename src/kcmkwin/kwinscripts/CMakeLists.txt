@@ -23,7 +23,7 @@ target_link_libraries(kcm_kwin_scripts
     KF5::ItemViews
 )
 
-kpackage_install_package(package kwin-scripts kcms)
+kpackage_install_package(package kcm_kwin_scripts kcms)
 install(TARGETS kcm_kwin_scripts DESTINATION ${KDE_INSTALL_PLUGINDIR}/kcms)
 install(FILES kwinscripts.desktop DESTINATION ${KDE_INSTALL_KSERVICESDIR})
 install(FILES kwinscripts.knsrc DESTINATION ${KDE_INSTALL_KNSRCDIR})

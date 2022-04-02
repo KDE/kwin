@@ -23,20 +23,11 @@ class Module : public KQuickAddons::ConfigModule
         
     Q_PROPERTY(QAbstractItemModel *effectsModel READ effectsModel CONSTANT)
     Q_PROPERTY(QList<KPluginMetaData> pendingDeletions READ pendingDeletions NOTIFY pendingDeletionsChanged)
-    Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
+    Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY messageChanged)
+    Q_PROPERTY(QString infoMessage READ infoMessage NOTIFY messageChanged)
 public:
-    /**
-     * Constructor.
-     *
-     * @param parent Parent widget of the module
-     * @param args Arguments for the module
-     */
-    explicit Module(QObject *parent, const QVariantList &args = QVariantList());
+    explicit Module(QObject *parent, const KPluginMetaData &data, const QVariantList &args = QVariantList());
 
-    /**
-     * Destructor.
-     */
-    ~Module() override;
     void load() override;
     void save() override;
     void defaults() override;
@@ -58,34 +49,38 @@ public:
         return m_pendingDeletions;
     }
 
-    Q_SIGNAL void errorMessageChanged();
+    Q_SIGNAL void messageChanged();
     QString errorMessage() const
     {
         return m_errorMessage;
     }
+    QString infoMessage() const
+    {
+        return m_infoMessage;
+    }
     void setErrorMessage(const QString &message)
     {
+        m_infoMessage.clear();
         m_errorMessage = message;
-        Q_EMIT errorMessageChanged();
+        Q_EMIT messageChanged();
     }
-
-protected Q_SLOTS:
 
     /**
      * Called when the import script button is clicked.
      */
-    void importScript();
+    Q_INVOKABLE void importScript();
 
-    void importScriptInstallFinished(KJob *job);
-
-    void configure(const KPluginMetaData &data);
+    Q_INVOKABLE void configure(const KPluginMetaData &data);
 
 private:
+    void importScriptInstallFinished(KJob *job);
+
     KSharedConfigPtr m_kwinConfig;
     KWinScriptsData *m_kwinScriptsData;
     QList<KPluginMetaData> m_pendingDeletions;
     KPluginModel *m_model;
     QString m_errorMessage;
+    QString m_infoMessage;
 };
 
 #endif // MODULE_H

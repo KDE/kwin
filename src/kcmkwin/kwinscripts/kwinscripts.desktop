@@ -3,7 +3,6 @@ Icon=preferences-system-windows-actions
 Type=Service
 X-KDE-ServiceTypes=KCModule
 
-X-KDE-Library=kcm_kwin_scripts
 X-KDE-ParentApp=kcontrol
 
 X-KDE-Keywords=kwin script,plugins,window manager
