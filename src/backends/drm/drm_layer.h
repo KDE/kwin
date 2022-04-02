@@ -35,19 +35,20 @@ public:
 class DrmPipelineLayer : public DrmOutputLayer
 {
 public:
-    DrmPipelineLayer(DrmPipeline *pipeline);
-
-    /**
-     * @returns a buffer for atomic test commits
-     * If no fitting buffer is available, a new current buffer is created
-     */
-    virtual QSharedPointer<DrmBuffer> testBuffer() = 0;
-
     virtual QSharedPointer<DrmBuffer> currentBuffer() const = 0;
+    virtual QRect pixelGeometry() const;
+    virtual bool checkTestBuffer();
     virtual bool hasDirectScanoutBuffer() const;
-
-protected:
-    DrmPipeline *const m_pipeline;
+    virtual void pageFlipped();
 };
 
+class DrmOverlayLayer : public DrmPipelineLayer
+{
+public:
+    bool needsCompositing() const;
+    void setNeedsCompositing(bool needsCompositing);
+
+private:
+    bool m_needsCompositing = false;
+};
 }

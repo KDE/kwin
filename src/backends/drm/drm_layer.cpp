@@ -7,6 +7,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_layer.h"
+
+#include "drm_buffer.h"
 #include "drm_pipeline.h"
 
 #include <QMatrix4x4>
@@ -26,9 +28,14 @@ QSharedPointer<GLTexture> DrmOutputLayer::texture() const
     return nullptr;
 }
 
-DrmPipelineLayer::DrmPipelineLayer(DrmPipeline *pipeline)
-    : m_pipeline(pipeline)
+QRect DrmPipelineLayer::pixelGeometry() const
 {
+    return currentBuffer() ? QRect(QPoint(0, 0), currentBuffer()->size()) : QRect();
+}
+
+bool DrmPipelineLayer::checkTestBuffer()
+{
+    return false;
 }
 
 bool DrmPipelineLayer::hasDirectScanoutBuffer() const
@@ -36,6 +43,19 @@ bool DrmPipelineLayer::hasDirectScanoutBuffer() const
     return false;
 }
 
+void DrmPipelineLayer::pageFlipped()
+{
+}
+
+bool DrmOverlayLayer::needsCompositing() const
+{
+    return m_needsCompositing;
+}
+
+void DrmOverlayLayer::setNeedsCompositing(bool needsCompositing)
+{
+    m_needsCompositing = needsCompositing;
+}
 }
 
 #include "drm_layer.moc"

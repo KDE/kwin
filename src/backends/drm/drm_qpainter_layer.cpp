@@ -23,7 +23,7 @@ namespace KWin
 {
 
 DrmQPainterLayer::DrmQPainterLayer(DrmQPainterBackend *backend, DrmPipeline *pipeline)
-    : DrmPipelineLayer(pipeline)
+    : m_pipeline(pipeline)
 {
     connect(backend, &DrmQPainterBackend::aboutToBeDestroyed, this, [this]() {
         m_swapchain.reset();
@@ -49,12 +49,12 @@ void DrmQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &da
     m_swapchain->releaseBuffer(m_swapchain->currentBuffer(), damagedRegion);
 }
 
-QSharedPointer<DrmBuffer> DrmQPainterLayer::testBuffer()
+bool DrmQPainterLayer::checkTestBuffer()
 {
     if (!doesSwapchainFit()) {
         m_swapchain = QSharedPointer<DumbSwapchain>::create(m_pipeline->gpu(), m_pipeline->sourceSize(), DRM_FORMAT_XRGB8888);
     }
-    return m_swapchain->currentBuffer();
+    return !m_swapchain->isEmpty();
 }
 
 bool DrmQPainterLayer::doesSwapchainFit() const
@@ -119,20 +119,20 @@ QRect DrmVirtualQPainterLayer::geometry() const
 }
 
 DrmLeaseQPainterLayer::DrmLeaseQPainterLayer(DrmQPainterBackend *backend, DrmPipeline *pipeline)
-    : DrmPipelineLayer(pipeline)
+    : m_pipeline(pipeline)
 {
     connect(backend, &DrmQPainterBackend::aboutToBeDestroyed, this, [this]() {
         m_buffer.reset();
     });
 }
 
-QSharedPointer<DrmBuffer> DrmLeaseQPainterLayer::testBuffer()
+bool DrmLeaseQPainterLayer::checkTestBuffer()
 {
     const auto size = m_pipeline->sourceSize();
     if (!m_buffer || m_buffer->size() != size) {
         m_buffer = QSharedPointer<DrmDumbBuffer>::create(m_pipeline->gpu(), size, DRM_FORMAT_XRGB8888);
     }
-    return m_buffer;
+    return !m_buffer.isNull();
 }
 
 QSharedPointer<DrmBuffer> DrmLeaseQPainterLayer::currentBuffer() const

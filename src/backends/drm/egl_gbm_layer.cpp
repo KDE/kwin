@@ -13,13 +13,12 @@
 #include "drm_gpu.h"
 #include "drm_output.h"
 #include "drm_pipeline.h"
-#include "egl_dmabuf.h"
 #include "egl_gbm_backend.h"
 #include "logging.h"
 #include "surfaceitem_wayland.h"
 
-#include "KWaylandServer/linuxdmabufv1clientbuffer.h"
-#include "KWaylandServer/surface_interface.h"
+#include <KWaylandServer/linuxdmabufv1clientbuffer.h>
+#include <KWaylandServer/surface_interface.h>
 
 #include <QRegion>
 #include <drm_fourcc.h>
@@ -31,9 +30,9 @@ namespace KWin
 {
 
 EglGbmLayer::EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline)
-    : DrmPipelineLayer(pipeline)
-    , m_surface(pipeline->gpu(), eglBackend)
+    : m_surface(pipeline->gpu(), eglBackend)
     , m_dmabufFeedback(pipeline->gpu(), eglBackend)
+    , m_pipeline(pipeline)
 {
     connect(eglBackend, &EglGbmBackend::aboutToBeDestroyed, this, &EglGbmLayer::destroyResources);
 }
@@ -75,20 +74,14 @@ QRegion EglGbmLayer::currentDamage() const
     return m_currentDamage;
 }
 
-QSharedPointer<DrmBuffer> EglGbmLayer::testBuffer()
+bool EglGbmLayer::checkTestBuffer()
 {
     if (!m_surface.doesSurfaceFit(m_pipeline->sourceSize(), m_pipeline->supportedFormats())) {
-        renderTestBuffer();
+        beginFrame(m_pipeline->output()->geometry());
+        glClear(GL_COLOR_BUFFER_BIT);
+        endFrame(m_pipeline->output()->geometry(), m_pipeline->output()->geometry());
     }
-    return m_currentBuffer;
-}
-
-bool EglGbmLayer::renderTestBuffer()
-{
-    beginFrame(m_pipeline->output()->geometry());
-    glClear(GL_COLOR_BUFFER_BIT);
-    endFrame(m_pipeline->output()->geometry(), m_pipeline->output()->geometry());
-    return true;
+    return !m_currentBuffer.isNull();
 }
 
 QSharedPointer<GLTexture> EglGbmLayer::texture() const
@@ -161,5 +154,11 @@ bool EglGbmLayer::hasDirectScanoutBuffer() const
 QRect EglGbmLayer::geometry() const
 {
     return m_pipeline->output()->geometry();
+}
+
+void EglGbmLayer::pageFlipped()
+{
+    m_scanoutBuffer.reset();
+    // don't release m_currentBuffer yet, it may be needed for atomic tests
 }
 }

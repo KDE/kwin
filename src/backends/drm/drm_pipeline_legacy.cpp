@@ -22,7 +22,7 @@ namespace KWin
 
 bool DrmPipeline::presentLegacy()
 {
-    const auto buffer = pending.layer->currentBuffer();
+    const auto buffer = pending.primaryLayer->currentBuffer();
     if ((!pending.crtc->current() || pending.crtc->current()->needsModeChange(buffer.get())) && !legacyModeset()) {
         return false;
     }
@@ -38,16 +38,16 @@ bool DrmPipeline::presentLegacy()
 bool DrmPipeline::legacyModeset()
 {
     uint32_t connId = m_connector->id();
-    if (!pending.layer->testBuffer() || drmModeSetCrtc(gpu()->fd(), pending.crtc->id(), pending.layer->currentBuffer()->bufferId(), 0, 0, &connId, 1, pending.mode->nativeMode()) != 0) {
+    if (!pending.primaryLayer->checkTestBuffer() || drmModeSetCrtc(gpu()->fd(), pending.crtc->id(), pending.primaryLayer->currentBuffer()->bufferId(), 0, 0, &connId, 1, pending.mode->nativeMode()) != 0) {
         qCWarning(KWIN_DRM) << "Modeset failed!" << strerror(errno);
         pending = m_next;
         return false;
     }
     // make sure the buffer gets kept alive, or the modeset gets reverted by the kernel
     if (pending.crtc->current()) {
-        pending.crtc->setNext(pending.layer->currentBuffer());
+        pending.crtc->setNext(pending.primaryLayer->currentBuffer());
     } else {
-        pending.crtc->setCurrent(pending.layer->currentBuffer());
+        pending.crtc->setCurrent(pending.primaryLayer->currentBuffer());
     }
     return true;
 }

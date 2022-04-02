@@ -257,7 +257,7 @@ bool DrmOutput::present()
     if (DrmPipeline::presentPipelines(m_pipelines)) {
         QRegion damage;
         for (const auto &pipeline : qAsConst(m_pipelines)) {
-            damage |= pipeline->pending.layer->currentDamage();
+            damage |= pipeline->pending.primaryLayer->currentDamage();
         }
         Q_EMIT outputChange(damage);
         return true;
@@ -408,7 +408,7 @@ bool DrmRenderOutput::usesSoftwareCursor() const
 
 OutputLayer *DrmRenderOutput::layer() const
 {
-    return m_pipeline->pending.layer.get();
+    return m_pipeline->pending.primaryLayer.get();
 }
 
 }

@@ -465,8 +465,8 @@ bool DrmGpu::testPipelines()
     // pipelines that are enabled but not active need to be activated for the test
     QVector<DrmPipeline *> inactivePipelines;
     for (const auto &pipeline : qAsConst(m_pipelines)) {
-        if (!pipeline->pending.layer) {
-            pipeline->pending.layer = m_platform->renderBackend()->createDrmPipelineLayer(pipeline);
+        if (!pipeline->pending.primaryLayer) {
+            pipeline->pending.primaryLayer = m_platform->renderBackend()->createDrmPipelineLayer(pipeline);
         }
         if (!pipeline->pending.active) {
             pipeline->pending.active = true;
@@ -602,7 +602,7 @@ void DrmGpu::removeOutput(DrmOutput *output)
     const auto connectors = output->connectors();
     for (const auto &conn : connectors) {
         m_pipelines.removeOne(conn->pipeline());
-        conn->pipeline()->pending.layer.reset();
+        conn->pipeline()->pending.primaryLayer.reset();
     }
     m_outputs.removeOne(output);
     Q_EMIT outputRemoved(output);
@@ -703,7 +703,7 @@ void DrmGpu::removeLeaseOutput(DrmLeaseOutput *output)
     qCDebug(KWIN_DRM) << "Removing leased output" << output;
     m_leaseOutputs.removeOne(output);
     m_pipelines.removeOne(output->pipeline());
-    output->pipeline()->pending.layer.reset();
+    output->pipeline()->pending.primaryLayer.reset();
     delete output;
 }
 
@@ -820,7 +820,7 @@ QSize DrmGpu::cursorSize() const
 void DrmGpu::recreateSurfaces()
 {
     for (const auto &pipeline : qAsConst(m_pipelines)) {
-        pipeline->pending.layer = m_platform->renderBackend()->createDrmPipelineLayer(pipeline);
+        pipeline->pending.primaryLayer = m_platform->renderBackend()->createDrmPipelineLayer(pipeline);
     }
     for (const auto &output : qAsConst(m_outputs)) {
         if (const auto virtualOutput = qobject_cast<DrmVirtualOutput *>(output)) {

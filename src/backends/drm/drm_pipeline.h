@@ -32,6 +32,7 @@ class DrmDumbBuffer;
 class GammaRamp;
 class DrmConnectorMode;
 class DrmPipelineLayer;
+class DrmOverlayLayer;
 
 class DrmGammaRamp
 {
@@ -97,7 +98,8 @@ public:
         RenderLoopPrivate::SyncMode syncMode = RenderLoopPrivate::SyncMode::Fixed;
         QSharedPointer<DrmGammaRamp> gamma;
 
-        QSharedPointer<DrmPipelineLayer> layer;
+        QSharedPointer<DrmPipelineLayer> primaryLayer;
+        QVector<QSharedPointer<DrmOverlayLayer>> overlays;
 
         // the transformation that this pipeline will apply to submitted buffers
         DrmPlane::Transformations bufferTransformation = DrmPlane::Transformation::Rotate0;

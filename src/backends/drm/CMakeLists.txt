@@ -30,6 +30,7 @@ set(DRM_SOURCES
     drm_lease_egl_gbm_layer.cpp
     egl_gbm_layer_surface.cpp
     dmabuf_feedback.cpp
+    egl_gbm_overlay_layer.cpp
 )
 
 add_library(KWinWaylandDrmBackend MODULE ${DRM_SOURCES})

@@ -27,7 +27,7 @@ public:
 
     std::optional<QRegion> beginFrame(const QRect &geometry) override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
-    QSharedPointer<DrmBuffer> testBuffer() override;
+    bool checkTestBuffer() override;
     QSharedPointer<DrmBuffer> currentBuffer() const override;
     QRegion currentDamage() const override;
     QImage *image() override;
@@ -38,6 +38,7 @@ private:
 
     QSharedPointer<DumbSwapchain> m_swapchain;
     QRegion m_currentDamage;
+    DrmPipeline *const m_pipeline;
 };
 
 class DrmVirtualQPainterLayer : public DrmOutputLayer
@@ -66,12 +67,13 @@ public:
     std::optional<QRegion> beginFrame(const QRect &geometry) override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
-    QSharedPointer<DrmBuffer> testBuffer() override;
+    bool checkTestBuffer() override;
     QSharedPointer<DrmBuffer> currentBuffer() const override;
     QRect geometry() const override;
 
 private:
     QSharedPointer<DrmDumbBuffer> m_buffer;
+    DrmPipeline *const m_pipeline;
 };
 
 }

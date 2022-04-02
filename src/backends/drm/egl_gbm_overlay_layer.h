@@ -7,51 +7,45 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-#include "drm_layer.h"
 
 #include "dmabuf_feedback.h"
+#include "drm_layer.h"
 #include "egl_gbm_layer_surface.h"
-
-#include <QMap>
-#include <QPointer>
-#include <QRegion>
-#include <QSharedPointer>
-#include <epoxy/egl.h>
-#include <optional>
 
 namespace KWin
 {
 
-class EglGbmBackend;
 class DrmGbmBuffer;
 
-class EglGbmLayer : public DrmPipelineLayer
+class EglGbmOverlayLayer : public DrmOverlayLayer
 {
 public:
-    EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline);
-    ~EglGbmLayer();
+    EglGbmOverlayLayer(EglGbmBackend *eglBackend, DrmPlane *overlayPlane, DrmPipeline *pipeline);
+    ~EglGbmOverlayLayer();
 
     std::optional<QRegion> beginFrame(const QRect &geometry) override;
     void aboutToStartPainting(const QRegion &damagedRegion) override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     bool scanout(SurfaceItem *surfaceItem) override;
-    bool checkTestBuffer() override;
     QSharedPointer<DrmBuffer> currentBuffer() const override;
-    bool hasDirectScanoutBuffer() const override;
     QRegion currentDamage() const override;
     QSharedPointer<GLTexture> texture() const override;
+    QRect pixelGeometry() const override;
     QRect geometry() const override;
     void pageFlipped() override;
 
 private:
     void destroyResources();
 
-    QSharedPointer<DrmGbmBuffer> m_scanoutBuffer;
     QSharedPointer<DrmBuffer> m_currentBuffer;
     QRegion m_currentDamage;
+    QRect m_geometry;
+    QRect m_pixelGeometry;
 
     EglGbmLayerSurface m_surface;
     DmabufFeedback m_dmabufFeedback;
+    DrmPlane *const m_plane;
+    // TODO allow the pipeline to change
     DrmPipeline *const m_pipeline;
 };
 

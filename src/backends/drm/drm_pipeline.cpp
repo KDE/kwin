@@ -71,7 +71,7 @@ bool DrmPipeline::presentPipelines(const QVector<DrmPipeline *> &pipelines)
         return commitPipelines(pipelines, CommitMode::Commit);
     } else {
         for (const auto &pipeline : pipelines) {
-            if (pipeline->pending.layer->hasDirectScanoutBuffer()) {
+            if (pipeline->pending.primaryLayer->hasDirectScanoutBuffer()) {
                 // already presented
                 continue;
             }
@@ -115,7 +115,7 @@ bool DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline *> &pipelines,
         return false;
     };
     for (const auto &pipeline : pipelines) {
-        if (!pipeline->pending.layer->testBuffer()) {
+        if (!pipeline->pending.primaryLayer->checkTestBuffer()) {
             qCWarning(KWIN_DRM) << "Checking test buffer failed for" << mode;
             return failed();
         }
@@ -179,7 +179,7 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
         pending.crtc->setPending(DrmCrtc::PropertyIndex::VrrEnabled, pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive);
         pending.crtc->setPending(DrmCrtc::PropertyIndex::Gamma_LUT, pending.gamma ? pending.gamma->blobId() : 0);
         const auto modeSize = pending.mode->size();
-        const auto buffer = pending.layer->currentBuffer().data();
+        const auto buffer = pending.primaryLayer->currentBuffer().data();
         pending.crtc->primaryPlane()->set(QPoint(0, 0), buffer ? buffer->size() : bufferSize(), QPoint(0, 0), modeSize);
         pending.crtc->primaryPlane()->setBuffer(activePending() ? buffer : nullptr);
     }
@@ -266,7 +266,7 @@ void DrmPipeline::atomicCommitSuccessful(CommitMode mode)
         m_connector->commit();
         if (pending.crtc) {
             pending.crtc->commit();
-            pending.crtc->primaryPlane()->setNext(pending.layer->currentBuffer());
+            pending.crtc->primaryPlane()->setNext(pending.primaryLayer->currentBuffer());
             pending.crtc->primaryPlane()->commit();
         }
         m_current = pending;
@@ -314,11 +314,14 @@ DrmGpu *DrmPipeline::gpu() const
 
 void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp)
 {
+    m_pageflipPending = false;
     m_current.crtc->flipBuffer();
     if (m_current.crtc->primaryPlane()) {
         m_current.crtc->primaryPlane()->flipBuffer();
     }
-    m_pageflipPending = false;
+    if (pending.primaryLayer) {
+        pending.primaryLayer->pageFlipped();
+    }
     if (m_output) {
         m_output->pageFlipped(timestamp);
     }

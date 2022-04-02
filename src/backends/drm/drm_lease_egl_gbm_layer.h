@@ -23,12 +23,13 @@ public:
 
     std::optional<QRegion> beginFrame(const QRect &geometry) override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
-    QSharedPointer<DrmBuffer> testBuffer() override;
+    bool checkTestBuffer() override;
     QSharedPointer<DrmBuffer> currentBuffer() const override;
     QRect geometry() const override;
 
 private:
     QSharedPointer<DrmBuffer> m_buffer;
+    DrmPipeline *const m_pipeline;
 };
 
 }

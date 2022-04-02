@@ -20,14 +20,14 @@ namespace KWin
 {
 
 DrmLeaseEglGbmLayer::DrmLeaseEglGbmLayer(EglGbmBackend *backend, DrmPipeline *pipeline)
-    : DrmPipelineLayer(pipeline)
+    : m_pipeline(pipeline)
 {
     connect(backend, &EglGbmBackend::aboutToBeDestroyed, this, [this]() {
         m_buffer.reset();
     });
 }
 
-QSharedPointer<DrmBuffer> DrmLeaseEglGbmLayer::testBuffer()
+bool DrmLeaseEglGbmLayer::checkTestBuffer()
 {
     const auto mods = m_pipeline->supportedFormats().value(DRM_FORMAT_XRGB8888);
     const auto size = m_pipeline->sourceSize();
@@ -49,7 +49,7 @@ QSharedPointer<DrmBuffer> DrmLeaseEglGbmLayer::testBuffer()
             qCWarning(KWIN_DRM) << "Failed to create gbm_bo for lease output";
         }
     }
-    return m_buffer;
+    return !m_buffer.isNull();
 }
 
 QSharedPointer<DrmBuffer> DrmLeaseEglGbmLayer::currentBuffer() const
