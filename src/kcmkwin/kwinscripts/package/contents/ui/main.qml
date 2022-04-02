@@ -15,33 +15,33 @@ import org.kde.kirigami 2.10 as Kirigami
 import org.kde.newstuff 1.62 as NewStuff
 import org.kde.kcmutils 1.0 as KCMUtils
 
-KCMUtils.KPluginSelector {
-    id: selector
-    model: kcm.effectsModel
+ScrollViewKCM {
+    view: KCMUtils.KPluginSelector {
+        id: selector
+        model: kcm.effectsModel
 
-    delegate: KCMUtils.KPluginDelegate {
-        aboutDialog: selector.aboutDialog
-        additionalActions: [
-            Kirigami.Action {
-                    enabled: kcm.canDeleteEntry(model.metaData)
-                    icon.name: kcm.pendingDeletions.indexOf(model.metaData) === -1 ? "delete" : "edit-undo"
-                    tooltip: i18nc("@info:tooltip", "Configure...")
-                    onTriggered: kcm.togglePendingDeletion(model.metaData)
-            }
-        ]
+        delegate: KCMUtils.KPluginDelegate {
+            aboutDialog: selector.aboutDialog
+            additionalActions: [
+                Kirigami.Action {
+                        enabled: kcm.canDeleteEntry(model.metaData)
+                        icon.name: kcm.pendingDeletions.indexOf(model.metaData) === -1 ? "delete" : "edit-undo"
+                        tooltip: i18nc("@info:tooltip", "Configure...")
+                        onTriggered: kcm.togglePendingDeletion(model.metaData)
+                }
+            ]
+        }
     }
-    footer: ColumnLayout {
-        RowLayout {
-            Layout.alignment: Qt.AlignRight
+    footer: RowLayout {
+        Layout.alignment: Qt.AlignRight
 
-            NewStuff.Button {
-                text: i18n("Get New KWin Scripts ...")
-                visible: KAuthorized.authorize(KAuthorized.GHNS)
-                configFile: "kwinscripts.knsrc"
-                onEntryEvent: function (entry, event) {
-                    if (event == 1) { // StatusChangedEvent
-                        kcm.onGHNSEntriesChanged()
-                    }
+        NewStuff.Button {
+            text: i18n("Get New KWin Scripts ...")
+            visible: KAuthorized.authorize(KAuthorized.GHNS)
+            configFile: "kwinscripts.knsrc"
+            onEntryEvent: function (entry, event) {
+                if (event == 1) { // StatusChangedEvent
+                    kcm.onGHNSEntriesChanged()
                 }
             }
         }
