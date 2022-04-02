@@ -81,8 +81,6 @@ public:
      */
     QSize bufferSize() const;
 
-    bool isFormatSupported(uint32_t drmFormat) const;
-    QVector<uint64_t> supportedModifiers(uint32_t drmFormat) const;
     QMap<uint32_t, QVector<uint64_t>> supportedFormats() const;
 
     void setOutput(DrmOutput *output);

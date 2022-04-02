@@ -117,14 +117,14 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
     if (!buffer || buffer->planes().isEmpty() || buffer->size() != m_pipeline->sourceSize()) {
         return false;
     }
-
-    if (!m_pipeline->isFormatSupported(buffer->format())) {
-        m_dmabufFeedback.scanoutFailed(surface, m_pipeline->supportedFormats());
+    const auto formats = m_pipeline->supportedFormats();
+    if (!formats.contains(buffer->format())) {
+        m_dmabufFeedback.scanoutFailed(surface, formats);
         return false;
     }
     m_scanoutBuffer = QSharedPointer<DrmGbmBuffer>::create(m_pipeline->gpu(), buffer);
     if (!m_scanoutBuffer || !m_scanoutBuffer->bufferId()) {
-        m_dmabufFeedback.scanoutFailed(surface, m_pipeline->supportedFormats());
+        m_dmabufFeedback.scanoutFailed(surface, formats);
         m_scanoutBuffer.reset();
         return false;
     }
@@ -142,7 +142,7 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
         m_currentDamage = damage;
         return true;
     } else {
-        m_dmabufFeedback.scanoutFailed(surface, m_pipeline->supportedFormats());
+        m_dmabufFeedback.scanoutFailed(surface, formats);
         m_scanoutBuffer.reset();
         return false;
     }
