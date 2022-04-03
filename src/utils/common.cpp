@@ -84,8 +84,9 @@ static int server_grab_count = 0;
 
 void grabXServer()
 {
-    if (++server_grab_count == 1)
+    if (++server_grab_count == 1) {
         xcb_grab_server(connection());
+    }
 }
 
 void ungrabXServer()
@@ -101,14 +102,18 @@ static bool keyboard_grabbed = false;
 
 bool grabXKeyboard(xcb_window_t w)
 {
-    if (QWidget::keyboardGrabber() != nullptr)
+    if (QWidget::keyboardGrabber() != nullptr) {
         return false;
-    if (keyboard_grabbed)
+    }
+    if (keyboard_grabbed) {
         return false;
-    if (qApp->activePopupWidget() != nullptr)
+    }
+    if (qApp->activePopupWidget() != nullptr) {
         return false;
-    if (w == XCB_WINDOW_NONE)
+    }
+    if (w == XCB_WINDOW_NONE) {
         w = rootWindow();
+    }
     const xcb_grab_keyboard_cookie_t c = xcb_grab_keyboard_unchecked(connection(), false, w, xTime(),
                                                                      XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC);
     ScopedCPointer<xcb_grab_keyboard_reply_t> grab(xcb_grab_keyboard_reply(connection(), c, nullptr));
@@ -138,46 +143,60 @@ void ungrabXKeyboard()
 
 Qt::MouseButton x11ToQtMouseButton(int button)
 {
-    if (button == XCB_BUTTON_INDEX_1)
+    if (button == XCB_BUTTON_INDEX_1) {
         return Qt::LeftButton;
-    if (button == XCB_BUTTON_INDEX_2)
+    }
+    if (button == XCB_BUTTON_INDEX_2) {
         return Qt::MiddleButton;
-    if (button == XCB_BUTTON_INDEX_3)
+    }
+    if (button == XCB_BUTTON_INDEX_3) {
         return Qt::RightButton;
-    if (button == XCB_BUTTON_INDEX_4)
+    }
+    if (button == XCB_BUTTON_INDEX_4) {
         return Qt::XButton1;
-    if (button == XCB_BUTTON_INDEX_5)
+    }
+    if (button == XCB_BUTTON_INDEX_5) {
         return Qt::XButton2;
+    }
     return Qt::NoButton;
 }
 
 Qt::MouseButtons x11ToQtMouseButtons(int state)
 {
     Qt::MouseButtons ret = {};
-    if (state & XCB_KEY_BUT_MASK_BUTTON_1)
+    if (state & XCB_KEY_BUT_MASK_BUTTON_1) {
         ret |= Qt::LeftButton;
-    if (state & XCB_KEY_BUT_MASK_BUTTON_2)
+    }
+    if (state & XCB_KEY_BUT_MASK_BUTTON_2) {
         ret |= Qt::MiddleButton;
-    if (state & XCB_KEY_BUT_MASK_BUTTON_3)
+    }
+    if (state & XCB_KEY_BUT_MASK_BUTTON_3) {
         ret |= Qt::RightButton;
-    if (state & XCB_KEY_BUT_MASK_BUTTON_4)
+    }
+    if (state & XCB_KEY_BUT_MASK_BUTTON_4) {
         ret |= Qt::XButton1;
-    if (state & XCB_KEY_BUT_MASK_BUTTON_5)
+    }
+    if (state & XCB_KEY_BUT_MASK_BUTTON_5) {
         ret |= Qt::XButton2;
+    }
     return ret;
 }
 
 Qt::KeyboardModifiers x11ToQtKeyboardModifiers(int state)
 {
     Qt::KeyboardModifiers ret = {};
-    if (state & XCB_KEY_BUT_MASK_SHIFT)
+    if (state & XCB_KEY_BUT_MASK_SHIFT) {
         ret |= Qt::ShiftModifier;
-    if (state & XCB_KEY_BUT_MASK_CONTROL)
+    }
+    if (state & XCB_KEY_BUT_MASK_CONTROL) {
         ret |= Qt::ControlModifier;
-    if (state & KKeyServer::modXAlt())
+    }
+    if (state & KKeyServer::modXAlt()) {
         ret |= Qt::AltModifier;
-    if (state & KKeyServer::modXMeta())
+    }
+    if (state & KKeyServer::modXMeta()) {
         ret |= Qt::MetaModifier;
+    }
     return ret;
 }
 

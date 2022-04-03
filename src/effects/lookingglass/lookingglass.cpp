@@ -201,10 +201,11 @@ void LookingGlassEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::m
     const int time = m_lastPresentTime.count() ? (presentTime - m_lastPresentTime).count() : 0;
     if (zoom != target_zoom) {
         double diff = time / animationTime(500.0);
-        if (target_zoom > zoom)
+        if (target_zoom > zoom) {
             zoom = qMin(zoom * qMax(1.0 + diff, 1.2), target_zoom);
-        else
+        } else {
             zoom = qMax(zoom * qMin(1.0 - diff, 0.8), target_zoom);
+        }
         qCDebug(KWIN_LOOKINGGLASS) << "zoom is now " << zoom;
         radius = qBound((double)initialradius, initialradius * zoom, 3.5 * initialradius);
 

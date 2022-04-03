@@ -139,6 +139,7 @@ public:
     void registerRealtimeTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback);
     void registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *action);
     void registerRealtimeTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback);
+    void registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action);
     void registerGlobalAccel(KGlobalAccelInterface *interface);
 
     bool supportsPointerWarping() const;
@@ -398,6 +399,8 @@ public:
     virtual bool touchDown(qint32 id, const QPointF &pos, quint32 time);
     virtual bool touchMotion(qint32 id, const QPointF &pos, quint32 time);
     virtual bool touchUp(qint32 id, quint32 time);
+    virtual bool touchCancel();
+    virtual bool touchFrame();
 
     virtual bool pinchGestureBegin(int fingerCount, quint32 time);
     virtual bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time);

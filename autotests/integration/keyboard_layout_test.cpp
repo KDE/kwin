@@ -370,8 +370,9 @@ void KeyboardLayoutTest::testVirtualDesktopPolicy()
         QCOMPARE(desktops.at(desktop), VirtualDesktopManager::self()->currentDesktop());
         layout = (desktop + 1) % xkb->numberOfLayouts();
         QCOMPARE(xkb->currentLayout(), layout);
-        if (--desktop >= VirtualDesktopManager::self()->count()) // overflow
+        if (--desktop >= VirtualDesktopManager::self()->count()) { // overflow
             break;
+        }
         VirtualDesktopManager::self()->setCurrent(desktops.at(desktop));
     }
 

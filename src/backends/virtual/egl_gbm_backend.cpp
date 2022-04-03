@@ -64,8 +64,9 @@ bool EglGbmBackend::initializeEgl()
         }
     }
 
-    if (display == EGL_NO_DISPLAY)
+    if (display == EGL_NO_DISPLAY) {
         return false;
+    }
     setEglDisplay(display);
     return initEglAPI();
 }

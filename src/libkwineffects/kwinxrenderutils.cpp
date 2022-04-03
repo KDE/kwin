@@ -89,8 +89,9 @@ XRenderPicture xRenderBlendPicture(double opacity)
 
 static xcb_render_picture_t createPicture(xcb_pixmap_t pix, int depth)
 {
-    if (pix == XCB_PIXMAP_NONE)
+    if (pix == XCB_PIXMAP_NONE) {
         return XCB_RENDER_PICTURE_NONE;
+    }
     xcb_connection_t *c = XRenderUtils::s_connection;
     static QHash<int, xcb_render_pictformat_t> s_renderFormats;
     if (!s_renderFormats.contains(depth)) {
@@ -240,8 +241,9 @@ struct PictFormatData
                 const xcb_render_pictvisual_t *visuals = xcb_render_pictdepth_visuals(depths.data);
                 const int len = xcb_render_pictdepth_visuals_length(depths.data);
 
-                for (int i = 0; i < len; i++)
+                for (int i = 0; i < len; i++) {
                     visualHash.insert(visuals[i].visual, visuals[i].format);
+                }
             }
         }
 
@@ -250,8 +252,9 @@ struct PictFormatData
         const int len = xcb_render_query_pict_formats_formats_length(reply);
 
         for (int i = 0; i < len; i++) {
-            if (formats[i].type == XCB_RENDER_PICT_TYPE_DIRECT)
+            if (formats[i].type == XCB_RENDER_PICT_TYPE_DIRECT) {
                 formatInfoHash.insert(formats[i].id, &formats[i].direct);
+            }
         }
     }
 

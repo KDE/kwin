@@ -983,12 +983,13 @@ void X11Compositor::updateClientCompositeBlocking(X11Client *c)
     if (c) {
         if (c->isBlockingCompositing()) {
             // Do NOT attempt to call suspend(true) from within the eventchain!
-            if (!(m_suspended & BlockRuleSuspend))
+            if (!(m_suspended & BlockRuleSuspend)) {
                 QMetaObject::invokeMethod(
                     this, [this]() {
                         suspend(BlockRuleSuspend);
                     },
                     Qt::QueuedConnection);
+            }
         }
     } else if (m_suspended & BlockRuleSuspend) {
         // If !c we just check if we can resume in case a blocking client was lost.

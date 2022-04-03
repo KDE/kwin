@@ -254,9 +254,25 @@ int WorkspaceWrapper::displayHeight() const
     return displaySize().height();
 }
 
+static VirtualDesktop *resolveVirtualDesktop(int desktopId)
+{
+    if (desktopId == 0 || desktopId == -1) {
+        return VirtualDesktopManager::self()->currentDesktop();
+    } else {
+        return VirtualDesktopManager::self()->desktopForX11Id(desktopId);
+    }
+}
+
 QRect WorkspaceWrapper::clientArea(ClientAreaOption option, const QPoint &p, int desktop) const
 {
-    return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), p, desktop);
+    const AbstractOutput *output = kwinApp()->platform()->outputAt(p);
+    const VirtualDesktop *virtualDesktop = resolveVirtualDesktop(desktop);
+    return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), output, virtualDesktop);
+}
+
+QRect WorkspaceWrapper::clientArea(ClientAreaOption option, const QPoint &p, VirtualDesktop *desktop) const
+{
+    return workspace()->clientArea(static_cast<clientAreaOption>(option), kwinApp()->platform()->outputAt(p), desktop);
 }
 
 QRect WorkspaceWrapper::clientArea(ClientAreaOption option, const KWin::AbstractClient *c) const
@@ -271,7 +287,29 @@ QRect WorkspaceWrapper::clientArea(ClientAreaOption option, KWin::AbstractClient
 
 QRect WorkspaceWrapper::clientArea(ClientAreaOption option, int screen, int desktop) const
 {
-    return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), screen, desktop);
+    VirtualDesktop *virtualDesktop;
+    AbstractOutput *output;
+
+    if (desktop == NETWinInfo::OnAllDesktops || desktop == 0) {
+        virtualDesktop = VirtualDesktopManager::self()->currentDesktop();
+    } else {
+        virtualDesktop = VirtualDesktopManager::self()->desktopForX11Id(desktop);
+        Q_ASSERT(virtualDesktop);
+    }
+
+    if (screen == -1) {
+        output = workspace()->activeOutput();
+    } else {
+        output = kwinApp()->platform()->findOutput(screen);
+        Q_ASSERT(output);
+    }
+
+    return workspace()->clientArea(static_cast<clientAreaOption>(option), output, virtualDesktop);
+}
+
+QRect WorkspaceWrapper::clientArea(ClientAreaOption option, AbstractOutput *output, VirtualDesktop *desktop) const
+{
+    return workspace()->clientArea(static_cast<clientAreaOption>(option), output, desktop);
 }
 
 QString WorkspaceWrapper::desktopName(int desktop) const
@@ -308,8 +346,9 @@ void WorkspaceWrapper::setupClientConnections(AbstractClient *client)
             this, &WorkspaceWrapper::clientMaximizeSet);
 
     X11Client *x11Client = qobject_cast<X11Client *>(client); // TODO: Drop X11-specific signals.
-    if (!x11Client)
+    if (!x11Client) {
         return;
+    }
 
     connect(x11Client, &X11Client::clientManaging, this, &WorkspaceWrapper::clientManaging);
     connect(x11Client, &X11Client::clientFullScreenSet, this, &WorkspaceWrapper::clientFullScreenSet);

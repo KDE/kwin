@@ -40,8 +40,9 @@ void FallApartEffect::reconfigure(ReconfigureFlags)
 
 void FallApartEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
-    if (!windows.isEmpty())
+    if (!windows.isEmpty()) {
         data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+    }
     effects->prePaintScreen(data, presentTime);
 }
 
@@ -83,15 +84,19 @@ void FallApartEffect::deform(EffectWindow *w, int mask, WindowPaintData &data, W
             // they are (left pieces generally move to the left, etc.)
             QPointF p1(quad[0].x(), quad[0].y());
             double xdiff = 0;
-            if (p1.x() < w->width() / 2)
+            if (p1.x() < w->width() / 2) {
                 xdiff = -(w->width() / 2 - p1.x()) / w->width() * 100;
-            if (p1.x() > w->width() / 2)
+            }
+            if (p1.x() > w->width() / 2) {
                 xdiff = (p1.x() - w->width() / 2) / w->width() * 100;
+            }
             double ydiff = 0;
-            if (p1.y() < w->height() / 2)
+            if (p1.y() < w->height() / 2) {
                 ydiff = -(w->height() / 2 - p1.y()) / w->height() * 100;
-            if (p1.y() > w->height() / 2)
+            }
+            if (p1.y() > w->height() / 2) {
                 ydiff = (p1.y() - w->height() / 2) / w->height() * 100;
+            }
             double modif = t * t * 64;
             srandom(cnt); // change direction randomly but consistently
             xdiff += (rand() % 21 - 10);
@@ -125,8 +130,9 @@ void FallApartEffect::deform(EffectWindow *w, int mask, WindowPaintData &data, W
 
 void FallApartEffect::postPaintScreen()
 {
-    if (!windows.isEmpty())
+    if (!windows.isEmpty()) {
         effects->addRepaintFull();
+    }
     effects->postPaintScreen();
 }
 
@@ -150,22 +156,27 @@ bool FallApartEffect::isRealWindow(EffectWindow *w)
     if (w->isX11Client() && !w->isManaged()) {
         return false;
     }
-    if (!w->isNormalWindow())
+    if (!w->isNormalWindow()) {
         return false;
+    }
     return true;
 }
 
 void FallApartEffect::slotWindowClosed(EffectWindow *c)
 {
-    if (effects->activeFullScreenEffect())
+    if (effects->activeFullScreenEffect()) {
         return;
-    if (!isRealWindow(c))
+    }
+    if (!isRealWindow(c)) {
         return;
-    if (!c->isVisible())
+    }
+    if (!c->isVisible()) {
         return;
+    }
     const void *e = c->data(WindowClosedGrabRole).value<void *>();
-    if (e && e != this)
+    if (e && e != this) {
         return;
+    }
     c->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
     windows[c].progress = 0;
     c->refWindow();

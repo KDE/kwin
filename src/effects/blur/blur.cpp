@@ -387,8 +387,9 @@ bool BlurEffect::enabledByDefault()
 {
     GLPlatform *gl = GLPlatform::instance();
 
-    if (gl->isIntel() && gl->chipClass() < SandyBridge)
+    if (gl->isIntel() && gl->chipClass() < SandyBridge) {
         return false;
+    }
     if (gl->isPanfrost() && gl->chipClass() <= MaliT8XX) {
         return false;
     }
@@ -408,8 +409,9 @@ bool BlurEffect::supported()
         glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTexSize);
 
         const QSize screenSize = effects->virtualScreenSize();
-        if (screenSize.width() > maxTexSize || screenSize.height() > maxTexSize)
+        if (screenSize.width() > maxTexSize || screenSize.height() > maxTexSize) {
             supported = false;
+        }
     }
     return supported;
 }
@@ -500,8 +502,9 @@ void BlurEffect::uploadGeometry(GLVertexBuffer *vbo, const QRegion &blurRegion, 
 {
     const int vertexCount = ((blurRegion.rectCount() * (m_downSampleIterations + 1)) + windowRegion.rectCount()) * 6;
 
-    if (!vertexCount)
+    if (!vertexCount) {
         return;
+    }
 
     QVector2D *map = (QVector2D *)vbo->map(vertexCount * sizeof(QVector2D));
 
@@ -581,25 +584,30 @@ void BlurEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::
 
 bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintData &data) const
 {
-    if (!m_renderTargetsValid || !m_shader || !m_shader->isValid())
+    if (!m_renderTargetsValid || !m_shader || !m_shader->isValid()) {
         return false;
+    }
 
-    if (effects->activeFullScreenEffect() && !w->data(WindowForceBlurRole).toBool())
+    if (effects->activeFullScreenEffect() && !w->data(WindowForceBlurRole).toBool()) {
         return false;
+    }
 
-    if (w->isDesktop())
+    if (w->isDesktop()) {
         return false;
+    }
 
     bool scaled = !qFuzzyCompare(data.xScale(), 1.0) && !qFuzzyCompare(data.yScale(), 1.0);
     bool translated = data.xTranslation() || data.yTranslation();
 
-    if ((scaled || (translated || (mask & PAINT_WINDOW_TRANSFORMED))) && !w->data(WindowForceBlurRole).toBool())
+    if ((scaled || (translated || (mask & PAINT_WINDOW_TRANSFORMED))) && !w->data(WindowForceBlurRole).toBool()) {
         return false;
+    }
 
     bool blurBehindDecos = effects->decorationsHaveAlpha() && decorationSupportsBlurBehind(w);
 
-    if (!w->hasAlpha() && w->opacity() >= 1.0 && !(blurBehindDecos && w->hasDecoration()))
+    if (!w->hasAlpha() && w->opacity() >= 1.0 && !(blurBehindDecos && w->hasDecoration())) {
         return false;
+    }
 
     return true;
 }

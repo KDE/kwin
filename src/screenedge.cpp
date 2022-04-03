@@ -502,8 +502,9 @@ void Edge::switchDesktop(const QPoint &cursorPos)
 
 void Edge::pushCursorBack(const QPoint &cursorPos)
 {
-    if (m_pushBackBlocked)
+    if (m_pushBackBlocked) {
         return;
+    }
     int x = cursorPos.x();
     int y = cursorPos.y();
     const QSize &distance = edges()->cursorPushBackDistance();
@@ -1261,8 +1262,9 @@ ElectricBorderAction ScreenEdges::actionForTouchEdge(Edge *edge) const
 
 void ScreenEdges::reserveDesktopSwitching(bool isToReserve, Qt::Orientations o)
 {
-    if (!o)
+    if (!o) {
         return;
+    }
     for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
         Edge *edge = *it;
         if (edge->isCorner()) {
@@ -1313,8 +1315,9 @@ void ScreenEdges::reserve(AbstractClient *client, ElectricBorder border)
     if (border != ElectricNone) {
         createEdgeForClient(client, border);
     } else {
-        if (hadBorder) // show again
+        if (hadBorder) { // show again
             client->showOnScreenEdge();
+        }
     }
 }
 

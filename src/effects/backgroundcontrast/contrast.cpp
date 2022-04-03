@@ -258,10 +258,12 @@ bool ContrastEffect::enabledByDefault()
 {
     GLPlatform *gl = GLPlatform::instance();
 
-    if (gl->isIntel() && gl->chipClass() < SandyBridge)
+    if (gl->isIntel() && gl->chipClass() < SandyBridge) {
         return false;
-    if (gl->isPanfrost() && gl->chipClass() <= MaliT8XX)
+    }
+    if (gl->isPanfrost() && gl->chipClass() <= MaliT8XX) {
         return false;
+    }
     if (gl->isSoftwareEmulation()) {
         return false;
     }
@@ -278,8 +280,9 @@ bool ContrastEffect::supported()
         glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTexSize);
 
         const QSize screenSize = effects->virtualScreenSize();
-        if (screenSize.width() > maxTexSize || screenSize.height() > maxTexSize)
+        if (screenSize.width() > maxTexSize || screenSize.height() > maxTexSize) {
             supported = false;
+        }
     }
     return supported;
 }
@@ -326,8 +329,9 @@ void ContrastEffect::uploadRegion(QVector2D *&map, const QRegion &region)
 void ContrastEffect::uploadGeometry(GLVertexBuffer *vbo, const QRegion &region)
 {
     const int vertexCount = region.rectCount() * 6;
-    if (!vertexCount)
+    if (!vertexCount) {
         return;
+    }
 
     QVector2D *map = (QVector2D *)vbo->map(vertexCount * sizeof(QVector2D));
     uploadRegion(map, region);
@@ -342,23 +346,28 @@ void ContrastEffect::uploadGeometry(GLVertexBuffer *vbo, const QRegion &region)
 
 bool ContrastEffect::shouldContrast(const EffectWindow *w, int mask, const WindowPaintData &data) const
 {
-    if (!shader || !shader->isValid())
+    if (!shader || !shader->isValid()) {
         return false;
+    }
 
-    if (effects->activeFullScreenEffect() && !w->data(WindowForceBackgroundContrastRole).toBool())
+    if (effects->activeFullScreenEffect() && !w->data(WindowForceBackgroundContrastRole).toBool()) {
         return false;
+    }
 
-    if (w->isDesktop())
+    if (w->isDesktop()) {
         return false;
+    }
 
     bool scaled = !qFuzzyCompare(data.xScale(), 1.0) && !qFuzzyCompare(data.yScale(), 1.0);
     bool translated = data.xTranslation() || data.yTranslation();
 
-    if ((scaled || (translated || (mask & PAINT_WINDOW_TRANSFORMED))) && !w->data(WindowForceBackgroundContrastRole).toBool())
+    if ((scaled || (translated || (mask & PAINT_WINDOW_TRANSFORMED))) && !w->data(WindowForceBackgroundContrastRole).toBool()) {
         return false;
+    }
 
-    if (!w->hasAlpha())
+    if (!w->hasAlpha()) {
         return false;
+    }
 
     return true;
 }

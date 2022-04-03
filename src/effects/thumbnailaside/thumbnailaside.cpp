@@ -76,8 +76,9 @@ void ThumbnailAsideEffect::paintWindow(EffectWindow *w, int mask, QRegion region
 void ThumbnailAsideEffect::slotWindowDamaged(EffectWindow *w, const QRegion &)
 {
     for (const Data &d : qAsConst(windows)) {
-        if (d.window == w)
+        if (d.window == w) {
             effects->addRepaint(d.rect);
+        }
     }
 }
 
@@ -85,10 +86,11 @@ void ThumbnailAsideEffect::slotWindowFrameGeometryChanged(EffectWindow *w, const
 {
     for (const Data &d : qAsConst(windows)) {
         if (d.window == w) {
-            if (w->size() == old.size())
+            if (w->size() == old.size()) {
                 effects->addRepaint(d.rect);
-            else
+            } else {
                 arrange();
+            }
             return;
         }
     }
@@ -102,12 +104,14 @@ void ThumbnailAsideEffect::slotWindowClosed(EffectWindow *w)
 void ThumbnailAsideEffect::toggleCurrentThumbnail()
 {
     EffectWindow *active = effects->activeWindow();
-    if (active == nullptr)
+    if (active == nullptr) {
         return;
-    if (windows.contains(active))
+    }
+    if (windows.contains(active)) {
         removeThumbnail(active);
-    else
+    } else {
         addThumbnail(active);
+    }
 }
 
 void ThumbnailAsideEffect::addThumbnail(EffectWindow *w)
@@ -122,8 +126,9 @@ void ThumbnailAsideEffect::addThumbnail(EffectWindow *w)
 
 void ThumbnailAsideEffect::removeThumbnail(EffectWindow *w)
 {
-    if (!windows.contains(w))
+    if (!windows.contains(w)) {
         return;
+    }
     repaintAll(); // repaint old areas
     int index = windows[w].index;
     windows.remove(w);
@@ -131,16 +136,18 @@ void ThumbnailAsideEffect::removeThumbnail(EffectWindow *w)
          it != windows.end();
          ++it) {
         Data &d = *it;
-        if (d.index > index)
+        if (d.index > index) {
             --d.index;
+        }
     }
     arrange();
 }
 
 void ThumbnailAsideEffect::arrange()
 {
-    if (windows.size() == 0)
+    if (windows.size() == 0) {
         return;
+    }
     int height = 0;
     QVector<int> pos(windows.size());
     int mwidth = 0;

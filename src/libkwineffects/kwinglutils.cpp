@@ -58,8 +58,9 @@ static void initDebugOutput()
 
     const bool have_KHR_debug = hasGLExtension(QByteArrayLiteral("GL_KHR_debug"));
     const bool have_ARB_debug = hasGLExtension(QByteArrayLiteral("GL_ARB_debug_output"));
-    if (!have_KHR_debug && !have_ARB_debug)
+    if (!have_KHR_debug && !have_ARB_debug) {
         return;
+    }
 
     if (!have_ARB_debug) {
         // if we don't have ARB debug, but only KHR debug we need to verify whether the context is a debug context
@@ -111,8 +112,9 @@ static void initDebugOutput()
     glDebugMessageCallback(callback, nullptr);
 
     // This state exists only in GL_KHR_debug
-    if (have_KHR_debug)
+    if (have_KHR_debug) {
         glEnable(GL_DEBUG_OUTPUT);
+    }
 
 #if !defined(QT_NO_DEBUG)
     // Enable all debug messages
@@ -140,8 +142,9 @@ void initGL(const std::function<resolveFuncPtr(const char *)> &resolveFunction)
             const QByteArray name = (const char *)glGetStringi(GL_EXTENSIONS, i);
             glExtensions << name;
         }
-    } else
+    } else {
         glExtensions = QByteArray((const char *)glGetString(GL_EXTENSIONS)).split(' ');
+    }
 
     // handle OpenGL extensions functions
     glResolveFunctions(resolveFunction);
@@ -341,11 +344,13 @@ bool GLShader::compile(GLuint program, GLenum shaderType, const QByteArray &sour
         qCCritical(LIBKWINGLUTILS) << "Failed to compile" << typeName << "shader:"
                                    << "\n"
                                    << log;
-    } else if (length > 0)
+    } else if (length > 0) {
         qCDebug(LIBKWINGLUTILS) << "Shader compile log:" << log;
+    }
 
-    if (status != 0)
+    if (status != 0) {
         glAttachShader(program, shader);
+    }
 
     glDeleteShader(shader);
     return status != 0;
@@ -367,20 +372,23 @@ bool GLShader::load(const QByteArray &vertexSource, const QByteArray &fragmentSo
     if (!vertexSource.isEmpty()) {
         bool success = compile(mProgram, GL_VERTEX_SHADER, vertexSource);
 
-        if (!success)
+        if (!success) {
             return false;
+        }
     }
 
     // Compile the fragment shader
     if (!fragmentSource.isEmpty()) {
         bool success = compile(mProgram, GL_FRAGMENT_SHADER, fragmentSource);
 
-        if (!success)
+        if (!success) {
             return false;
+        }
     }
 
-    if (mExplicitLinking)
+    if (mExplicitLinking) {
         return true;
+    }
 
     // link() sets mValid
     return link();
@@ -393,8 +401,9 @@ void GLShader::bindAttributeLocation(const char *name, int index)
 
 void GLShader::bindFragDataLocation(const char *name, int index)
 {
-    if (!GLPlatform::instance()->isGLES() && (hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_EXT_gpu_shader4"))))
+    if (!GLPlatform::instance()->isGLES() && (hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_EXT_gpu_shader4")))) {
         glBindFragDataLocation(mProgram, index, name);
+    }
 }
 
 void GLShader::bind()
@@ -409,8 +418,9 @@ void GLShader::unbind()
 
 void GLShader::resolveLocations()
 {
-    if (mLocationsResolved)
+    if (mLocationsResolved) {
         return;
+    }
 
     mMatrixLocation[TextureMatrix] = uniformLocation("textureMatrix");
     mMatrixLocation[ProjectionMatrix] = uniformLocation("projection");
@@ -655,30 +665,34 @@ QByteArray ShaderManager::generateVertexSource(ShaderTraits traits) const
         attribute = glsl_140 ? QByteArrayLiteral("in") : QByteArrayLiteral("attribute");
         varying = glsl_140 ? QByteArrayLiteral("out") : QByteArrayLiteral("varying");
 
-        if (glsl_140)
+        if (glsl_140) {
             stream << "#version 140\n\n";
+        }
     } else {
         const bool glsl_es_300 = gl->glslVersion() >= kVersionNumber(3, 0);
 
         attribute = glsl_es_300 ? QByteArrayLiteral("in") : QByteArrayLiteral("attribute");
         varying = glsl_es_300 ? QByteArrayLiteral("out") : QByteArrayLiteral("varying");
 
-        if (glsl_es_300)
+        if (glsl_es_300) {
             stream << "#version 300 es\n\n";
+        }
     }
 
     stream << attribute << " vec4 position;\n";
     if (traits & ShaderTrait::MapTexture) {
         stream << attribute << " vec4 texcoord;\n\n";
         stream << varying << " vec2 texcoord0;\n\n";
-    } else
+    } else {
         stream << "\n";
+    }
 
     stream << "uniform mat4 modelViewProjectionMatrix;\n\n";
 
     stream << "void main()\n{\n";
-    if (traits & ShaderTrait::MapTexture)
+    if (traits & ShaderTrait::MapTexture) {
         stream << "    texcoord0 = texcoord.st;\n";
+    }
 
     stream << "    gl_Position = modelViewProjectionMatrix * position;\n";
     stream << "}\n";
@@ -698,8 +712,9 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
     if (!gl->isGLES()) {
         const bool glsl_140 = gl->glslVersion() >= kVersionNumber(1, 40);
 
-        if (glsl_140)
+        if (glsl_140) {
             stream << "#version 140\n\n";
+        }
 
         varying = glsl_140 ? QByteArrayLiteral("in") : QByteArrayLiteral("varying");
         textureLookup = glsl_140 ? QByteArrayLiteral("texture") : QByteArrayLiteral("texture2D");
@@ -707,8 +722,9 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
     } else {
         const bool glsl_es_300 = GLPlatform::instance()->glslVersion() >= kVersionNumber(3, 0);
 
-        if (glsl_es_300)
+        if (glsl_es_300) {
             stream << "#version 300 es\n\n";
+        }
 
         // From the GLSL ES specification:
         //
@@ -723,19 +739,23 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
     if (traits & ShaderTrait::MapTexture) {
         stream << "uniform sampler2D sampler;\n";
 
-        if (traits & ShaderTrait::Modulate)
+        if (traits & ShaderTrait::Modulate) {
             stream << "uniform vec4 modulation;\n";
-        if (traits & ShaderTrait::AdjustSaturation)
+        }
+        if (traits & ShaderTrait::AdjustSaturation) {
             stream << "uniform float saturation;\n";
+        }
 
         stream << "\n"
                << varying << " vec2 texcoord0;\n";
 
-    } else if (traits & ShaderTrait::UniformColor)
+    } else if (traits & ShaderTrait::UniformColor) {
         stream << "uniform vec4 geometryColor;\n";
+    }
 
-    if (output != QByteArrayLiteral("gl_FragColor"))
+    if (output != QByteArrayLiteral("gl_FragColor")) {
         stream << "\nout vec4 " << output << ";\n";
+    }
 
     stream << "\nvoid main(void)\n{\n";
     if (traits & ShaderTrait::MapTexture) {
@@ -743,17 +763,20 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
 
         if (traits & (ShaderTrait::Modulate | ShaderTrait::AdjustSaturation)) {
             stream << "    vec4 texel = " << textureLookup << "(sampler, texcoordC);\n";
-            if (traits & ShaderTrait::Modulate)
+            if (traits & ShaderTrait::Modulate) {
                 stream << "    texel *= modulation;\n";
-            if (traits & ShaderTrait::AdjustSaturation)
+            }
+            if (traits & ShaderTrait::AdjustSaturation) {
                 stream << "    texel.rgb = mix(vec3(dot(texel.rgb, vec3(0.2126, 0.7152, 0.0722))), texel.rgb, saturation);\n";
+            }
 
             stream << "    " << output << " = texel;\n";
         } else {
             stream << "    " << output << " = " << textureLookup << "(sampler, texcoordC);\n";
         }
-    } else if (traits & ShaderTrait::UniformColor)
+    } else if (traits & ShaderTrait::UniformColor) {
         stream << "    " << output << " = geometryColor;\n";
+    }
 
     stream << "}";
     stream.flush();
@@ -1098,10 +1121,11 @@ void GLRenderTarget::initFBO(GLTexture *colorAttachment)
 
     if (status != GL_FRAMEBUFFER_COMPLETE) {
         // We have an incomplete framebuffer, consider it invalid
-        if (status == 0)
+        if (status == 0) {
             qCCritical(LIBKWINGLUTILS) << "glCheckFramebufferStatus failed: " << formatGLError(glGetError());
-        else
+        } else {
             qCCritical(LIBKWINGLUTILS) << "Invalid framebuffer status: " << formatFramebufferStatus(status);
+        }
         glDeleteFramebuffers(1, &mFramebuffer);
         return;
     }
@@ -1355,8 +1379,9 @@ IndexBuffer::~IndexBuffer()
 void IndexBuffer::accommodate(int count)
 {
     // Check if we need to grow the buffer.
-    if (count <= m_count)
+    if (count <= m_count) {
         return;
+    }
 
     count = align(count, 128);
     size_t size = 6 * sizeof(uint16_t) * count;
@@ -1379,8 +1404,9 @@ void IndexBuffer::accommodate(int count)
 
     const uint16_t index[] = {1, 0, 3, 3, 2, 1};
     for (int i = m_count; i < count; i++) {
-        for (int j = 0; j < 6; j++)
+        for (int j = 0; j < 6; j++) {
             *(map++) = i * 4 + index[j];
+        }
     }
 
     glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
@@ -1407,10 +1433,11 @@ public:
 
     void operator=(bool val)
     {
-        if (val)
+        if (val) {
             m_bitfield |= m_mask;
-        else
+        } else {
             m_bitfield &= ~m_mask;
+        }
     }
 
     operator bool() const
@@ -1511,8 +1538,9 @@ struct BufferFence
 
 static void deleteAll(std::deque<BufferFence> &fences)
 {
-    for (const BufferFence &fence : fences)
+    for (const BufferFence &fence : fences) {
         glDeleteSync(fence.sync);
+    }
 
     fences.clear();
 }
@@ -1537,8 +1565,9 @@ public:
     size_t average() const
     {
         size_t sum = 0;
-        for (size_t size : m_array)
+        for (size_t size : m_array) {
             sum += size;
+        }
         return sum / Count;
     }
 
@@ -1665,8 +1694,9 @@ void GLVertexBufferPrivate::interleaveArrays(float *dst, int dim,
 
     default:
         for (int i = 0; i < count; i++) {
-            for (int j = 0; j < dim; j++)
+            for (int j = 0; j < dim; j++) {
                 *(dst++) = *(vertices++);
+            }
 
             *(dst++) = *(texcoords++);
             *(dst++) = *(texcoords++);
@@ -1695,8 +1725,9 @@ void GLVertexBufferPrivate::bindArrays()
 void GLVertexBufferPrivate::unbindArrays()
 {
     BitfieldIterator it(enabledArrays);
-    while (it.hasNext())
+    while (it.hasNext()) {
         glDisableVertexAttribArray(it.next());
+    }
 }
 
 void GLVertexBufferPrivate::reallocatePersistentBuffer(size_t size)
@@ -1709,8 +1740,9 @@ void GLVertexBufferPrivate::reallocatePersistentBuffer(size_t size)
         deleteAll(fences);
     }
 
-    if (buffer == 0)
+    if (buffer == 0) {
         glGenBuffers(1, &buffer);
+    }
 
     // Round the size up to 64 kb
     size_t minSize = qMax<size_t>(frameSizes.average() * 3, 128 * 1024);
@@ -1762,16 +1794,18 @@ bool GLVertexBufferPrivate::awaitFence(intptr_t end)
 
 GLvoid *GLVertexBufferPrivate::getIdleRange(size_t size)
 {
-    if (unlikely(size > bufferSize))
+    if (unlikely(size > bufferSize)) {
         reallocatePersistentBuffer(size * 2);
+    }
 
     // Handle wrap-around
     if (unlikely(nextOffset + size > bufferSize)) {
         nextOffset = 0;
         bufferEnd -= bufferSize;
 
-        for (BufferFence &fence : fences)
+        for (BufferFence &fence : fences) {
             fence.nextEnd -= bufferSize;
+        }
 
         // Emit a fence now
         BufferFence fence;
@@ -1782,8 +1816,9 @@ GLvoid *GLVertexBufferPrivate::getIdleRange(size_t size)
     }
 
     if (unlikely(nextOffset + intptr_t(size) > bufferEnd)) {
-        if (!awaitFence(nextOffset + size))
+        if (!awaitFence(nextOffset + size)) {
             return nullptr;
+        }
     }
 
     return map + nextOffset;
@@ -1862,21 +1897,24 @@ GLvoid *GLVertexBuffer::map(size_t size)
     d->mappedSize = size;
     d->frameSize += size;
 
-    if (d->persistent)
+    if (d->persistent) {
         return d->getIdleRange(size);
+    }
 
     glBindBuffer(GL_ARRAY_BUFFER, d->buffer);
 
     bool preferBufferSubData = GLPlatform::instance()->preferBufferSubData();
 
-    if (GLVertexBufferPrivate::hasMapBufferRange && !preferBufferSubData)
+    if (GLVertexBufferPrivate::hasMapBufferRange && !preferBufferSubData) {
         return (GLvoid *)d->mapNextFreeRange(size);
+    }
 
     // If we can't map the buffer we allocate local memory to hold the
     // buffer data and return a pointer to it.  The data will be submitted
     // to the actual buffer object when the user calls unmap().
-    if (size_t(d->dataStore.size()) < size)
+    if (size_t(d->dataStore.size()) < size) {
         d->dataStore.resize(size);
+    }
 
     return (GLvoid *)d->dataStore.data();
 }
@@ -1915,8 +1953,9 @@ void GLVertexBuffer::unmap()
         }
 
         // Free the local memory buffer if it's unlikely to be used again
-        if (d->usage == GL_STATIC_DRAW)
+        if (d->usage == GL_STATIC_DRAW) {
             d->dataStore = QByteArray();
+        }
     }
 
     d->mappedSize = 0;
@@ -1980,8 +2019,9 @@ void GLVertexBuffer::draw(const QRegion &region, GLenum primitiveMode, int first
     if (primitiveMode == GL_QUADS) {
         IndexBuffer *&indexBuffer = GLVertexBufferPrivate::s_indexBuffer;
 
-        if (!indexBuffer)
+        if (!indexBuffer) {
             indexBuffer = new IndexBuffer;
+        }
 
         indexBuffer->bind();
         indexBuffer->accommodate(count / 4);
@@ -2043,8 +2083,9 @@ void GLVertexBuffer::reset()
 
 void GLVertexBuffer::endOfFrame()
 {
-    if (!d->persistent)
+    if (!d->persistent) {
         return;
+    }
 
     // Emit a fence if we have uploaded data
     if (d->frameSize > 0) {
@@ -2074,8 +2115,9 @@ void GLVertexBuffer::endOfFrame()
 
 void GLVertexBuffer::beginFrame()
 {
-    if (!d->persistent)
+    if (!d->persistent) {
         return;
+    }
 
     // Remove finished fences from the list and update the bufferEnd offset
     while (d->fences.size() > 1 && d->fences.front().signaled()) {

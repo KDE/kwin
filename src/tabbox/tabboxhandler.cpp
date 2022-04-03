@@ -146,23 +146,27 @@ DesktopModel *TabBoxHandlerPrivate::desktopModel() const
 
 void TabBoxHandlerPrivate::updateHighlightWindows()
 {
-    if (!isShown || config.tabBoxMode() != TabBoxConfig::ClientTabBox)
+    if (!isShown || config.tabBoxMode() != TabBoxConfig::ClientTabBox) {
         return;
+    }
 
     TabBoxClient *currentClient = q->client(index);
     QWindow *w = window();
 
     if (q->isKWinCompositing()) {
-        if (lastRaisedClient)
+        if (lastRaisedClient) {
             q->elevateClient(lastRaisedClient, w, false);
+        }
         lastRaisedClient = currentClient;
-        if (currentClient)
+        if (currentClient) {
             q->elevateClient(currentClient, w, true);
+        }
     } else {
         if (lastRaisedClient) {
             q->shadeClient(lastRaisedClient, true);
-            if (lastRaisedClientSucc)
+            if (lastRaisedClientSucc) {
                 q->restack(lastRaisedClient, lastRaisedClientSucc);
+            }
             // TODO lastRaisedClient->setMinimized( lastRaisedClientWasMinimized );
         }
 
@@ -205,10 +209,12 @@ void TabBoxHandlerPrivate::endHighlightWindows(bool abort)
         }
     }
     QWindow *w = window();
-    if (currentClient)
+    if (currentClient) {
         q->elevateClient(currentClient, w, false);
-    if (abort && lastRaisedClient && lastRaisedClientSucc)
+    }
+    if (abort && lastRaisedClient && lastRaisedClientSucc) {
         q->restack(lastRaisedClient, lastRaisedClientSucc);
+    }
     lastRaisedClient = nullptr;
     lastRaisedClientSucc = nullptr;
     // highlight windows
@@ -438,60 +444,69 @@ QModelIndex TabBoxHandler::nextPrev(bool forward) const
         if (column == model->columnCount()) {
             column = 0;
             row++;
-            if (row == model->rowCount())
+            if (row == model->rowCount()) {
                 row = 0;
+            }
         }
         ret = model->index(row, column);
-        if (!ret.isValid())
+        if (!ret.isValid()) {
             ret = model->index(0, 0);
+        }
     } else {
         int column = d->index.column() - 1;
         int row = d->index.row();
         if (column < 0) {
             column = model->columnCount() - 1;
             row--;
-            if (row < 0)
+            if (row < 0) {
                 row = model->rowCount() - 1;
+            }
         }
         ret = model->index(row, column);
         if (!ret.isValid()) {
             row = model->rowCount() - 1;
             for (int i = model->columnCount() - 1; i >= 0; i--) {
                 ret = model->index(row, i);
-                if (ret.isValid())
+                if (ret.isValid()) {
                     break;
+                }
             }
         }
     }
-    if (ret.isValid())
+    if (ret.isValid()) {
         return ret;
-    else
+    } else {
         return d->index;
+    }
 }
 
 QModelIndex TabBoxHandler::desktopIndex(int desktop) const
 {
-    if (d->config.tabBoxMode() != TabBoxConfig::DesktopTabBox)
+    if (d->config.tabBoxMode() != TabBoxConfig::DesktopTabBox) {
         return QModelIndex();
+    }
     return d->desktopModel()->desktopIndex(desktop);
 }
 
 QList<int> TabBoxHandler::desktopList() const
 {
-    if (d->config.tabBoxMode() != TabBoxConfig::DesktopTabBox)
+    if (d->config.tabBoxMode() != TabBoxConfig::DesktopTabBox) {
         return QList<int>();
+    }
     return d->desktopModel()->desktopList();
 }
 
 int TabBoxHandler::desktop(const QModelIndex &index) const
 {
-    if (!index.isValid() || (d->config.tabBoxMode() != TabBoxConfig::DesktopTabBox))
+    if (!index.isValid() || (d->config.tabBoxMode() != TabBoxConfig::DesktopTabBox)) {
         return -1;
+    }
     QVariant ret = d->desktopModel()->data(index, DesktopModel::DesktopRole);
-    if (ret.isValid())
+    if (ret.isValid()) {
         return ret.toInt();
-    else
+    } else {
         return -1;
+    }
 }
 
 void TabBoxHandler::setCurrentIndex(const QModelIndex &index)
@@ -543,15 +558,17 @@ QModelIndex TabBoxHandler::index(QWeakPointer<KWin::TabBox::TabBoxClient> client
 
 TabBoxClientList TabBoxHandler::clientList() const
 {
-    if (d->config.tabBoxMode() != TabBoxConfig::ClientTabBox)
+    if (d->config.tabBoxMode() != TabBoxConfig::ClientTabBox) {
         return TabBoxClientList();
+    }
     return d->clientModel()->clientList();
 }
 
 TabBoxClient *TabBoxHandler::client(const QModelIndex &index) const
 {
-    if ((!index.isValid()) || (d->config.tabBoxMode() != TabBoxConfig::ClientTabBox))
+    if ((!index.isValid()) || (d->config.tabBoxMode() != TabBoxConfig::ClientTabBox)) {
         return nullptr;
+    }
     TabBoxClient *c = static_cast<TabBoxClient *>(
         d->clientModel()->data(index, ClientModel::ClientRole).value<void *>());
     return c;
@@ -578,10 +595,12 @@ void TabBoxHandler::createModel(bool partialReset)
                 lastRaisedSucc = true;
             }
         }
-        if (d->lastRaisedClient && !lastRaised)
+        if (d->lastRaisedClient && !lastRaised) {
             d->lastRaisedClient = nullptr;
-        if (d->lastRaisedClientSucc && !lastRaisedSucc)
+        }
+        if (d->lastRaisedClientSucc && !lastRaisedSucc) {
             d->lastRaisedClientSucc = nullptr;
+        }
         break;
     }
     case TabBoxConfig::DesktopTabBox:

@@ -141,8 +141,9 @@ void ScreenCastStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
     spa_data->mapoffset = 0;
     spa_data->flags = SPA_DATA_FLAG_READWRITE;
 
-    if (spa_data[0].type != SPA_ID_INVALID && spa_data[0].type & (1 << SPA_DATA_DmaBuf))
+    if (spa_data[0].type != SPA_ID_INVALID && spa_data[0].type & (1 << SPA_DATA_DmaBuf)) {
         dmabuf.reset(kwinApp()->platform()->createDmaBufTexture(stream->m_resolution));
+    }
 
     if (dmabuf) {
         spa_data->type = SPA_DATA_DmaBuf;
@@ -175,8 +176,9 @@ void ScreenCastStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
         }
 
         unsigned int seals = F_SEAL_GROW | F_SEAL_SHRINK | F_SEAL_SEAL;
-        if (fcntl(spa_data->fd, F_ADD_SEALS, seals) == -1)
+        if (fcntl(spa_data->fd, F_ADD_SEALS, seals) == -1) {
             qCWarning(KWIN_SCREENCAST) << "memfd: Failed to add seals";
+        }
 
         spa_data->data = mmap(nullptr,
                               spa_data->maxsize,
@@ -184,10 +186,11 @@ void ScreenCastStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
                               MAP_SHARED,
                               spa_data->fd,
                               spa_data->mapoffset);
-        if (spa_data->data == MAP_FAILED)
+        if (spa_data->data == MAP_FAILED) {
             qCCritical(KWIN_SCREENCAST) << "memfd: Failed to mmap memory";
-        else
+        } else {
             qCDebug(KWIN_SCREENCAST) << "memfd: created successfully" << spa_data->data << spa_data->maxsize;
+        }
 #endif
     }
 }
@@ -412,8 +415,9 @@ void ScreenCastStream::recordFrame(const QRegion &damagedRegion)
             mvp.ortho(r);
             shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
 
-            if (!m_cursor.texture || m_cursor.lastKey != cursor->image().cacheKey())
+            if (!m_cursor.texture || m_cursor.lastKey != cursor->image().cacheKey()) {
                 m_cursor.texture.reset(new GLTexture(cursor->image()));
+            }
 
             m_cursor.texture->setYInverted(false);
             m_cursor.texture->bind();

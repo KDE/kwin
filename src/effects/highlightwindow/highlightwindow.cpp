@@ -97,8 +97,9 @@ void HighlightWindowEffect::slotWindowAdded(EffectWindow *w)
 
 void HighlightWindowEffect::slotWindowClosed(EffectWindow *w)
 {
-    if (m_monitorWindow == w) // The monitoring window was destroyed
+    if (m_monitorWindow == w) { // The monitoring window was destroyed
         finishHighlighting();
+    }
 }
 
 void HighlightWindowEffect::slotWindowDeleted(EffectWindow *w)
@@ -108,15 +109,17 @@ void HighlightWindowEffect::slotWindowDeleted(EffectWindow *w)
 
 void HighlightWindowEffect::slotPropertyNotify(EffectWindow *w, long a, EffectWindow *addedWindow)
 {
-    if (a != m_atom || m_atom == XCB_ATOM_NONE)
+    if (a != m_atom || m_atom == XCB_ATOM_NONE) {
         return; // Not our atom
+    }
 
     // if the window is null, the property was set on the root window - see events.cpp
     QByteArray byteData = w ? w->readProperty(m_atom, m_atom, 32) : effects->readRootProperty(m_atom, m_atom, 32);
     if (byteData.length() < 1) {
         // Property was removed, clearing highlight
-        if (!addedWindow || w != addedWindow)
+        if (!addedWindow || w != addedWindow) {
             finishHighlighting();
+        }
         return;
     }
     auto *data = reinterpret_cast<uint32_t *>(byteData.data());

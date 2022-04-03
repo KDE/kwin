@@ -116,8 +116,9 @@ void Toplevel::copyToDeleted(Toplevel *c)
     ready_for_painting = c->ready_for_painting;
     is_shape = c->is_shape;
     effect_window = c->effect_window;
-    if (effect_window != nullptr)
+    if (effect_window != nullptr) {
         effect_window->setWindow(this);
+    }
     m_shadow = c->m_shadow;
     if (m_shadow) {
         m_shadow->setToplevel(this);
@@ -271,8 +272,9 @@ void Toplevel::setOpacity(qreal opacity)
 
 bool Toplevel::setupCompositing()
 {
-    if (!Compositor::compositing())
+    if (!Compositor::compositing()) {
         return false;
+    }
 
     effect_window = new EffectWindowImpl(this);
     updateShadow();

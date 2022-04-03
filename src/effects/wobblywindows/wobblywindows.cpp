@@ -331,14 +331,18 @@ void WobblyWindowsEffect::slotWindowStepUserMovedResized(EffectWindow *w, const 
     if (windows.contains(w)) {
         WindowWobblyInfos &wwi = windows[w];
         const QRect rect = w->frameGeometry();
-        if (rect.y() != wwi.resize_original_rect.y())
+        if (rect.y() != wwi.resize_original_rect.y()) {
             wwi.can_wobble_top = true;
-        if (rect.x() != wwi.resize_original_rect.x())
+        }
+        if (rect.x() != wwi.resize_original_rect.x()) {
             wwi.can_wobble_left = true;
-        if (rect.right() != wwi.resize_original_rect.right())
+        }
+        if (rect.right() != wwi.resize_original_rect.right()) {
             wwi.can_wobble_right = true;
-        if (rect.bottom() != wwi.resize_original_rect.bottom())
+        }
+        if (rect.bottom() != wwi.resize_original_rect.bottom()) {
             wwi.can_wobble_bottom = true;
+        }
     }
 }
 
@@ -348,14 +352,18 @@ void WobblyWindowsEffect::slotWindowFinishUserMovedResized(EffectWindow *w)
         WindowWobblyInfos &wwi = windows[w];
         wwi.status = Free;
         const QRect rect = w->frameGeometry();
-        if (rect.y() != wwi.resize_original_rect.y())
+        if (rect.y() != wwi.resize_original_rect.y()) {
             wwi.can_wobble_top = true;
-        if (rect.x() != wwi.resize_original_rect.x())
+        }
+        if (rect.x() != wwi.resize_original_rect.x()) {
             wwi.can_wobble_left = true;
-        if (rect.right() != wwi.resize_original_rect.right())
+        }
+        if (rect.right() != wwi.resize_original_rect.right()) {
             wwi.can_wobble_right = true;
-        if (rect.bottom() != wwi.resize_original_rect.bottom())
+        }
+        if (rect.bottom() != wwi.resize_original_rect.bottom()) {
             wwi.can_wobble_bottom = true;
+        }
     }
 }
 
@@ -374,14 +382,18 @@ void WobblyWindowsEffect::slotWindowMaximizeStateChanged(EffectWindow *w, bool h
     if (windows.contains(w)) {
         WindowWobblyInfos &wwi = windows[w];
         const QRect rect = w->frameGeometry();
-        if (rect.y() != wwi.resize_original_rect.y())
+        if (rect.y() != wwi.resize_original_rect.y()) {
             wwi.can_wobble_top = true;
-        if (rect.x() != wwi.resize_original_rect.x())
+        }
+        if (rect.x() != wwi.resize_original_rect.x()) {
             wwi.can_wobble_left = true;
-        if (rect.right() != wwi.resize_original_rect.right())
+        }
+        if (rect.right() != wwi.resize_original_rect.right()) {
             wwi.can_wobble_right = true;
-        if (rect.bottom() != wwi.resize_original_rect.bottom())
+        }
+        if (rect.bottom() != wwi.resize_original_rect.bottom()) {
             wwi.can_wobble_bottom = true;
+        }
     }
 }
 
@@ -907,24 +919,32 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow *w, qreal time)
     }
 
     if (!wwi.can_wobble_top) {
-        for (unsigned int i = 0; i < wwi.width; ++i)
-            for (unsigned j = 0; j < wwi.width - 1; ++j)
+        for (unsigned int i = 0; i < wwi.width; ++i) {
+            for (unsigned j = 0; j < wwi.width - 1; ++j) {
                 wwi.position[i + wwi.width * j].y = wwi.origin[i + wwi.width * j].y;
+            }
+        }
     }
     if (!wwi.can_wobble_bottom) {
-        for (unsigned int i = wwi.width * (wwi.height - 1); i < wwi.count; ++i)
-            for (unsigned j = 0; j < wwi.width - 1; ++j)
+        for (unsigned int i = wwi.width * (wwi.height - 1); i < wwi.count; ++i) {
+            for (unsigned j = 0; j < wwi.width - 1; ++j) {
                 wwi.position[i - wwi.width * j].y = wwi.origin[i - wwi.width * j].y;
+            }
+        }
     }
     if (!wwi.can_wobble_left) {
-        for (unsigned int i = 0; i < wwi.count; i += wwi.width)
-            for (unsigned j = 0; j < wwi.width - 1; ++j)
+        for (unsigned int i = 0; i < wwi.count; i += wwi.width) {
+            for (unsigned j = 0; j < wwi.width - 1; ++j) {
                 wwi.position[i + j].x = wwi.origin[i + j].x;
+            }
+        }
     }
     if (!wwi.can_wobble_right) {
-        for (unsigned int i = wwi.width - 1; i < wwi.count; i += wwi.width)
-            for (unsigned j = 0; j < wwi.width - 1; ++j)
+        for (unsigned int i = wwi.width - 1; i < wwi.count; i += wwi.width) {
+            for (unsigned j = 0; j < wwi.width - 1; ++j) {
                 wwi.position[i - j].x = wwi.origin[i - j].x;
+            }
+        }
     }
 
 #if defined VERBOSE_MODE
@@ -939,8 +959,9 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow *w, qreal time)
         freeWobblyInfo(wwi);
         windows.remove(w);
         unredirect(w);
-        if (windows.isEmpty())
+        if (windows.isEmpty()) {
             effects->addRepaintFull();
+        }
         return false;
     }
 

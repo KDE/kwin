@@ -44,8 +44,9 @@ ShowFpsEffect::ShowFpsEffect()
     }
     for (int i = 0;
          i < MAX_FPS;
-         ++i)
+         ++i) {
         frames[i] = 0;
+    }
     m_noBenchmark->setAlignment(Qt::AlignTop | Qt::AlignRight);
     m_noBenchmark->setText(i18n("This effect is not a benchmark"));
     reconfigure(ReconfigureAll);
@@ -62,14 +63,16 @@ void ShowFpsEffect::reconfigure(ReconfigureFlags)
     x = ShowFpsConfig::x();
     y = ShowFpsConfig::y();
     const QSize screenSize = effects->virtualScreenSize();
-    if (x == -10000) // there's no -0 :(
+    if (x == -10000) { // there's no -0 :(
         x = screenSize.width() - 2 * NUM_PAINTS - FPS_WIDTH;
-    else if (x < 0)
+    } else if (x < 0) {
         x = screenSize.width() - 2 * NUM_PAINTS - FPS_WIDTH - x;
-    if (y == -10000)
+    }
+    if (y == -10000) {
         y = screenSize.height() - MAX_TIME;
-    else if (y < 0)
+    } else if (y < 0) {
         y = screenSize.height() - MAX_TIME - y;
+    }
     fps_rect = QRect(x, y, FPS_WIDTH + 2 * NUM_PAINTS, MAX_TIME);
     m_noBenchmark->setPosition(fps_rect.bottomRight() + QPoint(-6, 6));
 
@@ -78,8 +81,9 @@ void ShowFpsEffect::reconfigure(ReconfigureFlags)
     textColor = ShowFpsConfig::textColor();
     double textAlpha = ShowFpsConfig::textAlpha();
 
-    if (!textColor.isValid())
+    if (!textColor.isValid()) {
         textColor = QPalette().color(QPalette::Active, QPalette::WindowText);
+    }
     textColor.setAlphaF(textAlpha);
 
     switch (textPosition) {
@@ -113,8 +117,9 @@ void ShowFpsEffect::reconfigure(ReconfigureFlags)
 void ShowFpsEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     frames[frames_pos] = QDateTime::currentMSecsSinceEpoch();
-    if (++frames_pos == MAX_FPS)
+    if (++frames_pos == MAX_FPS) {
         frames_pos = 0;
+    }
     effects->prePaintScreen(data, presentTime);
     data.paint += fps_rect;
 
@@ -141,17 +146,21 @@ void ShowFpsEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData
 {
     effects->paintScreen(mask, region, data);
     int lastFrame = frames_pos - 1;
-    if (lastFrame < 0)
+    if (lastFrame < 0) {
         lastFrame = MAX_FPS - 1;
+    }
     const qint64 lastTimestamp = frames[lastFrame];
     int fps = 0;
     for (int i = 0;
          i < MAX_FPS;
-         ++i)
-        if (abs(lastTimestamp - frames[i]) < 1000)
+         ++i) {
+        if (abs(lastTimestamp - frames[i]) < 1000) {
             ++fps; // count all frames in the last second
-    if (fps > MAX_TIME)
+        }
+    }
+    if (fps > MAX_TIME) {
         fps = MAX_TIME; // keep it the same height
+    }
     if (effects->isOpenGLCompositing()) {
         paintGL(fps, data.projectionMatrix());
         glFinish(); // make sure all rendering is done
@@ -287,8 +296,9 @@ void ShowFpsEffect::paintFPSGraph(int x, int y)
 void ShowFpsEffect::paintDrawSizeGraph(int x, int y)
 {
     int max_drawsize = 0;
-    for (int i = 0; i < NUM_PAINTS; i++)
+    for (int i = 0; i < NUM_PAINTS; i++) {
         max_drawsize = qMax(max_drawsize, paint_size[i]);
+    }
 
     // Log of min/max values shown on graph
     const float max_pixels_log = 7.2f;
@@ -298,8 +308,9 @@ void ShowFpsEffect::paintDrawSizeGraph(int x, int y)
     float drawscale = (MAX_TIME - minh) / (max_pixels_log - min_pixels_log);
     QList<int> drawlines;
 
-    for (int logh = (int)min_pixels_log; logh <= max_pixels_log; logh++)
+    for (int logh = (int)min_pixels_log; logh <= max_pixels_log; logh++) {
         drawlines.append((int)((logh - min_pixels_log) * drawscale) + minh);
+    }
 
     QList<int> drawvalues;
     for (int i = 0;
@@ -394,8 +405,9 @@ void ShowFpsEffect::postPaintScreen()
 {
     effects->postPaintScreen();
     paints[paints_pos] = t.elapsed();
-    if (++paints_pos == NUM_PAINTS)
+    if (++paints_pos == NUM_PAINTS) {
         paints_pos = 0;
+    }
     effects->addRepaint(fps_rect);
 }
 

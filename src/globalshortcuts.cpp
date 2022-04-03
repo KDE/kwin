@@ -106,7 +106,8 @@ PinchGesture *GlobalShortcut::pinchGesture() const
 
 GlobalShortcutsManager::GlobalShortcutsManager(QObject *parent)
     : QObject(parent)
-    , m_gestureRecognizer(new GestureRecognizer(this))
+    , m_touchpadGestureRecognizer(new GestureRecognizer(this))
+    , m_touchscreenGestureRecognizer(new GestureRecognizer(this))
 {
 }
 
@@ -141,7 +142,7 @@ void GlobalShortcutsManager::objectDeleted(QObject *object)
     }
 }
 
-bool GlobalShortcutsManager::addIfNotExists(GlobalShortcut sc)
+bool GlobalShortcutsManager::addIfNotExists(GlobalShortcut sc, DeviceType device)
 {
     for (const auto &cs : qAsConst(m_shortcuts)) {
         if (sc.shortcut() == cs.shortcut()) {
@@ -149,10 +150,11 @@ bool GlobalShortcutsManager::addIfNotExists(GlobalShortcut sc)
         }
     }
 
+    const auto &recognizer = device == DeviceType::Touchpad ? m_touchpadGestureRecognizer : m_touchscreenGestureRecognizer;
     if (std::holds_alternative<SwipeShortcut>(sc.shortcut()) || std::holds_alternative<RealtimeFeedbackSwipeShortcut>(sc.shortcut())) {
-        m_gestureRecognizer->registerSwipeGesture(sc.swipeGesture());
+        recognizer->registerSwipeGesture(sc.swipeGesture());
     } else if (std::holds_alternative<PinchShortcut>(sc.shortcut()) || std::holds_alternative<RealtimeFeedbackPinchShortcut>(sc.shortcut())) {
-        m_gestureRecognizer->registerPinchGesture(sc.pinchGesture());
+        recognizer->registerPinchGesture(sc.pinchGesture());
     }
     connect(sc.action(), &QAction::destroyed, this, &GlobalShortcutsManager::objectDeleted);
     m_shortcuts.push_back(std::move(sc));
@@ -171,22 +173,27 @@ void GlobalShortcutsManager::registerAxisShortcut(QAction *action, Qt::KeyboardM
 
 void GlobalShortcutsManager::registerTouchpadSwipe(QAction *action, SwipeDirection direction, uint fingerCount)
 {
-    addIfNotExists(GlobalShortcut(SwipeShortcut{direction, fingerCount}, action));
+    addIfNotExists(GlobalShortcut(SwipeShortcut{DeviceType::Touchpad, direction, fingerCount}, action), DeviceType::Touchpad);
 }
 
 void GlobalShortcutsManager::registerRealtimeTouchpadSwipe(QAction *action, std::function<void(qreal)> progressCallback, SwipeDirection direction, uint fingerCount)
 {
-    addIfNotExists(GlobalShortcut(RealtimeFeedbackSwipeShortcut{direction, progressCallback, fingerCount}, action));
+    addIfNotExists(GlobalShortcut(RealtimeFeedbackSwipeShortcut{DeviceType::Touchpad, direction, progressCallback, fingerCount}, action)), DeviceType::Touchpad;
 }
 
 void GlobalShortcutsManager::registerTouchpadPinch(QAction *action, PinchDirection direction, uint fingerCount)
 {
-    addIfNotExists(GlobalShortcut(PinchShortcut{direction, fingerCount}, action));
+    addIfNotExists(GlobalShortcut(PinchShortcut{direction, fingerCount}, action), DeviceType::Touchpad);
 }
 
 void GlobalShortcutsManager::registerRealtimeTouchpadPinch(QAction *onUp, std::function<void(qreal)> progressCallback, PinchDirection direction, uint fingerCount)
 {
-    addIfNotExists(GlobalShortcut(RealtimeFeedbackPinchShortcut{direction, progressCallback, fingerCount}, onUp));
+    addIfNotExists(GlobalShortcut(RealtimeFeedbackPinchShortcut{direction, progressCallback, fingerCount}, onUp), DeviceType::Touchpad);
+}
+
+void GlobalShortcutsManager::registerTouchscreenSwipe(QAction *action, SwipeDirection direction, uint fingerCount)
+{
+    addIfNotExists(GlobalShortcut(SwipeShortcut{DeviceType::Touchscreen, direction, fingerCount}, action), DeviceType::Touchscreen);
 }
 
 bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, int keyQt)
@@ -250,45 +257,61 @@ bool GlobalShortcutsManager::processAxis(Qt::KeyboardModifiers mods, PointerAxis
     return match<PointerAxisShortcut>(m_shortcuts, mods, axis);
 }
 
-void GlobalShortcutsManager::processSwipeStart(uint fingerCount)
+void GlobalShortcutsManager::processSwipeStart(DeviceType device, uint fingerCount)
 {
-    m_gestureRecognizer->startSwipeGesture(fingerCount);
+    if (device == DeviceType::Touchpad) {
+        m_touchpadGestureRecognizer->startSwipeGesture(fingerCount);
+    } else {
+        m_touchscreenGestureRecognizer->startSwipeGesture(fingerCount);
+    }
 }
 
-void GlobalShortcutsManager::processSwipeUpdate(const QSizeF &delta)
+void GlobalShortcutsManager::processSwipeUpdate(DeviceType device, const QSizeF &delta)
 {
-    m_gestureRecognizer->updateSwipeGesture(delta);
+    if (device == DeviceType::Touchpad) {
+        m_touchpadGestureRecognizer->updateSwipeGesture(delta);
+    } else {
+        m_touchscreenGestureRecognizer->updateSwipeGesture(delta);
+    }
 }
 
-void GlobalShortcutsManager::processSwipeCancel()
+void GlobalShortcutsManager::processSwipeCancel(DeviceType device)
 {
-    m_gestureRecognizer->cancelSwipeGesture();
+    if (device == DeviceType::Touchpad) {
+        m_touchpadGestureRecognizer->cancelSwipeGesture();
+    } else {
+        m_touchscreenGestureRecognizer->cancelSwipeGesture();
+    }
 }
 
-void GlobalShortcutsManager::processSwipeEnd()
+void GlobalShortcutsManager::processSwipeEnd(DeviceType device)
 {
-    m_gestureRecognizer->endSwipeGesture();
+    if (device == DeviceType::Touchpad) {
+        m_touchpadGestureRecognizer->endSwipeGesture();
+    } else {
+        m_touchscreenGestureRecognizer->endSwipeGesture();
+    }
     // TODO: cancel on Wayland Seat if one triggered
 }
 
 void GlobalShortcutsManager::processPinchStart(uint fingerCount)
 {
-    m_gestureRecognizer->startPinchGesture(fingerCount);
+    m_touchpadGestureRecognizer->startPinchGesture(fingerCount);
 }
 
 void GlobalShortcutsManager::processPinchUpdate(qreal scale, qreal angleDelta, const QSizeF &delta)
 {
-    m_gestureRecognizer->updatePinchGesture(scale, angleDelta, delta);
+    m_touchpadGestureRecognizer->updatePinchGesture(scale, angleDelta, delta);
 }
 
 void GlobalShortcutsManager::processPinchCancel()
 {
-    m_gestureRecognizer->cancelPinchGesture();
+    m_touchpadGestureRecognizer->cancelPinchGesture();
 }
 
 void GlobalShortcutsManager::processPinchEnd()
 {
-    m_gestureRecognizer->endPinchGesture();
+    m_touchpadGestureRecognizer->endPinchGesture();
 }
 
 } // namespace

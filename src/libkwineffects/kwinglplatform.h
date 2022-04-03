@@ -458,8 +458,9 @@ private:
 
 inline GLPlatform *GLPlatform::instance()
 {
-    if (!s_platform)
+    if (!s_platform) {
         s_platform = new GLPlatform;
+    }
 
     return s_platform;
 }

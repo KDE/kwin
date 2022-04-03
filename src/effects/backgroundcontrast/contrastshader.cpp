@@ -61,8 +61,9 @@ float ContrastShader::opacity() const
 
 void ContrastShader::setColorMatrix(const QMatrix4x4 &matrix)
 {
-    if (!isValid())
+    if (!isValid()) {
         return;
+    }
 
     ShaderManager::instance()->pushShader(shader);
     shader->setUniform(colorMatrixLocation, matrix);
@@ -71,24 +72,27 @@ void ContrastShader::setColorMatrix(const QMatrix4x4 &matrix)
 
 void ContrastShader::setTextureMatrix(const QMatrix4x4 &matrix)
 {
-    if (!isValid())
+    if (!isValid()) {
         return;
+    }
 
     shader->setUniform(textureMatrixLocation, matrix);
 }
 
 void ContrastShader::setModelViewProjectionMatrix(const QMatrix4x4 &matrix)
 {
-    if (!isValid())
+    if (!isValid()) {
         return;
+    }
 
     shader->setUniform(mvpMatrixLocation, matrix);
 }
 
 void ContrastShader::bind()
 {
-    if (!isValid())
+    if (!isValid()) {
         return;
+    }
 
     ShaderManager::instance()->pushShader(shader);
 }
@@ -158,8 +162,9 @@ void ContrastShader::init()
     stream2 << "uniform float opacity;\n";
     stream2 << varying_in << " vec4 varyingTexCoords;\n";
 
-    if (core)
+    if (core) {
         stream2 << "out vec4 fragColor;\n\n";
+    }
 
     stream2 << "void main(void)\n";
     stream2 << "{\n";

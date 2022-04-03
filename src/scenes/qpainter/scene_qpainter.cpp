@@ -137,11 +137,13 @@ void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const
     QRegion region = _region;
 
     const QRect boundingRect = windowItem()->mapToGlobal(windowItem()->boundingRect());
-    if (!(mask & (PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED)))
+    if (!(mask & (PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED))) {
         region &= boundingRect;
+    }
 
-    if (region.isEmpty())
+    if (region.isEmpty()) {
         return;
+    }
 
     QPainter *scenePainter = m_scene->scenePainter();
     QPainter *painter = scenePainter;

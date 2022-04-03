@@ -108,15 +108,17 @@ QMatrix4x4 SceneOpenGL::transformation(int mask, const ScreenPaintData &data) co
 {
     QMatrix4x4 matrix;
 
-    if (!(mask & PAINT_SCREEN_TRANSFORMED))
+    if (!(mask & PAINT_SCREEN_TRANSFORMED)) {
         return matrix;
+    }
 
     matrix.translate(data.translation());
     const QVector3D scale = data.scale();
     matrix.scale(scale.x(), scale.y(), scale.z());
 
-    if (data.rotationAngle() == 0.0)
+    if (data.rotationAngle() == 0.0) {
         return matrix;
+    }
 
     // Apply the rotation
     // cannot use data.rotation->applyTo(&matrix) as QGraphicsRotation uses projectedRotate to map back to 2D
@@ -323,8 +325,9 @@ void SceneOpenGL::performPaintWindow(EffectWindowImpl *w, int mask, const QRegio
             m_lanczosFilter = new LanczosFilter(this);
         }
         m_lanczosFilter->performPaint(w, mask, region, data);
-    } else
+    } else {
         w->sceneWindow()->performPaint(mask, region, data);
+    }
 }
 
 //****************************************
@@ -351,10 +354,11 @@ QVector4D OpenGLWindow::modulate(float opacity, float brightness) const
 
 void OpenGLWindow::setBlendEnabled(bool enabled)
 {
-    if (enabled && !m_blendingEnabled)
+    if (enabled && !m_blendingEnabled) {
         glEnable(GL_BLEND);
-    else if (!enabled && m_blendingEnabled)
+    } else if (!enabled && m_blendingEnabled) {
         glDisable(GL_BLEND);
+    }
 
     m_blendingEnabled = enabled;
 }
@@ -505,14 +509,16 @@ QMatrix4x4 OpenGLWindow::modelViewProjectionMatrix(int mask, const WindowPaintDa
     // the same dimensions as the default framebuffer.
     //
     // Note that the screen transformation is not applied here.
-    if (!pMatrix.isIdentity())
+    if (!pMatrix.isIdentity()) {
         return pMatrix * mvMatrix;
+    }
 
     // If an effect has specified a model-view matrix, we multiply that matrix
     // with the default projection matrix.  If the effect hasn't specified a
     // model-view matrix, mvMatrix will be the identity matrix.
-    if (mask & Scene::PAINT_SCREEN_TRANSFORMED)
+    if (mask & Scene::PAINT_SCREEN_TRANSFORMED) {
         return m_scene->screenProjectionMatrix() * mvMatrix;
+    }
 
     return m_scene->renderTargetProjectionMatrix() * mvMatrix;
 }
@@ -574,11 +580,13 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
     if (!shader) {
         ShaderTraits traits = ShaderTrait::MapTexture;
 
-        if (data.opacity() != 1.0 || data.brightness() != 1.0 || data.crossFadeProgress() != 1.0)
+        if (data.opacity() != 1.0 || data.brightness() != 1.0 || data.crossFadeProgress() != 1.0) {
             traits |= ShaderTrait::Modulate;
+        }
 
-        if (data.saturation() != 1.0)
+        if (data.saturation() != 1.0) {
             traits |= ShaderTrait::AdjustSaturation;
+        }
 
         shader = ShaderManager::instance()->pushShader(traits);
     }
@@ -606,8 +614,9 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
 
     for (int i = 0, v = 0; i < renderContext.renderNodes.count(); i++) {
         RenderNode &renderNode = renderContext.renderNodes[i];
-        if (renderNode.quads.isEmpty() || !renderNode.texture)
+        if (renderNode.quads.isEmpty() || !renderNode.texture) {
             continue;
+        }
 
         renderNode.firstVertex = v;
         renderNode.vertexCount = renderNode.quads.count() * verticesPerQuad;
@@ -635,8 +644,9 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
     const QMatrix4x4 modelViewProjection = modelViewProjectionMatrix(mask, data);
     for (int i = 0; i < renderContext.renderNodes.count(); i++) {
         const RenderNode &renderNode = renderContext.renderNodes[i];
-        if (renderNode.vertexCount == 0)
+        if (renderNode.vertexCount == 0) {
             continue;
+        }
 
         setBlendEnabled(renderNode.hasAlpha || renderNode.opacity < 1.0);
 
@@ -660,8 +670,9 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
 
     setBlendEnabled(false);
 
-    if (!data.shader)
+    if (!data.shader) {
         ShaderManager::instance()->popShader();
+    }
 
     if (renderContext.hardwareClipping) {
         glDisable(GL_SCISSOR_TEST);
@@ -758,8 +769,9 @@ void SceneOpenGL::EffectFrame::crossFadeText()
 
 void SceneOpenGL::EffectFrame::render(const QRegion &_region, double opacity, double frameOpacity)
 {
-    if (m_effectFrame->geometry().isEmpty())
+    if (m_effectFrame->geometry().isEmpty()) {
         return; // Nothing to display
+    }
 
     Q_UNUSED(_region); // TODO: Old region doesn't seem to work with OpenGL
 
@@ -906,8 +918,9 @@ void SceneOpenGL::EffectFrame::render(const QRegion &_region, double opacity, do
         m_unstyledVBO->render(GL_TRIANGLES);
         m_unstyledTexture->unbind();
     } else if (m_effectFrame->style() == EffectFrameStyled) {
-        if (!m_texture) // Lazy creation
+        if (!m_texture) { // Lazy creation
             updateTexture();
+        }
 
         if (shader) {
             const float a = opacity * frameOpacity;
@@ -928,8 +941,9 @@ void SceneOpenGL::EffectFrame::render(const QRegion &_region, double opacity, do
     if (!m_effectFrame->selection().isNull()) {
         if (!m_selectionTexture) { // Lazy creation
             QPixmap pixmap = m_effectFrame->selectionFrame().framePixmap();
-            if (!pixmap.isNull())
+            if (!pixmap.isNull()) {
                 m_selectionTexture = new GLTexture(pixmap);
+            }
         }
         if (m_selectionTexture) {
             if (shader) {
@@ -1008,8 +1022,9 @@ void SceneOpenGL::EffectFrame::render(const QRegion &_region, double opacity, do
                 shader->setUniform(GLShader::ModulationConstant, constant);
             }
         }
-        if (!m_textTexture) // Lazy creation
+        if (!m_textTexture) { // Lazy creation
             updateTextTexture();
+        }
 
         if (m_textTexture) {
             m_textTexture->bind();
@@ -1041,13 +1056,15 @@ void SceneOpenGL::EffectFrame::updateTextTexture()
     delete m_textPixmap;
     m_textPixmap = nullptr;
 
-    if (m_effectFrame->text().isEmpty())
+    if (m_effectFrame->text().isEmpty()) {
         return;
+    }
 
     // Determine position on texture to paint text
     QRect rect(QPoint(0, 0), m_effectFrame->geometry().size());
-    if (!m_effectFrame->icon().isNull() && !m_effectFrame->iconSize().isEmpty())
+    if (!m_effectFrame->icon().isNull() && !m_effectFrame->iconSize().isEmpty()) {
         rect.setLeft(m_effectFrame->iconSize().width());
+    }
 
     // If static size elide text as required
     QString text = m_effectFrame->text();
@@ -1060,10 +1077,11 @@ void SceneOpenGL::EffectFrame::updateTextTexture()
     m_textPixmap->fill(Qt::transparent);
     QPainter p(m_textPixmap);
     p.setFont(m_effectFrame->font());
-    if (m_effectFrame->style() == EffectFrameStyled)
+    if (m_effectFrame->style() == EffectFrameStyled) {
         p.setPen(m_effectFrame->styledTextColor());
-    else // TODO: What about no frame? Custom color setting required
+    } else { // TODO: What about no frame? Custom color setting required
         p.setPen(Qt::white);
+    }
     p.drawText(rect, m_effectFrame->alignment(), text);
     p.end();
     m_textTexture = new GLTexture(*m_textPixmap);
@@ -1245,8 +1263,9 @@ bool SceneOpenGLShadow::prepareBackend()
             uint8_t *const dst = reinterpret_cast<uint8_t *>(alphaImage.scanLine(y));
 
             for (ptrdiff_t x = 0; x < image.width(); x++) {
-                if (src[x] & 0x00ffffff)
+                if (src[x] & 0x00ffffff) {
                     alphaOnly = false;
+                }
 
                 dst[x] = qAlpha(src[x]);
             }
@@ -1460,8 +1479,9 @@ void SceneOpenGLDecorationRenderer::resizeTexture()
     size.rwidth() += 2 * TexturePad;
     size.rwidth() = align(size.width(), 128);
 
-    if (m_texture && m_texture->size() == size)
+    if (m_texture && m_texture->size() == size) {
         return;
+    }
 
     if (!size.isEmpty()) {
         m_texture.reset(new GLTexture(GL_RGBA8, size.width(), size.height()));

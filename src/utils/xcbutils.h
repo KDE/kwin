@@ -615,8 +615,9 @@ public:
     }
     inline xcb_window_t parent()
     {
-        if (isNull())
+        if (isNull()) {
             return XCB_WINDOW_NONE;
+        }
         return (*this)->parent;
     }
 };
@@ -639,8 +640,9 @@ public:
 
     inline xcb_window_t window()
     {
-        if (isNull())
+        if (isNull()) {
             return XCB_WINDOW_NONE;
+        }
         return (*this)->focus;
     }
 };

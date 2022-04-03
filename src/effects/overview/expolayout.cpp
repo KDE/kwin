@@ -354,11 +354,12 @@ void ExpoLayout::calculateWindowTransformationsClosest()
     // precalculate all slot centers
     QVector<QPoint> slotCenters;
     slotCenters.resize(rows * columns);
-    for (int x = 0; x < columns; ++x)
+    for (int x = 0; x < columns; ++x) {
         for (int y = 0; y < rows; ++y) {
             slotCenters[x + y * columns] = QPoint(area.x() + slotWidth * x + slotWidth / 2,
                                                   area.y() + slotHeight * y + slotHeight / 2);
         }
+    }
 
     // Assign each window to the closest available slot
     QList<ExpoCell *> tmpList = m_cells; // use a QLinkedList copy instead?
@@ -618,9 +619,9 @@ void ExpoLayout::calculateWindowTransformationsNatural()
                                 target->y() - yDiff - heightDiff,
                                 target->width() + widthDiff,
                                 target->height() + heightDiff);
-                if (isOverlappingAny(cell, targets, borderRegion, m_spacing))
+                if (isOverlappingAny(cell, targets, borderRegion, m_spacing)) {
                     *target = oldRect;
-                else {
+                } else {
                     moved = true;
                     heightDiff = heightForWidth(cell, target->width() + widthDiff) - target->height();
                     yDiff = heightDiff / 2;
@@ -632,9 +633,9 @@ void ExpoLayout::calculateWindowTransformationsNatural()
                                 target->y() + yDiff,
                                 target->width() + widthDiff,
                                 target->height() + heightDiff);
-                if (isOverlappingAny(cell, targets, borderRegion, m_spacing))
+                if (isOverlappingAny(cell, targets, borderRegion, m_spacing)) {
                     *target = oldRect;
-                else {
+                } else {
                     moved = true;
                     heightDiff = heightForWidth(cell, target->width() + widthDiff) - target->height();
                     yDiff = heightDiff / 2;
@@ -646,9 +647,9 @@ void ExpoLayout::calculateWindowTransformationsNatural()
                                 target->y() + yDiff,
                                 target->width() + widthDiff,
                                 target->height() + heightDiff);
-                if (isOverlappingAny(cell, targets, borderRegion, m_spacing))
+                if (isOverlappingAny(cell, targets, borderRegion, m_spacing)) {
                     *target = oldRect;
-                else {
+                } else {
                     moved = true;
                     heightDiff = heightForWidth(cell, target->width() + widthDiff) - target->height();
                     yDiff = heightDiff / 2;

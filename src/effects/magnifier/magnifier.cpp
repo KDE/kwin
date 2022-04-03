@@ -79,8 +79,9 @@ void MagnifierEffect::reconfigure(ReconfigureFlags)
     magnifier_size = QSize(width, height);
     // Load the saved zoom value.
     target_zoom = MagnifierConfig::initialZoom();
-    if (target_zoom != zoom)
+    if (target_zoom != zoom) {
         toggle();
+    }
 }
 
 void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
@@ -89,9 +90,9 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
 
     if (zoom != target_zoom) {
         double diff = time / animationTime(500.0);
-        if (target_zoom > zoom)
+        if (target_zoom > zoom) {
             zoom = qMin(zoom * qMax(1 + diff, 1.2), target_zoom);
-        else {
+        } else {
             zoom = qMax(zoom * qMin(1 - diff, 0.8), target_zoom);
             if (zoom == 1.0) {
                 // zoom ended - delete FBO and texture
@@ -110,8 +111,9 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
     }
 
     effects->prePaintScreen(data, presentTime);
-    if (zoom != 1.0)
+    if (zoom != 1.0) {
         data.paint |= magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH);
+    }
 }
 
 void MagnifierEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
@@ -260,10 +262,11 @@ void MagnifierEffect::toggle()
 void MagnifierEffect::slotMouseChanged(const QPoint &pos, const QPoint &old,
                                        Qt::MouseButtons, Qt::MouseButtons, Qt::KeyboardModifiers, Qt::KeyboardModifiers)
 {
-    if (pos != old && zoom != 1)
+    if (pos != old && zoom != 1) {
         // need full repaint as we might lose some change events on fast mouse movements
         // see Bug 187658
         effects->addRepaintFull();
+    }
 }
 
 void MagnifierEffect::slotWindowDamaged()

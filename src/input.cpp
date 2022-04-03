@@ -42,6 +42,8 @@
 #include "wayland_server.h"
 #include "workspace.h"
 #include "xwl/xwayland_interface.h"
+#include "abstract_output.h"
+
 #include <KDecoration2/Decoration>
 #include <KGlobalAccel>
 #include <KLocalizedString>
@@ -135,6 +137,16 @@ bool InputEventFilter::touchUp(qint32 id, quint32 time)
 {
     Q_UNUSED(id)
     Q_UNUSED(time)
+    return false;
+}
+
+bool InputEventFilter::touchCancel()
+{
+    return false;
+}
+
+bool InputEventFilter::touchFrame()
+{
     return false;
 }
 
@@ -995,25 +1007,25 @@ public:
     bool swipeGestureBegin(int fingerCount, quint32 time) override
     {
         Q_UNUSED(time)
-        input()->shortcuts()->processSwipeStart(fingerCount);
+        input()->shortcuts()->processSwipeStart(DeviceType::Touchpad, fingerCount);
         return false;
     }
     bool swipeGestureUpdate(const QSizeF &delta, quint32 time) override
     {
         Q_UNUSED(time)
-        input()->shortcuts()->processSwipeUpdate(delta);
+        input()->shortcuts()->processSwipeUpdate(DeviceType::Touchpad, delta);
         return false;
     }
     bool swipeGestureCancelled(quint32 time) override
     {
         Q_UNUSED(time)
-        input()->shortcuts()->processSwipeCancel();
+        input()->shortcuts()->processSwipeCancel(DeviceType::Touchpad);
         return false;
     }
     bool swipeGestureEnd(quint32 time) override
     {
         Q_UNUSED(time)
-        input()->shortcuts()->processSwipeEnd();
+        input()->shortcuts()->processSwipeEnd(DeviceType::Touchpad);
         return false;
     }
     bool pinchGestureBegin(int fingerCount, quint32 time) override
@@ -1042,8 +1054,99 @@ public:
         input()->shortcuts()->processPinchCancel();
         return false;
     }
+        bool touchDown(qint32 id, const QPointF &pos, quint32 time) override {
+        if (m_gestureTaken) {
+            input()->shortcuts()->processSwipeCancel(DeviceType::Touchscreen);
+            m_gestureCancelled = true;
+            return true;
+        } else {
+            m_touchPoints.insert(id, {pos, QSize()});
+            if (m_touchPoints.count() == 1) {
+                m_lastTouchDownTime = time;
+            } else {
+                if (time - m_lastTouchDownTime > 250) {
+                    m_gestureCancelled = true;
+                    return false;
+                }
+                m_lastTouchDownTime = time;
+                auto output = kwinApp()->platform()->outputAt(pos.toPoint());
+                float xfactor = output->physicalSize().width() / (float)output->geometry().width();
+                float yfactor = output->physicalSize().height() / (float)output->geometry().height();
+                bool distanceMatch = std::any_of(m_touchPoints.constBegin(), m_touchPoints.constEnd(), [pos, xfactor, yfactor](const auto &point) {
+                    QPointF p = pos - point.pos;
+                    return std::abs(xfactor * p.x()) + std::abs(yfactor * p.y()) < 50;
+                });
+                if (!distanceMatch) {
+                    m_gestureCancelled = true;
+                    return false;
+                }
+            }
+            if (m_touchPoints.count() >= 3 && !m_gestureCancelled) {
+                m_gestureTaken = true;
+                input()->processFilters(std::bind(&InputEventFilter::touchCancel, std::placeholders::_1));
+                input()->shortcuts()->processSwipeStart(DeviceType::Touchscreen, m_touchPoints.count());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
+        Q_UNUSED(time);
+        if (m_gestureTaken) {
+            if (m_gestureCancelled) {
+                return true;
+            }
+            // only track one finger for simplicity
+            if (id != m_touchPoints.begin().key()) {
+                return true;
+            }
+            auto &point = m_touchPoints[id];
+            QPointF dist = pos - point.pos;
+            auto output = kwinApp()->platform()->outputAt(pos.toPoint());
+            float xfactor = output->physicalSize().width() / (float)output->geometry().width();
+            float yfactor = output->physicalSize().height() / (float)output->geometry().height();
+            QSize delta = QSize(xfactor * dist.x(), yfactor * dist.y()) * 10;
+            point.distance += delta;
+            point.pos = pos;
+            input()->shortcuts()->processSwipeUpdate(DeviceType::Touchscreen, delta);
+            return true;
+        }
+        return false;
+    }
+
+    bool touchUp(qint32 id, quint32 time) override {
+        Q_UNUSED(time);
+        m_touchPoints.remove(id);
+        if (m_gestureTaken) {
+            if (!m_gestureCancelled) {
+                input()->shortcuts()->processSwipeEnd(DeviceType::Touchscreen);
+                m_gestureCancelled = true;
+            }
+            m_gestureTaken &= m_touchPoints.count() > 0;
+            m_gestureCancelled &= m_gestureTaken;
+            m_touchGestureCancelSent &= m_gestureTaken;
+            return true;
+        }
+        return false;
+    }
+
+    bool touchFrame() override {
+        return m_gestureTaken;
+    }
 
 private:
+    struct TouchPoint {
+        QPointF pos;
+        QSize distance;
+    };
+    bool m_gestureTaken = false;
+    bool m_gestureCancelled = false;
+    bool m_touchGestureCancelSent = false;
+    uint32_t m_lastTouchDownTime = 0;
+    QPointF m_lastAverageDistance;
+    QMap<int32_t, TouchPoint> m_touchPoints;
+
     QTimer *m_powerDown = nullptr;
 };
 
@@ -1751,6 +1854,16 @@ public:
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         seat->notifyTouchUp(id);
+        return true;
+    }
+    bool touchCancel() override
+    {
+        waylandServer()->seat()->notifyTouchCancel();
+        return true;
+    }
+    bool touchFrame() override
+    {
+        waylandServer()->seat()->notifyTouchFrame();
         return true;
     }
     bool pinchGestureBegin(int fingerCount, quint32 time) override
@@ -2681,7 +2794,6 @@ void InputRedirection::setupInputFilters()
     if (hasGlobalShortcutSupport) {
         installInputEventFilter(new ScreenEdgeInputFilter);
     }
-    installInputEventFilter(new EffectsFilter);
     installInputEventFilter(new MoveResizeFilter);
 #if KWIN_BUILD_TABBOX
     installInputEventFilter(new TabBoxInputFilter);
@@ -2689,6 +2801,7 @@ void InputRedirection::setupInputFilters()
     if (hasGlobalShortcutSupport) {
         installInputEventFilter(new GlobalShortcutFilter);
     }
+    installInputEventFilter(new EffectsFilter);
     installInputEventFilter(new PopupInputFilter);
     installInputEventFilter(new DecorationEventFilter);
     installInputEventFilter(new WindowActionInputFilter);
@@ -3066,6 +3179,11 @@ void InputRedirection::registerRealtimeTouchpadPinchShortcut(PinchDirection dire
 void InputRedirection::registerGlobalAccel(KGlobalAccelInterface *interface)
 {
     m_shortcuts->setKGlobalAccelInterface(interface);
+}
+
+void InputRedirection::registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action)
+{
+    m_shortcuts->registerTouchscreenSwipe(action, direction, fingerCount);
 }
 
 void InputRedirection::warpPointer(const QPointF &pos)

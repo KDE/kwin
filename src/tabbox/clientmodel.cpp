@@ -35,16 +35,18 @@ ClientModel::~ClientModel()
 
 QVariant ClientModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid())
+    if (!index.isValid()) {
         return QVariant();
+    }
 
     if (m_clientList.isEmpty()) {
         return QVariant();
     }
 
     int clientIndex = index.row();
-    if (clientIndex >= m_clientList.count())
+    if (clientIndex >= m_clientList.count()) {
         return QVariant();
+    }
     QSharedPointer<TabBoxClient> client = m_clientList[clientIndex].toStrongRef();
     if (!client) {
         return QVariant();
@@ -118,8 +120,9 @@ QModelIndex ClientModel::index(int row, int column, const QModelIndex &parent) c
         return QModelIndex();
     }
     int index = row * columnCount();
-    if (index >= m_clientList.count() && !m_clientList.isEmpty())
+    if (index >= m_clientList.count() && !m_clientList.isEmpty()) {
         return QModelIndex();
+    }
     return createIndex(row, 0);
 }
 
@@ -137,8 +140,9 @@ QHash<int, QByteArray> ClientModel::roleNames() const
 
 QModelIndex ClientModel::index(QWeakPointer<TabBoxClient> client) const
 {
-    if (!m_clientList.contains(client))
+    if (!m_clientList.contains(client)) {
         return QModelIndex();
+    }
     int index = m_clientList.indexOf(client);
     int row = index / columnCount();
     int column = index % columnCount();
@@ -199,8 +203,9 @@ void ClientModel::createClientList(int desktop, bool partialReset)
                 if (start == add.data()) {
                     m_clientList.removeAll(add);
                     m_clientList.prepend(add);
-                } else
+                } else {
                     m_clientList += add;
+                }
                 if (add.data()->isFirstInTabBox()) {
                     stickyClients << add;
                 }
@@ -211,8 +216,9 @@ void ClientModel::createClientList(int desktop, bool partialReset)
                 c = stacking[++index];
             }
 
-            if (c == stop)
+            if (c == stop) {
                 break;
+            }
         }
         break;
     }
@@ -224,8 +230,9 @@ void ClientModel::createClientList(int desktop, bool partialReset)
     if (tabBox->config().clientApplicationsMode() != TabBoxConfig::AllWindowsCurrentApplication
         && (tabBox->config().showDesktopMode() == TabBoxConfig::ShowDesktopClient || m_clientList.isEmpty())) {
         QWeakPointer<TabBoxClient> desktopClient = tabBox->desktopClient();
-        if (!desktopClient.isNull())
+        if (!desktopClient.isNull()) {
             m_clientList.append(desktopClient);
+        }
     }
     endResetModel();
 }

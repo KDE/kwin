@@ -313,12 +313,15 @@ int main(int argc, char *argv[])
     KWin::gainRealTime();
     KWin::dropNiceCapability();
 
-    if (signal(SIGTERM, KWin::sighandler) == SIG_IGN)
+    if (signal(SIGTERM, KWin::sighandler) == SIG_IGN) {
         signal(SIGTERM, SIG_IGN);
-    if (signal(SIGINT, KWin::sighandler) == SIG_IGN)
+    }
+    if (signal(SIGINT, KWin::sighandler) == SIG_IGN) {
         signal(SIGINT, SIG_IGN);
-    if (signal(SIGHUP, KWin::sighandler) == SIG_IGN)
+    }
+    if (signal(SIGHUP, KWin::sighandler) == SIG_IGN) {
         signal(SIGHUP, SIG_IGN);
+    }
     signal(SIGPIPE, SIG_IGN);
 
     QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();

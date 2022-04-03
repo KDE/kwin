@@ -67,8 +67,9 @@ bool PipeWireCore::init()
     QSocketNotifier *notifier = new QSocketNotifier(pw_loop_get_fd(pwMainLoop), QSocketNotifier::Read, this);
     connect(notifier, &QSocketNotifier::activated, this, [this] {
         int result = pw_loop_iterate(pwMainLoop, 0);
-        if (result < 0)
+        if (result < 0) {
             qCWarning(KWIN_SCREENCAST) << "pipewire_loop_iterate failed: " << result;
+        }
     });
 
     pwContext = pw_context_new(pwMainLoop, nullptr, 0);

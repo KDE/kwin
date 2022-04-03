@@ -103,8 +103,9 @@ QPixmap PlastikButtonProvider::requestPixmap(const QString &id, QSize *size, con
 QPixmap PlastikButtonProvider::icon(ButtonIcon icon, int size, bool active, bool shadow)
 {
     Q_UNUSED(active);
-    if (size % 2 == 0)
+    if (size % 2 == 0) {
         --size;
+    }
 
     QPixmap image(size, size);
     image.fill(Qt::transparent);
@@ -175,8 +176,9 @@ QPixmap PlastikButtonProvider::icon(ButtonIcon icon, int size, bool active, bool
 
         int margin1, margin2;
         margin1 = margin2 = lineWidth2 * 2;
-        if (r.width() < 8)
+        if (r.width() < 8) {
             margin1 = 1;
+        }
 
         // background window
         drawObject(p, HorizontalLine, r.x() + margin1, r.top(), r.width() - margin1, lineWidth2);
@@ -258,8 +260,9 @@ QPixmap PlastikButtonProvider::icon(ButtonIcon icon, int size, bool active, bool
 
     case NotOnAllDesktopsIcon: {
         int lwMark = r.width() - lwTitleBar * 2 - 2;
-        if (lwMark < 1)
+        if (lwMark < 1) {
             lwMark = 3;
+        }
 
         drawObject(p, HorizontalLine, r.x() + (r.width() - lwMark) / 2, r.y() + (r.height() - lwMark) / 2, lwMark, lwMark);
 
@@ -283,8 +286,9 @@ QPixmap PlastikButtonProvider::icon(ButtonIcon icon, int size, bool active, bool
         // arrow
         drawObject(p, CrossDiagonalLine, r.x(), center + 2 * lwArrow, center - r.x(), lwArrow);
         drawObject(p, DiagonalLine, r.x() + center, r.y() + 1 + 2 * lwArrow, center - r.x(), lwArrow);
-        if (lwArrow > 1)
+        if (lwArrow > 1) {
             drawObject(p, HorizontalLine, center - (lwArrow - 2), r.y() + 2 * lwArrow, (lwArrow - 2) * 2, lwArrow);
+        }
 
         // Fall through to KeepAboveIcon intended!
         Q_FALLTHROUGH();
@@ -295,8 +299,9 @@ QPixmap PlastikButtonProvider::icon(ButtonIcon icon, int size, bool active, bool
         // arrow
         drawObject(p, CrossDiagonalLine, r.x(), center, center - r.x(), lwArrow);
         drawObject(p, DiagonalLine, r.x() + center, r.y() + 1, center - r.x(), lwArrow);
-        if (lwArrow > 1)
+        if (lwArrow > 1) {
             drawObject(p, HorizontalLine, center - (lwArrow - 2), r.y(), (lwArrow - 2) * 2, lwArrow);
+        }
 
         break;
     }
@@ -307,8 +312,9 @@ QPixmap PlastikButtonProvider::icon(ButtonIcon icon, int size, bool active, bool
         // arrow
         drawObject(p, DiagonalLine, r.x(), center - 2 * lwArrow, center - r.x(), lwArrow);
         drawObject(p, CrossDiagonalLine, r.x() + center, r.bottom() - 1 - 2 * lwArrow, center - r.x(), lwArrow);
-        if (lwArrow > 1)
+        if (lwArrow > 1) {
             drawObject(p, HorizontalLine, center - (lwArrow - 2), r.bottom() - (lwArrow - 1) - 2 * lwArrow, (lwArrow - 2) * 2, lwArrow);
+        }
 
         // Fall through to KeepBelowIcon intended!
         Q_FALLTHROUGH();
@@ -319,8 +325,9 @@ QPixmap PlastikButtonProvider::icon(ButtonIcon icon, int size, bool active, bool
         // arrow
         drawObject(p, DiagonalLine, r.x(), center, center - r.x(), lwArrow);
         drawObject(p, CrossDiagonalLine, r.x() + center, r.bottom() - 1, center - r.x(), lwArrow);
-        if (lwArrow > 1)
+        if (lwArrow > 1) {
             drawObject(p, HorizontalLine, center - (lwArrow - 2), r.bottom() - (lwArrow - 1), (lwArrow - 2) * 2, lwArrow);
+        }
 
         break;
     }

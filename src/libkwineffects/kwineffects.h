@@ -956,6 +956,16 @@ public:
     virtual void registerRealtimeTouchpadPinchShortcut(PinchDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback) = 0;
 
     virtual void registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *action) = 0;
+
+    /**
+     * @brief Registers a global touchscreen swipe gesture shortcut with the provided @p action.
+     *
+     * @param direction The direction for the swipe
+     * @param action The action which gets triggered when the gesture triggers
+     * @since 5.25
+     */
+    virtual void registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action) = 0;
+
     /**
      * Retrieve the proxy class for an effect if it has one. Will return NULL if
      * the effect isn't loaded or doesn't have a proxy class.
@@ -3392,8 +3402,9 @@ public:
      */
     inline void manage(const EffectWindowList &list)
     {
-        for (int i = 0; i < list.size(); i++)
+        for (int i = 0; i < list.size(); i++) {
             manage(list.at(i));
+        }
     }
     /**
      * Deregister a window. All transformations applied to the
@@ -4035,8 +4046,9 @@ Motion<T>::~Motion()
 template<typename T>
 void Motion<T>::calculate(const int msec)
 {
-    if (m_value == m_target && m_velocity == T()) // At target and not moving
+    if (m_value == m_target && m_velocity == T()) { // At target and not moving
         return;
+    }
 
     // Poor man's time independent calculation
     int steps = qMax(1, msec / 5);

@@ -141,11 +141,11 @@ void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
     m_startupInfo->setTimeout(m_timeout.count());
     const bool busyBlinking = c.readEntry("Blinking", false);
     const bool busyBouncing = c.readEntry("Bouncing", true);
-    if (!busyCursor)
+    if (!busyCursor) {
         m_type = NoFeedback;
-    else if (busyBouncing)
+    } else if (busyBouncing) {
         m_type = BouncingFeedback;
-    else if (busyBlinking) {
+    } else if (busyBlinking) {
         m_type = BlinkingFeedback;
         if (effects->compositingType() == OpenGLCompositing) {
             ensureResources();
@@ -156,8 +156,9 @@ void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
                 qCDebug(KWIN_STARTUPFEEDBACK) << "Blinking Shader is not valid";
             }
         }
-    } else
+    } else {
         m_type = PassiveFeedback;
+    }
     if (m_active) {
         stop();
         start(m_startups[m_currentStartup]);
@@ -235,8 +236,9 @@ void StartupFeedbackEffect::postPaintScreen()
 {
     if (m_active) {
         m_dirtyRect = m_currentGeometry; // ensure the now dirty region is cleaned on the next pass
-        if (m_type == BlinkingFeedback || m_type == BouncingFeedback)
+        if (m_type == BlinkingFeedback || m_type == BouncingFeedback) {
             effects->addRepaint(m_dirtyRect); // we also have to trigger a repaint
+        }
     }
     effects->postPaintScreen();
 }
@@ -300,10 +302,12 @@ void StartupFeedbackEffect::gotStartupChange(const QString &id, const QIcon &ico
 
 void StartupFeedbackEffect::start(const Startup &startup)
 {
-    if (m_type == NoFeedback || m_splashVisible || effects->isCursorHidden())
+    if (m_type == NoFeedback || m_splashVisible || effects->isCursorHidden()) {
         return;
-    if (!m_active)
+    }
+    if (!m_active) {
         effects->startMousePolling();
+    }
     m_active = true;
 
     // read details about the mouse-cursor theme define per default
@@ -315,8 +319,9 @@ void StartupFeedbackEffect::start(const Startup &startup)
         iconSize = QApplication::style()->pixelMetric(QStyle::PM_SmallIconSize);
     }
     // get ratio for bouncing cursor so we don't need to manually calculate the sizes for each icon size
-    if (m_type == BouncingFeedback)
+    if (m_type == BouncingFeedback) {
         m_bounceSizesRatio = iconSize / 16.0;
+    }
     const QPixmap iconPixmap = startup.icon.pixmap(iconSize);
     prepareTextures(iconPixmap);
     m_dirtyRect = m_currentGeometry = feedbackRect();
@@ -325,8 +330,9 @@ void StartupFeedbackEffect::start(const Startup &startup)
 
 void StartupFeedbackEffect::stop()
 {
-    if (m_active)
+    if (m_active) {
         effects->stopMousePolling();
+    }
     m_active = false;
     m_lastPresentTime = std::chrono::milliseconds::zero();
     effects->makeOpenGLContextCurrent();
@@ -377,8 +383,9 @@ QImage StartupFeedbackEffect::scalePixmap(const QPixmap &pm, const QSize &size) 
 {
     const QSize &adjustedSize = size * m_bounceSizesRatio;
     QImage scaled = pm.toImage().scaled(adjustedSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-    if (scaled.format() != QImage::Format_ARGB32_Premultiplied && scaled.format() != QImage::Format_ARGB32)
+    if (scaled.format() != QImage::Format_ARGB32_Premultiplied && scaled.format() != QImage::Format_ARGB32) {
         scaled = scaled.convertToFormat(QImage::Format_ARGB32);
+    }
 
     QImage result(20 * m_bounceSizesRatio, 20 * m_bounceSizesRatio, QImage::Format_ARGB32);
     QPainter p(&result);
@@ -391,14 +398,15 @@ QImage StartupFeedbackEffect::scalePixmap(const QPixmap &pm, const QSize &size) 
 QRect StartupFeedbackEffect::feedbackRect() const
 {
     int xDiff;
-    if (m_cursorSize <= 16)
+    if (m_cursorSize <= 16) {
         xDiff = 8 + 7;
-    else if (m_cursorSize <= 32)
+    } else if (m_cursorSize <= 32) {
         xDiff = 16 + 7;
-    else if (m_cursorSize <= 48)
+    } else if (m_cursorSize <= 48) {
         xDiff = 24 + 7;
-    else
+    } else {
         xDiff = 32 + 7;
+    }
     int yDiff = xDiff;
     GLTexture *texture = nullptr;
     int yOffset = 0;
@@ -417,8 +425,9 @@ QRect StartupFeedbackEffect::feedbackRect() const
     }
     const QPoint cursorPos = effects->cursorPos() + QPoint(xDiff, yDiff + yOffset);
     QRect rect;
-    if (texture)
+    if (texture) {
         rect = QRect(cursorPos, texture->size());
+    }
     return rect;
 }
 

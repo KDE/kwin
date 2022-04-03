@@ -526,8 +526,9 @@ static quint32 monotonicTime()
     timespec ts;
 
     const int result = clock_gettime(CLOCK_MONOTONIC, &ts);
-    if (result)
+    if (result) {
         qCWarning(KWIN_CORE, "Failed to query monotonic time: %s", strerror(errno));
+    }
 
     return ts.tv_sec * 1000 + ts.tv_nsec / 1000000L;
 }

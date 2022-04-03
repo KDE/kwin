@@ -141,11 +141,9 @@ public:
     Toplevel *findInternal(QWindow *w) const;
 
     QRect clientArea(clientAreaOption, const AbstractOutput *output, const VirtualDesktop *desktop) const;
-    QRect clientArea(clientAreaOption, const QPoint &p, int desktop) const;
     QRect clientArea(clientAreaOption, const Toplevel *window) const;
     QRect clientArea(clientAreaOption, const Toplevel *window, const AbstractOutput *output) const;
     QRect clientArea(clientAreaOption, const Toplevel *window, const QPoint &pos) const;
-    QRect clientArea(clientAreaOption, int screen, int desktop) const;
 
     /**
      * Returns the geometry of this Workspace, i.e. the bounding rectangle of all outputs.
@@ -337,7 +335,13 @@ public:
     AbstractOutput *previousOutput(AbstractOutput *reference) const;
     void switchToOutput(AbstractOutput *output);
 
-    void setShowingDesktop(bool showing);
+    /**
+     * Set "Show Desktop" status
+     *
+     * @param showing @c true to show the desktop, @c false to restore the window positions
+     * @param animated @c true if the "Show Desktop Animation" should be played, otherwise @c false
+     */
+    void setShowingDesktop(bool showing, bool animated = true);
     bool showingDesktop() const;
 
     void removeX11Client(X11Client *); // Only called from X11Client::destroyClient() or X11Client::releaseWindow()
@@ -530,7 +534,7 @@ Q_SIGNALS:
     void unmanagedRemoved(KWin::Unmanaged *);
     void deletedRemoved(KWin::Deleted *);
     void configChanged();
-    void showingDesktopChanged(bool showing);
+    void showingDesktopChanged(bool showing, bool animated);
     /**
      * This signal is emitted when the stacking order changed, i.e. a window is risen
      * or lowered

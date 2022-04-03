@@ -80,7 +80,6 @@ public:
      * Schedules a repaint for the specified @a region.
      */
     void addRepaint(const QRegion &region);
-    void addRepaint(const QRect &rect);
     void addRepaint(int x, int y, int width, int height);
     void addRepaintFull();
     QRegion damage() const;
@@ -324,8 +323,6 @@ public:
     void disablePainting(int reason);
     // is the window visible at all
     bool isVisible() const;
-    // is the window fully opaque
-    bool isOpaque() const;
     QRegion decorationShape() const;
     void updateToplevel(Deleted *deleted);
     void referencePreviousPixmap();

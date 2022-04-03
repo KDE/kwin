@@ -46,10 +46,8 @@ private:
     QString m_colorScheme;
     KConfigWatcher::Ptr m_watcher;
 
-    struct LegacyPalette
+    struct LegacyColors
     {
-        QPalette palette;
-
         QColor activeTitleBarColor;
         QColor inactiveTitleBarColor;
 
@@ -61,17 +59,16 @@ private:
         QColor warningForegroundColor;
     };
 
-    struct ModernPalette
+    struct ModernColors
     {
         KColorScheme active;
         KColorScheme inactive;
     };
 
-    std::optional<LegacyPalette> m_legacyPalette;
     KSharedConfig::Ptr m_colorSchemeConfig;
-
-    ModernPalette m_palette;
-    QPalette m_applicationPalette;
+    QPalette m_palette;
+    ModernColors m_colors;
+    std::optional<LegacyColors> m_legacyColors;
 };
 
 }

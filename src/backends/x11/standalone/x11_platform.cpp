@@ -215,11 +215,12 @@ QString X11StandalonePlatform::compositingNotPossibleReason() const
     // first off, check whether we figured that we'll crash on detection because of a buggy driver
     KConfigGroup gl_workaround_group(kwinApp()->config(), "Compositing");
     const QString unsafeKey(QLatin1String("OpenGLIsUnsafe") + (kwinApp()->isX11MultiHead() ? QString::number(kwinApp()->x11ScreenNumber()) : QString()));
-    if (gl_workaround_group.readEntry("Backend", "OpenGL") == QLatin1String("OpenGL") && gl_workaround_group.readEntry(unsafeKey, false))
+    if (gl_workaround_group.readEntry("Backend", "OpenGL") == QLatin1String("OpenGL") && gl_workaround_group.readEntry(unsafeKey, false)) {
         return i18n("<b>OpenGL compositing (the default) has crashed KWin in the past.</b><br>"
                     "This was most likely due to a driver bug."
                     "<p>If you think that you have meanwhile upgraded to a stable driver,<br>"
                     "you can reset this protection but <b>be aware that this might result in an immediate crash!</b></p>");
+    }
 
     if (!Xcb::Extensions::self()->isCompositeAvailable() || !Xcb::Extensions::self()->isDamageAvailable()) {
         return i18n("Required X extensions (XComposite and XDamage) are not available.");
@@ -249,8 +250,9 @@ bool X11StandalonePlatform::compositingPossible() const
         qCWarning(KWIN_X11STANDALONE) << "Compositing disabled: no damage extension available";
         return false;
     }
-    if (hasGlx())
+    if (hasGlx()) {
         return true;
+    }
     if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES) {
         return true;
     } else if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
@@ -506,10 +508,12 @@ void X11StandalonePlatform::doUpdateOutputs()
                             // refresh rate calculation - WTF was wikipedia 1998 when I needed it?
                             int dotclock = modes[j].dot_clock,
                                 vtotal = modes[j].vtotal;
-                            if (modes[j].mode_flags & XCB_RANDR_MODE_FLAG_INTERLACE)
+                            if (modes[j].mode_flags & XCB_RANDR_MODE_FLAG_INTERLACE) {
                                 dotclock *= 2;
-                            if (modes[j].mode_flags & XCB_RANDR_MODE_FLAG_DOUBLE_SCAN)
+                            }
+                            if (modes[j].mode_flags & XCB_RANDR_MODE_FLAG_DOUBLE_SCAN) {
                                 vtotal *= 2;
+                            }
                             refreshRate = dotclock / float(modes[j].htotal * vtotal);
                         }
                         break; // found mode

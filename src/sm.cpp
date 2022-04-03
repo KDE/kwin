@@ -52,10 +52,12 @@ static const char *const window_type_names[] = {
 
 static const char *windowTypeToTxt(NET::WindowType type)
 {
-    if (type >= NET::Unknown && type <= NET::Splash)
+    if (type >= NET::Unknown && type <= NET::Splash) {
         return window_type_names[type + 1]; // +1 (unknown==-1)
-    if (type == -2) // undefined (not really part of NET::WindowType)
+    }
+    if (type == -2) { // undefined (not really part of NET::WindowType)
         return "Undefined";
+    }
     qFatal("Unknown Window Type");
     return nullptr;
 }
@@ -64,9 +66,11 @@ static NET::WindowType txtToWindowType(const char *txt)
 {
     for (int i = NET::Unknown;
          i <= NET::Splash;
-         ++i)
-        if (qstrcmp(txt, window_type_names[i + 1]) == 0) // +1
+         ++i) {
+        if (qstrcmp(txt, window_type_names[i + 1]) == 0) { // +1
             return static_cast<NET::WindowType>(i);
+        }
+    }
     return static_cast<NET::WindowType>(-2); // undefined
 }
 
@@ -93,16 +97,20 @@ void Workspace::storeSession(const QString &sessionName, SMSavePhase phase)
         }
         QByteArray sessionId = c->sessionId();
         QByteArray wmCommand = c->wmCommand();
-        if (sessionId.isEmpty())
+        if (sessionId.isEmpty()) {
             // remember also applications that are not XSMP capable
             // and use the obsolete WM_COMMAND / WM_SAVE_YOURSELF
-            if (wmCommand.isEmpty())
+            if (wmCommand.isEmpty()) {
                 continue;
+            }
+        }
         count++;
-        if (c->isActive())
+        if (c->isActive()) {
             active_client = count;
-        if (phase == SMSavePhase2 || phase == SMSavePhase2Full)
+        }
+        if (phase == SMSavePhase2 || phase == SMSavePhase2Full) {
             storeClient(cg, count, c);
+        }
     }
     if (phase == SMSavePhase0) {
         // it would be much simpler to save these values to the config file,
@@ -171,18 +179,22 @@ void Workspace::storeSubSession(const QString &name, QSet<QByteArray> sessionIds
         }
         QByteArray sessionId = c->sessionId();
         QByteArray wmCommand = c->wmCommand();
-        if (sessionId.isEmpty())
+        if (sessionId.isEmpty()) {
             // remember also applications that are not XSMP capable
             // and use the obsolete WM_COMMAND / WM_SAVE_YOURSELF
-            if (wmCommand.isEmpty())
+            if (wmCommand.isEmpty()) {
                 continue;
-        if (!sessionIds.contains(sessionId))
+            }
+        }
+        if (!sessionIds.contains(sessionId)) {
             continue;
+        }
 
         qCDebug(KWIN_CORE) << "storing" << sessionId;
         count++;
-        if (c->isActive())
+        if (c->isActive()) {
             active_client = count;
+        }
         storeClient(cg, count, c);
     }
     cg.writeEntry("count", count);
@@ -277,8 +289,9 @@ SessionInfo *Workspace::takeSessionInfo(X11Client *c)
     if (!sessionId.isEmpty()) {
         // look for a real session managed client (algorithm suggested by ICCCM)
         for (SessionInfo *info : qAsConst(session)) {
-            if (realInfo)
+            if (realInfo) {
                 break;
+            }
             if (info->sessionId == sessionId && sessionInfoWindowTypeMatch(c, info)) {
                 if (!windowRole.isEmpty()) {
                     if (info->windowRole == windowRole) {
@@ -298,8 +311,9 @@ SessionInfo *Workspace::takeSessionInfo(X11Client *c)
     } else {
         // look for a sessioninfo with matching features.
         for (SessionInfo *info : qAsConst(session)) {
-            if (realInfo)
+            if (realInfo) {
                 break;
+            }
             if (info->resourceName == resourceName
                 && info->resourceClass == resourceClass
                 && sessionInfoWindowTypeMatch(c, info)) {

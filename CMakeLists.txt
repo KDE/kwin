@@ -75,6 +75,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # required frameworks by Core
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
+    Auth
     Config
     ConfigWidgets
     CoreAddons

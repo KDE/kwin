@@ -798,6 +798,9 @@ void VirtualDesktopManager::initShortcuts()
                                   findChild<QAction *>(QStringLiteral("Switch to Next Desktop")));
     input()->registerAxisShortcut(Qt::ControlModifier | Qt::AltModifier, PointerAxisUp,
                                   findChild<QAction *>(QStringLiteral("Switch to Previous Desktop")));
+
+    input()->registerTouchscreenSwipeShortcut(SwipeDirection::Left, 3, nextAction);
+    input()->registerTouchscreenSwipeShortcut(SwipeDirection::Right, 3, previousAction);
 }
 
 void VirtualDesktopManager::initSwitchToShortcuts()

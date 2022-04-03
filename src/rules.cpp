@@ -93,8 +93,9 @@ Rules::Rules(const QString &str, bool temporary)
     auto cfg = KSharedConfig::openConfig(file.fileName(), KConfig::SimpleConfig);
     RuleSettings settings(cfg, QString());
     readFromSettings(&settings);
-    if (description.isEmpty())
+    if (description.isEmpty()) {
         description = QStringLiteral("temporary");
+    }
 }
 
 #define READ_MATCH_STRING(var, func) \
@@ -130,14 +131,17 @@ void Rules::readFromSettings(const RuleSettings *settings)
     READ_FORCE_RULE(placement, );
     READ_SET_RULE(position);
     READ_SET_RULE(size);
-    if (size.isEmpty() && sizerule != static_cast<SetRule>(Remember))
+    if (size.isEmpty() && sizerule != static_cast<SetRule>(Remember)) {
         sizerule = UnusedSetRule;
+    }
     READ_FORCE_RULE(minsize, );
-    if (!minsize.isValid())
+    if (!minsize.isValid()) {
         minsize = QSize(1, 1);
+    }
     READ_FORCE_RULE(maxsize, );
-    if (maxsize.isEmpty())
+    if (maxsize.isEmpty()) {
         maxsize = QSize(32767, 32767);
+    }
     READ_FORCE_RULE(opacityactive, );
     READ_FORCE_RULE(opacityinactive, );
     READ_SET_RULE(ignoregeometry);
@@ -145,8 +149,9 @@ void Rules::readFromSettings(const RuleSettings *settings)
     READ_SET_RULE(screen);
     READ_SET_RULE(activity);
     READ_FORCE_RULE(type, static_cast<NET::WindowType>);
-    if (type == NET::Unknown)
+    if (type == NET::Unknown) {
         typerule = UnusedForceRule;
+    }
     READ_SET_RULE(maximizevert);
     READ_SET_RULE(maximizehoriz);
     READ_SET_RULE(minimize);
@@ -160,8 +165,9 @@ void Rules::readFromSettings(const RuleSettings *settings)
     READ_SET_RULE(noborder);
 
     READ_FORCE_RULE(decocolor, getDecoColor);
-    if (decocolor.isEmpty())
+    if (decocolor.isEmpty()) {
         decocolorrule = UnusedForceRule;
+    }
 
     READ_FORCE_RULE(blockcompositing, );
     READ_FORCE_RULE(fsplevel, );
@@ -302,8 +308,9 @@ bool Rules::isEmpty() const
 
 Rules::ForceRule Rules::convertForceRule(int v)
 {
-    if (v == DontAffect || v == Force || v == ForceTemporarily)
+    if (v == DontAffect || v == Force || v == ForceTemporarily) {
         return static_cast<ForceRule>(v);
+    }
     return UnusedForceRule;
 }
 
@@ -320,10 +327,12 @@ QString Rules::getDecoColor(const QString &themeName)
 bool Rules::matchType(NET::WindowType match_type) const
 {
     if (types != NET::AllTypesMask) {
-        if (match_type == NET::Unknown)
+        if (match_type == NET::Unknown) {
             match_type = NET::Normal; // NET::Unknown->NET::Normal is only here for matching
-        if (!NET::typeMatchesMask(match_type, types))
+        }
+        if (!NET::typeMatchesMask(match_type, types)) {
             return false;
+        }
     }
     return true;
 }
@@ -335,12 +344,15 @@ bool Rules::matchWMClass(const QByteArray &match_class, const QByteArray &match_
         QByteArray cwmclass = wmclasscomplete
             ? match_name + ' ' + match_class
             : match_class;
-        if (wmclassmatch == RegExpMatch && !QRegularExpression(QString::fromUtf8(wmclass)).match(QString::fromUtf8(cwmclass)).hasMatch())
+        if (wmclassmatch == RegExpMatch && !QRegularExpression(QString::fromUtf8(wmclass)).match(QString::fromUtf8(cwmclass)).hasMatch()) {
             return false;
-        if (wmclassmatch == ExactMatch && wmclass != cwmclass)
+        }
+        if (wmclassmatch == ExactMatch && wmclass != cwmclass) {
             return false;
-        if (wmclassmatch == SubstringMatch && !cwmclass.contains(wmclass))
+        }
+        if (wmclassmatch == SubstringMatch && !cwmclass.contains(wmclass)) {
             return false;
+        }
     }
     return true;
 }
@@ -348,12 +360,15 @@ bool Rules::matchWMClass(const QByteArray &match_class, const QByteArray &match_
 bool Rules::matchRole(const QByteArray &match_role) const
 {
     if (windowrolematch != UnimportantMatch) {
-        if (windowrolematch == RegExpMatch && !QRegularExpression(QString::fromUtf8(windowrole)).match(QString::fromUtf8(match_role)).hasMatch())
+        if (windowrolematch == RegExpMatch && !QRegularExpression(QString::fromUtf8(windowrole)).match(QString::fromUtf8(match_role)).hasMatch()) {
             return false;
-        if (windowrolematch == ExactMatch && windowrole != match_role)
+        }
+        if (windowrolematch == ExactMatch && windowrole != match_role) {
             return false;
-        if (windowrolematch == SubstringMatch && !match_role.contains(windowrole))
+        }
+        if (windowrolematch == SubstringMatch && !match_role.contains(windowrole)) {
             return false;
+        }
     }
     return true;
 }
@@ -361,12 +376,15 @@ bool Rules::matchRole(const QByteArray &match_role) const
 bool Rules::matchTitle(const QString &match_title) const
 {
     if (titlematch != UnimportantMatch) {
-        if (titlematch == RegExpMatch && !QRegularExpression(title).match(match_title).hasMatch())
+        if (titlematch == RegExpMatch && !QRegularExpression(title).match(match_title).hasMatch()) {
             return false;
-        if (titlematch == ExactMatch && title != match_title)
+        }
+        if (titlematch == ExactMatch && title != match_title) {
             return false;
-        if (titlematch == SubstringMatch && !match_title.contains(title))
+        }
+        if (titlematch == SubstringMatch && !match_title.contains(title)) {
             return false;
+        }
     }
     return true;
 }
@@ -376,17 +394,21 @@ bool Rules::matchClientMachine(const QByteArray &match_machine, bool local) cons
     if (clientmachinematch != UnimportantMatch) {
         // if it's localhost, check also "localhost" before checking hostname
         if (match_machine != "localhost" && local
-            && matchClientMachine("localhost", true))
+            && matchClientMachine("localhost", true)) {
             return true;
+        }
         if (clientmachinematch == RegExpMatch
-            && !QRegularExpression(QString::fromUtf8(clientmachine)).match(QString::fromUtf8(match_machine)).hasMatch())
+            && !QRegularExpression(QString::fromUtf8(clientmachine)).match(QString::fromUtf8(match_machine)).hasMatch()) {
             return false;
+        }
         if (clientmachinematch == ExactMatch
-            && clientmachine != match_machine)
+            && clientmachine != match_machine) {
             return false;
+        }
         if (clientmachinematch == SubstringMatch
-            && !match_machine.contains(clientmachine))
+            && !match_machine.contains(clientmachine)) {
             return false;
+        }
     }
     return true;
 }
@@ -394,21 +416,27 @@ bool Rules::matchClientMachine(const QByteArray &match_machine, bool local) cons
 #ifndef KCMRULES
 bool Rules::match(const AbstractClient *c) const
 {
-    if (!matchType(c->windowType(true)))
+    if (!matchType(c->windowType(true))) {
         return false;
-    if (!matchWMClass(c->resourceClass(), c->resourceName()))
+    }
+    if (!matchWMClass(c->resourceClass(), c->resourceName())) {
         return false;
-    if (!matchRole(c->windowRole().toLower()))
+    }
+    if (!matchRole(c->windowRole().toLower())) {
         return false;
-    if (!matchClientMachine(c->clientMachine()->hostName(), c->clientMachine()->isLocal()))
+    }
+    if (!matchClientMachine(c->clientMachine()->hostName(), c->clientMachine()->isLocal())) {
         return false;
-    if (titlematch != UnimportantMatch) // track title changes to rematch rules
+    }
+    if (titlematch != UnimportantMatch) { // track title changes to rematch rules
         QObject::connect(c, &AbstractClient::captionChanged, c, &AbstractClient::evaluateWindowRules,
                          // QueuedConnection, because title may change before
                          // the client is ready (could segfault!)
                          static_cast<Qt::ConnectionType>(Qt::QueuedConnection | Qt::UniqueConnection));
-    if (!matchTitle(c->captionNormal()))
+    }
+    if (!matchTitle(c->captionNormal())) {
         return false;
+    }
     return true;
 }
 
@@ -422,10 +450,12 @@ bool Rules::update(AbstractClient *c, int selection)
         if (!c->isFullScreen()) {
             QPoint new_pos = position;
             // don't use the position in the direction which is maximized
-            if ((c->maximizeMode() & MaximizeHorizontal) == 0)
+            if ((c->maximizeMode() & MaximizeHorizontal) == 0) {
                 new_pos.setX(c->pos().x());
-            if ((c->maximizeMode() & MaximizeVertical) == 0)
+            }
+            if ((c->maximizeMode() & MaximizeVertical) == 0) {
                 new_pos.setY(c->pos().y());
+            }
             updated = updated || position != new_pos;
             position = new_pos;
         }
@@ -434,10 +464,12 @@ bool Rules::update(AbstractClient *c, int selection)
         if (!c->isFullScreen()) {
             QSize new_size = size;
             // don't use the position in the direction which is maximized
-            if ((c->maximizeMode() & MaximizeHorizontal) == 0)
+            if ((c->maximizeMode() & MaximizeHorizontal) == 0) {
                 new_size.setWidth(c->size().width());
-            if ((c->maximizeMode() & MaximizeVertical) == 0)
+            }
+            if ((c->maximizeMode() & MaximizeVertical) == 0) {
                 new_size.setHeight(c->size().height());
+            }
             updated = updated || size != new_size;
             size = new_size;
         }
@@ -543,15 +575,17 @@ bool Rules::applyGeometry(QRect &rect, bool init) const
 
 bool Rules::applyPosition(QPoint &pos, bool init) const
 {
-    if (this->position != invalidPoint && checkSetRule(positionrule, init))
+    if (this->position != invalidPoint && checkSetRule(positionrule, init)) {
         pos = this->position;
+    }
     return checkSetStop(positionrule);
 }
 
 bool Rules::applySize(QSize &s, bool init) const
 {
-    if (this->size.isValid() && checkSetRule(sizerule, init))
+    if (this->size.isValid() && checkSetRule(sizerule, init)) {
         s = this->size;
+    }
     return checkSetStop(sizerule);
 }
 
@@ -580,15 +614,17 @@ bool Rules::applyDesktops(QVector<VirtualDesktop *> &vds, bool init) const
 
 bool Rules::applyMaximizeHoriz(MaximizeMode &mode, bool init) const
 {
-    if (checkSetRule(maximizehorizrule, init))
+    if (checkSetRule(maximizehorizrule, init)) {
         mode = static_cast<MaximizeMode>((maximizehoriz ? MaximizeHorizontal : 0) | (mode & MaximizeVertical));
+    }
     return checkSetStop(maximizehorizrule);
 }
 
 bool Rules::applyMaximizeVert(MaximizeMode &mode, bool init) const
 {
-    if (checkSetRule(maximizevertrule, init))
+    if (checkSetRule(maximizevertrule, init)) {
         mode = static_cast<MaximizeMode>((maximizevert ? MaximizeVertical : 0) | (mode & MaximizeHorizontal));
+    }
     return checkSetStop(maximizevertrule);
 }
 
@@ -597,10 +633,12 @@ APPLY_RULE(minimize, Minimize, bool)
 bool Rules::applyShade(ShadeMode &sh, bool init) const
 {
     if (checkSetRule(shaderule, init)) {
-        if (!this->shade)
+        if (!this->shade) {
             sh = ShadeNone;
-        if (this->shade && sh == ShadeNone)
+        }
+        if (this->shade && sh == ShadeNone) {
             sh = ShadeNormal;
+        }
     }
     return checkSetStop(shaderule);
 }
@@ -636,8 +674,9 @@ bool Rules::isTemporary() const
 
 bool Rules::discardTemporary(bool force)
 {
-    if (temporary_state == 0) // not temporary
+    if (temporary_state == 0) { // not temporary
         return false;
+    }
     if (force || --temporary_state == 0) { // too old
         delete this;
         return true;
@@ -718,9 +757,9 @@ void WindowRules::discardTemporary()
     QVector<Rules *>::Iterator it2 = rules.begin();
     for (QVector<Rules *>::Iterator it = rules.begin();
          it != rules.end();) {
-        if ((*it)->discardTemporary(true))
+        if ((*it)->discardTemporary(true)) {
             ++it;
-        else {
+        } else {
             *it2++ = *it++;
         }
     }
@@ -732,11 +771,14 @@ void WindowRules::update(AbstractClient *c, int selection)
     bool updated = false;
     for (QVector<Rules *>::ConstIterator it = rules.constBegin();
          it != rules.constEnd();
-         ++it)
-        if ((*it)->update(c, selection)) // no short-circuiting here
+         ++it) {
+        if ((*it)->update(c, selection)) { // no short-circuiting here
             updated = true;
-    if (updated)
+        }
+    }
+    if (updated) {
         RuleBook::self()->requestDiskStorage();
+    }
 }
 
 #define CHECK_RULE(rule, type)                                        \
@@ -868,10 +910,11 @@ void AbstractClient::applyWindowRules()
     // Type
     maximize(maximizeMode());
     // Minimize : functions don't check, and there are two functions
-    if (client_rules->checkMinimize(isMinimized()))
+    if (client_rules->checkMinimize(isMinimized())) {
         minimize();
-    else
+    } else {
         unminimize();
+    }
     setShade(shadeMode());
     setOriginalSkipTaskbar(skipTaskbar());
     setSkipPager(skipPager());
@@ -884,8 +927,9 @@ void AbstractClient::applyWindowRules()
     // FSP
     // AcceptFocus :
     if (workspace()->mostRecentlyActivatedClient() == this
-        && !client_rules->checkAcceptFocus(true))
+        && !client_rules->checkAcceptFocus(true)) {
         workspace()->activateNextClient(this);
+    }
     // Autogrouping : Only checked on window manage
     // AutogroupInForeground : Only checked on window manage
     // AutogroupById : Only checked on window manage
@@ -895,22 +939,25 @@ void AbstractClient::applyWindowRules()
     if (isActive()) {
         setOpacity(rules()->checkOpacityActive(qRound(opacity() * 100.0)) / 100.0);
         workspace()->disableGlobalShortcutsForClient(rules()->checkDisableGlobalShortcuts(false));
-    } else
+    } else {
         setOpacity(rules()->checkOpacityInactive(qRound(opacity() * 100.0)) / 100.0);
+    }
     setDesktopFileName(rules()->checkDesktopFile(desktopFileName()).toUtf8());
 }
 
 void X11Client::updateWindowRules(Rules::Types selection)
 {
-    if (!isManaged()) // not fully setup yet
+    if (!isManaged()) { // not fully setup yet
         return;
+    }
     AbstractClient::updateWindowRules(selection);
 }
 
 void AbstractClient::updateWindowRules(Rules::Types selection)
 {
-    if (RuleBook::self()->areUpdatesDisabled())
+    if (RuleBook::self()->areUpdatesDisabled()) {
         return;
+    }
     m_rules.update(this, selection);
 }
 
@@ -976,10 +1023,11 @@ WindowRules RuleBook::find(const AbstractClient *c, bool ignore_temporary)
         if ((*it)->match(c)) {
             Rules *rule = *it;
             qCDebug(KWIN_CORE) << "Rule found:" << rule << ":" << c;
-            if (rule->isTemporary())
+            if (rule->isTemporary()) {
                 it = m_rules.erase(it);
-            else
+            } else {
                 ++it;
+            }
             ret.append(rule);
             continue;
         }
@@ -993,8 +1041,9 @@ void RuleBook::edit(AbstractClient *c, bool whole_app)
     save();
     QStringList args;
     args << QStringLiteral("--uuid") << c->internalId().toString();
-    if (whole_app)
+    if (whole_app) {
         args << QStringLiteral("--whole-app");
+    }
     QProcess *p = new QProcess(this);
     p->setArguments(args);
     p->setProcessEnvironment(kwinApp()->processStartupEnvironment());
@@ -1046,13 +1095,16 @@ void RuleBook::temporaryRulesMessage(const QString &message)
     bool was_temporary = false;
     for (QList<Rules *>::ConstIterator it = m_rules.constBegin();
          it != m_rules.constEnd();
-         ++it)
-        if ((*it)->isTemporary())
+         ++it) {
+        if ((*it)->isTemporary()) {
             was_temporary = true;
+        }
+    }
     Rules *rule = new Rules(message, true);
     m_rules.prepend(rule); // highest priority first
-    if (!was_temporary)
+    if (!was_temporary) {
         QTimer::singleShot(60000, this, &RuleBook::cleanupTemporaryRules);
+    }
 }
 
 void RuleBook::cleanupTemporaryRules()
@@ -1063,13 +1115,15 @@ void RuleBook::cleanupTemporaryRules()
         if ((*it)->discardTemporary(false)) { // deletes (*it)
             it = m_rules.erase(it);
         } else {
-            if ((*it)->isTemporary())
+            if ((*it)->isTemporary()) {
                 has_temporary = true;
+            }
             ++it;
         }
     }
-    if (has_temporary)
+    if (has_temporary) {
         QTimer::singleShot(60000, this, &RuleBook::cleanupTemporaryRules);
+    }
 }
 
 void RuleBook::discardUsed(AbstractClient *c, bool withdrawn)
@@ -1091,8 +1145,9 @@ void RuleBook::discardUsed(AbstractClient *c, bool withdrawn)
         }
         ++it;
     }
-    if (updated)
+    if (updated) {
         requestDiskStorage();
+    }
 }
 
 void RuleBook::requestDiskStorage()

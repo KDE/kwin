@@ -136,14 +136,16 @@ void ScreenPreviewWidget::paintEvent(QPaintEvent *event)
 
 void ScreenPreviewWidget::dropEvent(QDropEvent *e)
 {
-    if (!e->mimeData()->hasUrls())
+    if (!e->mimeData()->hasUrls()) {
         return;
+    }
 
     QList<QUrl> uris(KUrlMimeData::urlsFromMimeData(e->mimeData()));
     if (!uris.isEmpty()) {
         // TODO: Download remote file
-        if (uris.first().isLocalFile())
+        if (uris.first().isLocalFile()) {
             Q_EMIT imageDropped(uris.first().path());
+        }
     }
 }
 

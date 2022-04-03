@@ -139,8 +139,12 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
 
     Workspace *ws = Workspace::self();
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
-    connect(ws, &Workspace::showingDesktopChanged,
-            this, &EffectsHandlerImpl::showingDesktopChanged);
+    connect(ws, &Workspace::showingDesktopChanged, this,
+        [this](bool showing, bool animated) {
+            if (animated) {
+                Q_EMIT showingDesktopChanged(showing);
+            }
+    });
     connect(ws, &Workspace::currentDesktopChanged, this, [this](int old, AbstractClient *c) {
         const int newDesktop = VirtualDesktopManager::self()->current();
         if (old != 0 && newDesktop != old) {
@@ -156,10 +160,11 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
         Q_EMIT desktopPresenceChanged(c->effectWindow(), old, c->desktop());
     });
     connect(ws, &Workspace::clientAdded, this, [this](AbstractClient *c) {
-        if (c->readyForPainting())
+        if (c->readyForPainting()) {
             slotClientShown(c);
-        else
+        } else {
             connect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotClientShown);
+        }
     });
     connect(ws, &Workspace::unmanagedAdded, this, [this](Unmanaged *u) {
         // it's never initially ready but has synthetic 50ms delay
@@ -361,8 +366,9 @@ void EffectsHandlerImpl::paintScreen(int mask, const QRegion &region, ScreenPain
     if (m_currentPaintScreenIterator != m_activeEffects.constEnd()) {
         (*m_currentPaintScreenIterator++)->paintScreen(mask, region, data);
         --m_currentPaintScreenIterator;
-    } else
+    } else {
         m_scene->finalPaintScreen(mask, region, data);
+    }
 }
 
 void EffectsHandlerImpl::paintDesktop(int desktop, int mask, QRegion region, ScreenPaintData &data)
@@ -404,8 +410,9 @@ void EffectsHandlerImpl::paintWindow(EffectWindow *w, int mask, const QRegion &r
     if (m_currentPaintWindowIterator != m_activeEffects.constEnd()) {
         (*m_currentPaintWindowIterator++)->paintWindow(w, mask, region, data);
         --m_currentPaintWindowIterator;
-    } else
+    } else {
         m_scene->finalPaintWindow(static_cast<EffectWindowImpl *>(w), mask, region, data);
+    }
 }
 
 void EffectsHandlerImpl::paintEffectFrame(EffectFrame *frame, const QRegion &region, double opacity, double frameOpacity)
@@ -430,9 +437,11 @@ void EffectsHandlerImpl::postPaintWindow(EffectWindow *w)
 
 Effect *EffectsHandlerImpl::provides(Effect::Feature ef)
 {
-    for (int i = 0; i < loaded_effects.size(); ++i)
-        if (loaded_effects.at(i).second->provides(ef))
+    for (int i = 0; i < loaded_effects.size(); ++i) {
+        if (loaded_effects.at(i).second->provides(ef)) {
             return loaded_effects.at(i).second;
+        }
+    }
     return nullptr;
 }
 
@@ -441,8 +450,9 @@ void EffectsHandlerImpl::drawWindow(EffectWindow *w, int mask, const QRegion &re
     if (m_currentDrawWindowIterator != m_activeEffects.constEnd()) {
         (*m_currentDrawWindowIterator++)->drawWindow(w, mask, region, data);
         --m_currentDrawWindowIterator;
-    } else
+    } else {
         m_scene->finalDrawWindow(static_cast<EffectWindowImpl *>(w), mask, region, data);
+    }
 }
 
 bool EffectsHandlerImpl::hasDecorationShadows() const
@@ -562,8 +572,9 @@ void EffectsHandlerImpl::slotGeometryShapeChanged(Toplevel *t, const QRect &old)
 {
     // during late cleanup effectWindow() may be already NULL
     // in some functions that may still call this
-    if (t == nullptr || t->effectWindow() == nullptr)
+    if (t == nullptr || t->effectWindow() == nullptr) {
         return;
+    }
     Q_EMIT windowGeometryShapeChanged(t->effectWindow(), old);
 }
 
@@ -600,8 +611,9 @@ bool EffectsHandlerImpl::hasActiveFullScreenEffect() const
 
 bool EffectsHandlerImpl::grabKeyboard(Effect *effect)
 {
-    if (keyboard_grab_effect != nullptr)
+    if (keyboard_grab_effect != nullptr) {
         return false;
+    }
     if (!doGrabKeyboard()) {
         return false;
     }
@@ -627,8 +639,9 @@ void EffectsHandlerImpl::doUngrabKeyboard()
 
 void EffectsHandlerImpl::grabbedKeyboardEvent(QKeyEvent *e)
 {
-    if (keyboard_grab_effect != nullptr)
+    if (keyboard_grab_effect != nullptr) {
         keyboard_grab_effect->grabbedKeyboardEvent(e);
+    }
 }
 
 void EffectsHandlerImpl::startMouseInterception(Effect *effect, Qt::CursorShape shape)
@@ -792,25 +805,34 @@ void EffectsHandlerImpl::registerTouchpadPinchShortcut(PinchDirection direction,
     input()->registerTouchpadPinchShortcut(direction, fingerCount, action);
 }
 
+void EffectsHandlerImpl::registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action)
+{
+    input()->registerTouchscreenSwipeShortcut(direction, fingerCount, action);
+}
+
 void *EffectsHandlerImpl::getProxy(QString name)
 {
-    for (QVector<EffectPair>::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it)
-        if ((*it).first == name)
+    for (QVector<EffectPair>::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
+        if ((*it).first == name) {
             return (*it).second->proxy();
+        }
+    }
 
     return nullptr;
 }
 
 void EffectsHandlerImpl::startMousePolling()
 {
-    if (Cursors::self()->mouse())
+    if (Cursors::self()->mouse()) {
         Cursors::self()->mouse()->startMousePolling();
+    }
 }
 
 void EffectsHandlerImpl::stopMousePolling()
 {
-    if (Cursors::self()->mouse())
+    if (Cursors::self()->mouse()) {
         Cursors::self()->mouse()->stopMousePolling();
+    }
 }
 
 bool EffectsHandlerImpl::hasKeyboardGrab() const
@@ -820,11 +842,12 @@ bool EffectsHandlerImpl::hasKeyboardGrab() const
 
 void EffectsHandlerImpl::registerPropertyType(long atom, bool reg)
 {
-    if (reg)
+    if (reg) {
         ++registered_atoms[atom]; // initialized to 0 if not present yet
-    else {
-        if (--registered_atoms[atom] == 0)
+    } else {
+        if (--registered_atoms[atom] == 0) {
             registered_atoms.remove(atom);
+        }
     }
 }
 
@@ -895,13 +918,15 @@ EffectWindow *EffectsHandlerImpl::activeWindow() const
 void EffectsHandlerImpl::moveWindow(EffectWindow *w, const QPoint &pos, bool snap, double snapAdjust)
 {
     auto cl = qobject_cast<AbstractClient *>(static_cast<EffectWindowImpl *>(w)->window());
-    if (!cl || !cl->isMovable())
+    if (!cl || !cl->isMovable()) {
         return;
+    }
 
-    if (snap)
+    if (snap) {
         cl->move(Workspace::self()->adjustClientPosition(cl, pos, true, snapAdjust));
-    else
+    } else {
         cl->move(pos);
+    }
 }
 
 void EffectsHandlerImpl::windowToDesktop(EffectWindow *w, int desktop)
@@ -1021,8 +1046,9 @@ QPoint EffectsHandlerImpl::desktopGridCoords(int id) const
 QPoint EffectsHandlerImpl::desktopCoords(int id) const
 {
     QPoint coords = VirtualDesktopManager::self()->grid().gridCoords(id);
-    if (coords.x() == -1)
+    if (coords.x() == -1) {
         return QPoint(-1, -1);
+    }
     const QSize displaySize = Screens::self()->size();
     return QPoint(coords.x() * displaySize.width(), coords.y() * displaySize.height());
 }
@@ -1065,10 +1091,12 @@ double EffectsHandlerImpl::animationTimeFactor() const
 
 EffectWindow *EffectsHandlerImpl::findWindow(WId id) const
 {
-    if (X11Client *w = Workspace::self()->findClient(Predicate::WindowMatch, id))
+    if (X11Client *w = Workspace::self()->findClient(Predicate::WindowMatch, id)) {
         return w->effectWindow();
-    if (Unmanaged *w = Workspace::self()->findUnmanaged(id))
+    }
+    if (Unmanaged *w = Workspace::self()->findUnmanaged(id)) {
         return w->effectWindow();
+    }
     return nullptr;
 }
 
@@ -1110,8 +1138,9 @@ EffectWindowList EffectsHandlerImpl::stackingOrder() const
     QList<Toplevel *> list = Workspace::self()->xStackingOrder();
     EffectWindowList ret;
     for (Toplevel *t : list) {
-        if (EffectWindow *w = effectWindow(t))
+        if (EffectWindow *w = effectWindow(t)) {
             ret.append(w);
+        }
     }
     return ret;
 }
@@ -1119,8 +1148,9 @@ EffectWindowList EffectsHandlerImpl::stackingOrder() const
 void EffectsHandlerImpl::setElevatedWindow(KWin::EffectWindow *w, bool set)
 {
     elevated_windows.removeAll(w);
-    if (set)
+    if (set) {
         elevated_windows.append(w);
+    }
 }
 
 void EffectsHandlerImpl::setTabBoxWindow(EffectWindow *w)
@@ -1202,8 +1232,9 @@ int EffectsHandlerImpl::currentTabBoxDesktop() const
 EffectWindow *EffectsHandlerImpl::currentTabBoxWindow() const
 {
 #if KWIN_BUILD_TABBOX
-    if (auto c = TabBox::TabBox::self()->currentClient())
+    if (auto c = TabBox::TabBox::self()->currentClient()) {
         return c->effectWindow();
+    }
 #endif
     return nullptr;
 }
@@ -1233,17 +1264,19 @@ EffectScreen *EffectsHandlerImpl::activeScreen() const
     return EffectScreenImpl::get(workspace()->activeOutput());
 }
 
+static VirtualDesktop *resolveVirtualDesktop(int desktopId)
+{
+    if (desktopId == 0 || desktopId == -1) {
+        return VirtualDesktopManager::self()->currentDesktop();
+    } else {
+        return VirtualDesktopManager::self()->desktopForX11Id(desktopId);
+    }
+}
+
 QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectScreen *screen, int desktop) const
 {
-    const VirtualDesktop *virtualDesktop;
-    if (desktop == 0 || desktop == -1) {
-        virtualDesktop = VirtualDesktopManager::self()->currentDesktop();
-    } else {
-        virtualDesktop = VirtualDesktopManager::self()->desktopForX11Id(desktop);
-    }
-
     const EffectScreenImpl *screenImpl = static_cast<const EffectScreenImpl *>(screen);
-    return Workspace::self()->clientArea(opt, screenImpl->platformOutput(), virtualDesktop);
+    return Workspace::self()->clientArea(opt, screenImpl->platformOutput(), resolveVirtualDesktop(desktop));
 }
 
 QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectWindow *c) const
@@ -1254,7 +1287,9 @@ QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectWindow *c
 
 QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const QPoint &p, int desktop) const
 {
-    return Workspace::self()->clientArea(opt, p, desktop);
+    const AbstractOutput *output = kwinApp()->platform()->outputAt(p);
+    const VirtualDesktop *virtualDesktop = resolveVirtualDesktop(desktop);
+    return Workspace::self()->clientArea(opt, output, virtualDesktop);
 }
 
 QRect EffectsHandlerImpl::virtualScreenGeometry() const
@@ -1369,10 +1404,11 @@ QPainter *EffectsHandlerImpl::scenePainter()
 
 void EffectsHandlerImpl::toggleEffect(const QString &name)
 {
-    if (isEffectLoaded(name))
+    if (isEffectLoaded(name)) {
         unloadEffect(name);
-    else
+    } else {
         loadEffect(name);
+    }
 }
 
 QStringList EffectsHandlerImpl::loadedEffects() const
@@ -1443,13 +1479,14 @@ void EffectsHandlerImpl::destroyEffect(Effect *effect)
 
 void EffectsHandlerImpl::reconfigureEffect(const QString &name)
 {
-    for (QVector<EffectPair>::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it)
+    for (QVector<EffectPair>::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
         if ((*it).first == name) {
             kwinApp()->config()->reparseConfiguration();
             makeOpenGLContextCurrent();
             (*it).second->reconfigure(Effect::ReconfigureAll);
             return;
         }
+    }
 }
 
 bool EffectsHandlerImpl::isEffectLoaded(const QString &name) const
@@ -2197,10 +2234,11 @@ EffectWindowList EffectWindowImpl::mainWindows() const
 
 void EffectWindowImpl::setData(int role, const QVariant &data)
 {
-    if (!data.isNull())
+    if (!data.isNull()) {
         dataMap[role] = data;
-    else
+    } else {
         dataMap.remove(role);
+    }
     Q_EMIT effects->windowDataChanged(this, role);
 }
 
@@ -2440,18 +2478,20 @@ Qt::Alignment EffectFrameImpl::alignment() const
 
 void EffectFrameImpl::align(QRect &geometry)
 {
-    if (m_alignment & Qt::AlignLeft)
+    if (m_alignment & Qt::AlignLeft) {
         geometry.moveLeft(m_point.x());
-    else if (m_alignment & Qt::AlignRight)
+    } else if (m_alignment & Qt::AlignRight) {
         geometry.moveLeft(m_point.x() - geometry.width());
-    else
+    } else {
         geometry.moveLeft(m_point.x() - geometry.width() / 2);
-    if (m_alignment & Qt::AlignTop)
+    }
+    if (m_alignment & Qt::AlignTop) {
         geometry.moveTop(m_point.y());
-    else if (m_alignment & Qt::AlignBottom)
+    } else if (m_alignment & Qt::AlignBottom) {
         geometry.moveTop(m_point.y() - geometry.height());
-    else
+    } else {
         geometry.moveTop(m_point.y() - geometry.height() / 2);
+    }
 }
 
 void EffectFrameImpl::setAlignment(Qt::Alignment alignment)
@@ -2506,8 +2546,9 @@ void EffectFrameImpl::setSelection(const QRect &selection)
 
 void EffectFrameImpl::autoResize()
 {
-    if (m_static)
+    if (m_static) {
         return; // Not automatically resizing
+    }
 
     QRect geometry;
     // Set size
@@ -2517,8 +2558,9 @@ void EffectFrameImpl::autoResize()
     }
     if (!m_icon.isNull() && !m_iconSize.isEmpty()) {
         geometry.setLeft(-m_iconSize.width());
-        if (m_iconSize.height() > geometry.height())
+        if (m_iconSize.height() > geometry.height()) {
             geometry.setHeight(m_iconSize.height());
+        }
     }
 
     align(geometry);

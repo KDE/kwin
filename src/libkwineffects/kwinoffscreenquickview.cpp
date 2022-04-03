@@ -27,6 +27,8 @@
 #include <QOpenGLFramebufferObject>
 #include <QTimer>
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <QQuickOpenGLUtils>
+#include <QQuickRenderTarget>
 #include <private/qeventpoint_p.h> // for QMutableEventPoint
 #endif
 
@@ -267,7 +269,11 @@ void OffscreenQuickView::update()
                 return;
             }
         }
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         d->m_view->setRenderTarget(d->m_fbo.data());
+#else
+        d->m_view->setRenderTarget(QQuickRenderTarget::fromOpenGLTexture(d->m_fbo->texture(), d->m_fbo->size()));
+#endif
     }
 
     d->m_renderControl->polishItems();
@@ -275,7 +281,11 @@ void OffscreenQuickView::update()
 
     d->m_renderControl->render();
     if (usingGl) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         d->m_view->resetOpenGLState();
+#else
+        QQuickOpenGLUtils::resetOpenGLState();
+#endif
     }
 
     if (d->m_useBlit) {
@@ -625,6 +635,11 @@ OffscreenQuickScene::~OffscreenQuickScene() = default;
 
 void OffscreenQuickScene::setSource(const QUrl &source)
 {
+    setSource(source, QVariantMap());
+}
+
+void OffscreenQuickScene::setSource(const QUrl &source, const QVariantMap &initialProperties)
+{
     if (!d->qmlComponent) {
         d->qmlComponent.reset(new QQmlComponent(d->qmlEngine.data()));
     }
@@ -638,7 +653,7 @@ void OffscreenQuickScene::setSource(const QUrl &source)
 
     d->quickItem.reset();
 
-    QScopedPointer<QObject> qmlObject(d->qmlComponent->create());
+    QScopedPointer<QObject> qmlObject(d->qmlComponent->createWithInitialProperties(initialProperties));
     QQuickItem *item = qobject_cast<QQuickItem *>(qmlObject.data());
     if (!item) {
         qCWarning(LIBKWINEFFECTS) << "Root object of effect quick view" << source << "is not a QQuickItem";

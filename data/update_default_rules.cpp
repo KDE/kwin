@@ -17,8 +17,9 @@
 
 int main(int argc, char *argv[])
 {
-    if (argc != 2)
+    if (argc != 2) {
         return 1;
+    }
 
     QCoreApplication::setApplicationName("kwin_update_default_rules");
 
@@ -42,8 +43,9 @@ int main(int argc, char *argv[])
         KConfigGroup dcg2(&dest_cfg, QString::number(pos));
         for (QMap<QString, QString>::ConstIterator it = entries.constBegin();
              it != entries.constEnd();
-             ++it)
+             ++it) {
             dcg2.writeEntry(it.key(), *it);
+        }
     }
     dcg.writeEntry("count", pos);
     scg.sync();

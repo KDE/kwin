@@ -207,7 +207,7 @@ void TouchInputRedirection::frame()
     if (!inited() || !waylandServer()->seat()->hasTouch()) {
         return;
     }
-    waylandServer()->seat()->notifyTouchFrame();
+    input()->processFilters(std::bind(&InputEventFilter::touchFrame, std::placeholders::_1));
 }
 
 }

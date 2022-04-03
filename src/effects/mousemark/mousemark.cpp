@@ -71,8 +71,9 @@ void MouseMarkEffect::reconfigure(ReconfigureFlags)
 void MouseMarkEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
     effects->paintScreen(mask, region, data); // paint normal screen
-    if (marks.isEmpty() && drawing.isEmpty())
+    if (marks.isEmpty() && drawing.isEmpty()) {
         return;
+    }
     if (effects->isOpenGLCompositing()) {
         if (!GLPlatform::instance()->isGLES()) {
             glEnable(GL_BLEND);
@@ -146,17 +147,21 @@ void MouseMarkEffect::slotMouseChanged(const QPoint &pos, const QPoint &,
             arrow_start = NULL_POINT;
             effects->addRepaintFull();
             return;
-        } else
+        } else {
             arrow_start = pos;
+        }
     }
-    if (arrow_start != NULL_POINT)
+    if (arrow_start != NULL_POINT) {
         return;
+    }
     // TODO the shortcuts now trigger this right before they're activated
     if (modifiers == (Qt::META | Qt::SHIFT)) { // activated
-        if (drawing.isEmpty())
+        if (drawing.isEmpty()) {
             drawing.append(pos);
-        if (drawing.last() == pos)
+        }
+        if (drawing.last() == pos) {
             return;
+        }
         QPoint pos2 = drawing.last();
         drawing.append(pos);
         QRect repaint = QRect(qMin(pos.x(), pos2.x()), qMin(pos.y(), pos2.y()),

@@ -83,8 +83,9 @@ bool InvertEffect::loadData()
 void InvertEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
 {
     // Load if we haven't already
-    if (m_valid && !m_inited)
+    if (m_valid && !m_inited) {
         m_valid = loadData();
+    }
 
     bool useShader = m_valid && (m_allWindows != m_windows.contains(w));
     if (useShader) {
@@ -128,10 +129,11 @@ void InvertEffect::toggleWindow()
     if (!effects->activeWindow()) {
         return;
     }
-    if (!m_windows.contains(effects->activeWindow()))
+    if (!m_windows.contains(effects->activeWindow())) {
         m_windows.append(effects->activeWindow());
-    else
+    } else {
         m_windows.removeOne(effects->activeWindow());
+    }
     effects->activeWindow()->addRepaintFull();
 }
 

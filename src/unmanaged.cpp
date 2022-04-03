@@ -124,8 +124,9 @@ bool Unmanaged::track(xcb_window_t w)
     getResourceClass();
     getWmClientLeader();
     getWmClientMachine();
-    if (Xcb::Extensions::self()->isShapeAvailable())
+    if (Xcb::Extensions::self()->isShapeAvailable()) {
         xcb_shape_select_input(kwinApp()->x11Connection(), w, true);
+    }
     detectShape(w);
     getWmOpaqueRegion();
     getSkipCloseAnimation();
@@ -133,8 +134,9 @@ bool Unmanaged::track(xcb_window_t w)
     if (QWindow *internalWindow = findInternalWindow()) {
         m_outline = internalWindow->property("__kwin_outline").toBool();
     }
-    if (effects)
+    if (effects) {
         static_cast<EffectsHandlerImpl *>(effects)->checkInputWindowStacking();
+    }
     return true;
 }
 
@@ -147,8 +149,9 @@ void Unmanaged::release(ReleaseReason releaseReason)
     Q_EMIT windowClosed(this, del);
     finishCompositing(releaseReason);
     if (!QWidget::find(window()) && releaseReason != ReleaseReason::Destroyed) { // don't affect our own windows
-        if (Xcb::Extensions::self()->isShapeAvailable())
+        if (Xcb::Extensions::self()->isShapeAvailable()) {
             xcb_shape_select_input(kwinApp()->x11Connection(), window(), false);
+        }
         Xcb::selectInput(window(), XCB_EVENT_MASK_NO_EVENT);
     }
     workspace()->removeUnmanaged(this);

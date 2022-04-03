@@ -62,8 +62,9 @@ void Activities::slotRemoved(const QString &activity)
 {
     const auto clients = Workspace::self()->allClientList();
     for (auto *const client : clients) {
-        if (client->isDesktop())
+        if (client->isDesktop()) {
             continue;
+        }
         client->setOnActivity(activity, false);
     }
     // toss out any session data for it
@@ -79,19 +80,22 @@ void Activities::toggleClientOnActivity(AbstractClient *c, const QString &activi
     // note: all activities === no activities
     bool enable = was_on_all || !was_on_activity;
     c->setOnActivity(activity, enable);
-    if (c->isOnActivity(activity) == was_on_activity && c->isOnAllActivities() == was_on_all) // No change
+    if (c->isOnActivity(activity) == was_on_activity && c->isOnAllActivities() == was_on_all) { // No change
         return;
+    }
 
     Workspace *ws = Workspace::self();
     if (c->isOnCurrentActivity()) {
         if (c->wantsTabFocus() && options->focusPolicyIsReasonable() && !was_on_activity && // for stickyness changes
                                                                                             // FIXME not sure if the line above refers to the correct activity
-            !dont_activate)
+            !dont_activate) {
             ws->requestFocus(c);
-        else
+        } else {
             ws->restackClientUnderActive(c);
-    } else
+        }
+    } else {
         ws->raiseClient(c);
+    }
 
     // notifyWindowDesktopChanged( c, old_desktop );
 
@@ -144,8 +148,9 @@ bool Activities::stop(const QString &id)
 void Activities::reallyStop(const QString &id)
 {
     Workspace *ws = Workspace::self();
-    if (ws->sessionManager()->state() == SessionState::Saving)
+    if (ws->sessionManager()->state() == SessionState::Saving) {
         return; // ksmserver doesn't queue requests (yet)
+    }
 
     qCDebug(KWIN_CORE) << id;
 
@@ -153,8 +158,9 @@ void Activities::reallyStop(const QString &id)
     QSet<QByteArray> dontCloseSessionIds;
     const auto clients = ws->allClientList();
     for (auto *const c : clients) {
-        if (c->isDesktop())
+        if (c->isDesktop()) {
             continue;
+        }
         const QByteArray sessionId = c->sessionId();
         if (sessionId.isEmpty()) {
             continue; // TODO support old wm_command apps too?

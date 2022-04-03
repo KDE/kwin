@@ -46,27 +46,32 @@ LanczosFilter::~LanczosFilter()
 
 void LanczosFilter::init()
 {
-    if (m_inited)
+    if (m_inited) {
         return;
+    }
     m_inited = true;
     const bool force = (qstrcmp(qgetenv("KWIN_FORCE_LANCZOS"), "1") == 0);
     if (force) {
         qCWarning(KWIN_OPENGL) << "Lanczos Filter forced on by environment variable";
     }
 
-    if (!force && options->glSmoothScale() != 2)
+    if (!force && options->glSmoothScale() != 2) {
         return; // disabled by config
-    if (!GLRenderTarget::supported())
+    }
+    if (!GLRenderTarget::supported()) {
         return;
+    }
 
     GLPlatform *gl = GLPlatform::instance();
     if (!force) {
         // The lanczos filter is reported to be broken with the Intel driver prior SandyBridge
-        if (gl->driver() == Driver_Intel && gl->chipClass() < SandyBridge)
+        if (gl->driver() == Driver_Intel && gl->chipClass() < SandyBridge) {
             return;
+        }
         // also radeon before R600 has trouble
-        if (gl->isRadeon() && gl->chipClass() < R600)
+        if (gl->isRadeon() && gl->chipClass() < R600) {
             return;
+        }
         // and also for software emulation (e.g. llvmpipe)
         if (gl->isSoftwareEmulation()) {
             return;
@@ -109,11 +114,13 @@ static float sinc(float x)
 
 static float lanczos(float x, float a)
 {
-    if (qFuzzyCompare(x + 1.0, 1.0))
+    if (qFuzzyCompare(x + 1.0, 1.0)) {
         return 1.0;
+    }
 
-    if (qAbs(x) >= a)
+    if (qAbs(x) >= a) {
         return 0.0;
+    }
 
     return sinc(x) * sinc(x / a);
 }
@@ -160,8 +167,9 @@ void LanczosFilter::createOffsets(int count, float width, Qt::Orientation direct
 void LanczosFilter::performPaint(EffectWindowImpl *w, int mask, QRegion region, WindowPaintData &data)
 {
     if (data.xScale() < 0.9 || data.yScale() < 0.9) {
-        if (!m_inited)
+        if (!m_inited) {
             init();
+        }
         const QRect screenRect = Workspace::self()->clientArea(ScreenArea, w->window());
         // window geometry may not be bigger than screen geometry to fit into the FBO
         QRect winGeo(w->expandedGeometry());

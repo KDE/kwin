@@ -139,14 +139,17 @@ GlxBackend::~GlxBackend()
     cleanupGL();
     doneCurrent();
 
-    if (ctx)
+    if (ctx) {
         glXDestroyContext(display(), ctx);
+    }
 
-    if (glxWindow)
+    if (glxWindow) {
         glXDestroyWindow(display(), glxWindow);
+    }
 
-    if (window)
+    if (window) {
         XDestroyWindow(display(), window);
+    }
 
     qDeleteAll(m_fbconfigHash);
     m_fbconfigHash.clear();
@@ -164,8 +167,9 @@ static glXFuncPtr getProcAddress(const char *name)
     ret = glXGetProcAddress((const GLubyte *)name);
 #endif
 #if HAVE_DL_LIBRARY
-    if (ret == nullptr)
+    if (ret == nullptr) {
         ret = (glXFuncPtr)dlsym(RTLD_DEFAULT, name);
+    }
 #endif
     return ret;
 }
@@ -204,8 +208,9 @@ void GlxBackend::init()
     GLPlatform *glPlatform = GLPlatform::instance();
     glPlatform->detect(GlxPlatformInterface);
     options->setGlPreferBufferSwap(options->glPreferBufferSwap()); // resolve autosetting
-    if (options->glPreferBufferSwap() == Options::AutoSwapStrategy)
+    if (options->glPreferBufferSwap() == Options::AutoSwapStrategy) {
         options->setGlPreferBufferSwap('e'); // for unknown drivers - should not happen
+    }
     glPlatform->printResults();
     initGL(&getProcAddress);
 
@@ -238,8 +243,9 @@ void GlxBackend::init()
     if (hasExtension(QByteArrayLiteral("GLX_EXT_buffer_age"))) {
         const QByteArray useBufferAge = qgetenv("KWIN_USE_BUFFER_AGE");
 
-        if (useBufferAge != "0")
+        if (useBufferAge != "0") {
             setSupportsBufferAge(true);
+        }
     }
 
     // If the buffer age extension is unsupported, glXSwapBuffers() is not guaranteed to
@@ -397,8 +403,9 @@ bool GlxBackend::initRenderingContext()
         }
     }
 
-    if (!ctx)
+    if (!ctx) {
         ctx = glXCreateNewContext(display(), fbconfig, GLX_RGBA_TYPE, globalShareContext, direct);
+    }
 
     if (!ctx) {
         qCDebug(KWIN_X11STANDALONE) << "Failed to create an OpenGL context.";
@@ -417,8 +424,9 @@ bool GlxBackend::initRenderingContext()
 
 bool GlxBackend::initBuffer()
 {
-    if (!initFbConfig())
+    if (!initFbConfig()) {
         return false;
+    }
 
     if (overlayWindow()->create()) {
         xcb_connection_t *const c = connection();
@@ -520,8 +528,9 @@ void GlxBackend::initVisualDepthHashTable()
             const int len = xcb_depth_visuals_length(depth.data);
             const xcb_visualtype_t *visuals = xcb_depth_visuals(depth.data);
 
-            for (int i = 0; i < len; i++)
+            for (int i = 0; i < len; i++) {
                 m_visualDepthHash.insert(visuals[i].visual_id, depth.data->depth);
+            }
         }
     }
 }
@@ -619,44 +628,51 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
         glXGetFBConfigAttrib(display(), configs[i], GLX_GREEN_SIZE, &green);
         glXGetFBConfigAttrib(display(), configs[i], GLX_BLUE_SIZE, &blue);
 
-        if (std::tie(red, green, blue) != rgb_sizes)
+        if (std::tie(red, green, blue) != rgb_sizes) {
             continue;
+        }
 
         xcb_visualid_t visual;
         glXGetFBConfigAttrib(display(), configs[i], GLX_VISUAL_ID, (int *)&visual);
 
-        if (visualDepth(visual) != depth)
+        if (visualDepth(visual) != depth) {
             continue;
+        }
 
         int bind_rgb, bind_rgba;
         glXGetFBConfigAttrib(display(), configs[i], GLX_BIND_TO_TEXTURE_RGBA_EXT, &bind_rgba);
         glXGetFBConfigAttrib(display(), configs[i], GLX_BIND_TO_TEXTURE_RGB_EXT, &bind_rgb);
 
-        if (!bind_rgb && !bind_rgba)
+        if (!bind_rgb && !bind_rgba) {
             continue;
+        }
 
         int depth, stencil;
         glXGetFBConfigAttrib(display(), configs[i], GLX_DEPTH_SIZE, &depth);
         glXGetFBConfigAttrib(display(), configs[i], GLX_STENCIL_SIZE, &stencil);
 
         int texture_format;
-        if (alpha_bits)
+        if (alpha_bits) {
             texture_format = bind_rgba ? GLX_TEXTURE_FORMAT_RGBA_EXT : GLX_TEXTURE_FORMAT_RGB_EXT;
-        else
+        } else {
             texture_format = bind_rgb ? GLX_TEXTURE_FORMAT_RGB_EXT : GLX_TEXTURE_FORMAT_RGBA_EXT;
+        }
 
         candidates.emplace_back(FBConfig{configs[i], depth, stencil, texture_format});
     }
 
-    if (count > 0)
+    if (count > 0) {
         XFree(configs);
+    }
 
     std::stable_sort(candidates.begin(), candidates.end(), [](const FBConfig &left, const FBConfig &right) {
-        if (left.depth < right.depth)
+        if (left.depth < right.depth) {
             return true;
+        }
 
-        if (left.stencil < right.stencil)
+        if (left.stencil < right.stencil) {
             return true;
+        }
 
         return false;
     });
@@ -690,12 +706,13 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
 
 void GlxBackend::setSwapInterval(int interval)
 {
-    if (m_haveEXTSwapControl)
+    if (m_haveEXTSwapControl) {
         glXSwapIntervalEXT(display(), glxWindow, interval);
-    else if (m_haveMESASwapControl)
+    } else if (m_haveMESASwapControl) {
         glXSwapIntervalMESA(interval);
-    else if (m_haveSGISwapControl)
+    } else if (m_haveSGISwapControl) {
         glXSwapIntervalSGI(interval);
+    }
 }
 
 void GlxBackend::present(const QRegion &damage)
@@ -787,8 +804,9 @@ void GlxBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion,
 
     present(effectiveRenderedRegion);
 
-    if (overlayWindow()->window()) // show the window only after the first pass,
+    if (overlayWindow()->window()) { // show the window only after the first pass,
         overlayWindow()->show(); // since that pass may take long
+    }
 
     // Save the damaged region to history
     if (supportsBufferAge()) {
@@ -883,12 +901,14 @@ void GlxPixmapTexturePrivate::onDamage()
 
 bool GlxPixmapTexturePrivate::create(SurfacePixmapX11 *texture)
 {
-    if (texture->pixmap() == XCB_NONE || texture->size().isEmpty() || texture->visual() == XCB_NONE)
+    if (texture->pixmap() == XCB_NONE || texture->size().isEmpty() || texture->visual() == XCB_NONE) {
         return false;
+    }
 
     const FBConfigInfo *info = m_backend->infoForVisual(texture->visual());
-    if (!info || info->fbconfig == nullptr)
+    if (!info || info->fbconfig == nullptr) {
         return false;
+    }
 
     if (info->texture_targets & GLX_TEXTURE_2D_BIT_EXT) {
         m_target = GL_TEXTURE_2D;

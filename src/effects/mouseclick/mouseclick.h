@@ -78,8 +78,9 @@ public:
     {
         if (m_isPressed != pressed) {
             m_isPressed = pressed;
-            if (pressed)
+            if (pressed) {
                 m_time = 0;
+            }
         }
     }
 };
