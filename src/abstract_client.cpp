@@ -311,7 +311,7 @@ Layer AbstractClient::belongsToLayer() const
     if (isDock()) {
         return layerForDock();
     }
-    if (isPopupWindow())
+    if (isPopupWindow()) {
         return PopupLayer;
     }
     if (isOnScreenDisplay()) {
