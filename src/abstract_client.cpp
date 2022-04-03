@@ -281,6 +281,7 @@ Layer AbstractClient::belongsToLayer() const
     }
     if (isInputMethod()) {
         return UnmanagedLayer;
+    }
 
     if (workspace()->showingDesktop()) {
         // NOTE: showing desktop state
