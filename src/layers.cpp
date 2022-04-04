@@ -638,6 +638,11 @@ QList<Toplevel *> Workspace::xStackingOrder() const
     return x_stacking;
 }
 
+QList<Toplevel *> Workspace::unconstrainedStackingOrder() const
+{
+    return unconstrained_stacking_order;
+}
+
 void Workspace::updateXStackingOrder()
 {
     // use our own stacking order, not the X one, as they may differ

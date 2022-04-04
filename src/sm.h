@@ -14,6 +14,9 @@
 #include <QDataStream>
 #include <QRect>
 #include <QStringList>
+
+#include <KConfigGroup>
+
 #include <kwinglobals.h>
 #include <netwm_def.h>
 
@@ -21,15 +24,27 @@ namespace KWin
 {
 
 class X11Client;
+struct SessionInfo;
 
 class SessionManager : public QObject
 {
     Q_OBJECT
 public:
+    enum SMSavePhase {
+        SMSavePhase0, // saving global state in "phase 0"
+        SMSavePhase2, // saving window state in phase 2
+        SMSavePhase2Full, // complete saving in phase2, there was no phase 0
+    };
+
     SessionManager(QObject *parent);
     ~SessionManager() override;
 
     SessionState state() const;
+
+    void loadSubSessionInfo(const QString &name);
+    void storeSubSession(const QString &name, QSet<QByteArray> sessionIds);
+
+    SessionInfo *takeSessionInfo(X11Client *);
 
 Q_SIGNALS:
     void stateChanged();
@@ -47,7 +62,18 @@ public Q_SLOTS: // DBus API
 
 private:
     void setState(SessionState state);
+
+    void storeSession(const QString &sessionName, SMSavePhase phase);
+    void storeClient(KConfigGroup &cg, int num, X11Client *c);
+    void loadSessionInfo(const QString &sessionName);
+    void addSessionInfo(KConfigGroup &cg);
+
     SessionState m_sessionState = SessionState::Normal;
+
+    int session_active_client;
+    int session_desktop;
+
+    QList<SessionInfo *> session;
 };
 
 struct SessionInfo
@@ -81,12 +107,6 @@ struct SessionInfo
     float opacity;
 
     QStringList activities;
-};
-
-enum SMSavePhase {
-    SMSavePhase0, // saving global state in "phase 0"
-    SMSavePhase2, // saving window state in phase 2
-    SMSavePhase2Full, // complete saving in phase2, there was no phase 0
 };
 
 } // namespace

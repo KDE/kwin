@@ -186,15 +186,6 @@ Workspace::Workspace()
     decorationBridge->init();
     connect(this, &Workspace::configChanged, decorationBridge, &Decoration::DecorationBridge::reconfigure);
 
-    connect(m_sessionManager, &SessionManager::loadSessionRequested, this, &Workspace::loadSessionInfo);
-
-    connect(m_sessionManager, &SessionManager::prepareSessionSaveRequested, this, [this](const QString &name) {
-        storeSession(name, SMSavePhase0);
-    });
-    connect(m_sessionManager, &SessionManager::finishSessionSaveRequested, this, [this](const QString &name) {
-        storeSession(name, SMSavePhase2);
-    });
-
     new DBusInterface(this);
     Outline::create(this);
 
@@ -513,7 +504,6 @@ Workspace::~Workspace()
 
     delete Placement::self();
     delete client_keys_dialog;
-    qDeleteAll(session);
 
     _self = nullptr;
 }
@@ -1950,6 +1940,11 @@ void Workspace::removeInternalClient(InternalClient *client)
     updateClientArea();
 
     Q_EMIT internalClientRemoved(client);
+}
+
+void Workspace::setInitialDesktop(int desktop)
+{
+    m_initialDesktop = desktop;
 }
 
 Group *Workspace::findGroup(xcb_window_t leader) const

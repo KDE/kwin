@@ -120,7 +120,7 @@ bool Activities::start(const QString &id)
         return false; // bogus id
     }
 
-    ws->loadSubSessionInfo(id);
+    ws->sessionManager()->loadSubSessionInfo(id);
 
     QDBusInterface ksmserver("org.kde.ksmserver", "/KSMServer", "org.kde.KSMServerInterface");
     if (ksmserver.isValid()) {
@@ -186,7 +186,7 @@ void Activities::reallyStop(const QString &id)
         }
     }
 
-    ws->storeSubSession(id, saveSessionIds);
+    ws->sessionManager()->storeSubSession(id, saveSessionIds);
 
     QStringList saveAndClose;
     QStringList saveOnly;

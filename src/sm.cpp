@@ -79,7 +79,7 @@ static NET::WindowType txtToWindowType(const char *txt)
  *
  * @see loadSessionInfo
  */
-void Workspace::storeSession(const QString &sessionName, SMSavePhase phase)
+void SessionManager::storeSession(const QString &sessionName, SMSavePhase phase)
 {
     qCDebug(KWIN_CORE) << "storing session" << sessionName << "in phase" << phase;
     KConfig *config = sessionConfig(sessionName, QString());
@@ -88,7 +88,8 @@ void Workspace::storeSession(const QString &sessionName, SMSavePhase phase)
     int count = 0;
     int active_client = -1;
 
-    for (auto it = m_x11Clients.begin(); it != m_x11Clients.end(); ++it) {
+    const QList<X11Client *> x11Clients = workspace()->clientList();
+    for (auto it = x11Clients.begin(); it != x11Clients.end(); ++it) {
         X11Client *c = (*it);
         if (c->windowType() > NET::Splash) {
             // window types outside this are not tooltips/menus/OSDs
@@ -130,7 +131,7 @@ void Workspace::storeSession(const QString &sessionName, SMSavePhase phase)
     config->sync(); // it previously did some "revert to defaults" stuff for phase1 I think
 }
 
-void Workspace::storeClient(KConfigGroup &cg, int num, X11Client *c)
+void SessionManager::storeClient(KConfigGroup &cg, int num, X11Client *c)
 {
     c->setSessionActivityOverride(false); // make sure we get the real values
     QString n = QString::number(num);
@@ -162,17 +163,19 @@ void Workspace::storeClient(KConfigGroup &cg, int num, X11Client *c)
     cg.writeEntry(QLatin1String("userNoBorder") + n, c->userNoBorder());
     cg.writeEntry(QLatin1String("windowType") + n, windowTypeToTxt(c->windowType()));
     cg.writeEntry(QLatin1String("shortcut") + n, c->shortcut().toString());
-    cg.writeEntry(QLatin1String("stackingOrder") + n, unconstrained_stacking_order.indexOf(c));
+    cg.writeEntry(QLatin1String("stackingOrder") + n, workspace()->unconstrainedStackingOrder().indexOf(c));
     cg.writeEntry(QLatin1String("activities") + n, c->activities());
 }
 
-void Workspace::storeSubSession(const QString &name, QSet<QByteArray> sessionIds)
+void SessionManager::storeSubSession(const QString &name, QSet<QByteArray> sessionIds)
 {
     // TODO clear it first
     KConfigGroup cg(KSharedConfig::openConfig(), QLatin1String("SubSession: ") + name);
     int count = 0;
     int active_client = -1;
-    for (auto it = m_x11Clients.begin(); it != m_x11Clients.end(); ++it) {
+    const QList<X11Client *> x11Clients = workspace()->clientList();
+
+    for (auto it = x11Clients.begin(); it != x11Clients.end(); ++it) {
         X11Client *c = (*it);
         if (c->windowType() > NET::Splash) {
             continue;
@@ -207,16 +210,17 @@ void Workspace::storeSubSession(const QString &name, QSet<QByteArray> sessionIds
  *
  * @see storeSession
  */
-void Workspace::loadSessionInfo(const QString &sessionName)
+void SessionManager::loadSession(const QString &sessionName)
 {
     session.clear();
     KConfigGroup cg(sessionConfig(sessionName, QString()), "Session");
+    Q_EMIT loadSessionRequested(sessionName);
     addSessionInfo(cg);
 }
 
-void Workspace::addSessionInfo(KConfigGroup &cg)
+void SessionManager::addSessionInfo(KConfigGroup &cg)
 {
-    m_initialDesktop = cg.readEntry("desktop", 1);
+    workspace()->setInitialDesktop(cg.readEntry("desktop", 1));
     int count = cg.readEntry("count", 0);
     int active_client = cg.readEntry("active", 0);
     for (int i = 1; i <= count; i++) {
@@ -252,7 +256,7 @@ void Workspace::addSessionInfo(KConfigGroup &cg)
     }
 }
 
-void Workspace::loadSubSessionInfo(const QString &name)
+void SessionManager::loadSubSessionInfo(const QString &name)
 {
     KConfigGroup cg(KSharedConfig::openConfig(), QLatin1String("SubSession: ") + name);
     addSessionInfo(cg);
@@ -276,7 +280,7 @@ static bool sessionInfoWindowTypeMatch(X11Client *c, SessionInfo *info)
  *
  * May return 0 if there's no session info for the client.
  */
-SessionInfo *Workspace::takeSessionInfo(X11Client *c)
+SessionInfo *SessionManager::takeSessionInfo(X11Client *c)
 {
     SessionInfo *realInfo = nullptr;
     QByteArray sessionId = c->sessionId();
@@ -336,6 +340,7 @@ SessionManager::SessionManager(QObject *parent)
 
 SessionManager::~SessionManager()
 {
+    qDeleteAll(session);
 }
 
 SessionState SessionManager::state() const
@@ -378,19 +383,16 @@ void SessionManager::setState(SessionState state)
     Q_EMIT stateChanged();
 }
 
-void SessionManager::loadSession(const QString &name)
-{
-    Q_EMIT loadSessionRequested(name);
-}
-
 void SessionManager::aboutToSaveSession(const QString &name)
 {
     Q_EMIT prepareSessionSaveRequested(name);
+    storeSession(name, SMSavePhase0);
 }
 
 void SessionManager::finishSaveSession(const QString &name)
 {
     Q_EMIT finishSessionSaveRequested(name);
+    storeSession(name, SMSavePhase2);
 }
 
 void SessionManager::quit()

@@ -285,6 +285,7 @@ public:
      */
     const QList<Toplevel *> &stackingOrder() const;
     QList<Toplevel *> xStackingOrder() const;
+    QList<Toplevel *> unconstrainedStackingOrder() const;
     QList<X11Client *> ensureStackingOrder(const QList<X11Client *> &clients) const;
     QList<AbstractClient *> ensureStackingOrder(const QList<AbstractClient *> &clients) const;
 
@@ -321,11 +322,6 @@ public:
     void updateOnAllDesktopsOfTransients(AbstractClient *);
     void checkTransients(xcb_window_t w);
 
-    void storeSession(const QString &sessionName, SMSavePhase phase);
-    void storeClient(KConfigGroup &cg, int num, X11Client *c);
-    void storeSubSession(const QString &name, QSet<QByteArray> sessionIds);
-    void loadSubSessionInfo(const QString &name);
-
     SessionInfo *takeSessionInfo(X11Client *);
 
     // D-Bus interface
@@ -350,6 +346,7 @@ public:
     void addGroup(Group *group);
     void removeGroup(Group *group);
     Group *findClientLeaderGroup(const X11Client *c) const;
+    int unconstainedStackingOrderIndex(const X11Client *c) const;
 
     void removeUnmanaged(Unmanaged *); // Only called from Unmanaged::release()
     void removeDeleted(Deleted *);
@@ -431,6 +428,12 @@ public:
      * @internal
      */
     void removeInternalClient(InternalClient *client);
+
+    /**
+     * @internal
+     * Used by session management
+     */
+    void setInitialDesktop(int desktop);
 
 public Q_SLOTS:
     void performWindowOperation(KWin::AbstractClient *c, Options::WindowOperation op);
@@ -612,11 +615,6 @@ private:
     AbstractClient *active_popup_client;
 
     int m_initialDesktop;
-    void loadSessionInfo(const QString &sessionName);
-    void addSessionInfo(KConfigGroup &cg);
-
-    QList<SessionInfo *> session;
-
     void updateXStackingOrder();
     void updateTabbox();
 
@@ -652,9 +650,6 @@ private:
 
     bool was_user_interaction;
     QScopedPointer<X11EventFilter> m_wasUserInteractionFilter;
-
-    int session_active_client;
-    int session_desktop;
 
     int block_focus;
 

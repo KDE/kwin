@@ -483,7 +483,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
     updateInputWindow();
     updateLayer();
 
-    SessionInfo *session = workspace()->takeSessionInfo(this);
+    SessionInfo *session = workspace()->sessionManager()->takeSessionInfo(this);
     if (session) {
         init_minimize = session->minimized;
         noborder = session->noBorder;
