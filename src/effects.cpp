@@ -1895,6 +1895,11 @@ QRect EffectScreenImpl::geometry() const
     return m_platformOutput->geometry();
 }
 
+int EffectScreenImpl::refreshRate() const
+{
+    return m_platformOutput->refreshRate();
+}
+
 EffectScreen::Transform EffectScreenImpl::transform() const
 {
     return EffectScreen::Transform(m_platformOutput->transform());

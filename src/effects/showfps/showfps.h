@@ -30,6 +30,9 @@ class ShowFpsEffect
     Q_PROPERTY(int textAlign READ configuredTextAlign)
     Q_PROPERTY(QFont textFont READ configuredTextFont)
     Q_PROPERTY(QColor textColor READ configuredTextColor)
+    Q_PROPERTY(bool showGraph READ configuredShowGraph)
+    Q_PROPERTY(bool showNoBenchmark READ configuredShowNoBenchmark)
+    Q_PROPERTY(bool colorizeText READ configuredColorizeText)
 public:
     ShowFpsEffect();
     ~ShowFpsEffect() override;
@@ -77,6 +80,18 @@ public:
     {
         return textColor;
     }
+    bool configuredShowGraph() const
+    {
+        return m_showGraph;
+    }
+    bool configuredShowNoBenchmark() const
+    {
+        return m_showNoBenchmark;
+    }
+    bool configuredColorizeText() const
+    {
+        return m_colorizeText;
+    }
 
 private:
     void paintGL(int fps, const QMatrix4x4 &projectionMatrix);
@@ -98,6 +113,10 @@ private:
     qint64 frames[MAX_FPS]; // the time when the frame was done
     int frames_pos; // position in the queue
     double alpha;
+    bool m_showNoBenchmark;
+    bool m_showGraph;
+    bool m_colorizeText;
+    int detectedMaxFps;
     int x;
     int y;
     QRect fps_rect;

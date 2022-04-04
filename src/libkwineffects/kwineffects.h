@@ -1954,6 +1954,7 @@ class KWINEFFECTS_EXPORT EffectScreen : public QObject
     Q_PROPERTY(QRect geometry READ geometry NOTIFY geometryChanged)
     Q_PROPERTY(qreal devicePixelRatio READ devicePixelRatio NOTIFY devicePixelRatioChanged)
     Q_PROPERTY(QString name READ name CONSTANT)
+    Q_PROPERTY(qreal refreshRate READ refreshRate CONSTANT)
 
 public:
     explicit EffectScreen(QObject *parent = nullptr);
@@ -1972,6 +1973,11 @@ public:
      * Returns the screen's geometry in the device-independent pixels.
      */
     virtual QRect geometry() const = 0;
+
+    /**
+     * Returns the screen's refresh rate in milli-hertz.
+     */
+    virtual int refreshRate() const = 0;
 
     enum class Transform {
         Normal,

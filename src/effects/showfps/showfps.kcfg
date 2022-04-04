@@ -24,5 +24,14 @@
         <entry name="Y" type="Int">
             <default>0</default>
         </entry>
+        <entry name="ShowGraph" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="ShowNoBenchmark" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="ColorizeText" type="Bool">
+            <default>true</default>
+        </entry>
     </group>
 </kcfg>

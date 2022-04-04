@@ -390,6 +390,7 @@ public:
     QString name() const override;
     qreal devicePixelRatio() const override;
     QRect geometry() const override;
+    int refreshRate() const override;
     Transform transform() const override;
 
     static EffectScreenImpl *get(AbstractOutput *output);
