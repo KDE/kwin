@@ -247,6 +247,7 @@ FocusScope {
                         PropertyChanges {
                             target: closeButton
                             opacity: 1
+                        }
                     },
                     State {
                         name: "active-hidden"
