@@ -337,16 +337,11 @@ bool DrmConnector::updateProperties()
     }
 
     // parse edid
-    auto edidProp = getProp(PropertyIndex::Edid);
-    if (edidProp) {
-        DrmScopedPointer<drmModePropertyBlobRes> blob(drmModeGetPropertyBlob(gpu()->fd(), edidProp->current()));
-        if (blob && blob->data) {
-            m_edid = Edid(blob->data, blob->length);
-            if (!m_edid.isValid()) {
-                qCWarning(KWIN_DRM) << "Couldn't parse EDID for connector" << this;
-            }
+    if (const auto edidProp = getProp(PropertyIndex::Edid); edidProp && edidProp->immutableBlob()) {
+        m_edid = Edid(edidProp->immutableBlob()->data, edidProp->immutableBlob()->length);
+        if (!m_edid.isValid()) {
+            qCWarning(KWIN_DRM) << "Couldn't parse EDID for connector" << this;
         }
-        deleteProp(PropertyIndex::Edid);
     } else {
         qCDebug(KWIN_DRM) << "Could not find edid for connector" << this;
     }

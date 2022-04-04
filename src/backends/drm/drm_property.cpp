@@ -24,6 +24,7 @@ DrmProperty::DrmProperty(DrmObject *obj, drmModePropertyRes *prop, uint64_t val,
     , m_next(val)
     , m_current(val)
     , m_immutable(prop->flags & DRM_MODE_PROP_IMMUTABLE)
+    , m_isBlob(prop->flags & DRM_MODE_PROP_BLOB)
     , m_obj(obj)
 {
     if (!enumNames.isEmpty()) {
@@ -35,6 +36,7 @@ DrmProperty::DrmProperty(DrmObject *obj, drmModePropertyRes *prop, uint64_t val,
         m_minValue = prop->values[0];
         m_maxValue = prop->values[1];
     }
+    updateBlob();
 }
 
 DrmProperty::~DrmProperty() = default;
@@ -110,7 +112,10 @@ bool DrmProperty::needsCommit() const
 
 void DrmProperty::setCurrent(uint64_t value)
 {
-    m_current = value;
+    if (m_current != value) {
+        updateBlob();
+        m_current = value;
+    }
 }
 
 uint64_t DrmProperty::current() const
@@ -122,10 +127,12 @@ QVector<QByteArray> DrmProperty::enumNames() const
 {
     return m_enumNames;
 }
+
 bool DrmProperty::hasEnum(uint64_t value) const
 {
     return m_enumMap.contains(value);
 }
+
 bool DrmProperty::hasAllEnums() const
 {
     return m_enumMap.count() == m_enumNames.count();
@@ -166,4 +173,22 @@ uint64_t DrmProperty::maxValue() const
     return m_maxValue;
 }
 
+void DrmProperty::updateBlob()
+{
+    if (m_immutable && m_isBlob) {
+        if (m_current != 0) {
+            m_immutableBlob.reset(drmModeGetPropertyBlob(m_obj->gpu()->fd(), m_current));
+            if (m_immutableBlob && (!m_immutableBlob->data || !m_immutableBlob->length)) {
+                m_immutableBlob.reset();
+            }
+        } else {
+            m_immutableBlob.reset();
+        }
+    }
+}
+
+drmModePropertyBlobRes *DrmProperty::immutableBlob() const
+{
+    return m_immutableBlob.get();
+}
 }
