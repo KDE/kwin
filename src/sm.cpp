@@ -117,15 +117,15 @@ void SessionManager::storeSession(const QString &sessionName, SMSavePhase phase)
         // it would be much simpler to save these values to the config file,
         // but both Qt and KDE treat phase1 and phase2 separately,
         // which results in different sessionkey and different config file :(
-        session_active_client = active_client;
-        session_desktop = VirtualDesktopManager::self()->current();
+        m_sessionActiveClient = active_client;
+        m_sessionDesktop = VirtualDesktopManager::self()->current();
     } else if (phase == SMSavePhase2) {
         cg.writeEntry("count", count);
-        cg.writeEntry("active", session_active_client);
-        cg.writeEntry("desktop", session_desktop);
+        cg.writeEntry("active", m_sessionActiveClient);
+        cg.writeEntry("desktop", m_sessionDesktop);
     } else { // SMSavePhase2Full
         cg.writeEntry("count", count);
-        cg.writeEntry("active", session_active_client);
+        cg.writeEntry("active", m_sessionActiveClient);
         cg.writeEntry("desktop", VirtualDesktopManager::self()->current());
     }
     config->sync(); // it previously did some "revert to defaults" stuff for phase1 I think

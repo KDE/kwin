@@ -70,8 +70,8 @@ private:
 
     SessionState m_sessionState = SessionState::Normal;
 
-    int session_active_client;
-    int session_desktop;
+    int m_sessionActiveClient;
+    int m_sessionDesktop;
 
     QList<SessionInfo *> session;
 };
