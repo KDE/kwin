@@ -313,6 +313,12 @@ bool DrmGpu::updateOutputs()
         plane->updateProperties();
     }
 
+    for (const auto &pipeline : qAsConst(m_pipelines)) {
+        if (!pipeline->pending.layer) {
+            pipeline->pending.layer = m_platform->renderBackend()->createDrmPipelineLayer(pipeline);
+            pipeline->applyPendingChanges();
+        }
+    }
     if (testPendingConfiguration()) {
         for (const auto &pipeline : qAsConst(m_pipelines)) {
             pipeline->applyPendingChanges();
@@ -428,9 +434,6 @@ bool DrmGpu::testPipelines()
     // pipelines that are enabled but not active need to be activated for the test
     QVector<DrmPipeline *> inactivePipelines;
     for (const auto &pipeline : qAsConst(m_pipelines)) {
-        if (!pipeline->pending.layer) {
-            pipeline->pending.layer = m_platform->renderBackend()->createDrmPipelineLayer(pipeline);
-        }
         if (!pipeline->pending.active) {
             pipeline->pending.active = true;
             inactivePipelines << pipeline;
@@ -782,6 +785,7 @@ void DrmGpu::recreateSurfaces()
 {
     for (const auto &pipeline : qAsConst(m_pipelines)) {
         pipeline->pending.layer = m_platform->renderBackend()->createDrmPipelineLayer(pipeline);
+        pipeline->applyPendingChanges();
     }
     for (const auto &output : qAsConst(m_outputs)) {
         if (const auto virtualOutput = qobject_cast<DrmVirtualOutput *>(output)) {
