@@ -46,8 +46,7 @@ WaylandClient::WaylandClient(SurfaceInterface *surface)
             this, &WaylandClient::updateClientOutputs);
     connect(this, &WaylandClient::desktopFileNameChanged,
             this, &WaylandClient::updateIcon);
-    connect(screens(), &Screens::changed, this,
-            &WaylandClient::updateClientOutputs);
+    connect(screens(), &Screens::sizeChanged, this, &WaylandClient::updateClientOutputs);
     connect(surface->client(), &ClientConnection::aboutToBeDestroyed,
             this, &WaylandClient::destroyClient);
 
@@ -158,6 +157,11 @@ bool WaylandClient::belongsToDesktop() const
 void WaylandClient::updateClientOutputs()
 {
     surface()->setOutputs(waylandServer()->display()->outputsIntersecting(frameGeometry()));
+
+    int screenId = screens()->number(frameGeometry().center());
+    if (screenId >= 0) {
+        surface()->setScale(screens()->scale(screenId));
+    }
 }
 
 void WaylandClient::updateIcon()
