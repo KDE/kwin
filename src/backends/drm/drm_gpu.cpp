@@ -328,6 +328,7 @@ bool DrmGpu::updateOutputs()
             }
         }
     } else {
+        qCWarning(KWIN_DRM, "Failed to find a working setup for new outputs!");
         for (const auto &pipeline : qAsConst(m_pipelines)) {
             pipeline->revertPendingChanges();
         }

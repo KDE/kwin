@@ -343,6 +343,7 @@ bool DrmOutput::setGammaRamp(const GammaRamp &gamma)
         m_renderLoop->scheduleRepaint();
         return true;
     } else {
+        qCWarning(KWIN_DRM) << "Applying gamma ramp failed on output" << this;
         m_pipeline->revertPendingChanges();
         return false;
     }
