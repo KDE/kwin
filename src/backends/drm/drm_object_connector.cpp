@@ -344,6 +344,7 @@ bool DrmConnector::updateProperties()
         } else {
             if (!m_pipeline->pending.mode) {
                 m_pipeline->pending.mode = m_modes.constFirst();
+                m_pipeline->applyPendingChanges();
             }
             if (m_pipeline->output()) {
                 m_pipeline->output()->updateModes();
