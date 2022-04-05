@@ -434,9 +434,9 @@ void Compositor::addOutput(AbstractOutput *output)
 
     auto workspaceLayer = new RenderLayer(output->renderLoop());
     workspaceLayer->setDelegate(new SceneDelegate(m_scene, output));
-    workspaceLayer->setGeometry(QRect(QPoint(0, 0), output->geometry().size()));
+    workspaceLayer->setGeometry(output->rect());
     connect(output, &AbstractOutput::geometryChanged, workspaceLayer, [output, workspaceLayer]() {
-        workspaceLayer->setGeometry(QRect(QPoint(0, 0), output->geometry().size()));
+        workspaceLayer->setGeometry(output->rect());
     });
 
     auto cursorLayer = new RenderLayer(output->renderLoop());

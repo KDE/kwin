@@ -138,6 +138,11 @@ public:
     virtual QRect geometry() const = 0;
 
     /**
+     * Equivalent to `QRect(QPoint(0, 0), geometry().size())`
+     */
+    QRect rect() const;
+
+    /**
      * Returns the approximate vertical refresh rate of this output, in mHz.
      */
     virtual int refreshRate() const = 0;
@@ -284,6 +289,11 @@ private:
     int m_directScanoutCount = 0;
     friend class EffectScreenImpl; // to access m_effectScreen
 };
+
+inline QRect AbstractOutput::rect() const
+{
+    return QRect(QPoint(0, 0), geometry().size());
+}
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const AbstractOutput *output);
 

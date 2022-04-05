@@ -297,7 +297,7 @@ bool EglWaylandBackend::initBufferConfigs()
 static QVector<EGLint> regionToRects(const QRegion &region, AbstractWaylandOutput *output)
 {
     const int height = output->modeSize().height();
-    const QMatrix4x4 matrix = WaylandOutput::logicalToNativeMatrix(QRect(QPoint(0, 0), output->geometry().size()),
+    const QMatrix4x4 matrix = WaylandOutput::logicalToNativeMatrix(output->rect(),
                                                                    output->scale(),
                                                                    output->transform());
 

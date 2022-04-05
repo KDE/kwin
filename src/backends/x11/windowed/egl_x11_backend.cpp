@@ -71,7 +71,7 @@ QRegion EglX11Backend::beginFrame(AbstractOutput *output)
     const EglX11Output *rendererOutput = m_outputs[output];
     makeContextCurrent(rendererOutput->m_eglSurface);
     GLRenderTarget::pushRenderTarget(rendererOutput->m_renderTarget.data());
-    return QRect(QPoint(0, 0), output->geometry().size());
+    return output->rect();
 }
 
 void EglX11Backend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
