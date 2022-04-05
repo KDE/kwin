@@ -90,7 +90,7 @@ std::optional<QRegion> EglGbmLayer::startRendering()
     if (!m_gbmSurface->makeContextCurrent()) {
         return std::optional<QRegion>();
     }
-    auto repaintRegion = m_gbmSurface->repaintRegion(m_pipeline->output()->geometry());
+    auto repaintRegion = m_gbmSurface->repaintRegion();
 
     // shadow buffer
     if (doesShadowBufferFit(m_shadowBuffer.data())) {
@@ -185,7 +185,7 @@ bool EglGbmLayer::renderTestBuffer()
         return false;
     }
     glClear(GL_COLOR_BUFFER_BIT);
-    if (!endRendering(m_pipeline->output()->geometry())) {
+    if (!endRendering(infiniteRegion())) {
         return false;
     }
     return true;
@@ -441,22 +441,11 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
         m_scanoutBuffer.reset();
         return false;
     }
-    // damage tracking for screen casting
-    QRegion damage;
-    if (m_scanoutCandidate.surface == item->surface()) {
-        QRegion trackedDamage = surfaceItem->damage();
-        surfaceItem->resetDamage();
-        for (const auto &rect : trackedDamage) {
-            auto damageRect = QRect(rect);
-            damageRect.translate(m_pipeline->output()->geometry().topLeft());
-            damage |= damageRect;
-        }
-    } else {
-        damage = m_pipeline->output()->geometry();
-    }
+
     if (m_pipeline->testScanout()) {
         m_currentBuffer = m_scanoutBuffer;
-        m_currentDamage = damage;
+        m_currentDamage = surfaceItem->damage();
+        surfaceItem->resetDamage();
         return true;
     } else {
         m_scanoutBuffer.reset();

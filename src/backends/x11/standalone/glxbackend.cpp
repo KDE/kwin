@@ -772,7 +772,7 @@ QRegion GlxBackend::beginFrame(AbstractOutput *output)
 
     GLRenderTarget::pushRenderTarget(m_renderTarget.data());
     if (supportsBufferAge()) {
-        repaint = m_damageJournal.accumulate(m_bufferAge, screens()->geometry());
+        repaint = m_damageJournal.accumulate(m_bufferAge, infiniteRegion());
     }
 
     glXWaitX();

@@ -10,6 +10,7 @@
 #include "dumb_swapchain.h"
 #include "drm_buffer.h"
 #include "drm_gpu.h"
+#include "kwineffects.h"
 #include "logging.h"
 
 namespace KWin
@@ -40,14 +41,14 @@ DumbSwapchain::DumbSwapchain(DrmGpu *gpu, const QSize &size, uint32_t drmFormat,
     }
 }
 
-QSharedPointer<DrmDumbBuffer> DumbSwapchain::acquireBuffer(const QRect &geometry, QRegion *needsRepaint)
+QSharedPointer<DrmDumbBuffer> DumbSwapchain::acquireBuffer(QRegion *needsRepaint)
 {
     if (m_slots.isEmpty()) {
         return {};
     }
     index = (index + 1) % m_slots.count();
     if (needsRepaint) {
-        *needsRepaint = m_damageJournal.accumulate(m_slots[index].age, geometry);
+        *needsRepaint = m_damageJournal.accumulate(m_slots[index].age, infiniteRegion());
     }
     return m_slots[index].buffer;
 }

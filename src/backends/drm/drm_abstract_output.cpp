@@ -39,7 +39,7 @@ void DrmAbstractOutput::pageFlipped(std::chrono::nanoseconds timestamp) const
 QVector<int32_t> DrmAbstractOutput::regionToRects(const QRegion &region) const
 {
     const int height = pixelSize().height();
-    const QMatrix4x4 matrix = AbstractWaylandOutput::logicalToNativeMatrix(geometry(), scale(), transform());
+    const QMatrix4x4 matrix = AbstractWaylandOutput::logicalToNativeMatrix(QRect(QPoint(0, 0), geometry().size()), scale(), transform());
     QVector<EGLint> rects;
     rects.reserve(region.rectCount() * 4);
     for (const QRect &_rect : region) {

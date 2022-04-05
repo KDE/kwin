@@ -139,7 +139,7 @@ void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamV1Interface
         }
 
         const QRect frame({}, streamOutput->modeSize());
-        const QRegion region = streamOutput->pixelSize() != streamOutput->modeSize() ? frame : damagedRegion.translated(-streamOutput->geometry().topLeft()).intersected(frame);
+        const QRegion region = streamOutput->pixelSize() != streamOutput->modeSize() ? frame : damagedRegion;
         stream->recordFrame(region);
     };
     connect(stream, &ScreenCastStream::startStreaming, waylandStream, [streamOutput, stream, bufferToStream] {

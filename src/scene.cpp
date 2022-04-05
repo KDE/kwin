@@ -104,7 +104,7 @@ SceneDelegate::~SceneDelegate()
 
 QRegion SceneDelegate::repaints() const
 {
-    return m_scene->damage();
+    return m_scene->damage().translated(-viewport().topLeft());
 }
 
 SurfaceItem *SceneDelegate::scanoutCandidate() const
@@ -124,7 +124,12 @@ void SceneDelegate::postPaint()
 
 void SceneDelegate::paint(const QRegion &region)
 {
-    m_scene->paint(region);
+    m_scene->paint(region.translated(viewport().topLeft()));
+}
+
+QRect SceneDelegate::viewport() const
+{
+    return m_output ? m_output->geometry() : m_scene->geometry();
 }
 
 //****************************************
@@ -168,9 +173,11 @@ void Scene::addRepaint(int x, int y, int width, int height)
 void Scene::addRepaint(const QRegion &region)
 {
     for (const auto &delegate : std::as_const(m_delegates)) {
-        const QRegion dirtyRegion = region & delegate->layer()->geometry();
+        const QRect viewport = delegate->viewport();
+        QRegion dirtyRegion = region & viewport;
+        dirtyRegion.translate(-viewport.topLeft());
         if (!dirtyRegion.isEmpty()) {
-            delegate->layer()->addRepaint(delegate->layer()->mapFromGlobal(dirtyRegion));
+            delegate->layer()->addRepaint(dirtyRegion);
         }
     }
 }
@@ -347,7 +354,7 @@ void Scene::preparePaintGenericScreen()
         }
     }
 
-    m_paintContext.damage = QRect(QPoint(0, 0), renderTargetRect().size());
+    m_paintContext.damage = renderTargetRect();
 }
 
 void Scene::preparePaintSimpleScreen()
@@ -384,18 +391,14 @@ void Scene::preparePaintSimpleScreen()
     }
 
     // Perform an occlusion cull pass, remove surface damage occluded by opaque windows.
-    QRegion surfaceDamage;
     QRegion opaque;
     for (int i = m_paintContext.phase2Data.size() - 1; i >= 0; --i) {
         const auto &paintData = m_paintContext.phase2Data.at(i);
-        surfaceDamage += paintData.region - opaque;
+        m_paintContext.damage += paintData.region - opaque;
         if (!(paintData.mask & (PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED))) {
             opaque += paintData.opaque;
         }
     }
-
-    m_paintContext.damage += surfaceDamage & renderTargetRect();
-    m_paintContext.damage.translate(-renderTargetRect().topLeft());
 }
 
 void Scene::postPaint()

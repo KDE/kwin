@@ -49,7 +49,7 @@ public:
     uint32_t format() const;
     QVector<uint64_t> modifiers() const;
     int bufferAge() const;
-    QRegion repaintRegion(const QRect &geometry) const;
+    QRegion repaintRegion() const;
 
 private:
     gbm_surface *m_surface;

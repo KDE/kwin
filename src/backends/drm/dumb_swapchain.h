@@ -27,7 +27,7 @@ class DumbSwapchain
 public:
     DumbSwapchain(DrmGpu *gpu, const QSize &size, uint32_t drmFormat, QImage::Format imageFormat = QImage::Format_RGB32);
 
-    QSharedPointer<DrmDumbBuffer> acquireBuffer(const QRect &geometry = {}, QRegion *needsRepaint = nullptr);
+    QSharedPointer<DrmDumbBuffer> acquireBuffer(QRegion *needsRepaint = nullptr);
     QSharedPointer<DrmDumbBuffer> currentBuffer() const;
     void releaseBuffer(QSharedPointer<DrmDumbBuffer> buffer, const QRegion &damage = {});
 

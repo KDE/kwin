@@ -63,7 +63,6 @@ public:
     void present(const QRegion &damage);
 
     QRegion accumulateDamage(int bufferAge) const;
-    QRegion mapToLocal(const QRegion &region) const;
 
 private:
     WaylandOutput *m_waylandOutput;

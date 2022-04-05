@@ -52,7 +52,7 @@ QImage *X11WindowedQPainterBackend::bufferForScreen(AbstractOutput *output)
 
 QRegion X11WindowedQPainterBackend::beginFrame(AbstractOutput *output)
 {
-    return output->geometry();
+    return QRect(QPoint(0, 0), output->geometry().size());
 }
 
 void X11WindowedQPainterBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)

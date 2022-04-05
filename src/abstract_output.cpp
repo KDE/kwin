@@ -173,4 +173,9 @@ bool AbstractOutput::usesSoftwareCursor() const
     return true;
 }
 
+QRect AbstractOutput::mapFromGlobal(const QRect &rect) const
+{
+    return rect.translated(-geometry().topLeft());
+}
+
 } // namespace KWin

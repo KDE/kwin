@@ -14,6 +14,7 @@
 #include "drm_backend.h"
 #include "drm_gpu.h"
 #include "egl_gbm_backend.h"
+#include "kwineffects.h"
 #include "kwineglutils_p.h"
 #include "kwinglplatform.h"
 #include "logging.h"
@@ -178,12 +179,12 @@ int GbmSurface::bufferAge() const
     return m_bufferAge;
 }
 
-QRegion GbmSurface::repaintRegion(const QRect &geometry) const
+QRegion GbmSurface::repaintRegion() const
 {
     if (m_eglBackend->supportsBufferAge()) {
-        return m_damageJournal.accumulate(m_bufferAge, geometry);
+        return m_damageJournal.accumulate(m_bufferAge, infiniteRegion());
     } else {
-        return geometry;
+        return infiniteRegion();
     }
 }
 

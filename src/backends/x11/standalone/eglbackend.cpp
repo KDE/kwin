@@ -112,7 +112,7 @@ QRegion EglBackend::beginFrame(AbstractOutput *output)
 
     QRegion repaint;
     if (supportsBufferAge()) {
-        repaint = m_damageJournal.accumulate(m_bufferAge, screens()->geometry());
+        repaint = m_damageJournal.accumulate(m_bufferAge, infiniteRegion());
     }
 
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);

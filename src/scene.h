@@ -53,6 +53,8 @@ public:
     explicit SceneDelegate(Scene *scene, AbstractOutput *output, QObject *parent = nullptr);
     ~SceneDelegate() override;
 
+    QRect viewport() const;
+
     QRegion repaints() const override;
     SurfaceItem *scanoutCandidate() const override;
     void prePaint() override;

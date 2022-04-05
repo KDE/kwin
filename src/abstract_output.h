@@ -95,6 +95,11 @@ public:
     ~AbstractOutput() override;
 
     /**
+     * Maps the specified @a rect from the global coordinate system to the output-local coords.
+     */
+    QRect mapFromGlobal(const QRect &rect) const;
+
+    /**
      * Returns a dummy OutputLayer corresponding to the primary plane.
      *
      * TODO: remove this. The Compositor should allocate and deallocate hardware planes

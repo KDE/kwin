@@ -12,6 +12,7 @@
 #include "wayland_output.h"
 
 #include "composite.h"
+#include "kwineffects.h"
 #include "logging.h"
 
 #include <KWayland/Client/buffer.h>
@@ -127,12 +128,7 @@ WaylandQPainterBufferSlot *WaylandQPainterOutput::acquire()
 
 QRegion WaylandQPainterOutput::accumulateDamage(int bufferAge) const
 {
-    return m_damageJournal.accumulate(bufferAge, m_waylandOutput->geometry());
-}
-
-QRegion WaylandQPainterOutput::mapToLocal(const QRegion &region) const
-{
-    return region.translated(-m_waylandOutput->geometry().topLeft());
+    return m_damageJournal.accumulate(bufferAge, infiniteRegion());
 }
 
 WaylandQPainterBackend::WaylandQPainterBackend(Wayland::WaylandBackend *b)
@@ -174,7 +170,7 @@ void WaylandQPainterBackend::endFrame(AbstractOutput *output, const QRegion &ren
     WaylandQPainterOutput *rendererOutput = m_outputs[output];
     Q_ASSERT(rendererOutput);
 
-    rendererOutput->present(rendererOutput->mapToLocal(damagedRegion));
+    rendererOutput->present(damagedRegion);
 }
 
 QImage *WaylandQPainterBackend::bufferForScreen(AbstractOutput *output)

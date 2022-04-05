@@ -79,7 +79,7 @@ std::optional<QRegion> VirtualEglGbmLayer::startRendering()
         return std::optional<QRegion>();
     }
     GLRenderTarget::pushRenderTarget(m_gbmSurface->renderTarget());
-    return m_gbmSurface->repaintRegion(m_output->geometry());
+    return m_gbmSurface->repaintRegion();
 }
 
 bool VirtualEglGbmLayer::endRendering(const QRegion &damagedRegion)

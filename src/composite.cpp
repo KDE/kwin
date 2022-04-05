@@ -434,9 +434,9 @@ void Compositor::addOutput(AbstractOutput *output)
 
     auto workspaceLayer = new RenderLayer(output->renderLoop());
     workspaceLayer->setDelegate(new SceneDelegate(m_scene, output));
-    workspaceLayer->setGeometry(output->geometry());
+    workspaceLayer->setGeometry(QRect(QPoint(0, 0), output->geometry().size()));
     connect(output, &AbstractOutput::geometryChanged, workspaceLayer, [output, workspaceLayer]() {
-        workspaceLayer->setGeometry(output->geometry());
+        workspaceLayer->setGeometry(QRect(QPoint(0, 0), output->geometry().size()));
     });
 
     auto cursorLayer = new RenderLayer(output->renderLoop());
@@ -445,10 +445,10 @@ void Compositor::addOutput(AbstractOutput *output)
     cursorLayer->setParent(workspaceLayer);
     cursorLayer->setSuperlayer(workspaceLayer);
 
-    auto updateCursorLayer = [output, workspaceLayer, cursorLayer]() {
+    auto updateCursorLayer = [output, cursorLayer]() {
         const Cursor *cursor = Cursors::self()->currentCursor();
         cursorLayer->setVisible(cursor->isOnOutput(output) && output->usesSoftwareCursor());
-        cursorLayer->setGeometry(workspaceLayer->mapFromGlobal(cursor->geometry()));
+        cursorLayer->setGeometry(output->mapFromGlobal(cursor->geometry()));
         cursorLayer->addRepaintFull();
     };
     updateCursorLayer();
@@ -682,7 +682,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         preparePaintPass(superLayer, &surfaceDamage);
 
         const QRegion repair = m_backend->beginFrame(output);
-        const QRegion bufferDamage = surfaceDamage.united(repair);
+        const QRegion bufferDamage = surfaceDamage.united(repair).intersected(superLayer->rect());
         m_backend->aboutToStartPainting(output, bufferDamage);
 
         paintPass(superLayer, bufferDamage);

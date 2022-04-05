@@ -36,7 +36,7 @@ std::optional<QRegion> DrmQPainterLayer::startRendering()
         m_swapchain = QSharedPointer<DumbSwapchain>::create(m_pipeline->gpu(), m_pipeline->sourceSize(), DRM_FORMAT_XRGB8888);
     }
     QRegion needsRepaint;
-    if (!m_swapchain->acquireBuffer(m_pipeline->output()->geometry(), &needsRepaint)) {
+    if (!m_swapchain->acquireBuffer(&needsRepaint)) {
         return std::optional<QRegion>();
     }
     return needsRepaint;

@@ -297,7 +297,7 @@ bool EglWaylandBackend::initBufferConfigs()
 static QVector<EGLint> regionToRects(const QRegion &region, AbstractWaylandOutput *output)
 {
     const int height = output->modeSize().height();
-    const QMatrix4x4 matrix = WaylandOutput::logicalToNativeMatrix(output->geometry(),
+    const QMatrix4x4 matrix = WaylandOutput::logicalToNativeMatrix(QRect(QPoint(0, 0), output->geometry().size()),
                                                                    output->scale(),
                                                                    output->transform());
 
@@ -385,7 +385,7 @@ QRegion EglWaylandBackend::beginFrame(AbstractOutput *output)
     GLRenderTarget::pushRenderTarget(eglOutput->renderTarget());
 
     if (supportsBufferAge()) {
-        return eglOutput->m_damageJournal.accumulate(eglOutput->m_bufferAge, eglOutput->m_waylandOutput->geometry());
+        return eglOutput->m_damageJournal.accumulate(eglOutput->m_bufferAge, infiniteRegion());
     }
 
     return QRegion();

@@ -164,7 +164,7 @@ QRegion EglGbmBackend::beginFrame(AbstractOutput *output)
     if (!GLRenderTarget::currentRenderTarget()) {
         GLRenderTarget::pushRenderTarget(m_fbo);
     }
-    return QRegion(0, 0, screens()->size().width(), screens()->size().height());
+    return infiniteRegion();
 }
 
 static void convertFromGLImage(QImage &img, int w, int h)
