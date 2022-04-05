@@ -76,6 +76,7 @@ void XdgActivationV1Integration::activateSurface(SurfaceInterface *surface, cons
 
     if (!m_currentActivationToken || m_currentActivationToken->token != token) {
         qCDebug(KWIN_CORE) << "Refusing to activate " << client << " (provided token: " << token << ", current token:" << (m_currentActivationToken ? m_currentActivationToken->token : QStringLiteral("null")) << ")";
+        client->demandAttention();
         return;
     }
 
