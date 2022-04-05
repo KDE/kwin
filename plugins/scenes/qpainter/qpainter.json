@@ -24,6 +24,7 @@
         "Description[pl]": "Wtyczka kompozytora KWin wyświetlająca przez QPainter",
         "Description[pt]": "'Plugin' de Composição do KWin com desenho via QPainter",
         "Description[pt_BR]": "Plugin do compositor KWin renderizando pelo QPainter",
+        "Description[ro]": "Extensie de compozitor KWin ce randează prin QPainter",
         "Description[ru]": "Отрисовка подключаемым модулем компоновщика KWin через QPainter",
         "Description[sk]": "Renderovací plugin kompozítora KWin cez QPainter",
         "Description[sl]": "Izrisovanje vstavka upravljalnika skladnje KWin preko QPainter-ja",
