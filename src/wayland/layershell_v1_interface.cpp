@@ -69,6 +69,7 @@ public:
     bool isClosed = false;
     bool isConfigured = false;
     bool isCommitted = false;
+    bool firstBufferAttached = false;
 
 protected:
     void zwlr_layer_surface_v1_destroy_resource(Resource *resource) override;
@@ -290,8 +291,10 @@ void LayerSurfaceV1InterfacePrivate::commit()
         return;
     }
 
-    if (!surface->isMapped() && isCommitted) {
+    // detect reset
+    if (!surface->isMapped() && firstBufferAttached) {
         isCommitted = false;
+        firstBufferAttached = false;
         isConfigured = false;
 
         current = LayerSurfaceV1State();
@@ -303,6 +306,9 @@ void LayerSurfaceV1InterfacePrivate::commit()
     const LayerSurfaceV1State previous = std::exchange(current, pending);
 
     isCommitted = true; // Must set the committed state before emitting any signals.
+    if (surface->isMapped()) {
+        firstBufferAttached = true;
+    }
 
     if (previous.acceptsFocus != current.acceptsFocus) {
         Q_EMIT q->acceptsFocusChanged();
