@@ -26,6 +26,7 @@
         "Description[pl]": "Wyświetlaj w zagnieżdżonym oknie w kompozytorze Wayland.",
         "Description[pt]": "Desenhar numa janela encadeada no compositor de Wayland em execução.",
         "Description[pt_BR]": "Renderizar uma janela encadeada no compositor Wayland em execução.",
+        "Description[ro]": "Randează într-o fereastră imbricată pe compozitorul Wayland activ.",
         "Description[ru]": "Отрисовка во вложенное окно компоновщика Wayland.",
         "Description[sk]": "Renderovať na vnorené okno na bežiaci kompozítor Wayland.",
         "Description[sl]": "Izriši v gnezdeno okno na upravljalniku skladnje Wayland.",

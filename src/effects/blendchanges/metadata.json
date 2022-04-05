@@ -1,11 +1,11 @@
 {
     "KPlugin": {
-        "Name": "Blend Changes",
-        "Description": "Animates system style changes",
         "Category": "Appearance",
+        "Description": "Animates system style changes",
         "EnabledByDefault": true,
         "Id": "blendchanges",
-        "License": "GPL"
+        "License": "GPL",
+        "Name": "Blend Changes"
     },
     "org.kde.kwin.effect": {
         "internal": true
