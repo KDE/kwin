@@ -18,14 +18,25 @@ import org.kde.kcmutils 1.0 as KCMUtils
 ScrollViewKCM {
     implicitWidth: Kirigami.Units.gridUnit * 22
     implicitHeight: Kirigami.Units.gridUnit * 20
-    header: Kirigami.InlineMessage {
-        visible: kcm.errorMessage || kcm.infoMessage
-        type: kcm.errorMessage ? Kirigami.MessageType.Error : Kirigami.MessageType.Information
-        text: kcm.errorMessage || kcm.infoMessage
-      }
+    header: RowLayout {
+        Row {
+            Kirigami.InlineMessage {
+                visible: kcm.errorMessage || kcm.infoMessage
+                type: kcm.errorMessage ? Kirigami.MessageType.Error : Kirigami.MessageType.Information
+                text: kcm.errorMessage || kcm.infoMessage
+                Layout.fillWidth: true
+            }
+            Kirigami.SearchField {
+                id: searchField
+                Layout.fillWidth: true
+            }
+        }
+    }
+
 
     view: KCMUtils.KPluginSelector {
         id: selector
+        searchField: searchField
         sourceModel: kcm.effectsModel
 
         delegate: KCMUtils.KPluginDelegate {
