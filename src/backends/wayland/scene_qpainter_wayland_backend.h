@@ -10,6 +10,7 @@
 #ifndef KWIN_SCENE_QPAINTER_WAYLAND_BACKEND_H
 #define KWIN_SCENE_QPAINTER_WAYLAND_BACKEND_H
 
+#include "outputlayer.h"
 #include "qpainterbackend.h"
 #include "utils/damagejournal.h"
 
@@ -46,12 +47,14 @@ public:
     int age = 0;
 };
 
-class WaylandQPainterOutput : public QObject
+class WaylandQPainterOutput : public OutputLayer
 {
-    Q_OBJECT
 public:
-    WaylandQPainterOutput(WaylandOutput *output, QObject *parent = nullptr);
+    WaylandQPainterOutput(WaylandOutput *output);
     ~WaylandQPainterOutput() override;
+
+    QRegion beginFrame() override;
+    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
     bool init(KWayland::Client::ShmPool *pool);
     void updateSize(const QSize &size);
@@ -60,7 +63,7 @@ public:
     WaylandQPainterBufferSlot *back() const;
 
     WaylandQPainterBufferSlot *acquire();
-    void present(const QRegion &damage);
+    void present();
 
     QRegion accumulateDamage(int bufferAge) const;
 
@@ -84,17 +87,15 @@ public:
 
     QImage *bufferForScreen(AbstractOutput *output) override;
 
-    QRegion beginFrame(AbstractOutput *output) override;
-    void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     void present(AbstractOutput *output) override;
+    OutputLayer *primaryLayer(AbstractOutput *output) override;
 
 private:
     void createOutput(AbstractOutput *waylandOutput);
     void frameRendered();
 
     WaylandBackend *m_backend;
-    QRegion m_lastDamagedRegion;
-    QMap<AbstractOutput *, WaylandQPainterOutput *> m_outputs;
+    QMap<AbstractOutput *, QSharedPointer<WaylandQPainterOutput>> m_outputs;
 };
 
 }

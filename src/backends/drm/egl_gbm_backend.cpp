@@ -216,11 +216,6 @@ bool EglGbmBackend::initBufferConfigs()
     return false;
 }
 
-void EglGbmBackend::aboutToStartPainting(AbstractOutput *output, const QRegion &damagedRegion)
-{
-    static_cast<DrmAbstractOutput *>(output)->outputLayer()->aboutToStartPainting(damagedRegion);
-}
-
 SurfaceTexture *EglGbmBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
     return new BasicEGLSurfaceTextureInternal(this, pixmap);
@@ -231,33 +226,14 @@ SurfaceTexture *EglGbmBackend::createSurfaceTextureWayland(SurfacePixmapWayland 
     return new BasicEGLSurfaceTextureWayland(this, pixmap);
 }
 
-QRegion EglGbmBackend::beginFrame(AbstractOutput *output)
-{
-    return static_cast<DrmAbstractOutput *>(output)->outputLayer()->startRendering().value_or(QRegion());
-}
-
-void EglGbmBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion,
-                             const QRegion &damagedRegion)
-{
-    Q_UNUSED(renderedRegion)
-
-    const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
-    drmOutput->outputLayer()->endRendering(damagedRegion);
-}
-
 void EglGbmBackend::present(AbstractOutput *output)
 {
     static_cast<DrmAbstractOutput *>(output)->present();
 }
 
-bool EglGbmBackend::scanout(AbstractOutput *output, SurfaceItem *surfaceItem)
+OutputLayer *EglGbmBackend::primaryLayer(AbstractOutput *output)
 {
-    const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
-    if (drmOutput->outputLayer()->scanout(surfaceItem)) {
-        return true;
-    } else {
-        return false;
-    }
+    return static_cast<DrmAbstractOutput *>(output)->outputLayer();
 }
 
 QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(AbstractOutput *output) const

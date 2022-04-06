@@ -76,6 +76,11 @@ public:
         return region;
     }
 
+    QRegion lastDamage() const
+    {
+        return m_log.first();
+    }
+
 private:
     QList<QRegion> m_log;
     int m_capacity = 10;

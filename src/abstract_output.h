@@ -26,7 +26,6 @@ class OutputChangeSetV2;
 namespace KWin
 {
 class EffectScreenImpl;
-class OutputLayer;
 class RenderLoop;
 
 class KWIN_EXPORT GammaRamp
@@ -98,15 +97,6 @@ public:
      * Maps the specified @a rect from the global coordinate system to the output-local coords.
      */
     QRect mapFromGlobal(const QRect &rect) const;
-
-    /**
-     * Returns a dummy OutputLayer corresponding to the primary plane.
-     *
-     * TODO: remove this. The Compositor should allocate and deallocate hardware planes
-     * after the pre paint pass. Planes must be allocated based on the bounding rect, transform,
-     * and visibility (for the cursor plane).
-     */
-    OutputLayer *layer() const;
 
     /**
      * Returns a short identifiable name of this output.
@@ -285,7 +275,6 @@ Q_SIGNALS:
 private:
     Q_DISABLE_COPY(AbstractOutput)
     EffectScreenImpl *m_effectScreen = nullptr;
-    OutputLayer *m_layer;
     int m_directScanoutCount = 0;
     friend class EffectScreenImpl; // to access m_effectScreen
 };

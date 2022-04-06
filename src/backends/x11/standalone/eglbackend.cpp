@@ -26,9 +26,25 @@
 namespace KWin
 {
 
+EglLayer::EglLayer(EglBackend *backend)
+    : m_backend(backend)
+{
+}
+
+QRegion EglLayer::beginFrame()
+{
+    return m_backend->beginFrame();
+}
+
+void EglLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+{
+    m_backend->endFrame(renderedRegion, damagedRegion);
+}
+
 EglBackend::EglBackend(Display *display, X11StandalonePlatform *backend)
     : EglOnXBackend(display)
     , m_backend(backend)
+    , m_layer(new EglLayer(this))
 {
     // There is no any way to determine when a buffer swap completes with EGL. Fallback
     // to software vblank events. Could we use the Present extension to get notified when
@@ -105,9 +121,8 @@ void EglBackend::screenGeometryChanged()
     m_renderTarget.reset(new GLRenderTarget(0, screens()->size()));
 }
 
-QRegion EglBackend::beginFrame(AbstractOutput *output)
+QRegion EglBackend::beginFrame()
 {
-    Q_UNUSED(output)
     makeCurrent();
 
     QRegion repaint;
@@ -122,10 +137,8 @@ QRegion EglBackend::beginFrame(AbstractOutput *output)
     return repaint;
 }
 
-void EglBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
+void EglBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    Q_UNUSED(output)
-
     // Save the damaged region to history
     if (supportsBufferAge()) {
         m_damageJournal.add(damagedRegion);
@@ -177,6 +190,12 @@ void EglBackend::presentSurface(EGLSurface surface, const QRegion &damage, const
             eglPostSubBufferNV(eglDisplay(), surface, r.left(), screenGeometry.height() - r.bottom() - 1, r.width(), r.height());
         }
     }
+}
+
+OutputLayer *EglBackend::primaryLayer(AbstractOutput *output)
+{
+    Q_UNUSED(output)
+    return m_layer.get();
 }
 
 void EglBackend::vblank(std::chrono::nanoseconds timestamp)

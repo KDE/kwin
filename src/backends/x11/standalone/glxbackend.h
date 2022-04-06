@@ -10,6 +10,7 @@
 #define KWIN_GLX_BACKEND_H
 #include "openglbackend.h"
 #include "openglsurfacetexture_x11.h"
+#include "outputlayer.h"
 #include "utils/damagejournal.h"
 #include "x11eventfilter.h"
 
@@ -30,6 +31,7 @@ namespace KWin
 class GlxPixmapTexturePrivate;
 class VsyncMonitor;
 class X11StandalonePlatform;
+class GlxBackend;
 
 // GLX_MESA_swap_interval
 using glXSwapIntervalMESA_func = int (*)(unsigned int interval);
@@ -58,6 +60,18 @@ private:
     xcb_glx_drawable_t m_glxDrawable;
 };
 
+class GlxLayer : public OutputLayer
+{
+public:
+    GlxLayer(GlxBackend *backend);
+
+    QRegion beginFrame() override;
+    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+
+private:
+    GlxBackend *const m_backend;
+};
+
 /**
  * @brief OpenGL Backend using GLX over an X overlay window.
  */
@@ -69,13 +83,14 @@ public:
     GlxBackend(Display *display, X11StandalonePlatform *backend);
     ~GlxBackend() override;
     SurfaceTexture *createSurfaceTextureX11(SurfacePixmapX11 *pixmap) override;
-    QRegion beginFrame(AbstractOutput *output) override;
-    void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    QRegion beginFrame();
+    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
     void present(AbstractOutput *output) override;
     bool makeCurrent() override;
     void doneCurrent() override;
     OverlayWindow *overlayWindow() const override;
     void init() override;
+    OutputLayer *primaryLayer(AbstractOutput *output) override;
 
     Display *display() const
     {
@@ -119,6 +134,7 @@ private:
     Display *m_x11Display;
     X11StandalonePlatform *m_backend;
     VsyncMonitor *m_vsyncMonitor = nullptr;
+    QScopedPointer<GlxLayer> m_layer;
     friend class GlxPixmapTexturePrivate;
 };
 

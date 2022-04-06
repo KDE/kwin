@@ -30,23 +30,23 @@ DrmQPainterLayer::DrmQPainterLayer(DrmQPainterBackend *backend, DrmPipeline *pip
     });
 }
 
-std::optional<QRegion> DrmQPainterLayer::startRendering()
+QRegion DrmQPainterLayer::beginFrame()
 {
     if (!doesSwapchainFit()) {
         m_swapchain = QSharedPointer<DumbSwapchain>::create(m_pipeline->gpu(), m_pipeline->sourceSize(), DRM_FORMAT_XRGB8888);
     }
     QRegion needsRepaint;
     if (!m_swapchain->acquireBuffer(&needsRepaint)) {
-        return std::optional<QRegion>();
+        return QRegion();
     }
     return needsRepaint;
 }
 
-bool DrmQPainterLayer::endRendering(const QRegion &damagedRegion)
+void DrmQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    Q_UNUSED(renderedRegion)
     m_currentDamage = damagedRegion;
     m_swapchain->releaseBuffer(m_swapchain->currentBuffer(), damagedRegion);
-    return true;
 }
 
 QSharedPointer<DrmBuffer> DrmQPainterLayer::testBuffer()
@@ -82,7 +82,7 @@ DrmVirtualQPainterLayer::DrmVirtualQPainterLayer(DrmVirtualOutput *output)
 {
 }
 
-std::optional<QRegion> DrmVirtualQPainterLayer::startRendering()
+QRegion DrmVirtualQPainterLayer::beginFrame()
 {
     if (m_image.isNull() || m_image.size() != m_output->pixelSize()) {
         m_image = QImage(m_output->pixelSize(), QImage::Format_RGB32);
@@ -90,10 +90,10 @@ std::optional<QRegion> DrmVirtualQPainterLayer::startRendering()
     return QRegion();
 }
 
-bool DrmVirtualQPainterLayer::endRendering(const QRegion &damagedRegion)
+void DrmVirtualQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    Q_UNUSED(renderedRegion)
     m_currentDamage = damagedRegion;
-    return true;
 }
 
 QRegion DrmVirtualQPainterLayer::currentDamage() const
@@ -128,4 +128,14 @@ QSharedPointer<DrmBuffer> DrmLeaseQPainterLayer::currentBuffer() const
     return m_buffer;
 }
 
+QRegion DrmLeaseQPainterLayer::beginFrame()
+{
+    return QRegion();
+}
+
+void DrmLeaseQPainterLayer::endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion)
+{
+    Q_UNUSED(damagedRegion)
+    Q_UNUSED(renderedRegion)
+}
 }

@@ -21,6 +21,42 @@
 namespace KWin
 {
 
+EglX11Output::EglX11Output(EglX11Backend *backend, AbstractOutput *output, EGLSurface surface)
+    : m_eglSurface(surface)
+    , m_renderTarget(new GLRenderTarget(0, output->pixelSize()))
+    , m_output(output)
+    , m_backend(backend)
+{
+}
+
+EglX11Output::~EglX11Output()
+{
+    eglDestroySurface(m_backend->eglDisplay(), m_eglSurface);
+}
+
+QRegion EglX11Output::beginFrame()
+{
+    eglMakeCurrent(m_backend->eglDisplay(), m_eglSurface, m_eglSurface, m_backend->context());
+    GLRenderTarget::pushRenderTarget(m_renderTarget.data());
+    return m_output->rect();
+}
+
+void EglX11Output::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+{
+    Q_UNUSED(renderedRegion)
+    m_lastDamage = damagedRegion;
+}
+
+EGLSurface EglX11Output::surface() const
+{
+    return m_eglSurface;
+}
+
+QRegion EglX11Output::lastDamage() const
+{
+    return m_lastDamage;
+}
+
 EglX11Backend::EglX11Backend(X11WindowedBackend *backend)
     : EglOnXBackend(backend->connection(), backend->display(), backend->rootWindow(), backend->screenNumer(), XCB_WINDOW_NONE)
     , m_backend(backend)
@@ -40,10 +76,7 @@ void EglX11Backend::init()
 
 void EglX11Backend::cleanupSurfaces()
 {
-    for (auto it = m_outputs.begin(); it != m_outputs.end(); ++it) {
-        eglDestroySurface(eglDisplay(), (*it)->m_eglSurface);
-    }
-    qDeleteAll(m_outputs);
+    m_outputs.clear();
 }
 
 bool EglX11Backend::createSurfaces()
@@ -54,38 +87,19 @@ bool EglX11Backend::createSurfaces()
         if (s == EGL_NO_SURFACE) {
             return false;
         }
-        EglX11Output *rendererOutput = new EglX11Output;
-        rendererOutput->m_eglSurface = s;
-        rendererOutput->m_renderTarget.reset(new GLRenderTarget(0, output->pixelSize()));
-        m_outputs[output] = rendererOutput;
+        m_outputs[output] = QSharedPointer<EglX11Output>::create(this, output, s);
     }
     if (m_outputs.isEmpty()) {
         return false;
     }
-    setSurface(m_outputs.first()->m_eglSurface);
+    setSurface(m_outputs.first()->surface());
     return true;
-}
-
-QRegion EglX11Backend::beginFrame(AbstractOutput *output)
-{
-    const EglX11Output *rendererOutput = m_outputs[output];
-    makeContextCurrent(rendererOutput->m_eglSurface);
-    GLRenderTarget::pushRenderTarget(rendererOutput->m_renderTarget.data());
-    return output->rect();
-}
-
-void EglX11Backend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
-{
-    Q_UNUSED(damagedRegion)
-
-    static_cast<X11WindowedOutput *>(output)->vsyncMonitor()->arm();
-    GLRenderTarget::popRenderTarget();
-    m_lastRenderedRegion = renderedRegion;
 }
 
 void EglX11Backend::present(AbstractOutput *output)
 {
-    presentSurface(m_outputs[output]->m_eglSurface, m_lastRenderedRegion, output->geometry());
+    const auto &renderOutput = m_outputs[output];
+    presentSurface(renderOutput->surface(), renderOutput->lastDamage(), output->geometry());
 }
 
 void EglX11Backend::presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry)
@@ -104,6 +118,11 @@ void EglX11Backend::presentSurface(EGLSurface surface, const QRegion &damage, co
             eglPostSubBufferNV(eglDisplay(), surface, r.left(), screenGeometry.height() - r.bottom() - 1, r.width(), r.height());
         }
     }
+}
+
+OutputLayer *EglX11Backend::primaryLayer(AbstractOutput *output)
+{
+    return m_outputs[output].get();
 }
 
 SurfaceTexture *EglX11Backend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)

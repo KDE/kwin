@@ -14,16 +14,33 @@
 namespace KWin
 {
 
+class SurfaceItem;
+
 class KWIN_EXPORT OutputLayer : public QObject
 {
     Q_OBJECT
-
 public:
     explicit OutputLayer(QObject *parent = nullptr);
 
     QRegion repaints() const;
     void resetRepaints();
     void addRepaint(const QRegion &region);
+
+    /**
+     * Notifies about starting to paint.
+     *
+     * @p damage contains the reported damage as suggested by windows and effects on prepaint calls.
+     */
+    virtual void aboutToStartPainting(const QRegion &damage);
+
+    virtual QRegion beginFrame() = 0;
+    virtual void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) = 0;
+
+    /**
+     * Tries to import the newest buffer of the surface for direct scanout
+     * Returns @c true if scanout succeeds, @c false if rendering is necessary
+     */
+    virtual bool scanout(SurfaceItem *surfaceItem);
 
 private:
     QRegion m_repaints;

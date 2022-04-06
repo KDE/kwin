@@ -39,22 +39,14 @@ QImage *DrmQPainterBackend::bufferForScreen(AbstractOutput *output)
     return dynamic_cast<QPainterLayer *>(drmOutput->outputLayer())->image();
 }
 
-QRegion DrmQPainterBackend::beginFrame(AbstractOutput *output)
-{
-    const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
-    return drmOutput->outputLayer()->startRendering().value_or(QRegion());
-}
-
-void DrmQPainterBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damage)
-{
-    Q_UNUSED(renderedRegion)
-    const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
-    drmOutput->outputLayer()->endRendering(damage);
-}
-
 void DrmQPainterBackend::present(AbstractOutput *output)
 {
     static_cast<DrmAbstractOutput *>(output)->present();
+}
+
+OutputLayer *DrmQPainterBackend::primaryLayer(AbstractOutput *output)
+{
+    return static_cast<DrmAbstractOutput *>(output)->outputLayer();
 }
 
 QSharedPointer<DrmPipelineLayer> DrmQPainterBackend::createDrmPipelineLayer(DrmPipeline *pipeline)

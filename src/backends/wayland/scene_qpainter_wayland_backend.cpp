@@ -38,9 +38,8 @@ WaylandQPainterBufferSlot::~WaylandQPainterBufferSlot()
     buffer->setUsed(false);
 }
 
-WaylandQPainterOutput::WaylandQPainterOutput(WaylandOutput *output, QObject *parent)
-    : QObject(parent)
-    , m_waylandOutput(output)
+WaylandQPainterOutput::WaylandQPainterOutput(WaylandOutput *output)
+    : m_waylandOutput(output)
 {
 }
 
@@ -78,7 +77,7 @@ void WaylandQPainterOutput::updateSize(const QSize &size)
     m_slots.clear();
 }
 
-void WaylandQPainterOutput::present(const QRegion &damage)
+void WaylandQPainterOutput::present()
 {
     for (WaylandQPainterBufferSlot *slot : qAsConst(m_slots)) {
         if (slot == m_back) {
@@ -90,11 +89,9 @@ void WaylandQPainterOutput::present(const QRegion &damage)
 
     auto s = m_waylandOutput->surface();
     s->attachBuffer(m_back->buffer);
-    s->damage(damage);
+    s->damage(m_damageJournal.lastDamage());
     s->setScale(std::ceil(m_waylandOutput->scale()));
     s->commit();
-
-    m_damageJournal.add(damage);
 }
 
 WaylandQPainterBufferSlot *WaylandQPainterOutput::back() const
@@ -131,6 +128,19 @@ QRegion WaylandQPainterOutput::accumulateDamage(int bufferAge) const
     return m_damageJournal.accumulate(bufferAge, infiniteRegion());
 }
 
+QRegion WaylandQPainterOutput::beginFrame()
+{
+    WaylandQPainterBufferSlot *slot = acquire();
+    return accumulateDamage(slot->age);
+}
+
+void WaylandQPainterOutput::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+{
+    Q_UNUSED(renderedRegion)
+
+    m_damageJournal.add(damagedRegion);
+}
+
 WaylandQPainterBackend::WaylandQPainterBackend(Wayland::WaylandBackend *b)
     : QPainterBackend()
     , m_backend(b)
@@ -142,13 +152,12 @@ WaylandQPainterBackend::WaylandQPainterBackend(Wayland::WaylandBackend *b)
     }
     connect(m_backend, &WaylandBackend::outputAdded, this, &WaylandQPainterBackend::createOutput);
     connect(m_backend, &WaylandBackend::outputRemoved, this, [this](AbstractOutput *waylandOutput) {
-        auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [waylandOutput](WaylandQPainterOutput *output) {
+        auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [waylandOutput](const auto &output) {
             return output->m_waylandOutput == waylandOutput;
         });
         if (it == m_outputs.end()) {
             return;
         }
-        delete *it;
         m_outputs.erase(it);
     });
 }
@@ -159,17 +168,9 @@ WaylandQPainterBackend::~WaylandQPainterBackend()
 
 void WaylandQPainterBackend::createOutput(AbstractOutput *waylandOutput)
 {
-    auto *output = new WaylandQPainterOutput(static_cast<WaylandOutput *>(waylandOutput), this);
+    const auto output = QSharedPointer<WaylandQPainterOutput>::create(static_cast<WaylandOutput *>(waylandOutput));
     output->init(m_backend->shmPool());
     m_outputs.insert(waylandOutput, output);
-}
-
-void WaylandQPainterBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
-{
-    Q_UNUSED(output)
-    Q_UNUSED(renderedRegion)
-
-    m_lastDamagedRegion = damagedRegion;
 }
 
 QImage *WaylandQPainterBackend::bufferForScreen(AbstractOutput *output)
@@ -177,18 +178,14 @@ QImage *WaylandQPainterBackend::bufferForScreen(AbstractOutput *output)
     return &m_outputs[output]->back()->image;
 }
 
-QRegion WaylandQPainterBackend::beginFrame(AbstractOutput *output)
-{
-    WaylandQPainterOutput *rendererOutput = m_outputs[output];
-    Q_ASSERT(rendererOutput);
-
-    WaylandQPainterBufferSlot *slot = rendererOutput->acquire();
-    return rendererOutput->accumulateDamage(slot->age);
-}
-
 void WaylandQPainterBackend::present(AbstractOutput *output)
 {
-    m_outputs[output]->present(m_lastDamagedRegion);
+    m_outputs[output]->present();
+}
+
+OutputLayer *WaylandQPainterBackend::primaryLayer(AbstractOutput *output)
+{
+    return m_outputs[output].get();
 }
 }
 }

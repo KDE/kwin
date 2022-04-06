@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "outputlayer.h"
 
 #include <QObject>
 #include <QRegion>
@@ -21,25 +22,12 @@ class DrmBuffer;
 class GLTexture;
 class DrmPipeline;
 
-class DrmOutputLayer : public QObject
+class DrmOutputLayer : public OutputLayer
 {
-    Q_OBJECT
 public:
     virtual ~DrmOutputLayer();
 
-    virtual void aboutToStartPainting(const QRegion &damagedRegion);
-    virtual std::optional<QRegion> startRendering();
-    virtual bool endRendering(const QRegion &damagedRegion);
-
-    /**
-     * attempts to directly scan out the current buffer of the surfaceItem
-     * @returns true if scanout was successful
-     *          false if rendering is required
-     */
-    virtual bool scanout(SurfaceItem *surfaceItem);
-
     virtual QSharedPointer<GLTexture> texture() const;
-
     virtual QRegion currentDamage() const;
 };
 

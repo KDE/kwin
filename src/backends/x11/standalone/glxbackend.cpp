@@ -103,6 +103,21 @@ bool SwapEventFilter::event(xcb_generic_event_t *event)
     return true;
 }
 
+GlxLayer::GlxLayer(GlxBackend *backend)
+    : m_backend(backend)
+{
+}
+
+QRegion GlxLayer::beginFrame()
+{
+    return m_backend->beginFrame();
+}
+
+void GlxLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+{
+    m_backend->endFrame(renderedRegion, damagedRegion);
+}
+
 GlxBackend::GlxBackend(Display *display, X11StandalonePlatform *backend)
     : OpenGLBackend()
     , m_overlayWindow(kwinApp()->platform()->createOverlayWindow())
@@ -113,6 +128,7 @@ GlxBackend::GlxBackend(Display *display, X11StandalonePlatform *backend)
     , m_bufferAge(0)
     , m_x11Display(display)
     , m_backend(backend)
+    , m_layer(new GlxLayer(this))
 {
     // Force initialization of GLX integration in the Qt's xcb backend
     // to make it call XESetWireToEvent callbacks, which is required
@@ -763,10 +779,8 @@ SurfaceTexture *GlxBackend::createSurfaceTextureX11(SurfacePixmapX11 *pixmap)
     return new GlxSurfaceTextureX11(this, pixmap);
 }
 
-QRegion GlxBackend::beginFrame(AbstractOutput *output)
+QRegion GlxBackend::beginFrame()
 {
-    Q_UNUSED(output)
-
     QRegion repaint;
     makeCurrent();
 
@@ -780,10 +794,8 @@ QRegion GlxBackend::beginFrame(AbstractOutput *output)
     return repaint;
 }
 
-void GlxBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
+void GlxBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    Q_UNUSED(output)
-
     // Save the damaged region to history
     if (supportsBufferAge()) {
         m_damageJournal.add(damagedRegion);
@@ -844,6 +856,12 @@ void GlxBackend::doneCurrent()
 OverlayWindow *GlxBackend::overlayWindow() const
 {
     return m_overlayWindow;
+}
+
+OutputLayer *GlxBackend::primaryLayer(AbstractOutput *output)
+{
+    Q_UNUSED(output)
+    return m_layer.get();
 }
 
 GlxSurfaceTextureX11::GlxSurfaceTextureX11(GlxBackend *backend, SurfacePixmapX11 *texture)

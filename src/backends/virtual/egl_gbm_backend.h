@@ -9,12 +9,26 @@
 #ifndef KWIN_EGL_GBM_BACKEND_H
 #define KWIN_EGL_GBM_BACKEND_H
 #include "abstract_egl_backend.h"
+#include "outputlayer.h"
 
 namespace KWin
 {
 class VirtualBackend;
 class GLTexture;
 class GLRenderTarget;
+class EglGbmBackend;
+
+class VirtualOutputLayer : public OutputLayer
+{
+public:
+    VirtualOutputLayer(EglGbmBackend *backend);
+
+    QRegion beginFrame() override;
+    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+
+private:
+    EglGbmBackend *const m_backend;
+};
 
 /**
  * @brief OpenGL Backend using Egl on a GBM surface.
@@ -28,10 +42,11 @@ public:
     ~EglGbmBackend() override;
     SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
-    QRegion beginFrame(AbstractOutput *output) override;
-    void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    OutputLayer *primaryLayer(AbstractOutput *output) override;
     void present(AbstractOutput *output) override;
     void init() override;
+
+    QRegion beginFrame();
 
 private:
     bool initializeEgl();
@@ -41,6 +56,7 @@ private:
     GLTexture *m_backBuffer = nullptr;
     GLRenderTarget *m_fbo = nullptr;
     int m_frameCounter = 0;
+    QScopedPointer<VirtualOutputLayer> m_layer;
 };
 
 } // namespace

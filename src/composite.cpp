@@ -652,7 +652,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 
     AbstractOutput *output = findOutput(renderLoop);
-    OutputLayer *outputLayer = output->layer();
+    OutputLayer *outputLayer = m_backend->primaryLayer(output);
     fTraceDuration("Paint (", output->name(), ")");
 
     RenderLayer *superLayer = m_superlayers[renderLoop];
@@ -670,7 +670,7 @@ void Compositor::composite(RenderLoop *renderLoop)
             return sublayer->isVisible();
         });
         if (scanoutPossible && !output->directScanoutInhibited()) {
-            directScanout = m_backend->scanout(output, scanoutCandidate);
+            directScanout = outputLayer->scanout(scanoutCandidate);
         }
     }
 
@@ -679,12 +679,12 @@ void Compositor::composite(RenderLoop *renderLoop)
         outputLayer->resetRepaints();
         preparePaintPass(superLayer, &surfaceDamage);
 
-        const QRegion repair = m_backend->beginFrame(output);
+        const QRegion repair = outputLayer->beginFrame();
         const QRegion bufferDamage = surfaceDamage.united(repair).intersected(superLayer->rect());
-        m_backend->aboutToStartPainting(output, bufferDamage);
+        outputLayer->aboutToStartPainting(bufferDamage);
 
         paintPass(superLayer, bufferDamage);
-        m_backend->endFrame(output, bufferDamage, surfaceDamage);
+        outputLayer->endFrame(bufferDamage, surfaceDamage);
     }
     renderLoop->endFrame();
 

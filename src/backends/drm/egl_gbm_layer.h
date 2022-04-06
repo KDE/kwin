@@ -36,9 +36,9 @@ public:
     EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline);
     ~EglGbmLayer();
 
-    std::optional<QRegion> startRendering() override;
+    QRegion beginFrame() override;
     void aboutToStartPainting(const QRegion &damagedRegion) override;
-    bool endRendering(const QRegion &damagedRegion) override;
+    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     bool scanout(SurfaceItem *surfaceItem) override;
     QSharedPointer<DrmBuffer> testBuffer() override;
     QSharedPointer<DrmBuffer> currentBuffer() const override;

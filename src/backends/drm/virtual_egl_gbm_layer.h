@@ -36,8 +36,8 @@ public:
     VirtualEglGbmLayer(EglGbmBackend *eglBackend, DrmVirtualOutput *output);
 
     void aboutToStartPainting(const QRegion &damagedRegion) override;
-    std::optional<QRegion> startRendering() override;
-    bool endRendering(const QRegion &damagedRegion) override;
+    QRegion beginFrame() override;
+    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     bool scanout(SurfaceItem *surfaceItem) override;
 
     QRegion currentDamage() const override;
