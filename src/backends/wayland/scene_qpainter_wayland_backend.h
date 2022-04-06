@@ -84,14 +84,16 @@ public:
 
     QImage *bufferForScreen(AbstractOutput *output) override;
 
-    void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     QRegion beginFrame(AbstractOutput *output) override;
+    void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    void present(AbstractOutput *output) override;
 
 private:
     void createOutput(AbstractOutput *waylandOutput);
     void frameRendered();
 
     WaylandBackend *m_backend;
+    QRegion m_lastDamagedRegion;
     QMap<AbstractOutput *, WaylandQPainterOutput *> m_outputs;
 };
 

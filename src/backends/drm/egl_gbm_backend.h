@@ -66,6 +66,8 @@ public:
 
     QRegion beginFrame(AbstractOutput *output) override;
     void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    void present(AbstractOutput *output) override;
+
     void init() override;
     bool scanout(AbstractOutput *output, SurfaceItem *surfaceItem) override;
     bool prefer10bpc() const override;

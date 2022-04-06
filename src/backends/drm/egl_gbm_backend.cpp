@@ -243,14 +243,17 @@ void EglGbmBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegi
 
     const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
     drmOutput->outputLayer()->endRendering(damagedRegion);
-    drmOutput->present();
+}
+
+void EglGbmBackend::present(AbstractOutput *output)
+{
+    static_cast<DrmAbstractOutput *>(output)->present();
 }
 
 bool EglGbmBackend::scanout(AbstractOutput *output, SurfaceItem *surfaceItem)
 {
     const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
     if (drmOutput->outputLayer()->scanout(surfaceItem)) {
-        drmOutput->present();
         return true;
     } else {
         return false;

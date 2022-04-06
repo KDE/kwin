@@ -166,11 +166,10 @@ void WaylandQPainterBackend::createOutput(AbstractOutput *waylandOutput)
 
 void WaylandQPainterBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    Q_UNUSED(output)
     Q_UNUSED(renderedRegion)
-    WaylandQPainterOutput *rendererOutput = m_outputs[output];
-    Q_ASSERT(rendererOutput);
 
-    rendererOutput->present(damagedRegion);
+    m_lastDamagedRegion = damagedRegion;
 }
 
 QImage *WaylandQPainterBackend::bufferForScreen(AbstractOutput *output)
@@ -187,5 +186,9 @@ QRegion WaylandQPainterBackend::beginFrame(AbstractOutput *output)
     return rendererOutput->accumulateDamage(slot->age);
 }
 
+void WaylandQPainterBackend::present(AbstractOutput *output)
+{
+    m_outputs[output]->present(m_lastDamagedRegion);
+}
 }
 }

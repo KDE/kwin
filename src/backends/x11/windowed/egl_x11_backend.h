@@ -41,6 +41,7 @@ public:
     void init() override;
     QRegion beginFrame(AbstractOutput *output) override;
     void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    void present(AbstractOutput *output) override;
 
 protected:
     void cleanupSurfaces() override;
@@ -50,6 +51,7 @@ private:
     void presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry);
 
     QMap<AbstractOutput *, EglX11Output *> m_outputs;
+    QRegion m_lastRenderedRegion;
     X11WindowedBackend *m_backend;
 };
 

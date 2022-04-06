@@ -57,9 +57,13 @@ QRegion X11WindowedQPainterBackend::beginFrame(AbstractOutput *output)
 
 void X11WindowedQPainterBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    Q_UNUSED(output)
     Q_UNUSED(renderedRegion)
     Q_UNUSED(damagedRegion)
+}
 
+void X11WindowedQPainterBackend::present(AbstractOutput *output)
+{
     static_cast<X11WindowedOutput *>(output)->vsyncMonitor()->arm();
 
     xcb_connection_t *c = m_backend->connection();
@@ -78,5 +82,4 @@ void X11WindowedQPainterBackend::endFrame(AbstractOutput *output, const QRegion 
                   m_gc, buffer.width(), buffer.height(), 0, 0, 0, 24,
                   buffer.sizeInBytes(), buffer.constBits());
 }
-
 }

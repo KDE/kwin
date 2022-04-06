@@ -50,6 +50,10 @@ void DrmQPainterBackend::endFrame(AbstractOutput *output, const QRegion &rendere
     Q_UNUSED(renderedRegion)
     const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
     drmOutput->outputLayer()->endRendering(damage);
+}
+
+void DrmQPainterBackend::present(AbstractOutput *output)
+{
     static_cast<DrmAbstractOutput *>(output)->present();
 }
 

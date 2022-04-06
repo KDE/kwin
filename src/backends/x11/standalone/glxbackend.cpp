@@ -784,6 +784,17 @@ void GlxBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion,
 {
     Q_UNUSED(output)
 
+    // Save the damaged region to history
+    if (supportsBufferAge()) {
+        m_damageJournal.add(damagedRegion);
+    }
+    m_lastRenderedRegion = renderedRegion;
+}
+
+void GlxBackend::present(AbstractOutput *output)
+{
+    Q_UNUSED(output)
+
     // If the GLX_INTEL_swap_event extension is not used for getting presentation feedback,
     // assume that the frame will be presented at the next vblank event, this is racy.
     if (m_vsyncMonitor) {
@@ -792,10 +803,10 @@ void GlxBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion,
 
     const QRegion displayRegion(screens()->geometry());
 
-    QRegion effectiveRenderedRegion = renderedRegion;
-    if (!supportsBufferAge() && options->glPreferBufferSwap() == Options::CopyFrontBuffer && renderedRegion != displayRegion) {
+    QRegion effectiveRenderedRegion = m_lastRenderedRegion;
+    if (!supportsBufferAge() && options->glPreferBufferSwap() == Options::CopyFrontBuffer && m_lastRenderedRegion != displayRegion) {
         glReadBuffer(GL_FRONT);
-        copyPixels(displayRegion - renderedRegion);
+        copyPixels(displayRegion - m_lastRenderedRegion);
         glReadBuffer(GL_BACK);
         effectiveRenderedRegion = displayRegion;
     }
@@ -806,11 +817,6 @@ void GlxBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion,
 
     if (overlayWindow()->window()) { // show the window only after the first pass,
         overlayWindow()->show(); // since that pass may take long
-    }
-
-    // Save the damaged region to history
-    if (supportsBufferAge()) {
-        m_damageJournal.add(damagedRegion);
     }
 }
 

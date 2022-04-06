@@ -41,6 +41,7 @@ public:
 
     virtual QRegion beginFrame(AbstractOutput *output) = 0;
     virtual void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) = 0;
+    virtual void present(AbstractOutput *output) = 0;
 
     /**
      * Tries to directly scan out a surface to the screen

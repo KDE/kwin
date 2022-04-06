@@ -33,6 +33,7 @@ public:
     SurfaceTexture *createSurfaceTextureX11(SurfacePixmapX11 *texture) override;
     QRegion beginFrame(AbstractOutput *output) override;
     void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    void present(AbstractOutput *output) override;
 
 private:
     void screenGeometryChanged();
@@ -44,6 +45,7 @@ private:
     DamageJournal m_damageJournal;
     QScopedPointer<GLRenderTarget> m_renderTarget;
     int m_bufferAge = 0;
+    QRegion m_lastRenderedRegion;
 };
 
 class EglPixmapTexture : public GLTexture

@@ -199,8 +199,13 @@ static void convertFromGLImage(QImage &img, int w, int h)
 
 void EglGbmBackend::endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    Q_UNUSED(output)
     Q_UNUSED(renderedRegion)
     Q_UNUSED(damagedRegion)
+}
+
+void EglGbmBackend::present(AbstractOutput *output)
+{
     glFlush();
 
     static_cast<VirtualOutput *>(output)->vsyncMonitor()->arm();
