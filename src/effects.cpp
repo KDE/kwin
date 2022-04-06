@@ -1838,11 +1838,7 @@ bool EffectsHandlerImpl::isInputPanelOverlay() const
         return true;
     }
 
-    auto panel = InputMethod::self()->panel();
-    if (panel) {
-        return panel->mode() == InputPanelV1Client::Overlay;
-    }
-    return true;
+    return InputMethod::self()->isOverlay();
 }
 
 //****************************************

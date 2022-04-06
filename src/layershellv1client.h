@@ -45,6 +45,9 @@ public:
     void closeWindow() override;
     void setVirtualKeyboardGeometry(const QRect &geo) override;
 
+    bool isInputMethod() const override;
+    QRect inputGeometry() const override;
+
 protected:
     Layer belongsToLayer() const override;
     bool acceptsFocus() const override;

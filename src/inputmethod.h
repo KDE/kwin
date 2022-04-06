@@ -32,6 +32,7 @@ namespace KWin
 {
 
 class AbstractClient;
+class WaylandClient;
 class InputPanelV1Client;
 
 /**
@@ -62,8 +63,10 @@ public:
     bool isVisible() const;
     bool isAvailable() const;
 
-    InputPanelV1Client *panel() const;
-    void setPanel(InputPanelV1Client *client);
+    WaylandClient *panel() const;
+    void setPanel(WaylandClient *client);
+    bool isOverlay() const;
+
     void setInputMethodCommand(const QString &path);
 
     KWaylandServer::InputMethodGrabV1 *keyboardGrab();
@@ -122,7 +125,7 @@ private:
 
     bool m_enabled = true;
     quint32 m_serial = 0;
-    QPointer<InputPanelV1Client> m_inputClient;
+    QPointer<WaylandClient> m_inputClient;
     QPointer<AbstractClient> m_trackedClient;
     QPointer<KWaylandServer::InputMethodGrabV1> m_keyboardGrab;
 

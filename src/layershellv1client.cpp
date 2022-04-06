@@ -7,6 +7,7 @@
 #include "layershellv1client.h"
 #include "abstract_output.h"
 #include "deleted.h"
+#include "inputmethod.h"
 #include "layershellv1integration.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -32,6 +33,7 @@ static NET::WindowType scopeToType(const QString &scope)
         {QStringLiteral("dialog"), NET::Dialog},
         {QStringLiteral("splash"), NET::Splash},
         {QStringLiteral("utility"), NET::Utility},
+        {QStringLiteral("input-panel"), NET::Utility},
     };
     return scopeToType.value(scope.toLower(), NET::Normal);
 }
@@ -80,6 +82,10 @@ LayerShellV1Client::LayerShellV1Client(LayerSurfaceV1Interface *shellSurface,
             this, &LayerShellV1Client::scheduleRearrange);
     connect(shellSurface, &LayerSurfaceV1Interface::acceptsFocusChanged,
             this, &LayerShellV1Client::handleAcceptsFocusChanged);
+
+    if (isInputMethod()) {
+        InputMethod::self()->setPanel(this);
+    }
 }
 
 LayerSurfaceV1Interface *LayerShellV1Client::shellSurface() const
@@ -129,6 +135,10 @@ bool LayerShellV1Client::isResizable() const
 
 bool LayerShellV1Client::takeFocus()
 {
+    if (isInputMethod()) {
+        return false;
+    }
+
     setActive(true);
     return true;
 }
@@ -213,7 +223,7 @@ Layer LayerShellV1Client::belongsToLayer() const
 
 bool LayerShellV1Client::acceptsFocus() const
 {
-    return m_shellSurface->acceptsFocus();
+    return !isInputMethod() && m_shellSurface->acceptsFocus();
 }
 
 void LayerShellV1Client::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
@@ -293,6 +303,20 @@ void LayerShellV1Client::setVirtualKeyboardGeometry(const QRect &geo)
 
     m_virtualKeyboardGeometry = geo;
     scheduleRearrange();
+}
+
+bool LayerShellV1Client::isInputMethod() const
+{
+    return m_shellSurface->scope() == QStringLiteral("input-panel");
+}
+
+QRect LayerShellV1Client::inputGeometry() const
+{
+    if (isInputMethod()) {
+        return surface()->input().boundingRect().translated(pos());
+    }
+
+    return QRect{};
 }
 
 } // namespace KWin

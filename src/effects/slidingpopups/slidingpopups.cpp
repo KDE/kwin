@@ -227,6 +227,10 @@ void SlidingPopupsEffect::setupSlideData(EffectWindow *w)
         internal->installEventFilter(this);
         setupInternalWindowSlide(w);
     }
+
+    if (w == effects->inputPanel()) {
+        setupInputPanelSlide();
+    }
 }
 
 void SlidingPopupsEffect::slotWindowAdded(EffectWindow *w)

@@ -160,12 +160,12 @@ void InputMethod::setActive(bool active)
     }
 }
 
-InputPanelV1Client *InputMethod::panel() const
+WaylandClient *InputMethod::panel() const
 {
     return m_inputClient;
 }
 
-void InputMethod::setPanel(InputPanelV1Client *client)
+void InputMethod::setPanel(WaylandClient *client)
 {
     Q_ASSERT(client->isInputMethod());
     if (m_inputClient) {
@@ -189,6 +189,14 @@ void InputMethod::setPanel(InputPanelV1Client *client)
     Q_EMIT visibleChanged();
     updateInputPanelState();
     Q_EMIT panelChanged();
+}
+
+bool InputMethod::isOverlay() const
+{
+    if (auto client = qobject_cast<InputPanelV1Client *>(m_inputClient.data()); client) {
+        return client->mode() == InputPanelV1Client::Overlay;
+    }
+    return false;
 }
 
 void InputMethod::setTrackedClient(AbstractClient *trackedClient)
@@ -268,7 +276,9 @@ void InputMethod::textInputInterfaceV2StateUpdated(quint32 serial, KWaylandServe
         return;
     }
     if (m_inputClient && shouldShowOnActive()) {
-        m_inputClient->allow();
+        if (auto client = qobject_cast<InputPanelV1Client *>(m_inputClient.data()); client) {
+            client->allow();
+        }
     }
     switch (reason) {
     case KWaylandServer::TextInputV2Interface::UpdateReason::StateChange:
@@ -617,15 +627,17 @@ void InputMethod::updateInputPanelState()
     }
 
     if (m_inputClient && shouldShowOnActive()) {
-        m_inputClient->allow();
+        if (auto client = qobject_cast<InputPanelV1Client *>(m_inputClient.data()); client) {
+            client->allow();
+        }
     }
 
     QRect overlap = QRect(0, 0, 0, 0);
     if (m_trackedClient) {
-        const bool bottomKeyboard = m_inputClient && m_inputClient->mode() != InputPanelV1Client::Overlay && m_inputClient->isShown();
+        const bool bottomKeyboard = m_inputClient && !isOverlay() && m_inputClient->isShown();
         m_trackedClient->setVirtualKeyboardGeometry(bottomKeyboard ? m_inputClient->inputGeometry() : QRect());
 
-        if (m_inputClient && m_inputClient->mode() != InputPanelV1Client::Overlay) {
+        if (m_inputClient && !isOverlay()) {
             overlap = m_trackedClient->frameGeometry() & m_inputClient->inputGeometry();
             overlap.moveTo(m_trackedClient->mapToLocal(overlap.topLeft()));
         }
