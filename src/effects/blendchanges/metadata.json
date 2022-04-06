@@ -2,10 +2,22 @@
     "KPlugin": {
         "Category": "Appearance",
         "Description": "Animates system style changes",
+        "Description[ca]": "Anima els canvis d'estil del sistema",
+        "Description[es]": "Anima los cambios de estilo del sistema",
+        "Description[nl]": "Systeemstijl wijzigingen animeren",
+        "Description[sv]": "Animerar systemets stiländringar",
+        "Description[uk]": "Анімація змін у стилі системи",
+        "Description[x-test]": "xxAnimates system style changesxx",
         "EnabledByDefault": true,
         "Id": "blendchanges",
         "License": "GPL",
-        "Name": "Blend Changes"
+        "Name": "Blend Changes",
+        "Name[ca]": "Transició de canvis",
+        "Name[es]": "Mezclar cambios",
+        "Name[nl]": "Wijzigingen mengen",
+        "Name[sv]": "Blanda ändringar",
+        "Name[uk]": "Злиття змін",
+        "Name[x-test]": "xxBlend Changesxx"
     },
     "org.kde.kwin.effect": {
         "internal": true
