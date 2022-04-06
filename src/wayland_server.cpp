@@ -603,6 +603,8 @@ void WaylandServer::initScreenLocker()
             }
             ScreenLocker::KSldApp::self()->setWaylandFd(clientFd);
 
+            new LockScreenPresentationWatcher(this);
+
             const QVector<SeatInterface *> seatIfaces = m_display->seats();
             for (auto *seat : seatIfaces) {
                 connect(seat, &KWaylandServer::SeatInterface::timestampChanged,
@@ -618,8 +620,6 @@ void WaylandServer::initScreenLocker()
                 delete m_screenLockerClientConnection;
                 m_screenLockerClientConnection = nullptr;
             }
-
-            new LockScreenPresentationWatcher(this);
 
             const QVector<SeatInterface *> seatIfaces = m_display->seats();
             for (auto *seat : seatIfaces) {
