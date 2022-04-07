@@ -2,6 +2,7 @@
     "KPlugin": {
         "Category": "Appearance",
         "Description": "Animates system style changes",
+        "Description[ca@valencia]": "Anima els canvis d'estil del sistema",
         "Description[ca]": "Anima els canvis d'estil del sistema",
         "Description[es]": "Anima los cambios de estilo del sistema",
         "Description[nl]": "Systeemstijl wijzigingen animeren",
@@ -12,6 +13,7 @@
         "Id": "blendchanges",
         "License": "GPL",
         "Name": "Blend Changes",
+        "Name[ca@valencia]": "Transició de canvis",
         "Name[ca]": "Transició de canvis",
         "Name[es]": "Mezclar cambios",
         "Name[nl]": "Wijzigingen mengen",
