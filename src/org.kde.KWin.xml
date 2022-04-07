@@ -35,6 +35,9 @@
     <method name="supportInformation">
         <arg type="s" direction="out"/>
     </method>
+    <method name="activeOutputName">
+        <arg type="s" direction="out"/>
+    </method>
     <method name="showDebugConsole"/>
     <method name="replace"/>
     <method name="queryWindowInfo">

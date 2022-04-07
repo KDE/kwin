@@ -56,6 +56,7 @@ public Q_SLOTS: // METHODS
     bool startActivity(const QString &in0);
     bool stopActivity(const QString &in0);
     QString supportInformation();
+    QString activeOutputName();
     Q_NOREPLY void unclutterDesktop();
     Q_NOREPLY void showDebugConsole();
 

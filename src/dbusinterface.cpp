@@ -15,6 +15,7 @@
 
 // kwin
 #include "abstract_client.h"
+#include "abstract_output.h"
 #include "atoms.h"
 #include "composite.h"
 #include "debug_console.h"
@@ -128,6 +129,11 @@ WRAP(unclutterDesktop)
 WRAP(QString, supportInformation)
 
 #undef WRAP
+
+QString DBusInterface::activeOutputName()
+{
+    return Workspace::self()->activeOutput()->name();
+}
 
 bool DBusInterface::startActivity(const QString &in0)
 {
