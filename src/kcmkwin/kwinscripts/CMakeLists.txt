@@ -1,15 +1,12 @@
 # KI18N Translation Domain for this library
 add_definitions(-DTRANSLATION_DOMAIN=\"kcm-kwin-scripts\")
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+kcoreaddons_add_plugin(kcm_kwin_scripts INSTALL_NAMESPACE plasma/kcms/systemsettings)
 
-set(kcm_SRCS
+target_sources(kcm_kwin_scripts PRIVATE
     module.cpp
     kwinscriptsdata.cpp
 )
-
-add_library(kcm_kwin_scripts MODULE ${kcm_SRCS})
-kcoreaddons_desktop_to_json(kcm_kwin_scripts kwinscripts.desktop)
 
 target_link_libraries(kcm_kwin_scripts
     Qt::DBus
@@ -24,6 +21,5 @@ target_link_libraries(kcm_kwin_scripts
 )
 
 kpackage_install_package(package kcm_kwin_scripts kcms)
-install(TARGETS kcm_kwin_scripts DESTINATION ${KDE_INSTALL_PLUGINDIR}/kcms)
-install(FILES kwinscripts.desktop DESTINATION ${KDE_INSTALL_KSERVICESDIR})
+install(FILES kwinscripts.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 install(FILES kwinscripts.knsrc DESTINATION ${KDE_INSTALL_KNSRCDIR})
