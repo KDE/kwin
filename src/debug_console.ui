@@ -428,12 +428,18 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_5">
          <item alignment="Qt::AlignBottom">
-          <widget class="KTitleWidget" name="ktitlewidget">
+          <widget class="QLabel" name="label">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
            </property>
            <property name="text">
             <string>Clipboard</string>
@@ -468,12 +474,18 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_4">
          <item alignment="Qt::AlignBottom">
-          <widget class="KTitleWidget" name="ktitlewidget_2">
+          <widget class="QLabel" name="label">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
            </property>
            <property name="text">
             <string>Primary Selection</string>
@@ -505,13 +517,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>KTitleWidget</class>
-   <extends>QWidget</extends>
-   <header>ktitlewidget.h</header>
-  </customwidget>
- </customwidgets>
  <tabstops>
   <tabstop>quitButton</tabstop>
  </tabstops>
