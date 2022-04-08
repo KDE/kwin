@@ -68,12 +68,12 @@ private Q_SLOTS:
     void testMaximizeApplyNow();
     void testMaximizeForceTemporarily();
 
-    void testDesktopDontAffect();
-    void testDesktopApply();
-    void testDesktopRemember();
-    void testDesktopForce();
-    void testDesktopApplyNow();
-    void testDesktopForceTemporarily();
+    void testDesktopsDontAffect();
+    void testDesktopsApply();
+    void testDesktopsRemember();
+    void testDesktopsForce();
+    void testDesktopsApplyNow();
+    void testDesktopsForceTemporarily();
 
     void testMinimizeDontAffect();
     void testMinimizeApply();
@@ -1326,189 +1326,210 @@ void TestXdgShellClientRules::testMaximizeForceTemporarily()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testDesktopDontAffect()
+void TestXdgShellClientRules::testDesktopsDontAffect()
 {
     // We need at least two virtual desktop for this test.
     VirtualDesktopManager::self()->setCount(2);
     QCOMPARE(VirtualDesktopManager::self()->count(), 2u);
-    VirtualDesktopManager::self()->setCurrent(1);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
+    VirtualDesktop *vd1 = VirtualDesktopManager::self()->desktops().at(0);
+    VirtualDesktop *vd2 = VirtualDesktopManager::self()->desktops().at(1);
 
-    setWindowRule("desktops", QStringList{VirtualDesktopManager::self()->desktopForX11Id(2)->id()}, int(Rules::DontAffect));
+    VirtualDesktopManager::self()->setCurrent(vd1);
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd1);
+
+    setWindowRule("desktops", QStringList{vd2->id()}, int(Rules::DontAffect));
 
     createTestWindow();
 
     // The client should appear on the current virtual desktop.
-    QCOMPARE(m_client->desktop(), 1);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
+    QCOMPARE(m_client->desktops(), {vd1});
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd1);
 
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testDesktopApply()
+void TestXdgShellClientRules::testDesktopsApply()
 {
     // We need at least two virtual desktop for this test.
     VirtualDesktopManager::self()->setCount(2);
     QCOMPARE(VirtualDesktopManager::self()->count(), 2u);
-    VirtualDesktopManager::self()->setCurrent(1);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
+    VirtualDesktop *vd1 = VirtualDesktopManager::self()->desktops().at(0);
+    VirtualDesktop *vd2 = VirtualDesktopManager::self()->desktops().at(1);
 
-    setWindowRule("desktops", QStringList{VirtualDesktopManager::self()->desktopForX11Id(2)->id()}, int(Rules::Apply));
+    VirtualDesktopManager::self()->setCurrent(vd1);
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd1);
+
+    setWindowRule("desktops", QStringList{vd2->id()}, int(Rules::Apply));
 
     createTestWindow();
 
     // The client should appear on the second virtual desktop.
-    QCOMPARE(m_client->desktop(), 2);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 2);
+    QCOMPARE(m_client->desktops(), {vd2});
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd2);
 
     // We still should be able to move the client between desktops.
-    workspace()->sendClientToDesktop(m_client, 1, true);
-    QCOMPARE(m_client->desktop(), 1);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 2);
+    m_client->setDesktops({vd1});
+    QCOMPARE(m_client->desktops(), {vd1});
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd2);
 
     // If we re-open the client, it should appear on the second virtual desktop again.
-    VirtualDesktopManager::self()->setCurrent(1);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
-
     destroyTestWindow();
+    VirtualDesktopManager::self()->setCurrent(vd1);
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd1);
     createTestWindow();
-    QCOMPARE(m_client->desktop(), 2);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 2);
+
+    QCOMPARE(m_client->desktops(), {vd2});
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd2);
 
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testDesktopRemember()
+void TestXdgShellClientRules::testDesktopsRemember()
 {
     // We need at least two virtual desktop for this test.
     VirtualDesktopManager::self()->setCount(2);
     QCOMPARE(VirtualDesktopManager::self()->count(), 2u);
-    VirtualDesktopManager::self()->setCurrent(1);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
+    VirtualDesktop *vd1 = VirtualDesktopManager::self()->desktops().at(0);
+    VirtualDesktop *vd2 = VirtualDesktopManager::self()->desktops().at(1);
 
-    setWindowRule("desktops", QStringList{VirtualDesktopManager::self()->desktopForX11Id(2)->id()}, int(Rules::Remember));
+    VirtualDesktopManager::self()->setCurrent(vd1);
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd1);
+
+    setWindowRule("desktops", QStringList{vd2->id()}, int(Rules::Remember));
 
     createTestWindow();
 
-    QCOMPARE(m_client->desktop(), 2);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 2);
+    QCOMPARE(m_client->desktops(), {vd2});
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd2);
 
     // Move the client to the first virtual desktop.
-    workspace()->sendClientToDesktop(m_client, 1, true);
-    QCOMPARE(m_client->desktop(), 1);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 2);
+    m_client->setDesktops({vd1});
+    QCOMPARE(m_client->desktops(), {vd1});
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd2);
 
     // If we create the client again, it should appear on the first virtual desktop.
     destroyTestWindow();
     createTestWindow();
 
-    QCOMPARE(m_client->desktop(), 1);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
+    QCOMPARE(m_client->desktops(), {vd1});
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd1);
 
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testDesktopForce()
+void TestXdgShellClientRules::testDesktopsForce()
 {
     // We need at least two virtual desktop for this test.
     VirtualDesktopManager::self()->setCount(2);
     QCOMPARE(VirtualDesktopManager::self()->count(), 2u);
-    VirtualDesktopManager::self()->setCurrent(1);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
+    VirtualDesktop *vd1 = VirtualDesktopManager::self()->desktops().at(0);
+    VirtualDesktop *vd2 = VirtualDesktopManager::self()->desktops().at(1);
 
-    setWindowRule("desktops", QStringList{VirtualDesktopManager::self()->desktopForX11Id(2)->id()}, int(Rules::Force));
+    VirtualDesktopManager::self()->setCurrent(vd1);
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd1);
+
+    setWindowRule("desktops", QStringList{vd2->id()}, int(Rules::Force));
 
     createTestWindow();
 
     // The client should appear on the second virtual desktop.
-    QCOMPARE(m_client->desktop(), 2);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 2);
+    QCOMPARE(m_client->desktops(), {vd2});
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd2);
+
 
     // Any attempt to move the client to another virtual desktop should fail.
-    workspace()->sendClientToDesktop(m_client, 1, true);
-    QCOMPARE(m_client->desktop(), 2);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 2);
+    m_client->setDesktops({vd1});
+    QCOMPARE(m_client->desktops(), {vd2});
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd2);
 
     // If we re-open the client, it should appear on the second virtual desktop again.
-    VirtualDesktopManager::self()->setCurrent(1);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
-
     destroyTestWindow();
+    VirtualDesktopManager::self()->setCurrent(vd1);
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd1);
     createTestWindow();
 
-    QCOMPARE(m_client->desktop(), 2);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 2);
+    QCOMPARE(m_client->desktops(), {vd2});
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd2);
 
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testDesktopApplyNow()
+void TestXdgShellClientRules::testDesktopsApplyNow()
 {
     // We need at least two virtual desktop for this test.
     VirtualDesktopManager::self()->setCount(2);
     QCOMPARE(VirtualDesktopManager::self()->count(), 2u);
-    VirtualDesktopManager::self()->setCurrent(1);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
+    VirtualDesktop *vd1 = VirtualDesktopManager::self()->desktops().at(0);
+    VirtualDesktop *vd2 = VirtualDesktopManager::self()->desktops().at(1);
+
+    VirtualDesktopManager::self()->setCurrent(vd1);
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd1);
 
     createTestWindow();
-    QCOMPARE(m_client->desktop(), 1);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
-    setWindowRule("desktops", QStringList{VirtualDesktopManager::self()->desktopForX11Id(2)->id()}, int(Rules::ApplyNow));
+    QCOMPARE(m_client->desktops(), {vd1});
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd1);
+
+    setWindowRule("desktops", QStringList{vd2->id()}, int(Rules::ApplyNow));
 
     // The client should have been moved to the second virtual desktop.
-    QCOMPARE(m_client->desktop(), 2);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
+    QCOMPARE(m_client->desktops(), {vd2});
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd1);
 
     // One should still be able to move the client between desktops.
-    workspace()->sendClientToDesktop(m_client, 1, true);
-    QCOMPARE(m_client->desktop(), 1);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
+    m_client->setDesktops({vd1});
+    QCOMPARE(m_client->desktops(), {vd1});
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd1);
 
     // The rule should not be applied again.
     m_client->evaluateWindowRules();
-    QCOMPARE(m_client->desktop(), 1);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
+    QCOMPARE(m_client->desktops(), {vd1});
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd1);
 
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testDesktopForceTemporarily()
+void TestXdgShellClientRules::testDesktopsForceTemporarily()
 {
     // We need at least two virtual desktop for this test.
     VirtualDesktopManager::self()->setCount(2);
     QCOMPARE(VirtualDesktopManager::self()->count(), 2u);
-    VirtualDesktopManager::self()->setCurrent(1);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
+    VirtualDesktop *vd1 = VirtualDesktopManager::self()->desktops().at(0);
+    VirtualDesktop *vd2 = VirtualDesktopManager::self()->desktops().at(1);
 
-    setWindowRule("desktops", QStringList{VirtualDesktopManager::self()->desktopForX11Id(2)->id()}, int(Rules::ForceTemporarily));
+    VirtualDesktopManager::self()->setCurrent(vd1);
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd1);
+
+    setWindowRule("desktops", QStringList{vd2->id()}, int(Rules::ForceTemporarily));
 
     createTestWindow();
 
     // The client should appear on the second virtual desktop.
-    QCOMPARE(m_client->desktop(), 2);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 2);
+    QCOMPARE(m_client->desktops(), {vd2});
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd2);
 
     // Any attempt to move the client to another virtual desktop should fail.
-    workspace()->sendClientToDesktop(m_client, 1, true);
-    QCOMPARE(m_client->desktop(), 2);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 2);
+    m_client->setDesktops({vd1});
+    QCOMPARE(m_client->desktops(), {vd2});
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd2);
 
     // The rule should be discarded when the client is withdrawn.
     destroyTestWindow();
-    VirtualDesktopManager::self()->setCurrent(1);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
+    VirtualDesktopManager::self()->setCurrent(vd1);
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd1);
     createTestWindow();
-    QCOMPARE(m_client->desktop(), 1);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
+
+    QCOMPARE(m_client->desktops(), {vd1});
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd1);
 
     // One should be able to move the client between desktops.
-    workspace()->sendClientToDesktop(m_client, 2, true);
-    QCOMPARE(m_client->desktop(), 2);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
-    workspace()->sendClientToDesktop(m_client, 1, true);
-    QCOMPARE(m_client->desktop(), 1);
-    QCOMPARE(VirtualDesktopManager::self()->current(), 1);
+    m_client->setDesktops({vd2});
+    QCOMPARE(m_client->desktops(), {vd2});
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd1);
+
+    m_client->setDesktops({vd1});
+    QCOMPARE(m_client->desktops(), {vd1});
+    QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd1);
 
     destroyTestWindow();
 }
