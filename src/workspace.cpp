@@ -2324,7 +2324,7 @@ QRect Workspace::clientArea(clientAreaOption opt, const AbstractOutput *output, 
 
 QRect Workspace::clientArea(clientAreaOption opt, const Toplevel *window) const
 {
-    return clientArea(opt, window, window->frameGeometry().center());
+    return clientArea(opt, window, window->output());
 }
 
 QRect Workspace::clientArea(clientAreaOption opt, const Toplevel *window, const AbstractOutput *output) const
