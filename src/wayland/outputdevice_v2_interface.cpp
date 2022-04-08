@@ -33,7 +33,7 @@ public:
 
     void sendGeometry(Resource *resource);
     wl_resource *sendNewMode(Resource *resource, OutputDeviceModeV2Interface *mode);
-    void sendCurrentMode(Resource *resource, OutputDeviceModeV2Interface *mode);
+    void sendCurrentMode(Resource *resource);
     void sendDone(Resource *resource);
     void sendUuid(Resource *resource);
     void sendEdid(Resource *resource);
@@ -183,7 +183,7 @@ void OutputDeviceV2Interface::setCurrentMode(OutputDeviceModeV2Interface *mode)
     const auto clientResources = d->resourceMap();
     for (auto it = clientResources.begin(); it != clientResources.end(); ++it) {
         auto resource = *it;
-        d->sendCurrentMode(resource, d->currentMode);
+        d->sendCurrentMode(resource);
         d->sendDone(resource);
     }
     d->updateGeometry();
@@ -260,22 +260,10 @@ void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource
     sendName(resource);
     sendSerialNumber(resource);
 
-    auto currentModeIt = modes.end();
-    for (auto it = modes.begin(); it != modes.end(); ++it) {
-        auto &mode = *it;
-        if (mode->flags().testFlag(OutputDeviceModeV2Interface::ModeFlag::Current)) {
-            // needs to be sent as last mode
-            currentModeIt = it;
-            continue;
-        }
+    for (OutputDeviceModeV2Interface *mode : std::as_const(modes)) {
         sendNewMode(resource, mode);
     }
-
-    if (currentModeIt != modes.end()) {
-        auto modeResource = sendNewMode(resource, *currentModeIt);
-        send_current_mode(resource->handle, modeResource);
-    }
-
+    sendCurrentMode(resource);
     sendUuid(resource);
     sendEdid(resource);
     sendEnabled(resource);
@@ -299,9 +287,9 @@ wl_resource *OutputDeviceV2InterfacePrivate::sendNewMode(Resource *resource, Out
     return modeResource->handle;
 }
 
-void OutputDeviceV2InterfacePrivate::sendCurrentMode(Resource *outputResource, OutputDeviceModeV2Interface *mode)
+void OutputDeviceV2InterfacePrivate::sendCurrentMode(Resource *outputResource)
 {
-    const auto modeResource = OutputDeviceModeV2InterfacePrivate::get(mode)->findResource(outputResource);
+    const auto modeResource = OutputDeviceModeV2InterfacePrivate::get(currentMode)->findResource(outputResource);
     send_current_mode(outputResource->handle, modeResource->handle);
 }
 
@@ -509,12 +497,12 @@ void OutputDeviceV2Interface::setModes(const QList<OutputDeviceModeV2Interface *
         d->modes << outputDeviceMode;
         outputDeviceMode->setParent(this);
 
+        for (auto resource : clientResources) {
+            d->sendNewMode(resource, outputDeviceMode);
+        }
+
         if (outputDeviceMode->flags().testFlag(OutputDeviceModeV2Interface::ModeFlag::Current)) {
             d->currentMode = outputDeviceMode;
-        } else {
-            for (auto resource : clientResources) {
-                d->sendNewMode(resource, outputDeviceMode);
-            }
         }
     }
 
@@ -523,8 +511,7 @@ void OutputDeviceV2Interface::setModes(const QList<OutputDeviceModeV2Interface *
     }
 
     for (auto resource : clientResources) {
-        d->sendNewMode(resource, d->currentMode);
-        d->sendCurrentMode(resource, d->currentMode);
+        d->sendCurrentMode(resource);
     }
 
     qDeleteAll(oldModes.crbegin(), oldModes.crend());
