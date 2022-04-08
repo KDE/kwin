@@ -12,6 +12,7 @@
 
 #include <kwinglutils.h>
 
+#include <QHash>
 #include <QPointer>
 #include <QSharedPointer>
 #include <optional>
@@ -44,9 +45,7 @@ class DrmPipeline;
 struct GbmFormat
 {
     uint32_t drmFormat = 0;
-    EGLint redSize = -1;
-    EGLint greenSize = -1;
-    EGLint blueSize = -1;
+    uint32_t bpp;
     EGLint alphaSize = -1;
 };
 bool operator==(const GbmFormat &lhs, const GbmFormat &rhs);
@@ -76,7 +75,7 @@ public:
 
     QSharedPointer<DrmBuffer> testBuffer(DrmAbstractOutput *output);
     EGLConfig config(uint32_t format) const;
-    GbmFormat gbmFormatForDrmFormat(uint32_t format) const;
+    std::optional<GbmFormat> gbmFormatForDrmFormat(uint32_t format) const;
     DrmGpu *gpu() const;
 
 Q_SIGNALS:
@@ -88,8 +87,8 @@ private:
     bool initRenderingContext();
 
     DrmBackend *m_backend;
-    QVector<GbmFormat> m_formats;
-    QMap<uint32_t, EGLConfig> m_configs;
+    QHash<uint32_t, GbmFormat> m_formats;
+    QHash<uint32_t, EGLConfig> m_configs;
 
     friend class EglGbmTexture;
 };

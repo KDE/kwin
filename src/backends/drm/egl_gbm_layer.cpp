@@ -100,7 +100,7 @@ OutputLayerBeginFrameInfo EglGbmLayer::beginFrame()
             m_shadowBuffer = m_oldShadowBuffer;
         } else {
             if (m_pipeline->pending.bufferTransformation != m_pipeline->pending.sourceTransformation) {
-                const auto format = m_eglBackend->gbmFormatForDrmFormat(m_gbmSurface->format());
+                const auto format = m_eglBackend->gbmFormatForDrmFormat(m_gbmSurface->format()).value();
                 m_shadowBuffer = QSharedPointer<ShadowBuffer>::create(m_pipeline->sourceSize(), format);
                 if (!m_shadowBuffer->isComplete()) {
                     return {};
@@ -238,18 +238,35 @@ bool EglGbmLayer::createGbmSurface(uint32_t format, const QVector<uint64_t> &mod
 
 bool EglGbmLayer::createGbmSurface()
 {
-    const auto tranches = m_eglBackend->dmabuf()->tranches();
-    for (const auto &tranche : tranches) {
-        for (auto it = tranche.formatTable.constBegin(); it != tranche.formatTable.constEnd(); it++) {
-            const uint32_t &format = it.key();
-            if (m_importMode == MultiGpuImportMode::DumbBufferXrgb8888 && format != DRM_FORMAT_XRGB8888) {
-                continue;
-            }
-            if (m_pipeline->isFormatSupported(format) && createGbmSurface(format, m_pipeline->supportedModifiers(format))) {
-                return true;
-            }
+    const auto formats = m_pipeline->supportedFormats();
+    QVector<GbmFormat> sortedFormats;
+    for (auto it = formats.begin(); it != formats.end(); it++) {
+        const auto format = m_eglBackend->gbmFormatForDrmFormat(it.key());
+        if (format.has_value()) {
+            sortedFormats << format.value();
         }
     }
+    std::sort(sortedFormats.begin(), sortedFormats.end(), [this](const auto &lhs, const auto &rhs) {
+        if (lhs.drmFormat == rhs.drmFormat) {
+            // prefer having an alpha channel
+            return lhs.alphaSize > rhs.alphaSize;
+        } else if (m_eglBackend->prefer10bpc() && ((lhs.bpp == 30) != (rhs.bpp == 30))) {
+            // prefer 10bpc / 30bpp formats
+            return lhs.bpp == 30 ? true : false;
+        } else {
+            // fallback
+            return lhs.drmFormat < rhs.drmFormat;
+        }
+    });
+    for (const auto &format : qAsConst(sortedFormats)) {
+        if (m_importMode == MultiGpuImportMode::DumbBufferXrgb8888 && format.drmFormat != DRM_FORMAT_XRGB8888) {
+            continue;
+        }
+        if (formats.contains(format.drmFormat) && createGbmSurface(format.drmFormat, formats[format.drmFormat])) {
+            return true;
+        }
+    }
+    qCCritical(KWIN_DRM, "Failed to create a gbm surface!");
     return false;
 }
 

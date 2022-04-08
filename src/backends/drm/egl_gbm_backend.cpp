@@ -161,42 +161,19 @@ bool EglGbmBackend::initBufferConfigs()
 
         GbmFormat format;
         format.drmFormat = gbmFormat;
+        EGLint red, green, blue;
         // Query number of bits for color channel
-        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_RED_SIZE, &format.redSize);
-        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_GREEN_SIZE, &format.greenSize);
-        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_BLUE_SIZE, &format.blueSize);
+        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_RED_SIZE, &red);
+        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_GREEN_SIZE, &green);
+        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_BLUE_SIZE, &blue);
         eglGetConfigAttrib(eglDisplay(), configs[i], EGL_ALPHA_SIZE, &format.alphaSize);
-
-        if (m_formats.contains(format)) {
+        format.bpp = red + green + blue;
+        if (m_formats.contains(gbmFormat)) {
             continue;
         }
-        m_formats << format;
+        m_formats[gbmFormat] = format;
         m_configs[format.drmFormat] = configs[i];
     }
-
-    QVector<int> colorDepthOrder = {30, 24};
-    bool ok = false;
-    const int preferred = qEnvironmentVariableIntValue("KWIN_DRM_PREFER_COLOR_DEPTH", &ok);
-    if (ok) {
-        colorDepthOrder.prepend(preferred);
-    }
-
-    std::sort(m_formats.begin(), m_formats.end(), [&colorDepthOrder](const auto &lhs, const auto &rhs) {
-        const int ls = lhs.redSize + lhs.greenSize + lhs.blueSize;
-        const int rs = rhs.redSize + rhs.greenSize + rhs.blueSize;
-        if (ls == rs) {
-            return lhs.alphaSize < rhs.alphaSize;
-        } else {
-            for (const int &d : qAsConst(colorDepthOrder)) {
-                if (ls == d) {
-                    return true;
-                } else if (rs == d) {
-                    return false;
-                }
-            }
-            return ls > rs;
-        }
-    });
     if (!m_formats.isEmpty()) {
         return true;
     }
@@ -242,23 +219,11 @@ QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(AbstractOutput *output
     return static_cast<EglGbmLayer *>(drmOutput->outputLayer())->texture();
 }
 
-GbmFormat EglGbmBackend::gbmFormatForDrmFormat(uint32_t format) const
+std::optional<GbmFormat> EglGbmBackend::gbmFormatForDrmFormat(uint32_t format) const
 {
     // TODO use a hardcoded lookup table where needed instead?
-    const auto it = std::find_if(m_formats.begin(), m_formats.end(), [format](const auto &gbmFormat) {
-        return gbmFormat.drmFormat == format;
-    });
-    if (it == m_formats.end()) {
-        return GbmFormat{
-            .drmFormat = DRM_FORMAT_XRGB8888,
-            .redSize = 8,
-            .greenSize = 8,
-            .blueSize = 8,
-            .alphaSize = 0,
-        };
-    } else {
-        return *it;
-    }
+    const auto it = m_formats.constFind(format);
+    return it == m_formats.constEnd() ? std::optional<GbmFormat>() : *it;
 }
 
 bool EglGbmBackend::prefer10bpc() const

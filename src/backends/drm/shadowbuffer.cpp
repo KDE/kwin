@@ -108,12 +108,10 @@ uint32_t ShadowBuffer::drmFormat() const
 
 GLint ShadowBuffer::internalFormat(const GbmFormat &format) const
 {
-    if (format.redSize <= 8 && format.greenSize <= 8 && format.blueSize <= 8) {
+    if (format.bpp <= 24) {
         return GL_RGBA8;
-    } else if (format.redSize <= 10 && format.greenSize <= 10 && format.blueSize <= 10) {
+    } else if (format.bpp <= 30) {
         return GL_RGB10_A2;
-    } else if (format.redSize <= 12 && format.greenSize <= 12 && format.blueSize <= 12) {
-        return GL_RGBA12;
     } else {
         return GL_RGBA16;
     }
