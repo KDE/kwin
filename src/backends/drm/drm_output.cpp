@@ -337,7 +337,6 @@ bool DrmOutput::present(const QSharedPointer<DrmBuffer> &buffer, QRegion damaged
             m_pipeline->applyPendingChanges();
         } else {
             m_pipeline->revertPendingChanges();
-            setVrrPolicy(RenderLoop::VrrPolicy::Never);
         }
     }
     if (m_pipeline->present(buffer)) {
