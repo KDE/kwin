@@ -317,7 +317,6 @@ bool DrmOutput::present()
             m_pipeline->applyPendingChanges();
         } else {
             m_pipeline->revertPendingChanges();
-            setVrrPolicy(RenderLoop::VrrPolicy::Never);
         }
     }
     bool modeset = gpu()->needsModeset();
