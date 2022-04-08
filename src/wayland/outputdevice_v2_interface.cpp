@@ -168,6 +168,7 @@ int OutputDeviceV2Interface::refreshRate() const
 
 void OutputDeviceV2Interface::setCurrentMode(OutputDeviceModeV2Interface *mode)
 {
+    Q_ASSERT(d->modes.contains(mode));
     if (mode == d->currentMode) {
         return;
     }
