@@ -20,24 +20,14 @@
 #include <KConfigGroup>
 
 #include <cerrno>
+#include <cstring>
 
 namespace KWin
 {
 
 static bool checkIfEqual(const drmModeModeInfo *one, const drmModeModeInfo *two)
 {
-    return one->clock == two->clock
-        && one->hdisplay == two->hdisplay
-        && one->hsync_start == two->hsync_start
-        && one->hsync_end == two->hsync_end
-        && one->htotal == two->htotal
-        && one->hskew == two->hskew
-        && one->vdisplay == two->vdisplay
-        && one->vsync_start == two->vsync_start
-        && one->vsync_end == two->vsync_end
-        && one->vtotal == two->vtotal
-        && one->vscan == two->vscan
-        && one->vrefresh == two->vrefresh;
+    return std::memcmp(one, two, sizeof(drmModeModeInfo)) == 0;
 }
 
 static quint64 refreshRateForMode(_drmModeModeInfo *m)
