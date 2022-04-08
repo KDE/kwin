@@ -1488,7 +1488,6 @@ void AbstractClient::setupWindowManagementInterface()
     w->setKeepBelow(keepBelow());
     w->setMaximized(maximizeMode() == KWin::MaximizeFull);
     w->setMinimized(isMinimized());
-    w->setOnAllDesktops(isOnAllDesktops());
     w->setDemandsAttention(isDemandingAttention());
     w->setCloseable(isCloseable());
     w->setMaximizeable(isMaximizable());
@@ -1620,6 +1619,10 @@ void AbstractClient::setupWindowManagementInterface()
     for (const auto vd : qAsConst(m_desktops)) {
         w->addPlasmaVirtualDesktop(vd->id());
     }
+    // We need to set `OnAllDesktops` after the actual VD list has been added.
+    // Otherwise it will unconditionally add the current desktop to the interface
+    // which may not be the case, for example, when using rules
+    w->setOnAllDesktops(isOnAllDesktops());
 
     //Plasma Virtual desktop management
     //show/hide when the window enters/exits from desktop
