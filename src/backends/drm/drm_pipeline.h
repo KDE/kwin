@@ -63,6 +63,7 @@ public:
      */
     bool present();
     bool testScanout();
+    bool maybeModeset();
 
     bool needsModeset() const;
     void applyPendingChanges();

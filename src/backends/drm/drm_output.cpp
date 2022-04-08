@@ -320,14 +320,15 @@ bool DrmOutput::present()
             setVrrPolicy(RenderLoop::VrrPolicy::Never);
         }
     }
-    if (m_pipeline->present()) {
+    bool modeset = gpu()->needsModeset();
+    if (modeset ? m_pipeline->maybeModeset() : m_pipeline->present()) {
         Q_EMIT outputChange(m_pipeline->pending.layer->currentDamage());
         return true;
-    } else {
+    } else if (!modeset) {
         qCWarning(KWIN_DRM) << "Presentation failed!" << strerror(errno);
         frameFailed();
-        return false;
     }
+    return false;
 }
 
 int DrmOutput::gammaRampSize() const

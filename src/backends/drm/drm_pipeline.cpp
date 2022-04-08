@@ -61,10 +61,6 @@ bool DrmPipeline::testScanout()
 bool DrmPipeline::present()
 {
     Q_ASSERT(pending.crtc);
-    if (gpu()->needsModeset()) {
-        m_modesetPresentPending = true;
-        return gpu()->maybeModeset();
-    }
     if (gpu()->atomicModeSetting()) {
         return commitPipelines({this}, CommitMode::Commit);
     } else {
@@ -77,6 +73,12 @@ bool DrmPipeline::present()
         }
     }
     return true;
+}
+
+bool DrmPipeline::maybeModeset()
+{
+    m_modesetPresentPending = true;
+    return gpu()->maybeModeset();
 }
 
 bool DrmPipeline::commitPipelines(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects)
