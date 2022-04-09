@@ -615,7 +615,7 @@ void InputMethod::updateInputPanelState()
         const bool bottomKeyboard = m_inputClient && m_inputClient->mode() != InputPanelV1Client::Overlay && m_inputClient->isShown();
         m_trackedClient->setVirtualKeyboardGeometry(bottomKeyboard ? m_inputClient->inputGeometry() : QRect());
 
-        if (m_inputClient) {
+        if (m_inputClient && m_inputClient->mode() != InputPanelV1Client::Overlay) {
             overlap = m_trackedClient->frameGeometry() & m_inputClient->inputGeometry();
             overlap.moveTo(m_trackedClient->mapToLocal(overlap.topLeft()));
         }
