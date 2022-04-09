@@ -166,12 +166,12 @@ private:
 private:
     KSharedConfig::Ptr m_config;
 
-    AbstractClient *client;
-    QScopedPointer<KWayland::Client::Surface> surface;
-    QScopedPointer<Test::XdgToplevel> shellSurface;
+    AbstractClient *m_client;
+    QScopedPointer<KWayland::Client::Surface> m_surface;
+    QScopedPointer<Test::XdgToplevel> m_shellSurface;
 
-    QScopedPointer<QSignalSpy> toplevelConfigureRequestedSpy;
-    QScopedPointer<QSignalSpy> surfaceConfigureRequestedSpy;
+    QScopedPointer<QSignalSpy> m_toplevelConfigureRequestedSpy;
+    QScopedPointer<QSignalSpy> m_surfaceConfigureRequestedSpy;
 };
 
 void TestXdgShellClientRules::initTestCase()
@@ -226,20 +226,20 @@ void TestXdgShellClientRules::createTestWindow(ClientFlags flags)
     const auto decorationMode = (flags & ServerSideDecoration) ? Test::XdgToplevelDecorationV1::mode_server_side
                                                                : Test::XdgToplevelDecorationV1::mode_client_side;
     // Create an xdg surface.
-    surface.reset(Test::createSurface());
-    shellSurface.reset(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly, surface.data()));
-    Test::XdgToplevelDecorationV1 *decoration = Test::createXdgToplevelDecorationV1(shellSurface.data(), shellSurface.data());
+    m_surface.reset(Test::createSurface());
+    m_shellSurface.reset(Test::createXdgToplevelSurface(m_surface.data(), Test::CreationSetup::CreateOnly, m_surface.data()));
+    Test::XdgToplevelDecorationV1 *decoration = Test::createXdgToplevelDecorationV1(m_shellSurface.data(), m_shellSurface.data());
 
     // Add signal watchers
-    toplevelConfigureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested));
-    surfaceConfigureRequestedSpy.reset(new QSignalSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested));
+    m_toplevelConfigureRequestedSpy.reset(new QSignalSpy(m_shellSurface.data(), &Test::XdgToplevel::configureRequested));
+    m_surfaceConfigureRequestedSpy.reset(new QSignalSpy(m_shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested));
 
-    shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
+    m_shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
     decoration->set_mode(decorationMode);
 
     // Wait for the initial configure event
-    surface->commit(KWayland::Client::Surface::CommitFlag::None);
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
+    m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
 
     if (createClient) {
         mapClientToSurface(QSize(100, 50), flags);
@@ -250,26 +250,26 @@ void TestXdgShellClientRules::mapClientToSurface(QSize clientSize, ClientFlags f
 {
     const bool clientShouldBeActive = !(flags & ClientShouldBeInactive);
 
-    QVERIFY(!surface.isNull());
-    QVERIFY(!shellSurface.isNull());
-    QVERIFY(!surfaceConfigureRequestedSpy.isNull());
+    QVERIFY(!m_surface.isNull());
+    QVERIFY(!m_shellSurface.isNull());
+    QVERIFY(!m_surfaceConfigureRequestedSpy.isNull());
 
     // Draw content of the surface.
-    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
+    m_shellSurface->xdgSurface()->ack_configure(m_surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
 
     // Create the client
-    client = Test::renderAndWaitForShown(surface.data(), clientSize, Qt::blue);
-    QVERIFY(client);
-    QCOMPARE(client->isActive(), clientShouldBeActive);
+    m_client = Test::renderAndWaitForShown(m_surface.data(), clientSize, Qt::blue);
+    QVERIFY(m_client);
+    QCOMPARE(m_client->isActive(), clientShouldBeActive);
 }
 
 void TestXdgShellClientRules::destroyTestWindow()
 {
-    surfaceConfigureRequestedSpy.reset();
-    toplevelConfigureRequestedSpy.reset();
-    shellSurface.reset();
-    surface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(client));
+    m_surfaceConfigureRequestedSpy.reset();
+    m_toplevelConfigureRequestedSpy.reset();
+    m_shellSurface.reset();
+    m_surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(m_client));
 }
 
 template<typename T>
@@ -298,9 +298,9 @@ void TestXdgShellClientRules::testPositionDontAffect()
 
     // The position of the client should not be affected by the rule. The default
     // placement policy will put the client in the top-left corner of the screen.
-    QVERIFY(client->isMovable());
-    QVERIFY(client->isMovableAcrossScreens());
-    QCOMPARE(client->pos(), QPoint(0, 0));
+    QVERIFY(m_client->isMovable());
+    QVERIFY(m_client->isMovableAcrossScreens());
+    QCOMPARE(m_client->pos(), QPoint(0, 0));
 
     destroyTestWindow();
 }
@@ -312,48 +312,48 @@ void TestXdgShellClientRules::testPositionApply()
     createTestWindow();
 
     // The client should be moved to the position specified by the rule.
-    QVERIFY(client->isMovable());
-    QVERIFY(client->isMovableAcrossScreens());
-    QCOMPARE(client->pos(), QPoint(42, 42));
+    QVERIFY(m_client->isMovable());
+    QVERIFY(m_client->isMovableAcrossScreens());
+    QCOMPARE(m_client->pos(), QPoint(42, 42));
 
     // One should still be able to move the client around.
-    QSignalSpy clientStartMoveResizedSpy(client, &AbstractClient::clientStartUserMovedResized);
+    QSignalSpy clientStartMoveResizedSpy(m_client, &AbstractClient::clientStartUserMovedResized);
     QVERIFY(clientStartMoveResizedSpy.isValid());
-    QSignalSpy clientStepUserMovedResizedSpy(client, &AbstractClient::clientStepUserMovedResized);
+    QSignalSpy clientStepUserMovedResizedSpy(m_client, &AbstractClient::clientStepUserMovedResized);
     QVERIFY(clientStepUserMovedResizedSpy.isValid());
-    QSignalSpy clientFinishUserMovedResizedSpy(client, &AbstractClient::clientFinishUserMovedResized);
+    QSignalSpy clientFinishUserMovedResizedSpy(m_client, &AbstractClient::clientFinishUserMovedResized);
     QVERIFY(clientFinishUserMovedResizedSpy.isValid());
 
     QCOMPARE(workspace()->moveResizeClient(), nullptr);
-    QVERIFY(!client->isInteractiveMove());
-    QVERIFY(!client->isInteractiveResize());
+    QVERIFY(!m_client->isInteractiveMove());
+    QVERIFY(!m_client->isInteractiveResize());
     workspace()->slotWindowMove();
-    QCOMPARE(workspace()->moveResizeClient(), client);
+    QCOMPARE(workspace()->moveResizeClient(), m_client);
     QCOMPARE(clientStartMoveResizedSpy.count(), 1);
-    QVERIFY(client->isInteractiveMove());
-    QVERIFY(!client->isInteractiveResize());
+    QVERIFY(m_client->isInteractiveMove());
+    QVERIFY(!m_client->isInteractiveResize());
 
     const QPoint cursorPos = KWin::Cursors::self()->mouse()->pos();
-    client->keyPressEvent(Qt::Key_Right);
-    client->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
+    m_client->keyPressEvent(Qt::Key_Right);
+    m_client->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
-    QCOMPARE(client->pos(), QPoint(50, 42));
+    QCOMPARE(m_client->pos(), QPoint(50, 42));
 
-    client->keyPressEvent(Qt::Key_Enter);
+    m_client->keyPressEvent(Qt::Key_Enter);
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
     QCOMPARE(workspace()->moveResizeClient(), nullptr);
-    QVERIFY(!client->isInteractiveMove());
-    QVERIFY(!client->isInteractiveResize());
-    QCOMPARE(client->pos(), QPoint(50, 42));
+    QVERIFY(!m_client->isInteractiveMove());
+    QVERIFY(!m_client->isInteractiveResize());
+    QCOMPARE(m_client->pos(), QPoint(50, 42));
 
     // The rule should be applied again if the client appears after it's been closed.
     destroyTestWindow();
     createTestWindow();
 
-    QVERIFY(client->isMovable());
-    QVERIFY(client->isMovableAcrossScreens());
-    QCOMPARE(client->pos(), QPoint(42, 42));
+    QVERIFY(m_client->isMovable());
+    QVERIFY(m_client->isMovableAcrossScreens());
+    QCOMPARE(m_client->pos(), QPoint(42, 42));
 
     destroyTestWindow();
 }
@@ -364,48 +364,48 @@ void TestXdgShellClientRules::testPositionRemember()
     createTestWindow();
 
     // The client should be moved to the position specified by the rule.
-    QVERIFY(client->isMovable());
-    QVERIFY(client->isMovableAcrossScreens());
-    QCOMPARE(client->pos(), QPoint(42, 42));
+    QVERIFY(m_client->isMovable());
+    QVERIFY(m_client->isMovableAcrossScreens());
+    QCOMPARE(m_client->pos(), QPoint(42, 42));
 
     // One should still be able to move the client around.
-    QSignalSpy clientStartMoveResizedSpy(client, &AbstractClient::clientStartUserMovedResized);
+    QSignalSpy clientStartMoveResizedSpy(m_client, &AbstractClient::clientStartUserMovedResized);
     QVERIFY(clientStartMoveResizedSpy.isValid());
-    QSignalSpy clientStepUserMovedResizedSpy(client, &AbstractClient::clientStepUserMovedResized);
+    QSignalSpy clientStepUserMovedResizedSpy(m_client, &AbstractClient::clientStepUserMovedResized);
     QVERIFY(clientStepUserMovedResizedSpy.isValid());
-    QSignalSpy clientFinishUserMovedResizedSpy(client, &AbstractClient::clientFinishUserMovedResized);
+    QSignalSpy clientFinishUserMovedResizedSpy(m_client, &AbstractClient::clientFinishUserMovedResized);
     QVERIFY(clientFinishUserMovedResizedSpy.isValid());
 
     QCOMPARE(workspace()->moveResizeClient(), nullptr);
-    QVERIFY(!client->isInteractiveMove());
-    QVERIFY(!client->isInteractiveResize());
+    QVERIFY(!m_client->isInteractiveMove());
+    QVERIFY(!m_client->isInteractiveResize());
     workspace()->slotWindowMove();
-    QCOMPARE(workspace()->moveResizeClient(), client);
+    QCOMPARE(workspace()->moveResizeClient(), m_client);
     QCOMPARE(clientStartMoveResizedSpy.count(), 1);
-    QVERIFY(client->isInteractiveMove());
-    QVERIFY(!client->isInteractiveResize());
+    QVERIFY(m_client->isInteractiveMove());
+    QVERIFY(!m_client->isInteractiveResize());
 
     const QPoint cursorPos = KWin::Cursors::self()->mouse()->pos();
-    client->keyPressEvent(Qt::Key_Right);
-    client->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
+    m_client->keyPressEvent(Qt::Key_Right);
+    m_client->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
-    QCOMPARE(client->pos(), QPoint(50, 42));
+    QCOMPARE(m_client->pos(), QPoint(50, 42));
 
-    client->keyPressEvent(Qt::Key_Enter);
+    m_client->keyPressEvent(Qt::Key_Enter);
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
     QCOMPARE(workspace()->moveResizeClient(), nullptr);
-    QVERIFY(!client->isInteractiveMove());
-    QVERIFY(!client->isInteractiveResize());
-    QCOMPARE(client->pos(), QPoint(50, 42));
+    QVERIFY(!m_client->isInteractiveMove());
+    QVERIFY(!m_client->isInteractiveResize());
+    QCOMPARE(m_client->pos(), QPoint(50, 42));
 
     // The client should be placed at the last know position if we reopen it.
     destroyTestWindow();
     createTestWindow();
 
-    QVERIFY(client->isMovable());
-    QVERIFY(client->isMovableAcrossScreens());
-    QCOMPARE(client->pos(), QPoint(50, 42));
+    QVERIFY(m_client->isMovable());
+    QVERIFY(m_client->isMovableAcrossScreens());
+    QCOMPARE(m_client->pos(), QPoint(50, 42));
 
     destroyTestWindow();
 }
@@ -417,29 +417,29 @@ void TestXdgShellClientRules::testPositionForce()
     createTestWindow();
 
     // The client should be moved to the position specified by the rule.
-    QVERIFY(!client->isMovable());
-    QVERIFY(!client->isMovableAcrossScreens());
-    QCOMPARE(client->pos(), QPoint(42, 42));
+    QVERIFY(!m_client->isMovable());
+    QVERIFY(!m_client->isMovableAcrossScreens());
+    QCOMPARE(m_client->pos(), QPoint(42, 42));
 
     // User should not be able to move the client.
-    QSignalSpy clientStartMoveResizedSpy(client, &AbstractClient::clientStartUserMovedResized);
+    QSignalSpy clientStartMoveResizedSpy(m_client, &AbstractClient::clientStartUserMovedResized);
     QVERIFY(clientStartMoveResizedSpy.isValid());
     QCOMPARE(workspace()->moveResizeClient(), nullptr);
-    QVERIFY(!client->isInteractiveMove());
-    QVERIFY(!client->isInteractiveResize());
+    QVERIFY(!m_client->isInteractiveMove());
+    QVERIFY(!m_client->isInteractiveResize());
     workspace()->slotWindowMove();
     QCOMPARE(workspace()->moveResizeClient(), nullptr);
     QCOMPARE(clientStartMoveResizedSpy.count(), 0);
-    QVERIFY(!client->isInteractiveMove());
-    QVERIFY(!client->isInteractiveResize());
+    QVERIFY(!m_client->isInteractiveMove());
+    QVERIFY(!m_client->isInteractiveResize());
 
     // The position should still be forced if we reopen the client.
     destroyTestWindow();
     createTestWindow();
 
-    QVERIFY(!client->isMovable());
-    QVERIFY(!client->isMovableAcrossScreens());
-    QCOMPARE(client->pos(), QPoint(42, 42));
+    QVERIFY(!m_client->isMovable());
+    QVERIFY(!m_client->isMovableAcrossScreens());
+    QCOMPARE(m_client->pos(), QPoint(42, 42));
 
     destroyTestWindow();
 }
@@ -450,55 +450,55 @@ void TestXdgShellClientRules::testPositionApplyNow()
 
     // The position of the client isn't set by any rule, thus the default placement
     // policy will try to put the client in the top-left corner of the screen.
-    QVERIFY(client->isMovable());
-    QVERIFY(client->isMovableAcrossScreens());
-    QCOMPARE(client->pos(), QPoint(0, 0));
+    QVERIFY(m_client->isMovable());
+    QVERIFY(m_client->isMovableAcrossScreens());
+    QCOMPARE(m_client->pos(), QPoint(0, 0));
 
-    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
+    QSignalSpy frameGeometryChangedSpy(m_client, &AbstractClient::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
 
     setWindowRule("position", QPoint(42, 42), int(Rules::ApplyNow));
 
     // The client should be moved to the position specified by the rule.
     QCOMPARE(frameGeometryChangedSpy.count(), 1);
-    QCOMPARE(client->pos(), QPoint(42, 42));
+    QCOMPARE(m_client->pos(), QPoint(42, 42));
 
     // We still have to be able to move the client around.
-    QVERIFY(client->isMovable());
-    QVERIFY(client->isMovableAcrossScreens());
-    QSignalSpy clientStartMoveResizedSpy(client, &AbstractClient::clientStartUserMovedResized);
+    QVERIFY(m_client->isMovable());
+    QVERIFY(m_client->isMovableAcrossScreens());
+    QSignalSpy clientStartMoveResizedSpy(m_client, &AbstractClient::clientStartUserMovedResized);
     QVERIFY(clientStartMoveResizedSpy.isValid());
-    QSignalSpy clientStepUserMovedResizedSpy(client, &AbstractClient::clientStepUserMovedResized);
+    QSignalSpy clientStepUserMovedResizedSpy(m_client, &AbstractClient::clientStepUserMovedResized);
     QVERIFY(clientStepUserMovedResizedSpy.isValid());
-    QSignalSpy clientFinishUserMovedResizedSpy(client, &AbstractClient::clientFinishUserMovedResized);
+    QSignalSpy clientFinishUserMovedResizedSpy(m_client, &AbstractClient::clientFinishUserMovedResized);
     QVERIFY(clientFinishUserMovedResizedSpy.isValid());
 
     QCOMPARE(workspace()->moveResizeClient(), nullptr);
-    QVERIFY(!client->isInteractiveMove());
-    QVERIFY(!client->isInteractiveResize());
+    QVERIFY(!m_client->isInteractiveMove());
+    QVERIFY(!m_client->isInteractiveResize());
     workspace()->slotWindowMove();
-    QCOMPARE(workspace()->moveResizeClient(), client);
+    QCOMPARE(workspace()->moveResizeClient(), m_client);
     QCOMPARE(clientStartMoveResizedSpy.count(), 1);
-    QVERIFY(client->isInteractiveMove());
-    QVERIFY(!client->isInteractiveResize());
+    QVERIFY(m_client->isInteractiveMove());
+    QVERIFY(!m_client->isInteractiveResize());
 
     const QPoint cursorPos = KWin::Cursors::self()->mouse()->pos();
-    client->keyPressEvent(Qt::Key_Right);
-    client->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
+    m_client->keyPressEvent(Qt::Key_Right);
+    m_client->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
-    QCOMPARE(client->pos(), QPoint(50, 42));
+    QCOMPARE(m_client->pos(), QPoint(50, 42));
 
-    client->keyPressEvent(Qt::Key_Enter);
+    m_client->keyPressEvent(Qt::Key_Enter);
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
     QCOMPARE(workspace()->moveResizeClient(), nullptr);
-    QVERIFY(!client->isInteractiveMove());
-    QVERIFY(!client->isInteractiveResize());
-    QCOMPARE(client->pos(), QPoint(50, 42));
+    QVERIFY(!m_client->isInteractiveMove());
+    QVERIFY(!m_client->isInteractiveResize());
+    QCOMPARE(m_client->pos(), QPoint(50, 42));
 
     // The rule should not be applied again.
-    client->evaluateWindowRules();
-    QCOMPARE(client->pos(), QPoint(50, 42));
+    m_client->evaluateWindowRules();
+    QCOMPARE(m_client->pos(), QPoint(50, 42));
 
     destroyTestWindow();
 }
@@ -510,29 +510,29 @@ void TestXdgShellClientRules::testPositionForceTemporarily()
     createTestWindow();
 
     // The client should be moved to the position specified by the rule.
-    QVERIFY(!client->isMovable());
-    QVERIFY(!client->isMovableAcrossScreens());
-    QCOMPARE(client->pos(), QPoint(42, 42));
+    QVERIFY(!m_client->isMovable());
+    QVERIFY(!m_client->isMovableAcrossScreens());
+    QCOMPARE(m_client->pos(), QPoint(42, 42));
 
     // User should not be able to move the client.
-    QSignalSpy clientStartMoveResizedSpy(client, &AbstractClient::clientStartUserMovedResized);
+    QSignalSpy clientStartMoveResizedSpy(m_client, &AbstractClient::clientStartUserMovedResized);
     QVERIFY(clientStartMoveResizedSpy.isValid());
     QCOMPARE(workspace()->moveResizeClient(), nullptr);
-    QVERIFY(!client->isInteractiveMove());
-    QVERIFY(!client->isInteractiveResize());
+    QVERIFY(!m_client->isInteractiveMove());
+    QVERIFY(!m_client->isInteractiveResize());
     workspace()->slotWindowMove();
     QCOMPARE(workspace()->moveResizeClient(), nullptr);
     QCOMPARE(clientStartMoveResizedSpy.count(), 0);
-    QVERIFY(!client->isInteractiveMove());
-    QVERIFY(!client->isInteractiveResize());
+    QVERIFY(!m_client->isInteractiveMove());
+    QVERIFY(!m_client->isInteractiveResize());
 
     // The rule should be discarded if we close the client.
     destroyTestWindow();
     createTestWindow();
 
-    QVERIFY(client->isMovable());
-    QVERIFY(client->isMovableAcrossScreens());
-    QCOMPARE(client->pos(), QPoint(0, 0));
+    QVERIFY(m_client->isMovable());
+    QVERIFY(m_client->isMovableAcrossScreens());
+    QCOMPARE(m_client->pos(), QPoint(0, 0));
 
     destroyTestWindow();
 }
@@ -544,19 +544,19 @@ void TestXdgShellClientRules::testSizeDontAffect()
     createTestWindow(ReturnAfterSurfaceConfiguration);
 
     // The window size shouldn't be enforced by the rule.
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->last().first().toSize(), QSize(0, 0));
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().first().toSize(), QSize(0, 0));
 
     // Map the client.
     mapClientToSurface(QSize(100, 50));
-    QVERIFY(client->isResizable());
-    QCOMPARE(client->size(), QSize(100, 50));
+    QVERIFY(m_client->isResizable());
+    QCOMPARE(m_client->size(), QSize(100, 50));
 
     // We should receive a configure event when the client becomes active.
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 2);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 2);
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 2);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
 
     destroyTestWindow();
 }
@@ -569,95 +569,95 @@ void TestXdgShellClientRules::testSizeApply()
 
     // The initial configure event should contain size hint set by the rule.
     Test::XdgToplevel::States states;
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(480, 640));
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(480, 640));
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Resizing));
 
     // Map the client.
     mapClientToSurface(QSize(480, 640));
-    QVERIFY(client->isResizable());
-    QCOMPARE(client->size(), QSize(480, 640));
+    QVERIFY(m_client->isResizable());
+    QCOMPARE(m_client->size(), QSize(480, 640));
 
     // We should receive a configure event when the client becomes active.
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 2);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 2);
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 2);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Resizing));
 
     // One still should be able to resize the client.
-    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
+    QSignalSpy frameGeometryChangedSpy(m_client, &AbstractClient::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
-    QSignalSpy clientStartMoveResizedSpy(client, &AbstractClient::clientStartUserMovedResized);
+    QSignalSpy clientStartMoveResizedSpy(m_client, &AbstractClient::clientStartUserMovedResized);
     QVERIFY(clientStartMoveResizedSpy.isValid());
-    QSignalSpy clientStepUserMovedResizedSpy(client, &AbstractClient::clientStepUserMovedResized);
+    QSignalSpy clientStepUserMovedResizedSpy(m_client, &AbstractClient::clientStepUserMovedResized);
     QVERIFY(clientStepUserMovedResizedSpy.isValid());
-    QSignalSpy clientFinishUserMovedResizedSpy(client, &AbstractClient::clientFinishUserMovedResized);
+    QSignalSpy clientFinishUserMovedResizedSpy(m_client, &AbstractClient::clientFinishUserMovedResized);
     QVERIFY(clientFinishUserMovedResizedSpy.isValid());
 
     QCOMPARE(workspace()->moveResizeClient(), nullptr);
-    QVERIFY(!client->isInteractiveMove());
-    QVERIFY(!client->isInteractiveResize());
+    QVERIFY(!m_client->isInteractiveMove());
+    QVERIFY(!m_client->isInteractiveResize());
     workspace()->slotWindowResize();
-    QCOMPARE(workspace()->moveResizeClient(), client);
+    QCOMPARE(workspace()->moveResizeClient(), m_client);
     QCOMPARE(clientStartMoveResizedSpy.count(), 1);
-    QVERIFY(!client->isInteractiveMove());
-    QVERIFY(client->isInteractiveResize());
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 3);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 3);
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(!m_client->isInteractiveMove());
+    QVERIFY(m_client->isInteractiveResize());
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 3);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 3);
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
-    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
+    m_shellSurface->xdgSurface()->ack_configure(m_surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
 
     const QPoint cursorPos = KWin::Cursors::self()->mouse()->pos();
-    client->keyPressEvent(Qt::Key_Right);
-    client->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
+    m_client->keyPressEvent(Qt::Key_Right);
+    m_client->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 4);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 4);
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 4);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 4);
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
-    QCOMPARE(toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(488, 640));
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(488, 640));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
-    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
-    Test::render(surface.data(), QSize(488, 640), Qt::blue);
+    m_shellSurface->xdgSurface()->ack_configure(m_surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
+    Test::render(m_surface.data(), QSize(488, 640), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(client->size(), QSize(488, 640));
+    QCOMPARE(m_client->size(), QSize(488, 640));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
 
-    client->keyPressEvent(Qt::Key_Enter);
+    m_client->keyPressEvent(Qt::Key_Enter);
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
     QCOMPARE(workspace()->moveResizeClient(), nullptr);
-    QVERIFY(!client->isInteractiveMove());
-    QVERIFY(!client->isInteractiveResize());
+    QVERIFY(!m_client->isInteractiveMove());
+    QVERIFY(!m_client->isInteractiveResize());
 
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 5);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 5);
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 5);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 5);
 
     // The rule should be applied again if the client appears after it's been closed.
     destroyTestWindow();
     createTestWindow(ReturnAfterSurfaceConfiguration);
 
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->last().first().toSize(), QSize(480, 640));
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().first().toSize(), QSize(480, 640));
 
     mapClientToSurface(QSize(480, 640));
-    QVERIFY(client->isResizable());
-    QCOMPARE(client->size(), QSize(480, 640));
+    QVERIFY(m_client->isResizable());
+    QCOMPARE(m_client->size(), QSize(480, 640));
 
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 2);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 2);
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 2);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
 
     destroyTestWindow();
 }
@@ -670,95 +670,95 @@ void TestXdgShellClientRules::testSizeRemember()
 
     // The initial configure event should contain size hint set by the rule.
     Test::XdgToplevel::States states;
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->last().first().toSize(), QSize(480, 640));
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().first().toSize(), QSize(480, 640));
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Resizing));
 
     // Map the client.
     mapClientToSurface(QSize(480, 640));
-    QVERIFY(client->isResizable());
-    QCOMPARE(client->size(), QSize(480, 640));
+    QVERIFY(m_client->isResizable());
+    QCOMPARE(m_client->size(), QSize(480, 640));
 
     // We should receive a configure event when the client becomes active.
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 2);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 2);
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 2);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Resizing));
 
     // One should still be able to resize the client.
-    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
+    QSignalSpy frameGeometryChangedSpy(m_client, &AbstractClient::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
-    QSignalSpy clientStartMoveResizedSpy(client, &AbstractClient::clientStartUserMovedResized);
+    QSignalSpy clientStartMoveResizedSpy(m_client, &AbstractClient::clientStartUserMovedResized);
     QVERIFY(clientStartMoveResizedSpy.isValid());
-    QSignalSpy clientStepUserMovedResizedSpy(client, &AbstractClient::clientStepUserMovedResized);
+    QSignalSpy clientStepUserMovedResizedSpy(m_client, &AbstractClient::clientStepUserMovedResized);
     QVERIFY(clientStepUserMovedResizedSpy.isValid());
-    QSignalSpy clientFinishUserMovedResizedSpy(client, &AbstractClient::clientFinishUserMovedResized);
+    QSignalSpy clientFinishUserMovedResizedSpy(m_client, &AbstractClient::clientFinishUserMovedResized);
     QVERIFY(clientFinishUserMovedResizedSpy.isValid());
 
     QCOMPARE(workspace()->moveResizeClient(), nullptr);
-    QVERIFY(!client->isInteractiveMove());
-    QVERIFY(!client->isInteractiveResize());
+    QVERIFY(!m_client->isInteractiveMove());
+    QVERIFY(!m_client->isInteractiveResize());
     workspace()->slotWindowResize();
-    QCOMPARE(workspace()->moveResizeClient(), client);
+    QCOMPARE(workspace()->moveResizeClient(), m_client);
     QCOMPARE(clientStartMoveResizedSpy.count(), 1);
-    QVERIFY(!client->isInteractiveMove());
-    QVERIFY(client->isInteractiveResize());
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 3);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 3);
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(!m_client->isInteractiveMove());
+    QVERIFY(m_client->isInteractiveResize());
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 3);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 3);
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
-    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
+    m_shellSurface->xdgSurface()->ack_configure(m_surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
 
     const QPoint cursorPos = KWin::Cursors::self()->mouse()->pos();
-    client->keyPressEvent(Qt::Key_Right);
-    client->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
+    m_client->keyPressEvent(Qt::Key_Right);
+    m_client->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 4);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 4);
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 4);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 4);
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
-    QCOMPARE(toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(488, 640));
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(488, 640));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
-    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
-    Test::render(surface.data(), QSize(488, 640), Qt::blue);
+    m_shellSurface->xdgSurface()->ack_configure(m_surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
+    Test::render(m_surface.data(), QSize(488, 640), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(client->size(), QSize(488, 640));
+    QCOMPARE(m_client->size(), QSize(488, 640));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
 
-    client->keyPressEvent(Qt::Key_Enter);
+    m_client->keyPressEvent(Qt::Key_Enter);
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
     QCOMPARE(workspace()->moveResizeClient(), nullptr);
-    QVERIFY(!client->isInteractiveMove());
-    QVERIFY(!client->isInteractiveResize());
+    QVERIFY(!m_client->isInteractiveMove());
+    QVERIFY(!m_client->isInteractiveResize());
 
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 5);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 5);
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 5);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 5);
 
     // If the client appears again, it should have the last known size.
     destroyTestWindow();
     createTestWindow(ReturnAfterSurfaceConfiguration);
 
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->last().first().toSize(), QSize(488, 640));
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().first().toSize(), QSize(488, 640));
 
     mapClientToSurface(QSize(488, 640));
-    QVERIFY(client->isResizable());
-    QCOMPARE(client->size(), QSize(488, 640));
+    QVERIFY(m_client->isResizable());
+    QCOMPARE(m_client->size(), QSize(488, 640));
 
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 2);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 2);
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 2);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
 
     destroyTestWindow();
 }
@@ -770,48 +770,48 @@ void TestXdgShellClientRules::testSizeForce()
     createTestWindow(ReturnAfterSurfaceConfiguration);
 
     // The initial configure event should contain size hint set by the rule.
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->last().first().toSize(), QSize(480, 640));
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().first().toSize(), QSize(480, 640));
 
     // Map the client.
     mapClientToSurface(QSize(480, 640));
-    QVERIFY(!client->isResizable());
-    QCOMPARE(client->size(), QSize(480, 640));
+    QVERIFY(!m_client->isResizable());
+    QCOMPARE(m_client->size(), QSize(480, 640));
 
     // We should receive a configure event when the client becomes active.
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 2);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 2);
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 2);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
 
     // Any attempt to resize the client should not succeed.
-    QSignalSpy clientStartMoveResizedSpy(client, &AbstractClient::clientStartUserMovedResized);
+    QSignalSpy clientStartMoveResizedSpy(m_client, &AbstractClient::clientStartUserMovedResized);
     QVERIFY(clientStartMoveResizedSpy.isValid());
     QCOMPARE(workspace()->moveResizeClient(), nullptr);
-    QVERIFY(!client->isInteractiveMove());
-    QVERIFY(!client->isInteractiveResize());
+    QVERIFY(!m_client->isInteractiveMove());
+    QVERIFY(!m_client->isInteractiveResize());
     workspace()->slotWindowResize();
     QCOMPARE(workspace()->moveResizeClient(), nullptr);
     QCOMPARE(clientStartMoveResizedSpy.count(), 0);
-    QVERIFY(!client->isInteractiveMove());
-    QVERIFY(!client->isInteractiveResize());
-    QVERIFY(!surfaceConfigureRequestedSpy->wait(100));
+    QVERIFY(!m_client->isInteractiveMove());
+    QVERIFY(!m_client->isInteractiveResize());
+    QVERIFY(!m_surfaceConfigureRequestedSpy->wait(100));
 
     // If the client appears again, the size should still be forced.
     destroyTestWindow();
     createTestWindow(ReturnAfterSurfaceConfiguration);
 
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->last().first().toSize(), QSize(480, 640));
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().first().toSize(), QSize(480, 640));
 
     mapClientToSurface(QSize(480, 640));
-    QVERIFY(!client->isResizable());
-    QCOMPARE(client->size(), QSize(480, 640));
+    QVERIFY(!m_client->isResizable());
+    QCOMPARE(m_client->size(), QSize(480, 640));
 
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 2);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 2);
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 2);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
 
     destroyTestWindow();
 }
@@ -821,40 +821,40 @@ void TestXdgShellClientRules::testSizeApplyNow()
     createTestWindow(ReturnAfterSurfaceConfiguration);
 
     // The expected surface dimensions should be set by the rule.
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->last().first().toSize(), QSize(0, 0));
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().first().toSize(), QSize(0, 0));
 
     // Map the client.
     mapClientToSurface(QSize(100, 50));
-    QVERIFY(client->isResizable());
-    QCOMPARE(client->size(), QSize(100, 50));
+    QVERIFY(m_client->isResizable());
+    QCOMPARE(m_client->size(), QSize(100, 50));
 
     // We should receive a configure event when the client becomes active.
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 2);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 2);
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 2);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
 
     setWindowRule("size", QSize(480, 640), int(Rules::ApplyNow));
 
     // The compositor should send a configure event with a new size.
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 3);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 3);
-    QCOMPARE(toplevelConfigureRequestedSpy->last().first().toSize(), QSize(480, 640));
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 3);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 3);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().first().toSize(), QSize(480, 640));
 
     // Draw the surface with the new size.
-    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
+    QSignalSpy frameGeometryChangedSpy(m_client, &AbstractClient::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
-    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
-    Test::render(surface.data(), QSize(480, 640), Qt::blue);
+    m_shellSurface->xdgSurface()->ack_configure(m_surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
+    Test::render(m_surface.data(), QSize(480, 640), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(client->size(), QSize(480, 640));
-    QVERIFY(!surfaceConfigureRequestedSpy->wait(100));
+    QCOMPARE(m_client->size(), QSize(480, 640));
+    QVERIFY(!m_surfaceConfigureRequestedSpy->wait(100));
 
     // The rule should not be applied again.
-    client->evaluateWindowRules();
-    QVERIFY(!surfaceConfigureRequestedSpy->wait(100));
+    m_client->evaluateWindowRules();
+    QVERIFY(!m_surfaceConfigureRequestedSpy->wait(100));
 
     destroyTestWindow();
 }
@@ -866,48 +866,48 @@ void TestXdgShellClientRules::testSizeForceTemporarily()
     createTestWindow(ReturnAfterSurfaceConfiguration);
 
     // The initial configure event should contain size hint set by the rule.
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->last().first().toSize(), QSize(480, 640));
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().first().toSize(), QSize(480, 640));
 
     // Map the client.
     mapClientToSurface(QSize(480, 640));
-    QVERIFY(!client->isResizable());
-    QCOMPARE(client->size(), QSize(480, 640));
+    QVERIFY(!m_client->isResizable());
+    QCOMPARE(m_client->size(), QSize(480, 640));
 
     // We should receive a configure event when the client becomes active.
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 2);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 2);
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 2);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
 
     // Any attempt to resize the client should not succeed.
-    QSignalSpy clientStartMoveResizedSpy(client, &AbstractClient::clientStartUserMovedResized);
+    QSignalSpy clientStartMoveResizedSpy(m_client, &AbstractClient::clientStartUserMovedResized);
     QVERIFY(clientStartMoveResizedSpy.isValid());
     QCOMPARE(workspace()->moveResizeClient(), nullptr);
-    QVERIFY(!client->isInteractiveMove());
-    QVERIFY(!client->isInteractiveResize());
+    QVERIFY(!m_client->isInteractiveMove());
+    QVERIFY(!m_client->isInteractiveResize());
     workspace()->slotWindowResize();
     QCOMPARE(workspace()->moveResizeClient(), nullptr);
     QCOMPARE(clientStartMoveResizedSpy.count(), 0);
-    QVERIFY(!client->isInteractiveMove());
-    QVERIFY(!client->isInteractiveResize());
-    QVERIFY(!surfaceConfigureRequestedSpy->wait(100));
+    QVERIFY(!m_client->isInteractiveMove());
+    QVERIFY(!m_client->isInteractiveResize());
+    QVERIFY(!m_surfaceConfigureRequestedSpy->wait(100));
 
     // The rule should be discarded when the client is closed.
     destroyTestWindow();
     createTestWindow(ReturnAfterSurfaceConfiguration);
 
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->last().first().toSize(), QSize(0, 0));
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().first().toSize(), QSize(0, 0));
 
     mapClientToSurface(QSize(100, 50));
-    QVERIFY(client->isResizable());
-    QCOMPARE(client->size(), QSize(100, 50));
+    QVERIFY(m_client->isResizable());
+    QCOMPARE(m_client->size(), QSize(100, 50));
 
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 2);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 2);
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 2);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
 
     destroyTestWindow();
 }
@@ -921,26 +921,26 @@ void TestXdgShellClientRules::testMaximizeDontAffect()
 
     // Wait for the initial configure event.
     Test::XdgToplevel::States states;
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(0, 0));
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(0, 0));
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
 
     // Map the client.
     mapClientToSurface(QSize(100, 50));
 
-    QVERIFY(client->isMaximizable());
-    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
-    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
-    QCOMPARE(client->size(), QSize(100, 50));
+    QVERIFY(m_client->isMaximizable());
+    QCOMPARE(m_client->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(m_client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(m_client->size(), QSize(100, 50));
 
     // We should receive a configure event when the client becomes active.
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 2);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 2);
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 2);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
 
@@ -956,69 +956,69 @@ void TestXdgShellClientRules::testMaximizeApply()
 
     // Wait for the initial configure event.
     Test::XdgToplevel::States states;
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(1280, 1024));
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(1280, 1024));
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
 
     // Map the client.
     mapClientToSurface(QSize(1280, 1024));
 
-    QVERIFY(client->isMaximizable());
-    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
-    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
-    QCOMPARE(client->size(), QSize(1280, 1024));
+    QVERIFY(m_client->isMaximizable());
+    QCOMPARE(m_client->maximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(m_client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(m_client->size(), QSize(1280, 1024));
 
     // We should receive a configure event when the client becomes active.
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 2);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 2);
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 2);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
 
     // One should still be able to change the maximized state of the client.
     workspace()->slotWindowMaximize();
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 3);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 3);
-    QCOMPARE(toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(0, 0));
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 3);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 3);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(0, 0));
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
 
-    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
+    QSignalSpy frameGeometryChangedSpy(m_client, &AbstractClient::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
-    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
-    Test::render(surface.data(), QSize(100, 50), Qt::blue);
+    m_shellSurface->xdgSurface()->ack_configure(m_surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
+    Test::render(m_surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(client->size(), QSize(100, 50));
-    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
-    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(m_client->size(), QSize(100, 50));
+    QCOMPARE(m_client->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(m_client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
 
     // If we create the client again, it should be initially maximized.
     destroyTestWindow();
     createTestWindow(ReturnAfterSurfaceConfiguration);
 
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(1280, 1024));
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(1280, 1024));
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
 
     mapClientToSurface(QSize(1280, 1024));
-    QVERIFY(client->isMaximizable());
-    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
-    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
-    QCOMPARE(client->size(), QSize(1280, 1024));
+    QVERIFY(m_client->isMaximizable());
+    QCOMPARE(m_client->maximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(m_client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(m_client->size(), QSize(1280, 1024));
 
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 2);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 2);
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 2);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
 
@@ -1034,70 +1034,70 @@ void TestXdgShellClientRules::testMaximizeRemember()
 
     // Wait for the initial configure event.
     Test::XdgToplevel::States states;
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(1280, 1024));
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(1280, 1024));
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
 
     // Map the client.
     mapClientToSurface(QSize(1280, 1024));
 
-    QVERIFY(client->isMaximizable());
-    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
-    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
-    QCOMPARE(client->size(), QSize(1280, 1024));
+    QVERIFY(m_client->isMaximizable());
+    QCOMPARE(m_client->maximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(m_client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(m_client->size(), QSize(1280, 1024));
 
     // We should receive a configure event when the client becomes active.
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 2);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 2);
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 2);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
 
     // One should still be able to change the maximized state of the client.
     workspace()->slotWindowMaximize();
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 3);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 3);
-    QCOMPARE(toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(0, 0));
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 3);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 3);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(0, 0));
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
 
-    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
+    QSignalSpy frameGeometryChangedSpy(m_client, &AbstractClient::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
-    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
-    Test::render(surface.data(), QSize(100, 50), Qt::blue);
+    m_shellSurface->xdgSurface()->ack_configure(m_surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
+    Test::render(m_surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(client->size(), QSize(100, 50));
-    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
-    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(m_client->size(), QSize(100, 50));
+    QCOMPARE(m_client->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(m_client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
 
     // If we create the client again, it should not be maximized (because last time it wasn't).
     destroyTestWindow();
     createTestWindow(ReturnAfterSurfaceConfiguration);
 
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(0, 0));
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(0, 0));
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
 
     mapClientToSurface(QSize(100, 50));
 
-    QVERIFY(client->isMaximizable());
-    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
-    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
-    QCOMPARE(client->size(), QSize(100, 50));
+    QVERIFY(m_client->isMaximizable());
+    QCOMPARE(m_client->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(m_client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(m_client->size(), QSize(100, 50));
 
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 2);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 2);
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 2);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
 
@@ -1113,59 +1113,59 @@ void TestXdgShellClientRules::testMaximizeForce()
 
     // Wait for the initial configure event.
     Test::XdgToplevel::States states;
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(1280, 1024));
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(1280, 1024));
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
 
     // Map the client.
     mapClientToSurface(QSize(1280, 1024));
 
-    QVERIFY(!client->isMaximizable());
-    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
-    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
-    QCOMPARE(client->size(), QSize(1280, 1024));
+    QVERIFY(!m_client->isMaximizable());
+    QCOMPARE(m_client->maximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(m_client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(m_client->size(), QSize(1280, 1024));
 
     // We should receive a configure event when the client becomes active.
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 2);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 2);
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 2);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
 
     // Any attempt to change the maximized state should not succeed.
-    const QRect oldGeometry = client->frameGeometry();
+    const QRect oldGeometry = m_client->frameGeometry();
     workspace()->slotWindowMaximize();
-    QVERIFY(!surfaceConfigureRequestedSpy->wait(100));
-    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
-    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
-    QCOMPARE(client->frameGeometry(), oldGeometry);
+    QVERIFY(!m_surfaceConfigureRequestedSpy->wait(100));
+    QCOMPARE(m_client->maximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(m_client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(m_client->frameGeometry(), oldGeometry);
 
     // If we create the client again, the maximized state should still be forced.
     destroyTestWindow();
     createTestWindow(ReturnAfterSurfaceConfiguration);
 
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(1280, 1024));
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(1280, 1024));
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
 
     mapClientToSurface(QSize(1280, 1024));
 
-    QVERIFY(!client->isMaximizable());
-    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
-    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
-    QCOMPARE(client->size(), QSize(1280, 1024));
+    QVERIFY(!m_client->isMaximizable());
+    QCOMPARE(m_client->maximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(m_client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(m_client->size(), QSize(1280, 1024));
 
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 2);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 2);
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 2);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
 
@@ -1178,26 +1178,26 @@ void TestXdgShellClientRules::testMaximizeApplyNow()
 
     // Wait for the initial configure event.
     Test::XdgToplevel::States states;
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(0, 0));
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(0, 0));
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
 
     // Map the client.
     mapClientToSurface(QSize(100, 50));
 
-    QVERIFY(client->isMaximizable());
-    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
-    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
-    QCOMPARE(client->size(), QSize(100, 50));
+    QVERIFY(m_client->isMaximizable());
+    QCOMPARE(m_client->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(m_client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(m_client->size(), QSize(100, 50));
 
     // We should receive a configure event when the client becomes active.
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 2);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 2);
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 2);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
 
@@ -1205,51 +1205,51 @@ void TestXdgShellClientRules::testMaximizeApplyNow()
     setWindowRule("maximizevert", true, int(Rules::ApplyNow));
 
     // We should receive a configure event with a new surface size.
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 3);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 3);
-    QCOMPARE(toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(1280, 1024));
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 3);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 3);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(1280, 1024));
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
 
     // Draw contents of the maximized client.
-    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
+    QSignalSpy frameGeometryChangedSpy(m_client, &AbstractClient::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
-    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
-    Test::render(surface.data(), QSize(1280, 1024), Qt::blue);
+    m_shellSurface->xdgSurface()->ack_configure(m_surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
+    Test::render(m_surface.data(), QSize(1280, 1024), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(client->size(), QSize(1280, 1024));
-    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
-    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(m_client->size(), QSize(1280, 1024));
+    QCOMPARE(m_client->maximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(m_client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
 
     // The client still has to be maximizeable.
-    QVERIFY(client->isMaximizable());
+    QVERIFY(m_client->isMaximizable());
 
     // Restore the client.
     workspace()->slotWindowMaximize();
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 4);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 4);
-    QCOMPARE(toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(100, 50));
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 4);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 4);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(100, 50));
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
 
-    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
-    Test::render(surface.data(), QSize(100, 50), Qt::blue);
+    m_shellSurface->xdgSurface()->ack_configure(m_surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
+    Test::render(m_surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(client->size(), QSize(100, 50));
-    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
-    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(m_client->size(), QSize(100, 50));
+    QCOMPARE(m_client->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(m_client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
 
     // The rule should be discarded after it's been applied.
-    const QRect oldGeometry = client->frameGeometry();
-    client->evaluateWindowRules();
-    QVERIFY(!surfaceConfigureRequestedSpy->wait(100));
-    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
-    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
-    QCOMPARE(client->frameGeometry(), oldGeometry);
+    const QRect oldGeometry = m_client->frameGeometry();
+    m_client->evaluateWindowRules();
+    QVERIFY(!m_surfaceConfigureRequestedSpy->wait(100));
+    QCOMPARE(m_client->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(m_client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(m_client->frameGeometry(), oldGeometry);
 
     destroyTestWindow();
 }
@@ -1263,59 +1263,59 @@ void TestXdgShellClientRules::testMaximizeForceTemporarily()
 
     // Wait for the initial configure event.
     Test::XdgToplevel::States states;
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(1280, 1024));
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(1280, 1024));
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
 
     // Map the client.
     mapClientToSurface(QSize(1280, 1024));
 
-    QVERIFY(!client->isMaximizable());
-    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
-    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
-    QCOMPARE(client->size(), QSize(1280, 1024));
+    QVERIFY(!m_client->isMaximizable());
+    QCOMPARE(m_client->maximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(m_client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(m_client->size(), QSize(1280, 1024));
 
     // We should receive a configure event when the client becomes active.
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 2);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 2);
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 2);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
 
     // Any attempt to change the maximized state should not succeed.
-    const QRect oldGeometry = client->frameGeometry();
+    const QRect oldGeometry = m_client->frameGeometry();
     workspace()->slotWindowMaximize();
-    QVERIFY(!surfaceConfigureRequestedSpy->wait(100));
-    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
-    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
-    QCOMPARE(client->frameGeometry(), oldGeometry);
+    QVERIFY(!m_surfaceConfigureRequestedSpy->wait(100));
+    QCOMPARE(m_client->maximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(m_client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(m_client->frameGeometry(), oldGeometry);
 
     // The rule should be discarded if we close the client.
     destroyTestWindow();
     createTestWindow(ReturnAfterSurfaceConfiguration);
 
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(0, 0));
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 1);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(0, 0));
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
 
     mapClientToSurface(QSize(100, 50));
 
-    QVERIFY(client->isMaximizable());
-    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
-    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
-    QCOMPARE(client->size(), QSize(100, 50));
+    QVERIFY(m_client->isMaximizable());
+    QCOMPARE(m_client->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(m_client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(m_client->size(), QSize(100, 50));
 
-    QVERIFY(surfaceConfigureRequestedSpy->wait());
-    QCOMPARE(surfaceConfigureRequestedSpy->count(), 2);
-    QCOMPARE(toplevelConfigureRequestedSpy->count(), 2);
-    states = toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(m_surfaceConfigureRequestedSpy->wait());
+    QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 2);
+    QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
+    states = m_toplevelConfigureRequestedSpy->last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
 
@@ -1335,7 +1335,7 @@ void TestXdgShellClientRules::testDesktopDontAffect()
     createTestWindow();
 
     // The client should appear on the current virtual desktop.
-    QCOMPARE(client->desktop(), 1);
+    QCOMPARE(m_client->desktop(), 1);
     QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
     destroyTestWindow();
@@ -1354,12 +1354,12 @@ void TestXdgShellClientRules::testDesktopApply()
     createTestWindow();
 
     // The client should appear on the second virtual desktop.
-    QCOMPARE(client->desktop(), 2);
+    QCOMPARE(m_client->desktop(), 2);
     QCOMPARE(VirtualDesktopManager::self()->current(), 2);
 
     // We still should be able to move the client between desktops.
-    workspace()->sendClientToDesktop(client, 1, true);
-    QCOMPARE(client->desktop(), 1);
+    workspace()->sendClientToDesktop(m_client, 1, true);
+    QCOMPARE(m_client->desktop(), 1);
     QCOMPARE(VirtualDesktopManager::self()->current(), 2);
 
     // If we re-open the client, it should appear on the second virtual desktop again.
@@ -1368,7 +1368,7 @@ void TestXdgShellClientRules::testDesktopApply()
 
     destroyTestWindow();
     createTestWindow();
-    QCOMPARE(client->desktop(), 2);
+    QCOMPARE(m_client->desktop(), 2);
     QCOMPARE(VirtualDesktopManager::self()->current(), 2);
 
     destroyTestWindow();
@@ -1386,19 +1386,19 @@ void TestXdgShellClientRules::testDesktopRemember()
 
     createTestWindow();
 
-    QCOMPARE(client->desktop(), 2);
+    QCOMPARE(m_client->desktop(), 2);
     QCOMPARE(VirtualDesktopManager::self()->current(), 2);
 
     // Move the client to the first virtual desktop.
-    workspace()->sendClientToDesktop(client, 1, true);
-    QCOMPARE(client->desktop(), 1);
+    workspace()->sendClientToDesktop(m_client, 1, true);
+    QCOMPARE(m_client->desktop(), 1);
     QCOMPARE(VirtualDesktopManager::self()->current(), 2);
 
     // If we create the client again, it should appear on the first virtual desktop.
     destroyTestWindow();
     createTestWindow();
 
-    QCOMPARE(client->desktop(), 1);
+    QCOMPARE(m_client->desktop(), 1);
     QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
     destroyTestWindow();
@@ -1417,12 +1417,12 @@ void TestXdgShellClientRules::testDesktopForce()
     createTestWindow();
 
     // The client should appear on the second virtual desktop.
-    QCOMPARE(client->desktop(), 2);
+    QCOMPARE(m_client->desktop(), 2);
     QCOMPARE(VirtualDesktopManager::self()->current(), 2);
 
     // Any attempt to move the client to another virtual desktop should fail.
-    workspace()->sendClientToDesktop(client, 1, true);
-    QCOMPARE(client->desktop(), 2);
+    workspace()->sendClientToDesktop(m_client, 1, true);
+    QCOMPARE(m_client->desktop(), 2);
     QCOMPARE(VirtualDesktopManager::self()->current(), 2);
 
     // If we re-open the client, it should appear on the second virtual desktop again.
@@ -1432,7 +1432,7 @@ void TestXdgShellClientRules::testDesktopForce()
     destroyTestWindow();
     createTestWindow();
 
-    QCOMPARE(client->desktop(), 2);
+    QCOMPARE(m_client->desktop(), 2);
     QCOMPARE(VirtualDesktopManager::self()->current(), 2);
 
     destroyTestWindow();
@@ -1447,23 +1447,23 @@ void TestXdgShellClientRules::testDesktopApplyNow()
     QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
     createTestWindow();
-    QCOMPARE(client->desktop(), 1);
+    QCOMPARE(m_client->desktop(), 1);
     QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
     setWindowRule("desktops", QStringList{VirtualDesktopManager::self()->desktopForX11Id(2)->id()}, int(Rules::ApplyNow));
 
     // The client should have been moved to the second virtual desktop.
-    QCOMPARE(client->desktop(), 2);
+    QCOMPARE(m_client->desktop(), 2);
     QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
     // One should still be able to move the client between desktops.
-    workspace()->sendClientToDesktop(client, 1, true);
-    QCOMPARE(client->desktop(), 1);
+    workspace()->sendClientToDesktop(m_client, 1, true);
+    QCOMPARE(m_client->desktop(), 1);
     QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
     // The rule should not be applied again.
-    client->evaluateWindowRules();
-    QCOMPARE(client->desktop(), 1);
+    m_client->evaluateWindowRules();
+    QCOMPARE(m_client->desktop(), 1);
     QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
     destroyTestWindow();
@@ -1482,12 +1482,12 @@ void TestXdgShellClientRules::testDesktopForceTemporarily()
     createTestWindow();
 
     // The client should appear on the second virtual desktop.
-    QCOMPARE(client->desktop(), 2);
+    QCOMPARE(m_client->desktop(), 2);
     QCOMPARE(VirtualDesktopManager::self()->current(), 2);
 
     // Any attempt to move the client to another virtual desktop should fail.
-    workspace()->sendClientToDesktop(client, 1, true);
-    QCOMPARE(client->desktop(), 2);
+    workspace()->sendClientToDesktop(m_client, 1, true);
+    QCOMPARE(m_client->desktop(), 2);
     QCOMPARE(VirtualDesktopManager::self()->current(), 2);
 
     // The rule should be discarded when the client is withdrawn.
@@ -1495,15 +1495,15 @@ void TestXdgShellClientRules::testDesktopForceTemporarily()
     VirtualDesktopManager::self()->setCurrent(1);
     QCOMPARE(VirtualDesktopManager::self()->current(), 1);
     createTestWindow();
-    QCOMPARE(client->desktop(), 1);
+    QCOMPARE(m_client->desktop(), 1);
     QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
     // One should be able to move the client between desktops.
-    workspace()->sendClientToDesktop(client, 2, true);
-    QCOMPARE(client->desktop(), 2);
+    workspace()->sendClientToDesktop(m_client, 2, true);
+    QCOMPARE(m_client->desktop(), 2);
     QCOMPARE(VirtualDesktopManager::self()->current(), 1);
-    workspace()->sendClientToDesktop(client, 1, true);
-    QCOMPARE(client->desktop(), 1);
+    workspace()->sendClientToDesktop(m_client, 1, true);
+    QCOMPARE(m_client->desktop(), 1);
     QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
     destroyTestWindow();
@@ -1514,10 +1514,10 @@ void TestXdgShellClientRules::testMinimizeDontAffect()
     setWindowRule("minimize", true, int(Rules::DontAffect));
 
     createTestWindow();
-    QVERIFY(client->isMinimizable());
+    QVERIFY(m_client->isMinimizable());
 
     // The client should not be minimized.
-    QVERIFY(!client->isMinimized());
+    QVERIFY(!m_client->isMinimized());
 
     destroyTestWindow();
 }
@@ -1527,20 +1527,20 @@ void TestXdgShellClientRules::testMinimizeApply()
     setWindowRule("minimize", true, int(Rules::Apply));
 
     createTestWindow(ClientShouldBeInactive);
-    QVERIFY(client->isMinimizable());
+    QVERIFY(m_client->isMinimizable());
 
     // The client should be minimized.
-    QVERIFY(client->isMinimized());
+    QVERIFY(m_client->isMinimized());
 
     // We should still be able to unminimize the client.
-    client->unminimize();
-    QVERIFY(!client->isMinimized());
+    m_client->unminimize();
+    QVERIFY(!m_client->isMinimized());
 
     // If we re-open the client, it should be minimized back again.
     destroyTestWindow();
     createTestWindow(ClientShouldBeInactive);
-    QVERIFY(client->isMinimizable());
-    QVERIFY(client->isMinimized());
+    QVERIFY(m_client->isMinimizable());
+    QVERIFY(m_client->isMinimized());
 
     destroyTestWindow();
 }
@@ -1550,18 +1550,18 @@ void TestXdgShellClientRules::testMinimizeRemember()
     setWindowRule("minimize", false, int(Rules::Remember));
 
     createTestWindow();
-    QVERIFY(client->isMinimizable());
-    QVERIFY(!client->isMinimized());
+    QVERIFY(m_client->isMinimizable());
+    QVERIFY(!m_client->isMinimized());
 
     // Minimize the client.
-    client->minimize();
-    QVERIFY(client->isMinimized());
+    m_client->minimize();
+    QVERIFY(m_client->isMinimized());
 
     // If we open the client again, it should be minimized.
     destroyTestWindow();
     createTestWindow(ClientShouldBeInactive);
-    QVERIFY(client->isMinimizable());
-    QVERIFY(client->isMinimized());
+    QVERIFY(m_client->isMinimizable());
+    QVERIFY(m_client->isMinimized());
 
     destroyTestWindow();
 }
@@ -1571,20 +1571,20 @@ void TestXdgShellClientRules::testMinimizeForce()
     setWindowRule("minimize", false, int(Rules::Force));
 
     createTestWindow();
-    QVERIFY(!client->isMinimizable());
-    QVERIFY(!client->isMinimized());
+    QVERIFY(!m_client->isMinimizable());
+    QVERIFY(!m_client->isMinimized());
 
     // Any attempt to minimize the client should fail.
-    client->minimize();
-    QVERIFY(!client->isMinimized());
+    m_client->minimize();
+    QVERIFY(!m_client->isMinimized());
 
     // If we re-open the client, the minimized state should still be forced.
     destroyTestWindow();
     createTestWindow();
-    QVERIFY(!client->isMinimizable());
-    QVERIFY(!client->isMinimized());
-    client->minimize();
-    QVERIFY(!client->isMinimized());
+    QVERIFY(!m_client->isMinimizable());
+    QVERIFY(!m_client->isMinimized());
+    m_client->minimize();
+    QVERIFY(!m_client->isMinimized());
 
     destroyTestWindow();
 }
@@ -1592,23 +1592,23 @@ void TestXdgShellClientRules::testMinimizeForce()
 void TestXdgShellClientRules::testMinimizeApplyNow()
 {
     createTestWindow();
-    QVERIFY(client->isMinimizable());
-    QVERIFY(!client->isMinimized());
+    QVERIFY(m_client->isMinimizable());
+    QVERIFY(!m_client->isMinimized());
 
     setWindowRule("minimize", true, int(Rules::ApplyNow));
 
     // The client should be minimized now.
-    QVERIFY(client->isMinimizable());
-    QVERIFY(client->isMinimized());
+    QVERIFY(m_client->isMinimizable());
+    QVERIFY(m_client->isMinimized());
 
     // One is still able to unminimize the client.
-    client->unminimize();
-    QVERIFY(!client->isMinimized());
+    m_client->unminimize();
+    QVERIFY(!m_client->isMinimized());
 
     // The rule should not be applied again.
-    client->evaluateWindowRules();
-    QVERIFY(client->isMinimizable());
-    QVERIFY(!client->isMinimized());
+    m_client->evaluateWindowRules();
+    QVERIFY(m_client->isMinimizable());
+    QVERIFY(!m_client->isMinimized());
 
     destroyTestWindow();
 }
@@ -1618,20 +1618,20 @@ void TestXdgShellClientRules::testMinimizeForceTemporarily()
     setWindowRule("minimize", false, int(Rules::ForceTemporarily));
 
     createTestWindow();
-    QVERIFY(!client->isMinimizable());
-    QVERIFY(!client->isMinimized());
+    QVERIFY(!m_client->isMinimizable());
+    QVERIFY(!m_client->isMinimized());
 
     // Any attempt to minimize the client should fail until the client is closed.
-    client->minimize();
-    QVERIFY(!client->isMinimized());
+    m_client->minimize();
+    QVERIFY(!m_client->isMinimized());
 
     // The rule should be discarded when the client is closed.
     destroyTestWindow();
     createTestWindow();
-    QVERIFY(client->isMinimizable());
-    QVERIFY(!client->isMinimized());
-    client->minimize();
-    QVERIFY(client->isMinimized());
+    QVERIFY(m_client->isMinimizable());
+    QVERIFY(!m_client->isMinimized());
+    m_client->minimize();
+    QVERIFY(m_client->isMinimized());
 
     destroyTestWindow();
 }
@@ -1643,7 +1643,7 @@ void TestXdgShellClientRules::testSkipTaskbarDontAffect()
     createTestWindow();
 
     // The client should not be affected by the rule.
-    QVERIFY(!client->skipTaskbar());
+    QVERIFY(!m_client->skipTaskbar());
 
     destroyTestWindow();
 }
@@ -1655,16 +1655,16 @@ void TestXdgShellClientRules::testSkipTaskbarApply()
     createTestWindow();
 
     // The client should not be included on a taskbar.
-    QVERIFY(client->skipTaskbar());
+    QVERIFY(m_client->skipTaskbar());
 
     // Though one can change that.
-    client->setOriginalSkipTaskbar(false);
-    QVERIFY(!client->skipTaskbar());
+    m_client->setOriginalSkipTaskbar(false);
+    QVERIFY(!m_client->skipTaskbar());
 
     // Reopen the client, the rule should be applied again.
     destroyTestWindow();
     createTestWindow();
-    QVERIFY(client->skipTaskbar());
+    QVERIFY(m_client->skipTaskbar());
 
     destroyTestWindow();
 }
@@ -1676,18 +1676,18 @@ void TestXdgShellClientRules::testSkipTaskbarRemember()
     createTestWindow();
 
     // The client should not be included on a taskbar.
-    QVERIFY(client->skipTaskbar());
+    QVERIFY(m_client->skipTaskbar());
 
     // Change the skip-taskbar state.
-    client->setOriginalSkipTaskbar(false);
-    QVERIFY(!client->skipTaskbar());
+    m_client->setOriginalSkipTaskbar(false);
+    QVERIFY(!m_client->skipTaskbar());
 
     // Reopen the client.
     destroyTestWindow();
     createTestWindow();
 
     // The client should be included on a taskbar.
-    QVERIFY(!client->skipTaskbar());
+    QVERIFY(!m_client->skipTaskbar());
 
     destroyTestWindow();
 }
@@ -1699,18 +1699,18 @@ void TestXdgShellClientRules::testSkipTaskbarForce()
     createTestWindow();
 
     // The client should not be included on a taskbar.
-    QVERIFY(client->skipTaskbar());
+    QVERIFY(m_client->skipTaskbar());
 
     // Any attempt to change the skip-taskbar state should not succeed.
-    client->setOriginalSkipTaskbar(false);
-    QVERIFY(client->skipTaskbar());
+    m_client->setOriginalSkipTaskbar(false);
+    QVERIFY(m_client->skipTaskbar());
 
     // Reopen the client.
     destroyTestWindow();
     createTestWindow();
 
     // The skip-taskbar state should be still forced.
-    QVERIFY(client->skipTaskbar());
+    QVERIFY(m_client->skipTaskbar());
 
     destroyTestWindow();
 }
@@ -1718,20 +1718,20 @@ void TestXdgShellClientRules::testSkipTaskbarForce()
 void TestXdgShellClientRules::testSkipTaskbarApplyNow()
 {
     createTestWindow();
-    QVERIFY(!client->skipTaskbar());
+    QVERIFY(!m_client->skipTaskbar());
 
     setWindowRule("skiptaskbar", true, int(Rules::ApplyNow));
 
     // The client should not be on a taskbar now.
-    QVERIFY(client->skipTaskbar());
+    QVERIFY(m_client->skipTaskbar());
 
     // Also, one change the skip-taskbar state.
-    client->setOriginalSkipTaskbar(false);
-    QVERIFY(!client->skipTaskbar());
+    m_client->setOriginalSkipTaskbar(false);
+    QVERIFY(!m_client->skipTaskbar());
 
     // The rule should not be applied again.
-    client->evaluateWindowRules();
-    QVERIFY(!client->skipTaskbar());
+    m_client->evaluateWindowRules();
+    QVERIFY(!m_client->skipTaskbar());
 
     destroyTestWindow();
 }
@@ -1743,20 +1743,20 @@ void TestXdgShellClientRules::testSkipTaskbarForceTemporarily()
     createTestWindow();
 
     // The client should not be included on a taskbar.
-    QVERIFY(client->skipTaskbar());
+    QVERIFY(m_client->skipTaskbar());
 
     // Any attempt to change the skip-taskbar state should not succeed.
-    client->setOriginalSkipTaskbar(false);
-    QVERIFY(client->skipTaskbar());
+    m_client->setOriginalSkipTaskbar(false);
+    QVERIFY(m_client->skipTaskbar());
 
     // The rule should be discarded when the client is closed.
     destroyTestWindow();
     createTestWindow();
-    QVERIFY(!client->skipTaskbar());
+    QVERIFY(!m_client->skipTaskbar());
 
     // The skip-taskbar state is no longer forced.
-    client->setOriginalSkipTaskbar(true);
-    QVERIFY(client->skipTaskbar());
+    m_client->setOriginalSkipTaskbar(true);
+    QVERIFY(m_client->skipTaskbar());
 
     destroyTestWindow();
 }
@@ -1768,7 +1768,7 @@ void TestXdgShellClientRules::testSkipPagerDontAffect()
     createTestWindow();
 
     // The client should not be affected by the rule.
-    QVERIFY(!client->skipPager());
+    QVERIFY(!m_client->skipPager());
 
     destroyTestWindow();
 }
@@ -1780,16 +1780,16 @@ void TestXdgShellClientRules::testSkipPagerApply()
     createTestWindow();
 
     // The client should not be included on a pager.
-    QVERIFY(client->skipPager());
+    QVERIFY(m_client->skipPager());
 
     // Though one can change that.
-    client->setSkipPager(false);
-    QVERIFY(!client->skipPager());
+    m_client->setSkipPager(false);
+    QVERIFY(!m_client->skipPager());
 
     // Reopen the client, the rule should be applied again.
     destroyTestWindow();
     createTestWindow();
-    QVERIFY(client->skipPager());
+    QVERIFY(m_client->skipPager());
 
     destroyTestWindow();
 }
@@ -1801,18 +1801,18 @@ void TestXdgShellClientRules::testSkipPagerRemember()
     createTestWindow();
 
     // The client should not be included on a pager.
-    QVERIFY(client->skipPager());
+    QVERIFY(m_client->skipPager());
 
     // Change the skip-pager state.
-    client->setSkipPager(false);
-    QVERIFY(!client->skipPager());
+    m_client->setSkipPager(false);
+    QVERIFY(!m_client->skipPager());
 
     // Reopen the client.
     destroyTestWindow();
     createTestWindow();
 
     // The client should be included on a pager.
-    QVERIFY(!client->skipPager());
+    QVERIFY(!m_client->skipPager());
 
     destroyTestWindow();
 }
@@ -1824,18 +1824,18 @@ void TestXdgShellClientRules::testSkipPagerForce()
     createTestWindow();
 
     // The client should not be included on a pager.
-    QVERIFY(client->skipPager());
+    QVERIFY(m_client->skipPager());
 
     // Any attempt to change the skip-pager state should not succeed.
-    client->setSkipPager(false);
-    QVERIFY(client->skipPager());
+    m_client->setSkipPager(false);
+    QVERIFY(m_client->skipPager());
 
     // Reopen the client.
     destroyTestWindow();
     createTestWindow();
 
     // The skip-pager state should be still forced.
-    QVERIFY(client->skipPager());
+    QVERIFY(m_client->skipPager());
 
     destroyTestWindow();
 }
@@ -1843,20 +1843,20 @@ void TestXdgShellClientRules::testSkipPagerForce()
 void TestXdgShellClientRules::testSkipPagerApplyNow()
 {
     createTestWindow();
-    QVERIFY(!client->skipPager());
+    QVERIFY(!m_client->skipPager());
 
     setWindowRule("skippager", true, int(Rules::ApplyNow));
 
     // The client should not be on a pager now.
-    QVERIFY(client->skipPager());
+    QVERIFY(m_client->skipPager());
 
     // Also, one change the skip-pager state.
-    client->setSkipPager(false);
-    QVERIFY(!client->skipPager());
+    m_client->setSkipPager(false);
+    QVERIFY(!m_client->skipPager());
 
     // The rule should not be applied again.
-    client->evaluateWindowRules();
-    QVERIFY(!client->skipPager());
+    m_client->evaluateWindowRules();
+    QVERIFY(!m_client->skipPager());
 
     destroyTestWindow();
 }
@@ -1868,20 +1868,20 @@ void TestXdgShellClientRules::testSkipPagerForceTemporarily()
     createTestWindow();
 
     // The client should not be included on a pager.
-    QVERIFY(client->skipPager());
+    QVERIFY(m_client->skipPager());
 
     // Any attempt to change the skip-pager state should not succeed.
-    client->setSkipPager(false);
-    QVERIFY(client->skipPager());
+    m_client->setSkipPager(false);
+    QVERIFY(m_client->skipPager());
 
     // The rule should be discarded when the client is closed.
     destroyTestWindow();
     createTestWindow();
-    QVERIFY(!client->skipPager());
+    QVERIFY(!m_client->skipPager());
 
     // The skip-pager state is no longer forced.
-    client->setSkipPager(true);
-    QVERIFY(client->skipPager());
+    m_client->setSkipPager(true);
+    QVERIFY(m_client->skipPager());
 
     destroyTestWindow();
 }
@@ -1893,7 +1893,7 @@ void TestXdgShellClientRules::testSkipSwitcherDontAffect()
     createTestWindow();
 
     // The client should not be affected by the rule.
-    QVERIFY(!client->skipSwitcher());
+    QVERIFY(!m_client->skipSwitcher());
 
     destroyTestWindow();
 }
@@ -1905,16 +1905,16 @@ void TestXdgShellClientRules::testSkipSwitcherApply()
     createTestWindow();
 
     // The client should be excluded from window switching effects.
-    QVERIFY(client->skipSwitcher());
+    QVERIFY(m_client->skipSwitcher());
 
     // Though one can change that.
-    client->setSkipSwitcher(false);
-    QVERIFY(!client->skipSwitcher());
+    m_client->setSkipSwitcher(false);
+    QVERIFY(!m_client->skipSwitcher());
 
     // Reopen the client, the rule should be applied again.
     destroyTestWindow();
     createTestWindow();
-    QVERIFY(client->skipSwitcher());
+    QVERIFY(m_client->skipSwitcher());
 
     destroyTestWindow();
 }
@@ -1926,18 +1926,18 @@ void TestXdgShellClientRules::testSkipSwitcherRemember()
     createTestWindow();
 
     // The client should be excluded from window switching effects.
-    QVERIFY(client->skipSwitcher());
+    QVERIFY(m_client->skipSwitcher());
 
     // Change the skip-switcher state.
-    client->setSkipSwitcher(false);
-    QVERIFY(!client->skipSwitcher());
+    m_client->setSkipSwitcher(false);
+    QVERIFY(!m_client->skipSwitcher());
 
     // Reopen the client.
     destroyTestWindow();
     createTestWindow();
 
     // The client should be included in window switching effects.
-    QVERIFY(!client->skipSwitcher());
+    QVERIFY(!m_client->skipSwitcher());
 
     destroyTestWindow();
 }
@@ -1949,18 +1949,18 @@ void TestXdgShellClientRules::testSkipSwitcherForce()
     createTestWindow();
 
     // The client should be excluded from window switching effects.
-    QVERIFY(client->skipSwitcher());
+    QVERIFY(m_client->skipSwitcher());
 
     // Any attempt to change the skip-switcher state should not succeed.
-    client->setSkipSwitcher(false);
-    QVERIFY(client->skipSwitcher());
+    m_client->setSkipSwitcher(false);
+    QVERIFY(m_client->skipSwitcher());
 
     // Reopen the client.
     destroyTestWindow();
     createTestWindow();
 
     // The skip-switcher state should be still forced.
-    QVERIFY(client->skipSwitcher());
+    QVERIFY(m_client->skipSwitcher());
 
     destroyTestWindow();
 }
@@ -1968,20 +1968,20 @@ void TestXdgShellClientRules::testSkipSwitcherForce()
 void TestXdgShellClientRules::testSkipSwitcherApplyNow()
 {
     createTestWindow();
-    QVERIFY(!client->skipSwitcher());
+    QVERIFY(!m_client->skipSwitcher());
 
     setWindowRule("skipswitcher", true, int(Rules::ApplyNow));
 
     // The client should be excluded from window switching effects now.
-    QVERIFY(client->skipSwitcher());
+    QVERIFY(m_client->skipSwitcher());
 
     // Also, one change the skip-switcher state.
-    client->setSkipSwitcher(false);
-    QVERIFY(!client->skipSwitcher());
+    m_client->setSkipSwitcher(false);
+    QVERIFY(!m_client->skipSwitcher());
 
     // The rule should not be applied again.
-    client->evaluateWindowRules();
-    QVERIFY(!client->skipSwitcher());
+    m_client->evaluateWindowRules();
+    QVERIFY(!m_client->skipSwitcher());
 
     destroyTestWindow();
 }
@@ -1993,20 +1993,20 @@ void TestXdgShellClientRules::testSkipSwitcherForceTemporarily()
     createTestWindow();
 
     // The client should be excluded from window switching effects.
-    QVERIFY(client->skipSwitcher());
+    QVERIFY(m_client->skipSwitcher());
 
     // Any attempt to change the skip-switcher state should not succeed.
-    client->setSkipSwitcher(false);
-    QVERIFY(client->skipSwitcher());
+    m_client->setSkipSwitcher(false);
+    QVERIFY(m_client->skipSwitcher());
 
     // The rule should be discarded when the client is closed.
     destroyTestWindow();
     createTestWindow();
-    QVERIFY(!client->skipSwitcher());
+    QVERIFY(!m_client->skipSwitcher());
 
     // The skip-switcher state is no longer forced.
-    client->setSkipSwitcher(true);
-    QVERIFY(client->skipSwitcher());
+    m_client->setSkipSwitcher(true);
+    QVERIFY(m_client->skipSwitcher());
 
     destroyTestWindow();
 }
@@ -2018,7 +2018,7 @@ void TestXdgShellClientRules::testKeepAboveDontAffect()
     createTestWindow();
 
     // The keep-above state of the client should not be affected by the rule.
-    QVERIFY(!client->keepAbove());
+    QVERIFY(!m_client->keepAbove());
 
     destroyTestWindow();
 }
@@ -2030,16 +2030,16 @@ void TestXdgShellClientRules::testKeepAboveApply()
     createTestWindow();
 
     // Initially, the client should be kept above.
-    QVERIFY(client->keepAbove());
+    QVERIFY(m_client->keepAbove());
 
     // One should also be able to alter the keep-above state.
-    client->setKeepAbove(false);
-    QVERIFY(!client->keepAbove());
+    m_client->setKeepAbove(false);
+    QVERIFY(!m_client->keepAbove());
 
     // If one re-opens the client, it should be kept above back again.
     destroyTestWindow();
     createTestWindow();
-    QVERIFY(client->keepAbove());
+    QVERIFY(m_client->keepAbove());
 
     destroyTestWindow();
 }
@@ -2051,16 +2051,16 @@ void TestXdgShellClientRules::testKeepAboveRemember()
     createTestWindow();
 
     // Initially, the client should be kept above.
-    QVERIFY(client->keepAbove());
+    QVERIFY(m_client->keepAbove());
 
     // Unset the keep-above state.
-    client->setKeepAbove(false);
-    QVERIFY(!client->keepAbove());
+    m_client->setKeepAbove(false);
+    QVERIFY(!m_client->keepAbove());
     destroyTestWindow();
 
     // Re-open the client, it should not be kept above.
     createTestWindow();
-    QVERIFY(!client->keepAbove());
+    QVERIFY(!m_client->keepAbove());
 
     destroyTestWindow();
 }
@@ -2072,16 +2072,16 @@ void TestXdgShellClientRules::testKeepAboveForce()
     createTestWindow();
 
     // Initially, the client should be kept above.
-    QVERIFY(client->keepAbove());
+    QVERIFY(m_client->keepAbove());
 
     // Any attemt to unset the keep-above should not succeed.
-    client->setKeepAbove(false);
-    QVERIFY(client->keepAbove());
+    m_client->setKeepAbove(false);
+    QVERIFY(m_client->keepAbove());
 
     // If we re-open the client, it should still be kept above.
     destroyTestWindow();
     createTestWindow();
-    QVERIFY(client->keepAbove());
+    QVERIFY(m_client->keepAbove());
 
     destroyTestWindow();
 }
@@ -2089,20 +2089,20 @@ void TestXdgShellClientRules::testKeepAboveForce()
 void TestXdgShellClientRules::testKeepAboveApplyNow()
 {
     createTestWindow();
-    QVERIFY(!client->keepAbove());
+    QVERIFY(!m_client->keepAbove());
 
     setWindowRule("above", true, int(Rules::ApplyNow));
 
     // The client should now be kept above other clients.
-    QVERIFY(client->keepAbove());
+    QVERIFY(m_client->keepAbove());
 
     // One is still able to change the keep-above state of the client.
-    client->setKeepAbove(false);
-    QVERIFY(!client->keepAbove());
+    m_client->setKeepAbove(false);
+    QVERIFY(!m_client->keepAbove());
 
     // The rule should not be applied again.
-    client->evaluateWindowRules();
-    QVERIFY(!client->keepAbove());
+    m_client->evaluateWindowRules();
+    QVERIFY(!m_client->keepAbove());
 
     destroyTestWindow();
 }
@@ -2114,22 +2114,22 @@ void TestXdgShellClientRules::testKeepAboveForceTemporarily()
     createTestWindow();
 
     // Initially, the client should be kept above.
-    QVERIFY(client->keepAbove());
+    QVERIFY(m_client->keepAbove());
 
     // Any attempt to alter the keep-above state should not succeed.
-    client->setKeepAbove(false);
-    QVERIFY(client->keepAbove());
+    m_client->setKeepAbove(false);
+    QVERIFY(m_client->keepAbove());
 
     // The rule should be discarded when the client is closed.
     destroyTestWindow();
     createTestWindow();
-    QVERIFY(!client->keepAbove());
+    QVERIFY(!m_client->keepAbove());
 
     // The keep-above state is no longer forced.
-    client->setKeepAbove(true);
-    QVERIFY(client->keepAbove());
-    client->setKeepAbove(false);
-    QVERIFY(!client->keepAbove());
+    m_client->setKeepAbove(true);
+    QVERIFY(m_client->keepAbove());
+    m_client->setKeepAbove(false);
+    QVERIFY(!m_client->keepAbove());
 
     destroyTestWindow();
 }
@@ -2141,7 +2141,7 @@ void TestXdgShellClientRules::testKeepBelowDontAffect()
     createTestWindow();
 
     // The keep-below state of the client should not be affected by the rule.
-    QVERIFY(!client->keepBelow());
+    QVERIFY(!m_client->keepBelow());
 
     destroyTestWindow();
 }
@@ -2153,16 +2153,16 @@ void TestXdgShellClientRules::testKeepBelowApply()
     createTestWindow();
 
     // Initially, the client should be kept below.
-    QVERIFY(client->keepBelow());
+    QVERIFY(m_client->keepBelow());
 
     // One should also be able to alter the keep-below state.
-    client->setKeepBelow(false);
-    QVERIFY(!client->keepBelow());
+    m_client->setKeepBelow(false);
+    QVERIFY(!m_client->keepBelow());
 
     // If one re-opens the client, it should be kept above back again.
     destroyTestWindow();
     createTestWindow();
-    QVERIFY(client->keepBelow());
+    QVERIFY(m_client->keepBelow());
 
     destroyTestWindow();
 }
@@ -2174,16 +2174,16 @@ void TestXdgShellClientRules::testKeepBelowRemember()
     createTestWindow();
 
     // Initially, the client should be kept below.
-    QVERIFY(client->keepBelow());
+    QVERIFY(m_client->keepBelow());
 
     // Unset the keep-below state.
-    client->setKeepBelow(false);
-    QVERIFY(!client->keepBelow());
+    m_client->setKeepBelow(false);
+    QVERIFY(!m_client->keepBelow());
     destroyTestWindow();
 
     // Re-open the client, it should not be kept below.
     createTestWindow();
-    QVERIFY(!client->keepBelow());
+    QVERIFY(!m_client->keepBelow());
 
     destroyTestWindow();
 }
@@ -2195,16 +2195,16 @@ void TestXdgShellClientRules::testKeepBelowForce()
     createTestWindow();
 
     // Initially, the client should be kept below.
-    QVERIFY(client->keepBelow());
+    QVERIFY(m_client->keepBelow());
 
     // Any attemt to unset the keep-below should not succeed.
-    client->setKeepBelow(false);
-    QVERIFY(client->keepBelow());
+    m_client->setKeepBelow(false);
+    QVERIFY(m_client->keepBelow());
 
     // If we re-open the client, it should still be kept below.
     destroyTestWindow();
     createTestWindow();
-    QVERIFY(client->keepBelow());
+    QVERIFY(m_client->keepBelow());
 
     destroyTestWindow();
 }
@@ -2212,20 +2212,20 @@ void TestXdgShellClientRules::testKeepBelowForce()
 void TestXdgShellClientRules::testKeepBelowApplyNow()
 {
     createTestWindow();
-    QVERIFY(!client->keepBelow());
+    QVERIFY(!m_client->keepBelow());
 
     setWindowRule("below", true, int(Rules::ApplyNow));
 
     // The client should now be kept below other clients.
-    QVERIFY(client->keepBelow());
+    QVERIFY(m_client->keepBelow());
 
     // One is still able to change the keep-below state of the client.
-    client->setKeepBelow(false);
-    QVERIFY(!client->keepBelow());
+    m_client->setKeepBelow(false);
+    QVERIFY(!m_client->keepBelow());
 
     // The rule should not be applied again.
-    client->evaluateWindowRules();
-    QVERIFY(!client->keepBelow());
+    m_client->evaluateWindowRules();
+    QVERIFY(!m_client->keepBelow());
 
     destroyTestWindow();
 }
@@ -2237,22 +2237,22 @@ void TestXdgShellClientRules::testKeepBelowForceTemporarily()
     createTestWindow();
 
     // Initially, the client should be kept below.
-    QVERIFY(client->keepBelow());
+    QVERIFY(m_client->keepBelow());
 
     // Any attempt to alter the keep-below state should not succeed.
-    client->setKeepBelow(false);
-    QVERIFY(client->keepBelow());
+    m_client->setKeepBelow(false);
+    QVERIFY(m_client->keepBelow());
 
     // The rule should be discarded when the client is closed.
     destroyTestWindow();
     createTestWindow();
-    QVERIFY(!client->keepBelow());
+    QVERIFY(!m_client->keepBelow());
 
     // The keep-below state is no longer forced.
-    client->setKeepBelow(true);
-    QVERIFY(client->keepBelow());
-    client->setKeepBelow(false);
-    QVERIFY(!client->keepBelow());
+    m_client->setKeepBelow(true);
+    QVERIFY(m_client->keepBelow());
+    m_client->setKeepBelow(false);
+    QVERIFY(!m_client->keepBelow());
 
     destroyTestWindow();
 }
@@ -2262,12 +2262,12 @@ void TestXdgShellClientRules::testShortcutDontAffect()
     setWindowRule("shortcut", "Ctrl+Alt+1", int(Rules::DontAffect));
 
     createTestWindow();
-    QCOMPARE(client->shortcut(), QKeySequence());
-    client->minimize();
-    QVERIFY(client->isMinimized());
+    QCOMPARE(m_client->shortcut(), QKeySequence());
+    m_client->minimize();
+    QVERIFY(m_client->isMinimized());
 
     // If we press the window shortcut, nothing should happen.
-    QSignalSpy clientUnminimizedSpy(client, &AbstractClient::clientUnminimized);
+    QSignalSpy clientUnminimizedSpy(m_client, &AbstractClient::clientUnminimized);
     QVERIFY(clientUnminimizedSpy.isValid());
     quint32 timestamp = 1;
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
@@ -2277,7 +2277,7 @@ void TestXdgShellClientRules::testShortcutDontAffect()
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(!clientUnminimizedSpy.wait(100));
-    QVERIFY(client->isMinimized());
+    QVERIFY(m_client->isMinimized());
 
     destroyTestWindow();
 }
@@ -2289,12 +2289,12 @@ void TestXdgShellClientRules::testShortcutApply()
     createTestWindow();
 
     // If we press the window shortcut, the window should be brought back to user.
-    QSignalSpy clientUnminimizedSpy(client, &AbstractClient::clientUnminimized);
+    QSignalSpy clientUnminimizedSpy(m_client, &AbstractClient::clientUnminimized);
     QVERIFY(clientUnminimizedSpy.isValid());
     quint32 timestamp = 1;
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
-    client->minimize();
-    QVERIFY(client->isMinimized());
+    QCOMPARE(m_client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
+    m_client->minimize();
+    QVERIFY(m_client->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyPressed(KEY_1, timestamp++);
@@ -2302,13 +2302,13 @@ void TestXdgShellClientRules::testShortcutApply()
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(clientUnminimizedSpy.wait());
-    QVERIFY(!client->isMinimized());
+    QVERIFY(!m_client->isMinimized());
 
     // One can also change the shortcut.
-    client->setShortcut(QStringLiteral("Ctrl+Alt+2"));
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_2}));
-    client->minimize();
-    QVERIFY(client->isMinimized());
+    m_client->setShortcut(QStringLiteral("Ctrl+Alt+2"));
+    QCOMPARE(m_client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_2}));
+    m_client->minimize();
+    QVERIFY(m_client->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyPressed(KEY_2, timestamp++);
@@ -2316,11 +2316,11 @@ void TestXdgShellClientRules::testShortcutApply()
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(clientUnminimizedSpy.wait());
-    QVERIFY(!client->isMinimized());
+    QVERIFY(!m_client->isMinimized());
 
     // The old shortcut should do nothing.
-    client->minimize();
-    QVERIFY(client->isMinimized());
+    m_client->minimize();
+    QVERIFY(m_client->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyPressed(KEY_1, timestamp++);
@@ -2328,14 +2328,14 @@ void TestXdgShellClientRules::testShortcutApply()
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(!clientUnminimizedSpy.wait(100));
-    QVERIFY(client->isMinimized());
+    QVERIFY(m_client->isMinimized());
 
     // Reopen the client.
     destroyTestWindow();
     createTestWindow();
 
     // The window shortcut should be set back to Ctrl+Alt+1.
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
+    QCOMPARE(m_client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
 
     destroyTestWindow();
 }
@@ -2349,12 +2349,12 @@ void TestXdgShellClientRules::testShortcutRemember()
     createTestWindow();
 
     // If we press the window shortcut, the window should be brought back to user.
-    QSignalSpy clientUnminimizedSpy(client, &AbstractClient::clientUnminimized);
+    QSignalSpy clientUnminimizedSpy(m_client, &AbstractClient::clientUnminimized);
     QVERIFY(clientUnminimizedSpy.isValid());
     quint32 timestamp = 1;
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
-    client->minimize();
-    QVERIFY(client->isMinimized());
+    QCOMPARE(m_client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
+    m_client->minimize();
+    QVERIFY(m_client->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyPressed(KEY_1, timestamp++);
@@ -2362,13 +2362,13 @@ void TestXdgShellClientRules::testShortcutRemember()
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(clientUnminimizedSpy.wait());
-    QVERIFY(!client->isMinimized());
+    QVERIFY(!m_client->isMinimized());
 
     // Change the window shortcut to Ctrl+Alt+2.
-    client->setShortcut(QStringLiteral("Ctrl+Alt+2"));
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_2}));
-    client->minimize();
-    QVERIFY(client->isMinimized());
+    m_client->setShortcut(QStringLiteral("Ctrl+Alt+2"));
+    QCOMPARE(m_client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_2}));
+    m_client->minimize();
+    QVERIFY(m_client->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyPressed(KEY_2, timestamp++);
@@ -2376,14 +2376,14 @@ void TestXdgShellClientRules::testShortcutRemember()
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(clientUnminimizedSpy.wait());
-    QVERIFY(!client->isMinimized());
+    QVERIFY(!m_client->isMinimized());
 
     // Reopen the client.
     destroyTestWindow();
     createTestWindow();
 
     // The window shortcut should be set to the last known value.
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_2}));
+    QCOMPARE(m_client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_2}));
 
     destroyTestWindow();
 }
@@ -2397,12 +2397,12 @@ void TestXdgShellClientRules::testShortcutForce()
     createTestWindow();
 
     // If we press the window shortcut, the window should be brought back to user.
-    QSignalSpy clientUnminimizedSpy(client, &AbstractClient::clientUnminimized);
+    QSignalSpy clientUnminimizedSpy(m_client, &AbstractClient::clientUnminimized);
     QVERIFY(clientUnminimizedSpy.isValid());
     quint32 timestamp = 1;
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
-    client->minimize();
-    QVERIFY(client->isMinimized());
+    QCOMPARE(m_client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
+    m_client->minimize();
+    QVERIFY(m_client->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyPressed(KEY_1, timestamp++);
@@ -2410,13 +2410,13 @@ void TestXdgShellClientRules::testShortcutForce()
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(clientUnminimizedSpy.wait());
-    QVERIFY(!client->isMinimized());
+    QVERIFY(!m_client->isMinimized());
 
     // Any attempt to change the window shortcut should not succeed.
-    client->setShortcut(QStringLiteral("Ctrl+Alt+2"));
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
-    client->minimize();
-    QVERIFY(client->isMinimized());
+    m_client->setShortcut(QStringLiteral("Ctrl+Alt+2"));
+    QCOMPARE(m_client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
+    m_client->minimize();
+    QVERIFY(m_client->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyPressed(KEY_2, timestamp++);
@@ -2424,14 +2424,14 @@ void TestXdgShellClientRules::testShortcutForce()
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(!clientUnminimizedSpy.wait(100));
-    QVERIFY(client->isMinimized());
+    QVERIFY(m_client->isMinimized());
 
     // Reopen the client.
     destroyTestWindow();
     createTestWindow();
 
     // The window shortcut should still be forced.
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
+    QCOMPARE(m_client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
 
     destroyTestWindow();
 }
@@ -2439,17 +2439,17 @@ void TestXdgShellClientRules::testShortcutForce()
 void TestXdgShellClientRules::testShortcutApplyNow()
 {
     createTestWindow();
-    QVERIFY(client->shortcut().isEmpty());
+    QVERIFY(m_client->shortcut().isEmpty());
 
     setWindowRule("shortcut", "Ctrl+Alt+1", int(Rules::ApplyNow));
 
     // The client should now have a window shortcut assigned.
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
-    QSignalSpy clientUnminimizedSpy(client, &AbstractClient::clientUnminimized);
+    QCOMPARE(m_client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
+    QSignalSpy clientUnminimizedSpy(m_client, &AbstractClient::clientUnminimized);
     QVERIFY(clientUnminimizedSpy.isValid());
     quint32 timestamp = 1;
-    client->minimize();
-    QVERIFY(client->isMinimized());
+    m_client->minimize();
+    QVERIFY(m_client->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyPressed(KEY_1, timestamp++);
@@ -2457,13 +2457,13 @@ void TestXdgShellClientRules::testShortcutApplyNow()
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(clientUnminimizedSpy.wait());
-    QVERIFY(!client->isMinimized());
+    QVERIFY(!m_client->isMinimized());
 
     // Assign a different shortcut.
-    client->setShortcut(QStringLiteral("Ctrl+Alt+2"));
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_2}));
-    client->minimize();
-    QVERIFY(client->isMinimized());
+    m_client->setShortcut(QStringLiteral("Ctrl+Alt+2"));
+    QCOMPARE(m_client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_2}));
+    m_client->minimize();
+    QVERIFY(m_client->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyPressed(KEY_2, timestamp++);
@@ -2471,11 +2471,11 @@ void TestXdgShellClientRules::testShortcutApplyNow()
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(clientUnminimizedSpy.wait());
-    QVERIFY(!client->isMinimized());
+    QVERIFY(!m_client->isMinimized());
 
     // The rule should not be applied again.
-    client->evaluateWindowRules();
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_2}));
+    m_client->evaluateWindowRules();
+    QCOMPARE(m_client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_2}));
 
     destroyTestWindow();
 }
@@ -2489,12 +2489,12 @@ void TestXdgShellClientRules::testShortcutForceTemporarily()
     createTestWindow();
 
     // If we press the window shortcut, the window should be brought back to user.
-    QSignalSpy clientUnminimizedSpy(client, &AbstractClient::clientUnminimized);
+    QSignalSpy clientUnminimizedSpy(m_client, &AbstractClient::clientUnminimized);
     QVERIFY(clientUnminimizedSpy.isValid());
     quint32 timestamp = 1;
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
-    client->minimize();
-    QVERIFY(client->isMinimized());
+    QCOMPARE(m_client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
+    m_client->minimize();
+    QVERIFY(m_client->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyPressed(KEY_1, timestamp++);
@@ -2502,13 +2502,13 @@ void TestXdgShellClientRules::testShortcutForceTemporarily()
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(clientUnminimizedSpy.wait());
-    QVERIFY(!client->isMinimized());
+    QVERIFY(!m_client->isMinimized());
 
     // Any attempt to change the window shortcut should not succeed.
-    client->setShortcut(QStringLiteral("Ctrl+Alt+2"));
-    QCOMPARE(client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
-    client->minimize();
-    QVERIFY(client->isMinimized());
+    m_client->setShortcut(QStringLiteral("Ctrl+Alt+2"));
+    QCOMPARE(m_client->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
+    m_client->minimize();
+    QVERIFY(m_client->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyPressed(KEY_2, timestamp++);
@@ -2516,12 +2516,12 @@ void TestXdgShellClientRules::testShortcutForceTemporarily()
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(!clientUnminimizedSpy.wait(100));
-    QVERIFY(client->isMinimized());
+    QVERIFY(m_client->isMinimized());
 
     // The rule should be discarded when the client is closed.
     destroyTestWindow();
     createTestWindow();
-    QVERIFY(client->shortcut().isEmpty());
+    QVERIFY(m_client->shortcut().isEmpty());
 
     destroyTestWindow();
 }
@@ -2579,10 +2579,10 @@ void TestXdgShellClientRules::testActiveOpacityDontAffect()
     setWindowRule("opacityactive", 90, int(Rules::DontAffect));
 
     createTestWindow();
-    QVERIFY(client->isActive());
+    QVERIFY(m_client->isActive());
 
     // The opacity should not be affected by the rule.
-    QCOMPARE(client->opacity(), 1.0);
+    QCOMPARE(m_client->opacity(), 1.0);
 
     destroyTestWindow();
 }
@@ -2592,8 +2592,8 @@ void TestXdgShellClientRules::testActiveOpacityForce()
     setWindowRule("opacityactive", 90, int(Rules::Force));
 
     createTestWindow();
-    QVERIFY(client->isActive());
-    QCOMPARE(client->opacity(), 0.9);
+    QVERIFY(m_client->isActive());
+    QCOMPARE(m_client->opacity(), 0.9);
 
     destroyTestWindow();
 }
@@ -2603,14 +2603,14 @@ void TestXdgShellClientRules::testActiveOpacityForceTemporarily()
     setWindowRule("opacityactive", 90, int(Rules::ForceTemporarily));
 
     createTestWindow();
-    QVERIFY(client->isActive());
-    QCOMPARE(client->opacity(), 0.9);
+    QVERIFY(m_client->isActive());
+    QCOMPARE(m_client->opacity(), 0.9);
 
     // The rule should be discarded when the client is closed.
     destroyTestWindow();
     createTestWindow();
-    QVERIFY(client->isActive());
-    QCOMPARE(client->opacity(), 1.0);
+    QVERIFY(m_client->isActive());
+    QCOMPARE(m_client->opacity(), 1.0);
 
     destroyTestWindow();
 }
@@ -2620,14 +2620,14 @@ void TestXdgShellClientRules::testInactiveOpacityDontAffect()
     setWindowRule("opacityinactive", 80, int(Rules::DontAffect));
 
     createTestWindow();
-    QVERIFY(client->isActive());
+    QVERIFY(m_client->isActive());
 
     // Make the client inactive.
     workspace()->setActiveClient(nullptr);
-    QVERIFY(!client->isActive());
+    QVERIFY(!m_client->isActive());
 
     // The opacity of the client should not be affected by the rule.
-    QCOMPARE(client->opacity(), 1.0);
+    QCOMPARE(m_client->opacity(), 1.0);
 
     destroyTestWindow();
 }
@@ -2637,15 +2637,15 @@ void TestXdgShellClientRules::testInactiveOpacityForce()
     setWindowRule("opacityinactive", 80, int(Rules::Force));
 
     createTestWindow();
-    QVERIFY(client->isActive());
-    QCOMPARE(client->opacity(), 1.0);
+    QVERIFY(m_client->isActive());
+    QCOMPARE(m_client->opacity(), 1.0);
 
     // Make the client inactive.
     workspace()->setActiveClient(nullptr);
-    QVERIFY(!client->isActive());
+    QVERIFY(!m_client->isActive());
 
     // The opacity should be forced by the rule.
-    QCOMPARE(client->opacity(), 0.8);
+    QCOMPARE(m_client->opacity(), 0.8);
 
     destroyTestWindow();
 }
@@ -2655,25 +2655,25 @@ void TestXdgShellClientRules::testInactiveOpacityForceTemporarily()
     setWindowRule("opacityinactive", 80, int(Rules::ForceTemporarily));
 
     createTestWindow();
-    QVERIFY(client->isActive());
-    QCOMPARE(client->opacity(), 1.0);
+    QVERIFY(m_client->isActive());
+    QCOMPARE(m_client->opacity(), 1.0);
 
     // Make the client inactive.
     workspace()->setActiveClient(nullptr);
-    QVERIFY(!client->isActive());
+    QVERIFY(!m_client->isActive());
 
     // The opacity should be forced by the rule.
-    QCOMPARE(client->opacity(), 0.8);
+    QCOMPARE(m_client->opacity(), 0.8);
 
     // The rule should be discarded when the client is closed.
     destroyTestWindow();
     createTestWindow();
 
-    QVERIFY(client->isActive());
-    QCOMPARE(client->opacity(), 1.0);
+    QVERIFY(m_client->isActive());
+    QCOMPARE(m_client->opacity(), 1.0);
     workspace()->setActiveClient(nullptr);
-    QVERIFY(!client->isActive());
-    QCOMPARE(client->opacity(), 1.0);
+    QVERIFY(!m_client->isActive());
+    QCOMPARE(m_client->opacity(), 1.0);
 
     destroyTestWindow();
 }
@@ -2684,7 +2684,7 @@ void TestXdgShellClientRules::testNoBorderDontAffect()
     createTestWindow(ServerSideDecoration);
 
     // The client should not be affected by the rule.
-    QVERIFY(!client->noBorder());
+    QVERIFY(!m_client->noBorder());
 
     destroyTestWindow();
 }
@@ -2695,18 +2695,18 @@ void TestXdgShellClientRules::testNoBorderApply()
     createTestWindow(ServerSideDecoration);
 
     // Initially, the client should not be decorated.
-    QVERIFY(client->noBorder());
-    QVERIFY(!client->isDecorated());
+    QVERIFY(m_client->noBorder());
+    QVERIFY(!m_client->isDecorated());
 
     // But you should be able to change "no border" property afterwards.
-    QVERIFY(client->userCanSetNoBorder());
-    client->setNoBorder(false);
-    QVERIFY(!client->noBorder());
+    QVERIFY(m_client->userCanSetNoBorder());
+    m_client->setNoBorder(false);
+    QVERIFY(!m_client->noBorder());
 
     // If one re-opens the client, it should have no border again.
     destroyTestWindow();
     createTestWindow(ServerSideDecoration);
-    QVERIFY(client->noBorder());
+    QVERIFY(m_client->noBorder());
 
     destroyTestWindow();
 }
@@ -2717,19 +2717,19 @@ void TestXdgShellClientRules::testNoBorderRemember()
     createTestWindow(ServerSideDecoration);
 
     // Initially, the client should not be decorated.
-    QVERIFY(client->noBorder());
-    QVERIFY(!client->isDecorated());
+    QVERIFY(m_client->noBorder());
+    QVERIFY(!m_client->isDecorated());
 
     // Unset the "no border" property.
-    QVERIFY(client->userCanSetNoBorder());
-    client->setNoBorder(false);
-    QVERIFY(!client->noBorder());
+    QVERIFY(m_client->userCanSetNoBorder());
+    m_client->setNoBorder(false);
+    QVERIFY(!m_client->noBorder());
 
     // Re-open the client, it should be decorated.
     destroyTestWindow();
     createTestWindow(ServerSideDecoration);
-    QVERIFY(client->isDecorated());
-    QVERIFY(!client->noBorder());
+    QVERIFY(m_client->isDecorated());
+    QVERIFY(!m_client->noBorder());
 
     destroyTestWindow();
 }
@@ -2740,19 +2740,19 @@ void TestXdgShellClientRules::testNoBorderForce()
     createTestWindow(ServerSideDecoration);
 
     // The client should not be decorated.
-    QVERIFY(client->noBorder());
-    QVERIFY(!client->isDecorated());
+    QVERIFY(m_client->noBorder());
+    QVERIFY(!m_client->isDecorated());
 
     // And the user should not be able to change the "no border" property.
-    client->setNoBorder(false);
-    QVERIFY(client->noBorder());
+    m_client->setNoBorder(false);
+    QVERIFY(m_client->noBorder());
 
     // Reopen the client.
     destroyTestWindow();
     createTestWindow(ServerSideDecoration);
 
     // The "no border" property should be still forced.
-    QVERIFY(client->noBorder());
+    QVERIFY(m_client->noBorder());
 
     destroyTestWindow();
 }
@@ -2760,21 +2760,21 @@ void TestXdgShellClientRules::testNoBorderForce()
 void TestXdgShellClientRules::testNoBorderApplyNow()
 {
     createTestWindow(ServerSideDecoration);
-    QVERIFY(!client->noBorder());
+    QVERIFY(!m_client->noBorder());
 
     // Initialize RuleBook with the test rule.
     setWindowRule("noborder", true, int(Rules::ApplyNow));
 
     // The "no border" property should be set now.
-    QVERIFY(client->noBorder());
+    QVERIFY(m_client->noBorder());
 
     // One should be still able to change the "no border" property.
-    client->setNoBorder(false);
-    QVERIFY(!client->noBorder());
+    m_client->setNoBorder(false);
+    QVERIFY(!m_client->noBorder());
 
     // The rule should not be applied again.
-    client->evaluateWindowRules();
-    QVERIFY(!client->noBorder());
+    m_client->evaluateWindowRules();
+    QVERIFY(!m_client->noBorder());
 
     destroyTestWindow();
 }
@@ -2785,22 +2785,22 @@ void TestXdgShellClientRules::testNoBorderForceTemporarily()
     createTestWindow(ServerSideDecoration);
 
     // The "no border" property should be set.
-    QVERIFY(client->noBorder());
+    QVERIFY(m_client->noBorder());
 
     // And you should not be able to change it.
-    client->setNoBorder(false);
-    QVERIFY(client->noBorder());
+    m_client->setNoBorder(false);
+    QVERIFY(m_client->noBorder());
 
     // The rule should be discarded when the client is closed.
     destroyTestWindow();
     createTestWindow(ServerSideDecoration);
-    QVERIFY(!client->noBorder());
+    QVERIFY(!m_client->noBorder());
 
     // The "no border" property is no longer forced.
-    client->setNoBorder(true);
-    QVERIFY(client->noBorder());
-    client->setNoBorder(false);
-    QVERIFY(!client->noBorder());
+    m_client->setNoBorder(true);
+    QVERIFY(m_client->noBorder());
+    m_client->setNoBorder(false);
+    QVERIFY(!m_client->noBorder());
 
     destroyTestWindow();
 }
@@ -2814,11 +2814,11 @@ void TestXdgShellClientRules::testScreenDontAffect()
     createTestWindow();
 
     // The client should not be affected by the rule.
-    QCOMPARE(client->output()->name(), outputs.at(0)->name());
+    QCOMPARE(m_client->output()->name(), outputs.at(0)->name());
 
     // The user can still move the client to another screen.
-    workspace()->sendClientToOutput(client, outputs.at(1));
-    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+    workspace()->sendClientToOutput(m_client, outputs.at(1));
+    QCOMPARE(m_client->output()->name(), outputs.at(1)->name());
 
     destroyTestWindow();
 }
@@ -2833,11 +2833,11 @@ void TestXdgShellClientRules::testScreenApply()
 
     // The client should be in the screen specified by the rule.
     QEXPECT_FAIL("", "Applying a screen rule on a new client fails on Wayland", Continue);
-    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+    QCOMPARE(m_client->output()->name(), outputs.at(1)->name());
 
     // The user can move the client to another screen.
-    workspace()->sendClientToOutput(client, outputs.at(0));
-    QCOMPARE(client->output()->name(), outputs.at(0)->name());
+    workspace()->sendClientToOutput(m_client, outputs.at(0));
+    QCOMPARE(m_client->output()->name(), outputs.at(0)->name());
 
     destroyTestWindow();
 }
@@ -2851,18 +2851,18 @@ void TestXdgShellClientRules::testScreenRemember()
     createTestWindow();
 
     // Initially, the client should be in the first screen
-    QCOMPARE(client->output()->name(), outputs.at(0)->name());
+    QCOMPARE(m_client->output()->name(), outputs.at(0)->name());
 
     // Move the client to the second screen.
-    workspace()->sendClientToOutput(client, outputs.at(1));
-    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+    workspace()->sendClientToOutput(m_client, outputs.at(1));
+    QCOMPARE(m_client->output()->name(), outputs.at(1)->name());
 
     // Close and reopen the client.
     destroyTestWindow();
     createTestWindow();
 
     QEXPECT_FAIL("", "Applying a screen rule on a new client fails on Wayland", Continue);
-    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+    QCOMPARE(m_client->output()->name(), outputs.at(1)->name());
 
     destroyTestWindow();
 }
@@ -2872,16 +2872,16 @@ void TestXdgShellClientRules::testScreenForce()
     const KWin::Outputs outputs = kwinApp()->platform()->enabledOutputs();
 
     createTestWindow();
-    QVERIFY(client->isActive());
+    QVERIFY(m_client->isActive());
 
     setWindowRule("screen", int(1), int(Rules::Force));
 
     // The client should be forced to the screen specified by the rule.
-    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+    QCOMPARE(m_client->output()->name(), outputs.at(1)->name());
 
     // User should not be able to move the client to another screen.
-    workspace()->sendClientToOutput(client, outputs.at(0));
-    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+    workspace()->sendClientToOutput(m_client, outputs.at(0));
+    QCOMPARE(m_client->output()->name(), outputs.at(1)->name());
 
     // Disable the output where the window is on, so the client is moved the other screen
     WaylandOutputConfig config;
@@ -2890,7 +2890,7 @@ void TestXdgShellClientRules::testScreenForce()
     kwinApp()->platform()->applyOutputChanges(config);
 
     QVERIFY(!outputs.at(1)->isEnabled());
-    QCOMPARE(client->output()->name(), outputs.at(0)->name());
+    QCOMPARE(m_client->output()->name(), outputs.at(0)->name());
 
     // Enable the output and check that the client is moved there again
     changeSet->enabled = true;
@@ -2898,14 +2898,14 @@ void TestXdgShellClientRules::testScreenForce()
 
     QVERIFY(outputs.at(1)->isEnabled());
     QEXPECT_FAIL("", "Disabling and enabling an output does not move the client to the Forced screen", Continue);
-    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+    QCOMPARE(m_client->output()->name(), outputs.at(1)->name());
 
     // Close and reopen the client.
     destroyTestWindow();
     createTestWindow();
 
     QEXPECT_FAIL("", "Applying a screen rule on a new client fails on Wayland", Continue);
-    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+    QCOMPARE(m_client->output()->name(), outputs.at(1)->name());
 
     destroyTestWindow();
 }
@@ -2916,19 +2916,19 @@ void TestXdgShellClientRules::testScreenApplyNow()
 
     createTestWindow();
 
-    QCOMPARE(client->output()->name(), outputs.at(0)->name());
+    QCOMPARE(m_client->output()->name(), outputs.at(0)->name());
 
     // Set the rule so the client should move to the screen specified by the rule.
     setWindowRule("screen", int(1), int(Rules::ApplyNow));
-    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+    QCOMPARE(m_client->output()->name(), outputs.at(1)->name());
 
     // The user can move the client to another screen.
-    workspace()->sendClientToOutput(client, outputs.at(0));
-    QCOMPARE(client->output()->name(), outputs.at(0)->name());
+    workspace()->sendClientToOutput(m_client, outputs.at(0));
+    QCOMPARE(m_client->output()->name(), outputs.at(0)->name());
 
     // The rule should not be applied again.
-    client->evaluateWindowRules();
-    QCOMPARE(client->output()->name(), outputs.at(0)->name());
+    m_client->evaluateWindowRules();
+    QCOMPARE(m_client->output()->name(), outputs.at(0)->name());
 
     destroyTestWindow();
 }
@@ -2942,18 +2942,18 @@ void TestXdgShellClientRules::testScreenForceTemporarily()
     setWindowRule("screen", int(1), int(Rules::ForceTemporarily));
 
     // The client should be forced the second screen
-    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+    QCOMPARE(m_client->output()->name(), outputs.at(1)->name());
 
     // User is not allowed to move it
-    workspace()->sendClientToOutput(client, outputs.at(0));
-    QCOMPARE(client->output()->name(), outputs.at(1)->name());
+    workspace()->sendClientToOutput(m_client, outputs.at(0));
+    QCOMPARE(m_client->output()->name(), outputs.at(1)->name());
 
     // Close and reopen the client.
     destroyTestWindow();
     createTestWindow();
 
     // The rule should be discarded now
-    QCOMPARE(client->output()->name(), outputs.at(0)->name());
+    QCOMPARE(m_client->output()->name(), outputs.at(0)->name());
 
     destroyTestWindow();
 }
