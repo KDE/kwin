@@ -14,8 +14,8 @@
 namespace KWin
 {
 class VirtualBackend;
+class GLFramebuffer;
 class GLTexture;
-class GLRenderTarget;
 class EglGbmBackend;
 
 class VirtualOutputLayer : public OutputLayer
@@ -54,7 +54,7 @@ private:
     bool initRenderingContext();
     VirtualBackend *m_backend;
     GLTexture *m_backBuffer = nullptr;
-    GLRenderTarget *m_fbo = nullptr;
+    GLFramebuffer *m_fbo = nullptr;
     int m_frameCounter = 0;
     QScopedPointer<VirtualOutputLayer> m_layer;
 };

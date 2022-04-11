@@ -47,8 +47,8 @@ ShadowBuffer::ShadowBuffer(const QSize &size, const GbmFormat &format)
     m_texture->setFilter(GL_NEAREST);
     m_texture->setYInverted(true);
 
-    m_renderTarget.reset(new GLRenderTarget(m_texture.data()));
-    if (!m_renderTarget->valid()) {
+    m_fbo.reset(new GLFramebuffer(m_texture.data()));
+    if (!m_fbo->valid()) {
         qCCritical(KWIN_DRM) << "Error: framebuffer not complete!";
         return;
     }
@@ -86,9 +86,9 @@ void ShadowBuffer::render(DrmPlane::Transformations transform)
     ShaderManager::instance()->popShader();
 }
 
-GLRenderTarget *ShadowBuffer::renderTarget() const
+GLFramebuffer *ShadowBuffer::fbo() const
 {
-    return m_renderTarget.data();
+    return m_fbo.data();
 }
 
 QSharedPointer<GLTexture> ShadowBuffer::texture() const
@@ -98,7 +98,7 @@ QSharedPointer<GLTexture> ShadowBuffer::texture() const
 
 bool ShadowBuffer::isComplete() const
 {
-    return m_renderTarget->valid() && m_vbo;
+    return m_fbo->valid() && m_vbo;
 }
 
 uint32_t ShadowBuffer::drmFormat() const

@@ -33,7 +33,7 @@ public:
 
 private:
     EGLSurface m_eglSurface;
-    QScopedPointer<GLRenderTarget> m_renderTarget;
+    QScopedPointer<GLFramebuffer> m_fbo;
     QRegion m_lastDamage;
 
     AbstractOutput *const m_output;

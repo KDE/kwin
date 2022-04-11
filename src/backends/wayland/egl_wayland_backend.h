@@ -21,7 +21,7 @@ struct wl_shm;
 
 namespace KWin
 {
-class GLRenderTarget;
+class GLFramebuffer;
 
 namespace Wayland
 {
@@ -38,7 +38,7 @@ public:
     bool init();
     void updateSize();
 
-    GLRenderTarget *renderTarget() const;
+    GLFramebuffer *fbo() const;
     bool makeContextCurrent() const;
     void present();
 
@@ -54,7 +54,7 @@ private:
     EGLSurface m_eglSurface = EGL_NO_SURFACE;
     int m_bufferAge = 0;
     DamageJournal m_damageJournal;
-    QScopedPointer<GLRenderTarget> m_renderTarget;
+    QScopedPointer<GLFramebuffer> m_fbo;
     EglWaylandBackend *const m_backend;
 
     friend class EglWaylandBackend;

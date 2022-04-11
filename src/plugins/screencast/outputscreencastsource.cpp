@@ -42,7 +42,7 @@ void OutputScreenCastSource::render(QImage *image)
     }
 }
 
-void OutputScreenCastSource::render(GLRenderTarget *target)
+void OutputScreenCastSource::render(GLFramebuffer *target)
 {
     const QSharedPointer<GLTexture> outputTexture = Compositor::self()->scene()->textureForOutput(m_output);
     if (!outputTexture) {
@@ -56,11 +56,11 @@ void OutputScreenCastSource::render(GLRenderTarget *target)
     projectionMatrix.ortho(geometry);
     shaderBinder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
 
-    GLRenderTarget::pushRenderTarget(target);
+    GLFramebuffer::pushFramebuffer(target);
     outputTexture->bind();
     outputTexture->render(geometry);
     outputTexture->unbind();
-    GLRenderTarget::popRenderTarget();
+    GLFramebuffer::popFramebuffer();
 }
 
 std::chrono::nanoseconds OutputScreenCastSource::clock() const

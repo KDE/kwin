@@ -26,14 +26,14 @@ public:
     bool isComplete() const;
     void render(DrmPlane::Transformations transform);
 
-    GLRenderTarget *renderTarget() const;
+    GLFramebuffer *fbo() const;
     QSharedPointer<GLTexture> texture() const;
     uint32_t drmFormat() const;
 
 private:
     GLint internalFormat(const GbmFormat &format) const;
     QSharedPointer<GLTexture> m_texture;
-    QScopedPointer<GLRenderTarget> m_renderTarget;
+    QScopedPointer<GLFramebuffer> m_fbo;
     QScopedPointer<GLVertexBuffer> m_vbo;
     const QSize m_size;
     const uint32_t m_drmFormat;

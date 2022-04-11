@@ -31,7 +31,7 @@
 #include <cmath>
 #include <deque>
 
-#define DEBUG_GLRENDERTARGET 0
+#define DEBUG_GLFRAMEBUFFER 0
 
 #ifdef __GNUC__
 #define likely(x) __builtin_expect(!!(x), 1)
@@ -152,7 +152,7 @@ void initGL(const std::function<resolveFuncPtr(const char *)> &resolveFunction)
     initDebugOutput();
 
     GLTexturePrivate::initStatic();
-    GLRenderTarget::initStatic();
+    GLFramebuffer::initStatic();
     GLVertexBuffer::initStatic();
 }
 
@@ -160,7 +160,7 @@ void cleanupGL()
 {
     ShaderManager::cleanup();
     GLTexturePrivate::cleanup();
-    GLRenderTarget::cleanup();
+    GLFramebuffer::cleanup();
     GLVertexBuffer::cleanup();
     GLPlatform::cleanup();
 
@@ -940,12 +940,12 @@ GLShader *ShaderManager::loadShaderFromCode(const QByteArray &vertexSource, cons
     return shader;
 }
 
-/***  GLRenderTarget  ***/
-bool GLRenderTarget::sSupported = false;
-bool GLRenderTarget::s_blitSupported = false;
-QStack<GLRenderTarget *> GLRenderTarget::s_renderTargets = QStack<GLRenderTarget *>();
+/***  GLFramebuffer  ***/
+bool GLFramebuffer::sSupported = false;
+bool GLFramebuffer::s_blitSupported = false;
+QStack<GLFramebuffer *> GLFramebuffer::s_fbos = QStack<GLFramebuffer *>();
 
-void GLRenderTarget::initStatic()
+void GLFramebuffer::initStatic()
 {
     if (GLPlatform::instance()->isGLES()) {
         sSupported = true;
@@ -957,61 +957,61 @@ void GLRenderTarget::initStatic()
     }
 }
 
-void GLRenderTarget::cleanup()
+void GLFramebuffer::cleanup()
 {
-    Q_ASSERT(s_renderTargets.isEmpty());
+    Q_ASSERT(s_fbos.isEmpty());
     sSupported = false;
     s_blitSupported = false;
 }
 
-bool GLRenderTarget::blitSupported()
+bool GLFramebuffer::blitSupported()
 {
     return s_blitSupported;
 }
 
-GLRenderTarget *GLRenderTarget::currentRenderTarget()
+GLFramebuffer *GLFramebuffer::currentFramebuffer()
 {
-    return s_renderTargets.isEmpty() ? nullptr : s_renderTargets.top();
+    return s_fbos.isEmpty() ? nullptr : s_fbos.top();
 }
 
-void GLRenderTarget::pushRenderTarget(GLRenderTarget *target)
+void GLFramebuffer::pushFramebuffer(GLFramebuffer *fbo)
 {
-    target->bind();
-    s_renderTargets.push(target);
+    fbo->bind();
+    s_fbos.push(fbo);
 }
 
-void GLRenderTarget::pushRenderTargets(QStack<GLRenderTarget *> targets)
+void GLFramebuffer::pushFramebuffers(QStack<GLFramebuffer *> fbos)
 {
-    targets.top()->bind();
-    s_renderTargets.append(targets);
+    fbos.top()->bind();
+    s_fbos.append(fbos);
 }
 
-GLRenderTarget *GLRenderTarget::popRenderTarget()
+GLFramebuffer *GLFramebuffer::popFramebuffer()
 {
-    GLRenderTarget *ret = s_renderTargets.pop();
-    if (!s_renderTargets.isEmpty()) {
-        s_renderTargets.top()->bind();
+    GLFramebuffer *ret = s_fbos.pop();
+    if (!s_fbos.isEmpty()) {
+        s_fbos.top()->bind();
     }
 
     return ret;
 }
 
-GLRenderTarget::GLRenderTarget()
+GLFramebuffer::GLFramebuffer()
 {
 }
 
-GLRenderTarget::GLRenderTarget(GLTexture *colorAttachment)
+GLFramebuffer::GLFramebuffer(GLTexture *colorAttachment)
     : mSize(colorAttachment->size())
 {
     // Make sure FBO is supported
     if (sSupported && !colorAttachment->isNull()) {
         initFBO(colorAttachment);
     } else {
-        qCCritical(LIBKWINGLUTILS) << "Render targets aren't supported!";
+        qCCritical(LIBKWINGLUTILS) << "Framebuffer objects aren't supported!";
     }
 }
 
-GLRenderTarget::GLRenderTarget(GLuint handle, const QSize &size)
+GLFramebuffer::GLFramebuffer(GLuint handle, const QSize &size)
     : mFramebuffer(handle)
     , mSize(size)
     , mValid(true)
@@ -1019,17 +1019,17 @@ GLRenderTarget::GLRenderTarget(GLuint handle, const QSize &size)
 {
 }
 
-GLRenderTarget::~GLRenderTarget()
+GLFramebuffer::~GLFramebuffer()
 {
     if (!mForeign && mValid) {
         glDeleteFramebuffers(1, &mFramebuffer);
     }
 }
 
-bool GLRenderTarget::bind()
+bool GLFramebuffer::bind()
 {
     if (!valid()) {
-        qCCritical(LIBKWINGLUTILS) << "Can't enable invalid render target!";
+        qCCritical(LIBKWINGLUTILS) << "Can't enable invalid framebuffer object!";
         return false;
     }
 
@@ -1071,22 +1071,22 @@ static QString formatFramebufferStatus(GLenum status)
     }
 }
 
-void GLRenderTarget::initFBO(GLTexture *colorAttachment)
+void GLFramebuffer::initFBO(GLTexture *colorAttachment)
 {
-#if DEBUG_GLRENDERTARGET
+#if DEBUG_GLFRAMEBUFFER
     GLenum err = glGetError();
     if (err != GL_NO_ERROR)
-        qCCritical(LIBKWINGLUTILS) << "Error status when entering GLRenderTarget::initFBO: " << formatGLError(err);
+        qCCritical(LIBKWINGLUTILS) << "Error status when entering GLFramebuffer::initFBO: " << formatGLError(err);
 #endif
 
     GLuint prevFbo = 0;
-    if (const GLRenderTarget *current = currentRenderTarget()) {
+    if (const GLFramebuffer *current = currentFramebuffer()) {
         prevFbo = current->handle();
     }
 
     glGenFramebuffers(1, &mFramebuffer);
 
-#if DEBUG_GLRENDERTARGET
+#if DEBUG_GLFRAMEBUFFER
     if ((err = glGetError()) != GL_NO_ERROR) {
         qCCritical(LIBKWINGLUTILS) << "glGenFramebuffers failed: " << formatGLError(err);
         return;
@@ -1095,7 +1095,7 @@ void GLRenderTarget::initFBO(GLTexture *colorAttachment)
 
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
 
-#if DEBUG_GLRENDERTARGET
+#if DEBUG_GLFRAMEBUFFER
     if ((err = glGetError()) != GL_NO_ERROR) {
         qCCritical(LIBKWINGLUTILS) << "glBindFramebuffer failed: " << formatGLError(err);
         glDeleteFramebuffers(1, &mFramebuffer);
@@ -1106,7 +1106,7 @@ void GLRenderTarget::initFBO(GLTexture *colorAttachment)
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                            colorAttachment->target(), colorAttachment->texture(), 0);
 
-#if DEBUG_GLRENDERTARGET
+#if DEBUG_GLFRAMEBUFFER
     if ((err = glGetError()) != GL_NO_ERROR) {
         qCCritical(LIBKWINGLUTILS) << "glFramebufferTexture2D failed: " << formatGLError(err);
         glBindFramebuffer(GL_FRAMEBUFFER, prevFbo);
@@ -1133,14 +1133,14 @@ void GLRenderTarget::initFBO(GLTexture *colorAttachment)
     mValid = true;
 }
 
-void GLRenderTarget::blitFromFramebuffer(const QRect &source, const QRect &destination, GLenum filter)
+void GLFramebuffer::blitFromFramebuffer(const QRect &source, const QRect &destination, GLenum filter)
 {
     if (!valid()) {
         return;
     }
 
-    const GLRenderTarget *top = currentRenderTarget();
-    GLRenderTarget::pushRenderTarget(this);
+    const GLFramebuffer *top = currentFramebuffer();
+    GLFramebuffer::pushFramebuffer(this);
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, handle());
     glBindFramebuffer(GL_READ_FRAMEBUFFER, top->handle());
@@ -1160,7 +1160,7 @@ void GLRenderTarget::blitFromFramebuffer(const QRect &source, const QRect &desti
 
     glBlitFramebuffer(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, GL_COLOR_BUFFER_BIT, filter);
 
-    GLRenderTarget::popRenderTarget();
+    GLFramebuffer::popFramebuffer();
 }
 
 // ------------------------------------------------------------------
@@ -2032,9 +2032,9 @@ void GLVertexBuffer::draw(const QRegion &region, GLenum primitiveMode, int first
             glDrawElementsBaseVertex(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, nullptr, first);
         } else {
             // Clip using scissoring
-            const GLRenderTarget *renderTarget = GLRenderTarget::currentRenderTarget();
+            const GLFramebuffer *current = GLFramebuffer::currentFramebuffer();
             for (const QRect &r : region) {
-                glScissor(r.x(), renderTarget->size().height() - (r.y() + r.height()), r.width(), r.height());
+                glScissor(r.x(), current->size().height() - (r.y() + r.height()), r.width(), r.height());
                 glDrawElementsBaseVertex(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, nullptr, first);
             }
         }
@@ -2045,9 +2045,9 @@ void GLVertexBuffer::draw(const QRegion &region, GLenum primitiveMode, int first
         glDrawArrays(primitiveMode, first, count);
     } else {
         // Clip using scissoring
-        const GLRenderTarget *renderTarget = GLRenderTarget::currentRenderTarget();
+        const GLFramebuffer *current = GLFramebuffer::currentFramebuffer();
         for (const QRect &r : region) {
-            glScissor(r.x(), renderTarget->size().height() - (r.y() + r.height()), r.width(), r.height());
+            glScissor(r.x(), current->size().height() - (r.y() + r.height()), r.width(), r.height());
             glDrawArrays(primitiveMode, first, count);
         }
     }

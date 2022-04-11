@@ -25,7 +25,7 @@ class EffectWindow;
 class EffectWindowImpl;
 class WindowPaintData;
 class GLTexture;
-class GLRenderTarget;
+class GLFramebuffer;
 class GLShader;
 class Scene;
 
@@ -51,7 +51,7 @@ private:
     void createKernel(float delta, int *kernelSize);
     void createOffsets(int count, float width, Qt::Orientation direction);
     GLTexture *m_offscreenTex;
-    GLRenderTarget *m_offscreenTarget;
+    GLFramebuffer *m_offscreenTarget;
     QBasicTimer m_timer;
     bool m_inited;
     QScopedPointer<GLShader> m_shader;

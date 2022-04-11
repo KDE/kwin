@@ -16,7 +16,7 @@
 namespace KWin
 {
 
-class GLRenderTarget;
+class GLFramebuffer;
 class GLShader;
 class GLTexture;
 class GLVertexBuffer;
@@ -64,7 +64,7 @@ private:
     int radius;
     int initialradius;
     GLTexture *m_texture;
-    GLRenderTarget *m_fbo;
+    GLFramebuffer *m_fbo;
     GLVertexBuffer *m_vbo;
     GLShader *m_shader;
     std::chrono::milliseconds m_lastPresentTime;

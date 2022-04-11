@@ -75,7 +75,7 @@ static void convertFromGLImage(QImage &img, int w, int h)
 
 bool ScreenShotEffect::supported()
 {
-    return effects->isOpenGLCompositing() && GLRenderTarget::supported();
+    return effects->isOpenGLCompositing() && GLFramebuffer::supported();
 }
 
 ScreenShotEffect::ScreenShotEffect()
@@ -235,12 +235,12 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
     }
     bool validTarget = true;
     QScopedPointer<GLTexture> offscreenTexture;
-    QScopedPointer<GLRenderTarget> target;
+    QScopedPointer<GLFramebuffer> target;
     if (effects->isOpenGLCompositing()) {
         offscreenTexture.reset(new GLTexture(GL_RGBA8, geometry.size() * devicePixelRatio));
         offscreenTexture->setFilter(GL_LINEAR);
         offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
-        target.reset(new GLRenderTarget(offscreenTexture.data()));
+        target.reset(new GLFramebuffer(offscreenTexture.data()));
         validTarget = target->valid();
     }
     if (validTarget) {
@@ -251,7 +251,7 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
         int mask = PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_TRANSLUCENT;
         QImage img;
         if (effects->isOpenGLCompositing()) {
-            GLRenderTarget::pushRenderTarget(target.data());
+            GLFramebuffer::pushFramebuffer(target.data());
             glClearColor(0.0, 0.0, 0.0, 0.0);
             glClear(GL_COLOR_BUFFER_BIT);
             glClearColor(0.0, 0.0, 0.0, 1.0);
@@ -267,7 +267,7 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
             img.setDevicePixelRatio(devicePixelRatio);
             glReadnPixels(0, 0, img.width(), img.height(), GL_RGBA, GL_UNSIGNED_BYTE, img.sizeInBytes(),
                           static_cast<GLvoid *>(img.bits()));
-            GLRenderTarget::popRenderTarget();
+            GLFramebuffer::popFramebuffer();
             convertFromGLImage(img, img.width(), img.height());
         }
 
@@ -354,10 +354,10 @@ QImage ScreenShotEffect::blitScreenshot(const QRect &geometry, qreal devicePixel
     if (effects->isOpenGLCompositing()) {
         const QSize nativeSize = geometry.size() * devicePixelRatio;
 
-        if (GLRenderTarget::blitSupported() && !GLPlatform::instance()->isGLES()) {
+        if (GLFramebuffer::blitSupported() && !GLPlatform::instance()->isGLES()) {
             image = QImage(nativeSize.width(), nativeSize.height(), QImage::Format_ARGB32);
             GLTexture texture(GL_RGBA8, nativeSize.width(), nativeSize.height());
-            GLRenderTarget target(&texture);
+            GLFramebuffer target(&texture);
             target.blitFromFramebuffer(effects->mapToRenderTarget(geometry));
             // copy content from framebuffer into image
             texture.bind();

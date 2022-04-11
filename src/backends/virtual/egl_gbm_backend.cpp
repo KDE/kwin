@@ -57,8 +57,8 @@ EglGbmBackend::EglGbmBackend(VirtualBackend *b)
 
 EglGbmBackend::~EglGbmBackend()
 {
-    while (GLRenderTarget::currentRenderTarget()) {
-        GLRenderTarget::popRenderTarget();
+    while (GLFramebuffer::currentFramebuffer()) {
+        GLFramebuffer::popFramebuffer();
     }
     delete m_fbo;
     delete m_backBuffer;
@@ -102,13 +102,13 @@ void EglGbmBackend::init()
     initKWinGL();
 
     m_backBuffer = new GLTexture(GL_RGB8, screens()->size().width(), screens()->size().height());
-    m_fbo = new GLRenderTarget(m_backBuffer);
+    m_fbo = new GLFramebuffer(m_backBuffer);
     if (!m_fbo->valid()) {
         setFailed("Could not create framebuffer object");
         return;
     }
-    GLRenderTarget::pushRenderTarget(m_fbo);
-    if (!GLRenderTarget::currentRenderTarget()) {
+    GLFramebuffer::pushFramebuffer(m_fbo);
+    if (!GLFramebuffer::currentFramebuffer()) {
         setFailed("Failed to bind framebuffer object");
         return;
     }
@@ -177,8 +177,8 @@ SurfaceTexture *EglGbmBackend::createSurfaceTextureWayland(SurfacePixmapWayland 
 
 QRegion EglGbmBackend::beginFrame()
 {
-    if (!GLRenderTarget::currentRenderTarget()) {
-        GLRenderTarget::pushRenderTarget(m_fbo);
+    if (!GLFramebuffer::currentFramebuffer()) {
+        GLFramebuffer::pushFramebuffer(m_fbo);
     }
     return infiniteRegion();
 }
@@ -231,7 +231,7 @@ void EglGbmBackend::present(AbstractOutput *output)
         convertFromGLImage(img, m_backBuffer->width(), m_backBuffer->height());
         img.save(QStringLiteral("%1/%2.png").arg(m_backend->saveFrames()).arg(QString::number(m_frameCounter++)));
     }
-    GLRenderTarget::popRenderTarget();
+    GLFramebuffer::popFramebuffer();
 
     eglSwapBuffers(eglDisplay(), surface());
 }

@@ -230,7 +230,7 @@ void GlxBackend::init()
     glPlatform->printResults();
     initGL(&getProcAddress);
 
-    m_renderTarget.reset(new GLRenderTarget(0, screens()->size()));
+    m_fbo.reset(new GLFramebuffer(0, screens()->size()));
 
     bool supportsSwapEvent = false;
 
@@ -771,7 +771,7 @@ void GlxBackend::screenGeometryChanged()
 
     // The back buffer contents are now undefined
     m_bufferAge = 0;
-    m_renderTarget.reset(new GLRenderTarget(0, size));
+    m_fbo.reset(new GLFramebuffer(0, size));
 }
 
 SurfaceTexture *GlxBackend::createSurfaceTextureX11(SurfacePixmapX11 *pixmap)
@@ -784,7 +784,7 @@ QRegion GlxBackend::beginFrame()
     QRegion repaint;
     makeCurrent();
 
-    GLRenderTarget::pushRenderTarget(m_renderTarget.data());
+    GLFramebuffer::pushFramebuffer(m_fbo.data());
     if (supportsBufferAge()) {
         repaint = m_damageJournal.accumulate(m_bufferAge, infiniteRegion());
     }
@@ -823,7 +823,7 @@ void GlxBackend::present(AbstractOutput *output)
         effectiveRenderedRegion = displayRegion;
     }
 
-    GLRenderTarget::popRenderTarget();
+    GLFramebuffer::popFramebuffer();
 
     present(effectiveRenderedRegion);
 

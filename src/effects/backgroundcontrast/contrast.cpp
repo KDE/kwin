@@ -273,7 +273,7 @@ bool ContrastEffect::enabledByDefault()
 
 bool ContrastEffect::supported()
 {
-    bool supported = effects->isOpenGLCompositing() && GLRenderTarget::supported();
+    bool supported = effects->isOpenGLCompositing() && GLFramebuffer::supported();
 
     if (supported) {
         int maxTexSize;

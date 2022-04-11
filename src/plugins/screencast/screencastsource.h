@@ -11,7 +11,7 @@
 namespace KWin
 {
 
-class GLRenderTarget;
+class GLFramebuffer;
 
 class ScreenCastSource : public QObject
 {
@@ -23,7 +23,7 @@ public:
     virtual bool hasAlphaChannel() const = 0;
     virtual QSize textureSize() const = 0;
 
-    virtual void render(GLRenderTarget *target) = 0;
+    virtual void render(GLFramebuffer *target) = 0;
     virtual void render(QImage *image) = 0;
     virtual std::chrono::nanoseconds clock() const = 0;
 

@@ -109,7 +109,7 @@ bool LookingGlassEffect::loadData()
     m_texture->setFilter(GL_LINEAR_MIPMAP_LINEAR);
     m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
 
-    m_fbo = new GLRenderTarget(m_texture);
+    m_fbo = new GLFramebuffer(m_texture);
     if (!m_fbo->valid()) {
         return false;
     }
@@ -223,7 +223,7 @@ void LookingGlassEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::m
     if (m_valid && m_enabled) {
         data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
         // Start rendering to texture
-        GLRenderTarget::pushRenderTarget(m_fbo);
+        GLFramebuffer::pushFramebuffer(m_fbo);
     }
 
     effects->prePaintScreen(data, presentTime);
@@ -251,7 +251,7 @@ void LookingGlassEffect::paintScreen(int mask, const QRegion &region, ScreenPain
     effects->paintScreen(mask, region, data);
     if (m_valid && m_enabled) {
         // Disable render texture
-        GLRenderTarget *target = GLRenderTarget::popRenderTarget();
+        GLFramebuffer *target = GLFramebuffer::popFramebuffer();
         Q_ASSERT(target == m_fbo);
         Q_UNUSED(target);
         m_texture->bind();

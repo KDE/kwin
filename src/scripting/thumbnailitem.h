@@ -15,7 +15,7 @@
 namespace KWin
 {
 class AbstractClient;
-class GLRenderTarget;
+class GLFramebuffer;
 class GLTexture;
 class ThumbnailTextureProvider;
 
@@ -85,7 +85,7 @@ protected:
 
     mutable ThumbnailTextureProvider *m_provider = nullptr;
     QSharedPointer<GLTexture> m_offscreenTexture;
-    QScopedPointer<GLRenderTarget> m_offscreenTarget;
+    QScopedPointer<GLFramebuffer> m_offscreenTarget;
     GLsync m_acquireFence = 0;
     qreal m_devicePixelRatio = 1;
 

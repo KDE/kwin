@@ -374,46 +374,46 @@ inline GLShader *ShaderBinder::shader()
 }
 
 /**
- * @short Render target object
+ * @short OpenGL framebuffer object
  *
- * Render target object enables you to render onto a texture. This texture can
- *  later be used to e.g. do post-processing of the scene.
+ * Framebuffer object enables you to render onto a texture. This texture can
+ * later be used to e.g. do post-processing of the scene.
  *
  * @author Rivo Laks <rivolaks@hot.ee>
  */
-class KWINGLUTILS_EXPORT GLRenderTarget
+class KWINGLUTILS_EXPORT GLFramebuffer
 {
 public:
     /**
-     * Constructs a GLRenderTarget
+     * Constructs a GLFramebuffer
      * @since 5.13
      */
-    explicit GLRenderTarget();
+    explicit GLFramebuffer();
 
     /**
-     * Constructs a GLRenderTarget. Note that ensuring the color attachment outlives
-     * the render target is the responsibility of the caller.
+     * Constructs a GLFramebuffer. Note that ensuring the color attachment outlives
+     * the framebuffer is the responsibility of the caller.
      *
      * @param colorAttachment texture where the scene will be rendered onto
      */
-    explicit GLRenderTarget(GLTexture *colorAttachment);
+    explicit GLFramebuffer(GLTexture *colorAttachment);
 
     /**
-     * Constructs a wrapper for an already created render target object. The GLRenderTarget
+     * Constructs a wrapper for an already created framebuffer object. The GLFramebuffer
      * does not take the ownership of the framebuffer object handle.
      */
-    GLRenderTarget(GLuint handle, const QSize &size);
-    ~GLRenderTarget();
+    GLFramebuffer(GLuint handle, const QSize &size);
+    ~GLFramebuffer();
 
     /**
-     * Returns the framebuffer object handle to this render target object.
+     * Returns the framebuffer object handle to this framebuffer object.
      */
     GLuint handle() const
     {
         return mFramebuffer;
     }
     /**
-     * Returns the size of the color attachment to this render target object.
+     * Returns the size of the color attachment to this framebuffer object.
      */
     QSize size() const
     {
@@ -431,19 +431,19 @@ public:
     }
 
     /**
-     * Returns the last bound render target, or @c null if no render target is current.
+     * Returns the last bound framebuffer, or @c null if no framebuffer is current.
      */
-    static GLRenderTarget *currentRenderTarget();
+    static GLFramebuffer *currentFramebuffer();
 
     /**
-     * Pushes the render target stack of the input parameter in reverse order.
-     * @param targets The stack of GLRenderTargets
+     * Pushes the framebuffer stack of the input parameter in reverse order.
+     * @param fbos The stack of GLFramebuffers
      * @since 5.13
      */
-    static void pushRenderTargets(QStack<GLRenderTarget *> targets);
+    static void pushFramebuffers(QStack<GLFramebuffer *> fbos);
 
-    static void pushRenderTarget(GLRenderTarget *target);
-    static GLRenderTarget *popRenderTarget();
+    static void pushFramebuffer(GLFramebuffer *fbo);
+    static GLFramebuffer *popFramebuffer();
     /**
      * Whether the GL_EXT_framebuffer_blit extension is supported.
      * This functionality is not available in OpenGL ES 2.0.
@@ -454,8 +454,8 @@ public:
     static bool blitSupported();
 
     /**
-     * Blits from @a source rectangle in the current render target to the @a destination rectangle in
-     * this render target.
+     * Blits from @a source rectangle in the current framebuffer to the @a destination rectangle in
+     * this framebuffer.
      *
      * Be aware that framebuffer blitting may not be supported on all hardware. Use blitSupported()
      * to check whether it is supported.
@@ -478,7 +478,7 @@ private:
     static void cleanup();
     static bool sSupported;
     static bool s_blitSupported;
-    static QStack<GLRenderTarget *> s_renderTargets;
+    static QStack<GLFramebuffer *> s_fbos;
 
     GLuint mFramebuffer = 0;
     QSize mSize;

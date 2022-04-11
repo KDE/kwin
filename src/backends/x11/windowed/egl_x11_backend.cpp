@@ -23,7 +23,7 @@ namespace KWin
 
 EglX11Output::EglX11Output(EglX11Backend *backend, AbstractOutput *output, EGLSurface surface)
     : m_eglSurface(surface)
-    , m_renderTarget(new GLRenderTarget(0, output->pixelSize()))
+    , m_fbo(new GLFramebuffer(0, output->pixelSize()))
     , m_output(output)
     , m_backend(backend)
 {
@@ -37,7 +37,7 @@ EglX11Output::~EglX11Output()
 QRegion EglX11Output::beginFrame()
 {
     eglMakeCurrent(m_backend->eglDisplay(), m_eglSurface, m_eglSurface, m_backend->context());
-    GLRenderTarget::pushRenderTarget(m_renderTarget.data());
+    GLFramebuffer::pushFramebuffer(m_fbo.data());
     return m_output->rect();
 }
 
@@ -45,6 +45,7 @@ void EglX11Output::endFrame(const QRegion &renderedRegion, const QRegion &damage
 {
     Q_UNUSED(renderedRegion)
     m_lastDamage = damagedRegion;
+    GLFramebuffer::popFramebuffer();
 }
 
 EGLSurface EglX11Output::surface() const

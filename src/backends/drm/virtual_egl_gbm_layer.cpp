@@ -78,13 +78,13 @@ QRegion VirtualEglGbmLayer::beginFrame()
     if (!m_gbmSurface->makeContextCurrent()) {
         return QRegion();
     }
-    GLRenderTarget::pushRenderTarget(m_gbmSurface->renderTarget());
+    GLFramebuffer::pushFramebuffer(m_gbmSurface->fbo());
     return m_gbmSurface->repaintRegion();
 }
 
 void VirtualEglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    GLRenderTarget::popRenderTarget();
+    GLFramebuffer::popFramebuffer();
     const auto buffer = m_gbmSurface->swapBuffers(damagedRegion.intersected(m_output->geometry()));
     if (buffer) {
         m_currentBuffer = buffer;

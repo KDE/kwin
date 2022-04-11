@@ -27,7 +27,7 @@ GbmSurface::GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, uint32_t
     , m_eglBackend(static_cast<EglGbmBackend *>(gpu->platform()->renderBackend()))
     , m_size(size)
     , m_format(format)
-    , m_renderTarget(new GLRenderTarget(0, size))
+    , m_fbo(new GLFramebuffer(0, size))
 {
     if (!m_surface) {
         qCCritical(KWIN_DRM) << "Could not create gbm surface!" << strerror(errno);
@@ -45,7 +45,7 @@ GbmSurface::GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, QVector<
     , m_size(size)
     , m_format(format)
     , m_modifiers(modifiers)
-    , m_renderTarget(new GLRenderTarget(0, size))
+    , m_fbo(new GLFramebuffer(0, size))
 {
     if (!m_surface) {
         qCCritical(KWIN_DRM) << "Could not create gbm surface!" << strerror(errno);
@@ -144,9 +144,9 @@ QSharedPointer<DrmGbmBuffer> GbmSurface::currentDrmBuffer() const
     return m_currentDrmBuffer;
 }
 
-GLRenderTarget *GbmSurface::renderTarget() const
+GLFramebuffer *GbmSurface::fbo() const
 {
-    return m_renderTarget.data();
+    return m_fbo.data();
 }
 
 EGLSurface GbmSurface::eglSurface() const

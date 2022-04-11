@@ -123,7 +123,7 @@ private:
     QHash<xcb_visualid_t, FBConfigInfo *> m_fbconfigHash;
     QHash<xcb_visualid_t, int> m_visualDepthHash;
     std::unique_ptr<SwapEventFilter> m_swapEventFilter;
-    QScopedPointer<GLRenderTarget> m_renderTarget;
+    QScopedPointer<GLFramebuffer> m_fbo;
     DamageJournal m_damageJournal;
     QRegion m_lastRenderedRegion;
     int m_bufferAge;

@@ -80,7 +80,7 @@ bool EglWaylandOutput::init()
         return false;
     }
     m_overlay = overlay;
-    m_renderTarget.reset(new GLRenderTarget(0, nativeSize));
+    m_fbo.reset(new GLFramebuffer(0, nativeSize));
 
     EGLSurface eglSurface = EGL_NO_SURFACE;
     if (m_backend->havePlatformBase()) {
@@ -106,15 +106,15 @@ EglWaylandOutput::~EglWaylandOutput()
     wl_egl_window_destroy(m_overlay);
 }
 
-GLRenderTarget *EglWaylandOutput::renderTarget() const
+GLFramebuffer *EglWaylandOutput::fbo() const
 {
-    return m_renderTarget.data();
+    return m_fbo.data();
 }
 
 void EglWaylandOutput::updateSize()
 {
     const QSize nativeSize = m_waylandOutput->geometry().size() * m_waylandOutput->scale();
-    m_renderTarget.reset(new GLRenderTarget(0, nativeSize));
+    m_fbo.reset(new GLFramebuffer(0, nativeSize));
 
     wl_egl_window_resize(m_overlay, nativeSize.width(), nativeSize.height(), 0, 0);
     resetBufferAge();
@@ -146,7 +146,7 @@ QRegion EglWaylandOutput::beginFrame()
 {
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
     makeContextCurrent();
-    GLRenderTarget::pushRenderTarget(m_renderTarget.get());
+    GLFramebuffer::pushFramebuffer(m_fbo.get());
     if (m_backend->supportsBufferAge()) {
         return m_damageJournal.accumulate(m_bufferAge, infiniteRegion());
     }
@@ -157,7 +157,7 @@ void EglWaylandOutput::endFrame(const QRegion &renderedRegion, const QRegion &da
 {
     Q_UNUSED(renderedRegion)
     m_damageJournal.add(damagedRegion);
-    GLRenderTarget::popRenderTarget();
+    GLFramebuffer::popFramebuffer();
 }
 
 void EglWaylandOutput::aboutToStartPainting(const QRegion &damage)
@@ -358,10 +358,10 @@ bool EglWaylandBackend::initBufferConfigs()
 QSharedPointer<KWin::GLTexture> EglWaylandBackend::textureForOutput(KWin::AbstractOutput *output) const
 {
     QSharedPointer<GLTexture> texture(new GLTexture(GL_RGBA8, output->pixelSize()));
-    GLRenderTarget::pushRenderTarget(m_outputs[output]->renderTarget());
-    GLRenderTarget renderTarget(texture.data());
+    GLFramebuffer::pushFramebuffer(m_outputs[output]->fbo());
+    GLFramebuffer renderTarget(texture.data());
     renderTarget.blitFromFramebuffer(QRect(0, texture->height(), texture->width(), -texture->height()));
-    GLRenderTarget::popRenderTarget();
+    GLFramebuffer::popFramebuffer();
     return texture;
 }
 

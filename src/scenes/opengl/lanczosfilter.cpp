@@ -58,7 +58,7 @@ void LanczosFilter::init()
     if (!force && options->glSmoothScale() != 2) {
         return; // disabled by config
     }
-    if (!GLRenderTarget::supported()) {
+    if (!GLFramebuffer::supported()) {
         return;
     }
 
@@ -103,7 +103,7 @@ void LanczosFilter::updateOffscreenSurfaces()
         m_offscreenTex = new GLTexture(GL_RGBA8, w, h);
         m_offscreenTex->setFilter(GL_LINEAR);
         m_offscreenTex->setWrapMode(GL_CLAMP_TO_EDGE);
-        m_offscreenTarget = new GLRenderTarget(m_offscreenTex);
+        m_offscreenTarget = new GLFramebuffer(m_offscreenTex);
     }
 }
 
@@ -245,7 +245,7 @@ void LanczosFilter::performPaint(EffectWindowImpl *w, int mask, QRegion region, 
 
             // Bind the offscreen FBO and draw the window on it unscaled
             updateOffscreenSurfaces();
-            GLRenderTarget::pushRenderTarget(m_offscreenTarget);
+            GLFramebuffer::pushFramebuffer(m_offscreenTarget);
 
             QMatrix4x4 modelViewProjectionMatrix;
             modelViewProjectionMatrix.ortho(0, m_offscreenTex->width(), m_offscreenTex->height(), 0, 0, 65535);
@@ -341,7 +341,7 @@ void LanczosFilter::performPaint(EffectWindowImpl *w, int mask, QRegion region, 
             cache->setWrapMode(GL_CLAMP_TO_EDGE);
             cache->bind();
             glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, m_offscreenTex->height() - th, tw, th);
-            GLRenderTarget::popRenderTarget();
+            GLFramebuffer::popFramebuffer();
 
             if (hardwareClipping) {
                 glEnable(GL_SCISSOR_TEST);

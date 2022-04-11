@@ -66,12 +66,12 @@ void ScreenTransformEffect::addScreen(EffectScreen *screen)
         // Rendering the current scene into a texture
         const bool c = state.m_texture->create();
         Q_ASSERT(c);
-        GLRenderTarget renderTarget(state.m_texture.data());
-        GLRenderTarget::pushRenderTarget(&renderTarget);
+        GLFramebuffer fbo(state.m_texture.data());
+        GLFramebuffer::pushFramebuffer(&fbo);
 
         effects->renderScreen(screen);
         state.m_captured = true;
-        GLRenderTarget::popRenderTarget();
+        GLFramebuffer::popFramebuffer();
     });
 }
 

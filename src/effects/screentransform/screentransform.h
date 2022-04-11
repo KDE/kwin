@@ -13,7 +13,7 @@
 
 namespace KWin
 {
-class GLRenderTarget;
+class GLFramebuffer;
 class GLTexture;
 
 class ScreenTransformEffect : public Effect

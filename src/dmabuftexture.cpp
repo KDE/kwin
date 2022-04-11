@@ -14,7 +14,7 @@ namespace KWin
 
 DmaBufTexture::DmaBufTexture(KWin::GLTexture *texture)
     : m_texture(texture)
-    , m_framebuffer(new KWin::GLRenderTarget(texture))
+    , m_framebuffer(new KWin::GLFramebuffer(texture))
 {
 }
 
@@ -25,7 +25,7 @@ KWin::GLTexture *DmaBufTexture::texture() const
     return m_texture.data();
 }
 
-KWin::GLRenderTarget *DmaBufTexture::framebuffer() const
+KWin::GLFramebuffer *DmaBufTexture::framebuffer() const
 {
     return m_framebuffer.data();
 }

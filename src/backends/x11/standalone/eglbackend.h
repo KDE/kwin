@@ -58,7 +58,7 @@ private:
     X11StandalonePlatform *m_backend;
     SoftwareVsyncMonitor *m_vsyncMonitor;
     DamageJournal m_damageJournal;
-    QScopedPointer<GLRenderTarget> m_renderTarget;
+    QScopedPointer<GLFramebuffer> m_fbo;
     int m_bufferAge = 0;
     QRegion m_lastRenderedRegion;
     QScopedPointer<EglLayer> m_layer;

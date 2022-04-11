@@ -111,11 +111,11 @@ QRegion EglGbmLayer::beginFrame()
         }
     }
 
-    GLRenderTarget::pushRenderTarget(m_gbmSurface->renderTarget());
+    GLFramebuffer::pushFramebuffer(m_gbmSurface->fbo());
     if (m_shadowBuffer) {
         // the blit after rendering will completely overwrite the back buffer anyways
         repaintRegion = QRegion();
-        GLRenderTarget::pushRenderTarget(m_shadowBuffer->renderTarget());
+        GLFramebuffer::pushFramebuffer(m_shadowBuffer->fbo());
     }
 
     return repaintRegion;
@@ -136,11 +136,11 @@ void EglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damaged
 {
     Q_UNUSED(renderedRegion)
     if (m_shadowBuffer) {
-        GLRenderTarget::popRenderTarget();
+        GLFramebuffer::popFramebuffer();
         // TODO handle m_pipeline->pending.bufferTransformation != Rotate0
         m_shadowBuffer->render(m_pipeline->pending.sourceTransformation);
     }
-    GLRenderTarget::popRenderTarget();
+    GLFramebuffer::popFramebuffer();
     QSharedPointer<DrmBuffer> buffer;
     if (m_pipeline->gpu() == m_eglBackend->gpu()) {
         buffer = m_gbmSurface->swapBuffersForDrm(damagedRegion);

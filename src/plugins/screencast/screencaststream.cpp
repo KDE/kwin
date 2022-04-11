@@ -406,7 +406,7 @@ void ScreenCastStream::recordFrame(const QRegion &damagedRegion)
 
         auto cursor = Cursors::self()->currentCursor();
         if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded && m_cursor.viewport.contains(cursor->pos())) {
-            GLRenderTarget::pushRenderTarget(buf->framebuffer());
+            GLFramebuffer::pushFramebuffer(buf->framebuffer());
 
             QRect r(QPoint(), size);
             auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
@@ -433,7 +433,7 @@ void ScreenCastStream::recordFrame(const QRegion &damagedRegion)
             m_cursor.lastRect = cursorRect;
 
             ShaderManager::instance()->popShader();
-            GLRenderTarget::popRenderTarget();
+            GLFramebuffer::popFramebuffer();
         }
     }
 

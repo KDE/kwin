@@ -16,7 +16,7 @@
 namespace KWin
 {
 
-class GLRenderTarget;
+class GLFramebuffer;
 class GLTexture;
 
 class MagnifierEffect
@@ -61,7 +61,7 @@ private:
     std::chrono::milliseconds m_lastPresentTime;
     QSize magnifier_size;
     GLTexture *m_texture;
-    GLRenderTarget *m_fbo;
+    GLFramebuffer *m_fbo;
 };
 
 } // namespace

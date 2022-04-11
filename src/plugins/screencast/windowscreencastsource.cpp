@@ -40,13 +40,13 @@ QSize WindowScreenCastSource::textureSize() const
 void WindowScreenCastSource::render(QImage *image)
 {
     GLTexture offscreenTexture(hasAlphaChannel() ? GL_RGBA8 : GL_RGB8, textureSize());
-    GLRenderTarget offscreenTarget(&offscreenTexture);
+    GLFramebuffer offscreenTarget(&offscreenTexture);
 
     render(&offscreenTarget);
     grabTexture(&offscreenTexture, image);
 }
 
-void WindowScreenCastSource::render(GLRenderTarget *target)
+void WindowScreenCastSource::render(GLFramebuffer *target)
 {
     const QRect geometry = m_window->clientGeometry();
     QMatrix4x4 projectionMatrix;
@@ -57,11 +57,11 @@ void WindowScreenCastSource::render(GLRenderTarget *target)
     WindowPaintData data(effectWindow);
     data.setProjectionMatrix(projectionMatrix);
 
-    GLRenderTarget::pushRenderTarget(target);
+    GLFramebuffer::pushFramebuffer(target);
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
     effectWindow->sceneWindow()->performPaint(Scene::PAINT_WINDOW_TRANSFORMED, infiniteRegion(), data);
-    GLRenderTarget::popRenderTarget();
+    GLFramebuffer::popFramebuffer();
 }
 
 std::chrono::nanoseconds WindowScreenCastSource::clock() const

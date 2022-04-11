@@ -14,7 +14,7 @@ namespace KWin
 struct DeformOffscreenData
 {
     QScopedPointer<GLTexture> texture;
-    QScopedPointer<GLRenderTarget> renderTarget;
+    QScopedPointer<GLFramebuffer> fbo;
     bool isDirty = true;
 };
 
@@ -101,12 +101,12 @@ GLTexture *DeformEffectPrivate::maybeRender(EffectWindow *window, DeformOffscree
         offscreenData->texture.reset(new GLTexture(GL_RGBA8, textureSize));
         offscreenData->texture->setFilter(GL_LINEAR);
         offscreenData->texture->setWrapMode(GL_CLAMP_TO_EDGE);
-        offscreenData->renderTarget.reset(new GLRenderTarget(offscreenData->texture.data()));
+        offscreenData->fbo.reset(new GLFramebuffer(offscreenData->texture.data()));
         offscreenData->isDirty = true;
     }
 
     if (offscreenData->isDirty) {
-        GLRenderTarget::pushRenderTarget(offscreenData->renderTarget.data());
+        GLFramebuffer::pushFramebuffer(offscreenData->fbo.data());
         glClearColor(0.0, 0.0, 0.0, 0.0);
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -122,7 +122,7 @@ GLTexture *DeformEffectPrivate::maybeRender(EffectWindow *window, DeformOffscree
         const int mask = Effect::PAINT_WINDOW_TRANSFORMED | Effect::PAINT_WINDOW_TRANSLUCENT;
         effects->drawWindow(window, mask, infiniteRegion(), data);
 
-        GLRenderTarget::popRenderTarget();
+        GLFramebuffer::popFramebuffer();
         offscreenData->isDirty = false;
     }
 

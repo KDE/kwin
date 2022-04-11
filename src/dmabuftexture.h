@@ -10,7 +10,7 @@
 
 namespace KWin
 {
-class GLRenderTarget;
+class GLFramebuffer;
 class GLTexture;
 
 class KWIN_EXPORT DmaBufTexture
@@ -22,11 +22,11 @@ public:
     virtual quint32 stride() const = 0;
     virtual int fd() const = 0;
     KWin::GLTexture *texture() const;
-    KWin::GLRenderTarget *framebuffer() const;
+    KWin::GLFramebuffer *framebuffer() const;
 
 protected:
     QScopedPointer<KWin::GLTexture> m_texture;
-    QScopedPointer<KWin::GLRenderTarget> m_framebuffer;
+    QScopedPointer<KWin::GLFramebuffer> m_framebuffer;
 };
 
 }
