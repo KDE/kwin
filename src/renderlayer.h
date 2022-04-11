@@ -8,8 +8,11 @@
 
 #include "kwin_export.h"
 
+#include "outputlayer.h"
+
 #include <QMap>
 #include <QObject>
+#include <QPointer>
 #include <QRegion>
 
 namespace KWin
@@ -84,7 +87,7 @@ private:
     QRegion m_repaints;
     QRect m_boundingRect;
     QRect m_geometry;
-    OutputLayer *m_outputLayer = nullptr;
+    QPointer<OutputLayer> m_outputLayer;
     RenderLayer *m_superlayer = nullptr;
     QList<RenderLayer *> m_sublayers;
     bool m_effectiveVisible = true;
