@@ -68,13 +68,15 @@ supports the following attributes:
     from: FPx2, /* for first animation, optional */
     to: FPx2, /* for first animation, optional */
     delay: int, /* for first animation, optional */
+    shader: int, /* for first animation, optional */
     animations: [ /* additional animations, optional */
         {
         curve: QEasingCurve.Type, /* overrides global */
         type: Effect.Attribute,
         from: FPx2,
         to: FPx2,
-        delay: int
+        delay: int,
+        shader: int
         }
     ]
 }
@@ -151,6 +153,22 @@ For convenience you can pass a single quint64 as well.
                 <name>registerShortcut</name>
                 <read></read>
                 <detaileddescription>Registers keySequence as a global shortcut. When the shortcut is invoked the callback will be called. Title and text are used to name the shortcut and make it available to the global shortcut configuration module.</detaileddescription>
+            </memberdef>
+            <memberdef kind="function">
+                <type>Q_SCRIPTABLE uint</type>
+                <definition>uint KWin::ScriptedEffect::addFragmentShader</definition>
+                <argsstring>(ShaderTrait traits, QString fragmentShaderFile)</argsstring>
+                <name>addFragmentShader</name>
+                <read></read>
+                <detaileddescription>Creates a shader and returns an identifier which can be used in animate or set. The shader sources must be provided in the shaders sub-directory of the contents package directory. The fragment shader needs to have the file extension frag. Each shader should be provided in a GLSL 1.10 and GLSL 1.40 variant. The 1.40 variant needs to have a suffix _core. E.g. there should be a shader myCustomShader.frag and myCustomShader_core.frag. The vertex shader is generated from the ShaderTrait. The ShaderTrait enum can be used as flags in this method.</detaileddescription>
+            </memberdef>
+            <memberdef kind="function">
+                <type>Q_SCRIPTABLE uint</type>
+                <definition>void KWin::ScriptedEffect::setUniform</definition>
+                <argsstring>(uint shaderId, QString name, QJSValue value)</argsstring>
+                <name>setUniform</name>
+                <read></read>
+                <detaileddescription>Updates the uniform value of the uniform identified by @p name for the shader identified by @p shaderId. The @p value can be a floating point numeric value (integer uniform values are not supported), an array with either 2, 3 or 4 numeric values, a string to identify a color or a variant value to identify a color as returned by readConfig. This method can be used to update the state of the shader when the configuration of the effect changed.</detaileddescription>
             </memberdef>
         </sectiondef>
     </compounddef>
