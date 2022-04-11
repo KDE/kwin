@@ -617,7 +617,7 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent *e)
                                                       end = windows.constEnd();
                      it != end; ++it) {
                     EffectWindow *w = const_cast<EffectWindow *>(*it); // we're not really touching it here but below
-                    if (w->isOnAllDesktops()) {
+                    if (w->isOnAllDesktops() || !w->isOnCurrentActivity()) {
                         continue;
                     }
                     if (w->isOnDesktop(highlightedDesktop)) {
