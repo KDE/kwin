@@ -72,7 +72,7 @@ AniData::AniData()
 AniData::AniData(AnimationEffect::Attribute a, int meta_, const FPx2 &to_,
                  int delay, const FPx2 &from_, bool waitAtSource_,
                  FullScreenEffectLockPtr fullScreenEffectLock_, bool keepAlive,
-                 PreviousWindowPixmapLockPtr previousWindowPixmapLock_)
+                 PreviousWindowPixmapLockPtr previousWindowPixmapLock_, GLShader *shader)
     : attribute(a)
     , from(from_)
     , to(to_)
@@ -84,6 +84,7 @@ AniData::AniData(AnimationEffect::Attribute a, int meta_, const FPx2 &to_,
     , keepAlive(keepAlive)
     , previousWindowPixmapLock(std::move(previousWindowPixmapLock_))
     , lastPresentTime(std::chrono::milliseconds::zero())
+    , shader(shader)
 {
 }
 

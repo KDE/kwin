@@ -69,7 +69,7 @@ public:
     AniData(AnimationEffect::Attribute a, int meta, const FPx2 &to,
             int delay, const FPx2 &from, bool waitAtSource,
             FullScreenEffectLockPtr = FullScreenEffectLockPtr(),
-            bool keepAlive = true, PreviousWindowPixmapLockPtr previousWindowPixmapLock = {});
+            bool keepAlive = true, PreviousWindowPixmapLockPtr previousWindowPixmapLock = {}, GLShader *shader = nullptr);
 
     bool isActive() const;
 
@@ -94,6 +94,7 @@ public:
     PreviousWindowPixmapLockPtr previousWindowPixmapLock;
     AnimationEffect::TerminationFlags terminationFlags;
     std::chrono::milliseconds lastPresentTime;
+    GLShader *shader{nullptr};
 };
 
 } // namespace

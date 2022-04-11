@@ -14,7 +14,7 @@
 #include <QEasingCurve>
 #include <QElapsedTimer>
 #include <QtMath>
-#include <kwineffects.h>
+#include <kwindeformeffect.h>
 #include <kwineffects_export.h>
 
 namespace KWin
@@ -191,7 +191,7 @@ class AnimationEffectPrivate;
  *
  * @since 4.8
  */
-class KWINEFFECTS_EXPORT AnimationEffect : public Effect
+class KWINEFFECTS_EXPORT AnimationEffect : public DeformEffect
 {
     Q_OBJECT
 
@@ -217,6 +217,16 @@ public:
         Clip,
         Generic,
         CrossFadePrevious,
+        /**
+         * Performs an animation with a provided shader.
+         * The float uniform @c animationProgress is set to the current progress of the animation.
+         **/
+        Shader,
+        /**
+         * Like Shader, but additionally allows to animate a float uniform passed to the shader.
+         * The uniform location must be provided as metadata.
+         **/
+        ShaderUniform,
         NonFloatBase = Position
     };
     Q_ENUM(Attribute)
@@ -360,12 +370,13 @@ protected:
      * @param fullScreen Sets this effect as the active full screen effect for the
      *   duration of the animation.
      * @param keepAlive Whether closed windows should be kept alive during animation.
+     * @param shader Optional shader to use to render the window.
      * @returns An ID that you can use to cancel a running animation.
      * @since 4.8
      */
-    quint64 animate(EffectWindow *w, Attribute a, uint meta, int ms, const FPx2 &to, const QEasingCurve &curve = QEasingCurve(), int delay = 0, const FPx2 &from = FPx2(), bool fullScreen = false, bool keepAlive = true)
+    quint64 animate(EffectWindow *w, Attribute a, uint meta, int ms, const FPx2 &to, const QEasingCurve &curve = QEasingCurve(), int delay = 0, const FPx2 &from = FPx2(), bool fullScreen = false, bool keepAlive = true, GLShader *shader = nullptr)
     {
-        return p_animate(w, a, meta, ms, to, curve, delay, from, false, fullScreen, keepAlive);
+        return p_animate(w, a, meta, ms, to, curve, delay, from, false, fullScreen, keepAlive, shader);
     }
 
     /**
@@ -392,12 +403,13 @@ protected:
      * @param fullScreen Sets this effect as the active full screen effect for the
      *   duration of the animation.
      * @param keepAlive Whether closed windows should be kept alive during animation.
+     * @param shader Optional shader to use to render the window.
      * @returns An ID that you need to use to cancel this manipulation.
      * @since 4.11
      */
-    quint64 set(EffectWindow *w, Attribute a, uint meta, int ms, const FPx2 &to, const QEasingCurve &curve = QEasingCurve(), int delay = 0, const FPx2 &from = FPx2(), bool fullScreen = false, bool keepAlive = true)
+    quint64 set(EffectWindow *w, Attribute a, uint meta, int ms, const FPx2 &to, const QEasingCurve &curve = QEasingCurve(), int delay = 0, const FPx2 &from = FPx2(), bool fullScreen = false, bool keepAlive = true, GLShader *shader = nullptr)
     {
-        return p_animate(w, a, meta, ms, to, curve, delay, from, true, fullScreen, keepAlive);
+        return p_animate(w, a, meta, ms, to, curve, delay, from, true, fullScreen, keepAlive, shader);
     }
 
     /**
@@ -506,7 +518,7 @@ protected:
     AniMap state() const;
 
 private:
-    quint64 p_animate(EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, const QEasingCurve &curve, int delay, FPx2 from, bool keepAtTarget, bool fullScreenEffect, bool keepAlive);
+    quint64 p_animate(EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, const QEasingCurve &curve, int delay, FPx2 from, bool keepAtTarget, bool fullScreenEffect, bool keepAlive, GLShader *shader);
     QRect clipRect(const QRect &windowRect, const AniData &) const;
     float interpolated(const AniData &, int i = 0) const;
     float progress(const AniData &) const;

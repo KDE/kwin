@@ -9,6 +9,7 @@
 */
 
 #include "kwinanimationeffect.h"
+#include "kwinglutils.h"
 #include "anidata_p.h"
 
 #include <QAction>
@@ -207,7 +208,7 @@ void AnimationEffect::validate(Attribute a, uint &meta, FPx2 *from, FPx2 *to, co
     }
 }
 
-quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, const QEasingCurve &curve, int delay, FPx2 from, bool keepAtTarget, bool fullScreenEffect, bool keepAlive)
+quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, const QEasingCurve &curve, int delay, FPx2 from, bool keepAtTarget, bool fullScreenEffect, bool keepAlive, GLShader *shader)
 {
     const bool waitAtSource = from.isValid();
     validate(a, meta, &from, &to, w);
@@ -249,7 +250,8 @@ quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, int 
         waitAtSource, // Whether the animation should be kept at source
         fullscreen, // Full screen effect lock
         keepAlive, // Keep alive flag
-        previousPixmap // Previous window pixmap lock
+        previousPixmap, // Previous window pixmap lock
+        shader
         ));
 
     const quint64 ret_id = ++d->m_animCounter;
@@ -279,6 +281,9 @@ quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, int 
         }
     } else {
         triggerRepaint();
+    }
+    if (shader) {
+        DeformEffect::redirect(w);
     }
     return ret_id;
 }
@@ -405,6 +410,9 @@ bool AnimationEffect::cancel(quint64 animationId)
     for (AniMap::iterator entry = d->m_animations.begin(), mapEnd = d->m_animations.end(); entry != mapEnd; ++entry) {
         for (QList<AniData>::iterator anim = entry->first.begin(), animEnd = entry->first.end(); anim != animEnd; ++anim) {
             if (anim->id == animationId) {
+                if (anim->shader && std::none_of(entry->first.begin(), entry->first.end(), [animationId] (const auto &anim) { return anim.id != animationId && anim.shader; })) {
+                    unredirect(entry.key());
+                }
                 entry->first.erase(anim); // remove the animation
                 if (entry->first.isEmpty()) { // no other animations on the window, release it.
                     d->m_animations.erase(entry);
@@ -642,11 +650,27 @@ void AnimationEffect::paintWindow(EffectWindow *w, int mask, QRegion region, Win
             case CrossFadePrevious:
                 data.setCrossFadeProgress(progress(*anim));
                 break;
+            case Shader:
+                if (anim->shader && anim->shader->isValid()) {
+                    ShaderBinder binder{anim->shader};
+                    anim->shader->setUniform("animationProgress", progress(*anim));
+                    setShader(w, anim->shader);
+                }
+                break;
+            case ShaderUniform:
+                if (anim->shader && anim->shader->isValid()) {
+                    ShaderBinder binder{anim->shader};
+                    anim->shader->setUniform("animationProgress", progress(*anim));
+                    anim->shader->setUniform(anim->meta, interpolated(*anim));
+                    setShader(w, anim->shader);
+                }
+                break;
             default:
                 break;
             }
         }
     }
+
     effects->paintWindow(w, mask, region, data);
 }
 
@@ -667,6 +691,9 @@ void AnimationEffect::postPaintScreen()
             }
             EffectWindow *window = entry.key();
             d->m_justEndedAnimation = anim->id;
+            if (anim->shader && std::none_of(entry->first.begin(), entry->first.end(), [anim] (const auto &other) { return anim->id != other.id && other.shader; })) {
+                unredirect(window);
+            }
             animationEnded(window, anim->attribute, anim->meta);
             d->m_justEndedAnimation = 0;
             // NOTICE animationEnded is an external call and might have called "::animate"
@@ -854,6 +881,8 @@ void AnimationEffect::updateLayerRepaints()
             case Brightness:
             case Saturation:
             case CrossFadePrevious:
+            case Shader:
+            case ShaderUniform:
                 createRegion = true;
                 break;
             case Rotation:
