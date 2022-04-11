@@ -72,9 +72,6 @@ StrutRect &StrutRect::operator=(const StrutRect &other)
     return *this;
 }
 
-#endif
-
-#ifndef KCMRULES
 void updateXTime()
 {
     kwinApp()->platform()->updateXTime();
