@@ -206,6 +206,10 @@ void TestXdgShellClientRules::init()
 
 void TestXdgShellClientRules::cleanup()
 {
+    if (!m_shellSurface.isNull()) {
+        destroyTestWindow();
+    }
+
     Test::destroyWaylandConnection();
 
     // Wipe the window rule config clean.
