@@ -41,7 +41,7 @@ class KWIN_EXPORT SurfacePixmapInternal final : public SurfacePixmap
 public:
     explicit SurfacePixmapInternal(SurfaceItemInternal *item, QObject *parent = nullptr);
 
-    QOpenGLFramebufferObject *fbo() const;
+    QSharedPointer<QOpenGLFramebufferObject> fbo() const;
     QImage image() const;
 
     void create() override;

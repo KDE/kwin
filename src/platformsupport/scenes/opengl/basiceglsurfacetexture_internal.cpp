@@ -45,7 +45,7 @@ void BasicEGLSurfaceTextureInternal::update(const QRegion &region)
 
 bool BasicEGLSurfaceTextureInternal::updateFromFramebuffer()
 {
-    const QOpenGLFramebufferObject *fbo = m_pixmap->fbo();
+    const QSharedPointer<QOpenGLFramebufferObject> fbo = m_pixmap->fbo();
     if (!fbo) {
         return false;
     }

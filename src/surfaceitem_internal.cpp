@@ -50,9 +50,9 @@ SurfacePixmapInternal::SurfacePixmapInternal(SurfaceItemInternal *item, QObject 
 {
 }
 
-QOpenGLFramebufferObject *SurfacePixmapInternal::fbo() const
+QSharedPointer<QOpenGLFramebufferObject> SurfacePixmapInternal::fbo() const
 {
-    return m_fbo.data();
+    return m_fbo;
 }
 
 QImage SurfacePixmapInternal::image() const
