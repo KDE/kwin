@@ -67,6 +67,16 @@ public Q_SLOTS:
      * @since 5.18
      */
     void uninhibit(uint cookie);
+    /**
+     * @brief Previews a given temperature for a short time (15s).
+     * @since 5.25
+     */
+    void preview(uint temperature);
+    /**
+     * @brief Stops an ongoing preview.
+     * @since 5.25
+     */
+    void stopPreview();
 
 private Q_SLOTS:
     void removeInhibitorService(const QString &serviceName);

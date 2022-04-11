@@ -330,7 +330,9 @@ void NightColorManager::resetAllTimers()
     if (isAvailable()) {
         setRunning(isEnabled() && !isInhibited());
         // we do this also for active being false in order to reset the temperature back to the day value
-        resetQuickAdjustTimer();
+        updateTransitionTimings(false);
+        updateTargetTemperature();
+        resetQuickAdjustTimer(currentTargetTemp());
     } else {
         setRunning(false);
     }
@@ -347,20 +349,17 @@ void NightColorManager::cancelAllTimers()
     m_quickAdjustTimer = nullptr;
 }
 
-void NightColorManager::resetQuickAdjustTimer()
+void NightColorManager::resetQuickAdjustTimer(int targetTemp)
 {
-    updateTransitionTimings(false);
-    updateTargetTemperature();
-
-    int tempDiff = qAbs(currentTargetTemp() - m_currentTemp);
+    int tempDiff = qAbs(targetTemp - m_currentTemp);
     // allow tolerance of one TEMPERATURE_STEP to compensate if a slow update is coincidental
     if (tempDiff > TEMPERATURE_STEP) {
         cancelAllTimers();
         m_quickAdjustTimer = new QTimer(this);
         m_quickAdjustTimer->setSingleShot(false);
-        connect(m_quickAdjustTimer, &QTimer::timeout, this, &NightColorManager::quickAdjust);
+        connect(m_quickAdjustTimer, &QTimer::timeout, this, [this, targetTemp]() { quickAdjust(targetTemp); });
 
-        int interval = QUICK_ADJUST_DURATION / (tempDiff / TEMPERATURE_STEP);
+        int interval = (QUICK_ADJUST_DURATION / (m_previewTimer && m_previewTimer->isActive() ? 8 : 1)) / (tempDiff / TEMPERATURE_STEP);
         if (interval == 0) {
             interval = 1;
         }
@@ -370,14 +369,13 @@ void NightColorManager::resetQuickAdjustTimer()
     }
 }
 
-void NightColorManager::quickAdjust()
+void NightColorManager::quickAdjust(int targetTemp)
 {
     if (!m_quickAdjustTimer) {
         return;
     }
 
     int nextTemp;
-    const int targetTemp = currentTargetTemp();
 
     if (m_currentTemp < targetTemp) {
         nextTemp = qMin(m_currentTemp + TEMPERATURE_STEP, targetTemp);
@@ -483,6 +481,28 @@ void NightColorManager::slowUpdate(int targetTemp)
         // stop timer, we reached the target temp
         delete m_slowUpdateTimer;
         m_slowUpdateTimer = nullptr;
+    }
+}
+
+void NightColorManager::preview(uint previewTemp)
+{
+    resetQuickAdjustTimer((int)previewTemp);
+    if (m_previewTimer) {
+        delete m_previewTimer;
+        m_previewTimer = nullptr;
+    }
+    m_previewTimer = new QTimer(this);
+    m_previewTimer->setSingleShot(true);
+    connect(m_previewTimer, &QTimer::timeout, this, &NightColorManager::stopPreview);
+    m_previewTimer->start(15000);
+}
+
+void NightColorManager::stopPreview()
+{
+    if (m_previewTimer && m_previewTimer->isActive()) {
+        updateTransitionTimings(false);
+        updateTargetTemperature();
+        resetQuickAdjustTimer(currentTargetTemp());
     }
 }
 

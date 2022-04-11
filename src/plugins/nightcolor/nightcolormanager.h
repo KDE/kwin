@@ -179,9 +179,20 @@ public:
     void reconfigure();
     static NightColorManager *self();
 
+    /**
+     * Previews a given temperature for a short time (15s).
+     */
+    void preview(uint previewTemp);
+
+    /**
+     * Stops an ongoing preview.
+     * Has no effect if there is currently no preview.
+     */
+    void stopPreview();
+
 public Q_SLOTS:
     void resetSlowUpdateStartTimer();
-    void quickAdjust();
+    void quickAdjust(int targetTemp);
 
 Q_SIGNALS:
     /**
@@ -234,7 +245,7 @@ private:
     /**
      * Quick shift on manual change to current target Temperature
      */
-    void resetQuickAdjustTimer();
+    void resetQuickAdjustTimer(int targetTemp);
     /**
      * Slow shift to daytime target Temperature
      */
@@ -286,6 +297,7 @@ private:
     QTimer *m_slowUpdateStartTimer = nullptr;
     QTimer *m_slowUpdateTimer = nullptr;
     QTimer *m_quickAdjustTimer = nullptr;
+    QTimer *m_previewTimer = nullptr;
 
     int m_currentTemp = NEUTRAL_TEMPERATURE;
     int m_targetTemperature = NEUTRAL_TEMPERATURE;

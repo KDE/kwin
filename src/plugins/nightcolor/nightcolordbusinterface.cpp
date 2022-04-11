@@ -288,4 +288,14 @@ void NightColorDBusInterface::removeInhibitorService(const QString &serviceName)
     }
 }
 
+void NightColorDBusInterface::preview(uint previewTemp)
+{
+    m_manager->preview(previewTemp);
+}
+
+void NightColorDBusInterface::stopPreview()
+{
+    m_manager->stopPreview();
+}
+
 }

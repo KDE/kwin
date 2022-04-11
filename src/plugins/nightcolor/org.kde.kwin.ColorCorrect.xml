@@ -36,6 +36,24 @@
     </method>
 
     <!--
+        Previews a given temperature for a short time (15s).
+
+        If there is an existing preview running, replaces it.
+        Preview can be ended before 15s too, by calling stopPreview.
+    -->
+    <method name="preview">
+        <arg name="temperature" type="u" direction="in"/>
+    </method>
+
+    <!--
+        Stops an ongoing preview.
+
+        Has no effect if there is currently no preview.
+    -->
+    <method name="stopPreview">
+    </method>
+
+    <!--
         This property holds a value to indicate whether Night Color is inhibited.
     -->
     <property name="inhibited" type="b" access="read"/>
