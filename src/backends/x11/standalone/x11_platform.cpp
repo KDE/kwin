@@ -40,6 +40,7 @@
 
 #include <KConfigGroup>
 #include <KCrash>
+#include <KGlobalAccel>
 #include <KLocalizedString>
 
 #include <QOpenGLContext>
@@ -368,7 +369,10 @@ void X11StandalonePlatform::startInteractivePositionSelection(std::function<void
 
 void X11StandalonePlatform::setupActionForGlobalAccel(QAction *action)
 {
-    connect(action, &QAction::triggered, kwinApp(), [action] {
+    connect(KGlobalAccel::self(), &KGlobalAccel::globalShortcutActiveChanged, kwinApp(), [action](QAction *triggeredAction, bool active) {
+        if (triggeredAction != action)
+            return;
+
         QVariant timestamp = action->property("org.kde.kglobalaccel.activationTimestamp");
         bool ok = false;
         const quint32 t = timestamp.toULongLong(&ok);
