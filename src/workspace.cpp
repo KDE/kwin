@@ -2281,6 +2281,7 @@ QRect Workspace::clientArea(clientAreaOption opt, const AbstractOutput *output, 
     if (is_multihead) {
         effectiveOutput = kwinApp()->platform()->findOutput(screen_number);
     }
+    Q_ASSERT(effectiveOutput);
 
     QRect screenArea = m_screenAreas[desktop][effectiveOutput];
     if (screenArea.isNull()) { // screens may be missing during KWin initialization or screen config changes
@@ -2324,7 +2325,11 @@ QRect Workspace::clientArea(clientAreaOption opt, const AbstractOutput *output, 
 
 QRect Workspace::clientArea(clientAreaOption opt, const Toplevel *window) const
 {
-    return clientArea(opt, window, window->output());
+    auto output = window->output();
+    if (!output) {
+        output = kwinApp()->platform()->primaryOutput();
+    }
+    return clientArea(opt, window, output);
 }
 
 QRect Workspace::clientArea(clientAreaOption opt, const Toplevel *window, const AbstractOutput *output) const
@@ -2341,7 +2346,11 @@ QRect Workspace::clientArea(clientAreaOption opt, const Toplevel *window, const 
 
 QRect Workspace::clientArea(clientAreaOption opt, const Toplevel *window, const QPoint &pos) const
 {
-    return clientArea(opt, window, kwinApp()->platform()->outputAt(pos));
+    auto output = kwinApp()->platform()->outputAt(pos);
+    if (!output) {
+        output = kwinApp()->platform()->primaryOutput();
+    }
+    return clientArea(opt, window, output);
 }
 
 QRect Workspace::geometry() const
