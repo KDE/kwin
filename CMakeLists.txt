@@ -244,6 +244,9 @@ else()
     set(HAVE_GBM_BO_GET_FD_FOR_PLANE 0)
 endif()
 
+pkg_check_modules(Libxcvt IMPORTED_TARGET libxcvt>=0.1.1)
+add_feature_info(Libxcvt Libxcvt_FOUND "Required for generating modes in the drm backend")
+
 find_package(X11)
 set_package_properties(X11 PROPERTIES
     DESCRIPTION "X11 libraries"
