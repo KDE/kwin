@@ -6,22 +6,22 @@
 
 #pragma once
 
-#include "cursorview.h"
+#include "renderlayerdelegate.h"
 
 namespace KWin
 {
 
 class GLTexture;
 
-class OpenGLCursorView final : public CursorView
+class CursorDelegateOpenGL final : public RenderLayerDelegate
 {
     Q_OBJECT
 
 public:
-    explicit OpenGLCursorView(QObject *parent = nullptr);
-    ~OpenGLCursorView() override;
+    explicit CursorDelegateOpenGL(QObject *parent = nullptr);
+    ~CursorDelegateOpenGL() override;
 
-    void paint(RenderLayer *renderLayer, RenderTarget *renderTarget, const QRegion &region) override;
+    void paint(RenderTarget *renderTarget, const QRegion &region) override;
 
 private:
     QScopedPointer<GLTexture> m_cursorTexture;

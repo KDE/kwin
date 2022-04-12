@@ -4,7 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "cursorview_opengl.h"
+#include "cursordelegate_opengl.h"
 #include "cursor.h"
 #include "kwingltexture.h"
 #include "kwinglutils.h"
@@ -14,17 +14,21 @@
 namespace KWin
 {
 
-OpenGLCursorView::OpenGLCursorView(QObject *parent)
-    : CursorView(parent)
+CursorDelegateOpenGL::CursorDelegateOpenGL(QObject *parent)
+    : RenderLayerDelegate(parent)
 {
 }
 
-OpenGLCursorView::~OpenGLCursorView()
+CursorDelegateOpenGL::~CursorDelegateOpenGL()
 {
 }
 
-void OpenGLCursorView::paint(RenderLayer *renderLayer, RenderTarget *renderTarget, const QRegion &region)
+void CursorDelegateOpenGL::paint(RenderTarget *renderTarget, const QRegion &region)
 {
+    if (!region.intersects(layer()->mapToGlobal(layer()->rect()))) {
+        return;
+    }
+
     auto allocateTexture = [this]() {
         const QImage img = Cursors::self()->currentCursor()->image();
         if (img.isNull()) {
@@ -54,7 +58,7 @@ void OpenGLCursorView::paint(RenderLayer *renderLayer, RenderTarget *renderTarge
         }
     }
 
-    const QRect cursorRect = renderLayer->mapToGlobal(renderLayer->rect());
+    const QRect cursorRect = layer()->mapToGlobal(layer()->rect());
 
     QMatrix4x4 mvp;
     mvp.ortho(QRect(QPoint(0, 0), renderTarget->size() / renderTarget->devicePixelRatio()));

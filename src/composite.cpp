@@ -11,8 +11,8 @@
 #include <config-kwin.h>
 
 #include "abstract_output.h"
-#include "cursorview_opengl.h"
-#include "cursorview_qpainter.h"
+#include "cursordelegate_opengl.h"
+#include "cursordelegate_qpainter.h"
 #include "dbusinterface.h"
 #include "decorations/decoratedclient.h"
 #include "deleted.h"
@@ -203,7 +203,6 @@ bool Compositor::attemptOpenGLCompositing()
 
     m_backend = backend.take();
     m_scene = scene.take();
-    m_cursorView = new OpenGLCursorView();
 
     // set strict binding
     if (options->isGlStrictBindingFollowsDriver()) {
@@ -228,7 +227,6 @@ bool Compositor::attemptQPainterCompositing()
 
     m_backend = backend.take();
     m_scene = scene.take();
-    m_cursorView = new QPainterCursorView();
 
     qCDebug(KWIN_CORE) << "QPainter compositing has been successfully initialized";
     return true;
@@ -441,7 +439,11 @@ void Compositor::addOutput(AbstractOutput *output)
 
     auto cursorLayer = new RenderLayer(output->renderLoop());
     cursorLayer->setVisible(false);
-    cursorLayer->setDelegate(new CursorDelegate(m_cursorView));
+    if (m_backend->compositingType() == OpenGLCompositing) {
+        cursorLayer->setDelegate(new CursorDelegateOpenGL());
+    } else {
+        cursorLayer->setDelegate(new CursorDelegateQPainter());
+    }
     cursorLayer->setParent(workspaceLayer);
     cursorLayer->setSuperlayer(workspaceLayer);
 
@@ -550,9 +552,6 @@ void Compositor::stop()
 
     delete m_scene;
     m_scene = nullptr;
-
-    delete m_cursorView;
-    m_cursorView = nullptr;
 
     delete m_backend;
     m_backend = nullptr;
