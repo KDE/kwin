@@ -44,13 +44,15 @@ namespace KWin
 
 KscreenEffect::KscreenEffect()
     : Effect()
-    , m_atom(effects->announceSupportProperty("_KDE_KWIN_KSCREEN_SUPPORT", this))
+    , m_atom(effects->waylandDisplay() ? XCB_ATOM_NONE : effects->announceSupportProperty("_KDE_KWIN_KSCREEN_SUPPORT", this))
 {
     initConfig<KscreenConfig>();
-    connect(effects, &EffectsHandler::propertyNotify, this, &KscreenEffect::propertyNotify);
-    connect(effects, &EffectsHandler::xcbConnectionChanged, this, [this]() {
-        m_atom = effects->announceSupportProperty(QByteArrayLiteral("_KDE_KWIN_KSCREEN_SUPPORT"), this);
-    });
+    if (!effects->waylandDisplay()) {
+        connect(effects, &EffectsHandler::propertyNotify, this, &KscreenEffect::propertyNotify);
+        connect(effects, &EffectsHandler::xcbConnectionChanged, this, [this]() {
+            m_atom = effects->announceSupportProperty(QByteArrayLiteral("_KDE_KWIN_KSCREEN_SUPPORT"), this);
+        });
+    }
     reconfigure(ReconfigureAll);
 
     const QList<EffectScreen *> screens = effects->screens();
