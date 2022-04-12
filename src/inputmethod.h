@@ -32,8 +32,9 @@ namespace KWin
 {
 
 class AbstractClient;
-class WaylandClient;
+class AbstractOutput;
 class InputPanelV1Client;
+class WaylandClient;
 
 /**
  * This class implements the zwp_input_method_unstable_v1, which is currently used to provide
@@ -115,6 +116,8 @@ private:
 
     bool touchEventTriggered() const;
     void resetPendingPreedit();
+
+    void repositionLayerShell();
 
     struct
     {

@@ -11,6 +11,7 @@
 #include <config-kwin.h>
 
 #include "abstract_client.h"
+#include "abstract_output.h"
 #include "input.h"
 #include "inputpanelv1client.h"
 #include "keyboard_input.h"
@@ -278,6 +279,8 @@ void InputMethod::textInputInterfaceV2StateUpdated(quint32 serial, KWaylandServe
     if (m_inputClient && shouldShowOnActive()) {
         if (auto client = qobject_cast<InputPanelV1Client *>(m_inputClient.data()); client) {
             client->allow();
+        } else {
+            repositionLayerShell();
         }
     }
     switch (reason) {
@@ -629,6 +632,8 @@ void InputMethod::updateInputPanelState()
     if (m_inputClient && shouldShowOnActive()) {
         if (auto client = qobject_cast<InputPanelV1Client *>(m_inputClient.data()); client) {
             client->allow();
+        } else {
+            repositionLayerShell();
         }
     }
 
@@ -771,4 +776,29 @@ void InputMethod::resetPendingPreedit()
     preedit.highlightRanges.clear();
 }
 
+void InputMethod::repositionLayerShell()
+{
+    // This effectively makes layer shell input clients behave as if they had
+    // anchors set to Bottom/Left/Right, but respecting Plasma panels instead of
+    // ignoring them.
+
+    QSize panelSize = m_inputClient->surface()->size();
+    if (!panelSize.isValid() || panelSize.isEmpty()) {
+        return;
+    }
+
+    auto output = m_inputClient->output();
+    QRect outputArea;
+    if (output) {
+        outputArea = output->geometry();
+        if (!waylandServer()->isScreenLocked()) {
+            outputArea = workspace()->clientArea(MaximizeArea, m_inputClient, output);
+        }
+    } else {
+        outputArea = workspace()->clientArea(MaximizeArea, m_inputClient);
+    }
+
+    QRect geo{outputArea.bottomLeft() - QPoint(0, panelSize.height()), QSize{outputArea.width(), panelSize.height()}};
+    m_inputClient->moveResize(geo);
+}
 }

@@ -250,7 +250,14 @@ void LayerShellV1Client::moveResizeInternal(const QRect &rect, MoveResizeMode mo
 void LayerShellV1Client::handleSizeChanged()
 {
     updateGeometry(QRect(pos(), clientSizeToFrameSize(surface()->size())));
-    scheduleRearrange();
+
+    // When we use the client as input panel, InputMethod will position the
+    // client, potentially changing its size. When that happens, triggering a
+    // rearrange here will cause the client to be resized again and we enter an
+    // infinite resize loop.
+    if (!isInputMethod()) {
+        scheduleRearrange();
+    }
 }
 
 void LayerShellV1Client::handleUnmapped()
