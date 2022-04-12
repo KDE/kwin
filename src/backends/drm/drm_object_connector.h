@@ -105,6 +105,9 @@ public:
     LinkStatus linkStatus() const;
 
 private:
+    void generateCommonModes();
+    void generateMode(const QSize &size, uint32_t refreshRate);
+
     QScopedPointer<DrmPipeline> m_pipeline;
     DrmScopedPointer<drmModeConnector> m_conn;
     Edid m_edid;

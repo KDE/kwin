@@ -34,7 +34,7 @@ set(DRM_SOURCES
 
 add_library(KWinWaylandDrmBackend MODULE ${DRM_SOURCES})
 set_target_properties(KWinWaylandDrmBackend PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org.kde.kwin.waylandbackends/")
-target_link_libraries(KWinWaylandDrmBackend kwin Libdrm::Libdrm gbm::gbm)
+target_link_libraries(KWinWaylandDrmBackend kwin Libdrm::Libdrm gbm::gbm PkgConfig::Libxcvt)
 
 install(
     TARGETS

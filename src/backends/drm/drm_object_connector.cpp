@@ -21,6 +21,7 @@
 
 #include <cerrno>
 #include <cstring>
+#include <libxcvt/libxcvt.h>
 
 namespace KWin
 {
@@ -345,6 +346,7 @@ bool DrmConnector::updateProperties()
         if (m_modes.isEmpty()) {
             return false;
         } else {
+            generateCommonModes();
             if (!m_pipeline->pending.mode) {
                 m_pipeline->pending.mode = m_modes.constFirst();
                 m_pipeline->applyPendingChanges();
@@ -390,6 +392,73 @@ DrmConnector::LinkStatus DrmConnector::linkStatus() const
         return property->enumForValue<LinkStatus>(property->current());
     }
     return LinkStatus::Good;
+}
+
+static const QVector<QSize> s_commonModes = {
+    /* 4:3 (1.33) */
+    QSize(1600, 1200),
+    QSize(1280, 1024), /* 5:4 (1.25) */
+    QSize(1024, 768),
+    /* 16:10 (1.6) */
+    QSize(2560, 1600),
+    QSize(1920, 1200),
+    QSize(1280, 800),
+    /* 16:9 (1.77) */
+    QSize(5120, 2880),
+    QSize(3840, 2160),
+    QSize(3200, 1800),
+    QSize(2880, 1620),
+    QSize(2560, 1440),
+    QSize(1920, 1080),
+    QSize(1600, 900),
+    QSize(1368, 768),
+    QSize(1280, 720),
+};
+
+void DrmConnector::generateCommonModes()
+{
+    uint32_t maxBandwidthEstimation = 0;
+    QSize maxSize;
+    for (const auto &mode : qAsConst(m_modes)) {
+        if (mode->size().width() > maxSize.width() || mode->size().height() > maxSize.height()) {
+            maxSize = mode->size();
+            maxBandwidthEstimation = std::max(maxBandwidthEstimation, static_cast<uint32_t>(mode->size().width() * mode->size().height() * mode->refreshRate()));
+        }
+    }
+    for (const auto &size : s_commonModes) {
+        uint32_t bandwidthEstimation = size.width() * size.height() * 60000;
+        const auto it = std::find_if(m_modes.constBegin(), m_modes.constEnd(), [size](const auto &mode) {
+            return mode->size() == size;
+        });
+        if (it == m_modes.constEnd() && size.width() <= maxSize.width() && size.height() <= maxSize.height() && bandwidthEstimation < maxBandwidthEstimation) {
+            generateMode(size, 60000);
+        }
+    }
+}
+
+void DrmConnector::generateMode(const QSize &size, uint32_t refreshRate)
+{
+    auto modeInfo = libxcvt_gen_mode_info(size.width(), size.height(), refreshRate, false, false);
+
+    drmModeModeInfo mode;
+    mode.vdisplay = modeInfo->vdisplay;
+    mode.hdisplay = modeInfo->hdisplay;
+    mode.clock = modeInfo->dot_clock;
+    mode.hsync_start = modeInfo->hsync_start;
+    mode.hsync_end = modeInfo->hsync_end;
+    mode.htotal = modeInfo->htotal;
+    mode.vsync_start = modeInfo->vsync_start;
+    mode.vsync_end = modeInfo->vsync_end;
+    mode.vtotal = modeInfo->vtotal;
+    mode.vrefresh = modeInfo->vrefresh;
+    mode.flags = modeInfo->mode_flags;
+
+    mode.type = DRM_MODE_TYPE_USERDEF;
+    sprintf(mode.name, "%dx%d@%d", size.width(), size.height(), mode.vrefresh);
+
+    m_modes << QSharedPointer<DrmConnectorMode>::create(this, mode);
+
+    free(modeInfo);
 }
 
 QDebug &operator<<(QDebug &s, const KWin::DrmConnector *obj)
