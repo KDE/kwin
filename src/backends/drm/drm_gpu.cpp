@@ -250,6 +250,7 @@ bool DrmGpu::updateOutputs()
     }
 
     // check for added and removed connectors
+    QVector<DrmOutput *> addedOutputs;
     QVector<DrmConnector *> removedConnectors = m_connectors;
     for (int i = 0; i < resources->count_connectors; ++i) {
         const uint32_t currentConnector = resources->connectors[i];
@@ -284,6 +285,7 @@ bool DrmGpu::updateOutputs()
                     auto output = new DrmOutput(conn->pipeline());
                     m_drmOutputs << output;
                     m_outputs << output;
+                    addedOutputs << output;
                     Q_EMIT outputAdded(output);
                 }
             }
@@ -331,6 +333,11 @@ bool DrmGpu::updateOutputs()
         qCWarning(KWIN_DRM, "Failed to find a working setup for new outputs!");
         for (const auto &pipeline : qAsConst(m_pipelines)) {
             pipeline->revertPendingChanges();
+        }
+        for (const auto &output : qAsConst(addedOutputs)) {
+            output->setEnabled(false);
+            output->pipeline()->pending.enabled = false;
+            output->pipeline()->applyPendingChanges();
         }
     }
     m_leaseDevice->setDrmMaster(true);
