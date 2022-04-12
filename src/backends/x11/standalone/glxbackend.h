@@ -65,7 +65,7 @@ class GlxLayer : public OutputLayer
 public:
     GlxLayer(GlxBackend *backend);
 
-    QRegion beginFrame() override;
+    OutputLayerBeginFrameInfo beginFrame() override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
 private:
@@ -83,7 +83,7 @@ public:
     GlxBackend(Display *display, X11StandalonePlatform *backend);
     ~GlxBackend() override;
     SurfaceTexture *createSurfaceTextureX11(SurfacePixmapX11 *pixmap) override;
-    QRegion beginFrame();
+    OutputLayerBeginFrameInfo beginFrame();
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
     void present(AbstractOutput *output) override;
     bool makeCurrent() override;

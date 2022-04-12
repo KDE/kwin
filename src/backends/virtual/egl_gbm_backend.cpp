@@ -35,7 +35,7 @@ VirtualOutputLayer::VirtualOutputLayer(EglGbmBackend *backend)
 {
 }
 
-QRegion VirtualOutputLayer::beginFrame()
+OutputLayerBeginFrameInfo VirtualOutputLayer::beginFrame()
 {
     return m_backend->beginFrame();
 }
@@ -175,12 +175,15 @@ SurfaceTexture *EglGbmBackend::createSurfaceTextureWayland(SurfacePixmapWayland 
     return new BasicEGLSurfaceTextureWayland(this, pixmap);
 }
 
-QRegion EglGbmBackend::beginFrame()
+OutputLayerBeginFrameInfo EglGbmBackend::beginFrame()
 {
     if (!GLFramebuffer::currentFramebuffer()) {
         GLFramebuffer::pushFramebuffer(m_fbo);
     }
-    return infiniteRegion();
+    return OutputLayerBeginFrameInfo{
+        .renderTarget = RenderTarget(m_fbo),
+        .repaint = infiniteRegion(),
+    };
 }
 
 static void convertFromGLImage(QImage &img, int w, int h)

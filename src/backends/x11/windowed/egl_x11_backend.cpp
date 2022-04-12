@@ -34,11 +34,14 @@ EglX11Output::~EglX11Output()
     eglDestroySurface(m_backend->eglDisplay(), m_eglSurface);
 }
 
-QRegion EglX11Output::beginFrame()
+OutputLayerBeginFrameInfo EglX11Output::beginFrame()
 {
     eglMakeCurrent(m_backend->eglDisplay(), m_eglSurface, m_eglSurface, m_backend->context());
     GLFramebuffer::pushFramebuffer(m_fbo.data());
-    return m_output->rect();
+    return OutputLayerBeginFrameInfo{
+        .renderTarget = RenderTarget(m_fbo.data()),
+        .repaint = m_output->rect(),
+    };
 }
 
 void EglX11Output::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)

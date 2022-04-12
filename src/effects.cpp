@@ -1798,9 +1798,12 @@ void EffectsHandlerImpl::slotOutputDisabled(AbstractOutput *output)
 
 void EffectsHandlerImpl::renderScreen(EffectScreen *screen)
 {
+    RenderTarget renderTarget(GLFramebuffer::currentFramebuffer());
+    renderTarget.setDevicePixelRatio(screen->devicePixelRatio());
+
     auto output = static_cast<EffectScreenImpl *>(screen)->platformOutput();
     m_scene->prePaint(output);
-    m_scene->paint(output->geometry());
+    m_scene->paint(&renderTarget, output->geometry());
     m_scene->postPaint();
 }
 

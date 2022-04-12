@@ -59,7 +59,7 @@ public:
     SurfaceItem *scanoutCandidate() const override;
     void prePaint() override;
     void postPaint() override;
-    void paint(const QRegion &region) override;
+    void paint(RenderTarget *renderTarget, const QRegion &region) override;
 
 private:
     Scene *m_scene;
@@ -99,7 +99,7 @@ public:
     SurfaceItem *scanoutCandidate() const;
     void prePaint(AbstractOutput *output);
     void postPaint();
-    virtual void paint(const QRegion &region) = 0;
+    virtual void paint(RenderTarget *renderTarget, const QRegion &region) = 0;
 
     /**
      * Adds the Toplevel to the Scene.

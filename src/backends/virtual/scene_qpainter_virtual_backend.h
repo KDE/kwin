@@ -26,7 +26,7 @@ class VirtualQPainterLayer : public OutputLayer
 public:
     VirtualQPainterLayer(AbstractOutput *output);
 
-    QRegion beginFrame() override;
+    OutputLayerBeginFrameInfo beginFrame() override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     QImage *image();
 

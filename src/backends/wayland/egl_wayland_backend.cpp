@@ -142,15 +142,21 @@ bool EglWaylandOutput::makeContextCurrent() const
     return true;
 }
 
-QRegion EglWaylandOutput::beginFrame()
+OutputLayerBeginFrameInfo EglWaylandOutput::beginFrame()
 {
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
     makeContextCurrent();
-    GLFramebuffer::pushFramebuffer(m_fbo.get());
+
+    QRegion repair;
     if (m_backend->supportsBufferAge()) {
-        return m_damageJournal.accumulate(m_bufferAge, infiniteRegion());
+        repair = m_damageJournal.accumulate(m_bufferAge, infiniteRegion());
     }
-    return QRegion();
+
+    GLFramebuffer::pushFramebuffer(m_fbo.get());
+    return OutputLayerBeginFrameInfo{
+        .renderTarget = RenderTarget(m_fbo.data()),
+        .repaint = repair,
+    };
 }
 
 void EglWaylandOutput::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)

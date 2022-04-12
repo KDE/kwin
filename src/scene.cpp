@@ -122,9 +122,9 @@ void SceneDelegate::postPaint()
     m_scene->postPaint();
 }
 
-void SceneDelegate::paint(const QRegion &region)
+void SceneDelegate::paint(RenderTarget *renderTarget, const QRegion &region)
 {
-    m_scene->paint(region.translated(viewport().topLeft()));
+    m_scene->paint(renderTarget, region.translated(viewport().topLeft()));
 }
 
 QRect SceneDelegate::viewport() const

@@ -7,6 +7,7 @@
 #pragma once
 
 #include "kwin_export.h"
+#include "rendertarget.h"
 
 #include <QObject>
 #include <QRegion>
@@ -15,6 +16,12 @@ namespace KWin
 {
 
 class SurfaceItem;
+
+struct OutputLayerBeginFrameInfo
+{
+    RenderTarget renderTarget;
+    QRegion repaint;
+};
 
 class KWIN_EXPORT OutputLayer : public QObject
 {
@@ -33,7 +40,7 @@ public:
      */
     virtual void aboutToStartPainting(const QRegion &damage);
 
-    virtual QRegion beginFrame() = 0;
+    virtual OutputLayerBeginFrameInfo beginFrame() = 0;
     virtual void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) = 0;
 
     /**

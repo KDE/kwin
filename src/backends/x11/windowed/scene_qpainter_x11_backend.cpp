@@ -24,9 +24,12 @@ X11WindowedQPainterOutput::X11WindowedQPainterOutput(AbstractOutput *output, xcb
     buffer.fill(Qt::black);
 }
 
-QRegion X11WindowedQPainterOutput::beginFrame()
+OutputLayerBeginFrameInfo X11WindowedQPainterOutput::beginFrame()
 {
-    return m_output->rect();
+    return OutputLayerBeginFrameInfo{
+        .renderTarget = RenderTarget(&buffer),
+        .repaint = m_output->rect(),
+    };
 }
 
 void X11WindowedQPainterOutput::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)

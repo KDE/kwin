@@ -5,10 +5,9 @@
 */
 
 #include "cursorview_qpainter.h"
-#include "abstract_output.h"
-#include "composite.h"
 #include "cursor.h"
-#include "qpainterbackend.h"
+#include "renderlayer.h"
+#include "rendertarget.h"
 
 #include <QPainter>
 
@@ -20,18 +19,17 @@ QPainterCursorView::QPainterCursorView(QObject *parent)
 {
 }
 
-void QPainterCursorView::paint(AbstractOutput *output, const QRegion &region)
+void QPainterCursorView::paint(RenderLayer *renderLayer, RenderTarget *renderTarget, const QRegion &region)
 {
-    QImage *renderTarget = static_cast<QPainterBackend *>(Compositor::self()->backend())->bufferForScreen(output);
-    if (Q_UNLIKELY(!renderTarget)) {
+    QImage *buffer = std::get<QImage *>(renderTarget->nativeHandle());
+    if (Q_UNLIKELY(!buffer)) {
         return;
     }
 
     const Cursor *cursor = Cursors::self()->currentCursor();
-    QPainter painter(renderTarget);
-    painter.setWindow(output->geometry());
+    QPainter painter(buffer);
     painter.setClipRegion(region);
-    painter.drawImage(cursor->geometry(), cursor->image());
+    painter.drawImage(renderLayer->mapToGlobal(renderLayer->rect()), cursor->image());
 }
 
 } // namespace KWin

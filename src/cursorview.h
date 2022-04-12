@@ -11,8 +11,6 @@
 namespace KWin
 {
 
-class AbstractOutput;
-
 class KWIN_EXPORT CursorView : public QObject
 {
     Q_OBJECT
@@ -20,7 +18,7 @@ class KWIN_EXPORT CursorView : public QObject
 public:
     explicit CursorView(QObject *parent = nullptr);
 
-    virtual void paint(AbstractOutput *output, const QRegion &region) = 0;
+    virtual void paint(RenderLayer *layer, RenderTarget *renderTarget, const QRegion &region) = 0;
 };
 
 class KWIN_EXPORT CursorDelegate : public RenderLayerDelegate
@@ -28,13 +26,12 @@ class KWIN_EXPORT CursorDelegate : public RenderLayerDelegate
     Q_OBJECT
 
 public:
-    CursorDelegate(AbstractOutput *output, CursorView *view);
+    CursorDelegate(CursorView *view);
 
-    void paint(const QRegion &region) override;
+    void paint(RenderTarget *renderTarget, const QRegion &region) override;
 
 private:
     CursorView *m_view;
-    AbstractOutput *m_output;
 };
 
 } // namespace KWin

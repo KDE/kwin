@@ -24,6 +24,7 @@ class CursorView;
 class RenderBackend;
 class RenderLayer;
 class RenderLoop;
+class RenderTarget;
 class Scene;
 class Toplevel;
 class X11Client;
@@ -144,7 +145,7 @@ private:
     void prePaintPass(RenderLayer *layer);
     void postPaintPass(RenderLayer *layer);
     void preparePaintPass(RenderLayer *layer, QRegion *repaint);
-    void paintPass(RenderLayer *layer, const QRegion &region);
+    void paintPass(RenderLayer *layer, RenderTarget *target, const QRegion &region);
 
     State m_state = State::Off;
     CompositorSelectionOwner *m_selectionOwner = nullptr;

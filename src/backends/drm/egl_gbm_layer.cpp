@@ -61,7 +61,7 @@ void EglGbmLayer::destroyResources()
     m_oldGbmSurface.reset();
 }
 
-QRegion EglGbmLayer::beginFrame()
+OutputLayerBeginFrameInfo EglGbmLayer::beginFrame()
 {
     m_scanoutBuffer.reset();
     // dmabuf feedback
@@ -81,14 +81,14 @@ QRegion EglGbmLayer::beginFrame()
             m_gbmSurface = m_oldGbmSurface;
         } else {
             if (!createGbmSurface()) {
-                return QRegion();
+                return {};
             }
             // dmabuf might work with the new surface
             m_importMode = MultiGpuImportMode::Dmabuf;
         }
     }
     if (!m_gbmSurface->makeContextCurrent()) {
-        return QRegion();
+        return {};
     }
     auto repaintRegion = m_gbmSurface->repaintRegion();
 
@@ -103,7 +103,7 @@ QRegion EglGbmLayer::beginFrame()
                 const auto format = m_eglBackend->gbmFormatForDrmFormat(m_gbmSurface->format());
                 m_shadowBuffer = QSharedPointer<ShadowBuffer>::create(m_pipeline->sourceSize(), format);
                 if (!m_shadowBuffer->isComplete()) {
-                    return QRegion();
+                    return {};
                 }
             } else {
                 m_shadowBuffer.reset();
@@ -118,7 +118,10 @@ QRegion EglGbmLayer::beginFrame()
         GLFramebuffer::pushFramebuffer(m_shadowBuffer->fbo());
     }
 
-    return repaintRegion;
+    return OutputLayerBeginFrameInfo{
+        .renderTarget = RenderTarget(GLFramebuffer::currentFramebuffer()),
+        .repaint = repaintRegion,
+    };
 }
 
 void EglGbmLayer::aboutToStartPainting(const QRegion &damagedRegion)

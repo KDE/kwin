@@ -42,7 +42,7 @@ public:
     bool makeContextCurrent() const;
     void present();
 
-    QRegion beginFrame() override;
+    OutputLayerBeginFrameInfo beginFrame() override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     void aboutToStartPainting(const QRegion &damage) override;
 

@@ -27,7 +27,7 @@ class EglLayer : public OutputLayer
 public:
     EglLayer(EglBackend *backend);
 
-    QRegion beginFrame() override;
+    OutputLayerBeginFrameInfo beginFrame() override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
 private:
@@ -45,7 +45,7 @@ public:
     void init() override;
 
     SurfaceTexture *createSurfaceTextureX11(SurfacePixmapX11 *texture) override;
-    QRegion beginFrame();
+    OutputLayerBeginFrameInfo beginFrame();
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
     void present(AbstractOutput *output) override;
     OutputLayer *primaryLayer(AbstractOutput *output) override;

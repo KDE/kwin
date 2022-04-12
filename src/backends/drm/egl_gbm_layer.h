@@ -36,7 +36,7 @@ public:
     EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline);
     ~EglGbmLayer();
 
-    QRegion beginFrame() override;
+    OutputLayerBeginFrameInfo beginFrame() override;
     void aboutToStartPainting(const QRegion &damagedRegion) override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     bool scanout(SurfaceItem *surfaceItem) override;

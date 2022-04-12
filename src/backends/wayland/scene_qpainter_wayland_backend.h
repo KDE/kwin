@@ -53,7 +53,7 @@ public:
     WaylandQPainterOutput(WaylandOutput *output);
     ~WaylandQPainterOutput() override;
 
-    QRegion beginFrame() override;
+    OutputLayerBeginFrameInfo beginFrame() override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
     bool init(KWayland::Client::ShmPool *pool);

@@ -31,7 +31,7 @@ EglLayer::EglLayer(EglBackend *backend)
 {
 }
 
-QRegion EglLayer::beginFrame()
+OutputLayerBeginFrameInfo EglLayer::beginFrame()
 {
     return m_backend->beginFrame();
 }
@@ -121,7 +121,7 @@ void EglBackend::screenGeometryChanged()
     m_fbo.reset(new GLFramebuffer(0, screens()->size()));
 }
 
-QRegion EglBackend::beginFrame()
+OutputLayerBeginFrameInfo EglBackend::beginFrame()
 {
     makeCurrent();
 
@@ -134,7 +134,10 @@ QRegion EglBackend::beginFrame()
 
     // Push the default framebuffer to the render target stack.
     GLFramebuffer::pushFramebuffer(m_fbo.data());
-    return repaint;
+    return OutputLayerBeginFrameInfo{
+        .renderTarget = RenderTarget(m_fbo.data()),
+        .repaint = repaint,
+    };
 }
 
 void EglBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)

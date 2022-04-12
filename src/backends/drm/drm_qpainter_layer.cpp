@@ -30,16 +30,19 @@ DrmQPainterLayer::DrmQPainterLayer(DrmQPainterBackend *backend, DrmPipeline *pip
     });
 }
 
-QRegion DrmQPainterLayer::beginFrame()
+OutputLayerBeginFrameInfo DrmQPainterLayer::beginFrame()
 {
     if (!doesSwapchainFit()) {
         m_swapchain = QSharedPointer<DumbSwapchain>::create(m_pipeline->gpu(), m_pipeline->sourceSize(), DRM_FORMAT_XRGB8888);
     }
     QRegion needsRepaint;
     if (!m_swapchain->acquireBuffer(&needsRepaint)) {
-        return QRegion();
+        return {};
     }
-    return needsRepaint;
+    return OutputLayerBeginFrameInfo{
+        .renderTarget = RenderTarget(m_swapchain->currentBuffer()->image()),
+        .repaint = needsRepaint,
+    };
 }
 
 void DrmQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
@@ -82,12 +85,15 @@ DrmVirtualQPainterLayer::DrmVirtualQPainterLayer(DrmVirtualOutput *output)
 {
 }
 
-QRegion DrmVirtualQPainterLayer::beginFrame()
+OutputLayerBeginFrameInfo DrmVirtualQPainterLayer::beginFrame()
 {
     if (m_image.isNull() || m_image.size() != m_output->pixelSize()) {
         m_image = QImage(m_output->pixelSize(), QImage::Format_RGB32);
     }
-    return QRegion();
+    return OutputLayerBeginFrameInfo{
+        .renderTarget = RenderTarget(&m_image),
+        .repaint = QRegion(),
+    };
 }
 
 void DrmVirtualQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
@@ -128,9 +134,9 @@ QSharedPointer<DrmBuffer> DrmLeaseQPainterLayer::currentBuffer() const
     return m_buffer;
 }
 
-QRegion DrmLeaseQPainterLayer::beginFrame()
+OutputLayerBeginFrameInfo DrmLeaseQPainterLayer::beginFrame()
 {
-    return QRegion();
+    return {};
 }
 
 void DrmLeaseQPainterLayer::endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion)

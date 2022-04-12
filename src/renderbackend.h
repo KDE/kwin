@@ -7,6 +7,7 @@
 #pragma once
 
 #include "kwinglobals.h"
+#include "rendertarget.h"
 
 #include <QObject>
 

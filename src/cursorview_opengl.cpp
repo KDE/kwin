@@ -5,10 +5,11 @@
 */
 
 #include "cursorview_opengl.h"
-#include "abstract_output.h"
 #include "cursor.h"
 #include "kwingltexture.h"
 #include "kwinglutils.h"
+#include "renderlayer.h"
+#include "rendertarget.h"
 
 namespace KWin
 {
@@ -22,9 +23,8 @@ OpenGLCursorView::~OpenGLCursorView()
 {
 }
 
-void OpenGLCursorView::paint(AbstractOutput *output, const QRegion &region)
+void OpenGLCursorView::paint(RenderLayer *renderLayer, RenderTarget *renderTarget, const QRegion &region)
 {
-    const Cursor *cursor = Cursors::self()->currentCursor();
     auto allocateTexture = [this]() {
         const QImage img = Cursors::self()->currentCursor()->image();
         if (img.isNull()) {
@@ -54,10 +54,10 @@ void OpenGLCursorView::paint(AbstractOutput *output, const QRegion &region)
         }
     }
 
-    const QRect cursorRect = cursor->geometry();
+    const QRect cursorRect = renderLayer->mapToGlobal(renderLayer->rect());
 
     QMatrix4x4 mvp;
-    mvp.ortho(output->geometry());
+    mvp.ortho(QRect(QPoint(0, 0), renderTarget->size() / renderTarget->devicePixelRatio()));
     mvp.translate(cursorRect.x(), cursorRect.y());
 
     // Don't need to call GLVertexBuffer::beginFrame() and GLVertexBuffer::endOfFrame() because

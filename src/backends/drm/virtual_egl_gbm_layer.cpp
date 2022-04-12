@@ -61,7 +61,7 @@ void VirtualEglGbmLayer::aboutToStartPainting(const QRegion &damagedRegion)
     }
 }
 
-QRegion VirtualEglGbmLayer::beginFrame()
+OutputLayerBeginFrameInfo VirtualEglGbmLayer::beginFrame()
 {
     // gbm surface
     if (doesGbmSurfaceFit(m_gbmSurface.data())) {
@@ -71,15 +71,18 @@ QRegion VirtualEglGbmLayer::beginFrame()
             m_gbmSurface = m_oldGbmSurface;
         } else {
             if (!createGbmSurface()) {
-                return QRegion();
+                return {};
             }
         }
     }
     if (!m_gbmSurface->makeContextCurrent()) {
-        return QRegion();
+        return {};
     }
     GLFramebuffer::pushFramebuffer(m_gbmSurface->fbo());
-    return m_gbmSurface->repaintRegion();
+    return OutputLayerBeginFrameInfo{
+        .renderTarget = RenderTarget(m_gbmSurface->fbo()),
+        .repaint = m_gbmSurface->repaintRegion(),
+    };
 }
 
 void VirtualEglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)

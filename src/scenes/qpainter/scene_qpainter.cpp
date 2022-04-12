@@ -68,9 +68,9 @@ void SceneQPainter::paintGenericScreen(int mask, const ScreenPaintData &data)
     m_painter->restore();
 }
 
-void SceneQPainter::paint(const QRegion &region)
+void SceneQPainter::paint(RenderTarget *target, const QRegion &region)
 {
-    QImage *buffer = m_backend->bufferForScreen(painted_screen);
+    QImage *buffer = std::get<QImage *>(target->nativeHandle());
     if (buffer && !buffer->isNull()) {
         m_painter->begin(buffer);
         m_painter->setWindow(painted_screen->geometry());

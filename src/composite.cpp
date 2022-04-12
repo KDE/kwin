@@ -441,7 +441,7 @@ void Compositor::addOutput(AbstractOutput *output)
 
     auto cursorLayer = new RenderLayer(output->renderLoop());
     cursorLayer->setVisible(false);
-    cursorLayer->setDelegate(new CursorDelegate(output, m_cursorView));
+    cursorLayer->setDelegate(new CursorDelegate(m_cursorView));
     cursorLayer->setParent(workspaceLayer);
     cursorLayer->setSuperlayer(workspaceLayer);
 
@@ -679,11 +679,13 @@ void Compositor::composite(RenderLoop *renderLoop)
         outputLayer->resetRepaints();
         preparePaintPass(superLayer, &surfaceDamage);
 
-        const QRegion repair = outputLayer->beginFrame();
-        const QRegion bufferDamage = surfaceDamage.united(repair).intersected(superLayer->rect());
+        OutputLayerBeginFrameInfo beginInfo = outputLayer->beginFrame();
+        beginInfo.renderTarget.setDevicePixelRatio(output->scale());
+
+        const QRegion bufferDamage = surfaceDamage.united(beginInfo.repaint).intersected(superLayer->rect());
         outputLayer->aboutToStartPainting(bufferDamage);
 
-        paintPass(superLayer, bufferDamage);
+        paintPass(superLayer, &beginInfo.renderTarget, bufferDamage);
         outputLayer->endFrame(bufferDamage, surfaceDamage);
     }
     renderLoop->endFrame();
@@ -737,14 +739,14 @@ void Compositor::preparePaintPass(RenderLayer *layer, QRegion *repaint)
     }
 }
 
-void Compositor::paintPass(RenderLayer *layer, const QRegion &region)
+void Compositor::paintPass(RenderLayer *layer, RenderTarget *target, const QRegion &region)
 {
-    layer->delegate()->paint(region);
+    layer->delegate()->paint(target, region);
 
     const auto sublayers = layer->sublayers();
     for (RenderLayer *sublayer : sublayers) {
         if (sublayer->isVisible()) {
-            paintPass(sublayer, region);
+            paintPass(sublayer, target, region);
         }
     }
 }

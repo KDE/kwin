@@ -128,10 +128,13 @@ QRegion WaylandQPainterOutput::accumulateDamage(int bufferAge) const
     return m_damageJournal.accumulate(bufferAge, infiniteRegion());
 }
 
-QRegion WaylandQPainterOutput::beginFrame()
+OutputLayerBeginFrameInfo WaylandQPainterOutput::beginFrame()
 {
     WaylandQPainterBufferSlot *slot = acquire();
-    return accumulateDamage(slot->age);
+    return OutputLayerBeginFrameInfo{
+        .renderTarget = RenderTarget(&slot->image),
+        .repaint = accumulateDamage(slot->age),
+    };
 }
 
 void WaylandQPainterOutput::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)

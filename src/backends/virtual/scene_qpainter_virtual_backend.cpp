@@ -25,9 +25,12 @@ VirtualQPainterLayer::VirtualQPainterLayer(AbstractOutput *output)
     m_image.fill(Qt::black);
 }
 
-QRegion VirtualQPainterLayer::beginFrame()
+OutputLayerBeginFrameInfo VirtualQPainterLayer::beginFrame()
 {
-    return m_output->geometry();
+    return OutputLayerBeginFrameInfo{
+        .renderTarget = RenderTarget(&m_image),
+        .repaint = m_output->rect(),
+    };
 }
 
 void VirtualQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)

@@ -108,7 +108,7 @@ GlxLayer::GlxLayer(GlxBackend *backend)
 {
 }
 
-QRegion GlxLayer::beginFrame()
+OutputLayerBeginFrameInfo GlxLayer::beginFrame()
 {
     return m_backend->beginFrame();
 }
@@ -779,7 +779,7 @@ SurfaceTexture *GlxBackend::createSurfaceTextureX11(SurfacePixmapX11 *pixmap)
     return new GlxSurfaceTextureX11(this, pixmap);
 }
 
-QRegion GlxBackend::beginFrame()
+OutputLayerBeginFrameInfo GlxBackend::beginFrame()
 {
     QRegion repaint;
     makeCurrent();
@@ -791,7 +791,10 @@ QRegion GlxBackend::beginFrame()
 
     glXWaitX();
 
-    return repaint;
+    return OutputLayerBeginFrameInfo{
+        .renderTarget = RenderTarget(m_fbo.data()),
+        .repaint = repaint,
+    };
 }
 
 void GlxBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)

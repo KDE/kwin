@@ -21,7 +21,7 @@ public:
     explicit OpenGLCursorView(QObject *parent = nullptr);
     ~OpenGLCursorView() override;
 
-    void paint(AbstractOutput *output, const QRegion &region) override;
+    void paint(RenderLayer *renderLayer, RenderTarget *renderTarget, const QRegion &region) override;
 
 private:
     QScopedPointer<GLTexture> m_cursorTexture;

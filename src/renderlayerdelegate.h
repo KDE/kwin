@@ -15,6 +15,7 @@ namespace KWin
 {
 
 class RenderLayer;
+class RenderTarget;
 class SurfaceItem;
 
 /**
@@ -57,7 +58,7 @@ public:
      * This function is called when the compositor wants the render layer delegate
      * to repaint its contents.
      */
-    virtual void paint(const QRegion &region) = 0;
+    virtual void paint(RenderTarget *renderTarget, const QRegion &region) = 0;
 
 private:
     RenderLayer *m_layer = nullptr;
