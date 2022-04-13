@@ -48,7 +48,6 @@ public:
     {
         return m_failed;
     }
-    virtual QImage *bufferForScreen(AbstractOutput *output) = 0;
 
 protected:
     QPainterBackend();

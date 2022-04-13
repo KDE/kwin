@@ -684,12 +684,6 @@ QPainter *Scene::scenePainter() const
     return nullptr;
 }
 
-QImage *Scene::qpainterRenderBuffer(AbstractOutput *output) const
-{
-    Q_UNUSED(output)
-    return nullptr;
-}
-
 QVector<QByteArray> Scene::openGLPlatformInterfaceExtensions() const
 {
     return QVector<QByteArray>{};

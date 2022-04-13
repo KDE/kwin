@@ -176,11 +176,6 @@ void WaylandQPainterBackend::createOutput(AbstractOutput *waylandOutput)
     m_outputs.insert(waylandOutput, output);
 }
 
-QImage *WaylandQPainterBackend::bufferForScreen(AbstractOutput *output)
-{
-    return &m_outputs[output]->back()->image;
-}
-
 void WaylandQPainterBackend::present(AbstractOutput *output)
 {
     m_outputs[output]->present();

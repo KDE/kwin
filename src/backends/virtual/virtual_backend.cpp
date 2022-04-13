@@ -10,6 +10,7 @@
 
 #include <config-kwin.h>
 
+#include "composite.h"
 #include "egl_gbm_backend.h"
 #include "scene_qpainter_virtual_backend.h"
 #include "session.h"
@@ -174,4 +175,14 @@ void VirtualBackend::removeOutput(AbstractOutput *output)
     Q_EMIT screensQueried();
 }
 
+QImage VirtualBackend::captureOutput(AbstractOutput *output) const
+{
+    if (auto backend = qobject_cast<VirtualQPainterBackend *>(Compositor::self()->backend())) {
+        if (auto layer = backend->primaryLayer(output)) {
+            return *layer->image();
+        }
+    }
+    return QImage();
 }
+
+} // namespace KWin

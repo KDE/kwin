@@ -39,7 +39,6 @@ public:
     }
 
     QPainter *scenePainter() const override;
-    QImage *qpainterRenderBuffer(AbstractOutput *output) const override;
 
     QPainterBackend *backend() const
     {

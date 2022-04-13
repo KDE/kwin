@@ -44,7 +44,6 @@ public:
     X11WindowedQPainterBackend(X11WindowedBackend *backend);
     ~X11WindowedQPainterBackend() override;
 
-    QImage *bufferForScreen(AbstractOutput *output) override;
     void present(AbstractOutput *output) override;
     OutputLayer *primaryLayer(AbstractOutput *output) override;
 

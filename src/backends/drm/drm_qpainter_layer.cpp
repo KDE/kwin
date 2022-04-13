@@ -75,11 +75,6 @@ QRegion DrmQPainterLayer::currentDamage() const
     return m_currentDamage;
 }
 
-QImage *DrmQPainterLayer::image()
-{
-    return m_swapchain ? m_swapchain->currentBuffer()->image() : nullptr;
-}
-
 DrmVirtualQPainterLayer::DrmVirtualQPainterLayer(DrmVirtualOutput *output)
     : m_output(output)
 {
@@ -105,11 +100,6 @@ void DrmVirtualQPainterLayer::endFrame(const QRegion &renderedRegion, const QReg
 QRegion DrmVirtualQPainterLayer::currentDamage() const
 {
     return m_currentDamage;
-}
-
-QImage *DrmVirtualQPainterLayer::image()
-{
-    return &m_image;
 }
 
 DrmLeaseQPainterLayer::DrmLeaseQPainterLayer(DrmQPainterBackend *backend, DrmPipeline *pipeline)

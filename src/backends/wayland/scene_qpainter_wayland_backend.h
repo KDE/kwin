@@ -85,8 +85,6 @@ public:
     explicit WaylandQPainterBackend(WaylandBackend *b);
     ~WaylandQPainterBackend() override;
 
-    QImage *bufferForScreen(AbstractOutput *output) override;
-
     void present(AbstractOutput *output) override;
     OutputLayer *primaryLayer(AbstractOutput *output) override;
 

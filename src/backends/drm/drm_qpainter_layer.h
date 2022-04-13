@@ -24,8 +24,6 @@ class QPainterLayer
 {
 public:
     virtual ~QPainterLayer() = default;
-
-    virtual QImage *image() = 0;
 };
 
 class DrmQPainterLayer : public DrmPipelineLayer, public QPainterLayer
@@ -38,7 +36,6 @@ public:
     QSharedPointer<DrmBuffer> testBuffer() override;
     QSharedPointer<DrmBuffer> currentBuffer() const override;
     QRegion currentDamage() const override;
-    QImage *image() override;
 
 private:
     bool doesSwapchainFit() const;
@@ -56,7 +53,6 @@ public:
     void endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion) override;
 
     QRegion currentDamage() const override;
-    QImage *image() override;
 
 private:
     QImage m_image;

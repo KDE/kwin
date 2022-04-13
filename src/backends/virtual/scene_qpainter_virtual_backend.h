@@ -42,9 +42,8 @@ public:
     VirtualQPainterBackend(VirtualBackend *backend);
     ~VirtualQPainterBackend() override;
 
-    QImage *bufferForScreen(AbstractOutput *output) override;
     void present(AbstractOutput *output) override;
-    OutputLayer *primaryLayer(AbstractOutput *output) override;
+    VirtualQPainterLayer *primaryLayer(AbstractOutput *output) override;
 
 private:
     void createOutputs();

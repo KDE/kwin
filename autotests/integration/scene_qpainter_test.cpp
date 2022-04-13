@@ -45,6 +45,9 @@ private Q_SLOTS:
     void testWindowScaled();
     void testCompositorRestart();
     void testX11Window();
+
+private:
+    QImage grab(AbstractOutput *output);
 };
 
 void SceneQPainterTest::cleanup()
@@ -85,6 +88,17 @@ void SceneQPainterTest::initTestCase()
     QVERIFY(Compositor::self());
 }
 
+QImage SceneQPainterTest::grab(AbstractOutput *output)
+{
+    QImage image;
+    QMetaObject::invokeMethod(kwinApp()->platform(),
+                              "captureOutput",
+                              Qt::DirectConnection,
+                              Q_RETURN_ARG(QImage, image),
+                              Q_ARG(AbstractOutput *, output));
+    return image;
+}
+
 void SceneQPainterTest::testStartFrame()
 {
     // this test verifies that the initial rendering is correct
@@ -105,7 +119,7 @@ void SceneQPainterTest::testStartFrame()
     QVERIFY(!cursorImage.isNull());
     p.drawImage(cursor->pos() - cursor->hotspot(), cursorImage);
     const auto outputs = kwinApp()->platform()->enabledOutputs();
-    QCOMPARE(referenceImage, *scene->qpainterRenderBuffer(outputs.constFirst()));
+    QCOMPARE(referenceImage, grab(outputs.constFirst()));
 }
 
 void SceneQPainterTest::testCursorMoving()
@@ -137,7 +151,7 @@ void SceneQPainterTest::testCursorMoving()
     QVERIFY(!cursorImage.isNull());
     p.drawImage(QPoint(45, 45) - cursor->hotspot(), cursorImage);
     const auto outputs = kwinApp()->platform()->enabledOutputs();
-    QCOMPARE(referenceImage, *scene->qpainterRenderBuffer(outputs.constFirst()));
+    QCOMPARE(referenceImage, grab(outputs.constFirst()));
 }
 
 void SceneQPainterTest::testWindow()
@@ -176,13 +190,13 @@ void SceneQPainterTest::testWindow()
     QVERIFY(frameRenderedSpy.wait());
     painter.fillRect(KWin::Cursors::self()->mouse()->pos().x() - 5, KWin::Cursors::self()->mouse()->pos().y() - 5, 10, 10, Qt::red);
     const auto outputs = kwinApp()->platform()->enabledOutputs();
-    QCOMPARE(referenceImage, *scene->qpainterRenderBuffer(outputs.constFirst()));
+    QCOMPARE(referenceImage, grab(outputs.constFirst()));
     // let's move the cursor again
     KWin::Cursors::self()->mouse()->setPos(10, 10);
     QVERIFY(frameRenderedSpy.wait());
     painter.fillRect(0, 0, 200, 300, Qt::blue);
     painter.fillRect(5, 5, 10, 10, Qt::red);
-    QCOMPARE(referenceImage, *scene->qpainterRenderBuffer(outputs.constFirst()));
+    QCOMPARE(referenceImage, grab(outputs.constFirst()));
 }
 
 void SceneQPainterTest::testWindowScaled()
@@ -233,7 +247,7 @@ void SceneQPainterTest::testWindowScaled()
     painter.fillRect(5, 5, 10, 10, Qt::red); // cursor
 
     const auto outputs = kwinApp()->platform()->enabledOutputs();
-    QCOMPARE(referenceImage, *scene->qpainterRenderBuffer(outputs.constFirst()));
+    QCOMPARE(referenceImage, grab(outputs.constFirst()));
 }
 
 void SceneQPainterTest::testCompositorRestart()
@@ -278,7 +292,7 @@ void SceneQPainterTest::testCompositorRestart()
     QVERIFY(!cursorImage.isNull());
     painter.drawImage(QPoint(400, 400) - cursor->hotspot(), cursorImage);
     const auto outputs = kwinApp()->platform()->enabledOutputs();
-    QCOMPARE(referenceImage, *scene->qpainterRenderBuffer(outputs.constFirst()));
+    QCOMPARE(referenceImage, grab(outputs.constFirst()));
 }
 
 struct XcbConnectionDeleter
@@ -366,8 +380,8 @@ void SceneQPainterTest::testX11Window()
     QVERIFY(frameRenderedSpy.wait());
 
     const QPoint startPos = client->pos() + client->clientPos();
-    auto image = scene->qpainterRenderBuffer(kwinApp()->platform()->enabledOutputs().constFirst());
-    QCOMPARE(image->copy(QRect(startPos, client->clientSize())), compareImage);
+    auto image = grab(kwinApp()->platform()->enabledOutputs().constFirst());
+    QCOMPARE(image.copy(QRect(startPos, client->clientSize())), compareImage);
 
     // and destroy the window again
     xcb_unmap_window(c.data(), w);

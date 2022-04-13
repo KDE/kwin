@@ -114,11 +114,6 @@ Shadow *SceneQPainter::createShadow(Toplevel *toplevel)
     return new SceneQPainterShadow(toplevel);
 }
 
-QImage *SceneQPainter::qpainterRenderBuffer(AbstractOutput *output) const
-{
-    return m_backend->bufferForScreen(output);
-}
-
 //****************************************
 // SceneQPainter::Window
 //****************************************

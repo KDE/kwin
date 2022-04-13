@@ -33,12 +33,6 @@ DrmQPainterBackend::~DrmQPainterBackend()
     m_backend->setRenderBackend(nullptr);
 }
 
-QImage *DrmQPainterBackend::bufferForScreen(AbstractOutput *output)
-{
-    const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
-    return dynamic_cast<QPainterLayer *>(drmOutput->outputLayer())->image();
-}
-
 void DrmQPainterBackend::present(AbstractOutput *output)
 {
     static_cast<DrmAbstractOutput *>(output)->present();

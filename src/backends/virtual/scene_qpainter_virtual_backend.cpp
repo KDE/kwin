@@ -54,11 +54,6 @@ VirtualQPainterBackend::VirtualQPainterBackend(VirtualBackend *backend)
 
 VirtualQPainterBackend::~VirtualQPainterBackend() = default;
 
-QImage *VirtualQPainterBackend::bufferForScreen(AbstractOutput *output)
-{
-    return m_outputs[output]->image();
-}
-
 void VirtualQPainterBackend::createOutputs()
 {
     m_outputs.clear();
@@ -77,7 +72,7 @@ void VirtualQPainterBackend::present(AbstractOutput *output)
     }
 }
 
-OutputLayer *VirtualQPainterBackend::primaryLayer(AbstractOutput *output)
+VirtualQPainterLayer *VirtualQPainterBackend::primaryLayer(AbstractOutput *output)
 {
     return m_outputs[output].get();
 }

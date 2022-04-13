@@ -63,11 +63,6 @@ void X11WindowedQPainterBackend::createOutputs()
     }
 }
 
-QImage *X11WindowedQPainterBackend::bufferForScreen(AbstractOutput *output)
-{
-    return &m_outputs[output]->buffer;
-}
-
 void X11WindowedQPainterBackend::present(AbstractOutput *output)
 {
     static_cast<X11WindowedOutput *>(output)->vsyncMonitor()->arm();

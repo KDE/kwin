@@ -30,7 +30,6 @@ public:
     DrmQPainterBackend(DrmBackend *backend);
     ~DrmQPainterBackend();
 
-    QImage *bufferForScreen(AbstractOutput *output) override;
     void present(AbstractOutput *output) override;
     OutputLayer *primaryLayer(AbstractOutput *output) override;
 
