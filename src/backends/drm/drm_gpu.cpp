@@ -395,7 +395,7 @@ bool DrmGpu::checkCrtcAssignment(QVector<DrmConnector *> connectors, const QVect
     return false;
 }
 
-bool DrmGpu::testPendingConfiguration(TestMode mode)
+bool DrmGpu::testPendingConfiguration()
 {
     QVector<DrmConnector *> connectors;
     for (const auto &conn : qAsConst(m_connectors)) {
@@ -417,14 +417,7 @@ bool DrmGpu::testPendingConfiguration(TestMode mode)
             return c1->getProp(DrmConnector::PropertyIndex::CrtcId)->current() > c2->getProp(DrmConnector::PropertyIndex::CrtcId)->current();
         });
     }
-    const auto &test = [&connectors, &crtcs, this, mode]() {
-        if (mode == TestMode::TestWithCrtcReallocation) {
-            return checkCrtcAssignment(connectors, crtcs);
-        } else {
-            return testPipelines();
-        }
-    };
-    if (test()) {
+    if (checkCrtcAssignment(connectors, crtcs)) {
         return true;
     } else {
         // try again without hw rotation
@@ -433,7 +426,7 @@ bool DrmGpu::testPendingConfiguration(TestMode mode)
             hwRotationUsed |= (pipeline->pending.bufferTransformation != DrmPlane::Transformations(DrmPlane::Transformation::Rotate0));
             pipeline->pending.bufferTransformation = DrmPlane::Transformation::Rotate0;
         }
-        return hwRotationUsed ? test() : false;
+        return hwRotationUsed ? checkCrtcAssignment(connectors, crtcs) : false;
     }
 }
 

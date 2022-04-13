@@ -81,11 +81,7 @@ public:
     DrmVirtualOutput *createVirtualOutput(const QString &name, const QSize &size, double scale, VirtualOutputMode mode);
     void removeVirtualOutput(DrmVirtualOutput *output);
 
-    enum class TestMode {
-        TestOnly,
-        TestWithCrtcReallocation
-    };
-    bool testPendingConfiguration(TestMode mode = TestMode::TestWithCrtcReallocation);
+    bool testPendingConfiguration();
     bool needsModeset() const;
     bool maybeModeset();
 

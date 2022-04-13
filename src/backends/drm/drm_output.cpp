@@ -296,7 +296,7 @@ void DrmOutput::updateModes()
         if (currentMode != m_pipeline->pending.mode) {
             // DrmConnector::findCurrentMode might fail
             m_pipeline->pending.mode = currentMode ? currentMode : m_pipeline->connector()->modes().constFirst();
-            if (m_gpu->testPendingConfiguration(DrmGpu::TestMode::TestWithCrtcReallocation)) {
+            if (m_gpu->testPendingConfiguration()) {
                 m_pipeline->applyPendingChanges();
                 setCurrentModeInternal(m_pipeline->pending.mode->size(), m_pipeline->pending.mode->refreshRate());
                 m_renderLoop->setRefreshRate(m_pipeline->pending.mode->refreshRate());
