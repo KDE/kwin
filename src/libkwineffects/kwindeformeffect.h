@@ -63,6 +63,13 @@ protected:
      */
     virtual void deform(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads);
 
+    /**
+     * Allows to specify a @p shader to draw the redirected texture for @p window.
+     * Can only be called once the window is redirected.
+     * @since 5.25
+     **/
+    void setShader(EffectWindow *window, GLShader *shader);
+
 private Q_SLOTS:
     void handleWindowDamaged(EffectWindow *window);
     void handleWindowDeleted(EffectWindow *window);

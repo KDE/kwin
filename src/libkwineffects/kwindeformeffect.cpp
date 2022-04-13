@@ -16,6 +16,7 @@ struct DeformOffscreenData
     QScopedPointer<GLTexture> texture;
     QScopedPointer<GLFramebuffer> fbo;
     bool isDirty = true;
+    GLShader *shader = nullptr;
 };
 
 class DeformEffectPrivate
@@ -26,7 +27,7 @@ public:
     QMetaObject::Connection windowDeletedConnection;
 
     void paint(EffectWindow *window, GLTexture *texture, const QRegion &region,
-               const WindowPaintData &data, const WindowQuadList &quads);
+               const WindowPaintData &data, const WindowQuadList &quads, GLShader *offscreenShader);
 
     GLTexture *maybeRender(EffectWindow *window, DeformOffscreenData *offscreenData);
     bool live = true;
@@ -130,10 +131,10 @@ GLTexture *DeformEffectPrivate::maybeRender(EffectWindow *window, DeformOffscree
 }
 
 void DeformEffectPrivate::paint(EffectWindow *window, GLTexture *texture, const QRegion &region,
-                                const WindowPaintData &data, const WindowQuadList &quads)
+                                const WindowPaintData &data, const WindowQuadList &quads, GLShader *offscreenShader)
 {
-    ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::AdjustSaturation);
-    GLShader *shader = binder.shader();
+    GLShader *shader = offscreenShader ? offscreenShader : ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::AdjustSaturation);
+    ShaderBinder binder(shader);
 
     const bool indexedQuads = GLVertexBuffer::supportsIndexedQuads();
     const GLenum primitiveType = indexedQuads ? GL_QUADS : GL_TRIANGLES;
@@ -165,6 +166,8 @@ void DeformEffectPrivate::paint(EffectWindow *window, GLTexture *texture, const 
     shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
     shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
     shader->setUniform(GLShader::Saturation, data.saturation());
+    shader->setUniform(GLShader::TextureWidth, texture->width());
+    shader->setUniform(GLShader::TextureHeight, texture->height());
 
     texture->bind();
     vbo->draw(effects->mapToRenderTarget(region), primitiveType, 0, verticesPerQuad * quads.count(), true);
@@ -199,7 +202,7 @@ void DeformEffect::drawWindow(EffectWindow *window, int mask, const QRegion &reg
     deform(window, mask, data, quads);
 
     GLTexture *texture = d->maybeRender(window, offscreenData);
-    d->paint(window, texture, region, data, quads);
+    d->paint(window, texture, region, data, quads, offscreenData->shader);
 }
 
 void DeformEffect::handleWindowDamaged(EffectWindow *window)
@@ -232,6 +235,14 @@ void DeformEffect::destroyConnections()
 
     d->windowDamagedConnection = {};
     d->windowDeletedConnection = {};
+}
+
+void DeformEffect::setShader(EffectWindow *window, GLShader *shader)
+{
+    DeformOffscreenData *offscreenData = d->windows.value(window);
+    if (offscreenData) {
+        offscreenData->shader = shader;
+    }
 }
 
 } // namespace KWin
