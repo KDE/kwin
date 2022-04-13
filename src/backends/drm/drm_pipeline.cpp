@@ -417,29 +417,7 @@ DrmOutput *DrmPipeline::output() const
 static const QMap<uint32_t, QVector<uint64_t>> legacyFormats = {
     {DRM_FORMAT_XRGB8888, {}}};
 
-bool DrmPipeline::isFormatSupported(uint32_t drmFormat) const
-{
-    if (pending.crtc) {
-        if (pending.crtc->primaryPlane()) {
-            return pending.crtc->primaryPlane()->formats().contains(drmFormat);
-        } else {
-            return legacyFormats.contains(drmFormat);
-        }
-    } else {
-        return false;
-    }
-}
-
-QVector<uint64_t> DrmPipeline::supportedModifiers(uint32_t drmFormat) const
-{
-    if (pending.crtc && pending.crtc->primaryPlane()) {
-        return pending.crtc->primaryPlane()->formats().value(drmFormat);
-    } else {
-        return {};
-    }
-}
-
-QMap<uint32_t, QVector<uint64_t>> DrmPipeline::supportedFormats() const
+QMap<uint32_t, QVector<uint64_t>> DrmPipeline::formats() const
 {
     if (pending.crtc) {
         if (pending.crtc->primaryPlane()) {

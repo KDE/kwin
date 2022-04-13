@@ -238,7 +238,7 @@ bool EglGbmLayer::createGbmSurface(uint32_t format, const QVector<uint64_t> &mod
 
 bool EglGbmLayer::createGbmSurface()
 {
-    const auto formats = m_pipeline->supportedFormats();
+    const auto formats = m_pipeline->formats();
     QVector<GbmFormat> sortedFormats;
     for (auto it = formats.begin(); it != formats.end(); it++) {
         const auto format = m_eglBackend->gbmFormatForDrmFormat(it.key());
@@ -273,9 +273,9 @@ bool EglGbmLayer::createGbmSurface()
 bool EglGbmLayer::doesGbmSurfaceFit(GbmSurface *surf) const
 {
     return surf && surf->size() == m_pipeline->bufferSize()
-        && m_pipeline->isFormatSupported(surf->format())
+        && m_pipeline->formats().contains(surf->format())
         && (m_importMode != MultiGpuImportMode::DumbBufferXrgb8888 || surf->format() == DRM_FORMAT_XRGB8888)
-        && (surf->modifiers().isEmpty() || m_pipeline->supportedModifiers(surf->format()) == surf->modifiers());
+        && (surf->modifiers().isEmpty() || m_pipeline->formats().value(surf->format()) == surf->modifiers());
 }
 
 bool EglGbmLayer::doesShadowBufferFit(ShadowBuffer *buffer) const
@@ -448,7 +448,7 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
     m_scanoutCandidate.surface = item->surface();
     m_scanoutCandidate.attemptedThisFrame = true;
 
-    if (!m_pipeline->isFormatSupported(buffer->format())) {
+    if (!m_pipeline->formats().contains(buffer->format())) {
         sendDmabufFeedback(buffer);
         return false;
     }
@@ -477,7 +477,7 @@ void EglGbmLayer::sendDmabufFeedback(KWaylandServer::LinuxDmaBufV1ClientBuffer *
     }
     if (m_scanoutCandidate.surface->dmabufFeedbackV1()) {
         QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> scanoutTranches;
-        const auto &drmFormats = m_pipeline->supportedFormats();
+        const auto drmFormats = m_pipeline->formats();
         const auto tranches = m_eglBackend->dmabuf()->tranches();
         for (const auto &tranche : tranches) {
             KWaylandServer::LinuxDmaBufV1Feedback::Tranche scanoutTranche;
