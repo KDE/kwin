@@ -376,9 +376,11 @@ bool DrmGpu::checkCrtcAssignment(QVector<DrmConnector *> connectors, const QVect
             auto crtcsLeft = crtcs;
             crtcsLeft.removeOne(currentCrtc);
             pipeline->setCrtc(currentCrtc);
-            if (checkCrtcAssignment(connectors, crtcsLeft)) {
-                return true;
-            }
+            do {
+                if (checkCrtcAssignment(connectors, crtcsLeft)) {
+                    return true;
+                }
+            } while (pipeline->pruneModifier());
         }
     }
     for (const auto &crtc : qAsConst(crtcs)) {
@@ -386,9 +388,11 @@ bool DrmGpu::checkCrtcAssignment(QVector<DrmConnector *> connectors, const QVect
             auto crtcsLeft = crtcs;
             crtcsLeft.removeOne(crtc);
             pipeline->setCrtc(crtc);
-            if (checkCrtcAssignment(connectors, crtcsLeft)) {
-                return true;
-            }
+            do {
+                if (checkCrtcAssignment(connectors, crtcsLeft)) {
+                    return true;
+                }
+            } while (pipeline->pruneModifier());
         }
     }
     return false;

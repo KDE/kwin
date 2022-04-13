@@ -409,20 +409,23 @@ DrmOutput *DrmPipeline::output() const
     return m_output;
 }
 
-static const QMap<uint32_t, QVector<uint64_t>> legacyFormats = {
-    {DRM_FORMAT_XRGB8888, {}}};
-
 QMap<uint32_t, QVector<uint64_t>> DrmPipeline::formats() const
 {
-    if (m_pending.crtc) {
-        if (m_pending.crtc->primaryPlane()) {
-            return m_pending.crtc->primaryPlane()->formats();
-        } else {
-            return legacyFormats;
-        }
-    } else {
-        return {};
+    return m_pending.formats;
+}
+
+bool DrmPipeline::pruneModifier()
+{
+    if (m_pending.layer->currentBuffer()->modifier() == DRM_FORMAT_MOD_NONE
+        || m_pending.layer->currentBuffer()->modifier() == DRM_FORMAT_MOD_INVALID) {
+        return false;
     }
+    auto &modifiers = m_pending.formats[m_pending.layer->currentBuffer()->format()];
+    if (modifiers.count() <= 1) {
+        return false;
+    }
+    modifiers.removeOne(m_pending.layer->currentBuffer()->modifier());
+    return true;
 }
 
 bool DrmPipeline::needsModeset() const
@@ -608,9 +611,16 @@ Output::RgbRange DrmPipeline::rgbRange() const
     return m_pending.rgbRange;
 }
 
+static const QMap<uint32_t, QVector<uint64_t>> legacyFormats = {{DRM_FORMAT_XRGB8888, {}}};
+
 void DrmPipeline::setCrtc(DrmCrtc *crtc)
 {
     m_pending.crtc = crtc;
+    if (crtc) {
+        m_pending.formats = crtc->primaryPlane() ? crtc->primaryPlane()->formats() : legacyFormats;
+    } else {
+        m_pending.formats = {};
+    }
 }
 
 void DrmPipeline::setMode(const QSharedPointer<DrmConnectorMode> &mode)

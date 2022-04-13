@@ -144,7 +144,7 @@ QSharedPointer<GLTexture> GbmBuffer::createTexture(EGLDisplay eglDisplay) const
 }
 
 DrmGbmBuffer::DrmGbmBuffer(DrmGpu *gpu, GbmSurface *surface, gbm_bo *bo)
-    : DrmBuffer(gpu, gbm_bo_get_format(bo), gbm_bo_get_modifier(bo))
+    : DrmBuffer(gpu, gbm_bo_get_format(bo), surface && surface->modifiers().isEmpty() ? DRM_FORMAT_MOD_INVALID : gbm_bo_get_modifier(bo))
     , GbmBuffer(surface, bo)
 {
     initialize();

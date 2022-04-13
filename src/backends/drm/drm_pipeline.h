@@ -85,6 +85,7 @@ public:
     QSize bufferSize() const;
 
     QMap<uint32_t, QVector<uint64_t>> formats() const;
+    bool pruneModifier();
 
     void setOutput(DrmOutput *output);
     DrmOutput *output() const;
@@ -158,6 +159,7 @@ private:
     struct State
     {
         DrmCrtc *crtc = nullptr;
+        QMap<uint32_t, QVector<uint64_t>> formats;
         bool active = true; // whether or not the pipeline should be currently used
         bool enabled = true; // whether or not the pipeline needs a crtc
         QSharedPointer<DrmConnectorMode> mode;
