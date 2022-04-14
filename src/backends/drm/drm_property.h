@@ -11,10 +11,11 @@
 #pragma once
 #include "drm_pointer.h"
 
-#include <xf86drmMode.h>
 #include <QByteArray>
 #include <QMap>
 #include <QVector>
+
+#include <xf86drmMode.h>
 
 namespace KWin
 {

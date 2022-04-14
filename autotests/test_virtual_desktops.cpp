@@ -38,7 +38,7 @@ void InputRedirection::registerTouchpadSwipeShortcut(SwipeDirection, uint finger
 {
 }
 
-void InputRedirection::registerTouchscreenSwipeShortcut(SwipeDirection, uint fingerCount, QAction*)
+void InputRedirection::registerTouchscreenSwipeShortcut(SwipeDirection, uint fingerCount, QAction *)
 {
 }
 

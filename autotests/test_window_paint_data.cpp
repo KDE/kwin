@@ -336,7 +336,8 @@ public:
     {
         return 0;
     }
-    QUuid internalId() const override {
+    QUuid internalId() const override
+    {
         return QUuid();
     }
 

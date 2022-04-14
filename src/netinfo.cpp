@@ -166,7 +166,7 @@ void RootInfo::changeActiveWindow(xcb_window_t w, NET::RequestSource src, xcb_ti
             X11Client *c2;
             if (workspace->allowClientActivation(c, timestamp, false, true)) {
                 workspace->activateClient(c);
-            // if activation of the requestor's window would be allowed, allow activation too
+                // if activation of the requestor's window would be allowed, allow activation too
             } else if (active_window != XCB_WINDOW_NONE
                        && (c2 = workspace->findClient(Predicate::WindowMatch, active_window)) != nullptr
                        && workspace->allowClientActivation(c2,

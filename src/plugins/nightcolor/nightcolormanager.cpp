@@ -357,7 +357,9 @@ void NightColorManager::resetQuickAdjustTimer(int targetTemp)
         cancelAllTimers();
         m_quickAdjustTimer = new QTimer(this);
         m_quickAdjustTimer->setSingleShot(false);
-        connect(m_quickAdjustTimer, &QTimer::timeout, this, [this, targetTemp]() { quickAdjust(targetTemp); });
+        connect(m_quickAdjustTimer, &QTimer::timeout, this, [this, targetTemp]() {
+            quickAdjust(targetTemp);
+        });
 
         int interval = (QUICK_ADJUST_DURATION / (m_previewTimer && m_previewTimer->isActive() ? 8 : 1)) / (tempDiff / TEMPERATURE_STEP);
         if (interval == 0) {

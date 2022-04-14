@@ -1436,7 +1436,6 @@ void TestXdgShellClientRules::testDesktopsForce()
     QCOMPARE(m_client->desktops(), {vd2});
     QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd2);
 
-
     // Any attempt to move the client to another virtual desktop should fail.
     m_client->setDesktops({vd1});
     QCOMPARE(m_client->desktops(), {vd2});

@@ -31,6 +31,7 @@
 #if KWIN_BUILD_TABBOX
 #include "tabbox/tabbox.h"
 #endif
+#include "abstract_output.h"
 #include "cursor.h"
 #include "internal_client.h"
 #include "platform.h"
@@ -42,7 +43,6 @@
 #include "wayland_server.h"
 #include "workspace.h"
 #include "xwl/xwayland_interface.h"
-#include "abstract_output.h"
 
 #include <KDecoration2/Decoration>
 #include <KGlobalAccel>
@@ -1054,7 +1054,8 @@ public:
         input()->shortcuts()->processPinchCancel();
         return false;
     }
-        bool touchDown(qint32 id, const QPointF &pos, quint32 time) override {
+    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override
+    {
         if (m_gestureTaken) {
             input()->shortcuts()->processSwipeCancel(DeviceType::Touchscreen);
             m_gestureCancelled = true;
@@ -1091,7 +1092,8 @@ public:
         return false;
     }
 
-    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
+    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override
+    {
         Q_UNUSED(time);
         if (m_gestureTaken) {
             if (m_gestureCancelled) {
@@ -1115,7 +1117,8 @@ public:
         return false;
     }
 
-    bool touchUp(qint32 id, quint32 time) override {
+    bool touchUp(qint32 id, quint32 time) override
+    {
         Q_UNUSED(time);
         m_touchPoints.remove(id);
         if (m_gestureTaken) {
@@ -1131,12 +1134,14 @@ public:
         return false;
     }
 
-    bool touchFrame() override {
+    bool touchFrame() override
+    {
         return m_gestureTaken;
     }
 
 private:
-    struct TouchPoint {
+    struct TouchPoint
+    {
         QPointF pos;
         QSize distance;
     };

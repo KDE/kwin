@@ -39,10 +39,10 @@ WindowViewEffect::~WindowViewEffect()
 
 QVariantMap WindowViewEffect::initialProperties(EffectScreen *screen)
 {
-    return QVariantMap {
-        { QStringLiteral("effect"), QVariant::fromValue(this) },
-        { QStringLiteral("targetScreen"), QVariant::fromValue(screen) },
-        { QStringLiteral("selectedIds"), QVariant::fromValue(m_windowIds) },
+    return QVariantMap{
+        {QStringLiteral("effect"), QVariant::fromValue(this)},
+        {QStringLiteral("targetScreen"), QVariant::fromValue(screen)},
+        {QStringLiteral("selectedIds"), QVariant::fromValue(m_windowIds)},
     };
 }
 
