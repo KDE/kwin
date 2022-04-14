@@ -84,6 +84,7 @@ target_sources(kwin PRIVATE
     options.cpp
     osd.cpp
     outline.cpp
+    outputconfiguration.cpp
     outputlayer.cpp
     overlaywindow.cpp
     placement.cpp
@@ -142,7 +143,6 @@ target_sources(kwin PRIVATE
     wayland_server.cpp
     waylandclient.cpp
     waylandoutput.cpp
-    waylandoutputconfig.cpp
     waylandoutputdevicev2.cpp
     waylandshellintegration.cpp
     window_property_notify_x11_filter.cpp

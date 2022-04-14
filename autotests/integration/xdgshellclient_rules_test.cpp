@@ -14,11 +14,11 @@
 #include "abstract_client.h"
 #include "abstract_output.h"
 #include "cursor.h"
+#include "outputconfiguration.h"
 #include "platform.h"
 #include "rules.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
-#include "waylandoutputconfig.h"
 #include "workspace.h"
 
 #include <KWayland/Client/surface.h>
@@ -2908,7 +2908,7 @@ void TestXdgShellClientRules::testScreenForce()
     QCOMPARE(m_client->output()->name(), outputs.at(1)->name());
 
     // Disable the output where the window is on, so the client is moved the other screen
-    WaylandOutputConfig config;
+    OutputConfiguration config;
     auto changeSet = config.changeSet(outputs.at(1));
     changeSet->enabled = false;
     kwinApp()->platform()->applyOutputChanges(config);

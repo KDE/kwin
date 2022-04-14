@@ -6,19 +6,19 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "waylandoutputconfig.h"
+#include "outputconfiguration.h"
 
 namespace KWin
 {
 
-QSharedPointer<OutputChangeSet> WaylandOutputConfig::changeSet(AbstractOutput *output)
+QSharedPointer<OutputChangeSet> OutputConfiguration::changeSet(AbstractOutput *output)
 {
     const auto ptr = constChangeSet(output);
     m_properties[output] = ptr;
     return ptr;
 }
 
-QSharedPointer<OutputChangeSet> WaylandOutputConfig::constChangeSet(AbstractOutput *output) const
+QSharedPointer<OutputChangeSet> OutputConfiguration::constChangeSet(AbstractOutput *output) const
 {
     if (!m_properties.contains(output)) {
         auto props = QSharedPointer<OutputChangeSet>::create();

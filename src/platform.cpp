@@ -16,13 +16,13 @@
 #include "cursor.h"
 #include "effects.h"
 #include "outline.h"
+#include "outputconfiguration.h"
 #include "overlaywindow.h"
 #include "pointer_input.h"
 #include "scene.h"
 #include "screenedge.h"
 #include "screens.h"
 #include "wayland_server.h"
-#include "waylandoutputconfig.h"
 #include <KCoreAddons>
 
 #include <KWaylandServer/outputchangeset_v2.h>
@@ -98,7 +98,7 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationV2Interfa
         return;
     }
 
-    WaylandOutputConfig cfg;
+    OutputConfiguration cfg;
     const auto changes = config->changes();
     for (auto it = changes.begin(); it != changes.end(); it++) {
         const KWaylandServer::OutputChangeSetV2 *changeset = it.value();
@@ -148,7 +148,7 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationV2Interfa
     }
 }
 
-bool Platform::applyOutputChanges(const WaylandOutputConfig &config)
+bool Platform::applyOutputChanges(const OutputConfiguration &config)
 {
     const auto availableOutputs = outputs();
     QVector<AbstractOutput *> toBeEnabledOutputs;

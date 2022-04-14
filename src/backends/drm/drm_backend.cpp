@@ -25,12 +25,12 @@
 #include "gbm_dmabuf.h"
 #include "logging.h"
 #include "main.h"
+#include "outputconfiguration.h"
 #include "renderloop.h"
 #include "scene.h"
 #include "scene_qpainter_drm_backend.h"
 #include "session.h"
 #include "udev.h"
-#include "waylandoutputconfig.h"
 // KF5
 #include <KCoreAddons>
 #include <KLocalizedString>
@@ -436,7 +436,7 @@ bool DrmBackend::readOutputsConfiguration(const QVector<DrmAbstractOutput *> &ou
     const auto outputsInfo = KWinKScreenIntegration::outputsConfig(outputs);
 
     AbstractOutput *primaryOutput = outputs.constFirst();
-    WaylandOutputConfig cfg;
+    OutputConfiguration cfg;
     // default position goes from left to right
     QPoint pos(0, 0);
     for (const auto &output : qAsConst(outputs)) {
@@ -515,7 +515,7 @@ void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
             outputs.removeOne(output);
             if (!readOutputsConfiguration(outputs)) {
                 // config is invalid or failed to apply -> Try to enable an output anyways
-                WaylandOutputConfig cfg;
+                OutputConfiguration cfg;
                 cfg.changeSet(outputs.constFirst())->enabled = true;
                 if (!applyOutputChanges(cfg)) {
                     qCCritical(KWIN_DRM) << "Could not enable any outputs!";
@@ -636,7 +636,7 @@ DrmGpu *DrmBackend::findGpuByFd(int fd) const
     return nullptr;
 }
 
-bool DrmBackend::applyOutputChanges(const WaylandOutputConfig &config)
+bool DrmBackend::applyOutputChanges(const OutputConfiguration &config)
 {
     QVector<DrmOutput *> toBeEnabled;
     QVector<DrmOutput *> toBeDisabled;

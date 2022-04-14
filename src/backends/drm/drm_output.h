@@ -50,8 +50,8 @@ public:
     bool present() override;
     DrmOutputLayer *outputLayer() const override;
 
-    bool queueChanges(const WaylandOutputConfig &config);
-    void applyQueuedChanges(const WaylandOutputConfig &config);
+    bool queueChanges(const OutputConfiguration &config);
+    void applyQueuedChanges(const OutputConfiguration &config);
     void revertQueuedChanges();
     void updateModes();
 

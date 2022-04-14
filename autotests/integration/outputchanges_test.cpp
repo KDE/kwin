@@ -9,9 +9,9 @@
 #include "abstract_client.h"
 #include "abstract_output.h"
 #include "cursor.h"
+#include "outputconfiguration.h"
 #include "platform.h"
 #include "wayland_server.h"
-#include "waylandoutputconfig.h"
 #include "workspace.h"
 
 #include <KWayland/Client/surface.h>
@@ -83,7 +83,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputIsDisabled()
     QCOMPARE(client->frameGeometry(), QRect(42, 67, 100, 50));
 
     // Disable the output where the window is on.
-    WaylandOutputConfig config;
+    OutputConfiguration config;
     {
         auto changeSet = config.changeSet(outputs[0]);
         changeSet->enabled = false;
@@ -109,7 +109,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterAnotherOutputIsDisabled()
     QCOMPARE(client->frameGeometry(), QRect(1280 + 42, 67, 100, 50));
 
     // Disable the first output.
-    WaylandOutputConfig config;
+    OutputConfiguration config;
     {
         auto changeSet = config.changeSet(outputs[0]);
         changeSet->enabled = false;
@@ -139,7 +139,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputIsMoved()
     QCOMPARE(client->frameGeometry(), QRect(42, 67, 100, 50));
 
     // Disable the first output.
-    WaylandOutputConfig config;
+    OutputConfiguration config;
     {
         auto changeSet = config.changeSet(outputs[0]);
         changeSet->pos = QPoint(-10, 20);

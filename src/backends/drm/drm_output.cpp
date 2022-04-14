@@ -20,12 +20,12 @@
 #include "dumb_swapchain.h"
 #include "logging.h"
 #include "main.h"
+#include "outputconfiguration.h"
 #include "renderloop.h"
 #include "renderloop_p.h"
 #include "scene.h"
 #include "screens.h"
 #include "session.h"
-#include "waylandoutputconfig.h"
 // Qt
 #include <QCryptographicHash>
 #include <QMatrix4x4>
@@ -359,7 +359,7 @@ DrmPipeline *DrmOutput::pipeline() const
     return m_pipeline;
 }
 
-bool DrmOutput::queueChanges(const WaylandOutputConfig &config)
+bool DrmOutput::queueChanges(const OutputConfiguration &config)
 {
     static bool valid;
     static int envOnlySoftwareRotations = qEnvironmentVariableIntValue("KWIN_DRM_SW_ROTATIONS_ONLY", &valid) == 1 || !valid;
@@ -385,7 +385,7 @@ bool DrmOutput::queueChanges(const WaylandOutputConfig &config)
     return true;
 }
 
-void DrmOutput::applyQueuedChanges(const WaylandOutputConfig &config)
+void DrmOutput::applyQueuedChanges(const OutputConfiguration &config)
 {
     if (!m_connector->isConnected()) {
         return;

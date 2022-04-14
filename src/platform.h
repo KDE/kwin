@@ -41,7 +41,7 @@ class Scene;
 class ScreenEdges;
 class Session;
 class Toplevel;
-class WaylandOutputConfig;
+class OutputConfiguration;
 
 class KWIN_EXPORT Outputs : public QVector<AbstractOutput *>
 {
@@ -370,7 +370,7 @@ public:
     /**
      * Applies the output changes. Default implementation only sets values common between platforms
      */
-    virtual bool applyOutputChanges(const WaylandOutputConfig &config);
+    virtual bool applyOutputChanges(const OutputConfiguration &config);
 
 public Q_SLOTS:
     virtual void sceneInitialized(){};

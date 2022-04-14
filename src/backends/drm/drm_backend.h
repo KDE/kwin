@@ -81,7 +81,7 @@ Q_SIGNALS:
     void gpuAdded(DrmGpu *gpu);
 
 protected:
-    bool applyOutputChanges(const WaylandOutputConfig &config) override;
+    bool applyOutputChanges(const OutputConfiguration &config) override;
 
 private:
     friend class DrmGpu;

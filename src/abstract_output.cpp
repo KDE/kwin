@@ -8,7 +8,7 @@
 */
 
 #include "abstract_output.h"
-#include "waylandoutputconfig.h"
+#include "outputconfiguration.h"
 
 #include <KConfigGroup>
 #include <KLocalizedString>
@@ -263,7 +263,7 @@ void AbstractOutput::setSubPixelInternal(SubPixel subPixel)
     m_subPixel = subPixel;
 }
 
-void AbstractOutput::applyChanges(const WaylandOutputConfig &config)
+void AbstractOutput::applyChanges(const OutputConfiguration &config)
 {
     auto props = config.constChangeSet(this);
     Q_EMIT aboutToChange();

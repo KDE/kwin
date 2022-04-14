@@ -26,7 +26,7 @@ namespace KWin
 
 class EffectScreenImpl;
 class RenderLoop;
-class WaylandOutputConfig;
+class OutputConfiguration;
 
 class KWIN_EXPORT GammaRamp
 {
@@ -279,7 +279,7 @@ public:
     void moveTo(const QPoint &pos);
     void setScale(qreal scale);
 
-    void applyChanges(const WaylandOutputConfig &config);
+    void applyChanges(const OutputConfiguration &config);
 
     SubPixel subPixel() const;
     QString description() const;

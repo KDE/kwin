@@ -31,7 +31,7 @@ public:
     RenderLoop::VrrPolicy vrrPolicy;
 };
 
-class KWIN_EXPORT WaylandOutputConfig
+class KWIN_EXPORT OutputConfiguration
 {
 public:
     QSharedPointer<OutputChangeSet> changeSet(AbstractOutput *output);
