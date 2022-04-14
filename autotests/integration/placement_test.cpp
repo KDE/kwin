@@ -23,7 +23,6 @@
 #include <KWayland/Client/surface.h>
 
 using namespace KWin;
-using namespace KWayland::Client;
 
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_placement-0");
 
@@ -179,8 +178,8 @@ void TestPlacement::testPlaceMaximized()
     // add a top panel
     QScopedPointer<KWayland::Client::Surface> panelSurface(Test::createSurface());
     QScopedPointer<QObject> panelShellSurface(Test::createXdgToplevelSurface(panelSurface.data()));
-    QScopedPointer<PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(panelSurface.data()));
-    plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
+    QScopedPointer<KWayland::Client::PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(panelSurface.data()));
+    plasmaSurface->setRole(KWayland::Client::PlasmaShellSurface::Role::Panel);
     plasmaSurface->setPosition(QPoint(0, 0));
     Test::renderAndWaitForShown(panelSurface.data(), QSize(1280, 20), Qt::blue);
 
@@ -202,8 +201,8 @@ void TestPlacement::testPlaceMaximizedLeavesFullscreen()
     // add a top panel
     QScopedPointer<KWayland::Client::Surface> panelSurface(Test::createSurface());
     QScopedPointer<QObject> panelShellSurface(Test::createXdgToplevelSurface(panelSurface.data()));
-    QScopedPointer<PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(panelSurface.data()));
-    plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
+    QScopedPointer<KWayland::Client::PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(panelSurface.data()));
+    plasmaSurface->setRole(KWayland::Client::PlasmaShellSurface::Role::Panel);
     plasmaSurface->setPosition(QPoint(0, 0));
     Test::renderAndWaitForShown(panelSurface.data(), QSize(1280, 20), Qt::blue);
 

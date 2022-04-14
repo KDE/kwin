@@ -242,7 +242,7 @@ static struct
     Registry *registry = nullptr;
     WaylandOutputManagementV2 *outputManagementV2 = nullptr;
     QThread *thread = nullptr;
-    QVector<Output *> outputs;
+    QVector<KWayland::Client::Output *> outputs;
     QVector<WaylandOutputDeviceV2 *> outputDevicesV2;
     IdleInhibitManagerV1 *idleInhibitManagerV1 = nullptr;
     AppMenuManager *appMenu = nullptr;
@@ -346,13 +346,13 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
     registry->setEventQueue(s_waylandConnection.queue);
 
     QObject::connect(registry, &Registry::outputAnnounced, [=](quint32 name, quint32 version) {
-        Output *output = registry->createOutput(name, version, s_waylandConnection.registry);
+        KWayland::Client::Output *output = registry->createOutput(name, version, s_waylandConnection.registry);
         s_waylandConnection.outputs << output;
-        QObject::connect(output, &Output::removed, [=]() {
+        QObject::connect(output, &KWayland::Client::Output::removed, [=]() {
             output->deleteLater();
             s_waylandConnection.outputs.removeOne(output);
         });
-        QObject::connect(output, &Output::destroyed, [=]() {
+        QObject::connect(output, &KWayland::Client::Output::destroyed, [=]() {
             s_waylandConnection.outputs.removeOne(output);
         });
     });
@@ -764,7 +764,7 @@ SubSurface *createSubSurface(KWayland::Client::Surface *surface, KWayland::Clien
     return s;
 }
 
-LayerSurfaceV1 *createLayerSurfaceV1(KWayland::Client::Surface *surface, const QString &scope, Output *output, LayerShellV1::layer layer)
+LayerSurfaceV1 *createLayerSurfaceV1(KWayland::Client::Surface *surface, const QString &scope, KWayland::Client::Output *output, LayerShellV1::layer layer)
 {
     LayerShellV1 *shell = s_waylandConnection.layerShellV1;
     if (!shell) {
@@ -783,7 +783,7 @@ LayerSurfaceV1 *createLayerSurfaceV1(KWayland::Client::Surface *surface, const Q
     return shellSurface;
 }
 
-QtWayland::zwp_input_panel_surface_v1 *createInputPanelSurfaceV1(KWayland::Client::Surface *surface, Output *output)
+QtWayland::zwp_input_panel_surface_v1 *createInputPanelSurfaceV1(KWayland::Client::Surface *surface, KWayland::Client::Output *output)
 {
     if (!s_waylandConnection.inputPanelV1) {
         qWarning() << "Unable to create the input panel surface. The interface input_panel global is not bound";

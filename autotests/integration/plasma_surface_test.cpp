@@ -25,7 +25,6 @@
 #include <KWayland/Client/surface.h>
 
 using namespace KWin;
-using namespace KWayland::Client;
 
 Q_DECLARE_METATYPE(KWin::Layer)
 
@@ -55,7 +54,7 @@ private Q_SLOTS:
 
 private:
     KWayland::Client::Compositor *m_compositor = nullptr;
-    PlasmaShell *m_plasmaShell = nullptr;
+    KWayland::Client::PlasmaShell *m_plasmaShell = nullptr;
 };
 
 void PlasmaSurfaceTest::initTestCase()
@@ -85,16 +84,16 @@ void PlasmaSurfaceTest::cleanup()
 
 void PlasmaSurfaceTest::testRoleOnAllDesktops_data()
 {
-    QTest::addColumn<PlasmaShellSurface::Role>("role");
+    QTest::addColumn<KWayland::Client::PlasmaShellSurface::Role>("role");
     QTest::addColumn<bool>("expectedOnAllDesktops");
 
-    QTest::newRow("Desktop") << PlasmaShellSurface::Role::Desktop << true;
-    QTest::newRow("Panel") << PlasmaShellSurface::Role::Panel << true;
-    QTest::newRow("OSD") << PlasmaShellSurface::Role::OnScreenDisplay << true;
-    QTest::newRow("Normal") << PlasmaShellSurface::Role::Normal << false;
-    QTest::newRow("Notification") << PlasmaShellSurface::Role::Notification << true;
-    QTest::newRow("ToolTip") << PlasmaShellSurface::Role::ToolTip << true;
-    QTest::newRow("CriticalNotification") << PlasmaShellSurface::Role::CriticalNotification << true;
+    QTest::newRow("Desktop") << KWayland::Client::PlasmaShellSurface::Role::Desktop << true;
+    QTest::newRow("Panel") << KWayland::Client::PlasmaShellSurface::Role::Panel << true;
+    QTest::newRow("OSD") << KWayland::Client::PlasmaShellSurface::Role::OnScreenDisplay << true;
+    QTest::newRow("Normal") << KWayland::Client::PlasmaShellSurface::Role::Normal << false;
+    QTest::newRow("Notification") << KWayland::Client::PlasmaShellSurface::Role::Notification << true;
+    QTest::newRow("ToolTip") << KWayland::Client::PlasmaShellSurface::Role::ToolTip << true;
+    QTest::newRow("CriticalNotification") << KWayland::Client::PlasmaShellSurface::Role::CriticalNotification << true;
 }
 
 void PlasmaSurfaceTest::testRoleOnAllDesktops()
@@ -104,7 +103,7 @@ void PlasmaSurfaceTest::testRoleOnAllDesktops()
     QVERIFY(!surface.isNull());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
+    QScopedPointer<KWayland::Client::PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
     QVERIFY(!plasmaSurface.isNull());
 
     // now render to map the window
@@ -118,7 +117,7 @@ void PlasmaSurfaceTest::testRoleOnAllDesktops()
     // now let's try to change that
     QSignalSpy onAllDesktopsSpy(c, &AbstractClient::desktopChanged);
     QVERIFY(onAllDesktopsSpy.isValid());
-    QFETCH(PlasmaShellSurface::Role, role);
+    QFETCH(KWayland::Client::PlasmaShellSurface::Role, role);
     plasmaSurface->setRole(role);
     QFETCH(bool, expectedOnAllDesktops);
     QCOMPARE(onAllDesktopsSpy.wait(), expectedOnAllDesktops);
@@ -128,7 +127,7 @@ void PlasmaSurfaceTest::testRoleOnAllDesktops()
     // first creating the PlasmaSurface then the Shell Surface
     QScopedPointer<KWayland::Client::Surface> surface2(Test::createSurface());
     QVERIFY(!surface2.isNull());
-    QScopedPointer<PlasmaShellSurface> plasmaSurface2(m_plasmaShell->createSurface(surface2.data()));
+    QScopedPointer<KWayland::Client::PlasmaShellSurface> plasmaSurface2(m_plasmaShell->createSurface(surface2.data()));
     QVERIFY(!plasmaSurface2.isNull());
     plasmaSurface2->setRole(role);
     QScopedPointer<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.data()));
@@ -142,17 +141,17 @@ void PlasmaSurfaceTest::testRoleOnAllDesktops()
 
 void PlasmaSurfaceTest::testAcceptsFocus_data()
 {
-    QTest::addColumn<PlasmaShellSurface::Role>("role");
+    QTest::addColumn<KWayland::Client::PlasmaShellSurface::Role>("role");
     QTest::addColumn<bool>("wantsInput");
     QTest::addColumn<bool>("active");
 
-    QTest::newRow("Desktop") << PlasmaShellSurface::Role::Desktop << true << true;
-    QTest::newRow("Panel") << PlasmaShellSurface::Role::Panel << true << false;
-    QTest::newRow("OSD") << PlasmaShellSurface::Role::OnScreenDisplay << false << false;
-    QTest::newRow("Normal") << PlasmaShellSurface::Role::Normal << true << true;
-    QTest::newRow("Notification") << PlasmaShellSurface::Role::Notification << false << false;
-    QTest::newRow("ToolTip") << PlasmaShellSurface::Role::ToolTip << false << false;
-    QTest::newRow("CriticalNotification") << PlasmaShellSurface::Role::CriticalNotification << false << false;
+    QTest::newRow("Desktop") << KWayland::Client::PlasmaShellSurface::Role::Desktop << true << true;
+    QTest::newRow("Panel") << KWayland::Client::PlasmaShellSurface::Role::Panel << true << false;
+    QTest::newRow("OSD") << KWayland::Client::PlasmaShellSurface::Role::OnScreenDisplay << false << false;
+    QTest::newRow("Normal") << KWayland::Client::PlasmaShellSurface::Role::Normal << true << true;
+    QTest::newRow("Notification") << KWayland::Client::PlasmaShellSurface::Role::Notification << false << false;
+    QTest::newRow("ToolTip") << KWayland::Client::PlasmaShellSurface::Role::ToolTip << false << false;
+    QTest::newRow("CriticalNotification") << KWayland::Client::PlasmaShellSurface::Role::CriticalNotification << false << false;
 }
 
 void PlasmaSurfaceTest::testAcceptsFocus()
@@ -162,9 +161,9 @@ void PlasmaSurfaceTest::testAcceptsFocus()
     QVERIFY(!surface.isNull());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
+    QScopedPointer<KWayland::Client::PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
     QVERIFY(!plasmaSurface.isNull());
-    QFETCH(PlasmaShellSurface::Role, role);
+    QFETCH(KWayland::Client::PlasmaShellSurface::Role, role);
     plasmaSurface->setRole(role);
 
     // now render to map the window
@@ -181,9 +180,9 @@ void PlasmaSurfaceTest::testOSDPlacement()
     QVERIFY(!surface.isNull());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
+    QScopedPointer<KWayland::Client::PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
     QVERIFY(!plasmaSurface.isNull());
-    plasmaSurface->setRole(PlasmaShellSurface::Role::OnScreenDisplay);
+    plasmaSurface->setRole(KWayland::Client::PlasmaShellSurface::Role::OnScreenDisplay);
 
     // now render and map the window
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
@@ -222,9 +221,9 @@ void PlasmaSurfaceTest::testOSDPlacementManualPosition()
 {
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
-    QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
+    QScopedPointer<KWayland::Client::PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
     QVERIFY(!plasmaSurface.isNull());
-    plasmaSurface->setRole(PlasmaShellSurface::Role::OnScreenDisplay);
+    plasmaSurface->setRole(KWayland::Client::PlasmaShellSurface::Role::OnScreenDisplay);
 
     plasmaSurface->setPosition(QPoint(50, 70));
 
@@ -243,15 +242,15 @@ void PlasmaSurfaceTest::testOSDPlacementManualPosition()
 
 void PlasmaSurfaceTest::testPanelTypeHasStrut_data()
 {
-    QTest::addColumn<PlasmaShellSurface::PanelBehavior>("panelBehavior");
+    QTest::addColumn<KWayland::Client::PlasmaShellSurface::PanelBehavior>("panelBehavior");
     QTest::addColumn<bool>("expectedStrut");
     QTest::addColumn<QRect>("expectedMaxArea");
     QTest::addColumn<KWin::Layer>("expectedLayer");
 
-    QTest::newRow("always visible - xdgWmBase") << PlasmaShellSurface::PanelBehavior::AlwaysVisible << true << QRect(0, 50, 1280, 974) << KWin::DockLayer;
-    QTest::newRow("autohide - xdgWmBase") << PlasmaShellSurface::PanelBehavior::AutoHide << false << QRect(0, 0, 1280, 1024) << KWin::AboveLayer;
-    QTest::newRow("windows can cover - xdgWmBase") << PlasmaShellSurface::PanelBehavior::WindowsCanCover << false << QRect(0, 0, 1280, 1024) << KWin::NormalLayer;
-    QTest::newRow("windows go below - xdgWmBase") << PlasmaShellSurface::PanelBehavior::WindowsGoBelow << false << QRect(0, 0, 1280, 1024) << KWin::AboveLayer;
+    QTest::newRow("always visible - xdgWmBase") << KWayland::Client::PlasmaShellSurface::PanelBehavior::AlwaysVisible << true << QRect(0, 50, 1280, 974) << KWin::DockLayer;
+    QTest::newRow("autohide - xdgWmBase") << KWayland::Client::PlasmaShellSurface::PanelBehavior::AutoHide << false << QRect(0, 0, 1280, 1024) << KWin::AboveLayer;
+    QTest::newRow("windows can cover - xdgWmBase") << KWayland::Client::PlasmaShellSurface::PanelBehavior::WindowsCanCover << false << QRect(0, 0, 1280, 1024) << KWin::NormalLayer;
+    QTest::newRow("windows go below - xdgWmBase") << KWayland::Client::PlasmaShellSurface::PanelBehavior::WindowsGoBelow << false << QRect(0, 0, 1280, 1024) << KWin::AboveLayer;
 }
 
 void PlasmaSurfaceTest::testPanelTypeHasStrut()
@@ -260,11 +259,11 @@ void PlasmaSurfaceTest::testPanelTypeHasStrut()
     QVERIFY(!surface.isNull());
     QScopedPointer<QObject> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
+    QScopedPointer<KWayland::Client::PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
     QVERIFY(!plasmaSurface.isNull());
-    plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
+    plasmaSurface->setRole(KWayland::Client::PlasmaShellSurface::Role::Panel);
     plasmaSurface->setPosition(QPoint(0, 0));
-    QFETCH(PlasmaShellSurface::PanelBehavior, panelBehavior);
+    QFETCH(KWayland::Client::PlasmaShellSurface::PanelBehavior, panelBehavior);
     plasmaSurface->setPanelBehavior(panelBehavior);
 
     // now render and map the window
@@ -311,12 +310,12 @@ void PlasmaSurfaceTest::testPanelWindowsCanCover()
     QVERIFY(!surface.isNull());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
+    QScopedPointer<KWayland::Client::PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
     QVERIFY(!plasmaSurface.isNull());
-    plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
+    plasmaSurface->setRole(KWayland::Client::PlasmaShellSurface::Role::Panel);
     QFETCH(QRect, panelGeometry);
     plasmaSurface->setPosition(panelGeometry.topLeft());
-    plasmaSurface->setPanelBehavior(PlasmaShellSurface::PanelBehavior::WindowsCanCover);
+    plasmaSurface->setPanelBehavior(KWayland::Client::PlasmaShellSurface::PanelBehavior::WindowsCanCover);
 
     // now render and map the window
     auto panel = Test::renderAndWaitForShown(surface.data(), panelGeometry.size(), Qt::blue);
@@ -382,9 +381,9 @@ void PlasmaSurfaceTest::testPanelActivate()
     QVERIFY(!surface.isNull());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
+    QScopedPointer<KWayland::Client::PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
     QVERIFY(!plasmaSurface.isNull());
-    plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
+    plasmaSurface->setRole(KWayland::Client::PlasmaShellSurface::Role::Panel);
     QFETCH(bool, wantsFocus);
     plasmaSurface->setPanelTakesFocus(wantsFocus);
 
