@@ -19,13 +19,12 @@
 #include <kconfig.h>
 
 #ifndef KCMRULES
+#include "abstract_client.h"
 #include "client_machine.h"
 #include "main.h"
 #include "platform.h"
-#include "screens.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
-#include "x11client.h"
 #endif
 
 #include "rulebooksettings.h"
@@ -880,94 +879,6 @@ CHECK_RULE(DesktopFile, QString)
 #undef CHECK_RULE
 #undef CHECK_FORCE_RULE
 
-// Client
-
-void AbstractClient::setupWindowRules(bool ignore_temporary)
-{
-    disconnect(this, &AbstractClient::captionChanged, this, &AbstractClient::evaluateWindowRules);
-    m_rules = RuleBook::self()->find(this, ignore_temporary);
-    // check only after getting the rules, because there may be a rule forcing window type
-}
-
-// Applies Force, ForceTemporarily and ApplyNow rules
-// Used e.g. after the rules have been modified using the kcm.
-void AbstractClient::applyWindowRules()
-{
-    // apply force rules
-    // Placement - does need explicit update, just like some others below
-    // Geometry : setGeometry() doesn't check rules
-    auto client_rules = rules();
-    const QRect oldGeometry = moveResizeGeometry();
-    const QRect geometry = client_rules->checkGeometry(oldGeometry);
-    if (geometry != oldGeometry) {
-        moveResize(geometry);
-    }
-    // MinSize, MaxSize handled by Geometry
-    // IgnoreGeometry
-    setDesktops(desktops());
-    workspace()->sendClientToOutput(this, output());
-    setOnActivities(activities());
-    // Type
-    maximize(maximizeMode());
-    // Minimize : functions don't check, and there are two functions
-    if (client_rules->checkMinimize(isMinimized())) {
-        minimize();
-    } else {
-        unminimize();
-    }
-    setShade(shadeMode());
-    setOriginalSkipTaskbar(skipTaskbar());
-    setSkipPager(skipPager());
-    setSkipSwitcher(skipSwitcher());
-    setKeepAbove(keepAbove());
-    setKeepBelow(keepBelow());
-    setFullScreen(isFullScreen(), true);
-    setNoBorder(noBorder());
-    updateColorScheme();
-    // FSP
-    // AcceptFocus :
-    if (workspace()->mostRecentlyActivatedClient() == this
-        && !client_rules->checkAcceptFocus(true)) {
-        workspace()->activateNextClient(this);
-    }
-    // Autogrouping : Only checked on window manage
-    // AutogroupInForeground : Only checked on window manage
-    // AutogroupById : Only checked on window manage
-    // StrictGeometry
-    setShortcut(rules()->checkShortcut(shortcut().toString()));
-    // see also X11Client::setActive()
-    if (isActive()) {
-        setOpacity(rules()->checkOpacityActive(qRound(opacity() * 100.0)) / 100.0);
-        workspace()->disableGlobalShortcutsForClient(rules()->checkDisableGlobalShortcuts(false));
-    } else {
-        setOpacity(rules()->checkOpacityInactive(qRound(opacity() * 100.0)) / 100.0);
-    }
-    setDesktopFileName(rules()->checkDesktopFile(desktopFileName()).toUtf8());
-}
-
-void X11Client::updateWindowRules(Rules::Types selection)
-{
-    if (!isManaged()) { // not fully setup yet
-        return;
-    }
-    AbstractClient::updateWindowRules(selection);
-}
-
-void AbstractClient::updateWindowRules(Rules::Types selection)
-{
-    if (RuleBook::self()->areUpdatesDisabled()) {
-        return;
-    }
-    m_rules.update(this, selection);
-}
-
-void AbstractClient::finishWindowRules()
-{
-    updateWindowRules(Rules::All);
-    m_rules = WindowRules();
-}
-
-// Workspace
 KWIN_SINGLETON_FACTORY(RuleBook)
 
 RuleBook::RuleBook(QObject *parent)

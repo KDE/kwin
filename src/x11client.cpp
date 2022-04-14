@@ -318,7 +318,7 @@ void X11Client::releaseWindow(bool on_shutdown)
     if (on_shutdown) {
         // Map the window, so it can be found after another WM is started
         m_client.map();
-    // TODO: Preserve minimized, shaded etc. state?
+        // TODO: Preserve minimized, shaded etc. state?
     } else { // Make sure it's not mapped if the app unmapped it (#65279). The app
         // may do map+unmap before we initially map the window by calling rawShow() from manage().
         m_client.unmap();
@@ -2222,8 +2222,8 @@ void X11Client::getMotifHints()
         // If we just got a hint telling us to hide decorations, we do so.
         if (m_motif.noBorder()) {
             noborder = rules()->checkNoBorder(true);
-        // If the Motif hint is now telling us to show decorations, we only do so if the app didn't
-        // instruct us to hide decorations in some other way, though.
+            // If the Motif hint is now telling us to show decorations, we only do so if the app didn't
+            // instruct us to hide decorations in some other way, though.
         } else if (!app_noborder) {
             noborder = rules()->checkNoBorder(false);
         }
@@ -2877,7 +2877,7 @@ bool X11Client::belongToSameApplication(const X11Client *c1, const X11Client *c2
                && c2->wmClientLeader() != c2->window()) { // don't use in this test then
         same_app = true; // same client leader
 
-    // tests that mean they most probably don't belong together
+        // tests that mean they most probably don't belong together
     } else if ((c1->pid() != c2->pid() && !checks.testFlag(SameApplicationCheck::AllowCrossProcesses))
                || c1->wmClientMachine(false) != c2->wmClientMachine(false)) {
         ; // different processes
@@ -2893,7 +2893,7 @@ bool X11Client::belongToSameApplication(const X11Client *c1, const X11Client *c2
         ; // "different" apps
     } else if (c1->pid() == 0 || c2->pid() == 0) {
         ; // old apps that don't have _NET_WM_PID, consider them different
-    // if they weren't found to match above
+        // if they weren't found to match above
     } else {
         same_app = true; // looks like it's the same app
     }
@@ -4829,6 +4829,14 @@ void X11Client::applyWindowRules()
 bool X11Client::supportsWindowRules() const
 {
     return true;
+}
+
+void X11Client::updateWindowRules(Rules::Types selection)
+{
+    if (!isManaged()) { // not fully setup yet
+        return;
+    }
+    AbstractClient::updateWindowRules(selection);
 }
 
 void X11Client::damageNotifyEvent()
