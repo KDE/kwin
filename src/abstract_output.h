@@ -11,22 +11,22 @@
 
 #include <kwin_export.h>
 
+#include "renderloop.h"
+
 #include <QDebug>
+#include <QMatrix4x4>
 #include <QObject>
 #include <QRect>
 #include <QSize>
 #include <QUuid>
 #include <QVector>
 
-namespace KWaylandServer
-{
-class OutputChangeSetV2;
-}
-
 namespace KWin
 {
+
 class EffectScreenImpl;
 class RenderLoop;
+class WaylandOutputConfig;
 
 class KWIN_EXPORT GammaRamp
 {
@@ -90,6 +90,56 @@ class KWIN_EXPORT AbstractOutput : public QObject
     Q_OBJECT
 
 public:
+    enum class ModeFlag : uint {
+        Current = 0x1,
+        Preferred = 0x2,
+    };
+    Q_DECLARE_FLAGS(ModeFlags, ModeFlag)
+    Q_ENUM(ModeFlag)
+
+    struct Mode
+    {
+        QSize size;
+        int refreshRate;
+        ModeFlags flags;
+        int id;
+
+        inline bool operator==(const Mode &other) const;
+    };
+
+    enum class DpmsMode {
+        On,
+        Standby,
+        Suspend,
+        Off,
+    };
+    Q_ENUM(DpmsMode)
+
+    enum class Capability : uint {
+        Dpms = 0x1,
+        Overscan = 0x2,
+        Vrr = 0x4,
+        RgbRange = 0x8,
+    };
+    Q_DECLARE_FLAGS(Capabilities, Capability)
+
+    enum class SubPixel {
+        Unknown,
+        None,
+        Horizontal_RGB,
+        Horizontal_BGR,
+        Vertical_RGB,
+        Vertical_BGR,
+    };
+    Q_ENUM(SubPixel)
+
+    enum class RgbRange {
+        Automatic = 0,
+        Full = 1,
+        Limited = 2,
+    };
+    Q_ENUM(RgbRange)
+
     explicit AbstractOutput(QObject *parent = nullptr);
     ~AbstractOutput() override;
 
@@ -101,31 +151,31 @@ public:
     /**
      * Returns a short identifiable name of this output.
      */
-    virtual QString name() const = 0;
+    QString name() const;
 
     /**
      * Returns the identifying uuid of this output.
      *
      * Default implementation returns an empty byte array.
      */
-    virtual QUuid uuid() const;
+    QUuid uuid() const;
 
     /**
      * Returns @c true if the output is enabled; otherwise returns @c false.
      */
-    virtual bool isEnabled() const;
+    bool isEnabled() const;
 
     /**
      * Enable or disable the output.
      *
      * Default implementation does nothing
      */
-    virtual void setEnabled(bool enable);
+    void setEnabled(bool enable);
 
     /**
      * Returns geometry of this output in device independent pixels.
      */
-    virtual QRect geometry() const = 0;
+    QRect geometry() const;
 
     /**
      * Equivalent to `QRect(QPoint(0, 0), geometry().size())`
@@ -135,29 +185,27 @@ public:
     /**
      * Returns the approximate vertical refresh rate of this output, in mHz.
      */
-    virtual int refreshRate() const = 0;
+    int refreshRate() const;
 
     /**
      * Returns whether this output is connected through an internal connector,
      * e.g. LVDS, or eDP.
-     *
-     * Default implementation returns @c false.
      */
-    virtual bool isInternal() const;
+    bool isInternal() const;
 
     /**
      * Returns the ratio between physical pixels and logical pixels.
      *
      * Default implementation returns 1.
      */
-    virtual qreal scale() const;
+    qreal scale() const;
 
     /**
      * Returns the physical size of this output, in millimeters.
      *
      * Default implementation returns an invalid QSize.
      */
-    virtual QSize physicalSize() const;
+    QSize physicalSize() const;
 
     /**
      * Returns the size of the gamma lookup table.
@@ -174,20 +222,23 @@ public:
     virtual bool setGammaRamp(const GammaRamp &gamma);
 
     /** Returns the resolution of the output.  */
-    virtual QSize pixelSize() const = 0;
+    QSize pixelSize() const;
+    QSize modeSize() const;
+
+    QString eisaId() const;
 
     /**
      * Returns the manufacturer of the screen.
      */
-    virtual QString manufacturer() const;
+    QString manufacturer() const;
     /**
      * Returns the model of the screen.
      */
-    virtual QString model() const;
+    QString model() const;
     /**
      * Returns the serial number of the screen.
      */
-    virtual QString serialNumber() const;
+    QString serialNumber() const;
 
     /**
      * Returns the RenderLoop for this output. If the platform does not support per screen
@@ -221,12 +272,36 @@ public:
         Flipped270
     };
     Q_ENUM(Transform)
-    virtual Transform transform() const
-    {
-        return Transform::Normal;
-    }
+    Transform transform() const;
 
     virtual bool usesSoftwareCursor() const;
+
+    void moveTo(const QPoint &pos);
+    void setScale(qreal scale);
+
+    void applyChanges(const WaylandOutputConfig &config);
+
+    SubPixel subPixel() const;
+    QString description() const;
+    Capabilities capabilities() const;
+    QByteArray edid() const;
+    QVector<Mode> modes() const;
+    void setModes(const QVector<Mode> &modes);
+    DpmsMode dpmsMode() const;
+    virtual void setDpmsMode(DpmsMode mode);
+
+    uint32_t overscan() const;
+
+    /**
+     * Returns a matrix that can translate into the display's coordinates system
+     */
+    static QMatrix4x4 logicalToNativeMatrix(const QRect &rect, qreal scale, Transform transform);
+
+    void setVrrPolicy(RenderLoop::VrrPolicy policy);
+    RenderLoop::VrrPolicy vrrPolicy() const;
+    RgbRange rgbRange() const;
+
+    bool isPlaceholder() const;
 
 Q_SIGNALS:
     /**
@@ -272,10 +347,78 @@ Q_SIGNALS:
      */
     void changed();
 
+    void currentModeChanged();
+    void modesChanged();
+    void outputChange(const QRegion &damagedRegion);
+    void transformChanged();
+    void dpmsModeChanged();
+    void capabilitiesChanged();
+    void overscanChanged();
+    void vrrPolicyChanged();
+    void rgbRangeChanged();
+
+protected:
+    void initialize(const QString &model, const QString &manufacturer,
+                    const QString &eisaId, const QString &serialNumber,
+                    const QSize &physicalSize,
+                    const QVector<Mode> &modes, const QByteArray &edid);
+
+    void setName(const QString &name)
+    {
+        m_name = name;
+    }
+    void setInternal(bool set)
+    {
+        m_internal = set;
+    }
+
+    virtual void updateEnablement(bool enable)
+    {
+        Q_UNUSED(enable);
+    }
+    virtual void updateTransform(Transform transform)
+    {
+        Q_UNUSED(transform);
+    }
+
+    void setCurrentModeInternal(const QSize &size, int refreshRate);
+    void setTransformInternal(Transform transform);
+    void setDpmsModeInternal(DpmsMode dpmsMode);
+    void setCapabilityInternal(Capability capability, bool on = true);
+    void setSubPixelInternal(SubPixel subPixel);
+    void setOverscanInternal(uint32_t overscan);
+    void setPlaceholder(bool isPlaceholder);
+    void setRgbRangeInternal(RgbRange range);
+    void setPhysicalSizeInternal(const QSize &size);
+
+    QSize orientateSize(const QSize &size) const;
+
 private:
     Q_DISABLE_COPY(AbstractOutput)
     EffectScreenImpl *m_effectScreen = nullptr;
     int m_directScanoutCount = 0;
+    QString m_name;
+    QString m_eisaId;
+    QString m_manufacturer;
+    QString m_model;
+    QString m_serialNumber;
+    QUuid m_uuid;
+    QSize m_modeSize;
+    QSize m_physicalSize;
+    QPoint m_position;
+    qreal m_scale = 1;
+    Capabilities m_capabilities;
+    Transform m_transform = Transform::Normal;
+    QByteArray m_edid;
+    QVector<Mode> m_modes;
+    DpmsMode m_dpmsMode = DpmsMode::On;
+    SubPixel m_subPixel = SubPixel::Unknown;
+    int m_refreshRate = -1;
+    bool m_isEnabled = true;
+    bool m_internal = false;
+    bool m_isPlaceholder = false;
+    uint32_t m_overscan = 0;
+    RgbRange m_rgbRange = RgbRange::Automatic;
     friend class EffectScreenImpl; // to access m_effectScreen
 };
 
@@ -287,5 +430,7 @@ inline QRect AbstractOutput::rect() const
 KWIN_EXPORT QDebug operator<<(QDebug debug, const AbstractOutput *output);
 
 } // namespace KWin
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::AbstractOutput::Capabilities)
 
 #endif

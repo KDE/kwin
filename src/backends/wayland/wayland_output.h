@@ -9,11 +9,12 @@
 #ifndef KWIN_WAYLAND_OUTPUT_H
 #define KWIN_WAYLAND_OUTPUT_H
 
-#include "abstract_wayland_output.h"
+#include "abstract_output.h"
 
 #include <KWayland/Client/xdgshell.h>
 
 #include <QObject>
+#include <QTimer>
 
 namespace KWayland
 {
@@ -35,7 +36,7 @@ namespace Wayland
 {
 class WaylandBackend;
 
-class WaylandOutput : public AbstractWaylandOutput
+class WaylandOutput : public AbstractOutput
 {
     Q_OBJECT
 public:
@@ -80,7 +81,7 @@ public:
 
     void updateEnablement(bool enable) override;
     void updateTransform(Transform transform) override;
-    void setDpmsMode(KWin::AbstractWaylandOutput::DpmsMode mode) override;
+    void setDpmsMode(DpmsMode mode) override;
 
 Q_SIGNALS:
     void sizeChanged(const QSize &size);

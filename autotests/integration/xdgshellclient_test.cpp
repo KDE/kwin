@@ -10,7 +10,7 @@
 #include "kwin_wayland_test.h"
 
 #include "abstract_client.h"
-#include "abstract_wayland_output.h"
+#include "abstract_output.h"
 #include "cursor.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/settings.h"

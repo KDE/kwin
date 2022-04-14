@@ -10,7 +10,7 @@
 
 #include <config-kwin.h>
 
-#include "abstract_wayland_output.h"
+#include "abstract_output.h"
 #include "composite.h"
 #include "idle_inhibition.h"
 #include "inputpanelv1integration.h"
@@ -306,37 +306,33 @@ void WaylandServer::initPlatform()
 
 void WaylandServer::handleOutputAdded(AbstractOutput *output)
 {
-    auto o = static_cast<AbstractWaylandOutput *>(output);
-    if (!o->isPlaceholder()) {
-        m_waylandOutputDevices.insert(o, new WaylandOutputDevice(o));
+    if (!output->isPlaceholder()) {
+        m_waylandOutputDevices.insert(output, new WaylandOutputDevice(output));
     }
 }
 
 void WaylandServer::handleOutputRemoved(AbstractOutput *output)
 {
-    auto o = static_cast<AbstractWaylandOutput *>(output);
-    if (!o->isPlaceholder()) {
-        delete m_waylandOutputDevices.take(o);
+    if (!output->isPlaceholder()) {
+        delete m_waylandOutputDevices.take(output);
     }
 }
 
 void WaylandServer::handleOutputEnabled(AbstractOutput *output)
 {
-    auto o = static_cast<AbstractWaylandOutput *>(output);
-    if (!o->isPlaceholder()) {
-        m_waylandOutputs.insert(o, new WaylandOutput(o));
+    if (!output->isPlaceholder()) {
+        m_waylandOutputs.insert(output, new WaylandOutput(output));
     }
 }
 
 void WaylandServer::handleOutputDisabled(AbstractOutput *output)
 {
-    auto o = static_cast<AbstractWaylandOutput *>(output);
-    if (!o->isPlaceholder()) {
-        delete m_waylandOutputs.take(o);
+    if (!output->isPlaceholder()) {
+        delete m_waylandOutputs.take(output);
     }
 }
 
-AbstractWaylandOutput *WaylandServer::findOutput(KWaylandServer::OutputInterface *outputIface) const
+AbstractOutput *WaylandServer::findOutput(KWaylandServer::OutputInterface *outputIface) const
 {
     for (auto it = m_waylandOutputs.constBegin(); it != m_waylandOutputs.constEnd(); ++it) {
         if ((*it)->waylandOutput() == outputIface) {

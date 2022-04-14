@@ -2909,7 +2909,7 @@ void TestXdgShellClientRules::testScreenForce()
 
     // Disable the output where the window is on, so the client is moved the other screen
     WaylandOutputConfig config;
-    auto changeSet = config.changeSet(static_cast<AbstractWaylandOutput *>(outputs.at(1)));
+    auto changeSet = config.changeSet(outputs.at(1));
     changeSet->enabled = false;
     kwinApp()->platform()->applyOutputChanges(config);
 

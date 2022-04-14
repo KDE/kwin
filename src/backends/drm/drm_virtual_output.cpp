@@ -34,7 +34,7 @@ DrmVirtualOutput::DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize
 
     setName("Virtual-" + name);
     m_modeIndex = 0;
-    QVector<Mode> modes = {{size, 60000, AbstractWaylandOutput::ModeFlags(AbstractWaylandOutput::ModeFlag::Current) | AbstractWaylandOutput::ModeFlag::Preferred, 0}};
+    QVector<Mode> modes = {{size, 60000, AbstractOutput::ModeFlags(AbstractOutput::ModeFlag::Current) | AbstractOutput::ModeFlag::Preferred, 0}};
     initialize(QLatin1String("model_") + name,
                QLatin1String("manufacturer_") + name,
                QLatin1String("eisa_") + name,

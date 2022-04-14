@@ -207,21 +207,21 @@ QSharedPointer<DrmConnectorMode> DrmConnector::findMode(const drmModeModeInfo &m
     return it == m_modes.constEnd() ? nullptr : *it;
 }
 
-AbstractWaylandOutput::SubPixel DrmConnector::subpixel() const
+AbstractOutput::SubPixel DrmConnector::subpixel() const
 {
     switch (m_conn->subpixel) {
     case DRM_MODE_SUBPIXEL_UNKNOWN:
-        return AbstractWaylandOutput::SubPixel::Unknown;
+        return AbstractOutput::SubPixel::Unknown;
     case DRM_MODE_SUBPIXEL_NONE:
-        return AbstractWaylandOutput::SubPixel::None;
+        return AbstractOutput::SubPixel::None;
     case DRM_MODE_SUBPIXEL_HORIZONTAL_RGB:
-        return AbstractWaylandOutput::SubPixel::Horizontal_RGB;
+        return AbstractOutput::SubPixel::Horizontal_RGB;
     case DRM_MODE_SUBPIXEL_HORIZONTAL_BGR:
-        return AbstractWaylandOutput::SubPixel::Horizontal_BGR;
+        return AbstractOutput::SubPixel::Horizontal_BGR;
     case DRM_MODE_SUBPIXEL_VERTICAL_RGB:
-        return AbstractWaylandOutput::SubPixel::Vertical_RGB;
+        return AbstractOutput::SubPixel::Vertical_RGB;
     case DRM_MODE_SUBPIXEL_VERTICAL_BGR:
-        return AbstractWaylandOutput::SubPixel::Vertical_BGR;
+        return AbstractOutput::SubPixel::Vertical_BGR;
     default:
         Q_UNREACHABLE();
     }
@@ -271,10 +271,10 @@ bool DrmConnector::hasRgbRange() const
     return rgb && rgb->hasAllEnums();
 }
 
-AbstractWaylandOutput::RgbRange DrmConnector::rgbRange() const
+AbstractOutput::RgbRange DrmConnector::rgbRange() const
 {
     const auto &rgb = getProp(PropertyIndex::Broadcast_RGB);
-    return rgb->enumForValue<AbstractWaylandOutput::RgbRange>(rgb->pending());
+    return rgb->enumForValue<AbstractOutput::RgbRange>(rgb->pending());
 }
 
 bool DrmConnector::updateProperties()

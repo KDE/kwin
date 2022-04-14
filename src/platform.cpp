@@ -102,7 +102,7 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationV2Interfa
     const auto changes = config->changes();
     for (auto it = changes.begin(); it != changes.end(); it++) {
         const KWaylandServer::OutputChangeSetV2 *changeset = it.value();
-        auto output = qobject_cast<AbstractWaylandOutput *>(findOutput(it.key()->uuid()));
+        auto output = findOutput(it.key()->uuid());
         if (!output) {
             qCWarning(KWIN_CORE) << "Could NOT find output matching " << it.key()->uuid();
             continue;
@@ -113,20 +113,15 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationV2Interfa
         props->scale = changeset->scale();
         props->modeSize = changeset->size();
         props->refreshRate = changeset->refreshRate();
-        props->transform = static_cast<AbstractWaylandOutput::Transform>(changeset->transform());
+        props->transform = static_cast<AbstractOutput::Transform>(changeset->transform());
         props->overscan = changeset->overscan();
-        props->rgbRange = static_cast<AbstractWaylandOutput::RgbRange>(changeset->rgbRange());
+        props->rgbRange = static_cast<AbstractOutput::RgbRange>(changeset->rgbRange());
         props->vrrPolicy = static_cast<RenderLoop::VrrPolicy>(changeset->vrrPolicy());
     }
 
     const auto allOutputs = outputs();
     bool allDisabled = !std::any_of(allOutputs.begin(), allOutputs.end(), [&cfg](const auto &output) {
-        auto o = qobject_cast<AbstractWaylandOutput *>(output);
-        if (!o) {
-            qCWarning(KWIN_CORE) << "Platform::requestOutputsChange should only be called for Wayland platforms!";
-            return false;
-        }
-        return cfg.changeSet(o)->enabled;
+        return cfg.changeSet(output)->enabled;
     });
     if (allDisabled) {
         qCWarning(KWIN_CORE) << "Disabling all outputs through configuration changes is not allowed";
@@ -159,17 +154,17 @@ bool Platform::applyOutputChanges(const WaylandOutputConfig &config)
     QVector<AbstractOutput *> toBeEnabledOutputs;
     QVector<AbstractOutput *> toBeDisabledOutputs;
     for (const auto &output : availableOutputs) {
-        if (config.constChangeSet(qobject_cast<AbstractWaylandOutput *>(output))->enabled) {
+        if (config.constChangeSet(output)->enabled) {
             toBeEnabledOutputs << output;
         } else {
             toBeDisabledOutputs << output;
         }
     }
     for (const auto &output : toBeEnabledOutputs) {
-        static_cast<AbstractWaylandOutput *>(output)->applyChanges(config);
+        output->applyChanges(config);
     }
     for (const auto &output : toBeDisabledOutputs) {
-        static_cast<AbstractWaylandOutput *>(output)->applyChanges(config);
+        output->applyChanges(config);
     }
     return true;
 }

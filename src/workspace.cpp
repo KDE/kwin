@@ -13,7 +13,7 @@
 // kwin libs
 #include <kwinglplatform.h>
 // kwin
-#include "abstract_wayland_output.h"
+#include "abstract_output.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -1622,24 +1622,21 @@ QString Workspace::supportInformation() const
                            .arg(geo.height()));
         support.append(QStringLiteral("Scale: %1\n").arg(output->scale()));
         support.append(QStringLiteral("Refresh Rate: %1\n").arg(output->refreshRate()));
-        const auto waylandOutput = qobject_cast<AbstractWaylandOutput *>(output);
-        if (waylandOutput) {
-            QString vrr = QStringLiteral("incapable");
-            if (waylandOutput->capabilities() & AbstractWaylandOutput::Capability::Vrr) {
-                switch (waylandOutput->vrrPolicy()) {
-                case RenderLoop::VrrPolicy::Never:
-                    vrr = QStringLiteral("never");
-                    break;
-                case RenderLoop::VrrPolicy::Always:
-                    vrr = QStringLiteral("always");
-                    break;
-                case RenderLoop::VrrPolicy::Automatic:
-                    vrr = QStringLiteral("automatic");
-                    break;
-                }
+        QString vrr = QStringLiteral("incapable");
+        if (output->capabilities() & AbstractOutput::Capability::Vrr) {
+            switch (output->vrrPolicy()) {
+            case RenderLoop::VrrPolicy::Never:
+                vrr = QStringLiteral("never");
+                break;
+            case RenderLoop::VrrPolicy::Always:
+                vrr = QStringLiteral("always");
+                break;
+            case RenderLoop::VrrPolicy::Automatic:
+                vrr = QStringLiteral("automatic");
+                break;
             }
-            support.append(QStringLiteral("Adaptive Sync: %1\n").arg(vrr));
         }
+        support.append(QStringLiteral("Adaptive Sync: %1\n").arg(vrr));
     }
     support.append(QStringLiteral("\nCompositing\n"));
     support.append(QStringLiteral("===========\n"));

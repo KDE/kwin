@@ -15,7 +15,7 @@
 
 namespace KWin
 {
-class AbstractWaylandOutput;
+class AbstractOutput;
 
 class InputPanelV1Client : public WaylandClient
 {
@@ -87,7 +87,7 @@ private:
     void reposition();
     void setOutput(KWaylandServer::OutputInterface *output);
 
-    QPointer<AbstractWaylandOutput> m_output;
+    QPointer<AbstractOutput> m_output;
     Mode m_mode = Toplevel;
     const QPointer<KWaylandServer::InputPanelSurfaceV1Interface> m_panelSurface;
 };

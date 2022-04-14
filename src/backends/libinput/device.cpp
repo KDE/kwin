@@ -672,6 +672,7 @@ AbstractOutput *Device::output() const
 
 void Device::setOutput(AbstractOutput *output)
 {
+#ifndef KWIN_BUILD_TESTING
     m_output = output;
     if (m_output) {
         writeEntry(ConfigKey::OutputName, output->name());
@@ -679,6 +680,9 @@ void Device::setOutput(AbstractOutput *output)
         writeEntry(ConfigKey::OutputName, QString());
     }
     Q_EMIT outputNameChanged();
+#else
+    Q_UNUSED(output)
+#endif
 }
 
 static libinput_led toLibinputLEDS(LEDs leds)

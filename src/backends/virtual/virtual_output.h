@@ -9,7 +9,7 @@
 #ifndef KWIN_VIRTUAL_OUTPUT_H
 #define KWIN_VIRTUAL_OUTPUT_H
 
-#include "abstract_wayland_output.h"
+#include "abstract_output.h"
 
 #include <QObject>
 #include <QRect>
@@ -20,7 +20,7 @@ namespace KWin
 class SoftwareVsyncMonitor;
 class VirtualBackend;
 
-class VirtualOutput : public AbstractWaylandOutput
+class VirtualOutput : public AbstractOutput
 {
     Q_OBJECT
 

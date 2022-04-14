@@ -8,7 +8,7 @@
 */
 
 #include "inputpanelv1client.h"
-#include "abstract_wayland_output.h"
+#include "abstract_output.h"
 #include "deleted.h"
 #include "inputmethod.h"
 #include "platform.h"
@@ -166,13 +166,13 @@ QRect InputPanelV1Client::inputGeometry() const
 void InputPanelV1Client::setOutput(OutputInterface *outputIface)
 {
     if (m_output) {
-        disconnect(m_output, &AbstractWaylandOutput::geometryChanged, this, &InputPanelV1Client::reposition);
+        disconnect(m_output, &AbstractOutput::geometryChanged, this, &InputPanelV1Client::reposition);
     }
 
     m_output = waylandServer()->findOutput(outputIface);
 
     if (m_output) {
-        connect(m_output, &AbstractWaylandOutput::geometryChanged, this, &InputPanelV1Client::reposition);
+        connect(m_output, &AbstractOutput::geometryChanged, this, &InputPanelV1Client::reposition);
     }
 }
 

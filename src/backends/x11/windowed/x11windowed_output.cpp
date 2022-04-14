@@ -26,7 +26,7 @@ namespace KWin
 {
 
 X11WindowedOutput::X11WindowedOutput(X11WindowedBackend *backend)
-    : AbstractWaylandOutput(backend)
+    : AbstractOutput(backend)
     , m_renderLoop(new RenderLoop(this))
     , m_vsyncMonitor(SoftwareVsyncMonitor::create(this))
     , m_backend(backend)

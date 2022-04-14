@@ -5,7 +5,7 @@
 */
 
 #include "layershellv1integration.h"
-#include "abstract_wayland_output.h"
+#include "abstract_output.h"
 #include "layershellv1client.h"
 #include "platform.h"
 #include "screens.h"

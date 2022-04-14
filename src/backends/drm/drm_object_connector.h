@@ -14,7 +14,7 @@
 
 #include <QSize>
 
-#include "abstract_wayland_output.h"
+#include "abstract_output.h"
 #include "drm_object.h"
 #include "drm_pointer.h"
 #include "edid.h"
@@ -101,12 +101,12 @@ public:
     QVector<QSharedPointer<DrmConnectorMode>> modes() const;
     QSharedPointer<DrmConnectorMode> findMode(const drmModeModeInfo &modeInfo) const;
 
-    AbstractWaylandOutput::SubPixel subpixel() const;
+    AbstractOutput::SubPixel subpixel() const;
     bool hasOverscan() const;
     uint32_t overscan() const;
     bool vrrCapable() const;
     bool hasRgbRange() const;
-    AbstractWaylandOutput::RgbRange rgbRange() const;
+    AbstractOutput::RgbRange rgbRange() const;
     LinkStatus linkStatus() const;
 
 private:

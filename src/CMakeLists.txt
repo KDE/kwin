@@ -29,7 +29,6 @@ target_sources(kwin PRIVATE
     3rdparty/xcursor.c
     abstract_client.cpp
     abstract_output.cpp
-    abstract_wayland_output.cpp
     activation.cpp
     appmenu.cpp
     atoms.cpp

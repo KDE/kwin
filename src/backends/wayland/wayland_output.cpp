@@ -25,7 +25,7 @@ using namespace KWayland::Client;
 static const int s_refreshRate = 60000; // TODO: can we get refresh rate data from Wayland host?
 
 WaylandOutput::WaylandOutput(Surface *surface, WaylandBackend *backend)
-    : AbstractWaylandOutput(backend)
+    : AbstractOutput(backend)
     , m_renderLoop(new RenderLoop(this))
     , m_surface(surface)
     , m_backend(backend)
@@ -102,7 +102,7 @@ void WaylandOutput::updateEnablement(bool enable)
     setDpmsMode(enable ? DpmsMode::On : DpmsMode::Off);
 }
 
-void WaylandOutput::setDpmsMode(KWin::AbstractWaylandOutput::DpmsMode mode)
+void WaylandOutput::setDpmsMode(DpmsMode mode)
 {
     if (mode == DpmsMode::Off) {
         if (!m_turnOffTimer.isActive()) {

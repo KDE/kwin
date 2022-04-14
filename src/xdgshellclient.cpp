@@ -9,7 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "xdgshellclient.h"
-#include "abstract_wayland_output.h"
+#include "abstract_output.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif

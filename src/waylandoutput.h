@@ -6,11 +6,13 @@
 
 #pragma once
 
-#include "abstract_wayland_output.h"
+#include "abstract_output.h"
 
 #include <KWaylandServer/output_interface.h>
 #include <KWaylandServer/utils.h>
 #include <KWaylandServer/xdgoutput_v1_interface.h>
+
+#include <QTimer>
 
 namespace KWin
 {
@@ -20,7 +22,7 @@ class WaylandOutput : public QObject
     Q_OBJECT
 
 public:
-    explicit WaylandOutput(AbstractWaylandOutput *output, QObject *parent = nullptr);
+    explicit WaylandOutput(AbstractOutput *output, QObject *parent = nullptr);
 
     KWaylandServer::OutputInterface *waylandOutput() const;
 
@@ -32,7 +34,7 @@ private Q_SLOTS:
     void scheduleUpdate();
 
 private:
-    AbstractWaylandOutput *m_platformOutput;
+    AbstractOutput *m_platformOutput;
     QTimer m_updateTimer;
     KWaylandServer::ScopedGlobalPointer<KWaylandServer::OutputInterface> m_waylandOutput;
     KWaylandServer::XdgOutputV1Interface *m_xdgOutputV1;

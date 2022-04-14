@@ -543,8 +543,8 @@ void X11StandalonePlatform::doUpdateOutputs()
                     output->setRenderLoop(m_renderLoop);
                     output->setCrtc(crtcs[i]);
                     output->setGammaRampSize(gamma.isNull() ? 0 : gamma->size);
-                    output->setGeometry(geometry);
-                    output->setRefreshRate(refreshRate * 1000);
+                    output->setMode(geometry.size(), refreshRate * 1000);
+                    output->moveTo(geometry.topLeft());
                     output->setXineramaNumber(i);
 
                     QSize physicalSize(outputInfo->mm_width, outputInfo->mm_height);

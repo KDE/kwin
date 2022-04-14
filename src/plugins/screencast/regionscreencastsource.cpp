@@ -7,7 +7,7 @@
 #include "regionscreencastsource.h"
 #include "screencastutils.h"
 
-#include <abstract_wayland_output.h>
+#include <abstract_output.h>
 #include <composite.h>
 #include <kwingltexture.h>
 #include <kwinglutils.h>
@@ -38,7 +38,7 @@ bool RegionScreenCastSource::hasAlphaChannel() const
     return true;
 }
 
-void RegionScreenCastSource::updateOutput(AbstractWaylandOutput *output)
+void RegionScreenCastSource::updateOutput(AbstractOutput *output)
 {
     m_last = output->renderLoop()->lastPresentationTimestamp();
 
@@ -80,9 +80,8 @@ void RegionScreenCastSource::render(GLFramebuffer *target)
         m_target.reset(new GLFramebuffer(m_renderedTexture.data()));
         const auto allOutputs = kwinApp()->platform()->enabledOutputs();
         for (auto output : allOutputs) {
-            AbstractWaylandOutput *streamOutput = qobject_cast<AbstractWaylandOutput *>(output);
-            if (streamOutput->geometry().intersects(m_region)) {
-                updateOutput(streamOutput);
+            if (output->geometry().intersects(m_region)) {
+                updateOutput(output);
             }
         }
     }

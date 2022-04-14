@@ -19,10 +19,6 @@ public:
     explicit X11PlaceholderOutput(RenderLoop *loop, QObject *parent = nullptr);
 
     RenderLoop *renderLoop() const override;
-    QString name() const override;
-    QRect geometry() const override;
-    int refreshRate() const override;
-    QSize pixelSize() const override;
 
 private:
     RenderLoop *m_loop;

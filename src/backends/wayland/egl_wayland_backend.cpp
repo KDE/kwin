@@ -44,7 +44,7 @@ namespace KWin
 namespace Wayland
 {
 
-static QVector<EGLint> regionToRects(const QRegion &region, AbstractWaylandOutput *output)
+static QVector<EGLint> regionToRects(const QRegion &region, AbstractOutput *output)
 {
     const int height = output->modeSize().height();
     const QMatrix4x4 matrix = WaylandOutput::logicalToNativeMatrix(output->rect(),

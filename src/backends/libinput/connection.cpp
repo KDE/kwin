@@ -14,7 +14,7 @@
 // TODO: Make it compile also in testing environment
 #ifndef KWIN_BUILD_TESTING
 #include "abstract_client.h"
-#include "abstract_wayland_output.h"
+#include "abstract_output.h"
 #include "main.h"
 #include "platform.h"
 #include "workspace.h"
@@ -194,9 +194,9 @@ void Connection::handleEvent()
 }
 
 #ifndef KWIN_BUILD_TESTING
-QPointF devicePointToGlobalPosition(const QPointF &devicePos, const AbstractWaylandOutput *output)
+QPointF devicePointToGlobalPosition(const QPointF &devicePos, const AbstractOutput *output)
 {
-    using Transform = AbstractWaylandOutput::Transform;
+    using Transform = AbstractOutput::Transform;
 
     QPointF pos = devicePos;
     // TODO: Do we need to handle the flipped cases differently?
@@ -358,10 +358,8 @@ void Connection::processEvents()
         case LIBINPUT_EVENT_TOUCH_DOWN: {
 #ifndef KWIN_BUILD_TESTING
             TouchEvent *te = static_cast<TouchEvent *>(event.data());
-            const auto *output = static_cast<AbstractWaylandOutput *>(te->device()->output());
-            const QPointF globalPos =
-                devicePointToGlobalPosition(te->absolutePos(output->modeSize()),
-                                            output);
+            const auto *output = te->device()->output();
+            const QPointF globalPos = devicePointToGlobalPosition(te->absolutePos(output->modeSize()), output);
             Q_EMIT te->device()->touchDown(te->id(), globalPos, te->time(), te->device());
             break;
 #endif
@@ -374,10 +372,8 @@ void Connection::processEvents()
         case LIBINPUT_EVENT_TOUCH_MOTION: {
 #ifndef KWIN_BUILD_TESTING
             TouchEvent *te = static_cast<TouchEvent *>(event.data());
-            const auto *output = static_cast<AbstractWaylandOutput *>(te->device()->output());
-            const QPointF globalPos =
-                devicePointToGlobalPosition(te->absolutePos(output->modeSize()),
-                                            output);
+            const auto *output = te->device()->output();
+            const QPointF globalPos = devicePointToGlobalPosition(te->absolutePos(output->modeSize()), output);
             Q_EMIT te->device()->touchMotion(te->id(), globalPos, te->time(), te->device());
             break;
 #endif
@@ -477,12 +473,12 @@ void Connection::processEvents()
 
             if (workspace()) {
 #ifndef KWIN_BUILD_TESTING
-                AbstractWaylandOutput *output = static_cast<AbstractWaylandOutput *>(tte->device()->output());
+                AbstractOutput *output = tte->device()->output();
                 if (!output && workspace()->activeClient()) {
-                    output = static_cast<AbstractWaylandOutput *>(workspace()->activeClient()->output());
+                    output = workspace()->activeClient()->output();
                 }
                 if (!output) {
-                    output = static_cast<AbstractWaylandOutput *>(workspace()->activeOutput());
+                    output = workspace()->activeOutput();
                 }
                 const QPointF globalPos =
                     devicePointToGlobalPosition(tte->transformedPosition(output->modeSize()),

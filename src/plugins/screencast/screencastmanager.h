@@ -14,7 +14,7 @@
 
 namespace KWin
 {
-class AbstractWaylandOutput;
+class AbstractOutput;
 class ScreenCastStream;
 
 class ScreencastManager : public Plugin
@@ -30,7 +30,7 @@ private:
                              KWaylandServer::OutputInterface *output,
                              KWaylandServer::ScreencastV1Interface::CursorMode mode);
     void
-    streamOutput(KWaylandServer::ScreencastStreamV1Interface *stream, AbstractWaylandOutput *output, KWaylandServer::ScreencastV1Interface::CursorMode mode);
+    streamOutput(KWaylandServer::ScreencastStreamV1Interface *stream, AbstractOutput *output, KWaylandServer::ScreencastV1Interface::CursorMode mode);
     void streamVirtualOutput(KWaylandServer::ScreencastStreamV1Interface *stream,
                              const QString &name,
                              const QSize &size,

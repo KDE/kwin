@@ -59,7 +59,6 @@ class Toplevel;
 class XdgPopupClient;
 class XdgSurfaceClient;
 class XdgToplevelClient;
-class AbstractWaylandOutput;
 class WaylandOutput;
 class WaylandOutputDevice;
 
@@ -226,7 +225,7 @@ public:
         m_linuxDmabufBuffers.remove(buffer);
     }
 
-    AbstractWaylandOutput *findOutput(KWaylandServer::OutputInterface *output) const;
+    AbstractOutput *findOutput(KWaylandServer::OutputInterface *output) const;
 
     /**
      * Returns the first socket name that can be used to connect to this server.
@@ -291,8 +290,8 @@ private:
     KWaylandServer::PrimaryOutputV1Interface *m_primary = nullptr;
     QList<AbstractClient *> m_clients;
     InitializationFlags m_initFlags;
-    QHash<AbstractWaylandOutput *, WaylandOutput *> m_waylandOutputs;
-    QHash<AbstractWaylandOutput *, WaylandOutputDevice *> m_waylandOutputDevices;
+    QHash<AbstractOutput *, WaylandOutput *> m_waylandOutputs;
+    QHash<AbstractOutput *, WaylandOutputDevice *> m_waylandOutputDevices;
     KWIN_SINGLETON(WaylandServer)
 };
 

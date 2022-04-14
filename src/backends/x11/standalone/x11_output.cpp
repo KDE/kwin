@@ -14,13 +14,8 @@ namespace KWin
 
 X11Output::X11Output(const QString &name, QObject *parent)
     : AbstractOutput(parent)
-    , m_name(name)
 {
-}
-
-QString X11Output::name() const
-{
-    return m_name;
+    setName(name);
 }
 
 RenderLoop *X11Output::renderLoop() const
@@ -41,29 +36,6 @@ int X11Output::xineramaNumber() const
 void X11Output::setXineramaNumber(int number)
 {
     m_xineramaNumber = number;
-}
-
-QRect X11Output::geometry() const
-{
-    return m_geometry;
-}
-
-void X11Output::setGeometry(QRect set)
-{
-    if (m_geometry != set) {
-        m_geometry = set;
-        Q_EMIT geometryChanged();
-    }
-}
-
-int X11Output::refreshRate() const
-{
-    return m_refreshRate;
-}
-
-void X11Output::setRefreshRate(int set)
-{
-    m_refreshRate = set;
 }
 
 int X11Output::gammaRampSize() const
@@ -93,24 +65,19 @@ void X11Output::setGammaRampSize(int size)
     m_gammaRampSize = size;
 }
 
-QSize X11Output::physicalSize() const
+bool X11Output::usesSoftwareCursor() const
 {
-    return m_physicalSize;
+    return false;
+}
+
+void X11Output::setMode(const QSize &size, int refreshRate)
+{
+    setCurrentModeInternal(size, refreshRate);
 }
 
 void X11Output::setPhysicalSize(const QSize &size)
 {
-    m_physicalSize = size;
-}
-
-QSize X11Output::pixelSize() const
-{
-    return geometry().size();
-}
-
-bool X11Output::usesSoftwareCursor() const
-{
-    return false;
+    setPhysicalSizeInternal(size);
 }
 
 }

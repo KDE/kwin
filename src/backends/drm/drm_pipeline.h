@@ -17,7 +17,7 @@
 #include <chrono>
 #include <xf86drmMode.h>
 
-#include "abstract_wayland_output.h"
+#include "abstract_output.h"
 #include "drm_object_plane.h"
 #include "renderloop_p.h"
 
@@ -104,7 +104,7 @@ public:
         bool enabled = true; // whether or not the pipeline needs a crtc
         QSharedPointer<DrmConnectorMode> mode;
         uint32_t overscan = 0;
-        AbstractWaylandOutput::RgbRange rgbRange = AbstractWaylandOutput::RgbRange::Automatic;
+        AbstractOutput::RgbRange rgbRange = AbstractOutput::RgbRange::Automatic;
         RenderLoopPrivate::SyncMode syncMode = RenderLoopPrivate::SyncMode::Fixed;
         QSharedPointer<DrmGammaRamp> gamma;
 

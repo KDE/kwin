@@ -18,6 +18,7 @@
 #include <QPoint>
 #include <QSharedPointer>
 #include <QSize>
+#include <QTimer>
 #include <QVector>
 #include <chrono>
 #include <xf86drmMode.h>
@@ -63,7 +64,7 @@ private:
     bool setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
 
-    QVector<AbstractWaylandOutput::Mode> getModes() const;
+    QVector<AbstractOutput::Mode> getModes() const;
 
     int gammaRampSize() const override;
     bool setGammaRamp(const GammaRamp &gamma) override;

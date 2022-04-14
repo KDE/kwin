@@ -107,7 +107,7 @@ void DrmBackend::turnOutputsOn()
 {
     m_dpmsFilter.reset();
     for (auto it = m_enabledOutputs.constBegin(), end = m_enabledOutputs.constEnd(); it != end; it++) {
-        (*it)->setDpmsMode(AbstractWaylandOutput::DpmsMode::On);
+        (*it)->setDpmsMode(AbstractOutput::DpmsMode::On);
     }
 }
 
@@ -118,7 +118,7 @@ void DrmBackend::checkOutputsAreOn()
         return;
     }
     for (auto it = m_enabledOutputs.constBegin(), end = m_enabledOutputs.constEnd(); it != end; it++) {
-        if ((*it)->dpmsMode() != AbstractWaylandOutput::DpmsMode::On) {
+        if ((*it)->dpmsMode() != AbstractOutput::DpmsMode::On) {
             // dpms still disabled, need to keep the filter
             return;
         }
@@ -435,7 +435,7 @@ bool DrmBackend::readOutputsConfiguration(const QVector<DrmAbstractOutput *> &ou
     Q_ASSERT(!outputs.isEmpty());
     const auto outputsInfo = KWinKScreenIntegration::outputsConfig(outputs);
 
-    AbstractWaylandOutput *primaryOutput = outputs.constFirst();
+    AbstractOutput *primaryOutput = outputs.constFirst();
     WaylandOutputConfig cfg;
     // default position goes from left to right
     QPoint pos(0, 0);
@@ -460,7 +460,7 @@ bool DrmBackend::readOutputsConfiguration(const QVector<DrmAbstractOutput *> &ou
 
             props->overscan = static_cast<uint32_t>(outputInfo["overscan"].toInt(props->overscan));
             props->vrrPolicy = static_cast<RenderLoop::VrrPolicy>(outputInfo["vrrpolicy"].toInt(static_cast<uint32_t>(props->vrrPolicy)));
-            props->rgbRange = static_cast<AbstractWaylandOutput::RgbRange>(outputInfo["rgbrange"].toInt(static_cast<uint32_t>(props->rgbRange)));
+            props->rgbRange = static_cast<AbstractOutput::RgbRange>(outputInfo["rgbrange"].toInt(static_cast<uint32_t>(props->rgbRange)));
 
             if (const QJsonObject mode = outputInfo["mode"].toObject(); !mode.isEmpty()) {
                 const QJsonObject size = mode["size"].toObject();

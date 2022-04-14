@@ -7,11 +7,12 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "abstract_egl_backend.h"
-#include "abstract_wayland_output.h"
+#include "abstract_output.h"
 #include "composite.h"
 #include "egl_dmabuf.h"
 #include "options.h"
 #include "platform.h"
+#include "utils/common.h"
 #include "utils/egl_context_attribute_builder.h"
 #include "wayland_server.h"
 #include <KWaylandServer/display.h>

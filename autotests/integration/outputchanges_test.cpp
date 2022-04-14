@@ -85,7 +85,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputIsDisabled()
     // Disable the output where the window is on.
     WaylandOutputConfig config;
     {
-        auto changeSet = config.changeSet(static_cast<AbstractWaylandOutput *>(outputs[0]));
+        auto changeSet = config.changeSet(outputs[0]);
         changeSet->enabled = false;
     }
     kwinApp()->platform()->applyOutputChanges(config);
@@ -111,11 +111,11 @@ void OutputChangesTest::testWindowSticksToOutputAfterAnotherOutputIsDisabled()
     // Disable the first output.
     WaylandOutputConfig config;
     {
-        auto changeSet = config.changeSet(static_cast<AbstractWaylandOutput *>(outputs[0]));
+        auto changeSet = config.changeSet(outputs[0]);
         changeSet->enabled = false;
     }
     {
-        auto changeSet = config.changeSet(static_cast<AbstractWaylandOutput *>(outputs[1]));
+        auto changeSet = config.changeSet(outputs[1]);
         changeSet->pos = QPoint(0, 0);
     }
     kwinApp()->platform()->applyOutputChanges(config);
@@ -141,7 +141,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputIsMoved()
     // Disable the first output.
     WaylandOutputConfig config;
     {
-        auto changeSet = config.changeSet(static_cast<AbstractWaylandOutput *>(outputs[0]));
+        auto changeSet = config.changeSet(outputs[0]);
         changeSet->pos = QPoint(-10, 20);
     }
     kwinApp()->platform()->applyOutputChanges(config);

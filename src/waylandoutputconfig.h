@@ -11,7 +11,7 @@
 #include <QPoint>
 #include <QSize>
 
-#include "abstract_wayland_output.h"
+#include "abstract_output.h"
 #include "kwin_export.h"
 
 namespace KWin
@@ -25,20 +25,20 @@ public:
     float scale;
     QSize modeSize;
     uint32_t refreshRate;
-    AbstractWaylandOutput::Transform transform;
+    AbstractOutput::Transform transform;
     uint32_t overscan;
-    AbstractWaylandOutput::RgbRange rgbRange;
+    AbstractOutput::RgbRange rgbRange;
     RenderLoop::VrrPolicy vrrPolicy;
 };
 
 class KWIN_EXPORT WaylandOutputConfig
 {
 public:
-    QSharedPointer<OutputChangeSet> changeSet(AbstractWaylandOutput *output);
-    QSharedPointer<OutputChangeSet> constChangeSet(AbstractWaylandOutput *output) const;
+    QSharedPointer<OutputChangeSet> changeSet(AbstractOutput *output);
+    QSharedPointer<OutputChangeSet> constChangeSet(AbstractOutput *output) const;
 
 private:
-    QMap<AbstractWaylandOutput *, QSharedPointer<OutputChangeSet>> m_properties;
+    QMap<AbstractOutput *, QSharedPointer<OutputChangeSet>> m_properties;
 };
 
 }
