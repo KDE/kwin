@@ -8,7 +8,6 @@
 */
 #ifndef KWIN_PLATFORM_H
 #define KWIN_PLATFORM_H
-#include "input.h"
 #include <epoxy/egl.h>
 #include <kwin_export.h>
 #include <kwinglobals.h>
@@ -374,33 +373,6 @@ public:
     virtual bool applyOutputChanges(const WaylandOutputConfig &config);
 
 public Q_SLOTS:
-    void pointerMotion(const QPointF &position, quint32 time);
-    void pointerButtonPressed(quint32 button, quint32 time);
-    void pointerButtonReleased(quint32 button, quint32 time);
-    void pointerAxisHorizontal(qreal delta, quint32 time, qint32 discreteDelta = 0,
-                               InputRedirection::PointerAxisSource source = InputRedirection::PointerAxisSourceUnknown);
-    void pointerAxisVertical(qreal delta, quint32 time, qint32 discreteDelta = 0,
-                             InputRedirection::PointerAxisSource source = InputRedirection::PointerAxisSourceUnknown);
-    void keyboardKeyPressed(quint32 key, quint32 time);
-    void keyboardKeyReleased(quint32 key, quint32 time);
-    void keyboardModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group);
-    void keymapChange(int fd, uint32_t size);
-    void touchDown(qint32 id, const QPointF &pos, quint32 time);
-    void touchUp(qint32 id, quint32 time);
-    void touchMotion(qint32 id, const QPointF &pos, quint32 time);
-    void cancelTouchSequence();
-    void touchCancel();
-    void touchFrame();
-
-    void processSwipeGestureBegin(int fingerCount, quint32 time);
-    void processSwipeGestureUpdate(const QSizeF &delta, quint32 time);
-    void processSwipeGestureEnd(quint32 time);
-    void processSwipeGestureCancelled(quint32 time);
-    void processPinchGestureBegin(int fingerCount, quint32 time);
-    void processPinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time);
-    void processPinchGestureEnd(quint32 time);
-    void processPinchGestureCancelled(quint32 time);
-
     virtual void sceneInitialized(){};
 
 Q_SIGNALS:

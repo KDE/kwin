@@ -15,6 +15,7 @@
 #include "nightcolorsettings.h"
 #include "suncalc.h"
 
+#include <input.h>
 #include <main.h>
 #include <platform.h>
 #include <session.h>

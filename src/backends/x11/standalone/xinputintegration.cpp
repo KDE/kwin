@@ -9,9 +9,11 @@
 #include "xinputintegration.h"
 #include "ge_event_mem_mover.h"
 #include "gestures.h"
+#include "keyboard_input.h"
 #include "logging.h"
 #include "main.h"
 #include "platform.h"
+#include "pointer_input.h"
 #include "screenedge.h"
 #include "x11cursor.h"
 
@@ -48,12 +50,12 @@ public:
         switch (ge->event_type) {
         case XI_RawKeyPress: {
             auto re = reinterpret_cast<xXIRawEvent *>(event);
-            kwinApp()->platform()->keyboardKeyPressed(re->detail - 8, re->time);
+            input()->keyboard()->processKey(re->detail - 8, InputRedirection::KeyboardKeyPressed, re->time);
             break;
         }
         case XI_RawKeyRelease: {
             auto re = reinterpret_cast<xXIRawEvent *>(event);
-            kwinApp()->platform()->keyboardKeyReleased(re->detail - 8, re->time);
+            input()->keyboard()->processKey(re->detail - 8, InputRedirection::KeyboardKeyReleased, re->time);
             break;
         }
         case XI_RawButtonPress: {
@@ -62,13 +64,13 @@ public:
             // TODO: this currently ignores left handed settings, for current usage not needed
             // if we want to use also for global mouse shortcuts, this needs to reflect state correctly
             case XCB_BUTTON_INDEX_1:
-                kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, e->time);
+                input()->pointer()->processButton(BTN_LEFT, InputRedirection::PointerButtonPressed, e->time);
                 break;
             case XCB_BUTTON_INDEX_2:
-                kwinApp()->platform()->pointerButtonPressed(BTN_MIDDLE, e->time);
+                input()->pointer()->processButton(BTN_MIDDLE, InputRedirection::PointerButtonPressed, e->time);
                 break;
             case XCB_BUTTON_INDEX_3:
-                kwinApp()->platform()->pointerButtonPressed(BTN_RIGHT, e->time);
+                input()->pointer()->processButton(BTN_RIGHT, InputRedirection::PointerButtonPressed, e->time);
                 break;
             case XCB_BUTTON_INDEX_4:
             case XCB_BUTTON_INDEX_5:
@@ -87,19 +89,19 @@ public:
             // TODO: this currently ignores left handed settings, for current usage not needed
             // if we want to use also for global mouse shortcuts, this needs to reflect state correctly
             case XCB_BUTTON_INDEX_1:
-                kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, e->time);
+                input()->pointer()->processButton(BTN_LEFT, InputRedirection::PointerButtonReleased, e->time);
                 break;
             case XCB_BUTTON_INDEX_2:
-                kwinApp()->platform()->pointerButtonReleased(BTN_MIDDLE, e->time);
+                input()->pointer()->processButton(BTN_MIDDLE, InputRedirection::PointerButtonReleased, e->time);
                 break;
             case XCB_BUTTON_INDEX_3:
-                kwinApp()->platform()->pointerButtonReleased(BTN_RIGHT, e->time);
+                input()->pointer()->processButton(BTN_RIGHT, InputRedirection::PointerButtonReleased, e->time);
                 break;
             case XCB_BUTTON_INDEX_4:
-                kwinApp()->platform()->pointerAxisVertical(120, e->time);
+                input()->pointer()->processAxis(InputRedirection::PointerAxisVertical, 120, 1, InputRedirection::PointerAxisSourceWheel, e->time);
                 break;
             case XCB_BUTTON_INDEX_5:
-                kwinApp()->platform()->pointerAxisVertical(-120, e->time);
+                input()->pointer()->processAxis(InputRedirection::PointerAxisVertical, -120, 1, InputRedirection::PointerAxisSourceWheel, e->time);
                 break;
                 // TODO: further buttons, horizontal scrolling?
             }
@@ -190,9 +192,9 @@ public:
         if (ke->event == ke->root) {
             const uint8_t eventType = event->response_type & ~0x80;
             if (eventType == XCB_KEY_PRESS) {
-                kwinApp()->platform()->keyboardKeyPressed(ke->detail - 8, ke->time);
+                input()->keyboard()->processKey(ke->detail - 8, InputRedirection::KeyboardKeyPressed, ke->time);
             } else {
-                kwinApp()->platform()->keyboardKeyReleased(ke->detail - 8, ke->time);
+                input()->keyboard()->processKey(ke->detail - 8, InputRedirection::KeyboardKeyReleased, ke->time);
             }
         }
         return false;
