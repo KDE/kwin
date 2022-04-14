@@ -883,7 +883,7 @@ ScreenLockerFilter::~ScreenLockerFilter() = default;
 
 bool ScreenLockerFilter::filterAcceptsWindow(KWin::Toplevel *w) const
 {
-    return !waylandServer()->isScreenLocked() || (w->isLockScreen() || w->isInputMethod());
+    return !waylandServer() || !waylandServer()->isScreenLocked() || (w->isLockScreen() || w->isInputMethod());
 }
 
 } // namespace
