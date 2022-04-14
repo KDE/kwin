@@ -1994,7 +1994,7 @@ const EffectWindowGroup *EffectWindowImpl::group() const
 
 void EffectWindowImpl::refWindow()
 {
-    if (auto d = qobject_cast<Deleted *>(toplevel)) {
+    if (auto d = static_cast<Deleted *>(toplevel->isDeleted() ? toplevel : nullptr)) {
         return d->refWindow();
     }
     Q_UNREACHABLE(); // TODO
@@ -2002,7 +2002,7 @@ void EffectWindowImpl::refWindow()
 
 void EffectWindowImpl::unrefWindow()
 {
-    if (auto d = qobject_cast<Deleted *>(toplevel)) {
+    if (auto d = static_cast<Deleted *>(toplevel->isDeleted() ? toplevel : nullptr)) {
         return d->unrefWindow(); // delays deletion in case
     }
     Q_UNREACHABLE(); // TODO
@@ -2071,7 +2071,7 @@ TOPLEVEL_HELPER(QUuid, internalId, internalId)
         if (client) {                                                                           \
             return client->propertyname();                                                      \
         }                                                                                       \
-        auto deleted = qobject_cast<Deleted *>(toplevel);                                       \
+        auto deleted = static_cast<Deleted *>(toplevel->isDeleted() ? toplevel : nullptr);      \
         if (deleted) {                                                                          \
             return deleted->propertyname();                                                     \
         }                                                                                       \
@@ -2240,7 +2240,7 @@ EffectWindowList EffectWindowImpl::mainWindows() const
     if (auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr)) {
         return getMainWindows(client);
     }
-    if (auto deleted = qobject_cast<Deleted *>(toplevel)) {
+    if (auto deleted = static_cast<Deleted *>(toplevel->isDeleted() ? toplevel : nullptr)) {
         return getMainWindows(deleted);
     }
     return {};
