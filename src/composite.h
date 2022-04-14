@@ -18,7 +18,7 @@
 namespace KWin
 {
 
-class AbstractOutput;
+class Output;
 class CompositorSelectionOwner;
 class CursorView;
 class RenderBackend;
@@ -135,9 +135,9 @@ private:
     bool attemptOpenGLCompositing();
     bool attemptQPainterCompositing();
 
-    AbstractOutput *findOutput(RenderLoop *loop) const;
-    void addOutput(AbstractOutput *output);
-    void removeOutput(AbstractOutput *output);
+    Output *findOutput(RenderLoop *loop) const;
+    void addOutput(Output *output);
+    void removeOutput(Output *output);
 
     void addSuperLayer(RenderLayer *layer);
     void removeSuperLayer(RenderLayer *layer);

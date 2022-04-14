@@ -9,7 +9,7 @@
 #include "toplevel.h"
 
 #include "abstract_client.h"
-#include "abstract_output.h"
+#include "output.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -386,12 +386,12 @@ int Toplevel::screen() const
     return kwinApp()->platform()->enabledOutputs().indexOf(m_output);
 }
 
-AbstractOutput *Toplevel::output() const
+Output *Toplevel::output() const
 {
     return m_output;
 }
 
-void Toplevel::setOutput(AbstractOutput *output)
+void Toplevel::setOutput(Output *output)
 {
     if (m_output != output) {
         m_output = output;
@@ -404,7 +404,7 @@ bool Toplevel::isOnActiveOutput() const
     return isOnOutput(workspace()->activeOutput());
 }
 
-bool Toplevel::isOnOutput(AbstractOutput *output) const
+bool Toplevel::isOnOutput(Output *output) const
 {
     return output->geometry().intersects(frameGeometry());
 }

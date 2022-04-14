@@ -11,8 +11,8 @@
 #include <QPoint>
 #include <QSize>
 
-#include "abstract_output.h"
 #include "kwin_export.h"
+#include "output.h"
 
 namespace KWin
 {
@@ -25,20 +25,20 @@ public:
     float scale;
     QSize modeSize;
     uint32_t refreshRate;
-    AbstractOutput::Transform transform;
+    Output::Transform transform;
     uint32_t overscan;
-    AbstractOutput::RgbRange rgbRange;
+    Output::RgbRange rgbRange;
     RenderLoop::VrrPolicy vrrPolicy;
 };
 
 class KWIN_EXPORT OutputConfiguration
 {
 public:
-    QSharedPointer<OutputChangeSet> changeSet(AbstractOutput *output);
-    QSharedPointer<OutputChangeSet> constChangeSet(AbstractOutput *output) const;
+    QSharedPointer<OutputChangeSet> changeSet(Output *output);
+    QSharedPointer<OutputChangeSet> constChangeSet(Output *output) const;
 
 private:
-    QMap<AbstractOutput *, QSharedPointer<OutputChangeSet>> m_properties;
+    QMap<Output *, QSharedPointer<OutputChangeSet>> m_properties;
 };
 
 }

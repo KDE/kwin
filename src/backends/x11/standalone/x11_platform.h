@@ -97,7 +97,7 @@ private:
     QScopedPointer<X11EventFilter> m_screenEdgesFilter;
     QScopedPointer<X11EventFilter> m_randrEventFilter;
     RenderLoop *m_renderLoop;
-    QVector<AbstractOutput *> m_outputs;
+    QVector<Output *> m_outputs;
 };
 
 }

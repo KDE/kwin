@@ -59,8 +59,8 @@ public:
     QVector<CompositingType> supportedCompositors() const override;
 
     QString supportInformation() const override;
-    AbstractOutput *createVirtualOutput(const QString &name, const QSize &size, double scale) override;
-    void removeVirtualOutput(AbstractOutput *output) override;
+    Output *createVirtualOutput(const QString &name, const QSize &size, double scale) override;
+    void removeVirtualOutput(Output *output) override;
 
     DrmGpu *primaryGpu() const;
     DrmGpu *findGpu(dev_t deviceId) const;

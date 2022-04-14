@@ -7,17 +7,17 @@
 #include "outputscreencastsource.h"
 #include "screencastutils.h"
 
-#include "abstract_output.h"
 #include "composite.h"
 #include "kwingltexture.h"
 #include "kwinglutils.h"
+#include "output.h"
 #include "renderloop.h"
 #include "scene.h"
 
 namespace KWin
 {
 
-OutputScreenCastSource::OutputScreenCastSource(AbstractOutput *output, QObject *parent)
+OutputScreenCastSource::OutputScreenCastSource(Output *output, QObject *parent)
     : ScreenCastSource(parent)
     , m_output(output)
 {

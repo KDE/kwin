@@ -838,7 +838,7 @@ MaximizeMode WindowRules::checkMaximize(MaximizeMode mode, bool init) const
     return static_cast<MaximizeMode>((vert ? MaximizeVertical : 0) | (horiz ? MaximizeHorizontal : 0));
 }
 
-AbstractOutput *WindowRules::checkOutput(AbstractOutput *output, bool init) const
+Output *WindowRules::checkOutput(Output *output, bool init) const
 {
     if (rules.isEmpty()) {
         return output;
@@ -849,7 +849,7 @@ AbstractOutput *WindowRules::checkOutput(AbstractOutput *output, bool init) cons
             break;
         }
     }
-    AbstractOutput *ruleOutput = kwinApp()->platform()->findOutput(ret);
+    Output *ruleOutput = kwinApp()->platform()->findOutput(ret);
     return ruleOutput ? ruleOutput : output;
 }
 

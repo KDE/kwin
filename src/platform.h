@@ -27,7 +27,7 @@ class OutputConfigurationV2Interface;
 namespace KWin
 {
 
-class AbstractOutput;
+class Output;
 class Edge;
 class Compositor;
 class DmaBufTexture;
@@ -43,7 +43,7 @@ class Session;
 class Toplevel;
 class OutputConfiguration;
 
-class KWIN_EXPORT Outputs : public QVector<AbstractOutput *>
+class KWIN_EXPORT Outputs : public QVector<Output *>
 {
 public:
     Outputs(){};
@@ -318,10 +318,10 @@ public:
     {
         return Outputs();
     }
-    AbstractOutput *findOutput(int screenId) const;
-    AbstractOutput *findOutput(const QUuid &uuid) const;
-    AbstractOutput *findOutput(const QString &name) const;
-    AbstractOutput *outputAt(const QPoint &pos) const;
+    Output *findOutput(int screenId) const;
+    Output *findOutput(const QUuid &uuid) const;
+    Output *findOutput(const QString &name) const;
+    Output *outputAt(const QPoint &pos) const;
 
     /**
      * A string of information to include in kwin debug output
@@ -351,13 +351,13 @@ public:
         m_selectedCompositor = type;
     }
 
-    virtual AbstractOutput *createVirtualOutput(const QString &name, const QSize &size, qreal scaling);
-    virtual void removeVirtualOutput(AbstractOutput *output);
+    virtual Output *createVirtualOutput(const QString &name, const QSize &size, qreal scaling);
+    virtual void removeVirtualOutput(Output *output);
 
     /**
      * @returns the primary output amomg the enabled outputs
      */
-    AbstractOutput *primaryOutput() const
+    Output *primaryOutput() const
     {
         return m_primaryOutput;
     }
@@ -365,7 +365,7 @@ public:
     /**
      * Assigns a the @p primary output among the enabled outputs
      */
-    void setPrimaryOutput(AbstractOutput *primary);
+    void setPrimaryOutput(Output *primary);
 
     /**
      * Applies the output changes. Default implementation only sets values common between platforms
@@ -382,16 +382,16 @@ Q_SIGNALS:
      * This signal is emitted when an output has been connected. The @a output is not ready
      * for compositing yet.
      */
-    void outputAdded(AbstractOutput *output);
+    void outputAdded(Output *output);
     /**
      * This signal is emitted when an output has been disconnected.
      */
-    void outputRemoved(AbstractOutput *output);
+    void outputRemoved(Output *output);
     /**
      * This signal is emitted when the @a output has become activated and it is ready for
      * compositing.
      */
-    void outputEnabled(AbstractOutput *output);
+    void outputEnabled(Output *output);
     /**
      * This signal is emitted when the @a output has been deactivated and it is no longer
      * being composited. The outputDisabled() signal is guaranteed to be emitted before the
@@ -399,9 +399,9 @@ Q_SIGNALS:
      *
      * @see outputEnabled, outputRemoved
      */
-    void outputDisabled(AbstractOutput *output);
+    void outputDisabled(Output *output);
 
-    void primaryOutputChanged(AbstractOutput *primaryOutput);
+    void primaryOutputChanged(Output *primaryOutput);
 
 protected:
     explicit Platform(QObject *parent = nullptr);
@@ -444,7 +444,7 @@ private:
     bool m_supportsGammaControl = false;
     bool m_supportsOutputChanges = false;
     CompositingType m_selectedCompositor = NoCompositing;
-    AbstractOutput *m_primaryOutput = nullptr;
+    Output *m_primaryOutput = nullptr;
 };
 
 }

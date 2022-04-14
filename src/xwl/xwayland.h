@@ -17,7 +17,7 @@ class QSocketNotifier;
 
 namespace KWin
 {
-class AbstractOutput;
+class Output;
 class ApplicationWaylandAbstract;
 
 namespace Xwl
@@ -63,7 +63,7 @@ private:
 
     void installSocketNotifier();
     void uninstallSocketNotifier();
-    void updatePrimary(AbstractOutput *primaryOutput);
+    void updatePrimary(Output *primaryOutput);
 
     bool createX11Connection();
     void destroyX11Connection();

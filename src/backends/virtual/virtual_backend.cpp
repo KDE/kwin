@@ -162,7 +162,7 @@ void VirtualBackend::enableOutput(VirtualOutput *output, bool enable)
     Q_EMIT screensQueried();
 }
 
-void VirtualBackend::removeOutput(AbstractOutput *output)
+void VirtualBackend::removeOutput(Output *output)
 {
     VirtualOutput *virtualOutput = static_cast<VirtualOutput *>(output);
     virtualOutput->setEnabled(false);
@@ -175,7 +175,7 @@ void VirtualBackend::removeOutput(AbstractOutput *output)
     Q_EMIT screensQueried();
 }
 
-QImage VirtualBackend::captureOutput(AbstractOutput *output) const
+QImage VirtualBackend::captureOutput(Output *output) const
 {
     if (auto backend = qobject_cast<VirtualQPainterBackend *>(Compositor::self()->backend())) {
         if (auto layer = backend->primaryLayer(output)) {

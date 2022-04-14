@@ -60,8 +60,8 @@ public:
 
     void enableOutput(VirtualOutput *output, bool enable);
 
-    Q_INVOKABLE void removeOutput(AbstractOutput *output);
-    Q_INVOKABLE QImage captureOutput(AbstractOutput *output) const;
+    Q_INVOKABLE void removeOutput(Output *output);
+    Q_INVOKABLE QImage captureOutput(Output *output) const;
 
 Q_SIGNALS:
     void virtualOutputsSet(bool countChanged);

@@ -23,11 +23,11 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "useractions.h"
-#include "abstract_output.h"
 #include "composite.h"
 #include "cursor.h"
 #include "effects.h"
 #include "input.h"
+#include "output.h"
 #include "platform.h"
 #include "screens.h"
 #include "scripting/scripting.h"
@@ -675,7 +675,7 @@ void UserActionsMenu::screenPopupAboutToShow()
 
     const auto outputs = kwinApp()->platform()->enabledOutputs();
     for (int i = 0; i < outputs.count(); ++i) {
-        AbstractOutput *output = outputs[i];
+        Output *output = outputs[i];
         // assumption: there are not more than 9 screens attached.
         QAction *action = m_screenMenu->addAction(i18nc("@item:inmenu List of all Screens to send a window to. First argument is a number, second the output identifier. E.g. Screen 1 (HDMI1)",
                                                         "Screen &%1 (%2)", (i + 1), output->name()));
@@ -1328,7 +1328,7 @@ static bool screenSwitchImpossible()
     return true;
 }
 
-AbstractOutput *Workspace::nextOutput(AbstractOutput *reference) const
+Output *Workspace::nextOutput(Output *reference) const
 {
     const auto outputs = kwinApp()->platform()->enabledOutputs();
     const int index = outputs.indexOf(reference);
@@ -1336,7 +1336,7 @@ AbstractOutput *Workspace::nextOutput(AbstractOutput *reference) const
     return outputs[(index + 1) % outputs.count()];
 }
 
-AbstractOutput *Workspace::previousOutput(AbstractOutput *reference) const
+Output *Workspace::previousOutput(Output *reference) const
 {
     const auto outputs = kwinApp()->platform()->enabledOutputs();
     const int index = outputs.indexOf(reference);
@@ -1349,7 +1349,7 @@ void Workspace::slotSwitchToScreen()
     if (screenSwitchImpossible()) {
         return;
     }
-    AbstractOutput *output = kwinApp()->platform()->findOutput(senderValue(sender()));
+    Output *output = kwinApp()->platform()->findOutput(senderValue(sender()));
     if (output) {
         switchToOutput(output);
     }
@@ -1374,7 +1374,7 @@ void Workspace::slotSwitchToPrevScreen()
 void Workspace::slotWindowToScreen()
 {
     if (USABLE_ACTIVE_CLIENT) {
-        AbstractOutput *output = kwinApp()->platform()->findOutput(senderValue(sender()));
+        Output *output = kwinApp()->platform()->findOutput(senderValue(sender()));
         if (output) {
             sendClientToOutput(active_client, output);
         }

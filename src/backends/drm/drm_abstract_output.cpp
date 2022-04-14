@@ -15,7 +15,7 @@ namespace KWin
 {
 
 DrmAbstractOutput::DrmAbstractOutput(DrmGpu *gpu)
-    : AbstractOutput(gpu->platform())
+    : Output(gpu->platform())
     , m_renderLoop(new RenderLoop(this))
     , m_gpu(gpu)
 {
@@ -39,7 +39,7 @@ void DrmAbstractOutput::pageFlipped(std::chrono::nanoseconds timestamp) const
 QVector<int32_t> DrmAbstractOutput::regionToRects(const QRegion &region) const
 {
     const int height = pixelSize().height();
-    const QMatrix4x4 matrix = AbstractOutput::logicalToNativeMatrix(rect(), scale(), transform());
+    const QMatrix4x4 matrix = Output::logicalToNativeMatrix(rect(), scale(), transform());
     QVector<EGLint> rects;
     rects.reserve(region.rectCount() * 4);
     for (const QRect &_rect : region) {

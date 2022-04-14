@@ -85,7 +85,7 @@ private:
 /**
  * Generic output representation.
  */
-class KWIN_EXPORT AbstractOutput : public QObject
+class KWIN_EXPORT Output : public QObject
 {
     Q_OBJECT
 
@@ -140,8 +140,8 @@ public:
     };
     Q_ENUM(RgbRange)
 
-    explicit AbstractOutput(QObject *parent = nullptr);
-    ~AbstractOutput() override;
+    explicit Output(QObject *parent = nullptr);
+    ~Output() override;
 
     /**
      * Maps the specified @a rect from the global coordinate system to the output-local coords.
@@ -394,7 +394,7 @@ protected:
     QSize orientateSize(const QSize &size) const;
 
 private:
-    Q_DISABLE_COPY(AbstractOutput)
+    Q_DISABLE_COPY(Output)
     EffectScreenImpl *m_effectScreen = nullptr;
     int m_directScanoutCount = 0;
     QString m_name;
@@ -422,15 +422,15 @@ private:
     friend class EffectScreenImpl; // to access m_effectScreen
 };
 
-inline QRect AbstractOutput::rect() const
+inline QRect Output::rect() const
 {
     return QRect(QPoint(0, 0), geometry().size());
 }
 
-KWIN_EXPORT QDebug operator<<(QDebug debug, const AbstractOutput *output);
+KWIN_EXPORT QDebug operator<<(QDebug debug, const Output *output);
 
 } // namespace KWin
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::AbstractOutput::Capabilities)
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Output::Capabilities)
 
 #endif

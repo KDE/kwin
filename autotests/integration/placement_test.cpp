@@ -10,8 +10,8 @@
 #include "kwin_wayland_test.h"
 
 #include "abstract_client.h"
-#include "abstract_output.h"
 #include "cursor.h"
+#include "output.h"
 #include "platform.h"
 #include "screens.h"
 #include "wayland_server.h"
@@ -349,7 +349,7 @@ void TestPlacement::testPlaceRandom()
 
 void TestPlacement::testFullscreen()
 {
-    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
 
     setPlacementPolicy(Placement::Smart);
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());

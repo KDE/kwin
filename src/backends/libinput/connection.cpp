@@ -14,8 +14,8 @@
 // TODO: Make it compile also in testing environment
 #ifndef KWIN_BUILD_TESTING
 #include "abstract_client.h"
-#include "abstract_output.h"
 #include "main.h"
+#include "output.h"
 #include "platform.h"
 #include "workspace.h"
 #endif
@@ -194,9 +194,9 @@ void Connection::handleEvent()
 }
 
 #ifndef KWIN_BUILD_TESTING
-QPointF devicePointToGlobalPosition(const QPointF &devicePos, const AbstractOutput *output)
+QPointF devicePointToGlobalPosition(const QPointF &devicePos, const Output *output)
 {
-    using Transform = AbstractOutput::Transform;
+    using Transform = Output::Transform;
 
     QPointF pos = devicePos;
     // TODO: Do we need to handle the flipped cases differently?
@@ -473,7 +473,7 @@ void Connection::processEvents()
 
             if (workspace()) {
 #ifndef KWIN_BUILD_TESTING
-                AbstractOutput *output = tte->device()->output();
+                Output *output = tte->device()->output();
                 if (!output && workspace()->activeClient()) {
                     output = workspace()->activeClient()->output();
                 }
@@ -547,15 +547,15 @@ void Connection::applyScreenToDevice(Device *device)
         return;
     }
 
-    AbstractOutput *deviceOutput = nullptr;
-    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+    Output *deviceOutput = nullptr;
+    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
     // let's try to find a screen for it
     if (outputs.count() == 1) {
         deviceOutput = outputs.constFirst();
     }
     if (!deviceOutput && !device->outputName().isEmpty()) {
         // we have an output name, try to find a screen with matching name
-        for (AbstractOutput *output : outputs) {
+        for (Output *output : outputs) {
             if (output->name() == device->outputName()) {
                 deviceOutput = output;
                 break;
@@ -564,14 +564,14 @@ void Connection::applyScreenToDevice(Device *device)
     }
     if (!deviceOutput) {
         // do we have an internal screen?
-        AbstractOutput *internalOutput = nullptr;
-        for (AbstractOutput *output : outputs) {
+        Output *internalOutput = nullptr;
+        for (Output *output : outputs) {
             if (output->isInternal()) {
                 internalOutput = output;
                 break;
             }
         }
-        auto testScreenMatches = [device](const AbstractOutput *output) {
+        auto testScreenMatches = [device](const Output *output) {
             const auto &size = device->size();
             const auto &screenSize = output->physicalSize();
             return std::round(size.width()) == std::round(screenSize.width())
@@ -581,7 +581,7 @@ void Connection::applyScreenToDevice(Device *device)
             deviceOutput = internalOutput;
         }
         // let's compare all screens for size
-        for (AbstractOutput *output : outputs) {
+        for (Output *output : outputs) {
             if (testScreenMatches(output)) {
                 deviceOutput = output;
                 break;

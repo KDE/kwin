@@ -17,8 +17,8 @@
 #include <chrono>
 #include <xf86drmMode.h>
 
-#include "abstract_output.h"
 #include "drm_object_plane.h"
+#include "output.h"
 #include "renderloop_p.h"
 
 namespace KWin
@@ -104,7 +104,7 @@ public:
         bool enabled = true; // whether or not the pipeline needs a crtc
         QSharedPointer<DrmConnectorMode> mode;
         uint32_t overscan = 0;
-        AbstractOutput::RgbRange rgbRange = AbstractOutput::RgbRange::Automatic;
+        Output::RgbRange rgbRange = Output::RgbRange::Automatic;
         RenderLoopPrivate::SyncMode syncMode = RenderLoopPrivate::SyncMode::Fixed;
         QSharedPointer<DrmGammaRamp> gamma;
 

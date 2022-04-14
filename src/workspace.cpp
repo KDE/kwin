@@ -13,7 +13,7 @@
 // kwin libs
 #include <kwinglplatform.h>
 // kwin
-#include "abstract_output.h"
+#include "output.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -217,8 +217,8 @@ void Workspace::init()
     connect(platform, &Platform::outputEnabled, this, &Workspace::slotOutputEnabled);
     connect(platform, &Platform::outputDisabled, this, &Workspace::slotOutputDisabled);
 
-    const QVector<AbstractOutput *> outputs = platform->enabledOutputs();
-    for (AbstractOutput *output : outputs) {
+    const QVector<Output *> outputs = platform->enabledOutputs();
+    for (Output *output : outputs) {
         slotOutputEnabled(output);
     }
 
@@ -1219,23 +1219,23 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
 #endif
 }
 
-void Workspace::slotOutputEnabled(AbstractOutput *output)
+void Workspace::slotOutputEnabled(Output *output)
 {
     if (!m_activeOutput) {
         m_activeOutput = output;
     }
 
-    connect(output, &AbstractOutput::geometryChanged, this, &Workspace::desktopResized);
+    connect(output, &Output::geometryChanged, this, &Workspace::desktopResized);
     desktopResized();
 }
 
-void Workspace::slotOutputDisabled(AbstractOutput *output)
+void Workspace::slotOutputDisabled(Output *output)
 {
     if (m_activeOutput == output) {
         m_activeOutput = kwinApp()->platform()->outputAt(output->geometry().center());
     }
 
-    disconnect(output, &AbstractOutput::geometryChanged, this, &Workspace::desktopResized);
+    disconnect(output, &Output::geometryChanged, this, &Workspace::desktopResized);
     desktopResized();
 
     const auto stack = xStackingOrder();
@@ -1356,7 +1356,7 @@ bool Workspace::isOnCurrentHead()
     return kwinApp()->x11RootWindow() == geometry->root;
 }
 
-void Workspace::sendClientToOutput(AbstractClient *client, AbstractOutput *output)
+void Workspace::sendClientToOutput(AbstractClient *client, Output *output)
 {
     client->sendToOutput(output);
 }
@@ -1607,7 +1607,7 @@ QString Workspace::supportInformation() const
     } else {
         support.append(QStringLiteral(" no\n"));
     }
-    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
     support.append(QStringLiteral("Number of Screens: %1\n\n").arg(outputs.count()));
     for (int i = 0; i < outputs.count(); ++i) {
         const auto output = outputs[i];
@@ -1623,7 +1623,7 @@ QString Workspace::supportInformation() const
         support.append(QStringLiteral("Scale: %1\n").arg(output->scale()));
         support.append(QStringLiteral("Refresh Rate: %1\n").arg(output->refreshRate()));
         QString vrr = QStringLiteral("incapable");
-        if (output->capabilities() & AbstractOutput::Capability::Vrr) {
+        if (output->capabilities() & Output::Capability::Vrr) {
             switch (output->vrrPolicy()) {
             case RenderLoop::VrrPolicy::Never:
                 vrr = QStringLiteral("never");
@@ -2069,7 +2069,7 @@ void Workspace::desktopResized()
 
     const QRect oldGeometry = m_geometry;
     m_geometry = QRect();
-    for (const AbstractOutput *output : outputs) {
+    for (const Output *output : outputs) {
         m_geometry = m_geometry.united(output->geometry());
     }
 
@@ -2097,7 +2097,7 @@ void Workspace::saveOldScreenSizes()
     m_oldScreenGeometries.clear();
 
     const auto outputs = kwinApp()->platform()->enabledOutputs();
-    for (const AbstractOutput *output : outputs) {
+    for (const Output *output : outputs) {
         m_oldScreenGeometries.insert(output, output->geometry());
     }
 }
@@ -2117,7 +2117,7 @@ static bool hasOffscreenXineramaStrut(AbstractClient *client)
 
     // Remove all visible areas so that only the invisible remain
     const auto outputs = kwinApp()->platform()->enabledOutputs();
-    for (const AbstractOutput *output : outputs) {
+    for (const Output *output : outputs) {
         region -= output->geometry();
     }
 
@@ -2188,17 +2188,17 @@ QRect Workspace::adjustClientArea(AbstractClient *client, const QRect &area) con
  */
 void Workspace::updateClientArea()
 {
-    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
     const QVector<VirtualDesktop *> desktops = VirtualDesktopManager::self()->desktops();
 
     QHash<const VirtualDesktop *, QRect> workAreas;
     QHash<const VirtualDesktop *, StrutRects> restrictedAreas;
-    QHash<const VirtualDesktop *, QHash<const AbstractOutput *, QRect>> screenAreas;
+    QHash<const VirtualDesktop *, QHash<const Output *, QRect>> screenAreas;
 
     for (const VirtualDesktop *desktop : desktops) {
         workAreas[desktop] = m_geometry;
 
-        for (const AbstractOutput *output : outputs) {
+        for (const Output *output : outputs) {
             screenAreas[desktop][output] = output->geometry();
         }
     }
@@ -2216,7 +2216,7 @@ void Workspace::updateClientArea()
         }
         // sanity check that a strut doesn't exclude a complete screen geometry
         // this is a violation to EWMH, as KWin just ignores the strut
-        for (const AbstractOutput *output : outputs) {
+        for (const Output *output : outputs) {
             if (!r.intersects(output->geometry())) {
                 qCDebug(KWIN_CORE) << "Adjusted client area would exclude a complete screen, ignore";
                 r = m_geometry;
@@ -2243,7 +2243,7 @@ void Workspace::updateClientArea()
                 workAreas[vd] &= r;
             }
             restrictedAreas[vd] += strutRegion;
-            for (AbstractOutput *output : outputs) {
+            for (Output *output : outputs) {
                 const auto geo = screenAreas[vd][output].intersected(adjustClientArea(client, output->geometry()));
                 // ignore the geometry if it results in the screen getting removed completely
                 if (!geo.isEmpty()) {
@@ -2287,11 +2287,11 @@ void Workspace::updateClientArea()
  * geometry minus windows on the dock. Placement algorithms should
  * refer to this rather than Screens::geometry.
  */
-QRect Workspace::clientArea(clientAreaOption opt, const AbstractOutput *output, const VirtualDesktop *desktop) const
+QRect Workspace::clientArea(clientAreaOption opt, const Output *output, const VirtualDesktop *desktop) const
 {
     QRect workArea;
 
-    const AbstractOutput *effectiveOutput = output;
+    const Output *effectiveOutput = output;
     if (is_multihead) {
         effectiveOutput = kwinApp()->platform()->findOutput(screen_number);
     }
@@ -2341,7 +2341,7 @@ QRect Workspace::clientArea(clientAreaOption opt, const Toplevel *window) const
     return clientArea(opt, window, window->output());
 }
 
-QRect Workspace::clientArea(clientAreaOption opt, const Toplevel *window, const AbstractOutput *output) const
+QRect Workspace::clientArea(clientAreaOption opt, const Toplevel *window, const Output *output) const
 {
     const VirtualDesktop *desktop;
     if (window->isOnCurrentDesktop()) {
@@ -2389,7 +2389,7 @@ QRegion Workspace::previousRestrictedMoveArea(const VirtualDesktop *desktop, Str
     return strutsToRegion(areas, m_oldRestrictedAreas[desktop]);
 }
 
-QHash<const AbstractOutput *, QRect> Workspace::previousScreenSizes() const
+QHash<const Output *, QRect> Workspace::previousScreenSizes() const
 {
     return m_oldScreenGeometries;
 }
@@ -2404,7 +2404,7 @@ int Workspace::oldDisplayHeight() const
     return olddisplaysize.height();
 }
 
-AbstractOutput *Workspace::activeOutput() const
+Output *Workspace::activeOutput() const
 {
     if (options->activeMouseScreen()) {
         return kwinApp()->platform()->outputAt(Cursors::self()->mouse()->pos());
@@ -2417,7 +2417,7 @@ AbstractOutput *Workspace::activeOutput() const
     return m_activeOutput;
 }
 
-void Workspace::setActiveOutput(AbstractOutput *output)
+void Workspace::setActiveOutput(Output *output)
 {
     m_activeOutput = output;
 }
@@ -2458,7 +2458,7 @@ QPoint Workspace::adjustClientPosition(AbstractClient *c, QPoint pos, bool unres
 
         const bool snappingToCenter = (options->centerSnapZone() * snapAdjust);
         const bool sOWO = options->isSnapOnlyWhenOverlapping();
-        const AbstractOutput *output = kwinApp()->platform()->outputAt(pos + c->rect().center());
+        const Output *output = kwinApp()->platform()->outputAt(pos + c->rect().center());
         if (maxRect.isNull()) {
             maxRect = clientArea(MaximizeArea, c, output);
         }

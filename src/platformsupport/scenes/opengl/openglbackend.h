@@ -16,7 +16,7 @@
 
 namespace KWin
 {
-class AbstractOutput;
+class Output;
 class OpenGLBackend;
 class SurfaceItem;
 class SurfacePixmapInternal;
@@ -125,7 +125,7 @@ public:
      */
     void copyPixels(const QRegion &region);
 
-    virtual QSharedPointer<GLTexture> textureForOutput(AbstractOutput *output) const;
+    virtual QSharedPointer<GLTexture> textureForOutput(Output *output) const;
 
 protected:
     /**

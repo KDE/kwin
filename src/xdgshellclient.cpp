@@ -9,7 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "xdgshellclient.h"
-#include "abstract_output.h"
+#include "output.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -364,7 +364,7 @@ void XdgSurfaceClient::updateShowOnScreenEdge()
         Qt::Edges edges;
 
         const auto outputs = kwinApp()->platform()->enabledOutputs();
-        for (const AbstractOutput *output : outputs) {
+        for (const Output *output : outputs) {
             const QRect screenGeometry = output->geometry();
             if (screenGeometry.left() == clientGeometry.left()) {
                 edges |= Qt::LeftEdge;
@@ -1589,13 +1589,13 @@ void XdgToplevelClient::setFullScreen(bool set, bool user)
     configureDecoration();
 
     if (set) {
-        const AbstractOutput *output = m_fullScreenRequestedOutput ? m_fullScreenRequestedOutput.data() : kwinApp()->platform()->outputAt(moveResizeGeometry().center());
+        const Output *output = m_fullScreenRequestedOutput ? m_fullScreenRequestedOutput.data() : kwinApp()->platform()->outputAt(moveResizeGeometry().center());
         setFullscreenGeometryRestore(moveResizeGeometry());
         moveResize(workspace()->clientArea(FullScreenArea, this, output));
     } else {
         m_fullScreenRequestedOutput.clear();
         if (fullscreenGeometryRestore().isValid()) {
-            AbstractOutput *currentOutput = output();
+            Output *currentOutput = output();
             moveResize(QRect(fullscreenGeometryRestore().topLeft(),
                              constrainFrameSize(fullscreenGeometryRestore().size())));
             if (currentOutput != output()) {

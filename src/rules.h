@@ -26,7 +26,7 @@ namespace KWin
 {
 
 class AbstractClient;
-class AbstractOutput;
+class Output;
 class Rules;
 class RuleSettings;
 class VirtualDesktop;
@@ -53,7 +53,7 @@ public:
     int checkOpacityInactive(int s) const;
     bool checkIgnoreGeometry(bool ignore, bool init = false) const;
     QVector<VirtualDesktop *> checkDesktops(QVector<VirtualDesktop *> desktops, bool init = false) const;
-    AbstractOutput *checkOutput(AbstractOutput *output, bool init = false) const;
+    Output *checkOutput(Output *output, bool init = false) const;
     QStringList checkActivity(QStringList activity, bool init = false) const;
     NET::WindowType checkType(NET::WindowType type) const;
     MaximizeMode checkMaximize(MaximizeMode mode, bool init = false) const;

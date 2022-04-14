@@ -5,9 +5,9 @@
 */
 
 #include "colormanager.h"
-#include "abstract_output.h"
 #include "colordevice.h"
 #include "main.h"
+#include "output.h"
 #include "platform.h"
 #include "session.h"
 #include "utils/common.h"
@@ -30,8 +30,8 @@ ColorManager::ColorManager(QObject *parent)
     Platform *platform = kwinApp()->platform();
     Session *session = platform->session();
 
-    const QVector<AbstractOutput *> outputs = platform->enabledOutputs();
-    for (AbstractOutput *output : outputs) {
+    const QVector<Output *> outputs = platform->enabledOutputs();
+    for (Output *output : outputs) {
         handleOutputEnabled(output);
     }
 
@@ -50,7 +50,7 @@ QVector<ColorDevice *> ColorManager::devices() const
     return d->devices;
 }
 
-ColorDevice *ColorManager::findDevice(AbstractOutput *output) const
+ColorDevice *ColorManager::findDevice(Output *output) const
 {
     auto it = std::find_if(d->devices.begin(), d->devices.end(), [&output](ColorDevice *device) {
         return device->output() == output;
@@ -61,14 +61,14 @@ ColorDevice *ColorManager::findDevice(AbstractOutput *output) const
     return nullptr;
 }
 
-void ColorManager::handleOutputEnabled(AbstractOutput *output)
+void ColorManager::handleOutputEnabled(Output *output)
 {
     ColorDevice *device = new ColorDevice(output, this);
     d->devices.append(device);
     Q_EMIT deviceAdded(device);
 }
 
-void ColorManager::handleOutputDisabled(AbstractOutput *output)
+void ColorManager::handleOutputDisabled(Output *output)
 {
     auto it = std::find_if(d->devices.begin(), d->devices.end(), [&output](ColorDevice *device) {
         return device->output() == output;

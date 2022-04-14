@@ -8,11 +8,11 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "abstract_output.h"
 #include "cursor.h"
 #include "deleted.h"
 #include "effects.h"
 #include "internal_client.h"
+#include "output.h"
 #include "platform.h"
 #include "wayland_server.h"
 #include "workspace.h"

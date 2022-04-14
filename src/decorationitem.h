@@ -95,7 +95,7 @@ protected:
 
 private:
     Toplevel *m_window;
-    QPointer<AbstractOutput> m_output;
+    QPointer<Output> m_output;
     QPointer<KDecoration2::Decoration> m_decoration;
     QScopedPointer<DecorationRenderer> m_renderer;
 };

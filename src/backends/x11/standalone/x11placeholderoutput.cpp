@@ -11,7 +11,7 @@ namespace KWin
 {
 
 X11PlaceholderOutput::X11PlaceholderOutput(RenderLoop *loop, QObject *parent)
-    : AbstractOutput(parent)
+    : Output(parent)
     , m_loop(loop)
 {
     QSize pixelSize;

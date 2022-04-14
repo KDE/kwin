@@ -6,9 +6,9 @@
 
 #include "kwin_wayland_test.h"
 
-#include "abstract_output.h"
 #include "composite.h"
 #include "main.h"
+#include "output.h"
 #include "platform.h"
 #include "scene.h"
 #include "screens.h"

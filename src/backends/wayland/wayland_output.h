@@ -9,7 +9,7 @@
 #ifndef KWIN_WAYLAND_OUTPUT_H
 #define KWIN_WAYLAND_OUTPUT_H
 
-#include "abstract_output.h"
+#include "output.h"
 
 #include <KWayland/Client/xdgshell.h>
 
@@ -36,7 +36,7 @@ namespace Wayland
 {
 class WaylandBackend;
 
-class WaylandOutput : public AbstractOutput
+class WaylandOutput : public Output
 {
     Q_OBJECT
 public:

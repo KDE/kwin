@@ -10,9 +10,9 @@
 
 #include <config-kwin.h>
 
-#include "abstract_output.h"
 #include "libinput_logging.h"
 #include "main.h"
+#include "output.h"
 #include "platform.h"
 
 #include <QDBusArgument>
@@ -665,12 +665,12 @@ void Device::setOutputName(const QString &name)
 #endif
 }
 
-AbstractOutput *Device::output() const
+Output *Device::output() const
 {
     return m_output;
 }
 
-void Device::setOutput(AbstractOutput *output)
+void Device::setOutput(Output *output)
 {
 #ifndef KWIN_BUILD_TESTING
     m_output = output;

@@ -9,10 +9,10 @@
 #include "kwin_wayland_test.h"
 
 #include "abstract_client.h"
-#include "abstract_output.h"
 #include "cursor.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/settings.h"
+#include "output.h"
 #include "platform.h"
 #include "scripting/scripting.h"
 #include "wayland_server.h"
@@ -197,7 +197,7 @@ void QuickTilingTest::testQuickTiling()
     QCOMPARE(c->frameGeometry(), expectedGeometry);
 
     // send window to other screen
-    QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+    QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
     QCOMPARE(c->output(), outputs[0]);
     c->sendToOutput(outputs[1]);
     QCOMPARE(c->output(), outputs[1]);

@@ -23,7 +23,7 @@ class EglX11Backend;
 class EglX11Output : public OutputLayer
 {
 public:
-    EglX11Output(EglX11Backend *backend, AbstractOutput *output, EGLSurface surface);
+    EglX11Output(EglX11Backend *backend, Output *output, EGLSurface surface);
     ~EglX11Output();
 
     OutputLayerBeginFrameInfo beginFrame() override;
@@ -36,7 +36,7 @@ private:
     QScopedPointer<GLFramebuffer> m_fbo;
     QRegion m_lastDamage;
 
-    AbstractOutput *const m_output;
+    Output *const m_output;
     EglX11Backend *const m_backend;
 };
 
@@ -54,9 +54,9 @@ public:
     SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
     void init() override;
-    void endFrame(AbstractOutput *output, const QRegion &renderedRegion, const QRegion &damagedRegion);
-    void present(AbstractOutput *output) override;
-    OutputLayer *primaryLayer(AbstractOutput *output) override;
+    void endFrame(Output *output, const QRegion &renderedRegion, const QRegion &damagedRegion);
+    void present(Output *output) override;
+    OutputLayer *primaryLayer(Output *output) override;
 
 protected:
     void cleanupSurfaces() override;
@@ -65,7 +65,7 @@ protected:
 private:
     void presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry);
 
-    QMap<AbstractOutput *, QSharedPointer<EglX11Output>> m_outputs;
+    QMap<Output *, QSharedPointer<EglX11Output>> m_outputs;
     X11WindowedBackend *m_backend;
 };
 

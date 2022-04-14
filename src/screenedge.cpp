@@ -20,11 +20,11 @@
 
 #include <config-kwin.h>
 
-#include "abstract_output.h"
 #include "cursor.h"
 #include "effects.h"
 #include "gestures.h"
 #include "main.h"
+#include "output.h"
 #include "platform.h"
 #include "utils/common.h"
 #include "virtualdesktops.h"
@@ -74,7 +74,7 @@ QAction *TouchCallback::touchUpAction() const
     return m_touchUpAction;
 }
 
-void TouchCallback::progressCallback(ElectricBorder border, const QSizeF &deltaProgress, AbstractOutput *output) const
+void TouchCallback::progressCallback(ElectricBorder border, const QSizeF &deltaProgress, Output *output) const
 {
     if (m_progressCallback) {
         m_progressCallback(border, deltaProgress, output);
@@ -568,7 +568,7 @@ void Edge::setGeometry(const QRect &geometry)
     doGeometryUpdate();
 
     if (isScreenEdge()) {
-        const AbstractOutput *output = kwinApp()->platform()->outputAt(m_geometry.center());
+        const Output *output = kwinApp()->platform()->outputAt(m_geometry.center());
         m_gesture->setStartGeometry(m_geometry);
         m_gesture->setMinimumDelta(QSizeF(MINIMUM_DELTA, MINIMUM_DELTA) / output->scale());
     }
@@ -749,12 +749,12 @@ void Edge::setClient(AbstractClient *client)
     }
 }
 
-void Edge::setOutput(AbstractOutput *output)
+void Edge::setOutput(Output *output)
 {
     m_output = output;
 }
 
-AbstractOutput *Edge::output() const
+Output *Edge::output() const
 {
     return m_output;
 }
@@ -972,7 +972,7 @@ static bool isLeftScreen(const QRect &screen, const QRect &fullArea)
         return true;
     }
     // If any other screen has a right edge against our left edge, then this screen is not a left screen
-    for (const AbstractOutput *output : outputs) {
+    for (const Output *output : outputs) {
         const QRect otherGeo = output->geometry();
         if (otherGeo == screen) {
             // that's our screen to test
@@ -999,7 +999,7 @@ static bool isRightScreen(const QRect &screen, const QRect &fullArea)
         return true;
     }
     // If any other screen has any left edge against any of our right edge, then this screen is not a right screen
-    for (const AbstractOutput *output : outputs) {
+    for (const Output *output : outputs) {
         const QRect otherGeo = output->geometry();
         if (otherGeo == screen) {
             // that's our screen to test
@@ -1026,7 +1026,7 @@ static bool isTopScreen(const QRect &screen, const QRect &fullArea)
         return true;
     }
     // If any other screen has any bottom edge against any of our top edge, then this screen is not a top screen
-    for (const AbstractOutput *output : outputs) {
+    for (const Output *output : outputs) {
         const QRect otherGeo = output->geometry();
         if (otherGeo == screen) {
             // that's our screen to test
@@ -1053,7 +1053,7 @@ static bool isBottomScreen(const QRect &screen, const QRect &fullArea)
         return true;
     }
     // If any other screen has any top edge against any of our bottom edge, then this screen is not a bottom screen
-    for (const AbstractOutput *output : outputs) {
+    for (const Output *output : outputs) {
         const QRect otherGeo = output->geometry();
         if (otherGeo == screen) {
             // that's our screen to test
@@ -1078,7 +1078,7 @@ void ScreenEdges::recreateEdges()
     QRegion processedRegion;
 
     const auto outputs = kwinApp()->platform()->enabledOutputs();
-    for (AbstractOutput *output : outputs) {
+    for (Output *output : outputs) {
         const QRegion screen = QRegion(output->geometry()).subtracted(processedRegion);
         processedRegion += screen;
         for (const QRect &screenPart : screen) {
@@ -1130,7 +1130,7 @@ void ScreenEdges::recreateEdges()
     qDeleteAll(oldEdges);
 }
 
-void ScreenEdges::createVerticalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, AbstractOutput *output)
+void ScreenEdges::createVerticalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, Output *output)
 {
     if (border != ElectricRight && border != KWin::ElectricLeft) {
         return;
@@ -1160,7 +1160,7 @@ void ScreenEdges::createVerticalEdge(ElectricBorder border, const QRect &screen,
     m_edges << createEdge(border, x, y, TOUCH_TARGET, height, output);
 }
 
-void ScreenEdges::createHorizontalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, AbstractOutput *output)
+void ScreenEdges::createHorizontalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, Output *output)
 {
     if (border != ElectricTop && border != ElectricBottom) {
         return;
@@ -1184,7 +1184,7 @@ void ScreenEdges::createHorizontalEdge(ElectricBorder border, const QRect &scree
     m_edges << createEdge(border, x, y, width, TOUCH_TARGET, output);
 }
 
-Edge *ScreenEdges::createEdge(ElectricBorder border, int x, int y, int width, int height, AbstractOutput *output, bool createAction)
+Edge *ScreenEdges::createEdge(ElectricBorder border, int x, int y, int width, int height, Output *output, bool createAction)
 {
     Edge *edge = kwinApp()->platform()->createScreenEdge(this);
     // Edges can not have negative size.
@@ -1349,8 +1349,8 @@ void ScreenEdges::createEdgeForClient(AbstractClient *client, ElectricBorder bor
     const QRect fullArea = workspace()->geometry();
 
     const auto outputs = kwinApp()->platform()->enabledOutputs();
-    AbstractOutput *foundOutput = nullptr;
-    for (AbstractOutput *output : outputs) {
+    Output *foundOutput = nullptr;
+    for (Output *output : outputs) {
         foundOutput = output;
         const QRect screen = output->geometry();
         if (!screen.contains(geo)) {

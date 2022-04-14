@@ -165,7 +165,7 @@ void DrmOutput::moveCursor()
     }
 }
 
-QVector<AbstractOutput::Mode> DrmOutput::getModes() const
+QVector<Output::Mode> DrmOutput::getModes() const
 {
     bool modeFound = false;
     QVector<Mode> modes;

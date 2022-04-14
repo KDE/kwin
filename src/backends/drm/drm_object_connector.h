@@ -14,10 +14,10 @@
 
 #include <QSize>
 
-#include "abstract_output.h"
 #include "drm_object.h"
 #include "drm_pointer.h"
 #include "edid.h"
+#include "output.h"
 
 namespace KWin
 {
@@ -101,12 +101,12 @@ public:
     QVector<QSharedPointer<DrmConnectorMode>> modes() const;
     QSharedPointer<DrmConnectorMode> findMode(const drmModeModeInfo &modeInfo) const;
 
-    AbstractOutput::SubPixel subpixel() const;
+    Output::SubPixel subpixel() const;
     bool hasOverscan() const;
     uint32_t overscan() const;
     bool vrrCapable() const;
     bool hasRgbRange() const;
-    AbstractOutput::RgbRange rgbRange() const;
+    Output::RgbRange rgbRange() const;
     LinkStatus linkStatus() const;
 
 private:

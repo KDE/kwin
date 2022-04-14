@@ -8,11 +8,11 @@
 
 #include "screencastmanager.h"
 #include "abstract_client.h"
-#include "abstract_output.h"
 #include "composite.h"
 #include "deleted.h"
 #include "effects.h"
 #include "kwingltexture.h"
+#include "output.h"
 #include "outputscreencastsource.h"
 #include "platform.h"
 #include "regionscreencastsource.h"
@@ -122,7 +122,7 @@ void ScreencastManager::streamWaylandOutput(KWaylandServer::ScreencastStreamV1In
 }
 
 void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamV1Interface *waylandStream,
-                                     AbstractOutput *streamOutput,
+                                     Output *streamOutput,
                                      KWaylandServer::ScreencastV1Interface::CursorMode mode)
 {
     if (!streamOutput) {
@@ -144,7 +144,7 @@ void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamV1Interface
     };
     connect(stream, &ScreenCastStream::startStreaming, waylandStream, [streamOutput, stream, bufferToStream] {
         Compositor::self()->scene()->addRepaint(streamOutput->geometry());
-        connect(streamOutput, &AbstractOutput::outputChange, stream, bufferToStream);
+        connect(streamOutput, &Output::outputChange, stream, bufferToStream);
     });
     integrateStreams(waylandStream, stream);
 }
@@ -182,7 +182,7 @@ void ScreencastManager::streamRegion(KWaylandServer::ScreencastStreamV1Interface
                     source->updateOutput(output);
                     stream->recordFrame(region.translated(-streamRegion.topLeft()).intersected(streamRegion));
                 };
-                connect(output, &AbstractOutput::outputChange, stream, bufferToStream);
+                connect(output, &Output::outputChange, stream, bufferToStream);
             }
         }
     });

@@ -203,17 +203,17 @@ SurfaceTexture *EglGbmBackend::createSurfaceTextureWayland(SurfacePixmapWayland 
     return new BasicEGLSurfaceTextureWayland(this, pixmap);
 }
 
-void EglGbmBackend::present(AbstractOutput *output)
+void EglGbmBackend::present(Output *output)
 {
     static_cast<DrmAbstractOutput *>(output)->present();
 }
 
-OutputLayer *EglGbmBackend::primaryLayer(AbstractOutput *output)
+OutputLayer *EglGbmBackend::primaryLayer(Output *output)
 {
     return static_cast<DrmAbstractOutput *>(output)->outputLayer();
 }
 
-QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(AbstractOutput *output) const
+QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(Output *output) const
 {
     const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
     return static_cast<EglGbmLayer *>(drmOutput->outputLayer())->texture();

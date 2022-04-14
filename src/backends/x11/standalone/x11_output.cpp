@@ -13,7 +13,7 @@ namespace KWin
 {
 
 X11Output::X11Output(const QString &name, QObject *parent)
-    : AbstractOutput(parent)
+    : Output(parent)
 {
     setName(name);
 }

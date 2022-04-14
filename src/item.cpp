@@ -5,9 +5,9 @@
 */
 
 #include "item.h"
-#include "abstract_output.h"
 #include "composite.h"
 #include "main.h"
+#include "output.h"
 #include "platform.h"
 #include "renderloop.h"
 #include "scene.h"
@@ -255,7 +255,7 @@ void Item::scheduleRepaint(const QRegion &region)
 
 void Item::scheduleRepaintInternal(const QRegion &region)
 {
-    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
     const QRegion globalRegion = mapToGlobal(region);
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
         for (const auto &output : outputs) {
@@ -276,10 +276,10 @@ void Item::scheduleFrame()
     if (!isVisible()) {
         return;
     }
-    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
         const QRect geometry = mapToGlobal(rect());
-        for (const AbstractOutput *output : outputs) {
+        for (const Output *output : outputs) {
             if (output->geometry().intersects(geometry)) {
                 output->renderLoop()->scheduleRepaint(this);
             }
@@ -311,17 +311,17 @@ WindowQuadList Item::quads() const
     return m_quads.value();
 }
 
-QRegion Item::repaints(AbstractOutput *output) const
+QRegion Item::repaints(Output *output) const
 {
     return m_repaints.value(output, QRect(QPoint(0, 0), screens()->size()));
 }
 
-void Item::resetRepaints(AbstractOutput *output)
+void Item::resetRepaints(Output *output)
 {
     m_repaints.insert(output, QRegion());
 }
 
-void Item::removeRepaints(AbstractOutput *output)
+void Item::removeRepaints(Output *output)
 {
     m_repaints.remove(output);
 }

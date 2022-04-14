@@ -299,8 +299,8 @@ public:
     void createDpmsFilter();
     void clearDpmsFilter();
 
-    AbstractOutput *createVirtualOutput(const QString &name, const QSize &size, double scale) override;
-    void removeVirtualOutput(AbstractOutput *output) override;
+    Output *createVirtualOutput(const QString &name, const QSize &size, double scale) override;
+    void removeVirtualOutput(Output *output) override;
 
 Q_SIGNALS:
     void systemCompositorDied();

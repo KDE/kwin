@@ -83,29 +83,29 @@ public:
     SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
 
     void init() override;
-    void present(AbstractOutput *output) override;
-    OutputLayer *primaryLayer(AbstractOutput *output) override;
+    void present(Output *output) override;
+    OutputLayer *primaryLayer(Output *output) override;
 
     bool havePlatformBase() const
     {
         return m_havePlatformBase;
     }
 
-    QSharedPointer<KWin::GLTexture> textureForOutput(KWin::AbstractOutput *output) const override;
+    QSharedPointer<KWin::GLTexture> textureForOutput(KWin::Output *output) const override;
 
 private:
     bool initializeEgl();
     bool initBufferConfigs();
     bool initRenderingContext();
 
-    bool createEglWaylandOutput(AbstractOutput *output);
+    bool createEglWaylandOutput(Output *output);
 
     void cleanupSurfaces() override;
 
     void presentOnSurface(EglWaylandOutput *output, const QRegion &damagedRegion);
 
     WaylandBackend *m_backend;
-    QMap<AbstractOutput *, QSharedPointer<EglWaylandOutput>> m_outputs;
+    QMap<Output *, QSharedPointer<EglWaylandOutput>> m_outputs;
     bool m_havePlatformBase;
     friend class EglWaylandTexture;
 };

@@ -47,7 +47,7 @@ private Q_SLOTS:
     void testX11Window();
 
 private:
-    QImage grab(AbstractOutput *output);
+    QImage grab(Output *output);
 };
 
 void SceneQPainterTest::cleanup()
@@ -88,14 +88,14 @@ void SceneQPainterTest::initTestCase()
     QVERIFY(Compositor::self());
 }
 
-QImage SceneQPainterTest::grab(AbstractOutput *output)
+QImage SceneQPainterTest::grab(Output *output)
 {
     QImage image;
     QMetaObject::invokeMethod(kwinApp()->platform(),
                               "captureOutput",
                               Qt::DirectConnection,
                               Q_RETURN_ARG(QImage, image),
-                              Q_ARG(AbstractOutput *, output));
+                              Q_ARG(Output *, output));
     return image;
 }
 

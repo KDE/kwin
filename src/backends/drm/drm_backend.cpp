@@ -107,7 +107,7 @@ void DrmBackend::turnOutputsOn()
 {
     m_dpmsFilter.reset();
     for (auto it = m_enabledOutputs.constBegin(), end = m_enabledOutputs.constEnd(); it != end; it++) {
-        (*it)->setDpmsMode(AbstractOutput::DpmsMode::On);
+        (*it)->setDpmsMode(Output::DpmsMode::On);
     }
 }
 
@@ -118,7 +118,7 @@ void DrmBackend::checkOutputsAreOn()
         return;
     }
     for (auto it = m_enabledOutputs.constBegin(), end = m_enabledOutputs.constEnd(); it != end; it++) {
-        if ((*it)->dpmsMode() != AbstractOutput::DpmsMode::On) {
+        if ((*it)->dpmsMode() != Output::DpmsMode::On) {
             // dpms still disabled, need to keep the filter
             return;
         }
@@ -435,7 +435,7 @@ bool DrmBackend::readOutputsConfiguration(const QVector<DrmAbstractOutput *> &ou
     Q_ASSERT(!outputs.isEmpty());
     const auto outputsInfo = KWinKScreenIntegration::outputsConfig(outputs);
 
-    AbstractOutput *primaryOutput = outputs.constFirst();
+    Output *primaryOutput = outputs.constFirst();
     OutputConfiguration cfg;
     // default position goes from left to right
     QPoint pos(0, 0);
@@ -460,7 +460,7 @@ bool DrmBackend::readOutputsConfiguration(const QVector<DrmAbstractOutput *> &ou
 
             props->overscan = static_cast<uint32_t>(outputInfo["overscan"].toInt(props->overscan));
             props->vrrPolicy = static_cast<RenderLoop::VrrPolicy>(outputInfo["vrrpolicy"].toInt(static_cast<uint32_t>(props->vrrPolicy)));
-            props->rgbRange = static_cast<AbstractOutput::RgbRange>(outputInfo["rgbrange"].toInt(static_cast<uint32_t>(props->rgbRange)));
+            props->rgbRange = static_cast<Output::RgbRange>(outputInfo["rgbrange"].toInt(static_cast<uint32_t>(props->rgbRange)));
 
             if (const QJsonObject mode = outputInfo["mode"].toObject(); !mode.isEmpty()) {
                 const QJsonObject size = mode["size"].toObject();
@@ -584,7 +584,7 @@ QString DrmBackend::supportInformation() const
     return supportInfo;
 }
 
-AbstractOutput *DrmBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
+Output *DrmBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
     auto output = primaryGpu()->createVirtualOutput(name, size * scale, scale, DrmGpu::Full);
     readOutputsConfiguration(m_outputs);
@@ -592,7 +592,7 @@ AbstractOutput *DrmBackend::createVirtualOutput(const QString &name, const QSize
     return output;
 }
 
-void DrmBackend::removeVirtualOutput(AbstractOutput *output)
+void DrmBackend::removeVirtualOutput(Output *output)
 {
     auto virtualOutput = qobject_cast<DrmVirtualOutput *>(output);
     if (!virtualOutput) {

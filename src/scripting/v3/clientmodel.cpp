@@ -6,7 +6,7 @@
 
 #include "clientmodel.h"
 #include "abstract_client.h"
-#include "abstract_output.h"
+#include "output.h"
 #include "platform.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
@@ -186,7 +186,7 @@ QString ClientFilterModel::screenName() const
 
 void ClientFilterModel::setScreenName(const QString &screen)
 {
-    AbstractOutput *output = kwinApp()->platform()->findOutput(screen);
+    Output *output = kwinApp()->platform()->findOutput(screen);
     if (m_output != output) {
         m_output = output;
         Q_EMIT screenNameChanged();

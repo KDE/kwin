@@ -265,7 +265,7 @@ static VirtualDesktop *resolveVirtualDesktop(int desktopId)
 
 QRect WorkspaceWrapper::clientArea(ClientAreaOption option, const QPoint &p, int desktop) const
 {
-    const AbstractOutput *output = kwinApp()->platform()->outputAt(p);
+    const Output *output = kwinApp()->platform()->outputAt(p);
     const VirtualDesktop *virtualDesktop = resolveVirtualDesktop(desktop);
     return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), output, virtualDesktop);
 }
@@ -288,7 +288,7 @@ QRect WorkspaceWrapper::clientArea(ClientAreaOption option, KWin::AbstractClient
 QRect WorkspaceWrapper::clientArea(ClientAreaOption option, int screen, int desktop) const
 {
     VirtualDesktop *virtualDesktop;
-    AbstractOutput *output;
+    Output *output;
 
     if (desktop == NETWinInfo::OnAllDesktops || desktop == 0) {
         virtualDesktop = VirtualDesktopManager::self()->currentDesktop();
@@ -307,7 +307,7 @@ QRect WorkspaceWrapper::clientArea(ClientAreaOption option, int screen, int desk
     return workspace()->clientArea(static_cast<clientAreaOption>(option), output, virtualDesktop);
 }
 
-QRect WorkspaceWrapper::clientArea(ClientAreaOption option, AbstractOutput *output, VirtualDesktop *desktop) const
+QRect WorkspaceWrapper::clientArea(ClientAreaOption option, Output *output, VirtualDesktop *desktop) const
 {
     return workspace()->clientArea(static_cast<clientAreaOption>(option), output, desktop);
 }
@@ -421,7 +421,7 @@ QSize WorkspaceWrapper::virtualScreenSize() const
 
 void WorkspaceWrapper::sendClientToScreen(AbstractClient *client, int screen)
 {
-    AbstractOutput *output = kwinApp()->platform()->findOutput(screen);
+    Output *output = kwinApp()->platform()->findOutput(screen);
     if (output) {
         workspace()->sendClientToOutput(client, output);
     }

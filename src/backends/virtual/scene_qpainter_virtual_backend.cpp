@@ -18,7 +18,7 @@
 namespace KWin
 {
 
-VirtualQPainterLayer::VirtualQPainterLayer(AbstractOutput *output)
+VirtualQPainterLayer::VirtualQPainterLayer(Output *output)
     : m_output(output)
     , m_image(output->pixelSize(), QImage::Format_RGB32)
 {
@@ -63,7 +63,7 @@ void VirtualQPainterBackend::createOutputs()
     }
 }
 
-void VirtualQPainterBackend::present(AbstractOutput *output)
+void VirtualQPainterBackend::present(Output *output)
 {
     static_cast<VirtualOutput *>(output)->vsyncMonitor()->arm();
 
@@ -72,7 +72,7 @@ void VirtualQPainterBackend::present(AbstractOutput *output)
     }
 }
 
-VirtualQPainterLayer *VirtualQPainterBackend::primaryLayer(AbstractOutput *output)
+VirtualQPainterLayer *VirtualQPainterBackend::primaryLayer(Output *output)
 {
     return m_outputs[output].get();
 }

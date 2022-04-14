@@ -806,7 +806,7 @@ void GlxBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedR
     m_lastRenderedRegion = renderedRegion;
 }
 
-void GlxBackend::present(AbstractOutput *output)
+void GlxBackend::present(Output *output)
 {
     Q_UNUSED(output)
 
@@ -861,7 +861,7 @@ OverlayWindow *GlxBackend::overlayWindow() const
     return m_overlayWindow;
 }
 
-OutputLayer *GlxBackend::primaryLayer(AbstractOutput *output)
+OutputLayer *GlxBackend::primaryLayer(Output *output)
 {
     Q_UNUSED(output)
     return m_layer.get();

@@ -31,7 +31,7 @@ struct AbstractEglBackendFunctions
 };
 
 class EglDmabuf;
-class AbstractOutput;
+class Output;
 
 class KWIN_EXPORT AbstractEglBackend : public OpenGLBackend
 {
@@ -62,7 +62,7 @@ public:
         return m_config;
     }
 
-    QSharedPointer<GLTexture> textureForOutput(AbstractOutput *output) const override;
+    QSharedPointer<GLTexture> textureForOutput(Output *output) const override;
 
     dev_t deviceId() const;
     virtual bool prefer10bpc() const;

@@ -24,14 +24,14 @@ class VirtualBackend;
 class VirtualQPainterLayer : public OutputLayer
 {
 public:
-    VirtualQPainterLayer(AbstractOutput *output);
+    VirtualQPainterLayer(Output *output);
 
     OutputLayerBeginFrameInfo beginFrame() override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     QImage *image();
 
 private:
-    AbstractOutput *const m_output;
+    Output *const m_output;
     QImage m_image;
 };
 
@@ -42,13 +42,13 @@ public:
     VirtualQPainterBackend(VirtualBackend *backend);
     ~VirtualQPainterBackend() override;
 
-    void present(AbstractOutput *output) override;
-    VirtualQPainterLayer *primaryLayer(AbstractOutput *output) override;
+    void present(Output *output) override;
+    VirtualQPainterLayer *primaryLayer(Output *output) override;
 
 private:
     void createOutputs();
 
-    QMap<AbstractOutput *, QSharedPointer<VirtualQPainterLayer>> m_outputs;
+    QMap<Output *, QSharedPointer<VirtualQPainterLayer>> m_outputs;
     VirtualBackend *m_backend;
     int m_frameCounter = 0;
 };

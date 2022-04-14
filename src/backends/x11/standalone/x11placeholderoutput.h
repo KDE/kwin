@@ -6,12 +6,12 @@
 
 #pragma once
 
-#include "abstract_output.h"
+#include "output.h"
 
 namespace KWin
 {
 
-class X11PlaceholderOutput : public AbstractOutput
+class X11PlaceholderOutput : public Output
 {
     Q_OBJECT
 

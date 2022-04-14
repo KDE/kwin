@@ -9,11 +9,11 @@
 #include "kwin_wayland_test.h"
 
 #include "abstract_client.h"
-#include "abstract_output.h"
 #include "cursor.h"
 #include "deleted.h"
 #include "effects.h"
 #include "inputmethod.h"
+#include "output.h"
 #include "platform.h"
 #include "qwayland-input-method-unstable-v1.h"
 #include "qwayland-text-input-unstable-v3.h"

@@ -28,7 +28,7 @@ namespace Decoration
 class DecoratedClientImpl;
 }
 
-class AbstractOutput;
+class Output;
 class DecorationRenderer;
 class Deleted;
 class EffectFrameImpl;
@@ -61,7 +61,7 @@ class SceneDelegate : public RenderLayerDelegate
 
 public:
     explicit SceneDelegate(Scene *scene, QObject *parent = nullptr);
-    explicit SceneDelegate(Scene *scene, AbstractOutput *output, QObject *parent = nullptr);
+    explicit SceneDelegate(Scene *scene, Output *output, QObject *parent = nullptr);
     ~SceneDelegate() override;
 
     QRect viewport() const;
@@ -74,7 +74,7 @@ public:
 
 private:
     Scene *m_scene;
-    AbstractOutput *m_output = nullptr;
+    Output *m_output = nullptr;
 };
 
 class KWIN_EXPORT Scene : public QObject
@@ -108,7 +108,7 @@ public:
     virtual bool initFailed() const = 0;
 
     SurfaceItem *scanoutCandidate() const;
-    void prePaint(AbstractOutput *output);
+    void prePaint(Output *output);
     void postPaint();
     virtual void paint(RenderTarget *renderTarget, const QRegion &region) = 0;
 
@@ -200,7 +200,7 @@ public:
      */
     virtual QVector<QByteArray> openGLPlatformInterfaceExtensions() const;
 
-    virtual QSharedPointer<GLTexture> textureForOutput(AbstractOutput *output) const
+    virtual QSharedPointer<GLTexture> textureForOutput(Output *output) const
     {
         Q_UNUSED(output);
         return {};
@@ -271,7 +271,7 @@ protected:
     };
 
     // The screen that is being currently painted
-    AbstractOutput *painted_screen = nullptr;
+    Output *painted_screen = nullptr;
 
     // windows in their stacking order
     QVector<Window *> stacking_order;

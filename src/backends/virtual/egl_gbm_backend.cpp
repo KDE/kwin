@@ -216,13 +216,13 @@ static void convertFromGLImage(QImage &img, int w, int h)
     img = img.mirrored();
 }
 
-OutputLayer *EglGbmBackend::primaryLayer(AbstractOutput *output)
+OutputLayer *EglGbmBackend::primaryLayer(Output *output)
 {
     Q_UNUSED(output)
     return m_layer.get();
 }
 
-void EglGbmBackend::present(AbstractOutput *output)
+void EglGbmBackend::present(Output *output)
 {
     glFlush();
 

@@ -154,7 +154,7 @@ WaylandQPainterBackend::WaylandQPainterBackend(Wayland::WaylandBackend *b)
         createOutput(output);
     }
     connect(m_backend, &WaylandBackend::outputAdded, this, &WaylandQPainterBackend::createOutput);
-    connect(m_backend, &WaylandBackend::outputRemoved, this, [this](AbstractOutput *waylandOutput) {
+    connect(m_backend, &WaylandBackend::outputRemoved, this, [this](Output *waylandOutput) {
         auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [waylandOutput](const auto &output) {
             return output->m_waylandOutput == waylandOutput;
         });
@@ -169,19 +169,19 @@ WaylandQPainterBackend::~WaylandQPainterBackend()
 {
 }
 
-void WaylandQPainterBackend::createOutput(AbstractOutput *waylandOutput)
+void WaylandQPainterBackend::createOutput(Output *waylandOutput)
 {
     const auto output = QSharedPointer<WaylandQPainterOutput>::create(static_cast<WaylandOutput *>(waylandOutput));
     output->init(m_backend->shmPool());
     m_outputs.insert(waylandOutput, output);
 }
 
-void WaylandQPainterBackend::present(AbstractOutput *output)
+void WaylandQPainterBackend::present(Output *output)
 {
     m_outputs[output]->present();
 }
 
-OutputLayer *WaylandQPainterBackend::primaryLayer(AbstractOutput *output)
+OutputLayer *WaylandQPainterBackend::primaryLayer(Output *output)
 {
     return m_outputs[output].get();
 }

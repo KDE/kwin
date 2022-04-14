@@ -7,12 +7,12 @@
 #include "windowscreencastsource.h"
 #include "screencastutils.h"
 
-#include "abstract_output.h"
 #include "deleted.h"
 #include "effects.h"
 #include "kwineffects.h"
 #include "kwingltexture.h"
 #include "kwinglutils.h"
+#include "output.h"
 #include "renderloop.h"
 #include "scene.h"
 #include "toplevel.h"

@@ -25,7 +25,7 @@ using namespace KWayland::Client;
 static const int s_refreshRate = 60000; // TODO: can we get refresh rate data from Wayland host?
 
 WaylandOutput::WaylandOutput(Surface *surface, WaylandBackend *backend)
-    : AbstractOutput(backend)
+    : Output(backend)
     , m_renderLoop(new RenderLoop(this))
     , m_surface(surface)
     , m_backend(backend)

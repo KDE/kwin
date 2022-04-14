@@ -31,9 +31,9 @@
 #if KWIN_BUILD_TABBOX
 #include "tabbox/tabbox.h"
 #endif
-#include "abstract_output.h"
 #include "cursor.h"
 #include "internal_client.h"
+#include "output.h"
 #include "platform.h"
 #include "popup_input_filter.h"
 #include "screenedge.h"

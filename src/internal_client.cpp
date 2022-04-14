@@ -473,7 +473,7 @@ void InternalClient::commitGeometry(const QRect &rect)
     // The client geometry and the buffer geometry are the same.
     const QRect oldClientGeometry = m_clientGeometry;
     const QRect oldFrameGeometry = m_frameGeometry;
-    const AbstractOutput *oldOutput = m_output;
+    const Output *oldOutput = m_output;
 
     m_clientGeometry = frameRectToClientRect(rect);
     m_frameGeometry = rect;

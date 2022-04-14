@@ -16,7 +16,7 @@
 namespace KWin
 {
 
-X11WindowedQPainterOutput::X11WindowedQPainterOutput(AbstractOutput *output, xcb_window_t window)
+X11WindowedQPainterOutput::X11WindowedQPainterOutput(Output *output, xcb_window_t window)
     : window(window)
     , buffer(output->pixelSize() * output->scale(), QImage::Format_RGB32)
     , m_output(output)
@@ -63,7 +63,7 @@ void X11WindowedQPainterBackend::createOutputs()
     }
 }
 
-void X11WindowedQPainterBackend::present(AbstractOutput *output)
+void X11WindowedQPainterBackend::present(Output *output)
 {
     static_cast<X11WindowedOutput *>(output)->vsyncMonitor()->arm();
 
@@ -84,7 +84,7 @@ void X11WindowedQPainterBackend::present(AbstractOutput *output)
                   buffer.sizeInBytes(), buffer.constBits());
 }
 
-OutputLayer *X11WindowedQPainterBackend::primaryLayer(AbstractOutput *output)
+OutputLayer *X11WindowedQPainterBackend::primaryLayer(Output *output)
 {
     return m_outputs[output].get();
 }

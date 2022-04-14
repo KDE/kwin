@@ -9,7 +9,7 @@
 */
 #include "abstract_client.h"
 
-#include "abstract_output.h"
+#include "output.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -1389,7 +1389,7 @@ void AbstractClient::handleInteractiveMoveResize(int x, int y, int x_root, int y
         Q_ASSERT(gravity == Gravity::None);
         if (!isMovable()) { // isMovableAcrossScreens() must have been true to get here
             // Special moving of maximized windows on Xinerama screens
-            AbstractOutput *output = kwinApp()->platform()->outputAt(globalPos);
+            Output *output = kwinApp()->platform()->outputAt(globalPos);
             if (isFullScreen()) {
                 setMoveResizeGeometry(workspace()->clientArea(FullScreenArea, this, output));
             } else {
@@ -2183,13 +2183,13 @@ void AbstractClient::checkQuickTilingMaximizationZones(int xroot, int yroot)
     bool innerBorder = false;
 
     const auto outputs = kwinApp()->platform()->enabledOutputs();
-    for (const AbstractOutput *output : outputs) {
+    for (const Output *output : outputs) {
         if (!output->geometry().contains(QPoint(xroot, yroot))) {
             continue;
         }
 
         auto isInScreen = [&output, &outputs](const QPoint &pt) {
-            for (const AbstractOutput *other : outputs) {
+            for (const Output *other : outputs) {
                 if (other == output) {
                     continue;
                 }
@@ -3193,11 +3193,11 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
         // If trying to tile to the side that the window is already tiled to move the window to the next
         // screen if it exists, otherwise toggle the mode (set QuickTileFlag::None)
         if (quickTileMode() == mode) {
-            const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
-            const AbstractOutput *currentOutput = output();
-            const AbstractOutput *nextOutput = currentOutput;
+            const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
+            const Output *currentOutput = output();
+            const Output *nextOutput = currentOutput;
 
-            for (const AbstractOutput *output : outputs) {
+            for (const Output *output : outputs) {
                 if (output == currentOutput) {
                     continue;
                 }
@@ -3263,7 +3263,7 @@ void AbstractClient::doSetQuickTileMode()
 {
 }
 
-void AbstractClient::sendToOutput(AbstractOutput *newOutput)
+void AbstractClient::sendToOutput(Output *newOutput)
 {
     newOutput = rules()->checkOutput(newOutput);
     if (isActive()) {
@@ -3350,7 +3350,7 @@ void AbstractClient::sendToOutput(AbstractOutput *newOutput)
     }
 }
 
-void AbstractClient::updateGeometryRestoresForFullscreen(AbstractOutput *output)
+void AbstractClient::updateGeometryRestoresForFullscreen(Output *output)
 {
     QRect screenArea = workspace()->clientArea(MaximizeArea, this, output);
     QRect newFullScreenGeometryRestore = screenArea;
@@ -3423,7 +3423,7 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, const VirtualDesk
     QRect screenArea;
     if (workspace()->inUpdateClientArea()) {
         // check if the window is on an about to be destroyed output
-        AbstractOutput *newOutput = output();
+        Output *newOutput = output();
         if (!kwinApp()->platform()->enabledOutputs().contains(newOutput)) {
             newOutput = kwinApp()->platform()->outputAt(newGeom.center());
         }

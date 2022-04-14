@@ -9,8 +9,8 @@
 #include "kwin_wayland_test.h"
 
 #include "abstract_client.h"
-#include "abstract_output.h"
 #include "cursor.h"
+#include "output.h"
 #include "platform.h"
 #include "screens.h"
 #include "virtualdesktops.h"
@@ -270,7 +270,7 @@ void PlasmaSurfaceTest::testPanelTypeHasStrut()
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
     // the panel is on the first output and the current desktop
-    AbstractOutput *output = kwinApp()->platform()->enabledOutputs().constFirst();
+    Output *output = kwinApp()->platform()->enabledOutputs().constFirst();
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
 
     QVERIFY(c);
@@ -321,7 +321,7 @@ void PlasmaSurfaceTest::testPanelWindowsCanCover()
     auto panel = Test::renderAndWaitForShown(surface.data(), panelGeometry.size(), Qt::blue);
 
     // the panel is on the first output and the current desktop
-    AbstractOutput *output = kwinApp()->platform()->enabledOutputs().constFirst();
+    Output *output = kwinApp()->platform()->enabledOutputs().constFirst();
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
 
     QVERIFY(panel);

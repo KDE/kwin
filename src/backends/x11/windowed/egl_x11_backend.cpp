@@ -21,7 +21,7 @@
 namespace KWin
 {
 
-EglX11Output::EglX11Output(EglX11Backend *backend, AbstractOutput *output, EGLSurface surface)
+EglX11Output::EglX11Output(EglX11Backend *backend, Output *output, EGLSurface surface)
     : m_eglSurface(surface)
     , m_fbo(new GLFramebuffer(0, output->pixelSize()))
     , m_output(output)
@@ -100,7 +100,7 @@ bool EglX11Backend::createSurfaces()
     return true;
 }
 
-void EglX11Backend::present(AbstractOutput *output)
+void EglX11Backend::present(Output *output)
 {
     const auto &renderOutput = m_outputs[output];
     presentSurface(renderOutput->surface(), renderOutput->lastDamage(), output->geometry());
@@ -124,7 +124,7 @@ void EglX11Backend::presentSurface(EGLSurface surface, const QRegion &damage, co
     }
 }
 
-OutputLayer *EglX11Backend::primaryLayer(AbstractOutput *output)
+OutputLayer *EglX11Backend::primaryLayer(Output *output)
 {
     return m_outputs[output].get();
 }

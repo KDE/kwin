@@ -16,7 +16,7 @@ class LayerSurfaceV1Interface;
 namespace KWin
 {
 
-class AbstractOutput;
+class Output;
 class LayerShellV1Integration;
 
 class LayerShellV1Client : public WaylandClient
@@ -25,11 +25,11 @@ class LayerShellV1Client : public WaylandClient
 
 public:
     explicit LayerShellV1Client(KWaylandServer::LayerSurfaceV1Interface *shellSurface,
-                                AbstractOutput *output,
+                                Output *output,
                                 LayerShellV1Integration *integration);
 
     KWaylandServer::LayerSurfaceV1Interface *shellSurface() const;
-    AbstractOutput *desiredOutput() const;
+    Output *desiredOutput() const;
 
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     bool isPlaceable() const override;
@@ -59,7 +59,7 @@ private:
     void handleOutputDestroyed();
     void scheduleRearrange();
 
-    AbstractOutput *m_desiredOutput;
+    Output *m_desiredOutput;
     LayerShellV1Integration *m_integration;
     KWaylandServer::LayerSurfaceV1Interface *m_shellSurface;
     NET::WindowType m_windowType;

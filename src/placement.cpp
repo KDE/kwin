@@ -679,7 +679,7 @@ void AbstractClient::packTo(int left, int top)
 {
     workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
 
-    const AbstractOutput *oldOutput = output();
+    const Output *oldOutput = output();
     move(QPoint(left, top));
     if (output() != oldOutput) {
         workspace()->sendClientToOutput(this, output()); // checks rule validity

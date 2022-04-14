@@ -31,7 +31,7 @@ class XdgToplevelDecorationV1Interface;
 
 namespace KWin
 {
-class AbstractOutput;
+class Output;
 
 class XdgSurfaceConfigure
 {
@@ -233,7 +233,7 @@ private:
     bool m_isInitialized = false;
     bool m_userNoBorder = false;
     bool m_isTransient = false;
-    QPointer<AbstractOutput> m_fullScreenRequestedOutput;
+    QPointer<Output> m_fullScreenRequestedOutput;
     QSharedPointer<KDecoration2::Decoration> m_nextDecoration;
 };
 

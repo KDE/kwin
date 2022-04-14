@@ -7,9 +7,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "screen.h"
-#include "abstract_output.h"
 #include "integration.h"
 #include "logging.h"
+#include "output.h"
 #include "platformcursor.h"
 
 #include <qpa/qwindowsysteminterface.h>
@@ -24,12 +24,12 @@ static int forcedDpi()
     return qEnvironmentVariableIsSet("QT_WAYLAND_FORCE_DPI") ? qEnvironmentVariableIntValue("QT_WAYLAND_FORCE_DPI") : -1;
 }
 
-Screen::Screen(AbstractOutput *output, Integration *integration)
+Screen::Screen(Output *output, Integration *integration)
     : m_output(output)
     , m_cursor(new PlatformCursor)
     , m_integration(integration)
 {
-    connect(output, &AbstractOutput::geometryChanged, this, &Screen::handleGeometryChanged);
+    connect(output, &Output::geometryChanged, this, &Screen::handleGeometryChanged);
 }
 
 Screen::~Screen() = default;

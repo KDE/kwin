@@ -9,10 +9,10 @@
 #include "kwin_wayland_test.h"
 
 #include "abstract_client.h"
-#include "abstract_output.h"
 #include "cursor.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/settings.h"
+#include "output.h"
 #include "platform.h"
 #include "wayland_server.h"
 #include "workspace.h"

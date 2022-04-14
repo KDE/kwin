@@ -10,13 +10,13 @@
 
 #include <config-kwin.h>
 
-#include "abstract_output.h"
 #include "composite.h"
 #include "idle_inhibition.h"
 #include "inputpanelv1integration.h"
 #include "keyboard_input.h"
 #include "layershellv1integration.h"
 #include "main.h"
+#include "output.h"
 #include "platform.h"
 #include "scene.h"
 #include "screens.h"
@@ -286,53 +286,53 @@ void WaylandServer::initPlatform()
     connect(kwinApp()->platform(), &Platform::outputEnabled, this, &WaylandServer::handleOutputEnabled);
     connect(kwinApp()->platform(), &Platform::outputDisabled, this, &WaylandServer::handleOutputDisabled);
 
-    connect(kwinApp()->platform(), &Platform::primaryOutputChanged, this, [this](AbstractOutput *primaryOutput) {
+    connect(kwinApp()->platform(), &Platform::primaryOutputChanged, this, [this](Output *primaryOutput) {
         m_primary->setPrimaryOutput(primaryOutput ? primaryOutput->name() : QString());
     });
     if (auto primaryOutput = kwinApp()->platform()->primaryOutput()) {
         m_primary->setPrimaryOutput(primaryOutput->name());
     }
 
-    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->outputs();
-    for (AbstractOutput *output : outputs) {
+    const QVector<Output *> outputs = kwinApp()->platform()->outputs();
+    for (Output *output : outputs) {
         handleOutputAdded(output);
     }
 
-    const QVector<AbstractOutput *> enabledOutputs = kwinApp()->platform()->enabledOutputs();
-    for (AbstractOutput *output : enabledOutputs) {
+    const QVector<Output *> enabledOutputs = kwinApp()->platform()->enabledOutputs();
+    for (Output *output : enabledOutputs) {
         handleOutputEnabled(output);
     }
 }
 
-void WaylandServer::handleOutputAdded(AbstractOutput *output)
+void WaylandServer::handleOutputAdded(Output *output)
 {
     if (!output->isPlaceholder()) {
         m_waylandOutputDevices.insert(output, new WaylandOutputDevice(output));
     }
 }
 
-void WaylandServer::handleOutputRemoved(AbstractOutput *output)
+void WaylandServer::handleOutputRemoved(Output *output)
 {
     if (!output->isPlaceholder()) {
         delete m_waylandOutputDevices.take(output);
     }
 }
 
-void WaylandServer::handleOutputEnabled(AbstractOutput *output)
+void WaylandServer::handleOutputEnabled(Output *output)
 {
     if (!output->isPlaceholder()) {
         m_waylandOutputs.insert(output, new WaylandOutput(output));
     }
 }
 
-void WaylandServer::handleOutputDisabled(AbstractOutput *output)
+void WaylandServer::handleOutputDisabled(Output *output)
 {
     if (!output->isPlaceholder()) {
         delete m_waylandOutputs.take(output);
     }
 }
 
-AbstractOutput *WaylandServer::findOutput(KWaylandServer::OutputInterface *outputIface) const
+Output *WaylandServer::findOutput(KWaylandServer::OutputInterface *outputIface) const
 {
     for (auto it = m_waylandOutputs.constBegin(); it != m_waylandOutputs.constEnd(); ++it) {
         if ((*it)->waylandOutput() == outputIface) {

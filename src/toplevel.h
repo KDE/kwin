@@ -34,7 +34,7 @@ class SurfaceInterface;
 namespace KWin
 {
 
-class AbstractOutput;
+class Output;
 class ClientMachine;
 class Deleted;
 class EffectWindowImpl;
@@ -339,11 +339,11 @@ public:
     int y() const;
     int width() const;
     int height() const;
-    bool isOnOutput(AbstractOutput *output) const;
+    bool isOnOutput(Output *output) const;
     bool isOnActiveOutput() const;
     int screen() const; // the screen where the center is
-    AbstractOutput *output() const;
-    void setOutput(AbstractOutput *output);
+    Output *output() const;
+    void setOutput(Output *output);
     virtual QPoint clientPos() const = 0; // inside of geometry()
     QSize clientSize() const;
     /**
@@ -671,7 +671,7 @@ protected:
     void deleteEffectWindow();
     void setDepth(int depth);
 
-    AbstractOutput *m_output = nullptr;
+    Output *m_output = nullptr;
     QRect m_frameGeometry;
     QRect m_clientGeometry;
     QRect m_bufferGeometry;

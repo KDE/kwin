@@ -288,7 +288,7 @@ void WaylandClient::updateGeometry(const QRect &rect)
     const QRect oldClientGeometry = m_clientGeometry;
     const QRect oldFrameGeometry = m_frameGeometry;
     const QRect oldBufferGeometry = m_bufferGeometry;
-    const AbstractOutput *oldOutput = m_output;
+    const Output *oldOutput = m_output;
 
     m_clientGeometry = frameRectToClientRect(rect);
     m_frameGeometry = rect;

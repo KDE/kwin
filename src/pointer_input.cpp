@@ -12,12 +12,12 @@
 
 #include <config-kwin.h>
 
-#include "abstract_output.h"
 #include "decorations/decoratedclient.h"
 #include "effects.h"
 #include "input_event.h"
 #include "input_event_spy.h"
 #include "osd.h"
+#include "output.h"
 #include "platform.h"
 #include "screens.h"
 #include "wayland_server.h"
@@ -90,7 +90,7 @@ static Qt::MouseButton buttonToQtMouseButton(uint32_t button)
 static bool screenContainsPos(const QPointF &pos)
 {
     const auto outputs = kwinApp()->platform()->enabledOutputs();
-    for (const AbstractOutput *output : outputs) {
+    for (const Output *output : outputs) {
         if (output->geometry().contains(pos.toPoint())) {
             return true;
         }
@@ -176,7 +176,7 @@ void PointerInputRedirection::init()
     connect(workspace(), &Workspace::clientAdded, this, setupMoveResizeConnection);
 
     // warp the cursor to center of screen containing the workspace center
-    if (const AbstractOutput *output = kwinApp()->platform()->outputAt(workspace()->geometry().center())) {
+    if (const Output *output = kwinApp()->platform()->outputAt(workspace()->geometry().center())) {
         warp(output->geometry().center());
     }
     updateAfterScreenChange();
@@ -802,7 +802,7 @@ void PointerInputRedirection::updatePosition(const QPointF &pos)
         const QRectF unitedScreensGeometry = workspace()->geometry();
         p = confineToBoundingBox(p, unitedScreensGeometry);
         if (!screenContainsPos(p)) {
-            const AbstractOutput *currentOutput = kwinApp()->platform()->outputAt(m_pos.toPoint());
+            const Output *currentOutput = kwinApp()->platform()->outputAt(m_pos.toPoint());
             p = confineToBoundingBox(p, currentOutput->geometry());
         }
     }
@@ -886,7 +886,7 @@ void PointerInputRedirection::updateAfterScreenChange()
         return;
     }
     // pointer no longer on a screen, reposition to closes screen
-    const AbstractOutput *output = kwinApp()->platform()->outputAt(m_pos.toPoint());
+    const Output *output = kwinApp()->platform()->outputAt(m_pos.toPoint());
     // TODO: better way to get timestamps
     processMotionAbsolute(output->geometry().center(), waylandServer()->seat()->timestamp());
 }

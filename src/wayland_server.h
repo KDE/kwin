@@ -54,7 +54,7 @@ namespace KWin
 {
 
 class AbstractClient;
-class AbstractOutput;
+class Output;
 class Toplevel;
 class XdgPopupClient;
 class XdgSurfaceClient;
@@ -225,7 +225,7 @@ public:
         m_linuxDmabufBuffers.remove(buffer);
     }
 
-    AbstractOutput *findOutput(KWaylandServer::OutputInterface *output) const;
+    Output *findOutput(KWaylandServer::OutputInterface *output) const;
 
     /**
      * Returns the first socket name that can be used to connect to this server.
@@ -248,10 +248,10 @@ private:
     void registerXdgToplevelClient(XdgToplevelClient *client);
     void registerXdgPopupClient(XdgPopupClient *client);
     void registerShellClient(AbstractClient *client);
-    void handleOutputAdded(AbstractOutput *output);
-    void handleOutputRemoved(AbstractOutput *output);
-    void handleOutputEnabled(AbstractOutput *output);
-    void handleOutputDisabled(AbstractOutput *output);
+    void handleOutputAdded(Output *output);
+    void handleOutputRemoved(Output *output);
+    void handleOutputEnabled(Output *output);
+    void handleOutputDisabled(Output *output);
 
     class LockScreenPresentationWatcher : public QObject
     {
@@ -259,7 +259,7 @@ private:
         LockScreenPresentationWatcher(WaylandServer *server);
 
     private:
-        QSet<AbstractOutput *> m_signaledOutputs;
+        QSet<Output *> m_signaledOutputs;
     };
 
     KWaylandServer::Display *m_display = nullptr;
@@ -290,8 +290,8 @@ private:
     KWaylandServer::PrimaryOutputV1Interface *m_primary = nullptr;
     QList<AbstractClient *> m_clients;
     InitializationFlags m_initFlags;
-    QHash<AbstractOutput *, WaylandOutput *> m_waylandOutputs;
-    QHash<AbstractOutput *, WaylandOutputDevice *> m_waylandOutputDevices;
+    QHash<Output *, WaylandOutput *> m_waylandOutputs;
+    QHash<Output *, WaylandOutputDevice *> m_waylandOutputDevices;
     KWIN_SINGLETON(WaylandServer)
 };
 

@@ -64,7 +64,7 @@ private:
     bool setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
 
-    QVector<AbstractOutput::Mode> getModes() const;
+    QVector<Output::Mode> getModes() const;
 
     int gammaRampSize() const override;
     bool setGammaRamp(const GammaRamp &gamma) override;

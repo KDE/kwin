@@ -44,7 +44,7 @@ namespace KWin
 namespace Wayland
 {
 
-static QVector<EGLint> regionToRects(const QRegion &region, AbstractOutput *output)
+static QVector<EGLint> regionToRects(const QRegion &region, Output *output)
 {
     const int height = output->modeSize().height();
     const QMatrix4x4 matrix = WaylandOutput::logicalToNativeMatrix(output->rect(),
@@ -219,7 +219,7 @@ EglWaylandBackend::EglWaylandBackend(WaylandBackend *b)
     setIsDirectRendering(true);
 
     connect(m_backend, &WaylandBackend::outputAdded, this, &EglWaylandBackend::createEglWaylandOutput);
-    connect(m_backend, &WaylandBackend::outputRemoved, this, [this](AbstractOutput *output) {
+    connect(m_backend, &WaylandBackend::outputRemoved, this, [this](Output *output) {
         auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [output](const auto &o) {
             return o->m_waylandOutput == output;
         });
@@ -240,7 +240,7 @@ void EglWaylandBackend::cleanupSurfaces()
     m_outputs.clear();
 }
 
-bool EglWaylandBackend::createEglWaylandOutput(AbstractOutput *waylandOutput)
+bool EglWaylandBackend::createEglWaylandOutput(Output *waylandOutput)
 {
     const auto output = QSharedPointer<EglWaylandOutput>::create(static_cast<WaylandOutput *>(waylandOutput), this);
     if (!output->init()) {
@@ -361,7 +361,7 @@ bool EglWaylandBackend::initBufferConfigs()
     return true;
 }
 
-QSharedPointer<KWin::GLTexture> EglWaylandBackend::textureForOutput(KWin::AbstractOutput *output) const
+QSharedPointer<KWin::GLTexture> EglWaylandBackend::textureForOutput(KWin::Output *output) const
 {
     QSharedPointer<GLTexture> texture(new GLTexture(GL_RGBA8, output->pixelSize()));
     GLFramebuffer::pushFramebuffer(m_outputs[output]->fbo());
@@ -381,12 +381,12 @@ SurfaceTexture *EglWaylandBackend::createSurfaceTextureWayland(SurfacePixmapWayl
     return new BasicEGLSurfaceTextureWayland(this, pixmap);
 }
 
-void EglWaylandBackend::present(AbstractOutput *output)
+void EglWaylandBackend::present(Output *output)
 {
     m_outputs[output]->present();
 }
 
-OutputLayer *EglWaylandBackend::primaryLayer(AbstractOutput *output)
+OutputLayer *EglWaylandBackend::primaryLayer(Output *output)
 {
     return m_outputs[output].get();
 }

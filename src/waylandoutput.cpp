@@ -12,83 +12,83 @@
 namespace KWin
 {
 
-static KWaylandServer::OutputInterface::Transform kwinTransformToOutputTransform(AbstractOutput::Transform transform)
+static KWaylandServer::OutputInterface::Transform kwinTransformToOutputTransform(Output::Transform transform)
 {
     switch (transform) {
-    case AbstractOutput::Transform::Normal:
+    case Output::Transform::Normal:
         return KWaylandServer::OutputInterface::Transform::Normal;
-    case AbstractOutput::Transform::Rotated90:
+    case Output::Transform::Rotated90:
         return KWaylandServer::OutputInterface::Transform::Rotated90;
-    case AbstractOutput::Transform::Rotated180:
+    case Output::Transform::Rotated180:
         return KWaylandServer::OutputInterface::Transform::Rotated180;
-    case AbstractOutput::Transform::Rotated270:
+    case Output::Transform::Rotated270:
         return KWaylandServer::OutputInterface::Transform::Rotated270;
-    case AbstractOutput::Transform::Flipped:
+    case Output::Transform::Flipped:
         return KWaylandServer::OutputInterface::Transform::Flipped;
-    case AbstractOutput::Transform::Flipped90:
+    case Output::Transform::Flipped90:
         return KWaylandServer::OutputInterface::Transform::Flipped90;
-    case AbstractOutput::Transform::Flipped180:
+    case Output::Transform::Flipped180:
         return KWaylandServer::OutputInterface::Transform::Flipped180;
-    case AbstractOutput::Transform::Flipped270:
+    case Output::Transform::Flipped270:
         return KWaylandServer::OutputInterface::Transform::Flipped270;
     default:
         Q_UNREACHABLE();
     }
 }
 
-static KWaylandServer::OutputInterface::SubPixel kwinSubPixelToOutputSubPixel(AbstractOutput::SubPixel subPixel)
+static KWaylandServer::OutputInterface::SubPixel kwinSubPixelToOutputSubPixel(Output::SubPixel subPixel)
 {
     switch (subPixel) {
-    case AbstractOutput::SubPixel::Unknown:
+    case Output::SubPixel::Unknown:
         return KWaylandServer::OutputInterface::SubPixel::Unknown;
-    case AbstractOutput::SubPixel::None:
+    case Output::SubPixel::None:
         return KWaylandServer::OutputInterface::SubPixel::None;
-    case AbstractOutput::SubPixel::Horizontal_RGB:
+    case Output::SubPixel::Horizontal_RGB:
         return KWaylandServer::OutputInterface::SubPixel::HorizontalRGB;
-    case AbstractOutput::SubPixel::Horizontal_BGR:
+    case Output::SubPixel::Horizontal_BGR:
         return KWaylandServer::OutputInterface::SubPixel::HorizontalBGR;
-    case AbstractOutput::SubPixel::Vertical_RGB:
+    case Output::SubPixel::Vertical_RGB:
         return KWaylandServer::OutputInterface::SubPixel::VerticalRGB;
-    case AbstractOutput::SubPixel::Vertical_BGR:
+    case Output::SubPixel::Vertical_BGR:
         return KWaylandServer::OutputInterface::SubPixel::VerticalBGR;
     default:
         Q_UNREACHABLE();
     }
 }
 
-static KWaylandServer::OutputInterface::DpmsMode kwinDpmsModeToOutputDpmsMode(AbstractOutput::DpmsMode dpmsMode)
+static KWaylandServer::OutputInterface::DpmsMode kwinDpmsModeToOutputDpmsMode(Output::DpmsMode dpmsMode)
 {
     switch (dpmsMode) {
-    case AbstractOutput::DpmsMode::Off:
+    case Output::DpmsMode::Off:
         return KWaylandServer::OutputInterface::DpmsMode::Off;
-    case AbstractOutput::DpmsMode::On:
+    case Output::DpmsMode::On:
         return KWaylandServer::OutputInterface::DpmsMode::On;
-    case AbstractOutput::DpmsMode::Standby:
+    case Output::DpmsMode::Standby:
         return KWaylandServer::OutputInterface::DpmsMode::Standby;
-    case AbstractOutput::DpmsMode::Suspend:
+    case Output::DpmsMode::Suspend:
         return KWaylandServer::OutputInterface::DpmsMode::Suspend;
     default:
         Q_UNREACHABLE();
     }
 }
 
-static AbstractOutput::DpmsMode outputDpmsModeToKWinDpmsMode(KWaylandServer::OutputInterface::DpmsMode dpmsMode)
+static Output::DpmsMode outputDpmsModeToKWinDpmsMode(KWaylandServer::OutputInterface::DpmsMode dpmsMode)
 {
     switch (dpmsMode) {
     case KWaylandServer::OutputInterface::DpmsMode::Off:
-        return AbstractOutput::DpmsMode::Off;
+        return Output::DpmsMode::Off;
     case KWaylandServer::OutputInterface::DpmsMode::On:
-        return AbstractOutput::DpmsMode::On;
+        return Output::DpmsMode::On;
     case KWaylandServer::OutputInterface::DpmsMode::Standby:
-        return AbstractOutput::DpmsMode::Standby;
+        return Output::DpmsMode::Standby;
     case KWaylandServer::OutputInterface::DpmsMode::Suspend:
-        return AbstractOutput::DpmsMode::Suspend;
+        return Output::DpmsMode::Suspend;
     default:
         Q_UNREACHABLE();
     }
 }
 
-WaylandOutput::WaylandOutput(AbstractOutput *output, QObject *parent)
+WaylandOutput::WaylandOutput(Output *output, QObject *parent)
     : QObject(parent)
     , m_platformOutput(output)
     , m_waylandOutput(new KWaylandServer::OutputInterface(waylandServer()->display()))
@@ -101,7 +101,7 @@ WaylandOutput::WaylandOutput(AbstractOutput *output, QObject *parent)
     m_waylandOutput->setModel(output->model());
     m_waylandOutput->setPhysicalSize(output->physicalSize());
     m_waylandOutput->setDpmsMode(kwinDpmsModeToOutputDpmsMode(output->dpmsMode()));
-    m_waylandOutput->setDpmsSupported(output->capabilities() & AbstractOutput::Capability::Dpms);
+    m_waylandOutput->setDpmsSupported(output->capabilities() & Output::Capability::Dpms);
     m_waylandOutput->setGlobalPosition(geometry.topLeft());
     m_waylandOutput->setScale(std::ceil(output->scale()));
     m_waylandOutput->setMode(output->modeSize(), output->refreshRate());
@@ -116,7 +116,7 @@ WaylandOutput::WaylandOutput(AbstractOutput *output, QObject *parent)
     m_xdgOutputV1->done();
 
     // The dpms functionality is not part of the wl_output interface, but org_kde_kwin_dpms.
-    connect(output, &AbstractOutput::dpmsModeChanged,
+    connect(output, &Output::dpmsModeChanged,
             this, &WaylandOutput::handleDpmsModeChanged);
     connect(m_waylandOutput.data(), &KWaylandServer::OutputInterface::dpmsModeRequested,
             this, &WaylandOutput::handleDpmsModeRequested);
@@ -125,10 +125,10 @@ WaylandOutput::WaylandOutput(AbstractOutput *output, QObject *parent)
     m_updateTimer.setSingleShot(true);
     connect(&m_updateTimer, &QTimer::timeout, this, &WaylandOutput::update);
 
-    connect(output, &AbstractOutput::currentModeChanged, this, &WaylandOutput::scheduleUpdate);
-    connect(output, &AbstractOutput::geometryChanged, this, &WaylandOutput::scheduleUpdate);
-    connect(output, &AbstractOutput::transformChanged, this, &WaylandOutput::scheduleUpdate);
-    connect(output, &AbstractOutput::scaleChanged, this, &WaylandOutput::scheduleUpdate);
+    connect(output, &Output::currentModeChanged, this, &WaylandOutput::scheduleUpdate);
+    connect(output, &Output::geometryChanged, this, &WaylandOutput::scheduleUpdate);
+    connect(output, &Output::transformChanged, this, &WaylandOutput::scheduleUpdate);
+    connect(output, &Output::scaleChanged, this, &WaylandOutput::scheduleUpdate);
 }
 
 KWaylandServer::OutputInterface *WaylandOutput::waylandOutput() const

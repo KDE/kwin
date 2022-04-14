@@ -55,7 +55,7 @@ AbstractClient *FocusChain::getForActivation(VirtualDesktop *desktop) const
     return getForActivation(desktop, workspace()->activeOutput());
 }
 
-AbstractClient *FocusChain::getForActivation(VirtualDesktop *desktop, AbstractOutput *output) const
+AbstractClient *FocusChain::getForActivation(VirtualDesktop *desktop, Output *output) const
 {
     auto it = m_desktopFocusChains.constFind(desktop);
     if (it == m_desktopFocusChains.constEnd()) {

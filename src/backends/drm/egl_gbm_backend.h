@@ -27,7 +27,7 @@ class SurfaceInterface;
 
 namespace KWin
 {
-class AbstractOutput;
+class Output;
 class DrmAbstractOutput;
 class DrmBuffer;
 class DrmGbmBuffer;
@@ -63,15 +63,15 @@ public:
     SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
 
-    void present(AbstractOutput *output) override;
-    OutputLayer *primaryLayer(AbstractOutput *output) override;
+    void present(Output *output) override;
+    OutputLayer *primaryLayer(Output *output) override;
 
     void init() override;
     bool prefer10bpc() const override;
     QSharedPointer<DrmPipelineLayer> createDrmPipelineLayer(DrmPipeline *pipeline) override;
     QSharedPointer<DrmOutputLayer> createLayer(DrmVirtualOutput *output) override;
 
-    QSharedPointer<GLTexture> textureForOutput(AbstractOutput *requestedOutput) const override;
+    QSharedPointer<GLTexture> textureForOutput(Output *requestedOutput) const override;
 
     QSharedPointer<DrmBuffer> testBuffer(DrmAbstractOutput *output);
     EGLConfig config(uint32_t format) const;

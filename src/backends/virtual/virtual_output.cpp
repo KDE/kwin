@@ -16,7 +16,7 @@ namespace KWin
 {
 
 VirtualOutput::VirtualOutput(VirtualBackend *parent)
-    : AbstractOutput(parent)
+    : Output(parent)
     , m_backend(parent)
     , m_renderLoop(new RenderLoop(this))
     , m_vsyncMonitor(SoftwareVsyncMonitor::create(this))

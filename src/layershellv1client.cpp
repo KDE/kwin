@@ -5,9 +5,9 @@
 */
 
 #include "layershellv1client.h"
-#include "abstract_output.h"
 #include "deleted.h"
 #include "layershellv1integration.h"
+#include "output.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -37,7 +37,7 @@ static NET::WindowType scopeToType(const QString &scope)
 }
 
 LayerShellV1Client::LayerShellV1Client(LayerSurfaceV1Interface *shellSurface,
-                                       AbstractOutput *output,
+                                       Output *output,
                                        LayerShellV1Integration *integration)
     : WaylandClient(shellSurface->surface())
     , m_desiredOutput(output)
@@ -54,11 +54,11 @@ LayerShellV1Client::LayerShellV1Client(LayerSurfaceV1Interface *shellSurface,
     connect(shellSurface->surface(), &SurfaceInterface::aboutToBeDestroyed,
             this, &LayerShellV1Client::destroyClient);
 
-    connect(output, &AbstractOutput::geometryChanged,
+    connect(output, &Output::geometryChanged,
             this, &LayerShellV1Client::scheduleRearrange);
-    connect(output, &AbstractOutput::enabledChanged,
+    connect(output, &Output::enabledChanged,
             this, &LayerShellV1Client::handleOutputEnabledChanged);
-    connect(output, &AbstractOutput::destroyed,
+    connect(output, &Output::destroyed,
             this, &LayerShellV1Client::handleOutputDestroyed);
 
     connect(shellSurface->surface(), &SurfaceInterface::sizeChanged,
@@ -87,7 +87,7 @@ LayerSurfaceV1Interface *LayerShellV1Client::shellSurface() const
     return m_shellSurface;
 }
 
-AbstractOutput *LayerShellV1Client::desiredOutput() const
+Output *LayerShellV1Client::desiredOutput() const
 {
     return m_desiredOutput;
 }

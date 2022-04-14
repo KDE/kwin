@@ -11,14 +11,14 @@
 namespace KWin
 {
 
-QSharedPointer<OutputChangeSet> OutputConfiguration::changeSet(AbstractOutput *output)
+QSharedPointer<OutputChangeSet> OutputConfiguration::changeSet(Output *output)
 {
     const auto ptr = constChangeSet(output);
     m_properties[output] = ptr;
     return ptr;
 }
 
-QSharedPointer<OutputChangeSet> OutputConfiguration::constChangeSet(AbstractOutput *output) const
+QSharedPointer<OutputChangeSet> OutputConfiguration::constChangeSet(Output *output) const
 {
     if (!m_properties.contains(output)) {
         auto props = QSharedPointer<OutputChangeSet>::create();

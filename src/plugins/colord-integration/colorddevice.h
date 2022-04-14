@@ -15,16 +15,16 @@
 namespace KWin
 {
 
-class AbstractOutput;
+class Output;
 
 class ColordDevice : public QObject
 {
 public:
-    explicit ColordDevice(AbstractOutput *output, QObject *parent = nullptr);
+    explicit ColordDevice(Output *output, QObject *parent = nullptr);
 
     void initialize(const QDBusObjectPath &devicePath);
 
-    AbstractOutput *output() const;
+    Output *output() const;
     QDBusObjectPath objectPath() const;
 
 private Q_SLOTS:
@@ -32,7 +32,7 @@ private Q_SLOTS:
 
 private:
     CdDeviceInterface *m_colordInterface = nullptr;
-    QPointer<AbstractOutput> m_output;
+    QPointer<Output> m_output;
 };
 
 } // namespace KWin

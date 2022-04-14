@@ -7,10 +7,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "abstract_egl_backend.h"
-#include "abstract_output.h"
 #include "composite.h"
 #include "egl_dmabuf.h"
 #include "options.h"
+#include "output.h"
 #include "platform.h"
 #include "utils/common.h"
 #include "utils/egl_context_attribute_builder.h"
@@ -369,7 +369,7 @@ void AbstractEglBackend::setSurface(const EGLSurface &surface)
     m_surface = surface;
 }
 
-QSharedPointer<GLTexture> AbstractEglBackend::textureForOutput(AbstractOutput *requestedOutput) const
+QSharedPointer<GLTexture> AbstractEglBackend::textureForOutput(Output *requestedOutput) const
 {
     QSharedPointer<GLTexture> texture(new GLTexture(GL_RGBA8, requestedOutput->pixelSize()));
     GLFramebuffer renderTarget(texture.data());

@@ -13,7 +13,7 @@
 namespace KWin
 {
 
-class AbstractOutput;
+class Output;
 class ColorDevice;
 class ColorManagerPrivate;
 
@@ -31,7 +31,7 @@ public:
      * Returns the color device for the specified @a output, or @c null if there is no
      * any device.
      */
-    ColorDevice *findDevice(AbstractOutput *output) const;
+    ColorDevice *findDevice(Output *output) const;
 
     /**
      * Returns the list of all available color devices.
@@ -50,8 +50,8 @@ Q_SIGNALS:
     void deviceRemoved(ColorDevice *device);
 
 private Q_SLOTS:
-    void handleOutputEnabled(AbstractOutput *output);
-    void handleOutputDisabled(AbstractOutput *output);
+    void handleOutputEnabled(Output *output);
+    void handleOutputDisabled(Output *output);
     void handleSessionActiveChanged(bool active);
 
 private:

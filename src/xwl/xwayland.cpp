@@ -18,8 +18,8 @@
 #include "xwaylandlauncher.h"
 #include "xwldrophandler.h"
 
-#include "abstract_output.h"
 #include "main_wayland.h"
+#include "output.h"
 #include "platform.h"
 #include "utils/common.h"
 #include "utils/xcbutils.h"
@@ -211,7 +211,7 @@ void Xwayland::handleXwaylandReady()
     m_xrandrEventsFilter = new XrandrEventFilter(this);
 }
 
-void Xwayland::updatePrimary(AbstractOutput *primaryOutput)
+void Xwayland::updatePrimary(Output *primaryOutput)
 {
     Xcb::RandR::ScreenResources resources(kwinApp()->x11RootWindow());
     xcb_randr_crtc_t *crtcs = resources.crtcs();

@@ -1015,13 +1015,13 @@ void WaylandBackend::clearDpmsFilter()
     m_dpmsFilter.reset();
 }
 
-AbstractOutput *WaylandBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
+Output *WaylandBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
     Q_UNUSED(name);
     return createOutput(m_outputs.constLast()->geometry().topRight(), size * scale);
 }
 
-void WaylandBackend::removeVirtualOutput(AbstractOutput *output)
+void WaylandBackend::removeVirtualOutput(Output *output)
 {
     WaylandOutput *waylandOutput = dynamic_cast<WaylandOutput *>(output);
     if (waylandOutput && m_outputs.removeAll(waylandOutput)) {

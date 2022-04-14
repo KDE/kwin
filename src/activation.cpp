@@ -420,7 +420,7 @@ void Workspace::clientHidden(AbstractClient *c)
     activateNextClient(c);
 }
 
-AbstractClient *Workspace::clientUnderMouse(AbstractOutput *output) const
+AbstractClient *Workspace::clientUnderMouse(Output *output) const
 {
     auto it = stackingOrder().constEnd();
     while (it != stackingOrder().constBegin()) {
@@ -515,7 +515,7 @@ bool Workspace::activateNextClient(AbstractClient *c)
     return true;
 }
 
-void Workspace::switchToOutput(AbstractOutput *output)
+void Workspace::switchToOutput(Output *output)
 {
     if (!options->focusPolicyIsReasonable()) {
         return;
@@ -876,7 +876,7 @@ void X11Client::startupIdChanged()
         workspace()->sendClientToDesktop(this, desktop, true);
     }
     if (asn_data.xinerama() != -1) {
-        AbstractOutput *output = kwinApp()->platform()->findOutput(asn_data.xinerama());
+        Output *output = kwinApp()->platform()->findOutput(asn_data.xinerama());
         if (output) {
             workspace()->sendClientToOutput(this, output);
         }

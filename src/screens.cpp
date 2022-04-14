@@ -10,8 +10,8 @@
 
 #include <config-kwin.h>
 
-#include "abstract_output.h"
 #include "cursor.h"
+#include "output.h"
 #include "platform.h"
 #include "settings.h"
 #include "utils/common.h"
@@ -57,7 +57,7 @@ void Screens::init()
 
 QRect Screens::geometry(int screen) const
 {
-    if (AbstractOutput *output = findOutput(screen)) {
+    if (Output *output = findOutput(screen)) {
         return output->geometry();
     }
     return QRect();
@@ -65,7 +65,7 @@ QRect Screens::geometry(int screen) const
 
 qreal Screens::scale(int screen) const
 {
-    if (AbstractOutput *output = findOutput(screen)) {
+    if (Output *output = findOutput(screen)) {
         return output->scale();
     }
     return 1.0;
@@ -109,7 +109,7 @@ void Screens::setCount(int count)
     Q_EMIT countChanged(previous, count);
 }
 
-AbstractOutput *Screens::findOutput(int screen) const
+Output *Screens::findOutput(int screen) const
 {
     return kwinApp()->platform()->findOutput(screen);
 }

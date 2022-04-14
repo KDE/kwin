@@ -7,10 +7,10 @@
 
 #include "decorationitem.h"
 #include "abstract_client.h"
-#include "abstract_output.h"
 #include "composite.h"
 #include "decorations/decoratedclient.h"
 #include "deleted.h"
+#include "output.h"
 #include "scene.h"
 #include "utils/common.h"
 
@@ -159,14 +159,14 @@ void DecorationItem::preprocess()
 void DecorationItem::handleOutputChanged()
 {
     if (m_output) {
-        disconnect(m_output, &AbstractOutput::scaleChanged, this, &DecorationItem::handleOutputScaleChanged);
+        disconnect(m_output, &Output::scaleChanged, this, &DecorationItem::handleOutputScaleChanged);
     }
 
     m_output = m_window->output();
 
     if (m_output) {
         handleOutputScaleChanged();
-        connect(m_output, &AbstractOutput::scaleChanged, this, &DecorationItem::handleOutputScaleChanged);
+        connect(m_output, &Output::scaleChanged, this, &DecorationItem::handleOutputScaleChanged);
     }
 }
 

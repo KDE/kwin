@@ -9,9 +9,9 @@
 #include "kwin_wayland_test.h"
 
 #include "abstract_client.h"
-#include "abstract_output.h"
 #include "cursor.h"
 #include "deleted.h"
+#include "output.h"
 #include "platform.h"
 #include "utils/xcbutils.h"
 #include "wayland_server.h"

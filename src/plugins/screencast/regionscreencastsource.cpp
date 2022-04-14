@@ -7,10 +7,10 @@
 #include "regionscreencastsource.h"
 #include "screencastutils.h"
 
-#include <abstract_output.h>
 #include <composite.h>
 #include <kwingltexture.h>
 #include <kwinglutils.h>
+#include <output.h>
 #include <platform.h>
 #include <scene.h>
 
@@ -38,7 +38,7 @@ bool RegionScreenCastSource::hasAlphaChannel() const
     return true;
 }
 
-void RegionScreenCastSource::updateOutput(AbstractOutput *output)
+void RegionScreenCastSource::updateOutput(Output *output)
 {
     m_last = output->renderLoop()->lastPresentationTimestamp();
 

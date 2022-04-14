@@ -41,7 +41,7 @@ class Window;
 }
 
 class AbstractClient;
-class AbstractOutput;
+class Output;
 class ColorMapper;
 class Compositor;
 class Deleted;
@@ -140,9 +140,9 @@ public:
      */
     Toplevel *findInternal(QWindow *w) const;
 
-    QRect clientArea(clientAreaOption, const AbstractOutput *output, const VirtualDesktop *desktop) const;
+    QRect clientArea(clientAreaOption, const Output *output, const VirtualDesktop *desktop) const;
     QRect clientArea(clientAreaOption, const Toplevel *window) const;
-    QRect clientArea(clientAreaOption, const Toplevel *window, const AbstractOutput *output) const;
+    QRect clientArea(clientAreaOption, const Toplevel *window, const Output *output) const;
     QRect clientArea(clientAreaOption, const Toplevel *window, const QPoint &pos) const;
 
     /**
@@ -153,8 +153,8 @@ public:
 
     bool initializing() const;
 
-    AbstractOutput *activeOutput() const;
-    void setActiveOutput(AbstractOutput *output);
+    Output *activeOutput() const;
+    void setActiveOutput(Output *output);
     void setActiveOutput(const QPoint &pos);
 
     /**
@@ -169,7 +169,7 @@ public:
      */
     AbstractClient *mostRecentlyActivatedClient() const;
 
-    AbstractClient *clientUnderMouse(AbstractOutput *output) const;
+    AbstractClient *clientUnderMouse(Output *output) const;
 
     void activateClient(AbstractClient *, bool force = false);
     bool requestFocus(AbstractClient *c, bool force = false);
@@ -275,7 +275,7 @@ public:
     // The calls below are valid only in that case.
     bool inUpdateClientArea() const;
     QRegion previousRestrictedMoveArea(const VirtualDesktop *desktop, StrutAreas areas = StrutAreaAll) const;
-    QHash<const AbstractOutput *, QRect> previousScreenSizes() const;
+    QHash<const Output *, QRect> previousScreenSizes() const;
     int oldDisplayWidth() const;
     int oldDisplayHeight() const;
 
@@ -289,13 +289,13 @@ public:
     QList<X11Client *> ensureStackingOrder(const QList<X11Client *> &clients) const;
     QList<AbstractClient *> ensureStackingOrder(const QList<AbstractClient *> &clients) const;
 
-    AbstractClient *topClientOnDesktop(VirtualDesktop *desktop, AbstractOutput *output = nullptr, bool unconstrained = false,
+    AbstractClient *topClientOnDesktop(VirtualDesktop *desktop, Output *output = nullptr, bool unconstrained = false,
                                        bool only_normal = true) const;
     AbstractClient *findDesktop(bool topmost, VirtualDesktop *desktop) const;
     void sendClientToDesktop(AbstractClient *c, int desktop, bool dont_activate);
     void windowToPreviousDesktop(AbstractClient *c);
     void windowToNextDesktop(AbstractClient *c);
-    void sendClientToOutput(AbstractClient *client, AbstractOutput *output);
+    void sendClientToOutput(AbstractClient *client, Output *output);
 
     void addManualOverlay(xcb_window_t id)
     {
@@ -327,9 +327,9 @@ public:
     // D-Bus interface
     QString supportInformation() const;
 
-    AbstractOutput *nextOutput(AbstractOutput *reference) const;
-    AbstractOutput *previousOutput(AbstractOutput *reference) const;
-    void switchToOutput(AbstractOutput *output);
+    Output *nextOutput(Output *reference) const;
+    Output *previousOutput(Output *reference) const;
+    void switchToOutput(Output *output);
 
     /**
      * Set "Show Desktop" status
@@ -514,8 +514,8 @@ private Q_SLOTS:
     void slotCurrentDesktopChangingCancelled();
     void slotDesktopAdded(VirtualDesktop *desktop);
     void slotDesktopRemoved(VirtualDesktop *desktop);
-    void slotOutputEnabled(AbstractOutput *output);
-    void slotOutputDisabled(AbstractOutput *output);
+    void slotOutputEnabled(Output *output);
+    void slotOutputDisabled(Output *output);
 
 Q_SIGNALS:
     /**
@@ -622,7 +622,7 @@ private:
     void updateXStackingOrder();
     void updateTabbox();
 
-    AbstractOutput *m_activeOutput = nullptr;
+    Output *m_activeOutput = nullptr;
     AbstractClient *active_client;
     AbstractClient *last_active_client;
     AbstractClient *movingClient;
@@ -683,10 +683,10 @@ private:
 
     QHash<const VirtualDesktop *, QRect> m_workAreas;
     QHash<const VirtualDesktop *, StrutRects> m_restrictedAreas;
-    QHash<const VirtualDesktop *, QHash<const AbstractOutput *, QRect>> m_screenAreas;
+    QHash<const VirtualDesktop *, QHash<const Output *, QRect>> m_screenAreas;
     QRect m_geometry;
 
-    QHash<const AbstractOutput *, QRect> m_oldScreenGeometries;
+    QHash<const Output *, QRect> m_oldScreenGeometries;
     QSize olddisplaysize; // previous sizes od displayWidth()/displayHeight()
     QHash<const VirtualDesktop *, StrutRects> m_oldRestrictedAreas;
     bool m_inUpdateClientArea = false;

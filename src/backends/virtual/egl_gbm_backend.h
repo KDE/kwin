@@ -42,8 +42,8 @@ public:
     ~EglGbmBackend() override;
     SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
-    OutputLayer *primaryLayer(AbstractOutput *output) override;
-    void present(AbstractOutput *output) override;
+    OutputLayer *primaryLayer(Output *output) override;
+    void present(Output *output) override;
     void init() override;
 
     OutputLayerBeginFrameInfo beginFrame();

@@ -14,7 +14,7 @@
 namespace KWin
 {
 
-class AbstractOutput;
+class Output;
 class OverlayWindow;
 class OutputLayer;
 
@@ -33,8 +33,8 @@ public:
 
     virtual bool checkGraphicsReset();
 
-    virtual OutputLayer *primaryLayer(AbstractOutput *output) = 0;
-    virtual void present(AbstractOutput *output) = 0;
+    virtual OutputLayer *primaryLayer(Output *output) = 0;
+    virtual void present(Output *output) = 0;
 };
 
 } // namespace KWin

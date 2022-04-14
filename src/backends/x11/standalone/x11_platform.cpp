@@ -470,9 +470,9 @@ void X11StandalonePlatform::updateOutputs()
 template<typename T>
 void X11StandalonePlatform::doUpdateOutputs()
 {
-    QVector<AbstractOutput *> changed;
-    QVector<AbstractOutput *> added;
-    QVector<AbstractOutput *> removed = m_outputs;
+    QVector<Output *> changed;
+    QVector<Output *> added;
+    QVector<Output *> removed = m_outputs;
 
     if (Xcb::Extensions::self()->isRandrAvailable()) {
         T resources(rootWindow());
@@ -577,14 +577,14 @@ void X11StandalonePlatform::doUpdateOutputs()
     }
 
     // Process new outputs. Note new outputs must be introduced before removing any other outputs.
-    for (AbstractOutput *output : qAsConst(added)) {
+    for (Output *output : qAsConst(added)) {
         m_outputs.append(output);
         Q_EMIT outputAdded(output);
         Q_EMIT outputEnabled(output);
     }
 
     // Outputs have to be removed last to avoid the case where there are no enabled outputs.
-    for (AbstractOutput *output : qAsConst(removed)) {
+    for (Output *output : qAsConst(removed)) {
         m_outputs.removeOne(output);
         Q_EMIT outputDisabled(output);
         Q_EMIT outputRemoved(output);
@@ -593,7 +593,7 @@ void X11StandalonePlatform::doUpdateOutputs()
 
     // Make sure that the position of an output in m_outputs matches its xinerama index, there
     // are X11 protocols that use xinerama indices to identify outputs.
-    std::sort(m_outputs.begin(), m_outputs.end(), [](const AbstractOutput *a, const AbstractOutput *b) {
+    std::sort(m_outputs.begin(), m_outputs.end(), [](const Output *a, const Output *b) {
         const auto xa = qobject_cast<const X11Output *>(a);
         if (!xa) {
             return false;
@@ -610,7 +610,7 @@ void X11StandalonePlatform::doUpdateOutputs()
 
 X11Output *X11StandalonePlatform::findX11Output(const QString &name) const
 {
-    for (AbstractOutput *output : m_outputs) {
+    for (Output *output : m_outputs) {
         if (output->name() == name) {
             return qobject_cast<X11Output *>(output);
         }
@@ -633,7 +633,7 @@ RenderLoop *X11StandalonePlatform::renderLoop() const
     return m_renderLoop;
 }
 
-static bool refreshRate_compare(const AbstractOutput *first, const AbstractOutput *smallest)
+static bool refreshRate_compare(const Output *first, const Output *smallest)
 {
     return first->refreshRate() < smallest->refreshRate();
 }
@@ -645,14 +645,14 @@ static int currentRefreshRate()
         return refreshRate;
     }
 
-    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
     if (outputs.isEmpty()) {
         return 60000;
     }
 
     static const QString syncDisplayDevice = qEnvironmentVariable("__GL_SYNC_DISPLAY_DEVICE");
     if (!syncDisplayDevice.isEmpty()) {
-        for (const AbstractOutput *output : outputs) {
+        for (const Output *output : outputs) {
             if (output->name() == syncDisplayDevice) {
                 return output->refreshRate();
             }

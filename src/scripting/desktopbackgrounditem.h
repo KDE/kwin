@@ -11,7 +11,7 @@
 namespace KWin
 {
 
-class AbstractOutput;
+class Output;
 class VirtualDesktop;
 
 /**
@@ -22,7 +22,7 @@ class DesktopBackgroundItem : public WindowThumbnailItem
 {
     Q_OBJECT
     Q_PROPERTY(QString outputName READ outputName WRITE setOutputName NOTIFY outputChanged)
-    Q_PROPERTY(KWin::AbstractOutput *output READ output WRITE setOutput NOTIFY outputChanged)
+    Q_PROPERTY(KWin::Output *output READ output WRITE setOutput NOTIFY outputChanged)
     Q_PROPERTY(QString activity READ activity WRITE setActivity NOTIFY activityChanged)
     Q_PROPERTY(KWin::VirtualDesktop *desktop READ desktop WRITE setDesktop NOTIFY desktopChanged)
 
@@ -34,8 +34,8 @@ public:
     QString outputName() const;
     void setOutputName(const QString &name);
 
-    AbstractOutput *output() const;
-    void setOutput(AbstractOutput *output);
+    Output *output() const;
+    void setOutput(Output *output);
 
     VirtualDesktop *desktop() const;
     void setDesktop(VirtualDesktop *desktop);
@@ -51,7 +51,7 @@ Q_SIGNALS:
 private:
     void updateWindow();
 
-    AbstractOutput *m_output = nullptr;
+    Output *m_output = nullptr;
     VirtualDesktop *m_desktop = nullptr;
     QString m_activity;
 };

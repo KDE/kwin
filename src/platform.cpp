@@ -11,11 +11,11 @@
 
 #include <config-kwin.h>
 
-#include "abstract_output.h"
 #include "composite.h"
 #include "cursor.h"
 #include "effects.h"
 #include "outline.h"
+#include "output.h"
 #include "outputconfiguration.h"
 #include "overlaywindow.h"
 #include "pointer_input.h"
@@ -43,12 +43,12 @@ Platform::Platform(QObject *parent)
     : QObject(parent)
     , m_eglDisplay(EGL_NO_DISPLAY)
 {
-    connect(this, &Platform::outputDisabled, this, [this](AbstractOutput *output) {
+    connect(this, &Platform::outputDisabled, this, [this](Output *output) {
         if (m_primaryOutput == output) {
             setPrimaryOutput(enabledOutputs().value(0, nullptr));
         }
     });
-    connect(this, &Platform::outputEnabled, this, [this](AbstractOutput *output) {
+    connect(this, &Platform::outputEnabled, this, [this](Output *output) {
         if (!m_primaryOutput) {
             setPrimaryOutput(output);
         }
@@ -113,9 +113,9 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationV2Interfa
         props->scale = changeset->scale();
         props->modeSize = changeset->size();
         props->refreshRate = changeset->refreshRate();
-        props->transform = static_cast<AbstractOutput::Transform>(changeset->transform());
+        props->transform = static_cast<Output::Transform>(changeset->transform());
         props->overscan = changeset->overscan();
-        props->rgbRange = static_cast<AbstractOutput::RgbRange>(changeset->rgbRange());
+        props->rgbRange = static_cast<Output::RgbRange>(changeset->rgbRange());
         props->vrrPolicy = static_cast<RenderLoop::VrrPolicy>(changeset->vrrPolicy());
     }
 
@@ -151,8 +151,8 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationV2Interfa
 bool Platform::applyOutputChanges(const OutputConfiguration &config)
 {
     const auto availableOutputs = outputs();
-    QVector<AbstractOutput *> toBeEnabledOutputs;
-    QVector<AbstractOutput *> toBeDisabledOutputs;
+    QVector<Output *> toBeEnabledOutputs;
+    QVector<Output *> toBeDisabledOutputs;
     for (const auto &output : availableOutputs) {
         if (config.constChangeSet(output)->enabled) {
             toBeEnabledOutputs << output;
@@ -169,16 +169,16 @@ bool Platform::applyOutputChanges(const OutputConfiguration &config)
     return true;
 }
 
-AbstractOutput *Platform::findOutput(int screenId) const
+Output *Platform::findOutput(int screenId) const
 {
     return enabledOutputs().value(screenId);
 }
 
-AbstractOutput *Platform::findOutput(const QUuid &uuid) const
+Output *Platform::findOutput(const QUuid &uuid) const
 {
     const auto outs = outputs();
     auto it = std::find_if(outs.constBegin(), outs.constEnd(),
-                           [uuid](AbstractOutput *output) {
+                           [uuid](Output *output) {
                                return output->uuid() == uuid;
                            });
     if (it != outs.constEnd()) {
@@ -187,10 +187,10 @@ AbstractOutput *Platform::findOutput(const QUuid &uuid) const
     return nullptr;
 }
 
-AbstractOutput *Platform::findOutput(const QString &name) const
+Output *Platform::findOutput(const QString &name) const
 {
     const auto candidates = outputs();
-    for (AbstractOutput *candidate : candidates) {
+    for (Output *candidate : candidates) {
         if (candidate->name() == name) {
             return candidate;
         }
@@ -198,12 +198,12 @@ AbstractOutput *Platform::findOutput(const QString &name) const
     return nullptr;
 }
 
-AbstractOutput *Platform::outputAt(const QPoint &pos) const
+Output *Platform::outputAt(const QPoint &pos) const
 {
-    AbstractOutput *bestOutput = nullptr;
+    Output *bestOutput = nullptr;
     int minDistance = INT_MAX;
     const auto candidates = enabledOutputs();
-    for (AbstractOutput *output : candidates) {
+    for (Output *output : candidates) {
         const QRect &geo = output->geometry();
         if (geo.contains(pos)) {
             return output;
@@ -236,7 +236,7 @@ void Platform::setReady(bool ready)
     Q_EMIT readyChanged(m_ready);
 }
 
-AbstractOutput *Platform::createVirtualOutput(const QString &name, const QSize &size, double scale)
+Output *Platform::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
     Q_UNUSED(name);
     Q_UNUSED(size);
@@ -244,7 +244,7 @@ AbstractOutput *Platform::createVirtualOutput(const QString &name, const QSize &
     return nullptr;
 }
 
-void Platform::removeVirtualOutput(AbstractOutput *output)
+void Platform::removeVirtualOutput(Output *output)
 {
     Q_ASSERT(!output);
 }
@@ -397,7 +397,7 @@ void Platform::setSceneEglGlobalShareContext(EGLContext context)
     m_globalShareContext = context;
 }
 
-void Platform::setPrimaryOutput(AbstractOutput *primary)
+void Platform::setPrimaryOutput(Output *primary)
 {
     if (primary == m_primaryOutput) {
         return;

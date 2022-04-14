@@ -10,7 +10,7 @@
 // own
 #include "x11client.h"
 // kwin
-#include "abstract_output.h"
+#include "output.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -609,7 +609,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
         area = workspace()->clientArea(FullArea, this, geom.center());
         checkOffscreenPosition(&geom, area);
     } else {
-        AbstractOutput *output = nullptr;
+        Output *output = nullptr;
         if (asn_data.xinerama() != -1) {
             output = kwinApp()->platform()->findOutput(asn_data.xinerama());
         }
@@ -3931,7 +3931,7 @@ void X11Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh,
         requestedFrameSize = rules()->checkSize(requestedFrameSize);
         new_pos = rules()->checkPosition(new_pos);
 
-        AbstractOutput *newOutput = kwinApp()->platform()->outputAt(QRect(new_pos, requestedFrameSize).center());
+        Output *newOutput = kwinApp()->platform()->outputAt(QRect(new_pos, requestedFrameSize).center());
         if (newOutput != rules()->checkOutput(newOutput)) {
             return; // not allowed by rule
         }
@@ -4187,7 +4187,7 @@ void X11Client::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
     const QRect oldBufferGeometry = m_lastBufferGeometry;
     const QRect oldFrameGeometry = m_lastFrameGeometry;
     const QRect oldClientGeometry = m_lastClientGeometry;
-    const AbstractOutput *oldOutput = m_lastOutput;
+    const Output *oldOutput = m_lastOutput;
 
     updateServerGeometry();
     updateWindowRules(Rules::Position | Rules::Size);
@@ -4582,7 +4582,7 @@ void X11Client::setFullScreen(bool set, bool user)
         }
     } else {
         Q_ASSERT(!fullscreenGeometryRestore().isNull());
-        AbstractOutput *currentOutput = output();
+        Output *currentOutput = output();
         moveResize(QRect(fullscreenGeometryRestore().topLeft(), constrainFrameSize(fullscreenGeometryRestore().size())));
         if (currentOutput != output()) {
             workspace()->sendClientToOutput(this, currentOutput);

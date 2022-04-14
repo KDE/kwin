@@ -15,12 +15,12 @@
 
 // kwin
 #include "abstract_client.h"
-#include "abstract_output.h"
 #include "atoms.h"
 #include "composite.h"
 #include "debug_console.h"
 #include "kwinadaptor.h"
 #include "main.h"
+#include "output.h"
 #include "placement.h"
 #include "platform.h"
 #include "pluginmanager.h"

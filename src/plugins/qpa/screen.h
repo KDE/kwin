@@ -16,7 +16,7 @@
 
 namespace KWin
 {
-class AbstractOutput;
+class Output;
 
 namespace QPA
 {
@@ -28,7 +28,7 @@ class Screen : public QObject, public QPlatformScreen
     Q_OBJECT
 
 public:
-    Screen(AbstractOutput *output, Integration *integration);
+    Screen(Output *output, Integration *integration);
     ~Screen() override;
 
     QString name() const override;
@@ -45,7 +45,7 @@ private Q_SLOTS:
     void handleGeometryChanged();
 
 private:
-    QPointer<AbstractOutput> m_output;
+    QPointer<Output> m_output;
     QScopedPointer<PlatformCursor> m_cursor;
     Integration *m_integration;
 };

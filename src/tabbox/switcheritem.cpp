@@ -8,8 +8,8 @@
 */
 #include "switcheritem.h"
 // KWin
-#include "abstract_output.h"
 #include "composite.h"
+#include "output.h"
 #include "screens.h"
 #include "tabboxhandler.h"
 #include "workspace.h"

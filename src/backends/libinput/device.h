@@ -25,7 +25,7 @@ struct libinput_device;
 
 namespace KWin
 {
-class AbstractOutput;
+class Output;
 
 namespace LibInput
 {
@@ -613,8 +613,8 @@ public:
 
     void *groupUserData() const;
 
-    AbstractOutput *output() const;
-    void setOutput(AbstractOutput *output);
+    Output *output() const;
+    void setOutput(Output *output);
 
     LEDs leds() const override;
     void setLeds(LEDs leds) override;
@@ -727,7 +727,7 @@ private:
     KConfigGroup m_defaultConfig;
     bool m_loading = false;
 
-    QPointer<AbstractOutput> m_output;
+    QPointer<Output> m_output;
     Qt::ScreenOrientation m_orientation = Qt::PrimaryOrientation;
     QMatrix4x4 m_defaultCalibrationMatrix;
     QMatrix4x4 m_calibrationMatrix;

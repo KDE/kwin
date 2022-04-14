@@ -9,8 +9,8 @@
 #include "kwin_wayland_test.h"
 
 #include "abstract_client.h"
-#include "abstract_output.h"
 #include "cursor.h"
+#include "output.h"
 #include "platform.h"
 #include "screens.h"
 #include "wayland_server.h"
@@ -152,7 +152,7 @@ void ScreensTest::testCurrent_data()
 void ScreensTest::testCurrent()
 {
     QFETCH(int, currentId);
-    AbstractOutput *output = kwinApp()->platform()->findOutput(currentId);
+    Output *output = kwinApp()->platform()->findOutput(currentId);
 
     // Disable "active screen follows mouse"
     auto group = kwinApp()->config()->group("Windows");
@@ -197,7 +197,7 @@ void ScreensTest::testCurrentWithFollowsMouse()
     KWin::Cursors::self()->mouse()->setPos(cursorPos);
 
     QFETCH(int, expectedId);
-    AbstractOutput *expected = kwinApp()->platform()->findOutput(expectedId);
+    Output *expected = kwinApp()->platform()->findOutput(expectedId);
     QCOMPARE(workspace()->activeOutput(), expected);
 }
 
@@ -234,7 +234,7 @@ void ScreensTest::testCurrentPoint()
     workspace()->setActiveOutput(cursorPos);
 
     QFETCH(int, expectedId);
-    AbstractOutput *expected = kwinApp()->platform()->findOutput(expectedId);
+    Output *expected = kwinApp()->platform()->findOutput(expectedId);
     QCOMPARE(workspace()->activeOutput(), expected);
 }
 

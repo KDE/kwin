@@ -27,14 +27,14 @@ class X11WindowedBackend;
 class X11WindowedQPainterOutput : public OutputLayer
 {
 public:
-    X11WindowedQPainterOutput(AbstractOutput *output, xcb_window_t window);
+    X11WindowedQPainterOutput(Output *output, xcb_window_t window);
 
     OutputLayerBeginFrameInfo beginFrame() override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
     xcb_window_t window;
     QImage buffer;
-    AbstractOutput *const m_output;
+    Output *const m_output;
 };
 
 class X11WindowedQPainterBackend : public QPainterBackend
@@ -44,14 +44,14 @@ public:
     X11WindowedQPainterBackend(X11WindowedBackend *backend);
     ~X11WindowedQPainterBackend() override;
 
-    void present(AbstractOutput *output) override;
-    OutputLayer *primaryLayer(AbstractOutput *output) override;
+    void present(Output *output) override;
+    OutputLayer *primaryLayer(Output *output) override;
 
 private:
     void createOutputs();
     xcb_gcontext_t m_gc = XCB_NONE;
     X11WindowedBackend *m_backend;
-    QMap<AbstractOutput *, QSharedPointer<X11WindowedQPainterOutput>> m_outputs;
+    QMap<Output *, QSharedPointer<X11WindowedQPainterOutput>> m_outputs;
 };
 
 }

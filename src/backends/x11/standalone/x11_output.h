@@ -9,7 +9,7 @@
 #ifndef KWIN_X11_OUTPUT_H
 #define KWIN_X11_OUTPUT_H
 
-#include "abstract_output.h"
+#include "output.h"
 #include <kwin_export.h>
 
 #include <QObject>
@@ -23,7 +23,7 @@ namespace KWin
 /**
  * X11 output representation
  */
-class KWIN_EXPORT X11Output : public AbstractOutput
+class KWIN_EXPORT X11Output : public Output
 {
     Q_OBJECT
 

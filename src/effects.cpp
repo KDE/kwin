@@ -12,9 +12,9 @@
 
 #include <config-kwin.h>
 
-#include "abstract_output.h"
 #include "effectloader.h"
 #include "effectsadaptor.h"
+#include "output.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -253,8 +253,8 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     connect(kwinApp()->platform(), &Platform::outputEnabled, this, &EffectsHandlerImpl::slotOutputEnabled);
     connect(kwinApp()->platform(), &Platform::outputDisabled, this, &EffectsHandlerImpl::slotOutputDisabled);
 
-    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
-    for (AbstractOutput *output : outputs) {
+    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
+    for (Output *output : outputs) {
         slotOutputEnabled(output);
     }
 
@@ -1298,7 +1298,7 @@ QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectWindow *c
 
 QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const QPoint &p, int desktop) const
 {
-    const AbstractOutput *output = kwinApp()->platform()->outputAt(p);
+    const Output *output = kwinApp()->platform()->outputAt(p);
     const VirtualDesktop *virtualDesktop = resolveVirtualDesktop(desktop);
     return Workspace::self()->clientArea(opt, output, virtualDesktop);
 }
@@ -1398,7 +1398,7 @@ void EffectsHandlerImpl::registerTouchBorder(ElectricBorder border, QAction *act
 
 void EffectsHandlerImpl::registerRealtimeTouchBorder(ElectricBorder border, QAction *action, EffectsHandler::TouchBorderCallback progressCallback)
 {
-    ScreenEdges::self()->reserveTouch(border, action, [progressCallback](ElectricBorder border, const QSizeF &deltaProgress, AbstractOutput *output) {
+    ScreenEdges::self()->reserveTouch(border, action, [progressCallback](ElectricBorder border, const QSizeF &deltaProgress, Output *output) {
         progressCallback(border, deltaProgress, EffectScreenImpl::get(output));
     });
 }
@@ -1792,14 +1792,14 @@ EffectScreen *EffectsHandlerImpl::findScreen(int screenId) const
     return m_effectScreens.value(screenId);
 }
 
-void EffectsHandlerImpl::slotOutputEnabled(AbstractOutput *output)
+void EffectsHandlerImpl::slotOutputEnabled(Output *output)
 {
     EffectScreen *screen = new EffectScreenImpl(output, this);
     m_effectScreens.append(screen);
     Q_EMIT screenAdded(screen);
 }
 
-void EffectsHandlerImpl::slotOutputDisabled(AbstractOutput *output)
+void EffectsHandlerImpl::slotOutputDisabled(Output *output)
 {
     EffectScreen *screen = EffectScreenImpl::get(output);
     m_effectScreens.removeOne(screen);
@@ -1863,18 +1863,18 @@ bool EffectsHandlerImpl::isInputPanelOverlay() const
 // EffectScreenImpl
 //****************************************
 
-EffectScreenImpl::EffectScreenImpl(AbstractOutput *output, QObject *parent)
+EffectScreenImpl::EffectScreenImpl(Output *output, QObject *parent)
     : EffectScreen(parent)
     , m_platformOutput(output)
 {
     m_platformOutput->m_effectScreen = this;
 
-    connect(output, &AbstractOutput::aboutToChange, this, &EffectScreen::aboutToChange);
-    connect(output, &AbstractOutput::changed, this, &EffectScreen::changed);
-    connect(output, &AbstractOutput::wakeUp, this, &EffectScreen::wakeUp);
-    connect(output, &AbstractOutput::aboutToTurnOff, this, &EffectScreen::aboutToTurnOff);
-    connect(output, &AbstractOutput::scaleChanged, this, &EffectScreen::devicePixelRatioChanged);
-    connect(output, &AbstractOutput::geometryChanged, this, &EffectScreen::geometryChanged);
+    connect(output, &Output::aboutToChange, this, &EffectScreen::aboutToChange);
+    connect(output, &Output::changed, this, &EffectScreen::changed);
+    connect(output, &Output::wakeUp, this, &EffectScreen::wakeUp);
+    connect(output, &Output::aboutToTurnOff, this, &EffectScreen::aboutToTurnOff);
+    connect(output, &Output::scaleChanged, this, &EffectScreen::devicePixelRatioChanged);
+    connect(output, &Output::geometryChanged, this, &EffectScreen::geometryChanged);
 }
 
 EffectScreenImpl::~EffectScreenImpl()
@@ -1884,12 +1884,12 @@ EffectScreenImpl::~EffectScreenImpl()
     }
 }
 
-EffectScreenImpl *EffectScreenImpl::get(AbstractOutput *output)
+EffectScreenImpl *EffectScreenImpl::get(Output *output)
 {
     return output->m_effectScreen;
 }
 
-AbstractOutput *EffectScreenImpl::platformOutput() const
+Output *EffectScreenImpl::platformOutput() const
 {
     return m_platformOutput;
 }

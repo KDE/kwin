@@ -10,11 +10,11 @@
 #include "kwin_wayland_test.h"
 
 #include "abstract_client.h"
-#include "abstract_output.h"
 #include "composite.h"
 #include "deleted.h"
 #include "effectloader.h"
 #include "effects.h"
+#include "output.h"
 #include "platform.h"
 #include "renderbackend.h"
 #include "wayland_server.h"

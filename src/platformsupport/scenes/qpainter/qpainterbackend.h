@@ -22,7 +22,7 @@ namespace KWin
 class SurfacePixmapInternal;
 class SurfacePixmapWayland;
 class SurfaceTexture;
-class AbstractOutput;
+class Output;
 
 class KWIN_EXPORT QPainterBackend : public RenderBackend
 {

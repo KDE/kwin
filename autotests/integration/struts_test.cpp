@@ -8,9 +8,9 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "abstract_output.h"
 #include "cursor.h"
 #include "deleted.h"
+#include "output.h"
 #include "platform.h"
 #include "screenedge.h"
 #include "screens.h"
@@ -138,7 +138,7 @@ void StrutsTest::testWaylandStruts()
     using namespace KWayland::Client;
 
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
-    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
 
     // no, struts yet
     QVERIFY(waylandServer()->clients().isEmpty());
@@ -224,7 +224,7 @@ void StrutsTest::testWaylandStruts()
 void StrutsTest::testMoveWaylandPanel()
 {
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
-    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
 
     // this test verifies that repositioning a Wayland panel updates the client area
     using namespace KWayland::Client;
@@ -271,7 +271,7 @@ void StrutsTest::testWaylandMobilePanel()
     using namespace KWayland::Client;
 
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
-    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
 
     // First enable maxmizing policy
     KConfigGroup group = kwinApp()->config()->group("Windows");
@@ -550,7 +550,7 @@ void StrutsTest::testX11Struts()
     // this test verifies that struts are applied correctly for X11 windows
 
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
-    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
 
     // no, struts yet
     // first screen
@@ -697,7 +697,7 @@ void StrutsTest::test363804()
     QCOMPARE(screens()->geometry(), QRect(0, 0, 1920, 1848));
 
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
-    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
     QCOMPARE(outputs.count(), 2);
     QCOMPARE(outputs[0]->geometry(), geometries[0]);
     QCOMPARE(outputs[1]->geometry(), geometries[1]);
@@ -780,7 +780,7 @@ void StrutsTest::testLeftScreenSmallerBottomAligned()
                               Q_ARG(QVector<QRect>, geometries));
     QCOMPARE(screens()->geometry(), QRect(0, 0, 3046, 1050));
 
-    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
     QCOMPARE(outputs[0]->geometry(), geometries.at(0));
     QCOMPARE(outputs[1]->geometry(), geometries.at(1));
 
@@ -897,7 +897,7 @@ void StrutsTest::testWindowMoveWithPanelBetweenScreens()
                               Q_ARG(QVector<QRect>, geometries));
     QCOMPARE(screens()->geometry(), QRect(0, 0, 3046, 1050));
 
-    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
     QCOMPARE(outputs[0]->geometry(), geometries.at(0));
     QCOMPARE(outputs[1]->geometry(), geometries.at(1));
 

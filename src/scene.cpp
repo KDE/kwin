@@ -53,8 +53,8 @@
 */
 
 #include "scene.h"
-#include "abstract_output.h"
 #include "internal_client.h"
+#include "output.h"
 #include "platform.h"
 #include "renderlayer.h"
 #include "shadowitem.h"
@@ -89,7 +89,7 @@ SceneDelegate::SceneDelegate(Scene *scene, QObject *parent)
     m_scene->addDelegate(this);
 }
 
-SceneDelegate::SceneDelegate(Scene *scene, AbstractOutput *output, QObject *parent)
+SceneDelegate::SceneDelegate(Scene *scene, Output *output, QObject *parent)
     : RenderLayerDelegate(parent)
     , m_scene(scene)
     , m_output(output)
@@ -266,7 +266,7 @@ SurfaceItem *Scene::scanoutCandidate() const
     return candidate;
 }
 
-void Scene::prePaint(AbstractOutput *output)
+void Scene::prePaint(Output *output)
 {
     createStackingOrder();
 
@@ -313,7 +313,7 @@ void Scene::prePaint(AbstractOutput *output)
     }
 }
 
-static void resetRepaintsHelper(Item *item, AbstractOutput *output)
+static void resetRepaintsHelper(Item *item, Output *output)
 {
     item->resetRepaints(output);
 
@@ -323,7 +323,7 @@ static void resetRepaintsHelper(Item *item, AbstractOutput *output)
     }
 }
 
-static void accumulateRepaints(Item *item, AbstractOutput *output, QRegion *repaints)
+static void accumulateRepaints(Item *item, Output *output, QRegion *repaints)
 {
     *repaints += item->repaints(output);
     item->resetRepaints(output);

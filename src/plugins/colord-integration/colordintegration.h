@@ -15,7 +15,7 @@
 namespace KWin
 {
 
-class AbstractOutput;
+class Output;
 class ColordDevice;
 
 class KWIN_EXPORT ColordIntegration : public Plugin
@@ -26,14 +26,14 @@ public:
     explicit ColordIntegration(QObject *parent = nullptr);
 
 private Q_SLOTS:
-    void handleOutputAdded(AbstractOutput *output);
-    void handleOutputRemoved(AbstractOutput *output);
+    void handleOutputAdded(Output *output);
+    void handleOutputRemoved(Output *output);
 
 private:
     void initialize();
     void teardown();
 
-    QHash<AbstractOutput *, ColordDevice *> m_outputToDevice;
+    QHash<Output *, ColordDevice *> m_outputToDevice;
     CdInterface *m_colordInterface;
 };
 

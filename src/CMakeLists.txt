@@ -28,7 +28,6 @@ set_target_properties(kwin PROPERTIES
 target_sources(kwin PRIVATE
     3rdparty/xcursor.c
     abstract_client.cpp
-    abstract_output.cpp
     activation.cpp
     appmenu.cpp
     atoms.cpp
@@ -84,6 +83,7 @@ target_sources(kwin PRIVATE
     options.cpp
     osd.cpp
     outline.cpp
+    output.cpp
     outputconfiguration.cpp
     outputlayer.cpp
     overlaywindow.cpp

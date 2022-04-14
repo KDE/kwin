@@ -13,7 +13,7 @@
 namespace KWin
 {
 
-class AbstractOutput;
+class Output;
 class ColorDevicePrivate;
 
 /**
@@ -24,13 +24,13 @@ class KWIN_EXPORT ColorDevice : public QObject
     Q_OBJECT
 
 public:
-    explicit ColorDevice(AbstractOutput *output, QObject *parent = nullptr);
+    explicit ColorDevice(Output *output, QObject *parent = nullptr);
     ~ColorDevice() override;
 
     /**
      * Returns the underlying output for this color device.
      */
-    AbstractOutput *output() const;
+    Output *output() const;
 
     /**
      * Returns the current color brightness on this device, in percent.

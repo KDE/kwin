@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "abstract_output.h"
+#include "output.h"
 #include "outputconfiguration.h"
 
 #include <KConfigGroup>
@@ -58,7 +58,7 @@ const uint16_t *GammaRamp::blue() const
     return m_table.data() + 2 * m_size;
 }
 
-QDebug operator<<(QDebug debug, const AbstractOutput *output)
+QDebug operator<<(QDebug debug, const Output *output)
 {
     QDebugStateSaver saver(debug);
     debug.nospace();
@@ -74,108 +74,108 @@ QDebug operator<<(QDebug debug, const AbstractOutput *output)
         }
         debug << ')';
     } else {
-        debug << "AbstractOutput(0x0)";
+        debug << "Output(0x0)";
     }
     return debug;
 }
 
-AbstractOutput::AbstractOutput(QObject *parent)
+Output::Output(QObject *parent)
     : QObject(parent)
 {
 }
 
-AbstractOutput::~AbstractOutput()
+Output::~Output()
 {
 }
 
-QString AbstractOutput::name() const
+QString Output::name() const
 {
     return m_name;
 }
 
-QUuid AbstractOutput::uuid() const
+QUuid Output::uuid() const
 {
     return m_uuid;
 }
 
-AbstractOutput::Transform AbstractOutput::transform() const
+Output::Transform Output::transform() const
 {
     return m_transform;
 }
 
-QString AbstractOutput::eisaId() const
+QString Output::eisaId() const
 {
     return m_eisaId;
 }
 
-QString AbstractOutput::manufacturer() const
+QString Output::manufacturer() const
 {
     return m_manufacturer;
 }
 
-QString AbstractOutput::model() const
+QString Output::model() const
 {
     return m_model;
 }
 
-QString AbstractOutput::serialNumber() const
+QString Output::serialNumber() const
 {
     return m_serialNumber;
 }
 
-bool AbstractOutput::isInternal() const
+bool Output::isInternal() const
 {
     return m_internal;
 }
 
-int AbstractOutput::gammaRampSize() const
+int Output::gammaRampSize() const
 {
     return 0;
 }
 
-bool AbstractOutput::setGammaRamp(const GammaRamp &gamma)
+bool Output::setGammaRamp(const GammaRamp &gamma)
 {
     Q_UNUSED(gamma);
     return false;
 }
 
-void AbstractOutput::inhibitDirectScanout()
+void Output::inhibitDirectScanout()
 {
     m_directScanoutCount++;
 }
 
-void AbstractOutput::uninhibitDirectScanout()
+void Output::uninhibitDirectScanout()
 {
     m_directScanoutCount--;
 }
 
-bool AbstractOutput::directScanoutInhibited() const
+bool Output::directScanoutInhibited() const
 {
     return m_directScanoutCount;
 }
 
-std::chrono::milliseconds AbstractOutput::dimAnimationTime()
+std::chrono::milliseconds Output::dimAnimationTime()
 {
     // See kscreen.kcfg
     return std::chrono::milliseconds(KSharedConfig::openConfig()->group("Effect-Kscreen").readEntry("Duration", 250));
 }
 
-bool AbstractOutput::usesSoftwareCursor() const
+bool Output::usesSoftwareCursor() const
 {
     return true;
 }
 
-QRect AbstractOutput::mapFromGlobal(const QRect &rect) const
+QRect Output::mapFromGlobal(const QRect &rect) const
 {
     return rect.translated(-geometry().topLeft());
 }
 
-AbstractOutput::Capabilities AbstractOutput::capabilities() const
+Output::Capabilities Output::capabilities() const
 {
     return m_capabilities;
 }
 
-void AbstractOutput::setCapabilityInternal(Capability capability, bool on)
+void Output::setCapabilityInternal(Capability capability, bool on)
 {
     if (static_cast<bool>(m_capabilities & capability) != on) {
         m_capabilities.setFlag(capability, on);
@@ -183,12 +183,12 @@ void AbstractOutput::setCapabilityInternal(Capability capability, bool on)
     }
 }
 
-qreal AbstractOutput::scale() const
+qreal Output::scale() const
 {
     return m_scale;
 }
 
-void AbstractOutput::setScale(qreal scale)
+void Output::setScale(qreal scale)
 {
     if (m_scale != scale) {
         m_scale = scale;
@@ -197,22 +197,22 @@ void AbstractOutput::setScale(qreal scale)
     }
 }
 
-QRect AbstractOutput::geometry() const
+QRect Output::geometry() const
 {
     return QRect(m_position, pixelSize() / scale());
 }
 
-QSize AbstractOutput::physicalSize() const
+QSize Output::physicalSize() const
 {
     return orientateSize(m_physicalSize);
 }
 
-int AbstractOutput::refreshRate() const
+int Output::refreshRate() const
 {
     return m_refreshRate;
 }
 
-void AbstractOutput::moveTo(const QPoint &pos)
+void Output::moveTo(const QPoint &pos)
 {
     if (m_position != pos) {
         m_position = pos;
@@ -220,32 +220,32 @@ void AbstractOutput::moveTo(const QPoint &pos)
     }
 }
 
-QSize AbstractOutput::modeSize() const
+QSize Output::modeSize() const
 {
     return m_modeSize;
 }
 
-QSize AbstractOutput::pixelSize() const
+QSize Output::pixelSize() const
 {
     return orientateSize(m_modeSize);
 }
 
-QByteArray AbstractOutput::edid() const
+QByteArray Output::edid() const
 {
     return m_edid;
 }
 
-bool AbstractOutput::Mode::operator==(const Mode &other) const
+bool Output::Mode::operator==(const Mode &other) const
 {
     return id == other.id && other.flags == flags && size == other.size && refreshRate == other.refreshRate;
 }
 
-QVector<AbstractOutput::Mode> AbstractOutput::modes() const
+QVector<Output::Mode> Output::modes() const
 {
     return m_modes;
 }
 
-void AbstractOutput::setModes(const QVector<Mode> &modes)
+void Output::setModes(const QVector<Mode> &modes)
 {
     if (m_modes != modes) {
         m_modes = modes;
@@ -253,17 +253,17 @@ void AbstractOutput::setModes(const QVector<Mode> &modes)
     }
 }
 
-AbstractOutput::SubPixel AbstractOutput::subPixel() const
+Output::SubPixel Output::subPixel() const
 {
     return m_subPixel;
 }
 
-void AbstractOutput::setSubPixelInternal(SubPixel subPixel)
+void Output::setSubPixelInternal(SubPixel subPixel)
 {
     m_subPixel = subPixel;
 }
 
-void AbstractOutput::applyChanges(const OutputConfiguration &config)
+void Output::applyChanges(const OutputConfiguration &config)
 {
     auto props = config.constChangeSet(this);
     Q_EMIT aboutToChange();
@@ -278,12 +278,12 @@ void AbstractOutput::applyChanges(const OutputConfiguration &config)
     Q_EMIT changed();
 }
 
-bool AbstractOutput::isEnabled() const
+bool Output::isEnabled() const
 {
     return m_isEnabled;
 }
 
-void AbstractOutput::setEnabled(bool enable)
+void Output::setEnabled(bool enable)
 {
     if (m_isEnabled != enable) {
         m_isEnabled = enable;
@@ -292,12 +292,12 @@ void AbstractOutput::setEnabled(bool enable)
     }
 }
 
-QString AbstractOutput::description() const
+QString Output::description() const
 {
     return m_manufacturer + ' ' + m_model;
 }
 
-void AbstractOutput::setCurrentModeInternal(const QSize &size, int refreshRate)
+void Output::setCurrentModeInternal(const QSize &size, int refreshRate)
 {
     const bool sizeChanged = m_modeSize != size;
     if (sizeChanged || m_refreshRate != refreshRate) {
@@ -321,10 +321,10 @@ static QUuid generateOutputId(const QString &eisaId, const QString &model,
     return QUuid::createUuidV5(kwinNs, payload);
 }
 
-void AbstractOutput::initialize(const QString &model, const QString &manufacturer,
-                                const QString &eisaId, const QString &serialNumber,
-                                const QSize &physicalSize,
-                                const QVector<Mode> &modes, const QByteArray &edid)
+void Output::initialize(const QString &model, const QString &manufacturer,
+                        const QString &eisaId, const QString &serialNumber,
+                        const QSize &physicalSize,
+                        const QVector<Mode> &modes, const QByteArray &edid)
 {
     m_serialNumber = serialNumber;
     m_eisaId = eisaId;
@@ -344,7 +344,7 @@ void AbstractOutput::initialize(const QString &model, const QString &manufacture
     }
 }
 
-QSize AbstractOutput::orientateSize(const QSize &size) const
+QSize Output::orientateSize(const QSize &size) const
 {
     if (m_transform == Transform::Rotated90 || m_transform == Transform::Rotated270 || m_transform == Transform::Flipped90 || m_transform == Transform::Flipped270) {
         return size.transposed();
@@ -352,7 +352,7 @@ QSize AbstractOutput::orientateSize(const QSize &size) const
     return size;
 }
 
-void AbstractOutput::setTransformInternal(Transform transform)
+void Output::setTransformInternal(Transform transform)
 {
     if (m_transform != transform) {
         m_transform = transform;
@@ -362,7 +362,7 @@ void AbstractOutput::setTransformInternal(Transform transform)
     }
 }
 
-void AbstractOutput::setDpmsModeInternal(DpmsMode dpmsMode)
+void Output::setDpmsModeInternal(DpmsMode dpmsMode)
 {
     if (m_dpmsMode != dpmsMode) {
         m_dpmsMode = dpmsMode;
@@ -370,17 +370,17 @@ void AbstractOutput::setDpmsModeInternal(DpmsMode dpmsMode)
     }
 }
 
-void AbstractOutput::setDpmsMode(DpmsMode mode)
+void Output::setDpmsMode(DpmsMode mode)
 {
     Q_UNUSED(mode)
 }
 
-AbstractOutput::DpmsMode AbstractOutput::dpmsMode() const
+Output::DpmsMode Output::dpmsMode() const
 {
     return m_dpmsMode;
 }
 
-QMatrix4x4 AbstractOutput::logicalToNativeMatrix(const QRect &rect, qreal scale, Transform transform)
+QMatrix4x4 Output::logicalToNativeMatrix(const QRect &rect, qreal scale, Transform transform)
 {
     QMatrix4x4 matrix;
     matrix.scale(scale);
@@ -423,7 +423,7 @@ QMatrix4x4 AbstractOutput::logicalToNativeMatrix(const QRect &rect, qreal scale,
     return matrix;
 }
 
-void AbstractOutput::setOverscanInternal(uint32_t overscan)
+void Output::setOverscanInternal(uint32_t overscan)
 {
     if (m_overscan != overscan) {
         m_overscan = overscan;
@@ -431,12 +431,12 @@ void AbstractOutput::setOverscanInternal(uint32_t overscan)
     }
 }
 
-uint32_t AbstractOutput::overscan() const
+uint32_t Output::overscan() const
 {
     return m_overscan;
 }
 
-void AbstractOutput::setVrrPolicy(RenderLoop::VrrPolicy policy)
+void Output::setVrrPolicy(RenderLoop::VrrPolicy policy)
 {
     if (renderLoop()->vrrPolicy() != policy && (m_capabilities & Capability::Vrr)) {
         renderLoop()->setVrrPolicy(policy);
@@ -444,27 +444,27 @@ void AbstractOutput::setVrrPolicy(RenderLoop::VrrPolicy policy)
     }
 }
 
-RenderLoop::VrrPolicy AbstractOutput::vrrPolicy() const
+RenderLoop::VrrPolicy Output::vrrPolicy() const
 {
     return renderLoop()->vrrPolicy();
 }
 
-bool AbstractOutput::isPlaceholder() const
+bool Output::isPlaceholder() const
 {
     return m_isPlaceholder;
 }
 
-void AbstractOutput::setPlaceholder(bool isPlaceholder)
+void Output::setPlaceholder(bool isPlaceholder)
 {
     m_isPlaceholder = isPlaceholder;
 }
 
-AbstractOutput::RgbRange AbstractOutput::rgbRange() const
+Output::RgbRange Output::rgbRange() const
 {
     return m_rgbRange;
 }
 
-void AbstractOutput::setRgbRangeInternal(RgbRange range)
+void Output::setRgbRangeInternal(RgbRange range)
 {
     if (m_rgbRange != range) {
         m_rgbRange = range;
@@ -472,7 +472,7 @@ void AbstractOutput::setRgbRangeInternal(RgbRange range)
     }
 }
 
-void AbstractOutput::setPhysicalSizeInternal(const QSize &size)
+void Output::setPhysicalSizeInternal(const QSize &size)
 {
     m_physicalSize = size;
 }

@@ -5,22 +5,22 @@
 */
 
 #include "colorddevice.h"
-#include "abstract_output.h"
 #include "colordevice.h"
 #include "colordlogging.h"
 #include "colordprofileinterface.h"
 #include "colormanager.h"
+#include "output.h"
 
 namespace KWin
 {
 
-ColordDevice::ColordDevice(AbstractOutput *output, QObject *parent)
+ColordDevice::ColordDevice(Output *output, QObject *parent)
     : QObject(parent)
     , m_output(output)
 {
 }
 
-AbstractOutput *ColordDevice::output() const
+Output *ColordDevice::output() const
 {
     return m_output;
 }

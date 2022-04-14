@@ -10,7 +10,6 @@
 
 #include <config-kwin.h>
 
-#include "abstract_output.h"
 #include "cursordelegate_opengl.h"
 #include "cursordelegate_qpainter.h"
 #include "dbusinterface.h"
@@ -20,6 +19,7 @@
 #include "ftrace.h"
 #include "internal_client.h"
 #include "openglbackend.h"
+#include "output.h"
 #include "outputlayer.h"
 #include "overlaywindow.h"
 #include "platform.h"
@@ -369,7 +369,7 @@ void Compositor::startupWithWorkspace()
     Q_ASSERT(m_scene);
     m_scene->initialize();
 
-    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         auto workspaceLayer = new RenderLayer(outputs.constFirst()->renderLoop());
         workspaceLayer->setDelegate(new SceneDelegate(m_scene));
@@ -379,7 +379,7 @@ void Compositor::startupWithWorkspace()
         });
         addSuperLayer(workspaceLayer);
     } else {
-        for (AbstractOutput *output : outputs) {
+        for (Output *output : outputs) {
             addOutput(output);
         }
         connect(kwinApp()->platform(), &Platform::outputEnabled, this, &Compositor::addOutput);
@@ -415,10 +415,10 @@ void Compositor::startupWithWorkspace()
     }
 }
 
-AbstractOutput *Compositor::findOutput(RenderLoop *loop) const
+Output *Compositor::findOutput(RenderLoop *loop) const
 {
     const auto outputs = kwinApp()->platform()->enabledOutputs();
-    for (AbstractOutput *output : outputs) {
+    for (Output *output : outputs) {
         if (output->renderLoop() == loop) {
             return output;
         }
@@ -426,14 +426,14 @@ AbstractOutput *Compositor::findOutput(RenderLoop *loop) const
     return nullptr;
 }
 
-void Compositor::addOutput(AbstractOutput *output)
+void Compositor::addOutput(Output *output)
 {
     Q_ASSERT(kwinApp()->operationMode() != Application::OperationModeX11);
 
     auto workspaceLayer = new RenderLayer(output->renderLoop());
     workspaceLayer->setDelegate(new SceneDelegate(m_scene, output));
     workspaceLayer->setGeometry(output->rect());
-    connect(output, &AbstractOutput::geometryChanged, workspaceLayer, [output, workspaceLayer]() {
+    connect(output, &Output::geometryChanged, workspaceLayer, [output, workspaceLayer]() {
         workspaceLayer->setGeometry(output->rect());
     });
 
@@ -454,7 +454,7 @@ void Compositor::addOutput(AbstractOutput *output)
         cursorLayer->addRepaintFull();
     };
     updateCursorLayer();
-    connect(output, &AbstractOutput::geometryChanged, cursorLayer, updateCursorLayer);
+    connect(output, &Output::geometryChanged, cursorLayer, updateCursorLayer);
     connect(Cursors::self(), &Cursors::currentCursorChanged, cursorLayer, updateCursorLayer);
     connect(Cursors::self(), &Cursors::hiddenChanged, cursorLayer, updateCursorLayer);
     connect(Cursors::self(), &Cursors::positionChanged, cursorLayer, updateCursorLayer);
@@ -462,7 +462,7 @@ void Compositor::addOutput(AbstractOutput *output)
     addSuperLayer(workspaceLayer);
 }
 
-void Compositor::removeOutput(AbstractOutput *output)
+void Compositor::removeOutput(Output *output)
 {
     removeSuperLayer(m_superlayers[output->renderLoop()]);
 }
@@ -650,7 +650,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         return;
     }
 
-    AbstractOutput *output = findOutput(renderLoop);
+    Output *output = findOutput(renderLoop);
     OutputLayer *outputLayer = m_backend->primaryLayer(output);
     fTraceDuration("Paint (", output->name(), ")");
 

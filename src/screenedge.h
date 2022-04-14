@@ -35,7 +35,7 @@ namespace KWin
 {
 
 class AbstractClient;
-class AbstractOutput;
+class Output;
 class GestureRecognizer;
 class ScreenEdges;
 class SwipeGesture;
@@ -43,12 +43,12 @@ class SwipeGesture;
 class TouchCallback
 {
 public:
-    using CallbackFunction = std::function<void(ElectricBorder border, const QSizeF &, AbstractOutput *output)>;
+    using CallbackFunction = std::function<void(ElectricBorder border, const QSizeF &, Output *output)>;
     explicit TouchCallback(QAction *touchUpAction, TouchCallback::CallbackFunction progressCallback);
     ~TouchCallback();
 
     QAction *touchUpAction() const;
-    void progressCallback(ElectricBorder border, const QSizeF &deltaProgress, AbstractOutput *output) const;
+    void progressCallback(ElectricBorder border, const QSizeF &deltaProgress, Output *output) const;
     bool hasProgressCallback() const;
 
 private:
@@ -84,8 +84,8 @@ public:
     bool isApproaching() const;
     void setClient(AbstractClient *client);
     AbstractClient *client() const;
-    void setOutput(AbstractOutput *output);
-    AbstractOutput *output() const;
+    void setOutput(Output *output);
+    Output *output() const;
     const QRect &geometry() const;
     void setTouchAction(ElectricBorderAction action);
 
@@ -168,7 +168,7 @@ private:
     bool m_blocked;
     bool m_pushBackBlocked;
     AbstractClient *m_client;
-    AbstractOutput *m_output;
+    Output *m_output;
     SwipeGesture *m_gesture;
     QVector<TouchCallback> m_touchCallbacks;
     friend class ScreenEdges;
@@ -398,9 +398,9 @@ private:
     void setCursorPushBackDistance(const QSize &distance);
     void setTimeThreshold(int threshold);
     void setReActivationThreshold(int threshold);
-    void createHorizontalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, AbstractOutput *output);
-    void createVerticalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, AbstractOutput *output);
-    Edge *createEdge(ElectricBorder border, int x, int y, int width, int height, AbstractOutput *output, bool createAction = true);
+    void createHorizontalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, Output *output);
+    void createVerticalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, Output *output);
+    Edge *createEdge(ElectricBorder border, int x, int y, int width, int height, Output *output, bool createAction = true);
     void setActionForBorder(ElectricBorder border, ElectricBorderAction *oldValue, ElectricBorderAction newValue);
     void setActionForTouchBorder(ElectricBorder border, ElectricBorderAction newValue);
     ElectricBorderAction actionForEdge(Edge *edge) const;

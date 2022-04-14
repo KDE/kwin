@@ -9,11 +9,11 @@
 
 #include "cursor.h"
 // kwin
-#include "abstract_output.h"
 #include "composite.h"
 #include "input.h"
 #include "keyboard_input.h"
 #include "main.h"
+#include "output.h"
 #include "platform.h"
 #include "scene.h"
 #include "utils/common.h"
@@ -171,7 +171,7 @@ void Cursor::slotKGlobalSettingsNotifyChange(int type, int arg)
     }
 }
 
-bool Cursor::isOnOutput(AbstractOutput *output) const
+bool Cursor::isOnOutput(Output *output) const
 {
     if (Cursors::self()->isCursorHidden()) {
         return false;

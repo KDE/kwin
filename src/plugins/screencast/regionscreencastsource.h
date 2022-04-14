@@ -14,7 +14,7 @@
 
 namespace KWin
 {
-class AbstractOutput;
+class Output;
 
 class RegionScreenCastSource : public ScreenCastSource
 {
@@ -34,7 +34,7 @@ public:
     {
         return m_region;
     }
-    void updateOutput(AbstractOutput *output);
+    void updateOutput(Output *output);
 
 private:
     const QRect m_region;

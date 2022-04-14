@@ -8,9 +8,9 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "abstract_output.h"
 #include "composite.h"
 #include "cursor.h"
+#include "output.h"
 #include "platform.h"
 #include "renderbackend.h"
 #include "wayland_server.h"

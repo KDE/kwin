@@ -10,7 +10,7 @@
 #include "kwin_wayland_test.h"
 
 #include "abstract_client.h"
-#include "abstract_output.h"
+#include "output.h"
 #include "platform.h"
 #include "scripting/scripting.h"
 #include "wayland_server.h"

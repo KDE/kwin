@@ -5,7 +5,7 @@
 */
 
 #include "colordevice.h"
-#include "abstract_output.h"
+#include "output.h"
 #include "utils/common.h"
 
 #include "3rdparty/colortemperature.h"
@@ -73,7 +73,7 @@ public:
     void updateBrightnessToneCurves();
     void updateCalibrationToneCurves();
 
-    AbstractOutput *output;
+    Output *output;
     DirtyToneCurves dirtyCurves;
     QTimer *updateTimer;
     QString profile;
@@ -263,7 +263,7 @@ void ColorDevicePrivate::updateCalibrationToneCurves()
     cmsCloseProfile(handle);
 }
 
-ColorDevice::ColorDevice(AbstractOutput *output, QObject *parent)
+ColorDevice::ColorDevice(Output *output, QObject *parent)
     : QObject(parent)
     , d(new ColorDevicePrivate)
 {
@@ -282,7 +282,7 @@ ColorDevice::~ColorDevice()
     }
 }
 
-AbstractOutput *ColorDevice::output() const
+Output *ColorDevice::output() const
 {
     return d->output;
 }

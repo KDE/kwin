@@ -483,8 +483,8 @@ public:
      * false for Normal, Dialog, Utility and Menu (and Toolbar??? - not yet) TODO
      */
     bool isSpecialWindow() const;
-    void sendToOutput(AbstractOutput *output);
-    void updateGeometryRestoresForFullscreen(AbstractOutput *output);
+    void sendToOutput(Output *output);
+    void updateGeometryRestoresForFullscreen(Output *output);
     const QKeySequence &shortcut() const
     {
         return _shortcut;
@@ -1161,7 +1161,7 @@ protected:
     {
         m_interactiveMoveResize.buttonDown = down;
     }
-    AbstractOutput *interactiveMoveResizeStartOutput() const
+    Output *interactiveMoveResizeStartOutput() const
     {
         return m_interactiveMoveResize.startOutput;
     }
@@ -1332,7 +1332,7 @@ private:
         Gravity gravity = Gravity::None;
         bool buttonDown = false;
         CursorShape cursor = Qt::ArrowCursor;
-        AbstractOutput *startOutput = nullptr;
+        Output *startOutput = nullptr;
         QTimer *delayedTimer = nullptr;
     } m_interactiveMoveResize;
 

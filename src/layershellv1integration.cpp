@@ -5,8 +5,8 @@
 */
 
 #include "layershellv1integration.h"
-#include "abstract_output.h"
 #include "layershellv1client.h"
+#include "output.h"
 #include "platform.h"
 #include "screens.h"
 #include "wayland_server.h"
@@ -39,7 +39,7 @@ LayerShellV1Integration::LayerShellV1Integration(QObject *parent)
 
 void LayerShellV1Integration::createClient(LayerSurfaceV1Interface *shellSurface)
 {
-    AbstractOutput *output = waylandServer()->findOutput(shellSurface->output());
+    Output *output = waylandServer()->findOutput(shellSurface->output());
     if (!output) {
         output = workspace()->activeOutput();
     }
@@ -167,7 +167,7 @@ static void rearrangeLayer(const QList<LayerShellV1Client *> &clients, QRect *wo
     }
 }
 
-static QList<LayerShellV1Client *> clientsForOutput(AbstractOutput *output)
+static QList<LayerShellV1Client *> clientsForOutput(Output *output)
 {
     QList<LayerShellV1Client *> result;
     const QList<AbstractClient *> clients = waylandServer()->clients();
@@ -183,7 +183,7 @@ static QList<LayerShellV1Client *> clientsForOutput(AbstractOutput *output)
     return result;
 }
 
-static void rearrangeOutput(AbstractOutput *output)
+static void rearrangeOutput(Output *output)
 {
     const QList<LayerShellV1Client *> clients = clientsForOutput(output);
     if (!clients.isEmpty()) {
@@ -205,8 +205,8 @@ void LayerShellV1Integration::rearrange()
 {
     m_rearrangeTimer->stop();
 
-    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
-    for (AbstractOutput *output : outputs) {
+    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
+    for (Output *output : outputs) {
         rearrangeOutput(output);
     }
 

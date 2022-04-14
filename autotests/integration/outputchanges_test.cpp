@@ -7,8 +7,8 @@
 #include "kwin_wayland_test.h"
 
 #include "abstract_client.h"
-#include "abstract_output.h"
 #include "cursor.h"
+#include "output.h"
 #include "outputconfiguration.h"
 #include "platform.h"
 #include "wayland_server.h"

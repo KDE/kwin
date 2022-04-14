@@ -106,7 +106,7 @@ public:
         return m_screenNumber;
     }
     xcb_window_t window() const;
-    xcb_window_t windowForScreen(AbstractOutput *output) const;
+    xcb_window_t windowForScreen(Output *output) const;
     Display *display() const
     {
         return m_display;

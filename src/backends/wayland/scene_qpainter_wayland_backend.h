@@ -29,7 +29,7 @@ class Buffer;
 
 namespace KWin
 {
-class AbstractOutput;
+class Output;
 namespace Wayland
 {
 class WaylandBackend;
@@ -85,15 +85,15 @@ public:
     explicit WaylandQPainterBackend(WaylandBackend *b);
     ~WaylandQPainterBackend() override;
 
-    void present(AbstractOutput *output) override;
-    OutputLayer *primaryLayer(AbstractOutput *output) override;
+    void present(Output *output) override;
+    OutputLayer *primaryLayer(Output *output) override;
 
 private:
-    void createOutput(AbstractOutput *waylandOutput);
+    void createOutput(Output *waylandOutput);
     void frameRendered();
 
     WaylandBackend *m_backend;
-    QMap<AbstractOutput *, QSharedPointer<WaylandQPainterOutput>> m_outputs;
+    QMap<Output *, QSharedPointer<WaylandQPainterOutput>> m_outputs;
 };
 
 }

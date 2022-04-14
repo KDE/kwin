@@ -23,7 +23,7 @@
 namespace KWin
 {
 
-class AbstractOutput;
+class Output;
 
 namespace QPA
 {
@@ -49,18 +49,18 @@ public:
     QPlatformServices *services() const override;
     void initialize() override;
 
-    QHash<AbstractOutput *, Screen *> screens() const;
+    QHash<Output *, Screen *> screens() const;
 
 private Q_SLOTS:
-    void handleOutputEnabled(AbstractOutput *output);
-    void handleOutputDisabled(AbstractOutput *output);
+    void handleOutputEnabled(Output *output);
+    void handleOutputDisabled(Output *output);
     void handlePlatformCreated();
 
 private:
     QScopedPointer<QPlatformFontDatabase> m_fontDb;
     QPlatformNativeInterface *m_nativeInterface;
     QPlatformPlaceholderScreen *m_dummyScreen = nullptr;
-    QHash<AbstractOutput *, Screen *> m_screens;
+    QHash<Output *, Screen *> m_screens;
     QScopedPointer<QGenericUnixServices> m_services;
 };
 

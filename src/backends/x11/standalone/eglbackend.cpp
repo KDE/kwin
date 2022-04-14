@@ -149,7 +149,7 @@ void EglBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedR
     m_lastRenderedRegion = renderedRegion;
 }
 
-void EglBackend::present(AbstractOutput *output)
+void EglBackend::present(Output *output)
 {
     Q_UNUSED(output)
     // Start the software vsync monitor. There is no any reliable way to determine when
@@ -195,7 +195,7 @@ void EglBackend::presentSurface(EGLSurface surface, const QRegion &damage, const
     }
 }
 
-OutputLayer *EglBackend::primaryLayer(AbstractOutput *output)
+OutputLayer *EglBackend::primaryLayer(Output *output)
 {
     Q_UNUSED(output)
     return m_layer.get();

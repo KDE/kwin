@@ -21,13 +21,13 @@
 #include <kwinoffscreenquickview.h>
 
 #include "abstract_client.h"
-#include "abstract_output.h"
 #include "composite.h"
 #include "cursor.h"
 #include "decorations/decoratedclient.h"
 #include "effects.h"
 #include "lanczosfilter.h"
 #include "main.h"
+#include "output.h"
 #include "overlaywindow.h"
 #include "renderloop.h"
 #include "shadowitem.h"
@@ -235,7 +235,7 @@ QVector<QByteArray> SceneOpenGL::openGLPlatformInterfaceExtensions() const
     return m_backend->extensions().toVector();
 }
 
-QSharedPointer<GLTexture> SceneOpenGL::textureForOutput(AbstractOutput *output) const
+QSharedPointer<GLTexture> SceneOpenGL::textureForOutput(Output *output) const
 {
     return m_backend->textureForOutput(output);
 }
