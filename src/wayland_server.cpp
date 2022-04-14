@@ -527,7 +527,7 @@ SurfaceInterface *WaylandServer::findForeignTransientForSurface(SurfaceInterface
 
 void WaylandServer::shellClientShown(Toplevel *toplevel)
 {
-    AbstractClient *client = qobject_cast<AbstractClient *>(toplevel);
+    auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr);
     if (!client) {
         qCWarning(KWIN_CORE) << "Failed to cast a Toplevel which is supposed to be an AbstractClient to AbstractClient";
         return;
@@ -555,7 +555,7 @@ void WaylandServer::initWorkspace()
                 QVector<quint32> ids;
                 QVector<QString> uuids;
                 for (Toplevel *toplevel : workspace()->stackingOrder()) {
-                    auto *client = qobject_cast<AbstractClient *>(toplevel);
+                    auto *client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr);
                     if (client && client->windowManagementInterface()) {
                         ids << client->windowManagementInterface()->internalId();
                         uuids << client->windowManagementInterface()->uuid();

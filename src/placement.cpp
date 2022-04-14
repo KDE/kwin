@@ -232,7 +232,8 @@ void Placement::placeSmart(AbstractClient *c, const QRect &area, Policy /*next*/
             cyt = y;
             cyb = y + ch;
             for (auto l = workspace()->stackingOrder().constBegin(); l != workspace()->stackingOrder().constEnd(); ++l) {
-                AbstractClient *client = qobject_cast<AbstractClient *>(*l);
+                auto t = *l;
+                auto client = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
                 if (isIrrelevant(client, c, desktop)) {
                     continue;
                 }
@@ -286,7 +287,8 @@ void Placement::placeSmart(AbstractClient *c, const QRect &area, Policy /*next*/
 
             // compare to the position of each client on the same desk
             for (auto l = workspace()->stackingOrder().constBegin(); l != workspace()->stackingOrder().constEnd(); ++l) {
-                AbstractClient *client = qobject_cast<AbstractClient *>(*l);
+                auto t = *l;
+                auto client = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
                 if (isIrrelevant(client, c, desktop)) {
                     continue;
                 }
@@ -324,7 +326,8 @@ void Placement::placeSmart(AbstractClient *c, const QRect &area, Policy /*next*/
 
             // test the position of each window on the desk
             for (auto l = workspace()->stackingOrder().constBegin(); l != workspace()->stackingOrder().constEnd(); ++l) {
-                AbstractClient *client = qobject_cast<AbstractClient *>(*l);
+                auto t = *l;
+                auto client = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
                 if (isIrrelevant(client, c, desktop)) {
                     continue;
                 }
@@ -633,7 +636,7 @@ void Placement::cascadeDesktop()
     reinitCascading(desktop);
     const auto stackingOrder = ws->stackingOrder();
     for (Toplevel *toplevel : stackingOrder) {
-        auto client = qobject_cast<AbstractClient *>(toplevel);
+        auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr);
         if (!client || (!client->isOnCurrentDesktop()) || (client->isMinimized()) || (client->isOnAllDesktops()) || (!client->isMovable())) {
             continue;
         }

@@ -38,7 +38,7 @@ void KillWindow::start()
             if (!t) {
                 return;
             }
-            if (AbstractClient *c = qobject_cast<AbstractClient *>(t)) {
+            if (AbstractClient *c = static_cast<AbstractClient *>(t->isClient() ? t : nullptr)) {
                 c->killWindow();
             } else if (Unmanaged *u = qobject_cast<Unmanaged *>(t)) {
                 xcb_kill_client(kwinApp()->x11Connection(), u->window());

@@ -350,7 +350,8 @@ public:
             return false;
         }
 
-        auto client = qobject_cast<AbstractClient *>(input()->findToplevel(event->globalPos()));
+        auto t = input()->findToplevel(event->globalPos());
+        auto client = static_cast<AbstractClient *>(t && t->isClient() ? t : nullptr);
         if (client && client->isLockScreen()) {
             workspace()->activateClient(client);
         }
@@ -2383,7 +2384,7 @@ public:
             const auto eventPos = event->globalPos();
             // TODO: use InputDeviceHandler::at() here and check isClient()?
             Toplevel *t = input()->findManagedToplevel(eventPos);
-            const auto dragTarget = qobject_cast<AbstractClient *>(t);
+            const auto dragTarget = static_cast<AbstractClient *>(t && t->isClient() ? t : nullptr);
             if (dragTarget) {
                 if (dragTarget != m_dragTarget) {
                     workspace()->takeActivity(dragTarget, Workspace::ActivityFlag::ActivityFocus);
@@ -2476,7 +2477,7 @@ public:
         if (Toplevel *t = input()->findToplevel(pos.toPoint())) {
             // TODO: consider decorations
             if (t->surface() != seat->dragSurface()) {
-                if ((m_dragTarget = qobject_cast<AbstractClient *>(t))) {
+                if ((m_dragTarget = static_cast<AbstractClient *>(t->isClient() ? t : nullptr))) {
                     workspace()->takeActivity(m_dragTarget, Workspace::ActivityFlag::ActivityFocus);
                     m_raiseTimer.start();
                 }
@@ -3299,7 +3300,8 @@ void InputDeviceHandler::updateFocus()
 void InputDeviceHandler::updateDecoration()
 {
     Decoration::DecoratedClientImpl *decoration = nullptr;
-    auto *ac = qobject_cast<AbstractClient *>(m_hover.window);
+    auto t = m_hover.window.data();
+    auto ac = static_cast<AbstractClient *>(t && t->isClient() ? t : nullptr);
     if (ac && ac->decoratedClient()) {
         if (!ac->clientGeometry().contains(position().toPoint())) {
             // input device above decoration

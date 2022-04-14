@@ -48,8 +48,9 @@ bool PopupInputFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
         return false;
     }
     if (event->type() == QMouseEvent::MouseButtonPress) {
-        auto pointerFocus = qobject_cast<AbstractClient *>(input()->findToplevel(event->globalPos()));
-        if (!pointerFocus || !AbstractClient::belongToSameApplication(pointerFocus, qobject_cast<AbstractClient *>(m_popupClients.constLast()))) {
+        auto t = input()->findToplevel(event->globalPos());
+        auto pointerFocus = static_cast<AbstractClient *>(t && t->isClient() ? t : nullptr);
+        if (!pointerFocus || !AbstractClient::belongToSameApplication(pointerFocus, static_cast<AbstractClient *>(m_popupClients.constLast()->isClient() ? m_popupClients.constLast() : nullptr))) {
             // a press on a window (or no window) not belonging to the popup window
             cancelPopups();
             // filter out this press
@@ -96,8 +97,9 @@ bool PopupInputFilter::touchDown(qint32 id, const QPointF &pos, quint32 time)
     if (m_popupClients.isEmpty()) {
         return false;
     }
-    auto pointerFocus = qobject_cast<AbstractClient *>(input()->findToplevel(pos.toPoint()));
-    if (!pointerFocus || !AbstractClient::belongToSameApplication(pointerFocus, qobject_cast<AbstractClient *>(m_popupClients.constLast()))) {
+    auto t = input()->findToplevel(pos.toPoint());
+    auto pointerFocus = static_cast<AbstractClient *>(t && t->isClient() ? t : nullptr);
+    if (!pointerFocus || !AbstractClient::belongToSameApplication(pointerFocus, static_cast<AbstractClient *>(m_popupClients.constLast()->isClient() ? m_popupClients.constLast() : nullptr))) {
         // a touch on a window (or no window) not belonging to the popup window
         cancelPopups();
         // filter out this touch

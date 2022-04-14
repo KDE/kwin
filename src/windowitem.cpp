@@ -21,7 +21,7 @@ WindowItem::WindowItem(Toplevel *window, Item *parent)
     : Item(parent)
     , m_window(window)
 {
-    AbstractClient *client = qobject_cast<AbstractClient *>(window);
+    auto client = static_cast<AbstractClient *>(window->isClient() ? window : nullptr);
     if (client) {
         connect(client, &AbstractClient::decorationChanged, this, &WindowItem::updateDecorationItem);
         updateDecorationItem();
@@ -108,7 +108,7 @@ void WindowItem::updateShadowItem()
 
 void WindowItem::updateDecorationItem()
 {
-    AbstractClient *client = qobject_cast<AbstractClient *>(m_window);
+    auto client = static_cast<AbstractClient *>(m_window->isClient() ? m_window : nullptr);
     if (!client || client->isZombie()) {
         return;
     }

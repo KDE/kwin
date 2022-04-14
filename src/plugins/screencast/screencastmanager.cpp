@@ -48,7 +48,7 @@ public:
         : ScreenCastStream(new WindowScreenCastSource(toplevel), parent)
         , m_toplevel(toplevel)
     {
-        if (AbstractClient *client = qobject_cast<AbstractClient *>(toplevel)) {
+        if (AbstractClient *client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr)) {
             setObjectName(client->desktopFileName());
         }
         connect(this, &ScreenCastStream::startStreaming, this, &WindowStream::startFeeding);

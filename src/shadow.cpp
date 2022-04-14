@@ -76,7 +76,7 @@ Shadow *Shadow::createShadowFromX11(Toplevel *toplevel)
 
 Shadow *Shadow::createShadowFromDecoration(Toplevel *toplevel)
 {
-    AbstractClient *c = qobject_cast<AbstractClient *>(toplevel);
+    auto c = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr);
     if (!c) {
         return nullptr;
     }
@@ -289,7 +289,7 @@ bool Shadow::updateShadow()
     }
 
     if (m_decorationShadow) {
-        if (AbstractClient *c = qobject_cast<AbstractClient *>(m_topLevel)) {
+        if (auto c = static_cast<AbstractClient *>(m_topLevel->isClient() ? m_topLevel : nullptr)) {
             if (c->decoration()) {
                 if (init(c->decoration())) {
                     return true;

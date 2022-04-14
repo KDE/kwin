@@ -283,7 +283,7 @@ TabBoxClientList TabBoxHandlerImpl::stackingOrder() const
     const QList<Toplevel *> stacking = Workspace::self()->stackingOrder();
     TabBoxClientList ret;
     for (Toplevel *toplevel : stacking) {
-        if (auto client = qobject_cast<AbstractClient *>(toplevel)) {
+        if (auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr)) {
             ret.append(qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(client->tabBoxClient()));
         }
     }
@@ -330,7 +330,7 @@ QWeakPointer<TabBoxClient> TabBoxHandlerImpl::desktopClient() const
 {
     const auto stackingOrder = Workspace::self()->stackingOrder();
     for (Toplevel *toplevel : stackingOrder) {
-        auto client = qobject_cast<AbstractClient *>(toplevel);
+        auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr);
         if (client && client->isDesktop() && client->isOnCurrentDesktop() && client->output() == workspace()->activeOutput()) {
             return qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(client->tabBoxClient());
         }
@@ -1243,10 +1243,9 @@ void TabBox::CDEWalkThroughWindows(bool forward)
     // policies - the topmost one, with some exceptions (can't be keepabove/below,
     // otherwise it gets stuck on them)
     //     Q_ASSERT(Workspace::self()->block_stacking_updates == 0);
-    for (int i = Workspace::self()->stackingOrder().size() - 1;
-         i >= 0;
-         --i) {
-        auto it = qobject_cast<AbstractClient *>(Workspace::self()->stackingOrder().at(i));
+    for (int i = Workspace::self()->stackingOrder().size() - 1; i >= 0; --i) {
+        auto t = Workspace::self()->stackingOrder().at(i);
+        auto it = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
         if (it && it->isOnCurrentActivity() && it->isOnCurrentDesktop() && !it->isSpecialWindow()
             && !it->isShade() && it->isShown() && it->wantsTabFocus()
             && !it->keepAbove() && !it->keepBelow()) {

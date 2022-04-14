@@ -246,7 +246,7 @@ void SceneQPainter::Window::renderDecorationItem(QPainter *painter, DecorationIt
 {
     const auto renderer = static_cast<const SceneQPainterDecorationRenderer *>(decorationItem->renderer());
     QRect dtr, dlr, drr, dbr;
-    if (auto client = qobject_cast<AbstractClient *>(toplevel)) {
+    if (auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr)) {
         client->layoutDecorationRects(dlr, dtr, drr, dbr);
     } else if (auto deleted = qobject_cast<Deleted *>(toplevel)) {
         deleted->layoutDecorationRects(dlr, dtr, drr, dbr);

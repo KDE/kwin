@@ -197,7 +197,8 @@ void PointerInputRedirection::updateToReset()
         setDecoration(nullptr);
     }
     if (focus()) {
-        if (AbstractClient *c = qobject_cast<AbstractClient *>(focus())) {
+        auto t = focus();
+        if (auto c = static_cast<AbstractClient *>(t->isClient() ? t : nullptr)) {
             c->pointerLeaveEvent();
         }
         disconnect(m_focusGeometryConnection);
@@ -557,7 +558,7 @@ void PointerInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl 
 
 void PointerInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow)
 {
-    if (AbstractClient *ac = qobject_cast<AbstractClient *>(focusOld)) {
+    if (auto ac = static_cast<AbstractClient *>(focusOld && focusOld->isClient() ? focusOld : nullptr)) {
         ac->pointerLeaveEvent();
         breakPointerConstraints(ac->surface());
         disconnectPointerConstraintsConnection();
@@ -565,7 +566,7 @@ void PointerInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow
     disconnect(m_focusGeometryConnection);
     m_focusGeometryConnection = QMetaObject::Connection();
 
-    if (AbstractClient *ac = qobject_cast<AbstractClient *>(focusNow)) {
+    if (auto ac = static_cast<AbstractClient *>(focusNow && focusNow->isClient() ? focusNow : nullptr)) {
         ac->pointerEnterEvent(m_pos.toPoint());
     }
 

@@ -894,7 +894,8 @@ void Workspace::updateToolWindows(bool also_hide)
     // SELI TODO: But maybe it should - what if a new client has been added that's not in stacking order yet?
     QVector<AbstractClient *> to_show, to_hide;
     for (auto it = stacking_order.constBegin(); it != stacking_order.constEnd(); ++it) {
-        auto c = qobject_cast<AbstractClient *>(*it);
+        auto t = *it;
+        auto c = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
         if (!c) {
             continue;
         }
@@ -1095,7 +1096,8 @@ AbstractClient *Workspace::findClientToActivateOnDesktop(VirtualDesktop *desktop
     if (options->isNextFocusPrefersMouse()) {
         auto it = stackingOrder().constEnd();
         while (it != stackingOrder().constBegin()) {
-            AbstractClient *client = qobject_cast<AbstractClient *>(*(--it));
+            auto t = *(--it);
+            auto client = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
             if (!client) {
                 continue;
             }
@@ -1401,7 +1403,8 @@ void Workspace::setShowingDesktop(bool showing, bool animated)
     { // for the blocker RAII
         StackingUpdatesBlocker blocker(this); // updateLayer & lowerClient would invalidate stacking_order
         for (int i = stacking_order.count() - 1; i > -1; --i) {
-            AbstractClient *c = qobject_cast<AbstractClient *>(stacking_order.at(i));
+            auto t = stacking_order.at(i);
+            auto c = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
             if (c && c->isOnCurrentDesktop()) {
                 if (c->isDock()) {
                     c->updateLayer();
@@ -1783,7 +1786,8 @@ AbstractClient *Workspace::findAbstractClient(std::function<bool(const AbstractC
 
 AbstractClient *Workspace::findAbstractClient(const QUuid &internalId) const
 {
-    return qobject_cast<AbstractClient *>(findToplevel(internalId));
+    auto t = findToplevel(internalId);
+    return static_cast<AbstractClient *>(t && t->isClient() ? t : nullptr);
 }
 
 Unmanaged *Workspace::findUnmanaged(std::function<bool(const Unmanaged *)> func) const

@@ -515,8 +515,8 @@ void EffectsHandlerImpl::slotOpacityChanged(Toplevel *t, qreal oldOpacity)
 
 void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
 {
-    Q_ASSERT(qobject_cast<AbstractClient *>(t));
-    AbstractClient *c = static_cast<AbstractClient *>(t);
+    Q_ASSERT(t->isClient());
+    auto c = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
     disconnect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotClientShown);
     setupClientConnections(c);
     Q_EMIT windowAdded(c->effectWindow());
@@ -904,7 +904,8 @@ QByteArray EffectsHandlerImpl::readRootProperty(long atom, long type, int format
 
 void EffectsHandlerImpl::activateWindow(EffectWindow *c)
 {
-    if (auto cl = qobject_cast<AbstractClient *>(static_cast<EffectWindowImpl *>(c)->window())) {
+    auto t = static_cast<EffectWindowImpl *>(c)->window();
+    if (auto cl = static_cast<AbstractClient *>(t->isClient() ? t : nullptr)) {
         Workspace::self()->activateClient(cl, true);
     }
 }
@@ -916,7 +917,8 @@ EffectWindow *EffectsHandlerImpl::activeWindow() const
 
 void EffectsHandlerImpl::moveWindow(EffectWindow *w, const QPoint &pos, bool snap, double snapAdjust)
 {
-    auto cl = qobject_cast<AbstractClient *>(static_cast<EffectWindowImpl *>(w)->window());
+    auto t = static_cast<EffectWindowImpl *>(w)->window();
+    auto cl = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
     if (!cl || !cl->isMovable()) {
         return;
     }
@@ -930,7 +932,8 @@ void EffectsHandlerImpl::moveWindow(EffectWindow *w, const QPoint &pos, bool sna
 
 void EffectsHandlerImpl::windowToDesktop(EffectWindow *w, int desktop)
 {
-    auto cl = qobject_cast<AbstractClient *>(static_cast<EffectWindowImpl *>(w)->window());
+    auto t = static_cast<EffectWindowImpl *>(w)->window();
+    auto cl = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
     if (cl && !cl->isDesktop() && !cl->isDock()) {
         Workspace::self()->sendClientToDesktop(cl, desktop, true);
     }
@@ -938,7 +941,8 @@ void EffectsHandlerImpl::windowToDesktop(EffectWindow *w, int desktop)
 
 void EffectsHandlerImpl::windowToDesktops(EffectWindow *w, const QVector<uint> &desktopIds)
 {
-    AbstractClient *cl = qobject_cast<AbstractClient *>(static_cast<EffectWindowImpl *>(w)->window());
+    auto t = static_cast<EffectWindowImpl *>(w)->window();
+    auto cl = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
     if (!cl || cl->isDesktop() || cl->isDock()) {
         return;
     }
@@ -960,7 +964,8 @@ void EffectsHandlerImpl::windowToDesktops(EffectWindow *w, const QVector<uint> &
 
 void EffectsHandlerImpl::windowToScreen(EffectWindow *w, EffectScreen *screen)
 {
-    auto cl = qobject_cast<AbstractClient *>(static_cast<EffectWindowImpl *>(w)->window());
+    auto t = static_cast<EffectWindowImpl *>(w)->window();
+    auto cl = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
     if (cl && !cl->isDesktop() && !cl->isDock()) {
         EffectScreenImpl *screenImpl = static_cast<EffectScreenImpl *>(screen);
         Workspace::self()->sendClientToOutput(cl, screenImpl->platformOutput());
@@ -1155,7 +1160,8 @@ void EffectsHandlerImpl::setElevatedWindow(KWin::EffectWindow *w, bool set)
 void EffectsHandlerImpl::setTabBoxWindow(EffectWindow *w)
 {
 #if KWIN_BUILD_TABBOX
-    if (auto c = qobject_cast<AbstractClient *>(static_cast<EffectWindowImpl *>(w)->window())) {
+    auto t = static_cast<EffectWindowImpl *>(w)->window();
+    if (auto c = static_cast<AbstractClient *>(t->isClient() ? t : nullptr)) {
         TabBox::TabBox::self()->setCurrentClient(c);
     }
 #else
@@ -2058,18 +2064,18 @@ TOPLEVEL_HELPER(QUuid, internalId, internalId)
 
 #undef TOPLEVEL_HELPER
 
-#define CLIENT_HELPER_WITH_DELETED(rettype, prototype, propertyname, defaultValue) \
-    rettype EffectWindowImpl::prototype() const                                    \
-    {                                                                              \
-        auto client = qobject_cast<AbstractClient *>(toplevel);                    \
-        if (client) {                                                              \
-            return client->propertyname();                                         \
-        }                                                                          \
-        auto deleted = qobject_cast<Deleted *>(toplevel);                          \
-        if (deleted) {                                                             \
-            return deleted->propertyname();                                        \
-        }                                                                          \
-        return defaultValue;                                                       \
+#define CLIENT_HELPER_WITH_DELETED(rettype, prototype, propertyname, defaultValue)              \
+    rettype EffectWindowImpl::prototype() const                                                 \
+    {                                                                                           \
+        auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr); \
+        if (client) {                                                                           \
+            return client->propertyname();                                                      \
+        }                                                                                       \
+        auto deleted = qobject_cast<Deleted *>(toplevel);                                       \
+        if (deleted) {                                                                          \
+            return deleted->propertyname();                                                     \
+        }                                                                                       \
+        return defaultValue;                                                                    \
     }
 
 CLIENT_HELPER_WITH_DELETED(bool, isMinimized, isMinimized, false)
@@ -2103,14 +2109,14 @@ NET::WindowType EffectWindowImpl::windowType() const
     return toplevel->windowType();
 }
 
-#define CLIENT_HELPER(rettype, prototype, propertyname, defaultValue) \
-    rettype EffectWindowImpl::prototype() const                       \
-    {                                                                 \
-        auto client = qobject_cast<AbstractClient *>(toplevel);       \
-        if (client) {                                                 \
-            return client->propertyname();                            \
-        }                                                             \
-        return defaultValue;                                          \
+#define CLIENT_HELPER(rettype, prototype, propertyname, defaultValue)                           \
+    rettype EffectWindowImpl::prototype() const                                                 \
+    {                                                                                           \
+        auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr); \
+        if (client) {                                                                           \
+            return client->propertyname();                                                      \
+        }                                                                                       \
+        return defaultValue;                                                                    \
     }
 
 CLIENT_HELPER(bool, isMovable, isMovable, false)
@@ -2153,7 +2159,7 @@ QRect EffectWindowImpl::decorationInnerRect() const
 
 KDecoration2::Decoration *EffectWindowImpl::decoration() const
 {
-    auto client = qobject_cast<AbstractClient *>(toplevel);
+    auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr);
     if (!client) {
         return nullptr;
     }
@@ -2178,7 +2184,7 @@ void EffectWindowImpl::deleteProperty(long int atom) const
 
 EffectWindow *EffectWindowImpl::findModal()
 {
-    auto client = qobject_cast<AbstractClient *>(toplevel);
+    auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr);
     if (!client) {
         return nullptr;
     }
@@ -2193,7 +2199,7 @@ EffectWindow *EffectWindowImpl::findModal()
 
 EffectWindow *EffectWindowImpl::transientFor()
 {
-    auto client = qobject_cast<AbstractClient *>(toplevel);
+    auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr);
     if (!client) {
         return nullptr;
     }
@@ -2231,7 +2237,7 @@ EffectWindowList getMainWindows(T *c)
 
 EffectWindowList EffectWindowImpl::mainWindows() const
 {
-    if (auto client = qobject_cast<AbstractClient *>(toplevel)) {
+    if (auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr)) {
         return getMainWindows(client);
     }
     if (auto deleted = qobject_cast<Deleted *>(toplevel)) {
@@ -2275,21 +2281,21 @@ void EffectWindowImpl::elevate(bool elevate)
 
 void EffectWindowImpl::minimize()
 {
-    if (auto client = qobject_cast<AbstractClient *>(toplevel)) {
+    if (auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr)) {
         client->minimize();
     }
 }
 
 void EffectWindowImpl::unminimize()
 {
-    if (auto client = qobject_cast<AbstractClient *>(toplevel)) {
+    if (auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr)) {
         client->unminimize();
     }
 }
 
 void EffectWindowImpl::closeWindow()
 {
-    if (auto client = qobject_cast<AbstractClient *>(toplevel)) {
+    if (auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr)) {
         client->closeWindow();
     }
 }

@@ -237,7 +237,8 @@ AbstractClient *Workspace::topClientOnDesktop(VirtualDesktop *desktop, AbstractO
         list = unconstrained_stacking_order;
     }
     for (int i = list.size() - 1; i >= 0; --i) {
-        AbstractClient *c = qobject_cast<AbstractClient *>(list.at(i));
+        auto t = list.at(i);
+        auto c = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
         if (!c) {
             continue;
         }
@@ -261,14 +262,15 @@ AbstractClient *Workspace::findDesktop(bool topmost, VirtualDesktop *desktop) co
     // TODO    Q_ASSERT( block_stacking_updates == 0 );
     if (topmost) {
         for (int i = stacking_order.size() - 1; i >= 0; i--) {
-            AbstractClient *c = qobject_cast<AbstractClient *>(stacking_order.at(i));
+            auto t = stacking_order.at(i);
+            auto c = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
             if (c && c->isOnDesktop(desktop) && c->isDesktop() && c->isShown()) {
                 return c;
             }
         }
     } else { // bottom-most
         for (Toplevel *c : qAsConst(stacking_order)) {
-            AbstractClient *client = qobject_cast<AbstractClient *>(c);
+            auto client = static_cast<AbstractClient *>(c->isClient() ? c : nullptr);
             if (client && c->isOnDesktop(desktop) && c->isDesktop() && client->isShown()) {
                 return client;
             }
@@ -334,7 +336,8 @@ void Workspace::lowerClientWithinApplication(AbstractClient *c)
     bool lowered = false;
     // first try to put it below the bottom-most window of the application
     for (auto it = unconstrained_stacking_order.begin(); it != unconstrained_stacking_order.end(); ++it) {
-        AbstractClient *client = qobject_cast<AbstractClient *>(*it);
+        auto t = *it;
+        auto client = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
         if (!client) {
             continue;
         }
@@ -388,7 +391,8 @@ void Workspace::raiseClientWithinApplication(AbstractClient *c)
 
     // first try to put it above the top-most window of the application
     for (int i = unconstrained_stacking_order.size() - 1; i > -1; --i) {
-        AbstractClient *other = qobject_cast<AbstractClient *>(unconstrained_stacking_order.at(i));
+        auto t = unconstrained_stacking_order.at(i);
+        auto other = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
         if (!other) {
             continue;
         }
@@ -437,7 +441,8 @@ void Workspace::restack(AbstractClient *c, AbstractClient *under, bool force)
     if (!force && !AbstractClient::belongToSameApplication(under, c)) {
         // put in the stacking order below _all_ windows belonging to the active application
         for (int i = 0; i < unconstrained_stacking_order.size(); ++i) {
-            AbstractClient *other = qobject_cast<AbstractClient *>(unconstrained_stacking_order.at(i));
+            auto t = unconstrained_stacking_order.at(i);
+            auto other = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
             if (other && other->layer() == c->layer() && AbstractClient::belongToSameApplication(under, other)) {
                 under = (c == other) ? nullptr : other;
                 break;
