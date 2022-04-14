@@ -34,7 +34,8 @@ namespace KWin
 {
 
 Toplevel::Toplevel()
-    : m_visual(XCB_NONE)
+    : m_output(workspace()->activeOutput())
+    , m_visual(XCB_NONE)
     , bit_depth(24)
     , info(nullptr)
     , ready_for_painting(false)
