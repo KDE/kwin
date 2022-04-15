@@ -376,10 +376,6 @@ protected:
     {
         Q_UNUSED(enable);
     }
-    virtual void updateTransform(Transform transform)
-    {
-        Q_UNUSED(transform);
-    }
 
     void setCurrentModeInternal(const QSize &size, int refreshRate);
     void setTransformInternal(Transform transform);

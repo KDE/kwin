@@ -269,7 +269,7 @@ void Output::applyChanges(const OutputConfiguration &config)
     Q_EMIT aboutToChange();
 
     setEnabled(props->enabled);
-    updateTransform(props->transform);
+    setTransformInternal(props->transform);
     moveTo(props->pos);
     setScale(props->scale);
     setVrrPolicy(props->vrrPolicy);

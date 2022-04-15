@@ -80,7 +80,6 @@ public:
     }
 
     void updateEnablement(bool enable) override;
-    void updateTransform(Transform transform) override;
     void setDpmsMode(DpmsMode mode) override;
 
 Q_SIGNALS:
