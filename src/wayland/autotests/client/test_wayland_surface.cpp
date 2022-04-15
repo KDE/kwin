@@ -625,6 +625,10 @@ void TestWaylandSurface::testOpaque()
     QCOMPARE(opaqueRegionChangedSpy.count(), 0);
 
     // so let's commit to get the new region
+    QImage black(20, 40, QImage::Format_ARGB32_Premultiplied);
+    black.fill(Qt::black);
+    QSharedPointer<KWayland::Client::Buffer> buffer1 = m_shm->createBuffer(black).toStrongRef();
+    s->attachBuffer(buffer1);
     s->commit(Surface::CommitFlag::None);
     QVERIFY(opaqueRegionChangedSpy.wait());
     QCOMPARE(opaqueRegionChangedSpy.count(), 1);
@@ -638,13 +642,13 @@ void TestWaylandSurface::testOpaque()
     QCOMPARE(opaqueRegionChangedSpy.count(), 1);
     QCOMPARE(serverSurface->opaque(), QRegion(0, 10, 20, 30));
 
-    // let's change the opaque region
+    // let's change the opaque region, it will be clipped with rect(0, 0, 20, 40)
     s->setOpaqueRegion(m_compositor->createRegion(QRegion(10, 20, 30, 40)).get());
     s->commit(Surface::CommitFlag::None);
     QVERIFY(opaqueRegionChangedSpy.wait());
     QCOMPARE(opaqueRegionChangedSpy.count(), 2);
-    QCOMPARE(opaqueRegionChangedSpy.last().first().value<QRegion>(), QRegion(10, 20, 30, 40));
-    QCOMPARE(serverSurface->opaque(), QRegion(10, 20, 30, 40));
+    QCOMPARE(opaqueRegionChangedSpy.last().first().value<QRegion>(), QRegion(10, 20, 10, 20));
+    QCOMPARE(serverSurface->opaque(), QRegion(10, 20, 10, 20));
 
     // and let's go back to an empty region
     s->setOpaqueRegion();
