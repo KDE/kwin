@@ -32,9 +32,11 @@ WaylandOutput::WaylandOutput(Surface *surface, WaylandBackend *backend)
 {
     static int identifier = -1;
     identifier++;
-    setName("WL-" + QString::number(identifier));
+    setInformation(Information{
+        .name = QStringLiteral("WL-%1").arg(identifier),
+        .capabilities = Capability::Dpms,
+    });
 
-    setCapabilityInternal(Capability::Dpms);
     connect(surface, &Surface::frameRendered, this, [this] {
         m_rendered = true;
         Q_EMIT frameRendered();
@@ -63,9 +65,6 @@ void WaylandOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
 
     auto mode = QSharedPointer<OutputMode>::create(pixelSize, s_refreshRate);
     setModesInternal({mode}, mode);
-
-    static uint i = 0;
-    initialize(QStringLiteral("model_%1").arg(i++), "manufacturer_TODO", "eisa_TODO", "serial_TODO", pixelSize, {});
 
     moveTo(logicalPosition);
     setScale(backend()->initialOutputScale());

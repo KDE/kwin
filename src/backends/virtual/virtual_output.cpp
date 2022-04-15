@@ -25,7 +25,9 @@ VirtualOutput::VirtualOutput(VirtualBackend *parent)
 
     static int identifier = -1;
     m_identifier = ++identifier;
-    setName("Virtual-" + QString::number(identifier));
+    setInformation(Information{
+        .name = QStringLiteral("Virtual-%1").arg(identifier),
+    });
 }
 
 VirtualOutput::~VirtualOutput()
@@ -47,12 +49,6 @@ void VirtualOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
     const int refreshRate = 60000; // TODO: Make the refresh rate configurable.
     m_renderLoop->setRefreshRate(refreshRate);
     m_vsyncMonitor->setRefreshRate(refreshRate);
-
-    initialize(QByteArray("model_").append(QByteArray::number(m_identifier)),
-               QByteArray("manufacturer_").append(QByteArray::number(m_identifier)),
-               QByteArray("eisa_").append(QByteArray::number(m_identifier)),
-               QByteArray("serial_").append(QByteArray::number(m_identifier)),
-               pixelSize, QByteArray("EDID_").append(QByteArray::number(m_identifier)));
 
     setGeometry(QRect(logicalPosition, pixelSize));
 }

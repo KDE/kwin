@@ -28,7 +28,7 @@ class KWIN_EXPORT X11Output : public Output
     Q_OBJECT
 
 public:
-    explicit X11Output(const QString &name, QObject *parent = nullptr);
+    explicit X11Output(QObject *parent = nullptr);
 
     bool usesSoftwareCursor() const override;
 
@@ -40,7 +40,6 @@ public:
 
     void setColorTransformation(const QSharedPointer<ColorTransformation> &transformation) override;
 
-    void setPhysicalSize(const QSize &size);
     void setMode(const QSize &size, int refreshRate);
 
 private:

@@ -297,18 +297,22 @@ Q_SIGNALS:
     void rgbRangeChanged();
 
 protected:
-    void initialize(const QString &model, const QString &manufacturer,
-                    const QString &eisaId, const QString &serialNumber,
-                    const QSize &physicalSize, const QByteArray &edid);
+    struct Information
+    {
+        QString name;
+        QString manufacturer;
+        QString model;
+        QString serialNumber;
+        QString eisaId;
+        QSize physicalSize;
+        QByteArray edid;
+        SubPixel subPixel = SubPixel::Unknown;
+        Capabilities capabilities;
+        bool internal = false;
+        bool placeholder = false;
+    };
 
-    void setName(const QString &name)
-    {
-        m_name = name;
-    }
-    void setInternal(bool set)
-    {
-        m_internal = set;
-    }
+    void setInformation(const Information &information);
 
     virtual void updateEnablement(bool enable)
     {
@@ -319,12 +323,8 @@ protected:
     void setCurrentModeInternal(const QSharedPointer<OutputMode> &currentMode);
     void setTransformInternal(Transform transform);
     void setDpmsModeInternal(DpmsMode dpmsMode);
-    void setCapabilityInternal(Capability capability, bool on = true);
-    void setSubPixelInternal(SubPixel subPixel);
     void setOverscanInternal(uint32_t overscan);
-    void setPlaceholder(bool isPlaceholder);
     void setRgbRangeInternal(RgbRange range);
-    void setPhysicalSizeInternal(const QSize &size);
 
     QSize orientateSize(const QSize &size) const;
 
@@ -332,25 +332,16 @@ private:
     Q_DISABLE_COPY(Output)
     EffectScreenImpl *m_effectScreen = nullptr;
     int m_directScanoutCount = 0;
-    QString m_name;
-    QString m_eisaId;
-    QString m_manufacturer;
-    QString m_model;
-    QString m_serialNumber;
+    Information m_information;
     QUuid m_uuid;
-    QSize m_physicalSize;
     QPoint m_position;
     qreal m_scale = 1;
-    Capabilities m_capabilities;
     Transform m_transform = Transform::Normal;
-    QByteArray m_edid;
     QList<QSharedPointer<OutputMode>> m_modes;
     QSharedPointer<OutputMode> m_currentMode;
     DpmsMode m_dpmsMode = DpmsMode::On;
     SubPixel m_subPixel = SubPixel::Unknown;
     bool m_isEnabled = true;
-    bool m_internal = false;
-    bool m_isPlaceholder = false;
     uint32_t m_overscan = 0;
     RgbRange m_rgbRange = RgbRange::Automatic;
     friend class EffectScreenImpl; // to access m_effectScreen

@@ -531,7 +531,7 @@ void X11StandalonePlatform::doUpdateOutputs()
                         changed.append(output);
                         removed.removeOne(output);
                     } else {
-                        output = new X11Output(outputInfo.name());
+                        output = new X11Output();
                         added.append(output);
                     }
 
@@ -560,7 +560,11 @@ void X11StandalonePlatform::doUpdateOutputs()
                     case XCB_RANDR_ROTATION_REFLECT_Y:
                         break;
                     }
-                    output->setPhysicalSize(physicalSize);
+
+                    output->setInformation(X11Output::Information{
+                        .name = outputInfo.name(),
+                        .physicalSize = physicalSize,
+                    });
                     break;
                 }
             }

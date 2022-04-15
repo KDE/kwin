@@ -24,9 +24,14 @@ class DrmPipelineLayer;
 class DrmVirtualOutput : public DrmAbstractOutput
 {
     Q_OBJECT
+
 public:
-    DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size);
-    DrmVirtualOutput(DrmGpu *gpu, const QSize &size);
+    enum class Type {
+        Virtual,
+        Placeholder,
+    };
+
+    DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size, Type type);
     ~DrmVirtualOutput() override;
 
     bool present() override;

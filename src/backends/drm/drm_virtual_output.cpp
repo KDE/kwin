@@ -20,29 +20,21 @@
 namespace KWin
 {
 
-static int s_serial = 0;
-DrmVirtualOutput::DrmVirtualOutput(DrmGpu *gpu, const QSize &size)
-    : DrmVirtualOutput(QString::number(s_serial++), gpu, size)
-{
-}
-
-DrmVirtualOutput::DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size)
+DrmVirtualOutput::DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size, Type type)
     : DrmAbstractOutput(gpu)
     , m_vsyncMonitor(SoftwareVsyncMonitor::create(this))
 {
     connect(m_vsyncMonitor, &VsyncMonitor::vblankOccurred, this, &DrmVirtualOutput::vblank);
 
-    setName("Virtual-" + name);
-    initialize(QLatin1String("model_") + name,
-               QLatin1String("manufacturer_") + name,
-               QLatin1String("eisa_") + name,
-               QLatin1String("serial_") + name,
-               size,
-               QByteArray("EDID_") + name.toUtf8());
-
     auto mode = QSharedPointer<OutputMode>::create(size, 60000, OutputMode::Flag::Preferred);
     setModesInternal({mode}, mode);
     m_renderLoop->setRefreshRate(mode->refreshRate());
+
+    setInformation(Information{
+        .name = QStringLiteral("Virtual-") + name,
+        .physicalSize = size,
+        .placeholder = type == Type::Placeholder,
+    });
 
     recreateSurface();
 }

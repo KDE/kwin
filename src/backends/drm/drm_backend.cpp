@@ -524,7 +524,7 @@ void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
         }
         if (m_enabledOutputs.count() == 1 && !kwinApp()->isTerminating()) {
             qCDebug(KWIN_DRM) << "adding placeholder output";
-            m_placeHolderOutput = primaryGpu()->createVirtualOutput({}, m_enabledOutputs.constFirst()->pixelSize(), 1, DrmGpu::Placeholder);
+            m_placeHolderOutput = primaryGpu()->createVirtualOutput({}, m_enabledOutputs.constFirst()->pixelSize(), 1, DrmVirtualOutput::Type::Placeholder);
             // placeholder doesn't actually need to render anything
             m_placeHolderOutput->renderLoop()->inhibit();
             m_placeholderFilter.reset(new PlaceholderInputEventFilter());
@@ -586,7 +586,7 @@ QString DrmBackend::supportInformation() const
 
 Output *DrmBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
-    auto output = primaryGpu()->createVirtualOutput(name, size * scale, scale, DrmGpu::Full);
+    auto output = primaryGpu()->createVirtualOutput(name, size * scale, scale, DrmVirtualOutput::Type::Virtual);
     readOutputsConfiguration(m_outputs);
     Q_EMIT screensQueried();
     return output;

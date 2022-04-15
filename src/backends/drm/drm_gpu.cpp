@@ -582,11 +582,10 @@ const QVector<DrmPipeline *> DrmGpu::pipelines() const
     return m_pipelines;
 }
 
-DrmVirtualOutput *DrmGpu::createVirtualOutput(const QString &name, const QSize &size, double scale, VirtualOutputMode mode)
+DrmVirtualOutput *DrmGpu::createVirtualOutput(const QString &name, const QSize &size, double scale, DrmVirtualOutput::Type type)
 {
-    auto output = new DrmVirtualOutput(name, this, size);
+    auto output = new DrmVirtualOutput(name, this, size, type);
     output->setScale(scale);
-    output->setPlaceholder(mode == Placeholder);
     m_outputs << output;
     Q_EMIT outputEnabled(output);
     Q_EMIT outputAdded(output);

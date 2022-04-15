@@ -60,8 +60,6 @@ public:
     void setColorTransformation(const QSharedPointer<ColorTransformation> &transformation) override;
 
 private:
-    void initOutputDevice();
-
     void updateEnablement(bool enable) override;
     bool setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;

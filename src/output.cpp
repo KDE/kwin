@@ -71,7 +71,7 @@ Output::~Output()
 
 QString Output::name() const
 {
-    return m_name;
+    return m_information.name;
 }
 
 QUuid Output::uuid() const
@@ -86,27 +86,27 @@ Output::Transform Output::transform() const
 
 QString Output::eisaId() const
 {
-    return m_eisaId;
+    return m_information.eisaId;
 }
 
 QString Output::manufacturer() const
 {
-    return m_manufacturer;
+    return m_information.manufacturer;
 }
 
 QString Output::model() const
 {
-    return m_model;
+    return m_information.model;
 }
 
 QString Output::serialNumber() const
 {
-    return m_serialNumber;
+    return m_information.serialNumber;
 }
 
 bool Output::isInternal() const
 {
-    return m_internal;
+    return m_information.internal;
 }
 
 void Output::inhibitDirectScanout()
@@ -142,15 +142,7 @@ QRect Output::mapFromGlobal(const QRect &rect) const
 
 Output::Capabilities Output::capabilities() const
 {
-    return m_capabilities;
-}
-
-void Output::setCapabilityInternal(Capability capability, bool on)
-{
-    if (static_cast<bool>(m_capabilities & capability) != on) {
-        m_capabilities.setFlag(capability, on);
-        Q_EMIT capabilitiesChanged();
-    }
+    return m_information.capabilities;
 }
 
 qreal Output::scale() const
@@ -174,7 +166,7 @@ QRect Output::geometry() const
 
 QSize Output::physicalSize() const
 {
-    return orientateSize(m_physicalSize);
+    return orientateSize(m_information.physicalSize);
 }
 
 int Output::refreshRate() const
@@ -202,7 +194,7 @@ QSize Output::pixelSize() const
 
 QByteArray Output::edid() const
 {
-    return m_edid;
+    return m_information.edid;
 }
 
 QList<QSharedPointer<OutputMode>> Output::modes() const
@@ -233,12 +225,7 @@ void Output::setModesInternal(const QList<QSharedPointer<OutputMode>> &modes, co
 
 Output::SubPixel Output::subPixel() const
 {
-    return m_subPixel;
-}
-
-void Output::setSubPixelInternal(SubPixel subPixel)
-{
-    m_subPixel = subPixel;
+    return m_information.subPixel;
 }
 
 void Output::applyChanges(const OutputConfiguration &config)
@@ -272,7 +259,7 @@ void Output::setEnabled(bool enable)
 
 QString Output::description() const
 {
-    return m_manufacturer + ' ' + m_model;
+    return manufacturer() + ' ' + model();
 }
 
 void Output::setCurrentModeInternal(const QSharedPointer<OutputMode> &currentMode)
@@ -295,17 +282,10 @@ static QUuid generateOutputId(const QString &eisaId, const QString &model,
     return QUuid::createUuidV5(kwinNs, payload);
 }
 
-void Output::initialize(const QString &model, const QString &manufacturer,
-                        const QString &eisaId, const QString &serialNumber,
-                        const QSize &physicalSize, const QByteArray &edid)
+void Output::setInformation(const Information &information)
 {
-    m_serialNumber = serialNumber;
-    m_eisaId = eisaId;
-    m_manufacturer = manufacturer.isEmpty() ? i18n("unknown") : manufacturer;
-    m_model = model;
-    m_physicalSize = physicalSize;
-    m_edid = edid;
-    m_uuid = generateOutputId(m_eisaId, m_model, m_serialNumber, m_name);
+    m_information = information;
+    m_uuid = generateOutputId(eisaId(), model(), serialNumber(), name());
 }
 
 QSize Output::orientateSize(const QSize &size) const
@@ -402,7 +382,7 @@ uint32_t Output::overscan() const
 
 void Output::setVrrPolicy(RenderLoop::VrrPolicy policy)
 {
-    if (renderLoop()->vrrPolicy() != policy && (m_capabilities & Capability::Vrr)) {
+    if (renderLoop()->vrrPolicy() != policy && (capabilities() & Capability::Vrr)) {
         renderLoop()->setVrrPolicy(policy);
         Q_EMIT vrrPolicyChanged();
     }
@@ -415,12 +395,7 @@ RenderLoop::VrrPolicy Output::vrrPolicy() const
 
 bool Output::isPlaceholder() const
 {
-    return m_isPlaceholder;
-}
-
-void Output::setPlaceholder(bool isPlaceholder)
-{
-    m_isPlaceholder = isPlaceholder;
+    return m_information.placeholder;
 }
 
 Output::RgbRange Output::rgbRange() const
@@ -434,11 +409,6 @@ void Output::setRgbRangeInternal(RgbRange range)
         m_rgbRange = range;
         Q_EMIT rgbRangeChanged();
     }
-}
-
-void Output::setPhysicalSizeInternal(const QSize &size)
-{
-    m_physicalSize = size;
 }
 
 void Output::setColorTransformation(const QSharedPointer<ColorTransformation> &transformation)

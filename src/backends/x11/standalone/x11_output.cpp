@@ -13,10 +13,9 @@
 namespace KWin
 {
 
-X11Output::X11Output(const QString &name, QObject *parent)
+X11Output::X11Output(QObject *parent)
     : Output(parent)
 {
-    setName(name);
 }
 
 RenderLoop *X11Output::renderLoop() const
@@ -67,11 +66,6 @@ void X11Output::setMode(const QSize &size, int refreshRate)
 {
     auto mode = QSharedPointer<OutputMode>::create(size, refreshRate);
     setModesInternal({mode}, mode);
-}
-
-void X11Output::setPhysicalSize(const QSize &size)
-{
-    setPhysicalSizeInternal(size);
 }
 
 }

@@ -48,22 +48,42 @@ DrmOutput::DrmOutput(DrmPipeline *pipeline)
     m_pipeline->setOutput(this);
     const auto conn = m_pipeline->connector();
     m_renderLoop->setRefreshRate(m_pipeline->pending.mode->refreshRate());
-    setSubPixelInternal(conn->subpixel());
-    setInternal(conn->isInternal());
-    setCapabilityInternal(DrmOutput::Capability::Dpms);
+
+    Capabilities capabilities = Capability::Dpms;
     if (conn->hasOverscan()) {
-        setCapabilityInternal(Capability::Overscan);
+        capabilities |= Capability::Overscan;
         setOverscanInternal(conn->overscan());
     }
     if (conn->vrrCapable()) {
-        setCapabilityInternal(Capability::Vrr);
+        capabilities |= Capability::Vrr;
         setVrrPolicy(RenderLoop::VrrPolicy::Automatic);
     }
     if (conn->hasRgbRange()) {
-        setCapabilityInternal(Capability::RgbRange);
+        capabilities |= Capability::RgbRange;
         setRgbRangeInternal(conn->rgbRange());
     }
-    initOutputDevice();
+
+    const Edid *edid = conn->edid();
+
+    setInformation(Information{
+        .name = conn->connectorName(),
+        .manufacturer = edid->manufacturerString(),
+        .model = conn->modelName(),
+        .serialNumber = edid->serialNumber(),
+        .eisaId = edid->eisaId(),
+        .physicalSize = conn->physicalSize(),
+        .edid = edid->raw(),
+        .subPixel = conn->subpixel(),
+        .capabilities = capabilities,
+        .internal = conn->isInternal(),
+    });
+
+    const QList<QSharedPointer<OutputMode>> modes = getModes();
+    QSharedPointer<OutputMode> currentMode = m_pipeline->pending.mode;
+    if (!currentMode) {
+        currentMode = modes.constFirst();
+    }
+    setModesInternal(modes, currentMode);
 
     m_turnOffTimer.setSingleShot(true);
     m_turnOffTimer.setInterval(dimAnimationTime());
@@ -175,22 +195,6 @@ QList<QSharedPointer<OutputMode>> DrmOutput::getModes() const
         ret.append(drmMode);
     }
     return ret;
-}
-
-void DrmOutput::initOutputDevice()
-{
-    const auto conn = m_pipeline->connector();
-    setName(conn->connectorName());
-    initialize(conn->modelName(), conn->edid()->manufacturerString(),
-               conn->edid()->eisaId(), conn->edid()->serialNumber(),
-               conn->physicalSize(), conn->edid()->raw());
-
-    const QList<QSharedPointer<OutputMode>> modes = getModes();
-    QSharedPointer<OutputMode> currentMode = m_pipeline->pending.mode;
-    if (!currentMode) {
-        currentMode = modes.constFirst();
-    }
-    setModesInternal(modes, currentMode);
 }
 
 void DrmOutput::updateEnablement(bool enable)
