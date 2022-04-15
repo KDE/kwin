@@ -105,7 +105,7 @@ void SlideEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::millisec
     const int w = effects->desktopGridWidth();
     const int h = effects->desktopGridHeight();
 
-    //Clipping
+    // Clipping
     m_paintCtx.visibleDesktops.clear();
     m_paintCtx.visibleDesktops.reserve(4); // 4 - maximum number of visible desktops
     bool includedX = false, includedY = false;
@@ -144,7 +144,7 @@ void SlideEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &
         drawPosition = constrainToDrawableRange(drawPosition);
     }
 
-    //If we're wrapping, draw the desktop in the second position.
+    // If we're wrapping, draw the desktop in the second position.
     if (drawPosition.x() > w - 1) {
         wrappingX = true;
     }
@@ -152,7 +152,6 @@ void SlideEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &
     if (drawPosition.y() > h - 1) {
         wrappingY = true;
     }
-
 
     // When we enter a virtual desktop that has a window in fullscreen mode,
     // stacking order is fine. When we leave a virtual desktop that has
@@ -181,7 +180,7 @@ void SlideEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &
     for (int desktop : qAsConst(m_paintCtx.visibleDesktops)) {
         m_paintCtx.desktop = desktop;
         m_paintCtx.lastPass = (lastDesktop == desktop);
-        m_paintCtx.translation = QPointF(effects->desktopGridCoords(desktop)) - drawPosition;//TODO: verify
+        m_paintCtx.translation = QPointF(effects->desktopGridCoords(desktop)) - drawPosition; // TODO: verify
 
         // Decide if that first desktop should be drawn at 0 or the higher position used for wrapping.
         if (effects->desktopGridCoords(desktop).x() == 0 && wrappingX) {
@@ -285,7 +284,7 @@ void SlideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowP
         return;
     }
 
-    for (EffectScreen *screen: effects->screens()) {
+    for (EffectScreen *screen : effects->screens()) {
         QPoint translation = getDrawCoords(m_paintCtx.translation, screen);
         if (isTranslated(w)) {
             data += translation;
@@ -350,7 +349,7 @@ void SlideEffect::startAnimation(int old, int current, EffectWindow *movingWindo
 
     const bool wrap = effects->optionRollOverDesktops();
 
-    //Handle stacking order
+    // Handle stacking order
     const auto windows = effects->stackingOrder();
     for (EffectWindow *w : windows) {
         if (shouldElevate(w)) {
@@ -523,9 +522,9 @@ void SlideEffect::optimizePath()
         m_endPos.setY(fmod(m_endPos.y(), h));
     }
 
-     // Is there is a shorter possible route?
-     // If the x distance to be traveled is more than half the grid width, it's faster to wrap.
-     // To avoid negative coordinates, take the lower coordinate and raise.
+    // Is there is a shorter possible route?
+    // If the x distance to be traveled is more than half the grid width, it's faster to wrap.
+    // To avoid negative coordinates, take the lower coordinate and raise.
     if (std::abs((m_startPos.x() - m_endPos.x())) > w / 2.0) {
         if (m_startPos.x() < m_endPos.x()) {
             while (m_startPos.x() < m_endPos.x()) {

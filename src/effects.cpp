@@ -145,22 +145,19 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
         }
     });
     connect(ws, &Workspace::currentDesktopChanged, this, [this](int old, AbstractClient *c) {
-            const int newDesktop = VirtualDesktopManager::self()->current();
-            if (old != 0 && newDesktop != old) {
-                Q_EMIT desktopChanged(old, newDesktop, c ? c->effectWindow() : nullptr);
-                // TODO: remove in 4.10
-                Q_EMIT desktopChanged(old, newDesktop);
-            }
+        const int newDesktop = VirtualDesktopManager::self()->current();
+        if (old != 0 && newDesktop != old) {
+            Q_EMIT desktopChanged(old, newDesktop, c ? c->effectWindow() : nullptr);
+            // TODO: remove in 4.10
+            Q_EMIT desktopChanged(old, newDesktop);
         }
-    );
-    connect(ws, &Workspace::currentDesktopChanging, this, [this](uint currentDesktop, QPointF offset, KWin::AbstractClient* c){
-            Q_EMIT desktopChanging(currentDesktop, offset, c ? c->effectWindow() : nullptr);
-        }
-    );
-    connect(ws, &Workspace::currentDesktopChangingCancelled, this, [this](){
-            Q_EMIT desktopChangingCancelled();
-        }
-    );
+    });
+    connect(ws, &Workspace::currentDesktopChanging, this, [this](uint currentDesktop, QPointF offset, KWin::AbstractClient *c) {
+        Q_EMIT desktopChanging(currentDesktop, offset, c ? c->effectWindow() : nullptr);
+    });
+    connect(ws, &Workspace::currentDesktopChangingCancelled, this, [this]() {
+        Q_EMIT desktopChangingCancelled();
+    });
     connect(ws, &Workspace::desktopPresenceChanged, this, [this](AbstractClient *c, int old) {
         if (!c->effectWindow()) {
             return;

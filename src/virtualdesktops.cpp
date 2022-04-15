@@ -18,8 +18,8 @@
 #include <KWaylandServer/plasmavirtualdesktop_interface.h>
 // Qt
 #include <QAction>
-#include <QUuid>
 #include <QDebug>
+#include <QUuid>
 
 #include <algorithm>
 
@@ -794,7 +794,7 @@ void VirtualDesktopManager::initShortcuts()
     Q_UNUSED(addAction(QStringLiteral("Switch to Next Desktop"), i18n("Switch to Next Desktop"), &VirtualDesktopManager::slotNext))
     Q_UNUSED(addAction(QStringLiteral("Switch to Previous Desktop"), i18n("Switch to Previous Desktop"), &VirtualDesktopManager::slotPrevious))
 
-    //shortcuts
+    // shortcuts
     QAction *slotRightAction = addAction(QStringLiteral("Switch One Desktop to the Right"), i18n("Switch One Desktop to the Right"), &VirtualDesktopManager::slotRight);
     KGlobalAccel::setGlobalShortcut(slotRightAction, QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Right));
     QAction *slotLeftAction = addAction(QStringLiteral("Switch One Desktop to the Left"), i18n("Switch One Desktop to the Left"), &VirtualDesktopManager::slotLeft);
@@ -809,7 +809,7 @@ void VirtualDesktopManager::initShortcuts()
     connect(m_swipeGestureReleasedX.get(), &QAction::triggered, this, &VirtualDesktopManager::gestureReleasedX);
     connect(m_swipeGestureReleasedY.get(), &QAction::triggered, this, &VirtualDesktopManager::gestureReleasedY);
 
-    //These take the live feedback from a gesture
+    // These take the live feedback from a gesture
     input()->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Left, 3, m_swipeGestureReleasedX.get(), [this](qreal cb) {
         if (grid().width() > 1) {
             m_currentDesktopOffset.setX(cb);

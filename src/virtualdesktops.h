@@ -12,11 +12,11 @@
 #include <kwin_export.h>
 #include <kwinglobals.h>
 // Qt includes
+#include <QAction>
 #include <QObject>
 #include <QPoint>
 #include <QPointer>
 #include <QSize>
-#include <QAction>
 
 // KDE includes
 #include <KConfig>

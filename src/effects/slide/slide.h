@@ -42,7 +42,6 @@ namespace KWin
  * Good luck :)
  */
 
-
 class SlideEffect : public Effect
 {
     Q_OBJECT
@@ -85,7 +84,7 @@ public:
 
 private Q_SLOTS:
     void desktopChanged(int old, int current, EffectWindow *with);
-    void desktopChanging(uint old, QPointF desktopOffset, EffectWindow* with);
+    void desktopChanging(uint old, QPointF desktopOffset, EffectWindow *with);
     void desktopChangingCancelled();
     void windowAdded(EffectWindow *w);
     void windowDeleted(EffectWindow *w);
@@ -98,7 +97,7 @@ private:
     QPointF moveInsideDesktopGrid(QPointF p);
     QPointF constrainToDrawableRange(QPointF p);
     QPointF forcePositivePosition(QPointF p) const;
-    void optimizePath(); //Find the best path to target desktop
+    void optimizePath(); // Find the best path to target desktop
 
     void startAnimation(int old, int current, EffectWindow *movingWindow = nullptr);
     void finishedSwitching();
@@ -128,7 +127,7 @@ private:
         int desktop;
         bool firstPass;
         bool lastPass;
-        QPointF translation; //Uses desktops as units
+        QPointF translation; // Uses desktops as units
 
         QPoint currentPos;
         QVector<int> visibleDesktops;

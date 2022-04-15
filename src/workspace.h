@@ -529,7 +529,7 @@ Q_SIGNALS:
     void desktopPresenceChanged(KWin::AbstractClient *, int);
     void currentActivityChanged();
     void currentDesktopChanged(int, KWin::AbstractClient *);
-    void currentDesktopChanging(uint currentDesktop, QPointF delta, KWin::AbstractClient*);//for realtime animations
+    void currentDesktopChanging(uint currentDesktop, QPointF delta, KWin::AbstractClient *); // for realtime animations
     void currentDesktopChangingCancelled();
     void clientAdded(KWin::AbstractClient *);
     void clientRemoved(KWin::AbstractClient *);
