@@ -9,7 +9,6 @@
 
 #include "deleted.h"
 
-#include "abstract_client.h"
 #include "group.h"
 #include "netinfo.h"
 #include "shadow.h"
@@ -22,7 +21,7 @@ namespace KWin
 {
 
 Deleted::Deleted()
-    : Toplevel()
+    : AbstractClient()
     , delete_refcount(1)
     , m_frame(XCB_WINDOW_NONE)
     , m_layer(UnknownLayer)

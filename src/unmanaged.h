@@ -12,12 +12,12 @@
 
 #include <netwm.h>
 
-#include "toplevel.h"
+#include "abstract_client.h"
 
 namespace KWin
 {
 
-class KWIN_EXPORT Unmanaged : public Toplevel
+class KWIN_EXPORT Unmanaged : public AbstractClient
 {
     Q_OBJECT
 public:
@@ -36,6 +36,28 @@ public:
     }
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     bool isOutline() const override;
+
+    QString captionNormal() const override { return {}; }
+    QString captionSuffix() const override { return {}; }
+    bool isCloseable() const override { return false; }
+    bool isShown() const override { return false; }
+    bool isHiddenInternal() const override { return false; }
+    void hideClient() override { /* nothing to do */ }
+    void showClient() override { /* nothing to do */ }
+    AbstractClient *findModal(bool /*allow_itself*/) override { return nullptr; }
+    bool isResizable() const override { return false; }
+    bool isMovable() const override { return false; }
+    bool isMovableAcrossScreens() const override { return false; }
+    bool takeFocus() override { return false; }
+    bool wantsInput() const override { return false; }
+    void killWindow() override { /* nothing to do */ }
+    void destroyClient() override { /* nothing to do */ }
+    void closeWindow() override { /* nothing to do */ }
+    bool acceptsFocus() const override { return false; }
+    bool belongsToSameApplication(const AbstractClient *other, SameApplicationChecks /*checks*/) const override { return other == this; }
+    void moveResizeInternal(const QRect & /*rect*/, KWin::AbstractClient::MoveResizeMode /*mode*/) override { /* nothing to do */ }
+    void updateCaption() override { /* nothing to do */ }
+    void resizeWithChecks(const QSize&) override { /* nothing to do */ }
 
 public Q_SLOTS:
     void release(ReleaseReason releaseReason = ReleaseReason::Release);

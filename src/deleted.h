@@ -10,14 +10,12 @@
 #ifndef KWIN_DELETED_H
 #define KWIN_DELETED_H
 
-#include "toplevel.h"
+#include "abstract_client.h"
 
 namespace KWin
 {
 
-class AbstractClient;
-
-class KWIN_EXPORT Deleted : public Toplevel
+class KWIN_EXPORT Deleted : public AbstractClient
 {
     Q_OBJECT
 
@@ -51,7 +49,7 @@ public:
     {
         return m_modal;
     }
-    QList<AbstractClient *> mainClients() const
+    QList<AbstractClient *> mainClients() const override
     {
         return m_mainClients;
     }
@@ -62,7 +60,7 @@ public:
     }
     QByteArray windowRole() const override;
 
-    bool isFullScreen() const
+    bool isFullScreen() const override
     {
         return m_fullscreen;
     }
@@ -75,10 +73,33 @@ public:
     {
         return m_keepBelow;
     }
+
     QString caption() const
     {
         return m_caption;
     }
+
+    QString captionNormal() const override { return m_caption; }
+    QString captionSuffix() const override { return {}; }
+    bool isCloseable() const override { return false; }
+    bool isShown() const override { return false; }
+    bool isHiddenInternal() const override { return false; }
+    void hideClient() override { /* nothing to do */ }
+    void showClient() override { /* nothing to do */ }
+    AbstractClient *findModal(bool /*allow_itself*/) override { return nullptr; }
+    bool isResizable() const override { return false; }
+    bool isMovable() const override { return false; }
+    bool isMovableAcrossScreens() const override { return false; }
+    bool takeFocus() override { return false; }
+    bool wantsInput() const override { return false; }
+    void killWindow() override { /* nothing to do */ }
+    void destroyClient() override { /* nothing to do */ }
+    void closeWindow() override { /* nothing to do */ }
+    bool acceptsFocus() const override { return false; }
+    bool belongsToSameApplication(const AbstractClient *other, SameApplicationChecks /*checks*/) const override { return other == this; }
+    void moveResizeInternal(const QRect & /*rect*/, KWin::AbstractClient::MoveResizeMode /*mode*/) override { /* nothing to do */ }
+    void updateCaption() override { /* nothing to do */ }
+    void resizeWithChecks(const QSize&) override { /* nothing to do */ }
 
     /**
      * Returns whether the client was a popup.
