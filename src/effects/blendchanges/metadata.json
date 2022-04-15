@@ -15,6 +15,7 @@
         "Description[uk]": "Анімація змін у стилі системи",
         "Description[vi]": "Tạo hiệu ứng động cho các thay đổi kiểu cách hệ thống",
         "Description[x-test]": "xxAnimates system style changesxx",
+        "Description[zh_CN]": "动画过渡系统风格更改",
         "EnabledByDefault": true,
         "Id": "blendchanges",
         "License": "GPL",
@@ -31,7 +32,8 @@
         "Name[sv]": "Blanda ändringar",
         "Name[uk]": "Злиття змін",
         "Name[vi]": "Pha trộn các thay đổi",
-        "Name[x-test]": "xxBlend Changesxx"
+        "Name[x-test]": "xxBlend Changesxx",
+        "Name[zh_CN]": "平滑过渡更改"
     },
     "org.kde.kwin.effect": {
         "internal": true

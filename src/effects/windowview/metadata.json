@@ -2,10 +2,22 @@
     "KPlugin": {
         "Category": "Window Management",
         "Description": "Helper effect for the task manager",
+        "Description[ca@valencia]": "Efecte auxiliar per al gestor de tasques",
+        "Description[ca]": "Efecte auxiliar per al gestor de tasques",
+        "Description[nl]": "Effect van hulp voor de takenbeheerder",
+        "Description[sv]": "Hjälpeffekt för aktivitetshanteraren",
+        "Description[uk]": "Допоміжний ефект для керування завданнями",
+        "Description[x-test]": "xxHelper effect for the task managerxx",
         "EnabledByDefault": true,
         "Id": "windowview",
         "License": "GPL",
-        "Name": "Window View"
+        "Name": "Window View",
+        "Name[ca@valencia]": "Vista de finestres",
+        "Name[ca]": "Vista de finestres",
+        "Name[nl]": "Weergave met vensters",
+        "Name[sv]": "Fönstervy",
+        "Name[uk]": "Перегляд вікон",
+        "Name[x-test]": "xxWindow Viewxx"
     },
     "org.kde.kwin.effect": {
         "internal": true
