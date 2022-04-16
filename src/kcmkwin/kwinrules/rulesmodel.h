@@ -45,7 +45,6 @@ public:
         PolicyRole,
         PolicyModelRole,
         OptionsModelRole,
-        OptionsMaskRole,
         SuggestedValueRole
     };
     Q_ENUM(RulesRole)

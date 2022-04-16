@@ -26,7 +26,6 @@ RuleItem::RuleItem(const QString &key,
     , m_enabled(false)
     , m_policy(new RulePolicy(policyType))
     , m_options(nullptr)
-    , m_optionsMask(0U - 1)
 {
     reset();
 }
@@ -143,22 +142,10 @@ void RuleItem::setOptionsData(const QList<OptionsModel::Data> &data)
         return;
     }
     if (!m_options) {
-        m_options = new OptionsModel();
+        m_options = new OptionsModel({}, m_type == NetTypes);
     }
     m_options->updateModelData(data);
     m_options->setValue(m_value);
-
-    if (m_type == NetTypes) {
-        m_optionsMask = 0;
-        for (const OptionsModel::Data &dataItem : data) {
-            m_optionsMask += 1 << dataItem.value.toUInt();
-        }
-    }
-}
-
-uint RuleItem::optionsMask() const
-{
-    return m_optionsMask;
 }
 
 int RuleItem::policy() const
@@ -198,8 +185,8 @@ QVariant RuleItem::typedValue(const QVariant &value) const
     case Percentage:
         return value.toInt();
     case NetTypes: {
-        const uint typesMask = value.toUInt() & optionsMask(); // filter by the allowed mask in the model
-        if (typesMask == 0 || typesMask == optionsMask()) { // if no types or all of them are selected
+        const uint typesMask = m_options ? value.toUInt() & m_options->allOptionsMask() : 0; // filter by the allowed mask in the model
+        if (typesMask == 0 || typesMask == m_options->allOptionsMask()) { // if no types or all of them are selected
             return 0U - 1; // return an all active mask (NET:AllTypesMask)
         }
         return typesMask;

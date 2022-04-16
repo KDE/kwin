@@ -20,8 +20,17 @@ class OptionsModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(int selectedIndex READ selectedIndex NOTIFY selectedIndexChanged)
+    Q_PROPERTY(int allOptionsMask READ allOptionsMask NOTIFY modelUpdated)
+    Q_PROPERTY(int useFlags READ useFlags CONSTANT)
 
 public:
+    enum OptionsRole {
+        ValueRole = Qt::UserRole,
+        IconNameRole,
+        BitMaskRole,
+    };
+    Q_ENUM(OptionsRole)
+
     struct Data
     {
         Data(const QVariant &value, const QString &text, const QIcon &icon = {}, const QString &description = {})
@@ -45,14 +54,11 @@ public:
     };
 
 public:
-    OptionsModel()
-        : QAbstractListModel()
-        , m_data()
-        , m_index(0){};
-    OptionsModel(const QList<Data> &data)
+    OptionsModel(QList<Data> data = {}, bool useFlags = false)
         : QAbstractListModel()
         , m_data(data)
-        , m_index(0){};
+        , m_index(0)
+        , m_useFlags(useFlags){};
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QHash<int, QByteArray> roleNames() const override;
@@ -62,20 +68,26 @@ public:
     void setValue(QVariant value);
     void resetValue();
 
+    bool useFlags() const;
+    uint allOptionsMask() const;
+
     void updateModelData(const QList<Data> &data);
 
     Q_INVOKABLE int indexOf(const QVariant &value) const;
     Q_INVOKABLE QString textOfValue(const QVariant &value) const;
     int selectedIndex() const;
+    uint bitMask(int index) const;
 
 Q_SIGNALS:
     void selectedIndexChanged(int index);
+    void modelUpdated();
 
 public:
     QList<Data> m_data;
 
 protected:
     int m_index = 0;
+    bool m_useFlags = false;
 };
 
 class RulePolicy : public OptionsModel

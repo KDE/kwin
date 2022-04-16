@@ -110,9 +110,8 @@ Loader {
             flat: true
             model: ruleOptions
             multipleChoice: true
-            useFlagsValue: true
             // Filter the provided value with the options mask
-            selectionMask: ruleValue & optionsMask
+            selectionMask: ruleValue & model.allOptionsMask
             onActivated: {
                 valueEditor.valueEdited(selectionMask);
             }

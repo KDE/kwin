@@ -17,8 +17,9 @@ QHash<int, QByteArray> OptionsModel::roleNames() const
         {Qt::DisplayRole, QByteArrayLiteral("display")},
         {Qt::DecorationRole, QByteArrayLiteral("decoration")},
         {Qt::ToolTipRole, QByteArrayLiteral("tooltip")},
-        {Qt::UserRole, QByteArrayLiteral("value")},
-        {Qt::UserRole + 1, QByteArrayLiteral("iconName")},
+        {ValueRole, QByteArrayLiteral("value")},
+        {IconNameRole, QByteArrayLiteral("iconName")},
+        {BitMaskRole, QByteArrayLiteral("bitMask")},
     };
 }
 
@@ -36,19 +37,21 @@ QVariant OptionsModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    const Data data = m_data.at(index.row());
+    const Data item = m_data.at(index.row());
 
     switch (role) {
     case Qt::DisplayRole:
-        return data.text;
+        return item.text;
     case Qt::UserRole:
-        return data.value;
+        return item.value;
     case Qt::DecorationRole:
-        return data.icon;
-    case Qt::UserRole + 1:
-        return data.icon.name();
+        return item.icon;
+    case IconNameRole:
+        return item.icon.name();
     case Qt::ToolTipRole:
-        return data.description;
+        return item.description;
+    case BitMaskRole:
+        return bitMask(index.row());
     }
     return QVariant();
 }
@@ -103,11 +106,36 @@ void OptionsModel::resetValue()
     Q_EMIT selectedIndexChanged(m_index);
 }
 
+bool OptionsModel::useFlags() const
+{
+    return m_useFlags;
+};
+
+uint OptionsModel::bitMask(int index) const
+{
+    const Data item = m_data.at(index);
+
+    if (m_useFlags) {
+        return item.value.toUInt();
+    }
+    return 1u << index;
+}
+
+uint OptionsModel::allOptionsMask() const
+{
+    uint mask = 0;
+    for (int index = 0; index < m_data.count(); index++) {
+        mask += bitMask(index);
+    }
+    return mask;
+}
+
 void OptionsModel::updateModelData(const QList<Data> &data)
 {
     beginResetModel();
     m_data = data;
     endResetModel();
+    Q_EMIT modelUpdated();
 }
 
 RulePolicy::Type RulePolicy::type() const
