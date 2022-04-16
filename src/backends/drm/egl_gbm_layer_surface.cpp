@@ -159,7 +159,7 @@ bool EglGbmLayerSurface::createGbmSurface(const QSize &size, uint32_t format, co
     static bool modifiersEnvSet = false;
     static const bool modifiersEnv = qEnvironmentVariableIntValue("KWIN_DRM_USE_MODIFIERS", &modifiersEnvSet) != 0;
     const bool allowModifiers = m_eglBackend->gpu()->addFB2ModifiersSupported() && m_gpu->addFB2ModifiersSupported()
-        && ((m_eglBackend->gpu()->isNVidia() && !modifiersEnvSet) || (modifiersEnvSet && modifiersEnv));
+                                && (!modifiersEnvSet || (modifiersEnvSet && modifiersEnv));
 
     const auto config = m_eglBackend->config(format);
 
