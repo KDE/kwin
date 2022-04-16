@@ -30,6 +30,8 @@ RulesModel::RulesModel(QObject *parent)
                                          QStringLiteral("Do not create objects of type RuleItem"));
     qmlRegisterUncreatableType<RulesModel>("org.kde.kcms.kwinrules", 1, 0, "RulesModel",
                                            QStringLiteral("Do not create objects of type RulesModel"));
+    qmlRegisterUncreatableType<OptionsModel>("org.kde.kcms.kwinrules", 1, 0, "OptionsModel",
+                                             QStringLiteral("Do not create objects of type OptionsModel"));
 
     qDBusRegisterMetaType<KWin::DBusDesktopDataStruct>();
     qDBusRegisterMetaType<KWin::DBusDesktopDataVector>();
@@ -722,6 +724,7 @@ QList<OptionsModel::Data> RulesModel::windowTypesModelData() const
 {
     static const auto modelData = QList<OptionsModel::Data>{
         // TODO: Find/create better icons
+        {0, i18n("All Window Types"), {}, {}, OptionsModel::SelectAllOption},
         {1 << NET::Normal, i18n("Normal Window"), QIcon::fromTheme("window")},
         {1 << NET::Dialog, i18n("Dialog Window"), QIcon::fromTheme("window-duplicate")},
         {1 << NET::Utility, i18n("Utility Window"), QIcon::fromTheme("dialog-object-properties")},
@@ -739,7 +742,14 @@ QList<OptionsModel::Data> RulesModel::windowTypesModelData() const
 
 QList<OptionsModel::Data> RulesModel::virtualDesktopsModelData() const
 {
-    QList<OptionsModel::Data> modelData = {{QString(), i18n("All Desktops"), QIcon::fromTheme("window-pin")}};
+    QList<OptionsModel::Data> modelData;
+    modelData << OptionsModel::Data{
+        QString(),
+        i18n("All Desktops"),
+        QIcon::fromTheme("window-pin"),
+        i18nc("@info:tooltip in the virtual desktop list", "Make the window available on all desktops"),
+        OptionsModel::ExclusiveOption,
+    };
     for (const DBusDesktopDataStruct &desktop : m_virtualDesktops) {
         modelData << OptionsModel::Data{
             desktop.id,
@@ -757,7 +767,10 @@ QList<OptionsModel::Data> RulesModel::activitiesModelData() const
     modelData << OptionsModel::Data{
         Activities::nullUuid(),
         i18n("All Activities"),
-        QIcon::fromTheme("activities")};
+        QIcon::fromTheme("activities"),
+        i18nc("@info:tooltip in the activity list", "Make the window available on all activities"),
+        OptionsModel::ExclusiveOption,
+    };
 
     const auto activities = m_activities->activities(KActivities::Info::Running);
     if (m_activities->serviceStatus() == KActivities::Consumer::Running) {

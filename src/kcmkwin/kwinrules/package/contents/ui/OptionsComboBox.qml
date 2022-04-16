@@ -9,6 +9,7 @@ import QtQuick.Layouts 1.14
 import QtQuick.Controls 2.14 as QQC2
 
 import org.kde.kirigami 2.10 as Kirigami
+import org.kde.kcms.kwinrules 1.0
 
 
 QQC2.ComboBox {
@@ -43,13 +44,21 @@ QQC2.ComboBox {
     }
 
     delegate: QQC2.ItemDelegate {
+        id: delegateItem
+
         highlighted: optionsCombo.highlightedIndex == index
         width: parent.width
 
         contentItem: RowLayout {
+            QQC2.RadioButton {
+                id: radioButton
+                visible: multipleChoice && model.optionType === OptionsModel.ExclusiveOption
+                checked: (selectionMask & bitMask) == bitMask
+                enabled: false  // We don't want to uncheck the exclusive option on toggle
+            }
             QQC2.CheckBox {
                 id: checkBox
-                visible: multipleChoice
+                visible: multipleChoice && model.optionType !== OptionsModel.ExclusiveOption
                 checked: (selectionMask & model.bitMask) == model.bitMask
                 onToggled: {
                     selectionMask = (checked) ? selectionMask | model.bitMask : selectionMask & ~model.bitMask;
@@ -74,8 +83,13 @@ QQC2.ComboBox {
             anchors.fill: contentItem
             enabled: multipleChoice
             onClicked: {
-                checkBox.toggle();
-                checkBox.toggled();
+                if (checkBox.visible) {
+                    checkBox.toggle();
+                    checkBox.toggled();
+                } else if (radioButton.visible) {
+                    selectionMask = model.bitMask; // Only check the exclusive option
+                    activated(index);
+                }
             }
         }
 

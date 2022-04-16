@@ -19,6 +19,7 @@ QHash<int, QByteArray> OptionsModel::roleNames() const
         {Qt::ToolTipRole, QByteArrayLiteral("tooltip")},
         {ValueRole, QByteArrayLiteral("value")},
         {IconNameRole, QByteArrayLiteral("iconName")},
+        {OptionTypeRole, QByteArrayLiteral("optionType")},
         {BitMaskRole, QByteArrayLiteral("bitMask")},
     };
 }
@@ -50,6 +51,8 @@ QVariant OptionsModel::data(const QModelIndex &index, int role) const
         return item.icon.name();
     case Qt::ToolTipRole:
         return item.description;
+    case OptionTypeRole:
+        return item.optionType;
     case BitMaskRole:
         return bitMask(index.row());
     }
@@ -85,6 +88,9 @@ QVariant OptionsModel::value() const
     if (m_data.isEmpty()) {
         return QVariant();
     }
+    if (m_data.at(m_index).optionType == SelectAllOption) {
+        return allValues();
+    }
     return m_data.at(m_index).value;
 }
 
@@ -115,17 +121,37 @@ uint OptionsModel::bitMask(int index) const
 {
     const Data item = m_data.at(index);
 
+    if (item.optionType == SelectAllOption) {
+        return allOptionsMask();
+    }
     if (m_useFlags) {
         return item.value.toUInt();
     }
     return 1u << index;
 }
 
+QVariant OptionsModel::allValues() const
+{
+    if (m_useFlags) {
+        return allOptionsMask();
+    }
+
+    QVariantList list;
+    for (const Data &item : qAsConst(m_data)) {
+        if (item.optionType == NormalOption) {
+            list << item.value;
+        }
+    }
+    return list;
+}
+
 uint OptionsModel::allOptionsMask() const
 {
     uint mask = 0;
     for (int index = 0; index < m_data.count(); index++) {
-        mask += bitMask(index);
+        if (m_data.at(index).optionType == NormalOption) {
+            mask += bitMask(index);
+        }
     }
     return mask;
 }
