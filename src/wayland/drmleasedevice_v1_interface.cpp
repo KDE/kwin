@@ -84,10 +84,6 @@ void DrmLeaseDeviceV1InterfacePrivate::remove()
         request->connectors.clear();
     }
     globalRemove();
-    removed = true;
-    if (resourceMap().isEmpty()) {
-        delete this;
-    }
 }
 
 void DrmLeaseDeviceV1InterfacePrivate::registerConnector(DrmLeaseConnectorV1Interface *connector)
@@ -144,6 +140,9 @@ void DrmLeaseDeviceV1InterfacePrivate::wp_drm_lease_device_v1_release(Resource *
 
 void DrmLeaseDeviceV1InterfacePrivate::wp_drm_lease_device_v1_bind_resource(Resource *resource)
 {
+    if (isGlobalRemoved()) {
+        return;
+    }
     if (!hasDrmMaster) {
         pendingFds << resource->handle;
         return;
@@ -161,12 +160,9 @@ void DrmLeaseDeviceV1InterfacePrivate::wp_drm_lease_device_v1_bind_resource(Reso
     }
 }
 
-void DrmLeaseDeviceV1InterfacePrivate::wp_drm_lease_device_v1_destroy_resource(Resource *resource)
+void DrmLeaseDeviceV1InterfacePrivate::wp_drm_lease_device_v1_destroy_global()
 {
-    Q_UNUSED(resource)
-    if (removed && resourceMap().isEmpty()) {
-        delete this;
-    }
+    delete this;
 }
 
 

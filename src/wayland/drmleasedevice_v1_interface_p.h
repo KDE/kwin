@@ -44,7 +44,7 @@ protected:
     void wp_drm_lease_device_v1_create_lease_request(Resource *resource, uint32_t id) override;
     void wp_drm_lease_device_v1_release(Resource *resource) override;
     void wp_drm_lease_device_v1_bind_resource(Resource *resource) override;
-    void wp_drm_lease_device_v1_destroy_resource(Resource *resource) override;
+    void wp_drm_lease_device_v1_destroy_global() override;
 };
 
 class DrmLeaseConnectorV1InterfacePrivate : public QObject, public QtWaylandServer::wp_drm_lease_connector_v1
