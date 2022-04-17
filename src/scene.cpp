@@ -237,8 +237,7 @@ SurfaceItem *Scene::scanoutCandidate() const
             Window *window = stacking_order[i];
             AbstractClient *toplevel = window->window();
             if (toplevel->isOnOutput(painted_screen) && window->isVisible() && toplevel->opacity() > 0) {
-                AbstractClient *c = dynamic_cast<AbstractClient *>(toplevel);
-                if (!c || !c->isFullScreen() || c->opacity() != 1.0) {
+                if (!toplevel->isClient() || !toplevel->isFullScreen() || toplevel->opacity() != 1.0) {
                     break;
                 }
                 if (!window->surfaceItem()) {
@@ -373,8 +372,7 @@ void Scene::preparePaintSimpleScreen()
                 data.opaque = surfaceItem->mapToGlobal(surfaceItem->opaque());
             }
 
-            const AbstractClient *client = dynamic_cast<const AbstractClient *>(toplevel);
-            if (client && !client->decorationHasAlpha()) {
+            if (toplevel->isClient() && !toplevel->decorationHasAlpha()) {
                 data.opaque |= sceneWindow->decorationShape().translated(sceneWindow->pos());
             }
         }
@@ -789,8 +787,8 @@ bool Scene::Window::isVisible() const
     if (!toplevel->isOnCurrentActivity()) {
         return false;
     }
-    if (AbstractClient *c = dynamic_cast<AbstractClient *>(toplevel)) {
-        return c->isShown();
+    if (toplevel->isClient()) {
+        return toplevel->isShown();
     }
     return true; // Unmanaged is always visible
 }
@@ -818,11 +816,11 @@ void Scene::Window::resetPaintingEnabled()
     if (!toplevel->isOnCurrentActivity()) {
         disable_painting |= PAINT_DISABLED_BY_ACTIVITY;
     }
-    if (AbstractClient *c = dynamic_cast<AbstractClient *>(toplevel)) {
-        if (c->isMinimized()) {
+    if (toplevel->isClient()) {
+        if (toplevel->isMinimized()) {
             disable_painting |= PAINT_DISABLED_BY_MINIMIZE;
         }
-        if (c->isHiddenInternal()) {
+        if (toplevel->isHiddenInternal()) {
             disable_painting |= PAINT_DISABLED;
         }
     }

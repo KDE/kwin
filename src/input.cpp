@@ -1714,8 +1714,8 @@ public:
         if (event->type() != QEvent::MouseButtonPress) {
             return false;
         }
-        AbstractClient *c = dynamic_cast<AbstractClient *>(input()->pointer()->focus());
-        if (!c) {
+        AbstractClient *c = input()->pointer()->focus();
+        if (!c || !c->isClient()) {
             return false;
         }
         const auto actionResult = performClientMouseAction(event, c, MouseAction::ModifierAndWindow);
@@ -1730,8 +1730,8 @@ public:
             // only actions on vertical scroll
             return false;
         }
-        AbstractClient *c = dynamic_cast<AbstractClient *>(input()->pointer()->focus());
-        if (!c) {
+        AbstractClient *c = input()->pointer()->focus();
+        if (!c || !c->isClient()) {
             return false;
         }
         const auto actionResult = performClientWheelAction(event, c, MouseAction::ModifierAndWindow);
@@ -1748,8 +1748,8 @@ public:
         if (seat->isTouchSequence()) {
             return false;
         }
-        AbstractClient *c = dynamic_cast<AbstractClient *>(input()->touch()->focus());
-        if (!c) {
+        AbstractClient *c = input()->touch()->focus();
+        if (!c || !c->isClient()) {
             return false;
         }
         bool wasAction = false;
@@ -1764,8 +1764,8 @@ public:
         if (event->type() != QEvent::TabletPress) {
             return false;
         }
-        AbstractClient *c = dynamic_cast<AbstractClient *>(input()->tablet()->focus());
-        if (!c) {
+        AbstractClient *c = input()->tablet()->focus();
+        if (!c || !c->isClient()) {
             return false;
         }
         bool wasAction = false;
@@ -3116,8 +3116,8 @@ AbstractClient *InputRedirection::findManagedToplevel(const QPoint &pos)
             // a deleted window doesn't get mouse events
             continue;
         }
-        if (AbstractClient *c = dynamic_cast<AbstractClient *>(t)) {
-            if (!c->isOnCurrentActivity() || !c->isOnCurrentDesktop() || c->isMinimized() || c->isHiddenInternal()) {
+        if (t->isClient()) {
+            if (!t->isOnCurrentActivity() || !t->isOnCurrentDesktop() || t->isMinimized() || t->isHiddenInternal()) {
                 continue;
             }
         }
