@@ -20,13 +20,7 @@ class DrmVirtualOutput;
 class DrmQPainterBackend;
 class DrmDumbBuffer;
 
-class QPainterLayer
-{
-public:
-    virtual ~QPainterLayer() = default;
-};
-
-class DrmQPainterLayer : public DrmPipelineLayer, public QPainterLayer
+class DrmQPainterLayer : public DrmPipelineLayer
 {
 public:
     DrmQPainterLayer(DrmQPainterBackend *backend, DrmPipeline *pipeline);
@@ -44,7 +38,7 @@ private:
     QRegion m_currentDamage;
 };
 
-class DrmVirtualQPainterLayer : public DrmOutputLayer, public QPainterLayer
+class DrmVirtualQPainterLayer : public DrmOutputLayer
 {
 public:
     DrmVirtualQPainterLayer(DrmVirtualOutput *output);
