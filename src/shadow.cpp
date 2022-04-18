@@ -74,17 +74,13 @@ Shadow *Shadow::createShadowFromX11(AbstractClient *toplevel)
     }
 }
 
-Shadow *Shadow::createShadowFromDecoration(AbstractClient *toplevel)
+Shadow *Shadow::createShadowFromDecoration(AbstractClient *window)
 {
-    auto c = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr);
-    if (!c) {
+    if (!window->decoration()) {
         return nullptr;
     }
-    if (!c->decoration()) {
-        return nullptr;
-    }
-    Shadow *shadow = Compositor::self()->scene()->createShadow(toplevel);
-    if (!shadow->init(c->decoration())) {
+    Shadow *shadow = Compositor::self()->scene()->createShadow(window);
+    if (!shadow->init(window->decoration())) {
         delete shadow;
         return nullptr;
     }
@@ -289,9 +285,9 @@ bool Shadow::updateShadow()
     }
 
     if (m_decorationShadow) {
-        if (auto c = static_cast<AbstractClient *>(m_topLevel->isClient() ? m_topLevel : nullptr)) {
-            if (c->decoration()) {
-                if (init(c->decoration())) {
+        if (m_topLevel) {
+            if (m_topLevel->decoration()) {
+                if (init(m_topLevel->decoration())) {
                     return true;
                 }
             }
