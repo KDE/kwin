@@ -283,8 +283,8 @@ TabBoxClientList TabBoxHandlerImpl::stackingOrder() const
     const QList<AbstractClient *> stacking = Workspace::self()->stackingOrder();
     TabBoxClientList ret;
     for (AbstractClient *toplevel : stacking) {
-        if (auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr)) {
-            ret.append(qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(client->tabBoxClient()));
+        if (toplevel->isClient()) {
+            ret.append(qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(toplevel->tabBoxClient()));
         }
     }
     return ret;
@@ -330,9 +330,8 @@ QWeakPointer<TabBoxClient> TabBoxHandlerImpl::desktopClient() const
 {
     const auto stackingOrder = Workspace::self()->stackingOrder();
     for (AbstractClient *toplevel : stackingOrder) {
-        auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr);
-        if (client && client->isDesktop() && client->isOnCurrentDesktop() && client->output() == workspace()->activeOutput()) {
-            return qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(client->tabBoxClient());
+        if (toplevel->isClient() && toplevel->isDesktop() && toplevel->isOnCurrentDesktop() && toplevel->output() == workspace()->activeOutput()) {
+            return qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(toplevel->tabBoxClient());
         }
     }
     return QWeakPointer<TabBoxClient>();
@@ -1245,11 +1244,10 @@ void TabBox::CDEWalkThroughWindows(bool forward)
     //     Q_ASSERT(Workspace::self()->block_stacking_updates == 0);
     for (int i = Workspace::self()->stackingOrder().size() - 1; i >= 0; --i) {
         auto t = Workspace::self()->stackingOrder().at(i);
-        auto it = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
-        if (it && it->isOnCurrentActivity() && it->isOnCurrentDesktop() && !it->isSpecialWindow()
-            && !it->isShade() && it->isShown() && it->wantsTabFocus()
-            && !it->keepAbove() && !it->keepBelow()) {
-            c = it;
+        if (t->isClient() && t->isOnCurrentActivity() && t->isOnCurrentDesktop() && !t->isSpecialWindow()
+            && !t->isShade() && t->isShown() && t->wantsTabFocus()
+            && !t->keepAbove() && !t->keepBelow()) {
+            c = t;
             break;
         }
     }
