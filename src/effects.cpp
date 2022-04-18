@@ -522,10 +522,9 @@ void EffectsHandlerImpl::slotOpacityChanged(AbstractClient *t, qreal oldOpacity)
 void EffectsHandlerImpl::slotClientShown(KWin::AbstractClient *t)
 {
     Q_ASSERT(t->isClient());
-    auto c = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
-    disconnect(c, &AbstractClient::windowShown, this, &EffectsHandlerImpl::slotClientShown);
-    setupClientConnections(c);
-    Q_EMIT windowAdded(c->effectWindow());
+    disconnect(t, &AbstractClient::windowShown, this, &EffectsHandlerImpl::slotClientShown);
+    setupClientConnections(t);
+    Q_EMIT windowAdded(t->effectWindow());
 }
 
 void EffectsHandlerImpl::slotUnmanagedShown(KWin::AbstractClient *t)
@@ -910,9 +909,9 @@ QByteArray EffectsHandlerImpl::readRootProperty(long atom, long type, int format
 
 void EffectsHandlerImpl::activateWindow(EffectWindow *c)
 {
-    auto t = static_cast<EffectWindowImpl *>(c)->window();
-    if (auto cl = static_cast<AbstractClient *>(t->isClient() ? t : nullptr)) {
-        Workspace::self()->activateClient(cl, true);
+    auto window = static_cast<EffectWindowImpl *>(c)->window();
+    if (window->isClient()) {
+        Workspace::self()->activateClient(window, true);
     }
 }
 
@@ -923,33 +922,30 @@ EffectWindow *EffectsHandlerImpl::activeWindow() const
 
 void EffectsHandlerImpl::moveWindow(EffectWindow *w, const QPoint &pos, bool snap, double snapAdjust)
 {
-    auto t = static_cast<EffectWindowImpl *>(w)->window();
-    auto cl = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
-    if (!cl || !cl->isMovable()) {
+    auto window = static_cast<EffectWindowImpl *>(w)->window();
+    if (!window->isClient() || !window->isMovable()) {
         return;
     }
 
     if (snap) {
-        cl->move(Workspace::self()->adjustClientPosition(cl, pos, true, snapAdjust));
+        window->move(Workspace::self()->adjustClientPosition(window, pos, true, snapAdjust));
     } else {
-        cl->move(pos);
+        window->move(pos);
     }
 }
 
 void EffectsHandlerImpl::windowToDesktop(EffectWindow *w, int desktop)
 {
-    auto t = static_cast<EffectWindowImpl *>(w)->window();
-    auto cl = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
-    if (cl && !cl->isDesktop() && !cl->isDock()) {
-        Workspace::self()->sendClientToDesktop(cl, desktop, true);
+    auto window = static_cast<EffectWindowImpl *>(w)->window();
+    if (window->isClient() && !window->isDesktop() && !window->isDock()) {
+        Workspace::self()->sendClientToDesktop(window, desktop, true);
     }
 }
 
 void EffectsHandlerImpl::windowToDesktops(EffectWindow *w, const QVector<uint> &desktopIds)
 {
-    auto t = static_cast<EffectWindowImpl *>(w)->window();
-    auto cl = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
-    if (!cl || cl->isDesktop() || cl->isDock()) {
+    auto window = static_cast<EffectWindowImpl *>(w)->window();
+    if (!window->isClient() || window->isDesktop() || window->isDock()) {
         return;
     }
     QVector<VirtualDesktop *> desktops;
@@ -965,16 +961,15 @@ void EffectsHandlerImpl::windowToDesktops(EffectWindow *w, const QVector<uint> &
         }
         desktops << d;
     }
-    cl->setDesktops(desktops);
+    window->setDesktops(desktops);
 }
 
 void EffectsHandlerImpl::windowToScreen(EffectWindow *w, EffectScreen *screen)
 {
-    auto t = static_cast<EffectWindowImpl *>(w)->window();
-    auto cl = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
-    if (cl && !cl->isDesktop() && !cl->isDock()) {
+    auto window = static_cast<EffectWindowImpl *>(w)->window();
+    if (window->isClient() && !window->isDesktop() && !window->isDock()) {
         EffectScreenImpl *screenImpl = static_cast<EffectScreenImpl *>(screen);
-        Workspace::self()->sendClientToOutput(cl, screenImpl->platformOutput());
+        Workspace::self()->sendClientToOutput(window, screenImpl->platformOutput());
     }
 }
 
@@ -1166,9 +1161,9 @@ void EffectsHandlerImpl::setElevatedWindow(KWin::EffectWindow *w, bool set)
 void EffectsHandlerImpl::setTabBoxWindow(EffectWindow *w)
 {
 #if KWIN_BUILD_TABBOX
-    auto t = static_cast<EffectWindowImpl *>(w)->window();
-    if (auto c = static_cast<AbstractClient *>(t->isClient() ? t : nullptr)) {
-        TabBox::TabBox::self()->setCurrentClient(c);
+    auto window = static_cast<EffectWindowImpl *>(w)->window();
+    if (window->isClient()) {
+        TabBox::TabBox::self()->setCurrentClient(window);
     }
 #else
     Q_UNUSED(w)
@@ -2152,12 +2147,7 @@ QRect EffectWindowImpl::decorationInnerRect() const
 
 KDecoration2::Decoration *EffectWindowImpl::decoration() const
 {
-    auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr);
-    if (!client) {
-        return nullptr;
-    }
-
-    return client->decoration();
+    return toplevel->decoration();
 }
 
 QByteArray EffectWindowImpl::readProperty(long atom, long type, int format) const
@@ -2177,12 +2167,7 @@ void EffectWindowImpl::deleteProperty(long int atom) const
 
 EffectWindow *EffectWindowImpl::findModal()
 {
-    auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr);
-    if (!client) {
-        return nullptr;
-    }
-
-    AbstractClient *modal = client->findModal();
+    AbstractClient *modal = toplevel->findModal();
     if (modal) {
         return modal->effectWindow();
     }
@@ -2192,12 +2177,7 @@ EffectWindow *EffectWindowImpl::findModal()
 
 EffectWindow *EffectWindowImpl::transientFor()
 {
-    auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr);
-    if (!client) {
-        return nullptr;
-    }
-
-    AbstractClient *transientFor = client->transientFor();
+    AbstractClient *transientFor = toplevel->transientFor();
     if (transientFor) {
         return transientFor->effectWindow();
     }
@@ -2276,22 +2256,22 @@ void EffectWindowImpl::elevate(bool elevate)
 
 void EffectWindowImpl::minimize()
 {
-    if (auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr)) {
-        client->minimize();
+    if (toplevel->isClient()) {
+        toplevel->minimize();
     }
 }
 
 void EffectWindowImpl::unminimize()
 {
-    if (auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr)) {
-        client->unminimize();
+    if (toplevel->isClient()) {
+        toplevel->unminimize();
     }
 }
 
 void EffectWindowImpl::closeWindow()
 {
-    if (auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr)) {
-        client->closeWindow();
+    if (toplevel->isClient()) {
+        toplevel->closeWindow();
     }
 }
 
