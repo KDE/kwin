@@ -51,7 +51,7 @@ Deleted::~Deleted()
     deleteShadow();
 }
 
-Deleted *Deleted::create(Toplevel *c)
+Deleted *Deleted::create(AbstractClient *c)
 {
     Deleted *d = new Deleted();
     d->copyToDeleted(c);
@@ -66,10 +66,10 @@ void Deleted::discard()
     delete this;
 }
 
-void Deleted::copyToDeleted(Toplevel *c)
+void Deleted::copyToDeleted(AbstractClient *c)
 {
     Q_ASSERT(dynamic_cast<Deleted *>(c) == nullptr);
-    Toplevel::copyToDeleted(c);
+    AbstractClient::copyToDeleted(c);
     m_frameMargins = c->frameMargins();
     desk = c->desktop();
     m_desktops = c->desktops();
@@ -171,7 +171,7 @@ NET::WindowType Deleted::windowType(bool direct, int supportedTypes) const
     return m_type;
 }
 
-void Deleted::mainClientClosed(Toplevel *client)
+void Deleted::mainClientClosed(AbstractClient *client)
 {
     if (AbstractClient *c = dynamic_cast<AbstractClient *>(client)) {
         m_mainClients.removeAll(c);

@@ -635,7 +635,7 @@ void Placement::cascadeDesktop()
     const int desktop = VirtualDesktopManager::self()->current();
     reinitCascading(desktop);
     const auto stackingOrder = ws->stackingOrder();
-    for (Toplevel *toplevel : stackingOrder) {
+    for (AbstractClient *toplevel : stackingOrder) {
         auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr);
         if (!client || (!client->isOnCurrentDesktop()) || (client->isMinimized()) || (client->isOnAllDesktops()) || (!client->isMovable())) {
             continue;

@@ -16,7 +16,7 @@ namespace KWin
 {
 
 SurfaceItemWayland::SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface,
-                                       Toplevel *window, Item *parent)
+                                       AbstractClient *window, Item *parent)
     : SurfaceItem(window, parent)
     , m_surface(surface)
 {
@@ -197,10 +197,10 @@ void SurfacePixmapWayland::setBuffer(KWaylandServer::ClientBuffer *buffer)
     }
 }
 
-SurfaceItemXwayland::SurfaceItemXwayland(Toplevel *window, Item *parent)
+SurfaceItemXwayland::SurfaceItemXwayland(AbstractClient *window, Item *parent)
     : SurfaceItemWayland(window->surface(), window, parent)
 {
-    connect(window, &Toplevel::geometryShapeChanged, this, &SurfaceItemXwayland::discardQuads);
+    connect(window, &AbstractClient::geometryShapeChanged, this, &SurfaceItemXwayland::discardQuads);
 }
 
 QRegion SurfaceItemXwayland::shape() const

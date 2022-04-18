@@ -55,7 +55,6 @@ namespace KWin
 
 class AbstractClient;
 class Output;
-class Toplevel;
 class XdgPopupClient;
 class XdgSurfaceClient;
 class XdgToplevelClient;
@@ -242,7 +241,7 @@ Q_SIGNALS:
 
 private:
     int createScreenLockerConnection();
-    void shellClientShown(Toplevel *t);
+    void shellClientShown(AbstractClient *t);
     void initScreenLocker();
     void registerXdgGenericClient(AbstractClient *client);
     void registerXdgToplevelClient(XdgToplevelClient *client);

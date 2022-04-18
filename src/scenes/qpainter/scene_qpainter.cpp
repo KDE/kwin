@@ -21,7 +21,7 @@
 #include "renderloop.h"
 #include "screens.h"
 #include "surfaceitem.h"
-#include "toplevel.h"
+#include "abstract_client.h"
 #include "windowitem.h"
 
 #include <kwinoffscreenquickview.h>
@@ -99,7 +99,7 @@ void SceneQPainter::paintOffscreenQuickView(OffscreenQuickView *w)
     painter->restore();
 }
 
-Scene::Window *SceneQPainter::createWindow(Toplevel *toplevel)
+Scene::Window *SceneQPainter::createWindow(AbstractClient *toplevel)
 {
     return new SceneQPainter::Window(this, toplevel);
 }
@@ -109,7 +109,7 @@ Scene::EffectFrame *SceneQPainter::createEffectFrame(EffectFrameImpl *frame)
     return new QPainterEffectFrame(frame, this);
 }
 
-Shadow *SceneQPainter::createShadow(Toplevel *toplevel)
+Shadow *SceneQPainter::createShadow(AbstractClient *toplevel)
 {
     return new SceneQPainterShadow(toplevel);
 }
@@ -117,7 +117,7 @@ Shadow *SceneQPainter::createShadow(Toplevel *toplevel)
 //****************************************
 // SceneQPainter::Window
 //****************************************
-SceneQPainter::Window::Window(SceneQPainter *scene, Toplevel *c)
+SceneQPainter::Window::Window(SceneQPainter *scene, AbstractClient *c)
     : Scene::Window(c)
     , m_scene(scene)
 {
@@ -355,7 +355,7 @@ void QPainterEffectFrame::render(const QRegion &region, double opacity, double f
 //****************************************
 // QPainterShadow
 //****************************************
-SceneQPainterShadow::SceneQPainterShadow(Toplevel *toplevel)
+SceneQPainterShadow::SceneQPainterShadow(AbstractClient *toplevel)
     : Shadow(toplevel)
 {
 }

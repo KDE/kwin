@@ -13,7 +13,7 @@ namespace KWin
 
 class Deleted;
 class SurfacePixmap;
-class Toplevel;
+class AbstractClient;
 
 /**
  * The SurfaceItem class represents a surface with some contents.
@@ -26,7 +26,7 @@ public:
     QMatrix4x4 surfaceToBufferMatrix() const;
     void setSurfaceToBufferMatrix(const QMatrix4x4 &matrix);
 
-    Toplevel *window() const;
+    AbstractClient *window() const;
 
     virtual QRegion shape() const;
     virtual QRegion opaque() const;
@@ -45,15 +45,15 @@ public:
     void unreferencePreviousPixmap();
 
 protected:
-    explicit SurfaceItem(Toplevel *window, Item *parent = nullptr);
+    explicit SurfaceItem(AbstractClient *window, Item *parent = nullptr);
 
     virtual SurfacePixmap *createPixmap() = 0;
     void preprocess() override;
     WindowQuadList buildQuads() const override;
 
-    void handleWindowClosed(Toplevel *original, Deleted *deleted);
+    void handleWindowClosed(AbstractClient *original, Deleted *deleted);
 
-    Toplevel *m_window;
+    AbstractClient *m_window;
     QRegion m_damage;
     QScopedPointer<SurfacePixmap> m_pixmap;
     QScopedPointer<SurfacePixmap> m_previousPixmap;

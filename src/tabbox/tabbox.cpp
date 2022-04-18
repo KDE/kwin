@@ -280,9 +280,9 @@ QWeakPointer<TabBoxClient> TabBoxHandlerImpl::clientToAddToList(TabBoxClient *cl
 
 TabBoxClientList TabBoxHandlerImpl::stackingOrder() const
 {
-    const QList<Toplevel *> stacking = Workspace::self()->stackingOrder();
+    const QList<AbstractClient *> stacking = Workspace::self()->stackingOrder();
     TabBoxClientList ret;
-    for (Toplevel *toplevel : stacking) {
+    for (AbstractClient *toplevel : stacking) {
         if (auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr)) {
             ret.append(qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(client->tabBoxClient()));
         }
@@ -310,7 +310,7 @@ void TabBoxHandlerImpl::elevateClient(TabBoxClient *c, QWindow *tabbox, bool b) 
 {
     auto cl = static_cast<TabBoxClientImpl *>(c)->client();
     cl->elevate(b);
-    if (Toplevel *w = Workspace::self()->findInternal(tabbox)) {
+    if (AbstractClient *w = Workspace::self()->findInternal(tabbox)) {
         w->elevate(b);
     }
 }
@@ -329,7 +329,7 @@ void TabBoxHandlerImpl::shadeClient(TabBoxClient *c, bool b) const
 QWeakPointer<TabBoxClient> TabBoxHandlerImpl::desktopClient() const
 {
     const auto stackingOrder = Workspace::self()->stackingOrder();
-    for (Toplevel *toplevel : stackingOrder) {
+    for (AbstractClient *toplevel : stackingOrder) {
         auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr);
         if (client && client->isDesktop() && client->isOnCurrentDesktop() && client->output() == workspace()->activeOutput()) {
             return qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(client->tabBoxClient());
@@ -352,7 +352,7 @@ void TabBoxHandlerImpl::highlightWindows(TabBoxClient *window, QWindow *controll
     if (window) {
         windows << static_cast<TabBoxClientImpl *>(window)->client()->effectWindow();
     }
-    if (Toplevel *t = workspace()->findInternal(controller)) {
+    if (AbstractClient *t = workspace()->findInternal(controller)) {
         windows << t->effectWindow();
     }
     static_cast<EffectsHandlerImpl *>(effects)->highlightWindows(windows);
@@ -1042,7 +1042,7 @@ void TabBox::navigatingThroughWindows(bool forward, const QKeySequence &shortcut
         //  CDE style raise / lower
         CDEWalkThroughWindows(forward);
     } else {
-        workspace()->forEachAbstractClient([](Toplevel *toplevel) {
+        workspace()->forEachAbstractClient([](AbstractClient *toplevel) {
             if (toplevel->isPopupWindow()) {
                 toplevel->popupDone();
             }

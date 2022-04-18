@@ -133,7 +133,7 @@ bool Dnd::handleClientMessage(xcb_client_message_event_t *event)
     return false;
 }
 
-DragEventReply Dnd::dragMoveFilter(Toplevel *target, const QPoint &pos)
+DragEventReply Dnd::dragMoveFilter(AbstractClient *target, const QPoint &pos)
 {
     Q_ASSERT(m_currentDrag);
     return m_currentDrag->moveFilter(target, pos);

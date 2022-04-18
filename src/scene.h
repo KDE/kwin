@@ -12,7 +12,7 @@
 
 #include "kwineffects.h"
 #include "renderlayerdelegate.h"
-#include "toplevel.h"
+#include "abstract_client.h"
 #include "utils/common.h"
 
 #include <optional>
@@ -52,7 +52,7 @@ public:
     ScreenLockerFilter(Scene *scene);
     ~ScreenLockerFilter();
 
-    bool filterAcceptsWindow(KWin::Toplevel *w) const;
+    bool filterAcceptsWindow(KWin::AbstractClient *w) const;
 };
 
 class SceneDelegate : public RenderLayerDelegate
@@ -113,7 +113,7 @@ public:
     virtual void paint(RenderTarget *renderTarget, const QRegion &region) = 0;
 
     /**
-     * Adds the Toplevel to the Scene.
+     * Adds the AbstractClient to the Scene.
      *
      * If the toplevel gets deleted, then the scene will try automatically
      * to re-bind an underlying scene window to the corresponding Deleted.
@@ -121,15 +121,15 @@ public:
      * @param toplevel The window to be added.
      * @note You can add a toplevel to scene only once.
      */
-    void addToplevel(Toplevel *toplevel);
+    void addToplevel(AbstractClient *toplevel);
 
     /**
-     * Removes the Toplevel from the Scene.
+     * Removes the AbstractClient from the Scene.
      *
      * @param toplevel The window to be removed.
      * @note You can remove a toplevel from the scene only once.
      */
-    void removeToplevel(Toplevel *toplevel);
+    void removeToplevel(AbstractClient *toplevel);
 
     /**
      * @brief Creates the Scene backend of an EffectFrame.
@@ -143,9 +143,9 @@ public:
      * An implementing class has to create a proper instance. It is not allowed to
      * return @c null.
      *
-     * @param toplevel The Toplevel for which the Shadow needs to be created.
+     * @param toplevel The AbstractClient for which the Shadow needs to be created.
      */
-    virtual Shadow *createShadow(Toplevel *toplevel) = 0;
+    virtual Shadow *createShadow(AbstractClient *toplevel) = 0;
     // Flags controlling how painting is done.
     enum {
         // Window (or at least part of it) will be painted opaque.
@@ -225,10 +225,10 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     // a window has been closed
-    void windowClosed(KWin::Toplevel *c, KWin::Deleted *deleted);
+    void windowClosed(KWin::AbstractClient *c, KWin::Deleted *deleted);
 
 protected:
-    virtual Window *createWindow(Toplevel *toplevel) = 0;
+    virtual Window *createWindow(AbstractClient *toplevel) = 0;
     void createStackingOrder();
     void clearStackingOrder();
     // shared implementation, starts painting the screen
@@ -280,7 +280,7 @@ protected:
 private:
     std::chrono::milliseconds m_expectedPresentTimestamp = std::chrono::milliseconds::zero();
     QList<SceneDelegate *> m_delegates;
-    QHash<Toplevel *, Window *> m_windows;
+    QHash<AbstractClient *, Window *> m_windows;
     QRect m_geometry;
     QMatrix4x4 m_renderTargetProjectionMatrix;
     QRect m_renderTargetRect;
@@ -296,7 +296,7 @@ class Scene::Window : public QObject
     Q_OBJECT
 
 public:
-    explicit Window(Toplevel *client, QObject *parent = nullptr);
+    explicit Window(AbstractClient *client, QObject *parent = nullptr);
     ~Window() override;
     // perform the actual painting of the window
     virtual void performPaint(int mask, const QRegion &region, const WindowPaintData &data) = 0;
@@ -310,7 +310,7 @@ public:
     QRect rect() const;
     // access to the internal window class
     // TODO eventually get rid of this
-    Toplevel *window() const;
+    AbstractClient *window() const;
     // should the window be painted
     bool isPaintingEnabled() const;
     void resetPaintingEnabled();
@@ -340,7 +340,7 @@ public:
     ShadowItem *shadowItem() const;
 
 protected:
-    Toplevel *toplevel;
+    AbstractClient *toplevel;
 
 private:
     void referencePreviousPixmap_helper(SurfaceItem *item);
@@ -410,7 +410,7 @@ inline QRect Scene::Window::rect() const
     return toplevel->rect();
 }
 
-inline Toplevel *Scene::Window::window() const
+inline AbstractClient *Scene::Window::window() const
 {
     return toplevel;
 }

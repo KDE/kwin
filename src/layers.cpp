@@ -102,7 +102,7 @@ void Workspace::updateStackingOrder(bool propagate_new_clients)
         }
         return;
     }
-    QList<Toplevel *> new_stacking_order = constrainedStackingOrder();
+    QList<AbstractClient *> new_stacking_order = constrainedStackingOrder();
     bool changed = (force_restacking || new_stacking_order != stacking_order);
     force_restacking = false;
     stacking_order = new_stacking_order;
@@ -230,7 +230,7 @@ void Workspace::propagateClients(bool propagate_new_clients)
 AbstractClient *Workspace::topClientOnDesktop(VirtualDesktop *desktop, Output *output, bool unconstrained, bool only_normal) const
 {
     // TODO    Q_ASSERT( block_stacking_updates == 0 );
-    QList<Toplevel *> list;
+    QList<AbstractClient *> list;
     if (!unconstrained) {
         list = stacking_order;
     } else {
@@ -269,7 +269,7 @@ AbstractClient *Workspace::findDesktop(bool topmost, VirtualDesktop *desktop) co
             }
         }
     } else { // bottom-most
-        for (Toplevel *c : qAsConst(stacking_order)) {
+        for (AbstractClient *c : qAsConst(stacking_order)) {
             auto client = static_cast<AbstractClient *>(c->isClient() ? c : nullptr);
             if (client && c->isOnDesktop(desktop) && c->isDesktop() && client->isShown()) {
                 return client;
@@ -514,7 +514,7 @@ static Layer layerForClient(const X11Client *client)
     return layer;
 }
 
-static Layer computeLayer(const Toplevel *toplevel)
+static Layer computeLayer(const AbstractClient *toplevel)
 {
     if (auto client = qobject_cast<const X11Client *>(toplevel)) {
         return layerForClient(client);
@@ -526,17 +526,17 @@ static Layer computeLayer(const Toplevel *toplevel)
 /**
  * Returns a stacking order based upon \a list that fulfills certain contained.
  */
-QList<Toplevel *> Workspace::constrainedStackingOrder()
+QList<AbstractClient *> Workspace::constrainedStackingOrder()
 {
     // Sort the windows based on their layers while preserving their relative order in the
     // unconstrained stacking order.
-    std::array<QList<Toplevel *>, NumLayers> windows;
-    for (Toplevel *window : qAsConst(unconstrained_stacking_order)) {
+    std::array<QList<AbstractClient *>, NumLayers> windows;
+    for (AbstractClient *window : qAsConst(unconstrained_stacking_order)) {
         const Layer layer = computeLayer(window);
         windows[layer] << window;
     }
 
-    QList<Toplevel *> stacking;
+    QList<AbstractClient *> stacking;
     stacking.reserve(unconstrained_stacking_order.count());
     for (uint layer = FirstLayer; layer < NumLayers; ++layer) {
         stacking += windows[layer];
@@ -600,9 +600,9 @@ void Workspace::blockStackingUpdates(bool block)
 namespace
 {
 template<class T>
-QList<T *> ensureStackingOrderInList(const QList<Toplevel *> &stackingOrder, const QList<T *> &list)
+QList<T *> ensureStackingOrderInList(const QList<AbstractClient *> &stackingOrder, const QList<T *> &list)
 {
-    static_assert(std::is_base_of<Toplevel, T>::value,
+    static_assert(std::is_base_of<AbstractClient, T>::value,
                   "U must be derived from T");
     // TODO    Q_ASSERT( block_stacking_updates == 0 );
     if (list.count() < 2) {
@@ -635,7 +635,7 @@ QList<AbstractClient *> Workspace::ensureStackingOrder(const QList<AbstractClien
 }
 
 // Returns all windows in their stacking order on the root window.
-QList<Toplevel *> Workspace::xStackingOrder() const
+QList<AbstractClient *> Workspace::xStackingOrder() const
 {
     if (m_xStackingDirty) {
         const_cast<Workspace *>(this)->updateXStackingOrder();
@@ -643,7 +643,7 @@ QList<Toplevel *> Workspace::xStackingOrder() const
     return x_stacking;
 }
 
-QList<Toplevel *> Workspace::unconstrainedStackingOrder() const
+QList<AbstractClient *> Workspace::unconstrainedStackingOrder() const
 {
     return unconstrained_stacking_order;
 }

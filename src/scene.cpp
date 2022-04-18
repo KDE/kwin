@@ -235,7 +235,7 @@ SurfaceItem *Scene::scanoutCandidate() const
     if (!static_cast<EffectsHandlerImpl *>(effects)->blocksDirectScanout()) {
         for (int i = stacking_order.count() - 1; i >= 0; i--) {
             Window *window = stacking_order[i];
-            Toplevel *toplevel = window->window();
+            AbstractClient *toplevel = window->window();
             if (toplevel->isOnOutput(painted_screen) && window->isVisible() && toplevel->opacity() > 0) {
                 AbstractClient *c = dynamic_cast<AbstractClient *>(toplevel);
                 if (!c || !c->isFullScreen() || c->opacity() != 1.0) {
@@ -361,7 +361,7 @@ void Scene::preparePaintGenericScreen()
 void Scene::preparePaintSimpleScreen()
 {
     for (Window *sceneWindow : std::as_const(stacking_order)) {
-        const Toplevel *toplevel = sceneWindow->window();
+        const AbstractClient *toplevel = sceneWindow->window();
         WindowPrePaintData data;
         data.mask = m_paintContext.mask;
         accumulateRepaints(sceneWindow->windowItem(), painted_screen, &data.paint);
@@ -415,7 +415,7 @@ void Scene::postPaint()
             std::chrono::duration_cast<std::chrono::milliseconds>(painted_screen->renderLoop()->lastPresentationTimestamp());
 
         for (Window *window : std::as_const(m_windows)) {
-            Toplevel *toplevel = window->window();
+            AbstractClient *toplevel = window->window();
             if (!toplevel->isOnOutput(painted_screen)) {
                 continue;
             }
@@ -558,25 +558,25 @@ void Scene::paintSimpleScreen(int, const QRegion &region)
     }
 }
 
-void Scene::addToplevel(Toplevel *c)
+void Scene::addToplevel(AbstractClient *c)
 {
     Q_ASSERT(!m_windows.contains(c));
     Scene::Window *w = createWindow(c);
     m_windows[c] = w;
 
-    connect(c, &Toplevel::windowClosed, this, &Scene::windowClosed);
+    connect(c, &AbstractClient::windowClosed, this, &Scene::windowClosed);
 
     c->effectWindow()->setSceneWindow(w);
 }
 
-void Scene::removeToplevel(Toplevel *toplevel)
+void Scene::removeToplevel(AbstractClient *toplevel)
 {
     Q_ASSERT(m_windows.contains(toplevel));
     delete m_windows.take(toplevel);
     toplevel->effectWindow()->setSceneWindow(nullptr);
 }
 
-void Scene::windowClosed(Toplevel *toplevel, Deleted *deleted)
+void Scene::windowClosed(AbstractClient *toplevel, Deleted *deleted)
 {
     if (!deleted) {
         removeToplevel(toplevel);
@@ -592,12 +592,12 @@ void Scene::windowClosed(Toplevel *toplevel, Deleted *deleted)
 void Scene::createStackingOrder()
 {
     // Create a list of all windows in the stacking order
-    QList<Toplevel *> windows = Workspace::self()->xStackingOrder();
+    QList<AbstractClient *> windows = Workspace::self()->xStackingOrder();
 
     // Move elevated windows to the top of the stacking order
     const QList<EffectWindow *> elevatedList = static_cast<EffectsHandlerImpl *>(effects)->elevatedWindows();
     for (EffectWindow *c : elevatedList) {
-        Toplevel *t = static_cast<EffectWindowImpl *>(c)->window();
+        AbstractClient *t = static_cast<EffectWindowImpl *>(c)->window();
         windows.removeAll(t);
         windows.append(t);
     }
@@ -608,7 +608,7 @@ void Scene::createStackingOrder()
     // TODO? This cannot be used so carelessly - needs protections against broken clients, the
     // window should not get focus before it's displayed, handle unredirected windows properly and
     // so on.
-    for (Toplevel *win : windows) {
+    for (AbstractClient *win : windows) {
         if (!win->readyForPainting()) {
             windows.removeAll(win);
         }
@@ -618,7 +618,7 @@ void Scene::createStackingOrder()
     }
 
     // TODO: cache the stacking_order in case it has not changed
-    for (Toplevel *c : std::as_const(windows)) {
+    for (AbstractClient *c : std::as_const(windows)) {
         Q_ASSERT(m_windows.contains(c));
         stacking_order.append(m_windows[c]);
     }
@@ -710,7 +710,7 @@ SurfaceTexture *Scene::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 // Scene::Window
 //****************************************
 
-Scene::Window::Window(Toplevel *client, QObject *parent)
+Scene::Window::Window(AbstractClient *client, QObject *parent)
     : QObject(parent)
     , toplevel(client)
     , disable_painting(0)
@@ -725,7 +725,7 @@ Scene::Window::Window(Toplevel *client, QObject *parent)
         Q_UNREACHABLE();
     }
 
-    connect(toplevel, &Toplevel::frameGeometryChanged, this, &Window::updateWindowPosition);
+    connect(toplevel, &AbstractClient::frameGeometryChanged, this, &Window::updateWindowPosition);
     updateWindowPosition();
 }
 
@@ -881,7 +881,7 @@ ScreenLockerFilter::ScreenLockerFilter(Scene *s)
 
 ScreenLockerFilter::~ScreenLockerFilter() = default;
 
-bool ScreenLockerFilter::filterAcceptsWindow(KWin::Toplevel *w) const
+bool ScreenLockerFilter::filterAcceptsWindow(KWin::AbstractClient *w) const
 {
     return !waylandServer() || !waylandServer()->isScreenLocked() || (w->isLockScreen() || w->isInputMethod());
 }

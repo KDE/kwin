@@ -26,7 +26,6 @@ class SurfaceInterface;
 
 namespace KWin
 {
-class Toplevel;
 class AbstractClient;
 
 namespace Xwl
@@ -41,7 +40,7 @@ class WlToXDrag : public Drag
     using Drag::Drag;
 
 public:
-    DragEventReply moveFilter(Toplevel *target, const QPoint &pos) override;
+    DragEventReply moveFilter(AbstractClient *target, const QPoint &pos) override;
     bool handleClientMessage(xcb_client_message_event_t *event) override;
 
 private:

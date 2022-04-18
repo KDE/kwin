@@ -542,7 +542,7 @@ private:
     bool surfaceAllowed(KWaylandServer::SurfaceInterface *(KWaylandServer::SeatInterface::*method)() const) const
     {
         if (KWaylandServer::SurfaceInterface *s = (waylandServer()->seat()->*method)()) {
-            if (Toplevel *t = waylandServer()->findClient(s)) {
+            if (AbstractClient *t = waylandServer()->findClient(s)) {
                 return t->isLockScreen() || t->isInputMethod();
             }
             return false;
@@ -882,7 +882,7 @@ public:
     {
         return m_active;
     }
-    void start(std::function<void(KWin::Toplevel *)> callback)
+    void start(std::function<void(KWin::AbstractClient *)> callback)
     {
         Q_ASSERT(!m_active);
         m_active = true;
@@ -903,7 +903,7 @@ private:
     void deactivate()
     {
         m_active = false;
-        m_callback = std::function<void(KWin::Toplevel *)>();
+        m_callback = std::function<void(KWin::AbstractClient *)>();
         m_pointSelectionFallback = std::function<void(const QPoint &)>();
         input()->pointer()->removeWindowSelectionCursor();
         input()->keyboard()->update();
@@ -935,7 +935,7 @@ private:
         accept(pos.toPoint());
     }
     bool m_active = false;
-    std::function<void(KWin::Toplevel *)> m_callback;
+    std::function<void(KWin::AbstractClient *)> m_callback;
     std::function<void(const QPoint &)> m_pointSelectionFallback;
     QMap<quint32, QPointF> m_touchPoints;
 };
@@ -2181,7 +2181,7 @@ public:
         // may still happen (e.g. Release or ProximityOut events)
         auto tablet = static_cast<KWaylandServer::TabletV2Interface *>(event->tabletId().m_deviceGroupData);
 
-        Toplevel *toplevel = input()->findToplevel(event->globalPos());
+        AbstractClient *toplevel = input()->findToplevel(event->globalPos());
         if (!toplevel || !toplevel->surface()) {
             return false;
         }
@@ -2274,7 +2274,7 @@ public:
 
     KWaylandServer::TabletPadV2Interface *findAndAdoptPad(const TabletPadId &tabletPadId) const
     {
-        Toplevel *toplevel = workspace()->activeClient();
+        AbstractClient *toplevel = workspace()->activeClient();
         auto seat = findTabletSeat();
         if (!toplevel || !toplevel->surface() || !seat->isClientSupported(toplevel->surface()->client())) {
             return nullptr;
@@ -2335,7 +2335,7 @@ public:
     QHash<KWaylandServer::TabletToolV2Interface *, Cursor *> m_cursorByTool;
 };
 
-static KWaylandServer::AbstractDropHandler *dropHandler(Toplevel *toplevel)
+static KWaylandServer::AbstractDropHandler *dropHandler(AbstractClient *toplevel)
 {
     auto surface = toplevel->surface();
     if (!surface) {
@@ -2383,7 +2383,7 @@ public:
 
             const auto eventPos = event->globalPos();
             // TODO: use InputDeviceHandler::at() here and check isClient()?
-            Toplevel *t = input()->findManagedToplevel(eventPos);
+            AbstractClient *t = input()->findManagedToplevel(eventPos);
             const auto dragTarget = static_cast<AbstractClient *>(t && t->isClient() ? t : nullptr);
             if (dragTarget) {
                 if (dragTarget != m_dragTarget) {
@@ -2474,7 +2474,7 @@ public:
         seat->setTimestamp(time);
         seat->notifyTouchMotion(id, pos);
 
-        if (Toplevel *t = input()->findToplevel(pos.toPoint())) {
+        if (AbstractClient *t = input()->findToplevel(pos.toPoint())) {
             // TODO: consider decorations
             if (t->surface() != seat->dragSurface()) {
                 if ((m_dragTarget = static_cast<AbstractClient *>(t->isClient() ? t : nullptr))) {
@@ -3076,7 +3076,7 @@ Qt::MouseButtons InputRedirection::qtButtonStates() const
     return m_pointer->buttons();
 }
 
-Toplevel *InputRedirection::findToplevel(const QPoint &pos)
+AbstractClient *InputRedirection::findToplevel(const QPoint &pos)
 {
     if (!Workspace::self()) {
         return nullptr;
@@ -3098,20 +3098,20 @@ Toplevel *InputRedirection::findToplevel(const QPoint &pos)
     return findManagedToplevel(pos);
 }
 
-Toplevel *InputRedirection::findManagedToplevel(const QPoint &pos)
+AbstractClient *InputRedirection::findManagedToplevel(const QPoint &pos)
 {
     if (!Workspace::self()) {
         return nullptr;
     }
     const bool isScreenLocked = waylandServer() && waylandServer()->isScreenLocked();
-    const QList<Toplevel *> &stacking = Workspace::self()->stackingOrder();
+    const QList<AbstractClient *> &stacking = Workspace::self()->stackingOrder();
     if (stacking.isEmpty()) {
         return nullptr;
     }
     auto it = stacking.end();
     do {
         --it;
-        Toplevel *t = (*it);
+        AbstractClient *t = (*it);
         if (t->isDeleted()) {
             // a deleted window doesn't get mouse events
             continue;
@@ -3207,7 +3207,7 @@ QPointF InputRedirection::globalPointer() const
     return m_pointer->pos();
 }
 
-void InputRedirection::startInteractiveWindowSelection(std::function<void(KWin::Toplevel *)> callback, const QByteArray &cursorName)
+void InputRedirection::startInteractiveWindowSelection(std::function<void(KWin::AbstractClient *)> callback, const QByteArray &cursorName)
 {
     if (!m_windowSelector || m_windowSelector->isActive()) {
         callback(nullptr);
@@ -3246,7 +3246,7 @@ void InputDeviceHandler::init()
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, this, &InputDeviceHandler::update);
 }
 
-bool InputDeviceHandler::setHover(Toplevel *toplevel)
+bool InputDeviceHandler::setHover(AbstractClient *toplevel)
 {
     if (m_hover.window == toplevel) {
         return false;
@@ -3259,10 +3259,10 @@ bool InputDeviceHandler::setHover(Toplevel *toplevel)
     return true;
 }
 
-void InputDeviceHandler::setFocus(Toplevel *toplevel)
+void InputDeviceHandler::setFocus(AbstractClient *toplevel)
 {
     if (m_focus.window != toplevel) {
-        Toplevel *oldFocus = m_focus.window;
+        AbstractClient *oldFocus = m_focus.window;
         m_focus.window = toplevel;
         focusUpdate(oldFocus, m_focus.window);
     }
@@ -3280,7 +3280,7 @@ void InputDeviceHandler::setDecoration(Decoration::DecoratedClientImpl *decorati
 
 void InputDeviceHandler::updateFocus()
 {
-    Toplevel *focus = m_hover.window;
+    AbstractClient *focus = m_hover.window;
 
     if (m_focus.decoration) {
         focus = nullptr;
@@ -3288,7 +3288,7 @@ void InputDeviceHandler::updateFocus()
         // The surface has not yet been created (special XWayland case).
         // Therefore listen for its creation.
         if (!m_hover.surfaceCreatedConnection) {
-            m_hover.surfaceCreatedConnection = connect(m_hover.window, &Toplevel::surfaceChanged,
+            m_hover.surfaceCreatedConnection = connect(m_hover.window, &AbstractClient::surfaceChanged,
                                                        this, &InputDeviceHandler::update);
         }
         focus = nullptr;
@@ -3318,7 +3318,7 @@ void InputDeviceHandler::update()
         return;
     }
 
-    Toplevel *toplevel = nullptr;
+    AbstractClient *toplevel = nullptr;
     if (positionValid()) {
         toplevel = input()->findToplevel(position().toPoint());
     }
@@ -3336,12 +3336,12 @@ void InputDeviceHandler::update()
     workspace()->updateFocusMousePosition(position().toPoint());
 }
 
-Toplevel *InputDeviceHandler::hover() const
+AbstractClient *InputDeviceHandler::hover() const
 {
     return m_hover.window.data();
 }
 
-Toplevel *InputDeviceHandler::focus() const
+AbstractClient *InputDeviceHandler::focus() const
 {
     return m_focus.window.data();
 }

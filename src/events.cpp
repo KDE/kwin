@@ -587,7 +587,7 @@ void X11Client::destroyNotifyEvent(xcb_destroy_notify_event_t *e)
  */
 void X11Client::clientMessageEvent(xcb_client_message_event_t *e)
 {
-    Toplevel::clientMessageEvent(e);
+    AbstractClient::clientMessageEvent(e);
     if (e->window != window()) {
         return; // ignore frame/wrapper
     }
@@ -651,7 +651,7 @@ void X11Client::configureRequestEvent(xcb_configure_request_event_t *e)
  */
 void X11Client::propertyNotifyEvent(xcb_property_notify_event_t *e)
 {
-    Toplevel::propertyNotifyEvent(e);
+    AbstractClient::propertyNotifyEvent(e);
     if (e->window != window()) {
         return; // ignore frame/wrapper
     }
@@ -1315,10 +1315,10 @@ void Unmanaged::configureNotifyEvent(xcb_configure_notify_event_t *e)
 }
 
 // ****************************************
-// Toplevel
+// AbstractClient
 // ****************************************
 
-void Toplevel::propertyNotifyEvent(xcb_property_notify_event_t *e)
+void AbstractClient::propertyNotifyEvent(xcb_property_notify_event_t *e)
 {
     if (e->window != window()) {
         return; // ignore frame/wrapper
@@ -1336,7 +1336,7 @@ void Toplevel::propertyNotifyEvent(xcb_property_notify_event_t *e)
     }
 }
 
-void Toplevel::clientMessageEvent(xcb_client_message_event_t *e)
+void AbstractClient::clientMessageEvent(xcb_client_message_event_t *e)
 {
     if (e->type == atoms->wl_surface_id) {
         m_pendingSurfaceId = e->data.data32[0];

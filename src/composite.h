@@ -26,7 +26,7 @@ class RenderLayer;
 class RenderLoop;
 class RenderTarget;
 class Scene;
-class Toplevel;
+class AbstractClient;
 class X11Client;
 class X11SyncManager;
 

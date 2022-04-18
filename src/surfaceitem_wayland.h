@@ -27,7 +27,7 @@ class KWIN_EXPORT SurfaceItemWayland : public SurfaceItem
 
 public:
     explicit SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface,
-                                Toplevel *window, Item *parent = nullptr);
+                                AbstractClient *window, Item *parent = nullptr);
 
     QRegion shape() const override;
     QRegion opaque() const override;
@@ -85,7 +85,7 @@ class KWIN_EXPORT SurfaceItemXwayland : public SurfaceItemWayland
     Q_OBJECT
 
 public:
-    explicit SurfaceItemXwayland(Toplevel *window, Item *parent = nullptr);
+    explicit SurfaceItemXwayland(AbstractClient *window, Item *parent = nullptr);
 
     QRegion shape() const override;
 };

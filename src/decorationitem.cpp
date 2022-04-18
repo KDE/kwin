@@ -130,11 +130,11 @@ DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, AbstractCli
 {
     m_renderer.reset(Compositor::self()->scene()->createDecorationRenderer(window->decoratedClient()));
 
-    connect(window, &Toplevel::frameGeometryChanged,
+    connect(window, &AbstractClient::frameGeometryChanged,
             this, &DecorationItem::handleFrameGeometryChanged);
-    connect(window, &Toplevel::windowClosed,
+    connect(window, &AbstractClient::windowClosed,
             this, &DecorationItem::handleWindowClosed);
-    connect(window, &Toplevel::screenChanged,
+    connect(window, &AbstractClient::screenChanged,
             this, &DecorationItem::handleOutputChanged);
 
     connect(decoration, &KDecoration2::Decoration::bordersChanged,
@@ -184,7 +184,7 @@ void DecorationItem::handleFrameGeometryChanged()
     setSize(m_window->size());
 }
 
-void DecorationItem::handleWindowClosed(Toplevel *original, Deleted *deleted)
+void DecorationItem::handleWindowClosed(AbstractClient *original, Deleted *deleted)
 {
     Q_UNUSED(original)
     m_window = deleted;

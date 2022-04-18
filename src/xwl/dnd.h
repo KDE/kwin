@@ -21,7 +21,7 @@ class SurfaceInterface;
 
 namespace KWin
 {
-class Toplevel;
+class AbstractClient;
 
 namespace Xwl
 {
@@ -48,7 +48,7 @@ public:
     void x11OffersChanged(const QStringList &added, const QStringList &removed) override;
     bool handleClientMessage(xcb_client_message_event_t *event) override;
 
-    DragEventReply dragMoveFilter(Toplevel *target, const QPoint &pos);
+    DragEventReply dragMoveFilter(AbstractClient *target, const QPoint &pos);
 
     using DnDAction = KWaylandServer::DataDeviceManagerInterface::DnDAction;
     using DnDActions = KWaylandServer::DataDeviceManagerInterface::DnDActions;

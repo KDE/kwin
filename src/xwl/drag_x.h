@@ -20,7 +20,6 @@
 
 namespace KWin
 {
-class Toplevel;
 class AbstractClient;
 
 namespace Xwl
@@ -39,7 +38,7 @@ public:
     explicit XToWlDrag(X11Source *source);
     ~XToWlDrag() override;
 
-    DragEventReply moveFilter(Toplevel *target, const QPoint &pos) override;
+    DragEventReply moveFilter(AbstractClient *target, const QPoint &pos) override;
     bool handleClientMessage(xcb_client_message_event_t *event) override;
 
     void setDragAndDropAction(KWaylandServer::DataDeviceManagerInterface::DnDAction action);

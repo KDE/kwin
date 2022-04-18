@@ -360,7 +360,7 @@ bool WaylandServer::init(InitializationFlags flags)
     m_initFlags = flags;
     m_compositor = new CompositorInterface(m_display, m_display);
     connect(m_compositor, &CompositorInterface::surfaceCreated, this, [this](SurfaceInterface *surface) {
-        // check whether we have a Toplevel with the Surface's id
+        // check whether we have a AbstractClient with the Surface's id
         Workspace *ws = Workspace::self();
         if (!ws) {
             // it's possible that a Surface gets created before Workspace is created
@@ -521,7 +521,7 @@ SurfaceInterface *WaylandServer::findForeignTransientForSurface(SurfaceInterface
     return m_XdgForeign->transientFor(surface);
 }
 
-void WaylandServer::shellClientShown(Toplevel *toplevel)
+void WaylandServer::shellClientShown(AbstractClient *toplevel)
 {
     auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr);
     if (!client) {
@@ -550,7 +550,7 @@ void WaylandServer::initWorkspace()
             auto f = [this]() {
                 QVector<quint32> ids;
                 QVector<QString> uuids;
-                for (Toplevel *toplevel : workspace()->stackingOrder()) {
+                for (AbstractClient *toplevel : workspace()->stackingOrder()) {
                     auto *client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr);
                     if (client && client->windowManagementInterface()) {
                         ids << client->windowManagementInterface()->internalId();

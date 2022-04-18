@@ -12,7 +12,7 @@
 #include "input_event.h"
 #include "input_event_spy.h"
 #include "pointer_input.h"
-#include "toplevel.h"
+#include "abstract_client.h"
 #include "wayland_server.h"
 #include "workspace.h"
 // KDecoration
@@ -177,7 +177,7 @@ void TabletInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *
     m_decorationDestroyedConnection = connect(now, &QObject::destroyed, this, &TabletInputRedirection::update, Qt::QueuedConnection);
 }
 
-void TabletInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow)
+void TabletInputRedirection::focusUpdate(AbstractClient *focusOld, AbstractClient *focusNow)
 {
     Q_UNUSED(focusOld)
     Q_UNUSED(focusNow)

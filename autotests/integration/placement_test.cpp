@@ -366,7 +366,7 @@ void TestPlacement::testFullscreen()
 
     client->setFullScreen(true);
 
-    QSignalSpy geometryChangedSpy(client, &Toplevel::frameGeometryChanged);
+    QSignalSpy geometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.data(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::red);

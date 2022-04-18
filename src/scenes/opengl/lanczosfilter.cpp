@@ -399,7 +399,7 @@ void LanczosFilter::timerEvent(QTimerEvent *event)
         m_offscreenTarget = nullptr;
         m_offscreenTex = nullptr;
 
-        workspace()->forEachToplevel([this](Toplevel *toplevel) {
+        workspace()->forEachToplevel([this](AbstractClient *toplevel) {
             discardCacheTexture(toplevel->effectWindow());
         });
 

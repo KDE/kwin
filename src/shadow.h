@@ -28,7 +28,7 @@ class ShadowInterface;
 namespace KWin
 {
 
-class Toplevel;
+class AbstractClient;
 
 /**
  * @short Class representing a Window's Shadow to be rendered by the Compositor.
@@ -40,10 +40,10 @@ class Toplevel;
  * To create a Shadow instance use the static factory method createShadow which will
  * create an instance for the currently used Compositing Backend. It will read the X11 Property
  * and create the Shadow and all required data (such as WindowQuads). If there is no Shadow
- * defined for the Toplevel the factory method returns @c NULL.
+ * defined for the AbstractClient the factory method returns @c NULL.
  *
  * @author Martin Gräßlin <mgraesslin@kde.org>
- * @todo React on Toplevel size changes.
+ * @todo React on AbstractClient size changes.
  */
 class KWIN_EXPORT Shadow : public QObject
 {
@@ -69,18 +69,18 @@ public:
      *
      * If there is no shadow defined for @p toplevel this method
      * will return @c NULL.
-     * @param toplevel The Toplevel for which the shadow should be created
+     * @param toplevel The AbstractClient for which the shadow should be created
      * @return Created Shadow or @c NULL in case there is no shadow defined.
      */
-    static Shadow *createShadow(Toplevel *toplevel);
+    static Shadow *createShadow(AbstractClient *toplevel);
 
-    Toplevel *toplevel() const;
+    AbstractClient *toplevel() const;
     /**
      * Reparents the shadow to @p toplevel.
      * Used when a window is deleted.
      * @param toplevel The new parent
      */
-    void setToplevel(Toplevel *toplevel);
+    void setToplevel(AbstractClient *toplevel);
 
     bool hasDecorationShadow() const
     {
@@ -124,7 +124,7 @@ public Q_SLOTS:
     void geometryChanged();
 
 protected:
-    Shadow(Toplevel *toplevel);
+    Shadow(AbstractClient *toplevel);
 
     inline const QPixmap &shadowPixmap(ShadowElements element) const
     {
@@ -135,16 +135,16 @@ protected:
     void setShadowElement(const QPixmap &shadow, ShadowElements element);
 
 private:
-    static Shadow *createShadowFromX11(Toplevel *toplevel);
-    static Shadow *createShadowFromDecoration(Toplevel *toplevel);
-    static Shadow *createShadowFromWayland(Toplevel *toplevel);
-    static Shadow *createShadowFromInternalWindow(Toplevel *toplevel);
+    static Shadow *createShadowFromX11(AbstractClient *toplevel);
+    static Shadow *createShadowFromDecoration(AbstractClient *toplevel);
+    static Shadow *createShadowFromWayland(AbstractClient *toplevel);
+    static Shadow *createShadowFromInternalWindow(AbstractClient *toplevel);
     static QVector<uint32_t> readX11ShadowProperty(xcb_window_t id);
     bool init(const QVector<uint32_t> &data);
     bool init(KDecoration2::Decoration *decoration);
     bool init(const QPointer<KWaylandServer::ShadowInterface> &shadow);
     bool init(const QWindow *window);
-    Toplevel *m_topLevel;
+    AbstractClient *m_topLevel;
     // shadow pixmaps
     QPixmap m_shadowElements[ShadowElementsCount];
     // shadow offsets

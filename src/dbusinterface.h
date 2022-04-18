@@ -82,7 +82,7 @@ public Q_SLOTS: // METHODS
      *
      * The map includes entries such as position, size, status, and more.
      *
-     * @param uuid is a QUuid from Toplevel::internalId().
+     * @param uuid is a QUuid from AbstractClient::internalId().
      */
     QVariantMap getWindowInfo(const QString &uuid);
 

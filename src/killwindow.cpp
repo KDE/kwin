@@ -33,7 +33,7 @@ void KillWindow::start()
     OSD::show(i18n("Select window to force close with left click or enter.\nEscape or right click to cancel."),
               QStringLiteral("window-close"));
     kwinApp()->platform()->startInteractiveWindowSelection(
-        [](KWin::Toplevel *t) {
+        [](KWin::AbstractClient *t) {
             OSD::hide();
             if (!t) {
                 return;

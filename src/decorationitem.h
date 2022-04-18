@@ -18,7 +18,6 @@ namespace KWin
 
 class AbstractClient;
 class Deleted;
-class Toplevel;
 
 namespace Decoration
 {
@@ -85,7 +84,7 @@ public:
 
 private Q_SLOTS:
     void handleFrameGeometryChanged();
-    void handleWindowClosed(Toplevel *original, Deleted *deleted);
+    void handleWindowClosed(AbstractClient *original, Deleted *deleted);
     void handleOutputChanged();
     void handleOutputScaleChanged();
 
@@ -94,7 +93,7 @@ protected:
     WindowQuadList buildQuads() const override;
 
 private:
-    Toplevel *m_window;
+    AbstractClient *m_window;
     QPointer<Output> m_output;
     QPointer<KDecoration2::Decoration> m_decoration;
     QScopedPointer<DecorationRenderer> m_renderer;

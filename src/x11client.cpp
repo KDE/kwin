@@ -1417,7 +1417,7 @@ void X11Client::showClient()
 
 bool X11Client::setupCompositing()
 {
-    if (!Toplevel::setupCompositing()) {
+    if (!AbstractClient::setupCompositing()) {
         return false;
     }
     // If compositing is back on, stop rendering decoration in the frame window.
@@ -1428,7 +1428,7 @@ bool X11Client::setupCompositing()
 
 void X11Client::finishCompositing(ReleaseReason releaseReason)
 {
-    Toplevel::finishCompositing(releaseReason);
+    AbstractClient::finishCompositing(releaseReason);
     updateVisibility();
     // If compositing is off, render the decoration in the X11 frame window.
     maybeCreateX11DecorationRenderer();
@@ -1554,7 +1554,7 @@ void X11Client::doSetShade(ShadeMode previousShadeMode)
             setActive(true);
         }
         if (shadeMode() == ShadeHover) {
-            QList<Toplevel *> order = workspace()->stackingOrder();
+            QList<AbstractClient *> order = workspace()->stackingOrder();
             // invalidate, since "this" could be the topmost toplevel and shade_below dangeling
             shade_below = nullptr;
             // this is likely related to the index parameter?!
@@ -1988,7 +1988,7 @@ void X11Client::updateActivities(bool includeTransients)
 /**
  * Returns the list of activities the client window is on.
  * if it's on all activities, the list will be empty.
- * Don't use this, use isOnActivity() and friends (from class Toplevel)
+ * Don't use this, use isOnActivity() and friends (from class AbstractClient)
  */
 QStringList X11Client::activities() const
 {

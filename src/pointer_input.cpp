@@ -556,7 +556,7 @@ void PointerInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl 
     m_decorationDestroyedConnection = connect(now, &QObject::destroyed, this, &PointerInputRedirection::update, Qt::QueuedConnection);
 }
 
-void PointerInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow)
+void PointerInputRedirection::focusUpdate(AbstractClient *focusOld, AbstractClient *focusNow)
 {
     if (auto ac = static_cast<AbstractClient *>(focusOld && focusOld->isClient() ? focusOld : nullptr)) {
         ac->pointerLeaveEvent();
@@ -578,7 +578,7 @@ void PointerInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow
 
     seat->notifyPointerEnter(focusNow->surface(), m_pos, focusNow->inputTransformation());
 
-    m_focusGeometryConnection = connect(focusNow, &Toplevel::inputTransformationChanged, this, [this]() {
+    m_focusGeometryConnection = connect(focusNow, &AbstractClient::inputTransformationChanged, this, [this]() {
         // TODO: why no assert possible?
         if (!focus()) {
             return;
@@ -642,7 +642,7 @@ void PointerInputRedirection::disconnectPointerConstraintsConnection()
 }
 
 template<typename T>
-static QRegion getConstraintRegion(Toplevel *t, T *constraint)
+static QRegion getConstraintRegion(AbstractClient *t, T *constraint)
 {
     const QRegion windowShape = t->inputShape();
     const QRegion intersected = constraint->region().isEmpty() ? windowShape : windowShape.intersected(constraint->region());

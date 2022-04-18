@@ -303,7 +303,7 @@ struct XcbConnectionDeleter
     }
 };
 
-static bool waitForXwaylandBuffer(Toplevel *window, const QSize &size)
+static bool waitForXwaylandBuffer(AbstractClient *window, const QSize &size)
 {
     // Usually, when an Xwayland surface is created, it has a buffer of size 1x1,
     // a buffer with the correct size will be committed a bit later.

@@ -130,7 +130,6 @@ target_sources(kwin PRIVATE
     surfaceitem_x11.cpp
     syncalarmx11filter.cpp
     tablet_input.cpp
-    toplevel.cpp
     hide_cursor_spy.cpp
     touch_input.cpp
     udev.cpp

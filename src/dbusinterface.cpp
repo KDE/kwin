@@ -234,7 +234,7 @@ QVariantMap DBusInterface::queryWindowInfo()
     m_replyQueryWindowInfo = message();
     setDelayedReply(true);
     kwinApp()->platform()->startInteractiveWindowSelection(
-        [this](Toplevel *t) {
+        [this](AbstractClient *t) {
             if (auto c = static_cast<AbstractClient *>(t->isClient() ? t : nullptr)) {
                 QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createReply(clientToVariantMap(c)));
             } else if (qobject_cast<Unmanaged *>(t)) {

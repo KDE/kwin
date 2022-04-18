@@ -49,7 +49,6 @@ class Group;
 class InternalClient;
 class KillWindow;
 class ShortcutDialog;
-class Toplevel;
 class Unmanaged;
 class UserActionsMenu;
 class VirtualDesktop;
@@ -125,25 +124,25 @@ public:
      */
     Unmanaged *findUnmanaged(xcb_window_t w) const;
     void forEachUnmanaged(std::function<void(Unmanaged *)> func);
-    Toplevel *findToplevel(std::function<bool(const Toplevel *)> func) const;
-    void forEachToplevel(std::function<void(Toplevel *)> func);
+    AbstractClient *findToplevel(std::function<bool(const AbstractClient *)> func) const;
+    void forEachToplevel(std::function<void(AbstractClient *)> func);
 
-    Toplevel *findToplevel(const QUuid &internalId) const;
+    AbstractClient *findToplevel(const QUuid &internalId) const;
 
     /**
-     * @brief Finds a Toplevel for the internal window @p w.
+     * @brief Finds a AbstractClient for the internal window @p w.
      *
      * Internal window means a window created by KWin itself. On X11 this is an Unmanaged
      * and mapped by the window id, on Wayland a XdgShellClient mapped on the internal window id.
      *
-     * @returns Toplevel
+     * @returns AbstractClient
      */
-    Toplevel *findInternal(QWindow *w) const;
+    AbstractClient *findInternal(QWindow *w) const;
 
     QRect clientArea(clientAreaOption, const Output *output, const VirtualDesktop *desktop) const;
-    QRect clientArea(clientAreaOption, const Toplevel *window) const;
-    QRect clientArea(clientAreaOption, const Toplevel *window, const Output *output) const;
-    QRect clientArea(clientAreaOption, const Toplevel *window, const QPoint &pos) const;
+    QRect clientArea(clientAreaOption, const AbstractClient *window) const;
+    QRect clientArea(clientAreaOption, const AbstractClient *window, const Output *output) const;
+    QRect clientArea(clientAreaOption, const AbstractClient *window, const QPoint &pos) const;
 
     /**
      * Returns the geometry of this Workspace, i.e. the bounding rectangle of all outputs.
@@ -283,9 +282,9 @@ public:
      * Returns the list of clients sorted in stacking order, with topmost client
      * at the last position
      */
-    const QList<Toplevel *> &stackingOrder() const;
-    QList<Toplevel *> xStackingOrder() const;
-    QList<Toplevel *> unconstrainedStackingOrder() const;
+    const QList<AbstractClient *> &stackingOrder() const;
+    QList<AbstractClient *> xStackingOrder() const;
+    QList<AbstractClient *> unconstrainedStackingOrder() const;
     QList<X11Client *> ensureStackingOrder(const QList<X11Client *> &clients) const;
     QList<AbstractClient *> ensureStackingOrder(const QList<AbstractClient *> &clients) const;
 
@@ -350,7 +349,7 @@ public:
 
     void removeUnmanaged(Unmanaged *); // Only called from Unmanaged::release()
     void removeDeleted(Deleted *);
-    void addDeleted(Deleted *, Toplevel *);
+    void addDeleted(Deleted *, AbstractClient *);
 
     bool checkStartupNotification(xcb_window_t w, KStartupInfoId &id, KStartupInfoData &data);
 
@@ -572,7 +571,7 @@ private:
     bool switchWindow(AbstractClient *c, Direction direction, QPoint curPos, VirtualDesktop *desktop);
 
     void propagateClients(bool propagate_new_clients); // Called only from updateStackingOrder
-    QList<Toplevel *> constrainedStackingOrder();
+    QList<AbstractClient *> constrainedStackingOrder();
     void raiseClientWithinApplication(AbstractClient *c);
     void lowerClientWithinApplication(AbstractClient *c);
     bool allowFullClientRaising(const AbstractClient *c, xcb_timestamp_t timestamp);
@@ -580,9 +579,9 @@ private:
     void updateToolWindows(bool also_hide);
     void fixPositionAfterCrash(xcb_window_t w, const xcb_get_geometry_reply_t *geom);
     void saveOldScreenSizes();
-    void addToStack(Toplevel *toplevel);
-    void replaceInStack(Toplevel *original, Deleted *deleted);
-    void removeFromStack(Toplevel *toplevel);
+    void addToStack(AbstractClient *toplevel);
+    void replaceInStack(AbstractClient *original, Deleted *deleted);
+    void removeFromStack(AbstractClient *toplevel);
 
     /// This is the right way to create a new client
     X11Client *createClient(xcb_window_t w, bool is_mapped);
@@ -604,8 +603,8 @@ private:
 
     struct Constraint
     {
-        Toplevel *below;
-        Toplevel *above;
+        AbstractClient *below;
+        AbstractClient *above;
         // All constraints above our "below" window
         QList<Constraint *> parents;
         // All constraints below our "above" window
@@ -638,11 +637,11 @@ private:
     QList<Deleted *> deleted;
     QList<InternalClient *> m_internalClients;
 
-    QList<Toplevel *> unconstrained_stacking_order; // Topmost last
-    QList<Toplevel *> stacking_order; // Topmost last
+    QList<AbstractClient *> unconstrained_stacking_order; // Topmost last
+    QList<AbstractClient *> stacking_order; // Topmost last
     QVector<xcb_window_t> manual_overlays; // Topmost last
     bool force_restacking;
-    QList<Toplevel *> x_stacking; // From XQueryTree()
+    QList<AbstractClient *> x_stacking; // From XQueryTree()
     std::unique_ptr<Xcb::Tree> m_xStackingQueryTree;
     bool m_xStackingDirty = false;
     QList<AbstractClient *> should_get_focus; // Last is most recent
@@ -771,7 +770,7 @@ inline void Workspace::removeGroup(Group *group)
     groups.removeAll(group);
 }
 
-inline const QList<Toplevel *> &Workspace::stackingOrder() const
+inline const QList<AbstractClient *> &Workspace::stackingOrder() const
 {
     // TODO: Q_ASSERT( block_stacking_updates == 0 );
     return stacking_order;

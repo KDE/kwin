@@ -107,8 +107,8 @@ void TestWindowSelection::testSelectOnWindowPointer()
     QCOMPARE(input()->pointer()->focus(), client);
     QVERIFY(pointerEnteredSpy.wait());
 
-    Toplevel *selectedWindow = nullptr;
-    auto callback = [&selectedWindow](Toplevel *t) {
+    AbstractClient *selectedWindow = nullptr;
+    auto callback = [&selectedWindow](AbstractClient *t) {
         selectedWindow = t;
     };
 
@@ -191,8 +191,8 @@ void TestWindowSelection::testSelectOnWindowKeyboard()
     QVERIFY(keyboardEnteredSpy.wait());
     QVERIFY(!client->frameGeometry().contains(KWin::Cursors::self()->mouse()->pos()));
 
-    Toplevel *selectedWindow = nullptr;
-    auto callback = [&selectedWindow](Toplevel *t) {
+    AbstractClient *selectedWindow = nullptr;
+    auto callback = [&selectedWindow](AbstractClient *t) {
         selectedWindow = t;
     };
 
@@ -255,8 +255,8 @@ void TestWindowSelection::testSelectOnWindowTouch()
     auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
 
-    Toplevel *selectedWindow = nullptr;
-    auto callback = [&selectedWindow](Toplevel *t) {
+    AbstractClient *selectedWindow = nullptr;
+    auto callback = [&selectedWindow](AbstractClient *t) {
         selectedWindow = t;
     };
 
@@ -328,8 +328,8 @@ void TestWindowSelection::testCancelOnWindowPointer()
     QCOMPARE(input()->pointer()->focus(), client);
     QVERIFY(pointerEnteredSpy.wait());
 
-    Toplevel *selectedWindow = nullptr;
-    auto callback = [&selectedWindow](Toplevel *t) {
+    AbstractClient *selectedWindow = nullptr;
+    auto callback = [&selectedWindow](AbstractClient *t) {
         selectedWindow = t;
     };
 
@@ -387,8 +387,8 @@ void TestWindowSelection::testCancelOnWindowKeyboard()
     QCOMPARE(input()->pointer()->focus(), client);
     QVERIFY(pointerEnteredSpy.wait());
 
-    Toplevel *selectedWindow = nullptr;
-    auto callback = [&selectedWindow](Toplevel *t) {
+    AbstractClient *selectedWindow = nullptr;
+    auto callback = [&selectedWindow](AbstractClient *t) {
         selectedWindow = t;
     };
 

@@ -36,7 +36,7 @@ namespace KWin
 namespace Xwl
 {
 
-DragEventReply WlToXDrag::moveFilter(Toplevel *target, const QPoint &pos)
+DragEventReply WlToXDrag::moveFilter(AbstractClient *target, const QPoint &pos)
 {
     Q_UNUSED(target)
     Q_UNUSED(pos)

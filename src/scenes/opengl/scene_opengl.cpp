@@ -215,7 +215,7 @@ Scene::EffectFrame *SceneOpenGL::createEffectFrame(EffectFrameImpl *frame)
     return new SceneOpenGL::EffectFrame(frame, this);
 }
 
-Shadow *SceneOpenGL::createShadow(Toplevel *toplevel)
+Shadow *SceneOpenGL::createShadow(AbstractClient *toplevel)
 {
     return new SceneOpenGLShadow(toplevel);
 }
@@ -306,7 +306,7 @@ void SceneOpenGL::doPaintBackground(const QVector<float> &vertices)
     vbo->render(GL_TRIANGLES);
 }
 
-Scene::Window *SceneOpenGL::createWindow(Toplevel *t)
+Scene::Window *SceneOpenGL::createWindow(AbstractClient *t)
 {
     return new OpenGLWindow(t, this);
 }
@@ -335,7 +335,7 @@ void SceneOpenGL::performPaintWindow(EffectWindowImpl *w, int mask, const QRegio
 // OpenGLWindow
 //****************************************
 
-OpenGLWindow::OpenGLWindow(Toplevel *toplevel, SceneOpenGL *scene)
+OpenGLWindow::OpenGLWindow(AbstractClient *toplevel, SceneOpenGL *scene)
     : Scene::Window(toplevel)
     , m_scene(scene)
 {
@@ -1191,7 +1191,7 @@ QSharedPointer<GLTexture> DecorationShadowTextureCache::getTexture(SceneOpenGLSh
     return d.texture;
 }
 
-SceneOpenGLShadow::SceneOpenGLShadow(Toplevel *toplevel)
+SceneOpenGLShadow::SceneOpenGLShadow(AbstractClient *toplevel)
     : Shadow(toplevel)
 {
 }

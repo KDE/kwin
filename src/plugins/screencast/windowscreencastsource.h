@@ -13,14 +13,14 @@
 namespace KWin
 {
 
-class Toplevel;
+class AbstractClient;
 
 class WindowScreenCastSource : public ScreenCastSource
 {
     Q_OBJECT
 
 public:
-    explicit WindowScreenCastSource(Toplevel *window, QObject *parent = nullptr);
+    explicit WindowScreenCastSource(AbstractClient *window, QObject *parent = nullptr);
 
     bool hasAlphaChannel() const override;
     QSize textureSize() const override;
@@ -30,7 +30,7 @@ public:
     std::chrono::nanoseconds clock() const override;
 
 private:
-    QPointer<Toplevel> m_window;
+    QPointer<AbstractClient> m_window;
 };
 
 } // namespace KWin

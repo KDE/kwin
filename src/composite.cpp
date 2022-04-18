@@ -905,12 +905,12 @@ void X11Compositor::composite(RenderLoop *renderLoop)
         return;
     }
 
-    QList<Toplevel *> windows = Workspace::self()->xStackingOrder();
+    QList<AbstractClient *> windows = Workspace::self()->xStackingOrder();
     QList<SurfaceItemX11 *> dirtyItems;
 
     // Reset the damage state of each window and fetch the damage region
     // without waiting for a reply
-    for (Toplevel *window : qAsConst(windows)) {
+    for (AbstractClient *window : qAsConst(windows)) {
         SurfaceItemX11 *surfaceItem = static_cast<SurfaceItemX11 *>(window->surfaceItem());
         if (surfaceItem->fetchDamage()) {
             dirtyItems.append(surfaceItem);

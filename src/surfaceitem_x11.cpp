@@ -12,12 +12,12 @@
 namespace KWin
 {
 
-SurfaceItemX11::SurfaceItemX11(Toplevel *window, Item *parent)
+SurfaceItemX11::SurfaceItemX11(AbstractClient *window, Item *parent)
     : SurfaceItem(window, parent)
 {
-    connect(window, &Toplevel::bufferGeometryChanged,
+    connect(window, &AbstractClient::bufferGeometryChanged,
             this, &SurfaceItemX11::handleBufferGeometryChanged);
-    connect(window, &Toplevel::geometryShapeChanged,
+    connect(window, &AbstractClient::geometryShapeChanged,
             this, &SurfaceItemX11::discardQuads);
 
     m_damageHandle = xcb_generate_id(kwinApp()->x11Connection());
@@ -29,7 +29,7 @@ SurfaceItemX11::SurfaceItemX11(Toplevel *window, Item *parent)
 
 SurfaceItemX11::~SurfaceItemX11()
 {
-    // destroyDamage() will be called by the associated Toplevel.
+    // destroyDamage() will be called by the associated AbstractClient.
 }
 
 void SurfaceItemX11::preprocess()
@@ -115,7 +115,7 @@ void SurfaceItemX11::destroyDamage()
     }
 }
 
-void SurfaceItemX11::handleBufferGeometryChanged(Toplevel *toplevel, const QRect &old)
+void SurfaceItemX11::handleBufferGeometryChanged(AbstractClient *toplevel, const QRect &old)
 {
     if (toplevel->bufferGeometry().size() != old.size()) {
         discardPixmap();
@@ -171,7 +171,7 @@ xcb_visualid_t SurfacePixmapX11::visual() const
 
 void SurfacePixmapX11::create()
 {
-    const Toplevel *toplevel = m_item->window();
+    const AbstractClient *toplevel = m_item->window();
     if (toplevel->isDeleted()) {
         return;
     }

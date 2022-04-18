@@ -44,7 +44,7 @@ ScreencastManager::ScreencastManager(QObject *parent)
 class WindowStream : public ScreenCastStream
 {
 public:
-    WindowStream(Toplevel *toplevel, QObject *parent)
+    WindowStream(AbstractClient *toplevel, QObject *parent)
         : ScreenCastStream(new WindowScreenCastSource(toplevel), parent)
         , m_toplevel(toplevel)
     {
@@ -60,7 +60,7 @@ private:
     {
         connect(Compositor::self()->scene(), &Scene::frameRendered, this, &WindowStream::bufferToStream);
 
-        connect(m_toplevel, &Toplevel::damaged, this, &WindowStream::includeDamage);
+        connect(m_toplevel, &AbstractClient::damaged, this, &WindowStream::includeDamage);
         m_damagedRegion = m_toplevel->visibleGeometry();
         m_toplevel->addRepaintFull();
     }
@@ -70,7 +70,7 @@ private:
         disconnect(Compositor::self()->scene(), &Scene::frameRendered, this, &WindowStream::bufferToStream);
     }
 
-    void includeDamage(Toplevel *toplevel, const QRegion &damage)
+    void includeDamage(AbstractClient *toplevel, const QRegion &damage)
     {
         Q_ASSERT(m_toplevel == toplevel);
         m_damagedRegion |= damage;
@@ -85,7 +85,7 @@ private:
     }
 
     QRegion m_damagedRegion;
-    Toplevel *m_toplevel;
+    AbstractClient *m_toplevel;
 };
 
 void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamV1Interface *waylandStream, const QString &winid)
