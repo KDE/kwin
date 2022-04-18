@@ -350,10 +350,9 @@ public:
             return false;
         }
 
-        auto t = input()->findToplevel(event->globalPos());
-        auto client = static_cast<AbstractClient *>(t && t->isClient() ? t : nullptr);
-        if (client && client->isLockScreen()) {
-            workspace()->activateClient(client);
+        auto window = input()->findToplevel(event->globalPos());
+        if (window->isClient() && window->isLockScreen()) {
+            workspace()->activateClient(window);
         }
 
         auto seat = waylandServer()->seat();
@@ -3300,12 +3299,11 @@ void InputDeviceHandler::updateFocus()
 void InputDeviceHandler::updateDecoration()
 {
     Decoration::DecoratedClientImpl *decoration = nullptr;
-    auto t = m_hover.window.data();
-    auto ac = static_cast<AbstractClient *>(t && t->isClient() ? t : nullptr);
-    if (ac && ac->decoratedClient()) {
-        if (!ac->clientGeometry().contains(position().toPoint())) {
+    auto hover = m_hover.window.data();
+    if (hover && hover->decoratedClient()) {
+        if (!hover->clientGeometry().contains(position().toPoint())) {
             // input device above decoration
-            decoration = ac->decoratedClient();
+            decoration = hover->decoratedClient();
         }
     }
 
