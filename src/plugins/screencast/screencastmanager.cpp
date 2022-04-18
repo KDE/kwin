@@ -48,9 +48,7 @@ public:
         : ScreenCastStream(new WindowScreenCastSource(toplevel), parent)
         , m_toplevel(toplevel)
     {
-        if (AbstractClient *client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr)) {
-            setObjectName(client->desktopFileName());
-        }
+        setObjectName(toplevel->desktopFileName());
         connect(this, &ScreenCastStream::startStreaming, this, &WindowStream::startFeeding);
         connect(this, &ScreenCastStream::stopStreaming, this, &WindowStream::stopFeeding);
     }
