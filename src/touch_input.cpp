@@ -93,14 +93,14 @@ void TouchInputRedirection::focusUpdate(AbstractClient *focusOld, AbstractClient
 {
     // TODO: handle pointer grab aka popups
 
-    if (AbstractClient *ac = static_cast<AbstractClient *>(focusOld && focusOld->isClient() ? focusOld : nullptr)) {
-        ac->pointerLeaveEvent();
+    if (focusOld && focusOld->isClient()) {
+        focusOld->pointerLeaveEvent();
     }
     disconnect(m_focusGeometryConnection);
     m_focusGeometryConnection = QMetaObject::Connection();
 
-    if (AbstractClient *ac = static_cast<AbstractClient *>(focusNow && focusNow->isClient() ? focusNow : nullptr)) {
-        ac->pointerEnterEvent(m_lastPosition.toPoint());
+    if (focusNow && focusNow->isClient()) {
+        focusNow->pointerEnterEvent(m_lastPosition.toPoint());
     }
 
     auto seat = waylandServer()->seat();
