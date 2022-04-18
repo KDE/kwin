@@ -9,60 +9,81 @@
 
 #include <KCModule>
 #include <KPluginMetaData>
+#include <KPluginModel>
+#include <KQuickAddons/ConfigModule>
 #include <KSharedConfig>
-
-namespace Ui
-{
-class Module;
-}
+#include <kpluginmetadata.h>
 
 class KJob;
 class KWinScriptsData;
 
-class Module : public KCModule
+class Module : public KQuickAddons::ConfigModule
 {
     Q_OBJECT
-public:
-    /**
-     * Constructor.
-     *
-     * @param parent Parent widget of the module
-     * @param args Arguments for the module
-     */
-    explicit Module(QWidget *parent, const QVariantList &args = QVariantList());
 
-    /**
-     * Destructor.
-     */
-    ~Module() override;
+    Q_PROPERTY(QAbstractItemModel *model READ model CONSTANT)
+    Q_PROPERTY(QList<KPluginMetaData> pendingDeletions READ pendingDeletions NOTIFY pendingDeletionsChanged)
+    Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY messageChanged)
+    Q_PROPERTY(QString infoMessage READ infoMessage NOTIFY messageChanged)
+public:
+    explicit Module(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
+
     void load() override;
     void save() override;
     void defaults() override;
 
-Q_SIGNALS:
-    void pendingDeletionsChanged();
+    QAbstractItemModel *model() const
+    {
+        return m_model;
+    }
 
-protected Q_SLOTS:
+    Q_INVOKABLE void togglePendingDeletion(const KPluginMetaData &data);
+    Q_INVOKABLE bool canDeleteEntry(const KPluginMetaData &data)
+    {
+        return QFileInfo(data.metaDataFileName()).isWritable();
+    }
+
+    QList<KPluginMetaData> pendingDeletions()
+    {
+        return m_pendingDeletions;
+    }
+
+    QString errorMessage() const
+    {
+        return m_errorMessage;
+    }
+    QString infoMessage() const
+    {
+        return m_infoMessage;
+    }
+    void setErrorMessage(const QString &message)
+    {
+        m_infoMessage.clear();
+        m_errorMessage = message;
+        Q_EMIT messageChanged();
+    }
 
     /**
      * Called when the import script button is clicked.
      */
-    void importScript();
+    Q_INVOKABLE void importScript();
+    Q_INVOKABLE void onGHNSEntriesChanged();
 
-    void importScriptInstallFinished(KJob *job);
+    Q_INVOKABLE void configure(const KPluginMetaData &data);
+
+Q_SIGNALS:
+    void messageChanged();
+    void pendingDeletionsChanged();
 
 private:
-    /**
-     * UI
-     */
-    Ui::Module *ui;
-    /**
-     * Updates the contents of the list view.
-     */
-    void updateListViewContents();
+    void importScriptInstallFinished(KJob *job);
+
     KSharedConfigPtr m_kwinConfig;
     KWinScriptsData *m_kwinScriptsData;
     QList<KPluginMetaData> m_pendingDeletions;
+    KPluginModel *m_model;
+    QString m_errorMessage;
+    QString m_infoMessage;
 };
 
 #endif // MODULE_H
