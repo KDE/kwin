@@ -244,11 +244,7 @@ WindowQuadList DecorationItem::buildQuads() const
     const qreal devicePixelRatio = m_renderer->effectiveDevicePixelRatio();
     const int texturePad = DecorationRenderer::TexturePad;
 
-    if (const AbstractClient *client = qobject_cast<const AbstractClient *>(m_window)) {
-        client->layoutDecorationRects(left, top, right, bottom);
-    } else if (const Deleted *deleted = qobject_cast<const Deleted *>(m_window)) {
-        deleted->layoutDecorationRects(left, top, right, bottom);
-    }
+    m_window->layoutDecorationRects(left, top, right, bottom);
 
     const int topHeight = std::ceil(top.height() * devicePixelRatio);
     const int bottomHeight = std::ceil(bottom.height() * devicePixelRatio);

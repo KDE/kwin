@@ -32,7 +32,7 @@ public:
     QPoint clientPos() const override;
     bool isDeleted() const override;
     xcb_window_t frameId() const override;
-    void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
+    void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const override;
     Layer layer() const override
     {
         return m_layer;
