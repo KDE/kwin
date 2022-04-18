@@ -21,11 +21,9 @@ WindowItem::WindowItem(AbstractClient *window, Item *parent)
     : Item(parent)
     , m_window(window)
 {
-    auto client = static_cast<AbstractClient *>(window->isClient() ? window : nullptr);
-    if (client) {
-        connect(client, &AbstractClient::decorationChanged, this, &WindowItem::updateDecorationItem);
-        updateDecorationItem();
-    }
+    connect(window, &AbstractClient::decorationChanged, this, &WindowItem::updateDecorationItem);
+    updateDecorationItem();
+
     connect(window, &AbstractClient::shadowChanged, this, &WindowItem::updateShadowItem);
     updateShadowItem();
 
@@ -108,12 +106,11 @@ void WindowItem::updateShadowItem()
 
 void WindowItem::updateDecorationItem()
 {
-    auto client = static_cast<AbstractClient *>(m_window->isClient() ? m_window : nullptr);
-    if (!client || client->isZombie()) {
+    if (m_window->isDeleted() || m_window->isZombie()) {
         return;
     }
-    if (client->decoration()) {
-        m_decorationItem.reset(new DecorationItem(client->decoration(), client, this));
+    if (m_window->decoration()) {
+        m_decorationItem.reset(new DecorationItem(m_window->decoration(), m_window, this));
         if (m_shadowItem) {
             m_decorationItem->stackAfter(m_shadowItem.data());
         } else if (m_surfaceItem) {
