@@ -197,9 +197,8 @@ void PointerInputRedirection::updateToReset()
         setDecoration(nullptr);
     }
     if (focus()) {
-        auto t = focus();
-        if (auto c = static_cast<AbstractClient *>(t->isClient() ? t : nullptr)) {
-            c->pointerLeaveEvent();
+        if (focus()->isClient()) {
+            focus()->pointerLeaveEvent();
         }
         disconnect(m_focusGeometryConnection);
         m_focusGeometryConnection = QMetaObject::Connection();
@@ -558,16 +557,16 @@ void PointerInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl 
 
 void PointerInputRedirection::focusUpdate(AbstractClient *focusOld, AbstractClient *focusNow)
 {
-    if (auto ac = static_cast<AbstractClient *>(focusOld && focusOld->isClient() ? focusOld : nullptr)) {
-        ac->pointerLeaveEvent();
-        breakPointerConstraints(ac->surface());
+    if (focusOld && focusOld->isClient()) {
+        focusOld->pointerLeaveEvent();
+        breakPointerConstraints(focusOld->surface());
         disconnectPointerConstraintsConnection();
     }
     disconnect(m_focusGeometryConnection);
     m_focusGeometryConnection = QMetaObject::Connection();
 
-    if (auto ac = static_cast<AbstractClient *>(focusNow && focusNow->isClient() ? focusNow : nullptr)) {
-        ac->pointerEnterEvent(m_pos.toPoint());
+    if (focusNow && focusNow->isClient()) {
+        focusNow->pointerEnterEvent(m_pos.toPoint());
     }
 
     auto seat = waylandServer()->seat();
