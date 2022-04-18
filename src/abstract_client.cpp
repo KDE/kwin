@@ -2472,8 +2472,8 @@ bool AbstractClient::performMouseCommand(Options::MouseCommand cmd, const QPoint
             auto it = workspace()->stackingOrder().constEnd(),
                  begin = workspace()->stackingOrder().constBegin();
             while (mustReplay && --it != begin && *it != this) {
-                auto c = static_cast<AbstractClient *>((*it)->isClient() ? *it : nullptr);
-                if (!c || (c->keepAbove() && !keepAbove()) || (keepBelow() && !c->keepBelow())) {
+                auto c = *it;
+                if (!c->isClient() || (c->keepAbove() && !keepAbove()) || (keepBelow() && !c->keepBelow())) {
                     continue; // can never raise above "it"
                 }
                 mustReplay = !(c->isOnCurrentDesktop() && c->isOnCurrentActivity() && c->frameGeometry().intersects(frameGeometry()));
