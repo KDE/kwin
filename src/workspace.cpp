@@ -896,9 +896,8 @@ void Workspace::updateToolWindows(bool also_hide)
     // SELI TODO: But maybe it should - what if a new client has been added that's not in stacking order yet?
     QVector<AbstractClient *> to_show, to_hide;
     for (auto it = stacking_order.constBegin(); it != stacking_order.constEnd(); ++it) {
-        auto t = *it;
-        auto c = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
-        if (!c) {
+        auto c = *it;
+        if (!c->isClient()) {
             continue;
         }
         if (c->isUtility() || c->isMenu() || c->isToolbar()) {
@@ -1109,9 +1108,8 @@ AbstractClient *Workspace::findClientToActivateOnDesktop(VirtualDesktop *desktop
     if (options->isNextFocusPrefersMouse()) {
         auto it = stackingOrder().constEnd();
         while (it != stackingOrder().constBegin()) {
-            auto t = *(--it);
-            auto client = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
-            if (!client) {
+            auto client = *(--it);
+            if (!client->isClient()) {
                 continue;
             }
 
@@ -1421,9 +1419,8 @@ void Workspace::setShowingDesktop(bool showing, bool animated)
     { // for the blocker RAII
         StackingUpdatesBlocker blocker(this); // updateLayer & lowerClient would invalidate stacking_order
         for (int i = stacking_order.count() - 1; i > -1; --i) {
-            auto t = stacking_order.at(i);
-            auto c = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
-            if (c && c->isOnCurrentDesktop()) {
+            auto c = stacking_order.at(i);
+            if (c->isClient() && c->isOnCurrentDesktop()) {
                 if (c->isDock()) {
                     c->updateLayer();
                 } else if (c->isDesktop() && c->isShown()) {
@@ -1802,7 +1799,7 @@ AbstractClient *Workspace::findAbstractClient(std::function<bool(const AbstractC
 AbstractClient *Workspace::findAbstractClient(const QUuid &internalId) const
 {
     auto t = findToplevel(internalId);
-    return static_cast<AbstractClient *>(t && t->isClient() ? t : nullptr);
+    return t && t->isClient() ? t : nullptr;
 }
 
 Unmanaged *Workspace::findUnmanaged(std::function<bool(const Unmanaged *)> func) const

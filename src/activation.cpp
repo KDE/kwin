@@ -424,9 +424,8 @@ AbstractClient *Workspace::clientUnderMouse(Output *output) const
 {
     auto it = stackingOrder().constEnd();
     while (it != stackingOrder().constBegin()) {
-        auto t = *(--it);
-        auto client = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
-        if (!client) {
+        auto client = *(--it);
+        if (!client->isClient()) {
             continue;
         }
 

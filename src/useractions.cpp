@@ -1679,9 +1679,8 @@ bool Workspace::switchWindow(AbstractClient *c, Direction direction, QPoint curP
 
     QList<AbstractClient *> clist = stackingOrder();
     for (auto i = clist.rbegin(); i != clist.rend(); ++i) {
-        auto t = *i;
-        auto client = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
-        if (!client) {
+        auto client = *i;
+        if (!client->isClient()) {
             continue;
         }
         if (client->wantsTabFocus() && *i != c && client->isOnDesktop(desktop) && !client->isMinimized() && (*i)->isOnCurrentActivity()) {
