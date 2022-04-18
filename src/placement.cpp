@@ -154,7 +154,7 @@ void Placement::placeAtRandom(AbstractClient *c, const QRect &area, Policy /*nex
 // TODO: one day, there'll be C++11 ...
 static inline bool isIrrelevant(const AbstractClient *client, const AbstractClient *regarding, int desktop)
 {
-    if (!client) {
+    if (!client->isClient()) {
         return true;
     }
     if (client == regarding) {
@@ -232,8 +232,7 @@ void Placement::placeSmart(AbstractClient *c, const QRect &area, Policy /*next*/
             cyt = y;
             cyb = y + ch;
             for (auto l = workspace()->stackingOrder().constBegin(); l != workspace()->stackingOrder().constEnd(); ++l) {
-                auto t = *l;
-                auto client = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
+                auto client = *l;
                 if (isIrrelevant(client, c, desktop)) {
                     continue;
                 }
@@ -287,8 +286,7 @@ void Placement::placeSmart(AbstractClient *c, const QRect &area, Policy /*next*/
 
             // compare to the position of each client on the same desk
             for (auto l = workspace()->stackingOrder().constBegin(); l != workspace()->stackingOrder().constEnd(); ++l) {
-                auto t = *l;
-                auto client = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
+                auto client = *l;
                 if (isIrrelevant(client, c, desktop)) {
                     continue;
                 }
@@ -326,8 +324,7 @@ void Placement::placeSmart(AbstractClient *c, const QRect &area, Policy /*next*/
 
             // test the position of each window on the desk
             for (auto l = workspace()->stackingOrder().constBegin(); l != workspace()->stackingOrder().constEnd(); ++l) {
-                auto t = *l;
-                auto client = static_cast<AbstractClient *>(t->isClient() ? t : nullptr);
+                auto client = *l;
                 if (isIrrelevant(client, c, desktop)) {
                     continue;
                 }
@@ -636,12 +633,11 @@ void Placement::cascadeDesktop()
     reinitCascading(desktop);
     const auto stackingOrder = ws->stackingOrder();
     for (AbstractClient *toplevel : stackingOrder) {
-        auto client = static_cast<AbstractClient *>(toplevel->isClient() ? toplevel : nullptr);
-        if (!client || (!client->isOnCurrentDesktop()) || (client->isMinimized()) || (client->isOnAllDesktops()) || (!client->isMovable())) {
+        if (!toplevel->isClient() || (!toplevel->isOnCurrentDesktop()) || (toplevel->isMinimized()) || (toplevel->isOnAllDesktops()) || (!toplevel->isMovable())) {
             continue;
         }
-        const QRect placementArea = workspace()->clientArea(PlacementArea, client);
-        placeCascaded(client, placementArea);
+        const QRect placementArea = workspace()->clientArea(PlacementArea, toplevel);
+        placeCascaded(toplevel, placementArea);
     }
 }
 
