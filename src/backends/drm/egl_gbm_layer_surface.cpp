@@ -191,18 +191,34 @@ bool EglGbmLayerSurface::createGbmSurface(const QSize &size, uint32_t format, co
 
 bool EglGbmLayerSurface::createGbmSurface(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats)
 {
-    const auto tranches = m_eglBackend->dmabuf()->tranches();
-    for (const auto &tranche : tranches) {
-        for (auto it = tranche.formatTable.constBegin(); it != tranche.formatTable.constEnd(); it++) {
-            const uint32_t &format = it.key();
-            if (m_importMode == MultiGpuImportMode::DumbBufferXrgb8888 && format != DRM_FORMAT_XRGB8888) {
-                continue;
-            }
-            if (formats.contains(format) && createGbmSurface(size, format, formats[format])) {
-                return true;
-            }
+    QVector<GbmFormat> sortedFormats;
+    for (auto it = formats.begin(); it != formats.end(); it++) {
+        const auto format = m_eglBackend->gbmFormatForDrmFormat(it.key());
+        if (format.has_value()) {
+            sortedFormats << format.value();
         }
     }
+    std::sort(sortedFormats.begin(), sortedFormats.end(), [this](const auto &lhs, const auto &rhs) {
+        if (lhs.drmFormat == rhs.drmFormat) {
+            // prefer having an alpha channel
+            return lhs.alphaSize > rhs.alphaSize;
+        } else if (m_eglBackend->prefer10bpc() && ((lhs.bpp == 30) != (rhs.bpp == 30))) {
+            // prefer 10bpc / 30bpp formats
+            return lhs.bpp == 30 ? true : false;
+        } else {
+            // fallback
+            return lhs.drmFormat < rhs.drmFormat;
+        }
+    });
+    for (const auto &format : qAsConst(sortedFormats)) {
+        if (m_importMode == MultiGpuImportMode::DumbBufferXrgb8888 && format.drmFormat != DRM_FORMAT_XRGB8888) {
+            continue;
+        }
+        if (formats.contains(format.drmFormat) && createGbmSurface(size, format.drmFormat, formats[format.drmFormat])) {
+            return true;
+        }
+    }
+    qCCritical(KWIN_DRM, "Failed to create a gbm surface!");
     return false;
 }
 
