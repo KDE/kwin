@@ -66,7 +66,7 @@ private:
     bool setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
 
-    QVector<Output::Mode> getModes() const;
+    QList<QSharedPointer<OutputMode>> getModes() const;
 
     void updateCursor();
     void moveCursor();

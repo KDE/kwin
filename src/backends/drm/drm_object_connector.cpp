@@ -30,6 +30,11 @@ static bool checkIfEqual(const drmModeModeInfo *one, const drmModeModeInfo *two)
     return std::memcmp(one, two, sizeof(drmModeModeInfo)) == 0;
 }
 
+static QSize resolutionForMode(const drmModeModeInfo *info)
+{
+    return QSize(info->hdisplay, info->vdisplay);
+}
+
 static quint64 refreshRateForMode(_drmModeModeInfo *m)
 {
     // Calculate higher precision (mHz) refresh rate
@@ -47,11 +52,19 @@ static quint64 refreshRateForMode(_drmModeModeInfo *m)
     return refreshRate;
 }
 
+static OutputMode::Flags flagsForMode(const drmModeModeInfo *info)
+{
+    OutputMode::Flags flags;
+    if (info->type & DRM_MODE_TYPE_PREFERRED) {
+        flags |= OutputMode::Flag::Preferred;
+    }
+    return flags;
+}
+
 DrmConnectorMode::DrmConnectorMode(DrmConnector *connector, drmModeModeInfo nativeMode)
-    : m_connector(connector)
+    : OutputMode(resolutionForMode(&nativeMode), refreshRateForMode(&nativeMode), flagsForMode(&nativeMode))
+    , m_connector(connector)
     , m_nativeMode(nativeMode)
-    , m_size(nativeMode.hdisplay, nativeMode.vdisplay)
-    , m_refreshRate(refreshRateForMode(&nativeMode))
 {
 }
 
@@ -66,16 +79,6 @@ DrmConnectorMode::~DrmConnectorMode()
 drmModeModeInfo *DrmConnectorMode::nativeMode()
 {
     return &m_nativeMode;
-}
-
-QSize DrmConnectorMode::size() const
-{
-    return m_size;
-}
-
-uint32_t DrmConnectorMode::refreshRate() const
-{
-    return m_refreshRate;
 }
 
 uint32_t DrmConnectorMode::blobId()
@@ -194,7 +197,7 @@ QSize DrmConnector::physicalSize() const
     return m_physicalSize;
 }
 
-QVector<QSharedPointer<DrmConnectorMode>> DrmConnector::modes() const
+QList<QSharedPointer<DrmConnectorMode>> DrmConnector::modes() const
 {
     return m_modes;
 }

@@ -100,17 +100,17 @@ void WaylandOutputDevice::updateModes(Output *output)
 
     const auto modes = output->modes();
     deviceModes.reserve(modes.size());
-    for (const Output::Mode &mode : modes) {
+    for (const QSharedPointer<OutputMode> &mode : modes) {
         OutputDeviceModeV2Interface::ModeFlags flags;
 
-        if (mode.flags & Output::ModeFlag::Current) {
+        if (output->currentMode() == mode) {
             flags |= OutputDeviceModeV2Interface::ModeFlag::Current;
         }
-        if (mode.flags & Output::ModeFlag::Preferred) {
+        if (mode->flags() & OutputMode::Flag::Preferred) {
             flags |= OutputDeviceModeV2Interface::ModeFlag::Preferred;
         }
 
-        OutputDeviceModeV2Interface *deviceMode = new OutputDeviceModeV2Interface(mode.size, mode.refreshRate, flags);
+        OutputDeviceModeV2Interface *deviceMode = new OutputDeviceModeV2Interface(mode->size(), mode->refreshRate(), flags);
         deviceModes << deviceMode;
     }
     m_outputDeviceV2->setModes(deviceModes);

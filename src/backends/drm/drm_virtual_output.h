@@ -40,7 +40,6 @@ private:
 
     QSharedPointer<DrmOutputLayer> m_layer;
     bool m_pageFlipPending = true;
-    int m_modeIndex = 0;
 
     SoftwareVsyncMonitor *m_vsyncMonitor;
 };

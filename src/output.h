@@ -29,6 +29,27 @@ class RenderLoop;
 class OutputConfiguration;
 class ColorTransformation;
 
+class KWIN_EXPORT OutputMode
+{
+public:
+    enum class Flag : uint {
+        Preferred = 0x1,
+    };
+    Q_DECLARE_FLAGS(Flags, Flag)
+
+    OutputMode(const QSize &size, int refreshRate, Flags flags = {});
+    virtual ~OutputMode() = default;
+
+    QSize size() const;
+    int refreshRate() const;
+    Flags flags() const;
+
+private:
+    const QSize m_size;
+    const int m_refreshRate;
+    const Flags m_flags;
+};
+
 /**
  * Generic output representation.
  */
@@ -37,23 +58,6 @@ class KWIN_EXPORT Output : public QObject
     Q_OBJECT
 
 public:
-    enum class ModeFlag : uint {
-        Current = 0x1,
-        Preferred = 0x2,
-    };
-    Q_DECLARE_FLAGS(ModeFlags, ModeFlag)
-    Q_ENUM(ModeFlag)
-
-    struct Mode
-    {
-        QSize size;
-        int refreshRate;
-        ModeFlags flags;
-        int id;
-
-        inline bool operator==(const Mode &other) const;
-    };
-
     enum class DpmsMode {
         On,
         Standby,
@@ -218,8 +222,8 @@ public:
     QString description() const;
     Capabilities capabilities() const;
     QByteArray edid() const;
-    QVector<Mode> modes() const;
-    void setModes(const QVector<Mode> &modes);
+    QList<QSharedPointer<OutputMode>> modes() const;
+    QSharedPointer<OutputMode> currentMode() const;
     DpmsMode dpmsMode() const;
     virtual void setDpmsMode(DpmsMode mode);
 
@@ -295,8 +299,7 @@ Q_SIGNALS:
 protected:
     void initialize(const QString &model, const QString &manufacturer,
                     const QString &eisaId, const QString &serialNumber,
-                    const QSize &physicalSize,
-                    const QVector<Mode> &modes, const QByteArray &edid);
+                    const QSize &physicalSize, const QByteArray &edid);
 
     void setName(const QString &name)
     {
@@ -312,7 +315,8 @@ protected:
         Q_UNUSED(enable);
     }
 
-    void setCurrentModeInternal(const QSize &size, int refreshRate);
+    void setModesInternal(const QList<QSharedPointer<OutputMode>> &modes, const QSharedPointer<OutputMode> &currentMode);
+    void setCurrentModeInternal(const QSharedPointer<OutputMode> &currentMode);
     void setTransformInternal(Transform transform);
     void setDpmsModeInternal(DpmsMode dpmsMode);
     void setCapabilityInternal(Capability capability, bool on = true);
@@ -334,17 +338,16 @@ private:
     QString m_model;
     QString m_serialNumber;
     QUuid m_uuid;
-    QSize m_modeSize;
     QSize m_physicalSize;
     QPoint m_position;
     qreal m_scale = 1;
     Capabilities m_capabilities;
     Transform m_transform = Transform::Normal;
     QByteArray m_edid;
-    QVector<Mode> m_modes;
+    QList<QSharedPointer<OutputMode>> m_modes;
+    QSharedPointer<OutputMode> m_currentMode;
     DpmsMode m_dpmsMode = DpmsMode::On;
     SubPixel m_subPixel = SubPixel::Unknown;
-    int m_refreshRate = -1;
     bool m_isEnabled = true;
     bool m_internal = false;
     bool m_isPlaceholder = false;

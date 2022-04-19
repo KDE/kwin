@@ -38,6 +38,28 @@ QDebug operator<<(QDebug debug, const Output *output)
     return debug;
 }
 
+OutputMode::OutputMode(const QSize &size, int refreshRate, Flags flags)
+    : m_size(size)
+    , m_refreshRate(refreshRate)
+    , m_flags(flags)
+{
+}
+
+QSize OutputMode::size() const
+{
+    return m_size;
+}
+
+int OutputMode::refreshRate() const
+{
+    return m_refreshRate;
+}
+
+OutputMode::Flags OutputMode::flags() const
+{
+    return m_flags;
+}
+
 Output::Output(QObject *parent)
     : QObject(parent)
 {
@@ -157,7 +179,7 @@ QSize Output::physicalSize() const
 
 int Output::refreshRate() const
 {
-    return m_refreshRate;
+    return m_currentMode->refreshRate();
 }
 
 void Output::moveTo(const QPoint &pos)
@@ -170,12 +192,12 @@ void Output::moveTo(const QPoint &pos)
 
 QSize Output::modeSize() const
 {
-    return m_modeSize;
+    return m_currentMode->size();
 }
 
 QSize Output::pixelSize() const
 {
-    return orientateSize(m_modeSize);
+    return orientateSize(m_currentMode->size());
 }
 
 QByteArray Output::edid() const
@@ -183,21 +205,29 @@ QByteArray Output::edid() const
     return m_edid;
 }
 
-bool Output::Mode::operator==(const Mode &other) const
-{
-    return id == other.id && other.flags == flags && size == other.size && refreshRate == other.refreshRate;
-}
-
-QVector<Output::Mode> Output::modes() const
+QList<QSharedPointer<OutputMode>> Output::modes() const
 {
     return m_modes;
 }
 
-void Output::setModes(const QVector<Mode> &modes)
+QSharedPointer<OutputMode> Output::currentMode() const
 {
-    if (m_modes != modes) {
-        m_modes = modes;
+    return m_currentMode;
+}
+
+void Output::setModesInternal(const QList<QSharedPointer<OutputMode>> &modes, const QSharedPointer<OutputMode> &currentMode)
+{
+    const auto oldModes = m_modes;
+    const auto oldCurrentMode = m_currentMode;
+
+    m_modes = modes;
+    m_currentMode = currentMode;
+
+    if (m_modes != oldModes) {
         Q_EMIT modesChanged();
+    }
+    if (m_currentMode != oldCurrentMode) {
+        Q_EMIT currentModeChanged();
     }
 }
 
@@ -245,17 +275,13 @@ QString Output::description() const
     return m_manufacturer + ' ' + m_model;
 }
 
-void Output::setCurrentModeInternal(const QSize &size, int refreshRate)
+void Output::setCurrentModeInternal(const QSharedPointer<OutputMode> &currentMode)
 {
-    const bool sizeChanged = m_modeSize != size;
-    if (sizeChanged || m_refreshRate != refreshRate) {
-        m_modeSize = size;
-        m_refreshRate = refreshRate;
+    if (m_currentMode != currentMode) {
+        m_currentMode = currentMode;
 
         Q_EMIT currentModeChanged();
-        if (sizeChanged) {
-            Q_EMIT geometryChanged();
-        }
+        Q_EMIT geometryChanged();
     }
 }
 
@@ -271,8 +297,7 @@ static QUuid generateOutputId(const QString &eisaId, const QString &model,
 
 void Output::initialize(const QString &model, const QString &manufacturer,
                         const QString &eisaId, const QString &serialNumber,
-                        const QSize &physicalSize,
-                        const QVector<Mode> &modes, const QByteArray &edid)
+                        const QSize &physicalSize, const QByteArray &edid)
 {
     m_serialNumber = serialNumber;
     m_eisaId = eisaId;
@@ -280,16 +305,7 @@ void Output::initialize(const QString &model, const QString &manufacturer,
     m_model = model;
     m_physicalSize = physicalSize;
     m_edid = edid;
-    m_modes = modes;
     m_uuid = generateOutputId(m_eisaId, m_model, m_serialNumber, m_name);
-
-    for (const Mode &mode : modes) {
-        if (mode.flags & ModeFlag::Current) {
-            m_modeSize = mode.size;
-            m_refreshRate = mode.refreshRate;
-            break;
-        }
-    }
 }
 
 QSize Output::orientateSize(const QSize &size) const

@@ -20,20 +20,16 @@ X11PlaceholderOutput::X11PlaceholderOutput(RenderLoop *loop, QObject *parent)
         pixelSize = QSize(screen->width_in_pixels, screen->height_in_pixels);
     }
 
-    const Mode mode{
-        .size = pixelSize,
-        .refreshRate = 60000,
-        .flags = ModeFlag::Current,
-        .id = 0,
-    };
-
     const QByteArray model = QByteArrayLiteral("kwin");
     const QByteArray manufacturer = QByteArrayLiteral("xorg");
     const QByteArray eisaId;
     const QByteArray serial;
 
-    initialize(model, manufacturer, eisaId, serial, pixelSize, {mode}, QByteArray());
+    initialize(model, manufacturer, eisaId, serial, pixelSize, QByteArray());
     setName(QStringLiteral("Placeholder-0"));
+
+    auto mode = QSharedPointer<OutputMode>::create(pixelSize, 60000);
+    setModesInternal({mode}, mode);
 }
 
 RenderLoop *X11PlaceholderOutput::renderLoop() const

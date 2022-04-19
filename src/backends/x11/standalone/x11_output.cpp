@@ -65,7 +65,8 @@ bool X11Output::usesSoftwareCursor() const
 
 void X11Output::setMode(const QSize &size, int refreshRate)
 {
-    setCurrentModeInternal(size, refreshRate);
+    auto mode = QSharedPointer<OutputMode>::create(size, refreshRate);
+    setModesInternal({mode}, mode);
 }
 
 void X11Output::setPhysicalSize(const QSize &size)

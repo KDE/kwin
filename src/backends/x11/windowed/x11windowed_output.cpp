@@ -64,16 +64,13 @@ void X11WindowedOutput::init(const QPoint &logicalPosition, const QSize &pixelSi
     m_renderLoop->setRefreshRate(refreshRate);
     m_vsyncMonitor->setRefreshRate(refreshRate);
 
-    Mode mode;
-    mode.id = 0;
-    mode.size = pixelSize;
-    mode.flags = ModeFlag::Current;
-    mode.refreshRate = refreshRate;
+    auto mode = QSharedPointer<OutputMode>::create(pixelSize, refreshRate);
+    setModesInternal({mode}, mode);
 
     // Physicial size must be adjusted, such that QPA calculates correct sizes of
     // internal elements.
     const QSize physicalSize = pixelSize / 96.0 * 25.4 / m_backend->initialOutputScale();
-    initialize("model_TODO", "manufacturer_TODO", "eisa_TODO", "serial_TODO", physicalSize, {mode}, {});
+    initialize("model_TODO", "manufacturer_TODO", "eisa_TODO", "serial_TODO", physicalSize, {});
     setGeometry(logicalPosition, pixelSize);
     setScale(m_backend->initialOutputScale());
 

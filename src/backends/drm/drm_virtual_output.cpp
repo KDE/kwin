@@ -33,16 +33,16 @@ DrmVirtualOutput::DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize
     connect(m_vsyncMonitor, &VsyncMonitor::vblankOccurred, this, &DrmVirtualOutput::vblank);
 
     setName("Virtual-" + name);
-    m_modeIndex = 0;
-    QVector<Mode> modes = {{size, 60000, Output::ModeFlags(Output::ModeFlag::Current) | Output::ModeFlag::Preferred, 0}};
     initialize(QLatin1String("model_") + name,
                QLatin1String("manufacturer_") + name,
                QLatin1String("eisa_") + name,
                QLatin1String("serial_") + name,
-               modes[m_modeIndex].size,
-               modes,
+               size,
                QByteArray("EDID_") + name.toUtf8());
-    m_renderLoop->setRefreshRate(modes[m_modeIndex].refreshRate);
+
+    auto mode = QSharedPointer<OutputMode>::create(size, 60000, OutputMode::Flag::Preferred);
+    setModesInternal({mode}, mode);
+    m_renderLoop->setRefreshRate(mode->refreshRate());
 
     recreateSurface();
 }

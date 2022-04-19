@@ -61,32 +61,20 @@ void WaylandOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
 {
     m_renderLoop->setRefreshRate(s_refreshRate);
 
-    const Mode mode{
-        .size = pixelSize,
-        .refreshRate = s_refreshRate,
-        .flags = ModeFlag::Current,
-        .id = 0,
-    };
+    auto mode = QSharedPointer<OutputMode>::create(pixelSize, s_refreshRate);
+    setModesInternal({mode}, mode);
 
     static uint i = 0;
-    initialize(QStringLiteral("model_%1").arg(i++), "manufacturer_TODO", "eisa_TODO", "serial_TODO", pixelSize, {mode}, {});
+    initialize(QStringLiteral("model_%1").arg(i++), "manufacturer_TODO", "eisa_TODO", "serial_TODO", pixelSize, {});
 
     moveTo(logicalPosition);
-    setCurrentModeInternal(mode.size, mode.refreshRate);
     setScale(backend()->initialOutputScale());
 }
 
 void WaylandOutput::setGeometry(const QPoint &logicalPosition, const QSize &pixelSize)
 {
-    const Mode mode{
-        .size = pixelSize,
-        .refreshRate = s_refreshRate,
-        .flags = ModeFlag::Current,
-        .id = 0,
-    };
-
-    setModes({mode});
-    setCurrentModeInternal(mode.size, mode.refreshRate);
+    auto mode = QSharedPointer<OutputMode>::create(pixelSize, s_refreshRate);
+    setModesInternal({mode}, mode);
 
     moveTo(logicalPosition);
     Q_EMIT m_backend->screensQueried();

@@ -165,34 +165,16 @@ void DrmOutput::moveCursor()
     }
 }
 
-QVector<Output::Mode> DrmOutput::getModes() const
+QList<QSharedPointer<OutputMode>> DrmOutput::getModes() const
 {
-    bool modeFound = false;
-    QVector<Mode> modes;
-    const auto modelist = m_pipeline->connector()->modes();
+    const auto drmModes = m_pipeline->connector()->modes();
 
-    modes.reserve(modelist.count());
-    for (int i = 0; i < modelist.count(); ++i) {
-        Mode mode;
-        // compare the actual mode objects, not the pointers!
-        if (*modelist[i] == *m_pipeline->pending.mode) {
-            mode.flags |= ModeFlag::Current;
-            modeFound = true;
-        }
-        if (modelist[i]->nativeMode()->type & DRM_MODE_TYPE_PREFERRED) {
-            mode.flags |= ModeFlag::Preferred;
-        }
-
-        mode.id = i;
-        mode.size = modelist[i]->size();
-        mode.refreshRate = modelist[i]->refreshRate();
-        modes << mode;
+    QList<QSharedPointer<OutputMode>> ret;
+    ret.reserve(drmModes.count());
+    for (const QSharedPointer<DrmConnectorMode> &drmMode : drmModes) {
+        ret.append(drmMode);
     }
-    if (!modeFound) {
-        // select first mode by default
-        modes[0].flags |= ModeFlag::Current;
-    }
-    return modes;
+    return ret;
 }
 
 void DrmOutput::initOutputDevice()
@@ -201,7 +183,14 @@ void DrmOutput::initOutputDevice()
     setName(conn->connectorName());
     initialize(conn->modelName(), conn->edid()->manufacturerString(),
                conn->edid()->eisaId(), conn->edid()->serialNumber(),
-               conn->physicalSize(), getModes(), conn->edid()->raw());
+               conn->physicalSize(), conn->edid()->raw());
+
+    const QList<QSharedPointer<OutputMode>> modes = getModes();
+    QSharedPointer<OutputMode> currentMode = m_pipeline->pending.mode;
+    if (!currentMode) {
+        currentMode = modes.constFirst();
+    }
+    setModesInternal(modes, currentMode);
 }
 
 void DrmOutput::updateEnablement(bool enable)
@@ -290,7 +279,8 @@ DrmPlane::Transformations outputToPlaneTransform(DrmOutput::Transform transform)
 
 void DrmOutput::updateModes()
 {
-    setModes(getModes());
+    const QList<QSharedPointer<OutputMode>> modes = getModes();
+
     if (m_pipeline->pending.crtc) {
         const auto currentMode = m_pipeline->connector()->findMode(m_pipeline->pending.crtc->queryCurrentMode());
         if (currentMode != m_pipeline->pending.mode) {
@@ -298,7 +288,6 @@ void DrmOutput::updateModes()
             m_pipeline->pending.mode = currentMode ? currentMode : m_pipeline->connector()->modes().constFirst();
             if (m_gpu->testPendingConfiguration()) {
                 m_pipeline->applyPendingChanges();
-                setCurrentModeInternal(m_pipeline->pending.mode->size(), m_pipeline->pending.mode->refreshRate());
                 m_renderLoop->setRefreshRate(m_pipeline->pending.mode->refreshRate());
             } else {
                 qCWarning(KWIN_DRM) << "Setting changed mode failed!";
@@ -306,6 +295,13 @@ void DrmOutput::updateModes()
             }
         }
     }
+
+    QSharedPointer<OutputMode> currentMode = m_pipeline->pending.mode;
+    if (!currentMode) {
+        currentMode = modes.constFirst();
+    }
+
+    setModesInternal(modes, currentMode);
 }
 
 bool DrmOutput::present()
@@ -384,7 +380,7 @@ void DrmOutput::applyQueuedChanges(const OutputConfiguration &config)
     setTransformInternal(props->transform);
 
     const auto &mode = m_pipeline->pending.mode;
-    setCurrentModeInternal(mode->size(), mode->refreshRate());
+    setCurrentModeInternal(mode);
     m_renderLoop->setRefreshRate(mode->refreshRate());
     setOverscanInternal(m_pipeline->pending.overscan);
     setRgbRangeInternal(m_pipeline->pending.rgbRange);
