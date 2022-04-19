@@ -12,8 +12,10 @@
 namespace KWaylandServer
 {
 
+class Display;
 class OutputManagementV2InterfacePrivate;
 class OutputConfigurationV2Interface;
+
 /**
  * @class OutputManagementInterface
  *
