@@ -38,16 +38,13 @@ SurfaceInterfacePrivate::~SurfaceInterfacePrivate()
     wl_resource *resource;
     wl_resource *tmp;
 
-    wl_resource_for_each_safe(resource, tmp, &current.frameCallbacks)
-    {
+    wl_resource_for_each_safe (resource, tmp, &current.frameCallbacks) {
         wl_resource_destroy(resource);
     }
-    wl_resource_for_each_safe(resource, tmp, &pending.frameCallbacks)
-    {
+    wl_resource_for_each_safe (resource, tmp, &pending.frameCallbacks) {
         wl_resource_destroy(resource);
     }
-    wl_resource_for_each_safe(resource, tmp, &cached.frameCallbacks)
-    {
+    wl_resource_for_each_safe (resource, tmp, &cached.frameCallbacks) {
         wl_resource_destroy(resource);
     }
 
@@ -368,8 +365,7 @@ void SurfaceInterface::frameRendered(quint32 msec)
     wl_resource *resource;
     wl_resource *tmp;
 
-    wl_resource_for_each_safe(resource, tmp, &d->current.frameCallbacks)
-    {
+    wl_resource_for_each_safe (resource, tmp, &d->current.frameCallbacks) {
         wl_callback_send_done(resource, msec);
         wl_resource_destroy(resource);
     }

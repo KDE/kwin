@@ -110,10 +110,10 @@ void TestContrast::init()
 
 void TestContrast::cleanup()
 {
-#define CLEANUP(variable)                                                                                                                                      \
-    if (variable) {                                                                                                                                            \
-        delete variable;                                                                                                                                       \
-        variable = nullptr;                                                                                                                                    \
+#define CLEANUP(variable)   \
+    if (variable) {         \
+        delete variable;    \
+        variable = nullptr; \
     }
     CLEANUP(m_compositor)
     CLEANUP(m_contrastManager)

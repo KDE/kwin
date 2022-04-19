@@ -93,10 +93,10 @@ void ErrorTest::init()
 
 void ErrorTest::cleanup()
 {
-#define CLEANUP(variable)                                                                                                                                      \
-    if (variable) {                                                                                                                                            \
-        delete variable;                                                                                                                                       \
-        variable = nullptr;                                                                                                                                    \
+#define CLEANUP(variable)   \
+    if (variable) {         \
+        delete variable;    \
+        variable = nullptr; \
     }
     CLEANUP(m_plasmaShell)
     CLEANUP(m_compositor)

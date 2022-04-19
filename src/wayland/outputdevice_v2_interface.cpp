@@ -6,14 +6,14 @@
 */
 #include "outputdevice_v2_interface.h"
 
-#include "display_p.h"
 #include "display.h"
+#include "display_p.h"
 #include "logging.h"
 #include "utils.h"
 
 #include <QDebug>
-#include <QString>
 #include <QPointer>
+#include <QString>
 
 #include <wayland-client-protocol.h>
 
@@ -84,7 +84,8 @@ protected:
 class OutputDeviceModeV2InterfacePrivate : public QtWaylandServer::kde_output_device_mode_v2
 {
 public:
-    struct ModeResource : Resource {
+    struct ModeResource : Resource
+    {
         OutputDeviceV2InterfacePrivate::Resource *output;
     };
 
@@ -96,7 +97,10 @@ public:
 
     void bindResource(wl_resource *resource);
 
-    static OutputDeviceModeV2InterfacePrivate *get(OutputDeviceModeV2Interface *mode) { return mode->d.data(); }
+    static OutputDeviceModeV2InterfacePrivate *get(OutputDeviceModeV2Interface *mode)
+    {
+        return mode->d.data();
+    }
 
     OutputDeviceModeV2Interface *q;
 
@@ -174,7 +178,7 @@ void OutputDeviceV2Interface::setCurrentMode(OutputDeviceModeV2Interface *mode)
     }
     if (d->currentMode) {
         // another mode has the current flag - remove
-         d->currentMode->setFlags(d->currentMode->flags() & ~uint(OutputDeviceModeV2Interface::ModeFlag::Current));
+        d->currentMode->setFlags(d->currentMode->flags() & ~uint(OutputDeviceModeV2Interface::ModeFlag::Current));
     }
 
     mode->setFlags(mode->flags() | OutputDeviceModeV2Interface::ModeFlag::Current);
@@ -191,11 +195,9 @@ void OutputDeviceV2Interface::setCurrentMode(OutputDeviceModeV2Interface *mode)
 
 bool OutputDeviceV2Interface::setCurrentMode(const QSize &size, int refreshRate)
 {
-    auto mode = std::find_if(d->modes.begin(), d->modes.end(),
-        [size, refreshRate](OutputDeviceModeV2Interface *mode) {
-            return mode->size() == size && mode->refreshRate() == refreshRate;
-        }
-    );
+    auto mode = std::find_if(d->modes.begin(), d->modes.end(), [size, refreshRate](OutputDeviceModeV2Interface *mode) {
+        return mode->size() == size && mode->refreshRate() == refreshRate;
+    });
     if (mode == d->modes.end()) {
         return false;
     }
@@ -296,14 +298,14 @@ void OutputDeviceV2InterfacePrivate::sendCurrentMode(Resource *outputResource)
 void OutputDeviceV2InterfacePrivate::sendGeometry(Resource *resource)
 {
     send_geometry(resource->handle,
-                    globalPosition.x(),
-                    globalPosition.y(),
-                    physicalSize.width(),
-                    physicalSize.height(),
-                    toSubPixel(),
-                    manufacturer,
-                    model,
-                    toTransform());
+                  globalPosition.x(),
+                  globalPosition.y(),
+                  physicalSize.width(),
+                  physicalSize.height(),
+                  toSubPixel(),
+                  manufacturer,
+                  model,
+                  toTransform());
 }
 
 void OutputDeviceV2InterfacePrivate::sendScale(Resource *resource)
@@ -692,12 +694,14 @@ OutputDeviceModeV2InterfacePrivate::OutputDeviceModeV2InterfacePrivate(OutputDev
     , m_size(size)
     , m_refreshRate(refreshRate)
     , m_flags(flags)
-{}
+{
+}
 
 OutputDeviceModeV2Interface::OutputDeviceModeV2Interface(const QSize &size, int refreshRate, ModeFlags flags, QObject *parent)
     : QObject(parent)
     , d(new OutputDeviceModeV2InterfacePrivate(this, size, refreshRate, flags))
-{}
+{
+}
 
 OutputDeviceModeV2Interface::~OutputDeviceModeV2Interface() = default;
 

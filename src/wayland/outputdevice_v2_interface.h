@@ -24,7 +24,6 @@ class OutputDeviceV2InterfacePrivate;
 class OutputDeviceModeV2Interface;
 class OutputDeviceModeV2InterfacePrivate;
 
-
 /** @class OutputDeviceV2Interface
  *
  * Represents an output device, the difference to Output is that this output can be disabled,
@@ -146,7 +145,7 @@ private:
  *
  * Represents an output device mode.
  *
-* @see OutputDeviceV2Interface
+ * @see OutputDeviceV2Interface
  */
 class KWAYLANDSERVER_EXPORT OutputDeviceModeV2Interface : public QObject
 {

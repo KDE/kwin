@@ -16,8 +16,8 @@
 #include "surface_interface_p.h"
 
 #include <QTemporaryFile>
-#include <fcntl.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <unistd.h>
 
 namespace KWaylandServer
@@ -508,7 +508,8 @@ void LinuxDmaBufV1FeedbackPrivate::zwp_linux_dmabuf_feedback_v1_destroy(Resource
     wl_resource_destroy(resource->handle);
 }
 
-struct linux_dmabuf_feedback_v1_table_entry {
+struct linux_dmabuf_feedback_v1_table_entry
+{
     uint32_t format;
     uint32_t pad; // unused
     uint64_t modifier;

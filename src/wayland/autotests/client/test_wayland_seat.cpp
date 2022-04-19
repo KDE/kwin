@@ -1092,15 +1092,15 @@ class PointerHoldGesture : public QObject, public QtWayland::zwp_pointer_gesture
     Q_OBJECT
     void zwp_pointer_gesture_hold_v1_begin(uint32_t serial, uint32_t time, wl_surface *surface, uint32_t fingers) override
     {
-       Q_EMIT started(serial, time, surface, fingers);
+        Q_EMIT started(serial, time, surface, fingers);
     }
 
     void zwp_pointer_gesture_hold_v1_end(uint32_t serial, uint32_t time, int32_t cancelled) override
     {
-       cancelled ? Q_EMIT this->cancelled(serial, time) : Q_EMIT ended(serial, time);
+        cancelled ? Q_EMIT this->cancelled(serial, time) : Q_EMIT ended(serial, time);
     }
 Q_SIGNALS:
-    void started(quint32 serial , quint32 time, void *surface, quint32 fingers);
+    void started(quint32 serial, quint32 time, void *surface, quint32 fingers);
     void ended(quint32 serial, quint32 time);
     void cancelled(quint32 serial, quint32 time);
 };
@@ -1126,7 +1126,6 @@ void TestWaylandSeat::testPointerHoldGesture()
     PointerHoldGesture gesture(gestures.get_hold_gesture(*pointer));
     QVERIFY(gesture.isInitialized());
 
-
     QSignalSpy startSpy(&gesture, &PointerHoldGesture::started);
     QVERIFY(startSpy.isValid());
     QSignalSpy endSpy(&gesture, &PointerHoldGesture::ended);
@@ -1139,7 +1138,7 @@ void TestWaylandSeat::testPointerHoldGesture()
     QVERIFY(surfaceCreatedSpy.isValid());
     QScopedPointer<Surface> surface(m_compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
-    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface);
 
     QImage image(QSize(100, 100), QImage::Format_ARGB32_Premultiplied);
@@ -1162,7 +1161,7 @@ void TestWaylandSeat::testPointerHoldGesture()
     QCOMPARE(startSpy.count(), 1);
     QCOMPARE(startSpy.first().at(0).value<quint32>(), m_display->serial());
     QCOMPARE(startSpy.first().at(1).value<quint32>(), 1u);
-    QCOMPARE(startSpy.first().at(2).value<void*>(), *surface.get());
+    QCOMPARE(startSpy.first().at(2).value<void *>(), *surface.get());
     QCOMPARE(startSpy.first().at(3).value<quint32>(), 3);
 
     // another start should not be possible

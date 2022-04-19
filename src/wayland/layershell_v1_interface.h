@@ -59,7 +59,12 @@ class KWAYLANDSERVER_EXPORT LayerSurfaceV1Interface : public QObject
     Q_OBJECT
 
 public:
-    enum Layer { BackgroundLayer, BottomLayer, TopLayer, OverlayLayer };
+    enum Layer {
+        BackgroundLayer,
+        BottomLayer,
+        TopLayer,
+        OverlayLayer,
+    };
 
     LayerSurfaceV1Interface(LayerShellV1Interface *shell,
                             SurfaceInterface *surface,

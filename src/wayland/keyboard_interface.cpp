@@ -201,10 +201,10 @@ void KeyboardInterface::sendKey(quint32 key, KeyboardKeyState state)
 void KeyboardInterface::sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group)
 {
     bool changed = false;
-#define UPDATE(value)                                                                                                                                          \
-    if (d->modifiers.value != value) {                                                                                                                         \
-        d->modifiers.value = value;                                                                                                                            \
-        changed = true;                                                                                                                                        \
+#define UPDATE(value)                  \
+    if (d->modifiers.value != value) { \
+        d->modifiers.value = value;    \
+        changed = true;                \
     }
     UPDATE(depressed)
     UPDATE(latched)

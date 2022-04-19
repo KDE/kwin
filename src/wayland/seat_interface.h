@@ -538,7 +538,6 @@ public:
      */
     void startPointerHoldGesture(quint32 fingerCount);
 
-
     /**
      * The multi-finger hold gesture ended. This may happen when one or more fingers are lifted.
      * @see startPointerHoldGesture

@@ -219,10 +219,10 @@ void DataControlInterfaceTest::init()
 
 void DataControlInterfaceTest::cleanup()
 {
-#define CLEANUP(variable)                                                                                                                                      \
-    if (variable) {                                                                                                                                            \
-        delete variable;                                                                                                                                       \
-        variable = nullptr;                                                                                                                                    \
+#define CLEANUP(variable)   \
+    if (variable) {         \
+        delete variable;    \
+        variable = nullptr; \
     }
     CLEANUP(m_dataControlDeviceManager)
     CLEANUP(m_clientSeat)

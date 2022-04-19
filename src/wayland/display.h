@@ -111,7 +111,7 @@ public:
     /**
      * @returns All SeatInterface currently managed on the Display.
      */
-    QVector<SeatInterface*> seats() const;
+    QVector<SeatInterface *> seats() const;
     QList<OutputDeviceV2Interface *> outputDevices() const;
     QList<OutputInterface *> outputs() const;
     QVector<OutputInterface *> outputsIntersecting(const QRect &rect) const;

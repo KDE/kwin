@@ -24,7 +24,8 @@ class LinuxDmaBufV1FeedbackPrivate;
 /**
  * The LinuxDmaBufV1Plane type represents a plane in a client buffer.
  */
-struct LinuxDmaBufV1Plane {
+struct LinuxDmaBufV1Plane
+{
     int fd = -1; ///< The dmabuf file descriptor
     quint32 offset = 0; ///< The offset from the start of buffer
     quint32 stride = 0; ///< The distance from the start of a row to the next row in bytes
@@ -70,7 +71,8 @@ public:
     };
     Q_DECLARE_FLAGS(TrancheFlags, TrancheFlag)
 
-    struct Tranche {
+    struct Tranche
+    {
         dev_t device;
         TrancheFlags flags;
         QHash<uint32_t, QVector<uint64_t>> formatTable;

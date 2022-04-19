@@ -40,6 +40,7 @@ public:
     std::function<int()> createNonMasterFd;
     bool hasDrmMaster = true;
     bool removed = false;
+
 protected:
     void wp_drm_lease_device_v1_create_lease_request(Resource *resource, uint32_t id) override;
     void wp_drm_lease_device_v1_release(Resource *resource) override;
@@ -66,6 +67,7 @@ public:
     QString name;
     QString description;
     bool withdrawn = false;
+
 protected:
     void wp_drm_lease_connector_v1_destroy(Resource *resource) override;
 };
@@ -79,6 +81,7 @@ public:
     DrmLeaseDeviceV1InterfacePrivate *device;
     QVector<DrmLeaseConnectorV1Interface *> connectors;
     bool invalid = false;
+
 protected:
     void wp_drm_lease_request_v1_request_connector(Resource *resource, struct ::wl_resource *connector) override;
     void wp_drm_lease_request_v1_submit(Resource *resource, uint32_t id) override;
@@ -95,10 +98,10 @@ public:
     QVector<DrmLeaseConnectorV1Interface *> connectors;
     uint32_t lesseeId = 0;
     bool finished = false;
+
 protected:
     void wp_drm_lease_v1_destroy(Resource *resource) override;
     void wp_drm_lease_v1_destroy_resource(Resource *resource) override;
 };
 
 }
-

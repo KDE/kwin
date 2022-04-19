@@ -127,10 +127,10 @@ void TextInputTest::init()
 
 void TextInputTest::cleanup()
 {
-#define CLEANUP(variable)                                                                                                                                      \
-    if (variable) {                                                                                                                                            \
-        delete variable;                                                                                                                                       \
-        variable = nullptr;                                                                                                                                    \
+#define CLEANUP(variable)   \
+    if (variable) {         \
+        delete variable;    \
+        variable = nullptr; \
     }
     CLEANUP(m_textInputManagerV2)
     CLEANUP(m_keyboard)

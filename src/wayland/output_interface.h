@@ -54,7 +54,8 @@ public:
         Flipped180,
         Flipped270,
     };
-    struct Mode {
+    struct Mode
+    {
         QSize size = QSize();
         int refreshRate = 60000;
     };

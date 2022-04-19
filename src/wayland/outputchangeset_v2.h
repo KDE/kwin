@@ -40,7 +40,7 @@ public:
      * @returns @c true if the enabled property of the outputdevice has changed.
      *    bool modeChanged() const;
      */
-     /** Whether the transform() property of the outputdevice changed. */
+    /** Whether the transform() property of the outputdevice changed. */
     bool transformChanged() const;
 
     /** Whether the size property of the outputdevice changed.

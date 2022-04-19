@@ -39,7 +39,8 @@ private:
     SeatInterface *m_seatInterface = nullptr;
     DataDeviceManagerInterface *m_ddmInterface = nullptr;
 
-    struct Connection {
+    struct Connection
+    {
         ConnectionThread *connection = nullptr;
         QThread *thread = nullptr;
         EventQueue *queue = nullptr;
@@ -153,8 +154,8 @@ void SelectionTest::cleanup()
 {
     cleanupConnection(&m_client1);
     cleanupConnection(&m_client2);
-#define CLEANUP(variable)                                                                                                                                      \
-    delete variable;                                                                                                                                           \
+#define CLEANUP(variable) \
+    delete variable;      \
     variable = nullptr;
 
     CLEANUP(m_display)

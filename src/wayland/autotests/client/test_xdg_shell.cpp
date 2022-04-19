@@ -75,14 +75,14 @@ private:
     Seat *m_seat = nullptr;
 };
 
-#define SURFACE                                                                                                                                                \
-    QSignalSpy xdgSurfaceCreatedSpy(m_xdgShellInterface, &XdgShellInterface::toplevelCreated);                                                                 \
-    QVERIFY(xdgSurfaceCreatedSpy.isValid());                                                                                                                   \
-    QScopedPointer<Surface> surface(m_compositor->createSurface());                                                                                            \
-    QScopedPointer<XdgShellSurface> xdgSurface(m_xdgShell->createSurface(surface.data()));                                                                     \
-    QCOMPARE(xdgSurface->size(), QSize());                                                                                                                     \
-    QVERIFY(xdgSurfaceCreatedSpy.wait());                                                                                                                      \
-    auto serverXdgToplevel = xdgSurfaceCreatedSpy.first().first().value<XdgToplevelInterface *>();                                                             \
+#define SURFACE                                                                                    \
+    QSignalSpy xdgSurfaceCreatedSpy(m_xdgShellInterface, &XdgShellInterface::toplevelCreated);     \
+    QVERIFY(xdgSurfaceCreatedSpy.isValid());                                                       \
+    QScopedPointer<Surface> surface(m_compositor->createSurface());                                \
+    QScopedPointer<XdgShellSurface> xdgSurface(m_xdgShell->createSurface(surface.data()));         \
+    QCOMPARE(xdgSurface->size(), QSize());                                                         \
+    QVERIFY(xdgSurfaceCreatedSpy.wait());                                                          \
+    auto serverXdgToplevel = xdgSurfaceCreatedSpy.first().first().value<XdgToplevelInterface *>(); \
     QVERIFY(serverXdgToplevel);
 
 void XdgShellTest::init()
@@ -164,10 +164,10 @@ void XdgShellTest::init()
 
 void XdgShellTest::cleanup()
 {
-#define CLEANUP(variable)                                                                                                                                      \
-    if (variable) {                                                                                                                                            \
-        delete variable;                                                                                                                                       \
-        variable = nullptr;                                                                                                                                    \
+#define CLEANUP(variable)   \
+    if (variable) {         \
+        delete variable;    \
+        variable = nullptr; \
     }
     CLEANUP(m_xdgShell)
     CLEANUP(m_compositor)

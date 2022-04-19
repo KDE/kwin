@@ -4,12 +4,12 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#include "display.h"
 #include "outputmanagement_v2_interface.h"
+#include "display.h"
 #include "outputconfiguration_v2_interface.h"
 
-#include <wayland-server.h>
 #include "qwayland-server-kde-output-management-v2.h"
+#include <wayland-server.h>
 
 #include <QHash>
 

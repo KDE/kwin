@@ -69,7 +69,8 @@ public:
     AbstractDataSource *currentPrimarySelection = nullptr;
 
     // Pointer related members
-    struct Pointer {
+    struct Pointer
+    {
         enum class State {
             Released,
             Pressed,
@@ -77,7 +78,8 @@ public:
         QHash<quint32, quint32> buttonSerials;
         QHash<quint32, State> buttonStates;
         QPointF pos;
-        struct Focus {
+        struct Focus
+        {
             SurfaceInterface *surface = nullptr;
             QMetaObject::Connection destroyConnection;
             QPointF offset = QPointF();
@@ -91,8 +93,10 @@ public:
     void updatePointerButtonState(quint32 button, Pointer::State state);
 
     // Keyboard related members
-    struct Keyboard {
-        struct Focus {
+    struct Keyboard
+    {
+        struct Focus
+        {
             SurfaceInterface *surface = nullptr;
             QMetaObject::Connection destroyConnection;
             quint32 serial = 0;
@@ -104,8 +108,10 @@ public:
     Keyboard globalKeyboard;
 
     // Touch related members
-    struct Touch {
-        struct Focus {
+    struct Touch
+    {
+        struct Focus
+        {
             SurfaceInterface *surface = nullptr;
             QMetaObject::Connection destroyConnection;
             QPointF offset = QPointF();
@@ -117,7 +123,8 @@ public:
     };
     Touch globalTouch;
 
-    struct Drag {
+    struct Drag
+    {
         enum class Mode {
             None,
             Pointer,

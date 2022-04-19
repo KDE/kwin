@@ -5,14 +5,14 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#include "display.h"
 #include "outputconfiguration_v2_interface.h"
-#include "outputdevice_v2_interface.h"
+#include "display.h"
 #include "logging.h"
 #include "outputchangeset_v2_p.h"
+#include "outputdevice_v2_interface.h"
 
-#include "qwayland-server-kde-output-management-v2.h"
 #include "qwayland-server-kde-output-device-v2.h"
+#include "qwayland-server-kde-output-management-v2.h"
 
 #include <wayland-client-protocol.h>
 
@@ -56,7 +56,7 @@ protected:
 void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_enable(Resource *resource, wl_resource *outputdevice, int32_t enable)
 {
     Q_UNUSED(resource)
-    
+
     OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
     pendingChanges(output)->d->enabled = enable == 1;
 }
@@ -76,23 +76,23 @@ void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_transfor
     Q_UNUSED(resource)
     auto toTransform = [transform]() {
         switch (transform) {
-            case WL_OUTPUT_TRANSFORM_90:
-                return OutputDeviceV2Interface::Transform::Rotated90;
-            case WL_OUTPUT_TRANSFORM_180:
-                return OutputDeviceV2Interface::Transform::Rotated180;
-            case WL_OUTPUT_TRANSFORM_270:
-                return OutputDeviceV2Interface::Transform::Rotated270;
-            case WL_OUTPUT_TRANSFORM_FLIPPED:
-                return OutputDeviceV2Interface::Transform::Flipped;
-            case WL_OUTPUT_TRANSFORM_FLIPPED_90:
-                return OutputDeviceV2Interface::Transform::Flipped90;
-            case WL_OUTPUT_TRANSFORM_FLIPPED_180:
-                return OutputDeviceV2Interface::Transform::Flipped180;
-            case WL_OUTPUT_TRANSFORM_FLIPPED_270:
-                return OutputDeviceV2Interface::Transform::Flipped270;
-            case WL_OUTPUT_TRANSFORM_NORMAL:
-            default:
-                return OutputDeviceV2Interface::Transform::Normal;
+        case WL_OUTPUT_TRANSFORM_90:
+            return OutputDeviceV2Interface::Transform::Rotated90;
+        case WL_OUTPUT_TRANSFORM_180:
+            return OutputDeviceV2Interface::Transform::Rotated180;
+        case WL_OUTPUT_TRANSFORM_270:
+            return OutputDeviceV2Interface::Transform::Rotated270;
+        case WL_OUTPUT_TRANSFORM_FLIPPED:
+            return OutputDeviceV2Interface::Transform::Flipped;
+        case WL_OUTPUT_TRANSFORM_FLIPPED_90:
+            return OutputDeviceV2Interface::Transform::Flipped90;
+        case WL_OUTPUT_TRANSFORM_FLIPPED_180:
+            return OutputDeviceV2Interface::Transform::Flipped180;
+        case WL_OUTPUT_TRANSFORM_FLIPPED_270:
+            return OutputDeviceV2Interface::Transform::Flipped270;
+        case WL_OUTPUT_TRANSFORM_NORMAL:
+        default:
+            return OutputDeviceV2Interface::Transform::Normal;
         }
     };
     auto _transform = toTransform();
@@ -118,7 +118,7 @@ void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_scale(Re
         return;
     }
     OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
-    
+
     pendingChanges(output)->d->scale = doubleScale;
 }
 
@@ -190,7 +190,7 @@ OutputConfigurationV2InterfacePrivate::OutputConfigurationV2InterfacePrivate(Out
 {
 }
 
-QHash<OutputDeviceV2Interface*, OutputChangeSetV2*> OutputConfigurationV2Interface::changes() const
+QHash<OutputDeviceV2Interface *, OutputChangeSetV2 *> OutputConfigurationV2Interface::changes() const
 {
     return d->changes;
 }
@@ -244,12 +244,7 @@ bool OutputConfigurationV2InterfacePrivate::hasPendingChanges(OutputDeviceV2Inte
         return false;
     }
     auto c = *it;
-    return c->enabledChanged() ||
-    c->sizeChanged() ||
-    c->refreshRateChanged() ||
-    c->transformChanged() ||
-    c->positionChanged() ||
-    c->scaleChanged();
+    return c->enabledChanged() || c->sizeChanged() || c->refreshRateChanged() || c->transformChanged() || c->positionChanged() || c->scaleChanged();
 }
 
 void OutputConfigurationV2InterfacePrivate::clearPendingChanges()

@@ -5,8 +5,8 @@
 */
 
 #include "drmleasedevice_v1_interface.h"
-#include "drmleasedevice_v1_interface_p.h"
 #include "display.h"
+#include "drmleasedevice_v1_interface_p.h"
 #include "logging.h"
 #include "utils.h"
 
@@ -59,7 +59,6 @@ void DrmLeaseDeviceV1Interface::setDrmMaster(bool hasDrmMaster)
     }
     d->hasDrmMaster = hasDrmMaster;
 }
-
 
 DrmLeaseDeviceV1InterfacePrivate::DrmLeaseDeviceV1InterfacePrivate(Display *display, DrmLeaseDeviceV1Interface *device, std::function<int()> createNonMasterFd)
     : QtWaylandServer::wp_drm_lease_device_v1(*display, s_version)
@@ -165,7 +164,6 @@ void DrmLeaseDeviceV1InterfacePrivate::wp_drm_lease_device_v1_destroy_global()
     delete this;
 }
 
-
 DrmLeaseConnectorV1Interface::DrmLeaseConnectorV1Interface(DrmLeaseDeviceV1Interface *leaseDevice,
                                                            uint32_t id,
                                                            const QString &name,
@@ -186,7 +184,7 @@ DrmLeaseConnectorV1Interface::~DrmLeaseConnectorV1Interface()
 
 DrmLeaseConnectorV1Interface *DrmLeaseConnectorV1Interface::get(wl_resource *resource)
 {
-    if (auto connectorPrivate = resource_cast<DrmLeaseConnectorV1InterfacePrivate*>(resource)) {
+    if (auto connectorPrivate = resource_cast<DrmLeaseConnectorV1InterfacePrivate *>(resource)) {
         return connectorPrivate->q;
     }
     return nullptr;
@@ -238,7 +236,6 @@ void DrmLeaseConnectorV1InterfacePrivate::wp_drm_lease_connector_v1_destroy(Reso
 {
     wl_resource_destroy(resource->handle);
 }
-
 
 DrmLeaseRequestV1Interface::DrmLeaseRequestV1Interface(DrmLeaseDeviceV1InterfacePrivate *device, wl_resource *resource)
     : wp_drm_lease_request_v1(resource)
@@ -362,7 +359,6 @@ QVector<DrmLeaseConnectorV1Interface *> DrmLeaseV1Interface::connectors() const
 {
     return d->connectors;
 }
-
 
 DrmLeaseV1InterfacePrivate::DrmLeaseV1InterfacePrivate(DrmLeaseDeviceV1InterfacePrivate *device, DrmLeaseV1Interface *q, wl_resource *resource)
     : wp_drm_lease_v1(resource)

@@ -59,7 +59,8 @@ private:
     PlasmaShell *m_plasmaShell = nullptr;
     PlasmaShellSurface *m_plasmaShellSurface = nullptr;
     PlasmaWindowManagement *m_windowManagement = nullptr;
-    struct {
+    struct
+    {
         Surface *surface = nullptr;
         ShellSurface *shellSurface = nullptr;
         PlasmaShellSurface *plasmaSurface = nullptr;

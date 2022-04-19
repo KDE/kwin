@@ -30,7 +30,8 @@ public:
     bool hasAlphaChannel = false;
     QImage savedData;
 
-    struct DestroyListener {
+    struct DestroyListener
+    {
         wl_listener listener;
         ShmClientBufferPrivate *receiver;
     };

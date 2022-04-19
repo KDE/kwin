@@ -91,7 +91,8 @@ public:
     ShadowInterfacePrivate(ShadowInterface *_q, wl_resource *resource);
     ~ShadowInterfacePrivate();
 
-    struct State {
+    struct State
+    {
         enum Flags {
             None = 0,
             LeftBuffer = 1 << 0,
@@ -145,15 +146,15 @@ protected:
 void ShadowInterfacePrivate::org_kde_kwin_shadow_commit(Resource *resource)
 {
     Q_UNUSED(resource)
-#define BUFFER(__FLAG__, __PART__)                                                                                                                             \
-    if (pending.flags & State::Flags::__FLAG__##Buffer) {                                                                                                      \
-        if (current.__PART__) {                                                                                                                                \
-            current.__PART__->unref();                                                                                                                         \
-        }                                                                                                                                                      \
-        if (pending.__PART__) {                                                                                                                                \
-            pending.__PART__->ref();                                                                                                                           \
-        }                                                                                                                                                      \
-        current.__PART__ = pending.__PART__;                                                                                                                   \
+#define BUFFER(__FLAG__, __PART__)                        \
+    if (pending.flags & State::Flags::__FLAG__##Buffer) { \
+        if (current.__PART__) {                           \
+            current.__PART__->unref();                    \
+        }                                                 \
+        if (pending.__PART__) {                           \
+            pending.__PART__->ref();                      \
+        }                                                 \
+        current.__PART__ = pending.__PART__;              \
     }
     BUFFER(Left, left)
     BUFFER(TopLeft, topLeft)
@@ -301,9 +302,9 @@ ShadowInterfacePrivate::ShadowInterfacePrivate(ShadowInterface *_q, wl_resource 
 
 ShadowInterfacePrivate::~ShadowInterfacePrivate()
 {
-#define CURRENT(__PART__)                                                                                                                                      \
-    if (current.__PART__) {                                                                                                                                    \
-        current.__PART__->unref();                                                                                                                             \
+#define CURRENT(__PART__)          \
+    if (current.__PART__) {        \
+        current.__PART__->unref(); \
     }
     CURRENT(left)
     CURRENT(topLeft)
@@ -330,10 +331,10 @@ QMarginsF ShadowInterface::offset() const
     return d->current.offset;
 }
 
-#define BUFFER(__PART__)                                                                                                                                       \
-    ClientBuffer *ShadowInterface::__PART__() const                                                                                                            \
-    {                                                                                                                                                          \
-        return d->current.__PART__;                                                                                                                            \
+#define BUFFER(__PART__)                            \
+    ClientBuffer *ShadowInterface::__PART__() const \
+    {                                               \
+        return d->current.__PART__;                 \
     }
 
 BUFFER(left)

@@ -157,7 +157,7 @@ QList<OutputInterface *> Display::outputs() const
     return d->outputs;
 }
 
-QList< OutputDeviceV2Interface* > Display::outputDevices() const
+QList<OutputDeviceV2Interface *> Display::outputDevices() const
 {
     return d->outputdevicesV2;
 }
@@ -233,7 +233,8 @@ void *Display::eglDisplay() const
     return d->eglDisplay;
 }
 
-struct ClientBufferDestroyListener : wl_listener {
+struct ClientBufferDestroyListener : wl_listener
+{
     ClientBufferDestroyListener(Display *display, ClientBuffer *buffer);
     ~ClientBufferDestroyListener();
 

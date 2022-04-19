@@ -35,7 +35,8 @@ public:
     QPointer<DataSourceInterface> selection;
     QPointer<SurfaceInterface> proxyRemoteSurface;
 
-    struct Drag {
+    struct Drag
+    {
         SurfaceInterface *surface = nullptr;
         QMetaObject::Connection destroyConnection;
         QMetaObject::Connection posConnection;

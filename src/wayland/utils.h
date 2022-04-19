@@ -18,7 +18,8 @@ struct wl_resource;
 namespace KWaylandServer
 {
 template<typename T>
-struct SafeGlobalDeleter {
+struct SafeGlobalDeleter
+{
     static inline void cleanup(T *global)
     {
         if (global) {

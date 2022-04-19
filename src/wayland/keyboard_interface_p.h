@@ -39,12 +39,14 @@ public:
     QMetaObject::Connection destroyConnection;
     QByteArray keymap;
 
-    struct {
+    struct
+    {
         qint32 charactersPerSecond = 0;
         qint32 delay = 0;
     } keyRepeat;
 
-    struct Modifiers {
+    struct Modifiers
+    {
         quint32 depressed = 0;
         quint32 latched = 0;
         quint32 locked = 0;

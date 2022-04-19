@@ -96,9 +96,9 @@ void TestPlasmaShell::init()
     m_registry->setup();
 
     QVERIFY(interfacesAnnouncedSpy.wait());
-#define CREATE(variable, factory, iface)                                                                                                                       \
-    variable =                                                                                                                                                 \
-        m_registry->create##factory(m_registry->interface(Registry::Interface::iface).name, m_registry->interface(Registry::Interface::iface).version, this);  \
+#define CREATE(variable, factory, iface)                                                                                                                      \
+    variable =                                                                                                                                                \
+        m_registry->create##factory(m_registry->interface(Registry::Interface::iface).name, m_registry->interface(Registry::Interface::iface).version, this); \
     QVERIFY(variable);
 
     CREATE(m_compositor, Compositor, Compositor)
@@ -109,10 +109,10 @@ void TestPlasmaShell::init()
 
 void TestPlasmaShell::cleanup()
 {
-#define DELETE(name)                                                                                                                                           \
-    if (name) {                                                                                                                                                \
-        delete name;                                                                                                                                           \
-        name = nullptr;                                                                                                                                        \
+#define DELETE(name)    \
+    if (name) {         \
+        delete name;    \
+        name = nullptr; \
     }
     DELETE(m_plasmaShell)
     DELETE(m_compositor)

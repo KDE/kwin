@@ -6,9 +6,9 @@
 */
 #pragma once
 
-#include "outputmanagement_v2_interface.h"
-#include "outputdevice_v2_interface.h"
 #include "outputchangeset_v2.h"
+#include "outputdevice_v2_interface.h"
+#include "outputmanagement_v2_interface.h"
 
 #include <KWaylandServer/kwaylandserver_export.h>
 
@@ -88,7 +88,6 @@ private:
     QScopedPointer<OutputConfigurationV2InterfacePrivate> d;
 };
 
-
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::OutputConfigurationV2Interface*)
+Q_DECLARE_METATYPE(KWaylandServer::OutputConfigurationV2Interface *)

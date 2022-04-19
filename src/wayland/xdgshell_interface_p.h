@@ -83,7 +83,8 @@ protected:
     void xdg_positioner_set_parent_configure(Resource *resource, uint32_t serial) override;
 };
 
-struct XdgSurfaceState {
+struct XdgSurfaceState
+{
     QRect windowGeometry;
     quint32 acknowledgedConfigure;
     bool acknowledgedConfigureIsSet = false;
@@ -139,7 +140,8 @@ public:
     QString windowTitle;
     QString windowClass;
 
-    struct State {
+    struct State
+    {
         QSize minimumSize;
         QSize maximumSize;
     };

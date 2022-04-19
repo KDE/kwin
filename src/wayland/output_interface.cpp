@@ -40,7 +40,8 @@ public:
     OutputInterface::SubPixel subPixel = OutputInterface::SubPixel::Unknown;
     OutputInterface::Transform transform = OutputInterface::Transform::Normal;
     OutputInterface::Mode mode;
-    struct {
+    struct
+    {
         OutputInterface::DpmsMode mode = OutputInterface::DpmsMode::Off;
         bool supported = false;
     } dpms;

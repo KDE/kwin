@@ -20,7 +20,8 @@ class IdleInhibitorV1Interface;
 class SurfaceRole;
 class ViewportInterface;
 
-struct SurfaceState {
+struct SurfaceState
+{
     void mergeInto(SurfaceState *target);
 
     QRegion damage = QRegion();
@@ -53,7 +54,8 @@ struct SurfaceState {
     QList<SubSurfaceInterface *> below;
     QList<SubSurfaceInterface *> above;
 
-    struct {
+    struct
+    {
         QRectF sourceGeometry = QRectF();
         QSize destinationSize = QSize();
         bool sourceGeometryIsSet = false;

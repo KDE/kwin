@@ -60,7 +60,8 @@ public:
     /**
      * Structure containing DBus service name and path
      */
-    struct InterfaceAddress {
+    struct InterfaceAddress
+    {
         /** Service name of host with the AppMenu object*/
         QString serviceName;
         /** Object path of the AppMenu interface*/

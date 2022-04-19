@@ -63,7 +63,8 @@ public:
     qint32 surroundingTextSelectionAnchor = 0;
     TextInputChangeCause surroundingTextChangeCause = TextInputChangeCause::InputMethod;
 
-    struct {
+    struct
+    {
         QRect cursorRectangle;
         TextInputChangeCause surroundingTextChangeCause = TextInputChangeCause::InputMethod;
         TextInputContentHints contentHints = TextInputContentHint::None;
