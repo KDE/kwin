@@ -41,9 +41,9 @@ public:
     EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend);
     ~EglGbmLayerSurface();
 
-    OutputLayerBeginFrameInfo startRendering(const QSize &bufferSize, DrmPlane::Transformations renderTransform, DrmPlane::Transformations bufferTransform, const QMap<uint32_t, QVector<uint64_t>> &formats);
+    OutputLayerBeginFrameInfo startRendering(const QSize &bufferSize, DrmPlane::Transformations renderOrientation, DrmPlane::Transformations bufferOrientation, const QMap<uint32_t, QVector<uint64_t>> &formats);
     void aboutToStartPainting(DrmOutput *output, const QRegion &damagedRegion);
-    std::optional<std::tuple<QSharedPointer<DrmBuffer>, QRegion>> endRendering(DrmPlane::Transformations renderTransform, const QRegion &damagedRegion);
+    std::optional<std::tuple<QSharedPointer<DrmBuffer>, QRegion>> endRendering(DrmPlane::Transformations renderOrientation, const QRegion &damagedRegion);
 
     bool doesSurfaceFit(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
     QSharedPointer<GLTexture> texture() const;
@@ -55,7 +55,7 @@ private:
     bool createGbmSurface(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats);
     bool doesGbmSurfaceFit(GbmSurface *surf, const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
 
-    bool doesShadowBufferFit(ShadowBuffer *buffer, const QSize &size, DrmPlane::Transformations renderTransform, DrmPlane::Transformations bufferTransform) const;
+    bool doesShadowBufferFit(ShadowBuffer *buffer, const QSize &size, DrmPlane::Transformations renderOrientation, DrmPlane::Transformations bufferOrientation) const;
     bool doesSwapchainFit(DumbSwapchain *swapchain) const;
 
     QSharedPointer<DrmBuffer> importBuffer();

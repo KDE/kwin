@@ -358,9 +358,9 @@ bool DrmOutput::queueChanges(const OutputConfiguration &config)
     m_pipeline->pending.mode = *it;
     m_pipeline->pending.overscan = props->overscan;
     m_pipeline->pending.rgbRange = props->rgbRange;
-    m_pipeline->pending.sourceTransformation = outputToPlaneTransform(props->transform);
+    m_pipeline->pending.renderOrientation = outputToPlaneTransform(props->transform);
     if (!envOnlySoftwareRotations && m_gpu->atomicModeSetting()) {
-        m_pipeline->pending.bufferTransformation = m_pipeline->pending.sourceTransformation;
+        m_pipeline->pending.bufferOrientation = m_pipeline->pending.renderOrientation;
     }
     m_pipeline->pending.enabled = props->enabled;
     return true;

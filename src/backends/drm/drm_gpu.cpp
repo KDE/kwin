@@ -423,8 +423,8 @@ bool DrmGpu::testPendingConfiguration()
         // try again without hw rotation
         bool hwRotationUsed = false;
         for (const auto &pipeline : qAsConst(m_pipelines)) {
-            hwRotationUsed |= (pipeline->pending.bufferTransformation != DrmPlane::Transformations(DrmPlane::Transformation::Rotate0));
-            pipeline->pending.bufferTransformation = DrmPlane::Transformation::Rotate0;
+            hwRotationUsed |= (pipeline->pending.bufferOrientation != DrmPlane::Transformations(DrmPlane::Transformation::Rotate0));
+            pipeline->pending.bufferOrientation = DrmPlane::Transformation::Rotate0;
         }
         return hwRotationUsed ? checkCrtcAssignment(connectors, crtcs) : false;
     }

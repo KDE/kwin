@@ -238,7 +238,7 @@ void DrmPipeline::prepareAtomicModeset()
     pending.crtc->setPending(DrmCrtc::PropertyIndex::ModeId, activePending() ? pending.mode->blobId() : 0);
 
     pending.crtc->primaryPlane()->setPending(DrmPlane::PropertyIndex::CrtcId, activePending() ? pending.crtc->id() : 0);
-    pending.crtc->primaryPlane()->setTransformation(pending.bufferTransformation);
+    pending.crtc->primaryPlane()->setTransformation(pending.bufferOrientation);
     if (pending.crtc->cursorPlane()) {
         pending.crtc->cursorPlane()->setTransformation(DrmPlane::Transformation::Rotate0);
     }
@@ -362,7 +362,7 @@ void DrmPipeline::applyPendingChanges()
 QSize DrmPipeline::bufferSize() const
 {
     const auto modeSize = pending.mode->size();
-    if (pending.bufferTransformation & (DrmPlane::Transformation::Rotate90 | DrmPlane::Transformation::Rotate270)) {
+    if (pending.bufferOrientation & (DrmPlane::Transformation::Rotate90 | DrmPlane::Transformation::Rotate270)) {
         return modeSize.transposed();
     }
     return modeSize;
@@ -431,7 +431,7 @@ bool DrmPipeline::needsModeset() const
         || pending.active != m_current.active
         || pending.mode != m_current.mode
         || pending.rgbRange != m_current.rgbRange
-        || pending.bufferTransformation != m_current.bufferTransformation
+        || pending.bufferOrientation != m_current.bufferOrientation
         || m_connector->linkStatus() == DrmConnector::LinkStatus::Bad
         || m_modesetPresentPending;
 }

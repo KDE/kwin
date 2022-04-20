@@ -108,9 +108,9 @@ public:
         QSharedPointer<DrmDumbBuffer> cursorBo;
 
         // the transformation that this pipeline will apply to submitted buffers
-        DrmPlane::Transformations bufferTransformation = DrmPlane::Transformation::Rotate0;
+        DrmPlane::Transformations bufferOrientation = DrmPlane::Transformation::Rotate0;
         // the transformation that buffers submitted to the pipeline should have
-        DrmPlane::Transformations sourceTransformation = DrmPlane::Transformation::Rotate0;
+        DrmPlane::Transformations renderOrientation = DrmPlane::Transformation::Rotate0;
     };
     State pending;
 
