@@ -80,10 +80,6 @@ public:
     void resetModesetPresentPending();
     void printDebugInfo() const;
     /**
-     * which size buffers for rendering should have
-     */
-    QSize sourceSize() const;
-    /**
      * what size buffers submitted to this pipeline should have
      */
     QSize bufferSize() const;

@@ -368,15 +368,6 @@ QSize DrmPipeline::bufferSize() const
     return modeSize;
 }
 
-QSize DrmPipeline::sourceSize() const
-{
-    const auto modeSize = pending.mode->size();
-    if (pending.sourceTransformation & (DrmPlane::Transformation::Rotate90 | DrmPlane::Transformation::Rotate270)) {
-        return modeSize.transposed();
-    }
-    return modeSize;
-}
-
 bool DrmPipeline::isCursorVisible() const
 {
     const QRect mode = QRect(QPoint(), pending.mode->size());

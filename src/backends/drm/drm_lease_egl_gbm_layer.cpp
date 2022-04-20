@@ -30,7 +30,7 @@ DrmLeaseEglGbmLayer::DrmLeaseEglGbmLayer(EglGbmBackend *backend, DrmPipeline *pi
 QSharedPointer<DrmBuffer> DrmLeaseEglGbmLayer::testBuffer()
 {
     const auto mods = m_pipeline->formats().value(DRM_FORMAT_XRGB8888);
-    const auto size = m_pipeline->sourceSize();
+    const auto size = m_pipeline->bufferSize();
     if (!m_buffer || m_buffer->size() != size || !(mods.isEmpty() || mods.contains(m_buffer->modifier()))) {
         gbm_bo *newBo;
         if (mods.isEmpty()) {

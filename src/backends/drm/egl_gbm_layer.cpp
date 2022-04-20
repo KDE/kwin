@@ -64,7 +64,7 @@ void EglGbmLayer::aboutToStartPainting(const QRegion &damagedRegion)
 void EglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(renderedRegion)
-    const auto ret = m_surface.endRendering(m_pipeline->pending.bufferTransformation, damagedRegion);
+    const auto ret = m_surface.endRendering(m_pipeline->pending.sourceTransformation, damagedRegion);
     if (ret.has_value()) {
         std::tie(m_currentBuffer, m_currentDamage) = ret.value();
     }
@@ -77,7 +77,7 @@ QRegion EglGbmLayer::currentDamage() const
 
 QSharedPointer<DrmBuffer> EglGbmLayer::testBuffer()
 {
-    if (!m_surface.doesSurfaceFit(m_pipeline->sourceSize(), m_pipeline->formats())) {
+    if (!m_surface.doesSurfaceFit(m_pipeline->bufferSize(), m_pipeline->formats())) {
         renderTestBuffer();
     }
     return m_currentBuffer;
@@ -115,7 +115,7 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
     }
     const auto surface = item->surface();
     const auto buffer = qobject_cast<KWaylandServer::LinuxDmaBufV1ClientBuffer *>(surface->buffer());
-    if (!buffer || buffer->planes().isEmpty() || buffer->size() != m_pipeline->sourceSize()) {
+    if (!buffer || buffer->planes().isEmpty() || buffer->size() != m_pipeline->bufferSize()) {
         return false;
     }
 
