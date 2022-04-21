@@ -607,10 +607,8 @@ public:
      *
      * Note that the returned margins object will have all margins set to 0 if
      * the window doesn't have a server-side decoration.
-     *
-     * Default implementation returns a margins object with all margins set to 0.
      */
-    virtual QMargins frameMargins() const;
+    QMargins frameMargins() const;
     /**
      * The geometry of the Window which accepts input events. This might be larger
      * than the actual geometry, e.g. to support resizing outside the window.
@@ -1256,7 +1254,7 @@ public:
     void setDecoratedClient(QPointer<Decoration::DecoratedClientImpl> client);
     bool decorationHasAlpha() const;
     void triggerDecorationRepaint();
-    virtual void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
+    void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
     void processDecorationMove(const QPoint &localPos, const QPoint &globalPos);
     bool processDecorationButtonPress(QMouseEvent *event, bool ignoreMenu = false);
     void processDecorationButtonRelease(QMouseEvent *event);

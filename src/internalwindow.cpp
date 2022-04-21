@@ -366,8 +366,6 @@ void InternalWindow::destroyWindow()
     Deleted *deleted = Deleted::create(this);
     Q_EMIT windowClosed(this, deleted);
 
-    destroyDecoration();
-
     workspace()->removeInternalWindow(this);
 
     deleted->unrefWindow();

@@ -71,7 +71,6 @@ void Deleted::copyToDeleted(Window *window)
 {
     Q_ASSERT(!window->isDeleted());
     Window::copyToDeleted(window);
-    m_frameMargins = window->frameMargins();
     desk = window->desktop();
     m_desktops = window->desktops();
     activityList = window->activities();
@@ -83,12 +82,6 @@ void Deleted::copyToDeleted(Window *window)
     m_shade = window->isShade();
     if (WinInfo *cinfo = dynamic_cast<WinInfo *>(info)) {
         cinfo->disable();
-    }
-    if (window->isDecorated()) {
-        window->layoutDecorationRects(decoration_left,
-                                      decoration_top,
-                                      decoration_right,
-                                      decoration_bottom);
     }
     m_wasClient = true;
     m_minimized = window->isMinimized();
@@ -125,11 +118,6 @@ void Deleted::unrefWindow()
     deleteLater();
 }
 
-QMargins Deleted::frameMargins() const
-{
-    return m_frameMargins;
-}
-
 int Deleted::desktop() const
 {
     return desk;
@@ -148,14 +136,6 @@ QVector<VirtualDesktop *> Deleted::desktops() const
 QPoint Deleted::clientPos() const
 {
     return contentsRect.topLeft();
-}
-
-void Deleted::layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const
-{
-    left = decoration_left;
-    top = decoration_top;
-    right = decoration_right;
-    bottom = decoration_bottom;
 }
 
 bool Deleted::isDeleted() const

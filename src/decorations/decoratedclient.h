@@ -81,6 +81,10 @@ public:
     {
         return m_window;
     }
+    void setClient(AbstractClient *window)
+    {
+        m_client = window;
+    }
     KDecoration2::DecoratedClient *decoratedClient()
     {
         return KDecoration2::DecoratedClientPrivate::client();
@@ -94,6 +98,7 @@ private Q_SLOTS:
 private:
     Window *m_window;
     QSize m_clientSize;
+    bool m_active = false;
 
     QString m_toolTipText;
     QTimer m_toolTipWakeUp;

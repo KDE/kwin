@@ -123,7 +123,6 @@ Window::Window()
 Window::~Window()
 {
     Q_ASSERT(m_blockGeometryUpdates == 0);
-    Q_ASSERT(m_decoration.decoration == nullptr);
     delete info;
 }
 
@@ -192,6 +191,12 @@ void Window::copyToDeleted(Window *c)
     m_shadow = std::exchange(c->m_shadow, nullptr);
     if (m_shadow) {
         m_shadow->setWindow(this);
+    }
+    m_palette = c->m_palette;
+    m_decoration = c->m_decoration;
+    if (m_decoration.decoration) {
+        m_decoration.decoration->setParent(this);
+        m_decoration.client->setClient(this);
     }
     resource_name = c->resourceName();
     resource_class = c->resourceClass();

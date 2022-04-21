@@ -188,9 +188,6 @@ void DecorationItem::handleWindowClosed(Window *original, Deleted *deleted)
 {
     Q_UNUSED(original)
     m_window = deleted;
-
-    // If the decoration is about to be destroyed, render the decoration for the last time.
-    preprocess();
 }
 
 DecorationRenderer *DecorationItem::renderer() const

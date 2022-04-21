@@ -300,7 +300,6 @@ void X11Window::releaseWindow(bool on_shutdown)
         workspace()->windowHidden(this);
     }
     m_frame.unmap(); // Destroying decoration would cause ugly visual effect
-    destroyDecoration();
     cleanGrouping();
     workspace()->removeX11Window(this);
     if (!on_shutdown) {
@@ -359,7 +358,6 @@ void X11Window::destroyWindow()
     setModal(false);
     hidden = true; // So that it's not considered visible anymore
     workspace()->windowHidden(this);
-    destroyDecoration();
     cleanGrouping();
     workspace()->removeX11Window(this);
     m_client.reset(); // invalidate

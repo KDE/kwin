@@ -25,14 +25,12 @@ public:
     void refWindow();
     void unrefWindow();
     void discard();
-    QMargins frameMargins() const override;
     int desktop() const override;
     QStringList activities() const override;
     QVector<VirtualDesktop *> desktops() const override;
     QPoint clientPos() const override;
     bool isDeleted() const override;
     xcb_window_t frameId() const override;
-    void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const override;
     Layer layer() const override
     {
         return m_layer;
@@ -133,8 +131,6 @@ private:
     void copyToDeleted(Window *c);
     ~Deleted() override; // deleted only using unrefWindow()
 
-    QMargins m_frameMargins;
-
     int delete_refcount;
     int desk;
     QStringList activityList;
@@ -142,10 +138,6 @@ private:
     xcb_window_t m_frame;
     QVector<VirtualDesktop *> m_desktops;
 
-    QRect decoration_left;
-    QRect decoration_right;
-    QRect decoration_top;
-    QRect decoration_bottom;
     Layer m_layer;
     bool m_shade;
     bool m_minimized;
