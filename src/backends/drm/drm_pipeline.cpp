@@ -113,7 +113,7 @@ bool DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline *> &pipelines,
         return false;
     };
     for (const auto &pipeline : pipelines) {
-        if (!pipeline->pending.layer->checkTestBuffer()) {
+        if (pipeline->activePending() && !pipeline->pending.layer->checkTestBuffer()) {
             qCWarning(KWIN_DRM) << "Checking test buffer failed for" << mode;
             return failed();
         }
