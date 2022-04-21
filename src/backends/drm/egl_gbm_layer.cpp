@@ -34,17 +34,6 @@ EglGbmLayer::EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline)
     , m_surface(pipeline->gpu(), eglBackend)
     , m_dmabufFeedback(pipeline->gpu(), eglBackend)
 {
-    connect(eglBackend, &EglGbmBackend::aboutToBeDestroyed, this, &EglGbmLayer::destroyResources);
-}
-
-EglGbmLayer::~EglGbmLayer()
-{
-    destroyResources();
-}
-
-void EglGbmLayer::destroyResources()
-{
-    m_surface.destroyResources();
 }
 
 OutputLayerBeginFrameInfo EglGbmLayer::beginFrame()
@@ -74,21 +63,17 @@ QRegion EglGbmLayer::currentDamage() const
     return m_currentDamage;
 }
 
-QSharedPointer<DrmBuffer> EglGbmLayer::testBuffer()
+bool EglGbmLayer::checkTestBuffer()
 {
     if (!m_surface.doesSurfaceFit(m_pipeline->bufferSize(), m_pipeline->formats())) {
-        renderTestBuffer();
+        const auto buffer = m_surface.renderTestBuffer(m_pipeline->bufferSize(), m_pipeline->formats());
+        if (!buffer) {
+            return false;
+        } else {
+            m_currentBuffer = buffer;
+        }
     }
-    return m_currentBuffer;
-}
-
-bool EglGbmLayer::renderTestBuffer()
-{
-    const auto oldBuffer = m_currentBuffer;
-    beginFrame();
-    glClear(GL_COLOR_BUFFER_BIT);
-    endFrame(QRegion(), infiniteRegion());
-    return m_currentBuffer != oldBuffer;
+    return true;
 }
 
 QSharedPointer<GLTexture> EglGbmLayer::texture() const

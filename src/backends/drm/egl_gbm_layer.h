@@ -35,22 +35,18 @@ class EglGbmLayer : public DrmPipelineLayer
 {
 public:
     EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline);
-    ~EglGbmLayer();
 
     OutputLayerBeginFrameInfo beginFrame() override;
     void aboutToStartPainting(const QRegion &damagedRegion) override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     bool scanout(SurfaceItem *surfaceItem) override;
-    QSharedPointer<DrmBuffer> testBuffer() override;
+    bool checkTestBuffer() override;
     QSharedPointer<DrmBuffer> currentBuffer() const override;
     bool hasDirectScanoutBuffer() const override;
     QRegion currentDamage() const override;
     QSharedPointer<GLTexture> texture() const override;
 
 private:
-    bool renderTestBuffer();
-    void destroyResources();
-
     QSharedPointer<DrmGbmBuffer> m_scanoutBuffer;
     QSharedPointer<DrmBuffer> m_currentBuffer;
     QRegion m_currentDamage;

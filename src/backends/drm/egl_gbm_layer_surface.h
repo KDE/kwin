@@ -49,8 +49,10 @@ public:
     QSharedPointer<GLTexture> texture() const;
     void destroyResources();
     EglGbmBackend *eglBackend() const;
+    QSharedPointer<DrmBuffer> renderTestBuffer(const QSize &bufferSize, const QMap<uint32_t, QVector<uint64_t>> &formats);
 
 private:
+    bool checkGbmSurface(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats);
     bool createGbmSurface(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers);
     bool createGbmSurface(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats);
     bool doesGbmSurfaceFit(GbmSurface *surf, const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;

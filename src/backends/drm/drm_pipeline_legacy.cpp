@@ -38,7 +38,7 @@ bool DrmPipeline::presentLegacy()
 bool DrmPipeline::legacyModeset()
 {
     uint32_t connId = m_connector->id();
-    if (!pending.layer->testBuffer() || drmModeSetCrtc(gpu()->fd(), pending.crtc->id(), pending.layer->currentBuffer()->bufferId(), 0, 0, &connId, 1, pending.mode->nativeMode()) != 0) {
+    if (!pending.layer->checkTestBuffer() || drmModeSetCrtc(gpu()->fd(), pending.crtc->id(), pending.layer->currentBuffer()->bufferId(), 0, 0, &connId, 1, pending.mode->nativeMode()) != 0) {
         qCWarning(KWIN_DRM) << "Modeset failed!" << strerror(errno);
         pending = m_next;
         return false;

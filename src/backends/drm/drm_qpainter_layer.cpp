@@ -52,12 +52,12 @@ void DrmQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &da
     m_swapchain->releaseBuffer(m_swapchain->currentBuffer(), damagedRegion);
 }
 
-QSharedPointer<DrmBuffer> DrmQPainterLayer::testBuffer()
+bool DrmQPainterLayer::checkTestBuffer()
 {
     if (!doesSwapchainFit()) {
         m_swapchain = QSharedPointer<DumbSwapchain>::create(m_pipeline->gpu(), m_pipeline->bufferSize(), DRM_FORMAT_XRGB8888);
     }
-    return m_swapchain->currentBuffer();
+    return !m_swapchain->isEmpty();
 }
 
 bool DrmQPainterLayer::doesSwapchainFit() const
@@ -110,13 +110,13 @@ DrmLeaseQPainterLayer::DrmLeaseQPainterLayer(DrmQPainterBackend *backend, DrmPip
     });
 }
 
-QSharedPointer<DrmBuffer> DrmLeaseQPainterLayer::testBuffer()
+bool DrmLeaseQPainterLayer::checkTestBuffer()
 {
     const auto size = m_pipeline->bufferSize();
     if (!m_buffer || m_buffer->size() != size) {
         m_buffer = QSharedPointer<DrmDumbBuffer>::create(m_pipeline->gpu(), size, DRM_FORMAT_XRGB8888);
     }
-    return m_buffer;
+    return m_buffer->bufferId() != 0;
 }
 
 QSharedPointer<DrmBuffer> DrmLeaseQPainterLayer::currentBuffer() const

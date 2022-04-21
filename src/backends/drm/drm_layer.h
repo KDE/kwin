@@ -36,12 +36,7 @@ class DrmPipelineLayer : public DrmOutputLayer
 public:
     DrmPipelineLayer(DrmPipeline *pipeline);
 
-    /**
-     * @returns a buffer for atomic test commits
-     * If no fitting buffer is available, a new current buffer is created
-     */
-    virtual QSharedPointer<DrmBuffer> testBuffer() = 0;
-
+    virtual bool checkTestBuffer() = 0;
     virtual QSharedPointer<DrmBuffer> currentBuffer() const = 0;
     virtual bool hasDirectScanoutBuffer() const;
 

@@ -27,7 +27,7 @@ DrmLeaseEglGbmLayer::DrmLeaseEglGbmLayer(EglGbmBackend *backend, DrmPipeline *pi
     });
 }
 
-QSharedPointer<DrmBuffer> DrmLeaseEglGbmLayer::testBuffer()
+bool DrmLeaseEglGbmLayer::checkTestBuffer()
 {
     const auto mods = m_pipeline->formats().value(DRM_FORMAT_XRGB8888);
     const auto size = m_pipeline->bufferSize();
@@ -49,7 +49,7 @@ QSharedPointer<DrmBuffer> DrmLeaseEglGbmLayer::testBuffer()
             qCWarning(KWIN_DRM) << "Failed to create gbm_bo for lease output";
         }
     }
-    return m_buffer;
+    return m_buffer && m_buffer->bufferId() != 0;
 }
 
 QSharedPointer<DrmBuffer> DrmLeaseEglGbmLayer::currentBuffer() const

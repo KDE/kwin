@@ -27,7 +27,7 @@ public:
 
     OutputLayerBeginFrameInfo beginFrame() override;
     void endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion) override;
-    QSharedPointer<DrmBuffer> testBuffer() override;
+    bool checkTestBuffer() override;
     QSharedPointer<DrmBuffer> currentBuffer() const override;
     QRegion currentDamage() const override;
 
@@ -62,7 +62,7 @@ public:
     OutputLayerBeginFrameInfo beginFrame() override;
     void endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion) override;
 
-    QSharedPointer<DrmBuffer> testBuffer() override;
+    bool checkTestBuffer() override;
     QSharedPointer<DrmBuffer> currentBuffer() const override;
 
 private:
