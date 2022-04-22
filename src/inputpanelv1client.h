@@ -9,8 +9,8 @@
 
 #pragma once
 
+#include "wayland/inputmethod_v1_interface.h"
 #include "waylandclient.h"
-#include <KWaylandServer/inputmethod_v1_interface.h>
 #include <QPointer>
 
 namespace KWin

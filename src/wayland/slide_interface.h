@@ -5,9 +5,9 @@
 */
 #pragma once
 
-#include <QObject>
+#include "kwin_export.h"
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include <QObject>
 
 struct wl_resource;
 
@@ -17,7 +17,7 @@ class Display;
 class SlideManagerInterfacePrivate;
 class SlideInterfacePrivate;
 
-class KWAYLANDSERVER_EXPORT SlideManagerInterface : public QObject
+class KWIN_EXPORT SlideManagerInterface : public QObject
 {
     Q_OBJECT
 
@@ -31,7 +31,7 @@ private:
     QScopedPointer<SlideManagerInterfacePrivate> d;
 };
 
-class KWAYLANDSERVER_EXPORT SlideInterface : public QObject
+class KWIN_EXPORT SlideInterface : public QObject
 {
     Q_OBJECT
 public:

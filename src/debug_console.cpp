@@ -16,6 +16,16 @@
 #include "scene.h"
 #include "unmanaged.h"
 #include "utils/subsurfacemonitor.h"
+#include "wayland/abstract_data_source.h"
+#include "wayland/clientconnection.h"
+#include "wayland/datacontrolsource_v1_interface.h"
+#include "wayland/datasource_interface.h"
+#include "wayland/display.h"
+#include "wayland/primaryselectionsource_v1_interface.h"
+#include "wayland/seat_interface.h"
+#include "wayland/shmclientbuffer.h"
+#include "wayland/subcompositor_interface.h"
+#include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "waylandclient.h"
 #include "workspace.h"
@@ -26,17 +36,6 @@
 
 #include "ui_debug_console.h"
 
-// KWayland
-#include <KWaylandServer/abstract_data_source.h>
-#include <KWaylandServer/clientconnection.h>
-#include <KWaylandServer/datacontrolsource_v1_interface.h>
-#include <KWaylandServer/datasource_interface.h>
-#include <KWaylandServer/display.h>
-#include <KWaylandServer/primaryselectionsource_v1_interface.h>
-#include <KWaylandServer/seat_interface.h>
-#include <KWaylandServer/shmclientbuffer.h>
-#include <KWaylandServer/subcompositor_interface.h>
-#include <KWaylandServer/surface_interface.h>
 // frameworks
 #include <KLocalizedString>
 #include <NETWM>

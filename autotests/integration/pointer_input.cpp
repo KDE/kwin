@@ -19,6 +19,8 @@
 #include "screenedge.h"
 #include "screens.h"
 #include "virtualdesktops.h"
+#include "wayland/clientconnection.h"
+#include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "xcursortheme.h"
@@ -33,9 +35,6 @@
 #include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
-
-#include <KWaylandServer/clientconnection.h>
-#include <KWaylandServer/seat_interface.h>
 
 #include <linux/input.h>
 

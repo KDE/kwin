@@ -10,10 +10,9 @@
 #include "kwingltexture.h"
 #include "surfaceitem_wayland.h"
 #include "utils/common.h"
-
-#include <KWaylandServer/drmclientbuffer.h>
-#include <KWaylandServer/linuxdmabufv1clientbuffer.h>
-#include <KWaylandServer/shmclientbuffer.h>
+#include "wayland/drmclientbuffer.h"
+#include "wayland/linuxdmabufv1clientbuffer.h"
+#include "wayland/shmclientbuffer.h"
 
 namespace KWin
 {

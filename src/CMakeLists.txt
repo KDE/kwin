@@ -183,8 +183,6 @@ target_link_libraries(kwin
     KDecoration2::KDecoration
     KDecoration2::KDecoration2Private
 
-    Plasma::KWaylandServer
-
     XCB::COMPOSITE
     XCB::CURSOR
     XCB::DAMAGE
@@ -201,9 +199,11 @@ target_link_libraries(kwin
 
     UDev::UDev
     XKB::XKB
+    EGL::EGL
     epoxy::epoxy
 
     Threads::Threads
+    Wayland::Server
     lcms2::lcms2
 )
 if (QT_MAJOR_VERSION EQUAL "5")
@@ -248,6 +248,7 @@ target_sources(kwin PRIVATE
 add_subdirectory(backends)
 add_subdirectory(scenes)
 add_subdirectory(utils)
+add_subdirectory(wayland)
 
 if (KWIN_BUILD_ACTIVITIES)
     target_sources(kwin PRIVATE activities.cpp)

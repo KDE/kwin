@@ -15,13 +15,12 @@
 
 #include "abstract_client.h"
 #include "atoms.h"
+#include "wayland/clientconnection.h"
+#include "wayland/datadevice_interface.h"
+#include "wayland/datadevicemanager_interface.h"
+#include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
-
-#include <KWaylandServer/clientconnection.h>
-#include <KWaylandServer/datadevice_interface.h>
-#include <KWaylandServer/datadevicemanager_interface.h>
-#include <KWaylandServer/seat_interface.h>
 
 using namespace KWaylandServer;
 

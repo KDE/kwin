@@ -9,13 +9,13 @@
 */
 #include "virtualdesktops.h"
 #include "input.h"
+#include "wayland/plasmavirtualdesktop_interface.h"
 // KDE
 #include <KConfigGroup>
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <NETWM>
 
-#include <KWaylandServer/plasmavirtualdesktop_interface.h>
 // Qt
 #include <QAction>
 #include <QDebug>

@@ -7,7 +7,7 @@
 */
 #pragma once
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include "kwin_export.h"
 
 #include <QObject>
 
@@ -21,7 +21,7 @@ class TouchInterfacePrivate;
  * The TouchInterface class repserents a touchscreen associated with a wl_seat. It
  * corresponds to the Wayland interface @c wl_touch.
  */
-class KWAYLANDSERVER_EXPORT TouchInterface : public QObject
+class KWIN_EXPORT TouchInterface : public QObject
 {
     Q_OBJECT
 

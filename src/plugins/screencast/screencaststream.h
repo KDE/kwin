@@ -11,8 +11,7 @@
 #include "config-kwin.h"
 
 #include "kwinglobals.h"
-
-#include <KWaylandServer/screencast_v1_interface.h>
+#include "wayland/screencast_v1_interface.h"
 
 #include <QHash>
 #include <QObject>

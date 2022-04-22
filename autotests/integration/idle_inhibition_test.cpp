@@ -11,13 +11,12 @@
 #include "abstract_client.h"
 #include "platform.h"
 #include "virtualdesktops.h"
+#include "wayland/display.h"
+#include "wayland/idle_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
 #include <KWayland/Client/surface.h>
-
-#include <KWaylandServer/display.h>
-#include <KWaylandServer/idle_interface.h>
 
 using namespace KWin;
 using namespace KWayland::Client;

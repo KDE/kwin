@@ -14,7 +14,10 @@
 // Include with base class for effects.
 #include <kwineffects.h>
 
-#include <KWaylandServer/slide_interface.h>
+namespace KWaylandServer
+{
+class SlideManagerInterface;
+}
 
 namespace KWin
 {

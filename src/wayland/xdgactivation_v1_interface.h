@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include "kwin_export.h"
 
 #include <QObject>
 #include <QVector>
@@ -24,7 +24,7 @@ class ClientConnection;
 
 class XdgActivationV1InterfacePrivate;
 
-class KWAYLANDSERVER_EXPORT XdgActivationV1Interface : public QObject
+class KWIN_EXPORT XdgActivationV1Interface : public QObject
 {
     Q_OBJECT
     Q_DISABLE_COPY(XdgActivationV1Interface)

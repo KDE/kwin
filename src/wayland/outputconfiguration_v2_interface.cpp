@@ -7,9 +7,9 @@
 */
 #include "outputconfiguration_v2_interface.h"
 #include "display.h"
-#include "logging.h"
 #include "outputchangeset_v2_p.h"
 #include "outputdevice_v2_interface.h"
+#include "utils/common.h"
 
 #include "qwayland-server-kde-output-device-v2.h"
 #include "qwayland-server-kde-output-management-v2.h"
@@ -114,7 +114,7 @@ void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_scale(Re
     const qreal doubleScale = wl_fixed_to_double(scale);
 
     if (doubleScale <= 0) {
-        qCWarning(KWAYLAND_SERVER) << "Requested to scale output device to" << doubleScale << ", but I can't do that.";
+        qCWarning(KWIN_CORE) << "Requested to scale output device to" << doubleScale << ", but I can't do that.";
         return;
     }
     OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
@@ -132,7 +132,7 @@ void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_overscan
 {
     Q_UNUSED(resource)
     if (overscan > 100) {
-        qCWarning(KWAYLAND_SERVER) << "Invalid overscan requested:" << overscan;
+        qCWarning(KWIN_CORE) << "Invalid overscan requested:" << overscan;
         return;
     }
     OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
@@ -143,7 +143,7 @@ void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_set_vrr_
 {
     Q_UNUSED(resource)
     if (policy > static_cast<uint32_t>(OutputDeviceV2Interface::VrrPolicy::Automatic)) {
-        qCWarning(KWAYLAND_SERVER) << "Invalid Vrr Policy requested:" << policy;
+        qCWarning(KWIN_CORE) << "Invalid Vrr Policy requested:" << policy;
         return;
     }
     OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
@@ -154,7 +154,7 @@ void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_set_rgb_
 {
     Q_UNUSED(resource)
     if (rgbRange > static_cast<uint32_t>(OutputDeviceV2Interface::RgbRange::Limited)) {
-        qCWarning(KWAYLAND_SERVER) << "Invalid Rgb Range requested:" << rgbRange;
+        qCWarning(KWIN_CORE) << "Invalid Rgb Range requested:" << rgbRange;
         return;
     }
     OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);

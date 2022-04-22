@@ -7,9 +7,9 @@
 #ifndef KWAYLAND_SERVER_XDGOUTPUT_INTERFACE_H
 #define KWAYLAND_SERVER_XDGOUTPUT_INTERFACE_H
 
-#include <QObject>
+#include "kwin_export.h"
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include <QObject>
 
 /*
  * In terms of protocol XdgOutputInterface are a resource
@@ -29,7 +29,7 @@ class XdgOutputV1InterfacePrivate;
 /**
  * Global manager for XdgOutputs
  */
-class KWAYLANDSERVER_EXPORT XdgOutputManagerV1Interface : public QObject
+class KWIN_EXPORT XdgOutputManagerV1Interface : public QObject
 {
     Q_OBJECT
 
@@ -54,7 +54,7 @@ private:
  * Users should set all relevant values on creation and on future changes.
  * done() should be explicitly called after change batches including initial setting.
  */
-class KWAYLANDSERVER_EXPORT XdgOutputV1Interface : public QObject
+class KWIN_EXPORT XdgOutputV1Interface : public QObject
 {
     Q_OBJECT
 public:

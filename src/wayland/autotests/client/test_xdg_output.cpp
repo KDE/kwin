@@ -6,18 +6,17 @@
 // Qt
 #include <QtTest>
 // KWin
-#include "../../src/server/display.h"
-#include "../../src/server/dpms_interface.h"
-#include "../../src/server/output_interface.h"
-#include "../../src/server/xdgoutput_v1_interface.h"
+#include "wayland/display.h"
+#include "wayland/dpms_interface.h"
+#include "wayland/output_interface.h"
+#include "wayland/xdgoutput_v1_interface.h"
+
 #include "KWayland/Client/connection_thread.h"
 #include "KWayland/Client/dpms.h"
 #include "KWayland/Client/event_queue.h"
 #include "KWayland/Client/output.h"
 #include "KWayland/Client/registry.h"
 #include "KWayland/Client/xdgoutput.h"
-
-// Wayland
 
 class TestXdgOutput : public QObject
 {

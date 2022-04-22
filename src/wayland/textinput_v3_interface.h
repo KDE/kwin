@@ -9,7 +9,6 @@
 #include <QObject>
 
 #include "textinput.h"
-#include <KWaylandServer/kwaylandserver_export.h>
 
 struct wl_resource;
 namespace KWaylandServer
@@ -29,7 +28,7 @@ class TextInputManagerV3InterfacePrivate;
  *
  * To create a TextInputManagerV3Interface use {@link Display::createTextInputManager}
  */
-class KWAYLANDSERVER_EXPORT TextInputManagerV3Interface : public QObject
+class KWIN_EXPORT TextInputManagerV3Interface : public QObject
 {
     Q_OBJECT
 public:
@@ -51,7 +50,7 @@ private:
  * @see TextInputManagerV3Interface
  * @see SeatInterface
  */
-class KWAYLANDSERVER_EXPORT TextInputV3Interface : public QObject
+class KWIN_EXPORT TextInputV3Interface : public QObject
 {
     Q_OBJECT
 public:

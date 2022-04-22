@@ -13,6 +13,8 @@
 #include "output.h"
 #include "platform.h"
 #include "screens.h"
+#include "wayland/seat_interface.h"
+#include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include <kwineffects.h>
@@ -29,8 +31,6 @@
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/touch.h>
-#include <KWaylandServer/seat_interface.h>
-#include <KWaylandServer/surface_interface.h>
 
 struct PopupLayout
 {

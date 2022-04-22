@@ -22,11 +22,11 @@
 #include "scene.h"
 #include "screenedge.h"
 #include "screens.h"
+#include "wayland/outputchangeset_v2.h"
+#include "wayland/outputconfiguration_v2_interface.h"
 #include "wayland_server.h"
-#include <KCoreAddons>
 
-#include <KWaylandServer/outputchangeset_v2.h>
-#include <KWaylandServer/outputconfiguration_v2_interface.h>
+#include <KCoreAddons>
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <private/qtx11extras_p.h>

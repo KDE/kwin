@@ -13,6 +13,8 @@
 #include "effectloader.h"
 #include "effects.h"
 #include "platform.h"
+#include "wayland/display.h"
+#include "wayland/output_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11client.h"
@@ -22,8 +24,6 @@
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/surface.h>
-#include <KWaylandServer/display.h>
-#include <KWaylandServer/output_interface.h>
 
 using namespace KWin;
 using namespace KWayland::Client;

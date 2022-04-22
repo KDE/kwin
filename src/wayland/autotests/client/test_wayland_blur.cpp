@@ -6,9 +6,10 @@
 // Qt
 #include <QtTest>
 // KWin
-#include "../../src/server/blur_interface.h"
-#include "../../src/server/compositor_interface.h"
-#include "../../src/server/display.h"
+#include "wayland/blur_interface.h"
+#include "wayland/compositor_interface.h"
+#include "wayland/display.h"
+
 #include "KWayland/Client/blur.h"
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"

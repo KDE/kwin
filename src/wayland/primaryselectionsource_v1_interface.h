@@ -5,10 +5,9 @@
 */
 #pragma once
 
+#include "kwin_export.h"
+
 #include "abstract_data_source.h"
-
-#include <KWaylandServer/kwaylandserver_export.h>
-
 #include "primaryselectiondevicemanager_v1_interface.h"
 
 namespace KWaylandServer
@@ -19,7 +18,7 @@ class PrimarySelectionSourceV1InterfacePrivate;
  * @brief Represents the Resource for the zwp_primary_selection_source_v1 interface.
  * Lifespan is mapped to the underlying object
  */
-class KWAYLANDSERVER_EXPORT PrimarySelectionSourceV1Interface : public AbstractDataSource
+class KWIN_EXPORT PrimarySelectionSourceV1Interface : public AbstractDataSource
 {
     Q_OBJECT
 public:

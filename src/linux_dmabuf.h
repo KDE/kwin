@@ -10,7 +10,7 @@
 
 #include <kwin_export.h>
 
-#include <KWaylandServer/linuxdmabufv1clientbuffer.h>
+#include "wayland/linuxdmabufv1clientbuffer.h"
 
 namespace KWin
 {

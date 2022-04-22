@@ -9,7 +9,6 @@
 #include "pointer_interface.h"
 #include "clientconnection.h"
 #include "display.h"
-#include "logging.h"
 #include "pointer_interface_p.h"
 #include "pointergestures_v1_interface_p.h"
 #include "relativepointer_v1_interface_p.h"
@@ -17,6 +16,7 @@
 #include "surface_interface.h"
 #include "surfacerole_p.h"
 #include "utils.h"
+#include "utils/common.h"
 
 namespace KWaylandServer
 {
@@ -66,7 +66,7 @@ void PointerInterfacePrivate::pointer_set_cursor(Resource *resource, uint32_t se
         return;
     }
     if (focusedSurface->client()->client() != resource->client()) {
-        qCDebug(KWAYLAND_SERVER, "Denied set_cursor request from unfocused client");
+        qCDebug(KWIN_CORE, "Denied set_cursor request from unfocused client");
         return;
     }
 

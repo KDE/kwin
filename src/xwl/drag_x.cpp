@@ -18,13 +18,12 @@
 
 #include "abstract_client.h"
 #include "atoms.h"
+#include "wayland/datadevice_interface.h"
+#include "wayland/datasource_interface.h"
+#include "wayland/seat_interface.h"
+#include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
-
-#include <KWaylandServer/datadevice_interface.h>
-#include <KWaylandServer/datasource_interface.h>
-#include <KWaylandServer/seat_interface.h>
-#include <KWaylandServer/surface_interface.h>
 
 #include <QMouseEvent>
 #include <QTimer>

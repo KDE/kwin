@@ -9,6 +9,8 @@
 #ifndef KWIN_VIRTUAL_KEYBOARD_H
 #define KWIN_VIRTUAL_KEYBOARD_H
 
+#include "wayland/textinput_v2_interface.h"
+
 #include <utility>
 #include <vector>
 
@@ -17,7 +19,6 @@
 #include <kwin_export.h>
 #include <kwinglobals.h>
 
-#include <KWaylandServer/textinput_v2_interface.h>
 #include <QPointer>
 #include <QTimer>
 

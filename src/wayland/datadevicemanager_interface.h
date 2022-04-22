@@ -6,10 +6,11 @@
 */
 #pragma once
 
+#include "kwin_export.h"
+
 #include <QObject>
 
 #include "datadevice_interface.h"
-#include <KWaylandServer/kwaylandserver_export.h>
 
 namespace KWaylandServer
 {
@@ -21,7 +22,7 @@ class DataDeviceManagerInterfacePrivate;
  * @brief Represents the Global for wl_data_device_manager interface.
  *
  */
-class KWAYLANDSERVER_EXPORT DataDeviceManagerInterface : public QObject
+class KWIN_EXPORT DataDeviceManagerInterface : public QObject
 {
     Q_OBJECT
 

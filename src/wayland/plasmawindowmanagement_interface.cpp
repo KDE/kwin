@@ -5,9 +5,9 @@
 */
 #include "plasmawindowmanagement_interface.h"
 #include "display.h"
-#include "logging.h"
 #include "plasmavirtualdesktop_interface.h"
 #include "surface_interface.h"
+#include "utils/common.h"
 
 #include <QFile>
 #include <QHash>
@@ -235,7 +235,7 @@ void PlasmaWindowManagementInterfacePrivate::org_kde_plasma_window_management_ge
         return window->d->uuid == internal_window_uuid;
     });
     if (it == windows.constEnd()) {
-        qCWarning(KWAYLAND_SERVER) << "Could not find window with uuid" << internal_window_uuid;
+        qCWarning(KWIN_CORE) << "Could not find window with uuid" << internal_window_uuid;
         // create a temp window just for the resource, bind then immediately delete it, sending an unmap event
         PlasmaWindowInterface window(q, q);
         window.d->add(resource->client(), id, resource->version());

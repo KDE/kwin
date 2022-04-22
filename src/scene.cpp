@@ -60,6 +60,7 @@
 #include "shadowitem.h"
 #include "surfaceitem.h"
 #include "unmanaged.h"
+#include "wayland/surface_interface.h"
 #include "waylandclient.h"
 #include "windowitem.h"
 #include "workspace.h"
@@ -76,8 +77,6 @@
 #include "wayland_server.h"
 #include "x11client.h"
 #include <QtMath>
-
-#include <KWaylandServer/surface_interface.h>
 
 namespace KWin
 {

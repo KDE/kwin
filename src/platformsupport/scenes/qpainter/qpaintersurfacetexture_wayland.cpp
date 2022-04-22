@@ -7,9 +7,8 @@
 #include "qpaintersurfacetexture_wayland.h"
 #include "surfaceitem_wayland.h"
 #include "utils/common.h"
-
-#include <KWaylandServer/shmclientbuffer.h>
-#include <KWaylandServer/surface_interface.h>
+#include "wayland/shmclientbuffer.h"
+#include "wayland/surface_interface.h"
 
 #include <QPainter>
 

@@ -11,12 +11,12 @@
 #include "abstract_client.h"
 #include "effects.h"
 #include "utils/common.h"
+#include "wayland/display.h"
+#include "wayland/plasmawindowmanagement_interface.h"
+#include "wayland/surface_interface.h"
+#include "wayland/xdgactivation_v1_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include <KWaylandServer/display.h>
-#include <KWaylandServer/plasmawindowmanagement_interface.h>
-#include <KWaylandServer/surface_interface.h>
-#include <KWaylandServer/xdgactivation_v1_interface.h>
 
 using namespace KWaylandServer;
 

@@ -11,13 +11,14 @@
 #include "slidingpopups.h"
 #include "slidingpopupsconfig.h"
 
+#include "wayland/display.h"
+#include "wayland/slide_interface.h"
+#include "wayland/surface_interface.h"
+
 #include <QFontMetrics>
 #include <QGuiApplication>
 #include <QTimer>
 #include <QWindow>
-
-#include <KWaylandServer/display.h>
-#include <KWaylandServer/surface_interface.h>
 
 #include <KWindowEffects>
 

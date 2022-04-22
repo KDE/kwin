@@ -6,12 +6,13 @@
 // Qt
 #include <QtTest>
 // KWin
-#include "../../src/server/compositor_interface.h"
-#include "../../src/server/datadevicemanager_interface.h"
-#include "../../src/server/datasource_interface.h"
-#include "../../src/server/display.h"
-#include "../../src/server/seat_interface.h"
-#include "../../src/server/seat_interface_p.h"
+#include "wayland/compositor_interface.h"
+#include "wayland/datadevicemanager_interface.h"
+#include "wayland/datasource_interface.h"
+#include "wayland/display.h"
+#include "wayland/seat_interface.h"
+#include "wayland/seat_interface_p.h"
+
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"
 #include "KWayland/Client/datadevice.h"

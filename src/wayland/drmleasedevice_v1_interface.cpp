@@ -7,8 +7,8 @@
 #include "drmleasedevice_v1_interface.h"
 #include "display.h"
 #include "drmleasedevice_v1_interface_p.h"
-#include "logging.h"
 #include "utils.h"
+#include "utils/common.h"
 
 #include <fcntl.h>
 #include <unistd.h>
@@ -256,14 +256,14 @@ void DrmLeaseRequestV1Interface::wp_drm_lease_request_v1_request_connector(Resou
         if (connectorPrivate->device != device->q) {
             wl_resource_post_error(resource->handle, WP_DRM_LEASE_REQUEST_V1_ERROR_WRONG_DEVICE, "Requested connector from invalid lease device");
         } else if (connectorPrivate->withdrawn) {
-            qCWarning(KWAYLAND_SERVER) << "DrmLease: withdrawn connector requested";
+            qCWarning(KWIN_CORE) << "DrmLease: withdrawn connector requested";
         } else if (connectors.contains(connector)) {
             wl_resource_post_error(resource->handle, WP_DRM_LEASE_REQUEST_V1_ERROR_DUPLICATE_CONNECTOR, "Requested connector twice");
         } else {
             connectors << connector;
         }
     } else {
-        qCWarning(KWAYLAND_SERVER, "DrmLease: Invalid connector requested");
+        qCWarning(KWIN_CORE, "DrmLease: Invalid connector requested");
     }
 }
 
@@ -277,16 +277,16 @@ void DrmLeaseRequestV1Interface::wp_drm_lease_request_v1_submit(Resource *resour
     DrmLeaseV1Interface *lease = new DrmLeaseV1Interface(device, leaseResource);
     device->leases << lease;
     if (!device->hasDrmMaster) {
-        qCWarning(KWAYLAND_SERVER) << "DrmLease: rejecting lease request without drm master";
+        qCWarning(KWIN_CORE) << "DrmLease: rejecting lease request without drm master";
         lease->deny();
     } else if (invalid) {
-        qCWarning(KWAYLAND_SERVER()) << "DrmLease: rejecting lease request with a withdrawn connector";
+        qCWarning(KWIN_CORE) << "DrmLease: rejecting lease request with a withdrawn connector";
         lease->deny();
     } else if (connectors.isEmpty()) {
         wl_resource_post_error(resource->handle, WP_DRM_LEASE_REQUEST_V1_ERROR_EMPTY_LEASE, "Requested lease without connectors");
     } else {
         lease->d->connectors = connectors;
-        emit device->q->leaseRequested(lease);
+        Q_EMIT device->q->leaseRequested(lease);
     }
     wl_resource_destroy(resource->handle);
 }

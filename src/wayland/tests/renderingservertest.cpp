@@ -3,15 +3,15 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#include "../src/server/compositor_interface.h"
-#include "../src/server/datadevicemanager_interface.h"
-#include "../src/server/display.h"
-#include "../src/server/keyboard_interface.h"
-#include "../src/server/output_interface.h"
-#include "../src/server/pointer_interface.h"
-#include "../src/server/seat_interface.h"
-#include "../src/server/shmclientbuffer.h"
-#include "../src/server/xdgshell_interface.h"
+#include "../compositor_interface.h"
+#include "../datadevicemanager_interface.h"
+#include "../display.h"
+#include "../keyboard_interface.h"
+#include "../output_interface.h"
+#include "../pointer_interface.h"
+#include "../seat_interface.h"
+#include "../shmclientbuffer.h"
+#include "../xdgshell_interface.h"
 
 #include <QApplication>
 #include <QCommandLineParser>

@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include "kwin_export.h"
 
 #include <QObject>
 
@@ -23,7 +23,7 @@ class RelativePointerManagerV1InterfacePrivate;
  * which automatically delegates relative motion events to the created relative pointer
  * interfaces.
  */
-class KWAYLANDSERVER_EXPORT RelativePointerManagerV1Interface : public QObject
+class KWIN_EXPORT RelativePointerManagerV1Interface : public QObject
 {
     Q_OBJECT
 

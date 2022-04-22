@@ -10,10 +10,9 @@
 #include "idle_inhibition.h"
 #include "abstract_client.h"
 #include "deleted.h"
+#include "wayland/idle_interface.h"
+#include "wayland/surface_interface.h"
 #include "workspace.h"
-
-#include <KWaylandServer/idle_interface.h>
-#include <KWaylandServer/surface_interface.h>
 
 #include <algorithm>
 #include <functional>

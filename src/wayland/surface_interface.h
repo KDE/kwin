@@ -13,8 +13,6 @@
 #include <QPointer>
 #include <QRegion>
 
-#include <KWaylandServer/kwaylandserver_export.h>
-
 namespace KWaylandServer
 {
 class BlurInterface;
@@ -55,7 +53,7 @@ class LinuxDmaBufV1Feedback;
  * @see SlideInterface
  * @see LinuxDmaBufV1Feedback
  */
-class KWAYLANDSERVER_EXPORT SurfaceInterface : public QObject
+class KWIN_EXPORT SurfaceInterface : public QObject
 {
     Q_OBJECT
     /**

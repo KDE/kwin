@@ -6,7 +6,8 @@
 
 #pragma once
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include "kwin_export.h"
+
 #include <QObject>
 #include <QScopedPointer>
 
@@ -20,7 +21,7 @@ class ScreencastV1InterfacePrivate;
 class ScreencastStreamV1InterfacePrivate;
 class ScreencastStreamV1Interface;
 
-class KWAYLANDSERVER_EXPORT ScreencastStreamV1Interface : public QObject
+class KWIN_EXPORT ScreencastStreamV1Interface : public QObject
 {
     Q_OBJECT
 public:
@@ -39,7 +40,7 @@ private:
     QScopedPointer<ScreencastStreamV1InterfacePrivate> d;
 };
 
-class KWAYLANDSERVER_EXPORT ScreencastV1Interface : public QObject
+class KWIN_EXPORT ScreencastV1Interface : public QObject
 {
     Q_OBJECT
 

@@ -5,8 +5,7 @@
 */
 
 #include "fakeinputdevice.h"
-
-#include <KWaylandServer/fakeinput_interface.h>
+#include "wayland/fakeinput_interface.h"
 
 namespace KWin
 {

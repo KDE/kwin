@@ -8,9 +8,8 @@
 #pragma once
 
 #include "output.h"
-
-#include <KWaylandServer/outputdevice_v2_interface.h>
-#include <KWaylandServer/utils.h>
+#include "wayland/outputdevice_v2_interface.h"
+#include "wayland/utils.h"
 
 namespace KWin
 {

@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include "kwin_export.h"
 
 #include <QObject>
 #include <QSharedDataPointer>
@@ -37,7 +37,7 @@ class XdgSurfaceInterface;
  *
  * XdgShellInterface corresponds to the WaylandInterface \c xdg_wm_base.
  */
-class KWAYLANDSERVER_EXPORT XdgShellInterface : public QObject
+class KWIN_EXPORT XdgShellInterface : public QObject
 {
     Q_OBJECT
 
@@ -104,7 +104,7 @@ private:
  *
  * XdgSurfaceInterface corresponds to the Wayland interface \c xdg_surface.
  */
-class KWAYLANDSERVER_EXPORT XdgSurfaceInterface : public QObject
+class KWIN_EXPORT XdgSurfaceInterface : public QObject
 {
     Q_OBJECT
 
@@ -191,7 +191,7 @@ private:
  *
  * XdgToplevelInterface corresponds to the Wayland interface \c xdg_toplevel.
  */
-class KWAYLANDSERVER_EXPORT XdgToplevelInterface : public QObject
+class KWIN_EXPORT XdgToplevelInterface : public QObject
 {
     Q_OBJECT
 
@@ -397,7 +397,7 @@ private:
  *
  * XdgPositioner corresponds to the Wayland interface \c xdg_positioner.
  */
-class KWAYLANDSERVER_EXPORT XdgPositioner
+class KWIN_EXPORT XdgPositioner
 {
 public:
     /**
@@ -503,7 +503,7 @@ private:
  *
  * XdgPopupInterface corresponds to the Wayland interface \c xdg_popup.
  */
-class KWAYLANDSERVER_EXPORT XdgPopupInterface : public QObject
+class KWIN_EXPORT XdgPopupInterface : public QObject
 {
     Q_OBJECT
 

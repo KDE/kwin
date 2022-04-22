@@ -11,11 +11,10 @@
 #include "datasource.h"
 #include "selection_source.h"
 
+#include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11client.h"
-
-#include <KWaylandServer/seat_interface.h>
 
 #include <xcb/xcb_event.h>
 #include <xcb/xfixes.h>

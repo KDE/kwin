@@ -25,15 +25,15 @@
 #include "deleted.h"
 #include "tablet_input.h"
 #include "touch_input.h"
+#include "wayland/display.h"
+#include "wayland/inputmethod_v1_interface.h"
+#include "wayland/keyboard_interface.h"
+#include "wayland/seat_interface.h"
+#include "wayland/surface_interface.h"
+#include "wayland/textinput_v3_interface.h"
 
 #include <KLocalizedString>
 #include <KShell>
-#include <KWaylandServer/display.h>
-#include <KWaylandServer/inputmethod_v1_interface.h>
-#include <KWaylandServer/keyboard_interface.h>
-#include <KWaylandServer/seat_interface.h>
-#include <KWaylandServer/surface_interface.h>
-#include <KWaylandServer/textinput_v3_interface.h>
 
 #include <QDBusConnection>
 #include <QDBusMessage>

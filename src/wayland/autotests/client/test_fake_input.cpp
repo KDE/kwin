@@ -11,8 +11,8 @@
 #include "KWayland/Client/fakeinput.h"
 #include "KWayland/Client/registry.h"
 // server
-#include "../../src/server/display.h"
-#include "../../src/server/fakeinput_interface.h"
+#include "wayland/display.h"
+#include "wayland/fakeinput_interface.h"
 
 #include <linux/input.h>
 

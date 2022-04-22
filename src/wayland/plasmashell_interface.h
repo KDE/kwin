@@ -6,9 +6,9 @@
 */
 #pragma once
 
-#include <QObject>
+#include "kwin_export.h"
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include <QObject>
 
 class QSize;
 struct wl_resource;
@@ -32,7 +32,7 @@ class PlasmaShellSurfaceInterfacePrivate;
  * A server providing this interface should think about how to restrict access to it as
  * it allows to perform absolute window positioning.
  */
-class KWAYLANDSERVER_EXPORT PlasmaShellInterface : public QObject
+class KWIN_EXPORT PlasmaShellInterface : public QObject
 {
     Q_OBJECT
 
@@ -55,7 +55,7 @@ private:
  *
  * PlasmaShellSurfaceInterface gets created by PlasmaShellInterface.
  */
-class KWAYLANDSERVER_EXPORT PlasmaShellSurfaceInterface : public QObject
+class KWIN_EXPORT PlasmaShellSurfaceInterface : public QObject
 {
     Q_OBJECT
 public:

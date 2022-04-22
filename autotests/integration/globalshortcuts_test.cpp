@@ -14,13 +14,13 @@
 #include "keyboard_input.h"
 #include "platform.h"
 #include "useractions.h"
+#include "wayland/keyboard_interface.h"
+#include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11client.h"
 
 #include <KWayland/Client/surface.h>
-#include <KWaylandServer/keyboard_interface.h>
-#include <KWaylandServer/seat_interface.h>
 
 #include <KGlobalAccel>
 #include <linux/input.h>

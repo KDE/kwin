@@ -5,9 +5,9 @@
 */
 #pragma once
 
-#include <QObject>
+#include "kwin_export.h"
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include <QObject>
 
 struct wl_resource;
 
@@ -26,7 +26,7 @@ class SurfaceInterface;
  *
  * DataControlDeviceV1Interface corresponds to the Wayland interface @c zwlr_data_control_device_v1.
  */
-class KWAYLANDSERVER_EXPORT DataControlDeviceV1Interface : public QObject
+class KWIN_EXPORT DataControlDeviceV1Interface : public QObject
 {
     Q_OBJECT
 

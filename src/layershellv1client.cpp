@@ -8,12 +8,11 @@
 #include "deleted.h"
 #include "layershellv1integration.h"
 #include "output.h"
+#include "wayland/layershell_v1_interface.h"
+#include "wayland/output_interface.h"
+#include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
-
-#include <KWaylandServer/layershell_v1_interface.h>
-#include <KWaylandServer/output_interface.h>
-#include <KWaylandServer/surface_interface.h>
 
 using namespace KWaylandServer;
 

@@ -5,9 +5,9 @@
 */
 #pragma once
 
-#include <QObject>
+#include "kwin_export.h"
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include <QObject>
 
 namespace KWaylandServer
 {
@@ -29,7 +29,7 @@ class OutputConfigurationV2Interface;
  * @see OutputConfiguration
  * @see OutputConfigurationInterface
  */
-class KWAYLANDSERVER_EXPORT OutputManagementV2Interface : public QObject
+class KWIN_EXPORT OutputManagementV2Interface : public QObject
 {
     Q_OBJECT
 

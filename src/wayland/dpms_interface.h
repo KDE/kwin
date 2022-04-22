@@ -5,9 +5,9 @@
 */
 #pragma once
 
-#include <QObject>
+#include "kwin_export.h"
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include <QObject>
 
 namespace KWaylandServer
 {
@@ -46,7 +46,7 @@ class DpmsManagerInterfacePrivate;
  * @see Display
  * @see OutputInterface
  */
-class KWAYLANDSERVER_EXPORT DpmsManagerInterface : public QObject
+class KWIN_EXPORT DpmsManagerInterface : public QObject
 {
     Q_OBJECT
 

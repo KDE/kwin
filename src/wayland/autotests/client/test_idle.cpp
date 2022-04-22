@@ -12,9 +12,9 @@
 #include "KWayland/Client/registry.h"
 #include "KWayland/Client/seat.h"
 // server
-#include "../../src/server/display.h"
-#include "../../src/server/idle_interface.h"
-#include "../../src/server/seat_interface.h"
+#include "wayland/display.h"
+#include "wayland/idle_interface.h"
+#include "wayland/seat_interface.h"
 
 using namespace KWayland::Client;
 using namespace KWaylandServer;

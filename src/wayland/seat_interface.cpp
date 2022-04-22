@@ -16,7 +16,6 @@
 #include "display_p.h"
 #include "keyboard_interface.h"
 #include "keyboard_interface_p.h"
-#include "logging.h"
 #include "pointer_interface.h"
 #include "pointer_interface_p.h"
 #include "pointerconstraints_v1_interface.h"
@@ -30,6 +29,7 @@
 #include "textinput_v3_interface_p.h"
 #include "touch_interface_p.h"
 #include "utils.h"
+#include "utils/common.h"
 
 #include <linux/input.h>
 
@@ -1097,7 +1097,7 @@ void SeatInterface::notifyTouchMotion(qint32 id, const QPointF &globalPosition)
     auto itTouch = d->globalTouch.ids.constFind(id);
     if (itTouch == d->globalTouch.ids.constEnd()) {
         // This can happen in cases where the interaction started while the device was asleep
-        qCWarning(KWAYLAND_SERVER) << "Detected a touch move that never has been down, discarding";
+        qCWarning(KWIN_CORE) << "Detected a touch move that never has been down, discarding";
         return;
     }
 
@@ -1132,7 +1132,7 @@ void SeatInterface::notifyTouchUp(qint32 id)
     auto itTouch = d->globalTouch.ids.find(id);
     if (itTouch == d->globalTouch.ids.end()) {
         // This can happen in cases where the interaction started while the device was asleep
-        qCWarning(KWAYLAND_SERVER) << "Detected a touch that never started, discarding";
+        qCWarning(KWIN_CORE) << "Detected a touch that never started, discarding";
         return;
     }
     const qint32 serial = d->display->nextSerial();

@@ -15,13 +15,11 @@
 #include "decorations/decoratedclient.h"
 #include "input_event_spy.h"
 #include "pointer_input.h"
-#include "abstract_client.h"
+#include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 // KDecoration
 #include <KDecoration2/Decoration>
-// KWayland
-#include <KWaylandServer/seat_interface.h>
 // screenlocker
 #if KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>

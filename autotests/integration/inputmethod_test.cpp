@@ -18,13 +18,13 @@
 #include "qwayland-input-method-unstable-v1.h"
 #include "qwayland-text-input-unstable-v3.h"
 #include "virtualkeyboard_dbus.h"
+#include "wayland/clientconnection.h"
+#include "wayland/display.h"
+#include "wayland/seat_interface.h"
+#include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
-#include <KWaylandServer/clientconnection.h>
-#include <KWaylandServer/display.h>
-#include <KWaylandServer/seat_interface.h>
-#include <KWaylandServer/surface_interface.h>
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDBusPendingReply>

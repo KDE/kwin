@@ -38,7 +38,7 @@ struct LinuxDmaBufV1Plane
  * The LinuxDmaBufV1ClientBuffer can be used even after the underlying wl_buffer object
  * is destroyed by the client.
  */
-class KWAYLANDSERVER_EXPORT LinuxDmaBufV1ClientBuffer : public ClientBuffer
+class KWIN_EXPORT LinuxDmaBufV1ClientBuffer : public ClientBuffer
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(LinuxDmaBufV1ClientBuffer)
@@ -60,7 +60,7 @@ private:
     friend class LinuxDmaBufParamsV1;
 };
 
-class KWAYLANDSERVER_EXPORT LinuxDmaBufV1Feedback : public QObject
+class KWIN_EXPORT LinuxDmaBufV1Feedback : public QObject
 {
     Q_OBJECT
 public:
@@ -94,7 +94,7 @@ private:
 /**
  * The LinuxDmaBufV1ClientBufferIntegration class provides support for linux dma-buf buffers.
  */
-class KWAYLANDSERVER_EXPORT LinuxDmaBufV1ClientBufferIntegration : public ClientBufferIntegration
+class KWIN_EXPORT LinuxDmaBufV1ClientBufferIntegration : public ClientBufferIntegration
 {
     Q_OBJECT
 

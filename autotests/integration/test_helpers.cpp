@@ -14,6 +14,7 @@
 #include "screenlockerwatcher.h"
 #endif
 #include "inputmethod.h"
+#include "wayland/display.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -34,7 +35,6 @@
 #include <KWayland/Client/subsurface.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/textinput.h>
-#include <KWaylandServer/display.h>
 
 // screenlocker
 #if KWIN_BUILD_SCREENLOCKER

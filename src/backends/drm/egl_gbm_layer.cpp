@@ -17,9 +17,8 @@
 #include "egl_gbm_backend.h"
 #include "logging.h"
 #include "surfaceitem_wayland.h"
-
-#include "KWaylandServer/linuxdmabufv1clientbuffer.h"
-#include "KWaylandServer/surface_interface.h"
+#include "wayland/linuxdmabufv1clientbuffer.h"
+#include "wayland/surface_interface.h"
 
 #include <QRegion>
 #include <drm_fourcc.h>

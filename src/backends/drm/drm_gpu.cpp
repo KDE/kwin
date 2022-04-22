@@ -25,6 +25,7 @@
 #include "main.h"
 #include "renderloop_p.h"
 #include "session.h"
+#include "wayland/drmleasedevice_v1_interface.h"
 #include "wayland_server.h"
 // system
 #include <algorithm>
@@ -38,8 +39,6 @@
 #include <libdrm/drm_mode.h>
 #include <xf86drm.h>
 #include <xf86drmMode.h>
-// KWaylandServer
-#include "KWaylandServer/drmleasedevice_v1_interface.h"
 
 namespace KWin
 {

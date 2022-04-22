@@ -12,14 +12,12 @@
 #include "input_event.h"
 #include "input_event_spy.h"
 #include "pointer_input.h"
-#include "abstract_client.h"
+#include "wayland/seat_interface.h"
+#include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 // KDecoration
 #include <KDecoration2/Decoration>
-// KWayland
-#include <KWaylandServer/seat_interface.h>
-#include <KWaylandServer/surface_interface.h>
 // Qt
 #include <QHoverEvent>
 #include <QWindow>

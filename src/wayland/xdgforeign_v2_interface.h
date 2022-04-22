@@ -6,9 +6,9 @@
 */
 #pragma once
 
-#include <QObject>
+#include "kwin_export.h"
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include <QObject>
 
 namespace KWaylandServer
 {
@@ -24,7 +24,7 @@ class XdgForeignV2InterfacePrivate;
  * This parent relationship is traced by the transientChanged signal and the
  * transientFor method.
  */
-class KWAYLANDSERVER_EXPORT XdgForeignV2Interface : public QObject
+class KWIN_EXPORT XdgForeignV2Interface : public QObject
 {
     Q_OBJECT
 public:

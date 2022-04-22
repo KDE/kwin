@@ -6,11 +6,11 @@
 */
 #pragma once
 
+#include "kwin_export.h"
+
 #include "outputchangeset_v2.h"
 #include "outputdevice_v2_interface.h"
 #include "outputmanagement_v2_interface.h"
-
-#include <KWaylandServer/kwaylandserver_export.h>
 
 namespace KWaylandServer
 {
@@ -41,7 +41,7 @@ class OutputConfigurationV2InterfacePrivate;
  * @see OutputManagementInterface
  * @see OutputConfiguration
  */
-class KWAYLANDSERVER_EXPORT OutputConfigurationV2Interface : public QObject
+class KWIN_EXPORT OutputConfigurationV2Interface : public QObject
 {
     Q_OBJECT
 public:

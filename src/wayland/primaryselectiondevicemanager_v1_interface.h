@@ -5,9 +5,9 @@
 */
 #pragma once
 
-#include <QObject>
+#include "kwin_export.h"
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include <QObject>
 
 namespace KWaylandServer
 {
@@ -20,7 +20,7 @@ class PrimarySelectionDeviceV1Interface;
  * @brief Represents the Global for zwp_primary_selection_manager_v1 interface.
  *
  */
-class KWAYLANDSERVER_EXPORT PrimarySelectionDeviceManagerV1Interface : public QObject
+class KWIN_EXPORT PrimarySelectionDeviceManagerV1Interface : public QObject
 {
     Q_OBJECT
 

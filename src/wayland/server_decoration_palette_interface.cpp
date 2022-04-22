@@ -5,8 +5,8 @@
 */
 #include "server_decoration_palette_interface.h"
 #include "display.h"
-#include "logging.h"
 #include "surface_interface.h"
+#include "utils/common.h"
 
 #include <QtGlobal>
 
@@ -35,7 +35,7 @@ void ServerSideDecorationPaletteManagerInterfacePrivate::org_kde_kwin_server_dec
     SurfaceInterface *s = SurfaceInterface::get(surface);
     if (!s) {
         wl_resource_post_error(resource->handle, 0, "invalid surface");
-        qCWarning(KWAYLAND_SERVER) << "ServerSideDecorationPaletteInterface requested for non existing SurfaceInterface";
+        qCWarning(KWIN_CORE) << "ServerSideDecorationPaletteInterface requested for non existing SurfaceInterface";
         return;
     }
 

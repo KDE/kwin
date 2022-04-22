@@ -6,7 +6,8 @@
 
 #pragma once
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include "kwin_export.h"
+
 #include <QObject>
 
 namespace KWaylandServer
@@ -17,7 +18,7 @@ class KeyStateInterfacePrivate;
 /**
  * @brief Exposes key states to wayland clients
  */
-class KWAYLANDSERVER_EXPORT KeyStateInterface : public QObject
+class KWIN_EXPORT KeyStateInterface : public QObject
 {
     Q_OBJECT
 

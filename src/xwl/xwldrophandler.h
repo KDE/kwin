@@ -11,7 +11,7 @@
 #ifndef XWLDROPHANDLER_H
 #define XWLDROPHANDLER_H
 
-#include <KWaylandServer/datadevice_interface.h>
+#include "wayland/datadevice_interface.h"
 
 #include <xcb/xcb.h>
 

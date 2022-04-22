@@ -6,12 +6,12 @@
 */
 #pragma once
 
+#include "kwin_export.h"
+
 #include <optional>
 
 #include <QColor>
 #include <QObject>
-
-#include <KWaylandServer/kwaylandserver_export.h>
 
 struct wl_resource;
 
@@ -29,7 +29,7 @@ class ContrastInterfacePrivate;
  * @see ContrastInterface
  * @see SurfaceInterface
  */
-class KWAYLANDSERVER_EXPORT ContrastManagerInterface : public QObject
+class KWIN_EXPORT ContrastManagerInterface : public QObject
 {
     Q_OBJECT
 
@@ -55,7 +55,7 @@ private:
  * @see ContrastManagerInterface
  * @see SurfaceInterface
  */
-class KWAYLANDSERVER_EXPORT ContrastInterface : public QObject
+class KWIN_EXPORT ContrastInterface : public QObject
 {
     Q_OBJECT
 public:

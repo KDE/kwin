@@ -11,9 +11,8 @@
 #include "drm_gpu.h"
 #include "egl_dmabuf.h"
 #include "egl_gbm_backend.h"
-
-#include <KWaylandServer/linuxdmabufv1clientbuffer.h>
-#include <KWaylandServer/surface_interface.h>
+#include "wayland/linuxdmabufv1clientbuffer.h"
+#include "wayland/surface_interface.h"
 
 namespace KWin
 {

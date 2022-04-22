@@ -20,19 +20,19 @@
 #include "touch_input.h"
 #include "utils/subsurfacemonitor.h"
 #include "virtualdesktops.h"
+#include "wayland/appmenu_interface.h"
+#include "wayland/output_interface.h"
+#include "wayland/plasmashell_interface.h"
+#include "wayland/seat_interface.h"
+#include "wayland/server_decoration_interface.h"
+#include "wayland/server_decoration_palette_interface.h"
+#include "wayland/surface_interface.h"
+#include "wayland/xdgdecoration_v1_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
-#include <KWaylandServer/appmenu_interface.h>
-#include <KWaylandServer/output_interface.h>
-#include <KWaylandServer/plasmashell_interface.h>
-#include <KWaylandServer/seat_interface.h>
-#include <KWaylandServer/server_decoration_interface.h>
-#include <KWaylandServer/server_decoration_palette_interface.h>
-#include <KWaylandServer/surface_interface.h>
-#include <KWaylandServer/xdgdecoration_v1_interface.h>
 
 using namespace KWaylandServer;
 

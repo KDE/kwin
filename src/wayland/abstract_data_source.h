@@ -6,10 +6,10 @@
 
 #pragma once
 
+#include "kwin_export.h"
+
 #include "clientconnection.h"
 #include "datadevicemanager_interface.h"
-
-#include <KWaylandServer/kwaylandserver_export.h>
 
 struct wl_client;
 
@@ -25,7 +25,7 @@ namespace KWaylandServer
 // Anything related to selections are pure virtual, content relating
 // to drag and drop has a default implementation
 
-class KWAYLANDSERVER_EXPORT AbstractDataSource : public QObject
+class KWIN_EXPORT AbstractDataSource : public QObject
 {
     Q_OBJECT
 public:

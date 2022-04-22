@@ -5,10 +5,9 @@
 */
 #pragma once
 
+#include "kwin_export.h"
+
 #include "abstract_data_source.h"
-
-#include <KWaylandServer/kwaylandserver_export.h>
-
 #include "datacontroldevicemanager_v1_interface.h"
 
 namespace KWaylandServer
@@ -20,7 +19,7 @@ class DataControlSourceV1InterfacePrivate;
  *
  * DataControlSourceV1Interface corresponds to the wayland interface zwlr_data_control_source_v1.
  */
-class KWAYLANDSERVER_EXPORT DataControlSourceV1Interface : public AbstractDataSource
+class KWIN_EXPORT DataControlSourceV1Interface : public AbstractDataSource
 {
     Q_OBJECT
 

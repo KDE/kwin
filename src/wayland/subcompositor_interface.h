@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include <QObject>
+#include "kwin_export.h"
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include <QObject>
 
 struct wl_resource;
 
@@ -28,7 +28,7 @@ class SubSurfaceInterfacePrivate;
  *
  * The SubCompositorInterface corresponds to the Wayland interface @c wl_subcompositor.
  */
-class KWAYLANDSERVER_EXPORT SubCompositorInterface : public QObject
+class KWIN_EXPORT SubCompositorInterface : public QObject
 {
     Q_OBJECT
 
@@ -49,7 +49,7 @@ private:
 /**
  * The SubSurfaceInterface corresponds to the Wayland interface @c wl_subsurface.
  */
-class KWAYLANDSERVER_EXPORT SubSurfaceInterface : public QObject
+class KWIN_EXPORT SubSurfaceInterface : public QObject
 {
     Q_OBJECT
 

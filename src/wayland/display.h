@@ -6,10 +6,10 @@
 */
 #pragma once
 
+#include "kwin_export.h"
+
 #include <QList>
 #include <QObject>
-
-#include <KWaylandServer/kwaylandserver_export.h>
 
 #include "clientconnection.h"
 
@@ -44,7 +44,7 @@ class SeatInterface;
  *
  * @todo Improve documentation
  */
-class KWAYLANDSERVER_EXPORT Display : public QObject
+class KWIN_EXPORT Display : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool running READ isRunning NOTIFY runningChanged)

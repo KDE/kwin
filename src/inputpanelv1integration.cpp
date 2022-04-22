@@ -6,10 +6,9 @@
 
 #include "inputpanelv1integration.h"
 #include "inputpanelv1client.h"
+#include "wayland/display.h"
+#include "wayland/inputmethod_v1_interface.h"
 #include "wayland_server.h"
-
-#include <KWaylandServer/display.h>
-#include <KWaylandServer/inputmethod_v1_interface.h>
 
 using namespace KWaylandServer;
 

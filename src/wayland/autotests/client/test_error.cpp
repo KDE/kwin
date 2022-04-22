@@ -5,6 +5,12 @@
 */
 // Qt
 #include <QtTest>
+
+// server
+#include "wayland/compositor_interface.h"
+#include "wayland/display.h"
+#include "wayland/plasmashell_interface.h"
+
 // client
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"
@@ -12,10 +18,6 @@
 #include "KWayland/Client/plasmashell.h"
 #include "KWayland/Client/registry.h"
 #include "KWayland/Client/surface.h"
-// server
-#include "../../src/server/compositor_interface.h"
-#include "../../src/server/display.h"
-#include "../../src/server/plasmashell_interface.h"
 
 #include <wayland-client-protocol.h>
 

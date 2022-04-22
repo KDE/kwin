@@ -14,15 +14,13 @@
 #include "composite.h"
 #include "internal_client.h"
 #include "scene.h"
-#include "abstract_client.h"
+#include "wayland/shadow_interface.h"
+#include "wayland/shmclientbuffer.h"
+#include "wayland/surface_interface.h"
 #include "wayland_server.h"
 
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecorationShadow>
-
-#include <KWaylandServer/shadow_interface.h>
-#include <KWaylandServer/shmclientbuffer.h>
-#include <KWaylandServer/surface_interface.h>
 
 #include <QWindow>
 

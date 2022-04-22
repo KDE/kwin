@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include "kwin_export.h"
 
 #include <QObject>
 
@@ -15,7 +15,7 @@ namespace KWaylandServer
 {
 class SurfaceInterface;
 
-class KWAYLANDSERVER_EXPORT AbstractDropHandler : public QObject
+class KWIN_EXPORT AbstractDropHandler : public QObject
 {
     Q_OBJECT
 public:

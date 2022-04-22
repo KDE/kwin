@@ -5,11 +5,11 @@
 */
 #pragma once
 
+#include "kwin_export.h"
+
 #include <sys/types.h>
 
 #include <QObject>
-
-#include <KWaylandServer/kwaylandserver_export.h>
 
 struct wl_client;
 struct wl_resource;
@@ -28,7 +28,7 @@ class Display;
  *
  * @see Display
  */
-class KWAYLANDSERVER_EXPORT ClientConnection : public QObject
+class KWIN_EXPORT ClientConnection : public QObject
 {
     Q_OBJECT
 public:

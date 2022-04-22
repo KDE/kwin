@@ -18,14 +18,13 @@
 #include "regionscreencastsource.h"
 #include "scene.h"
 #include "screencaststream.h"
+#include "wayland/display.h"
+#include "wayland/output_interface.h"
 #include "wayland_server.h"
 #include "windowscreencastsource.h"
 #include "workspace.h"
 
 #include <KLocalizedString>
-
-#include <KWaylandServer/display.h>
-#include <KWaylandServer/output_interface.h>
 
 namespace KWin
 {

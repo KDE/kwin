@@ -14,6 +14,7 @@
 #include "internal_client.h"
 #include "output.h"
 #include "platform.h"
+#include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -24,8 +25,6 @@
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/surface.h>
 #include <KWindowSystem>
-
-#include <KWaylandServer/surface_interface.h>
 
 #include <linux/input.h>
 

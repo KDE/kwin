@@ -7,10 +7,9 @@
 #include "surfaceitem_wayland.h"
 #include "composite.h"
 #include "scene.h"
-
-#include <KWaylandServer/clientbuffer.h>
-#include <KWaylandServer/subcompositor_interface.h>
-#include <KWaylandServer/surface_interface.h>
+#include "wayland/clientbuffer.h"
+#include "wayland/subcompositor_interface.h"
+#include "wayland/surface_interface.h"
 
 namespace KWin
 {

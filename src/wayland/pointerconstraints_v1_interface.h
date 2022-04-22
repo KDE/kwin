@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include "kwin_export.h"
 
 #include <QObject>
 #include <QRegion>
@@ -30,7 +30,7 @@ class SurfaceInterface;
  * @see ConfinedPointerV1Interface
  * @see LockedPointerV1Interface
  */
-class KWAYLANDSERVER_EXPORT PointerConstraintsV1Interface : public QObject
+class KWIN_EXPORT PointerConstraintsV1Interface : public QObject
 {
     Q_OBJECT
 
@@ -56,7 +56,7 @@ private:
  * While the lock is active the PointerInterface does no longer Q_EMIT pointer motion
  * events, but still emits relative pointer motion events.
  */
-class KWAYLANDSERVER_EXPORT LockedPointerV1Interface : public QObject
+class KWIN_EXPORT LockedPointerV1Interface : public QObject
 {
     Q_OBJECT
 
@@ -172,7 +172,7 @@ private:
  * From compositor side the confinement can be deactivated by setting
  * {@link ConfinedPointerV1Interface::setConfined} to @c false.
  */
-class KWAYLANDSERVER_EXPORT ConfinedPointerV1Interface : public QObject
+class KWIN_EXPORT ConfinedPointerV1Interface : public QObject
 {
     Q_OBJECT
 

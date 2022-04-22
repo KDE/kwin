@@ -14,6 +14,7 @@
 #include "platform.h"
 #include "surfaceitem_x11.h"
 #include "utils/common.h"
+#include "wayland/surface_interface.h"
 #include "workspace.h"
 
 #include <QDebug>
@@ -22,8 +23,6 @@
 #include <QWindow>
 
 #include <xcb/shape.h>
-
-#include <KWaylandServer/surface_interface.h>
 
 using namespace KWaylandServer;
 

@@ -26,7 +26,7 @@ class SurfaceInterface;
  *
  * The LayerShellV1Interface corresponds to the Wayland interface @c zwlr_layer_shell_v1.
  */
-class KWAYLANDSERVER_EXPORT LayerShellV1Interface : public QObject
+class KWIN_EXPORT LayerShellV1Interface : public QObject
 {
     Q_OBJECT
 
@@ -54,7 +54,7 @@ private:
  *
  * The LayerSurfaceV1Interface corresponds to the Wayland interface @c zwlr_layer_surface_v1.
  */
-class KWAYLANDSERVER_EXPORT LayerSurfaceV1Interface : public QObject
+class KWIN_EXPORT LayerSurfaceV1Interface : public QObject
 {
     Q_OBJECT
 

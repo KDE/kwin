@@ -8,12 +8,13 @@
 #include <QPainter>
 #include <QtTest>
 // KWin
-#include "../../src/server/clientbuffer.h"
-#include "../../src/server/compositor_interface.h"
-#include "../../src/server/display.h"
-#include "../../src/server/idleinhibit_v1_interface.h"
-#include "../../src/server/shmclientbuffer.h"
-#include "../../src/server/surface_interface.h"
+#include "wayland/clientbuffer.h"
+#include "wayland/compositor_interface.h"
+#include "wayland/display.h"
+#include "wayland/idleinhibit_v1_interface.h"
+#include "wayland/shmclientbuffer.h"
+#include "wayland/surface_interface.h"
+
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"
 #include "KWayland/Client/event_queue.h"
@@ -23,6 +24,7 @@
 #include "KWayland/Client/registry.h"
 #include "KWayland/Client/shm_pool.h"
 #include "KWayland/Client/surface.h"
+
 // Wayland
 #include <wayland-client-protocol.h>
 

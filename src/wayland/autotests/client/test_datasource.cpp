@@ -6,15 +6,18 @@
 // Qt
 #include <QMimeDatabase>
 #include <QtTest>
+
+#include "wayland/datadevicemanager_interface.h"
+#include "wayland/datasource_interface.h"
+#include "wayland/display.h"
+
 // KWayland
-#include "../../src/server/datadevicemanager_interface.h"
-#include "../../src/server/datasource_interface.h"
-#include "../../src/server/display.h"
 #include "KWayland/Client/connection_thread.h"
 #include "KWayland/Client/datadevicemanager.h"
 #include "KWayland/Client/datasource.h"
 #include "KWayland/Client/event_queue.h"
 #include "KWayland/Client/registry.h"
+
 // Wayland
 #include <wayland-client.h>
 

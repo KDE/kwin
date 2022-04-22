@@ -10,13 +10,14 @@
 #include "contrastshader.h"
 // KConfigSkeleton
 
+#include "wayland/contrast_interface.h"
+#include "wayland/display.h"
+#include "wayland/surface_interface.h"
+
 #include <QCoreApplication>
 #include <QMatrix4x4>
 #include <QTimer>
 #include <QWindow>
-
-#include <KWaylandServer/display.h>
-#include <KWaylandServer/surface_interface.h>
 
 namespace KWin
 {

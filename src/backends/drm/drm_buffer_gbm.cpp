@@ -14,6 +14,8 @@
 #include "kwineglimagetexture.h"
 #include "kwineglutils_p.h"
 #include "logging.h"
+#include "wayland/clientbuffer.h"
+#include "wayland/linuxdmabufv1clientbuffer.h"
 
 // system
 #include <sys/mman.h>
@@ -24,9 +26,6 @@
 #include <gbm.h>
 #include <xf86drm.h>
 #include <xf86drmMode.h>
-// KWaylandServer
-#include "KWaylandServer/clientbuffer.h"
-#include "KWaylandServer/linuxdmabufv1clientbuffer.h"
 
 namespace KWin
 {

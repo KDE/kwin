@@ -5,9 +5,9 @@
 */
 #pragma once
 
-#include <QObject>
+#include "kwin_export.h"
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include <QObject>
 
 namespace KWaylandServer
 {
@@ -20,7 +20,7 @@ enum class KeyboardKeyState : quint32;
 /**
  * @brief Resource for the wl_keyboard interface.
  */
-class KWAYLANDSERVER_EXPORT KeyboardInterface : public QObject
+class KWIN_EXPORT KeyboardInterface : public QObject
 {
     Q_OBJECT
 public:

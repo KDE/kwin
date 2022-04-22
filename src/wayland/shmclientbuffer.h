@@ -19,7 +19,7 @@ class ShmClientBufferPrivate;
  * The buffer's data can be accessed using the data() function. Note that it is not allowed
  * to access data of several shared memory buffers simultaneously.
  */
-class KWAYLANDSERVER_EXPORT ShmClientBuffer : public ClientBuffer
+class KWIN_EXPORT ShmClientBuffer : public ClientBuffer
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(ShmClientBuffer)

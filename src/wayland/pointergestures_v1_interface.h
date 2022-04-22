@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include "kwin_export.h"
 
 #include <QObject>
 
@@ -22,7 +22,7 @@ class PointerGesturesV1InterfacePrivate;
  * Creates and manages pointer swipe and pointer pinch gestures which are
  * reported to the SeatInterface.
  */
-class KWAYLANDSERVER_EXPORT PointerGesturesV1Interface : public QObject
+class KWIN_EXPORT PointerGesturesV1Interface : public QObject
 {
     Q_OBJECT
 

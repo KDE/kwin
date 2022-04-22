@@ -15,14 +15,12 @@
 #include "inputmethod.h"
 #include "platform.h"
 #include "tabletmodemanager.h"
+#include "wayland/display.h"
+#include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "xwl/xwayland.h"
 #include "xwl/xwaylandlauncher.h"
-
-// KWayland
-#include <KWaylandServer/display.h>
-#include <KWaylandServer/seat_interface.h>
 
 // KDE
 #include <KCrash>

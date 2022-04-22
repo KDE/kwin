@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <KWaylandServer/abstract_data_source.h>
+#include "wayland/abstract_data_source.h"
 
 namespace KWin
 {

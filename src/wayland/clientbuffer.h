@@ -6,11 +6,11 @@
 
 #pragma once
 
+#include "kwin_export.h"
+
 #include <QImage>
 #include <QObject>
 #include <QSize>
-
-#include <KWaylandServer/kwaylandserver_export.h>
 
 struct wl_resource;
 
@@ -26,7 +26,7 @@ class ClientBufferPrivate;
  * You can use the isDestroyed() function to check whether the wl_buffer object has been
  * destroyed.
  */
-class KWAYLANDSERVER_EXPORT ClientBuffer : public QObject
+class KWIN_EXPORT ClientBuffer : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(ClientBuffer)

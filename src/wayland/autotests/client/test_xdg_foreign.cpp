@@ -7,10 +7,11 @@
 // Qt
 #include <QtTest>
 // KWin
-#include "../../src/server/compositor_interface.h"
-#include "../../src/server/display.h"
-#include "../../src/server/surface_interface.h"
-#include "../../src/server/xdgforeign_v2_interface.h"
+#include "wayland/compositor_interface.h"
+#include "wayland/display.h"
+#include "wayland/surface_interface.h"
+#include "wayland/xdgforeign_v2_interface.h"
+
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"
 #include "KWayland/Client/event_queue.h"

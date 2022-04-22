@@ -7,11 +7,12 @@
 // Qt
 #include <QtTest>
 // KWin
-#include "../../src/server/compositor_interface.h"
-#include "../../src/server/display.h"
-#include "../../src/server/outputconfiguration_interface.h"
-#include "../../src/server/outputdevice_interface.h"
-#include "../../src/server/outputmanagement_interface.h"
+#include "wayland/compositor_interface.h"
+#include "wayland/display.h"
+#include "wayland/outputconfiguration_interface.h"
+#include "wayland/outputdevice_interface.h"
+#include "wayland/outputmanagement_interface.h"
+
 #include "KWayland/Client/connection_thread.h"
 #include "KWayland/Client/event_queue.h"
 #include "KWayland/Client/output.h"

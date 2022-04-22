@@ -12,8 +12,8 @@
 
 #include "linuxdmabufv1clientbuffer.h"
 #include "linuxdmabufv1clientbuffer_p.h"
-#include "logging.h"
 #include "surface_interface_p.h"
+#include "utils/common.h"
 
 #include <QTemporaryFile>
 #include <errno.h>
@@ -59,7 +59,7 @@ void LinuxDmaBufV1ClientBufferIntegrationPrivate::zwp_linux_dmabuf_v1_get_surfac
 {
     auto surface = SurfaceInterface::get(surfaceResource);
     if (!surface) {
-        qCWarning(KWAYLAND_SERVER) << "requested surface feedback for nonexistant surface!";
+        qCWarning(KWIN_CORE) << "requested surface feedback for nonexistant surface!";
         return;
     }
     auto surfacePrivate = SurfaceInterfacePrivate::get(surface);
@@ -528,22 +528,22 @@ LinuxDmaBufV1FormatTable::LinuxDmaBufV1FormatTable(const QHash<uint32_t, QVector
     size = data.size() * sizeof(linux_dmabuf_feedback_v1_table_entry);
     QScopedPointer<QTemporaryFile> tmp(new QTemporaryFile());
     if (!tmp->open()) {
-        qCWarning(KWAYLAND_SERVER) << "Failed to create keymap file:" << tmp->errorString();
+        qCWarning(KWIN_CORE) << "Failed to create keymap file:" << tmp->errorString();
         return;
     }
     fd = open(tmp->fileName().toUtf8().constData(), O_RDONLY | O_CLOEXEC);
     if (fd < 0) {
-        qCWarning(KWAYLAND_SERVER) << "Could not create readonly shm fd!" << strerror(errno);
+        qCWarning(KWIN_CORE) << "Could not create readonly shm fd!" << strerror(errno);
         return;
     }
     unlink(tmp->fileName().toUtf8().constData());
     if (!tmp->resize(size)) {
-        qCWarning(KWAYLAND_SERVER) << "Failed to resize keymap file:" << tmp->errorString();
+        qCWarning(KWIN_CORE) << "Failed to resize keymap file:" << tmp->errorString();
         return;
     }
     uchar *address = tmp->map(0, size);
     if (!address) {
-        qCWarning(KWAYLAND_SERVER) << "Failed to map keymap file:" << tmp->errorString();
+        qCWarning(KWIN_CORE) << "Failed to map keymap file:" << tmp->errorString();
         return;
     }
     memcpy(address, data.data(), size);

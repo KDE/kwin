@@ -5,7 +5,7 @@
 */
 #pragma once
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include "kwin_export.h"
 
 #include <QVariant>
 #include <QtGlobal>
@@ -15,7 +15,7 @@
 
 namespace KWaylandServer
 {
-Q_NAMESPACE_EXPORT(KWAYLANDSERVER_EXPORT)
+Q_NAMESPACE_EXPORT(KWIN_EXPORT)
 /**
  * ContentHint allows to modify the behavior of the text input.
  */

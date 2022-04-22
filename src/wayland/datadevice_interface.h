@@ -7,9 +7,9 @@
 */
 #pragma once
 
-#include <QObject>
+#include "kwin_export.h"
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include <QObject>
 
 #include "abstract_drop_handler.h"
 
@@ -33,7 +33,7 @@ class DragAndDropIconPrivate;
  * Note that the lifetime of the drag-and-drop icon is bound to the lifetime of the underlying
  * icon surface.
  */
-class KWAYLANDSERVER_EXPORT DragAndDropIcon : public QObject
+class KWIN_EXPORT DragAndDropIcon : public QObject
 {
     Q_OBJECT
 
@@ -67,7 +67,7 @@ private:
  * @see SeatInterface
  * @see DataSourceInterface
  */
-class KWAYLANDSERVER_EXPORT DataDeviceInterface : public AbstractDropHandler
+class KWIN_EXPORT DataDeviceInterface : public AbstractDropHandler
 {
     Q_OBJECT
 public:

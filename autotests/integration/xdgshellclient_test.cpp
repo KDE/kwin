@@ -19,6 +19,8 @@
 #include "platform.h"
 #include "screens.h"
 #include "virtualdesktops.h"
+#include "wayland/clientconnection.h"
+#include "wayland/display.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -35,9 +37,6 @@
 #include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/subsurface.h>
 #include <KWayland/Client/surface.h>
-
-#include <KWaylandServer/clientconnection.h>
-#include <KWaylandServer/display.h>
 
 #include <QDBusConnection>
 

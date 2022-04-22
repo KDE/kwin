@@ -7,9 +7,9 @@
 */
 #pragma once
 
-#include <QObject>
+#include "kwin_export.h"
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include <QObject>
 
 struct wl_resource;
 
@@ -27,7 +27,7 @@ class BlurInterfacePrivate;
  * @see BlurInterface
  * @see SurfaceInterface
  */
-class KWAYLANDSERVER_EXPORT BlurManagerInterface : public QObject
+class KWIN_EXPORT BlurManagerInterface : public QObject
 {
     Q_OBJECT
 public:
@@ -54,7 +54,7 @@ private:
  * @see BlurManagerInterface
  * @see SurfaceInterface
  */
-class KWAYLANDSERVER_EXPORT BlurInterface : public QObject
+class KWIN_EXPORT BlurInterface : public QObject
 {
     Q_OBJECT
 public:

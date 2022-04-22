@@ -13,6 +13,7 @@
 #include "deleted.h"
 #include "output.h"
 #include "platform.h"
+#include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include <kwineffects.h>
@@ -25,8 +26,6 @@
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
-
-#include <KWaylandServer/seat_interface.h>
 
 namespace KWin
 {

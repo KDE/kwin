@@ -10,9 +10,9 @@
 
 #include <KIdleTime>
 
+#include "wayland/idle_interface.h"
+#include "wayland/seat_interface.h"
 #include "wayland_server.h"
-#include <KWaylandServer/idle_interface.h>
-#include <KWaylandServer/seat_interface.h>
 
 namespace KWin
 {

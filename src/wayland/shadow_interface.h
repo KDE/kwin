@@ -5,10 +5,10 @@
 */
 #pragma once
 
+#include "kwin_export.h"
+
 #include <QMarginsF>
 #include <QObject>
-
-#include <KWaylandServer/kwaylandserver_export.h>
 
 struct wl_resource;
 
@@ -19,7 +19,7 @@ class Display;
 class ShadowManagerInterfacePrivate;
 class ShadowInterfacePrivate;
 
-class KWAYLANDSERVER_EXPORT ShadowManagerInterface : public QObject
+class KWIN_EXPORT ShadowManagerInterface : public QObject
 {
     Q_OBJECT
 
@@ -33,7 +33,7 @@ private:
     QScopedPointer<ShadowManagerInterfacePrivate> d;
 };
 
-class KWAYLANDSERVER_EXPORT ShadowInterface : public QObject
+class KWIN_EXPORT ShadowInterface : public QObject
 {
     Q_OBJECT
 public:

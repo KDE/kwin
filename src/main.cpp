@@ -26,6 +26,7 @@
 #endif
 #include "sm.h"
 #include "utils/xcbutils.h"
+#include "wayland/surface_interface.h"
 #include "workspace.h"
 #include "x11eventfilter.h"
 
@@ -35,7 +36,6 @@
 #include <KAboutData>
 #include <KLocalizedString>
 #include <KPluginMetaData>
-#include <KWaylandServer/surface_interface.h>
 // Qt
 #include <QCommandLineParser>
 #include <QLibraryInfo>

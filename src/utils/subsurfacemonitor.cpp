@@ -9,8 +9,8 @@
 
 #include "subsurfacemonitor.h"
 
-#include <KWaylandServer/subcompositor_interface.h>
-#include <KWaylandServer/surface_interface.h>
+#include "wayland/subcompositor_interface.h"
+#include "wayland/surface_interface.h"
 
 using namespace KWaylandServer;
 

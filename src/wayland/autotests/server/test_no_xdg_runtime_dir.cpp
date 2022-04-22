@@ -6,7 +6,7 @@
 // Qt
 #include <QtTest>
 // WaylandServer
-#include "../../src/server/display.h"
+#include "wayland/display.h"
 
 using namespace KWaylandServer;
 

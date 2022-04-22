@@ -6,10 +6,11 @@
 // Qt
 #include <QtTest>
 // KWin
-#include "../../src/server/compositor_interface.h"
-#include "../../src/server/display.h"
-#include "../../src/server/plasmavirtualdesktop_interface.h"
-#include "../../src/server/plasmawindowmanagement_interface.h"
+#include "wayland/compositor_interface.h"
+#include "wayland/display.h"
+#include "wayland/plasmavirtualdesktop_interface.h"
+#include "wayland/plasmawindowmanagement_interface.h"
+
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"
 #include "KWayland/Client/event_queue.h"

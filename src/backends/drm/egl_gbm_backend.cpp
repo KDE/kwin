@@ -31,6 +31,9 @@
 #include "shadowbuffer.h"
 #include "surfaceitem_wayland.h"
 #include "virtual_egl_gbm_layer.h"
+#include "wayland/clientconnection.h"
+#include "wayland/linuxdmabufv1clientbuffer.h"
+#include "wayland/surface_interface.h"
 // kwin libs
 #include <kwineglimagetexture.h>
 #include <kwinglplatform.h>
@@ -39,10 +42,6 @@
 #include <errno.h>
 #include <gbm.h>
 #include <unistd.h>
-// kwayland server
-#include "KWaylandServer/clientconnection.h"
-#include "KWaylandServer/linuxdmabufv1clientbuffer.h"
-#include "KWaylandServer/surface_interface.h"
 
 namespace KWin
 {

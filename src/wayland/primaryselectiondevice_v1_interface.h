@@ -5,9 +5,9 @@
 */
 #pragma once
 
-#include <QObject>
+#include "kwin_export.h"
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include <QObject>
 
 struct wl_resource;
 struct wl_client;
@@ -29,7 +29,7 @@ class PrimarySelectionDeviceV1InterfacePrivate;
  * @see PrimarySelectionSourceInterface
  * Lifespan is mapped to the underlying object
  */
-class KWAYLANDSERVER_EXPORT PrimarySelectionDeviceV1Interface : public QObject
+class KWIN_EXPORT PrimarySelectionDeviceV1Interface : public QObject
 {
     Q_OBJECT
 public:

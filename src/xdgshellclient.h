@@ -11,9 +11,8 @@
 
 #pragma once
 
+#include "wayland/xdgshell_interface.h"
 #include "waylandclient.h"
-
-#include <KWaylandServer/xdgshell_interface.h>
 
 #include <QQueue>
 #include <QTimer>

@@ -40,6 +40,12 @@
 #include "screens.h"
 #include "unmanaged.h"
 #include "virtualdesktops.h"
+#include "wayland/display.h"
+#include "wayland/inputmethod_v1_interface.h"
+#include "wayland/seat_interface.h"
+#include "wayland/shmclientbuffer.h"
+#include "wayland/surface_interface.h"
+#include "wayland/tablet_v2_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "xwl/xwayland_interface.h"
@@ -47,12 +53,6 @@
 #include <KDecoration2/Decoration>
 #include <KGlobalAccel>
 #include <KLocalizedString>
-#include <KWaylandServer/display.h>
-#include <KWaylandServer/inputmethod_v1_interface.h>
-#include <KWaylandServer/seat_interface.h>
-#include <KWaylandServer/shmclientbuffer.h>
-#include <KWaylandServer/surface_interface.h>
-#include <KWaylandServer/tablet_v2_interface.h>
 #include <decorations/decoratedclient.h>
 
 // screenlocker

@@ -18,12 +18,12 @@
 #include "KWayland/Client/surface.h"
 #include "KWayland/Client/xdgshell.h"
 // server
-#include "../../src/server/compositor_interface.h"
-#include "../../src/server/display.h"
-#include "../../src/server/output_interface.h"
-#include "../../src/server/seat_interface.h"
-#include "../../src/server/surface_interface.h"
-#include "../../src/server/xdgshell_interface.h"
+#include "wayland/compositor_interface.h"
+#include "wayland/display.h"
+#include "wayland/output_interface.h"
+#include "wayland/seat_interface.h"
+#include "wayland/surface_interface.h"
+#include "wayland/xdgshell_interface.h"
 
 using namespace KWayland::Client;
 using namespace KWaylandServer;

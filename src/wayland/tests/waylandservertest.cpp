@@ -3,11 +3,11 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#include "../src/server/compositor_interface.h"
-#include "../src/server/display.h"
-#include "../src/server/output_interface.h"
-#include "../src/server/seat_interface.h"
-#include "../src/server/xdgshell_interface.h"
+#include "../compositor_interface.h"
+#include "../display.h"
+#include "../output_interface.h"
+#include "../seat_interface.h"
+#include "../xdgshell_interface.h"
 
 #include <QFile>
 #include <QGuiApplication>

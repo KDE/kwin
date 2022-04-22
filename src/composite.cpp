@@ -36,6 +36,7 @@
 #include "useractions.h"
 #include "utils/common.h"
 #include "utils/xcbutils.h"
+#include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11client.h"
@@ -43,8 +44,6 @@
 
 #include <kwinglplatform.h>
 #include <kwingltexture.h>
-
-#include <KWaylandServer/surface_interface.h>
 
 #include <KGlobalAccel>
 #include <KLocalizedString>

@@ -5,9 +5,9 @@
 */
 #pragma once
 
-#include <QObject>
+#include "kwin_export.h"
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include <QObject>
 
 #include "datacontroldevicemanager_v1_interface.h"
 
@@ -25,7 +25,7 @@ class DataControlOfferV1InterfacePrivate;
  *
  * DataControlOfferV1Interface corresponds to the Wayland interface @c zwlr_data_control_offer_v1.
  */
-class KWAYLANDSERVER_EXPORT DataControlOfferV1Interface : public QObject
+class KWIN_EXPORT DataControlOfferV1Interface : public QObject
 {
     Q_OBJECT
 

@@ -8,11 +8,10 @@
 */
 #include "xkb.h"
 #include "utils/common.h"
+#include "wayland/keyboard_interface.h"
+#include "wayland/seat_interface.h"
 // frameworks
 #include <KConfigGroup>
-// KWayland
-#include <KWaylandServer/keyboard_interface.h>
-#include <KWaylandServer/seat_interface.h>
 // Qt
 #include <QKeyEvent>
 #include <QTemporaryFile>

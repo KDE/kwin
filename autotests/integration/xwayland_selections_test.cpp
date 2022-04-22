@@ -12,11 +12,10 @@
 #include "abstract_client.h"
 #include "output.h"
 #include "platform.h"
+#include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "xwl/databridge.h"
-
-#include <KWaylandServer/seat_interface.h>
 
 #include <QProcess>
 #include <QProcessEnvironment>

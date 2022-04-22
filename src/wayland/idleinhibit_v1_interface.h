@@ -5,9 +5,9 @@
 */
 #pragma once
 
-#include <QObject>
+#include "kwin_export.h"
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include <QObject>
 
 struct wl_resource;
 
@@ -21,7 +21,7 @@ class IdleInhibitManagerV1InterfacePrivate;
  * SurfaceInterface. Whether a SurfaceInterface inhibits idle is exposes through
  * @link{SurfaceInterface::inhibitsIdle}.
  */
-class KWAYLANDSERVER_EXPORT IdleInhibitManagerV1Interface : public QObject
+class KWIN_EXPORT IdleInhibitManagerV1Interface : public QObject
 {
     Q_OBJECT
 

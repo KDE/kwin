@@ -6,7 +6,7 @@
 */
 #pragma once
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include "kwin_export.h"
 
 #include <QMatrix4x4>
 #include <QObject>
@@ -120,7 +120,7 @@ enum class KeyboardKeyState : quint32 {
  * @see TouchInterface
  * @see SurfaceInterface
  */
-class KWAYLANDSERVER_EXPORT SeatInterface : public QObject
+class KWIN_EXPORT SeatInterface : public QObject
 {
     Q_OBJECT
     /**

@@ -19,9 +19,8 @@
 #include "logging.h"
 #include "shadowbuffer.h"
 #include "surfaceitem_wayland.h"
-
-#include <KWaylandServer/linuxdmabufv1clientbuffer.h>
-#include <KWaylandServer/surface_interface.h>
+#include "wayland/linuxdmabufv1clientbuffer.h"
+#include "wayland/surface_interface.h"
 
 #include <drm_fourcc.h>
 #include <errno.h>
@@ -102,12 +101,12 @@ OutputLayerBeginFrameInfo EglGbmLayerSurface::startRendering(const QSize &buffer
     if (m_shadowBuffer) {
         GLFramebuffer::pushFramebuffer(m_shadowBuffer->fbo());
         // the blit after rendering will completely overwrite the back buffer anyways
-        return OutputLayerBeginFrameInfo {
+        return OutputLayerBeginFrameInfo{
             .renderTarget = RenderTarget(m_shadowBuffer->fbo()),
             .repaint = {},
         };
     } else {
-        return OutputLayerBeginFrameInfo {
+        return OutputLayerBeginFrameInfo{
             .renderTarget = RenderTarget(m_gbmSurface->fbo()),
             .repaint = m_gbmSurface->repaintRegion(),
         };

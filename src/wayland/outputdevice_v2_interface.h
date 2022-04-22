@@ -6,7 +6,7 @@
 */
 #pragma once
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include "kwin_export.h"
 
 #include <QObject>
 #include <QPoint>
@@ -31,7 +31,7 @@ class OutputDeviceModeV2InterfacePrivate;
  *
  * @see OutputManagementV2Interface
  */
-class KWAYLANDSERVER_EXPORT OutputDeviceV2Interface : public QObject
+class KWIN_EXPORT OutputDeviceV2Interface : public QObject
 {
     Q_OBJECT
 public:
@@ -147,7 +147,7 @@ private:
  *
  * @see OutputDeviceV2Interface
  */
-class KWAYLANDSERVER_EXPORT OutputDeviceModeV2Interface : public QObject
+class KWIN_EXPORT OutputDeviceModeV2Interface : public QObject
 {
     Q_OBJECT
 public:

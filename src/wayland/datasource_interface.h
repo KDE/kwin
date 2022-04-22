@@ -6,10 +6,9 @@
 */
 #pragma once
 
+#include "kwin_export.h"
+
 #include "abstract_data_source.h"
-
-#include <KWaylandServer/kwaylandserver_export.h>
-
 #include "datadevicemanager_interface.h"
 
 namespace KWaylandServer
@@ -19,7 +18,7 @@ class DataSourceInterfacePrivate;
 /**
  * @brief Represents the Resource for the wl_data_source interface.
  */
-class KWAYLANDSERVER_EXPORT DataSourceInterface : public AbstractDataSource
+class KWIN_EXPORT DataSourceInterface : public AbstractDataSource
 {
     Q_OBJECT
 public:

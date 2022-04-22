@@ -5,11 +5,11 @@
 */
 #pragma once
 
+#include "kwin_export.h"
+
 #include <QObject>
 #include <QPointF>
 #include <QSizeF>
-
-#include <KWaylandServer/kwaylandserver_export.h>
 
 struct wl_resource;
 
@@ -36,7 +36,7 @@ class FakeInputInterfacePrivate;
  *
  * @see FakeInputDevice
  */
-class KWAYLANDSERVER_EXPORT FakeInputInterface : public QObject
+class KWIN_EXPORT FakeInputInterface : public QObject
 {
     Q_OBJECT
 
@@ -60,7 +60,7 @@ private:
  *
  * @see FakeInputInterface
  */
-class KWAYLANDSERVER_EXPORT FakeInputDevice : public QObject
+class KWIN_EXPORT FakeInputDevice : public QObject
 {
     Q_OBJECT
 public:

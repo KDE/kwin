@@ -17,10 +17,10 @@
 #include "KWayland/Client/seat.h"
 #include "KWayland/Client/surface.h"
 // server
-#include "../../src/server/compositor_interface.h"
-#include "../../src/server/datadevicemanager_interface.h"
-#include "../../src/server/display.h"
-#include "../../src/server/seat_interface.h"
+#include "wayland/compositor_interface.h"
+#include "wayland/datadevicemanager_interface.h"
+#include "wayland/display.h"
+#include "wayland/seat_interface.h"
 
 using namespace KWayland::Client;
 using namespace KWaylandServer;

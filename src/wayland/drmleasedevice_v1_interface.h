@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include "kwin_export.h"
 
 #include <QObject>
 #include <QPointer>
@@ -27,7 +27,7 @@ class DrmLeaseConnectorV1InterfacePrivate;
  * The DrmLeaseV1DeviceInterface allows the wayland compositor to offer unused
  * drm connectors for lease by clients. The main use for this is VR headsets
  */
-class KWAYLANDSERVER_EXPORT DrmLeaseDeviceV1Interface : public QObject
+class KWIN_EXPORT DrmLeaseDeviceV1Interface : public QObject
 {
     Q_OBJECT
 public:
@@ -65,7 +65,7 @@ private:
  * will allow clients to requests a lease for the connector, deleting it will result in the
  * offer and possibly an active lease being revoked
  */
-class KWAYLANDSERVER_EXPORT DrmLeaseConnectorV1Interface : public QObject
+class KWIN_EXPORT DrmLeaseConnectorV1Interface : public QObject
 {
     Q_OBJECT
 public:
@@ -82,7 +82,7 @@ private:
 /**
  * Represents a lease request or active lease
  */
-class KWAYLANDSERVER_EXPORT DrmLeaseV1Interface : public QObject
+class KWIN_EXPORT DrmLeaseV1Interface : public QObject
 {
     Q_OBJECT
 public:

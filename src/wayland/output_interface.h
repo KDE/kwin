@@ -6,7 +6,7 @@
 */
 #pragma once
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include "kwin_export.h"
 
 #include <QObject>
 #include <QPoint>
@@ -25,7 +25,7 @@ class OutputInterfacePrivate;
  * The OutputInterface class represents a screen. This class corresponds to the Wayland
  * interface @c wl_output.
  */
-class KWAYLANDSERVER_EXPORT OutputInterface : public QObject
+class KWIN_EXPORT OutputInterface : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QSize physicalSize READ physicalSize WRITE setPhysicalSize NOTIFY physicalSizeChanged)

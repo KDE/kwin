@@ -15,7 +15,10 @@
 #include <QVector2D>
 #include <QVector>
 
-#include <KWaylandServer/contrast_interface.h>
+namespace KWaylandServer
+{
+class ContrastManagerInterface;
+}
 
 namespace KWin
 {

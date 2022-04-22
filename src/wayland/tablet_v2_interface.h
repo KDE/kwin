@@ -5,7 +5,7 @@
 */
 #pragma once
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include "kwin_export.h"
 
 #include <QObject>
 #include <QVector>
@@ -40,7 +40,7 @@ class TabletPadGroupV2InterfacePrivate;
  * the class that will have all of the information we need.
  */
 
-class KWAYLANDSERVER_EXPORT TabletManagerV2Interface : public QObject
+class KWIN_EXPORT TabletManagerV2Interface : public QObject
 {
     Q_OBJECT
 public:
@@ -53,7 +53,7 @@ private:
     QScopedPointer<TabletManagerV2InterfacePrivate> d;
 };
 
-class KWAYLANDSERVER_EXPORT TabletToolV2Interface : public QObject
+class KWIN_EXPORT TabletToolV2Interface : public QObject
 {
     Q_OBJECT
 public:
@@ -123,7 +123,7 @@ private:
     QScopedPointer<TabletToolV2InterfacePrivate> d;
 };
 
-class KWAYLANDSERVER_EXPORT TabletCursorV2 : public QObject
+class KWIN_EXPORT TabletCursorV2 : public QObject
 {
     Q_OBJECT
 public:
@@ -141,7 +141,7 @@ private:
     friend class TabletToolV2InterfacePrivate;
 };
 
-class KWAYLANDSERVER_EXPORT TabletPadV2Interface : public QObject
+class KWIN_EXPORT TabletPadV2Interface : public QObject
 {
     Q_OBJECT
 public:
@@ -171,7 +171,7 @@ private:
     QScopedPointer<TabletPadV2InterfacePrivate> d;
 };
 
-class KWAYLANDSERVER_EXPORT TabletPadRingV2Interface : public QObject
+class KWIN_EXPORT TabletPadRingV2Interface : public QObject
 {
     Q_OBJECT
 public:
@@ -195,7 +195,7 @@ private:
     QScopedPointer<TabletPadRingV2InterfacePrivate> d;
 };
 
-class KWAYLANDSERVER_EXPORT TabletPadStripV2Interface : public QObject
+class KWIN_EXPORT TabletPadStripV2Interface : public QObject
 {
     Q_OBJECT
 public:
@@ -218,7 +218,7 @@ private:
     QScopedPointer<TabletPadStripV2InterfacePrivate> d;
 };
 
-class KWAYLANDSERVER_EXPORT TabletPadGroupV2Interface : public QObject
+class KWIN_EXPORT TabletPadGroupV2Interface : public QObject
 {
     Q_OBJECT
 public:
@@ -234,7 +234,7 @@ private:
     QScopedPointer<TabletPadGroupV2InterfacePrivate> d;
 };
 
-class KWAYLANDSERVER_EXPORT TabletV2Interface : public QObject
+class KWIN_EXPORT TabletV2Interface : public QObject
 {
     Q_OBJECT
 public:
@@ -256,7 +256,7 @@ private:
     QScopedPointer<TabletV2InterfacePrivate> d;
 };
 
-class KWAYLANDSERVER_EXPORT TabletSeatV2Interface : public QObject
+class KWIN_EXPORT TabletSeatV2Interface : public QObject
 {
     Q_OBJECT
 public:

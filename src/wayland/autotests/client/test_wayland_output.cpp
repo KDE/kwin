@@ -6,14 +6,16 @@
 // Qt
 #include <QtTest>
 // KWin
-#include "../../src/server/display.h"
-#include "../../src/server/dpms_interface.h"
-#include "../../src/server/output_interface.h"
+#include "wayland/display.h"
+#include "wayland/dpms_interface.h"
+#include "wayland/output_interface.h"
+
 #include "KWayland/Client/connection_thread.h"
 #include "KWayland/Client/dpms.h"
 #include "KWayland/Client/event_queue.h"
 #include "KWayland/Client/output.h"
 #include "KWayland/Client/registry.h"
+
 // Wayland
 #include <wayland-client-protocol.h>
 

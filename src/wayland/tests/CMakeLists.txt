@@ -6,7 +6,7 @@ set(testServer_SRCS
     waylandservertest.cpp
     )
 add_executable(testServer ${testServer_SRCS})
-target_link_libraries(testServer Plasma::KWaylandServer Qt::CorePrivate)
+target_link_libraries(testServer kwin Qt::CorePrivate)
 ecm_mark_as_test(testServer)
 
 find_package(Qt${QT_MAJOR_VERSION}Widgets ${QT_MIN_VERSION} CONFIG QUIET)
@@ -15,7 +15,7 @@ if (TARGET Qt::Widgets)
         renderingservertest.cpp
         )
     add_executable(testRenderingServer ${testRenderingServer_SRCS})
-    target_link_libraries(testRenderingServer Plasma::KWaylandServer Qt::Concurrent Qt::Widgets)
+    target_link_libraries(testRenderingServer kwin Qt::Concurrent Qt::Widgets)
     ecm_mark_as_test(testRenderingServer)
 endif()
 

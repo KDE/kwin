@@ -14,8 +14,8 @@
 #include "platform.h"
 #include "utils/common.h"
 #include "utils/egl_context_attribute_builder.h"
+#include "wayland/display.h"
 #include "wayland_server.h"
-#include <KWaylandServer/display.h>
 // kwin libs
 #include <kwinglplatform.h>
 #include <kwinglutils.h>

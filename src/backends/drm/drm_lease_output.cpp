@@ -9,12 +9,12 @@
 
 #include "drm_lease_output.h"
 
-#include "KWaylandServer/drmleasedevice_v1_interface.h"
 #include "drm_layer.h"
 #include "drm_object_connector.h"
 #include "drm_object_crtc.h"
 #include "drm_object_plane.h"
 #include "drm_pipeline.h"
+#include "wayland/drmleasedevice_v1_interface.h"
 
 #include "logging.h"
 

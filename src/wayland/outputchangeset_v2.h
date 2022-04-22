@@ -10,7 +10,6 @@
 #include <QObject>
 
 #include "outputdevice_v2_interface.h"
-#include <KWaylandServer/kwaylandserver_export.h>
 
 namespace KWaylandServer
 {
@@ -26,7 +25,7 @@ class OutputChangeSetV2Private;
  *
  * @see OutputConfiguration
  */
-class KWAYLANDSERVER_EXPORT OutputChangeSetV2 : public QObject
+class KWIN_EXPORT OutputChangeSetV2 : public QObject
 {
     Q_OBJECT
 public:

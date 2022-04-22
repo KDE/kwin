@@ -141,12 +141,6 @@ set_package_properties(KF5Kirigami2 PROPERTIES
 
 find_package(KDecoration2 ${PROJECT_VERSION} CONFIG REQUIRED)
 
-find_package(KWaylandServer ${PROJECT_VERSION} CONFIG REQUIRED)
-set_package_properties(KWaylandServer PROPERTIES
-    TYPE REQUIRED
-    PURPOSE "For Wayland integration"
-)
-
 find_package(Breeze 5.9.0 CONFIG)
 set_package_properties(Breeze PROPERTIES
     TYPE OPTIONAL
@@ -194,6 +188,32 @@ add_feature_info("Wayland::EGL" Wayland_Egl_FOUND "Enable building of Wayland ba
 set(HAVE_WAYLAND_EGL FALSE)
 if (Wayland_Egl_FOUND)
     set(HAVE_WAYLAND_EGL TRUE)
+endif()
+
+find_package(Wayland 1.20 REQUIRED COMPONENTS
+    Server
+)
+
+find_package(WaylandProtocols 1.25)
+set_package_properties(WaylandProtocols PROPERTIES
+    TYPE REQUIRED
+    PURPOSE "Collection of Wayland protocols that add functionality not available in the Wayland core protocol"
+    URL "https://gitlab.freedesktop.org/wayland/wayland-protocols/"
+)
+
+find_package(PlasmaWaylandProtocols CONFIG)
+set_package_properties(PlasmaWaylandProtocols PROPERTIES
+    TYPE REQUIRED
+    PURPOSE "Collection of Plasma-specific Wayland protocols"
+    URL "https://invent.kde.org/libraries/plasma-wayland-protocols/"
+)
+
+if (QT_MAJOR_VERSION EQUAL "5")
+    find_package(QtWaylandScanner)
+    set_package_properties(QtWaylandScanner PROPERTIES
+        TYPE REQUIRED
+        PURPOSE "Required for building KWin with Wayland support"
+    )
 endif()
 
 find_package(XKB 0.7.0)
@@ -387,6 +407,7 @@ endif()
 
 include_directories(BEFORE
     ${CMAKE_CURRENT_BINARY_DIR}/src/libkwineffects
+    ${CMAKE_CURRENT_BINARY_DIR}/src/wayland
     ${CMAKE_CURRENT_BINARY_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/libkwineffects
     ${CMAKE_CURRENT_SOURCE_DIR}/src/effects
@@ -416,12 +437,7 @@ add_subdirectory(kconf_update)
 add_subdirectory(src)
 
 if (BUILD_TESTING)
-    find_package(WaylandProtocols 1.19 REQUIRED)
-    if (QT_MAJOR_VERSION EQUAL "5")
-        find_package(QtWaylandScanner ${QT_MIN_VERSION} REQUIRED)
-    endif()
     find_package(Wayland REQUIRED COMPONENTS Client)
-    find_package(PlasmaWaylandProtocols CONFIG REQUIRED)
 
     add_subdirectory(autotests)
     add_subdirectory(tests)

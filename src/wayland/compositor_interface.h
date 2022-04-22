@@ -6,11 +6,11 @@
 */
 #pragma once
 
+#include "kwin_export.h"
+
 #include "surface_interface.h"
 
 #include <QObject>
-
-#include <KWaylandServer/kwaylandserver_export.h>
 
 namespace KWaylandServer
 {
@@ -22,7 +22,7 @@ class Display;
  *
  * The CompositorInterface corresponds to the Wayland interface @c wl_compositor.
  */
-class KWAYLANDSERVER_EXPORT CompositorInterface : public QObject
+class KWIN_EXPORT CompositorInterface : public QObject
 {
     Q_OBJECT
 

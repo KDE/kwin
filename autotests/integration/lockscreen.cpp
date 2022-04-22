@@ -15,6 +15,8 @@
 #include "platform.h"
 #include "renderbackend.h"
 #include "screenedge.h"
+#include "wayland/keyboard_interface.h"
+#include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include <kwineffects.h>
@@ -28,8 +30,6 @@
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/touch.h>
-#include <KWaylandServer/keyboard_interface.h>
-#include <KWaylandServer/seat_interface.h>
 
 // screenlocker
 #include <KScreenLocker/KsldApp>

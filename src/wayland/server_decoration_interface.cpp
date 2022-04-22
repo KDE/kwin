@@ -5,8 +5,8 @@
 */
 #include "server_decoration_interface.h"
 #include "display.h"
-#include "logging.h"
 #include "surface_interface.h"
+#include "utils/common.h"
 
 #include <QVector>
 
@@ -149,7 +149,7 @@ void ServerSideDecorationInterfacePrivate::org_kde_kwin_server_decoration_reques
         break;
     default:
         // invalid mode
-        qCWarning(KWAYLAND_SERVER) << "Invalid mode:" << mode;
+        qCWarning(KWIN_CORE) << "Invalid mode:" << mode;
         return;
     }
     preferredMode = m;

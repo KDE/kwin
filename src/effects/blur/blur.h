@@ -16,7 +16,10 @@
 #include <QVector2D>
 #include <QVector>
 
-#include <KWaylandServer/blur_interface.h>
+namespace KWaylandServer
+{
+class BlurManagerInterface;
+}
 
 namespace KWin
 {

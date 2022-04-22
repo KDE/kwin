@@ -11,11 +11,10 @@
 #include "transfer.h"
 
 #include "atoms.h"
+#include "wayland/datadevice_interface.h"
+#include "wayland/datasource_interface.h"
+#include "wayland/seat_interface.h"
 #include "wayland_server.h"
-
-#include <KWaylandServer/datadevice_interface.h>
-#include <KWaylandServer/datasource_interface.h>
-#include <KWaylandServer/seat_interface.h>
 
 #include <unistd.h>
 

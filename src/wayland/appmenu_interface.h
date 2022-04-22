@@ -5,7 +5,8 @@
 */
 #pragma once
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include "kwin_export.h"
+
 #include <QObject>
 
 struct wl_resource;
@@ -25,7 +26,7 @@ class AppMenuInterfacePrivate;
  * This global can be used for clients to bind AppmenuInterface instances
  * and notifies when a new one is created
  */
-class KWAYLANDSERVER_EXPORT AppMenuManagerInterface : public QObject
+class KWIN_EXPORT AppMenuManagerInterface : public QObject
 {
     Q_OBJECT
 
@@ -53,7 +54,7 @@ private:
  * This interface is attached to a wl_surface and provides access to where
  * the AppMenu DBus interface is registered.
  */
-class KWAYLANDSERVER_EXPORT AppMenuInterface : public QObject
+class KWIN_EXPORT AppMenuInterface : public QObject
 {
     Q_OBJECT
 public:

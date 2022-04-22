@@ -12,10 +12,10 @@
 #include <wayland-client.h>
 
 // WaylandServer
-#include "../../src/server/compositor_interface.h"
-#include "../../src/server/display.h"
-#include "../../src/server/screencast_v1_interface.h"
-#include "../../src/server/seat_interface.h"
+#include "wayland/compositor_interface.h"
+#include "wayland/display.h"
+#include "wayland/screencast_v1_interface.h"
+#include "wayland/seat_interface.h"
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>

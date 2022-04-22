@@ -8,10 +8,10 @@
 #include "abstract_client.h"
 #include "deleted.h"
 #include "internal_client.h"
+#include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
-#include <KWaylandServer/seat_interface.h>
 #include <QMouseEvent>
 
 namespace KWin

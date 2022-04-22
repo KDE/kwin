@@ -5,9 +5,9 @@
 */
 #pragma once
 
-#include <QObject>
+#include "kwin_export.h"
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include <QObject>
 
 class QSize;
 
@@ -23,7 +23,7 @@ class PlasmaWindowManagementInterfacePrivate;
 class PlasmaWindowInterfacePrivate;
 class SurfaceInterface;
 
-class KWAYLANDSERVER_EXPORT PlasmaWindowActivationInterface
+class KWIN_EXPORT PlasmaWindowActivationInterface
 {
 public:
     ~PlasmaWindowActivationInterface();
@@ -37,7 +37,7 @@ private:
     QScopedPointer<PlasmaWindowActivationInterfacePrivate> d;
 };
 
-class KWAYLANDSERVER_EXPORT PlasmaWindowActivationFeedbackInterface : public QObject
+class KWIN_EXPORT PlasmaWindowActivationFeedbackInterface : public QObject
 {
     Q_OBJECT
 
@@ -57,7 +57,7 @@ private:
     QScopedPointer<PlasmaWindowActivationFeedbackInterfacePrivate> d;
 };
 
-class KWAYLANDSERVER_EXPORT PlasmaWindowManagementInterface : public QObject
+class KWIN_EXPORT PlasmaWindowManagementInterface : public QObject
 {
     Q_OBJECT
 
@@ -102,7 +102,7 @@ private:
 /**
  * @todo Add documentation
  */
-class KWAYLANDSERVER_EXPORT PlasmaWindowInterface : public QObject
+class KWIN_EXPORT PlasmaWindowInterface : public QObject
 {
     Q_OBJECT
 public:

@@ -9,13 +9,12 @@
 #include "waylandclient.h"
 #include "platform.h"
 #include "screens.h"
+#include "wayland/clientbuffer.h"
+#include "wayland/clientconnection.h"
+#include "wayland/display.h"
+#include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
-
-#include <KWaylandServer/clientbuffer.h>
-#include <KWaylandServer/clientconnection.h>
-#include <KWaylandServer/display.h>
-#include <KWaylandServer/surface_interface.h>
 
 #include <QFileInfo>
 

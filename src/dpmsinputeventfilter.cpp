@@ -10,12 +10,11 @@
 #include "main.h"
 #include "output.h"
 #include "platform.h"
+#include "wayland/seat_interface.h"
 #include "wayland_server.h"
 
 #include <QGuiApplication>
 #include <QKeyEvent>
-
-#include <KWaylandServer/seat_interface.h>
 
 namespace KWin
 {

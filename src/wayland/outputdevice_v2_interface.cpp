@@ -8,8 +8,8 @@
 
 #include "display.h"
 #include "display_p.h"
-#include "logging.h"
 #include "utils.h"
+#include "utils/common.h"
 
 #include <QDebug>
 #include <QPointer>
@@ -485,7 +485,7 @@ OutputDeviceV2Interface::Transform OutputDeviceV2Interface::transform() const
 void OutputDeviceV2Interface::setModes(const QList<OutputDeviceModeV2Interface *> &modes)
 {
     if (modes.isEmpty()) {
-        qCWarning(KWAYLAND_SERVER) << "Tried to set no modes for output";
+        qCWarning(KWIN_CORE) << "Tried to set no modes for output";
         return;
     }
 

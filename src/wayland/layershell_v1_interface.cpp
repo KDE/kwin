@@ -6,9 +6,9 @@
 
 #include "layershell_v1_interface.h"
 #include "display.h"
-#include "logging.h"
 #include "surface_interface.h"
 #include "surfacerole_p.h"
+#include "utils/common.h"
 #include "xdgshell_interface_p.h"
 
 #include <QPointer>
@@ -445,7 +445,7 @@ QString LayerSurfaceV1Interface::scope() const
 quint32 LayerSurfaceV1Interface::sendConfigure(const QSize &size)
 {
     if (d->isClosed) {
-        qCWarning(KWAYLAND_SERVER) << "Cannot configure a closed layer shell surface";
+        qCWarning(KWIN_CORE) << "Cannot configure a closed layer shell surface";
         return 0;
     }
 

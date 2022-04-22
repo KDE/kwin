@@ -5,9 +5,9 @@
 */
 #pragma once
 
-#include <QObject>
+#include "kwin_export.h"
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include <QObject>
 
 struct wl_resource;
 
@@ -22,7 +22,7 @@ class ServerSideDecorationInterfacePrivate;
 /**
  * @brief Manager to create ServerSideDecorationInterface.
  */
-class KWAYLANDSERVER_EXPORT ServerSideDecorationManagerInterface : public QObject
+class KWIN_EXPORT ServerSideDecorationManagerInterface : public QObject
 {
     Q_OBJECT
 
@@ -75,7 +75,7 @@ private:
  *
  * Created by ServerSideDecorationManagerInterface and emitted with decorationCreated signal.
  */
-class KWAYLANDSERVER_EXPORT ServerSideDecorationInterface : public QObject
+class KWIN_EXPORT ServerSideDecorationInterface : public QObject
 {
     Q_OBJECT
 public:

@@ -11,6 +11,10 @@
 // KConfigSkeleton
 #include "blurconfig.h"
 
+#include "wayland/blur_interface.h"
+#include "wayland/display.h"
+#include "wayland/surface_interface.h"
+
 #include <QGuiApplication>
 #include <QMatrix4x4>
 #include <QScreen>
@@ -22,9 +26,6 @@
 
 #include <KConfigGroup>
 #include <KSharedConfig>
-#include <KWaylandServer/display.h>
-#include <KWaylandServer/shadow_interface.h>
-#include <KWaylandServer/surface_interface.h>
 
 #include <KDecoration2/Decoration>
 

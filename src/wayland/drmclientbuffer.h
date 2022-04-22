@@ -16,7 +16,7 @@ class DrmClientBufferPrivate;
 /**
  * The DrmClientBufferIntegration class provides support for wl_drm client buffers.
  */
-class KWAYLANDSERVER_EXPORT DrmClientBufferIntegration : public ClientBufferIntegration
+class KWIN_EXPORT DrmClientBufferIntegration : public ClientBufferIntegration
 {
     Q_OBJECT
 
@@ -33,7 +33,7 @@ public:
  * linux-dmabuf-v1 protocol. Note that Vulkan WSI in Mesa still prefers wl_drm, but
  * that's about to change, https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/4942/
  */
-class KWAYLANDSERVER_EXPORT DrmClientBuffer : public ClientBuffer
+class KWIN_EXPORT DrmClientBuffer : public ClientBuffer
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(DrmClientBuffer)

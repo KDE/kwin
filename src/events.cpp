@@ -31,6 +31,8 @@
 #include "unmanaged.h"
 #include "useractions.h"
 #include "utils/xcbutils.h"
+#include "wayland/surface_interface.h"
+#include "wayland_server.h"
 
 #include <KDecoration2/Decoration>
 
@@ -52,9 +54,6 @@
 
 #include "composite.h"
 #include "x11eventfilter.h"
-
-#include "wayland_server.h"
-#include <KWaylandServer/surface_interface.h>
 
 #ifndef XCB_GE_GENERIC
 #define XCB_GE_GENERIC 35

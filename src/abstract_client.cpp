@@ -34,13 +34,12 @@
 #include "surfaceitem_x11.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
+#include "wayland/output_interface.h"
+#include "wayland/plasmawindowmanagement_interface.h"
+#include "wayland/surface_interface.h"
+#include "wayland_server.h"
 #include "windowitem.h"
 #include "workspace.h"
-
-#include "wayland_server.h"
-#include <KWaylandServer/output_interface.h>
-#include <KWaylandServer/plasmawindowmanagement_interface.h>
-#include <KWaylandServer/surface_interface.h>
 
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>

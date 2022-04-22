@@ -8,9 +8,9 @@
 #include "clientbufferintegration.h"
 #include "display_p.h"
 #include "drmclientbuffer.h"
-#include "logging.h"
 #include "output_interface.h"
 #include "shmclientbuffer.h"
+#include "utils/common.h"
 
 #include <QAbstractEventDispatcher>
 #include <QCoreApplication>
@@ -52,7 +52,7 @@ Display::~Display()
 bool Display::addSocketFileDescriptor(int fileDescriptor, const QString &name)
 {
     if (wl_display_add_socket_fd(d->display, fileDescriptor)) {
-        qCWarning(KWAYLAND_SERVER, "Failed to add %d fd to display", fileDescriptor);
+        qCWarning(KWIN_CORE, "Failed to add %d fd to display", fileDescriptor);
         return false;
     }
     if (!name.isEmpty()) {
@@ -66,13 +66,13 @@ bool Display::addSocketName(const QString &name)
     if (name.isEmpty()) {
         const char *socket = wl_display_add_socket_auto(d->display);
         if (!socket) {
-            qCWarning(KWAYLAND_SERVER, "Failed to find a free display socket");
+            qCWarning(KWIN_CORE, "Failed to find a free display socket");
             return false;
         }
         d->registerSocketName(QString::fromUtf8(socket));
     } else {
         if (wl_display_add_socket(d->display, qPrintable(name))) {
-            qCWarning(KWAYLAND_SERVER, "Failed to add %s socket to display", qPrintable(name));
+            qCWarning(KWIN_CORE, "Failed to add %s socket to display", qPrintable(name));
             return false;
         }
         d->registerSocketName(name);
@@ -93,7 +93,7 @@ bool Display::start()
 
     const int fileDescriptor = wl_event_loop_get_fd(d->loop);
     if (fileDescriptor == -1) {
-        qCWarning(KWAYLAND_SERVER) << "Did not get the file descriptor for the event loop";
+        qCWarning(KWIN_CORE) << "Did not get the file descriptor for the event loop";
         return false;
     }
 
@@ -112,7 +112,7 @@ bool Display::start()
 void Display::dispatchEvents()
 {
     if (wl_event_loop_dispatch(d->loop, 0) != 0) {
-        qCWarning(KWAYLAND_SERVER) << "Error on dispatching Wayland event loop";
+        qCWarning(KWIN_CORE) << "Error on dispatching Wayland event loop";
     }
 }
 
@@ -221,7 +221,7 @@ ClientConnection *Display::createClient(int fd)
 void Display::setEglDisplay(void *display)
 {
     if (d->eglDisplay != EGL_NO_DISPLAY) {
-        qCWarning(KWAYLAND_SERVER) << "EGLDisplay cannot be changed";
+        qCWarning(KWIN_CORE) << "EGLDisplay cannot be changed";
         return;
     }
     d->eglDisplay = (EGLDisplay)display;

@@ -14,10 +14,10 @@
 #include "KWayland/Client/shm_pool.h"
 #include "KWayland/Client/surface.h"
 // server
-#include "../../src/server/compositor_interface.h"
-#include "../../src/server/display.h"
-#include "../../src/server/shadow_interface.h"
-#include "../../src/server/shmclientbuffer.h"
+#include "wayland/compositor_interface.h"
+#include "wayland/display.h"
+#include "wayland/shadow_interface.h"
+#include "wayland/shmclientbuffer.h"
 
 using namespace KWayland::Client;
 using namespace KWaylandServer;

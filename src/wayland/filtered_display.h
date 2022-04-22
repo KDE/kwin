@@ -8,8 +8,6 @@
 
 #include "display.h"
 
-#include <KWaylandServer/kwaylandserver_export.h>
-
 namespace KWaylandServer
 {
 class FilteredDisplayPrivate;
@@ -19,7 +17,7 @@ class FilteredDisplayPrivate;
  *
  * Users of this class must implement the virtual @method allowInterface method.
  */
-class KWAYLANDSERVER_EXPORT FilteredDisplay : public Display
+class KWIN_EXPORT FilteredDisplay : public Display
 {
     Q_OBJECT
 public:

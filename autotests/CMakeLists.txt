@@ -34,13 +34,14 @@ set(testVirtualDesktops_SRCS
 add_executable(testVirtualDesktops ${testVirtualDesktops_SRCS})
 
 target_link_libraries(testVirtualDesktops
+    kwin
+
     Qt::Test
     Qt::Widgets
 
     KF5::ConfigCore
     KF5::GlobalAccel
     KF5::I18n
-    Plasma::KWaylandServer
     KF5::WindowSystem
 )
 add_test(NAME kwin-testVirtualDesktops COMMAND testVirtualDesktops)
@@ -221,12 +222,13 @@ set(testXkb_SRCS
 )
 add_executable(testXkb ${testXkb_SRCS})
 target_link_libraries(testXkb
+    kwin
+
     Qt::Gui
     Qt::Test
     Qt::Widgets
 
     KF5::ConfigCore
-    Plasma::KWaylandServer
     KF5::WindowSystem
 
     kwineffects

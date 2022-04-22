@@ -7,7 +7,7 @@
 */
 #pragma once
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include "kwin_export.h"
 
 #include <QObject>
 
@@ -28,7 +28,7 @@ enum class PointerButtonState : quint32;
  * The PointerInterface class represents one or more input devices such as mice, which control
  * the pointer location. It corresponds to the Wayland interface @c wl_pointer.
  */
-class KWAYLANDSERVER_EXPORT PointerInterface : public QObject
+class KWIN_EXPORT PointerInterface : public QObject
 {
     Q_OBJECT
 
@@ -83,7 +83,7 @@ private:
 /**
  * @brief Class encapsulating a Cursor image.
  */
-class KWAYLANDSERVER_EXPORT Cursor : public QObject
+class KWIN_EXPORT Cursor : public QObject
 {
     Q_OBJECT
 

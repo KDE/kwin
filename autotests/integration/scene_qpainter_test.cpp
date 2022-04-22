@@ -13,6 +13,8 @@
 #include "effectloader.h"
 #include "effects.h"
 #include "platform.h"
+#include "wayland/shmclientbuffer.h"
+#include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11client.h"
@@ -22,8 +24,6 @@
 #include <KWayland/Client/pointer.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/surface.h>
-#include <KWaylandServer/shmclientbuffer.h>
-#include <KWaylandServer/surface_interface.h>
 
 #include <QPainter>
 

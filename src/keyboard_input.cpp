@@ -17,14 +17,12 @@
 #include "keyboard_layout.h"
 #include "keyboard_repeat.h"
 #include "modifier_only_shortcuts.h"
-#include "abstract_client.h"
 #include "utils/common.h"
+#include "wayland/datadevice_interface.h"
+#include "wayland/keyboard_interface.h"
+#include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
-// KWayland
-#include <KWaylandServer/datadevice_interface.h>
-#include <KWaylandServer/keyboard_interface.h>
-#include <KWaylandServer/seat_interface.h>
 // screenlocker
 #if KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>

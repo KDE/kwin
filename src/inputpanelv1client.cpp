@@ -12,13 +12,13 @@
 #include "inputmethod.h"
 #include "output.h"
 #include "platform.h"
+#include "wayland/output_interface.h"
+#include "wayland/seat_interface.h"
+#include "wayland/surface_interface.h"
+#include "wayland/textinput_v2_interface.h"
+#include "wayland/textinput_v3_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include <KWaylandServer/output_interface.h>
-#include <KWaylandServer/seat_interface.h>
-#include <KWaylandServer/surface_interface.h>
-#include <KWaylandServer/textinput_v2_interface.h>
-#include <KWaylandServer/textinput_v3_interface.h>
 
 using namespace KWaylandServer;
 

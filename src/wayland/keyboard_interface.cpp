@@ -5,10 +5,10 @@
 */
 #include "display.h"
 #include "keyboard_interface_p.h"
-#include "logging.h"
 #include "seat_interface.h"
 #include "seat_interface_p.h"
 #include "surface_interface.h"
+#include "utils/common.h"
 // Qt
 #include <QTemporaryFile>
 #include <QVector>
@@ -76,19 +76,19 @@ void KeyboardInterfacePrivate::sendKeymap(Resource *resource)
 {
     QScopedPointer<QTemporaryFile> tmp(new QTemporaryFile());
     if (!tmp->open()) {
-        qCWarning(KWAYLAND_SERVER) << "Failed to create keymap file:" << tmp->errorString();
+        qCWarning(KWIN_CORE) << "Failed to create keymap file:" << tmp->errorString();
         return;
     }
 
     unlink(tmp->fileName().toUtf8().constData());
     if (!tmp->resize(keymap.size())) {
-        qCWarning(KWAYLAND_SERVER) << "Failed to resize keymap file:" << tmp->errorString();
+        qCWarning(KWIN_CORE) << "Failed to resize keymap file:" << tmp->errorString();
         return;
     }
 
     uchar *address = tmp->map(0, keymap.size());
     if (!address) {
-        qCWarning(KWAYLAND_SERVER) << "Failed to map keymap file:" << tmp->errorString();
+        qCWarning(KWIN_CORE) << "Failed to map keymap file:" << tmp->errorString();
         return;
     }
 

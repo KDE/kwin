@@ -5,9 +5,9 @@
 */
 #pragma once
 
-#include <QObject>
+#include "kwin_export.h"
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include <QObject>
 
 namespace KWaylandServer
 {
@@ -21,7 +21,7 @@ class PlasmaVirtualDesktopManagementInterfacePrivate;
  *
  * This class provides a convenient wrapper for the org_kde_plasma_virtual_desktop_management interface.
  */
-class KWAYLANDSERVER_EXPORT PlasmaVirtualDesktopManagementInterface : public QObject
+class KWIN_EXPORT PlasmaVirtualDesktopManagementInterface : public QObject
 {
     Q_OBJECT
 
@@ -91,7 +91,7 @@ private:
     QScopedPointer<PlasmaVirtualDesktopManagementInterfacePrivate> d;
 };
 
-class KWAYLANDSERVER_EXPORT PlasmaVirtualDesktopInterface : public QObject
+class KWIN_EXPORT PlasmaVirtualDesktopInterface : public QObject
 {
     Q_OBJECT
 public:

@@ -5,12 +5,11 @@
 */
 
 #include "xdgshellintegration.h"
+#include "wayland/display.h"
+#include "wayland/xdgshell_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "xdgshellclient.h"
-
-#include <KWaylandServer/display.h>
-#include <KWaylandServer/xdgshell_interface.h>
 
 using namespace KWaylandServer;
 

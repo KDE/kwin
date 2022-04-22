@@ -6,10 +6,10 @@
 // Qt
 #include <QtTest>
 // WaylandServer
-#include "../../src/server/clientconnection.h"
-#include "../../src/server/display.h"
-#include "../../src/server/output_interface.h"
-#include "../../src/server/outputmanagement_v2_interface.h"
+#include "wayland/clientconnection.h"
+#include "wayland/display.h"
+#include "wayland/output_interface.h"
+#include "wayland/outputmanagement_v2_interface.h"
 // Wayland
 #include <wayland-server.h>
 // system

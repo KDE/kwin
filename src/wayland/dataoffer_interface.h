@@ -6,9 +6,9 @@
 */
 #pragma once
 
-#include <QObject>
+#include "kwin_export.h"
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include <QObject>
 
 #include "datadevicemanager_interface.h"
 
@@ -22,7 +22,7 @@ class DataOfferInterfacePrivate;
  * @brief Represents the Resource for the wl_data_offer interface.
  *
  */
-class KWAYLANDSERVER_EXPORT DataOfferInterface : public QObject
+class KWIN_EXPORT DataOfferInterface : public QObject
 {
     Q_OBJECT
 public:

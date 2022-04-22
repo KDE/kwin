@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include "kwin_export.h"
 
 #include <QObject>
 
@@ -23,7 +23,7 @@ class ViewporterInterfacePrivate;
  *
  * ViewporterInterface corresponds to the Wayland interface @c wp_viewporter.
  */
-class KWAYLANDSERVER_EXPORT ViewporterInterface : public QObject
+class KWIN_EXPORT ViewporterInterface : public QObject
 {
     Q_OBJECT
 

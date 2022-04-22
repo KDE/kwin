@@ -15,6 +15,7 @@
 #include "settings.h"
 // KWin core
 #include "abstract_client.h"
+#include "wayland/server_decoration_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -22,9 +23,6 @@
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecorationSettings>
-
-// KWayland
-#include <KWaylandServer/server_decoration_interface.h>
 
 // Frameworks
 #include <KPluginFactory>
