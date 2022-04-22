@@ -42,7 +42,7 @@ Item {
         layer.effect: FastBlur {
             radius: container.organized ? 64 : 0
             Behavior on radius {
-                NumberAnimation { duration: effect.animationDuration; easing.type: Easing.OutCubic }
+                NumberAnimation { duration: container.animationDuration; easing.type: Easing.OutCubic }
             }
         }
     }

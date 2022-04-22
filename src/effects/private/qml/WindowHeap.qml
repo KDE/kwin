@@ -73,7 +73,7 @@ FocusScope {
                 component TweenBehavior : Behavior {
                     enabled: thumb.state !== "partial" && heap.animationEnabled && !thumb.activeDragHandler.active
                     NumberAnimation {
-                        duration: effect.animationDuration
+                        duration: heap.animationDuration
                         easing.type: Easing.OutCubic
                     }
                 }
@@ -121,7 +121,7 @@ FocusScope {
                         to: "normal"
                         enabled: heap.animationEnabled
                         NumberAnimation {
-                            duration: effect.animationDuration
+                            duration: heap.animationDuration
                             properties: "x, y, width, height, opacity"
                             easing.type: Easing.OutCubic
                         }
