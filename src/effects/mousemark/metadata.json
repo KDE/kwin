@@ -29,7 +29,7 @@
         "Description[tr]": "Masaüstünde çizgiler çizmenize izin verir.",
         "Description[uk]": "Можливість малювання ліній на стільниці",
         "Description[x-test]": "xxAllows you to draw lines on the desktopxx",
-        "Description[zh_CN]": "用鼠标指针直接在屏幕上画出线条",
+        "Description[zh_CN]": "用鼠标光标直接在屏幕上画出线条",
         "EnabledByDefault": false,
         "Id": "mousemark",
         "License": "GPL",

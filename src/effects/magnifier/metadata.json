@@ -29,7 +29,7 @@
         "Description[tr]": "Fare imlecinin yakınındaki ekran bölümünü büyüt",
         "Description[uk]": "Збільшення частини екрана поруч з вказівником миші",
         "Description[x-test]": "xxMagnify the section of the screen that is near the mouse cursorxx",
-        "Description[zh_CN]": "放大显示鼠标指针附近的一块方形区域的屏幕内容",
+        "Description[zh_CN]": "放大显示鼠标光标附近的一块方形区域的屏幕内容",
         "EnabledByDefault": false,
         "Id": "magnifier",
         "License": "GPL",

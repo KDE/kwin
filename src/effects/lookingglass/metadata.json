@@ -29,7 +29,7 @@
         "Description[tr]": "Bir balık gözlü lense benzeyen bir ekran büyüteci",
         "Description[uk]": "Екранна лупа, яка робить вигляд стільниці схожим на зображення, отримане з ефектом «риб’ячого ока»",
         "Description[x-test]": "xxA screen magnifier that looks like a fisheye lensxx",
-        "Description[zh_CN]": "放大显示鼠标指针附近的一块圆形的屏幕内容，效果类似鱼眼镜头",
+        "Description[zh_CN]": "放大显示鼠标光标附近的一块圆形的屏幕内容，效果类似鱼眼镜头",
         "EnabledByDefault": false,
         "Id": "lookingglass",
         "License": "GPL",
