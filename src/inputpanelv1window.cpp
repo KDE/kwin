@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "inputpanelv1client.h"
+#include "inputpanelv1window.h"
 #include "deleted.h"
 #include "inputmethod.h"
 #include "output.h"
@@ -25,7 +25,7 @@ using namespace KWaylandServer;
 namespace KWin
 {
 
-InputPanelV1Client::InputPanelV1Client(InputPanelSurfaceV1Interface *panelSurface)
+InputPanelV1Window::InputPanelV1Window(InputPanelSurfaceV1Interface *panelSurface)
     : WaylandClient(panelSurface->surface())
     , m_panelSurface(panelSurface)
 {
@@ -33,18 +33,18 @@ InputPanelV1Client::InputPanelV1Client(InputPanelSurfaceV1Interface *panelSurfac
     setSkipPager(true);
     setSkipTaskbar(true);
 
-    connect(surface(), &SurfaceInterface::aboutToBeDestroyed, this, &InputPanelV1Client::destroyClient);
-    connect(surface(), &SurfaceInterface::sizeChanged, this, &InputPanelV1Client::reposition);
-    connect(surface(), &SurfaceInterface::mapped, this, &InputPanelV1Client::updateDepth);
+    connect(surface(), &SurfaceInterface::aboutToBeDestroyed, this, &InputPanelV1Window::destroyClient);
+    connect(surface(), &SurfaceInterface::sizeChanged, this, &InputPanelV1Window::reposition);
+    connect(surface(), &SurfaceInterface::mapped, this, &InputPanelV1Window::updateDepth);
 
-    connect(panelSurface, &InputPanelSurfaceV1Interface::topLevel, this, &InputPanelV1Client::showTopLevel);
-    connect(panelSurface, &InputPanelSurfaceV1Interface::overlayPanel, this, &InputPanelV1Client::showOverlayPanel);
-    connect(panelSurface, &InputPanelSurfaceV1Interface::destroyed, this, &InputPanelV1Client::destroyClient);
+    connect(panelSurface, &InputPanelSurfaceV1Interface::topLevel, this, &InputPanelV1Window::showTopLevel);
+    connect(panelSurface, &InputPanelSurfaceV1Interface::overlayPanel, this, &InputPanelV1Window::showOverlayPanel);
+    connect(panelSurface, &InputPanelSurfaceV1Interface::destroyed, this, &InputPanelV1Window::destroyClient);
 
     InputMethod::self()->setPanel(this);
 }
 
-void InputPanelV1Client::showOverlayPanel()
+void InputPanelV1Window::showOverlayPanel()
 {
     setOutput(nullptr);
     m_mode = Overlay;
@@ -53,7 +53,7 @@ void InputPanelV1Client::showOverlayPanel()
     setReadyForPainting();
 }
 
-void InputPanelV1Client::showTopLevel(OutputInterface *output, InputPanelSurfaceV1Interface::Position position)
+void InputPanelV1Window::showTopLevel(OutputInterface *output, InputPanelSurfaceV1Interface::Position position)
 {
     Q_UNUSED(position);
     m_mode = Toplevel;
@@ -61,13 +61,13 @@ void InputPanelV1Client::showTopLevel(OutputInterface *output, InputPanelSurface
     showClient();
 }
 
-void InputPanelV1Client::allow()
+void InputPanelV1Window::allow()
 {
     setReadyForPainting();
     reposition();
 }
 
-void KWin::InputPanelV1Client::reposition()
+void KWin::InputPanelV1Window::reposition()
 {
     if (!readyForPainting()) {
         return;
@@ -140,7 +140,7 @@ void KWin::InputPanelV1Client::reposition()
     }
 }
 
-void InputPanelV1Client::destroyClient()
+void InputPanelV1Window::destroyClient()
 {
     markAsZombie();
 
@@ -153,30 +153,30 @@ void InputPanelV1Client::destroyClient()
     delete this;
 }
 
-NET::WindowType InputPanelV1Client::windowType(bool, int) const
+NET::WindowType InputPanelV1Window::windowType(bool, int) const
 {
     return NET::Utility;
 }
 
-QRect InputPanelV1Client::inputGeometry() const
+QRect InputPanelV1Window::inputGeometry() const
 {
     return readyForPainting() ? surface()->input().boundingRect().translated(pos()) : QRect();
 }
 
-void InputPanelV1Client::setOutput(OutputInterface *outputIface)
+void InputPanelV1Window::setOutput(OutputInterface *outputIface)
 {
     if (m_output) {
-        disconnect(m_output, &Output::geometryChanged, this, &InputPanelV1Client::reposition);
+        disconnect(m_output, &Output::geometryChanged, this, &InputPanelV1Window::reposition);
     }
 
     m_output = waylandServer()->findOutput(outputIface);
 
     if (m_output) {
-        connect(m_output, &Output::geometryChanged, this, &InputPanelV1Client::reposition);
+        connect(m_output, &Output::geometryChanged, this, &InputPanelV1Window::reposition);
     }
 }
 
-void InputPanelV1Client::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
+void InputPanelV1Window::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
 {
     Q_UNUSED(mode)
     updateGeometry(rect);

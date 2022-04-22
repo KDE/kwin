@@ -17,11 +17,11 @@ namespace KWin
 {
 class Output;
 
-class InputPanelV1Client : public WaylandClient
+class InputPanelV1Window : public WaylandClient
 {
     Q_OBJECT
 public:
-    InputPanelV1Client(KWaylandServer::InputPanelSurfaceV1Interface *panelSurface);
+    InputPanelV1Window(KWaylandServer::InputPanelSurfaceV1Interface *panelSurface);
 
     enum Mode {
         Toplevel,

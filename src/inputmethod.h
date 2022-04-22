@@ -33,7 +33,7 @@ namespace KWin
 {
 
 class Window;
-class InputPanelV1Client;
+class InputPanelV1Window;
 
 /**
  * This class implements the zwp_input_method_unstable_v1, which is currently used to provide
@@ -63,8 +63,8 @@ public:
     bool isVisible() const;
     bool isAvailable() const;
 
-    InputPanelV1Client *panel() const;
-    void setPanel(InputPanelV1Client *client);
+    InputPanelV1Window *panel() const;
+    void setPanel(InputPanelV1Window *client);
     void setInputMethodCommand(const QString &path);
 
     KWaylandServer::InputMethodGrabV1 *keyboardGrab();
@@ -123,7 +123,7 @@ private:
 
     bool m_enabled = true;
     quint32 m_serial = 0;
-    QPointer<InputPanelV1Client> m_inputClient;
+    QPointer<InputPanelV1Window> m_inputClient;
     QPointer<Window> m_trackedClient;
     QPointer<KWaylandServer::InputMethodGrabV1> m_keyboardGrab;
 

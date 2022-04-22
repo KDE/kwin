@@ -11,7 +11,7 @@
 #include <config-kwin.h>
 
 #include "input.h"
-#include "inputpanelv1client.h"
+#include "inputpanelv1window.h"
 #include "keyboard_input.h"
 #include "screens.h"
 #include "utils/common.h"
@@ -160,12 +160,12 @@ void InputMethod::setActive(bool active)
     }
 }
 
-InputPanelV1Client *InputMethod::panel() const
+InputPanelV1Window *InputMethod::panel() const
 {
     return m_inputClient;
 }
 
-void InputMethod::setPanel(InputPanelV1Client *client)
+void InputMethod::setPanel(InputPanelV1Window *client)
 {
     Q_ASSERT(client->isInputMethod());
     if (m_inputClient) {
@@ -622,10 +622,10 @@ void InputMethod::updateInputPanelState()
 
     QRect overlap = QRect(0, 0, 0, 0);
     if (m_trackedClient) {
-        const bool bottomKeyboard = m_inputClient && m_inputClient->mode() != InputPanelV1Client::Overlay && m_inputClient->isShown();
+        const bool bottomKeyboard = m_inputClient && m_inputClient->mode() != InputPanelV1Window::Overlay && m_inputClient->isShown();
         m_trackedClient->setVirtualKeyboardGeometry(bottomKeyboard ? m_inputClient->inputGeometry() : QRect());
 
-        if (m_inputClient && m_inputClient->mode() != InputPanelV1Client::Overlay) {
+        if (m_inputClient && m_inputClient->mode() != InputPanelV1Window::Overlay) {
             overlap = m_trackedClient->frameGeometry() & m_inputClient->inputGeometry();
             overlap.moveTo(m_trackedClient->mapToLocal(overlap.topLeft()));
         }

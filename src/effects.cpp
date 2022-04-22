@@ -40,7 +40,7 @@
 #include "composite.h"
 #include "decorations/decorationbridge.h"
 #include "inputmethod.h"
-#include "inputpanelv1client.h"
+#include "inputpanelv1window.h"
 #include "kwinglutils.h"
 #include "kwinoffscreenquickview.h"
 #include "platform.h"
@@ -1849,7 +1849,7 @@ bool EffectsHandlerImpl::isInputPanelOverlay() const
 
     auto panel = InputMethod::self()->panel();
     if (panel) {
-        return panel->mode() == InputPanelV1Client::Overlay;
+        return panel->mode() == InputPanelV1Window::Overlay;
     }
     return true;
 }
