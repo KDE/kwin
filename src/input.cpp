@@ -48,7 +48,7 @@
 #include "wayland/tablet_v2_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "xwl/xwayland_interface.h"
+#include "xwayland/xwayland_interface.h"
 
 #include <KDecoration2/Decoration>
 #include <KGlobalAccel>

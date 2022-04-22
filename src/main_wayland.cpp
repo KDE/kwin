@@ -19,8 +19,8 @@
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "xwl/xwayland.h"
-#include "xwl/xwaylandlauncher.h"
+#include "xwayland/xwayland.h"
+#include "xwayland/xwaylandlauncher.h"
 
 // KDE
 #include <KCrash>

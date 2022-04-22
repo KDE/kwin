@@ -159,7 +159,7 @@ target_sources(kwin PRIVATE
     xdgshellintegration.cpp
     xkb.cpp
     xwaylandclient.cpp
-    xwl/xwayland_interface.cpp
+    xwayland/xwayland_interface.cpp
 )
 
 target_link_libraries(kwin
@@ -249,6 +249,7 @@ add_subdirectory(backends)
 add_subdirectory(scenes)
 add_subdirectory(utils)
 add_subdirectory(wayland)
+add_subdirectory(xwayland)
 
 if (KWIN_BUILD_ACTIVITIES)
     target_sources(kwin PRIVATE activities.cpp)
@@ -292,8 +293,6 @@ kcoreaddons_target_static_plugins(kwin_x11 "kwin/effects/plugins")
 
 install(TARGETS kwin ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 install(TARGETS kwin_x11 ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-
-add_subdirectory(xwl)
 
 add_executable(kwin_wayland
     main_wayland.cpp

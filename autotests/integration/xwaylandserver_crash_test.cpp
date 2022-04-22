@@ -16,8 +16,8 @@
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11client.h"
-#include "xwl/xwayland.h"
-#include "xwl/xwaylandlauncher.h"
+#include "xwayland/xwayland.h"
+#include "xwayland/xwaylandlauncher.h"
 
 #include <xcb/xcb_icccm.h>
 

@@ -15,7 +15,7 @@
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "xwl/databridge.h"
+#include "xwayland/databridge.h"
 
 #include <QProcess>
 #include <QProcessEnvironment>
