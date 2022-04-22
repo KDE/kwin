@@ -15,14 +15,14 @@ namespace KWin
 {
 
 /**
- * The XwaylandClient class represents a managed Xwayland client.
+ * The XwaylandWindow class represents a managed Xwayland window.
  */
-class XwaylandClient : public X11Window
+class XwaylandWindow : public X11Window
 {
     Q_OBJECT
 
 public:
-    explicit XwaylandClient();
+    explicit XwaylandWindow();
 
     bool wantsSyncCounter() const override;
 

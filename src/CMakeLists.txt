@@ -158,7 +158,7 @@ target_sources(kwin PRIVATE
     xdgshellintegration.cpp
     xdgshellwindow.cpp
     xkb.cpp
-    xwaylandclient.cpp
+    xwaylandwindow.cpp
     xwayland/xwayland_interface.cpp
 )
 

@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "xwaylandclient.h"
+#include "xwaylandwindow.h"
 #include "wayland/surface_interface.h"
 
 using namespace KWaylandServer;
@@ -15,24 +15,24 @@ using namespace KWaylandServer;
 namespace KWin
 {
 
-XwaylandClient::XwaylandClient()
+XwaylandWindow::XwaylandWindow()
 {
     // The wayland surface is associated with the Xwayland window asynchronously.
-    connect(this, &Window::surfaceChanged, this, &XwaylandClient::associate);
+    connect(this, &Window::surfaceChanged, this, &XwaylandWindow::associate);
 }
 
-void XwaylandClient::associate()
+void XwaylandWindow::associate()
 {
     if (surface()->isMapped()) {
         initialize();
     } else {
         // Queued connection because we want to mark the window ready for painting after
         // the associated surface item has processed the new surface state.
-        connect(surface(), &SurfaceInterface::mapped, this, &XwaylandClient::initialize, Qt::QueuedConnection);
+        connect(surface(), &SurfaceInterface::mapped, this, &XwaylandWindow::initialize, Qt::QueuedConnection);
     }
 }
 
-void XwaylandClient::initialize()
+void XwaylandWindow::initialize()
 {
     if (!readyForPainting()) { // avoid "setReadyForPainting()" function calling overhead
         if (syncRequest().counter == XCB_NONE) { // cannot detect complete redraw, consider done now
@@ -42,7 +42,7 @@ void XwaylandClient::initialize()
     }
 }
 
-bool XwaylandClient::wantsSyncCounter() const
+bool XwaylandWindow::wantsSyncCounter() const
 {
     // When the frame window is resized, the attached buffer will be destroyed by
     // Xwayland, causing unexpected invalid previous and current window pixmaps.

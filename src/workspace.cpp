@@ -52,7 +52,7 @@
 #include "virtualdesktops.h"
 #include "was_user_interaction_x11_filter.h"
 #include "wayland_server.h"
-#include "xwaylandclient.h"
+#include "xwaylandwindow.h"
 // KDE
 #include <KConfig>
 #include <KConfigGroup>
@@ -652,7 +652,7 @@ X11Window *Workspace::createClient(xcb_window_t w, bool is_mapped)
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         c = new X11Window();
     } else {
-        c = new XwaylandClient();
+        c = new XwaylandWindow();
     }
     setupClientConnections(c);
     if (X11Compositor *compositor = X11Compositor::self()) {
