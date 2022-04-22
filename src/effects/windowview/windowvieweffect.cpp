@@ -56,7 +56,7 @@ void WindowViewEffect::activate(const QStringList &windowIds)
     QList<QUuid> internalIds;
     internalIds.reserve(windowIds.count());
     for (const QString &windowId : windowIds) {
-        if (const auto window = effects->findWindow(windowId)) {
+        if (const auto window = effects->findWindow(QUuid(windowId))) {
             internalIds.append(window->internalId());
             continue;
         }
