@@ -86,8 +86,9 @@ OutputLayerBeginFrameInfo VirtualEglGbmLayer::beginFrame()
 
 void VirtualEglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    Q_UNUSED(renderedRegion);
     GLFramebuffer::popFramebuffer();
-    const auto buffer = m_gbmSurface->swapBuffers(damagedRegion.intersected(m_output->geometry()));
+    const auto buffer = m_gbmSurface->swapBuffers(damagedRegion);
     if (buffer) {
         m_currentBuffer = buffer;
         m_currentDamage = damagedRegion;
@@ -170,21 +171,10 @@ bool VirtualEglGbmLayer::scanout(SurfaceItem *surfaceItem)
         return false;
     }
     // damage tracking for screen casting
-    QRegion damage;
-    if (m_scanoutSurface == item->surface()) {
-        QRegion trackedDamage = surfaceItem->damage();
-        surfaceItem->resetDamage();
-        for (const auto &rect : trackedDamage) {
-            auto damageRect = QRect(rect);
-            damageRect.translate(m_output->geometry().topLeft());
-            damage |= damageRect;
-        }
-    } else {
-        damage = m_output->geometry();
-    }
+    m_currentDamage = m_scanoutSurface == item->surface() ? surfaceItem->damage() : infiniteRegion();
+    surfaceItem->resetDamage();
     m_scanoutSurface = item->surface();
     m_currentBuffer = scanoutBuffer;
-    m_currentDamage = damage;
     return true;
 }
 
