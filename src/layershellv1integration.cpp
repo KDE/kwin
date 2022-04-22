@@ -5,7 +5,7 @@
 */
 
 #include "layershellv1integration.h"
-#include "layershellv1client.h"
+#include "layershellv1window.h"
 #include "output.h"
 #include "platform.h"
 #include "screens.h"
@@ -48,7 +48,7 @@ void LayerShellV1Integration::createClient(LayerSurfaceV1Interface *shellSurface
         return;
     }
 
-    Q_EMIT clientCreated(new LayerShellV1Client(shellSurface, output, this));
+    Q_EMIT clientCreated(new LayerShellV1Window(shellSurface, output, this));
 }
 
 void LayerShellV1Integration::recreateClient(LayerSurfaceV1Interface *shellSurface)
@@ -61,7 +61,7 @@ void LayerShellV1Integration::destroyClient(LayerSurfaceV1Interface *shellSurfac
 {
     const QList<Window *> clients = waylandServer()->clients();
     for (Window *client : clients) {
-        LayerShellV1Client *layerShellClient = qobject_cast<LayerShellV1Client *>(client);
+        LayerShellV1Window *layerShellClient = qobject_cast<LayerShellV1Window *>(client);
         if (layerShellClient && layerShellClient->shellSurface() == shellSurface) {
             layerShellClient->destroyClient();
             break;
@@ -87,10 +87,10 @@ static void adjustWorkArea(const LayerSurfaceV1Interface *shellSurface, QRect *w
     }
 }
 
-static void rearrangeLayer(const QList<LayerShellV1Client *> &clients, QRect *workArea,
+static void rearrangeLayer(const QList<LayerShellV1Window *> &clients, QRect *workArea,
                            LayerSurfaceV1Interface::Layer layer, bool exclusive)
 {
-    for (LayerShellV1Client *client : clients) {
+    for (LayerShellV1Window *client : clients) {
         LayerSurfaceV1Interface *shellSurface = client->shellSurface();
 
         if (shellSurface->layer() != layer) {
@@ -166,12 +166,12 @@ static void rearrangeLayer(const QList<LayerShellV1Client *> &clients, QRect *wo
     }
 }
 
-static QList<LayerShellV1Client *> clientsForOutput(Output *output)
+static QList<LayerShellV1Window *> clientsForOutput(Output *output)
 {
-    QList<LayerShellV1Client *> result;
+    QList<LayerShellV1Window *> result;
     const QList<Window *> clients = waylandServer()->clients();
     for (Window *client : clients) {
-        LayerShellV1Client *layerShellClient = qobject_cast<LayerShellV1Client *>(client);
+        LayerShellV1Window *layerShellClient = qobject_cast<LayerShellV1Window *>(client);
         if (!layerShellClient || layerShellClient->desiredOutput() != output) {
             continue;
         }
@@ -184,7 +184,7 @@ static QList<LayerShellV1Client *> clientsForOutput(Output *output)
 
 static void rearrangeOutput(Output *output)
 {
-    const QList<LayerShellV1Client *> clients = clientsForOutput(output);
+    const QList<LayerShellV1Window *> clients = clientsForOutput(output);
     if (!clients.isEmpty()) {
         QRect workArea = output->geometry();
 

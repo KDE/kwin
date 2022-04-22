@@ -19,12 +19,12 @@ namespace KWin
 class Output;
 class LayerShellV1Integration;
 
-class LayerShellV1Client : public WaylandClient
+class LayerShellV1Window : public WaylandClient
 {
     Q_OBJECT
 
 public:
-    explicit LayerShellV1Client(KWaylandServer::LayerSurfaceV1Interface *shellSurface,
+    explicit LayerShellV1Window(KWaylandServer::LayerSurfaceV1Interface *shellSurface,
                                 Output *output,
                                 LayerShellV1Integration *integration);
 

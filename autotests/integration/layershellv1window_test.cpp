@@ -22,9 +22,9 @@ Q_DECLARE_METATYPE(KWin::Layer)
 namespace KWin
 {
 
-static const QString s_socketName = QStringLiteral("wayland_test_kwin_layershellv1client-0");
+static const QString s_socketName = QStringLiteral("wayland_test_kwin_layershellv1window-0");
 
-class LayerShellV1ClientTest : public QObject
+class LayerShellV1WindowTest : public QObject
 {
     Q_OBJECT
 
@@ -51,7 +51,7 @@ private Q_SLOTS:
     void testUnmap();
 };
 
-void LayerShellV1ClientTest::initTestCase()
+void LayerShellV1WindowTest::initTestCase()
 {
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
@@ -68,7 +68,7 @@ void LayerShellV1ClientTest::initTestCase()
     Test::initWaylandWorkspace();
 }
 
-void LayerShellV1ClientTest::init()
+void LayerShellV1WindowTest::init()
 {
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::LayerShellV1));
 
@@ -76,12 +76,12 @@ void LayerShellV1ClientTest::init()
     Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 
-void LayerShellV1ClientTest::cleanup()
+void LayerShellV1WindowTest::cleanup()
 {
     Test::destroyWaylandConnection();
 }
 
-void LayerShellV1ClientTest::testOutput_data()
+void LayerShellV1WindowTest::testOutput_data()
 {
     QTest::addColumn<int>("screenId");
 
@@ -89,7 +89,7 @@ void LayerShellV1ClientTest::testOutput_data()
     QTest::addRow("second output") << 1;
 }
 
-void LayerShellV1ClientTest::testOutput()
+void LayerShellV1WindowTest::testOutput()
 {
     // Fetch the wl_output object.
     QFETCH(int, screenId);
@@ -123,7 +123,7 @@ void LayerShellV1ClientTest::testOutput()
     QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
-void LayerShellV1ClientTest::testAnchor_data()
+void LayerShellV1WindowTest::testAnchor_data()
 {
     QTest::addColumn<int>("anchor");
     QTest::addColumn<QRect>("expectedGeometry");
@@ -153,7 +153,7 @@ void LayerShellV1ClientTest::testAnchor_data()
                                  << QRect(0, 900, 280, 124);
 }
 
-void LayerShellV1ClientTest::testAnchor()
+void LayerShellV1WindowTest::testAnchor()
 {
     // Create a layer shell surface.
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
@@ -185,7 +185,7 @@ void LayerShellV1ClientTest::testAnchor()
     QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
-void LayerShellV1ClientTest::testMargins_data()
+void LayerShellV1WindowTest::testMargins_data()
 {
     QTest::addColumn<int>("anchor");
     QTest::addColumn<QMargins>("margins");
@@ -224,7 +224,7 @@ void LayerShellV1ClientTest::testMargins_data()
                                  << QRect(100, 500, 280, 124);
 }
 
-void LayerShellV1ClientTest::testMargins()
+void LayerShellV1WindowTest::testMargins()
 {
     // Create a layer shell surface.
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
@@ -257,7 +257,7 @@ void LayerShellV1ClientTest::testMargins()
     QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
-void LayerShellV1ClientTest::testLayer_data()
+void LayerShellV1WindowTest::testLayer_data()
 {
     QTest::addColumn<int>("protocolLayer");
     QTest::addColumn<Layer>("compositorLayer");
@@ -268,7 +268,7 @@ void LayerShellV1ClientTest::testLayer_data()
     QTest::addRow("background") << int(Test::LayerShellV1::layer_background) << DesktopLayer;
 }
 
-void LayerShellV1ClientTest::testLayer()
+void LayerShellV1WindowTest::testLayer()
 {
     // Create a layer shell surface.
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
@@ -299,7 +299,7 @@ void LayerShellV1ClientTest::testLayer()
     QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
-void LayerShellV1ClientTest::testPlacementArea_data()
+void LayerShellV1WindowTest::testPlacementArea_data()
 {
     QTest::addColumn<int>("anchor");
     QTest::addColumn<int>("exclusiveZone");
@@ -311,7 +311,7 @@ void LayerShellV1ClientTest::testPlacementArea_data()
     QTest::addRow("bottom") << int(Test::LayerSurfaceV1::anchor_bottom) << 300 << QRect(0, 0, 1280, 724);
 }
 
-void LayerShellV1ClientTest::testPlacementArea()
+void LayerShellV1WindowTest::testPlacementArea()
 {
     // Create a layer shell surface.
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
@@ -344,7 +344,7 @@ void LayerShellV1ClientTest::testPlacementArea()
     QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
-void LayerShellV1ClientTest::testFill_data()
+void LayerShellV1WindowTest::testFill_data()
 {
     QTest::addColumn<int>("anchor");
     QTest::addColumn<QSize>("desiredSize");
@@ -363,7 +363,7 @@ void LayerShellV1ClientTest::testFill_data()
                          << QRect(0, 0, 1280, 1024);
 }
 
-void LayerShellV1ClientTest::testFill()
+void LayerShellV1WindowTest::testFill()
 {
     // Create a layer shell surface.
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
@@ -395,7 +395,7 @@ void LayerShellV1ClientTest::testFill()
     QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
-void LayerShellV1ClientTest::testStack()
+void LayerShellV1WindowTest::testStack()
 {
     // Create a layer shell surface.
     QScopedPointer<KWayland::Client::Surface> surface1(Test::createSurface());
@@ -446,7 +446,7 @@ void LayerShellV1ClientTest::testStack()
     QVERIFY(Test::waitForWindowDestroyed(client2));
 }
 
-void LayerShellV1ClientTest::testFocus()
+void LayerShellV1WindowTest::testFocus()
 {
     // Create a layer shell surface.
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
@@ -476,7 +476,7 @@ void LayerShellV1ClientTest::testFocus()
     QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
-void LayerShellV1ClientTest::testActivate_data()
+void LayerShellV1WindowTest::testActivate_data()
 {
     QTest::addColumn<int>("layer");
     QTest::addColumn<bool>("active");
@@ -487,7 +487,7 @@ void LayerShellV1ClientTest::testActivate_data()
     QTest::addRow("background") << int(Test::LayerShellV1::layer_background) << false;
 }
 
-void LayerShellV1ClientTest::testActivate()
+void LayerShellV1WindowTest::testActivate()
 {
     // Create a layer shell surface.
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
@@ -524,7 +524,7 @@ void LayerShellV1ClientTest::testActivate()
     QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
-void LayerShellV1ClientTest::testUnmap()
+void LayerShellV1WindowTest::testUnmap()
 {
     // Create a layer shell surface.
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
@@ -568,5 +568,5 @@ void LayerShellV1ClientTest::testUnmap()
 
 } // namespace KWin
 
-WAYLANDTEST_MAIN(KWin::LayerShellV1ClientTest)
-#include "layershellv1client_test.moc"
+WAYLANDTEST_MAIN(KWin::LayerShellV1WindowTest)
+#include "layershellv1window_test.moc"

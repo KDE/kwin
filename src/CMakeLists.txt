@@ -74,8 +74,8 @@ target_sources(kwin PRIVATE
     keyboard_repeat.cpp
     killwindow.cpp
     layers.cpp
-    layershellv1client.cpp
     layershellv1integration.cpp
+    layershellv1window.cpp
     linux_dmabuf.cpp
     main.cpp
     modifier_only_shortcuts.cpp

@@ -4,7 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "layershellv1client.h"
+#include "layershellv1window.h"
 #include "deleted.h"
 #include "layershellv1integration.h"
 #include "output.h"
@@ -35,7 +35,7 @@ static NET::WindowType scopeToType(const QString &scope)
     return scopeToType.value(scope.toLower(), NET::Normal);
 }
 
-LayerShellV1Client::LayerShellV1Client(LayerSurfaceV1Interface *shellSurface,
+LayerShellV1Window::LayerShellV1Window(LayerSurfaceV1Interface *shellSurface,
                                        Output *output,
                                        LayerShellV1Integration *integration)
     : WaylandClient(shellSurface->surface())
@@ -49,95 +49,95 @@ LayerShellV1Client::LayerShellV1Client(LayerSurfaceV1Interface *shellSurface,
     setSkipTaskbar(true);
 
     connect(shellSurface, &LayerSurfaceV1Interface::aboutToBeDestroyed,
-            this, &LayerShellV1Client::destroyClient);
+            this, &LayerShellV1Window::destroyClient);
     connect(shellSurface->surface(), &SurfaceInterface::aboutToBeDestroyed,
-            this, &LayerShellV1Client::destroyClient);
+            this, &LayerShellV1Window::destroyClient);
 
     connect(output, &Output::geometryChanged,
-            this, &LayerShellV1Client::scheduleRearrange);
+            this, &LayerShellV1Window::scheduleRearrange);
     connect(output, &Output::enabledChanged,
-            this, &LayerShellV1Client::handleOutputEnabledChanged);
+            this, &LayerShellV1Window::handleOutputEnabledChanged);
     connect(output, &Output::destroyed,
-            this, &LayerShellV1Client::handleOutputDestroyed);
+            this, &LayerShellV1Window::handleOutputDestroyed);
 
     connect(shellSurface->surface(), &SurfaceInterface::sizeChanged,
-            this, &LayerShellV1Client::handleSizeChanged);
+            this, &LayerShellV1Window::handleSizeChanged);
     connect(shellSurface->surface(), &SurfaceInterface::unmapped,
-            this, &LayerShellV1Client::handleUnmapped);
+            this, &LayerShellV1Window::handleUnmapped);
     connect(shellSurface->surface(), &SurfaceInterface::committed,
-            this, &LayerShellV1Client::handleCommitted);
+            this, &LayerShellV1Window::handleCommitted);
 
     connect(shellSurface, &LayerSurfaceV1Interface::desiredSizeChanged,
-            this, &LayerShellV1Client::scheduleRearrange);
+            this, &LayerShellV1Window::scheduleRearrange);
     connect(shellSurface, &LayerSurfaceV1Interface::layerChanged,
-            this, &LayerShellV1Client::scheduleRearrange);
+            this, &LayerShellV1Window::scheduleRearrange);
     connect(shellSurface, &LayerSurfaceV1Interface::marginsChanged,
-            this, &LayerShellV1Client::scheduleRearrange);
+            this, &LayerShellV1Window::scheduleRearrange);
     connect(shellSurface, &LayerSurfaceV1Interface::anchorChanged,
-            this, &LayerShellV1Client::scheduleRearrange);
+            this, &LayerShellV1Window::scheduleRearrange);
     connect(shellSurface, &LayerSurfaceV1Interface::exclusiveZoneChanged,
-            this, &LayerShellV1Client::scheduleRearrange);
+            this, &LayerShellV1Window::scheduleRearrange);
     connect(shellSurface, &LayerSurfaceV1Interface::acceptsFocusChanged,
-            this, &LayerShellV1Client::handleAcceptsFocusChanged);
+            this, &LayerShellV1Window::handleAcceptsFocusChanged);
 }
 
-LayerSurfaceV1Interface *LayerShellV1Client::shellSurface() const
+LayerSurfaceV1Interface *LayerShellV1Window::shellSurface() const
 {
     return m_shellSurface;
 }
 
-Output *LayerShellV1Client::desiredOutput() const
+Output *LayerShellV1Window::desiredOutput() const
 {
     return m_desiredOutput;
 }
 
-void LayerShellV1Client::scheduleRearrange()
+void LayerShellV1Window::scheduleRearrange()
 {
     m_integration->scheduleRearrange();
 }
 
-NET::WindowType LayerShellV1Client::windowType(bool, int) const
+NET::WindowType LayerShellV1Window::windowType(bool, int) const
 {
     return m_windowType;
 }
 
-bool LayerShellV1Client::isPlaceable() const
+bool LayerShellV1Window::isPlaceable() const
 {
     return false;
 }
 
-bool LayerShellV1Client::isCloseable() const
+bool LayerShellV1Window::isCloseable() const
 {
     return true;
 }
 
-bool LayerShellV1Client::isMovable() const
+bool LayerShellV1Window::isMovable() const
 {
     return false;
 }
 
-bool LayerShellV1Client::isMovableAcrossScreens() const
+bool LayerShellV1Window::isMovableAcrossScreens() const
 {
     return false;
 }
 
-bool LayerShellV1Client::isResizable() const
+bool LayerShellV1Window::isResizable() const
 {
     return false;
 }
 
-bool LayerShellV1Client::takeFocus()
+bool LayerShellV1Window::takeFocus()
 {
     setActive(true);
     return true;
 }
 
-bool LayerShellV1Client::wantsInput() const
+bool LayerShellV1Window::wantsInput() const
 {
     return acceptsFocus() && readyForPainting();
 }
 
-StrutRect LayerShellV1Client::strutRect(StrutArea area) const
+StrutRect LayerShellV1Window::strutRect(StrutArea area) const
 {
     switch (area) {
     case StrutAreaLeft:
@@ -167,12 +167,12 @@ StrutRect LayerShellV1Client::strutRect(StrutArea area) const
     }
 }
 
-bool LayerShellV1Client::hasStrut() const
+bool LayerShellV1Window::hasStrut() const
 {
     return m_shellSurface->exclusiveZone() > 0;
 }
 
-void LayerShellV1Client::destroyClient()
+void LayerShellV1Window::destroyClient()
 {
     markAsZombie();
     cleanTabBox();
@@ -186,12 +186,12 @@ void LayerShellV1Client::destroyClient()
     delete this;
 }
 
-void LayerShellV1Client::closeWindow()
+void LayerShellV1Window::closeWindow()
 {
     m_shellSurface->sendClosed();
 }
 
-Layer LayerShellV1Client::belongsToLayer() const
+Layer LayerShellV1Window::belongsToLayer() const
 {
     if (!isNormalWindow()) {
         return WaylandClient::belongsToLayer();
@@ -210,12 +210,12 @@ Layer LayerShellV1Client::belongsToLayer() const
     }
 }
 
-bool LayerShellV1Client::acceptsFocus() const
+bool LayerShellV1Window::acceptsFocus() const
 {
     return m_shellSurface->acceptsFocus();
 }
 
-void LayerShellV1Client::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
+void LayerShellV1Window::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
 {
     if (areGeometryUpdatesBlocked()) {
         setPendingMoveResizeMode(mode);
@@ -236,18 +236,18 @@ void LayerShellV1Client::moveResizeInternal(const QRect &rect, MoveResizeMode mo
     updateGeometry(updateRect);
 }
 
-void LayerShellV1Client::handleSizeChanged()
+void LayerShellV1Window::handleSizeChanged()
 {
     updateGeometry(QRect(pos(), clientSizeToFrameSize(surface()->size())));
     scheduleRearrange();
 }
 
-void LayerShellV1Client::handleUnmapped()
+void LayerShellV1Window::handleUnmapped()
 {
     m_integration->recreateClient(shellSurface());
 }
 
-void LayerShellV1Client::handleCommitted()
+void LayerShellV1Window::handleCommitted()
 {
     if (surface()->buffer()) {
         updateDepth();
@@ -255,7 +255,7 @@ void LayerShellV1Client::handleCommitted()
     }
 }
 
-void LayerShellV1Client::handleAcceptsFocusChanged()
+void LayerShellV1Window::handleAcceptsFocusChanged()
 {
     switch (m_shellSurface->layer()) {
     case LayerSurfaceV1Interface::TopLayer:
@@ -270,7 +270,7 @@ void LayerShellV1Client::handleAcceptsFocusChanged()
     }
 }
 
-void LayerShellV1Client::handleOutputEnabledChanged()
+void LayerShellV1Window::handleOutputEnabledChanged()
 {
     if (!m_desiredOutput->isEnabled()) {
         closeWindow();
@@ -278,13 +278,13 @@ void LayerShellV1Client::handleOutputEnabledChanged()
     }
 }
 
-void LayerShellV1Client::handleOutputDestroyed()
+void LayerShellV1Window::handleOutputDestroyed()
 {
     closeWindow();
     destroyClient();
 }
 
-void LayerShellV1Client::setVirtualKeyboardGeometry(const QRect &geo)
+void LayerShellV1Window::setVirtualKeyboardGeometry(const QRect &geo)
 {
     if (m_virtualKeyboardGeometry == geo) {
         return;
