@@ -17,7 +17,7 @@
 #include "deleted.h"
 #include "effects.h"
 #include "ftrace.h"
-#include "internal_client.h"
+#include "internalwindow.h"
 #include "openglbackend.h"
 #include "output.h"
 #include "outputlayer.h"
@@ -393,7 +393,7 @@ void Compositor::startupWithWorkspace()
     for (Unmanaged *c : Workspace::self()->unmanagedList()) {
         c->setupCompositing();
     }
-    for (InternalClient *client : workspace()->internalClients()) {
+    for (InternalWindow *client : workspace()->internalClients()) {
         client->setupCompositing();
     }
 
@@ -509,7 +509,7 @@ void Compositor::stop()
         for (Unmanaged *c : Workspace::self()->unmanagedList()) {
             m_scene->removeToplevel(c);
         }
-        for (InternalClient *client : workspace()->internalClients()) {
+        for (InternalWindow *client : workspace()->internalClients()) {
             m_scene->removeToplevel(client);
         }
         for (X11Client *c : Workspace::self()->clientList()) {
@@ -518,7 +518,7 @@ void Compositor::stop()
         for (Unmanaged *c : Workspace::self()->unmanagedList()) {
             c->finishCompositing();
         }
-        for (InternalClient *client : workspace()->internalClients()) {
+        for (InternalWindow *client : workspace()->internalClients()) {
             client->finishCompositing();
         }
         if (auto *con = kwinApp()->x11Connection()) {

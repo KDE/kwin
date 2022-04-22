@@ -11,7 +11,7 @@
 // kwin
 #include "atoms.h"
 #include "composite.h"
-#include "internal_client.h"
+#include "internalwindow.h"
 #include "scene.h"
 #include "wayland/shadow_interface.h"
 #include "wayland/shmclientbuffer.h"
@@ -105,7 +105,7 @@ Shadow *Shadow::createShadowFromWayland(Window *toplevel)
 
 Shadow *Shadow::createShadowFromInternalWindow(Window *toplevel)
 {
-    const InternalClient *client = qobject_cast<InternalClient *>(toplevel);
+    const InternalWindow *client = qobject_cast<InternalWindow *>(toplevel);
     if (!client) {
         return nullptr;
     }
@@ -303,7 +303,7 @@ bool Shadow::updateShadow()
         }
     }
 
-    if (InternalClient *client = qobject_cast<InternalClient *>(m_topLevel)) {
+    if (InternalWindow *client = qobject_cast<InternalWindow *>(m_topLevel)) {
         if (init(client->internalWindow())) {
             return true;
         }

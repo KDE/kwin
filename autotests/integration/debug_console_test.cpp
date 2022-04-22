@@ -9,7 +9,7 @@
 #include "kwin_wayland_test.h"
 
 #include "debug_console.h"
-#include "internal_client.h"
+#include "internalwindow.h"
 #include "output.h"
 #include "platform.h"
 #include "utils/xcbutils.h"
@@ -48,7 +48,7 @@ private Q_SLOTS:
 void DebugConsoleTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
-    qRegisterMetaType<KWin::InternalClient *>();
+    qRegisterMetaType<KWin::InternalWindow *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -494,7 +494,7 @@ void DebugConsoleTest::testClosingDebugConsole()
     console->show();
     QCOMPARE(console->windowHandle()->isVisible(), true);
     QTRY_COMPARE(clientAddedSpy.count(), 1);
-    InternalClient *c = clientAddedSpy.first().first().value<InternalClient *>();
+    InternalWindow *c = clientAddedSpy.first().first().value<InternalWindow *>();
     QVERIFY(c->isInternal());
     QCOMPARE(c->internalWindow(), console->windowHandle());
     QVERIFY(c->isDecorated());

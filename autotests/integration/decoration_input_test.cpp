@@ -9,7 +9,7 @@
 #include "kwin_wayland_test.h"
 
 #include "cursor.h"
-#include "internal_client.h"
+#include "internalwindow.h"
 #include "output.h"
 #include "platform.h"
 #include "pointer_input.h"
@@ -121,7 +121,7 @@ Window *DecorationInputTest::showWindow()
 void DecorationInputTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
-    qRegisterMetaType<KWin::InternalClient *>();
+    qRegisterMetaType<KWin::InternalWindow *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -780,7 +780,7 @@ void DecorationInputTest::testTooltipDoesntEatKeyEvents()
     c->decoratedClient()->requestShowToolTip(QStringLiteral("test"));
     // now we should get an internal window
     QVERIFY(clientAddedSpy.wait());
-    InternalClient *internal = clientAddedSpy.first().first().value<InternalClient *>();
+    InternalWindow *internal = clientAddedSpy.first().first().value<InternalWindow *>();
     QVERIFY(internal->isInternal());
     QVERIFY(internal->internalWindow()->flags().testFlag(Qt::ToolTip));
 

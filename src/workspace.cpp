@@ -27,7 +27,7 @@
 #include "focuschain.h"
 #include "group.h"
 #include "input.h"
-#include "internal_client.h"
+#include "internalwindow.h"
 #include "killwindow.h"
 #include "moving_client_x11_filter.h"
 #include "netinfo.h"
@@ -490,8 +490,8 @@ Workspace::~Workspace()
     }
 
     // We need a shadow copy because clients get removed as we go through them.
-    const QList<InternalClient *> internalClients = m_internalClients;
-    for (InternalClient *client : internalClients) {
+    const QList<InternalWindow *> internalClients = m_internalClients;
+    for (InternalWindow *client : internalClients) {
         client->destroyClient();
     }
 
@@ -1790,7 +1790,7 @@ Window *Workspace::findAbstractClient(std::function<bool(const Window *)> func) 
     if (Window *ret = Window::findInList(m_allClients, func)) {
         return ret;
     }
-    if (InternalClient *ret = Window::findInList(m_internalClients, func)) {
+    if (InternalWindow *ret = Window::findInList(m_internalClients, func)) {
         return ret;
     }
     return nullptr;
@@ -1845,7 +1845,7 @@ Window *Workspace::findToplevel(std::function<bool(const Window *)> func) const
     if (Unmanaged *ret = Window::findInList(m_unmanaged, func)) {
         return ret;
     }
-    if (InternalClient *ret = Window::findInList(m_internalClients, func)) {
+    if (InternalWindow *ret = Window::findInList(m_internalClients, func)) {
         return ret;
     }
     return nullptr;
@@ -1888,7 +1888,7 @@ Window *Workspace::findInternal(QWindow *w) const
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         return findUnmanaged(w->winId());
     }
-    for (InternalClient *client : m_internalClients) {
+    for (InternalWindow *client : m_internalClients) {
         if (client->internalWindow() == w) {
             return client;
         }
@@ -1927,7 +1927,7 @@ void Workspace::updateTabbox()
 #endif
 }
 
-void Workspace::addInternalClient(InternalClient *client)
+void Workspace::addInternalClient(InternalWindow *client)
 {
     m_internalClients.append(client);
     addToStack(client);
@@ -1947,7 +1947,7 @@ void Workspace::addInternalClient(InternalClient *client)
     Q_EMIT internalClientAdded(client);
 }
 
-void Workspace::removeInternalClient(InternalClient *client)
+void Workspace::removeInternalClient(InternalWindow *client)
 {
     m_internalClients.removeOne(client);
 

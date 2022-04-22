@@ -10,7 +10,7 @@
 #include "composite.h"
 #include "input_event.h"
 #include "inputdevice.h"
-#include "internal_client.h"
+#include "internalwindow.h"
 #include "keyboard_input.h"
 #include "main.h"
 #include "scene.h"
@@ -919,13 +919,13 @@ DebugConsoleModel::DebugConsoleModel(QObject *parent)
     connect(workspace(), &Workspace::unmanagedRemoved, this, [this](Unmanaged *u) {
         remove(s_x11UnmanagedId - 1, m_unmanageds, u);
     });
-    for (InternalClient *client : workspace()->internalClients()) {
+    for (InternalWindow *client : workspace()->internalClients()) {
         m_internalClients.append(client);
     }
-    connect(workspace(), &Workspace::internalClientAdded, this, [this](InternalClient *client) {
+    connect(workspace(), &Workspace::internalClientAdded, this, [this](InternalWindow *client) {
         add(s_workspaceInternalId - 1, m_internalClients, client);
     });
-    connect(workspace(), &Workspace::internalClientRemoved, this, [this](InternalClient *client) {
+    connect(workspace(), &Workspace::internalClientRemoved, this, [this](InternalWindow *client) {
         remove(s_workspaceInternalId - 1, m_internalClients, client);
     });
 }
@@ -1217,7 +1217,7 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
         }
         if (Window *c = waylandClient(index)) {
             return propertyData(c, index, role);
-        } else if (InternalClient *c = internalClient(index)) {
+        } else if (InternalWindow *c = internalClient(index)) {
             return propertyData(c, index, role);
         } else if (X11Client *c = x11Client(index)) {
             return propertyData(c, index, role);
@@ -1250,7 +1250,7 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
         case s_waylandClientId:
             return clientData<WaylandClient>(index, role, m_waylandClients, generic);
         case s_workspaceInternalId:
-            return clientData<InternalClient>(index, role, m_internalClients, generic);
+            return clientData<InternalWindow>(index, role, m_internalClients, generic);
         default:
             break;
         }
@@ -1274,7 +1274,7 @@ WaylandClient *DebugConsoleModel::waylandClient(const QModelIndex &index) const
     return clientForIndex(index, m_waylandClients, s_waylandClientId);
 }
 
-InternalClient *DebugConsoleModel::internalClient(const QModelIndex &index) const
+InternalWindow *DebugConsoleModel::internalClient(const QModelIndex &index) const
 {
     return clientForIndex(index, m_internalClients, s_workspaceInternalId);
 }

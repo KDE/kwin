@@ -20,7 +20,7 @@ class QOpenGLFramebufferObject;
 namespace KWin
 {
 
-class InternalClient;
+class InternalWindow;
 
 namespace QPA
 {
@@ -42,7 +42,7 @@ public:
     const QSharedPointer<QOpenGLFramebufferObject> &contentFBO() const;
     QSharedPointer<QOpenGLFramebufferObject> swapFBO();
 
-    InternalClient *client() const;
+    InternalWindow *client() const;
     EGLSurface eglSurface() const;
 
 private:
@@ -51,7 +51,7 @@ private:
     void unmap();
 
     QSurfaceFormat m_format;
-    QPointer<InternalClient> m_handle;
+    QPointer<InternalWindow> m_handle;
     QSharedPointer<QOpenGLFramebufferObject> m_contentFBO;
     EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
     quint32 m_windowId;

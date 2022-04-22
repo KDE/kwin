@@ -18,7 +18,7 @@ namespace KWin
 class Window;
 class DecorationItem;
 class Deleted;
-class InternalClient;
+class InternalWindow;
 class Shadow;
 class ShadowItem;
 class SurfaceItem;
@@ -94,7 +94,7 @@ class KWIN_EXPORT WindowItemInternal : public WindowItem
     Q_OBJECT
 
 public:
-    explicit WindowItemInternal(InternalClient *window, Item *parent = nullptr);
+    explicit WindowItemInternal(InternalWindow *window, Item *parent = nullptr);
 };
 
 } // namespace KWin

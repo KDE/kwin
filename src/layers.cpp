@@ -69,7 +69,7 @@
 #include "effects.h"
 #include "focuschain.h"
 #include "group.h"
-#include "internal_client.h"
+#include "internalwindow.h"
 #include "netinfo.h"
 #include "rules.h"
 #include "screenedge.h"

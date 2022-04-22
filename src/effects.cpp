@@ -22,7 +22,7 @@
 #include "deleted.h"
 #include "group.h"
 #include "input_event.h"
-#include "internal_client.h"
+#include "internalwindow.h"
 #include "osd.h"
 #include "pointer_input.h"
 #include "renderbackend.h"
@@ -175,7 +175,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
         // it's never initially ready but has synthetic 50ms delay
         connect(u, &Window::windowShown, this, &EffectsHandlerImpl::slotUnmanagedShown);
     });
-    connect(ws, &Workspace::internalClientAdded, this, [this](InternalClient *client) {
+    connect(ws, &Workspace::internalClientAdded, this, [this](InternalWindow *client) {
         setupClientConnections(client);
         Q_EMIT windowAdded(client->effectWindow());
     });
@@ -246,7 +246,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     for (Unmanaged *u : ws->unmanagedList()) {
         setupUnmanagedConnections(u);
     }
-    for (InternalClient *client : ws->internalClients()) {
+    for (InternalWindow *client : ws->internalClients()) {
         setupClientConnections(client);
     }
 
@@ -2187,7 +2187,7 @@ EffectWindow *EffectWindowImpl::transientFor()
 
 QWindow *EffectWindowImpl::internalWindow() const
 {
-    auto client = qobject_cast<InternalClient *>(toplevel);
+    auto client = qobject_cast<InternalWindow *>(toplevel);
     if (!client) {
         return nullptr;
     }

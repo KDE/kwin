@@ -53,7 +53,7 @@
 */
 
 #include "scene.h"
-#include "internal_client.h"
+#include "internalwindow.h"
 #include "output.h"
 #include "platform.h"
 #include "renderlayer.h"
@@ -716,7 +716,7 @@ SceneWindow::SceneWindow(Window *client, QObject *parent)
         m_windowItem.reset(new WindowItemWayland(toplevel));
     } else if (qobject_cast<X11Client *>(client) || qobject_cast<Unmanaged *>(client)) {
         m_windowItem.reset(new WindowItemX11(toplevel));
-    } else if (auto internalClient = qobject_cast<InternalClient *>(client)) {
+    } else if (auto internalClient = qobject_cast<InternalWindow *>(client)) {
         m_windowItem.reset(new WindowItemInternal(internalClient));
     } else {
         Q_UNREACHABLE();

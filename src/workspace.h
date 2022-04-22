@@ -46,7 +46,7 @@ class ColorMapper;
 class Compositor;
 class Deleted;
 class Group;
-class InternalClient;
+class InternalWindow;
 class KillWindow;
 class ShortcutDialog;
 class Unmanaged;
@@ -249,7 +249,7 @@ public:
     /**
      * @returns List of all internal clients currently managed by Workspace
      */
-    const QList<InternalClient *> &internalClients() const
+    const QList<InternalWindow *> &internalClients() const
     {
         return m_internalClients;
     }
@@ -416,7 +416,7 @@ public:
      * @see internalClientAdded
      * @internal
      */
-    void addInternalClient(InternalClient *client);
+    void addInternalClient(InternalWindow *client);
 
     /**
      * Removes the internal client from Workspace.
@@ -426,7 +426,7 @@ public:
      * @see internalClientRemoved
      * @internal
      */
-    void removeInternalClient(InternalClient *client);
+    void removeInternalClient(InternalWindow *client);
 
     /**
      * @internal
@@ -550,12 +550,12 @@ Q_SIGNALS:
     /**
      * This signal is emitted whenever an internal client is created.
      */
-    void internalClientAdded(KWin::InternalClient *client);
+    void internalClientAdded(KWin::InternalWindow *client);
 
     /**
      * This signal is emitted whenever an internal client gets removed.
      */
-    void internalClientRemoved(KWin::InternalClient *client);
+    void internalClientRemoved(KWin::InternalWindow *client);
 
 private:
     void init();
@@ -635,7 +635,7 @@ private:
     QList<Window *> m_allClients;
     QList<Unmanaged *> m_unmanaged;
     QList<Deleted *> deleted;
-    QList<InternalClient *> m_internalClients;
+    QList<InternalWindow *> m_internalClients;
 
     QList<Window *> unconstrained_stacking_order; // Topmost last
     QList<Window *> stacking_order; // Topmost last

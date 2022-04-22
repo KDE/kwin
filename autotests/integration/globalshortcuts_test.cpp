@@ -10,7 +10,7 @@
 
 #include "cursor.h"
 #include "input.h"
-#include "internal_client.h"
+#include "internalwindow.h"
 #include "keyboard_input.h"
 #include "platform.h"
 #include "useractions.h"
@@ -56,7 +56,7 @@ private Q_SLOTS:
 void GlobalShortcutsTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
-    qRegisterMetaType<KWin::InternalClient *>();
+    qRegisterMetaType<KWin::InternalWindow *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -424,7 +424,7 @@ void GlobalShortcutsTest::testSetupWindowShortcut()
     QVERIFY(shortcutDialogAddedSpy.isValid());
     workspace()->slotSetupWindowShortcut();
     QTRY_COMPARE(shortcutDialogAddedSpy.count(), 1);
-    auto dialog = shortcutDialogAddedSpy.first().first().value<InternalClient *>();
+    auto dialog = shortcutDialogAddedSpy.first().first().value<InternalWindow *>();
     QVERIFY(dialog);
     QVERIFY(dialog->isInternal());
     auto sequenceEdit = workspace()->shortcutDialog()->findChild<QKeySequenceEdit *>();

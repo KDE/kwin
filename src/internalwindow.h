@@ -14,13 +14,13 @@
 namespace KWin
 {
 
-class KWIN_EXPORT InternalClient : public Window
+class KWIN_EXPORT InternalWindow : public Window
 {
     Q_OBJECT
 
 public:
-    explicit InternalClient(QWindow *window);
-    ~InternalClient() override;
+    explicit InternalWindow(QWindow *window);
+    ~InternalWindow() override;
 
     bool eventFilter(QObject *watched, QEvent *event) override;
 
@@ -91,7 +91,7 @@ private:
     Qt::WindowFlags m_internalWindowFlags = Qt::WindowFlags();
     bool m_userNoBorder = false;
 
-    Q_DISABLE_COPY(InternalClient)
+    Q_DISABLE_COPY(InternalWindow)
 };
 
 }

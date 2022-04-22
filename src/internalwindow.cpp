@@ -7,7 +7,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "internal_client.h"
+#include "internalwindow.h"
 #include "decorations/decorationbridge.h"
 #include "deleted.h"
 #include "platform.h"
@@ -28,17 +28,17 @@ static const QByteArray s_shadowEnabledPropertyName = QByteArrayLiteral("kwin_sh
 namespace KWin
 {
 
-InternalClient::InternalClient(QWindow *window)
+InternalWindow::InternalWindow(QWindow *window)
     : m_internalWindow(window)
     , m_internalWindowFlags(window->flags())
 {
-    connect(m_internalWindow, &QWindow::xChanged, this, &InternalClient::updateInternalWindowGeometry);
-    connect(m_internalWindow, &QWindow::yChanged, this, &InternalClient::updateInternalWindowGeometry);
-    connect(m_internalWindow, &QWindow::widthChanged, this, &InternalClient::updateInternalWindowGeometry);
-    connect(m_internalWindow, &QWindow::heightChanged, this, &InternalClient::updateInternalWindowGeometry);
-    connect(m_internalWindow, &QWindow::windowTitleChanged, this, &InternalClient::setCaption);
-    connect(m_internalWindow, &QWindow::opacityChanged, this, &InternalClient::setOpacity);
-    connect(m_internalWindow, &QWindow::destroyed, this, &InternalClient::destroyClient);
+    connect(m_internalWindow, &QWindow::xChanged, this, &InternalWindow::updateInternalWindowGeometry);
+    connect(m_internalWindow, &QWindow::yChanged, this, &InternalWindow::updateInternalWindowGeometry);
+    connect(m_internalWindow, &QWindow::widthChanged, this, &InternalWindow::updateInternalWindowGeometry);
+    connect(m_internalWindow, &QWindow::heightChanged, this, &InternalWindow::updateInternalWindowGeometry);
+    connect(m_internalWindow, &QWindow::windowTitleChanged, this, &InternalWindow::setCaption);
+    connect(m_internalWindow, &QWindow::opacityChanged, this, &InternalWindow::setOpacity);
+    connect(m_internalWindow, &QWindow::destroyed, this, &InternalWindow::destroyClient);
 
     const QVariant windowType = m_internalWindow->property("kwin_windowType");
     if (!windowType.isNull()) {
@@ -64,16 +64,16 @@ InternalClient::InternalClient(QWindow *window)
     m_internalWindow->installEventFilter(this);
 }
 
-InternalClient::~InternalClient()
+InternalWindow::~InternalWindow()
 {
 }
 
-bool InternalClient::isClient() const
+bool InternalWindow::isClient() const
 {
     return true;
 }
 
-bool InternalClient::hitTest(const QPoint &point) const
+bool InternalWindow::hitTest(const QPoint &point) const
 {
     if (!Window::hitTest(point)) {
         return false;
@@ -89,7 +89,7 @@ bool InternalClient::hitTest(const QPoint &point) const
     return true;
 }
 
-void InternalClient::pointerEnterEvent(const QPoint &globalPos)
+void InternalWindow::pointerEnterEvent(const QPoint &globalPos)
 {
     Window::pointerEnterEvent(globalPos);
 
@@ -97,7 +97,7 @@ void InternalClient::pointerEnterEvent(const QPoint &globalPos)
     QCoreApplication::sendEvent(m_internalWindow, &enterEvent);
 }
 
-void InternalClient::pointerLeaveEvent()
+void InternalWindow::pointerLeaveEvent()
 {
     Window::pointerLeaveEvent();
 
@@ -105,7 +105,7 @@ void InternalClient::pointerLeaveEvent()
     QCoreApplication::sendEvent(m_internalWindow, &event);
 }
 
-bool InternalClient::eventFilter(QObject *watched, QEvent *event)
+bool InternalWindow::eventFilter(QObject *watched, QEvent *event)
 {
     if (watched == m_internalWindow && event->type() == QEvent::DynamicPropertyChange) {
         QDynamicPropertyChangeEvent *pe = static_cast<QDynamicPropertyChangeEvent *>(event);
@@ -123,7 +123,7 @@ bool InternalClient::eventFilter(QObject *watched, QEvent *event)
     return false;
 }
 
-qreal InternalClient::bufferScale() const
+qreal InternalWindow::bufferScale() const
 {
     if (m_internalWindow) {
         return m_internalWindow->devicePixelRatio();
@@ -131,39 +131,39 @@ qreal InternalClient::bufferScale() const
     return 1;
 }
 
-QString InternalClient::captionNormal() const
+QString InternalWindow::captionNormal() const
 {
     return m_captionNormal;
 }
 
-QString InternalClient::captionSuffix() const
+QString InternalWindow::captionSuffix() const
 {
     return m_captionSuffix;
 }
 
-QSize InternalClient::minSize() const
+QSize InternalWindow::minSize() const
 {
     return m_internalWindow->minimumSize();
 }
 
-QSize InternalClient::maxSize() const
+QSize InternalWindow::maxSize() const
 {
     return m_internalWindow->maximumSize();
 }
 
-NET::WindowType InternalClient::windowType(bool direct, int supported_types) const
+NET::WindowType InternalWindow::windowType(bool direct, int supported_types) const
 {
     Q_UNUSED(direct)
     Q_UNUSED(supported_types)
     return m_windowType;
 }
 
-void InternalClient::killWindow()
+void InternalWindow::killWindow()
 {
     // We don't kill our internal windows.
 }
 
-bool InternalClient::isPopupWindow() const
+bool InternalWindow::isPopupWindow() const
 {
     if (Window::isPopupWindow()) {
         return true;
@@ -171,64 +171,64 @@ bool InternalClient::isPopupWindow() const
     return m_internalWindowFlags.testFlag(Qt::Popup);
 }
 
-QByteArray InternalClient::windowRole() const
+QByteArray InternalWindow::windowRole() const
 {
     return QByteArray();
 }
 
-void InternalClient::closeWindow()
+void InternalWindow::closeWindow()
 {
     if (m_internalWindow) {
         m_internalWindow->hide();
     }
 }
 
-bool InternalClient::isCloseable() const
+bool InternalWindow::isCloseable() const
 {
     return true;
 }
 
-bool InternalClient::isMovable() const
+bool InternalWindow::isMovable() const
 {
     return true;
 }
 
-bool InternalClient::isMovableAcrossScreens() const
+bool InternalWindow::isMovableAcrossScreens() const
 {
     return true;
 }
 
-bool InternalClient::isResizable() const
+bool InternalWindow::isResizable() const
 {
     return true;
 }
 
-bool InternalClient::isPlaceable() const
+bool InternalWindow::isPlaceable() const
 {
     return !m_internalWindowFlags.testFlag(Qt::BypassWindowManagerHint) && !m_internalWindowFlags.testFlag(Qt::Popup);
 }
 
-bool InternalClient::noBorder() const
+bool InternalWindow::noBorder() const
 {
     return m_userNoBorder || m_internalWindowFlags.testFlag(Qt::FramelessWindowHint) || m_internalWindowFlags.testFlag(Qt::Popup);
 }
 
-bool InternalClient::userCanSetNoBorder() const
+bool InternalWindow::userCanSetNoBorder() const
 {
     return !m_internalWindowFlags.testFlag(Qt::FramelessWindowHint) || m_internalWindowFlags.testFlag(Qt::Popup);
 }
 
-bool InternalClient::wantsInput() const
+bool InternalWindow::wantsInput() const
 {
     return false;
 }
 
-bool InternalClient::isInternal() const
+bool InternalWindow::isInternal() const
 {
     return true;
 }
 
-bool InternalClient::isLockScreen() const
+bool InternalWindow::isLockScreen() const
 {
     if (m_internalWindow) {
         return m_internalWindow->property("org_kde_ksld_emergency").toBool();
@@ -236,7 +236,7 @@ bool InternalClient::isLockScreen() const
     return false;
 }
 
-bool InternalClient::isOutline() const
+bool InternalWindow::isOutline() const
 {
     if (m_internalWindow) {
         return m_internalWindow->property("__kwin_outline").toBool();
@@ -244,25 +244,25 @@ bool InternalClient::isOutline() const
     return false;
 }
 
-bool InternalClient::isShown() const
+bool InternalWindow::isShown() const
 {
     return readyForPainting();
 }
 
-bool InternalClient::isHiddenInternal() const
+bool InternalWindow::isHiddenInternal() const
 {
     return false;
 }
 
-void InternalClient::hideClient()
+void InternalWindow::hideClient()
 {
 }
 
-void InternalClient::showClient()
+void InternalWindow::showClient()
 {
 }
 
-void InternalClient::resizeWithChecks(const QSize &size)
+void InternalWindow::resizeWithChecks(const QSize &size)
 {
     if (!m_internalWindow) {
         return;
@@ -271,7 +271,7 @@ void InternalClient::resizeWithChecks(const QSize &size)
     resize(size.boundedTo(area.size()));
 }
 
-void InternalClient::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
+void InternalWindow::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
 {
     if (areGeometryUpdatesBlocked()) {
         setPendingMoveResizeMode(mode);
@@ -286,18 +286,18 @@ void InternalClient::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
     }
 }
 
-Window *InternalClient::findModal(bool allow_itself)
+Window *InternalWindow::findModal(bool allow_itself)
 {
     Q_UNUSED(allow_itself)
     return nullptr;
 }
 
-bool InternalClient::takeFocus()
+bool InternalWindow::takeFocus()
 {
     return false;
 }
 
-void InternalClient::setNoBorder(bool set)
+void InternalWindow::setNoBorder(bool set)
 {
     if (!userCanSetNoBorder()) {
         return;
@@ -309,7 +309,7 @@ void InternalClient::setNoBorder(bool set)
     updateDecoration(true);
 }
 
-void InternalClient::createDecoration(const QRect &oldGeometry)
+void InternalWindow::createDecoration(const QRect &oldGeometry)
 {
     setDecoration(QSharedPointer<KDecoration2::Decoration>(Decoration::DecorationBridge::self()->createDecoration(this)));
     moveResize(oldGeometry);
@@ -317,14 +317,14 @@ void InternalClient::createDecoration(const QRect &oldGeometry)
     Q_EMIT geometryShapeChanged(this, oldGeometry);
 }
 
-void InternalClient::destroyDecoration()
+void InternalWindow::destroyDecoration()
 {
     const QSize clientSize = frameSizeToClientSize(moveResizeGeometry().size());
     setDecoration(nullptr);
     resize(clientSize);
 }
 
-void InternalClient::updateDecoration(bool check_workspace_pos, bool force)
+void InternalWindow::updateDecoration(bool check_workspace_pos, bool force)
 {
     if (!force && isDecorated() == !noBorder()) {
         return;
@@ -350,12 +350,12 @@ void InternalClient::updateDecoration(bool check_workspace_pos, bool force)
     }
 }
 
-void InternalClient::invalidateDecoration()
+void InternalWindow::invalidateDecoration()
 {
     updateDecoration(true, true);
 }
 
-void InternalClient::destroyClient()
+void InternalWindow::destroyClient()
 {
     markAsZombie();
     if (isInteractiveMoveResize()) {
@@ -376,17 +376,17 @@ void InternalClient::destroyClient()
     delete this;
 }
 
-bool InternalClient::hasPopupGrab() const
+bool InternalWindow::hasPopupGrab() const
 {
     return !m_internalWindow->flags().testFlag(Qt::WindowTransparentForInput) && m_internalWindow->flags().testFlag(Qt::Popup) && !m_internalWindow->flags().testFlag(Qt::ToolTip);
 }
 
-void InternalClient::popupDone()
+void InternalWindow::popupDone()
 {
     m_internalWindow->hide();
 }
 
-void InternalClient::present(const QSharedPointer<QOpenGLFramebufferObject> fbo)
+void InternalWindow::present(const QSharedPointer<QOpenGLFramebufferObject> fbo)
 {
     Q_ASSERT(m_internalImage.isNull());
 
@@ -401,7 +401,7 @@ void InternalClient::present(const QSharedPointer<QOpenGLFramebufferObject> fbo)
     surfaceItem()->addDamage(surfaceItem()->rect());
 }
 
-void InternalClient::present(const QImage &image, const QRegion &damage)
+void InternalWindow::present(const QImage &image, const QRegion &damage)
 {
     Q_ASSERT(m_internalFBO.isNull());
 
@@ -416,20 +416,20 @@ void InternalClient::present(const QImage &image, const QRegion &damage)
     surfaceItem()->addDamage(damage);
 }
 
-QWindow *InternalClient::internalWindow() const
+QWindow *InternalWindow::internalWindow() const
 {
     return m_internalWindow;
 }
 
-bool InternalClient::acceptsFocus() const
+bool InternalWindow::acceptsFocus() const
 {
     return false;
 }
 
-bool InternalClient::belongsToSameApplication(const Window *other, SameApplicationChecks checks) const
+bool InternalWindow::belongsToSameApplication(const Window *other, SameApplicationChecks checks) const
 {
     Q_UNUSED(checks)
-    const InternalClient *otherInternal = qobject_cast<const InternalClient *>(other);
+    const InternalWindow *otherInternal = qobject_cast<const InternalWindow *>(other);
     if (!otherInternal) {
         return false;
     }
@@ -439,12 +439,12 @@ bool InternalClient::belongsToSameApplication(const Window *other, SameApplicati
     return otherInternal->internalWindow()->isAncestorOf(internalWindow()) || internalWindow()->isAncestorOf(otherInternal->internalWindow());
 }
 
-void InternalClient::doInteractiveResizeSync()
+void InternalWindow::doInteractiveResizeSync()
 {
     requestGeometry(moveResizeGeometry());
 }
 
-void InternalClient::updateCaption()
+void InternalWindow::updateCaption()
 {
     const QString oldSuffix = m_captionSuffix;
     const auto shortcut = shortcutCaptionSuffix();
@@ -461,14 +461,14 @@ void InternalClient::updateCaption()
     }
 }
 
-void InternalClient::requestGeometry(const QRect &rect)
+void InternalWindow::requestGeometry(const QRect &rect)
 {
     if (m_internalWindow) {
         m_internalWindow->setGeometry(frameRectToClientRect(rect));
     }
 }
 
-void InternalClient::commitGeometry(const QRect &rect)
+void InternalWindow::commitGeometry(const QRect &rect)
 {
     // The client geometry and the buffer geometry are the same.
     const QRect oldClientGeometry = m_clientGeometry;
@@ -499,7 +499,7 @@ void InternalClient::commitGeometry(const QRect &rect)
     Q_EMIT geometryShapeChanged(this, oldFrameGeometry);
 }
 
-void InternalClient::setCaption(const QString &caption)
+void InternalWindow::setCaption(const QString &caption)
 {
     if (m_captionNormal == caption) {
         return;
@@ -515,7 +515,7 @@ void InternalClient::setCaption(const QString &caption)
     }
 }
 
-void InternalClient::markAsMapped()
+void InternalWindow::markAsMapped()
 {
     if (!ready_for_painting) {
         setReadyForPainting();
@@ -523,7 +523,7 @@ void InternalClient::markAsMapped()
     }
 }
 
-void InternalClient::syncGeometryToInternalWindow()
+void InternalWindow::syncGeometryToInternalWindow()
 {
     if (m_internalWindow->geometry() == frameRectToClientRect(frameGeometry())) {
         return;
@@ -534,7 +534,7 @@ void InternalClient::syncGeometryToInternalWindow()
     });
 }
 
-void InternalClient::updateInternalWindowGeometry()
+void InternalWindow::updateInternalWindowGeometry()
 {
     if (!isInteractiveMoveResize()) {
         const QRect rect = clientRectToFrameRect(m_internalWindow->geometry());

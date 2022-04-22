@@ -6,7 +6,7 @@
 */
 #include "popup_input_filter.h"
 #include "deleted.h"
-#include "internal_client.h"
+#include "internalwindow.h"
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "window.h"
