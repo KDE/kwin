@@ -16,7 +16,7 @@
 #include "renderbackend.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 #include <kwineffects.h>
 
 #include <KWayland/Client/surface.h>

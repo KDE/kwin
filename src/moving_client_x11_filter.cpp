@@ -8,7 +8,7 @@
 */
 #include "moving_client_x11_filter.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 #include <KKeyServer>
 #include <xcb/xcb.h>
 
@@ -22,7 +22,7 @@ MovingClientX11Filter::MovingClientX11Filter()
 
 bool MovingClientX11Filter::event(xcb_generic_event_t *event)
 {
-    auto client = dynamic_cast<X11Client *>(workspace()->moveResizeClient());
+    auto client = dynamic_cast<X11Window *>(workspace()->moveResizeClient());
     if (!client) {
         return false;
     }

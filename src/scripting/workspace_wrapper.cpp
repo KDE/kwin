@@ -14,7 +14,7 @@
 #include "screens.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -345,13 +345,13 @@ void WorkspaceWrapper::setupClientConnections(Window *client)
     connect(client, qOverload<Window *, bool, bool>(&Window::clientMaximizedStateChanged),
             this, &WorkspaceWrapper::clientMaximizeSet);
 
-    X11Client *x11Client = qobject_cast<X11Client *>(client); // TODO: Drop X11-specific signals.
+    X11Window *x11Client = qobject_cast<X11Window *>(client); // TODO: Drop X11-specific signals.
     if (!x11Client) {
         return;
     }
 
-    connect(x11Client, &X11Client::clientManaging, this, &WorkspaceWrapper::clientManaging);
-    connect(x11Client, &X11Client::clientFullScreenSet, this, &WorkspaceWrapper::clientFullScreenSet);
+    connect(x11Client, &X11Window::clientManaging, this, &WorkspaceWrapper::clientManaging);
+    connect(x11Client, &X11Window::clientFullScreenSet, this, &WorkspaceWrapper::clientFullScreenSet);
 }
 
 void WorkspaceWrapper::showOutline(const QRect &geometry)
@@ -369,7 +369,7 @@ void WorkspaceWrapper::hideOutline()
     outline()->hide();
 }
 
-X11Client *WorkspaceWrapper::getClient(qulonglong windowId)
+X11Window *WorkspaceWrapper::getClient(qulonglong windowId)
 {
     return Workspace::self()->findClient(Predicate::WindowMatch, windowId);
 }

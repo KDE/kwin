@@ -29,7 +29,7 @@
 #include "utils/common.h"
 #include "virtualdesktops.h"
 #include <workspace.h>
-#include <x11client.h>
+#include <x11window.h>
 // DBus generated
 #if KWIN_BUILD_SCREENLOCKER
 #include "screenlocker_interface.h"

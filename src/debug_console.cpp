@@ -29,7 +29,7 @@
 #include "wayland_server.h"
 #include "waylandwindow.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 #include <cerrno>
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
@@ -932,7 +932,7 @@ DebugConsoleModel::DebugConsoleModel(QObject *parent)
 
 void DebugConsoleModel::handleClientAdded(Window *client)
 {
-    X11Client *x11Client = qobject_cast<X11Client *>(client);
+    X11Window *x11Client = qobject_cast<X11Window *>(client);
     if (x11Client) {
         add(s_x11ClientId - 1, m_x11Clients, x11Client);
         return;
@@ -947,7 +947,7 @@ void DebugConsoleModel::handleClientAdded(Window *client)
 
 void DebugConsoleModel::handleClientRemoved(Window *client)
 {
-    X11Client *x11Client = qobject_cast<X11Client *>(client);
+    X11Window *x11Client = qobject_cast<X11Window *>(client);
     if (x11Client) {
         remove(s_x11ClientId - 1, m_x11Clients, x11Client);
         return;
@@ -1219,7 +1219,7 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
             return propertyData(c, index, role);
         } else if (InternalWindow *c = internalClient(index)) {
             return propertyData(c, index, role);
-        } else if (X11Client *c = x11Client(index)) {
+        } else if (X11Window *c = x11Client(index)) {
             return propertyData(c, index, role);
         } else if (Unmanaged *u = unmanaged(index)) {
             return propertyData(u, index, role);
@@ -1234,7 +1234,7 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
         };
         switch (index.parent().internalId()) {
         case s_x11ClientId:
-            return clientData<X11Client>(index, role, m_x11Clients, [](X11Client *c) -> QString {
+            return clientData<X11Window>(index, role, m_x11Clients, [](X11Window *c) -> QString {
                 return QStringLiteral("0x%1: %2").arg(c->window(), 0, 16).arg(c->caption());
             });
         case s_x11UnmanagedId: {
@@ -1279,7 +1279,7 @@ InternalWindow *DebugConsoleModel::internalClient(const QModelIndex &index) cons
     return clientForIndex(index, m_internalClients, s_workspaceInternalId);
 }
 
-X11Client *DebugConsoleModel::x11Client(const QModelIndex &index) const
+X11Window *DebugConsoleModel::x11Client(const QModelIndex &index) const
 {
     return clientForIndex(index, m_x11Clients, s_x11ClientId);
 }

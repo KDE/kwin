@@ -64,7 +64,7 @@
 #include "waylandoutput.h"
 #include "waylandoutputdevicev2.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 #include "xdgactivationv1.h"
 #include "xdgshellclient.h"
 #include "xdgshellintegration.h"
@@ -369,7 +369,7 @@ bool WaylandServer::init(InitializationFlags flags)
             return;
         }
 
-        X11Client *client = ws->findClient([surface](const X11Client *client) {
+        X11Window *client = ws->findClient([surface](const X11Window *client) {
             return client->pendingSurfaceId() == surface->id();
         });
         if (client) {

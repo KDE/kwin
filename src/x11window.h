@@ -66,7 +66,7 @@ private:
     xcb_gcontext_t m_gc;
 };
 
-class KWIN_EXPORT X11Client : public Window
+class KWIN_EXPORT X11Window : public Window
 {
     Q_OBJECT
     /**
@@ -93,8 +93,8 @@ class KWIN_EXPORT X11Client : public Window
      */
     Q_PROPERTY(bool clientSideDecorated READ isClientSideDecorated NOTIFY clientSideDecoratedChanged)
 public:
-    explicit X11Client();
-    ~X11Client() override; ///< Use destroyClient() or releaseWindow()
+    explicit X11Window();
+    ~X11Window() override; ///< Use destroyClient() or releaseWindow()
 
     xcb_window_t wrapperId() const;
     xcb_window_t inputId() const
@@ -246,10 +246,10 @@ public:
     bool hasUserTimeSupport() const;
 
     /// Does 'delete c;'
-    static void deleteClient(X11Client *c);
+    static void deleteClient(X11Window *c);
 
-    static bool belongToSameApplication(const X11Client *c1, const X11Client *c2, SameApplicationChecks checks = SameApplicationChecks());
-    static bool sameAppWindowRoleMatch(const X11Client *c1, const X11Client *c2, bool active_hack);
+    static bool belongToSameApplication(const X11Window *c1, const X11Window *c2, SameApplicationChecks checks = SameApplicationChecks());
+    static bool sameAppWindowRoleMatch(const X11Window *c1, const X11Window *c2, bool active_hack);
 
     void killWindow() override;
     void showContextHelp() override;
@@ -362,8 +362,8 @@ protected:
     // in between objects as compared to simple function
     // calls
 Q_SIGNALS:
-    void clientManaging(KWin::X11Client *);
-    void clientFullScreenSet(KWin::X11Client *, bool, bool);
+    void clientManaging(KWin::X11Window *);
+    void clientFullScreenSet(KWin::X11Window *, bool, bool);
 
     /**
      * Emitted whenever the Client want to show it menu
@@ -385,7 +385,7 @@ Q_SIGNALS:
     /**
      * Emitted whenever the Client's block compositing state changes.
      */
-    void blockingCompositingChanged(KWin::X11Client *client);
+    void blockingCompositingChanged(KWin::X11Window *client);
     void clientSideDecoratedChanged();
 
 private:
@@ -401,7 +401,7 @@ private:
     void fetchIconicName();
     QString readName() const;
     void setCaption(const QString &s, bool force = false);
-    bool hasTransientInternal(const X11Client *c, bool indirect, QList<const X11Client *> &set) const;
+    bool hasTransientInternal(const X11Window *c, bool indirect, QList<const X11Window *> &set) const;
     void setShortcutInternal() override;
 
     void configureRequest(int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool);
@@ -490,7 +490,7 @@ private:
     void setTransient(xcb_window_t new_transient_for_id);
     xcb_window_t m_transientForId;
     xcb_window_t m_originalTransientForId;
-    X11Client *shade_below;
+    X11Window *shade_below;
     Xcb::MotifHints m_motif;
     uint hidden : 1; ///< Forcibly hidden by calling hide()
     uint noborder : 1;
@@ -514,7 +514,7 @@ private:
     NET::Actions allowed_actions;
     bool shade_geometry_change;
     SyncRequest m_syncRequest;
-    static bool check_active_modal; ///< \see X11Client::checkActiveModal()
+    static bool check_active_modal; ///< \see X11Window::checkActiveModal()
     int sm_stacking_order;
     friend struct ResetupRulesProcedure;
 
@@ -544,108 +544,108 @@ private:
     QScopedPointer<X11DecorationRenderer> m_decorationRenderer;
 };
 
-inline xcb_window_t X11Client::wrapperId() const
+inline xcb_window_t X11Window::wrapperId() const
 {
     return m_wrapper;
 }
 
-inline bool X11Client::isClientSideDecorated() const
+inline bool X11Window::isClientSideDecorated() const
 {
     return !m_clientFrameExtents.isNull();
 }
 
-inline bool X11Client::groupTransient() const
+inline bool X11Window::groupTransient() const
 {
     return m_transientForId == kwinApp()->x11RootWindow();
 }
 
 // Needed because verifyTransientFor() may set transient_for_id to root window,
 // if the original value has a problem (window doesn't exist, etc.)
-inline bool X11Client::wasOriginallyGroupTransient() const
+inline bool X11Window::wasOriginallyGroupTransient() const
 {
     return m_originalTransientForId == kwinApp()->x11RootWindow();
 }
 
-inline bool X11Client::isTransient() const
+inline bool X11Window::isTransient() const
 {
     return m_transientForId != XCB_WINDOW_NONE;
 }
 
-inline const Group *X11Client::group() const
+inline const Group *X11Window::group() const
 {
     return in_group;
 }
 
-inline Group *X11Client::group()
+inline Group *X11Window::group()
 {
     return in_group;
 }
 
-inline bool X11Client::isShown() const
+inline bool X11Window::isShown() const
 {
     return !isMinimized() && !hidden;
 }
 
-inline bool X11Client::isHiddenInternal() const
+inline bool X11Window::isHiddenInternal() const
 {
     return hidden;
 }
 
-inline MaximizeMode X11Client::maximizeMode() const
+inline MaximizeMode X11Window::maximizeMode() const
 {
     return max_mode;
 }
 
-inline bool X11Client::isFullScreen() const
+inline bool X11Window::isFullScreen() const
 {
     return m_fullscreenMode != FullScreenNone;
 }
 
-inline bool X11Client::hasNETSupport() const
+inline bool X11Window::hasNETSupport() const
 {
     return info->hasNETSupport();
 }
 
-inline xcb_colormap_t X11Client::colormap() const
+inline xcb_colormap_t X11Window::colormap() const
 {
     return m_colormap;
 }
 
-inline int X11Client::sessionStackingOrder() const
+inline int X11Window::sessionStackingOrder() const
 {
     return sm_stacking_order;
 }
 
-inline bool X11Client::isManaged() const
+inline bool X11Window::isManaged() const
 {
     return m_managed;
 }
 
-inline void X11Client::resizeWithChecks(const QSize &s)
+inline void X11Window::resizeWithChecks(const QSize &s)
 {
     resizeWithChecks(s.width(), s.height(), XCB_GRAVITY_BIT_FORGET);
 }
 
-inline void X11Client::resizeWithChecks(const QSize &s, xcb_gravity_t gravity)
+inline void X11Window::resizeWithChecks(const QSize &s, xcb_gravity_t gravity)
 {
     resizeWithChecks(s.width(), s.height(), gravity);
 }
 
-inline bool X11Client::hasUserTimeSupport() const
+inline bool X11Window::hasUserTimeSupport() const
 {
     return info->userTime() != -1U;
 }
 
-inline xcb_window_t X11Client::moveResizeGrabWindow() const
+inline xcb_window_t X11Window::moveResizeGrabWindow() const
 {
     return m_moveResizeGrabWindow;
 }
 
-inline bool X11Client::hiddenPreview() const
+inline bool X11Window::hiddenPreview() const
 {
     return mapping_state == Kept;
 }
 
 } // namespace
-Q_DECLARE_METATYPE(KWin::X11Client *)
-Q_DECLARE_METATYPE(QList<KWin::X11Client *>)
+Q_DECLARE_METATYPE(KWin::X11Window *)
+Q_DECLARE_METATYPE(QList<KWin::X11Window *>)

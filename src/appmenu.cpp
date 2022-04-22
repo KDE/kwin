@@ -10,7 +10,7 @@
 */
 #include "appmenu.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 #include <appmenu_interface.h>
 
 #include <QDBusObjectPath>

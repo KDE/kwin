@@ -17,7 +17,7 @@
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 
 #include <KDecoration2/Decoration>
 

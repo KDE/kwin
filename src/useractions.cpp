@@ -33,7 +33,7 @@
 #include "scripting/scripting.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
@@ -1863,7 +1863,7 @@ void Window::setShortcutInternal()
     workspace()->clientShortcutUpdated(this);
 }
 
-void X11Client::setShortcutInternal()
+void X11Window::setShortcutInternal()
 {
     updateCaption();
 #if 0

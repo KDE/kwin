@@ -15,7 +15,7 @@
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 
 #include <QSocketNotifier>
 
@@ -162,7 +162,7 @@ void XWaylandInputTest::testPointerEnterLeaveSsd()
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
-    X11Client *client = windowCreatedSpy.last().first().value<X11Client *>();
+    X11Window *client = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(client);
     QVERIFY(client->isDecorated());
     QVERIFY(!client->hasStrut());
@@ -187,7 +187,7 @@ void XWaylandInputTest::testPointerEnterLeaveSsd()
     QCOMPARE(leftSpy.last().first(), client->frameGeometry().center() - client->clientPos());
 
     // destroy window again
-    QSignalSpy windowClosedSpy(client, &X11Client::windowClosed);
+    QSignalSpy windowClosedSpy(client, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
     xcb_unmap_window(c.data(), w);
     xcb_destroy_window(c.data(), w);
@@ -251,7 +251,7 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
-    X11Client *client = windowCreatedSpy.last().first().value<X11Client *>();
+    X11Window *client = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(client);
     QVERIFY(!client->isDecorated());
     QVERIFY(client->isClientSideDecorated());
@@ -277,7 +277,7 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
     QCOMPARE(leftSpy.last().first(), QPoint(59, 104));
 
     // Destroy the window.
-    QSignalSpy windowClosedSpy(client, &X11Client::windowClosed);
+    QSignalSpy windowClosedSpy(client, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
     xcb_unmap_window(c.data(), window);
     xcb_destroy_window(c.data(), window);

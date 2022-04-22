@@ -18,7 +18,7 @@
 #include "screens.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 #endif
 
 #include <QTextStream>
@@ -250,7 +250,7 @@ void Placement::placeSmart(Window *c, const QRect &area, Policy /*next*/)
                     if (client->keepAbove()) {
                         overlap += 16 * (xr - xl) * (yb - yt);
                     } else if (client->keepBelow() && !client->isDock()) { // ignore KeepBelow windows
-                        overlap += 0; // for placement (see X11Client::belongsToLayer() for Dock)
+                        overlap += 0; // for placement (see X11Window::belongsToLayer() for Dock)
                     } else {
                         overlap += (xr - xl) * (yb - yt);
                     }

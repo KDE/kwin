@@ -24,7 +24,7 @@ namespace KWin
 class Window;
 class Output;
 class VirtualDesktop;
-class X11Client;
+class X11Window;
 
 class WorkspaceWrapper : public QObject
 {
@@ -86,15 +86,15 @@ Q_SIGNALS:
     void currentDesktopChanged(int desktop, KWin::Window *client);
     void clientAdded(KWin::Window *client);
     void clientRemoved(KWin::Window *client);
-    void clientManaging(KWin::X11Client *client);
+    void clientManaging(KWin::X11Window *client);
     void clientMinimized(KWin::Window *client);
     void clientUnminimized(KWin::Window *client);
-    void clientRestored(KWin::X11Client *client);
+    void clientRestored(KWin::X11Window *client);
     void clientMaximizeSet(KWin::Window *client, bool h, bool v);
-    void killWindowCalled(KWin::X11Client *client);
+    void killWindowCalled(KWin::X11Window *client);
     void clientActivated(KWin::Window *client);
-    void clientFullScreenSet(KWin::X11Client *client, bool fullScreen, bool user);
-    void clientSetKeepAbove(KWin::X11Client *client, bool keepAbove);
+    void clientFullScreenSet(KWin::X11Window *client, bool fullScreen, bool user);
+    void clientSetKeepAbove(KWin::X11Window *client, bool keepAbove);
     /**
      * Signal emitted whenever the number of desktops changed.
      * To get the current number of desktops use the property desktops.
@@ -287,7 +287,7 @@ public:
      * @param windowId The window Id of the Client
      * @return The found Client or @c null
      */
-    Q_SCRIPTABLE KWin::X11Client *getClient(qulonglong windowId);
+    Q_SCRIPTABLE KWin::X11Window *getClient(qulonglong windowId);
 
 public Q_SLOTS:
     // all the available key bindings

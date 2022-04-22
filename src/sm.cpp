@@ -17,7 +17,7 @@
 
 #include "virtualdesktops.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 #include <QDebug>
 #include <QSessionManager>
 
@@ -88,9 +88,9 @@ void SessionManager::storeSession(const QString &sessionName, SMSavePhase phase)
     int count = 0;
     int active_client = -1;
 
-    const QList<X11Client *> x11Clients = workspace()->clientList();
+    const QList<X11Window *> x11Clients = workspace()->clientList();
     for (auto it = x11Clients.begin(); it != x11Clients.end(); ++it) {
-        X11Client *c = (*it);
+        X11Window *c = (*it);
         if (c->windowType() > NET::Splash) {
             // window types outside this are not tooltips/menus/OSDs
             // typically these will be unmanaged and not in this list anyway, but that is not enforced
@@ -131,7 +131,7 @@ void SessionManager::storeSession(const QString &sessionName, SMSavePhase phase)
     config->sync(); // it previously did some "revert to defaults" stuff for phase1 I think
 }
 
-void SessionManager::storeClient(KConfigGroup &cg, int num, X11Client *c)
+void SessionManager::storeClient(KConfigGroup &cg, int num, X11Window *c)
 {
     c->setSessionActivityOverride(false); // make sure we get the real values
     QString n = QString::number(num);
@@ -173,10 +173,10 @@ void SessionManager::storeSubSession(const QString &name, QSet<QByteArray> sessi
     KConfigGroup cg(KSharedConfig::openConfig(), QLatin1String("SubSession: ") + name);
     int count = 0;
     int active_client = -1;
-    const QList<X11Client *> x11Clients = workspace()->clientList();
+    const QList<X11Window *> x11Clients = workspace()->clientList();
 
     for (auto it = x11Clients.begin(); it != x11Clients.end(); ++it) {
-        X11Client *c = (*it);
+        X11Window *c = (*it);
         if (c->windowType() > NET::Splash) {
             continue;
         }
@@ -262,7 +262,7 @@ void SessionManager::loadSubSessionInfo(const QString &name)
     addSessionInfo(cg);
 }
 
-static bool sessionInfoWindowTypeMatch(X11Client *c, SessionInfo *info)
+static bool sessionInfoWindowTypeMatch(X11Window *c, SessionInfo *info)
 {
     if (info->windowType == -2) {
         // undefined (not really part of NET::WindowType)
@@ -280,7 +280,7 @@ static bool sessionInfoWindowTypeMatch(X11Client *c, SessionInfo *info)
  *
  * May return 0 if there's no session info for the client.
  */
-SessionInfo *SessionManager::takeSessionInfo(X11Client *c)
+SessionInfo *SessionManager::takeSessionInfo(X11Window *c)
 {
     SessionInfo *realInfo = nullptr;
     QByteArray sessionId = c->sessionId();
@@ -375,7 +375,7 @@ void SessionManager::setState(SessionState state)
     // If we're ending a save session due to either completion or cancellation
     if (m_sessionState == SessionState::Saving) {
         RuleBook::self()->setUpdatesDisabled(false);
-        Workspace::self()->forEachClient([](X11Client *client) {
+        Workspace::self()->forEachClient([](X11Window *client) {
             client->setSessionActivityOverride(false);
         });
     }

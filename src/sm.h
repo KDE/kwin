@@ -23,7 +23,7 @@
 namespace KWin
 {
 
-class X11Client;
+class X11Window;
 struct SessionInfo;
 
 class SessionManager : public QObject
@@ -44,7 +44,7 @@ public:
     void loadSubSessionInfo(const QString &name);
     void storeSubSession(const QString &name, QSet<QByteArray> sessionIds);
 
-    SessionInfo *takeSessionInfo(X11Client *);
+    SessionInfo *takeSessionInfo(X11Window *);
 
 Q_SIGNALS:
     void stateChanged();
@@ -64,7 +64,7 @@ private:
     void setState(SessionState state);
 
     void storeSession(const QString &sessionName, SMSavePhase phase);
-    void storeClient(KConfigGroup &cg, int num, X11Client *c);
+    void storeClient(KConfigGroup &cg, int num, X11Window *c);
     void loadSessionInfo(const QString &sessionName);
     void addSessionInfo(KConfigGroup &cg);
 

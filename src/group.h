@@ -18,7 +18,7 @@ namespace KWin
 {
 
 class EffectWindowGroupImpl;
-class X11Client;
+class X11Window;
 
 class Group
 {
@@ -26,13 +26,13 @@ public:
     Group(xcb_window_t leader);
     ~Group();
     xcb_window_t leader() const;
-    const X11Client *leaderClient() const;
-    X11Client *leaderClient();
-    const QList<X11Client *> &members() const;
+    const X11Window *leaderClient() const;
+    X11Window *leaderClient();
+    const QList<X11Window *> &members() const;
     QIcon icon() const;
-    void addMember(X11Client *member);
-    void removeMember(X11Client *member);
-    void gotLeader(X11Client *leader);
+    void addMember(X11Window *member);
+    void removeMember(X11Window *member);
+    void gotLeader(X11Window *leader);
     void lostLeader();
     void updateUserTime(xcb_timestamp_t time);
     xcb_timestamp_t userTime() const;
@@ -42,8 +42,8 @@ public:
 
 private:
     void startupIdChanged();
-    QList<X11Client *> _members;
-    X11Client *leader_client;
+    QList<X11Window *> _members;
+    X11Window *leader_client;
     xcb_window_t leader_wid;
     NETWinInfo *leader_info;
     xcb_timestamp_t user_time;
@@ -56,17 +56,17 @@ inline xcb_window_t Group::leader() const
     return leader_wid;
 }
 
-inline const X11Client *Group::leaderClient() const
+inline const X11Window *Group::leaderClient() const
 {
     return leader_client;
 }
 
-inline X11Client *Group::leaderClient()
+inline X11Window *Group::leaderClient()
 {
     return leader_client;
 }
 
-inline const QList<X11Client *> &Group::members() const
+inline const QList<X11Window *> &Group::members() const
 {
     return _members;
 }

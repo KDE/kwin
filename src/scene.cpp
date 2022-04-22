@@ -64,7 +64,7 @@
 #include "waylandwindow.h"
 #include "windowitem.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 
 #include <QQuickWindow>
 #include <QVector2D>
@@ -75,7 +75,7 @@
 #include "renderloop.h"
 #include "shadow.h"
 #include "wayland_server.h"
-#include "x11client.h"
+#include "x11window.h"
 #include <QtMath>
 
 namespace KWin
@@ -714,7 +714,7 @@ SceneWindow::SceneWindow(Window *client, QObject *parent)
 {
     if (qobject_cast<WaylandWindow *>(client)) {
         m_windowItem.reset(new WindowItemWayland(toplevel));
-    } else if (qobject_cast<X11Client *>(client) || qobject_cast<Unmanaged *>(client)) {
+    } else if (qobject_cast<X11Window *>(client) || qobject_cast<Unmanaged *>(client)) {
         m_windowItem.reset(new WindowItemX11(toplevel));
     } else if (auto internalClient = qobject_cast<InternalWindow *>(client)) {
         m_windowItem.reset(new WindowItemInternal(internalClient));

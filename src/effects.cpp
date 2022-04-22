@@ -27,7 +27,7 @@
 #include "pointer_input.h"
 #include "renderbackend.h"
 #include "unmanaged.h"
-#include "x11client.h"
+#include "x11window.h"
 #if KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
@@ -545,7 +545,7 @@ void EffectsHandlerImpl::slotWindowClosed(KWin::Window *c, KWin::Deleted *d)
 
 void EffectsHandlerImpl::slotClientModalityChanged()
 {
-    Q_EMIT windowModalityChanged(static_cast<X11Client *>(sender())->effectWindow());
+    Q_EMIT windowModalityChanged(static_cast<X11Window *>(sender())->effectWindow());
 }
 
 void EffectsHandlerImpl::slotCurrentTabAboutToChange(EffectWindow *from, EffectWindow *to)
@@ -1096,7 +1096,7 @@ double EffectsHandlerImpl::animationTimeFactor() const
 
 EffectWindow *EffectsHandlerImpl::findWindow(WId id) const
 {
-    if (X11Client *w = Workspace::self()->findClient(Predicate::WindowMatch, id)) {
+    if (X11Window *w = Workspace::self()->findClient(Predicate::WindowMatch, id)) {
         return w->effectWindow();
     }
     if (Unmanaged *w = Workspace::self()->findUnmanaged(id)) {
@@ -1933,7 +1933,7 @@ EffectWindowImpl::EffectWindowImpl(Window *toplevel)
     managed = toplevel->isClient();
 
     waylandClient = qobject_cast<KWin::WaylandWindow *>(toplevel) != nullptr;
-    x11Client = qobject_cast<KWin::X11Client *>(toplevel) != nullptr || qobject_cast<KWin::Unmanaged *>(toplevel) != nullptr;
+    x11Client = qobject_cast<KWin::X11Window *>(toplevel) != nullptr || qobject_cast<KWin::Unmanaged *>(toplevel) != nullptr;
 }
 
 EffectWindowImpl::~EffectWindowImpl()
@@ -1987,7 +1987,7 @@ void EffectWindowImpl::addLayerRepaint(int x, int y, int w, int h)
 
 const EffectWindowGroup *EffectWindowImpl::group() const
 {
-    if (auto c = qobject_cast<X11Client *>(toplevel)) {
+    if (auto c = qobject_cast<X11Window *>(toplevel)) {
         return c->group()->effectGroup();
     }
     return nullptr; // TODO
@@ -2123,7 +2123,7 @@ NET::WindowType EffectWindowImpl::windowType() const
 
 QSize EffectWindowImpl::basicUnit() const
 {
-    if (auto client = qobject_cast<X11Client *>(toplevel)) {
+    if (auto client = qobject_cast<X11Window *>(toplevel)) {
         return client->basicUnit();
     }
     return QSize(1, 1);

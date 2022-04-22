@@ -10,7 +10,7 @@
 #include "effects.h"
 #include "unmanaged.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 
 namespace KWin
 {

@@ -13,7 +13,7 @@
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 
 #include <KDecoration2/Decoration>
 
@@ -57,9 +57,9 @@ void DontCrashGlxgearsTest::testGlxgears()
     QVERIFY(clientAddedSpy.wait());
     QCOMPARE(clientAddedSpy.count(), 1);
     QCOMPARE(workspace()->clientList().count(), 1);
-    X11Client *glxgearsClient = workspace()->clientList().first();
+    X11Window *glxgearsClient = workspace()->clientList().first();
     QVERIFY(glxgearsClient->isDecorated());
-    QSignalSpy closedSpy(glxgearsClient, &X11Client::windowClosed);
+    QSignalSpy closedSpy(glxgearsClient, &X11Window::windowClosed);
     QVERIFY(closedSpy.isValid());
     KDecoration2::Decoration *decoration = glxgearsClient->decoration();
     QVERIFY(decoration);

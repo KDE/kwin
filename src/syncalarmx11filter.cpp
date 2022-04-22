@@ -10,7 +10,7 @@
 #include "syncalarmx11filter.h"
 #include "utils/xcbutils.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 
 namespace KWin
 {
@@ -23,7 +23,7 @@ SyncAlarmX11Filter::SyncAlarmX11Filter()
 bool SyncAlarmX11Filter::event(xcb_generic_event_t *event)
 {
     auto alarmEvent = reinterpret_cast<xcb_sync_alarm_notify_event_t *>(event);
-    auto client = workspace()->findClient([alarmEvent](const X11Client *client) {
+    auto client = workspace()->findClient([alarmEvent](const X11Window *client) {
         const auto syncRequest = client->syncRequest();
         return alarmEvent->alarm == syncRequest.alarm && alarmEvent->counter_value.hi == syncRequest.value.hi && alarmEvent->counter_value.lo == syncRequest.value.lo;
     });

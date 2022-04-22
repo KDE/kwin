@@ -13,7 +13,7 @@
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 #include "xwayland/xwayland.h"
 #include "xwayland/xwaylandlauncher.h"
 
@@ -102,7 +102,7 @@ void XwaylandServerRestartTest::testRestart()
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
-    X11Client *client = windowCreatedSpy.last().first().value<X11Client *>();
+    X11Window *client = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(client);
     QCOMPARE(client->window(), window);
     QVERIFY(client->isDecorated());

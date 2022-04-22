@@ -28,7 +28,7 @@
 #include "screenedge.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 // KDE
 #include <KConfigGroup>
 #include <KGlobalAccel>
@@ -669,11 +669,11 @@ void KWin::Scripting::init()
 
     qmlRegisterAnonymousType<KWin::Window>("org.kde.kwin", 2);
     qmlRegisterAnonymousType<KWin::VirtualDesktop>("org.kde.kwin", 2);
-    qmlRegisterAnonymousType<KWin::X11Client>("org.kde.kwin", 2);
+    qmlRegisterAnonymousType<KWin::X11Window>("org.kde.kwin", 2);
     qmlRegisterAnonymousType<QAbstractItemModel>("org.kde.kwin", 2);
     qmlRegisterAnonymousType<KWin::Window>("org.kde.kwin", 3);
     qmlRegisterAnonymousType<KWin::VirtualDesktop>("org.kde.kwin", 3);
-    qmlRegisterAnonymousType<KWin::X11Client>("org.kde.kwin", 3);
+    qmlRegisterAnonymousType<KWin::X11Window>("org.kde.kwin", 3);
     qmlRegisterAnonymousType<QAbstractItemModel>("org.kde.kwin", 3);
 
     // TODO Plasma 6: Drop context properties.

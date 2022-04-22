@@ -15,7 +15,7 @@
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 
 namespace KWin::Xwl
 {
@@ -43,7 +43,7 @@ bool XwlDropHandler::handleClientMessage(xcb_client_message_event_t *event)
 void XwlDropHandler::updateDragTarget(KWaylandServer::SurfaceInterface *surface, quint32 serial)
 {
     Q_UNUSED(serial)
-    auto client = workspace()->findClient([surface](const X11Client *c) {
+    auto client = workspace()->findClient([surface](const X11Window *c) {
         return c->surface() == surface;
     });
     if (m_xvisit && client == m_xvisit->target()) {

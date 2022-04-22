@@ -15,7 +15,7 @@
 #include "unmanaged.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 #include "xwayland/xwayland.h"
 #include "xwayland/xwaylandlauncher.h"
 
@@ -46,7 +46,7 @@ private Q_SLOTS:
 void XwaylandServerCrashTest::initTestCase()
 {
     qRegisterMetaType<Unmanaged *>();
-    qRegisterMetaType<X11Client *>();
+    qRegisterMetaType<X11Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -95,7 +95,7 @@ void XwaylandServerCrashTest::testCrash()
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
-    QPointer<X11Client> client = windowCreatedSpy.last().first().value<X11Client *>();
+    QPointer<X11Window> client = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(client);
     QVERIFY(client->isDecorated());
 

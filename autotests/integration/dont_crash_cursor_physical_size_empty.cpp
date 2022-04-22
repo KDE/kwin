@@ -17,7 +17,7 @@
 #include "wayland/output_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 
 #include <KConfigGroup>
 

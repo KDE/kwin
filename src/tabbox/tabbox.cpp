@@ -36,7 +36,7 @@
 #include "utils/xcbutils.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 // Qt
 #include <QAction>
 #include <QKeyEvent>

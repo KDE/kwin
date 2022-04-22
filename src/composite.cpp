@@ -39,7 +39,7 @@
 #include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 #include "x11syncmanager.h"
 
 #include <kwinglplatform.h>
@@ -387,7 +387,7 @@ void Compositor::startupWithWorkspace()
 
     m_state = State::On;
 
-    for (X11Client *c : Workspace::self()->clientList()) {
+    for (X11Window *c : Workspace::self()->clientList()) {
         c->setupCompositing();
     }
     for (Unmanaged *c : Workspace::self()->unmanagedList()) {
@@ -503,7 +503,7 @@ void Compositor::stop()
     effects = nullptr;
 
     if (Workspace::self()) {
-        for (X11Client *c : Workspace::self()->clientList()) {
+        for (X11Window *c : Workspace::self()->clientList()) {
             m_scene->removeToplevel(c);
         }
         for (Unmanaged *c : Workspace::self()->unmanagedList()) {
@@ -512,7 +512,7 @@ void Compositor::stop()
         for (InternalWindow *client : workspace()->internalClients()) {
             m_scene->removeToplevel(client);
         }
-        for (X11Client *c : Workspace::self()->clientList()) {
+        for (X11Window *c : Workspace::self()->clientList()) {
             c->finishCompositing();
         }
         for (Unmanaged *c : Workspace::self()->unmanagedList()) {
@@ -978,7 +978,7 @@ bool X11Compositor::isOverlayWindowVisible() const
     return backend()->overlayWindow()->isVisible();
 }
 
-void X11Compositor::updateClientCompositeBlocking(X11Client *c)
+void X11Compositor::updateClientCompositeBlocking(X11Window *c)
 {
     if (c) {
         if (c->isBlockingCompositing()) {

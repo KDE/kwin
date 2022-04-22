@@ -87,7 +87,7 @@ public:
      * If no Client for activation is found @c null is returned.
      *
      * @param desktop The virtual desktop to look for a Client for activation
-     * @return :X11Client *The Client which could be activated or @c null if there is none.
+     * @return :X11Window *The Client which could be activated or @c null if there is none.
      */
     Window *getForActivation(VirtualDesktop *desktop) const;
     /**
@@ -100,7 +100,7 @@ public:
      *
      * @param desktop The virtual desktop to look for a Client for activation
      * @param output The screen to constrain the search on with separate screen focus
-     * @return :X11Client *The Client which could be activated or @c null if there is none.
+     * @return :X11Window *The Client which could be activated or @c null if there is none.
      */
     Window *getForActivation(VirtualDesktop *desktop, Output *output) const;
 
@@ -133,7 +133,7 @@ public:
      * chain is returned.
      *
      * @param reference The start point in the focus chain to search
-     * @return :X11Client *The relatively next Client in the most recently used chain.
+     * @return :X11Window *The relatively next Client in the most recently used chain.
      */
     Window *nextMostRecentlyUsed(Window *reference) const;
     /**
@@ -145,14 +145,14 @@ public:
      *
      * @param reference The reference Client which should not be returned
      * @param desktop The virtual desktop whose focus chain should be used
-     * @return :X11Client *The next usable Client or @c null if none can be found.
+     * @return :X11Window *The next usable Client or @c null if none can be found.
      */
     Window *nextForDesktop(Window *reference, VirtualDesktop *desktop) const;
     /**
      * @brief Returns the first Client in the most recently used focus chain. First Client in this
      * case means really the first Client in the chain and not the most recently used Client.
      *
-     * @return :X11Client *The first Client in the most recently used chain.
+     * @return :X11Window *The first Client in the most recently used chain.
      */
     Window *firstMostRecentlyUsed() const;
 

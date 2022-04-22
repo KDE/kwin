@@ -15,7 +15,7 @@
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 
 #include <xcb/xcb_event.h>
 #include <xcb/xfixes.h>
@@ -106,7 +106,7 @@ void Primary::checkWlSource()
         removeSource();
         return;
     }
-    if (!qobject_cast<KWin::X11Client *>(workspace()->activeClient())) {
+    if (!qobject_cast<KWin::X11Window *>(workspace()->activeClient())) {
         // no active client or active client is Wayland native
         removeSource();
         return;
@@ -127,7 +127,7 @@ void Primary::checkWlSource()
 void Primary::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
 {
     const Window *client = workspace()->activeClient();
-    if (!qobject_cast<const X11Client *>(client)) {
+    if (!qobject_cast<const X11Window *>(client)) {
         // clipboard is only allowed to be acquired when Xwayland has focus
         // TODO: can we make this stronger (window id comparison)?
         createX11Source(nullptr);

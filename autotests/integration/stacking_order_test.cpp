@@ -16,7 +16,7 @@
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/surface.h>
@@ -357,7 +357,7 @@ void StackingOrderTest::testGroupTransientIsAboveWindowGroup()
     xcb_flush(conn.data());
 
     QVERIFY(windowCreatedSpy.wait());
-    X11Client *leader = windowCreatedSpy.first().first().value<X11Client *>();
+    X11Window *leader = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(leader);
     QVERIFY(leader->isActive());
     QCOMPARE(leader->window(), leaderWid);
@@ -372,7 +372,7 @@ void StackingOrderTest::testGroupTransientIsAboveWindowGroup()
     xcb_flush(conn.data());
 
     QVERIFY(windowCreatedSpy.wait());
-    X11Client *member1 = windowCreatedSpy.first().first().value<X11Client *>();
+    X11Window *member1 = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(member1);
     QVERIFY(member1->isActive());
     QCOMPARE(member1->window(), member1Wid);
@@ -388,7 +388,7 @@ void StackingOrderTest::testGroupTransientIsAboveWindowGroup()
     xcb_flush(conn.data());
 
     QVERIFY(windowCreatedSpy.wait());
-    X11Client *member2 = windowCreatedSpy.first().first().value<X11Client *>();
+    X11Window *member2 = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(member2);
     QVERIFY(member2->isActive());
     QCOMPARE(member2->window(), member2Wid);
@@ -426,7 +426,7 @@ void StackingOrderTest::testGroupTransientIsAboveWindowGroup()
     xcb_flush(conn.data());
 
     QVERIFY(windowCreatedSpy.wait());
-    X11Client *transient = windowCreatedSpy.first().first().value<X11Client *>();
+    X11Window *transient = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(transient);
     QVERIFY(transient->isActive());
     QCOMPARE(transient->window(), transientWid);
@@ -471,7 +471,7 @@ void StackingOrderTest::testRaiseGroupTransient()
     xcb_flush(conn.data());
 
     QVERIFY(windowCreatedSpy.wait());
-    X11Client *leader = windowCreatedSpy.first().first().value<X11Client *>();
+    X11Window *leader = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(leader);
     QVERIFY(leader->isActive());
     QCOMPARE(leader->window(), leaderWid);
@@ -486,7 +486,7 @@ void StackingOrderTest::testRaiseGroupTransient()
     xcb_flush(conn.data());
 
     QVERIFY(windowCreatedSpy.wait());
-    X11Client *member1 = windowCreatedSpy.first().first().value<X11Client *>();
+    X11Window *member1 = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(member1);
     QVERIFY(member1->isActive());
     QCOMPARE(member1->window(), member1Wid);
@@ -502,7 +502,7 @@ void StackingOrderTest::testRaiseGroupTransient()
     xcb_flush(conn.data());
 
     QVERIFY(windowCreatedSpy.wait());
-    X11Client *member2 = windowCreatedSpy.first().first().value<X11Client *>();
+    X11Window *member2 = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(member2);
     QVERIFY(member2->isActive());
     QCOMPARE(member2->window(), member2Wid);
@@ -540,7 +540,7 @@ void StackingOrderTest::testRaiseGroupTransient()
     xcb_flush(conn.data());
 
     QVERIFY(windowCreatedSpy.wait());
-    X11Client *transient = windowCreatedSpy.first().first().value<X11Client *>();
+    X11Window *transient = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(transient);
     QVERIFY(transient->isActive());
     QCOMPARE(transient->window(), transientWid);
@@ -605,7 +605,7 @@ void StackingOrderTest::testDeletedGroupTransient()
     xcb_flush(conn.data());
 
     QVERIFY(windowCreatedSpy.wait());
-    X11Client *leader = windowCreatedSpy.first().first().value<X11Client *>();
+    X11Window *leader = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(leader);
     QVERIFY(leader->isActive());
     QCOMPARE(leader->window(), leaderWid);
@@ -620,7 +620,7 @@ void StackingOrderTest::testDeletedGroupTransient()
     xcb_flush(conn.data());
 
     QVERIFY(windowCreatedSpy.wait());
-    X11Client *member1 = windowCreatedSpy.first().first().value<X11Client *>();
+    X11Window *member1 = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(member1);
     QVERIFY(member1->isActive());
     QCOMPARE(member1->window(), member1Wid);
@@ -636,7 +636,7 @@ void StackingOrderTest::testDeletedGroupTransient()
     xcb_flush(conn.data());
 
     QVERIFY(windowCreatedSpy.wait());
-    X11Client *member2 = windowCreatedSpy.first().first().value<X11Client *>();
+    X11Window *member2 = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(member2);
     QVERIFY(member2->isActive());
     QCOMPARE(member2->window(), member2Wid);
@@ -674,7 +674,7 @@ void StackingOrderTest::testDeletedGroupTransient()
     xcb_flush(conn.data());
 
     QVERIFY(windowCreatedSpy.wait());
-    X11Client *transient = windowCreatedSpy.first().first().value<X11Client *>();
+    X11Window *transient = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(transient);
     QVERIFY(transient->isActive());
     QCOMPARE(transient->window(), transientWid);
@@ -686,13 +686,13 @@ void StackingOrderTest::testDeletedGroupTransient()
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{leader, member1, member2, transient}));
 
     // Unmap the transient.
-    connect(transient, &X11Client::windowClosed, this,
+    connect(transient, &X11Window::windowClosed, this,
             [](Window *toplevel, Deleted *deleted) {
                 Q_UNUSED(toplevel)
                 deleted->refWindow();
             });
 
-    QSignalSpy windowClosedSpy(transient, &X11Client::windowClosed);
+    QSignalSpy windowClosedSpy(transient, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
     xcb_unmap_window(conn.data(), transientWid);
     xcb_flush(conn.data());
@@ -724,7 +724,7 @@ void StackingOrderTest::testDontKeepAboveNonModalDialogGroupTransients()
     xcb_flush(conn.data());
 
     QVERIFY(windowCreatedSpy.wait());
-    X11Client *leader = windowCreatedSpy.first().first().value<X11Client *>();
+    X11Window *leader = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(leader);
     QVERIFY(leader->isActive());
     QCOMPARE(leader->window(), leaderWid);
@@ -739,7 +739,7 @@ void StackingOrderTest::testDontKeepAboveNonModalDialogGroupTransients()
     xcb_flush(conn.data());
 
     QVERIFY(windowCreatedSpy.wait());
-    X11Client *member1 = windowCreatedSpy.first().first().value<X11Client *>();
+    X11Window *member1 = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(member1);
     QVERIFY(member1->isActive());
     QCOMPARE(member1->window(), member1Wid);
@@ -755,7 +755,7 @@ void StackingOrderTest::testDontKeepAboveNonModalDialogGroupTransients()
     xcb_flush(conn.data());
 
     QVERIFY(windowCreatedSpy.wait());
-    X11Client *member2 = windowCreatedSpy.first().first().value<X11Client *>();
+    X11Window *member2 = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(member2);
     QVERIFY(member2->isActive());
     QCOMPARE(member2->window(), member2Wid);
@@ -772,7 +772,7 @@ void StackingOrderTest::testDontKeepAboveNonModalDialogGroupTransients()
     xcb_flush(conn.data());
 
     QVERIFY(windowCreatedSpy.wait());
-    X11Client *transient = windowCreatedSpy.first().first().value<X11Client *>();
+    X11Window *transient = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(transient);
     QVERIFY(transient->isActive());
     QCOMPARE(transient->window(), transientWid);

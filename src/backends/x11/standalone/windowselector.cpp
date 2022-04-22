@@ -13,7 +13,7 @@
 #include "unmanaged.h"
 #include "utils/xcbutils.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 // XLib
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
@@ -226,7 +226,7 @@ void WindowSelector::selectWindowId(xcb_window_t window_to_select)
         return;
     }
     xcb_window_t window = window_to_select;
-    X11Client *client = nullptr;
+    X11Window *client = nullptr;
     while (true) {
         client = Workspace::self()->findClient(Predicate::FrameIdMatch, window);
         if (client) {

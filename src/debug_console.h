@@ -35,7 +35,7 @@ namespace KWin
 {
 
 class Window;
-class X11Client;
+class X11Window;
 class InternalWindow;
 class Unmanaged;
 class DebugConsoleFilter;
@@ -74,13 +74,13 @@ private:
     void remove(int parentRow, QVector<T *> &clients, T *client);
     WaylandWindow *waylandClient(const QModelIndex &index) const;
     InternalWindow *internalClient(const QModelIndex &index) const;
-    X11Client *x11Client(const QModelIndex &index) const;
+    X11Window *x11Client(const QModelIndex &index) const;
     Unmanaged *unmanaged(const QModelIndex &index) const;
     int topLevelRowCount() const;
 
     QVector<WaylandWindow *> m_waylandClients;
     QVector<InternalWindow *> m_internalClients;
-    QVector<X11Client *> m_x11Clients;
+    QVector<X11Window *> m_x11Clients;
     QVector<Unmanaged *> m_unmanageds;
 };
 

@@ -27,7 +27,7 @@
 #include "session.h"
 #include "tablet_input.h"
 #include "touch_input.h"
-#include "x11client.h"
+#include "x11window.h"
 #if KWIN_BUILD_TABBOX
 #include "tabbox/tabbox.h"
 #endif
@@ -2346,7 +2346,7 @@ static KWaylandServer::AbstractDropHandler *dropHandler(Window *toplevel)
         return dropTarget;
     }
 
-    if (qobject_cast<X11Client *>(toplevel) && xwayland()) {
+    if (qobject_cast<X11Window *>(toplevel) && xwayland()) {
         return xwayland()->xwlDropHandler();
     }
 

@@ -150,9 +150,9 @@ target_sources(kwin PRIVATE
     window_property_notify_x11_filter.cpp
     windowitem.cpp
     workspace.cpp
-    x11client.cpp
     x11eventfilter.cpp
     x11syncmanager.cpp
+    x11window.cpp
     xcursortheme.cpp
     xdgactivationv1.cpp
     xdgshellclient.cpp

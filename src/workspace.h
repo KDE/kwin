@@ -52,7 +52,7 @@ class ShortcutDialog;
 class Unmanaged;
 class UserActionsMenu;
 class VirtualDesktop;
-class X11Client;
+class X11Window;
 class X11EventFilter;
 enum class Predicate;
 
@@ -80,7 +80,7 @@ public:
      * needs to be implemented. An example usage for finding a Client with a matching windowId
      * @code
      * xcb_window_t w; // our test window
-     * X11Client *client = findClient([w](const X11Client *c) -> bool {
+     * X11Window *client = findClient([w](const X11Window *c) -> bool {
      *     return c->window() == w;
      * });
      * @endcode
@@ -90,18 +90,18 @@ public:
      * can be simplified to:
      * @code
      * xcb_window_t w; // our test window
-     * X11Client *client = findClient(Predicate::WindowMatch, w);
+     * X11Window *client = findClient(Predicate::WindowMatch, w);
      * @endcode
      *
-     * @param func Unary function that accepts a X11Client *as argument and
+     * @param func Unary function that accepts a X11Window *as argument and
      * returns a value convertible to bool. The value returned indicates whether the
-     * X11Client *is considered a match in the context of this function.
+     * X11Window *is considered a match in the context of this function.
      * The function shall not modify its argument.
      * This can either be a function pointer or a function object.
-     * @return KWin::X11Client *The found Client or @c null
+     * @return KWin::X11Window *The found Client or @c null
      * @see findClient(Predicate, xcb_window_t)
      */
-    X11Client *findClient(std::function<bool(const X11Client *)> func) const;
+    X11Window *findClient(std::function<bool(const X11Window *)> func) const;
     Window *findAbstractClient(std::function<bool(const Window *)> func) const;
     Window *findAbstractClient(const QUuid &internalId) const;
     /**
@@ -109,11 +109,11 @@ public:
      *
      * @param predicate Which window should be compared
      * @param w The window id to test against
-     * @return KWin::X11Client *The found Client or @c null
-     * @see findClient(std::function<bool (const X11Client *)>)
+     * @return KWin::X11Window *The found Client or @c null
+     * @see findClient(std::function<bool (const X11Window *)>)
      */
-    X11Client *findClient(Predicate predicate, xcb_window_t w) const;
-    void forEachClient(std::function<void(X11Client *)> func);
+    X11Window *findClient(Predicate predicate, xcb_window_t w) const;
+    void forEachClient(std::function<void(X11Window *)> func);
     void forEachAbstractClient(std::function<void(Window *)> func);
     Unmanaged *findUnmanaged(std::function<bool(const Unmanaged *)> func) const;
     /**
@@ -201,13 +201,13 @@ public:
     void raiseClient(Window *c, bool nogroup = false);
     void lowerClient(Window *c, bool nogroup = false);
     void raiseClientRequest(Window *c, NET::RequestSource src = NET::FromApplication, xcb_timestamp_t timestamp = 0);
-    void lowerClientRequest(X11Client *c, NET::RequestSource src, xcb_timestamp_t timestamp);
+    void lowerClientRequest(X11Window *c, NET::RequestSource src, xcb_timestamp_t timestamp);
     void lowerClientRequest(Window *c);
     void restackClientUnderActive(Window *);
     void restack(Window *c, Window *under, bool force = false);
     void raiseOrLowerClient(Window *);
     void resetUpdateToolWindowsTimer();
-    void restoreSessionStackingOrder(X11Client *c);
+    void restoreSessionStackingOrder(X11Window *c);
     void updateStackingOrder(bool propagate_new_clients = false);
     void forceRestacking();
 
@@ -220,7 +220,7 @@ public:
     /**
      * @return List of clients currently managed by Workspace
      */
-    const QList<X11Client *> &clientList() const
+    const QList<X11Window *> &clientList() const
     {
         return m_x11Clients;
     }
@@ -285,7 +285,7 @@ public:
     const QList<Window *> &stackingOrder() const;
     QList<Window *> xStackingOrder() const;
     QList<Window *> unconstrainedStackingOrder() const;
-    QList<X11Client *> ensureStackingOrder(const QList<X11Client *> &clients) const;
+    QList<X11Window *> ensureStackingOrder(const QList<X11Window *> &clients) const;
     QList<Window *> ensureStackingOrder(const QList<Window *> &clients) const;
 
     Window *topClientOnDesktop(VirtualDesktop *desktop, Output *output = nullptr, bool unconstrained = false,
@@ -321,7 +321,7 @@ public:
     void updateOnAllDesktopsOfTransients(Window *);
     void checkTransients(xcb_window_t w);
 
-    SessionInfo *takeSessionInfo(X11Client *);
+    SessionInfo *takeSessionInfo(X11Window *);
 
     // D-Bus interface
     QString supportInformation() const;
@@ -339,13 +339,13 @@ public:
     void setShowingDesktop(bool showing, bool animated = true);
     bool showingDesktop() const;
 
-    void removeX11Client(X11Client *); // Only called from X11Client::destroyClient() or X11Client::releaseWindow()
+    void removeX11Client(X11Window *); // Only called from X11Window::destroyClient() or X11Window::releaseWindow()
     void setActiveClient(Window *);
     Group *findGroup(xcb_window_t leader) const;
     void addGroup(Group *group);
     void removeGroup(Group *group);
-    Group *findClientLeaderGroup(const X11Client *c) const;
-    int unconstainedStackingOrderIndex(const X11Client *c) const;
+    Group *findClientLeaderGroup(const X11Window *c) const;
+    int unconstainedStackingOrderIndex(const X11Window *c) const;
 
     void removeUnmanaged(Unmanaged *); // Only called from Unmanaged::release()
     void removeDeleted(Deleted *);
@@ -584,9 +584,9 @@ private:
     void removeFromStack(Window *toplevel);
 
     /// This is the right way to create a new client
-    X11Client *createClient(xcb_window_t w, bool is_mapped);
+    X11Window *createClient(xcb_window_t w, bool is_mapped);
     void setupClientConnections(Window *client);
-    void addClient(X11Client *c);
+    void addClient(X11Window *c);
     Unmanaged *createUnmanaged(xcb_window_t w);
     void addUnmanaged(Unmanaged *c);
 
@@ -631,7 +631,7 @@ private:
     Window *delayfocus_client;
     QPoint focusMousePos;
 
-    QList<X11Client *> m_x11Clients;
+    QList<X11Window *> m_x11Clients;
     QList<Window *> m_allClients;
     QList<Unmanaged *> m_unmanaged;
     QList<Deleted *> deleted;
@@ -812,7 +812,7 @@ inline QPoint Workspace::focusMousePosition() const
     return focusMousePos;
 }
 
-inline void Workspace::forEachClient(std::function<void(X11Client *)> func)
+inline void Workspace::forEachClient(std::function<void(X11Window *)> func)
 {
     std::for_each(m_x11Clients.constBegin(), m_x11Clients.constEnd(), func);
 }

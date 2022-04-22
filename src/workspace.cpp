@@ -40,7 +40,7 @@
 #include "screens.h"
 #include "scripting/scripting.h"
 #include "syncalarmx11filter.h"
-#include "x11client.h"
+#include "x11window.h"
 #if KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
@@ -91,7 +91,7 @@ ColorMapper::~ColorMapper()
 void ColorMapper::update()
 {
     xcb_colormap_t cmap = m_default;
-    if (X11Client *c = dynamic_cast<X11Client *>(Workspace::self()->activeClient())) {
+    if (X11Window *c = dynamic_cast<X11Window *>(Workspace::self()->activeClient())) {
         if (c->colormap() != XCB_COLORMAP_NONE) {
             cmap = c->colormap();
         }
@@ -441,8 +441,8 @@ void Workspace::cleanupX11()
     StackingUpdatesBlocker blocker(this);
 
     // Use stacking_order, so that kwin --replace keeps stacking order.
-    const QList<X11Client *> orderedClients = ensureStackingOrder(m_x11Clients);
-    for (X11Client *client : orderedClients) {
+    const QList<X11Window *> orderedClients = ensureStackingOrder(m_x11Clients);
+    for (X11Window *client : orderedClients) {
         client->releaseWindow(true);
         removeFromStack(client);
     }
@@ -459,7 +459,7 @@ void Workspace::cleanupX11()
     VirtualDesktopManager *desktopManager = VirtualDesktopManager::self();
     desktopManager->setRootInfo(nullptr);
 
-    X11Client::cleanupX11();
+    X11Window::cleanupX11();
     RootInfo::destroy();
     Xcb::Extensions::destroy();
 
@@ -645,22 +645,22 @@ void Workspace::removeFromStack(Window *toplevel)
     }
 }
 
-X11Client *Workspace::createClient(xcb_window_t w, bool is_mapped)
+X11Window *Workspace::createClient(xcb_window_t w, bool is_mapped)
 {
     StackingUpdatesBlocker blocker(this);
-    X11Client *c = nullptr;
+    X11Window *c = nullptr;
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        c = new X11Client();
+        c = new X11Window();
     } else {
         c = new XwaylandClient();
     }
     setupClientConnections(c);
     if (X11Compositor *compositor = X11Compositor::self()) {
-        connect(c, &X11Client::blockingCompositingChanged, compositor, &X11Compositor::updateClientCompositeBlocking);
+        connect(c, &X11Window::blockingCompositingChanged, compositor, &X11Compositor::updateClientCompositeBlocking);
     }
-    connect(c, &X11Client::clientFullScreenSet, ScreenEdges::self(), &ScreenEdges::checkBlocking);
+    connect(c, &X11Window::clientFullScreenSet, ScreenEdges::self(), &ScreenEdges::checkBlocking);
     if (!c->manage(w, is_mapped)) {
-        X11Client::deleteClient(c);
+        X11Window::deleteClient(c);
         return nullptr;
     }
     addClient(c);
@@ -684,7 +684,7 @@ Unmanaged *Workspace::createUnmanaged(xcb_window_t w)
     return c;
 }
 
-void Workspace::addClient(X11Client *c)
+void Workspace::addClient(X11Window *c)
 {
     Group *grp = findGroup(c->window());
 
@@ -732,7 +732,7 @@ void Workspace::addUnmanaged(Unmanaged *c)
 /**
  * Destroys the client \a c
  */
-void Workspace::removeX11Client(X11Client *c)
+void Workspace::removeX11Client(X11Window *c)
 {
     if (c == active_popup_client) {
         closeActivePopup();
@@ -1039,7 +1039,7 @@ void Workspace::slotCurrentDesktopChangingCancelled()
 void Workspace::updateClientVisibilityOnDesktopChange(VirtualDesktop *newDesktop)
 {
     for (auto it = stacking_order.constBegin(); it != stacking_order.constEnd(); ++it) {
-        X11Client *c = qobject_cast<X11Client *>(*it);
+        X11Window *c = qobject_cast<X11Window *>(*it);
         if (!c) {
             continue;
         }
@@ -1057,7 +1057,7 @@ void Workspace::updateClientVisibilityOnDesktopChange(VirtualDesktop *newDesktop
     }
 
     for (int i = stacking_order.size() - 1; i >= 0; --i) {
-        X11Client *c = qobject_cast<X11Client *>(stacking_order.at(i));
+        X11Window *c = qobject_cast<X11Window *>(stacking_order.at(i));
         if (!c) {
             continue;
         }
@@ -1151,7 +1151,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
     // Notify::raise((Notify::Event) (Notify::DesktopChange+new_desktop));
 
     for (auto it = stacking_order.constBegin(); it != stacking_order.constEnd(); ++it) {
-        X11Client *c = qobject_cast<X11Client *>(*it);
+        X11Window *c = qobject_cast<X11Window *>(*it);
         if (!c) {
             continue;
         }
@@ -1170,7 +1170,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
         */
 
     for (int i = stacking_order.size() - 1; i >= 0; --i) {
-        X11Client *c = qobject_cast<X11Client *>(stacking_order.at(i));
+        X11Window *c = qobject_cast<X11Window *>(stacking_order.at(i));
         if (!c) {
             continue;
         }
@@ -1431,7 +1431,7 @@ void Workspace::setShowingDesktop(bool showing, bool animated)
                     }
                     if (auto group = c->group()) {
                         const auto members = group->members();
-                        for (X11Client *cm : members) {
+                        for (X11Window *cm : members) {
                             cm->updateLayer();
                         }
                     }
@@ -1777,9 +1777,9 @@ QString Workspace::supportInformation() const
     return support;
 }
 
-X11Client *Workspace::findClient(std::function<bool(const X11Client *)> func) const
+X11Window *Workspace::findClient(std::function<bool(const X11Window *)> func) const
 {
-    if (X11Client *ret = Window::findInList(m_x11Clients, func)) {
+    if (X11Window *ret = Window::findInList(m_x11Clients, func)) {
         return ret;
     }
     return nullptr;
@@ -1814,23 +1814,23 @@ Unmanaged *Workspace::findUnmanaged(xcb_window_t w) const
     });
 }
 
-X11Client *Workspace::findClient(Predicate predicate, xcb_window_t w) const
+X11Window *Workspace::findClient(Predicate predicate, xcb_window_t w) const
 {
     switch (predicate) {
     case Predicate::WindowMatch:
-        return findClient([w](const X11Client *c) {
+        return findClient([w](const X11Window *c) {
             return c->window() == w;
         });
     case Predicate::WrapperIdMatch:
-        return findClient([w](const X11Client *c) {
+        return findClient([w](const X11Window *c) {
             return c->wrapperId() == w;
         });
     case Predicate::FrameIdMatch:
-        return findClient([w](const X11Client *c) {
+        return findClient([w](const X11Window *c) {
             return c->frameId() == w;
         });
     case Predicate::InputIdMatch:
-        return findClient([w](const X11Client *c) {
+        return findClient([w](const X11Window *c) {
             return c->inputId() == w;
         });
     }
@@ -1976,7 +1976,7 @@ Group *Workspace::findGroup(xcb_window_t leader) const
 
 // Client is group transient, but has no group set. Try to find
 // group with windows with the same client leader.
-Group *Workspace::findClientLeaderGroup(const X11Client *c) const
+Group *Workspace::findClientLeaderGroup(const X11Window *c) const
 {
     Group *ret = nullptr;
     for (auto it = m_x11Clients.constBegin(); it != m_x11Clients.constEnd(); ++it) {
@@ -1991,10 +1991,10 @@ Group *Workspace::findClientLeaderGroup(const X11Client *c) const
                 // This most probably means the app uses group transients without
                 // setting group for its windows. Merging the two groups is a bad
                 // hack, but there's no really good solution for this case.
-                QList<X11Client *> old_group = (*it)->group()->members();
+                QList<X11Window *> old_group = (*it)->group()->members();
                 // old_group autodeletes when being empty
                 for (int pos = 0; pos < old_group.count(); ++pos) {
-                    X11Client *tmp = old_group[pos];
+                    X11Window *tmp = old_group[pos];
                     if (tmp != c) {
                         tmp->changeClientLeaderGroup(ret);
                     }

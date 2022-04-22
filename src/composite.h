@@ -27,7 +27,7 @@ class RenderLoop;
 class RenderTarget;
 class Scene;
 class Window;
-class X11Client;
+class X11Window;
 class X11SyncManager;
 
 class KWIN_EXPORT Compositor : public QObject
@@ -239,7 +239,7 @@ public:
      */
     bool isOverlayWindowVisible() const;
 
-    void updateClientCompositeBlocking(X11Client *client = nullptr);
+    void updateClientCompositeBlocking(X11Window *client = nullptr);
 
     static X11Compositor *self();
 

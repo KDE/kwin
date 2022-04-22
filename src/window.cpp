@@ -2242,7 +2242,7 @@ void Window::setupWindowManagementInterface()
     w->setShaded(isShade());
     w->setResizable(isResizable());
     w->setMovable(isMovable());
-    w->setVirtualDesktopChangeable(true); // FIXME Matches X11Client::actionSupported(), but both should be implemented.
+    w->setVirtualDesktopChangeable(true); // FIXME Matches X11Window::actionSupported(), but both should be implemented.
     w->setParentWindow(transientFor() ? transientFor()->windowManagementInterface() : nullptr);
     w->setGeometry(frameGeometry());
     connect(this, &Window::skipTaskbarChanged, w, [w, this]() {
@@ -4549,7 +4549,7 @@ void Window::applyWindowRules()
     // AutogroupById : Only checked on window manage
     // StrictGeometry
     setShortcut(rules()->checkShortcut(shortcut().toString()));
-    // see also X11Client::setActive()
+    // see also X11Window::setActive()
     if (isActive()) {
         setOpacity(rules()->checkOpacityActive(qRound(opacity() * 100.0)) / 100.0);
         workspace()->disableGlobalShortcutsForClient(rules()->checkDisableGlobalShortcuts(false));

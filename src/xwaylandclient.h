@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "x11client.h"
+#include "x11window.h"
 
 namespace KWin
 {
@@ -17,7 +17,7 @@ namespace KWin
 /**
  * The XwaylandClient class represents a managed Xwayland client.
  */
-class XwaylandClient : public X11Client
+class XwaylandClient : public X11Window
 {
     Q_OBJECT
 

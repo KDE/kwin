@@ -13,7 +13,7 @@
 #include "group.h"
 #include "effects.h"
 #include "workspace.h"
-#include "x11client.h"
+#include "x11window.h"
 
 #include <KWindowSystem>
 #include <QDebug>
@@ -70,14 +70,14 @@ QIcon Group::icon() const
     return QIcon();
 }
 
-void Group::addMember(X11Client *member_P)
+void Group::addMember(X11Window *member_P)
 {
     _members.append(member_P);
     //    qDebug() << "GROUPADD:" << this << ":" << member_P;
     //    qDebug() << kBacktrace();
 }
 
-void Group::removeMember(X11Client *member_P)
+void Group::removeMember(X11Window *member_P)
 {
     //    qDebug() << "GROUPREMOVE:" << this << ":" << member_P;
     //    qDebug() << kBacktrace();
@@ -106,7 +106,7 @@ void Group::deref()
     }
 }
 
-void Group::gotLeader(X11Client *leader_P)
+void Group::gotLeader(X11Window *leader_P)
 {
     Q_ASSERT(leader_P->window() == leader_wid);
     leader_client = leader_P;
