@@ -2,7 +2,7 @@ remove_definitions(-DQT_NO_CAST_FROM_ASCII)
 add_executable(qtwaylandscanner_kde qtwaylandscanner.cpp)
 target_link_libraries(qtwaylandscanner_kde Qt::Core)
 
-function(ecm_add_qtwayland_server_protocol_kde out_var)
+function(ecm_add_qtwayland_server_protocol_kde target)
     # Parse arguments
     set(oneValueArgs PROTOCOL BASENAME PREFIX)
     cmake_parse_arguments(ARGS "" "${oneValueArgs}" "" ${ARGN})
@@ -15,7 +15,7 @@ function(ecm_add_qtwayland_server_protocol_kde out_var)
 
 
     find_package(WaylandScanner REQUIRED QUIET)
-    ecm_add_wayland_server_protocol(${out_var}
+    ecm_add_wayland_server_protocol(${target}
                                     PROTOCOL ${ARGS_PROTOCOL}
                                     BASENAME ${ARGS_BASENAME})
 
@@ -35,6 +35,5 @@ function(ecm_add_qtwayland_server_protocol_kde out_var)
 
     set_property(SOURCE ${_header} ${_code} PROPERTY SKIP_AUTOMOC ON)
 
-    list(APPEND ${out_var} "${_code}")
-    set(${out_var} ${${out_var}} PARENT_SCOPE)
+    target_sources(${target} PRIVATE "${_code}")
 endfunction()
