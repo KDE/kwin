@@ -140,6 +140,7 @@ FocusScope {
                     verticalAlignment: Text.AlignVCenter
                     text: i18nd("kwin_effects", "Drag Down To Close")
                     opacity: 1 - thumbSource.opacity
+                    visible: !thumb.hidden
                 }
 
                 PlasmaCore.IconItem {
@@ -150,7 +151,7 @@ FocusScope {
                     anchors.horizontalCenter: thumbSource.horizontalCenter
                     anchors.bottom: thumbSource.bottom
                     anchors.bottomMargin: -height / 4
-                    visible: !activeDragHandler.active
+                    visible: !thumb.hidden && !activeDragHandler.active
 
 
                     PC3.Label {
