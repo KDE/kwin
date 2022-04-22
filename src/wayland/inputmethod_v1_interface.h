@@ -135,12 +135,15 @@ public:
 
     SurfaceInterface *surface() const;
 
+    quint32 sendConfigure(const QSize &size);
+
 Q_SIGNALS:
     void topLevel(OutputInterface *output, Position position);
     void overlayPanel();
+    void configureAcknowledged(quint32 serial);
 
 private:
-    InputPanelSurfaceV1Interface(SurfaceInterface *surface, quint32 id, QObject *parent);
+    InputPanelSurfaceV1Interface(SurfaceInterface *surface, Display *display, quint32 id, QObject *parent);
     friend class InputPanelV1InterfacePrivate;
     QScopedPointer<InputPanelSurfaceV1InterfacePrivate> d;
 };

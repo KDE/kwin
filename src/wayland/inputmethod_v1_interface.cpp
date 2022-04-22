@@ -14,7 +14,10 @@
 #include "surfacerole_p.h"
 #include "utils/common.h"
 
+#include <optional>
+
 #include <QHash>
+#include <QQueue>
 #include <QTemporaryFile>
 
 #include <unistd.h>
@@ -329,10 +332,11 @@ class InputPanelSurfaceV1InterfacePrivate : public QtWaylandServer::zwp_input_pa
     friend class InputPanelSurfaceV1Interface;
 
 public:
-    InputPanelSurfaceV1InterfacePrivate(SurfaceInterface *surface, quint32 id, InputPanelSurfaceV1Interface *q)
+    InputPanelSurfaceV1InterfacePrivate(SurfaceInterface *surface, Display *d, quint32 id, InputPanelSurfaceV1Interface *q)
         : zwp_input_panel_surface_v1()
         , SurfaceRole(surface, QByteArrayLiteral("input_panel_surface_v1"))
         , q(q)
+        , display(d)
     {
         Q_UNUSED(id)
     }
@@ -347,8 +351,40 @@ public:
         Q_EMIT q->topLevel(OutputInterface::get(output), InputPanelSurfaceV1Interface::Position(position));
     }
 
+    void zwp_input_panel_surface_v1_ack_configure(Resource *resource, uint32_t serial) override
+    {
+        if (!serials.contains(serial)) {
+            wl_resource_post_error(resource->handle, error_invalid_surface_state, "invalid configure serial %d", serial);
+            return;
+        }
+
+        while (!serials.isEmpty()) {
+            const quint32 head = serials.takeFirst();
+            if (head == serial) {
+                break;
+            }
+        }
+
+        pendingConfigure = serial;
+    }
+
     void commit() override
     {
+        if (pendingConfigure.has_value()) {
+            Q_EMIT q->configureAcknowledged(pendingConfigure.value());
+            pendingConfigure = std::nullopt;
+        }
+
+        if (!surface()->isMapped() && isCommitted) {
+            isCommitted = false;
+            isConfigured = false;
+
+            pendingConfigure = std::nullopt;
+
+            return;
+        }
+
+        isCommitted = true; // Must set the committed state before emitting any signals.
     }
 
     void zwp_input_panel_surface_v1_destroy_resource(Resource *) override
@@ -357,16 +393,36 @@ public:
     }
 
     InputPanelSurfaceV1Interface *const q;
+
+    Display *display = nullptr;
+
+    bool isConfigured = false;
+    bool isCommitted = false;
+
+    QQueue<quint32> serials;
+
+    std::optional<quint32> pendingConfigure;
 };
 
-InputPanelSurfaceV1Interface::InputPanelSurfaceV1Interface(SurfaceInterface *surface, quint32 id, QObject *parent)
+InputPanelSurfaceV1Interface::InputPanelSurfaceV1Interface(SurfaceInterface *surface, Display *display, quint32 id, QObject *parent)
     : QObject(parent)
-    , d(new InputPanelSurfaceV1InterfacePrivate(surface, id, this))
+    , d(new InputPanelSurfaceV1InterfacePrivate(surface, display, id, this))
 {
 }
 
 InputPanelSurfaceV1Interface::~InputPanelSurfaceV1Interface()
 {
+}
+
+quint32 InputPanelSurfaceV1Interface::sendConfigure(const QSize &size)
+{
+    auto serial = d->display->nextSerial();
+    d->serials << serial;
+
+    d->send_configure(serial, size.width(), size.height());
+    d->isConfigured = true;
+
+    return serial;
 }
 
 class InputPanelV1InterfacePrivate : public QtWaylandServer::zwp_input_panel_v1
@@ -375,6 +431,7 @@ public:
     InputPanelV1InterfacePrivate(InputPanelV1Interface *q, Display *d)
         : zwp_input_panel_v1(*d, s_version)
         , q(q)
+        , display(d)
     {
     }
 
@@ -388,13 +445,15 @@ public:
             return;
         }
 
-        auto interface = new InputPanelSurfaceV1Interface(surface, id, nullptr);
+        auto interface = new InputPanelSurfaceV1Interface(surface, display, id, nullptr);
         interface->d->init(resource->client(), id, resource->version());
 
         Q_EMIT q->inputPanelSurfaceAdded(interface);
     }
 
     InputPanelV1Interface *const q;
+
+    Display *display = nullptr;
 };
 
 InputPanelV1Interface::InputPanelV1Interface(Display *display, QObject *parent)

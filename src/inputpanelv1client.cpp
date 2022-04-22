@@ -178,8 +178,23 @@ void InputPanelV1Client::setOutput(OutputInterface *outputIface)
 
 void InputPanelV1Client::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
 {
-    Q_UNUSED(mode)
-    updateGeometry(rect);
+    if (areGeometryUpdatesBlocked()) {
+        setPendingMoveResizeMode(mode);
+        return;
+    }
+
+    const QSize requestedClientSize = frameSizeToClientSize(rect.size());
+    if (requestedClientSize != clientSize()) {
+        m_panelSurface->sendConfigure(rect.size());
+    } else {
+        updateGeometry(rect);
+        return;
+    }
+
+    // The surface position is updated synchronously.
+    QRect updateRect = m_frameGeometry;
+    updateRect.moveTopLeft(rect.topLeft());
+    updateGeometry(updateRect);
 }
 
 } // namespace KWin
