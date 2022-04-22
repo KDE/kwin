@@ -130,14 +130,10 @@ void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamV1Interface
     auto stream = new ScreenCastStream(new OutputScreenCastSource(streamOutput), this);
     stream->setObjectName(streamOutput->name());
     stream->setCursorMode(mode, streamOutput->scale(), streamOutput->geometry());
-    auto bufferToStream = [streamOutput, stream](const QRegion &damagedRegion) {
-        if (damagedRegion.isEmpty()) {
-            return;
+    auto bufferToStream = [stream](const QRegion &damagedRegion) {
+        if (!damagedRegion.isEmpty()) {
+            stream->recordFrame(damagedRegion);
         }
-
-        const QRect frame({}, streamOutput->modeSize());
-        const QRegion region = streamOutput->pixelSize() != streamOutput->modeSize() ? frame : damagedRegion;
-        stream->recordFrame(region);
     };
     connect(stream, &ScreenCastStream::startStreaming, waylandStream, [streamOutput, stream, bufferToStream] {
         Compositor::self()->scene()->addRepaint(streamOutput->geometry());
