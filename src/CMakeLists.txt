@@ -142,10 +142,10 @@ target_sources(kwin PRIVATE
     virtualkeyboard_dbus.cpp
     was_user_interaction_x11_filter.cpp
     wayland_server.cpp
-    waylandclient.cpp
     waylandoutput.cpp
     waylandoutputdevicev2.cpp
     waylandshellintegration.cpp
+    waylandwindow.cpp
     window.cpp
     window_property_notify_x11_filter.cpp
     windowitem.cpp

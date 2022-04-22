@@ -40,7 +40,7 @@ namespace KWin
 {
 
 XdgSurfaceClient::XdgSurfaceClient(XdgSurfaceInterface *shellSurface)
-    : WaylandClient(shellSurface->surface())
+    : WaylandWindow(shellSurface->surface())
     , m_shellSurface(shellSurface)
     , m_configureTimer(new QTimer(this))
 {
@@ -894,7 +894,7 @@ void XdgToplevelClient::doInteractiveResizeSync()
 
 void XdgToplevelClient::doSetActive()
 {
-    WaylandClient::doSetActive();
+    WaylandWindow::doSetActive();
 
     if (isActive()) {
         m_nextStates |= XdgToplevelInterface::State::Activated;

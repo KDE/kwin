@@ -10,14 +10,14 @@
 #pragma once
 
 #include "wayland/inputmethod_v1_interface.h"
-#include "waylandclient.h"
+#include "waylandwindow.h"
 #include <QPointer>
 
 namespace KWin
 {
 class Output;
 
-class InputPanelV1Window : public WaylandClient
+class InputPanelV1Window : public WaylandWindow
 {
     Q_OBJECT
 public:

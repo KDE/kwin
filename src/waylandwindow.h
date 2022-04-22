@@ -11,12 +11,12 @@
 namespace KWin
 {
 
-class WaylandClient : public Window
+class WaylandWindow : public Window
 {
     Q_OBJECT
 
 public:
-    WaylandClient(KWaylandServer::SurfaceInterface *surface);
+    WaylandWindow(KWaylandServer::SurfaceInterface *surface);
 
     QString captionNormal() const override;
     QString captionSuffix() const override;

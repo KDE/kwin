@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "waylandclient.h"
+#include "waylandwindow.h"
 
 namespace KWaylandServer
 {
@@ -19,7 +19,7 @@ namespace KWin
 class Output;
 class LayerShellV1Integration;
 
-class LayerShellV1Window : public WaylandClient
+class LayerShellV1Window : public WaylandWindow
 {
     Q_OBJECT
 

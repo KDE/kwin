@@ -27,7 +27,7 @@
 #include "wayland/subcompositor_interface.h"
 #include "wayland/surface_interface.h"
 #include "wayland_server.h"
-#include "waylandclient.h"
+#include "waylandwindow.h"
 #include "workspace.h"
 #include "x11client.h"
 #include <cerrno>
@@ -938,7 +938,7 @@ void DebugConsoleModel::handleClientAdded(Window *client)
         return;
     }
 
-    WaylandClient *waylandClient = qobject_cast<WaylandClient *>(client);
+    WaylandWindow *waylandClient = qobject_cast<WaylandWindow *>(client);
     if (waylandClient) {
         add(s_waylandClientId - 1, m_waylandClients, waylandClient);
         return;
@@ -953,7 +953,7 @@ void DebugConsoleModel::handleClientRemoved(Window *client)
         return;
     }
 
-    WaylandClient *waylandClient = qobject_cast<WaylandClient *>(client);
+    WaylandWindow *waylandClient = qobject_cast<WaylandWindow *>(client);
     if (waylandClient) {
         remove(s_waylandClientId - 1, m_waylandClients, waylandClient);
         return;
@@ -1248,7 +1248,7 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
             break;
         }
         case s_waylandClientId:
-            return clientData<WaylandClient>(index, role, m_waylandClients, generic);
+            return clientData<WaylandWindow>(index, role, m_waylandClients, generic);
         case s_workspaceInternalId:
             return clientData<InternalWindow>(index, role, m_internalClients, generic);
         default:
@@ -1269,7 +1269,7 @@ static T *clientForIndex(const QModelIndex &index, const QVector<T *> &clients, 
     return clients.at(row);
 }
 
-WaylandClient *DebugConsoleModel::waylandClient(const QModelIndex &index) const
+WaylandWindow *DebugConsoleModel::waylandClient(const QModelIndex &index) const
 {
     return clientForIndex(index, m_waylandClients, s_waylandClientId);
 }

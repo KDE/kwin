@@ -39,7 +39,7 @@ class X11Client;
 class InternalWindow;
 class Unmanaged;
 class DebugConsoleFilter;
-class WaylandClient;
+class WaylandWindow;
 
 class KWIN_EXPORT DebugConsoleModel : public QAbstractItemModel
 {
@@ -72,13 +72,13 @@ private:
     void add(int parentRow, QVector<T *> &clients, T *client);
     template<class T>
     void remove(int parentRow, QVector<T *> &clients, T *client);
-    WaylandClient *waylandClient(const QModelIndex &index) const;
+    WaylandWindow *waylandClient(const QModelIndex &index) const;
     InternalWindow *internalClient(const QModelIndex &index) const;
     X11Client *x11Client(const QModelIndex &index) const;
     Unmanaged *unmanaged(const QModelIndex &index) const;
     int topLevelRowCount() const;
 
-    QVector<WaylandClient *> m_waylandClients;
+    QVector<WaylandWindow *> m_waylandClients;
     QVector<InternalWindow *> m_internalClients;
     QVector<X11Client *> m_x11Clients;
     QVector<Unmanaged *> m_unmanageds;

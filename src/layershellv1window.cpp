@@ -38,7 +38,7 @@ static NET::WindowType scopeToType(const QString &scope)
 LayerShellV1Window::LayerShellV1Window(LayerSurfaceV1Interface *shellSurface,
                                        Output *output,
                                        LayerShellV1Integration *integration)
-    : WaylandClient(shellSurface->surface())
+    : WaylandWindow(shellSurface->surface())
     , m_desiredOutput(output)
     , m_integration(integration)
     , m_shellSurface(shellSurface)
@@ -194,7 +194,7 @@ void LayerShellV1Window::closeWindow()
 Layer LayerShellV1Window::belongsToLayer() const
 {
     if (!isNormalWindow()) {
-        return WaylandClient::belongsToLayer();
+        return WaylandWindow::belongsToLayer();
     }
     switch (m_shellSurface->layer()) {
     case LayerSurfaceV1Interface::BackgroundLayer:

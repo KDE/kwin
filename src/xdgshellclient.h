@@ -12,7 +12,7 @@
 #pragma once
 
 #include "wayland/xdgshell_interface.h"
-#include "waylandclient.h"
+#include "waylandwindow.h"
 
 #include <QQueue>
 #include <QTimer>
@@ -50,7 +50,7 @@ public:
     ConfigureFlags flags;
 };
 
-class XdgSurfaceClient : public WaylandClient
+class XdgSurfaceClient : public WaylandWindow
 {
     Q_OBJECT
 

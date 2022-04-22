@@ -47,7 +47,7 @@
 #include "utils/xcbutils.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
-#include "waylandclient.h"
+#include "waylandwindow.h"
 #include "window_property_notify_x11_filter.h"
 #include "workspace.h"
 
@@ -1932,7 +1932,7 @@ EffectWindowImpl::EffectWindowImpl(Window *toplevel)
     // can still figure out whether it is/was a managed window.
     managed = toplevel->isClient();
 
-    waylandClient = qobject_cast<KWin::WaylandClient *>(toplevel) != nullptr;
+    waylandClient = qobject_cast<KWin::WaylandWindow *>(toplevel) != nullptr;
     x11Client = qobject_cast<KWin::X11Client *>(toplevel) != nullptr || qobject_cast<KWin::Unmanaged *>(toplevel) != nullptr;
 }
 

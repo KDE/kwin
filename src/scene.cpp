@@ -61,7 +61,7 @@
 #include "surfaceitem.h"
 #include "unmanaged.h"
 #include "wayland/surface_interface.h"
-#include "waylandclient.h"
+#include "waylandwindow.h"
 #include "windowitem.h"
 #include "workspace.h"
 #include "x11client.h"
@@ -712,7 +712,7 @@ SceneWindow::SceneWindow(Window *client, QObject *parent)
     , toplevel(client)
     , disable_painting(0)
 {
-    if (qobject_cast<WaylandClient *>(client)) {
+    if (qobject_cast<WaylandWindow *>(client)) {
         m_windowItem.reset(new WindowItemWayland(toplevel));
     } else if (qobject_cast<X11Client *>(client) || qobject_cast<Unmanaged *>(client)) {
         m_windowItem.reset(new WindowItemX11(toplevel));

@@ -6,7 +6,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "waylandclient.h"
+#include "waylandwindow.h"
 #include "platform.h"
 #include "screens.h"
 #include "wayland/clientbuffer.h"
@@ -35,62 +35,62 @@ enum WaylandGeometryType {
 };
 Q_DECLARE_FLAGS(WaylandGeometryTypes, WaylandGeometryType)
 
-WaylandClient::WaylandClient(SurfaceInterface *surface)
+WaylandWindow::WaylandWindow(SurfaceInterface *surface)
 {
     setSurface(surface);
     setupCompositing();
 
     connect(surface, &SurfaceInterface::shadowChanged,
-            this, &WaylandClient::updateShadow);
-    connect(this, &WaylandClient::frameGeometryChanged,
-            this, &WaylandClient::updateClientOutputs);
-    connect(this, &WaylandClient::desktopFileNameChanged,
-            this, &WaylandClient::updateIcon);
-    connect(screens(), &Screens::changed, this, &WaylandClient::updateClientOutputs);
+            this, &WaylandWindow::updateShadow);
+    connect(this, &WaylandWindow::frameGeometryChanged,
+            this, &WaylandWindow::updateClientOutputs);
+    connect(this, &WaylandWindow::desktopFileNameChanged,
+            this, &WaylandWindow::updateIcon);
+    connect(screens(), &Screens::changed, this, &WaylandWindow::updateClientOutputs);
     connect(surface->client(), &ClientConnection::aboutToBeDestroyed,
-            this, &WaylandClient::destroyClient);
+            this, &WaylandWindow::destroyClient);
 
     updateResourceName();
     updateIcon();
 }
 
-QString WaylandClient::captionNormal() const
+QString WaylandWindow::captionNormal() const
 {
     return m_captionNormal;
 }
 
-QString WaylandClient::captionSuffix() const
+QString WaylandWindow::captionSuffix() const
 {
     return m_captionSuffix;
 }
 
-pid_t WaylandClient::pid() const
+pid_t WaylandWindow::pid() const
 {
     return surface()->client()->processId();
 }
 
-bool WaylandClient::isClient() const
+bool WaylandWindow::isClient() const
 {
     return true;
 }
 
-bool WaylandClient::isLockScreen() const
+bool WaylandWindow::isLockScreen() const
 {
     return surface()->client() == waylandServer()->screenLockerClientConnection();
 }
 
-bool WaylandClient::isLocalhost() const
+bool WaylandWindow::isLocalhost() const
 {
     return true;
 }
 
-Window *WaylandClient::findModal(bool allow_itself)
+Window *WaylandWindow::findModal(bool allow_itself)
 {
     Q_UNUSED(allow_itself)
     return nullptr;
 }
 
-void WaylandClient::resizeWithChecks(const QSize &size)
+void WaylandWindow::resizeWithChecks(const QSize &size)
 {
     const QRect area = workspace()->clientArea(WorkArea, this);
 
@@ -107,7 +107,7 @@ void WaylandClient::resizeWithChecks(const QSize &size)
     resize(QSize(width, height));
 }
 
-void WaylandClient::killWindow()
+void WaylandWindow::killWindow()
 {
     if (!surface()) {
         return;
@@ -122,12 +122,12 @@ void WaylandClient::killWindow()
     QTimer::singleShot(5000, c, &ClientConnection::destroy);
 }
 
-QByteArray WaylandClient::windowRole() const
+QByteArray WaylandWindow::windowRole() const
 {
     return QByteArray();
 }
 
-bool WaylandClient::belongsToSameApplication(const Window *other, SameApplicationChecks checks) const
+bool WaylandWindow::belongsToSameApplication(const Window *other, SameApplicationChecks checks) const
 {
     if (checks.testFlag(SameApplicationCheck::AllowCrossProcesses)) {
         if (other->desktopFileName() == desktopFileName()) {
@@ -140,7 +140,7 @@ bool WaylandClient::belongsToSameApplication(const Window *other, SameApplicatio
     return false;
 }
 
-bool WaylandClient::belongsToDesktop() const
+bool WaylandWindow::belongsToDesktop() const
 {
     const auto clients = waylandServer()->clients();
 
@@ -153,12 +153,12 @@ bool WaylandClient::belongsToDesktop() const
                        });
 }
 
-void WaylandClient::updateClientOutputs()
+void WaylandWindow::updateClientOutputs()
 {
     surface()->setOutputs(waylandServer()->display()->outputsIntersecting(frameGeometry()));
 }
 
-void WaylandClient::updateIcon()
+void WaylandWindow::updateIcon()
 {
     const QString waylandIconName = QStringLiteral("wayland");
     const QString dfIconName = iconFromDesktopFile();
@@ -169,7 +169,7 @@ void WaylandClient::updateIcon()
     setIcon(QIcon::fromTheme(iconName));
 }
 
-void WaylandClient::updateResourceName()
+void WaylandWindow::updateResourceName()
 {
     const QFileInfo fileInfo(surface()->client()->executablePath());
     if (fileInfo.exists()) {
@@ -178,7 +178,7 @@ void WaylandClient::updateResourceName()
     }
 }
 
-void WaylandClient::updateCaption()
+void WaylandWindow::updateCaption()
 {
     const QString oldSuffix = m_captionSuffix;
     const auto shortcut = shortcutCaptionSuffix();
@@ -195,7 +195,7 @@ void WaylandClient::updateCaption()
     }
 }
 
-void WaylandClient::setCaption(const QString &caption)
+void WaylandWindow::setCaption(const QString &caption)
 {
     const QString oldSuffix = m_captionSuffix;
     m_captionNormal = caption.simplified();
@@ -206,7 +206,7 @@ void WaylandClient::setCaption(const QString &caption)
     }
 }
 
-void WaylandClient::doSetActive()
+void WaylandWindow::doSetActive()
 {
     if (isActive()) { // TODO: Xwayland clients must be unfocused somewhere else.
         StackingUpdatesBlocker blocker(workspace());
@@ -214,7 +214,7 @@ void WaylandClient::doSetActive()
     }
 }
 
-void WaylandClient::updateDepth()
+void WaylandWindow::updateDepth()
 {
     if (surface()->buffer()->hasAlphaChannel()) {
         setDepth(32);
@@ -223,7 +223,7 @@ void WaylandClient::updateDepth()
     }
 }
 
-void WaylandClient::cleanGrouping()
+void WaylandWindow::cleanGrouping()
 {
     if (transientFor()) {
         transientFor()->removeTransient(this);
@@ -238,22 +238,22 @@ void WaylandClient::cleanGrouping()
     }
 }
 
-bool WaylandClient::isShown() const
+bool WaylandWindow::isShown() const
 {
     return !isZombie() && !isHidden() && !isMinimized();
 }
 
-bool WaylandClient::isHiddenInternal() const
+bool WaylandWindow::isHiddenInternal() const
 {
     return isHidden();
 }
 
-bool WaylandClient::isHidden() const
+bool WaylandWindow::isHidden() const
 {
     return m_isHidden;
 }
 
-void WaylandClient::showClient()
+void WaylandWindow::showClient()
 {
     if (!isHidden()) {
         return;
@@ -263,7 +263,7 @@ void WaylandClient::showClient()
     Q_EMIT windowShown(this);
 }
 
-void WaylandClient::hideClient()
+void WaylandWindow::hideClient()
 {
     if (isHidden()) {
         return;
@@ -277,12 +277,12 @@ void WaylandClient::hideClient()
     Q_EMIT windowHidden(this);
 }
 
-QRect WaylandClient::frameRectToBufferRect(const QRect &rect) const
+QRect WaylandWindow::frameRectToBufferRect(const QRect &rect) const
 {
     return QRect(rect.topLeft(), surface()->size());
 }
 
-void WaylandClient::updateGeometry(const QRect &rect)
+void WaylandWindow::updateGeometry(const QRect &rect)
 {
     const QRect oldClientGeometry = m_clientGeometry;
     const QRect oldFrameGeometry = m_frameGeometry;

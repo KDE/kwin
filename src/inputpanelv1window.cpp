@@ -26,7 +26,7 @@ namespace KWin
 {
 
 InputPanelV1Window::InputPanelV1Window(InputPanelSurfaceV1Interface *panelSurface)
-    : WaylandClient(panelSurface->surface())
+    : WaylandWindow(panelSurface->surface())
     , m_panelSurface(panelSurface)
 {
     setSkipSwitcher(true);
