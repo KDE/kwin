@@ -33,3 +33,6 @@ Dependencies:
     'plasma/breeze': '@same'
     'plasma/kdecoration': '@same'
     'plasma/kscreenlocker': '@same'
+
+Options:
+  use-ccache: True
