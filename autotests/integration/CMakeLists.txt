@@ -1,43 +1,36 @@
 add_subdirectory(helper)
 
-set(KWinIntegrationTestFramework_SOURCES
-    ../../src/cursor.cpp
-
-    generic_scene_opengl_test.cpp
-    kwin_wayland_test.cpp
-    test_helpers.cpp
-)
 add_library(KWinIntegrationTestFramework SHARED)
 if (QT_MAJOR_VERSION EQUAL "5")
-    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
+    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework
         PROTOCOL ${WaylandProtocols_DATADIR}/unstable/input-method/input-method-unstable-v1.xml
         BASENAME input-method-unstable-v1
     )
-    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
+    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework
         PROTOCOL ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v3.xml
         BASENAME text-input-unstable-v3
     )
-    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
+    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework
         PROTOCOL protocols/wlr-layer-shell-unstable-v1.xml
         BASENAME wlr-layer-shell-unstable-v1
     )
-    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
+    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework
         PROTOCOL ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
         BASENAME xdg-shell
     )
-    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
+    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework
         PROTOCOL ${WaylandProtocols_DATADIR}/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml
         BASENAME xdg-decoration-unstable-v1
     )
-    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
+    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework
         PROTOCOL ${WaylandProtocols_DATADIR}/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml
         BASENAME idle-inhibit-unstable-v1
     )
-    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
+    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework
         PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-device-v2.xml
         BASENAME kde-output-device-v2
     )
-    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
+    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework
         PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-management-v2.xml
         BASENAME kde-output-management-v2
     )
@@ -54,7 +47,13 @@ else()
     )
 endif()
 
-target_sources(KWinIntegrationTestFramework PRIVATE ${KWinIntegrationTestFramework_SOURCES})
+target_sources(KWinIntegrationTestFramework PRIVATE
+    ../../src/cursor.cpp
+
+    generic_scene_opengl_test.cpp
+    kwin_wayland_test.cpp
+    test_helpers.cpp
+)
 target_link_libraries(KWinIntegrationTestFramework
     PUBLIC
         Qt::Test
