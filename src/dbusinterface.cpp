@@ -14,7 +14,6 @@
 #include "virtualdesktopmanageradaptor.h"
 
 // kwin
-#include "abstract_client.h"
 #include "atoms.h"
 #include "composite.h"
 #include "debug_console.h"
@@ -27,6 +26,7 @@
 #include "renderbackend.h"
 #include "unmanaged.h"
 #include "virtualdesktops.h"
+#include "window.h"
 #include "workspace.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
@@ -194,7 +194,7 @@ void DBusInterface::replace()
 
 namespace
 {
-QVariantMap clientToVariantMap(const AbstractClient *c)
+QVariantMap clientToVariantMap(const Window *c)
 {
     return
     {
@@ -234,7 +234,7 @@ QVariantMap DBusInterface::queryWindowInfo()
     m_replyQueryWindowInfo = message();
     setDelayedReply(true);
     kwinApp()->platform()->startInteractiveWindowSelection(
-        [this](AbstractClient *t) {
+        [this](Window *t) {
             if (!t) {
                 QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createErrorReply(
                     QStringLiteral("org.kde.KWin.Error.UserCancel"),
@@ -255,7 +255,7 @@ QVariantMap DBusInterface::queryWindowInfo()
 QVariantMap DBusInterface::getWindowInfo(const QString &uuid)
 {
     const auto id = QUuid::fromString(uuid);
-    const auto client = workspace()->findAbstractClient([&id](const AbstractClient *c) {
+    const auto client = workspace()->findAbstractClient([&id](const Window *c) {
         return c->internalId() == id;
     });
     if (client) {

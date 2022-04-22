@@ -170,7 +170,7 @@ void X11DecorationRenderer::render(const QRegion &region)
  * is done in manage().
  */
 X11Client::X11Client()
-    : AbstractClient()
+    : Window()
     , m_client()
     , m_wrapper()
     , m_frame()
@@ -516,7 +516,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
             auto mainclients = mainClients();
             bool on_current = false;
             bool on_all = false;
-            AbstractClient *maincl = nullptr;
+            Window *maincl = nullptr;
             // This is slightly duplicated from Placement::placeOnMainWindow()
             for (auto it = mainclients.constBegin(); it != mainclients.constEnd(); ++it) {
                 if (mainclients.count() > 1 && // A group-transient
@@ -907,7 +907,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
         if (!isMapped && !session && isSessionSaving && !isOnCurrentActivity()) {
             setSessionActivityOverride(true);
             const auto &clients = mainClients();
-            for (AbstractClient *c : qAsConst(clients)) {
+            for (Window *c : qAsConst(clients)) {
                 if (X11Client *mc = dynamic_cast<X11Client *>(c)) {
                     mc->setSessionActivityOverride(true);
                 }
@@ -1417,7 +1417,7 @@ void X11Client::showClient()
 
 bool X11Client::setupCompositing()
 {
-    if (!AbstractClient::setupCompositing()) {
+    if (!Window::setupCompositing()) {
         return false;
     }
     // If compositing is back on, stop rendering decoration in the frame window.
@@ -1428,7 +1428,7 @@ bool X11Client::setupCompositing()
 
 void X11Client::finishCompositing(ReleaseReason releaseReason)
 {
-    AbstractClient::finishCompositing(releaseReason);
+    Window::finishCompositing(releaseReason);
     updateVisibility();
     // If compositing is off, render the decoration in the X11 frame window.
     maybeCreateX11DecorationRenderer();
@@ -1494,7 +1494,7 @@ QRect X11Client::iconGeometry() const
     } else {
         // Check all mainwindows of this window (recursively)
         const auto &clients = mainClients();
-        for (AbstractClient *amainwin : clients) {
+        for (Window *amainwin : clients) {
             X11Client *mainwin = dynamic_cast<X11Client *>(amainwin);
             if (!mainwin) {
                 continue;
@@ -1505,7 +1505,7 @@ QRect X11Client::iconGeometry() const
             }
         }
         // No mainwindow (or their parents) with icon geometry was found
-        return AbstractClient::iconGeometry();
+        return Window::iconGeometry();
     }
 }
 
@@ -1554,7 +1554,7 @@ void X11Client::doSetShade(ShadeMode previousShadeMode)
             setActive(true);
         }
         if (shadeMode() == ShadeHover) {
-            QList<AbstractClient *> order = workspace()->stackingOrder();
+            QList<Window *> order = workspace()->stackingOrder();
             // invalidate, since "this" could be the topmost toplevel and shade_below dangeling
             shade_below = nullptr;
             // this is likely related to the index parameter?!
@@ -1979,7 +1979,7 @@ void X11Client::doSetOnActivities(const QStringList &activityList)
 
 void X11Client::updateActivities(bool includeTransients)
 {
-    AbstractClient::updateActivities(includeTransients);
+    Window::updateActivities(includeTransients);
     if (!m_activityUpdatesBlocked) {
         updateVisibility();
     }
@@ -1988,14 +1988,14 @@ void X11Client::updateActivities(bool includeTransients)
 /**
  * Returns the list of activities the client window is on.
  * if it's on all activities, the list will be empty.
- * Don't use this, use isOnActivity() and friends (from class AbstractClient)
+ * Don't use this, use isOnActivity() and friends (from class Window)
  */
 QStringList X11Client::activities() const
 {
     if (sessionActivityOverride) {
         return QStringList();
     }
-    return AbstractClient::activities();
+    return Window::activities();
 }
 
 /**
@@ -2739,7 +2739,7 @@ void X11Client::readShowOnScreenEdge(Xcb::Property &property)
             setKeepBelow(true);
             successfullyHidden = keepBelow(); // request could have failed due to user kwin rules
 
-            m_edgeRemoveConnection = connect(this, &AbstractClient::keepBelowChanged, this, [this]() {
+            m_edgeRemoveConnection = connect(this, &Window::keepBelowChanged, this, [this]() {
                 if (!keepBelow()) {
                     ScreenEdges::self()->reserve(this, ElectricNone);
                 }
@@ -2788,7 +2788,7 @@ void X11Client::showOnScreenEdge()
     xcb_delete_property(kwinApp()->x11Connection(), window(), atoms->kde_screen_edge_show);
 }
 
-bool X11Client::belongsToSameApplication(const AbstractClient *other, SameApplicationChecks checks) const
+bool X11Client::belongsToSameApplication(const Window *other, SameApplicationChecks checks) const
 {
     const X11Client *c2 = dynamic_cast<const X11Client *>(other);
     if (!c2) {
@@ -3134,7 +3134,7 @@ void X11Client::checkGroupTransients()
             if (*it1 == *it2) {
                 continue;
             }
-            for (AbstractClient *cl = (*it2)->transientFor(); cl != nullptr; cl = cl->transientFor()) {
+            for (Window *cl = (*it2)->transientFor(); cl != nullptr; cl = cl->transientFor()) {
                 if (cl == *it1) {
                     // don't use removeTransient(), that would modify *it2 too
                     (*it2)->removeTransientFromList(*it1);
@@ -3242,9 +3242,9 @@ xcb_window_t X11Client::verifyTransientFor(xcb_window_t new_transient_for, bool 
     return new_transient_for;
 }
 
-void X11Client::addTransient(AbstractClient *cl)
+void X11Client::addTransient(Window *cl)
 {
-    AbstractClient::addTransient(cl);
+    Window::addTransient(cl);
     if (workspace()->mostRecentlyActivatedClient() == this && cl->isModal()) {
         check_active_modal = true;
     }
@@ -3256,13 +3256,13 @@ void X11Client::addTransient(AbstractClient *cl)
     //        qDebug() << "AT:" << (*it);
 }
 
-void X11Client::removeTransient(AbstractClient *cl)
+void X11Client::removeTransient(Window *cl)
 {
     //    qDebug() << "REMOVETRANS:" << this << ":" << cl;
     //    qDebug() << kBacktrace();
     // cl is transient for this, but this is going away
     // make cl group transient
-    AbstractClient::removeTransient(cl);
+    Window::removeTransient(cl);
     if (cl->transientFor() == this) {
         if (X11Client *c = dynamic_cast<X11Client *>(cl)) {
             c->m_transientForId = XCB_WINDOW_NONE;
@@ -3285,7 +3285,7 @@ void X11Client::checkTransient(xcb_window_t w)
 
 // returns true if cl is the transient_for window for this client,
 // or recursively the transient_for window
-bool X11Client::hasTransient(const AbstractClient *cl, bool indirect) const
+bool X11Client::hasTransient(const Window *cl, bool indirect) const
 {
     if (const X11Client *c = dynamic_cast<const X11Client *>(cl)) {
         // checkGroupTransients() uses this to break loops, so hasTransient() must detect them
@@ -3339,15 +3339,15 @@ bool X11Client::hasTransientInternal(const X11Client *cl, bool indirect, QList<c
     return false;
 }
 
-QList<AbstractClient *> X11Client::mainClients() const
+QList<Window *> X11Client::mainClients() const
 {
     if (!isTransient()) {
-        return QList<AbstractClient *>();
+        return QList<Window *>();
     }
-    if (const AbstractClient *t = transientFor()) {
-        return QList<AbstractClient *>{const_cast<AbstractClient *>(t)};
+    if (const Window *t = transientFor()) {
+        return QList<Window *>{const_cast<Window *>(t)};
     }
-    QList<AbstractClient *> result;
+    QList<Window *> result;
     Q_ASSERT(group());
     for (auto it = group()->members().constBegin(); it != group()->members().constEnd(); ++it) {
         if ((*it)->hasTransient(this, false)) {
@@ -3357,10 +3357,10 @@ QList<AbstractClient *> X11Client::mainClients() const
     return result;
 }
 
-AbstractClient *X11Client::findModal(bool allow_itself)
+Window *X11Client::findModal(bool allow_itself)
 {
     for (auto it = transients().constBegin(); it != transients().constEnd(); ++it) {
-        if (AbstractClient *ret = (*it)->findModal(true)) {
+        if (Window *ret = (*it)->findModal(true)) {
             return ret;
         }
     }
@@ -4685,7 +4685,7 @@ void X11Client::leaveInteractiveMoveResize()
         xcb_ungrab_pointer(kwinApp()->x11Connection(), xTime());
         m_moveResizeGrabWindow.reset();
     }
-    AbstractClient::leaveInteractiveMoveResize();
+    Window::leaveInteractiveMoveResize();
 }
 
 bool X11Client::isWaitingForInteractiveMoveResizeSync() const
@@ -4821,7 +4821,7 @@ bool X11Client::hasStrut() const
 
 void X11Client::applyWindowRules()
 {
-    AbstractClient::applyWindowRules();
+    Window::applyWindowRules();
     updateAllowedActions();
     setBlockingCompositing(info->isBlockingCompositing());
 }
@@ -4836,7 +4836,7 @@ void X11Client::updateWindowRules(Rules::Types selection)
     if (!isManaged()) { // not fully setup yet
         return;
     }
-    AbstractClient::updateWindowRules(selection);
+    Window::updateWindowRules(selection);
 }
 
 void X11Client::damageNotifyEvent()

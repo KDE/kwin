@@ -58,7 +58,7 @@ private:
 
 void PlasmaWindowTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -232,7 +232,7 @@ void PlasmaWindowTest::testPopupWindowNoPlasmaWindow()
     // first create the parent window
     QScopedPointer<KWayland::Client::Surface> parentSurface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> parentShellSurface(Test::createXdgToplevelSurface(parentSurface.data()));
-    AbstractClient *parentClient = Test::renderAndWaitForShown(parentSurface.data(), QSize(100, 50), Qt::blue);
+    Window *parentClient = Test::renderAndWaitForShown(parentSurface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(parentClient);
     QVERIFY(plasmaWindowCreatedSpy.wait());
     QCOMPARE(plasmaWindowCreatedSpy.count(), 1);
@@ -245,7 +245,7 @@ void PlasmaWindowTest::testPopupWindowNoPlasmaWindow()
     positioner->set_gravity(Test::XdgPositioner::gravity_bottom_right);
     QScopedPointer<KWayland::Client::Surface> popupSurface(Test::createSurface());
     QScopedPointer<Test::XdgPopup> popupShellSurface(Test::createXdgPopupSurface(popupSurface.data(), parentShellSurface->xdgSurface(), positioner.data()));
-    AbstractClient *popupClient = Test::renderAndWaitForShown(popupSurface.data(), QSize(10, 10), Qt::blue);
+    Window *popupClient = Test::renderAndWaitForShown(popupSurface.data(), QSize(10, 10), Qt::blue);
     QVERIFY(popupClient);
     QVERIFY(!plasmaWindowCreatedSpy.wait(100));
     QCOMPARE(plasmaWindowCreatedSpy.count(), 1);
@@ -270,7 +270,7 @@ void PlasmaWindowTest::testLockScreenNoPlasmaWindow()
     // lock
     ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
     QVERIFY(clientAddedSpy.wait());
-    QVERIFY(clientAddedSpy.first().first().value<AbstractClient *>()->isLockScreen());
+    QVERIFY(clientAddedSpy.first().first().value<Window *>()->isLockScreen());
     // should not be sent to the client
     QVERIFY(plasmaWindowCreatedSpy.isEmpty());
     QVERIFY(!plasmaWindowCreatedSpy.wait());

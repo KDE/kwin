@@ -116,7 +116,7 @@ private:
      * @brief The OverlayWindow used by this Backend.
      */
     OverlayWindow *m_overlayWindow;
-    Window window;
+    ::Window window;
     GLXFBConfig fbconfig;
     GLXWindow glxWindow;
     GLXContext ctx;

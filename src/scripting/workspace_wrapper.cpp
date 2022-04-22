@@ -58,8 +58,8 @@ WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
     // TODO Plasma 6: Remove it.
     connect(QApplication::desktop(), &QDesktopWidget::resized, this, &WorkspaceWrapper::screenResized);
 
-    const QList<AbstractClient *> clients = ws->allClientList();
-    for (AbstractClient *client : clients) {
+    const QList<Window *> clients = ws->allClientList();
+    for (Window *client : clients) {
         setupClientConnections(client);
     }
 }
@@ -94,7 +94,7 @@ void WorkspaceWrapper::setNumberOfDesktops(int count)
     VirtualDesktopManager::self()->setCount(count);
 }
 
-AbstractClient *WorkspaceWrapper::activeClient() const
+Window *WorkspaceWrapper::activeClient() const
 {
     return workspace()->activeClient();
 }
@@ -229,7 +229,7 @@ SLOTWRAPPER(slotSwitchDesktopDown, DesktopBelow)
 
 #undef SLOTWRAPPER
 
-void WorkspaceWrapper::setActiveClient(KWin::AbstractClient *client)
+void WorkspaceWrapper::setActiveClient(KWin::Window *client)
 {
     KWin::Workspace::self()->activateClient(client);
 }
@@ -275,12 +275,12 @@ QRect WorkspaceWrapper::clientArea(ClientAreaOption option, const QPoint &p, Vir
     return workspace()->clientArea(static_cast<clientAreaOption>(option), kwinApp()->platform()->outputAt(p), desktop);
 }
 
-QRect WorkspaceWrapper::clientArea(ClientAreaOption option, const KWin::AbstractClient *c) const
+QRect WorkspaceWrapper::clientArea(ClientAreaOption option, const KWin::Window *c) const
 {
     return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), c);
 }
 
-QRect WorkspaceWrapper::clientArea(ClientAreaOption option, KWin::AbstractClient *c) const
+QRect WorkspaceWrapper::clientArea(ClientAreaOption option, KWin::Window *c) const
 {
     return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), c);
 }
@@ -338,11 +338,11 @@ QString WorkspaceWrapper::supportInformation() const
     return Workspace::self()->supportInformation();
 }
 
-void WorkspaceWrapper::setupClientConnections(AbstractClient *client)
+void WorkspaceWrapper::setupClientConnections(Window *client)
 {
-    connect(client, &AbstractClient::clientMinimized, this, &WorkspaceWrapper::clientMinimized);
-    connect(client, &AbstractClient::clientUnminimized, this, &WorkspaceWrapper::clientUnminimized);
-    connect(client, qOverload<AbstractClient *, bool, bool>(&AbstractClient::clientMaximizedStateChanged),
+    connect(client, &Window::clientMinimized, this, &WorkspaceWrapper::clientMinimized);
+    connect(client, &Window::clientUnminimized, this, &WorkspaceWrapper::clientUnminimized);
+    connect(client, qOverload<Window *, bool, bool>(&Window::clientMaximizedStateChanged),
             this, &WorkspaceWrapper::clientMaximizeSet);
 
     X11Client *x11Client = qobject_cast<X11Client *>(client); // TODO: Drop X11-specific signals.
@@ -419,7 +419,7 @@ QSize WorkspaceWrapper::virtualScreenSize() const
     return workspace()->geometry().size();
 }
 
-void WorkspaceWrapper::sendClientToScreen(AbstractClient *client, int screen)
+void WorkspaceWrapper::sendClientToScreen(Window *client, int screen)
 {
     Output *output = kwinApp()->platform()->findOutput(screen);
     if (output) {
@@ -432,20 +432,20 @@ QtScriptWorkspaceWrapper::QtScriptWorkspaceWrapper(QObject *parent)
 {
 }
 
-QList<KWin::AbstractClient *> QtScriptWorkspaceWrapper::clientList() const
+QList<KWin::Window *> QtScriptWorkspaceWrapper::clientList() const
 {
     return workspace()->allClientList();
 }
 
-QQmlListProperty<KWin::AbstractClient> DeclarativeScriptWorkspaceWrapper::clients()
+QQmlListProperty<KWin::Window> DeclarativeScriptWorkspaceWrapper::clients()
 {
-    return QQmlListProperty<KWin::AbstractClient>(this, nullptr, &DeclarativeScriptWorkspaceWrapper::countClientList, &DeclarativeScriptWorkspaceWrapper::atClientList);
+    return QQmlListProperty<KWin::Window>(this, nullptr, &DeclarativeScriptWorkspaceWrapper::countClientList, &DeclarativeScriptWorkspaceWrapper::atClientList);
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-int DeclarativeScriptWorkspaceWrapper::countClientList(QQmlListProperty<KWin::AbstractClient> *clients)
+int DeclarativeScriptWorkspaceWrapper::countClientList(QQmlListProperty<KWin::Window> *clients)
 #else
-qsizetype DeclarativeScriptWorkspaceWrapper::countClientList(QQmlListProperty<KWin::AbstractClient> *clients)
+qsizetype DeclarativeScriptWorkspaceWrapper::countClientList(QQmlListProperty<KWin::Window> *clients)
 #endif
 {
     Q_UNUSED(clients)
@@ -453,9 +453,9 @@ qsizetype DeclarativeScriptWorkspaceWrapper::countClientList(QQmlListProperty<KW
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-KWin::AbstractClient *DeclarativeScriptWorkspaceWrapper::atClientList(QQmlListProperty<KWin::AbstractClient> *clients, int index)
+KWin::Window *DeclarativeScriptWorkspaceWrapper::atClientList(QQmlListProperty<KWin::Window> *clients, int index)
 #else
-KWin::AbstractClient *DeclarativeScriptWorkspaceWrapper::atClientList(QQmlListProperty<KWin::AbstractClient> *clients, qsizetype index)
+KWin::Window *DeclarativeScriptWorkspaceWrapper::atClientList(QQmlListProperty<KWin::Window> *clients, qsizetype index)
 #endif
 {
     Q_UNUSED(clients)

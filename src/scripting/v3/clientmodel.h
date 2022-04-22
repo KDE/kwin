@@ -16,7 +16,7 @@
 
 namespace KWin
 {
-class AbstractClient;
+class Window;
 class Output;
 
 namespace ScriptingModels::V3
@@ -41,13 +41,13 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
 private:
-    void markRoleChanged(AbstractClient *client, int role);
+    void markRoleChanged(Window *client, int role);
 
-    void handleClientAdded(AbstractClient *client);
-    void handleClientRemoved(AbstractClient *client);
-    void setupClientConnections(AbstractClient *client);
+    void handleClientAdded(Window *client);
+    void handleClientRemoved(Window *client);
+    void setupClientConnections(Window *client);
 
-    QList<AbstractClient *> m_clients;
+    QList<Window *> m_clients;
 };
 
 class ClientFilterModel : public QSortFilterProxyModel
@@ -108,7 +108,7 @@ Q_SIGNALS:
     void windowTypeChanged();
 
 private:
-    WindowTypes windowTypeMask(AbstractClient *client) const;
+    WindowTypes windowTypeMask(Window *client) const;
 
     ClientModel *m_clientModel = nullptr;
     std::optional<QString> m_activity;

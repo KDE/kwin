@@ -20,7 +20,7 @@
 
 namespace KWin
 {
-class AbstractClient;
+class Window;
 
 namespace Xwl
 {
@@ -38,7 +38,7 @@ public:
     explicit XToWlDrag(X11Source *source);
     ~XToWlDrag() override;
 
-    DragEventReply moveFilter(AbstractClient *target, const QPoint &pos) override;
+    DragEventReply moveFilter(Window *target, const QPoint &pos) override;
     bool handleClientMessage(xcb_client_message_event_t *event) override;
 
     void setDragAndDropAction(KWaylandServer::DataDeviceManagerInterface::DnDAction action);
@@ -76,13 +76,13 @@ class WlVisit : public QObject
     Q_OBJECT
 
 public:
-    WlVisit(AbstractClient *target, XToWlDrag *drag);
+    WlVisit(Window *target, XToWlDrag *drag);
     ~WlVisit() override;
 
     bool handleClientMessage(xcb_client_message_event_t *event);
     bool leave();
 
-    AbstractClient *target() const
+    Window *target() const
     {
         return m_target;
     }
@@ -123,7 +123,7 @@ private:
     void doFinish();
     void unmapProxyWindow();
 
-    AbstractClient *m_target;
+    Window *m_target;
     xcb_window_t m_window;
 
     xcb_window_t m_srcWindow = XCB_WINDOW_NONE;

@@ -23,7 +23,7 @@ class Controller;
 
 namespace KWin
 {
-class AbstractClient;
+class Window;
 
 class KWIN_EXPORT Activities : public QObject
 {
@@ -40,7 +40,7 @@ public:
      *
      * Takes care of transients as well.
      */
-    void toggleClientOnActivity(KWin::AbstractClient *c, const QString &activity, bool dont_activate);
+    void toggleClientOnActivity(KWin::Window *c, const QString &activity, bool dont_activate);
 
     QStringList running() const;
     QStringList all() const;

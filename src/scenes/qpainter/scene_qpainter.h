@@ -28,7 +28,7 @@ public:
     void paintGenericScreen(int mask, const ScreenPaintData &data) override;
     bool initFailed() const override;
     EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
-    Shadow *createShadow(AbstractClient *toplevel) override;
+    Shadow *createShadow(Window *toplevel) override;
     DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
     SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
@@ -49,23 +49,22 @@ public:
 
 protected:
     void paintBackground(const QRegion &region) override;
-    Scene::Window *createWindow(AbstractClient *toplevel) override;
+    SceneWindow *createWindow(Window *toplevel) override;
     void paintOffscreenQuickView(OffscreenQuickView *w) override;
 
 private:
     explicit SceneQPainter(QPainterBackend *backend, QObject *parent = nullptr);
     QPainterBackend *m_backend;
     QScopedPointer<QPainter> m_painter;
-    class Window;
 };
 
-class SceneQPainter::Window : public Scene::Window
+class SceneQPainterWindow : public SceneWindow
 {
     Q_OBJECT
 
 public:
-    Window(SceneQPainter *scene, AbstractClient *c);
-    ~Window() override;
+    SceneQPainterWindow(SceneQPainter *scene, Window *c);
+    ~SceneQPainterWindow() override;
     void performPaint(int mask, const QRegion &region, const WindowPaintData &data) override;
 
 private:
@@ -107,7 +106,7 @@ private:
 class SceneQPainterShadow : public Shadow
 {
 public:
-    SceneQPainterShadow(AbstractClient *toplevel);
+    SceneQPainterShadow(Window *toplevel);
     ~SceneQPainterShadow() override;
 
 protected:

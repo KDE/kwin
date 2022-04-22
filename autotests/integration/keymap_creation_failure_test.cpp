@@ -8,12 +8,12 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "abstract_client.h"
 #include "keyboard_input.h"
 #include "keyboard_layout.h"
 #include "platform.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 
 #include <KConfigGroup>
@@ -47,7 +47,7 @@ void KeymapCreationFailureTest::initTestCase()
     qputenv("XKB_DEFAULT_VARIANT", "no");
     qputenv("XKB_DEFAULT_OPTIONS", "no");
 
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));

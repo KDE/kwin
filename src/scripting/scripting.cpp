@@ -119,7 +119,7 @@ KWin::Script::Script(int id, QString scriptName, QString pluginName, QObject *pa
         QMetaType::registerConverter<QJSValue, QSize>(scriptValueToSize);
     }
 
-    qRegisterMetaType<QList<KWin::AbstractClient *>>();
+    qRegisterMetaType<QList<KWin::Window *>>();
 }
 
 KWin::Script::~Script()
@@ -435,7 +435,7 @@ void KWin::Script::registerUserActionsMenu(const QJSValue &callback)
     m_userActionsMenuCallbacks.append(callback);
 }
 
-QList<QAction *> KWin::Script::actionsForUserActionMenu(KWin::AbstractClient *client, QMenu *parent)
+QList<QAction *> KWin::Script::actionsForUserActionMenu(KWin::Window *client, QMenu *parent)
 {
     QList<QAction *> actions;
     actions.reserve(m_userActionsMenuCallbacks.count());
@@ -667,11 +667,11 @@ void KWin::Scripting::init()
     });
     qmlRegisterSingletonInstance("org.kde.kwin", 3, 0, "Options", options);
 
-    qmlRegisterAnonymousType<KWin::AbstractClient>("org.kde.kwin", 2);
+    qmlRegisterAnonymousType<KWin::Window>("org.kde.kwin", 2);
     qmlRegisterAnonymousType<KWin::VirtualDesktop>("org.kde.kwin", 2);
     qmlRegisterAnonymousType<KWin::X11Client>("org.kde.kwin", 2);
     qmlRegisterAnonymousType<QAbstractItemModel>("org.kde.kwin", 2);
-    qmlRegisterAnonymousType<KWin::AbstractClient>("org.kde.kwin", 3);
+    qmlRegisterAnonymousType<KWin::Window>("org.kde.kwin", 3);
     qmlRegisterAnonymousType<KWin::VirtualDesktop>("org.kde.kwin", 3);
     qmlRegisterAnonymousType<KWin::X11Client>("org.kde.kwin", 3);
     qmlRegisterAnonymousType<QAbstractItemModel>("org.kde.kwin", 3);
@@ -850,7 +850,7 @@ KWin::Scripting::~Scripting()
     s_self = nullptr;
 }
 
-QList<QAction *> KWin::Scripting::actionsForUserActionMenu(KWin::AbstractClient *c, QMenu *parent)
+QList<QAction *> KWin::Scripting::actionsForUserActionMenu(KWin::Window *c, QMenu *parent)
 {
     QList<QAction *> actions;
     for (AbstractScript *s : qAsConst(scripts)) {

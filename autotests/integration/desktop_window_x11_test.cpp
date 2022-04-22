@@ -8,13 +8,13 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "abstract_client.h"
 #include "cursor.h"
 #include "deleted.h"
 #include "output.h"
 #include "platform.h"
 #include "utils/xcbutils.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 #include "x11client.h"
 #include <kwineffects.h>
@@ -41,7 +41,7 @@ private:
 
 void X11DesktopWindowTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());

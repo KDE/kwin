@@ -9,11 +9,11 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "abstract_client.h"
 #include "output.h"
 #include "platform.h"
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 #include "xwayland/databridge.h"
 
@@ -47,7 +47,7 @@ private Q_SLOTS:
 void XwaylandSelectionsTest::initTestCase()
 {
     //    QSKIP("Skipped as it fails for unknown reasons on build.kde.org");
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<QProcess::ExitStatus>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
@@ -105,9 +105,9 @@ void XwaylandSelectionsTest::testSync()
     copyProcess->start();
     QVERIFY(copyProcess->waitForStarted());
 
-    AbstractClient *copyClient = nullptr;
+    Window *copyClient = nullptr;
     QVERIFY(clientAddedSpy.wait());
-    copyClient = clientAddedSpy.first().first().value<AbstractClient *>();
+    copyClient = clientAddedSpy.first().first().value<Window *>();
     QVERIFY(copyClient);
     if (workspace()->activeClient() != copyClient) {
         workspace()->activateClient(copyClient);
@@ -128,9 +128,9 @@ void XwaylandSelectionsTest::testSync()
     QVERIFY(pasteProcess->waitForStarted());
 
     clientAddedSpy.clear();
-    AbstractClient *pasteClient = nullptr;
+    Window *pasteClient = nullptr;
     QVERIFY(clientAddedSpy.wait());
-    pasteClient = clientAddedSpy.last().first().value<AbstractClient *>();
+    pasteClient = clientAddedSpy.last().first().value<Window *>();
     QCOMPARE(clientAddedSpy.count(), 1);
     QVERIFY(pasteClient);
 

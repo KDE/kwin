@@ -44,7 +44,7 @@ private Q_SLOTS:
 
 void WobblyWindowsShadeTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::Effect *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
@@ -130,7 +130,7 @@ void WobblyWindowsShadeTest::testShadeMove()
     QVERIFY(!client->isShade());
     QVERIFY(client->isActive());
 
-    QSignalSpy windowShownSpy(client, &AbstractClient::windowShown);
+    QSignalSpy windowShownSpy(client, &Window::windowShown);
     QVERIFY(windowShownSpy.isValid());
     QVERIFY(windowShownSpy.wait());
 

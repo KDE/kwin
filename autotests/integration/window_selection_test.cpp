@@ -8,13 +8,13 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "abstract_client.h"
 #include "cursor.h"
 #include "keyboard_input.h"
 #include "output.h"
 #include "platform.h"
 #include "pointer_input.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 
 #include <KWayland/Client/compositor.h>
@@ -53,7 +53,7 @@ private Q_SLOTS:
 
 void TestWindowSelection::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -107,8 +107,8 @@ void TestWindowSelection::testSelectOnWindowPointer()
     QCOMPARE(input()->pointer()->focus(), client);
     QVERIFY(pointerEnteredSpy.wait());
 
-    AbstractClient *selectedWindow = nullptr;
-    auto callback = [&selectedWindow](AbstractClient *t) {
+    Window *selectedWindow = nullptr;
+    auto callback = [&selectedWindow](Window *t) {
         selectedWindow = t;
     };
 
@@ -191,8 +191,8 @@ void TestWindowSelection::testSelectOnWindowKeyboard()
     QVERIFY(keyboardEnteredSpy.wait());
     QVERIFY(!client->frameGeometry().contains(KWin::Cursors::self()->mouse()->pos()));
 
-    AbstractClient *selectedWindow = nullptr;
-    auto callback = [&selectedWindow](AbstractClient *t) {
+    Window *selectedWindow = nullptr;
+    auto callback = [&selectedWindow](Window *t) {
         selectedWindow = t;
     };
 
@@ -255,8 +255,8 @@ void TestWindowSelection::testSelectOnWindowTouch()
     auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
 
-    AbstractClient *selectedWindow = nullptr;
-    auto callback = [&selectedWindow](AbstractClient *t) {
+    Window *selectedWindow = nullptr;
+    auto callback = [&selectedWindow](Window *t) {
         selectedWindow = t;
     };
 
@@ -328,8 +328,8 @@ void TestWindowSelection::testCancelOnWindowPointer()
     QCOMPARE(input()->pointer()->focus(), client);
     QVERIFY(pointerEnteredSpy.wait());
 
-    AbstractClient *selectedWindow = nullptr;
-    auto callback = [&selectedWindow](AbstractClient *t) {
+    Window *selectedWindow = nullptr;
+    auto callback = [&selectedWindow](Window *t) {
         selectedWindow = t;
     };
 
@@ -387,8 +387,8 @@ void TestWindowSelection::testCancelOnWindowKeyboard()
     QCOMPARE(input()->pointer()->focus(), client);
     QVERIFY(pointerEnteredSpy.wait());
 
-    AbstractClient *selectedWindow = nullptr;
-    auto callback = [&selectedWindow](AbstractClient *t) {
+    Window *selectedWindow = nullptr;
+    auto callback = [&selectedWindow](Window *t) {
         selectedWindow = t;
     };
 

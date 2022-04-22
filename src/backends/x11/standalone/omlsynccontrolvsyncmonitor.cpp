@@ -43,7 +43,7 @@ OMLSyncControlVsyncMonitorHelper::OMLSyncControlVsyncMonitorHelper(QObject *pare
         return;
     }
 
-    Window rootWindow = DefaultRootWindow(m_display);
+    ::Window rootWindow = DefaultRootWindow(m_display);
 
     const int attribs[] = {
         GLX_RENDER_TYPE, GLX_RGBA_BIT,

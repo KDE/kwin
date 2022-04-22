@@ -27,7 +27,7 @@ class OutputConfigurationV2Interface;
 namespace KWin
 {
 
-class AbstractClient;
+class Window;
 class Output;
 class Edge;
 class Compositor;
@@ -173,7 +173,7 @@ public:
     /**
      * Starts an interactive window selection process.
      *
-     * Once the user selected a window the @p callback is invoked with the selected AbstractClient as
+     * Once the user selected a window the @p callback is invoked with the selected Window as
      * argument. In case the user cancels the interactive window selection or selecting a window is currently
      * not possible (e.g. screen locked) the @p callback is invoked with a @c nullptr argument.
      *
@@ -186,7 +186,7 @@ public:
      * @param callback The function to invoke once the interactive window selection ends
      * @param cursorName The optional name of the cursor shape to use, default is crosshair
      */
-    virtual void startInteractiveWindowSelection(std::function<void(KWin::AbstractClient *)> callback, const QByteArray &cursorName = QByteArray());
+    virtual void startInteractiveWindowSelection(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName = QByteArray());
 
     /**
      * Starts an interactive position selection process.

@@ -294,7 +294,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
             const bool lostFocusPointerToRoot = currentInput->focus == kwinApp()->x11RootWindow() && event->detail == XCB_NOTIFY_DETAIL_INFERIOR;
             if (!currentInput.isNull() && (currentInput->focus == XCB_WINDOW_NONE || currentInput->focus == XCB_INPUT_FOCUS_POINTER_ROOT || lostFocusPointerToRoot)) {
                 // kWarning( 1212 ) << "X focus set to None/PointerRoot, reseting focus" ;
-                AbstractClient *c = mostRecentlyActivatedClient();
+                Window *c = mostRecentlyActivatedClient();
                 if (c != nullptr) {
                     requestFocus(c, true);
                 } else if (activateNextClient(nullptr)) {
@@ -586,7 +586,7 @@ void X11Client::destroyNotifyEvent(xcb_destroy_notify_event_t *e)
  */
 void X11Client::clientMessageEvent(xcb_client_message_event_t *e)
 {
-    AbstractClient::clientMessageEvent(e);
+    Window::clientMessageEvent(e);
     if (e->window != window()) {
         return; // ignore frame/wrapper
     }
@@ -650,7 +650,7 @@ void X11Client::configureRequestEvent(xcb_configure_request_event_t *e)
  */
 void X11Client::propertyNotifyEvent(xcb_property_notify_event_t *e)
 {
-    AbstractClient::propertyNotifyEvent(e);
+    Window::propertyNotifyEvent(e);
     if (e->window != window()) {
         return; // ignore frame/wrapper
     }
@@ -1214,7 +1214,7 @@ void X11Client::NETMoveResize(int x_root, int y_root, NET::Direction direction)
 void X11Client::keyPressEvent(uint key_code, xcb_timestamp_t time)
 {
     updateUserTime(time);
-    AbstractClient::keyPressEvent(key_code);
+    Window::keyPressEvent(key_code);
 }
 
 // ****************************************
@@ -1314,10 +1314,10 @@ void Unmanaged::configureNotifyEvent(xcb_configure_notify_event_t *e)
 }
 
 // ****************************************
-// AbstractClient
+// Window
 // ****************************************
 
-void AbstractClient::propertyNotifyEvent(xcb_property_notify_event_t *e)
+void Window::propertyNotifyEvent(xcb_property_notify_event_t *e)
 {
     if (e->window != window()) {
         return; // ignore frame/wrapper
@@ -1335,7 +1335,7 @@ void AbstractClient::propertyNotifyEvent(xcb_property_notify_event_t *e)
     }
 }
 
-void AbstractClient::clientMessageEvent(xcb_client_message_event_t *e)
+void Window::clientMessageEvent(xcb_client_message_event_t *e)
 {
     if (e->type == atoms->wl_surface_id) {
         m_pendingSurfaceId = e->data.data32[0];

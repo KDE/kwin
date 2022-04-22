@@ -59,8 +59,8 @@ void LayerShellV1Integration::recreateClient(LayerSurfaceV1Interface *shellSurfa
 
 void LayerShellV1Integration::destroyClient(LayerSurfaceV1Interface *shellSurface)
 {
-    const QList<AbstractClient *> clients = waylandServer()->clients();
-    for (AbstractClient *client : clients) {
+    const QList<Window *> clients = waylandServer()->clients();
+    for (Window *client : clients) {
         LayerShellV1Client *layerShellClient = qobject_cast<LayerShellV1Client *>(client);
         if (layerShellClient && layerShellClient->shellSurface() == shellSurface) {
             layerShellClient->destroyClient();
@@ -169,8 +169,8 @@ static void rearrangeLayer(const QList<LayerShellV1Client *> &clients, QRect *wo
 static QList<LayerShellV1Client *> clientsForOutput(Output *output)
 {
     QList<LayerShellV1Client *> result;
-    const QList<AbstractClient *> clients = waylandServer()->clients();
-    for (AbstractClient *client : clients) {
+    const QList<Window *> clients = waylandServer()->clients();
+    for (Window *client : clients) {
         LayerShellV1Client *layerShellClient = qobject_cast<LayerShellV1Client *>(client);
         if (!layerShellClient || layerShellClient->desiredOutput() != output) {
             continue;

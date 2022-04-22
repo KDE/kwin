@@ -53,7 +53,7 @@ class XdgDecorationManagerV1Interface;
 namespace KWin
 {
 
-class AbstractClient;
+class Window;
 class Output;
 class XdgPopupClient;
 class XdgSurfaceClient;
@@ -138,12 +138,12 @@ public:
     {
         return m_idle;
     }
-    QList<AbstractClient *> clients() const
+    QList<Window *> clients() const
     {
         return m_clients;
     }
-    void removeClient(AbstractClient *c);
-    AbstractClient *findClient(const KWaylandServer::SurfaceInterface *surface) const;
+    void removeClient(Window *c);
+    Window *findClient(const KWaylandServer::SurfaceInterface *surface) const;
     XdgToplevelClient *findXdgToplevelClient(KWaylandServer::SurfaceInterface *surface) const;
     XdgSurfaceClient *findXdgSurfaceClient(KWaylandServer::SurfaceInterface *surface) const;
 
@@ -233,20 +233,20 @@ public:
     QString socketName() const;
 
 Q_SIGNALS:
-    void shellClientAdded(KWin::AbstractClient *);
-    void shellClientRemoved(KWin::AbstractClient *);
+    void shellClientAdded(KWin::Window *);
+    void shellClientRemoved(KWin::Window *);
     void initialized();
     void foreignTransientChanged(KWaylandServer::SurfaceInterface *child);
     void lockStateChanged();
 
 private:
     int createScreenLockerConnection();
-    void shellClientShown(AbstractClient *t);
+    void shellClientShown(Window *t);
     void initScreenLocker();
-    void registerXdgGenericClient(AbstractClient *client);
+    void registerXdgGenericClient(Window *client);
     void registerXdgToplevelClient(XdgToplevelClient *client);
     void registerXdgPopupClient(XdgPopupClient *client);
-    void registerShellClient(AbstractClient *client);
+    void registerShellClient(Window *client);
     void handleOutputAdded(Output *output);
     void handleOutputRemoved(Output *output);
     void handleOutputEnabled(Output *output);
@@ -287,7 +287,7 @@ private:
     KWaylandServer::XdgForeignV2Interface *m_XdgForeign = nullptr;
     KWaylandServer::KeyStateInterface *m_keyState = nullptr;
     KWaylandServer::PrimaryOutputV1Interface *m_primary = nullptr;
-    QList<AbstractClient *> m_clients;
+    QList<Window *> m_clients;
     InitializationFlags m_initFlags;
     QHash<Output *, WaylandOutput *> m_waylandOutputs;
     QHash<Output *, WaylandOutputDevice *> m_waylandOutputDevices;

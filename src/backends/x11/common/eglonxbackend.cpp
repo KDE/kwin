@@ -211,7 +211,7 @@ EGLSurface EglOnXBackend::createSurface(xcb_window_t window)
     }
 
     // Window is 64 bits on a 64-bit architecture whereas xcb_window_t is always 32 bits.
-    Window nativeWindow = window;
+    ::Window nativeWindow = window;
 
     EGLSurface surface = EGL_NO_SURFACE;
     if (havePlatformBase()) {

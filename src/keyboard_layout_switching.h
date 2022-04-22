@@ -16,7 +16,7 @@
 namespace KWin
 {
 
-class AbstractClient;
+class Window;
 class KeyboardLayout;
 class Xkb;
 class VirtualDesktop;
@@ -115,7 +115,7 @@ protected:
     void layoutChanged(uint index) override;
 
 private:
-    QHash<AbstractClient *, quint32> m_layouts;
+    QHash<Window *, quint32> m_layouts;
 };
 
 class ApplicationPolicy : public Policy
@@ -135,8 +135,8 @@ protected:
     void layoutChanged(uint index) override;
 
 private:
-    void clientActivated(AbstractClient *c);
-    QHash<AbstractClient *, quint32> m_layouts;
+    void clientActivated(Window *c);
+    QHash<Window *, quint32> m_layouts;
     QHash<QByteArray, quint32> m_layoutsRestored;
 };
 

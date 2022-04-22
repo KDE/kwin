@@ -20,7 +20,6 @@
 #include <kwinglplatform.h>
 #include <kwinoffscreenquickview.h>
 
-#include "abstract_client.h"
 #include "composite.h"
 #include "cursor.h"
 #include "decorations/decoratedclient.h"
@@ -33,6 +32,7 @@
 #include "shadowitem.h"
 #include "surfaceitem.h"
 #include "utils/common.h"
+#include "window.h"
 #include "windowitem.h"
 
 #include <cmath>
@@ -215,7 +215,7 @@ Scene::EffectFrame *SceneOpenGL::createEffectFrame(EffectFrameImpl *frame)
     return new SceneOpenGL::EffectFrame(frame, this);
 }
 
-Shadow *SceneOpenGL::createShadow(AbstractClient *toplevel)
+Shadow *SceneOpenGL::createShadow(Window *toplevel)
 {
     return new SceneOpenGLShadow(toplevel);
 }
@@ -306,7 +306,7 @@ void SceneOpenGL::doPaintBackground(const QVector<float> &vertices)
     vbo->render(GL_TRIANGLES);
 }
 
-Scene::Window *SceneOpenGL::createWindow(AbstractClient *t)
+SceneWindow *SceneOpenGL::createWindow(Window *t)
 {
     return new OpenGLWindow(t, this);
 }
@@ -335,8 +335,8 @@ void SceneOpenGL::performPaintWindow(EffectWindowImpl *w, int mask, const QRegio
 // OpenGLWindow
 //****************************************
 
-OpenGLWindow::OpenGLWindow(AbstractClient *toplevel, SceneOpenGL *scene)
-    : Scene::Window(toplevel)
+OpenGLWindow::OpenGLWindow(Window *toplevel, SceneOpenGL *scene)
+    : SceneWindow(toplevel)
     , m_scene(scene)
 {
 }
@@ -1191,7 +1191,7 @@ QSharedPointer<GLTexture> DecorationShadowTextureCache::getTexture(SceneOpenGLSh
     return d.texture;
 }
 
-SceneOpenGLShadow::SceneOpenGLShadow(AbstractClient *toplevel)
+SceneOpenGLShadow::SceneOpenGLShadow(Window *toplevel)
     : Shadow(toplevel)
 {
 }

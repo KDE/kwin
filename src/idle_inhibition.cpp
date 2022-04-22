@@ -8,10 +8,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "idle_inhibition.h"
-#include "abstract_client.h"
 #include "deleted.h"
 #include "wayland/idle_interface.h"
 #include "wayland/surface_interface.h"
+#include "window.h"
 #include "workspace.h"
 
 #include <algorithm>
@@ -32,19 +32,19 @@ IdleInhibition::IdleInhibition(IdleInterface *idle)
 
 IdleInhibition::~IdleInhibition() = default;
 
-void IdleInhibition::registerClient(AbstractClient *client)
+void IdleInhibition::registerClient(Window *client)
 {
     auto updateInhibit = [this, client] {
         update(client);
     };
 
     m_connections[client] = connect(client->surface(), &SurfaceInterface::inhibitsIdleChanged, this, updateInhibit);
-    connect(client, &AbstractClient::desktopChanged, this, updateInhibit);
-    connect(client, &AbstractClient::clientMinimized, this, updateInhibit);
-    connect(client, &AbstractClient::clientUnminimized, this, updateInhibit);
-    connect(client, &AbstractClient::windowHidden, this, updateInhibit);
-    connect(client, &AbstractClient::windowShown, this, updateInhibit);
-    connect(client, &AbstractClient::windowClosed, this, [this, client]() {
+    connect(client, &Window::desktopChanged, this, updateInhibit);
+    connect(client, &Window::clientMinimized, this, updateInhibit);
+    connect(client, &Window::clientUnminimized, this, updateInhibit);
+    connect(client, &Window::windowHidden, this, updateInhibit);
+    connect(client, &Window::windowShown, this, updateInhibit);
+    connect(client, &Window::windowClosed, this, [this, client]() {
         uninhibit(client);
         auto it = m_connections.find(client);
         if (it != m_connections.end()) {
@@ -56,7 +56,7 @@ void IdleInhibition::registerClient(AbstractClient *client)
     updateInhibit();
 }
 
-void IdleInhibition::inhibit(AbstractClient *client)
+void IdleInhibition::inhibit(Window *client)
 {
     if (isInhibited(client)) {
         // already inhibited
@@ -67,7 +67,7 @@ void IdleInhibition::inhibit(AbstractClient *client)
     // TODO: notify powerdevil?
 }
 
-void IdleInhibition::uninhibit(AbstractClient *client)
+void IdleInhibition::uninhibit(Window *client)
 {
     auto it = std::find(m_idleInhibitors.begin(), m_idleInhibitors.end(), client);
     if (it == m_idleInhibitors.end()) {
@@ -78,7 +78,7 @@ void IdleInhibition::uninhibit(AbstractClient *client)
     m_idle->uninhibit();
 }
 
-void IdleInhibition::update(AbstractClient *client)
+void IdleInhibition::update(Window *client)
 {
     if (client->isInternal()) {
         return;
@@ -101,7 +101,7 @@ void IdleInhibition::slotWorkspaceCreated()
 
 void IdleInhibition::slotDesktopChanged()
 {
-    workspace()->forEachAbstractClient([this](AbstractClient *c) {
+    workspace()->forEachAbstractClient([this](Window *c) {
         update(c);
     });
 }

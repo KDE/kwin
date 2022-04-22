@@ -23,7 +23,6 @@
 #include <xcb/xcb_icccm.h>
 
 using namespace KWin;
-using namespace KWin::Xcb;
 
 class TestXcbSizeHints : public QObject
 {
@@ -40,7 +39,7 @@ private Q_SLOTS:
     void geometryHintsBeforeRead();
 
 private:
-    Window m_testWindow;
+    Xcb::Window m_testWindow;
 };
 
 void TestXcbSizeHints::initTestCase()
@@ -181,7 +180,7 @@ void TestXcbSizeHints::testSizeHints()
     xcb_icccm_set_wm_normal_hints(QX11Info::connection(), m_testWindow, &hints);
     xcb_flush(QX11Info::connection());
 
-    GeometryHints geoHints;
+    Xcb::GeometryHints geoHints;
     geoHints.init(m_testWindow);
     geoHints.read();
     QCOMPARE(geoHints.hasAspect(), minAspect.isValid() && maxAspect.isValid());
@@ -222,7 +221,7 @@ void TestXcbSizeHints::testSizeHints()
     QCOMPARE(sizeHints->winGravity, gravity);
 
     // copy
-    GeometryHints::NormalHints::SizeHints sizeHints2 = *sizeHints;
+    Xcb::GeometryHints::NormalHints::SizeHints sizeHints2 = *sizeHints;
     QTEST(sizeHints2.flags, "expectedFlags");
     QTEST(sizeHints2.pad[0], "expectedPad0");
     QTEST(sizeHints2.pad[1], "expectedPad1");
@@ -250,7 +249,7 @@ void TestXcbSizeHints::testSizeHintsEmpty()
     xcb_icccm_set_wm_normal_hints(QX11Info::connection(), m_testWindow, &xcbHints);
     xcb_flush(QX11Info::connection());
 
-    GeometryHints hints;
+    Xcb::GeometryHints hints;
     hints.init(m_testWindow);
     hints.read();
     QVERIFY(!hints.hasAspect());
@@ -294,7 +293,7 @@ void TestXcbSizeHints::testSizeHintsEmpty()
 
 void TestXcbSizeHints::testSizeHintsNotSet()
 {
-    GeometryHints hints;
+    Xcb::GeometryHints hints;
     hints.init(m_testWindow);
     hints.read();
     QVERIFY(!hints.m_sizeHints);
@@ -318,7 +317,7 @@ void TestXcbSizeHints::testSizeHintsNotSet()
 
 void TestXcbSizeHints::geometryHintsBeforeInit()
 {
-    GeometryHints hints;
+    Xcb::GeometryHints hints;
     QVERIFY(!hints.hasAspect());
     QVERIFY(!hints.hasBaseSize());
     QVERIFY(!hints.hasMaxSize());
@@ -345,7 +344,7 @@ void TestXcbSizeHints::geometryHintsBeforeRead()
     xcb_icccm_set_wm_normal_hints(QX11Info::connection(), m_testWindow, &xcbHints);
     xcb_flush(QX11Info::connection());
 
-    GeometryHints hints;
+    Xcb::GeometryHints hints;
     hints.init(m_testWindow);
     QVERIFY(!hints.hasAspect());
     QVERIFY(!hints.hasBaseSize());

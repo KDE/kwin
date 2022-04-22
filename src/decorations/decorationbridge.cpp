@@ -14,9 +14,9 @@
 #include "decorations_logging.h"
 #include "settings.h"
 // KWin core
-#include "abstract_client.h"
 #include "wayland/server_decoration_interface.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 
 // KDecoration
@@ -140,7 +140,7 @@ void DecorationBridge::initPlugin()
 
 static void recreateDecorations()
 {
-    Workspace::self()->forEachAbstractClient([](AbstractClient *c) {
+    Workspace::self()->forEachAbstractClient([](Window *c) {
         c->invalidateDecoration();
     });
 }
@@ -230,7 +230,7 @@ void DecorationBridge::findTheme(const QVariantMap &map)
 
 std::unique_ptr<KDecoration2::DecoratedClientPrivate> DecorationBridge::createClient(KDecoration2::DecoratedClient *client, KDecoration2::Decoration *decoration)
 {
-    return std::unique_ptr<DecoratedClientImpl>(new DecoratedClientImpl(static_cast<AbstractClient *>(decoration->parent()), client, decoration));
+    return std::unique_ptr<DecoratedClientImpl>(new DecoratedClientImpl(static_cast<Window *>(decoration->parent()), client, decoration));
 }
 
 std::unique_ptr<KDecoration2::DecorationSettingsPrivate> DecorationBridge::settings(KDecoration2::DecorationSettings *parent)
@@ -238,7 +238,7 @@ std::unique_ptr<KDecoration2::DecorationSettingsPrivate> DecorationBridge::setti
     return std::unique_ptr<SettingsImpl>(new SettingsImpl(parent));
 }
 
-KDecoration2::Decoration *DecorationBridge::createDecoration(AbstractClient *client)
+KDecoration2::Decoration *DecorationBridge::createDecoration(Window *client)
 {
     if (m_noPlugin) {
         return nullptr;

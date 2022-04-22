@@ -8,7 +8,6 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "abstract_client.h"
 #include "composite.h"
 #include "deleted.h"
 #include "effectloader.h"
@@ -16,6 +15,7 @@
 #include "platform.h"
 #include "scripting/scriptedeffect.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 #include "x11client.h"
 
@@ -44,7 +44,7 @@ private Q_SLOTS:
 void DontCrashCancelAnimationFromAnimationEndedTest::initTestCase()
 {
     qRegisterMetaType<KWin::Deleted *>();
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
     kwinApp()->start();
@@ -96,7 +96,7 @@ void DontCrashCancelAnimationFromAnimationEndedTest::testScript()
     QTest::qWait(200);
 
     // wait for the window to be passed to Deleted
-    QSignalSpy windowDeletedSpy(c, &AbstractClient::windowClosed);
+    QSignalSpy windowDeletedSpy(c, &Window::windowClosed);
     QVERIFY(windowDeletedSpy.isValid());
 
     surface->deleteLater();

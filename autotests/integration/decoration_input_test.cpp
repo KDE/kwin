@@ -8,7 +8,6 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "abstract_client.h"
 #include "cursor.h"
 #include "internal_client.h"
 #include "output.h"
@@ -17,6 +16,7 @@
 #include "screens.h"
 #include "touch_input.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 #include <kwineffects.h>
 
@@ -72,7 +72,7 @@ private Q_SLOTS:
     void testTooltipDoesntEatKeyEvents();
 
 private:
-    AbstractClient *showWindow();
+    Window *showWindow();
 };
 
 #define MOTION(target) Test::pointerMotion(target, timestamp++)
@@ -81,7 +81,7 @@ private:
 
 #define RELEASE Test::pointerButtonReleased(BTN_LEFT, timestamp++)
 
-AbstractClient *DecorationInputTest::showWindow()
+Window *DecorationInputTest::showWindow()
 {
     using namespace KWayland::Client;
 #define VERIFY(statement)                                                 \
@@ -120,7 +120,7 @@ AbstractClient *DecorationInputTest::showWindow()
 
 void DecorationInputTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::InternalClient *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
@@ -174,7 +174,7 @@ void DecorationInputTest::testAxis_data()
 
 void DecorationInputTest::testAxis()
 {
-    AbstractClient *c = showWindow();
+    Window *c = showWindow();
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
@@ -223,7 +223,7 @@ void DecorationInputTest::testDoubleClick_data()
 
 void KWin::DecorationInputTest::testDoubleClick()
 {
-    AbstractClient *c = showWindow();
+    Window *c = showWindow();
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
@@ -273,7 +273,7 @@ void DecorationInputTest::testDoubleTap_data()
 
 void KWin::DecorationInputTest::testDoubleTap()
 {
-    AbstractClient *c = showWindow();
+    Window *c = showWindow();
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
@@ -315,7 +315,7 @@ void KWin::DecorationInputTest::testDoubleTap()
 
 void DecorationInputTest::testHover()
 {
-    AbstractClient *c = showWindow();
+    Window *c = showWindow();
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
@@ -374,14 +374,14 @@ void DecorationInputTest::testPressToMove_data()
 
 void DecorationInputTest::testPressToMove()
 {
-    AbstractClient *c = showWindow();
+    Window *c = showWindow();
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
     c->move(screens()->geometry(0).center() - QPoint(c->width() / 2, c->height() / 2));
-    QSignalSpy startMoveResizedSpy(c, &AbstractClient::clientStartUserMovedResized);
+    QSignalSpy startMoveResizedSpy(c, &Window::clientStartUserMovedResized);
     QVERIFY(startMoveResizedSpy.isValid());
-    QSignalSpy clientFinishUserMovedResizedSpy(c, &AbstractClient::clientFinishUserMovedResized);
+    QSignalSpy clientFinishUserMovedResizedSpy(c, &Window::clientFinishUserMovedResized);
     QVERIFY(clientFinishUserMovedResizedSpy.isValid());
 
     quint32 timestamp = 1;
@@ -433,14 +433,14 @@ void DecorationInputTest::testTapToMove_data()
 
 void DecorationInputTest::testTapToMove()
 {
-    AbstractClient *c = showWindow();
+    Window *c = showWindow();
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
     c->move(screens()->geometry(0).center() - QPoint(c->width() / 2, c->height() / 2));
-    QSignalSpy startMoveResizedSpy(c, &AbstractClient::clientStartUserMovedResized);
+    QSignalSpy startMoveResizedSpy(c, &Window::clientStartUserMovedResized);
     QVERIFY(startMoveResizedSpy.isValid());
-    QSignalSpy clientFinishUserMovedResizedSpy(c, &AbstractClient::clientFinishUserMovedResized);
+    QSignalSpy clientFinishUserMovedResizedSpy(c, &Window::clientFinishUserMovedResized);
     QVERIFY(clientFinishUserMovedResizedSpy.isValid());
 
     quint32 timestamp = 1;
@@ -499,14 +499,14 @@ void DecorationInputTest::testResizeOutsideWindow()
     workspace()->slotReconfigure();
 
     // now create window
-    AbstractClient *c = showWindow();
+    Window *c = showWindow();
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
     c->move(screens()->geometry(0).center() - QPoint(c->width() / 2, c->height() / 2));
     QVERIFY(c->frameGeometry() != c->inputGeometry());
     QVERIFY(c->inputGeometry().contains(c->frameGeometry()));
-    QSignalSpy startMoveResizedSpy(c, &AbstractClient::clientStartUserMovedResized);
+    QSignalSpy startMoveResizedSpy(c, &Window::clientStartUserMovedResized);
     QVERIFY(startMoveResizedSpy.isValid());
 
     // go to border
@@ -596,7 +596,7 @@ void DecorationInputTest::testModifierClickUnrestrictedMove()
     QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedMove);
 
     // create a window
-    AbstractClient *c = showWindow();
+    Window *c = showWindow();
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
@@ -658,7 +658,7 @@ void DecorationInputTest::testModifierScrollOpacity()
     group.sync();
     workspace()->slotReconfigure();
 
-    AbstractClient *c = showWindow();
+    Window *c = showWindow();
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
@@ -717,7 +717,7 @@ void DecorationInputTest::testTouchEvents()
 {
     // this test verifies that the decoration gets a hover leave event on touch release
     // see BUG 386231
-    AbstractClient *c = showWindow();
+    Window *c = showWindow();
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());
@@ -766,7 +766,7 @@ void DecorationInputTest::testTooltipDoesntEatKeyEvents()
     QSignalSpy enteredSpy(keyboard, &KWayland::Client::Keyboard::entered);
     QVERIFY(enteredSpy.isValid());
 
-    AbstractClient *c = showWindow();
+    Window *c = showWindow();
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     QVERIFY(!c->noBorder());

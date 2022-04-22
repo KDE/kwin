@@ -20,7 +20,7 @@
 namespace KWin
 {
 
-class AbstractClient;
+class Window;
 class RootInfoFilter;
 class X11Client;
 
@@ -33,7 +33,7 @@ public:
     static RootInfo *create();
     static void destroy();
 
-    void setActiveClient(AbstractClient *client);
+    void setActiveClient(Window *client);
 
 protected:
     void changeNumberOfDesktops(int n) override;

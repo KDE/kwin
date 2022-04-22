@@ -38,7 +38,7 @@ class QDBusServiceWatcher;
 
 namespace KWin
 {
-class AbstractClient;
+class Window;
 class Compositor;
 class Deleted;
 class EffectLoader;
@@ -302,15 +302,15 @@ public Q_SLOTS:
     Q_SCRIPTABLE QString debug(const QString &name, const QString &parameter = QString()) const;
 
 protected Q_SLOTS:
-    void slotClientShown(KWin::AbstractClient *);
-    void slotUnmanagedShown(KWin::AbstractClient *);
-    void slotWindowClosed(KWin::AbstractClient *c, KWin::Deleted *d);
-    void slotClientMaximized(KWin::AbstractClient *c, MaximizeMode maxMode);
-    void slotOpacityChanged(KWin::AbstractClient *t, qreal oldOpacity);
+    void slotClientShown(KWin::Window *);
+    void slotUnmanagedShown(KWin::Window *);
+    void slotWindowClosed(KWin::Window *c, KWin::Deleted *d);
+    void slotClientMaximized(KWin::Window *c, MaximizeMode maxMode);
+    void slotOpacityChanged(KWin::Window *t, qreal oldOpacity);
     void slotClientModalityChanged();
-    void slotGeometryShapeChanged(KWin::AbstractClient *t, const QRect &old);
-    void slotFrameGeometryChanged(AbstractClient *toplevel, const QRect &oldGeometry);
-    void slotWindowDamaged(KWin::AbstractClient *t, const QRegion &r);
+    void slotGeometryShapeChanged(KWin::Window *t, const QRect &old);
+    void slotFrameGeometryChanged(Window *toplevel, const QRect &oldGeometry);
+    void slotWindowDamaged(KWin::Window *t, const QRegion &r);
     void slotOutputEnabled(Output *output);
     void slotOutputDisabled(Output *output);
 
@@ -318,7 +318,7 @@ protected:
     void connectNotify(const QMetaMethod &signal) override;
     void disconnectNotify(const QMetaMethod &signal) override;
     void effectsChanged();
-    void setupClientConnections(KWin::AbstractClient *client);
+    void setupClientConnections(KWin::Window *client);
     void setupUnmanagedConnections(KWin::Unmanaged *u);
 
     /**
@@ -402,7 +402,7 @@ class EffectWindowImpl : public EffectWindow
 {
     Q_OBJECT
 public:
-    explicit EffectWindowImpl(AbstractClient *toplevel);
+    explicit EffectWindowImpl(Window *toplevel);
     ~EffectWindowImpl() override;
 
     void enablePainting(int reason) override;
@@ -519,13 +519,13 @@ public:
 
     QWindow *internalWindow() const override;
 
-    const AbstractClient *window() const;
-    AbstractClient *window();
+    const Window *window() const;
+    Window *window();
 
-    void setWindow(AbstractClient *w); // internal
-    void setSceneWindow(Scene::Window *w); // internal
-    const Scene::Window *sceneWindow() const; // internal
-    Scene::Window *sceneWindow(); // internal
+    void setWindow(Window *w); // internal
+    void setSceneWindow(SceneWindow *w); // internal
+    const SceneWindow *sceneWindow() const; // internal
+    SceneWindow *sceneWindow(); // internal
 
     void elevate(bool elevate);
 
@@ -533,8 +533,8 @@ public:
     QVariant data(int role) const override;
 
 private:
-    AbstractClient *toplevel;
-    Scene::Window *sw; // This one is used only during paint pass.
+    Window *toplevel;
+    SceneWindow *sw; // This one is used only during paint pass.
     QHash<int, QVariant> dataMap;
     bool managed = false;
     bool waylandClient;
@@ -666,25 +666,25 @@ inline EffectWindowGroupImpl::EffectWindowGroupImpl(Group *g)
 {
 }
 
-EffectWindow *effectWindow(AbstractClient *w);
-EffectWindow *effectWindow(Scene::Window *w);
+EffectWindow *effectWindow(Window *w);
+EffectWindow *effectWindow(SceneWindow *w);
 
-inline const Scene::Window *EffectWindowImpl::sceneWindow() const
+inline const SceneWindow *EffectWindowImpl::sceneWindow() const
 {
     return sw;
 }
 
-inline Scene::Window *EffectWindowImpl::sceneWindow()
+inline SceneWindow *EffectWindowImpl::sceneWindow()
 {
     return sw;
 }
 
-inline const AbstractClient *EffectWindowImpl::window() const
+inline const Window *EffectWindowImpl::window() const
 {
     return toplevel;
 }
 
-inline AbstractClient *EffectWindowImpl::window()
+inline Window *EffectWindowImpl::window()
 {
     return toplevel;
 }

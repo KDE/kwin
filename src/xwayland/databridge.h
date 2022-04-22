@@ -23,7 +23,7 @@ class SurfaceInterface;
 
 namespace KWin
 {
-class AbstractClient;
+class Window;
 
 namespace Xwl
 {
@@ -47,7 +47,7 @@ public:
 
     ~DataBridge() override;
 
-    DragEventReply dragMoveFilter(AbstractClient *target, const QPoint &pos);
+    DragEventReply dragMoveFilter(Window *target, const QPoint &pos);
 
     Dnd *dnd() const
     {

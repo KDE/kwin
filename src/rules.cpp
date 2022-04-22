@@ -19,11 +19,11 @@
 #include <kconfig.h>
 
 #ifndef KCMRULES
-#include "abstract_client.h"
 #include "client_machine.h"
 #include "main.h"
 #include "platform.h"
 #include "virtualdesktops.h"
+#include "window.h"
 #include "workspace.h"
 #endif
 
@@ -413,7 +413,7 @@ bool Rules::matchClientMachine(const QByteArray &match_machine, bool local) cons
 }
 
 #ifndef KCMRULES
-bool Rules::match(const AbstractClient *c) const
+bool Rules::match(const Window *c) const
 {
     if (!matchType(c->windowType(true))) {
         return false;
@@ -428,7 +428,7 @@ bool Rules::match(const AbstractClient *c) const
         return false;
     }
     if (titlematch != UnimportantMatch) { // track title changes to rematch rules
-        QObject::connect(c, &AbstractClient::captionChanged, c, &AbstractClient::evaluateWindowRules,
+        QObject::connect(c, &Window::captionChanged, c, &Window::evaluateWindowRules,
                          // QueuedConnection, because title may change before
                          // the client is ready (could segfault!)
                          static_cast<Qt::ConnectionType>(Qt::QueuedConnection | Qt::UniqueConnection));
@@ -441,7 +441,7 @@ bool Rules::match(const AbstractClient *c) const
 
 #define NOW_REMEMBER(_T_, _V_) ((selection & _T_) && (_V_##rule == (SetRule)Remember))
 
-bool Rules::update(AbstractClient *c, int selection)
+bool Rules::update(Window *c, int selection)
 {
     // TODO check this setting is for this client ?
     bool updated = false;
@@ -765,7 +765,7 @@ void WindowRules::discardTemporary()
     rules.erase(it2, rules.end());
 }
 
-void WindowRules::update(AbstractClient *c, int selection)
+void WindowRules::update(Window *c, int selection)
 {
     bool updated = false;
     for (QVector<Rules *>::ConstIterator it = rules.constBegin();
@@ -922,7 +922,7 @@ void RuleBook::deleteAll()
     m_rules.clear();
 }
 
-WindowRules RuleBook::find(const AbstractClient *c, bool ignore_temporary)
+WindowRules RuleBook::find(const Window *c, bool ignore_temporary)
 {
     QVector<Rules *> ret;
     for (QList<Rules *>::Iterator it = m_rules.begin();
@@ -947,7 +947,7 @@ WindowRules RuleBook::find(const AbstractClient *c, bool ignore_temporary)
     return WindowRules(ret);
 }
 
-void RuleBook::edit(AbstractClient *c, bool whole_app)
+void RuleBook::edit(Window *c, bool whole_app)
 {
     save();
     QStringList args;
@@ -1037,7 +1037,7 @@ void RuleBook::cleanupTemporaryRules()
     }
 }
 
-void RuleBook::discardUsed(AbstractClient *c, bool withdrawn)
+void RuleBook::discardUsed(Window *c, bool withdrawn)
 {
     bool updated = false;
     for (QList<Rules *>::Iterator it = m_rules.begin();
@@ -1071,7 +1071,7 @@ void RuleBook::setUpdatesDisabled(bool disable)
     m_updatesDisabled = disable;
     if (!disable) {
         const auto clients = Workspace::self()->allClientList();
-        for (AbstractClient *c : clients) {
+        for (Window *c : clients) {
             c->updateWindowRules(Rules::All);
         }
     }

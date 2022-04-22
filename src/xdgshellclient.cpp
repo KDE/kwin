@@ -105,7 +105,7 @@ NET::WindowType XdgSurfaceClient::windowType(bool direct, int supported_types) c
 
 QRect XdgSurfaceClient::inputGeometry() const
 {
-    return isDecorated() ? AbstractClient::inputGeometry() : bufferGeometry();
+    return isDecorated() ? Window::inputGeometry() : bufferGeometry();
 }
 
 QMatrix4x4 XdgSurfaceClient::inputTransformation() const
@@ -1063,7 +1063,7 @@ Layer XdgToplevelClient::layerForDock() const
             break;
         }
     }
-    return AbstractClient::layerForDock();
+    return Window::layerForDock();
 }
 
 void XdgToplevelClient::handleWindowTitleChanged()
@@ -1243,7 +1243,7 @@ void XdgToplevelClient::handleTransientForChanged()
     if (!transientForSurface) {
         transientForSurface = waylandServer()->findForeignTransientForSurface(surface());
     }
-    AbstractClient *transientForClient = waylandServer()->findClient(transientForSurface);
+    Window *transientForClient = waylandServer()->findClient(transientForSurface);
     if (transientForClient != transientFor()) {
         if (transientFor()) {
             transientFor()->removeTransient(this);
@@ -1612,7 +1612,7 @@ void XdgToplevelClient::setFullScreen(bool set, bool user)
 }
 
 /**
- * \todo Move to AbstractClient.
+ * \todo Move to Window.
  */
 static bool changeMaximizeRecursion = false;
 void XdgToplevelClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
@@ -1763,10 +1763,10 @@ XdgPopupClient::XdgPopupClient(XdgPopupInterface *shellSurface)
 void XdgPopupClient::updateReactive()
 {
     if (m_shellSurface->positioner().isReactive()) {
-        connect(transientFor(), &AbstractClient::frameGeometryChanged,
+        connect(transientFor(), &Window::frameGeometryChanged,
                 this, &XdgPopupClient::relayout, Qt::UniqueConnection);
     } else {
-        disconnect(transientFor(), &AbstractClient::frameGeometryChanged,
+        disconnect(transientFor(), &Window::frameGeometryChanged,
                    this, &XdgPopupClient::relayout);
     }
 }
@@ -1996,7 +1996,7 @@ void XdgPopupClient::handleGrabRequested(SeatInterface *seat, quint32 serial)
 
 void XdgPopupClient::initialize()
 {
-    AbstractClient *parentClient = waylandServer()->findClient(m_shellSurface->parentSurface());
+    Window *parentClient = waylandServer()->findClient(m_shellSurface->parentSurface());
     parentClient->addTransient(this);
     setTransientFor(parentClient);
 

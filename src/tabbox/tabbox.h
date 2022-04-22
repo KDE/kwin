@@ -29,7 +29,7 @@ namespace KWin
 {
 
 class Workspace;
-class AbstractClient;
+class Window;
 class X11EventFilter;
 namespace TabBox
 {
@@ -78,7 +78,7 @@ private:
 class TabBoxClientImpl : public TabBoxClient
 {
 public:
-    explicit TabBoxClientImpl(AbstractClient *client);
+    explicit TabBoxClientImpl(Window *client);
     ~TabBoxClientImpl() override;
 
     QString caption() const override;
@@ -93,13 +93,13 @@ public:
     bool isFirstInTabBox() const override;
     QUuid internalId() const override;
 
-    AbstractClient *client() const
+    Window *client() const
     {
         return m_client;
     }
 
 private:
-    AbstractClient *m_client;
+    Window *m_client;
 };
 
 class KWIN_EXPORT TabBox : public QObject
@@ -112,14 +112,14 @@ public:
      * Returns the currently displayed client ( only works in TabBoxWindowsMode ).
      * Returns 0 if no client is displayed.
      */
-    AbstractClient *currentClient();
+    Window *currentClient();
 
     /**
      * Returns the list of clients potentially displayed ( only works in
      * TabBoxWindowsMode ).
      * Returns an empty list if no clients are available.
      */
-    QList<AbstractClient *> currentClientList();
+    QList<Window *> currentClientList();
 
     /**
      * Returns the currently displayed virtual desktop ( only works in
@@ -140,7 +140,7 @@ public:
      *
      * @see setCurrentDesktop
      */
-    void setCurrentClient(AbstractClient *newClient);
+    void setCurrentClient(Window *newClient);
 
     /**
      * Change the currently selected desktop, and notify the effects.
@@ -243,8 +243,8 @@ public:
 
     void initShortcuts();
 
-    AbstractClient *nextClientStatic(AbstractClient *) const;
-    AbstractClient *previousClientStatic(AbstractClient *) const;
+    Window *nextClientStatic(Window *) const;
+    Window *previousClientStatic(Window *) const;
     int nextDesktopStatic(int iDesktop) const;
     int previousDesktopStatic(int iDesktop) const;
     void keyPress(int key);
@@ -316,7 +316,7 @@ private:
     template<typename Slot>
     void key(const KLazyLocalizedString &actionName, Slot slot, const QKeySequence &shortcut = QKeySequence());
 
-    void shadeActivate(AbstractClient *c);
+    void shadeActivate(Window *c);
 
     bool toggleMode(TabBoxMode mode);
 

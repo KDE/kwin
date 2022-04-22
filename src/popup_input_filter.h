@@ -14,7 +14,7 @@
 
 namespace KWin
 {
-class AbstractClient;
+class Window;
 
 class PopupInputFilter : public QObject, public InputEventFilter
 {
@@ -26,12 +26,12 @@ public:
     bool touchDown(qint32 id, const QPointF &pos, quint32 time) override;
 
 private:
-    void handleClientAdded(AbstractClient *client);
-    void handleClientRemoved(AbstractClient *client);
-    void disconnectClient(AbstractClient *client);
+    void handleClientAdded(Window *client);
+    void handleClientRemoved(Window *client);
+    void disconnectClient(Window *client);
     void cancelPopups();
 
-    QVector<AbstractClient *> m_popupClients;
+    QVector<Window *> m_popupClients;
 };
 }
 

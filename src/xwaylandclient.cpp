@@ -18,7 +18,7 @@ namespace KWin
 XwaylandClient::XwaylandClient()
 {
     // The wayland surface is associated with the Xwayland window asynchronously.
-    connect(this, &AbstractClient::surfaceChanged, this, &XwaylandClient::associate);
+    connect(this, &Window::surfaceChanged, this, &XwaylandClient::associate);
 }
 
 void XwaylandClient::associate()

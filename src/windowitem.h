@@ -15,7 +15,7 @@ class Decoration;
 
 namespace KWin
 {
-class AbstractClient;
+class Window;
 class DecorationItem;
 class Deleted;
 class InternalClient;
@@ -37,21 +37,21 @@ public:
     SurfaceItem *surfaceItem() const;
     DecorationItem *decorationItem() const;
     ShadowItem *shadowItem() const;
-    AbstractClient *window() const;
+    Window *window() const;
 
 protected:
-    explicit WindowItem(AbstractClient *window, Item *parent = nullptr);
+    explicit WindowItem(Window *window, Item *parent = nullptr);
     void updateSurfaceItem(SurfaceItem *surfaceItem);
 
 private Q_SLOTS:
-    void handleWindowClosed(AbstractClient *original, Deleted *deleted);
+    void handleWindowClosed(Window *original, Deleted *deleted);
     void updateDecorationItem();
     void updateShadowItem();
     void updateSurfacePosition();
     void updateSurfaceVisibility();
 
 private:
-    AbstractClient *m_window;
+    Window *m_window;
     QScopedPointer<SurfaceItem> m_surfaceItem;
     QScopedPointer<DecorationItem> m_decorationItem;
     QScopedPointer<ShadowItem> m_shadowItem;
@@ -68,7 +68,7 @@ class KWIN_EXPORT WindowItemX11 : public WindowItem
     Q_OBJECT
 
 public:
-    explicit WindowItemX11(AbstractClient *window, Item *parent = nullptr);
+    explicit WindowItemX11(Window *window, Item *parent = nullptr);
 
 private Q_SLOTS:
     void initialize();
@@ -82,7 +82,7 @@ class KWIN_EXPORT WindowItemWayland : public WindowItem
     Q_OBJECT
 
 public:
-    explicit WindowItemWayland(AbstractClient *window, Item *parent = nullptr);
+    explicit WindowItemWayland(Window *window, Item *parent = nullptr);
 };
 
 /**

@@ -57,7 +57,7 @@ void SceneQPainterTest::cleanup()
 
 void SceneQPainterTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -303,7 +303,7 @@ struct XcbConnectionDeleter
     }
 };
 
-static bool waitForXwaylandBuffer(AbstractClient *window, const QSize &size)
+static bool waitForXwaylandBuffer(Window *window, const QSize &size)
 {
     // Usually, when an Xwayland surface is created, it has a buffer of size 1x1,
     // a buffer with the correct size will be committed a bit later.

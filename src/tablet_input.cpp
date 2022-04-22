@@ -7,7 +7,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "tablet_input.h"
-#include "abstract_client.h"
 #include "decorations/decoratedclient.h"
 #include "input_event.h"
 #include "input_event_spy.h"
@@ -15,6 +14,7 @@
 #include "wayland/seat_interface.h"
 #include "wayland/surface_interface.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 // KDecoration
 #include <KDecoration2/Decoration>
@@ -158,7 +158,7 @@ void TabletInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *
     now->client()->processDecorationMove(pos.toPoint(), m_lastPosition.toPoint());
 
     m_decorationGeometryConnection = connect(
-        decoration()->client(), &AbstractClient::frameGeometryChanged, this, [this]() {
+        decoration()->client(), &Window::frameGeometryChanged, this, [this]() {
             // ensure maximize button gets the leave event when maximizing/restore a window, see BUG 385140
             const auto oldDeco = decoration();
             update();
@@ -175,7 +175,7 @@ void TabletInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *
     m_decorationDestroyedConnection = connect(now, &QObject::destroyed, this, &TabletInputRedirection::update, Qt::QueuedConnection);
 }
 
-void TabletInputRedirection::focusUpdate(AbstractClient *focusOld, AbstractClient *focusNow)
+void TabletInputRedirection::focusUpdate(Window *focusOld, Window *focusNow)
 {
     Q_UNUSED(focusOld)
     Q_UNUSED(focusNow)

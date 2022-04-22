@@ -8,13 +8,13 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "abstract_client.h"
 #include "debug_console.h"
 #include "internal_client.h"
 #include "output.h"
 #include "platform.h"
 #include "utils/xcbutils.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 
 #include <KWayland/Client/compositor.h>
@@ -47,7 +47,7 @@ private Q_SLOTS:
 
 void DebugConsoleTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::InternalClient *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());

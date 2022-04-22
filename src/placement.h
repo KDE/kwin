@@ -23,7 +23,7 @@ class QObject;
 namespace KWin
 {
 
-class AbstractClient;
+class Window;
 
 class KWIN_EXPORT Placement
 {
@@ -50,10 +50,10 @@ public:
         Maximizing
     };
 
-    void place(AbstractClient *c, const QRect &area);
-    void placeSmart(AbstractClient *c, const QRect &area, Policy next = Unknown);
+    void place(Window *c, const QRect &area);
+    void placeSmart(Window *c, const QRect &area, Policy next = Unknown);
 
-    void placeCentered(AbstractClient *c, const QRect &area, Policy next = Unknown);
+    void placeCentered(Window *c, const QRect &area, Policy next = Unknown);
 
     void reinitCascading(int desktop);
 
@@ -69,18 +69,18 @@ public:
     static const char *policyToString(Policy policy);
 
 private:
-    void place(AbstractClient *c, const QRect &area, Policy policy, Policy nextPlacement = Unknown);
-    void placeUnderMouse(AbstractClient *c, const QRect &area, Policy next = Unknown);
-    void placeOnMainWindow(AbstractClient *c, const QRect &area, Policy next = Unknown);
-    void placeTransient(AbstractClient *c);
+    void place(Window *c, const QRect &area, Policy policy, Policy nextPlacement = Unknown);
+    void placeUnderMouse(Window *c, const QRect &area, Policy next = Unknown);
+    void placeOnMainWindow(Window *c, const QRect &area, Policy next = Unknown);
+    void placeTransient(Window *c);
 
-    void placeAtRandom(AbstractClient *c, const QRect &area, Policy next = Unknown);
-    void placeCascaded(AbstractClient *c, const QRect &area, Policy next = Unknown);
-    void placeMaximizing(AbstractClient *c, const QRect &area, Policy next = Unknown);
-    void placeZeroCornered(AbstractClient *c, const QRect &area, Policy next = Unknown);
-    void placeDialog(AbstractClient *c, const QRect &area, Policy next = Unknown);
-    void placeUtility(AbstractClient *c, const QRect &area, Policy next = Unknown);
-    void placeOnScreenDisplay(AbstractClient *c, const QRect &area);
+    void placeAtRandom(Window *c, const QRect &area, Policy next = Unknown);
+    void placeCascaded(Window *c, const QRect &area, Policy next = Unknown);
+    void placeMaximizing(Window *c, const QRect &area, Policy next = Unknown);
+    void placeZeroCornered(Window *c, const QRect &area, Policy next = Unknown);
+    void placeDialog(Window *c, const QRect &area, Policy next = Unknown);
+    void placeUtility(Window *c, const QRect &area, Policy next = Unknown);
+    void placeOnScreenDisplay(Window *c, const QRect &area);
 
     // CT needed for cascading+
     struct DesktopCascadingInfo

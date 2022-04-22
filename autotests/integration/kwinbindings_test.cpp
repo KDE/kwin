@@ -8,7 +8,6 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "abstract_client.h"
 #include "cursor.h"
 #include "input.h"
 #include "platform.h"
@@ -16,6 +15,7 @@
 #include "useractions.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 
 #include <KWayland/Client/surface.h>
@@ -45,7 +45,7 @@ private Q_SLOTS:
 
 void KWinBindingsTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -219,7 +219,7 @@ void KWinBindingsTest::testWindowToDesktop()
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QSignalSpy desktopChangedSpy(c, &AbstractClient::desktopChanged);
+    QSignalSpy desktopChangedSpy(c, &Window::desktopChanged);
     QVERIFY(desktopChangedSpy.isValid());
     QCOMPARE(workspace()->activeClient(), c);
 

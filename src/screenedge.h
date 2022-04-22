@@ -34,7 +34,7 @@ class QMouseEvent;
 namespace KWin
 {
 
-class AbstractClient;
+class Window;
 class Output;
 class GestureRecognizer;
 class ScreenEdges;
@@ -82,8 +82,8 @@ public:
     void startApproaching();
     void stopApproaching();
     bool isApproaching() const;
-    void setClient(AbstractClient *client);
-    AbstractClient *client() const;
+    void setClient(Window *client);
+    Window *client() const;
     void setOutput(Output *output);
     Output *output() const;
     const QRect &geometry() const;
@@ -167,7 +167,7 @@ private:
     int m_lastApproachingFactor;
     bool m_blocked;
     bool m_pushBackBlocked;
-    AbstractClient *m_client;
+    Window *m_client;
     Output *m_output;
     SwipeGesture *m_gesture;
     QVector<TouchCallback> m_touchCallbacks;
@@ -299,7 +299,7 @@ public:
      * @param client The Client for which an Edge should be reserved
      * @param border The border which the client wants to use, only proper borders are supported (no corners)
      */
-    void reserve(KWin::AbstractClient *client, ElectricBorder border);
+    void reserve(KWin::Window *client, ElectricBorder border);
 
     /**
      * Mark the specified screen edge as reserved for touch gestures. This method is provided for
@@ -405,8 +405,8 @@ private:
     void setActionForTouchBorder(ElectricBorder border, ElectricBorderAction newValue);
     ElectricBorderAction actionForEdge(Edge *edge) const;
     ElectricBorderAction actionForTouchEdge(Edge *edge) const;
-    void createEdgeForClient(AbstractClient *client, ElectricBorder border);
-    void deleteEdgeForClient(AbstractClient *client);
+    void createEdgeForClient(Window *client, ElectricBorder border);
+    void deleteEdgeForClient(Window *client);
     bool m_desktopSwitching;
     bool m_desktopSwitchingMovingClients;
     QSize m_cursorPushBackDistance;
@@ -515,7 +515,7 @@ inline bool Edge::isBlocked() const
     return m_blocked;
 }
 
-inline AbstractClient *Edge::client() const
+inline Window *Edge::client() const
 {
     return m_client;
 }

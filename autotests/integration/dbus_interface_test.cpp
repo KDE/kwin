@@ -10,13 +10,13 @@
 
 #include "kwin_wayland_test.h"
 
-#include "abstract_client.h"
 #include "atoms.h"
 #include "deleted.h"
 #include "platform.h"
 #include "rules.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 #include "x11client.h"
 
@@ -56,7 +56,7 @@ private Q_SLOTS:
 void TestDbusInterface::initTestCase()
 {
     qRegisterMetaType<KWin::Deleted *>();
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
 
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
@@ -113,7 +113,7 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
     Test::render(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(clientAddedSpy.isEmpty());
     QVERIFY(clientAddedSpy.wait());
-    auto client = clientAddedSpy.first().first().value<AbstractClient *>();
+    auto client = clientAddedSpy.first().first().value<Window *>();
     QVERIFY(client);
 
     const QVariantMap expectedData = {
@@ -209,7 +209,7 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
 
     // finally close window
     const auto id = client->internalId();
-    QSignalSpy windowClosedSpy(client, &AbstractClient::windowClosed);
+    QSignalSpy windowClosedSpy(client, &Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
     shellSurface.reset();
     surface.reset();

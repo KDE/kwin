@@ -35,7 +35,7 @@ namespace KWin
 namespace Xwl
 {
 
-DragEventReply WlToXDrag::moveFilter(AbstractClient *target, const QPoint &pos)
+DragEventReply WlToXDrag::moveFilter(Window *target, const QPoint &pos)
 {
     Q_UNUSED(target)
     Q_UNUSED(pos)
@@ -47,7 +47,7 @@ bool WlToXDrag::handleClientMessage(xcb_client_message_event_t *event)
     return DataBridge::self()->dnd()->dropHandler()->handleClientMessage(event);
 }
 
-Xvisit::Xvisit(AbstractClient *target, KWaylandServer::AbstractDataSource *dataSource, QObject *parent)
+Xvisit::Xvisit(Window *target, KWaylandServer::AbstractDataSource *dataSource, QObject *parent)
     : QObject(parent)
     , m_target(target)
     , m_dataSource(dataSource)

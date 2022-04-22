@@ -57,7 +57,7 @@ class VirtualDesktop;
 class WindowItem;
 
 /**
- * Enum to describe the reason why a AbstractClient has to be released.
+ * Enum to describe the reason why a Window has to be released.
  */
 enum class ReleaseReason {
     Release, ///< Normal Release after e.g. an Unmap notify event (window still valid)
@@ -76,7 +76,7 @@ class DecoratedClientImpl;
 class DecorationPalette;
 }
 
-class KWIN_EXPORT AbstractClient : public QObject
+class KWIN_EXPORT Window : public QObject
 {
     Q_OBJECT
 
@@ -84,39 +84,39 @@ class KWIN_EXPORT AbstractClient : public QObject
     Q_PROPERTY(qulonglong frameId READ frameId)
 
     /**
-     * This property holds rectangle that the pixmap or buffer of this AbstractClient
+     * This property holds rectangle that the pixmap or buffer of this Window
      * occupies on the screen. This rectangle includes invisible portions of the
      * client, e.g. client-side drop shadows, etc.
      */
     Q_PROPERTY(QRect bufferGeometry READ bufferGeometry)
 
     /**
-     * This property holds the position of the AbstractClient's frame geometry.
+     * This property holds the position of the Window's frame geometry.
      */
     Q_PROPERTY(QPoint pos READ pos)
 
     /**
-     * This property holds the size of the AbstractClient's frame geometry.
+     * This property holds the size of the Window's frame geometry.
      */
     Q_PROPERTY(QSize size READ size)
 
     /**
-     * This property holds the x position of the AbstractClient's frame geometry.
+     * This property holds the x position of the Window's frame geometry.
      */
     Q_PROPERTY(int x READ x NOTIFY frameGeometryChanged)
 
     /**
-     * This property holds the y position of the AbstractClient's frame geometry.
+     * This property holds the y position of the Window's frame geometry.
      */
     Q_PROPERTY(int y READ y NOTIFY frameGeometryChanged)
 
     /**
-     * This property holds the width of the AbstractClient's frame geometry.
+     * This property holds the width of the Window's frame geometry.
      */
     Q_PROPERTY(int width READ width NOTIFY frameGeometryChanged)
 
     /**
-     * This property holds the height of the AbstractClient's frame geometry.
+     * This property holds the height of the Window's frame geometry.
      */
     Q_PROPERTY(int height READ height NOTIFY frameGeometryChanged)
 
@@ -236,13 +236,13 @@ class KWIN_EXPORT AbstractClient : public QObject
     Q_PROPERTY(int windowType READ windowType)
 
     /**
-     * Whether this AbstractClient is managed by KWin (it has control over its placement and other
+     * Whether this Window is managed by KWin (it has control over its placement and other
      * aspects, as opposed to override-redirect windows that are entirely handled by the application).
      */
     Q_PROPERTY(bool managed READ isClient CONSTANT)
 
     /**
-     * Whether this AbstractClient represents an already deleted window and only kept for the compositor for animations.
+     * Whether this Window represents an already deleted window and only kept for the compositor for animations.
      */
     Q_PROPERTY(bool deleted READ isDeleted CONSTANT)
 
@@ -270,14 +270,14 @@ class KWIN_EXPORT AbstractClient : public QObject
     Q_PROPERTY(bool popupWindow READ isPopupWindow)
 
     /**
-     * Whether this AbstractClient represents the outline.
+     * Whether this Window represents the outline.
      *
      * @note It's always @c false if compositing is turned off.
      */
     Q_PROPERTY(bool outline READ isOutline)
 
     /**
-     * This property holds a UUID to uniquely identify this AbstractClient.
+     * This property holds a UUID to uniquely identify this Window.
      */
     Q_PROPERTY(QUuid internalId READ internalId CONSTANT)
 
@@ -455,7 +455,7 @@ class KWIN_EXPORT AbstractClient : public QObject
     /**
      * The Client to which this Client is a transient if any.
      */
-    Q_PROPERTY(KWin::AbstractClient *transientFor READ transientFor NOTIFY transientChanged)
+    Q_PROPERTY(KWin::Window *transientFor READ transientFor NOTIFY transientChanged)
 
     /**
      * Whether the Client represents a modal window.
@@ -536,7 +536,7 @@ class KWIN_EXPORT AbstractClient : public QObject
     Q_PROPERTY(bool resizeable READ isResizable)
 
     /**
-     * The desktop file name of the application this AbstractClient belongs to.
+     * The desktop file name of the application this Window belongs to.
      *
      * This is either the base name without full path and without file extension of the
      * desktop file for the window's application (e.g. "org.kde.foo").
@@ -580,21 +580,21 @@ class KWIN_EXPORT AbstractClient : public QObject
     Q_PROPERTY(bool hidden READ isHiddenInternal NOTIFY hiddenChanged)
 
 public:
-    ~AbstractClient() override;
+    ~Window() override;
 
     virtual xcb_window_t frameId() const;
     xcb_window_t window() const;
     /**
-     * Returns the geometry of the pixmap or buffer attached to this AbstractClient.
+     * Returns the geometry of the pixmap or buffer attached to this Window.
      *
-     * For X11 clients, this method returns server-side geometry of the AbstractClient.
+     * For X11 clients, this method returns server-side geometry of the Window.
      *
      * For Wayland clients, this method returns rectangle that the main surface
      * occupies on the screen, in global screen coordinates.
      */
     QRect bufferGeometry() const;
     /**
-     * Returns the geometry of the AbstractClient, excluding invisible portions, e.g.
+     * Returns the geometry of the Window, excluding invisible portions, e.g.
      * server-side and client-side drop shadows, etc.
      */
     QRect frameGeometry() const;
@@ -612,7 +612,7 @@ public:
      */
     virtual QMargins frameMargins() const;
     /**
-     * The geometry of the AbstractClient which accepts input events. This might be larger
+     * The geometry of the Window which accepts input events. This might be larger
      * than the actual geometry, e.g. to support resizing outside the window.
      *
      * Default implementation returns same as geometry.
@@ -630,7 +630,10 @@ public:
     int screen() const; // the screen where the center is
     Output *output() const;
     void setOutput(Output *output);
-    virtual QPoint clientPos() const { return QPoint(borderLeft(), borderTop()); }; // inside of geometry()
+    virtual QPoint clientPos() const
+    {
+        return QPoint(borderLeft(), borderTop());
+    }; // inside of geometry()
     QSize clientSize() const;
     /**
      * Returns a rectangle that the window occupies on the screen, including drop-shadows.
@@ -705,7 +708,7 @@ public:
     virtual bool isLocalhost() const;
     xcb_window_t wmClientLeader() const;
     virtual pid_t pid() const;
-    static bool resourceMatch(const AbstractClient *c1, const AbstractClient *c2);
+    static bool resourceMatch(const Window *c1, const Window *c2);
 
     bool readyForPainting() const; // true if the window has been already painted its contents
     xcb_visualid_t visual() const;
@@ -739,22 +742,22 @@ public:
     void elevate(bool elevate);
 
     /**
-     * Returns the Shadow associated with this AbstractClient or @c null if it has no shadow.
+     * Returns the Shadow associated with this Window or @c null if it has no shadow.
      */
     Shadow *shadow() const;
     /**
-     * Updates the Shadow associated with this AbstractClient from X11 Property.
+     * Updates the Shadow associated with this Window from X11 Property.
      * Call this method when the Property changes or Compositing is started.
      */
     void updateShadow();
     /**
-     * Whether the AbstractClient currently wants the shadow to be rendered. Default
+     * Whether the Window currently wants the shadow to be rendered. Default
      * implementation always returns @c true.
      */
     virtual bool wantsShadowToBeRendered() const;
 
     /**
-     * This method returns the area that the AbstractClient window reports to be opaque.
+     * This method returns the area that the Window window reports to be opaque.
      * It is supposed to only provide valuable information if hasAlpha is @c true .
      * @see hasAlpha
      */
@@ -790,7 +793,7 @@ public:
      *
      * Normally this is only relevant for transient windows.
      *
-     * Once the popup grab ends (e.g. pointer press outside of any AbstractClient of
+     * Once the popup grab ends (e.g. pointer press outside of any Window of
      * the client), the method popupDone should be invoked.
      *
      * The default implementation returns @c false.
@@ -812,13 +815,13 @@ public:
     virtual void popupDone(){};
 
     /**
-     * @brief Finds the AbstractClient matching the condition expressed in @p func in @p list.
+     * @brief Finds the Window matching the condition expressed in @p func in @p list.
      *
      * The method is templated to operate on either a list of Toplevels or on a list of
-     * a subclass type of AbstractClient.
+     * a subclass type of Window.
      * @param list The list to search in
      * @param func The condition function (compare std::find_if)
-     * @return T* The found AbstractClient or @c null if there is no matching AbstractClient
+     * @return T* The found Window or @c null if there is no matching Window
      */
     template<class T, class U>
     static T *findInList(const QList<T *> &list, std::function<bool(const U *)> func);
@@ -833,7 +836,7 @@ public:
     virtual bool isPopupWindow() const;
 
     /**
-     * A UUID to uniquely identify this AbstractClient independent of windowing system.
+     * A UUID to uniquely identify this Window independent of windowing system.
      */
     QUuid internalId() const
     {
@@ -925,7 +928,7 @@ public:
      */
     QString caption() const;
     /**
-     * @returns The caption as set by the AbstractClient without any suffix.
+     * @returns The caption as set by the Window without any suffix.
      * @see caption
      * @see captionSuffix
      */
@@ -946,10 +949,10 @@ public:
     virtual bool isFullScreen() const;
     virtual bool isRequestedFullScreen() const;
     // TODO: remove boolean trap
-    virtual AbstractClient *findModal(bool allow_itself = false) = 0;
+    virtual Window *findModal(bool allow_itself = false) = 0;
     virtual bool isTransient() const;
     /**
-     * @returns Whether there is a hint available to place the AbstractClient on it's parent, default @c false.
+     * @returns Whether there is a hint available to place the Window on it's parent, default @c false.
      * @see transientPlacementHint
      */
     virtual bool hasTransientPlacementHint() const;
@@ -958,19 +961,19 @@ public:
      * @returns The position the transient wishes to position itself
      */
     virtual QRect transientPlacement(const QRect &bounds) const;
-    const AbstractClient *transientFor() const;
-    AbstractClient *transientFor();
+    const Window *transientFor() const;
+    Window *transientFor();
     /**
      * @returns @c true if c is the transient_for window for this client,
      *  or recursively the transient_for window
      * @todo: remove boolean trap
      */
-    virtual bool hasTransient(const AbstractClient *c, bool indirect) const;
-    const QList<AbstractClient *> &transients() const; // Is not indirect
-    virtual void addTransient(AbstractClient *client);
-    virtual void removeTransient(AbstractClient *cl);
-    virtual QList<AbstractClient *> mainClients() const; // Call once before loop , is not indirect
-    QList<AbstractClient *> allMainClients() const; // Call once before loop , is indirect
+    virtual bool hasTransient(const Window *c, bool indirect) const;
+    const QList<Window *> &transients() const; // Is not indirect
+    virtual void addTransient(Window *client);
+    virtual void removeTransient(Window *cl);
+    virtual QList<Window *> mainClients() const; // Call once before loop , is not indirect
+    QList<Window *> allMainClients() const; // Call once before loop , is indirect
     /**
      * Returns true for "special" windows and false for windows which are "normal"
      * (normal=window which has a border, can be moved by the user, can be closed, etc.)
@@ -1232,7 +1235,7 @@ public:
      *
      * The @p handled argument specifies whether the button was handled or not.
      * This value should be used to determine whether the mouse button should be
-     * passed to the AbstractClient or being filtered out.
+     * passed to the Window or being filtered out.
      */
     Options::MouseCommand getMouseCommand(Qt::MouseButton button, bool *handled) const;
     Options::MouseCommand getWheelCommand(Qt::Orientation orientation, bool *handled) const;
@@ -1294,8 +1297,8 @@ public:
     virtual void setVirtualKeyboardGeometry(const QRect &geo);
 
     /**
-     * Restores the AbstractClient after it had been hidden due to show on screen edge functionality.
-     * The AbstractClient also gets raised (e.g. Panel mode windows can cover) and the AbstractClient
+     * Restores the Window after it had been hidden due to show on screen edge functionality.
+     * The Window also gets raised (e.g. Panel mode windows can cover) and the Window
      * gets informed in a window specific way that it is shown and raised again.
      */
     virtual void showOnScreenEdge();
@@ -1306,7 +1309,7 @@ public:
     }
 
     /**
-     * Tries to terminate the process of this AbstractClient.
+     * Tries to terminate the process of this Window.
      *
      * Implementing subclasses can perform a windowing system solution for terminating.
      */
@@ -1318,7 +1321,7 @@ public:
         AllowCrossProcesses = 1 << 1
     };
     Q_DECLARE_FLAGS(SameApplicationChecks, SameApplicationCheck)
-    static bool belongToSameApplication(const AbstractClient *c1, const AbstractClient *c2, SameApplicationChecks checks = SameApplicationChecks());
+    static bool belongToSameApplication(const Window *c1, const Window *c2, SameApplicationChecks checks = SameApplicationChecks());
 
     bool hasApplicationMenu() const;
     bool applicationMenuActive() const
@@ -1406,18 +1409,18 @@ protected Q_SLOTS:
 Q_SIGNALS:
     void stackingOrderChanged();
     void shadeChanged();
-    void opacityChanged(KWin::AbstractClient *toplevel, qreal oldOpacity);
-    void damaged(KWin::AbstractClient *toplevel, const QRegion &damage);
+    void opacityChanged(KWin::Window *toplevel, qreal oldOpacity);
+    void damaged(KWin::Window *toplevel, const QRegion &damage);
     void inputTransformationChanged();
     /**
-     * This signal is emitted when the AbstractClient's frame geometry changes.
+     * This signal is emitted when the Window's frame geometry changes.
      * @deprecated since 5.19, use frameGeometryChanged instead
      */
     void geometryChanged();
-    void geometryShapeChanged(KWin::AbstractClient *toplevel, const QRect &old);
-    void windowClosed(KWin::AbstractClient *toplevel, KWin::Deleted *deleted);
-    void windowShown(KWin::AbstractClient *toplevel);
-    void windowHidden(KWin::AbstractClient *toplevel);
+    void geometryShapeChanged(KWin::Window *toplevel, const QRect &old);
+    void windowClosed(KWin::Window *toplevel, KWin::Deleted *deleted);
+    void windowShown(KWin::Window *toplevel);
+    void windowHidden(KWin::Window *toplevel);
     /**
      * Signal emitted when the window's shape state changed. That is if it did not have a shape
      * and received one or if the shape was withdrawn. Think of Chromium enabling/disabling KWin's
@@ -1425,8 +1428,8 @@ Q_SIGNALS:
      */
     void shapedChanged();
     /**
-     * Emitted whenever the AbstractClient's screen changes. This can happen either in consequence to
-     * a screen being removed/added or if the AbstractClient's geometry changes.
+     * Emitted whenever the Window's screen changes. This can happen either in consequence to
+     * a screen being removed/added or if the Window's geometry changes.
      * @since 4.11
      */
     void screenChanged();
@@ -1447,7 +1450,7 @@ Q_SIGNALS:
     void hasAlphaChanged();
 
     /**
-     * Emitted whenever the Surface for this AbstractClient changes.
+     * Emitted whenever the Surface for this Window changes.
      */
     void surfaceChanged();
 
@@ -1458,17 +1461,17 @@ Q_SIGNALS:
     void shadowChanged();
 
     /**
-     * This signal is emitted when the AbstractClient's buffer geometry changes.
+     * This signal is emitted when the Window's buffer geometry changes.
      */
-    void bufferGeometryChanged(KWin::AbstractClient *toplevel, const QRect &oldGeometry);
+    void bufferGeometryChanged(KWin::Window *toplevel, const QRect &oldGeometry);
     /**
-     * This signal is emitted when the AbstractClient's frame geometry changes.
+     * This signal is emitted when the Window's frame geometry changes.
      */
-    void frameGeometryChanged(KWin::AbstractClient *toplevel, const QRect &oldGeometry);
+    void frameGeometryChanged(KWin::Window *toplevel, const QRect &oldGeometry);
     /**
-     * This signal is emitted when the AbstractClient's client geometry has changed.
+     * This signal is emitted when the Window's client geometry has changed.
      */
-    void clientGeometryChanged(KWin::AbstractClient *toplevel, const QRect &oldGeometry);
+    void clientGeometryChanged(KWin::Window *toplevel, const QRect &oldGeometry);
 
     /**
      * This signal is emitted when the visible geometry has changed.
@@ -1487,26 +1490,26 @@ Q_SIGNALS:
      * Emitted whenever the demands attention state changes.
      */
     void demandsAttentionChanged();
-    void desktopPresenceChanged(KWin::AbstractClient *, int); // to be forwarded by Workspace
+    void desktopPresenceChanged(KWin::Window *, int); // to be forwarded by Workspace
     void desktopChanged();
-    void activitiesChanged(KWin::AbstractClient *client);
+    void activitiesChanged(KWin::Window *client);
     void x11DesktopIdsChanged();
     void minimizedChanged();
-    void clientMinimized(KWin::AbstractClient *client, bool animate);
-    void clientUnminimized(KWin::AbstractClient *client, bool animate);
+    void clientMinimized(KWin::Window *client, bool animate);
+    void clientUnminimized(KWin::Window *client, bool animate);
     void paletteChanged(const QPalette &p);
     void colorSchemeChanged();
     void captionChanged();
-    void clientMaximizedStateChanged(KWin::AbstractClient *, MaximizeMode);
-    void clientMaximizedStateChanged(KWin::AbstractClient *c, bool h, bool v);
+    void clientMaximizedStateChanged(KWin::Window *, MaximizeMode);
+    void clientMaximizedStateChanged(KWin::Window *c, bool h, bool v);
     void transientChanged();
     void modalChanged();
     void quickTileModeChanged();
     void moveResizedChanged();
     void moveResizeCursorChanged(CursorShape);
-    void clientStartUserMovedResized(KWin::AbstractClient *);
-    void clientStepUserMovedResized(KWin::AbstractClient *, const QRect &);
-    void clientFinishUserMovedResized(KWin::AbstractClient *);
+    void clientStartUserMovedResized(KWin::Window *);
+    void clientStepUserMovedResized(KWin::Window *, const QRect &);
+    void clientFinishUserMovedResized(KWin::Window *);
     void closeableChanged(bool);
     void minimizeableChanged(bool);
     void shadeableChanged(bool);
@@ -1530,7 +1533,7 @@ protected:
     void getWmClientMachine();
 
     /**
-     * This function fetches the opaque region from this AbstractClient.
+     * This function fetches the opaque region from this Window.
      * Will only be called on corresponding property changes and for initialization.
      */
     void getWmOpaqueRegion();
@@ -1541,7 +1544,7 @@ protected:
     Xcb::Property fetchSkipCloseAnimation() const;
     void readSkipCloseAnimation(Xcb::Property &prop);
     void getSkipCloseAnimation();
-    void copyToDeleted(AbstractClient *c);
+    void copyToDeleted(Window *c);
     void disownDataPassedToDeleted();
     void deleteShadow();
     void deleteEffectWindow();
@@ -1562,7 +1565,7 @@ protected:
     QImage m_internalImage;
 
 protected:
-    AbstractClient();
+    Window();
     void setFirstInTabBox(bool enable)
     {
         m_firstInTabBox = enable;
@@ -1629,7 +1632,7 @@ protected:
      * Default implementation does nothig.
      */
     virtual void doMinimize();
-    virtual bool belongsToSameApplication(const AbstractClient *other, SameApplicationChecks checks) const = 0;
+    virtual bool belongsToSameApplication(const Window *other, SameApplicationChecks checks) const = 0;
 
     virtual void doSetSkipTaskbar();
     virtual void doSetSkipPager();
@@ -1639,11 +1642,11 @@ protected:
 
     void setupWindowManagementInterface();
     void updateColorScheme();
-    void setTransientFor(AbstractClient *transientFor);
+    void setTransientFor(Window *transientFor);
     /**
      * Just removes the @p cl from the transients without any further checks.
      */
-    void removeTransientFromList(AbstractClient *cl);
+    void removeTransientFromList(Window *cl);
 
     virtual Layer belongsToLayer() const;
     virtual bool belongsToDesktop() const;
@@ -1839,15 +1842,15 @@ protected:
     virtual void updateCaption() = 0;
 
     /**
-     * Looks for another AbstractClient with same captionNormal and captionSuffix.
-     * If no such AbstractClient exists @c nullptr is returned.
+     * Looks for another Window with same captionNormal and captionSuffix.
+     * If no such Window exists @c nullptr is returned.
      */
-    AbstractClient *findClientWithSameCaption() const;
+    Window *findClientWithSameCaption() const;
 
     void finishWindowRules();
     void discardTemporaryRules();
 
-    bool tabTo(AbstractClient *other, bool behind, bool activate);
+    bool tabTo(Window *other, bool behind, bool activate);
 
     void startShadeHoverTimer();
     void startShadeUnhoverTimer();
@@ -1922,8 +1925,8 @@ private:
 
     KWaylandServer::PlasmaWindowInterface *m_windowManagementInterface = nullptr;
 
-    AbstractClient *m_transientFor = nullptr;
-    QList<AbstractClient *> m_transients;
+    Window *m_transientFor = nullptr;
+    QList<Window *> m_transients;
     bool m_modal = false;
     Layer m_layer = UnknownLayer;
 
@@ -1979,12 +1982,12 @@ private:
 };
 
 /**
- * Helper for AbstractClient::blockGeometryUpdates() being called in pairs (true/false)
+ * Helper for Window::blockGeometryUpdates() being called in pairs (true/false)
  */
 class GeometryUpdatesBlocker
 {
 public:
-    explicit GeometryUpdatesBlocker(AbstractClient *c)
+    explicit GeometryUpdatesBlocker(Window *c)
         : cl(c)
     {
         cl->blockGeometryUpdates(true);
@@ -1995,262 +1998,262 @@ public:
     }
 
 private:
-    AbstractClient *cl;
+    Window *cl;
 };
 
-inline xcb_window_t AbstractClient::window() const
+inline xcb_window_t Window::window() const
 {
     return m_client;
 }
 
-inline void AbstractClient::setWindowHandles(xcb_window_t w)
+inline void Window::setWindowHandles(xcb_window_t w)
 {
     Q_ASSERT(!m_client.isValid() && w != XCB_WINDOW_NONE);
     m_client.reset(w, false);
 }
 
-inline QRect AbstractClient::bufferGeometry() const
+inline QRect Window::bufferGeometry() const
 {
     return m_bufferGeometry;
 }
 
-inline QRect AbstractClient::clientGeometry() const
+inline QRect Window::clientGeometry() const
 {
     return m_clientGeometry;
 }
 
-inline QSize AbstractClient::clientSize() const
+inline QSize Window::clientSize() const
 {
     return m_clientGeometry.size();
 }
 
-inline QRect AbstractClient::frameGeometry() const
+inline QRect Window::frameGeometry() const
 {
     return m_frameGeometry;
 }
 
-inline QSize AbstractClient::size() const
+inline QSize Window::size() const
 {
     return m_frameGeometry.size();
 }
 
-inline QPoint AbstractClient::pos() const
+inline QPoint Window::pos() const
 {
     return m_frameGeometry.topLeft();
 }
 
-inline int AbstractClient::x() const
+inline int Window::x() const
 {
     return m_frameGeometry.x();
 }
 
-inline int AbstractClient::y() const
+inline int Window::y() const
 {
     return m_frameGeometry.y();
 }
 
-inline int AbstractClient::width() const
+inline int Window::width() const
 {
     return m_frameGeometry.width();
 }
 
-inline int AbstractClient::height() const
+inline int Window::height() const
 {
     return m_frameGeometry.height();
 }
 
-inline QRect AbstractClient::rect() const
+inline QRect Window::rect() const
 {
     return QRect(0, 0, width(), height());
 }
 
-inline bool AbstractClient::readyForPainting() const
+inline bool Window::readyForPainting() const
 {
     return ready_for_painting;
 }
 
-inline xcb_visualid_t AbstractClient::visual() const
+inline xcb_visualid_t Window::visual() const
 {
     return m_visual;
 }
 
-inline bool AbstractClient::isDesktop() const
+inline bool Window::isDesktop() const
 {
     return windowType() == NET::Desktop;
 }
 
-inline bool AbstractClient::isDock() const
+inline bool Window::isDock() const
 {
     return windowType() == NET::Dock;
 }
 
-inline bool AbstractClient::isMenu() const
+inline bool Window::isMenu() const
 {
     return windowType() == NET::Menu;
 }
 
-inline bool AbstractClient::isToolbar() const
+inline bool Window::isToolbar() const
 {
     return windowType() == NET::Toolbar;
 }
 
-inline bool AbstractClient::isSplash() const
+inline bool Window::isSplash() const
 {
     return windowType() == NET::Splash;
 }
 
-inline bool AbstractClient::isUtility() const
+inline bool Window::isUtility() const
 {
     return windowType() == NET::Utility;
 }
 
-inline bool AbstractClient::isDialog() const
+inline bool Window::isDialog() const
 {
     return windowType() == NET::Dialog;
 }
 
-inline bool AbstractClient::isNormalWindow() const
+inline bool Window::isNormalWindow() const
 {
     return windowType() == NET::Normal;
 }
 
-inline bool AbstractClient::isDropdownMenu() const
+inline bool Window::isDropdownMenu() const
 {
     return windowType() == NET::DropdownMenu;
 }
 
-inline bool AbstractClient::isPopupMenu() const
+inline bool Window::isPopupMenu() const
 {
     return windowType() == NET::PopupMenu;
 }
 
-inline bool AbstractClient::isTooltip() const
+inline bool Window::isTooltip() const
 {
     return windowType() == NET::Tooltip;
 }
 
-inline bool AbstractClient::isNotification() const
+inline bool Window::isNotification() const
 {
     return windowType() == NET::Notification;
 }
 
-inline bool AbstractClient::isCriticalNotification() const
+inline bool Window::isCriticalNotification() const
 {
     return windowType() == NET::CriticalNotification;
 }
 
-inline bool AbstractClient::isOnScreenDisplay() const
+inline bool Window::isOnScreenDisplay() const
 {
     return windowType() == NET::OnScreenDisplay;
 }
 
-inline bool AbstractClient::isComboBox() const
+inline bool Window::isComboBox() const
 {
     return windowType() == NET::ComboBox;
 }
 
-inline bool AbstractClient::isDNDIcon() const
+inline bool Window::isDNDIcon() const
 {
     return windowType() == NET::DNDIcon;
 }
 
-inline bool AbstractClient::isLockScreen() const
+inline bool Window::isLockScreen() const
 {
     return false;
 }
 
-inline bool AbstractClient::isInputMethod() const
+inline bool Window::isInputMethod() const
 {
     return false;
 }
 
-inline bool AbstractClient::isOutline() const
+inline bool Window::isOutline() const
 {
     return false;
 }
 
-inline bool AbstractClient::isInternal() const
+inline bool Window::isInternal() const
 {
     return false;
 }
 
-inline bool AbstractClient::shape() const
+inline bool Window::shape() const
 {
     return is_shape;
 }
 
-inline int AbstractClient::depth() const
+inline int Window::depth() const
 {
     return bit_depth;
 }
 
-inline bool AbstractClient::hasAlpha() const
+inline bool Window::hasAlpha() const
 {
     return depth() == 32;
 }
 
-inline const QRegion &AbstractClient::opaqueRegion() const
+inline const QRegion &Window::opaqueRegion() const
 {
     return opaque_region;
 }
 
-inline EffectWindowImpl *AbstractClient::effectWindow()
+inline EffectWindowImpl *Window::effectWindow()
 {
     return effect_window;
 }
 
-inline const EffectWindowImpl *AbstractClient::effectWindow() const
+inline const EffectWindowImpl *Window::effectWindow() const
 {
     return effect_window;
 }
 
-inline bool AbstractClient::isOnAllDesktops() const
+inline bool Window::isOnAllDesktops() const
 {
     return desktops().isEmpty();
 }
 
-inline bool AbstractClient::isOnAllActivities() const
+inline bool Window::isOnAllActivities() const
 {
     return activities().isEmpty();
 }
 
-inline bool AbstractClient::isOnActivity(const QString &activity) const
+inline bool Window::isOnActivity(const QString &activity) const
 {
     return activities().isEmpty() || activities().contains(activity);
 }
 
-inline QByteArray AbstractClient::resourceName() const
+inline QByteArray Window::resourceName() const
 {
     return resource_name; // it is always lowercase
 }
 
-inline QByteArray AbstractClient::resourceClass() const
+inline QByteArray Window::resourceClass() const
 {
     return resource_class; // it is always lowercase
 }
 
-inline const ClientMachine *AbstractClient::clientMachine() const
+inline const ClientMachine *Window::clientMachine() const
 {
     return m_clientMachine;
 }
 
-inline quint32 AbstractClient::pendingSurfaceId() const
+inline quint32 Window::pendingSurfaceId() const
 {
     return m_pendingSurfaceId;
 }
 
-inline const QSharedPointer<QOpenGLFramebufferObject> &AbstractClient::internalFramebufferObject() const
+inline const QSharedPointer<QOpenGLFramebufferObject> &Window::internalFramebufferObject() const
 {
     return m_internalFBO;
 }
 
-inline QImage AbstractClient::internalImageObject() const
+inline QImage Window::internalImageObject() const
 {
     return m_internalImage;
 }
 
 template<class T, class U>
-inline T *AbstractClient::findInList(const QList<T *> &list, std::function<bool(const U *)> func)
+inline T *Window::findInList(const QList<T *> &list, std::function<bool(const U *)> func)
 {
     static_assert(std::is_base_of<U, T>::value,
                   "U must be derived from T");
@@ -2261,7 +2264,7 @@ inline T *AbstractClient::findInList(const QList<T *> &list, std::function<bool(
     return *it;
 }
 
-inline bool AbstractClient::isPopupWindow() const
+inline bool Window::isPopupWindow() const
 {
     switch (windowType()) {
     case NET::ComboBox:
@@ -2275,42 +2278,42 @@ inline bool AbstractClient::isPopupWindow() const
     }
 }
 
-inline const QList<AbstractClient *> &AbstractClient::transients() const
+inline const QList<Window *> &Window::transients() const
 {
     return m_transients;
 }
 
-inline bool AbstractClient::areGeometryUpdatesBlocked() const
+inline bool Window::areGeometryUpdatesBlocked() const
 {
     return m_blockGeometryUpdates != 0;
 }
 
-inline void AbstractClient::blockGeometryUpdates()
+inline void Window::blockGeometryUpdates()
 {
     m_blockGeometryUpdates++;
 }
 
-inline void AbstractClient::unblockGeometryUpdates()
+inline void Window::unblockGeometryUpdates()
 {
     m_blockGeometryUpdates--;
 }
 
-inline AbstractClient::MoveResizeMode AbstractClient::pendingMoveResizeMode() const
+inline Window::MoveResizeMode Window::pendingMoveResizeMode() const
 {
     return m_pendingMoveResizeMode;
 }
 
-inline void AbstractClient::setPendingMoveResizeMode(MoveResizeMode mode)
+inline void Window::setPendingMoveResizeMode(MoveResizeMode mode)
 {
     m_pendingMoveResizeMode = MoveResizeMode(uint(m_pendingMoveResizeMode) | uint(mode));
 }
 
-KWIN_EXPORT QDebug operator<<(QDebug debug, const AbstractClient *toplevel);
+KWIN_EXPORT QDebug operator<<(QDebug debug, const Window *toplevel);
 
 } // namespace KWin
 
-Q_DECLARE_METATYPE(KWin::AbstractClient *)
-Q_DECLARE_METATYPE(QList<KWin::AbstractClient *>)
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::AbstractClient::SameApplicationChecks)
+Q_DECLARE_METATYPE(KWin::Window *)
+Q_DECLARE_METATYPE(QList<KWin::Window *>)
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Window::SameApplicationChecks)
 
 #endif

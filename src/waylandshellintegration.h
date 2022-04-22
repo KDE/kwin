@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "abstract_client.h"
+#include "window.h"
 
 namespace KWin
 {
@@ -19,7 +19,7 @@ public:
     explicit WaylandShellIntegration(QObject *parent = nullptr);
 
 Q_SIGNALS:
-    void clientCreated(AbstractClient *client);
+    void clientCreated(Window *client);
 };
 
 } // namespace KWin

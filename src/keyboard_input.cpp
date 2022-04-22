@@ -10,7 +10,6 @@
 
 #include <config-kwin.h>
 
-#include "abstract_client.h"
 #include "input_event.h"
 #include "input_event_spy.h"
 #include "inputmethod.h"
@@ -22,6 +21,7 @@
 #include "wayland/keyboard_interface.h"
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 // screenlocker
 #if KWIN_BUILD_SCREENLOCKER
@@ -139,7 +139,7 @@ void KeyboardInputRedirection::init()
     connect(workspace(), &Workspace::clientActivated, this, [this] {
         disconnect(m_activeClientSurfaceChangedConnection);
         if (auto c = workspace()->activeClient()) {
-            m_activeClientSurfaceChangedConnection = connect(c, &AbstractClient::surfaceChanged, this, &KeyboardInputRedirection::update);
+            m_activeClientSurfaceChangedConnection = connect(c, &Window::surfaceChanged, this, &KeyboardInputRedirection::update);
         } else {
             m_activeClientSurfaceChangedConnection = QMetaObject::Connection();
         }
@@ -176,14 +176,14 @@ void KeyboardInputRedirection::update()
     }
     auto seat = waylandServer()->seat();
     // TODO: this needs better integration
-    AbstractClient *found = nullptr;
+    Window *found = nullptr;
     if (waylandServer()->isScreenLocked()) {
-        const QList<AbstractClient *> &stacking = Workspace::self()->stackingOrder();
+        const QList<Window *> &stacking = Workspace::self()->stackingOrder();
         if (!stacking.isEmpty()) {
             auto it = stacking.end();
             do {
                 --it;
-                AbstractClient *t = (*it);
+                Window *t = (*it);
                 if (t->isDeleted()) {
                     // a deleted window doesn't get mouse events
                     continue;

@@ -5,7 +5,6 @@
 */
 
 #include "windowitem.h"
-#include "abstract_client.h"
 #include "decorationitem.h"
 #include "deleted.h"
 #include "internal_client.h"
@@ -13,21 +12,22 @@
 #include "surfaceitem_internal.h"
 #include "surfaceitem_wayland.h"
 #include "surfaceitem_x11.h"
+#include "window.h"
 
 namespace KWin
 {
 
-WindowItem::WindowItem(AbstractClient *window, Item *parent)
+WindowItem::WindowItem(Window *window, Item *parent)
     : Item(parent)
     , m_window(window)
 {
-    connect(window, &AbstractClient::decorationChanged, this, &WindowItem::updateDecorationItem);
+    connect(window, &Window::decorationChanged, this, &WindowItem::updateDecorationItem);
     updateDecorationItem();
 
-    connect(window, &AbstractClient::shadowChanged, this, &WindowItem::updateShadowItem);
+    connect(window, &Window::shadowChanged, this, &WindowItem::updateShadowItem);
     updateShadowItem();
 
-    connect(window, &AbstractClient::windowClosed, this, &WindowItem::handleWindowClosed);
+    connect(window, &Window::windowClosed, this, &WindowItem::handleWindowClosed);
 }
 
 SurfaceItem *WindowItem::surfaceItem() const
@@ -45,12 +45,12 @@ ShadowItem *WindowItem::shadowItem() const
     return m_shadowItem.data();
 }
 
-AbstractClient *WindowItem::window() const
+Window *WindowItem::window() const
 {
     return m_window;
 }
 
-void WindowItem::handleWindowClosed(AbstractClient *original, Deleted *deleted)
+void WindowItem::handleWindowClosed(Window *original, Deleted *deleted)
 {
     Q_UNUSED(original)
     m_window = deleted;
@@ -61,16 +61,16 @@ void WindowItem::updateSurfaceItem(SurfaceItem *surfaceItem)
     m_surfaceItem.reset(surfaceItem);
 
     if (m_surfaceItem) {
-        connect(m_window, &AbstractClient::shadeChanged, this, &WindowItem::updateSurfaceVisibility);
-        connect(m_window, &AbstractClient::bufferGeometryChanged, this, &WindowItem::updateSurfacePosition);
-        connect(m_window, &AbstractClient::frameGeometryChanged, this, &WindowItem::updateSurfacePosition);
+        connect(m_window, &Window::shadeChanged, this, &WindowItem::updateSurfaceVisibility);
+        connect(m_window, &Window::bufferGeometryChanged, this, &WindowItem::updateSurfacePosition);
+        connect(m_window, &Window::frameGeometryChanged, this, &WindowItem::updateSurfacePosition);
 
         updateSurfacePosition();
         updateSurfaceVisibility();
     } else {
-        disconnect(m_window, &AbstractClient::shadeChanged, this, &WindowItem::updateSurfaceVisibility);
-        disconnect(m_window, &AbstractClient::bufferGeometryChanged, this, &WindowItem::updateSurfacePosition);
-        disconnect(m_window, &AbstractClient::frameGeometryChanged, this, &WindowItem::updateSurfacePosition);
+        disconnect(m_window, &Window::shadeChanged, this, &WindowItem::updateSurfaceVisibility);
+        disconnect(m_window, &Window::bufferGeometryChanged, this, &WindowItem::updateSurfacePosition);
+        disconnect(m_window, &Window::frameGeometryChanged, this, &WindowItem::updateSurfacePosition);
     }
 }
 
@@ -121,13 +121,13 @@ void WindowItem::updateDecorationItem()
     }
 }
 
-WindowItemX11::WindowItemX11(AbstractClient *window, Item *parent)
+WindowItemX11::WindowItemX11(Window *window, Item *parent)
     : WindowItem(window, parent)
 {
     initialize();
 
     // Xwayland windows and Wayland surfaces are associated asynchronously.
-    connect(window, &AbstractClient::surfaceChanged, this, &WindowItemX11::initialize);
+    connect(window, &Window::surfaceChanged, this, &WindowItemX11::initialize);
 }
 
 void WindowItemX11::initialize()
@@ -148,7 +148,7 @@ void WindowItemX11::initialize()
     }
 }
 
-WindowItemWayland::WindowItemWayland(AbstractClient *window, Item *parent)
+WindowItemWayland::WindowItemWayland(Window *window, Item *parent)
     : WindowItem(window, parent)
 {
     updateSurfaceItem(new SurfaceItemWayland(window->surface(), window, this));

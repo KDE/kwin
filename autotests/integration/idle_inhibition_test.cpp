@@ -8,12 +8,12 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "abstract_client.h"
 #include "platform.h"
 #include "virtualdesktops.h"
 #include "wayland/display.h"
 #include "wayland/idle_interface.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 
 #include <KWayland/Client/surface.h>
@@ -41,7 +41,7 @@ private Q_SLOTS:
 
 void TestIdleInhibition::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
 
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
@@ -244,7 +244,7 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
     QVERIFY(clientAddedSpy.isEmpty());
     QVERIFY(clientAddedSpy.wait());
     QCOMPARE(clientAddedSpy.count(), 1);
-    AbstractClient *client = clientAddedSpy.last().first().value<AbstractClient *>();
+    Window *client = clientAddedSpy.last().first().value<Window *>();
     QVERIFY(client);
     QCOMPARE(client->readyForPainting(), true);
 
@@ -277,7 +277,7 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
     Test::render(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(clientAddedSpy.wait());
     QCOMPARE(clientAddedSpy.count(), 2);
-    client = clientAddedSpy.last().first().value<AbstractClient *>();
+    client = clientAddedSpy.last().first().value<Window *>();
     QVERIFY(client);
     QCOMPARE(client->readyForPainting(), true);
 

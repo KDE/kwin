@@ -8,11 +8,11 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "abstract_client.h"
 #include "main.h"
 #include "platform.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 
 #include <KWayland/Client/surface.h>
@@ -38,7 +38,7 @@ private Q_SLOTS:
 
 void VirtualDesktopTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -134,7 +134,7 @@ void VirtualDesktopTest::testLastDesktopRemoved()
 
     QVERIFY(client);
     QCOMPARE(client->desktop(), 2);
-    QSignalSpy desktopPresenceChangedSpy(client, &AbstractClient::desktopPresenceChanged);
+    QSignalSpy desktopPresenceChangedSpy(client, &Window::desktopPresenceChanged);
     QVERIFY(desktopPresenceChangedSpy.isValid());
 
     QCOMPARE(client->desktops().count(), 1u);
@@ -169,7 +169,7 @@ void VirtualDesktopTest::testWindowOnMultipleDesktops()
 
     QVERIFY(client);
     QCOMPARE(client->desktop(), 3u);
-    QSignalSpy desktopPresenceChangedSpy(client, &AbstractClient::desktopPresenceChanged);
+    QSignalSpy desktopPresenceChangedSpy(client, &Window::desktopPresenceChanged);
     QVERIFY(desktopPresenceChangedSpy.isValid());
 
     QCOMPARE(client->desktops().count(), 1u);
@@ -248,7 +248,7 @@ void VirtualDesktopTest::testRemoveDesktopWithWindow()
 
     QVERIFY(client);
     QCOMPARE(client->desktop(), 3u);
-    QSignalSpy desktopPresenceChangedSpy(client, &AbstractClient::desktopPresenceChanged);
+    QSignalSpy desktopPresenceChangedSpy(client, &Window::desktopPresenceChanged);
     QVERIFY(desktopPresenceChangedSpy.isValid());
 
     QCOMPARE(client->desktops().count(), 1u);

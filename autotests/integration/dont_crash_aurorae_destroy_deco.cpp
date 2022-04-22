@@ -41,7 +41,7 @@ private Q_SLOTS:
 void DontCrashAuroraeDestroyDecoTest::initTestCase()
 {
     qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -117,7 +117,7 @@ void DontCrashAuroraeDestroyDecoTest::testBorderlessMaximizedWindows()
     QVERIFY(client->readyForPainting());
 
     // simulate click on maximize button
-    QSignalSpy maximizedStateChangedSpy(client, static_cast<void (AbstractClient::*)(KWin::AbstractClient *, MaximizeMode)>(&AbstractClient::clientMaximizedStateChanged));
+    QSignalSpy maximizedStateChangedSpy(client, static_cast<void (Window::*)(KWin::Window *, MaximizeMode)>(&Window::clientMaximizedStateChanged));
     QVERIFY(maximizedStateChangedSpy.isValid());
     quint32 timestamp = 1;
     Test::pointerMotion(client->frameGeometry().topLeft() + scenePoint.toPoint(), timestamp++);

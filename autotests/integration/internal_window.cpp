@@ -176,7 +176,7 @@ void HelperWindow::keyReleaseEvent(QKeyEvent *event)
 
 void InternalWindowTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::InternalClient *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
@@ -575,7 +575,7 @@ void InternalWindowTest::testSkipCloseAnimation()
     auto internalClient = clientAddedSpy.first().first().value<InternalClient *>();
     QVERIFY(internalClient);
     QCOMPARE(internalClient->skipsCloseAnimation(), initial);
-    QSignalSpy skipCloseChangedSpy(internalClient, &AbstractClient::skipCloseAnimationChanged);
+    QSignalSpy skipCloseChangedSpy(internalClient, &Window::skipCloseAnimationChanged);
     QVERIFY(skipCloseChangedSpy.isValid());
     win.setProperty("KWIN_SKIP_CLOSE_ANIMATION", !initial);
     QCOMPARE(skipCloseChangedSpy.count(), 1);
@@ -804,7 +804,7 @@ void InternalWindowTest::testReentrantMoveResize()
     QCOMPARE(client->pos(), QPoint(0, 0));
 
     // Let's pretend that there is a script that really wants the client to be at (100, 100).
-    connect(client, &AbstractClient::frameGeometryChanged, this, [client]() {
+    connect(client, &Window::frameGeometryChanged, this, [client]() {
         client->moveResize(QRect(QPoint(100, 100), client->size()));
     });
 

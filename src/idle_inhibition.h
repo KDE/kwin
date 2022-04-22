@@ -22,7 +22,7 @@ using KWaylandServer::IdleInterface;
 
 namespace KWin
 {
-class AbstractClient;
+class Window;
 
 class IdleInhibition : public QObject
 {
@@ -31,13 +31,13 @@ public:
     explicit IdleInhibition(IdleInterface *idle);
     ~IdleInhibition() override;
 
-    void registerClient(AbstractClient *client);
+    void registerClient(Window *client);
 
     bool isInhibited() const
     {
         return !m_idleInhibitors.isEmpty();
     }
-    bool isInhibited(AbstractClient *client) const
+    bool isInhibited(Window *client) const
     {
         return m_idleInhibitors.contains(client);
     }
@@ -47,12 +47,12 @@ private Q_SLOTS:
     void slotDesktopChanged();
 
 private:
-    void inhibit(AbstractClient *client);
-    void uninhibit(AbstractClient *client);
-    void update(AbstractClient *client);
+    void inhibit(Window *client);
+    void uninhibit(Window *client);
+    void update(Window *client);
 
     IdleInterface *m_idle;
-    QVector<AbstractClient *> m_idleInhibitors;
-    QMap<AbstractClient *, QMetaObject::Connection> m_connections;
+    QVector<Window *> m_idleInhibitors;
+    QMap<Window *, QMetaObject::Connection> m_connections;
 };
 }

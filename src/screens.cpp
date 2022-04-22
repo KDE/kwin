@@ -15,7 +15,7 @@
 #include "platform.h"
 #include "settings.h"
 #include "utils/common.h"
-#include <abstract_client.h>
+#include <window.h>
 #include <workspace.h>
 
 namespace KWin

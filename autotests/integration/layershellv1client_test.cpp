@@ -6,11 +6,11 @@
 
 #include "kwin_wayland_test.h"
 
-#include "abstract_client.h"
 #include "main.h"
 #include "output.h"
 #include "platform.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 
 #include <KWayland/Client/output.h>
@@ -112,7 +112,7 @@ void LayerShellV1ClientTest::testOutput()
 
     // Map the layer surface.
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
-    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
+    Window *client = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
     QVERIFY(client);
 
     // Verify that the client is on the requested screen.
@@ -174,7 +174,7 @@ void LayerShellV1ClientTest::testAnchor()
 
     // Map the layer surface.
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
-    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(280, 124), Qt::red);
+    Window *client = Test::renderAndWaitForShown(surface.data(), QSize(280, 124), Qt::red);
     QVERIFY(client);
 
     // Verify that the client is placed at expected location.
@@ -246,7 +246,7 @@ void LayerShellV1ClientTest::testMargins()
 
     // Map the layer surface.
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
-    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
+    Window *client = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
     QVERIFY(client);
 
     // Verify that the client is placed at expected location.
@@ -288,7 +288,7 @@ void LayerShellV1ClientTest::testLayer()
 
     // Map the layer surface.
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
-    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
+    Window *client = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
     QVERIFY(client);
 
     // Verify that the client is placed at expected location.
@@ -333,7 +333,7 @@ void LayerShellV1ClientTest::testPlacementArea()
 
     // Map the layer surface.
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
-    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
+    Window *client = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
     QVERIFY(client);
 
     // Verify that the work area has been adjusted.
@@ -384,7 +384,7 @@ void LayerShellV1ClientTest::testFill()
 
     // Map the layer surface.
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
-    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
+    Window *client = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
     QVERIFY(client);
 
     // Verify that the client is placed at expected location.
@@ -424,11 +424,11 @@ void LayerShellV1ClientTest::testStack()
 
     // Map the layer surface.
     shellSurface1->ack_configure(configureRequestedSpy1.last().at(0).toUInt());
-    AbstractClient *client1 = Test::renderAndWaitForShown(surface1.data(), requestedSize1, Qt::red);
+    Window *client1 = Test::renderAndWaitForShown(surface1.data(), requestedSize1, Qt::red);
     QVERIFY(client1);
 
     shellSurface2->ack_configure(configureRequestedSpy2.last().at(0).toUInt());
-    AbstractClient *client2 = Test::renderAndWaitForShown(surface2.data(), requestedSize2, Qt::red);
+    Window *client2 = Test::renderAndWaitForShown(surface2.data(), requestedSize2, Qt::red);
     QVERIFY(client2);
 
     // Check that the second layer surface is placed next to the first.
@@ -465,7 +465,7 @@ void LayerShellV1ClientTest::testFocus()
 
     // Map the layer surface.
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
-    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
+    Window *client = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
     QVERIFY(client);
 
     // The layer surface must be focused when it's mapped.
@@ -507,7 +507,7 @@ void LayerShellV1ClientTest::testActivate()
 
     // Map the layer surface.
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
-    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
+    Window *client = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
     QVERIFY(client);
     QVERIFY(!client->isActive());
 
@@ -515,7 +515,7 @@ void LayerShellV1ClientTest::testActivate()
     shellSurface->set_keyboard_interactivity(1);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
-    QSignalSpy activeChangedSpy(client, &AbstractClient::activeChanged);
+    QSignalSpy activeChangedSpy(client, &Window::activeChanged);
     QVERIFY(activeChangedSpy.isValid());
     QTEST(activeChangedSpy.wait(1000), "active");
 
@@ -541,7 +541,7 @@ void LayerShellV1ClientTest::testUnmap()
 
     // Map the layer surface.
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
-    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(280, 124), Qt::red);
+    Window *client = Test::renderAndWaitForShown(surface.data(), QSize(280, 124), Qt::red);
     QVERIFY(client);
 
     // Unmap the layer surface.

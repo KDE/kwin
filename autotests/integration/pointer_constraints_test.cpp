@@ -8,7 +8,6 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "abstract_client.h"
 #include "cursor.h"
 #include "keyboard_input.h"
 #include "output.h"
@@ -17,6 +16,7 @@
 #include "wayland/seat_interface.h"
 #include "wayland/surface_interface.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 
 #include <KWayland/Client/compositor.h>
@@ -57,7 +57,7 @@ private Q_SLOTS:
 void TestPointerConstraints::initTestCase()
 {
     qRegisterMetaType<PointerFunc>();
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -208,7 +208,7 @@ void TestPointerConstraints::testConfinedPointer()
     QVERIFY(unconfinedSpy2.isValid());
 
     // activate it again, this confines again
-    workspace()->activateClient(static_cast<AbstractClient *>(input()->pointer()->focus()));
+    workspace()->activateClient(static_cast<Window *>(input()->pointer()->focus()));
     QVERIFY(confinedSpy2.wait());
     QCOMPARE(input()->pointer()->isConstrained(), true);
 
@@ -217,7 +217,7 @@ void TestPointerConstraints::testConfinedPointer()
     QVERIFY(unconfinedSpy2.wait());
     QCOMPARE(input()->pointer()->isConstrained(), false);
     // activate it again, this confines again
-    workspace()->activateClient(static_cast<AbstractClient *>(input()->pointer()->focus()));
+    workspace()->activateClient(static_cast<Window *>(input()->pointer()->focus()));
     QVERIFY(confinedSpy2.wait());
     QCOMPARE(input()->pointer()->isConstrained(), true);
 
@@ -314,7 +314,7 @@ void TestPointerConstraints::testLockedPointer()
     QVERIFY(lockedSpy2.isValid());
 
     // activate the client again, this should lock again
-    workspace()->activateClient(static_cast<AbstractClient *>(input()->pointer()->focus()));
+    workspace()->activateClient(static_cast<Window *>(input()->pointer()->focus()));
     QVERIFY(lockedSpy2.wait());
     QCOMPARE(input()->pointer()->isConstrained(), true);
 

@@ -22,7 +22,7 @@ class QPoint;
 
 namespace KWin
 {
-class AbstractClient;
+class Window;
 
 class WindowSelector : public X11EventFilter
 {
@@ -30,7 +30,7 @@ public:
     WindowSelector();
     ~WindowSelector() override;
 
-    void start(std::function<void(KWin::AbstractClient *)> callback, const QByteArray &cursorName);
+    void start(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName);
     void start(std::function<void(const QPoint &)> callback);
     bool isActive() const
     {
@@ -50,7 +50,7 @@ private:
     bool activate(const QByteArray &cursorName = QByteArray());
     void cancelCallback();
     bool m_active;
-    std::function<void(KWin::AbstractClient *)> m_callback;
+    std::function<void(KWin::Window *)> m_callback;
     std::function<void(const QPoint &)> m_pointSelectionFallback;
 };
 

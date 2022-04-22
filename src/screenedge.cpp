@@ -342,7 +342,7 @@ bool Edge::canActivate(const QPoint &cursorPos, const QDateTime &triggerTime)
 
 void Edge::handle(const QPoint &cursorPos)
 {
-    AbstractClient *movingClient = Workspace::self()->moveResizeClient();
+    Window *movingClient = Workspace::self()->moveResizeClient();
     if ((edges()->isDesktopSwitchingMovingClients() && movingClient && !movingClient->isInteractiveResize()) || (edges()->isDesktopSwitching() && isScreenEdge())) {
         // always switch desktops in case:
         // moving a Client and option for switch on client move is enabled
@@ -480,7 +480,7 @@ void Edge::switchDesktop(const QPoint &cursorPos)
             pos.setY(OFFSET);
         }
     }
-    if (AbstractClient *c = Workspace::self()->moveResizeClient()) {
+    if (Window *c = Workspace::self()->moveResizeClient()) {
         const QVector<VirtualDesktop *> desktops{desktop};
         if (c->rules()->checkDesktops(desktops) != desktops) {
             // user attempts to move a client to another desktop where it is ruleforced to not be
@@ -580,7 +580,7 @@ void Edge::checkBlocking()
         return;
     }
     bool newValue = false;
-    if (AbstractClient *client = Workspace::self()->activeClient()) {
+    if (Window *client = Workspace::self()->activeClient()) {
         newValue = client->isFullScreen() && client->frameGeometry().contains(m_geometry.center());
     }
     if (newValue == m_blocked) {
@@ -740,7 +740,7 @@ void Edge::setTouchAction(ElectricBorderAction action)
     }
 }
 
-void Edge::setClient(AbstractClient *client)
+void Edge::setClient(Window *client)
 {
     const bool wasTouch = activatesForTouchGesture();
     m_client = client;
@@ -1298,7 +1298,7 @@ void ScreenEdges::unreserve(ElectricBorder border, QObject *object)
     }
 }
 
-void ScreenEdges::reserve(AbstractClient *client, ElectricBorder border)
+void ScreenEdges::reserve(Window *client, ElectricBorder border)
 {
     bool hadBorder = false;
     auto it = m_edges.begin();
@@ -1339,7 +1339,7 @@ void ScreenEdges::unreserveTouch(ElectricBorder border, QAction *action)
     }
 }
 
-void ScreenEdges::createEdgeForClient(AbstractClient *client, ElectricBorder border)
+void ScreenEdges::createEdgeForClient(Window *client, ElectricBorder border)
 {
     int y = 0;
     int x = 0;
@@ -1416,7 +1416,7 @@ void ScreenEdges::createEdgeForClient(AbstractClient *client, ElectricBorder bor
     }
 }
 
-void ScreenEdges::deleteEdgeForClient(AbstractClient *c)
+void ScreenEdges::deleteEdgeForClient(Window *c)
 {
     auto it = m_edges.begin();
     while (it != m_edges.end()) {

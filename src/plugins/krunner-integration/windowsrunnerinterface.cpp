@@ -10,8 +10,8 @@
 
 #include "windowsrunnerinterface.h"
 
-#include "abstract_client.h"
 #include "virtualdesktops.h"
+#include "window.h"
 #include "workspace.h"
 
 #include "krunner1adaptor.h"
@@ -120,7 +120,7 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
             }
         }
 
-        for (const AbstractClient *client : Workspace::self()->allClientList()) {
+        for (const Window *client : Workspace::self()->allClientList()) {
             if (!client->isNormalWindow()) {
                 continue;
             }
@@ -170,7 +170,7 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
     }
 
     // check for matching desktops by name
-    for (const AbstractClient *client : Workspace::self()->allClientList()) {
+    for (const Window *client : Workspace::self()->allClientList()) {
         if (!client->isNormalWindow()) {
             continue;
         }
@@ -189,7 +189,7 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
                 matches << desktopMatch(desktop, ActivateDesktopAction, 0.8);
             }
             // search for windows on desktop and list them with less relevance
-            for (const AbstractClient *client : Workspace::self()->allClientList()) {
+            for (const Window *client : Workspace::self()->allClientList()) {
                 if (!client->isNormalWindow()) {
                     continue;
                 }
@@ -266,7 +266,7 @@ RemoteMatch WindowsRunner::desktopMatch(const VirtualDesktop *desktop, const Win
     return match;
 }
 
-RemoteMatch WindowsRunner::windowsMatch(const AbstractClient *client, const WindowsRunnerAction action, qreal relevance, Plasma::QueryMatch::Type type) const
+RemoteMatch WindowsRunner::windowsMatch(const Window *client, const WindowsRunnerAction action, qreal relevance, Plasma::QueryMatch::Type type) const
 {
     RemoteMatch match;
     match.id = QString::number((int)action) + QLatin1Char('_') + client->internalId().toString();
@@ -331,7 +331,7 @@ RemoteMatch WindowsRunner::windowsMatch(const AbstractClient *client, const Wind
     return match;
 }
 
-bool WindowsRunner::actionSupported(const AbstractClient *client, const WindowsRunnerAction action) const
+bool WindowsRunner::actionSupported(const Window *client, const WindowsRunnerAction action) const
 {
     switch (action) {
     case CloseAction:

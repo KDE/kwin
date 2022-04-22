@@ -29,7 +29,7 @@ class SurfaceInterface;
 
 namespace KWin
 {
-class AbstractClient;
+class Window;
 class CursorImage;
 class InputDevice;
 class InputRedirection;
@@ -147,7 +147,7 @@ private:
     void processMotionInternal(const QPointF &pos, const QSizeF &delta, const QSizeF &deltaNonAccelerated, uint32_t time, quint64 timeUsec, InputDevice *device);
     void cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now) override;
 
-    void focusUpdate(AbstractClient *focusOld, AbstractClient *focusNow) override;
+    void focusUpdate(Window *focusOld, Window *focusNow) override;
 
     QPointF position() const override;
 

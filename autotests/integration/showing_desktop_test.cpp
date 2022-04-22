@@ -8,9 +8,9 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "abstract_client.h"
 #include "platform.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 
 #include <KWayland/Client/plasmashell.h>
@@ -35,7 +35,7 @@ private Q_SLOTS:
 
 void ShowingDesktopTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));

@@ -930,7 +930,7 @@ DebugConsoleModel::DebugConsoleModel(QObject *parent)
     });
 }
 
-void DebugConsoleModel::handleClientAdded(AbstractClient *client)
+void DebugConsoleModel::handleClientAdded(Window *client)
 {
     X11Client *x11Client = qobject_cast<X11Client *>(client);
     if (x11Client) {
@@ -945,7 +945,7 @@ void DebugConsoleModel::handleClientAdded(AbstractClient *client)
     }
 }
 
-void DebugConsoleModel::handleClientRemoved(AbstractClient *client)
+void DebugConsoleModel::handleClientRemoved(Window *client)
 {
     X11Client *x11Client = qobject_cast<X11Client *>(client);
     if (x11Client) {
@@ -1215,7 +1215,7 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
         if (index.column() >= 2 || role != Qt::DisplayRole) {
             return QVariant();
         }
-        if (AbstractClient *c = waylandClient(index)) {
+        if (Window *c = waylandClient(index)) {
             return propertyData(c, index, role);
         } else if (InternalClient *c = internalClient(index)) {
             return propertyData(c, index, role);
@@ -1229,7 +1229,7 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
             return QVariant();
         }
 
-        auto generic = [](AbstractClient *c) -> QString {
+        auto generic = [](Window *c) -> QString {
             return c->caption() + QLatin1Char(' ') + QString::fromUtf8(c->metaObject()->className());
         };
         switch (index.parent().internalId()) {
@@ -1300,7 +1300,7 @@ SurfaceTreeModel::SurfaceTreeModel(QObject *parent)
     };
     using namespace KWaylandServer;
 
-    auto watchSubsurfaces = [this, reset](AbstractClient *c) {
+    auto watchSubsurfaces = [this, reset](Window *c) {
         if (!c->surface()) {
             return;
         }
@@ -1313,7 +1313,7 @@ SurfaceTreeModel::SurfaceTreeModel(QObject *parent)
     for (auto c : workspace()->allClientList()) {
         watchSubsurfaces(c);
     }
-    connect(workspace(), &Workspace::clientAdded, this, [reset, watchSubsurfaces](AbstractClient *c) {
+    connect(workspace(), &Workspace::clientAdded, this, [reset, watchSubsurfaces](Window *c) {
         watchSubsurfaces(c);
         reset();
     });

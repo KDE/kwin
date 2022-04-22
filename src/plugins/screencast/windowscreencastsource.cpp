@@ -15,16 +15,16 @@
 #include "output.h"
 #include "renderloop.h"
 #include "scene.h"
-#include "abstract_client.h"
+#include "window.h"
 
 namespace KWin
 {
 
-WindowScreenCastSource::WindowScreenCastSource(AbstractClient *window, QObject *parent)
+WindowScreenCastSource::WindowScreenCastSource(Window *window, QObject *parent)
     : ScreenCastSource(parent)
     , m_window(window)
 {
-    connect(m_window, &AbstractClient::windowClosed, this, &ScreenCastSource::closed);
+    connect(m_window, &Window::windowClosed, this, &ScreenCastSource::closed);
 }
 
 bool WindowScreenCastSource::hasAlphaChannel() const

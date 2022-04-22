@@ -13,13 +13,13 @@
 #include "selection.h"
 #include "xwayland.h"
 
-#include "abstract_client.h"
 #include "atoms.h"
 #include "wayland/clientconnection.h"
 #include "wayland/datadevice_interface.h"
 #include "wayland/datadevicemanager_interface.h"
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 
 using namespace KWaylandServer;
@@ -69,7 +69,7 @@ bool DataBridge::nativeEventFilter(const QByteArray &eventType, void *message, q
     return false;
 }
 
-DragEventReply DataBridge::dragMoveFilter(AbstractClient *target, const QPoint &pos)
+DragEventReply DataBridge::dragMoveFilter(Window *target, const QPoint &pos)
 {
     return m_dnd->dragMoveFilter(target, pos);
 }

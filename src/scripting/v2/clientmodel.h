@@ -15,7 +15,7 @@
 
 namespace KWin
 {
-class AbstractClient;
+class Window;
 class Client;
 
 namespace ScriptingModels::V2
@@ -139,7 +139,7 @@ public:
     virtual const AbstractLevel *levelForId(quint32 id) const = 0;
     virtual AbstractLevel *parentForId(quint32 child) const = 0;
     virtual int rowForId(quint32 child) const = 0;
-    virtual AbstractClient *clientForId(quint32 child) const = 0;
+    virtual Window *clientForId(quint32 child) const = 0;
 
     virtual void setScreen(uint screen);
     virtual void setVirtualDesktop(uint virtualDesktop);
@@ -184,7 +184,7 @@ public:
     const AbstractLevel *levelForId(quint32 id) const override;
     AbstractLevel *parentForId(quint32 child) const override;
     int rowForId(quint32 child) const override;
-    AbstractClient *clientForId(quint32 child) const override;
+    Window *clientForId(quint32 child) const override;
 private Q_SLOTS:
     void desktopCountChanged(uint previousCount, uint newCount);
     void screenCountChanged(int previousCount, int newCount);
@@ -219,25 +219,25 @@ public:
     quint32 idForRow(int row) const override;
     bool containsId(quint32 id) const;
     int rowForId(quint32 row) const override;
-    AbstractClient *clientForId(quint32 child) const override;
+    Window *clientForId(quint32 child) const override;
     const AbstractLevel *levelForId(quint32 id) const override;
     AbstractLevel *parentForId(quint32 child) const override;
 public Q_SLOTS:
-    void clientAdded(KWin::AbstractClient *client);
-    void clientRemoved(KWin::AbstractClient *client);
+    void clientAdded(KWin::Window *client);
+    void clientRemoved(KWin::Window *client);
 private Q_SLOTS:
     // uses sender()
     void reInit();
 
 private:
-    void checkClient(KWin::AbstractClient *client);
-    void setupClientConnections(AbstractClient *client);
-    void addClient(AbstractClient *client);
-    void removeClient(AbstractClient *client);
-    bool shouldAdd(AbstractClient *client) const;
-    bool exclude(AbstractClient *client) const;
-    bool containsClient(AbstractClient *client) const;
-    QMap<quint32, AbstractClient *> m_clients;
+    void checkClient(KWin::Window *client);
+    void setupClientConnections(Window *client);
+    void addClient(Window *client);
+    void removeClient(Window *client);
+    bool shouldAdd(Window *client) const;
+    bool exclude(Window *client) const;
+    bool containsClient(Window *client) const;
+    QMap<quint32, Window *> m_clients;
 };
 
 class SimpleClientModel : public ClientModel

@@ -58,7 +58,7 @@ private:
 
 void StrutsTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
@@ -163,7 +163,7 @@ void StrutsTest::testWaylandStruts()
 
     QFETCH(QVector<QRect>, windowGeometries);
     // create the panels
-    QHash<KWayland::Client::Surface *, AbstractClient *> clients;
+    QHash<KWayland::Client::Surface *, Window *> clients;
     for (auto it = windowGeometries.constBegin(), end = windowGeometries.constEnd(); it != end; it++) {
         const QRect windowGeometry = *it;
         KWayland::Client::Surface *surface = Test::createSurface(m_compositor);
@@ -254,7 +254,7 @@ void StrutsTest::testMoveWaylandPanel()
     QCOMPARE(workspace()->clientArea(MaximizeArea, outputs[1], desktop), QRect(1280, 0, 1280, 1024));
     QCOMPARE(workspace()->clientArea(WorkArea, outputs[0], desktop), QRect(0, 0, 2560, 1000));
 
-    QSignalSpy frameGeometryChangedSpy(c, &AbstractClient::frameGeometryChanged);
+    QSignalSpy frameGeometryChangedSpy(c, &Window::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
     plasmaSurface->setPosition(QPoint(1280, 1000));
     QVERIFY(frameGeometryChangedSpy.wait());

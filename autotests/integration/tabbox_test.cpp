@@ -8,12 +8,12 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "abstract_client.h"
 #include "cursor.h"
 #include "input.h"
 #include "platform.h"
 #include "tabbox/tabbox.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 
 #include <KConfigGroup>
@@ -41,7 +41,7 @@ private Q_SLOTS:
 
 void TabBoxTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));

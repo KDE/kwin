@@ -8,13 +8,13 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "abstract_client.h"
 #include "cursor.h"
 #include "deleted.h"
 #include "output.h"
 #include "platform.h"
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 #include <kwineffects.h>
 
@@ -47,7 +47,7 @@ private:
 
 void InputStackingOrderTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
@@ -111,7 +111,7 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
     QVERIFY(shellSurface1);
     render(surface1);
     QVERIFY(clientAddedSpy.wait());
-    AbstractClient *window1 = workspace()->activeClient();
+    Window *window1 = workspace()->activeClient();
     QVERIFY(window1);
 
     KWayland::Client::Surface *surface2 = Test::createSurface(Test::waylandCompositor());
@@ -121,7 +121,7 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
     render(surface2);
     QVERIFY(clientAddedSpy.wait());
 
-    AbstractClient *window2 = workspace()->activeClient();
+    Window *window2 = workspace()->activeClient();
     QVERIFY(window2);
     QVERIFY(window1 != window2);
 
@@ -150,7 +150,7 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), window1->surface());
 
     // let's destroy window1, that should pass focus to window2 again
-    QSignalSpy windowClosedSpy(window1, &AbstractClient::windowClosed);
+    QSignalSpy windowClosedSpy(window1, &Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
     surface1->deleteLater();
     QVERIFY(windowClosedSpy.wait());

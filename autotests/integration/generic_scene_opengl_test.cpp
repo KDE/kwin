@@ -7,7 +7,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "generic_scene_opengl_test.h"
-#include "abstract_client.h"
 #include "composite.h"
 #include "cursor.h"
 #include "effectloader.h"
@@ -15,6 +14,7 @@
 #include "renderbackend.h"
 #include "scene.h"
 #include "wayland_server.h"
+#include "window.h"
 
 #include <KConfigGroup>
 
@@ -38,7 +38,7 @@ void GenericSceneOpenGLTest::cleanup()
 
 void GenericSceneOpenGLTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));

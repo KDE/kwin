@@ -219,12 +219,12 @@ KWaylandServer::ClientConnection *WaylandServer::inputMethodConnection() const
     return m_inputMethodServerConnection;
 }
 
-void WaylandServer::registerShellClient(AbstractClient *client)
+void WaylandServer::registerShellClient(Window *client)
 {
     if (client->readyForPainting()) {
         Q_EMIT shellClientAdded(client);
     } else {
-        connect(client, &AbstractClient::windowShown, this, &WaylandServer::shellClientShown);
+        connect(client, &Window::windowShown, this, &WaylandServer::shellClientShown);
     }
     m_clients << client;
 }
@@ -258,7 +258,7 @@ void WaylandServer::registerXdgToplevelClient(XdgToplevelClient *client)
     });
 }
 
-void WaylandServer::registerXdgGenericClient(AbstractClient *client)
+void WaylandServer::registerXdgGenericClient(Window *client)
 {
     XdgToplevelClient *toplevelClient = qobject_cast<XdgToplevelClient *>(client);
     if (toplevelClient) {
@@ -358,7 +358,7 @@ bool WaylandServer::init(InitializationFlags flags)
     m_initFlags = flags;
     m_compositor = new CompositorInterface(m_display, m_display);
     connect(m_compositor, &CompositorInterface::surfaceCreated, this, [this](SurfaceInterface *surface) {
-        // check whether we have a AbstractClient with the Surface's id
+        // check whether we have a Window with the Surface's id
         Workspace *ws = Workspace::self();
         if (!ws) {
             // it's possible that a Surface gets created before Workspace is created
@@ -519,9 +519,9 @@ SurfaceInterface *WaylandServer::findForeignTransientForSurface(SurfaceInterface
     return m_XdgForeign->transientFor(surface);
 }
 
-void WaylandServer::shellClientShown(AbstractClient *window)
+void WaylandServer::shellClientShown(Window *window)
 {
-    disconnect(window, &AbstractClient::windowShown, this, &WaylandServer::shellClientShown);
+    disconnect(window, &Window::windowShown, this, &WaylandServer::shellClientShown);
     Q_EMIT shellClientAdded(window);
 }
 
@@ -543,7 +543,7 @@ void WaylandServer::initWorkspace()
             auto f = [this]() {
                 QVector<quint32> ids;
                 QVector<QString> uuids;
-                for (AbstractClient *toplevel : workspace()->stackingOrder()) {
+                for (Window *toplevel : workspace()->stackingOrder()) {
                     if (toplevel->windowManagementInterface()) {
                         ids << toplevel->windowManagementInterface()->internalId();
                         uuids << toplevel->windowManagementInterface()->uuid();
@@ -679,16 +679,16 @@ void WaylandServer::destroyInputMethodConnection()
     m_inputMethodServerConnection = nullptr;
 }
 
-void WaylandServer::removeClient(AbstractClient *c)
+void WaylandServer::removeClient(Window *c)
 {
     m_clients.removeAll(c);
     Q_EMIT shellClientRemoved(c);
 }
 
-static AbstractClient *findClientInList(const QList<AbstractClient *> &clients, const KWaylandServer::SurfaceInterface *surface)
+static Window *findClientInList(const QList<Window *> &clients, const KWaylandServer::SurfaceInterface *surface)
 {
     auto it = std::find_if(clients.begin(), clients.end(),
-                           [surface](AbstractClient *c) {
+                           [surface](Window *c) {
                                return c->surface() == surface;
                            });
     if (it == clients.end()) {
@@ -697,12 +697,12 @@ static AbstractClient *findClientInList(const QList<AbstractClient *> &clients, 
     return *it;
 }
 
-AbstractClient *WaylandServer::findClient(const KWaylandServer::SurfaceInterface *surface) const
+Window *WaylandServer::findClient(const KWaylandServer::SurfaceInterface *surface) const
 {
     if (!surface) {
         return nullptr;
     }
-    if (AbstractClient *c = findClientInList(m_clients, surface)) {
+    if (Window *c = findClientInList(m_clients, surface)) {
         return c;
     }
     return nullptr;
@@ -784,7 +784,7 @@ QString WaylandServer::socketName() const
 #if KWIN_BUILD_SCREENLOCKER
 WaylandServer::LockScreenPresentationWatcher::LockScreenPresentationWatcher(WaylandServer *server)
 {
-    connect(server, &WaylandServer::shellClientAdded, this, [this](AbstractClient *client) {
+    connect(server, &WaylandServer::shellClientAdded, this, [this](Window *client) {
         if (client->isLockScreen()) {
             connect(client->output()->renderLoop(), &RenderLoop::framePresented, this, [this, client]() {
                 // only signal lockScreenShown once all outputs have been presented at least once

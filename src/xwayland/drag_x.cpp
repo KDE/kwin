@@ -16,13 +16,13 @@
 #include "selection_source.h"
 #include "xwayland.h"
 
-#include "abstract_client.h"
 #include "atoms.h"
 #include "wayland/datadevice_interface.h"
 #include "wayland/datasource_interface.h"
 #include "wayland/seat_interface.h"
 #include "wayland/surface_interface.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 
 #include <QMouseEvent>
@@ -118,7 +118,7 @@ XToWlDrag::~XToWlDrag()
 {
 }
 
-DragEventReply XToWlDrag::moveFilter(AbstractClient *target, const QPoint &pos)
+DragEventReply XToWlDrag::moveFilter(Window *target, const QPoint &pos)
 {
     Q_UNUSED(pos);
 
@@ -153,7 +153,7 @@ DragEventReply XToWlDrag::moveFilter(AbstractClient *target, const QPoint &pos)
         return DragEventReply::Ignore;
     }
     // new Wl native target
-    auto *ac = static_cast<AbstractClient *>(target);
+    auto *ac = static_cast<Window *>(target);
     m_visit = new WlVisit(ac, this);
     connect(m_visit, &WlVisit::offersReceived, this, &XToWlDrag::setOffers);
     return DragEventReply::Ignore;
@@ -252,7 +252,7 @@ bool XToWlDrag::checkForFinished()
     return transfersFinished;
 }
 
-WlVisit::WlVisit(AbstractClient *target, XToWlDrag *drag)
+WlVisit::WlVisit(Window *target, XToWlDrag *drag)
     : QObject(drag)
     , m_target(target)
     , m_drag(drag)

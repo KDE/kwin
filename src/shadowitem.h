@@ -13,7 +13,7 @@ namespace KWin
 
 class Deleted;
 class Shadow;
-class AbstractClient;
+class Window;
 
 /**
  * The ShadowItem class represents a nine-tile patch server-side drop-shadow.
@@ -23,7 +23,7 @@ class KWIN_EXPORT ShadowItem : public Item
     Q_OBJECT
 
 public:
-    explicit ShadowItem(Shadow *shadow, AbstractClient *window, Item *parent = nullptr);
+    explicit ShadowItem(Shadow *shadow, Window *window, Item *parent = nullptr);
     ~ShadowItem() override;
 
     Shadow *shadow() const;
@@ -34,10 +34,10 @@ protected:
 private Q_SLOTS:
     void handleTextureChanged();
     void updateGeometry();
-    void handleWindowClosed(AbstractClient *original, Deleted *deleted);
+    void handleWindowClosed(Window *original, Deleted *deleted);
 
 private:
-    AbstractClient *m_window;
+    Window *m_window;
     Shadow *m_shadow = nullptr;
 };
 

@@ -9,7 +9,6 @@
 #include "scene_qpainter.h"
 #include "qpaintersurfacetexture.h"
 // KWin
-#include "abstract_client.h"
 #include "composite.h"
 #include "cursor.h"
 #include "decorations/decoratedclient.h"
@@ -21,7 +20,7 @@
 #include "renderloop.h"
 #include "screens.h"
 #include "surfaceitem.h"
-#include "abstract_client.h"
+#include "window.h"
 #include "windowitem.h"
 
 #include <kwinoffscreenquickview.h>
@@ -99,9 +98,9 @@ void SceneQPainter::paintOffscreenQuickView(OffscreenQuickView *w)
     painter->restore();
 }
 
-Scene::Window *SceneQPainter::createWindow(AbstractClient *toplevel)
+SceneWindow *SceneQPainter::createWindow(Window *toplevel)
 {
-    return new SceneQPainter::Window(this, toplevel);
+    return new SceneQPainterWindow(this, toplevel);
 }
 
 Scene::EffectFrame *SceneQPainter::createEffectFrame(EffectFrameImpl *frame)
@@ -109,30 +108,30 @@ Scene::EffectFrame *SceneQPainter::createEffectFrame(EffectFrameImpl *frame)
     return new QPainterEffectFrame(frame, this);
 }
 
-Shadow *SceneQPainter::createShadow(AbstractClient *toplevel)
+Shadow *SceneQPainter::createShadow(Window *toplevel)
 {
     return new SceneQPainterShadow(toplevel);
 }
 
 //****************************************
-// SceneQPainter::Window
+// SceneQPainterWindow
 //****************************************
-SceneQPainter::Window::Window(SceneQPainter *scene, AbstractClient *c)
-    : Scene::Window(c)
+SceneQPainterWindow::SceneQPainterWindow(SceneQPainter *scene, Window *c)
+    : SceneWindow(c)
     , m_scene(scene)
 {
 }
 
-SceneQPainter::Window::~Window()
+SceneQPainterWindow::~SceneQPainterWindow()
 {
 }
 
-void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const WindowPaintData &data)
+void SceneQPainterWindow::performPaint(int mask, const QRegion &_region, const WindowPaintData &data)
 {
     QRegion region = _region;
 
     const QRect boundingRect = windowItem()->mapToGlobal(windowItem()->boundingRect());
-    if (!(mask & (PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED))) {
+    if (!(mask & (Scene::PAINT_WINDOW_TRANSFORMED | Scene::PAINT_SCREEN_TRANSFORMED))) {
         region &= boundingRect;
     }
 
@@ -146,7 +145,7 @@ void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const
     painter->setClipRegion(region);
     painter->setClipping(true);
 
-    if (mask & PAINT_WINDOW_TRANSFORMED) {
+    if (mask & Scene::PAINT_WINDOW_TRANSFORMED) {
         painter->translate(data.xTranslation(), data.yTranslation());
         painter->scale(data.xScale(), data.yScale());
     }
@@ -180,7 +179,7 @@ void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const
     painter->restore();
 }
 
-void SceneQPainter::Window::renderItem(QPainter *painter, Item *item) const
+void SceneQPainterWindow::renderItem(QPainter *painter, Item *item) const
 {
     const QList<Item *> sortedChildItems = item->sortedChildItems();
 
@@ -215,7 +214,7 @@ void SceneQPainter::Window::renderItem(QPainter *painter, Item *item) const
     painter->restore();
 }
 
-void SceneQPainter::Window::renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceItem) const
+void SceneQPainterWindow::renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceItem) const
 {
     const SurfacePixmap *surfaceTexture = surfaceItem->pixmap();
     if (!surfaceTexture || !surfaceTexture->isValid()) {
@@ -242,7 +241,7 @@ void SceneQPainter::Window::renderSurfaceItem(QPainter *painter, SurfaceItem *su
     }
 }
 
-void SceneQPainter::Window::renderDecorationItem(QPainter *painter, DecorationItem *decorationItem) const
+void SceneQPainterWindow::renderDecorationItem(QPainter *painter, DecorationItem *decorationItem) const
 {
     const auto renderer = static_cast<const SceneQPainterDecorationRenderer *>(decorationItem->renderer());
     QRect dtr, dlr, drr, dbr;
@@ -349,7 +348,7 @@ void QPainterEffectFrame::render(const QRegion &region, double opacity, double f
 //****************************************
 // QPainterShadow
 //****************************************
-SceneQPainterShadow::SceneQPainterShadow(AbstractClient *toplevel)
+SceneQPainterShadow::SceneQPainterShadow(Window *toplevel)
     : Shadow(toplevel)
 {
 }

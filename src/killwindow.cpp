@@ -9,11 +9,11 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "killwindow.h"
-#include "abstract_client.h"
 #include "main.h"
 #include "osd.h"
 #include "platform.h"
 #include "unmanaged.h"
+#include "window.h"
 
 #include <KLocalizedString>
 
@@ -33,12 +33,12 @@ void KillWindow::start()
     OSD::show(i18n("Select window to force close with left click or enter.\nEscape or right click to cancel."),
               QStringLiteral("window-close"));
     kwinApp()->platform()->startInteractiveWindowSelection(
-        [](KWin::AbstractClient *t) {
+        [](KWin::Window *t) {
             OSD::hide();
             if (!t) {
                 return;
             }
-            if (AbstractClient *c = static_cast<AbstractClient *>(t->isClient() ? t : nullptr)) {
+            if (Window *c = static_cast<Window *>(t->isClient() ? t : nullptr)) {
                 c->killWindow();
             } else if (Unmanaged *u = qobject_cast<Unmanaged *>(t)) {
                 xcb_kill_client(kwinApp()->x11Connection(), u->window());

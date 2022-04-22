@@ -12,8 +12,8 @@
 
 #include "kwineffects.h"
 #include "renderlayerdelegate.h"
-#include "abstract_client.h"
 #include "utils/common.h"
+#include "window.h"
 
 #include <optional>
 
@@ -37,6 +37,7 @@ class GLTexture;
 class Item;
 class RenderLoop;
 class Scene;
+class SceneWindow;
 class Shadow;
 class ShadowItem;
 class SurfaceItem;
@@ -52,7 +53,7 @@ public:
     ScreenLockerFilter(Scene *scene);
     ~ScreenLockerFilter();
 
-    bool filterAcceptsWindow(KWin::AbstractClient *w) const;
+    bool filterAcceptsWindow(Window *w) const;
 };
 
 class SceneDelegate : public RenderLayerDelegate
@@ -85,7 +86,6 @@ public:
     explicit Scene(QObject *parent = nullptr);
     ~Scene() override;
     class EffectFrame;
-    class Window;
 
     void initialize();
 
@@ -113,7 +113,7 @@ public:
     virtual void paint(RenderTarget *renderTarget, const QRegion &region) = 0;
 
     /**
-     * Adds the AbstractClient to the Scene.
+     * Adds the Window to the Scene.
      *
      * If the toplevel gets deleted, then the scene will try automatically
      * to re-bind an underlying scene window to the corresponding Deleted.
@@ -121,15 +121,15 @@ public:
      * @param toplevel The window to be added.
      * @note You can add a toplevel to scene only once.
      */
-    void addToplevel(AbstractClient *toplevel);
+    void addToplevel(Window *toplevel);
 
     /**
-     * Removes the AbstractClient from the Scene.
+     * Removes the Window from the Scene.
      *
      * @param toplevel The window to be removed.
      * @note You can remove a toplevel from the scene only once.
      */
-    void removeToplevel(AbstractClient *toplevel);
+    void removeToplevel(Window *toplevel);
 
     /**
      * @brief Creates the Scene backend of an EffectFrame.
@@ -143,16 +143,16 @@ public:
      * An implementing class has to create a proper instance. It is not allowed to
      * return @c null.
      *
-     * @param toplevel The AbstractClient for which the Shadow needs to be created.
+     * @param toplevel The Window for which the Shadow needs to be created.
      */
-    virtual Shadow *createShadow(AbstractClient *toplevel) = 0;
+    virtual Shadow *createShadow(Window *toplevel) = 0;
     // Flags controlling how painting is done.
     enum {
-        // Window (or at least part of it) will be painted opaque.
+        // SceneWindow (or at least part of it) will be painted opaque.
         PAINT_WINDOW_OPAQUE = 1 << 0,
-        // Window (or at least part of it) will be painted translucent.
+        // SceneWindow (or at least part of it) will be painted translucent.
         PAINT_WINDOW_TRANSLUCENT = 1 << 1,
-        // Window will be painted with transformed geometry.
+        // SceneWindow will be painted with transformed geometry.
         PAINT_WINDOW_TRANSFORMED = 1 << 2,
         // Paint only a region of the screen (can be optimized, cannot
         // be used together with TRANSFORMED flags).
@@ -164,7 +164,7 @@ public:
         // Clear whole background as the very first step, without optimizing it
         PAINT_SCREEN_BACKGROUND_FIRST = 1 << 6,
         // PAINT_DECORATION_ONLY = 1 << 7 has been removed
-        // Window will be painted with a lanczos filter.
+        // SceneWindow will be painted with a lanczos filter.
         PAINT_WINDOW_LANCZOS = 1 << 8
         // PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS = 1 << 9 has been removed
     };
@@ -225,10 +225,10 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     // a window has been closed
-    void windowClosed(KWin::AbstractClient *c, KWin::Deleted *deleted);
+    void windowClosed(Window *c, Deleted *deleted);
 
 protected:
-    virtual Window *createWindow(AbstractClient *toplevel) = 0;
+    virtual SceneWindow *createWindow(Window *toplevel) = 0;
     void createStackingOrder();
     void clearStackingOrder();
     // shared implementation, starts painting the screen
@@ -248,7 +248,7 @@ protected:
     // called after all effects had their paintWindow() called
     void finalPaintWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data);
     // shared implementation, starts painting the window
-    virtual void paintWindow(Window *w, int mask, const QRegion &region);
+    virtual void paintWindow(SceneWindow *w, int mask, const QRegion &region);
     // called after all effects had their drawWindow() called
     virtual void finalDrawWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data);
 
@@ -257,7 +257,7 @@ protected:
     // saved data for 2nd pass of optimized screen painting
     struct Phase2Data
     {
-        Window *window = nullptr;
+        SceneWindow *window = nullptr;
         QRegion region;
         QRegion opaque;
         int mask = 0;
@@ -274,13 +274,13 @@ protected:
     Output *painted_screen = nullptr;
 
     // windows in their stacking order
-    QVector<Window *> stacking_order;
+    QVector<SceneWindow *> stacking_order;
     ScreenLockerFilter m_filter;
 
 private:
     std::chrono::milliseconds m_expectedPresentTimestamp = std::chrono::milliseconds::zero();
     QList<SceneDelegate *> m_delegates;
-    QHash<AbstractClient *, Window *> m_windows;
+    QHash<Window *, SceneWindow *> m_windows;
     QRect m_geometry;
     QMatrix4x4 m_renderTargetProjectionMatrix;
     QRect m_renderTargetRect;
@@ -291,13 +291,13 @@ private:
 };
 
 // The base class for windows representations in composite backends
-class Scene::Window : public QObject
+class SceneWindow : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit Window(AbstractClient *client, QObject *parent = nullptr);
-    ~Window() override;
+    explicit SceneWindow(Window *client, QObject *parent = nullptr);
+    ~SceneWindow() override;
     // perform the actual painting of the window
     virtual void performPaint(int mask, const QRegion &region, const WindowPaintData &data) = 0;
     int x() const;
@@ -310,21 +310,21 @@ public:
     QRect rect() const;
     // access to the internal window class
     // TODO eventually get rid of this
-    AbstractClient *window() const;
+    Window *window() const;
     // should the window be painted
     bool isPaintingEnabled() const;
     void resetPaintingEnabled();
     // Flags explaining why painting should be disabled
     enum {
-        // Window will not be painted
+        // SceneWindow will not be painted
         PAINT_DISABLED = 1 << 0,
-        // Window will not be painted because it is deleted
+        // SceneWindow will not be painted because it is deleted
         PAINT_DISABLED_BY_DELETE = 1 << 1,
-        // Window will not be painted because of which desktop it's on
+        // SceneWindow will not be painted because of which desktop it's on
         PAINT_DISABLED_BY_DESKTOP = 1 << 2,
-        // Window will not be painted because it is minimized
+        // SceneWindow will not be painted because it is minimized
         PAINT_DISABLED_BY_MINIMIZE = 1 << 3,
-        // Window will not be painted because it's not on the current activity
+        // SceneWindow will not be painted because it's not on the current activity
         PAINT_DISABLED_BY_ACTIVITY = 1 << 5
     };
     void enablePainting(int reason);
@@ -340,7 +340,7 @@ public:
     ShadowItem *shadowItem() const;
 
 protected:
-    AbstractClient *toplevel;
+    Window *toplevel;
 
 private:
     void referencePreviousPixmap_helper(SurfaceItem *item);
@@ -350,7 +350,7 @@ private:
 
     int disable_painting;
     QScopedPointer<WindowItem> m_windowItem;
-    Q_DISABLE_COPY(Window)
+    Q_DISABLE_COPY(SceneWindow)
 };
 
 class Scene::EffectFrame
@@ -370,47 +370,47 @@ protected:
     EffectFrameImpl *m_effectFrame;
 };
 
-inline int Scene::Window::x() const
+inline int SceneWindow::x() const
 {
     return toplevel->x();
 }
 
-inline int Scene::Window::y() const
+inline int SceneWindow::y() const
 {
     return toplevel->y();
 }
 
-inline int Scene::Window::width() const
+inline int SceneWindow::width() const
 {
     return toplevel->width();
 }
 
-inline int Scene::Window::height() const
+inline int SceneWindow::height() const
 {
     return toplevel->height();
 }
 
-inline QRect Scene::Window::geometry() const
+inline QRect SceneWindow::geometry() const
 {
     return toplevel->frameGeometry();
 }
 
-inline QSize Scene::Window::size() const
+inline QSize SceneWindow::size() const
 {
     return toplevel->size();
 }
 
-inline QPoint Scene::Window::pos() const
+inline QPoint SceneWindow::pos() const
 {
     return toplevel->pos();
 }
 
-inline QRect Scene::Window::rect() const
+inline QRect SceneWindow::rect() const
 {
     return toplevel->rect();
 }
 
-inline AbstractClient *Scene::Window::window() const
+inline Window *SceneWindow::window() const
 {
     return toplevel;
 }

@@ -32,7 +32,7 @@ typedef uint32_t xkb_layout_index_t;
 namespace KWin
 {
 
-class AbstractClient;
+class Window;
 class InputDevice;
 class InputRedirection;
 class KeyboardLayout;

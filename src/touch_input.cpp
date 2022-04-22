@@ -11,12 +11,12 @@
 
 #include <config-kwin.h>
 
-#include "abstract_client.h"
 #include "decorations/decoratedclient.h"
 #include "input_event_spy.h"
 #include "pointer_input.h"
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 // KDecoration
 #include <KDecoration2/Decoration>
@@ -87,7 +87,7 @@ bool TouchInputRedirection::positionValid() const
     return !m_activeTouchPoints.isEmpty();
 }
 
-void TouchInputRedirection::focusUpdate(AbstractClient *focusOld, AbstractClient *focusNow)
+void TouchInputRedirection::focusUpdate(Window *focusOld, Window *focusNow)
 {
     // TODO: handle pointer grab aka popups
 
@@ -111,7 +111,7 @@ void TouchInputRedirection::focusUpdate(AbstractClient *focusOld, AbstractClient
 
     // FIXME: add input transformation API to KWaylandServer::SeatInterface for touch input
     seat->setFocusedTouchSurface(focusNow->surface(), -1 * focusNow->inputTransformation().map(focusNow->pos()) + focusNow->pos());
-    m_focusGeometryConnection = connect(focusNow, &AbstractClient::frameGeometryChanged, this, [this]() {
+    m_focusGeometryConnection = connect(focusNow, &Window::frameGeometryChanged, this, [this]() {
         if (!focus()) {
             return;
         }

@@ -5,8 +5,8 @@
 */
 
 #include "desktopbackgrounditem.h"
-#include "abstract_client.h"
 #include "output.h"
+#include "window.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -106,7 +106,7 @@ void DesktopBackgroundItem::updateWindow()
     }
 
     const auto clients = workspace()->allClientList();
-    for (AbstractClient *client : clients) {
+    for (Window *client : clients) {
         if (client->isDesktop() && client->isOnOutput(m_output) && client->isOnDesktop(desktop) && client->isOnActivity(activity)) {
             setClient(client);
             break;

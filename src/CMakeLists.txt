@@ -27,7 +27,6 @@ set_target_properties(kwin PROPERTIES
 
 target_sources(kwin PRIVATE
     3rdparty/xcursor.c
-    abstract_client.cpp
     activation.cpp
     appmenu.cpp
     atoms.cpp
@@ -147,6 +146,7 @@ target_sources(kwin PRIVATE
     waylandoutput.cpp
     waylandoutputdevicev2.cpp
     waylandshellintegration.cpp
+    window.cpp
     window_property_notify_x11_filter.cpp
     windowitem.cpp
     workspace.cpp

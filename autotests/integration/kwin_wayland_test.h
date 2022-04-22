@@ -9,9 +9,9 @@
 #ifndef KWIN_WAYLAND_TEST_H
 #define KWIN_WAYLAND_TEST_H
 
-#include "abstract_client.h"
 #include "inputdevice.h"
 #include "main.h"
+#include "window.h"
 
 // Qt
 #include <QtTest>
@@ -63,7 +63,6 @@ namespace Xwl
 class Xwayland;
 }
 
-class AbstractClient;
 namespace Test
 {
 class VirtualInputDevice;
@@ -439,7 +438,7 @@ public:
     MockInputMethod(struct wl_registry *registry, int id, int version);
     ~MockInputMethod();
 
-    AbstractClient *client() const
+    Window *client() const
     {
         return m_client;
     }
@@ -462,7 +461,7 @@ protected:
 private:
     QPointer<KWayland::Client::Surface> m_inputSurface;
     QtWayland::zwp_input_panel_surface_v1 *m_inputMethodSurface = nullptr;
-    QPointer<AbstractClient> m_client;
+    QPointer<Window> m_client;
     struct ::zwp_input_method_context_v1 *m_context = nullptr;
 };
 
@@ -573,7 +572,7 @@ KWayland::Client::TextInputManager *waylandTextInputManager();
 QVector<KWayland::Client::Output *> waylandOutputs();
 QVector<WaylandOutputDeviceV2 *> waylandOutputDevicesV2();
 
-bool waitForWaylandSurface(AbstractClient *client);
+bool waitForWaylandSurface(Window *client);
 
 bool waitForWaylandPointer();
 bool waitForWaylandTouch();
@@ -627,20 +626,20 @@ void render(KWayland::Client::Surface *surface, const QSize &size, const QColor 
 void render(KWayland::Client::Surface *surface, const QImage &img);
 
 /**
- * Waits till a new AbstractClient is shown and returns the created AbstractClient.
- * If no AbstractClient gets shown during @p timeout @c null is returned.
+ * Waits till a new Window is shown and returns the created Window.
+ * If no Window gets shown during @p timeout @c null is returned.
  */
-AbstractClient *waitForWaylandWindowShown(int timeout = 5000);
+Window *waitForWaylandWindowShown(int timeout = 5000);
 
 /**
  * Combination of @link{render} and @link{waitForWaylandWindowShown}.
  */
-AbstractClient *renderAndWaitForShown(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format = QImage::Format_ARGB32, int timeout = 5000);
+Window *renderAndWaitForShown(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format = QImage::Format_ARGB32, int timeout = 5000);
 
 /**
  * Waits for the @p client to be destroyed.
  */
-bool waitForWindowDestroyed(AbstractClient *client);
+bool waitForWindowDestroyed(Window *client);
 
 /**
  * Locks the screen and waits till the screen is locked.
@@ -656,7 +655,7 @@ bool unlockScreen();
 
 void initWaylandWorkspace();
 
-AbstractClient *inputPanelClient();
+Window *inputPanelClient();
 MockInputMethod *inputMethod();
 KWayland::Client::Surface *inputPanelSurface();
 

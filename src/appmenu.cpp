@@ -79,26 +79,26 @@ void ApplicationMenu::slotShowRequest(const QString &serviceName, const QDBusObj
         return;
     }
 
-    if (AbstractClient *c = findAbstractClientWithApplicationMenu(serviceName, menuObjectPath)) {
+    if (Window *c = findAbstractClientWithApplicationMenu(serviceName, menuObjectPath)) {
         c->showApplicationMenu(actionId);
     }
 }
 
 void ApplicationMenu::slotMenuShown(const QString &serviceName, const QDBusObjectPath &menuObjectPath)
 {
-    if (AbstractClient *c = findAbstractClientWithApplicationMenu(serviceName, menuObjectPath)) {
+    if (Window *c = findAbstractClientWithApplicationMenu(serviceName, menuObjectPath)) {
         c->setApplicationMenuActive(true);
     }
 }
 
 void ApplicationMenu::slotMenuHidden(const QString &serviceName, const QDBusObjectPath &menuObjectPath)
 {
-    if (AbstractClient *c = findAbstractClientWithApplicationMenu(serviceName, menuObjectPath)) {
+    if (Window *c = findAbstractClientWithApplicationMenu(serviceName, menuObjectPath)) {
         c->setApplicationMenuActive(false);
     }
 }
 
-void ApplicationMenu::showApplicationMenu(const QPoint &p, AbstractClient *c, int actionId)
+void ApplicationMenu::showApplicationMenu(const QPoint &p, Window *c, int actionId)
 {
     if (!c->hasApplicationMenu()) {
         return;
@@ -106,13 +106,13 @@ void ApplicationMenu::showApplicationMenu(const QPoint &p, AbstractClient *c, in
     m_appmenuInterface->showMenu(p.x(), p.y(), c->applicationMenuServiceName(), QDBusObjectPath(c->applicationMenuObjectPath()), actionId);
 }
 
-AbstractClient *ApplicationMenu::findAbstractClientWithApplicationMenu(const QString &serviceName, const QDBusObjectPath &menuObjectPath)
+Window *ApplicationMenu::findAbstractClientWithApplicationMenu(const QString &serviceName, const QDBusObjectPath &menuObjectPath)
 {
     if (serviceName.isEmpty() || menuObjectPath.path().isEmpty()) {
         return nullptr;
     }
 
-    return Workspace::self()->findAbstractClient([&](const AbstractClient *c) {
+    return Workspace::self()->findAbstractClient([&](const Window *c) {
         return c->applicationMenuServiceName() == serviceName
             && c->applicationMenuObjectPath() == menuObjectPath.path();
     });

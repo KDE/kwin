@@ -26,7 +26,7 @@ class SurfaceInterface;
 
 namespace KWin
 {
-class AbstractClient;
+class Window;
 
 namespace Xwl
 {
@@ -40,7 +40,7 @@ class WlToXDrag : public Drag
     using Drag::Drag;
 
 public:
-    DragEventReply moveFilter(AbstractClient *target, const QPoint &pos) override;
+    DragEventReply moveFilter(Window *target, const QPoint &pos) override;
     bool handleClientMessage(xcb_client_message_event_t *event) override;
 
 private:
@@ -55,7 +55,7 @@ class Xvisit : public QObject
 public:
     // TODO: handle ask action
 
-    Xvisit(AbstractClient *target, KWaylandServer::AbstractDataSource *dataSource, QObject *parent);
+    Xvisit(Window *target, KWaylandServer::AbstractDataSource *dataSource, QObject *parent);
 
     bool handleClientMessage(xcb_client_message_event_t *event);
     bool handleStatus(xcb_client_message_event_t *event);
@@ -68,7 +68,7 @@ public:
     {
         return m_state.finished;
     }
-    AbstractClient *target() const
+    Window *target() const
     {
         return m_target;
     }
@@ -92,7 +92,7 @@ private:
     void doFinish();
     void stopConnections();
 
-    AbstractClient *m_target;
+    Window *m_target;
     QPointer<KWaylandServer::AbstractDataSource> m_dataSource;
     uint32_t m_version = 0;
 

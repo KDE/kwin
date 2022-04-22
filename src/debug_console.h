@@ -34,7 +34,7 @@ class DebugConsole;
 namespace KWin
 {
 
-class AbstractClient;
+class Window;
 class X11Client;
 class InternalClient;
 class Unmanaged;
@@ -55,8 +55,8 @@ public:
     QModelIndex parent(const QModelIndex &child) const override;
 
 private Q_SLOTS:
-    void handleClientAdded(AbstractClient *client);
-    void handleClientRemoved(AbstractClient *client);
+    void handleClientAdded(Window *client);
+    void handleClientRemoved(Window *client);
 
 private:
     template<class T>

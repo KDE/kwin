@@ -22,7 +22,7 @@ class QRect;
 
 namespace KWin
 {
-class AbstractClient;
+class Window;
 
 /**
  * @brief Menu shown for a Client.
@@ -76,7 +76,7 @@ public:
      * @param c The Client to compare
      * @returns Whether the Client is the one related to this Menu
      */
-    bool isMenuClient(const AbstractClient *c) const;
+    bool isMenuClient(const Window *c) const;
     /**
      * Closes the Menu and prepares it for next usage.
      */
@@ -87,7 +87,7 @@ public:
      * @param pos The position where the menu should be shown.
      * @param client The Client for which the Menu has to be shown.
      */
-    void show(const QRect &pos, AbstractClient *client);
+    void show(const QRect &pos, Window *client);
 
 public Q_SLOTS:
     /**
@@ -166,7 +166,7 @@ private:
      * @param message The message type to be shown
      * @param c The Client for which the dialog should be shown.
      */
-    void helperDialog(const QString &message, AbstractClient *c);
+    void helperDialog(const QString &message, Window *c);
     /**
      * The actual main context menu which is show when the UserActionsMenu is invoked.
      */
@@ -205,7 +205,7 @@ private:
     /**
      * The Client for which the menu is shown.
      */
-    QPointer<AbstractClient> m_client;
+    QPointer<Window> m_client;
     QAction *m_rulesOperation = nullptr;
     QAction *m_applicationRulesOperation = nullptr;
 };

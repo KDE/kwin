@@ -9,13 +9,13 @@
 
 #include "kwin_wayland_test.h"
 
-#include "abstract_client.h"
 #include "composite.h"
 #include "effectloader.h"
 #include "effects.h"
 #include "platform.h"
 #include "renderbackend.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 
 #include <KWayland/Client/plasmashell.h>
@@ -43,7 +43,7 @@ void MinimizeAnimationTest::initTestCase()
 {
     qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
 
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -113,7 +113,7 @@ void MinimizeAnimationTest::testMinimizeUnminimize()
     plasmaPanelShellSurface->setRole(PlasmaShellSurface::Role::Panel);
     plasmaPanelShellSurface->setPosition(panelRect.topLeft());
     plasmaPanelShellSurface->setPanelBehavior(PlasmaShellSurface::PanelBehavior::AlwaysVisible);
-    AbstractClient *panel = Test::renderAndWaitForShown(panelSurface.data(), panelRect.size(), Qt::blue);
+    Window *panel = Test::renderAndWaitForShown(panelSurface.data(), panelRect.size(), Qt::blue);
     QVERIFY(panel);
     QVERIFY(panel->isDock());
     QCOMPARE(panel->frameGeometry(), panelRect);
@@ -125,7 +125,7 @@ void MinimizeAnimationTest::testMinimizeUnminimize()
     QVERIFY(!surface.isNull());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::red);
+    Window *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::red);
     QVERIFY(client);
     QVERIFY(plasmaWindowCreatedSpy.wait());
     QCOMPARE(plasmaWindowCreatedSpy.count(), 2);

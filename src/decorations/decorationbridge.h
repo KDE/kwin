@@ -26,7 +26,7 @@ class DecorationSettings;
 namespace KWin
 {
 
-class AbstractClient;
+class Window;
 
 namespace Decoration
 {
@@ -40,7 +40,7 @@ public:
     static bool hasPlugin();
 
     void init();
-    KDecoration2::Decoration *createDecoration(AbstractClient *client);
+    KDecoration2::Decoration *createDecoration(Window *client);
 
     std::unique_ptr<KDecoration2::DecoratedClientPrivate> createClient(KDecoration2::DecoratedClient *client, KDecoration2::Decoration *decoration) override;
     std::unique_ptr<KDecoration2::DecorationSettingsPrivate> settings(KDecoration2::DecorationSettings *parent) override;

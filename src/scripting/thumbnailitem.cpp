@@ -7,7 +7,6 @@
 */
 
 #include "thumbnailitem.h"
-#include "abstract_client.h"
 #include "composite.h"
 #include "effects.h"
 #include "renderbackend.h"
@@ -15,6 +14,7 @@
 #include "screens.h"
 #include "scripting_logging.h"
 #include "virtualdesktops.h"
+#include "window.h"
 #include "workspace.h"
 
 #include <kwingltexture.h>
@@ -293,31 +293,31 @@ void WindowThumbnailItem::setWId(const QUuid &wId)
     Q_EMIT wIdChanged();
 }
 
-AbstractClient *WindowThumbnailItem::client() const
+Window *WindowThumbnailItem::client() const
 {
     return m_client;
 }
 
-void WindowThumbnailItem::setClient(AbstractClient *client)
+void WindowThumbnailItem::setClient(Window *client)
 {
     if (m_client == client) {
         return;
     }
     if (m_client) {
-        disconnect(m_client, &AbstractClient::frameGeometryChanged,
+        disconnect(m_client, &Window::frameGeometryChanged,
                    this, &WindowThumbnailItem::invalidateOffscreenTexture);
-        disconnect(m_client, &AbstractClient::damaged,
+        disconnect(m_client, &Window::damaged,
                    this, &WindowThumbnailItem::invalidateOffscreenTexture);
-        disconnect(m_client, &AbstractClient::frameGeometryChanged,
+        disconnect(m_client, &Window::frameGeometryChanged,
                    this, &WindowThumbnailItem::updateImplicitSize);
     }
     m_client = client;
     if (m_client) {
-        connect(m_client, &AbstractClient::frameGeometryChanged,
+        connect(m_client, &Window::frameGeometryChanged,
                 this, &WindowThumbnailItem::invalidateOffscreenTexture);
-        connect(m_client, &AbstractClient::damaged,
+        connect(m_client, &Window::damaged,
                 this, &WindowThumbnailItem::invalidateOffscreenTexture);
-        connect(m_client, &AbstractClient::frameGeometryChanged,
+        connect(m_client, &Window::frameGeometryChanged,
                 this, &WindowThumbnailItem::updateImplicitSize);
         setWId(m_client->internalId());
     } else {

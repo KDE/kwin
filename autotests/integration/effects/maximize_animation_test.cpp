@@ -9,13 +9,13 @@
 
 #include "kwin_wayland_test.h"
 
-#include "abstract_client.h"
 #include "composite.h"
 #include "effectloader.h"
 #include "effects.h"
 #include "platform.h"
 #include "scene.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 
 #include <KWayland/Client/surface.h>
@@ -40,7 +40,7 @@ void MaximizeAnimationTest::initTestCase()
 {
     qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
 
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -106,7 +106,7 @@ void MaximizeAnimationTest::testMaximizeRestore()
 
     // Draw contents of the surface.
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
-    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    Window *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
     QVERIFY(client->isActive());
     QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
@@ -130,9 +130,9 @@ void MaximizeAnimationTest::testMaximizeRestore()
     QVERIFY(!effect->isActive());
 
     // Maximize the client.
-    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
+    QSignalSpy frameGeometryChangedSpy(client, &Window::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
-    QSignalSpy maximizeChangedSpy(client, qOverload<AbstractClient *, bool, bool>(&AbstractClient::clientMaximizedStateChanged));
+    QSignalSpy maximizeChangedSpy(client, qOverload<Window *, bool, bool>(&Window::clientMaximizedStateChanged));
     QVERIFY(maximizeChangedSpy.isValid());
 
     workspace()->slotWindowMaximize();

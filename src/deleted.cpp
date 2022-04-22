@@ -21,7 +21,7 @@ namespace KWin
 {
 
 Deleted::Deleted()
-    : AbstractClient()
+    : Window()
     , delete_refcount(1)
     , m_frame(XCB_WINDOW_NONE)
     , m_layer(UnknownLayer)
@@ -51,7 +51,7 @@ Deleted::~Deleted()
     deleteShadow();
 }
 
-Deleted *Deleted::create(AbstractClient *c)
+Deleted *Deleted::create(Window *c)
 {
     Deleted *d = new Deleted();
     d->copyToDeleted(c);
@@ -66,10 +66,10 @@ void Deleted::discard()
     delete this;
 }
 
-void Deleted::copyToDeleted(AbstractClient *window)
+void Deleted::copyToDeleted(Window *window)
 {
     Q_ASSERT(!window->isDeleted());
-    AbstractClient::copyToDeleted(window);
+    Window::copyToDeleted(window);
     m_frameMargins = window->frameMargins();
     desk = window->desktop();
     m_desktops = window->desktops();
@@ -93,8 +93,8 @@ void Deleted::copyToDeleted(AbstractClient *window)
     m_minimized = window->isMinimized();
     m_modal = window->isModal();
     m_mainClients = window->mainClients();
-    for (AbstractClient *c : qAsConst(m_mainClients)) {
-        connect(c, &AbstractClient::windowClosed, this, &Deleted::mainClientClosed);
+    for (Window *c : qAsConst(m_mainClients)) {
+        connect(c, &Window::windowClosed, this, &Deleted::mainClientClosed);
     }
     m_fullscreen = window->isFullScreen();
     m_keepAbove = window->keepAbove();
@@ -169,7 +169,7 @@ NET::WindowType Deleted::windowType(bool direct, int supportedTypes) const
     return m_type;
 }
 
-void Deleted::mainClientClosed(AbstractClient *window)
+void Deleted::mainClientClosed(Window *window)
 {
     m_mainClients.removeAll(window);
 }

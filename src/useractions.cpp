@@ -112,15 +112,15 @@ void UserActionsMenu::close()
     m_client.clear();
 }
 
-bool UserActionsMenu::isMenuClient(const AbstractClient *c) const
+bool UserActionsMenu::isMenuClient(const Window *c) const
 {
     return c && c == m_client;
 }
 
-void UserActionsMenu::show(const QRect &pos, AbstractClient *client)
+void UserActionsMenu::show(const QRect &pos, Window *client)
 {
     Q_ASSERT(client);
-    QPointer<AbstractClient> cl(client);
+    QPointer<Window> cl(client);
     // Presumably client will never be nullptr,
     // but play it safe and make sure not to crash.
     if (cl.isNull()) {
@@ -154,7 +154,7 @@ void UserActionsMenu::grabInput()
     m_menu->windowHandle()->setKeyboardGrabEnabled(true);
 }
 
-void UserActionsMenu::helperDialog(const QString &message, AbstractClient *client)
+void UserActionsMenu::helperDialog(const QString &message, Window *client)
 {
     QStringList args;
     QString type;
@@ -746,7 +746,7 @@ void UserActionsMenu::slotWindowOperation(QAction *action)
     }
 
     Options::WindowOperation op = static_cast<Options::WindowOperation>(action->data().toInt());
-    QPointer<AbstractClient> c = m_client ? m_client : QPointer<AbstractClient>(Workspace::self()->activeClient());
+    QPointer<Window> c = m_client ? m_client : QPointer<Window>(Workspace::self()->activeClient());
     if (c.isNull()) {
         return;
     }
@@ -1118,7 +1118,7 @@ void Workspace::initShortcuts()
     m_userActionsMenu->discard(); // so that it's recreated next time
 }
 
-void Workspace::setupWindowShortcut(AbstractClient *c)
+void Workspace::setupWindowShortcut(Window *c)
 {
     Q_ASSERT(client_keys_dialog == nullptr);
     // TODO: PORT ME (KGlobalAccel related)
@@ -1160,7 +1160,7 @@ void Workspace::setupWindowShortcutDone(bool ok)
     }
 }
 
-void Workspace::clientShortcutUpdated(AbstractClient *c)
+void Workspace::clientShortcutUpdated(Window *c)
 {
     QString key = QStringLiteral("_k_session:%1").arg(c->window());
     QAction *action = findChild<QAction *>(key);
@@ -1185,7 +1185,7 @@ void Workspace::clientShortcutUpdated(AbstractClient *c)
     }
 }
 
-void Workspace::performWindowOperation(AbstractClient *c, Options::WindowOperation op)
+void Workspace::performWindowOperation(Window *c, Options::WindowOperation op)
 {
     if (!c) {
         return;
@@ -1210,7 +1210,7 @@ void Workspace::performWindowOperation(AbstractClient *c, Options::WindowOperati
         c->performMouseCommand(Options::MouseUnrestrictedResize, Cursors::self()->mouse()->pos());
         break;
     case Options::CloseOp:
-        QMetaObject::invokeMethod(c, &AbstractClient::closeWindow, Qt::QueuedConnection);
+        QMetaObject::invokeMethod(c, &Window::closeWindow, Qt::QueuedConnection);
         break;
     case Options::MaximizeOp:
         c->maximize(c->maximizeMode() == MaximizeFull
@@ -1467,7 +1467,7 @@ void Workspace::slotWindowLower()
         // activateNextClient( c ); // Doesn't work when we lower a child window
         if (active_client->isActive() && options->focusPolicyIsReasonable()) {
             if (options->isNextFocusPrefersMouse()) {
-                AbstractClient *next = clientUnderMouse(active_client->output());
+                Window *next = clientUnderMouse(active_client->output());
                 if (next && next != active_client) {
                     requestFocus(next, false);
                 }
@@ -1538,7 +1538,7 @@ void Workspace::slotToggleShowDesktop()
 }
 
 template<typename Direction>
-void windowToDesktop(AbstractClient *c)
+void windowToDesktop(Window *c)
 {
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
     Workspace *ws = Workspace::self();
@@ -1563,7 +1563,7 @@ void Workspace::slotWindowToNextDesktop()
     }
 }
 
-void Workspace::windowToNextDesktop(AbstractClient *c)
+void Workspace::windowToNextDesktop(Window *c)
 {
     windowToDesktop<DesktopNext>(c);
 }
@@ -1578,7 +1578,7 @@ void Workspace::slotWindowToPreviousDesktop()
     }
 }
 
-void Workspace::windowToPreviousDesktop(AbstractClient *c)
+void Workspace::windowToPreviousDesktop(Window *c)
 {
     windowToDesktop<DesktopPrevious>(c);
 }
@@ -1646,7 +1646,7 @@ void Workspace::switchWindow(Direction direction)
     if (!active_client) {
         return;
     }
-    AbstractClient *c = active_client;
+    Window *c = active_client;
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
 
     // Centre of the active window
@@ -1672,12 +1672,12 @@ void Workspace::switchWindow(Direction direction)
     }
 }
 
-bool Workspace::switchWindow(AbstractClient *c, Direction direction, QPoint curPos, VirtualDesktop *desktop)
+bool Workspace::switchWindow(Window *c, Direction direction, QPoint curPos, VirtualDesktop *desktop)
 {
-    AbstractClient *switchTo = nullptr;
+    Window *switchTo = nullptr;
     int bestScore = 0;
 
-    QList<AbstractClient *> clist = stackingOrder();
+    QList<Window *> clist = stackingOrder();
     for (auto i = clist.rbegin(); i != clist.rend(); ++i) {
         auto client = *i;
         if (!client->isClient()) {
@@ -1740,12 +1740,12 @@ void Workspace::slotWindowOperations()
     showWindowMenu(QRect(pos, pos), active_client);
 }
 
-void Workspace::showWindowMenu(const QRect &pos, AbstractClient *cl)
+void Workspace::showWindowMenu(const QRect &pos, Window *cl)
 {
     m_userActionsMenu->show(pos, cl);
 }
 
-void Workspace::showApplicationMenu(const QRect &pos, AbstractClient *c, int actionId)
+void Workspace::showApplicationMenu(const QRect &pos, Window *c, int actionId)
 {
     ApplicationMenu::self()->showApplicationMenu(c->pos() + pos.bottomLeft(), c, actionId);
 }
@@ -1785,7 +1785,7 @@ void Workspace::slotWindowResize()
 
 #undef USABLE_ACTIVE_CLIENT
 
-void AbstractClient::setShortcut(const QString &_cut)
+void Window::setShortcut(const QString &_cut)
 {
     QString cut = rules()->checkShortcut(_cut);
     auto updateShortcut = [this](const QKeySequence &cut = QKeySequence()) {
@@ -1857,7 +1857,7 @@ void AbstractClient::setShortcut(const QString &_cut)
     updateShortcut();
 }
 
-void AbstractClient::setShortcutInternal()
+void Window::setShortcutInternal()
 {
     updateCaption();
     workspace()->clientShortcutUpdated(this);
@@ -1876,7 +1876,7 @@ void X11Client::setShortcutInternal()
 #endif
 }
 
-bool Workspace::shortcutAvailable(const QKeySequence &cut, AbstractClient *ignore) const
+bool Workspace::shortcutAvailable(const QKeySequence &cut, Window *ignore) const
 {
     if (ignore && cut == ignore->shortcut()) {
         return true;

@@ -23,7 +23,7 @@ class AbstractDropHandler;
 
 namespace KWin
 {
-class AbstractClient;
+class Window;
 
 namespace Xwl
 {
@@ -44,7 +44,7 @@ class KWIN_EXPORT XwaylandInterface : public QObject
 public:
     static XwaylandInterface *self();
 
-    virtual Xwl::DragEventReply dragMoveFilter(AbstractClient *target, const QPoint &pos) = 0;
+    virtual Xwl::DragEventReply dragMoveFilter(Window *target, const QPoint &pos) = 0;
     virtual KWaylandServer::AbstractDropHandler *xwlDropHandler() = 0;
 
 protected:

@@ -14,7 +14,7 @@
 
 namespace KWin
 {
-class AbstractClient;
+class Window;
 class GLFramebuffer;
 class GLTexture;
 class ThumbnailTextureProvider;
@@ -100,7 +100,7 @@ class WindowThumbnailItem : public ThumbnailItemBase
 {
     Q_OBJECT
     Q_PROPERTY(QUuid wId READ wId WRITE setWId NOTIFY wIdChanged)
-    Q_PROPERTY(KWin::AbstractClient *client READ client WRITE setClient NOTIFY clientChanged)
+    Q_PROPERTY(KWin::Window *client READ client WRITE setClient NOTIFY clientChanged)
 
 public:
     explicit WindowThumbnailItem(QQuickItem *parent = nullptr);
@@ -108,8 +108,8 @@ public:
     QUuid wId() const;
     void setWId(const QUuid &wId);
 
-    AbstractClient *client() const;
-    void setClient(AbstractClient *client);
+    Window *client() const;
+    void setClient(Window *client);
 
 Q_SIGNALS:
     void wIdChanged();
@@ -124,7 +124,7 @@ protected:
 
 private:
     QUuid m_wId;
-    QPointer<AbstractClient> m_client;
+    QPointer<Window> m_client;
     bool m_dirty = false;
 };
 

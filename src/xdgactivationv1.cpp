@@ -8,7 +8,6 @@
 */
 
 #include "xdgactivationv1.h"
-#include "abstract_client.h"
 #include "effects.h"
 #include "utils/common.h"
 #include "wayland/display.h"
@@ -16,6 +15,7 @@
 #include "wayland/surface_interface.h"
 #include "wayland/xdgactivation_v1_interface.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 
 using namespace KWaylandServer;
@@ -33,7 +33,7 @@ XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface 
     : QObject(parent)
 {
     Workspace *ws = Workspace::self();
-    connect(ws, &Workspace::clientActivated, this, [this](AbstractClient *client) {
+    connect(ws, &Workspace::clientActivated, this, [this](Window *client) {
         if (!m_currentActivationToken || !client || client->property("token").toString() == m_currentActivationToken->token) {
             return;
         }
@@ -55,7 +55,7 @@ XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface 
         QSharedPointer<PlasmaWindowActivationInterface> pwActivation(waylandServer()->plasmaActivationFeedback()->createActivation(appId));
         m_currentActivationToken.reset(new ActivationToken{newToken, client, surface, serial, seat, appId, pwActivation});
         if (!appId.isEmpty()) {
-            const auto icon = QIcon::fromTheme(AbstractClient::iconFromDesktopFile(appId), QIcon::fromTheme(QStringLiteral("system-run")));
+            const auto icon = QIcon::fromTheme(Window::iconFromDesktopFile(appId), QIcon::fromTheme(QStringLiteral("system-run")));
             Q_EMIT effects->startupAdded(m_currentActivationToken->token, icon);
         }
 

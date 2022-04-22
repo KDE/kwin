@@ -10,19 +10,19 @@
 namespace KWin
 {
 
-SurfaceItem::SurfaceItem(AbstractClient *window, Item *parent)
+SurfaceItem::SurfaceItem(Window *window, Item *parent)
     : Item(parent)
     , m_window(window)
 {
-    connect(window, &AbstractClient::windowClosed, this, &SurfaceItem::handleWindowClosed);
+    connect(window, &Window::windowClosed, this, &SurfaceItem::handleWindowClosed);
 }
 
-AbstractClient *SurfaceItem::window() const
+Window *SurfaceItem::window() const
 {
     return m_window;
 }
 
-void SurfaceItem::handleWindowClosed(AbstractClient *original, Deleted *deleted)
+void SurfaceItem::handleWindowClosed(Window *original, Deleted *deleted)
 {
     Q_UNUSED(original)
     m_window = deleted;

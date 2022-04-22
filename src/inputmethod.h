@@ -32,7 +32,7 @@ class InputMethodGrabV1;
 namespace KWin
 {
 
-class AbstractClient;
+class Window;
 class InputPanelV1Client;
 
 /**
@@ -107,7 +107,7 @@ private:
     void setTextDirection(uint32_t serial, Qt::LayoutDirection direction);
     void startInputMethod();
     void stopInputMethod();
-    void setTrackedClient(AbstractClient *trackedClient);
+    void setTrackedClient(Window *trackedClient);
     void installKeyboardGrab(KWaylandServer::InputMethodGrabV1 *keyboardGrab);
     void updateModifiersMap(const QByteArray &modifiers);
 
@@ -124,7 +124,7 @@ private:
     bool m_enabled = true;
     quint32 m_serial = 0;
     QPointer<InputPanelV1Client> m_inputClient;
-    QPointer<AbstractClient> m_trackedClient;
+    QPointer<Window> m_trackedClient;
     QPointer<KWaylandServer::InputMethodGrabV1> m_keyboardGrab;
 
     QProcess *m_inputMethodProcess = nullptr;

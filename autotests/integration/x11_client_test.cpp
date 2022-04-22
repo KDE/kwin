@@ -57,7 +57,7 @@ private Q_SLOTS:
 void X11ClientTest::initTestCase()
 {
     qRegisterMetaType<KWin::Deleted *>();
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -119,10 +119,10 @@ void X11ClientTest::testMinimumSize()
     QVERIFY(client);
     QVERIFY(client->isDecorated());
 
-    QSignalSpy clientStartMoveResizedSpy(client, &AbstractClient::clientStartUserMovedResized);
-    QSignalSpy clientStepUserMovedResizedSpy(client, &AbstractClient::clientStepUserMovedResized);
-    QSignalSpy clientFinishUserMovedResizedSpy(client, &AbstractClient::clientFinishUserMovedResized);
-    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
+    QSignalSpy clientStartMoveResizedSpy(client, &Window::clientStartUserMovedResized);
+    QSignalSpy clientStepUserMovedResizedSpy(client, &Window::clientStepUserMovedResized);
+    QSignalSpy clientFinishUserMovedResizedSpy(client, &Window::clientFinishUserMovedResized);
+    QSignalSpy frameGeometryChangedSpy(client, &Window::frameGeometryChanged);
 
     // Begin resize.
     QCOMPARE(workspace()->moveResizeClient(), nullptr);
@@ -224,10 +224,10 @@ void X11ClientTest::testMaximumSize()
     QVERIFY(client);
     QVERIFY(client->isDecorated());
 
-    QSignalSpy clientStartMoveResizedSpy(client, &AbstractClient::clientStartUserMovedResized);
-    QSignalSpy clientStepUserMovedResizedSpy(client, &AbstractClient::clientStepUserMovedResized);
-    QSignalSpy clientFinishUserMovedResizedSpy(client, &AbstractClient::clientFinishUserMovedResized);
-    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
+    QSignalSpy clientStartMoveResizedSpy(client, &Window::clientStartUserMovedResized);
+    QSignalSpy clientStepUserMovedResizedSpy(client, &Window::clientStepUserMovedResized);
+    QSignalSpy clientFinishUserMovedResizedSpy(client, &Window::clientFinishUserMovedResized);
+    QSignalSpy frameGeometryChangedSpy(client, &Window::frameGeometryChanged);
 
     // Begin resize.
     QCOMPARE(workspace()->moveResizeClient(), nullptr);
@@ -330,10 +330,10 @@ void X11ClientTest::testResizeIncrements()
     QVERIFY(client);
     QVERIFY(client->isDecorated());
 
-    QSignalSpy clientStartMoveResizedSpy(client, &AbstractClient::clientStartUserMovedResized);
-    QSignalSpy clientStepUserMovedResizedSpy(client, &AbstractClient::clientStepUserMovedResized);
-    QSignalSpy clientFinishUserMovedResizedSpy(client, &AbstractClient::clientFinishUserMovedResized);
-    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
+    QSignalSpy clientStartMoveResizedSpy(client, &Window::clientStartUserMovedResized);
+    QSignalSpy clientStepUserMovedResizedSpy(client, &Window::clientStepUserMovedResized);
+    QSignalSpy clientFinishUserMovedResizedSpy(client, &Window::clientFinishUserMovedResized);
+    QSignalSpy frameGeometryChangedSpy(client, &Window::frameGeometryChanged);
 
     // Begin resize.
     QCOMPARE(workspace()->moveResizeClient(), nullptr);
@@ -406,10 +406,10 @@ void X11ClientTest::testResizeIncrementsNoBaseSize()
     QVERIFY(client);
     QVERIFY(client->isDecorated());
 
-    QSignalSpy clientStartMoveResizedSpy(client, &AbstractClient::clientStartUserMovedResized);
-    QSignalSpy clientStepUserMovedResizedSpy(client, &AbstractClient::clientStepUserMovedResized);
-    QSignalSpy clientFinishUserMovedResizedSpy(client, &AbstractClient::clientFinishUserMovedResized);
-    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
+    QSignalSpy clientStartMoveResizedSpy(client, &Window::clientStartUserMovedResized);
+    QSignalSpy clientStepUserMovedResizedSpy(client, &Window::clientStepUserMovedResized);
+    QSignalSpy clientFinishUserMovedResizedSpy(client, &Window::clientFinishUserMovedResized);
+    QSignalSpy frameGeometryChangedSpy(client, &Window::frameGeometryChanged);
 
     // Begin resize.
     QCOMPARE(workspace()->moveResizeClient(), nullptr);
@@ -727,7 +727,7 @@ void X11ClientTest::testX11WindowId()
     QUuid deletedUuid;
     QCOMPARE(deletedUuid.isNull(), true);
 
-    connect(client, &X11Client::windowClosed, this, [&deletedUuid](AbstractClient *, Deleted *d) {
+    connect(client, &X11Client::windowClosed, this, [&deletedUuid](Window *, Deleted *d) {
         deletedUuid = d->internalId();
     });
 
@@ -1084,7 +1084,7 @@ void X11ClientTest::testReentrantMoveResize()
     QCOMPARE(client->pos(), QPoint(0, 0));
 
     // Let's pretend that there is a script that really wants the client to be at (100, 100).
-    connect(client, &AbstractClient::frameGeometryChanged, this, [client]() {
+    connect(client, &Window::frameGeometryChanged, this, [client]() {
         client->moveResize(QRect(QPoint(100, 100), client->size()));
     });
 

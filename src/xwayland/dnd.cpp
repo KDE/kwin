@@ -14,12 +14,12 @@
 #include "drag_x.h"
 #include "selection_source.h"
 
-#include "abstract_client.h"
 #include "atoms.h"
 #include "wayland/compositor_interface.h"
 #include "wayland/datasource_interface.h"
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 #include "xwayland.h"
 #include "xwldrophandler.h"
@@ -132,7 +132,7 @@ bool Dnd::handleClientMessage(xcb_client_message_event_t *event)
     return false;
 }
 
-DragEventReply Dnd::dragMoveFilter(AbstractClient *target, const QPoint &pos)
+DragEventReply Dnd::dragMoveFilter(Window *target, const QPoint &pos)
 {
     Q_ASSERT(m_currentDrag);
     return m_currentDrag->moveFilter(target, pos);

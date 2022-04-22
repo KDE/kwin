@@ -255,7 +255,7 @@ static struct
     TextInputManagerV3 *textInputManagerV3 = nullptr;
 } s_waylandConnection;
 
-AbstractClient *inputPanelClient()
+Window *inputPanelClient()
 {
     return s_waylandConnection.inputMethodV1->client();
 }
@@ -646,12 +646,12 @@ QVector<KWin::Test::WaylandOutputDeviceV2 *> waylandOutputDevicesV2()
     return s_waylandConnection.outputDevicesV2;
 }
 
-bool waitForWaylandSurface(AbstractClient *client)
+bool waitForWaylandSurface(Window *client)
 {
     if (client->surface()) {
         return true;
     }
-    QSignalSpy surfaceChangedSpy(client, &AbstractClient::surfaceChanged);
+    QSignalSpy surfaceChangedSpy(client, &Window::surfaceChanged);
     return surfaceChangedSpy.wait();
 }
 
@@ -705,7 +705,7 @@ void render(KWayland::Client::Surface *surface, const QImage &img)
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 }
 
-AbstractClient *waitForWaylandWindowShown(int timeout)
+Window *waitForWaylandWindowShown(int timeout)
 {
     QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     if (!clientAddedSpy.isValid()) {
@@ -714,10 +714,10 @@ AbstractClient *waitForWaylandWindowShown(int timeout)
     if (!clientAddedSpy.wait(timeout)) {
         return nullptr;
     }
-    return clientAddedSpy.first().first().value<AbstractClient *>();
+    return clientAddedSpy.first().first().value<Window *>();
 }
 
-AbstractClient *renderAndWaitForShown(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format, int timeout)
+Window *renderAndWaitForShown(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format, int timeout)
 {
     QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     if (!clientAddedSpy.isValid()) {
@@ -728,7 +728,7 @@ AbstractClient *renderAndWaitForShown(KWayland::Client::Surface *surface, const 
     if (!clientAddedSpy.wait(timeout)) {
         return nullptr;
     }
-    return clientAddedSpy.first().first().value<AbstractClient *>();
+    return clientAddedSpy.first().first().value<Window *>();
 }
 
 void flushWaylandConnection()
@@ -891,7 +891,7 @@ IdleInhibitorV1 *createIdleInhibitorV1(KWayland::Client::Surface *surface)
     return new IdleInhibitorV1(manager, surface);
 }
 
-bool waitForWindowDestroyed(AbstractClient *client)
+bool waitForWindowDestroyed(Window *client)
 {
     QSignalSpy destroyedSpy(client, &QObject::destroyed);
     if (!destroyedSpy.isValid()) {

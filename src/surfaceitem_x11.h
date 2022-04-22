@@ -22,7 +22,7 @@ class KWIN_EXPORT SurfaceItemX11 : public SurfaceItem
     Q_OBJECT
 
 public:
-    explicit SurfaceItemX11(AbstractClient *window, Item *parent = nullptr);
+    explicit SurfaceItemX11(Window *window, Item *parent = nullptr);
     ~SurfaceItemX11() override;
 
     void preprocess() override;
@@ -36,7 +36,7 @@ public:
     QRegion opaque() const override;
 
 private Q_SLOTS:
-    void handleBufferGeometryChanged(AbstractClient *toplevel, const QRect &old);
+    void handleBufferGeometryChanged(Window *toplevel, const QRect &old);
 
 protected:
     SurfacePixmap *createPixmap() override;

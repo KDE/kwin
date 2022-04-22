@@ -32,7 +32,7 @@ class QWheelEvent;
 
 namespace KWin
 {
-class AbstractClient;
+class Window;
 class GlobalShortcutsManager;
 class InputEventFilter;
 class InputEventSpy;
@@ -165,8 +165,8 @@ public:
      */
     void uninstallInputEventSpy(InputEventSpy *spy);
 
-    AbstractClient *findToplevel(const QPoint &pos);
-    AbstractClient *findManagedToplevel(const QPoint &pos);
+    Window *findToplevel(const QPoint &pos);
+    Window *findManagedToplevel(const QPoint &pos);
     GlobalShortcutsManager *shortcuts() const
     {
         return m_shortcuts;
@@ -241,7 +241,7 @@ public:
     bool hasTouch() const;
     bool hasTabletModeSwitch();
 
-    void startInteractiveWindowSelection(std::function<void(KWin::AbstractClient *)> callback, const QByteArray &cursorName);
+    void startInteractiveWindowSelection(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName);
     void startInteractivePositionSelection(std::function<void(const QPoint &)> callback);
     bool isSelectingWindow() const;
 
@@ -439,21 +439,21 @@ public:
     void update();
 
     /**
-     * @brief First AbstractClient currently at the position of the input device
+     * @brief First Window currently at the position of the input device
      * according to the stacking order.
-     * @return AbstractClient* at device position.
+     * @return Window* at device position.
      *
      * This will be null if no toplevel is at the position
      */
-    AbstractClient *hover() const;
+    Window *hover() const;
     /**
-     * @brief AbstractClient currently having pointer input focus (this might
-     * be different from the AbstractClient at the position of the pointer).
-     * @return AbstractClient* with pointer focus.
+     * @brief Window currently having pointer input focus (this might
+     * be different from the Window at the position of the pointer).
+     * @return Window* with pointer focus.
      *
      * This will be null if no toplevel has focus
      */
-    AbstractClient *focus() const;
+    Window *focus() const;
 
     /**
      * @brief The Decoration currently receiving events.
@@ -463,7 +463,7 @@ public:
 
     virtual QPointF position() const = 0;
 
-    void setFocus(AbstractClient *toplevel);
+    void setFocus(Window *toplevel);
     void setDecoration(Decoration::DecoratedClientImpl *decoration);
 
 Q_SIGNALS:
@@ -474,7 +474,7 @@ protected:
 
     virtual void cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now) = 0;
 
-    virtual void focusUpdate(AbstractClient *old, AbstractClient *now) = 0;
+    virtual void focusUpdate(Window *old, Window *now) = 0;
 
     /**
      * Certain input devices can be in a state of having no valid
@@ -500,19 +500,19 @@ protected:
     }
 
 private:
-    bool setHover(AbstractClient *toplevel);
+    bool setHover(Window *toplevel);
     void updateFocus();
     void updateDecoration();
 
     struct
     {
-        QPointer<AbstractClient> window;
+        QPointer<Window> window;
         QMetaObject::Connection surfaceCreatedConnection;
     } m_hover;
 
     struct
     {
-        QPointer<AbstractClient> window;
+        QPointer<Window> window;
         QPointer<Decoration::DecoratedClientImpl> decoration;
     } m_focus;
 

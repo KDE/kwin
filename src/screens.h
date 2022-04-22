@@ -22,7 +22,7 @@
 
 namespace KWin
 {
-class AbstractClient;
+class Window;
 class Output;
 class Platform;
 

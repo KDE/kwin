@@ -8,7 +8,7 @@
 */
 #include "activities.h"
 // KWin
-#include "abstract_client.h"
+#include "window.h"
 #include "workspace.h"
 // KDE
 #include <KConfigGroup>
@@ -72,7 +72,7 @@ void Activities::slotRemoved(const QString &activity)
     cg.deleteGroup();
 }
 
-void Activities::toggleClientOnActivity(AbstractClient *c, const QString &activity, bool dont_activate)
+void Activities::toggleClientOnActivity(Window *c, const QString &activity, bool dont_activate)
 {
     // int old_desktop = c->desktop();
     bool was_on_activity = c->isOnActivity(activity);

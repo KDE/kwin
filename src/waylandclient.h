@@ -6,12 +6,12 @@
 
 #pragma once
 
-#include "abstract_client.h"
+#include "window.h"
 
 namespace KWin
 {
 
-class WaylandClient : public AbstractClient
+class WaylandClient : public Window
 {
     Q_OBJECT
 
@@ -24,7 +24,7 @@ public:
     bool isClient() const override;
     bool isLockScreen() const override;
     bool isLocalhost() const override;
-    AbstractClient *findModal(bool allow_itself = false) override;
+    Window *findModal(bool allow_itself = false) override;
     void resizeWithChecks(const QSize &size) override;
     void killWindow() override;
     QByteArray windowRole() const override;
@@ -40,7 +40,7 @@ public:
     void setCaption(const QString &caption);
 
 protected:
-    bool belongsToSameApplication(const AbstractClient *other, SameApplicationChecks checks) const override;
+    bool belongsToSameApplication(const Window *other, SameApplicationChecks checks) const override;
     bool belongsToDesktop() const override;
     void doSetActive() override;
     void updateCaption() override;

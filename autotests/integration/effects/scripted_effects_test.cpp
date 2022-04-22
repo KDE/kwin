@@ -9,7 +9,6 @@
 
 #include "kwin_wayland_test.h"
 
-#include "abstract_client.h"
 #include "composite.h"
 #include "cursor.h"
 #include "deleted.h"
@@ -21,6 +20,7 @@
 #include "scripting/scriptedeffect.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 
 #include <KConfigGroup>
@@ -126,7 +126,7 @@ bool ScriptedEffectWithDebugSpy::load(const QString &name)
 
 void ScriptedEffectsTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::Effect *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
@@ -488,7 +488,7 @@ void ScriptedEffectsTest::testGrab()
     QVERIFY(surface);
     Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
     QVERIFY(shellSurface);
-    AbstractClient *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    Window *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
 
@@ -521,7 +521,7 @@ void ScriptedEffectsTest::testGrabAlreadyGrabbedWindow()
     QVERIFY(surface);
     Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
     QVERIFY(shellSurface);
-    AbstractClient *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    Window *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
 
@@ -558,7 +558,7 @@ void ScriptedEffectsTest::testGrabAlreadyGrabbedWindowForced()
     QVERIFY(surface);
     Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
     QVERIFY(shellSurface);
-    AbstractClient *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    Window *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
 
@@ -589,7 +589,7 @@ void ScriptedEffectsTest::testUngrab()
     QVERIFY(surface);
     Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
     QVERIFY(shellSurface);
-    AbstractClient *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    Window *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
 
@@ -632,7 +632,7 @@ void ScriptedEffectsTest::testRedirect()
     QVERIFY(surface);
     Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
     QVERIFY(shellSurface);
-    AbstractClient *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    Window *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
 
@@ -710,7 +710,7 @@ void ScriptedEffectsTest::testComplete()
     QVERIFY(surface);
     Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
     QVERIFY(shellSurface);
-    AbstractClient *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    Window *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
 

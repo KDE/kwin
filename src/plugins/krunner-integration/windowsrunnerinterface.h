@@ -27,7 +27,7 @@
 namespace KWin
 {
 class VirtualDesktop;
-class AbstractClient;
+class Window;
 
 class WindowsRunner : public Plugin, protected QDBusContext
 {
@@ -58,8 +58,8 @@ private:
 
     void initialize();
     RemoteMatch desktopMatch(const VirtualDesktop *desktop, const WindowsRunnerAction action = ActivateDesktopAction, qreal relevance = 1.0) const;
-    RemoteMatch windowsMatch(const AbstractClient *client, const WindowsRunnerAction action = ActivateAction, qreal relevance = 1.0, Plasma::QueryMatch::Type type = Plasma::QueryMatch::ExactMatch) const;
-    bool actionSupported(const AbstractClient *client, const WindowsRunnerAction action) const;
+    RemoteMatch windowsMatch(const Window *client, const WindowsRunnerAction action = ActivateAction, qreal relevance = 1.0, Plasma::QueryMatch::Type type = Plasma::QueryMatch::ExactMatch) const;
+    bool actionSupported(const Window *client, const WindowsRunnerAction action) const;
 };
 }
 

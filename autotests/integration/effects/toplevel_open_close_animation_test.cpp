@@ -9,7 +9,6 @@
 
 #include "kwin_wayland_test.h"
 
-#include "abstract_client.h"
 #include "composite.h"
 #include "deleted.h"
 #include "effectloader.h"
@@ -17,6 +16,7 @@
 #include "platform.h"
 #include "renderbackend.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 
 #include <KWayland/Client/surface.h>
@@ -44,7 +44,7 @@ void ToplevelOpenCloseAnimationTest::initTestCase()
 {
     qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
 
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
@@ -118,7 +118,7 @@ void ToplevelOpenCloseAnimationTest::testAnimateToplevels()
     QVERIFY(!surface.isNull());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    Window *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
     QVERIFY(effect->isActive());
 
@@ -127,7 +127,7 @@ void ToplevelOpenCloseAnimationTest::testAnimateToplevels()
 
     // Close the test client, the effect should start animating the disappearing
     // of the client.
-    QSignalSpy windowClosedSpy(client, &AbstractClient::windowClosed);
+    QSignalSpy windowClosedSpy(client, &Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
     shellSurface.reset();
     surface.reset();
@@ -162,7 +162,7 @@ void ToplevelOpenCloseAnimationTest::testDontAnimatePopups()
     QVERIFY(!mainWindowSurface.isNull());
     QScopedPointer<Test::XdgToplevel> mainWindowShellSurface(Test::createXdgToplevelSurface(mainWindowSurface.data()));
     QVERIFY(!mainWindowShellSurface.isNull());
-    AbstractClient *mainWindow = Test::renderAndWaitForShown(mainWindowSurface.data(), QSize(100, 50), Qt::blue);
+    Window *mainWindow = Test::renderAndWaitForShown(mainWindowSurface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(mainWindow);
 
     // Load effect that will be tested.
@@ -185,14 +185,14 @@ void ToplevelOpenCloseAnimationTest::testDontAnimatePopups()
     positioner->set_anchor(Test::XdgPositioner::anchor_bottom_left);
     QScopedPointer<Test::XdgPopup> popupShellSurface(Test::createXdgPopupSurface(popupSurface.data(), mainWindowShellSurface->xdgSurface(), positioner.data()));
     QVERIFY(!popupShellSurface.isNull());
-    AbstractClient *popup = Test::renderAndWaitForShown(popupSurface.data(), QSize(20, 20), Qt::red);
+    Window *popup = Test::renderAndWaitForShown(popupSurface.data(), QSize(20, 20), Qt::red);
     QVERIFY(popup);
     QVERIFY(popup->isPopupWindow());
     QCOMPARE(popup->transientFor(), mainWindow);
     QVERIFY(!effect->isActive());
 
     // Destroy the popup, it should not be animated.
-    QSignalSpy popupClosedSpy(popup, &AbstractClient::windowClosed);
+    QSignalSpy popupClosedSpy(popup, &Window::windowClosed);
     QVERIFY(popupClosedSpy.isValid());
     popupShellSurface.reset();
     popupSurface.reset();

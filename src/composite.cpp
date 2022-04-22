@@ -399,7 +399,7 @@ void Compositor::startupWithWorkspace()
 
     if (auto *server = waylandServer()) {
         const auto clients = server->clients();
-        for (AbstractClient *c : clients) {
+        for (Window *c : clients) {
             c->setupCompositing();
         }
     }
@@ -531,12 +531,12 @@ void Compositor::stop()
     }
 
     if (waylandServer()) {
-        const QList<AbstractClient *> toRemoveTopLevel = waylandServer()->clients();
-        for (AbstractClient *c : toRemoveTopLevel) {
+        const QList<Window *> toRemoveTopLevel = waylandServer()->clients();
+        for (Window *c : toRemoveTopLevel) {
             m_scene->removeToplevel(c);
         }
-        const QList<AbstractClient *> toFinishCompositing = waylandServer()->clients();
-        for (AbstractClient *c : toFinishCompositing) {
+        const QList<Window *> toFinishCompositing = waylandServer()->clients();
+        for (Window *c : toFinishCompositing) {
             c->finishCompositing();
         }
     }
@@ -904,12 +904,12 @@ void X11Compositor::composite(RenderLoop *renderLoop)
         return;
     }
 
-    QList<AbstractClient *> windows = Workspace::self()->xStackingOrder();
+    QList<Window *> windows = Workspace::self()->xStackingOrder();
     QList<SurfaceItemX11 *> dirtyItems;
 
     // Reset the damage state of each window and fetch the damage region
     // without waiting for a reply
-    for (AbstractClient *window : qAsConst(windows)) {
+    for (Window *window : qAsConst(windows)) {
         SurfaceItemX11 *surfaceItem = static_cast<SurfaceItemX11 *>(window->surfaceItem());
         if (surfaceItem->fetchDamage()) {
             dirtyItems.append(surfaceItem);

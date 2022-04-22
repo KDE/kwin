@@ -22,7 +22,6 @@
 #if HAVE_X11_XINPUT
 #include "xinputintegration.h"
 #endif
-#include "abstract_client.h"
 #include "effects_x11.h"
 #include "eglbackend.h"
 #include "keyboard_input.h"
@@ -33,6 +32,7 @@
 #include "renderloop.h"
 #include "screenedges_filter.h"
 #include "utils/xcbutils.h"
+#include "window.h"
 #include "workspace.h"
 #include "x11_output.h"
 
@@ -350,7 +350,7 @@ void X11StandalonePlatform::updateCursor()
     }
 }
 
-void X11StandalonePlatform::startInteractiveWindowSelection(std::function<void(KWin::AbstractClient *)> callback, const QByteArray &cursorName)
+void X11StandalonePlatform::startInteractiveWindowSelection(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName)
 {
     if (m_windowSelector.isNull()) {
         m_windowSelector.reset(new WindowSelector);

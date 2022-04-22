@@ -13,10 +13,10 @@
 
 // TODO: Make it compile also in testing environment
 #ifndef KWIN_BUILD_TESTING
-#include "abstract_client.h"
 #include "main.h"
 #include "output.h"
 #include "platform.h"
+#include "window.h"
 #include "workspace.h"
 #endif
 

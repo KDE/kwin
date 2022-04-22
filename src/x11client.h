@@ -11,9 +11,9 @@
 #pragma once
 
 // kwin
-#include "abstract_client.h"
 #include "decorationitem.h"
 #include "utils/xcbutils.h"
+#include "window.h"
 // Qt
 #include <QElapsedTimer>
 #include <QFlags>
@@ -66,7 +66,7 @@ private:
     xcb_gcontext_t m_gc;
 };
 
-class KWIN_EXPORT X11Client : public AbstractClient
+class KWIN_EXPORT X11Client : public Window
 {
     Q_OBJECT
     /**
@@ -116,10 +116,10 @@ public:
     bool isTransient() const override;
     bool groupTransient() const override;
     bool wasOriginallyGroupTransient() const;
-    QList<AbstractClient *> mainClients() const override; // Call once before loop , is not indirect
-    bool hasTransient(const AbstractClient *c, bool indirect) const override;
+    QList<Window *> mainClients() const override; // Call once before loop , is not indirect
+    bool hasTransient(const Window *c, bool indirect) const override;
     void checkTransient(xcb_window_t w);
-    AbstractClient *findModal(bool allow_itself = false) override;
+    Window *findModal(bool allow_itself = false) override;
     const Group *group() const override;
     Group *group() override;
     void checkGroup(Group *gr = nullptr, bool force = false);
@@ -226,7 +226,7 @@ public:
         return cap_suffix;
     }
 
-    using AbstractClient::keyPressEvent;
+    using Window::keyPressEvent;
     void keyPressEvent(uint key_code, xcb_timestamp_t time); // FRAME ??
     void updateMouseGrab() override;
     xcb_window_t moveResizeGrabWindow() const;
@@ -338,7 +338,7 @@ private:
     bool motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x_root, int y_root);
 
 protected:
-    bool belongsToSameApplication(const AbstractClient *other, SameApplicationChecks checks) const override;
+    bool belongsToSameApplication(const Window *other, SameApplicationChecks checks) const override;
     void doSetActive() override;
     void doSetKeepAbove() override;
     void doSetKeepBelow() override;
@@ -482,8 +482,8 @@ private:
     void readTransientProperty(Xcb::TransientFor &transientFor);
     void readTransient();
     xcb_window_t verifyTransientFor(xcb_window_t transient_for, bool set);
-    void addTransient(AbstractClient *cl) override;
-    void removeTransient(AbstractClient *cl) override;
+    void addTransient(Window *cl) override;
+    void removeTransient(Window *cl) override;
     void removeFromMainClients();
     void cleanGrouping();
     void checkGroupTransients();

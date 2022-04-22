@@ -37,7 +37,7 @@ typedef QList<QPair<bool, QPair<QString, QString>>> LoadScriptList;
 
 namespace KWin
 {
-class AbstractClient;
+class Window;
 class QtScriptWorkspaceWrapper;
 
 class KWIN_EXPORT AbstractScript : public QObject
@@ -184,7 +184,7 @@ public:
      * @return QList< QAction* > List of QActions obtained from asking the registered callbacks
      * @see registerUseractionsMenuCallback
      */
-    QList<QAction *> actionsForUserActionMenu(AbstractClient *client, QMenu *parent);
+    QList<QAction *> actionsForUserActionMenu(Window *client, QMenu *parent);
 
 public Q_SLOTS:
     void run() override;
@@ -339,7 +339,7 @@ public:
      * @param parent The parent menu to which to add created child menus and items
      * @return QList< QAction* > List of all actions aggregated from all scripts.
      */
-    QList<QAction *> actionsForUserActionMenu(AbstractClient *c, QMenu *parent);
+    QList<QAction *> actionsForUserActionMenu(Window *c, QMenu *parent);
 
     QQmlEngine *qmlEngine() const;
     QQmlEngine *qmlEngine();

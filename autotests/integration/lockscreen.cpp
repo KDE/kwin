@@ -8,7 +8,6 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "abstract_client.h"
 #include "composite.h"
 #include "cursor.h"
 #include "output.h"
@@ -18,6 +17,7 @@
 #include "wayland/keyboard_interface.h"
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 #include <kwineffects.h>
 
@@ -70,7 +70,7 @@ private Q_SLOTS:
 
 private:
     void unlock();
-    AbstractClient *showWindow();
+    Window *showWindow();
     KWayland::Client::ConnectionThread *m_connection = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
     KWayland::Client::Seat *m_seat = nullptr;
@@ -147,7 +147,7 @@ void LockScreenTest::unlock()
     }
 }
 
-AbstractClient *LockScreenTest::showWindow()
+Window *LockScreenTest::showWindow()
 {
     using namespace KWayland::Client;
 #define VERIFY(statement)                                                 \
@@ -175,7 +175,7 @@ AbstractClient *LockScreenTest::showWindow()
 
 void LockScreenTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -223,7 +223,7 @@ void LockScreenTest::testStackingOrder()
     LOCK;
     QVERIFY(clientAddedSpy.wait());
 
-    AbstractClient *client = clientAddedSpy.first().first().value<AbstractClient *>();
+    Window *client = clientAddedSpy.first().first().value<Window *>();
     QVERIFY(client);
     QVERIFY(client->isLockScreen());
     QCOMPARE(client->layer(), UnmanagedLayer);
@@ -242,7 +242,7 @@ void LockScreenTest::testPointer()
     QSignalSpy leftSpy(pointer.data(), &Pointer::left);
     QVERIFY(leftSpy.isValid());
 
-    AbstractClient *c = showWindow();
+    Window *c = showWindow();
     QVERIFY(c);
 
     // first move cursor into the center of the window
@@ -289,7 +289,7 @@ void LockScreenTest::testPointerButton()
     QSignalSpy buttonChangedSpy(pointer.data(), &Pointer::buttonStateChanged);
     QVERIFY(buttonChangedSpy.isValid());
 
-    AbstractClient *c = showWindow();
+    Window *c = showWindow();
     QVERIFY(c);
 
     // first move cursor into the center of the window
@@ -332,7 +332,7 @@ void LockScreenTest::testPointerAxis()
     QSignalSpy enteredSpy(pointer.data(), &Pointer::entered);
     QVERIFY(enteredSpy.isValid());
 
-    AbstractClient *c = showWindow();
+    Window *c = showWindow();
     QVERIFY(c);
 
     // first move cursor into the center of the window
@@ -376,7 +376,7 @@ void LockScreenTest::testKeyboard()
     QSignalSpy keyChangedSpy(keyboard.data(), &Keyboard::keyChanged);
     QVERIFY(keyChangedSpy.isValid());
 
-    AbstractClient *c = showWindow();
+    Window *c = showWindow();
     QVERIFY(c);
     QVERIFY(enteredSpy.wait());
     QTRY_COMPARE(enteredSpy.count(), 1);
@@ -564,9 +564,9 @@ void LockScreenTest::testEffectsKeyboardAutorepeat()
 void LockScreenTest::testMoveWindow()
 {
     using namespace KWayland::Client;
-    AbstractClient *c = showWindow();
+    Window *c = showWindow();
     QVERIFY(c);
-    QSignalSpy clientStepUserMovedResizedSpy(c, &AbstractClient::clientStepUserMovedResized);
+    QSignalSpy clientStepUserMovedResizedSpy(c, &Window::clientStepUserMovedResized);
     QVERIFY(clientStepUserMovedResizedSpy.isValid());
     quint32 timestamp = 1;
 
@@ -741,7 +741,7 @@ void LockScreenTest::testTouch()
     auto touch = m_seat->createTouch(m_seat);
     QVERIFY(touch);
     QVERIFY(touch->isValid());
-    AbstractClient *c = showWindow();
+    Window *c = showWindow();
     QVERIFY(c);
     QSignalSpy sequenceStartedSpy(touch, &Touch::sequenceStarted);
     QVERIFY(sequenceStartedSpy.isValid());

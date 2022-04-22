@@ -8,13 +8,13 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "abstract_client.h"
 #include "cursor.h"
 #include "output.h"
 #include "platform.h"
 #include "screens.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
@@ -59,7 +59,7 @@ private:
 
 void PlasmaSurfaceTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -107,7 +107,7 @@ void PlasmaSurfaceTest::testRoleOnAllDesktops()
     QVERIFY(!plasmaSurface.isNull());
 
     // now render to map the window
-    AbstractClient *c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    Window *c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
 
@@ -115,7 +115,7 @@ void PlasmaSurfaceTest::testRoleOnAllDesktops()
     QCOMPARE(c->isOnAllDesktops(), false);
 
     // now let's try to change that
-    QSignalSpy onAllDesktopsSpy(c, &AbstractClient::desktopChanged);
+    QSignalSpy onAllDesktopsSpy(c, &Window::desktopChanged);
     QVERIFY(onAllDesktopsSpy.isValid());
     QFETCH(KWayland::Client::PlasmaShellSurface::Role, role);
     plasmaSurface->setRole(role);
@@ -210,7 +210,7 @@ void PlasmaSurfaceTest::testOSDPlacement()
     QCOMPARE(c->frameGeometry(), QRect(1280 / 2 - 100 / 2, 2 * 1024 / 3 - 50 / 2, 100, 50));
 
     // change size of window
-    QSignalSpy frameGeometryChangedSpy(c, &AbstractClient::frameGeometryChanged);
+    QSignalSpy frameGeometryChangedSpy(c, &Window::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
     Test::render(surface.data(), QSize(200, 100), Qt::red);
     QVERIFY(frameGeometryChangedSpy.wait());

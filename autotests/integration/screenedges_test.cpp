@@ -10,13 +10,13 @@
 
 #include "kwin_wayland_test.h"
 
-#include "abstract_client.h"
 #include "cursor.h"
 #include "effectloader.h"
 #include "main.h"
 #include "platform.h"
 #include "screenedge.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 
 #include <KConfigGroup>
@@ -64,7 +64,7 @@ private Q_SLOTS:
 
 void ScreenEdgesTest::initTestCase()
 {
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::ElectricBorder>("ElectricBorder");
 
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
@@ -257,7 +257,7 @@ void ScreenEdgesTest::testClientEdge()
 
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), geometry.size(), Qt::red);
+    Window *client = Test::renderAndWaitForShown(surface.data(), geometry.size(), Qt::red);
     QVERIFY(client);
     QVERIFY(client->isActive());
     client->move(geometry.topLeft());

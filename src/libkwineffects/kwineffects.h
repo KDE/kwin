@@ -1166,7 +1166,7 @@ public:
      */
     Q_SCRIPTABLE virtual KWin::EffectWindow *findWindow(QWindow *w) const = 0;
     /**
-     * Finds the EffectWindow for the AbstractClient with KWin internal @p id.
+     * Finds the EffectWindow for the Window with KWin internal @p id.
      * If there is no such window @c null is returned.
      *
      * @since 5.16
@@ -2421,7 +2421,7 @@ public:
     /**
      * Returns the geometry of the pixmap or buffer attached to this window.
      *
-     * For X11 clients, this method returns server-side geometry of the AbstractClient.
+     * For X11 clients, this method returns server-side geometry of the Window.
      *
      * For Wayland clients, this method returns rectangle that the main surface
      * occupies on the screen, in global screen coordinates.

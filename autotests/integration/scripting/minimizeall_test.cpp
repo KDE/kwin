@@ -9,11 +9,11 @@
 
 #include "kwin_wayland_test.h"
 
-#include "abstract_client.h"
 #include "output.h"
 #include "platform.h"
 #include "scripting/scripting.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 
 #include <KPackage/PackageLoader>
@@ -43,7 +43,7 @@ void MinimizeAllScriptTest::initTestCase()
 {
     qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
 
-    qRegisterMetaType<AbstractClient *>();
+    qRegisterMetaType<Window *>();
 
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
@@ -110,14 +110,14 @@ void MinimizeAllScriptTest::testMinimizeUnminimize()
     // Create a couple of test clients.
     QScopedPointer<KWayland::Client::Surface> surface1(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface1(Test::createXdgToplevelSurface(surface1.data()));
-    AbstractClient *client1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::blue);
+    Window *client1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client1);
     QVERIFY(client1->isActive());
     QVERIFY(client1->isMinimizable());
 
     QScopedPointer<KWayland::Client::Surface> surface2(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.data()));
-    AbstractClient *client2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::red);
+    Window *client2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::red);
     QVERIFY(client2);
     QVERIFY(client2->isActive());
     QVERIFY(client2->isMinimizable());

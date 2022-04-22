@@ -84,7 +84,7 @@ bool WaylandClient::isLocalhost() const
     return true;
 }
 
-AbstractClient *WaylandClient::findModal(bool allow_itself)
+Window *WaylandClient::findModal(bool allow_itself)
 {
     Q_UNUSED(allow_itself)
     return nullptr;
@@ -127,7 +127,7 @@ QByteArray WaylandClient::windowRole() const
     return QByteArray();
 }
 
-bool WaylandClient::belongsToSameApplication(const AbstractClient *other, SameApplicationChecks checks) const
+bool WaylandClient::belongsToSameApplication(const Window *other, SameApplicationChecks checks) const
 {
     if (checks.testFlag(SameApplicationCheck::AllowCrossProcesses)) {
         if (other->desktopFileName() == desktopFileName()) {
@@ -145,7 +145,7 @@ bool WaylandClient::belongsToDesktop() const
     const auto clients = waylandServer()->clients();
 
     return std::any_of(clients.constBegin(), clients.constEnd(),
-                       [this](const AbstractClient *client) {
+                       [this](const Window *client) {
                            if (belongsToSameApplication(client, SameApplicationChecks())) {
                                return client->isDesktop();
                            }

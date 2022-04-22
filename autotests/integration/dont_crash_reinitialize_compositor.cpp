@@ -9,7 +9,6 @@
 
 #include "kwin_wayland_test.h"
 
-#include "abstract_client.h"
 #include "composite.h"
 #include "deleted.h"
 #include "effectloader.h"
@@ -18,6 +17,7 @@
 #include "platform.h"
 #include "renderbackend.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 
 #include <KWayland/Client/surface.h>
@@ -44,7 +44,7 @@ void DontCrashReinitializeCompositorTest::initTestCase()
 {
     qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
 
-    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
@@ -117,7 +117,7 @@ void DontCrashReinitializeCompositorTest::testReinitializeCompositor()
     QVERIFY(!surface.isNull());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    Window *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
 
     // Make sure that only the test effect is loaded.
@@ -130,7 +130,7 @@ void DontCrashReinitializeCompositorTest::testReinitializeCompositor()
     QVERIFY(!effect->isActive());
 
     // Close the test client.
-    QSignalSpy windowClosedSpy(client, &AbstractClient::windowClosed);
+    QSignalSpy windowClosedSpy(client, &Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
     shellSurface.reset();
     surface.reset();

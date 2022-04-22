@@ -9,12 +9,12 @@
 */
 #pragma once
 
-#include "abstract_client.h"
+#include "window.h"
 
 namespace KWin
 {
 
-class KWIN_EXPORT InternalClient : public AbstractClient
+class KWIN_EXPORT InternalClient : public Window
 {
     Q_OBJECT
 
@@ -50,7 +50,7 @@ public:
     void hideClient() override;
     void showClient() override;
     void resizeWithChecks(const QSize &size) override;
-    AbstractClient *findModal(bool allow_itself = false) override;
+    Window *findModal(bool allow_itself = false) override;
     bool takeFocus() override;
     void setNoBorder(bool set) override;
     void invalidateDecoration() override;
@@ -68,7 +68,7 @@ public:
 
 protected:
     bool acceptsFocus() const override;
-    bool belongsToSameApplication(const AbstractClient *other, SameApplicationChecks checks) const override;
+    bool belongsToSameApplication(const Window *other, SameApplicationChecks checks) const override;
     void doInteractiveResizeSync() override;
     void updateCaption() override;
     void moveResizeInternal(const QRect &rect, MoveResizeMode mode) override;

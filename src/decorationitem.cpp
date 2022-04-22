@@ -6,13 +6,13 @@
 */
 
 #include "decorationitem.h"
-#include "abstract_client.h"
 #include "composite.h"
 #include "decorations/decoratedclient.h"
 #include "deleted.h"
 #include "output.h"
 #include "scene.h"
 #include "utils/common.h"
+#include "window.h"
 
 #include <cmath>
 
@@ -124,17 +124,17 @@ void DecorationRenderer::renderToPainter(QPainter *painter, const QRect &rect)
     client()->decoration()->paint(painter, rect);
 }
 
-DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, AbstractClient *window, Item *parent)
+DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Window *window, Item *parent)
     : Item(parent)
     , m_window(window)
 {
     m_renderer.reset(Compositor::self()->scene()->createDecorationRenderer(window->decoratedClient()));
 
-    connect(window, &AbstractClient::frameGeometryChanged,
+    connect(window, &Window::frameGeometryChanged,
             this, &DecorationItem::handleFrameGeometryChanged);
-    connect(window, &AbstractClient::windowClosed,
+    connect(window, &Window::windowClosed,
             this, &DecorationItem::handleWindowClosed);
-    connect(window, &AbstractClient::screenChanged,
+    connect(window, &Window::screenChanged,
             this, &DecorationItem::handleOutputChanged);
 
     connect(decoration, &KDecoration2::Decoration::bordersChanged,
@@ -184,7 +184,7 @@ void DecorationItem::handleFrameGeometryChanged()
     setSize(m_window->size());
 }
 
-void DecorationItem::handleWindowClosed(AbstractClient *original, Deleted *deleted)
+void DecorationItem::handleWindowClosed(Window *original, Deleted *deleted)
 {
     Q_UNUSED(original)
     m_window = deleted;

@@ -25,7 +25,7 @@ class KXMessages;
 namespace KWin
 {
 
-class AbstractClient;
+class Window;
 class Output;
 class Rules;
 class RuleSettings;
@@ -38,7 +38,7 @@ class WindowRules
 public:
     explicit WindowRules(const QVector<Rules *> &rules);
     WindowRules();
-    void update(AbstractClient *, int selection);
+    void update(Window *, int selection);
     void discardTemporary();
     bool contains(const Rules *rule) const;
     void remove(Rules *rule);
@@ -147,8 +147,8 @@ public:
     bool isEmpty() const;
 #ifndef KCMRULES
     bool discardUsed(bool withdrawn);
-    bool match(const AbstractClient *c) const;
-    bool update(AbstractClient *, int selection);
+    bool match(const Window *c) const;
+    bool update(Window *, int selection);
     bool isTemporary() const;
     bool discardTemporary(bool force); // removes if temporary and forced or too old
     bool applyPlacement(Placement::Policy &placement) const;
@@ -302,12 +302,12 @@ class KWIN_EXPORT RuleBook : public QObject
     Q_OBJECT
 public:
     ~RuleBook() override;
-    WindowRules find(const AbstractClient *, bool);
-    void discardUsed(AbstractClient *c, bool withdraw);
+    WindowRules find(const Window *, bool);
+    void discardUsed(Window *c, bool withdraw);
     void setUpdatesDisabled(bool disable);
     bool areUpdatesDisabled() const;
     void load();
-    void edit(AbstractClient *c, bool whole_app);
+    void edit(Window *c, bool whole_app);
     void requestDiskStorage();
 
     void setConfig(const KSharedConfig::Ptr &config)

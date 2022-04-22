@@ -10,7 +10,7 @@
 
 #include <config-kwin.h>
 
-#include "abstract_client.h"
+#include "window.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -45,30 +45,30 @@ ClientLevel::~ClientLevel()
 {
 }
 
-void ClientLevel::clientAdded(AbstractClient *client)
+void ClientLevel::clientAdded(Window *client)
 {
     setupClientConnections(client);
     checkClient(client);
 }
 
-void ClientLevel::clientRemoved(AbstractClient *client)
+void ClientLevel::clientRemoved(Window *client)
 {
     removeClient(client);
 }
 
-void ClientLevel::setupClientConnections(AbstractClient *client)
+void ClientLevel::setupClientConnections(Window *client)
 {
     auto check = [this, client] {
         checkClient(client);
     };
-    connect(client, &AbstractClient::desktopChanged, this, check);
-    connect(client, &AbstractClient::screenChanged, this, check);
-    connect(client, &AbstractClient::activitiesChanged, this, check);
-    connect(client, &AbstractClient::windowHidden, this, check);
-    connect(client, &AbstractClient::windowShown, this, check);
+    connect(client, &Window::desktopChanged, this, check);
+    connect(client, &Window::screenChanged, this, check);
+    connect(client, &Window::activitiesChanged, this, check);
+    connect(client, &Window::windowHidden, this, check);
+    connect(client, &Window::windowShown, this, check);
 }
 
-void ClientLevel::checkClient(AbstractClient *client)
+void ClientLevel::checkClient(Window *client)
 {
     const bool shouldInclude = !exclude(client) && shouldAdd(client);
     const bool contains = containsClient(client);
@@ -80,7 +80,7 @@ void ClientLevel::checkClient(AbstractClient *client)
     }
 }
 
-bool ClientLevel::exclude(AbstractClient *client) const
+bool ClientLevel::exclude(Window *client) const
 {
     ClientModel::Exclusions exclusions = model()->exclusions();
     if (exclusions == ClientModel::NoExclusion) {
@@ -144,7 +144,7 @@ bool ClientLevel::exclude(AbstractClient *client) const
     return false;
 }
 
-bool ClientLevel::shouldAdd(AbstractClient *client) const
+bool ClientLevel::shouldAdd(Window *client) const
 {
     if (restrictions() == ClientModel::NoRestriction) {
         return true;
@@ -167,7 +167,7 @@ bool ClientLevel::shouldAdd(AbstractClient *client) const
     return true;
 }
 
-void ClientLevel::addClient(AbstractClient *client)
+void ClientLevel::addClient(Window *client)
 {
     if (containsClient(client)) {
         return;
@@ -177,7 +177,7 @@ void ClientLevel::addClient(AbstractClient *client)
     Q_EMIT endInsert();
 }
 
-void ClientLevel::removeClient(AbstractClient *client)
+void ClientLevel::removeClient(Window *client)
 {
     int index = 0;
     auto it = m_clients.begin();
@@ -196,9 +196,9 @@ void ClientLevel::removeClient(AbstractClient *client)
 
 void ClientLevel::init()
 {
-    const QList<AbstractClient *> &clients = workspace()->allClientList();
+    const QList<Window *> &clients = workspace()->allClientList();
     for (auto it = clients.begin(); it != clients.end(); ++it) {
-        AbstractClient *client = *it;
+        Window *client = *it;
         setupClientConnections(client);
         if (!exclude(client) && shouldAdd(client)) {
             m_clients.insert(nextId(), client);
@@ -208,7 +208,7 @@ void ClientLevel::init()
 
 void ClientLevel::reInit()
 {
-    const QList<AbstractClient *> &clients = workspace()->allClientList();
+    const QList<Window *> &clients = workspace()->allClientList();
     for (auto it = clients.begin(); it != clients.end(); ++it) {
         checkClient((*it));
     }
@@ -244,7 +244,7 @@ int ClientLevel::rowForId(quint32 id) const
     return -1;
 }
 
-AbstractClient *ClientLevel::clientForId(quint32 child) const
+Window *ClientLevel::clientForId(quint32 child) const
 {
     auto it = m_clients.constFind(child);
     if (it == m_clients.constEnd()) {
@@ -253,7 +253,7 @@ AbstractClient *ClientLevel::clientForId(quint32 child) const
     return it.value();
 }
 
-bool ClientLevel::containsClient(AbstractClient *client) const
+bool ClientLevel::containsClient(Window *client) const
 {
     for (auto it = m_clients.constBegin();
          it != m_clients.constEnd();
@@ -622,10 +622,10 @@ int ForkLevel::rowForId(quint32 child) const
     return -1;
 }
 
-AbstractClient *ForkLevel::clientForId(quint32 child) const
+Window *ForkLevel::clientForId(quint32 child) const
 {
     for (QList<AbstractLevel *>::const_iterator it = m_children.constBegin(); it != m_children.constEnd(); ++it) {
-        if (AbstractClient *client = (*it)->clientForId(child)) {
+        if (Window *client = (*it)->clientForId(child)) {
             return client;
         }
     }
@@ -686,7 +686,7 @@ QVariant ClientModel::data(const QModelIndex &index, int role) const
         }
     }
     if (role == Qt::DisplayRole || role == ClientRole) {
-        if (AbstractClient *client = m_root->clientForId(index.internalId())) {
+        if (Window *client = m_root->clientForId(index.internalId())) {
             return QVariant::fromValue(client);
         }
     }
@@ -887,7 +887,7 @@ bool ClientFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourc
         // we do not filter out screen, desktop and activity
         return true;
     }
-    AbstractClient *client = qvariant_cast<KWin::AbstractClient *>(data);
+    Window *client = qvariant_cast<KWin::Window *>(data);
     if (!client) {
         return false;
     }

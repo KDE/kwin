@@ -50,12 +50,12 @@ const NET::WindowTypes SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK = NET::NormalMask
     | NET::CriticalNotificationMask;
 
 Unmanaged::Unmanaged()
-    : AbstractClient()
+    : Window()
 {
     switch (kwinApp()->operationMode()) {
     case Application::OperationModeXwayland:
         // The wayland surface is associated with the override-redirect window asynchronously.
-        connect(this, &AbstractClient::surfaceChanged, this, &Unmanaged::associate);
+        connect(this, &Window::surfaceChanged, this, &Unmanaged::associate);
         break;
     case Application::OperationModeX11:
         // We have no way knowing whether the override-redirect window can be painted. Mark it

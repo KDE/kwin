@@ -10,7 +10,6 @@
 
 #include <config-kwin.h>
 
-#include "abstract_client.h"
 #include "input.h"
 #include "inputpanelv1client.h"
 #include "keyboard_input.h"
@@ -18,6 +17,7 @@
 #include "utils/common.h"
 #include "virtualkeyboard_dbus.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 #if KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
@@ -180,18 +180,18 @@ void InputMethod::setPanel(InputPanelV1Client *client)
             m_trackedClient->setVirtualKeyboardGeometry({});
         }
     });
-    connect(m_inputClient, &AbstractClient::frameGeometryChanged, this, &InputMethod::updateInputPanelState);
-    connect(m_inputClient, &AbstractClient::windowHidden, this, &InputMethod::updateInputPanelState);
-    connect(m_inputClient, &AbstractClient::windowClosed, this, &InputMethod::updateInputPanelState);
-    connect(m_inputClient, &AbstractClient::windowShown, this, &InputMethod::visibleChanged);
-    connect(m_inputClient, &AbstractClient::windowHidden, this, &InputMethod::visibleChanged);
-    connect(m_inputClient, &AbstractClient::windowClosed, this, &InputMethod::visibleChanged);
+    connect(m_inputClient, &Window::frameGeometryChanged, this, &InputMethod::updateInputPanelState);
+    connect(m_inputClient, &Window::windowHidden, this, &InputMethod::updateInputPanelState);
+    connect(m_inputClient, &Window::windowClosed, this, &InputMethod::updateInputPanelState);
+    connect(m_inputClient, &Window::windowShown, this, &InputMethod::visibleChanged);
+    connect(m_inputClient, &Window::windowHidden, this, &InputMethod::visibleChanged);
+    connect(m_inputClient, &Window::windowClosed, this, &InputMethod::visibleChanged);
     Q_EMIT visibleChanged();
     updateInputPanelState();
     Q_EMIT panelChanged();
 }
 
-void InputMethod::setTrackedClient(AbstractClient *trackedClient)
+void InputMethod::setTrackedClient(Window *trackedClient)
 {
     // Reset the old client virtual keybaord geom if necessary
     // Old and new clients could be the same if focus moves between subsurfaces
@@ -200,11 +200,11 @@ void InputMethod::setTrackedClient(AbstractClient *trackedClient)
     }
     if (m_trackedClient) {
         m_trackedClient->setVirtualKeyboardGeometry(QRect());
-        disconnect(m_trackedClient, &AbstractClient::frameGeometryChanged, this, &InputMethod::updateInputPanelState);
+        disconnect(m_trackedClient, &Window::frameGeometryChanged, this, &InputMethod::updateInputPanelState);
     }
     m_trackedClient = trackedClient;
     if (m_trackedClient) {
-        connect(m_trackedClient, &AbstractClient::frameGeometryChanged, this, &InputMethod::updateInputPanelState, Qt::QueuedConnection);
+        connect(m_trackedClient, &Window::frameGeometryChanged, this, &InputMethod::updateInputPanelState, Qt::QueuedConnection);
     }
     updateInputPanelState();
 }

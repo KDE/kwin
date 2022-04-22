@@ -7,10 +7,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "keyboard_layout_switching.h"
-#include "abstract_client.h"
 #include "deleted.h"
 #include "keyboard_layout.h"
 #include "virtualdesktops.h"
+#include "window.h"
 #include "workspace.h"
 #include "xkb.h"
 
@@ -188,7 +188,7 @@ void VirtualDesktopPolicy::layoutChanged(uint index)
 WindowPolicy::WindowPolicy(KWin::Xkb *xkb, KWin::KeyboardLayout *layout)
     : Policy(xkb, layout)
 {
-    connect(workspace(), &Workspace::clientActivated, this, [this](AbstractClient *c) {
+    connect(workspace(), &Workspace::clientActivated, this, [this](Window *c) {
         if (!c) {
             return;
         }
@@ -223,7 +223,7 @@ void WindowPolicy::layoutChanged(uint index)
     auto it = m_layouts.find(c);
     if (it == m_layouts.end()) {
         m_layouts.insert(c, index);
-        connect(c, &AbstractClient::windowClosed, this, [this, c]() {
+        connect(c, &Window::windowClosed, this, [this, c]() {
             m_layouts.remove(c);
         });
     } else {
@@ -274,7 +274,7 @@ ApplicationPolicy::~ApplicationPolicy()
 {
 }
 
-void ApplicationPolicy::clientActivated(AbstractClient *c)
+void ApplicationPolicy::clientActivated(Window *c)
 {
     if (!c) {
         return;
@@ -289,7 +289,7 @@ void ApplicationPolicy::clientActivated(AbstractClient *c)
         return;
     };
     for (it = m_layouts.constBegin(); it != m_layouts.constEnd(); it++) {
-        if (AbstractClient::belongToSameApplication(c, it.key())) {
+        if (Window::belongToSameApplication(c, it.key())) {
             const uint layout = it.value();
             setLayout(layout);
             layoutChanged(layout);
@@ -321,7 +321,7 @@ void ApplicationPolicy::layoutChanged(uint index)
     auto it = m_layouts.find(c);
     if (it == m_layouts.end()) {
         m_layouts.insert(c, index);
-        connect(c, &AbstractClient::windowClosed, this, [this, c]() {
+        connect(c, &Window::windowClosed, this, [this, c]() {
             m_layouts.remove(c);
         });
     } else {
@@ -332,7 +332,7 @@ void ApplicationPolicy::layoutChanged(uint index)
     }
     // update all layouts for the application
     for (it = m_layouts.begin(); it != m_layouts.end(); it++) {
-        if (AbstractClient::belongToSameApplication(it.key(), c)) {
+        if (Window::belongToSameApplication(it.key(), c)) {
             it.value() = index;
         }
     }

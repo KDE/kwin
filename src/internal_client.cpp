@@ -75,7 +75,7 @@ bool InternalClient::isClient() const
 
 bool InternalClient::hitTest(const QPoint &point) const
 {
-    if (!AbstractClient::hitTest(point)) {
+    if (!Window::hitTest(point)) {
         return false;
     }
 
@@ -91,7 +91,7 @@ bool InternalClient::hitTest(const QPoint &point) const
 
 void InternalClient::pointerEnterEvent(const QPoint &globalPos)
 {
-    AbstractClient::pointerEnterEvent(globalPos);
+    Window::pointerEnterEvent(globalPos);
 
     QEnterEvent enterEvent(pos(), pos(), globalPos);
     QCoreApplication::sendEvent(m_internalWindow, &enterEvent);
@@ -99,7 +99,7 @@ void InternalClient::pointerEnterEvent(const QPoint &globalPos)
 
 void InternalClient::pointerLeaveEvent()
 {
-    AbstractClient::pointerLeaveEvent();
+    Window::pointerLeaveEvent();
 
     QEvent event(QEvent::Leave);
     QCoreApplication::sendEvent(m_internalWindow, &event);
@@ -165,7 +165,7 @@ void InternalClient::killWindow()
 
 bool InternalClient::isPopupWindow() const
 {
-    if (AbstractClient::isPopupWindow()) {
+    if (Window::isPopupWindow()) {
         return true;
     }
     return m_internalWindowFlags.testFlag(Qt::Popup);
@@ -286,7 +286,7 @@ void InternalClient::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
     }
 }
 
-AbstractClient *InternalClient::findModal(bool allow_itself)
+Window *InternalClient::findModal(bool allow_itself)
 {
     Q_UNUSED(allow_itself)
     return nullptr;
@@ -426,7 +426,7 @@ bool InternalClient::acceptsFocus() const
     return false;
 }
 
-bool InternalClient::belongsToSameApplication(const AbstractClient *other, SameApplicationChecks checks) const
+bool InternalClient::belongsToSameApplication(const Window *other, SameApplicationChecks checks) const
 {
     Q_UNUSED(checks)
     const InternalClient *otherInternal = qobject_cast<const InternalClient *>(other);
