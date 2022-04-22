@@ -50,13 +50,13 @@ public:
     ConfigureFlags flags;
 };
 
-class XdgSurfaceClient : public WaylandWindow
+class XdgSurfaceWindow : public WaylandWindow
 {
     Q_OBJECT
 
 public:
-    explicit XdgSurfaceClient(KWaylandServer::XdgSurfaceInterface *shellSurface);
-    ~XdgSurfaceClient() override;
+    explicit XdgSurfaceWindow(KWaylandServer::XdgSurfaceInterface *shellSurface);
+    ~XdgSurfaceWindow() override;
 
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     QRect frameRectToBufferRect(const QRect &rect) const override;
@@ -111,7 +111,7 @@ public:
     KWaylandServer::XdgToplevelInterface::States states;
 };
 
-class XdgToplevelClient final : public XdgSurfaceClient
+class XdgToplevelWindow final : public XdgSurfaceWindow
 {
     Q_OBJECT
 
@@ -127,8 +127,8 @@ class XdgToplevelClient final : public XdgSurfaceClient
     };
 
 public:
-    explicit XdgToplevelClient(KWaylandServer::XdgToplevelInterface *shellSurface);
-    ~XdgToplevelClient() override;
+    explicit XdgToplevelWindow(KWaylandServer::XdgToplevelInterface *shellSurface);
+    ~XdgToplevelWindow() override;
 
     KWaylandServer::XdgToplevelInterface *shellSurface() const;
 
@@ -236,13 +236,13 @@ private:
     QSharedPointer<KDecoration2::Decoration> m_nextDecoration;
 };
 
-class XdgPopupClient final : public XdgSurfaceClient
+class XdgPopupWindow final : public XdgSurfaceWindow
 {
     Q_OBJECT
 
 public:
-    explicit XdgPopupClient(KWaylandServer::XdgPopupInterface *shellSurface);
-    ~XdgPopupClient() override;
+    explicit XdgPopupWindow(KWaylandServer::XdgPopupInterface *shellSurface);
+    ~XdgPopupWindow() override;
 
     bool hasPopupGrab() const override;
     void popupDone() override;

@@ -55,9 +55,9 @@ namespace KWin
 
 class Window;
 class Output;
-class XdgPopupClient;
-class XdgSurfaceClient;
-class XdgToplevelClient;
+class XdgPopupWindow;
+class XdgSurfaceWindow;
+class XdgToplevelWindow;
 class WaylandOutput;
 class WaylandOutputDevice;
 
@@ -144,8 +144,8 @@ public:
     }
     void removeClient(Window *c);
     Window *findClient(const KWaylandServer::SurfaceInterface *surface) const;
-    XdgToplevelClient *findXdgToplevelClient(KWaylandServer::SurfaceInterface *surface) const;
-    XdgSurfaceClient *findXdgSurfaceClient(KWaylandServer::SurfaceInterface *surface) const;
+    XdgToplevelWindow *findXdgToplevelWindow(KWaylandServer::SurfaceInterface *surface) const;
+    XdgSurfaceWindow *findXdgSurfaceWindow(KWaylandServer::SurfaceInterface *surface) const;
 
     /**
      * @returns a transient parent of a surface imported with the foreign protocol, if any
@@ -244,8 +244,8 @@ private:
     void shellClientShown(Window *t);
     void initScreenLocker();
     void registerXdgGenericClient(Window *client);
-    void registerXdgToplevelClient(XdgToplevelClient *client);
-    void registerXdgPopupClient(XdgPopupClient *client);
+    void registerXdgToplevelWindow(XdgToplevelWindow *client);
+    void registerXdgPopupWindow(XdgPopupWindow *client);
     void registerShellClient(Window *client);
     void handleOutputAdded(Output *output);
     void handleOutputRemoved(Output *output);

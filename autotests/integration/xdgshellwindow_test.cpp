@@ -50,9 +50,9 @@
 using namespace KWin;
 using namespace KWayland::Client;
 
-static const QString s_socketName = QStringLiteral("wayland_test_kwin_xdgshellclient-0");
+static const QString s_socketName = QStringLiteral("wayland_test_kwin_xdgshellwindow-0");
 
-class TestXdgShellClient : public QObject
+class TestXdgShellWindow : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
@@ -108,7 +108,7 @@ private Q_SLOTS:
     void testChangeDecorationModeAfterInitialCommit();
 };
 
-void TestXdgShellClient::testXdgWindowReactive()
+void TestXdgShellWindow::testXdgWindowReactive()
 {
     QScopedPointer<Test::XdgPositioner> positioner(Test::createXdgPositioner());
     positioner->set_size(10, 10);
@@ -134,7 +134,7 @@ void TestXdgShellClient::testXdgWindowReactive()
     QCOMPARE(popupConfigureRequested.count(), 1);
 }
 
-void TestXdgShellClient::testXdgWindowRepositioning()
+void TestXdgShellWindow::testXdgWindowRepositioning()
 {
     QScopedPointer<Test::XdgPositioner> positioner(Test::createXdgPositioner());
     positioner->set_size(10, 10);
@@ -163,7 +163,7 @@ void TestXdgShellClient::testXdgWindowRepositioning()
     QCOMPARE(reconfigureSpy.count(), 1);
 }
 
-void TestXdgShellClient::initTestCase()
+void TestXdgShellWindow::initTestCase()
 {
     qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::Window *>();
@@ -184,7 +184,7 @@ void TestXdgShellClient::initTestCase()
     Test::initWaylandWorkspace();
 }
 
-void TestXdgShellClient::init()
+void TestXdgShellWindow::init()
 {
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::XdgDecorationV1 | Test::AdditionalWaylandInterface::AppMenu));
     QVERIFY(Test::waitForWaylandPointer());
@@ -194,14 +194,14 @@ void TestXdgShellClient::init()
     KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 
-void TestXdgShellClient::cleanup()
+void TestXdgShellWindow::cleanup()
 {
     Test::destroyWaylandConnection();
 }
 
-void TestXdgShellClient::testMapUnmap()
+void TestXdgShellWindow::testMapUnmap()
 {
-    // This test verifies that the compositor destroys XdgToplevelClient when the
+    // This test verifies that the compositor destroys XdgToplevelWindow when the
     // associated xdg_toplevel surface is unmapped.
 
     // Create a wl_surface and an xdg_toplevel, but don't commit them yet!
@@ -262,7 +262,7 @@ void TestXdgShellClient::testMapUnmap()
     QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
-void TestXdgShellClient::testDesktopPresenceChanged()
+void TestXdgShellWindow::testDesktopPresenceChanged()
 {
     // this test verifies that the desktop presence changed signals are properly emitted
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
@@ -295,7 +295,7 @@ void TestXdgShellClient::testDesktopPresenceChanged()
     QCOMPARE(desktopPresenceChangedEffectsSpy.first().at(2).toInt(), 2);
 }
 
-void TestXdgShellClient::testWindowOutputs()
+void TestXdgShellWindow::testWindowOutputs()
 {
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
@@ -332,7 +332,7 @@ void TestXdgShellClient::testWindowOutputs()
     QCOMPARE(surface->outputs().first()->globalPosition(), QPoint(1280, 0));
 }
 
-void TestXdgShellClient::testMinimizeActiveWindow()
+void TestXdgShellWindow::testMinimizeActiveWindow()
 {
     // this test verifies that when minimizing the active window it gets deactivated
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
@@ -363,7 +363,7 @@ void TestXdgShellClient::testMinimizeActiveWindow()
     QCOMPARE(workspace()->activeClient(), c);
 }
 
-void TestXdgShellClient::testFullscreen_data()
+void TestXdgShellWindow::testFullscreen_data()
 {
     QTest::addColumn<Test::XdgToplevelDecorationV1::mode>("decoMode");
 
@@ -371,7 +371,7 @@ void TestXdgShellClient::testFullscreen_data()
     QTest::newRow("server-side deco") << Test::XdgToplevelDecorationV1::mode_server_side;
 }
 
-void TestXdgShellClient::testFullscreen()
+void TestXdgShellWindow::testFullscreen()
 {
     // this test verifies that a window can be properly fullscreened
 
@@ -452,7 +452,7 @@ void TestXdgShellClient::testFullscreen()
     QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
-void TestXdgShellClient::testUserCanSetFullscreen()
+void TestXdgShellWindow::testUserCanSetFullscreen()
 {
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
@@ -463,7 +463,7 @@ void TestXdgShellClient::testUserCanSetFullscreen()
     QVERIFY(c->userCanSetFullScreen());
 }
 
-void TestXdgShellClient::testMaximizedToFullscreen_data()
+void TestXdgShellWindow::testMaximizedToFullscreen_data()
 {
     QTest::addColumn<Test::XdgToplevelDecorationV1::mode>("decoMode");
 
@@ -471,7 +471,7 @@ void TestXdgShellClient::testMaximizedToFullscreen_data()
     QTest::newRow("server-side deco") << Test::XdgToplevelDecorationV1::mode_server_side;
 }
 
-void TestXdgShellClient::testMaximizedToFullscreen()
+void TestXdgShellWindow::testMaximizedToFullscreen()
 {
     // this test verifies that a window can be properly fullscreened after maximizing
 
@@ -562,7 +562,7 @@ void TestXdgShellClient::testMaximizedToFullscreen()
     QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
-void TestXdgShellClient::testFullscreenMultipleOutputs()
+void TestXdgShellWindow::testFullscreenMultipleOutputs()
 {
     // this test verifies that kwin will place fullscreen windows in the outputs its instructed to
 
@@ -615,7 +615,7 @@ void TestXdgShellClient::testFullscreenMultipleOutputs()
     }
 }
 
-void TestXdgShellClient::testHidden()
+void TestXdgShellWindow::testHidden()
 {
     // this test verifies that when hiding window it doesn't get shown
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
@@ -643,7 +643,7 @@ void TestXdgShellClient::testHidden()
     // QCOMPARE(workspace()->activeClient(), c);
 }
 
-void TestXdgShellClient::testDesktopFileName()
+void TestXdgShellWindow::testDesktopFileName()
 {
     QIcon::setThemeName(QStringLiteral("breeze"));
     // this test verifies that desktop file name is passed correctly to the window
@@ -655,7 +655,7 @@ void TestXdgShellClient::testDesktopFileName()
     QVERIFY(c);
     QCOMPARE(c->desktopFileName(), QByteArrayLiteral("org.kde.foo"));
     QCOMPARE(c->resourceClass(), QByteArrayLiteral("org.kde.foo"));
-    QVERIFY(c->resourceName().startsWith("testXdgShellClient"));
+    QVERIFY(c->resourceName().startsWith("testXdgShellWindow"));
     // the desktop file does not exist, so icon should be generic Wayland
     QCOMPARE(c->icon().name(), QStringLiteral("wayland"));
 
@@ -667,7 +667,7 @@ void TestXdgShellClient::testDesktopFileName()
     QVERIFY(desktopFileNameChangedSpy.wait());
     QCOMPARE(c->desktopFileName(), QByteArrayLiteral("org.kde.bar"));
     QCOMPARE(c->resourceClass(), QByteArrayLiteral("org.kde.bar"));
-    QVERIFY(c->resourceName().startsWith("testXdgShellClient"));
+    QVERIFY(c->resourceName().startsWith("testXdgShellWindow"));
     // icon should still be wayland
     QCOMPARE(c->icon().name(), QStringLiteral("wayland"));
     QVERIFY(iconChangedSpy.isEmpty());
@@ -680,7 +680,7 @@ void TestXdgShellClient::testDesktopFileName()
     QCOMPARE(c->icon().name(), QStringLiteral("kwin"));
 }
 
-void TestXdgShellClient::testCaptionSimplified()
+void TestXdgShellWindow::testCaptionSimplified()
 {
     // this test verifies that caption is properly trimmed
     // see BUG 323798 comment #12
@@ -695,7 +695,7 @@ void TestXdgShellClient::testCaptionSimplified()
     QCOMPARE(c->caption(), origTitle.simplified());
 }
 
-void TestXdgShellClient::testCaptionMultipleWindows()
+void TestXdgShellWindow::testCaptionMultipleWindows()
 {
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
@@ -742,7 +742,7 @@ void TestXdgShellClient::testCaptionMultipleWindows()
     QCOMPARE(c4->captionSuffix(), QStringLiteral(" <4>"));
 }
 
-void TestXdgShellClient::testUnresponsiveWindow_data()
+void TestXdgShellWindow::testUnresponsiveWindow_data()
 {
     QTest::addColumn<QString>("shellInterface"); // see env selection in qwaylandintegration.cpp
     QTest::addColumn<bool>("socketMode");
@@ -751,7 +751,7 @@ void TestXdgShellClient::testUnresponsiveWindow_data()
     QTest::newRow("xdg socket") << "xdg-shell" << true;
 }
 
-void TestXdgShellClient::testUnresponsiveWindow()
+void TestXdgShellWindow::testUnresponsiveWindow()
 {
     // this test verifies that killWindow properly terminates a process
     // for this an external binary is launched
@@ -826,7 +826,7 @@ void TestXdgShellClient::testUnresponsiveWindow()
     QVERIFY(elapsed2 > 1800); // second ping comes in a second later
 }
 
-void TestXdgShellClient::testAppMenu()
+void TestXdgShellWindow::testAppMenu()
 {
     // register a faux appmenu client
     QVERIFY(QDBusConnection::sessionBus().registerService("org.kde.kappmenu"));
@@ -846,7 +846,7 @@ void TestXdgShellClient::testAppMenu()
     QVERIFY(QDBusConnection::sessionBus().unregisterService("org.kde.kappmenu"));
 }
 
-void TestXdgShellClient::testSendClientWithTransientToDesktop()
+void TestXdgShellWindow::testSendClientWithTransientToDesktop()
 {
     // this test verifies that when sending a client to a desktop all transients are also send to that desktop
 
@@ -897,7 +897,7 @@ void TestXdgShellClient::testSendClientWithTransientToDesktop()
     QCOMPARE(transient->desktops(), QVector<VirtualDesktop *>{desktops[0]});
 }
 
-void TestXdgShellClient::testMinimizeWindowWithTransients()
+void TestXdgShellWindow::testMinimizeWindowWithTransients()
 {
     // this test verifies that when minimizing/unminimizing a window all its
     // transients will be minimized/unminimized as well
@@ -930,7 +930,7 @@ void TestXdgShellClient::testMinimizeWindowWithTransients()
     QVERIFY(!transient->isMinimized());
 }
 
-void TestXdgShellClient::testXdgDecoration_data()
+void TestXdgShellWindow::testXdgDecoration_data()
 {
     QTest::addColumn<Test::XdgToplevelDecorationV1::mode>("requestedMode");
     QTest::addColumn<Test::XdgToplevelDecorationV1::mode>("expectedMode");
@@ -939,7 +939,7 @@ void TestXdgShellClient::testXdgDecoration_data()
     QTest::newRow("server side requested") << Test::XdgToplevelDecorationV1::mode_server_side << Test::XdgToplevelDecorationV1::mode_server_side;
 }
 
-void TestXdgShellClient::testXdgDecoration()
+void TestXdgShellWindow::testXdgDecoration()
 {
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
@@ -966,14 +966,14 @@ void TestXdgShellClient::testXdgDecoration()
     QCOMPARE(c->isDecorated(), expectedMode == Test::XdgToplevelDecorationV1::mode_server_side);
 }
 
-void TestXdgShellClient::testXdgNeverCommitted()
+void TestXdgShellWindow::testXdgNeverCommitted()
 {
     // check we don't crash if we create a shell object but delete the XdgShellClient before committing it
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
 }
 
-void TestXdgShellClient::testXdgInitialState()
+void TestXdgShellWindow::testXdgInitialState()
 {
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
@@ -994,7 +994,7 @@ void TestXdgShellClient::testXdgInitialState()
     QCOMPARE(c->size(), QSize(200, 100));
 }
 
-void TestXdgShellClient::testXdgInitiallyMaximised()
+void TestXdgShellWindow::testXdgInitiallyMaximised()
 {
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
@@ -1021,7 +1021,7 @@ void TestXdgShellClient::testXdgInitiallyMaximised()
     QCOMPARE(c->size(), QSize(1280, 1024));
 }
 
-void TestXdgShellClient::testXdgInitiallyFullscreen()
+void TestXdgShellWindow::testXdgInitiallyFullscreen()
 {
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
@@ -1048,7 +1048,7 @@ void TestXdgShellClient::testXdgInitiallyFullscreen()
     QCOMPARE(c->size(), QSize(1280, 1024));
 }
 
-void TestXdgShellClient::testXdgInitiallyMinimized()
+void TestXdgShellWindow::testXdgInitiallyMinimized()
 {
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
@@ -1074,7 +1074,7 @@ void TestXdgShellClient::testXdgInitiallyMinimized()
     QVERIFY(c->isMinimized());
 }
 
-void TestXdgShellClient::testXdgWindowGeometryIsntSet()
+void TestXdgShellWindow::testXdgWindowGeometryIsntSet()
 {
     // This test verifies that the effective window geometry corresponds to the
     // bounding rectangle of the main surface and its sub-surfaces if no window
@@ -1111,7 +1111,7 @@ void TestXdgShellClient::testXdgWindowGeometryIsntSet()
     QCOMPARE(client->bufferGeometry().size(), QSize(100, 50));
 }
 
-void TestXdgShellClient::testXdgWindowGeometryAttachBuffer()
+void TestXdgShellWindow::testXdgWindowGeometryAttachBuffer()
 {
     // This test verifies that the effective window geometry remains the same when
     // a new buffer is attached and xdg_surface.set_window_geometry is not called
@@ -1159,7 +1159,7 @@ void TestXdgShellClient::testXdgWindowGeometryAttachBuffer()
     QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
-void TestXdgShellClient::testXdgWindowGeometryAttachSubSurface()
+void TestXdgShellWindow::testXdgWindowGeometryAttachSubSurface()
 {
     // This test verifies that the effective window geometry remains the same
     // when a new sub-surface is added and xdg_surface.set_window_geometry is
@@ -1204,7 +1204,7 @@ void TestXdgShellClient::testXdgWindowGeometryAttachSubSurface()
     QCOMPARE(client->bufferGeometry().size(), QSize(200, 100));
 }
 
-void TestXdgShellClient::testXdgWindowGeometryInteractiveResize()
+void TestXdgShellWindow::testXdgWindowGeometryInteractiveResize()
 {
     // This test verifies that correct window geometry is provided along each
     // configure event when an xdg-shell is being interactively resized.
@@ -1297,7 +1297,7 @@ void TestXdgShellClient::testXdgWindowGeometryInteractiveResize()
     QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
-void TestXdgShellClient::testXdgWindowGeometryFullScreen()
+void TestXdgShellWindow::testXdgWindowGeometryFullScreen()
 {
     // This test verifies that an xdg-shell receives correct window geometry when
     // its fullscreen state gets changed.
@@ -1354,7 +1354,7 @@ void TestXdgShellClient::testXdgWindowGeometryFullScreen()
     QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
-void TestXdgShellClient::testXdgWindowGeometryMaximize()
+void TestXdgShellWindow::testXdgWindowGeometryMaximize()
 {
     // This test verifies that an xdg-shell receives correct window geometry when
     // its maximized state gets changed.
@@ -1411,9 +1411,9 @@ void TestXdgShellClient::testXdgWindowGeometryMaximize()
     QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
-void TestXdgShellClient::testPointerInputTransform()
+void TestXdgShellWindow::testPointerInputTransform()
 {
-    // This test verifies that XdgToplevelClient provides correct input transform matrix.
+    // This test verifies that XdgToplevelWindow provides correct input transform matrix.
     // The input transform matrix is used by seat to map pointer events from the global
     // screen coordinates to the surface-local coordinates.
 
@@ -1470,7 +1470,7 @@ void TestXdgShellClient::testPointerInputTransform()
     QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
-void TestXdgShellClient::testReentrantSetFrameGeometry()
+void TestXdgShellWindow::testReentrantSetFrameGeometry()
 {
     // This test verifies that calling moveResize() from a slot connected directly
     // to the frameGeometryChanged() signal won't cause an infinite recursion.
@@ -1498,7 +1498,7 @@ void TestXdgShellClient::testReentrantSetFrameGeometry()
     QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
-void TestXdgShellClient::testDoubleMaximize()
+void TestXdgShellWindow::testDoubleMaximize()
 {
     // This test verifies that the case where a client issues two set_maximized() requests
     // separated by the initial commit is handled properly.
@@ -1533,7 +1533,7 @@ void TestXdgShellClient::testDoubleMaximize()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
 }
 
-void TestXdgShellClient::testDoubleFullscreenSeparatedByCommit()
+void TestXdgShellWindow::testDoubleFullscreenSeparatedByCommit()
 {
     // Some applications do weird things at startup and this is one of them. This test verifies
     // that the window will have good frame geometry if the client has issued several
@@ -1566,7 +1566,7 @@ void TestXdgShellClient::testDoubleFullscreenSeparatedByCommit()
     QCOMPARE(client->frameGeometry(), QRect(0, 0, 1280, 1024));
 }
 
-void TestXdgShellClient::testMaximizeHorizontal()
+void TestXdgShellWindow::testMaximizeHorizontal()
 {
     // Create the test client.
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
@@ -1646,7 +1646,7 @@ void TestXdgShellClient::testMaximizeHorizontal()
     QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
-void TestXdgShellClient::testMaximizeVertical()
+void TestXdgShellWindow::testMaximizeVertical()
 {
     // Create the test client.
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
@@ -1726,7 +1726,7 @@ void TestXdgShellClient::testMaximizeVertical()
     QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
-void TestXdgShellClient::testMaximizeFull()
+void TestXdgShellWindow::testMaximizeFull()
 {
     // Create the test client.
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
@@ -1806,7 +1806,7 @@ void TestXdgShellClient::testMaximizeFull()
     QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
-void TestXdgShellClient::testMaximizeAndChangeDecorationModeAfterInitialCommit()
+void TestXdgShellWindow::testMaximizeAndChangeDecorationModeAfterInitialCommit()
 {
     // Ideally, the app would initialize the xdg-toplevel surface before the initial commit, but
     // many don't do it. They initialize the surface after the first commit.
@@ -1834,7 +1834,7 @@ void TestXdgShellClient::testMaximizeAndChangeDecorationModeAfterInitialCommit()
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>(), Test::XdgToplevel::State::Maximized);
 }
 
-void TestXdgShellClient::testFullScreenAndChangeDecorationModeAfterInitialCommit()
+void TestXdgShellWindow::testFullScreenAndChangeDecorationModeAfterInitialCommit()
 {
     // Ideally, the app would initialize the xdg-toplevel surface before the initial commit, but
     // many don't do it. They initialize the surface after the first commit.
@@ -1862,7 +1862,7 @@ void TestXdgShellClient::testFullScreenAndChangeDecorationModeAfterInitialCommit
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>(), Test::XdgToplevel::State::Fullscreen);
 }
 
-void TestXdgShellClient::testChangeDecorationModeAfterInitialCommit()
+void TestXdgShellWindow::testChangeDecorationModeAfterInitialCommit()
 {
     // This test verifies that the compositor will respond with a good configure event when
     // the decoration mode changes after the first surface commit but before the surface is mapped.
@@ -1889,5 +1889,5 @@ void TestXdgShellClient::testChangeDecorationModeAfterInitialCommit()
     QCOMPARE(decorationConfigureRequestedSpy.last().at(0).value<Test::XdgToplevelDecorationV1::mode>(), Test::XdgToplevelDecorationV1::mode_client_side);
 }
 
-WAYLANDTEST_MAIN(TestXdgShellClient)
-#include "xdgshellclient_test.moc"
+WAYLANDTEST_MAIN(TestXdgShellWindow)
+#include "xdgshellwindow_test.moc"

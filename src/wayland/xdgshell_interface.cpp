@@ -45,7 +45,7 @@ void XdgShellInterfacePrivate::unregisterXdgSurface(XdgSurfaceInterface *surface
 
 /**
  * @todo Whether the ping is delayed or has timed out is out of domain of the XdgShellInterface.
- * Such matter must be handled somewhere else, e.g. XdgToplevelClient, not here!
+ * Such matter must be handled somewhere else, e.g. XdgToplevelWindow, not here!
  */
 void XdgShellInterfacePrivate::registerPing(quint32 serial)
 {

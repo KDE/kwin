@@ -27,7 +27,7 @@ public:
 private:
     void registerXdgToplevel(KWaylandServer::XdgToplevelInterface *toplevel);
     void registerXdgPopup(KWaylandServer::XdgPopupInterface *popup);
-    void createXdgToplevelClient(KWaylandServer::XdgToplevelInterface *surface);
+    void createXdgToplevelWindow(KWaylandServer::XdgToplevelInterface *surface);
 };
 
 } // namespace KWin

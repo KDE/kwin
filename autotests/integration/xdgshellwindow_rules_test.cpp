@@ -28,9 +28,9 @@
 using namespace KWin;
 using namespace KWayland::Client;
 
-static const QString s_socketName = QStringLiteral("wayland_test_kwin_xdgshellclient_rules-0");
+static const QString s_socketName = QStringLiteral("wayland_test_kwin_xdgshellwindow_rules-0");
 
-class TestXdgShellClientRules : public QObject
+class TestXdgShellWindowRules : public QObject
 {
     Q_OBJECT
 
@@ -174,7 +174,7 @@ private:
     QScopedPointer<QSignalSpy> m_surfaceConfigureRequestedSpy;
 };
 
-void TestXdgShellClientRules::initTestCase()
+void TestXdgShellWindowRules::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
 
@@ -196,7 +196,7 @@ void TestXdgShellClientRules::initTestCase()
     RuleBook::self()->setConfig(m_config);
 }
 
-void TestXdgShellClientRules::init()
+void TestXdgShellWindowRules::init()
 {
     VirtualDesktopManager::self()->setCurrent(VirtualDesktopManager::self()->desktops().first());
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::XdgDecorationV1));
@@ -204,7 +204,7 @@ void TestXdgShellClientRules::init()
     workspace()->setActiveOutput(QPoint(640, 512));
 }
 
-void TestXdgShellClientRules::cleanup()
+void TestXdgShellWindowRules::cleanup()
 {
     if (!m_shellSurface.isNull()) {
         destroyTestWindow();
@@ -223,7 +223,7 @@ void TestXdgShellClientRules::cleanup()
     QCOMPARE(VirtualDesktopManager::self()->count(), 1u);
 }
 
-void TestXdgShellClientRules::createTestWindow(ClientFlags flags)
+void TestXdgShellWindowRules::createTestWindow(ClientFlags flags)
 {
     // Apply flags for special windows and rules
     const bool createClient = !(flags & ReturnAfterSurfaceConfiguration);
@@ -250,7 +250,7 @@ void TestXdgShellClientRules::createTestWindow(ClientFlags flags)
     }
 }
 
-void TestXdgShellClientRules::mapClientToSurface(QSize clientSize, ClientFlags flags)
+void TestXdgShellWindowRules::mapClientToSurface(QSize clientSize, ClientFlags flags)
 {
     const bool clientShouldBeActive = !(flags & ClientShouldBeInactive);
 
@@ -267,7 +267,7 @@ void TestXdgShellClientRules::mapClientToSurface(QSize clientSize, ClientFlags f
     QCOMPARE(m_client->isActive(), clientShouldBeActive);
 }
 
-void TestXdgShellClientRules::destroyTestWindow()
+void TestXdgShellWindowRules::destroyTestWindow()
 {
     m_surfaceConfigureRequestedSpy.reset();
     m_toplevelConfigureRequestedSpy.reset();
@@ -277,7 +277,7 @@ void TestXdgShellClientRules::destroyTestWindow()
 }
 
 template<typename T>
-void TestXdgShellClientRules::setWindowRule(const QString &property, const T &value, int policy)
+void TestXdgShellWindowRules::setWindowRule(const QString &property, const T &value, int policy)
 {
     // Initialize RuleBook with the test rule.
     m_config->group("General").writeEntry("count", 1);
@@ -294,7 +294,7 @@ void TestXdgShellClientRules::setWindowRule(const QString &property, const T &va
     workspace()->slotReconfigure();
 }
 
-void TestXdgShellClientRules::testPositionDontAffect()
+void TestXdgShellWindowRules::testPositionDontAffect()
 {
     setWindowRule("position", QPoint(42, 42), int(Rules::DontAffect));
 
@@ -309,7 +309,7 @@ void TestXdgShellClientRules::testPositionDontAffect()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testPositionApply()
+void TestXdgShellWindowRules::testPositionApply()
 {
     setWindowRule("position", QPoint(42, 42), int(Rules::Apply));
 
@@ -362,7 +362,7 @@ void TestXdgShellClientRules::testPositionApply()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testPositionRemember()
+void TestXdgShellWindowRules::testPositionRemember()
 {
     setWindowRule("position", QPoint(42, 42), int(Rules::Remember));
     createTestWindow();
@@ -414,7 +414,7 @@ void TestXdgShellClientRules::testPositionRemember()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testPositionForce()
+void TestXdgShellWindowRules::testPositionForce()
 {
     setWindowRule("position", QPoint(42, 42), int(Rules::Force));
 
@@ -448,7 +448,7 @@ void TestXdgShellClientRules::testPositionForce()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testPositionApplyNow()
+void TestXdgShellWindowRules::testPositionApplyNow()
 {
     createTestWindow();
 
@@ -507,7 +507,7 @@ void TestXdgShellClientRules::testPositionApplyNow()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testPositionForceTemporarily()
+void TestXdgShellWindowRules::testPositionForceTemporarily()
 {
     setWindowRule("position", QPoint(42, 42), int(Rules::ForceTemporarily));
 
@@ -541,7 +541,7 @@ void TestXdgShellClientRules::testPositionForceTemporarily()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testSizeDontAffect()
+void TestXdgShellWindowRules::testSizeDontAffect()
 {
     setWindowRule("size", QSize(480, 640), int(Rules::DontAffect));
 
@@ -565,7 +565,7 @@ void TestXdgShellClientRules::testSizeDontAffect()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testSizeApply()
+void TestXdgShellWindowRules::testSizeApply()
 {
     setWindowRule("size", QSize(480, 640), int(Rules::Apply));
 
@@ -666,7 +666,7 @@ void TestXdgShellClientRules::testSizeApply()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testSizeRemember()
+void TestXdgShellWindowRules::testSizeRemember()
 {
     setWindowRule("size", QSize(480, 640), int(Rules::Remember));
 
@@ -767,7 +767,7 @@ void TestXdgShellClientRules::testSizeRemember()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testSizeForce()
+void TestXdgShellWindowRules::testSizeForce()
 {
     setWindowRule("size", QSize(480, 640), int(Rules::Force));
 
@@ -820,7 +820,7 @@ void TestXdgShellClientRules::testSizeForce()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testSizeApplyNow()
+void TestXdgShellWindowRules::testSizeApplyNow()
 {
     createTestWindow(ReturnAfterSurfaceConfiguration);
 
@@ -863,7 +863,7 @@ void TestXdgShellClientRules::testSizeApplyNow()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testSizeForceTemporarily()
+void TestXdgShellWindowRules::testSizeForceTemporarily()
 {
     setWindowRule("size", QSize(480, 640), int(Rules::ForceTemporarily));
 
@@ -916,7 +916,7 @@ void TestXdgShellClientRules::testSizeForceTemporarily()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testMaximizeDontAffect()
+void TestXdgShellWindowRules::testMaximizeDontAffect()
 {
     setWindowRule("maximizehoriz", true, int(Rules::DontAffect));
     setWindowRule("maximizevert", true, int(Rules::DontAffect));
@@ -951,7 +951,7 @@ void TestXdgShellClientRules::testMaximizeDontAffect()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testMaximizeApply()
+void TestXdgShellWindowRules::testMaximizeApply()
 {
     setWindowRule("maximizehoriz", true, int(Rules::Apply));
     setWindowRule("maximizevert", true, int(Rules::Apply));
@@ -1029,7 +1029,7 @@ void TestXdgShellClientRules::testMaximizeApply()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testMaximizeRemember()
+void TestXdgShellWindowRules::testMaximizeRemember()
 {
     setWindowRule("maximizehoriz", true, int(Rules::Remember));
     setWindowRule("maximizevert", true, int(Rules::Remember));
@@ -1108,7 +1108,7 @@ void TestXdgShellClientRules::testMaximizeRemember()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testMaximizeForce()
+void TestXdgShellWindowRules::testMaximizeForce()
 {
     setWindowRule("maximizehoriz", true, int(Rules::Force));
     setWindowRule("maximizevert", true, int(Rules::Force));
@@ -1176,7 +1176,7 @@ void TestXdgShellClientRules::testMaximizeForce()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testMaximizeApplyNow()
+void TestXdgShellWindowRules::testMaximizeApplyNow()
 {
     createTestWindow(ReturnAfterSurfaceConfiguration);
 
@@ -1258,7 +1258,7 @@ void TestXdgShellClientRules::testMaximizeApplyNow()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testMaximizeForceTemporarily()
+void TestXdgShellWindowRules::testMaximizeForceTemporarily()
 {
     setWindowRule("maximizehoriz", true, int(Rules::ForceTemporarily));
     setWindowRule("maximizevert", true, int(Rules::ForceTemporarily));
@@ -1326,7 +1326,7 @@ void TestXdgShellClientRules::testMaximizeForceTemporarily()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testDesktopsDontAffect()
+void TestXdgShellWindowRules::testDesktopsDontAffect()
 {
     // We need at least two virtual desktop for this test.
     VirtualDesktopManager::self()->setCount(2);
@@ -1348,7 +1348,7 @@ void TestXdgShellClientRules::testDesktopsDontAffect()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testDesktopsApply()
+void TestXdgShellWindowRules::testDesktopsApply()
 {
     // We need at least two virtual desktop for this test.
     VirtualDesktopManager::self()->setCount(2);
@@ -1384,7 +1384,7 @@ void TestXdgShellClientRules::testDesktopsApply()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testDesktopsRemember()
+void TestXdgShellWindowRules::testDesktopsRemember()
 {
     // We need at least two virtual desktop for this test.
     VirtualDesktopManager::self()->setCount(2);
@@ -1417,7 +1417,7 @@ void TestXdgShellClientRules::testDesktopsRemember()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testDesktopsForce()
+void TestXdgShellWindowRules::testDesktopsForce()
 {
     // We need at least two virtual desktop for this test.
     VirtualDesktopManager::self()->setCount(2);
@@ -1453,7 +1453,7 @@ void TestXdgShellClientRules::testDesktopsForce()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testDesktopsApplyNow()
+void TestXdgShellWindowRules::testDesktopsApplyNow()
 {
     // We need at least two virtual desktop for this test.
     VirtualDesktopManager::self()->setCount(2);
@@ -1488,7 +1488,7 @@ void TestXdgShellClientRules::testDesktopsApplyNow()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testDesktopsForceTemporarily()
+void TestXdgShellWindowRules::testDesktopsForceTemporarily()
 {
     // We need at least two virtual desktop for this test.
     VirtualDesktopManager::self()->setCount(2);
@@ -1533,7 +1533,7 @@ void TestXdgShellClientRules::testDesktopsForceTemporarily()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testMinimizeDontAffect()
+void TestXdgShellWindowRules::testMinimizeDontAffect()
 {
     setWindowRule("minimize", true, int(Rules::DontAffect));
 
@@ -1546,7 +1546,7 @@ void TestXdgShellClientRules::testMinimizeDontAffect()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testMinimizeApply()
+void TestXdgShellWindowRules::testMinimizeApply()
 {
     setWindowRule("minimize", true, int(Rules::Apply));
 
@@ -1569,7 +1569,7 @@ void TestXdgShellClientRules::testMinimizeApply()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testMinimizeRemember()
+void TestXdgShellWindowRules::testMinimizeRemember()
 {
     setWindowRule("minimize", false, int(Rules::Remember));
 
@@ -1590,7 +1590,7 @@ void TestXdgShellClientRules::testMinimizeRemember()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testMinimizeForce()
+void TestXdgShellWindowRules::testMinimizeForce()
 {
     setWindowRule("minimize", false, int(Rules::Force));
 
@@ -1613,7 +1613,7 @@ void TestXdgShellClientRules::testMinimizeForce()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testMinimizeApplyNow()
+void TestXdgShellWindowRules::testMinimizeApplyNow()
 {
     createTestWindow();
     QVERIFY(m_client->isMinimizable());
@@ -1637,7 +1637,7 @@ void TestXdgShellClientRules::testMinimizeApplyNow()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testMinimizeForceTemporarily()
+void TestXdgShellWindowRules::testMinimizeForceTemporarily()
 {
     setWindowRule("minimize", false, int(Rules::ForceTemporarily));
 
@@ -1660,7 +1660,7 @@ void TestXdgShellClientRules::testMinimizeForceTemporarily()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testSkipTaskbarDontAffect()
+void TestXdgShellWindowRules::testSkipTaskbarDontAffect()
 {
     setWindowRule("skiptaskbar", true, int(Rules::DontAffect));
 
@@ -1672,7 +1672,7 @@ void TestXdgShellClientRules::testSkipTaskbarDontAffect()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testSkipTaskbarApply()
+void TestXdgShellWindowRules::testSkipTaskbarApply()
 {
     setWindowRule("skiptaskbar", true, int(Rules::Apply));
 
@@ -1693,7 +1693,7 @@ void TestXdgShellClientRules::testSkipTaskbarApply()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testSkipTaskbarRemember()
+void TestXdgShellWindowRules::testSkipTaskbarRemember()
 {
     setWindowRule("skiptaskbar", true, int(Rules::Remember));
 
@@ -1716,7 +1716,7 @@ void TestXdgShellClientRules::testSkipTaskbarRemember()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testSkipTaskbarForce()
+void TestXdgShellWindowRules::testSkipTaskbarForce()
 {
     setWindowRule("skiptaskbar", true, int(Rules::Force));
 
@@ -1739,7 +1739,7 @@ void TestXdgShellClientRules::testSkipTaskbarForce()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testSkipTaskbarApplyNow()
+void TestXdgShellWindowRules::testSkipTaskbarApplyNow()
 {
     createTestWindow();
     QVERIFY(!m_client->skipTaskbar());
@@ -1760,7 +1760,7 @@ void TestXdgShellClientRules::testSkipTaskbarApplyNow()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testSkipTaskbarForceTemporarily()
+void TestXdgShellWindowRules::testSkipTaskbarForceTemporarily()
 {
     setWindowRule("skiptaskbar", true, int(Rules::ForceTemporarily));
 
@@ -1785,7 +1785,7 @@ void TestXdgShellClientRules::testSkipTaskbarForceTemporarily()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testSkipPagerDontAffect()
+void TestXdgShellWindowRules::testSkipPagerDontAffect()
 {
     setWindowRule("skippager", true, int(Rules::DontAffect));
 
@@ -1797,7 +1797,7 @@ void TestXdgShellClientRules::testSkipPagerDontAffect()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testSkipPagerApply()
+void TestXdgShellWindowRules::testSkipPagerApply()
 {
     setWindowRule("skippager", true, int(Rules::Apply));
 
@@ -1818,7 +1818,7 @@ void TestXdgShellClientRules::testSkipPagerApply()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testSkipPagerRemember()
+void TestXdgShellWindowRules::testSkipPagerRemember()
 {
     setWindowRule("skippager", true, int(Rules::Remember));
 
@@ -1841,7 +1841,7 @@ void TestXdgShellClientRules::testSkipPagerRemember()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testSkipPagerForce()
+void TestXdgShellWindowRules::testSkipPagerForce()
 {
     setWindowRule("skippager", true, int(Rules::Force));
 
@@ -1864,7 +1864,7 @@ void TestXdgShellClientRules::testSkipPagerForce()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testSkipPagerApplyNow()
+void TestXdgShellWindowRules::testSkipPagerApplyNow()
 {
     createTestWindow();
     QVERIFY(!m_client->skipPager());
@@ -1885,7 +1885,7 @@ void TestXdgShellClientRules::testSkipPagerApplyNow()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testSkipPagerForceTemporarily()
+void TestXdgShellWindowRules::testSkipPagerForceTemporarily()
 {
     setWindowRule("skippager", true, int(Rules::ForceTemporarily));
 
@@ -1910,7 +1910,7 @@ void TestXdgShellClientRules::testSkipPagerForceTemporarily()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testSkipSwitcherDontAffect()
+void TestXdgShellWindowRules::testSkipSwitcherDontAffect()
 {
     setWindowRule("skipswitcher", true, int(Rules::DontAffect));
 
@@ -1922,7 +1922,7 @@ void TestXdgShellClientRules::testSkipSwitcherDontAffect()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testSkipSwitcherApply()
+void TestXdgShellWindowRules::testSkipSwitcherApply()
 {
     setWindowRule("skipswitcher", true, int(Rules::Apply));
 
@@ -1943,7 +1943,7 @@ void TestXdgShellClientRules::testSkipSwitcherApply()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testSkipSwitcherRemember()
+void TestXdgShellWindowRules::testSkipSwitcherRemember()
 {
     setWindowRule("skipswitcher", true, int(Rules::Remember));
 
@@ -1966,7 +1966,7 @@ void TestXdgShellClientRules::testSkipSwitcherRemember()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testSkipSwitcherForce()
+void TestXdgShellWindowRules::testSkipSwitcherForce()
 {
     setWindowRule("skipswitcher", true, int(Rules::Force));
 
@@ -1989,7 +1989,7 @@ void TestXdgShellClientRules::testSkipSwitcherForce()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testSkipSwitcherApplyNow()
+void TestXdgShellWindowRules::testSkipSwitcherApplyNow()
 {
     createTestWindow();
     QVERIFY(!m_client->skipSwitcher());
@@ -2010,7 +2010,7 @@ void TestXdgShellClientRules::testSkipSwitcherApplyNow()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testSkipSwitcherForceTemporarily()
+void TestXdgShellWindowRules::testSkipSwitcherForceTemporarily()
 {
     setWindowRule("skipswitcher", true, int(Rules::ForceTemporarily));
 
@@ -2035,7 +2035,7 @@ void TestXdgShellClientRules::testSkipSwitcherForceTemporarily()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testKeepAboveDontAffect()
+void TestXdgShellWindowRules::testKeepAboveDontAffect()
 {
     setWindowRule("above", true, int(Rules::DontAffect));
 
@@ -2047,7 +2047,7 @@ void TestXdgShellClientRules::testKeepAboveDontAffect()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testKeepAboveApply()
+void TestXdgShellWindowRules::testKeepAboveApply()
 {
     setWindowRule("above", true, int(Rules::Apply));
 
@@ -2068,7 +2068,7 @@ void TestXdgShellClientRules::testKeepAboveApply()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testKeepAboveRemember()
+void TestXdgShellWindowRules::testKeepAboveRemember()
 {
     setWindowRule("above", true, int(Rules::Remember));
 
@@ -2089,7 +2089,7 @@ void TestXdgShellClientRules::testKeepAboveRemember()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testKeepAboveForce()
+void TestXdgShellWindowRules::testKeepAboveForce()
 {
     setWindowRule("above", true, int(Rules::Force));
 
@@ -2110,7 +2110,7 @@ void TestXdgShellClientRules::testKeepAboveForce()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testKeepAboveApplyNow()
+void TestXdgShellWindowRules::testKeepAboveApplyNow()
 {
     createTestWindow();
     QVERIFY(!m_client->keepAbove());
@@ -2131,7 +2131,7 @@ void TestXdgShellClientRules::testKeepAboveApplyNow()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testKeepAboveForceTemporarily()
+void TestXdgShellWindowRules::testKeepAboveForceTemporarily()
 {
     setWindowRule("above", true, int(Rules::ForceTemporarily));
 
@@ -2158,7 +2158,7 @@ void TestXdgShellClientRules::testKeepAboveForceTemporarily()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testKeepBelowDontAffect()
+void TestXdgShellWindowRules::testKeepBelowDontAffect()
 {
     setWindowRule("below", true, int(Rules::DontAffect));
 
@@ -2170,7 +2170,7 @@ void TestXdgShellClientRules::testKeepBelowDontAffect()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testKeepBelowApply()
+void TestXdgShellWindowRules::testKeepBelowApply()
 {
     setWindowRule("below", true, int(Rules::Apply));
 
@@ -2191,7 +2191,7 @@ void TestXdgShellClientRules::testKeepBelowApply()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testKeepBelowRemember()
+void TestXdgShellWindowRules::testKeepBelowRemember()
 {
     setWindowRule("below", true, int(Rules::Remember));
 
@@ -2212,7 +2212,7 @@ void TestXdgShellClientRules::testKeepBelowRemember()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testKeepBelowForce()
+void TestXdgShellWindowRules::testKeepBelowForce()
 {
     setWindowRule("below", true, int(Rules::Force));
 
@@ -2233,7 +2233,7 @@ void TestXdgShellClientRules::testKeepBelowForce()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testKeepBelowApplyNow()
+void TestXdgShellWindowRules::testKeepBelowApplyNow()
 {
     createTestWindow();
     QVERIFY(!m_client->keepBelow());
@@ -2254,7 +2254,7 @@ void TestXdgShellClientRules::testKeepBelowApplyNow()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testKeepBelowForceTemporarily()
+void TestXdgShellWindowRules::testKeepBelowForceTemporarily()
 {
     setWindowRule("below", true, int(Rules::ForceTemporarily));
 
@@ -2281,7 +2281,7 @@ void TestXdgShellClientRules::testKeepBelowForceTemporarily()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testShortcutDontAffect()
+void TestXdgShellWindowRules::testShortcutDontAffect()
 {
     setWindowRule("shortcut", "Ctrl+Alt+1", int(Rules::DontAffect));
 
@@ -2306,7 +2306,7 @@ void TestXdgShellClientRules::testShortcutDontAffect()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testShortcutApply()
+void TestXdgShellWindowRules::testShortcutApply()
 {
     setWindowRule("shortcut", "Ctrl+Alt+1", int(Rules::Apply));
 
@@ -2364,7 +2364,7 @@ void TestXdgShellClientRules::testShortcutApply()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testShortcutRemember()
+void TestXdgShellWindowRules::testShortcutRemember()
 {
     QSKIP("KWin core doesn't try to save the last used window shortcut");
 
@@ -2412,7 +2412,7 @@ void TestXdgShellClientRules::testShortcutRemember()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testShortcutForce()
+void TestXdgShellWindowRules::testShortcutForce()
 {
     QSKIP("KWin core can't release forced window shortcuts");
 
@@ -2460,7 +2460,7 @@ void TestXdgShellClientRules::testShortcutForce()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testShortcutApplyNow()
+void TestXdgShellWindowRules::testShortcutApplyNow()
 {
     createTestWindow();
     QVERIFY(m_client->shortcut().isEmpty());
@@ -2504,7 +2504,7 @@ void TestXdgShellClientRules::testShortcutApplyNow()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testShortcutForceTemporarily()
+void TestXdgShellWindowRules::testShortcutForceTemporarily()
 {
     QSKIP("KWin core can't release forced window shortcuts");
 
@@ -2550,7 +2550,7 @@ void TestXdgShellClientRules::testShortcutForceTemporarily()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testDesktopFileDontAffect()
+void TestXdgShellWindowRules::testDesktopFileDontAffect()
 {
     // Currently, the desktop file name is derived from the app id. If the app id is
     // changed, then the old rules will be lost. Either setDesktopFileName should
@@ -2558,7 +2558,7 @@ void TestXdgShellClientRules::testDesktopFileDontAffect()
     QSKIP("Needs changes in KWin core to pass");
 }
 
-void TestXdgShellClientRules::testDesktopFileApply()
+void TestXdgShellWindowRules::testDesktopFileApply()
 {
     // Currently, the desktop file name is derived from the app id. If the app id is
     // changed, then the old rules will be lost. Either setDesktopFileName should
@@ -2566,7 +2566,7 @@ void TestXdgShellClientRules::testDesktopFileApply()
     QSKIP("Needs changes in KWin core to pass");
 }
 
-void TestXdgShellClientRules::testDesktopFileRemember()
+void TestXdgShellWindowRules::testDesktopFileRemember()
 {
     // Currently, the desktop file name is derived from the app id. If the app id is
     // changed, then the old rules will be lost. Either setDesktopFileName should
@@ -2574,7 +2574,7 @@ void TestXdgShellClientRules::testDesktopFileRemember()
     QSKIP("Needs changes in KWin core to pass");
 }
 
-void TestXdgShellClientRules::testDesktopFileForce()
+void TestXdgShellWindowRules::testDesktopFileForce()
 {
     // Currently, the desktop file name is derived from the app id. If the app id is
     // changed, then the old rules will be lost. Either setDesktopFileName should
@@ -2582,7 +2582,7 @@ void TestXdgShellClientRules::testDesktopFileForce()
     QSKIP("Needs changes in KWin core to pass");
 }
 
-void TestXdgShellClientRules::testDesktopFileApplyNow()
+void TestXdgShellWindowRules::testDesktopFileApplyNow()
 {
     // Currently, the desktop file name is derived from the app id. If the app id is
     // changed, then the old rules will be lost. Either setDesktopFileName should
@@ -2590,7 +2590,7 @@ void TestXdgShellClientRules::testDesktopFileApplyNow()
     QSKIP("Needs changes in KWin core to pass");
 }
 
-void TestXdgShellClientRules::testDesktopFileForceTemporarily()
+void TestXdgShellWindowRules::testDesktopFileForceTemporarily()
 {
     // Currently, the desktop file name is derived from the app id. If the app id is
     // changed, then the old rules will be lost. Either setDesktopFileName should
@@ -2598,7 +2598,7 @@ void TestXdgShellClientRules::testDesktopFileForceTemporarily()
     QSKIP("Needs changes in KWin core to pass");
 }
 
-void TestXdgShellClientRules::testActiveOpacityDontAffect()
+void TestXdgShellWindowRules::testActiveOpacityDontAffect()
 {
     setWindowRule("opacityactive", 90, int(Rules::DontAffect));
 
@@ -2611,7 +2611,7 @@ void TestXdgShellClientRules::testActiveOpacityDontAffect()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testActiveOpacityForce()
+void TestXdgShellWindowRules::testActiveOpacityForce()
 {
     setWindowRule("opacityactive", 90, int(Rules::Force));
 
@@ -2622,7 +2622,7 @@ void TestXdgShellClientRules::testActiveOpacityForce()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testActiveOpacityForceTemporarily()
+void TestXdgShellWindowRules::testActiveOpacityForceTemporarily()
 {
     setWindowRule("opacityactive", 90, int(Rules::ForceTemporarily));
 
@@ -2639,7 +2639,7 @@ void TestXdgShellClientRules::testActiveOpacityForceTemporarily()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testInactiveOpacityDontAffect()
+void TestXdgShellWindowRules::testInactiveOpacityDontAffect()
 {
     setWindowRule("opacityinactive", 80, int(Rules::DontAffect));
 
@@ -2656,7 +2656,7 @@ void TestXdgShellClientRules::testInactiveOpacityDontAffect()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testInactiveOpacityForce()
+void TestXdgShellWindowRules::testInactiveOpacityForce()
 {
     setWindowRule("opacityinactive", 80, int(Rules::Force));
 
@@ -2674,7 +2674,7 @@ void TestXdgShellClientRules::testInactiveOpacityForce()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testInactiveOpacityForceTemporarily()
+void TestXdgShellWindowRules::testInactiveOpacityForceTemporarily()
 {
     setWindowRule("opacityinactive", 80, int(Rules::ForceTemporarily));
 
@@ -2702,7 +2702,7 @@ void TestXdgShellClientRules::testInactiveOpacityForceTemporarily()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testNoBorderDontAffect()
+void TestXdgShellWindowRules::testNoBorderDontAffect()
 {
     setWindowRule("noborder", true, int(Rules::DontAffect));
     createTestWindow(ServerSideDecoration);
@@ -2713,7 +2713,7 @@ void TestXdgShellClientRules::testNoBorderDontAffect()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testNoBorderApply()
+void TestXdgShellWindowRules::testNoBorderApply()
 {
     setWindowRule("noborder", true, int(Rules::Apply));
     createTestWindow(ServerSideDecoration);
@@ -2735,7 +2735,7 @@ void TestXdgShellClientRules::testNoBorderApply()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testNoBorderRemember()
+void TestXdgShellWindowRules::testNoBorderRemember()
 {
     setWindowRule("noborder", true, int(Rules::Remember));
     createTestWindow(ServerSideDecoration);
@@ -2758,7 +2758,7 @@ void TestXdgShellClientRules::testNoBorderRemember()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testNoBorderForce()
+void TestXdgShellWindowRules::testNoBorderForce()
 {
     setWindowRule("noborder", true, int(Rules::Force));
     createTestWindow(ServerSideDecoration);
@@ -2781,7 +2781,7 @@ void TestXdgShellClientRules::testNoBorderForce()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testNoBorderApplyNow()
+void TestXdgShellWindowRules::testNoBorderApplyNow()
 {
     createTestWindow(ServerSideDecoration);
     QVERIFY(!m_client->noBorder());
@@ -2803,7 +2803,7 @@ void TestXdgShellClientRules::testNoBorderApplyNow()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testNoBorderForceTemporarily()
+void TestXdgShellWindowRules::testNoBorderForceTemporarily()
 {
     setWindowRule("noborder", true, int(Rules::ForceTemporarily));
     createTestWindow(ServerSideDecoration);
@@ -2829,7 +2829,7 @@ void TestXdgShellClientRules::testNoBorderForceTemporarily()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testScreenDontAffect()
+void TestXdgShellWindowRules::testScreenDontAffect()
 {
     const KWin::Outputs outputs = kwinApp()->platform()->enabledOutputs();
 
@@ -2847,7 +2847,7 @@ void TestXdgShellClientRules::testScreenDontAffect()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testScreenApply()
+void TestXdgShellWindowRules::testScreenApply()
 {
     const KWin::Outputs outputs = kwinApp()->platform()->enabledOutputs();
 
@@ -2866,7 +2866,7 @@ void TestXdgShellClientRules::testScreenApply()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testScreenRemember()
+void TestXdgShellWindowRules::testScreenRemember()
 {
     const KWin::Outputs outputs = kwinApp()->platform()->enabledOutputs();
 
@@ -2891,7 +2891,7 @@ void TestXdgShellClientRules::testScreenRemember()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testScreenForce()
+void TestXdgShellWindowRules::testScreenForce()
 {
     const KWin::Outputs outputs = kwinApp()->platform()->enabledOutputs();
 
@@ -2933,7 +2933,7 @@ void TestXdgShellClientRules::testScreenForce()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testScreenApplyNow()
+void TestXdgShellWindowRules::testScreenApplyNow()
 {
     const KWin::Outputs outputs = kwinApp()->platform()->enabledOutputs();
 
@@ -2956,7 +2956,7 @@ void TestXdgShellClientRules::testScreenApplyNow()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testScreenForceTemporarily()
+void TestXdgShellWindowRules::testScreenForceTemporarily()
 {
     const KWin::Outputs outputs = kwinApp()->platform()->enabledOutputs();
 
@@ -2981,7 +2981,7 @@ void TestXdgShellClientRules::testScreenForceTemporarily()
     destroyTestWindow();
 }
 
-void TestXdgShellClientRules::testMatchAfterNameChange()
+void TestXdgShellWindowRules::testMatchAfterNameChange()
 {
     setWindowRule("above", true, int(Rules::Force));
 
@@ -3001,5 +3001,5 @@ void TestXdgShellClientRules::testMatchAfterNameChange()
     QCOMPARE(c->keepAbove(), true);
 }
 
-WAYLANDTEST_MAIN(TestXdgShellClientRules)
-#include "xdgshellclient_rules_test.moc"
+WAYLANDTEST_MAIN(TestXdgShellWindowRules)
+#include "xdgshellwindow_rules_test.moc"
