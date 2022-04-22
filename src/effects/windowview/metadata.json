@@ -9,11 +9,14 @@
         "Description[it]": "Effetto di assistenza per il gestore delle applicazioni",
         "Description[ko]": "작업 관리자용 도우미 효과",
         "Description[nl]": "Effect van hulp voor de takenbeheerder",
+        "Description[pt]": "Efeito auxiliar para o gestor de tarefas",
         "Description[sl]": "Učinki pomočnika za upravljalnika nalog",
         "Description[sv]": "Hjälpeffekt för aktivitetshanteraren",
+        "Description[tr]": "Görev yöneticisi için yardımcı etkisi",
         "Description[uk]": "Допоміжний ефект для керування завданнями",
         "Description[vi]": "Hiệu ứng trợ giúp cho trình quản lí tác vụ",
         "Description[x-test]": "xxHelper effect for the task managerxx",
+        "Description[zh_CN]": "任务管理器的辅助特效",
         "EnabledByDefault": true,
         "Id": "windowview",
         "License": "GPL",
@@ -25,11 +28,14 @@
         "Name[it]": "Vista della finestra",
         "Name[ko]": "창 보기",
         "Name[nl]": "Weergave met vensters",
+        "Name[pt]": "Vista da Janela",
         "Name[sl]": "Pogled okna",
         "Name[sv]": "Fönstervy",
+        "Name[tr]": "Pencere Görünümü",
         "Name[uk]": "Перегляд вікон",
         "Name[vi]": "Khung xem cửa sổ",
-        "Name[x-test]": "xxWindow Viewxx"
+        "Name[x-test]": "xxWindow Viewxx",
+        "Name[zh_CN]": "窗口视图"
     },
     "org.kde.kwin.effect": {
         "internal": true

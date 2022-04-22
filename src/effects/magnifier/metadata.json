@@ -32,7 +32,7 @@
         "Description[uk]": "Збільшення частини екрана поруч з вказівником миші",
         "Description[vi]": "Phóng đại khu vực màn hình gần với con trỏ chuột",
         "Description[x-test]": "xxMagnify the section of the screen that is near the mouse cursorxx",
-        "Description[zh_CN]": "放大显示鼠标指针附近的一块方形区域的屏幕内容",
+        "Description[zh_CN]": "放大显示鼠标光标附近的一块方形区域的屏幕内容",
         "EnabledByDefault": false,
         "Id": "magnifier",
         "License": "GPL",
