@@ -2,6 +2,7 @@
     "KPlugin": {
         "Category": "Window Management",
         "Description": "Helper effect for the task manager",
+        "Description[az]": "Tapşırıq meneceri üçün köməkçi effekti",
         "Description[ca@valencia]": "Efecte auxiliar per al gestor de tasques",
         "Description[ca]": "Efecte auxiliar per al gestor de tasques",
         "Description[es]": "Efecto auxiliar para el gestor de tareas",
@@ -21,6 +22,7 @@
         "Id": "windowview",
         "License": "GPL",
         "Name": "Window View",
+        "Name[az]": "Pəncərənin görünüşü",
         "Name[ca@valencia]": "Vista de finestres",
         "Name[ca]": "Vista de finestres",
         "Name[es]": "Vista de ventanas",
