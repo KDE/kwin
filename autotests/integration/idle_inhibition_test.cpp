@@ -83,9 +83,9 @@ void TestIdleInhibition::testInhibit()
     QScopedPointer<Test::IdleInhibitorV1> inhibitor(Test::createIdleInhibitorV1(surface.data()));
     QVERIFY(inhibitor);
 
-    // render the client
-    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(c);
+    // render the window
+    auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
 
     // this should inhibit our server object
     QVERIFY(idle->isInhibited());
@@ -101,7 +101,7 @@ void TestIdleInhibition::testInhibit()
     QVERIFY(idle->isInhibited());
 
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(c));
+    QVERIFY(Test::waitForWindowDestroyed(window));
     QTRY_VERIFY(!idle->isInhibited());
     QCOMPARE(inhibitedSpy.count(), 4);
 }
@@ -121,7 +121,7 @@ void TestIdleInhibition::testDontInhibitWhenNotOnCurrentDesktop()
     QSignalSpy inhibitedSpy(idle, &IdleInterface::inhibitedChanged);
     QVERIFY(inhibitedSpy.isValid());
 
-    // Create the test client.
+    // Create the test window.
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
@@ -131,13 +131,13 @@ void TestIdleInhibition::testDontInhibitWhenNotOnCurrentDesktop()
     QScopedPointer<Test::IdleInhibitorV1> inhibitor(Test::createIdleInhibitorV1(surface.data()));
     QVERIFY(inhibitor);
 
-    // Render the client.
-    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(c);
+    // Render the window.
+    auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
 
-    // The test client should be only on the first virtual desktop.
-    QCOMPARE(c->desktops().count(), 1);
-    QCOMPARE(c->desktops().first(), VirtualDesktopManager::self()->desktops().first());
+    // The test window should be only on the first virtual desktop.
+    QCOMPARE(window->desktops().count(), 1);
+    QCOMPARE(window->desktops().first(), VirtualDesktopManager::self()->desktops().first());
 
     // This should inhibit our server object.
     QVERIFY(idle->isInhibited());
@@ -154,14 +154,14 @@ void TestIdleInhibition::testDontInhibitWhenNotOnCurrentDesktop()
     // Switch back to the first virtual desktop.
     VirtualDesktopManager::self()->setCurrent(1);
 
-    // The test client became visible again, so the compositor has to honor the idle
+    // The test window became visible again, so the compositor has to honor the idle
     // inhibitor object back again.
     QVERIFY(idle->isInhibited());
     QCOMPARE(inhibitedSpy.count(), 3);
 
-    // Destroy the test client.
+    // Destroy the test window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(c));
+    QVERIFY(Test::waitForWindowDestroyed(window));
     QTRY_VERIFY(!idle->isInhibited());
     QCOMPARE(inhibitedSpy.count(), 4);
 }
@@ -178,7 +178,7 @@ void TestIdleInhibition::testDontInhibitWhenMinimized()
     QSignalSpy inhibitedSpy(idle, &IdleInterface::inhibitedChanged);
     QVERIFY(inhibitedSpy.isValid());
 
-    // Create the test client.
+    // Create the test window.
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
@@ -188,27 +188,27 @@ void TestIdleInhibition::testDontInhibitWhenMinimized()
     QScopedPointer<Test::IdleInhibitorV1> inhibitor(Test::createIdleInhibitorV1(surface.data()));
     QVERIFY(inhibitor);
 
-    // Render the client.
-    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(c);
+    // Render the window.
+    auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
 
     // This should inhibit our server object.
     QVERIFY(idle->isInhibited());
     QCOMPARE(inhibitedSpy.count(), 1);
 
-    // Minimize the client, the idle inhibitor object should not be honored.
-    c->minimize();
+    // Minimize the window, the idle inhibitor object should not be honored.
+    window->minimize();
     QVERIFY(!idle->isInhibited());
     QCOMPARE(inhibitedSpy.count(), 2);
 
-    // Unminimize the client, the idle inhibitor object should be honored back again.
-    c->unminimize();
+    // Unminimize the window, the idle inhibitor object should be honored back again.
+    window->unminimize();
     QVERIFY(idle->isInhibited());
     QCOMPARE(inhibitedSpy.count(), 3);
 
-    // Destroy the test client.
+    // Destroy the test window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(c));
+    QVERIFY(Test::waitForWindowDestroyed(window));
     QTRY_VERIFY(!idle->isInhibited());
     QCOMPARE(inhibitedSpy.count(), 4);
 }
@@ -216,7 +216,7 @@ void TestIdleInhibition::testDontInhibitWhenMinimized()
 void TestIdleInhibition::testDontInhibitWhenUnmapped()
 {
     // This test verifies that the idle inhibitor object is not honored by KWin
-    // when the associated client is unmapped.
+    // when the associated window is unmapped.
 
     // Get reference to the idle interface.
     auto idle = waylandServer()->display()->findChild<IdleInterface *>();
@@ -225,7 +225,7 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
     QSignalSpy inhibitedSpy(idle, &IdleInterface::inhibitedChanged);
     QVERIFY(inhibitedSpy.isValid());
 
-    // Create the test client.
+    // Create the test window.
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
@@ -237,16 +237,16 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
     QScopedPointer<Test::IdleInhibitorV1> inhibitor(Test::createIdleInhibitorV1(surface.data()));
     QVERIFY(inhibitor);
 
-    // Map the client.
+    // Map the window.
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowAddedSpy.isValid());
     Test::render(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(windowAddedSpy.isEmpty());
     QVERIFY(windowAddedSpy.wait());
     QCOMPARE(windowAddedSpy.count(), 1);
-    Window *client = windowAddedSpy.last().first().value<Window *>();
-    QVERIFY(client);
-    QCOMPARE(client->readyForPainting(), true);
+    Window *window = windowAddedSpy.last().first().value<Window *>();
+    QVERIFY(window);
+    QCOMPARE(window->readyForPainting(), true);
 
     // The compositor will respond with a configure event when the surface becomes active.
     QVERIFY(surfaceConfigureRequestedSpy.wait());
@@ -256,10 +256,10 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
     QVERIFY(idle->isInhibited());
     QCOMPARE(inhibitedSpy.count(), 1);
 
-    // Unmap the client.
+    // Unmap the window.
     surface->attachBuffer(Buffer::Ptr());
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
-    QVERIFY(Test::waitForWindowDestroyed(client));
+    QVERIFY(Test::waitForWindowDestroyed(window));
 
     // The surface is no longer visible, so the compositor doesn't have to honor the
     // idle inhibitor object.
@@ -273,22 +273,22 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
 
-    // Map the client.
+    // Map the window.
     Test::render(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(windowAddedSpy.wait());
     QCOMPARE(windowAddedSpy.count(), 2);
-    client = windowAddedSpy.last().first().value<Window *>();
-    QVERIFY(client);
-    QCOMPARE(client->readyForPainting(), true);
+    window = windowAddedSpy.last().first().value<Window *>();
+    QVERIFY(window);
+    QCOMPARE(window->readyForPainting(), true);
 
-    // The test client became visible again, so the compositor has to honor the idle
+    // The test window became visible again, so the compositor has to honor the idle
     // inhibitor object back again.
     QVERIFY(idle->isInhibited());
     QCOMPARE(inhibitedSpy.count(), 3);
 
-    // Destroy the test client.
+    // Destroy the test window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(client));
+    QVERIFY(Test::waitForWindowDestroyed(window));
     QTRY_VERIFY(!idle->isInhibited());
     QCOMPARE(inhibitedSpy.count(), 4);
 }
@@ -308,7 +308,7 @@ void TestIdleInhibition::testDontInhibitWhenLeftCurrentDesktop()
     QSignalSpy inhibitedSpy(idle, &IdleInterface::inhibitedChanged);
     QVERIFY(inhibitedSpy.isValid());
 
-    // Create the test client.
+    // Create the test window.
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
@@ -318,37 +318,37 @@ void TestIdleInhibition::testDontInhibitWhenLeftCurrentDesktop()
     QScopedPointer<Test::IdleInhibitorV1> inhibitor(Test::createIdleInhibitorV1(surface.data()));
     QVERIFY(inhibitor);
 
-    // Render the client.
-    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(c);
+    // Render the window.
+    auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
 
-    // The test client should be only on the first virtual desktop.
-    QCOMPARE(c->desktops().count(), 1);
-    QCOMPARE(c->desktops().first(), VirtualDesktopManager::self()->desktops().first());
+    // The test window should be only on the first virtual desktop.
+    QCOMPARE(window->desktops().count(), 1);
+    QCOMPARE(window->desktops().first(), VirtualDesktopManager::self()->desktops().first());
 
     // This should inhibit our server object.
     QVERIFY(idle->isInhibited());
     QCOMPARE(inhibitedSpy.count(), 1);
 
-    // Let the client enter the second virtual desktop.
-    c->enterDesktop(VirtualDesktopManager::self()->desktops().at(1));
+    // Let the window enter the second virtual desktop.
+    window->enterDesktop(VirtualDesktopManager::self()->desktops().at(1));
     QCOMPARE(inhibitedSpy.count(), 1);
 
-    // If the client leaves the first virtual desktop, then the associated idle
+    // If the window leaves the first virtual desktop, then the associated idle
     // inhibitor object should not be honored.
-    c->leaveDesktop(VirtualDesktopManager::self()->desktops().at(0));
+    window->leaveDesktop(VirtualDesktopManager::self()->desktops().at(0));
     QVERIFY(!idle->isInhibited());
     QCOMPARE(inhibitedSpy.count(), 2);
 
-    // If the client enters the first desktop, then the associated idle inhibitor
+    // If the window enters the first desktop, then the associated idle inhibitor
     // object should be honored back again.
-    c->enterDesktop(VirtualDesktopManager::self()->desktops().at(0));
+    window->enterDesktop(VirtualDesktopManager::self()->desktops().at(0));
     QVERIFY(idle->isInhibited());
     QCOMPARE(inhibitedSpy.count(), 3);
 
-    // Destroy the test client.
+    // Destroy the test window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(c));
+    QVERIFY(Test::waitForWindowDestroyed(window));
     QTRY_VERIFY(!idle->isInhibited());
     QCOMPARE(inhibitedSpy.count(), 4);
 }

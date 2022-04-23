@@ -168,8 +168,8 @@ void SlidingPopupsTest::testWithOtherEffect()
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(c.data()));
     const QRect windowGeometry(0, 0, 100, 200);
-    xcb_window_t w = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
+    xcb_window_t windowId = xcb_generate_id(c.data());
+    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
@@ -179,8 +179,8 @@ void SlidingPopupsTest::testWithOtherEffect()
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.data(), w, &hints);
-    NETWinInfo winInfo(c.data(), w, rootWindow(), NET::Properties(), NET::Properties2());
+    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
+    NETWinInfo winInfo(c.data(), windowId, rootWindow(), NET::Properties(), NET::Properties2());
     winInfo.setWindowType(NET::Normal);
 
     // and get the slide atom
@@ -192,19 +192,19 @@ void SlidingPopupsTest::testWithOtherEffect()
     data[1] = 0;
     QScopedPointer<xcb_intern_atom_reply_t, QScopedPointerPodDeleter> atom(xcb_intern_atom_reply(c.data(), atomCookie, nullptr));
     QVERIFY(!atom.isNull());
-    xcb_change_property(c.data(), XCB_PROP_MODE_REPLACE, w, atom->atom, atom->atom, 32, size, data);
+    xcb_change_property(c.data(), XCB_PROP_MODE_REPLACE, windowId, atom->atom, atom->atom, 32, size, data);
 
-    xcb_map_window(c.data(), w);
+    xcb_map_window(c.data(), windowId);
     xcb_flush(c.data());
 
-    // we should get a client for it
+    // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
-    X11Window *client = windowCreatedSpy.first().first().value<X11Window *>();
-    QVERIFY(client);
-    QCOMPARE(client->window(), w);
-    QVERIFY(client->isNormalWindow());
+    X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
+    QVERIFY(window);
+    QCOMPARE(window->window(), windowId);
+    QVERIFY(window->isNormalWindow());
 
     // sliding popups should be active
     QVERIFY(windowAddedSpy.wait());
@@ -217,10 +217,10 @@ void SlidingPopupsTest::testWithOtherEffect()
     QVERIFY(!otherEffect->isActive());
 
     // and destroy the window again
-    xcb_unmap_window(c.data(), w);
+    xcb_unmap_window(c.data(), windowId);
     xcb_flush(c.data());
 
-    QSignalSpy windowClosedSpy(client, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
 
     QSignalSpy windowDeletedSpy(effects, &EffectsHandler::windowDeleted);
@@ -237,7 +237,7 @@ void SlidingPopupsTest::testWithOtherEffect()
     QTRY_VERIFY(!slidingPoupus->isActive());
     QTest::qWait(300);
     QVERIFY(!otherEffect->isActive());
-    xcb_destroy_window(c.data(), w);
+    xcb_destroy_window(c.data(), windowId);
     c.reset();
 }
 
@@ -321,9 +321,9 @@ void SlidingPopupsTest::testWithOtherEffectWayland()
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(shellSurface);
     QCOMPARE(windowAddedSpy.count(), 0);
-    auto client = Test::renderAndWaitForShown(surface.data(), QSize(10, 20), Qt::blue);
-    QVERIFY(client);
-    QVERIFY(client->isNormalWindow());
+    auto window = Test::renderAndWaitForShown(surface.data(), QSize(10, 20), Qt::blue);
+    QVERIFY(window);
+    QVERIFY(window->isNormalWindow());
 
     // sliding popups should be active
     QCOMPARE(windowAddedSpy.count(), 1);
@@ -339,7 +339,7 @@ void SlidingPopupsTest::testWithOtherEffectWayland()
     shellSurface.reset();
     surface.reset();
 
-    QSignalSpy windowClosedSpy(client, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
 
     QSignalSpy windowDeletedSpy(effects, &EffectsHandler::windowDeleted);

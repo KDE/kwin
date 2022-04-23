@@ -103,8 +103,8 @@ void WobblyWindowsShadeTest::testShadeMove()
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(c.data()));
     const QRect windowGeometry(0, 0, 100, 200);
-    xcb_window_t w = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
+    xcb_window_t windowId = xcb_generate_id(c.data());
+    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
@@ -114,65 +114,65 @@ void WobblyWindowsShadeTest::testShadeMove()
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.data(), w, &hints);
-    xcb_map_window(c.data(), w);
+    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
+    xcb_map_window(c.data(), windowId);
     xcb_flush(c.data());
 
-    // we should get a client for it
+    // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
-    X11Window *client = windowCreatedSpy.first().first().value<X11Window *>();
-    QVERIFY(client);
-    QCOMPARE(client->window(), w);
-    QVERIFY(client->isDecorated());
-    QVERIFY(client->isShadeable());
-    QVERIFY(!client->isShade());
-    QVERIFY(client->isActive());
+    X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
+    QVERIFY(window);
+    QCOMPARE(window->window(), windowId);
+    QVERIFY(window->isDecorated());
+    QVERIFY(window->isShadeable());
+    QVERIFY(!window->isShade());
+    QVERIFY(window->isActive());
 
-    QSignalSpy windowShownSpy(client, &Window::windowShown);
+    QSignalSpy windowShownSpy(window, &Window::windowShown);
     QVERIFY(windowShownSpy.isValid());
     QVERIFY(windowShownSpy.wait());
 
     // now shade the window
     workspace()->slotWindowShade();
-    QVERIFY(client->isShade());
+    QVERIFY(window->isShade());
 
     QSignalSpy windowStartUserMovedResizedSpy(e, &EffectsHandler::windowStartUserMovedResized);
     QVERIFY(windowStartUserMovedResizedSpy.isValid());
 
     // begin move
     QVERIFY(workspace()->moveResizeWindow() == nullptr);
-    QCOMPARE(client->isInteractiveMove(), false);
+    QCOMPARE(window->isInteractiveMove(), false);
     workspace()->slotWindowMove();
-    QCOMPARE(workspace()->moveResizeWindow(), client);
-    QCOMPARE(client->isInteractiveMove(), true);
+    QCOMPARE(workspace()->moveResizeWindow(), window);
+    QCOMPARE(window->isInteractiveMove(), true);
     QCOMPARE(windowStartUserMovedResizedSpy.count(), 1);
 
     // wait for frame rendered
     QTest::qWait(100);
 
     // send some key events, not going through input redirection
-    client->keyPressEvent(Qt::Key_Right);
-    client->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
+    window->keyPressEvent(Qt::Key_Right);
+    window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
 
     // wait for frame rendered
     QTest::qWait(100);
 
-    client->keyPressEvent(Qt::Key_Right);
-    client->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
+    window->keyPressEvent(Qt::Key_Right);
+    window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
 
     // wait for frame rendered
     QTest::qWait(100);
 
-    client->keyPressEvent(Qt::Key_Down | Qt::ALT);
-    client->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
+    window->keyPressEvent(Qt::Key_Down | Qt::ALT);
+    window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
 
     // wait for frame rendered
     QTest::qWait(100);
 
     // let's end
-    client->keyPressEvent(Qt::Key_Enter);
+    window->keyPressEvent(Qt::Key_Enter);
 
     // wait for frame rendered
     QTest::qWait(100);

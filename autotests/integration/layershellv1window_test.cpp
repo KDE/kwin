@@ -112,15 +112,15 @@ void LayerShellV1WindowTest::testOutput()
 
     // Map the layer surface.
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
-    Window *client = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
-    QVERIFY(client);
+    Window *window = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
+    QVERIFY(window);
 
-    // Verify that the client is on the requested screen.
-    QVERIFY(output->geometry().contains(client->frameGeometry()));
+    // Verify that the window is on the requested screen.
+    QVERIFY(output->geometry().contains(window->frameGeometry()));
 
-    // Destroy the client.
+    // Destroy the window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(client));
+    QVERIFY(Test::waitForWindowDestroyed(window));
 }
 
 void LayerShellV1WindowTest::testAnchor_data()
@@ -174,15 +174,15 @@ void LayerShellV1WindowTest::testAnchor()
 
     // Map the layer surface.
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
-    Window *client = Test::renderAndWaitForShown(surface.data(), QSize(280, 124), Qt::red);
-    QVERIFY(client);
+    Window *window = Test::renderAndWaitForShown(surface.data(), QSize(280, 124), Qt::red);
+    QVERIFY(window);
 
-    // Verify that the client is placed at expected location.
-    QTEST(client->frameGeometry(), "expectedGeometry");
+    // Verify that the window is placed at expected location.
+    QTEST(window->frameGeometry(), "expectedGeometry");
 
-    // Destroy the client.
+    // Destroy the window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(client));
+    QVERIFY(Test::waitForWindowDestroyed(window));
 }
 
 void LayerShellV1WindowTest::testMargins_data()
@@ -246,15 +246,15 @@ void LayerShellV1WindowTest::testMargins()
 
     // Map the layer surface.
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
-    Window *client = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
-    QVERIFY(client);
+    Window *window = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
+    QVERIFY(window);
 
-    // Verify that the client is placed at expected location.
-    QTEST(client->frameGeometry(), "expectedGeometry");
+    // Verify that the window is placed at expected location.
+    QTEST(window->frameGeometry(), "expectedGeometry");
 
-    // Destroy the client.
+    // Destroy the window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(client));
+    QVERIFY(Test::waitForWindowDestroyed(window));
 }
 
 void LayerShellV1WindowTest::testLayer_data()
@@ -288,15 +288,15 @@ void LayerShellV1WindowTest::testLayer()
 
     // Map the layer surface.
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
-    Window *client = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
-    QVERIFY(client);
+    Window *window = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
+    QVERIFY(window);
 
-    // Verify that the client is placed at expected location.
-    QTEST(client->layer(), "compositorLayer");
+    // Verify that the window is placed at expected location.
+    QTEST(window->layer(), "compositorLayer");
 
-    // Destroy the client.
+    // Destroy the window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(client));
+    QVERIFY(Test::waitForWindowDestroyed(window));
 }
 
 void LayerShellV1WindowTest::testPlacementArea_data()
@@ -333,15 +333,15 @@ void LayerShellV1WindowTest::testPlacementArea()
 
     // Map the layer surface.
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
-    Window *client = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
-    QVERIFY(client);
+    Window *window = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
+    QVERIFY(window);
 
     // Verify that the work area has been adjusted.
-    QTEST(workspace()->clientArea(PlacementArea, client), "placementArea");
+    QTEST(workspace()->clientArea(PlacementArea, window), "placementArea");
 
-    // Destroy the client.
+    // Destroy the window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(client));
+    QVERIFY(Test::waitForWindowDestroyed(window));
 }
 
 void LayerShellV1WindowTest::testFill_data()
@@ -384,15 +384,15 @@ void LayerShellV1WindowTest::testFill()
 
     // Map the layer surface.
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
-    Window *client = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
-    QVERIFY(client);
+    Window *window = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
+    QVERIFY(window);
 
-    // Verify that the client is placed at expected location.
-    QTEST(client->frameGeometry(), "expectedGeometry");
+    // Verify that the window is placed at expected location.
+    QTEST(window->frameGeometry(), "expectedGeometry");
 
-    // Destroy the client.
+    // Destroy the window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(client));
+    QVERIFY(Test::waitForWindowDestroyed(window));
 }
 
 void LayerShellV1WindowTest::testStack()
@@ -424,26 +424,26 @@ void LayerShellV1WindowTest::testStack()
 
     // Map the layer surface.
     shellSurface1->ack_configure(configureRequestedSpy1.last().at(0).toUInt());
-    Window *client1 = Test::renderAndWaitForShown(surface1.data(), requestedSize1, Qt::red);
-    QVERIFY(client1);
+    Window *window1 = Test::renderAndWaitForShown(surface1.data(), requestedSize1, Qt::red);
+    QVERIFY(window1);
 
     shellSurface2->ack_configure(configureRequestedSpy2.last().at(0).toUInt());
-    Window *client2 = Test::renderAndWaitForShown(surface2.data(), requestedSize2, Qt::red);
-    QVERIFY(client2);
+    Window *window2 = Test::renderAndWaitForShown(surface2.data(), requestedSize2, Qt::red);
+    QVERIFY(window2);
 
     // Check that the second layer surface is placed next to the first.
-    QCOMPARE(client1->frameGeometry(), QRect(0, 450, 80, 124));
-    QCOMPARE(client2->frameGeometry(), QRect(80, 450, 200, 124));
+    QCOMPARE(window1->frameGeometry(), QRect(0, 450, 80, 124));
+    QCOMPARE(window2->frameGeometry(), QRect(80, 450, 200, 124));
 
     // Check that the work area has been adjusted accordingly.
-    QCOMPARE(workspace()->clientArea(PlacementArea, client1), QRect(280, 0, 1000, 1024));
-    QCOMPARE(workspace()->clientArea(PlacementArea, client2), QRect(280, 0, 1000, 1024));
+    QCOMPARE(workspace()->clientArea(PlacementArea, window1), QRect(280, 0, 1000, 1024));
+    QCOMPARE(workspace()->clientArea(PlacementArea, window2), QRect(280, 0, 1000, 1024));
 
-    // Destroy the client.
+    // Destroy the window.
     shellSurface1.reset();
-    QVERIFY(Test::waitForWindowDestroyed(client1));
+    QVERIFY(Test::waitForWindowDestroyed(window1));
     shellSurface2.reset();
-    QVERIFY(Test::waitForWindowDestroyed(client2));
+    QVERIFY(Test::waitForWindowDestroyed(window2));
 }
 
 void LayerShellV1WindowTest::testFocus()
@@ -465,15 +465,15 @@ void LayerShellV1WindowTest::testFocus()
 
     // Map the layer surface.
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
-    Window *client = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
-    QVERIFY(client);
+    Window *window = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
+    QVERIFY(window);
 
     // The layer surface must be focused when it's mapped.
-    QVERIFY(client->isActive());
+    QVERIFY(window->isActive());
 
-    // Destroy the client.
+    // Destroy the window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(client));
+    QVERIFY(Test::waitForWindowDestroyed(window));
 }
 
 void LayerShellV1WindowTest::testActivate_data()
@@ -507,21 +507,21 @@ void LayerShellV1WindowTest::testActivate()
 
     // Map the layer surface.
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
-    Window *client = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
-    QVERIFY(client);
-    QVERIFY(!client->isActive());
+    Window *window = Test::renderAndWaitForShown(surface.data(), requestedSize, Qt::red);
+    QVERIFY(window);
+    QVERIFY(!window->isActive());
 
     // Try to activate the layer surface.
     shellSurface->set_keyboard_interactivity(1);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
-    QSignalSpy activeChangedSpy(client, &Window::activeChanged);
+    QSignalSpy activeChangedSpy(window, &Window::activeChanged);
     QVERIFY(activeChangedSpy.isValid());
     QTEST(activeChangedSpy.wait(1000), "active");
 
-    // Destroy the client.
+    // Destroy the window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(client));
+    QVERIFY(Test::waitForWindowDestroyed(window));
 }
 
 void LayerShellV1WindowTest::testUnmap()
@@ -541,13 +541,13 @@ void LayerShellV1WindowTest::testUnmap()
 
     // Map the layer surface.
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
-    Window *client = Test::renderAndWaitForShown(surface.data(), QSize(280, 124), Qt::red);
-    QVERIFY(client);
+    Window *window = Test::renderAndWaitForShown(surface.data(), QSize(280, 124), Qt::red);
+    QVERIFY(window);
 
     // Unmap the layer surface.
     surface->attachBuffer(KWayland::Client::Buffer::Ptr());
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
-    QVERIFY(Test::waitForWindowDestroyed(client));
+    QVERIFY(Test::waitForWindowDestroyed(window));
 
     // Notify the compositor that we want to map the layer surface.
     shellSurface->set_size(280, 124);
@@ -558,12 +558,12 @@ void LayerShellV1WindowTest::testUnmap()
 
     // Map the layer surface back.
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
-    client = Test::renderAndWaitForShown(surface.data(), QSize(280, 124), Qt::red);
-    QVERIFY(client);
+    window = Test::renderAndWaitForShown(surface.data(), QSize(280, 124), Qt::red);
+    QVERIFY(window);
 
-    // Destroy the client.
+    // Destroy the window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(client));
+    QVERIFY(Test::waitForWindowDestroyed(window));
 }
 
 } // namespace KWin

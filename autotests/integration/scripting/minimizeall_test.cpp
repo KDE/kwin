@@ -107,20 +107,20 @@ void MinimizeAllScriptTest::testMinimizeUnminimize()
 
     using namespace KWayland::Client;
 
-    // Create a couple of test clients.
+    // Create a couple of test windows.
     QScopedPointer<KWayland::Client::Surface> surface1(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface1(Test::createXdgToplevelSurface(surface1.data()));
-    Window *client1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(client1);
-    QVERIFY(client1->isActive());
-    QVERIFY(client1->isMinimizable());
+    Window *window1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(window1);
+    QVERIFY(window1->isActive());
+    QVERIFY(window1->isMinimizable());
 
     QScopedPointer<KWayland::Client::Surface> surface2(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.data()));
-    Window *client2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::red);
-    QVERIFY(client2);
-    QVERIFY(client2->isActive());
-    QVERIFY(client2->isMinimizable());
+    Window *window2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::red);
+    QVERIFY(window2);
+    QVERIFY(window2->isActive());
+    QVERIFY(window2->isMinimizable());
 
     // Minimize the windows.
     quint32 timestamp = 1;
@@ -131,8 +131,8 @@ void MinimizeAllScriptTest::testMinimizeUnminimize()
     Test::keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
 
-    QTRY_VERIFY(client1->isMinimized());
-    QTRY_VERIFY(client2->isMinimized());
+    QTRY_VERIFY(window1->isMinimized());
+    QTRY_VERIFY(window2->isMinimized());
 
     // Unminimize the windows.
     Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
@@ -142,14 +142,14 @@ void MinimizeAllScriptTest::testMinimizeUnminimize()
     Test::keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
 
-    QTRY_VERIFY(!client1->isMinimized());
-    QTRY_VERIFY(!client2->isMinimized());
+    QTRY_VERIFY(!window1->isMinimized());
+    QTRY_VERIFY(!window2->isMinimized());
 
-    // Destroy test clients.
+    // Destroy test windows.
     shellSurface2.reset();
-    QVERIFY(Test::waitForWindowDestroyed(client2));
+    QVERIFY(Test::waitForWindowDestroyed(window2));
     shellSurface1.reset();
-    QVERIFY(Test::waitForWindowDestroyed(client1));
+    QVERIFY(Test::waitForWindowDestroyed(window1));
 }
 
 }

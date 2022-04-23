@@ -98,10 +98,10 @@ void DontCrashNoBorder::testCreateWindow()
 
     // let's render
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
-    auto c = Test::renderAndWaitForShown(surface.data(), QSize(500, 50), Qt::blue);
-    QVERIFY(c);
-    QCOMPARE(workspace()->activeWindow(), c);
-    QVERIFY(!c->isDecorated());
+    auto window = Test::renderAndWaitForShown(surface.data(), QSize(500, 50), Qt::blue);
+    QVERIFY(window);
+    QCOMPARE(workspace()->activeWindow(), window);
+    QVERIFY(!window->isDecorated());
 }
 
 }

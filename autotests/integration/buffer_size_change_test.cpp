@@ -53,8 +53,8 @@ void BufferSizeChangeTest::testShmBufferSizeChange()
     QVERIFY(!shellSurface.isNull());
 
     // set buffer size
-    Window *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(client);
+    Window *window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
 
     // add a first repaint
     QSignalSpy frameRenderedSpy(Compositor::self()->scene(), &Scene::frameRendered);
@@ -65,7 +65,7 @@ void BufferSizeChangeTest::testShmBufferSizeChange()
     // now change buffer size
     Test::render(surface.data(), QSize(30, 10), Qt::red);
 
-    QSignalSpy damagedSpy(client, &Window::damaged);
+    QSignalSpy damagedSpy(window, &Window::damaged);
     QVERIFY(damagedSpy.isValid());
     QVERIFY(damagedSpy.wait());
     KWin::Compositor::self()->scene()->addRepaintFull();

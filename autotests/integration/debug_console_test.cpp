@@ -38,7 +38,7 @@ private Q_SLOTS:
     void cleanup();
     void topLevelTest_data();
     void topLevelTest();
-    void testX11Client();
+    void testX11Window();
     void testX11Unmanaged();
     void testWaylandClient();
     void testInternalWindow();
@@ -109,7 +109,7 @@ void DebugConsoleTest::topLevelTest()
     }
 }
 
-void DebugConsoleTest::testX11Client()
+void DebugConsoleTest::testX11Window()
 {
     DebugConsoleModel model;
     QModelIndex x11TopLevelIndex = model.index(0, 0, QModelIndex());
@@ -140,40 +140,40 @@ void DebugConsoleTest::testX11Client()
     QCOMPARE(rowsInsertedSpy.first().at(1).value<int>(), 0);
     QCOMPARE(rowsInsertedSpy.first().at(2).value<int>(), 0);
 
-    QModelIndex clientIndex = model.index(0, 0, x11TopLevelIndex);
-    QVERIFY(clientIndex.isValid());
-    QCOMPARE(model.parent(clientIndex), x11TopLevelIndex);
-    QVERIFY(model.hasChildren(clientIndex));
-    QVERIFY(model.rowCount(clientIndex) != 0);
-    QCOMPARE(model.columnCount(clientIndex), 2);
+    QModelIndex windowIndex = model.index(0, 0, x11TopLevelIndex);
+    QVERIFY(windowIndex.isValid());
+    QCOMPARE(model.parent(windowIndex), x11TopLevelIndex);
+    QVERIFY(model.hasChildren(windowIndex));
+    QVERIFY(model.rowCount(windowIndex) != 0);
+    QCOMPARE(model.columnCount(windowIndex), 2);
     // other indexes are still invalid
     QVERIFY(!model.index(0, 1, x11TopLevelIndex).isValid());
     QVERIFY(!model.index(0, 2, x11TopLevelIndex).isValid());
     QVERIFY(!model.index(1, 0, x11TopLevelIndex).isValid());
 
-    // the clientIndex has children and those are properties
-    for (int i = 0; i < model.rowCount(clientIndex); i++) {
-        const QModelIndex propNameIndex = model.index(i, 0, clientIndex);
+    // the windowIndex has children and those are properties
+    for (int i = 0; i < model.rowCount(windowIndex); i++) {
+        const QModelIndex propNameIndex = model.index(i, 0, windowIndex);
         QVERIFY(propNameIndex.isValid());
-        QCOMPARE(model.parent(propNameIndex), clientIndex);
+        QCOMPARE(model.parent(propNameIndex), windowIndex);
         QVERIFY(!model.hasChildren(propNameIndex));
         QVERIFY(!model.index(0, 0, propNameIndex).isValid());
         QVERIFY(model.data(propNameIndex, Qt::DisplayRole).isValid());
         QCOMPARE(model.data(propNameIndex, Qt::DisplayRole).userType(), int(QMetaType::QString));
 
         // and the value
-        const QModelIndex propValueIndex = model.index(i, 1, clientIndex);
+        const QModelIndex propValueIndex = model.index(i, 1, windowIndex);
         QVERIFY(propValueIndex.isValid());
-        QCOMPARE(model.parent(propValueIndex), clientIndex);
+        QCOMPARE(model.parent(propValueIndex), windowIndex);
         QVERIFY(!model.index(0, 0, propValueIndex).isValid());
         QVERIFY(!model.hasChildren(propValueIndex));
         // TODO: how to test whether the values actually work?
 
         // and on third column we should not get an index any more
-        QVERIFY(!model.index(i, 2, clientIndex).isValid());
+        QVERIFY(!model.index(i, 2, windowIndex).isValid());
     }
     // row after count should be invalid
-    QVERIFY(!model.index(model.rowCount(clientIndex), 0, clientIndex).isValid());
+    QVERIFY(!model.index(model.rowCount(windowIndex), 0, windowIndex).isValid());
 
     // creating a second model should be initialized directly with the X11 child
     DebugConsoleModel model2;
@@ -228,42 +228,42 @@ void DebugConsoleTest::testX11Unmanaged()
     QCOMPARE(rowsInsertedSpy.first().at(1).value<int>(), 0);
     QCOMPARE(rowsInsertedSpy.first().at(2).value<int>(), 0);
 
-    QModelIndex clientIndex = model.index(0, 0, unmanagedTopLevelIndex);
-    QVERIFY(clientIndex.isValid());
-    QCOMPARE(model.parent(clientIndex), unmanagedTopLevelIndex);
-    QVERIFY(model.hasChildren(clientIndex));
-    QVERIFY(model.rowCount(clientIndex) != 0);
-    QCOMPARE(model.columnCount(clientIndex), 2);
+    QModelIndex windowIndex = model.index(0, 0, unmanagedTopLevelIndex);
+    QVERIFY(windowIndex.isValid());
+    QCOMPARE(model.parent(windowIndex), unmanagedTopLevelIndex);
+    QVERIFY(model.hasChildren(windowIndex));
+    QVERIFY(model.rowCount(windowIndex) != 0);
+    QCOMPARE(model.columnCount(windowIndex), 2);
     // other indexes are still invalid
     QVERIFY(!model.index(0, 1, unmanagedTopLevelIndex).isValid());
     QVERIFY(!model.index(0, 2, unmanagedTopLevelIndex).isValid());
     QVERIFY(!model.index(1, 0, unmanagedTopLevelIndex).isValid());
 
-    QCOMPARE(model.data(clientIndex, Qt::DisplayRole).toString(), QStringLiteral("0x%1").arg(window, 0, 16));
+    QCOMPARE(model.data(windowIndex, Qt::DisplayRole).toString(), QStringLiteral("0x%1").arg(window, 0, 16));
 
-    // the clientIndex has children and those are properties
-    for (int i = 0; i < model.rowCount(clientIndex); i++) {
-        const QModelIndex propNameIndex = model.index(i, 0, clientIndex);
+    // the windowIndex has children and those are properties
+    for (int i = 0; i < model.rowCount(windowIndex); i++) {
+        const QModelIndex propNameIndex = model.index(i, 0, windowIndex);
         QVERIFY(propNameIndex.isValid());
-        QCOMPARE(model.parent(propNameIndex), clientIndex);
+        QCOMPARE(model.parent(propNameIndex), windowIndex);
         QVERIFY(!model.hasChildren(propNameIndex));
         QVERIFY(!model.index(0, 0, propNameIndex).isValid());
         QVERIFY(model.data(propNameIndex, Qt::DisplayRole).isValid());
         QCOMPARE(model.data(propNameIndex, Qt::DisplayRole).userType(), int(QMetaType::QString));
 
         // and the value
-        const QModelIndex propValueIndex = model.index(i, 1, clientIndex);
+        const QModelIndex propValueIndex = model.index(i, 1, windowIndex);
         QVERIFY(propValueIndex.isValid());
-        QCOMPARE(model.parent(propValueIndex), clientIndex);
+        QCOMPARE(model.parent(propValueIndex), windowIndex);
         QVERIFY(!model.index(0, 0, propValueIndex).isValid());
         QVERIFY(!model.hasChildren(propValueIndex));
         // TODO: how to test whether the values actually work?
 
         // and on third column we should not get an index any more
-        QVERIFY(!model.index(i, 2, clientIndex).isValid());
+        QVERIFY(!model.index(i, 2, windowIndex).isValid());
     }
     // row after count should be invalid
-    QVERIFY(!model.index(model.rowCount(clientIndex), 0, clientIndex).isValid());
+    QVERIFY(!model.index(model.rowCount(windowIndex), 0, windowIndex).isValid());
 
     // creating a second model should be initialized directly with the X11 child
     DebugConsoleModel model2;
@@ -326,40 +326,40 @@ void DebugConsoleTest::testWaylandClient()
     QCOMPARE(rowsInsertedSpy.first().at(1).value<int>(), 0);
     QCOMPARE(rowsInsertedSpy.first().at(2).value<int>(), 0);
 
-    QModelIndex clientIndex = model.index(0, 0, waylandTopLevelIndex);
-    QVERIFY(clientIndex.isValid());
-    QCOMPARE(model.parent(clientIndex), waylandTopLevelIndex);
-    QVERIFY(model.hasChildren(clientIndex));
-    QVERIFY(model.rowCount(clientIndex) != 0);
-    QCOMPARE(model.columnCount(clientIndex), 2);
+    QModelIndex windowIndex = model.index(0, 0, waylandTopLevelIndex);
+    QVERIFY(windowIndex.isValid());
+    QCOMPARE(model.parent(windowIndex), waylandTopLevelIndex);
+    QVERIFY(model.hasChildren(windowIndex));
+    QVERIFY(model.rowCount(windowIndex) != 0);
+    QCOMPARE(model.columnCount(windowIndex), 2);
     // other indexes are still invalid
     QVERIFY(!model.index(0, 1, waylandTopLevelIndex).isValid());
     QVERIFY(!model.index(0, 2, waylandTopLevelIndex).isValid());
     QVERIFY(!model.index(1, 0, waylandTopLevelIndex).isValid());
 
-    // the clientIndex has children and those are properties
-    for (int i = 0; i < model.rowCount(clientIndex); i++) {
-        const QModelIndex propNameIndex = model.index(i, 0, clientIndex);
+    // the windowIndex has children and those are properties
+    for (int i = 0; i < model.rowCount(windowIndex); i++) {
+        const QModelIndex propNameIndex = model.index(i, 0, windowIndex);
         QVERIFY(propNameIndex.isValid());
-        QCOMPARE(model.parent(propNameIndex), clientIndex);
+        QCOMPARE(model.parent(propNameIndex), windowIndex);
         QVERIFY(!model.hasChildren(propNameIndex));
         QVERIFY(!model.index(0, 0, propNameIndex).isValid());
         QVERIFY(model.data(propNameIndex, Qt::DisplayRole).isValid());
         QCOMPARE(model.data(propNameIndex, Qt::DisplayRole).userType(), int(QMetaType::QString));
 
         // and the value
-        const QModelIndex propValueIndex = model.index(i, 1, clientIndex);
+        const QModelIndex propValueIndex = model.index(i, 1, windowIndex);
         QVERIFY(propValueIndex.isValid());
-        QCOMPARE(model.parent(propValueIndex), clientIndex);
+        QCOMPARE(model.parent(propValueIndex), windowIndex);
         QVERIFY(!model.index(0, 0, propValueIndex).isValid());
         QVERIFY(!model.hasChildren(propValueIndex));
         // TODO: how to test whether the values actually work?
 
         // and on third column we should not get an index any more
-        QVERIFY(!model.index(i, 2, clientIndex).isValid());
+        QVERIFY(!model.index(i, 2, windowIndex).isValid());
     }
     // row after count should be invalid
-    QVERIFY(!model.index(model.rowCount(clientIndex), 0, clientIndex).isValid());
+    QVERIFY(!model.index(model.rowCount(windowIndex), 0, windowIndex).isValid());
 
     // creating a second model should be initialized directly with the X11 child
     DebugConsoleModel model2;
@@ -431,12 +431,12 @@ void DebugConsoleTest::testInternalWindow()
     QTRY_COMPARE(rowsInsertedSpy.count(), 1);
     QCOMPARE(rowsInsertedSpy.first().first().value<QModelIndex>(), internalTopLevelIndex);
 
-    QModelIndex clientIndex = model.index(rowsInsertedSpy.first().last().toInt(), 0, internalTopLevelIndex);
-    QVERIFY(clientIndex.isValid());
-    QCOMPARE(model.parent(clientIndex), internalTopLevelIndex);
-    QVERIFY(model.hasChildren(clientIndex));
-    QVERIFY(model.rowCount(clientIndex) != 0);
-    QCOMPARE(model.columnCount(clientIndex), 2);
+    QModelIndex windowIndex = model.index(rowsInsertedSpy.first().last().toInt(), 0, internalTopLevelIndex);
+    QVERIFY(windowIndex.isValid());
+    QCOMPARE(model.parent(windowIndex), internalTopLevelIndex);
+    QVERIFY(model.hasChildren(windowIndex));
+    QVERIFY(model.rowCount(windowIndex) != 0);
+    QCOMPARE(model.columnCount(windowIndex), 2);
     // other indexes are still invalid
     QVERIFY(!model.index(rowsInsertedSpy.first().last().toInt(), 1, internalTopLevelIndex).isValid());
     QVERIFY(!model.index(rowsInsertedSpy.first().last().toInt(), 2, internalTopLevelIndex).isValid());
@@ -445,29 +445,29 @@ void DebugConsoleTest::testInternalWindow()
     // the wayland shell client top level should not have gained this window
     QVERIFY(!model.hasChildren(model.index(2, 0, QModelIndex())));
 
-    // the clientIndex has children and those are properties
-    for (int i = 0; i < model.rowCount(clientIndex); i++) {
-        const QModelIndex propNameIndex = model.index(i, 0, clientIndex);
+    // the windowIndex has children and those are properties
+    for (int i = 0; i < model.rowCount(windowIndex); i++) {
+        const QModelIndex propNameIndex = model.index(i, 0, windowIndex);
         QVERIFY(propNameIndex.isValid());
-        QCOMPARE(model.parent(propNameIndex), clientIndex);
+        QCOMPARE(model.parent(propNameIndex), windowIndex);
         QVERIFY(!model.hasChildren(propNameIndex));
         QVERIFY(!model.index(0, 0, propNameIndex).isValid());
         QVERIFY(model.data(propNameIndex, Qt::DisplayRole).isValid());
         QCOMPARE(model.data(propNameIndex, Qt::DisplayRole).userType(), int(QMetaType::QString));
 
         // and the value
-        const QModelIndex propValueIndex = model.index(i, 1, clientIndex);
+        const QModelIndex propValueIndex = model.index(i, 1, windowIndex);
         QVERIFY(propValueIndex.isValid());
-        QCOMPARE(model.parent(propValueIndex), clientIndex);
+        QCOMPARE(model.parent(propValueIndex), windowIndex);
         QVERIFY(!model.index(0, 0, propValueIndex).isValid());
         QVERIFY(!model.hasChildren(propValueIndex));
         // TODO: how to test whether the values actually work?
 
         // and on third column we should not get an index any more
-        QVERIFY(!model.index(i, 2, clientIndex).isValid());
+        QVERIFY(!model.index(i, 2, windowIndex).isValid());
     }
     // row after count should be invalid
-    QVERIFY(!model.index(model.rowCount(clientIndex), 0, clientIndex).isValid());
+    QVERIFY(!model.index(model.rowCount(windowIndex), 0, windowIndex).isValid());
 
     // now close the window again, it should be removed from the model
     QSignalSpy rowsRemovedSpy(&model, &QAbstractItemModel::rowsRemoved);
@@ -494,12 +494,12 @@ void DebugConsoleTest::testClosingDebugConsole()
     console->show();
     QCOMPARE(console->windowHandle()->isVisible(), true);
     QTRY_COMPARE(windowAddedSpy.count(), 1);
-    InternalWindow *c = windowAddedSpy.first().first().value<InternalWindow *>();
-    QVERIFY(c->isInternal());
-    QCOMPARE(c->internalWindow(), console->windowHandle());
-    QVERIFY(c->isDecorated());
-    QCOMPARE(c->isMinimizable(), false);
-    c->closeWindow();
+    InternalWindow *window = windowAddedSpy.first().first().value<InternalWindow *>();
+    QVERIFY(window->isInternal());
+    QCOMPARE(window->internalWindow(), console->windowHandle());
+    QVERIFY(window->isDecorated());
+    QCOMPARE(window->isMinimizable(), false);
+    window->closeWindow();
     QVERIFY(destroyedSpy.wait());
 }
 

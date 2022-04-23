@@ -86,8 +86,8 @@ void XwaylandServerRestartTest::testRestart()
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(c.data()));
     const QRect rect(0, 0, 100, 200);
-    xcb_window_t window = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, window, rootWindow(),
+    xcb_window_t windowId = xcb_generate_id(c.data());
+    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       rect.x(), rect.y(), rect.width(), rect.height(), 0,
                       XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
     xcb_size_hints_t hints;
@@ -95,17 +95,17 @@ void XwaylandServerRestartTest::testRestart()
     xcb_icccm_size_hints_set_position(&hints, 1, rect.x(), rect.y());
     xcb_icccm_size_hints_set_size(&hints, 1, rect.width(), rect.height());
     xcb_icccm_size_hints_set_min_size(&hints, rect.width(), rect.height());
-    xcb_icccm_set_wm_normal_hints(c.data(), window, &hints);
-    xcb_map_window(c.data(), window);
+    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
+    xcb_map_window(c.data(), windowId);
     xcb_flush(c.data());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
-    X11Window *client = windowCreatedSpy.last().first().value<X11Window *>();
-    QVERIFY(client);
-    QCOMPARE(client->window(), window);
-    QVERIFY(client->isDecorated());
+    X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
+    QVERIFY(window);
+    QCOMPARE(window->window(), windowId);
+    QVERIFY(window->isDecorated());
 
     // Render a frame to ensure that the compositor doesn't crash.
     Compositor::self()->scene()->addRepaintFull();
@@ -113,9 +113,9 @@ void XwaylandServerRestartTest::testRestart()
     QVERIFY(frameRenderedSpy.wait());
 
     // Destroy the test window.
-    xcb_destroy_window(c.data(), window);
+    xcb_destroy_window(c.data(), windowId);
     xcb_flush(c.data());
-    QVERIFY(Test::waitForWindowDestroyed(client));
+    QVERIFY(Test::waitForWindowDestroyed(window));
 }
 
 } // namespace KWin

@@ -255,9 +255,9 @@ static struct
     TextInputManagerV3 *textInputManagerV3 = nullptr;
 } s_waylandConnection;
 
-Window *inputPanelClient()
+Window *inputPanelWindow()
 {
-    return s_waylandConnection.inputMethodV1->client();
+    return s_waylandConnection.inputMethodV1->window();
 }
 
 MockInputMethod *inputMethod()
@@ -286,7 +286,7 @@ void MockInputMethod::zwp_input_method_v1_activate(struct ::zwp_input_method_con
         m_inputMethodSurface = Test::createInputPanelSurfaceV1(m_inputSurface, s_waylandConnection.outputs.first());
     }
     m_context = context;
-    m_client = Test::renderAndWaitForShown(m_inputSurface, QSize(1280, 400), Qt::blue);
+    m_window = Test::renderAndWaitForShown(m_inputSurface, QSize(1280, 400), Qt::blue);
 
     Q_EMIT activate();
 }
@@ -646,12 +646,12 @@ QVector<KWin::Test::WaylandOutputDeviceV2 *> waylandOutputDevicesV2()
     return s_waylandConnection.outputDevicesV2;
 }
 
-bool waitForWaylandSurface(Window *client)
+bool waitForWaylandSurface(Window *window)
 {
-    if (client->surface()) {
+    if (window->surface()) {
         return true;
     }
-    QSignalSpy surfaceChangedSpy(client, &Window::surfaceChanged);
+    QSignalSpy surfaceChangedSpy(window, &Window::surfaceChanged);
     return surfaceChangedSpy.wait();
 }
 
@@ -891,9 +891,9 @@ IdleInhibitorV1 *createIdleInhibitorV1(KWayland::Client::Surface *surface)
     return new IdleInhibitorV1(manager, surface);
 }
 
-bool waitForWindowDestroyed(Window *client)
+bool waitForWindowDestroyed(Window *window)
 {
-    QSignalSpy destroyedSpy(client, &QObject::destroyed);
+    QSignalSpy destroyedSpy(window, &QObject::destroyed);
     if (!destroyedSpy.isValid()) {
         return false;
     }

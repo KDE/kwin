@@ -81,7 +81,7 @@ static void purge(KConfig *config)
 
 void ScreensTest::cleanup()
 {
-    // Destroy the wayland connection of the test client.
+    // Destroy the wayland connection of the test window.
     Test::destroyWaylandConnection();
 
     // Wipe the screens config clean.

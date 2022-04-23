@@ -83,9 +83,9 @@ void DontCrashCursorPhysicalSizeEmpty::testMoveCursorOverDeco()
     Test::waylandServerSideDecoration()->create(surface.data(), surface.data());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
 
-    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(c);
-    QVERIFY(c->isDecorated());
+    auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
+    QVERIFY(window->isDecorated());
 
     // destroy physical size
     KWaylandServer::Display *display = waylandServer()->display();
@@ -94,7 +94,7 @@ void DontCrashCursorPhysicalSizeEmpty::testMoveCursorOverDeco()
     // and fake a cursor theme change, so that the theme gets recreated
     Q_EMIT KWin::Cursors::self()->mouse()->themeChanged();
 
-    KWin::Cursors::self()->mouse()->setPos(QPoint(c->frameGeometry().center().x(), c->clientPos().y() / 2));
+    KWin::Cursors::self()->mouse()->setPos(QPoint(window->frameGeometry().center().x(), window->clientPos().y() / 2));
 }
 
 WAYLANDTEST_MAIN(DontCrashCursorPhysicalSizeEmpty)

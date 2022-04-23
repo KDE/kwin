@@ -57,11 +57,11 @@ void DontCrashGlxgearsTest::testGlxgears()
     QVERIFY(windowAddedSpy.wait());
     QCOMPARE(windowAddedSpy.count(), 1);
     QCOMPARE(workspace()->clientList().count(), 1);
-    X11Window *glxgearsClient = workspace()->clientList().first();
-    QVERIFY(glxgearsClient->isDecorated());
-    QSignalSpy closedSpy(glxgearsClient, &X11Window::windowClosed);
+    X11Window *glxgearsWindow = workspace()->clientList().first();
+    QVERIFY(glxgearsWindow->isDecorated());
+    QSignalSpy closedSpy(glxgearsWindow, &X11Window::windowClosed);
     QVERIFY(closedSpy.isValid());
-    KDecoration2::Decoration *decoration = glxgearsClient->decoration();
+    KDecoration2::Decoration *decoration = glxgearsWindow->decoration();
     QVERIFY(decoration);
 
     // send a mouse event to the position of the close button

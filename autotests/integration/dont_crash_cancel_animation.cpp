@@ -88,15 +88,15 @@ void DontCrashCancelAnimationFromAnimationEndedTest::testScript()
     Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
     QVERIFY(shellSurface);
     // let's render
-    auto c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
-    QVERIFY(c);
-    QCOMPARE(workspace()->activeWindow(), c);
+    auto window = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    QVERIFY(window);
+    QCOMPARE(workspace()->activeWindow(), window);
 
     // make sure we animate
     QTest::qWait(200);
 
     // wait for the window to be passed to Deleted
-    QSignalSpy windowDeletedSpy(c, &Window::windowClosed);
+    QSignalSpy windowDeletedSpy(window, &Window::windowClosed);
     QVERIFY(windowDeletedSpy.isValid());
 
     surface->deleteLater();

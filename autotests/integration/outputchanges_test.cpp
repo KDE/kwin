@@ -75,12 +75,12 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputIsDisabled()
     // Create a window.
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(client);
+    auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
 
     // Move the window to some predefined position so the test is more robust.
-    client->move(QPoint(42, 67));
-    QCOMPARE(client->frameGeometry(), QRect(42, 67, 100, 50));
+    window->move(QPoint(42, 67));
+    QCOMPARE(window->frameGeometry(), QRect(42, 67, 100, 50));
 
     // Disable the output where the window is on.
     OutputConfiguration config;
@@ -91,7 +91,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputIsDisabled()
     kwinApp()->platform()->applyOutputChanges(config);
 
     // The window will be sent to the second output, which is at (1280, 0).
-    QCOMPARE(client->frameGeometry(), QRect(1280 + 42, 0 + 67, 100, 50));
+    QCOMPARE(window->frameGeometry(), QRect(1280 + 42, 0 + 67, 100, 50));
 }
 
 void OutputChangesTest::testWindowSticksToOutputAfterAnotherOutputIsDisabled()
@@ -101,12 +101,12 @@ void OutputChangesTest::testWindowSticksToOutputAfterAnotherOutputIsDisabled()
     // Create a window.
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(client);
+    auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
 
     // Move the window to the second output.
-    client->move(QPoint(1280 + 42, 67));
-    QCOMPARE(client->frameGeometry(), QRect(1280 + 42, 67, 100, 50));
+    window->move(QPoint(1280 + 42, 67));
+    QCOMPARE(window->frameGeometry(), QRect(1280 + 42, 67, 100, 50));
 
     // Disable the first output.
     OutputConfiguration config;
@@ -121,7 +121,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterAnotherOutputIsDisabled()
     kwinApp()->platform()->applyOutputChanges(config);
 
     // The position of the window relative to its output should remain the same.
-    QCOMPARE(client->frameGeometry(), QRect(42, 67, 100, 50));
+    QCOMPARE(window->frameGeometry(), QRect(42, 67, 100, 50));
 }
 
 void OutputChangesTest::testWindowSticksToOutputAfterOutputIsMoved()
@@ -131,12 +131,12 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputIsMoved()
     // Create a window.
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(client);
+    auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
 
     // Move the window to some predefined position so the test is more robust.
-    client->move(QPoint(42, 67));
-    QCOMPARE(client->frameGeometry(), QRect(42, 67, 100, 50));
+    window->move(QPoint(42, 67));
+    QCOMPARE(window->frameGeometry(), QRect(42, 67, 100, 50));
 
     // Disable the first output.
     OutputConfiguration config;
@@ -147,7 +147,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputIsMoved()
     kwinApp()->platform()->applyOutputChanges(config);
 
     // The position of the window relative to its output should remain the same.
-    QCOMPARE(client->frameGeometry(), QRect(-10 + 42, 20 + 67, 100, 50));
+    QCOMPARE(window->frameGeometry(), QRect(-10 + 42, 20 + 67, 100, 50));
 }
 
 }

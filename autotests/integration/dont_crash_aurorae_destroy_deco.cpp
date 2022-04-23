@@ -90,50 +90,50 @@ void DontCrashAuroraeDestroyDecoTest::testBorderlessMaximizedWindows()
     xcb_connection_t *c = xcb_connect(nullptr, nullptr);
     QVERIFY(!xcb_connection_has_error(c));
 
-    xcb_window_t w = xcb_generate_id(c);
-    xcb_create_window(c, XCB_COPY_FROM_PARENT, w, rootWindow(), 0, 0, 100, 200, 0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
-    xcb_map_window(c, w);
+    xcb_window_t windowId = xcb_generate_id(c);
+    xcb_create_window(c, XCB_COPY_FROM_PARENT, windowId, rootWindow(), 0, 0, 100, 200, 0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+    xcb_map_window(c, windowId);
     xcb_flush(c);
 
-    // we should get a client for it
+    // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
-    X11Window *client = windowCreatedSpy.first().first().value<X11Window *>();
-    QVERIFY(client);
-    QCOMPARE(client->window(), w);
-    QVERIFY(client->isDecorated());
-    QCOMPARE(client->maximizeMode(), MaximizeRestore);
-    QCOMPARE(client->noBorder(), false);
+    X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
+    QVERIFY(window);
+    QCOMPARE(window->window(), windowId);
+    QVERIFY(window->isDecorated());
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->noBorder(), false);
     // verify that the deco is Aurorae
-    QCOMPARE(qstrcmp(client->decoration()->metaObject()->className(), "Aurorae::Decoration"), 0);
+    QCOMPARE(qstrcmp(window->decoration()->metaObject()->className(), "Aurorae::Decoration"), 0);
     // find the maximize button
-    QQuickItem *item = client->decoration()->findChild<QQuickItem *>("maximizeButton");
+    QQuickItem *item = window->decoration()->findChild<QQuickItem *>("maximizeButton");
     QVERIFY(item);
     const QPointF scenePoint = item->mapToScene(QPoint(0, 0));
 
     // mark the window as ready for painting, otherwise it doesn't get input events
-    QMetaObject::invokeMethod(client, "setReadyForPainting");
-    QVERIFY(client->readyForPainting());
+    QMetaObject::invokeMethod(window, "setReadyForPainting");
+    QVERIFY(window->readyForPainting());
 
     // simulate click on maximize button
-    QSignalSpy maximizedStateChangedSpy(client, static_cast<void (Window::*)(KWin::Window *, MaximizeMode)>(&Window::clientMaximizedStateChanged));
+    QSignalSpy maximizedStateChangedSpy(window, static_cast<void (Window::*)(KWin::Window *, MaximizeMode)>(&Window::clientMaximizedStateChanged));
     QVERIFY(maximizedStateChangedSpy.isValid());
     quint32 timestamp = 1;
-    Test::pointerMotion(client->frameGeometry().topLeft() + scenePoint.toPoint(), timestamp++);
+    Test::pointerMotion(window->frameGeometry().topLeft() + scenePoint.toPoint(), timestamp++);
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);
     Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     QVERIFY(maximizedStateChangedSpy.wait());
-    QCOMPARE(client->maximizeMode(), MaximizeFull);
-    QCOMPARE(client->noBorder(), true);
+    QCOMPARE(window->maximizeMode(), MaximizeFull);
+    QCOMPARE(window->noBorder(), true);
 
     // and destroy the window again
-    xcb_unmap_window(c, w);
-    xcb_destroy_window(c, w);
+    xcb_unmap_window(c, windowId);
+    xcb_destroy_window(c, windowId);
     xcb_flush(c);
     xcb_disconnect(c);
 
-    QSignalSpy windowClosedSpy(client, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
     QVERIFY(windowClosedSpy.wait());
 }

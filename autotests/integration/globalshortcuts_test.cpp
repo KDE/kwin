@@ -48,8 +48,8 @@ private Q_SLOTS:
     void testUserActionsMenu();
     void testMetaShiftW();
     void testComponseKey();
-    void testX11ClientShortcut();
-    void testWaylandClientShortcut();
+    void testX11WindowShortcut();
+    void testWaylandWindowShortcut();
     void testSetupWindowShortcut();
 };
 
@@ -236,9 +236,9 @@ void GlobalShortcutsTest::testUserActionsMenu()
     // first create a window
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(c);
-    QVERIFY(c->isActive());
+    auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
+    QVERIFY(window->isActive());
 
     quint32 timestamp = 0;
     QVERIFY(!workspace()->userActionsMenu()->isShown());
@@ -302,7 +302,7 @@ struct XcbConnectionDeleter
     }
 };
 
-void GlobalShortcutsTest::testX11ClientShortcut()
+void GlobalShortcutsTest::testX11WindowShortcut()
 {
 #ifdef NO_XWAYLAND
     QSKIP("x11 test, unnecessary without xwayland");
@@ -310,11 +310,11 @@ void GlobalShortcutsTest::testX11ClientShortcut()
     // create an X11 window
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(c.data()));
-    xcb_window_t w = xcb_generate_id(c.data());
+    xcb_window_t windowId = xcb_generate_id(c.data());
     const QRect windowGeometry = QRect(0, 0, 10, 20);
     const uint32_t values[] = {
         XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW};
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
+    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
@@ -324,87 +324,87 @@ void GlobalShortcutsTest::testX11ClientShortcut()
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.data(), w, &hints);
-    NETWinInfo info(c.data(), w, rootWindow(), NET::WMAllProperties, NET::WM2AllProperties);
+    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
+    NETWinInfo info(c.data(), windowId, rootWindow(), NET::WMAllProperties, NET::WM2AllProperties);
     info.setWindowType(NET::Normal);
-    xcb_map_window(c.data(), w);
+    xcb_map_window(c.data(), windowId);
     xcb_flush(c.data());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
-    X11Window *client = windowCreatedSpy.last().first().value<X11Window *>();
-    QVERIFY(client);
+    X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
+    QVERIFY(window);
 
-    QCOMPARE(workspace()->activeWindow(), client);
-    QVERIFY(client->isActive());
-    QCOMPARE(client->shortcut(), QKeySequence());
+    QCOMPARE(workspace()->activeWindow(), window);
+    QVERIFY(window->isActive());
+    QCOMPARE(window->shortcut(), QKeySequence());
     const QKeySequence seq(Qt::META | Qt::SHIFT | Qt::Key_Y);
     QVERIFY(workspace()->shortcutAvailable(seq));
-    client->setShortcut(seq.toString());
-    QCOMPARE(client->shortcut(), seq);
+    window->setShortcut(seq.toString());
+    QCOMPARE(window->shortcut(), seq);
     QVERIFY(!workspace()->shortcutAvailable(seq));
-    QCOMPARE(client->caption(), QStringLiteral(" {Meta+Shift+Y}"));
+    QCOMPARE(window->caption(), QStringLiteral(" {Meta+Shift+Y}"));
 
     // it's delayed
     QCoreApplication::processEvents();
 
     workspace()->activateWindow(nullptr);
     QVERIFY(!workspace()->activeWindow());
-    QVERIFY(!client->isActive());
+    QVERIFY(!window->isActive());
 
     // now let's trigger the shortcut
     quint32 timestamp = 0;
     Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
     Test::keyboardKeyPressed(KEY_Y, timestamp++);
-    QTRY_COMPARE(workspace()->activeWindow(), client);
+    QTRY_COMPARE(workspace()->activeWindow(), window);
     Test::keyboardKeyReleased(KEY_Y, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
 
     // destroy window again
-    QSignalSpy windowClosedSpy(client, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
-    xcb_unmap_window(c.data(), w);
-    xcb_destroy_window(c.data(), w);
+    xcb_unmap_window(c.data(), windowId);
+    xcb_destroy_window(c.data(), windowId);
     xcb_flush(c.data());
     QVERIFY(windowClosedSpy.wait());
 }
 
-void GlobalShortcutsTest::testWaylandClientShortcut()
+void GlobalShortcutsTest::testWaylandWindowShortcut()
 {
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
-    QCOMPARE(workspace()->activeWindow(), client);
-    QVERIFY(client->isActive());
-    QCOMPARE(client->shortcut(), QKeySequence());
+    QCOMPARE(workspace()->activeWindow(), window);
+    QVERIFY(window->isActive());
+    QCOMPARE(window->shortcut(), QKeySequence());
     const QKeySequence seq(Qt::META | Qt::SHIFT | Qt::Key_Y);
     QVERIFY(workspace()->shortcutAvailable(seq));
-    client->setShortcut(seq.toString());
-    QCOMPARE(client->shortcut(), seq);
+    window->setShortcut(seq.toString());
+    QCOMPARE(window->shortcut(), seq);
     QVERIFY(!workspace()->shortcutAvailable(seq));
-    QCOMPARE(client->caption(), QStringLiteral(" {Meta+Shift+Y}"));
+    QCOMPARE(window->caption(), QStringLiteral(" {Meta+Shift+Y}"));
 
     workspace()->activateWindow(nullptr);
     QVERIFY(!workspace()->activeWindow());
-    QVERIFY(!client->isActive());
+    QVERIFY(!window->isActive());
 
     // now let's trigger the shortcut
     quint32 timestamp = 0;
     Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
     Test::keyboardKeyPressed(KEY_Y, timestamp++);
-    QTRY_COMPARE(workspace()->activeWindow(), client);
+    QTRY_COMPARE(workspace()->activeWindow(), window);
     Test::keyboardKeyReleased(KEY_Y, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
 
     shellSurface.reset();
     surface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(client));
+    QVERIFY(Test::waitForWindowDestroyed(window));
     QTRY_VERIFY_WITH_TIMEOUT(workspace()->shortcutAvailable(seq), 500); // we need the try since KGlobalAccelPrivate::unregister is async
 }
 
@@ -414,11 +414,11 @@ void GlobalShortcutsTest::testSetupWindowShortcut()
 
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
-    QCOMPARE(workspace()->activeWindow(), client);
-    QVERIFY(client->isActive());
-    QCOMPARE(client->shortcut(), QKeySequence());
+    QCOMPARE(workspace()->activeWindow(), window);
+    QVERIFY(window->isActive());
+    QCOMPARE(window->shortcut(), QKeySequence());
 
     QSignalSpy shortcutDialogAddedSpy(workspace(), &Workspace::internalWindowAdded);
     QVERIFY(shortcutDialogAddedSpy.isValid());
@@ -449,7 +449,7 @@ void GlobalShortcutsTest::testSetupWindowShortcut()
     // now send in enter
     Test::keyboardKeyPressed(KEY_ENTER, timestamp++);
     Test::keyboardKeyReleased(KEY_ENTER, timestamp++);
-    QTRY_COMPARE(client->shortcut(), QKeySequence(Qt::META | Qt::SHIFT | Qt::Key_Y));
+    QTRY_COMPARE(window->shortcut(), QKeySequence(Qt::META | Qt::SHIFT | Qt::Key_Y));
 }
 
 WAYLANDTEST_MAIN(GlobalShortcutsTest)

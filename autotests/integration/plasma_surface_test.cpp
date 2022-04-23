@@ -107,21 +107,21 @@ void PlasmaSurfaceTest::testRoleOnAllDesktops()
     QVERIFY(!plasmaSurface.isNull());
 
     // now render to map the window
-    Window *c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(c);
-    QCOMPARE(workspace()->activeWindow(), c);
+    Window *window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
+    QCOMPARE(workspace()->activeWindow(), window);
 
     // currently the role is not yet set, so the window should not be on all desktops
-    QCOMPARE(c->isOnAllDesktops(), false);
+    QCOMPARE(window->isOnAllDesktops(), false);
 
     // now let's try to change that
-    QSignalSpy onAllDesktopsSpy(c, &Window::desktopChanged);
+    QSignalSpy onAllDesktopsSpy(window, &Window::desktopChanged);
     QVERIFY(onAllDesktopsSpy.isValid());
     QFETCH(KWayland::Client::PlasmaShellSurface::Role, role);
     plasmaSurface->setRole(role);
     QFETCH(bool, expectedOnAllDesktops);
     QCOMPARE(onAllDesktopsSpy.wait(), expectedOnAllDesktops);
-    QCOMPARE(c->isOnAllDesktops(), expectedOnAllDesktops);
+    QCOMPARE(window->isOnAllDesktops(), expectedOnAllDesktops);
 
     // let's create a second window where we init a little bit different
     // first creating the PlasmaSurface then the Shell Surface
@@ -134,7 +134,7 @@ void PlasmaSurfaceTest::testRoleOnAllDesktops()
     QVERIFY(!shellSurface2.isNull());
     auto c2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::blue);
     QVERIFY(c2);
-    QVERIFY(c != c2);
+    QVERIFY(window != c2);
 
     QCOMPARE(c2->isOnAllDesktops(), expectedOnAllDesktops);
 }
@@ -167,11 +167,11 @@ void PlasmaSurfaceTest::testAcceptsFocus()
     plasmaSurface->setRole(role);
 
     // now render to map the window
-    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
-    QVERIFY(c);
-    QTEST(c->wantsInput(), "wantsInput");
-    QTEST(c->isActive(), "active");
+    QVERIFY(window);
+    QTEST(window->wantsInput(), "wantsInput");
+    QTEST(window->isActive(), "active");
 }
 
 void PlasmaSurfaceTest::testOSDPlacement()
@@ -185,12 +185,12 @@ void PlasmaSurfaceTest::testOSDPlacement()
     plasmaSurface->setRole(KWayland::Client::PlasmaShellSurface::Role::OnScreenDisplay);
 
     // now render and map the window
-    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
-    QVERIFY(c);
-    QCOMPARE(c->windowType(), NET::OnScreenDisplay);
-    QVERIFY(c->isOnScreenDisplay());
-    QCOMPARE(c->frameGeometry(), QRect(1280 / 2 - 100 / 2, 2 * 1024 / 3 - 50 / 2, 100, 50));
+    QVERIFY(window);
+    QCOMPARE(window->windowType(), NET::OnScreenDisplay);
+    QVERIFY(window->isOnScreenDisplay());
+    QCOMPARE(window->frameGeometry(), QRect(1280 / 2 - 100 / 2, 2 * 1024 / 3 - 50 / 2, 100, 50));
 
     // change the screen size
     QSignalSpy screensChangedSpy(screens(), &Screens::changed);
@@ -207,14 +207,14 @@ void PlasmaSurfaceTest::testOSDPlacement()
     QCOMPARE(outputs[0]->geometry(), geometries[0]);
     QCOMPARE(outputs[1]->geometry(), geometries[1]);
 
-    QCOMPARE(c->frameGeometry(), QRect(1280 / 2 - 100 / 2, 2 * 1024 / 3 - 50 / 2, 100, 50));
+    QCOMPARE(window->frameGeometry(), QRect(1280 / 2 - 100 / 2, 2 * 1024 / 3 - 50 / 2, 100, 50));
 
     // change size of window
-    QSignalSpy frameGeometryChangedSpy(c, &Window::frameGeometryChanged);
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
     Test::render(surface.data(), QSize(200, 100), Qt::red);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(c->frameGeometry(), QRect(1280 / 2 - 200 / 2, 2 * 1024 / 3 - 100 / 2, 200, 100));
+    QCOMPARE(window->frameGeometry(), QRect(1280 / 2 - 200 / 2, 2 * 1024 / 3 - 100 / 2, 200, 100));
 }
 
 void PlasmaSurfaceTest::testOSDPlacementManualPosition()
@@ -231,13 +231,13 @@ void PlasmaSurfaceTest::testOSDPlacementManualPosition()
     QVERIFY(!shellSurface.isNull());
 
     // now render and map the window
-    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
-    QVERIFY(c);
-    QVERIFY(!c->isPlaceable());
-    QCOMPARE(c->windowType(), NET::OnScreenDisplay);
-    QVERIFY(c->isOnScreenDisplay());
-    QCOMPARE(c->frameGeometry(), QRect(50, 70, 100, 50));
+    QVERIFY(window);
+    QVERIFY(!window->isPlaceable());
+    QCOMPARE(window->windowType(), NET::OnScreenDisplay);
+    QVERIFY(window->isOnScreenDisplay());
+    QCOMPARE(window->frameGeometry(), QRect(50, 70, 100, 50));
 }
 
 void PlasmaSurfaceTest::testPanelTypeHasStrut_data()
@@ -267,19 +267,19 @@ void PlasmaSurfaceTest::testPanelTypeHasStrut()
     plasmaSurface->setPanelBehavior(panelBehavior);
 
     // now render and map the window
-    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
     // the panel is on the first output and the current desktop
     Output *output = kwinApp()->platform()->enabledOutputs().constFirst();
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
 
-    QVERIFY(c);
-    QCOMPARE(c->windowType(), NET::Dock);
-    QVERIFY(c->isDock());
-    QCOMPARE(c->frameGeometry(), QRect(0, 0, 100, 50));
-    QTEST(c->hasStrut(), "expectedStrut");
+    QVERIFY(window);
+    QCOMPARE(window->windowType(), NET::Dock);
+    QVERIFY(window->isDock());
+    QCOMPARE(window->frameGeometry(), QRect(0, 0, 100, 50));
+    QTEST(window->hasStrut(), "expectedStrut");
     QTEST(workspace()->clientArea(MaximizeArea, output, desktop), "expectedMaxArea");
-    QTEST(c->layer(), "expectedLayer");
+    QTEST(window->layer(), "expectedLayer");
 }
 
 void PlasmaSurfaceTest::testPanelWindowsCanCover_data()
@@ -339,19 +339,19 @@ void PlasmaSurfaceTest::testPanelWindowsCanCover()
     QVERIFY(!shellSurface2.isNull());
 
     QFETCH(QRect, windowGeometry);
-    auto c = Test::renderAndWaitForShown(surface2.data(), windowGeometry.size(), Qt::red);
+    auto window = Test::renderAndWaitForShown(surface2.data(), windowGeometry.size(), Qt::red);
 
-    QVERIFY(c);
-    QCOMPARE(c->windowType(), NET::Normal);
-    QVERIFY(c->isActive());
-    QCOMPARE(c->layer(), KWin::NormalLayer);
-    c->move(windowGeometry.topLeft());
-    QCOMPARE(c->frameGeometry(), windowGeometry);
+    QVERIFY(window);
+    QCOMPARE(window->windowType(), NET::Normal);
+    QVERIFY(window->isActive());
+    QCOMPARE(window->layer(), KWin::NormalLayer);
+    window->move(windowGeometry.topLeft());
+    QCOMPARE(window->frameGeometry(), windowGeometry);
 
     auto stackingOrder = workspace()->stackingOrder();
     QCOMPARE(stackingOrder.count(), 2);
     QCOMPARE(stackingOrder.first(), panel);
-    QCOMPARE(stackingOrder.last(), c);
+    QCOMPARE(stackingOrder.last(), window);
 
     QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
     QVERIFY(stackingOrderChangedSpy.isValid());
@@ -362,7 +362,7 @@ void PlasmaSurfaceTest::testPanelWindowsCanCover()
     QCOMPARE(stackingOrderChangedSpy.count(), 1);
     stackingOrder = workspace()->stackingOrder();
     QCOMPARE(stackingOrder.count(), 2);
-    QCOMPARE(stackingOrder.first(), c);
+    QCOMPARE(stackingOrder.first(), window);
     QCOMPARE(stackingOrder.last(), panel);
 }
 

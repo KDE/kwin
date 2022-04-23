@@ -100,11 +100,11 @@ void WindowRuleTest::testApplyInitialMaximizeVert()
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(c.data()));
 
-    xcb_window_t w = xcb_generate_id(c.data());
+    xcb_window_t windowId = xcb_generate_id(c.data());
     const QRect windowGeometry = QRect(0, 0, 10, 20);
     const uint32_t values[] = {
         XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW};
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
+    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
@@ -114,36 +114,36 @@ void WindowRuleTest::testApplyInitialMaximizeVert()
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.data(), w, &hints);
-    xcb_icccm_set_wm_class(c.data(), w, 9, "kpat\0kpat");
+    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
+    xcb_icccm_set_wm_class(c.data(), windowId, 9, "kpat\0kpat");
 
     QFETCH(QByteArray, role);
-    xcb_change_property(c.data(), XCB_PROP_MODE_REPLACE, w, atoms->wm_window_role, XCB_ATOM_STRING, 8, role.length(), role.constData());
+    xcb_change_property(c.data(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_window_role, XCB_ATOM_STRING, 8, role.length(), role.constData());
 
-    NETWinInfo info(c.data(), w, rootWindow(), NET::WMAllProperties, NET::WM2AllProperties);
+    NETWinInfo info(c.data(), windowId, rootWindow(), NET::WMAllProperties, NET::WM2AllProperties);
     info.setWindowType(NET::Normal);
-    xcb_map_window(c.data(), w);
+    xcb_map_window(c.data(), windowId);
     xcb_flush(c.data());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
-    X11Window *client = windowCreatedSpy.last().first().value<X11Window *>();
-    QVERIFY(client);
-    QVERIFY(client->isDecorated());
-    QVERIFY(!client->hasStrut());
-    QVERIFY(!client->isHiddenInternal());
-    QVERIFY(!client->readyForPainting());
-    QMetaObject::invokeMethod(client, "setReadyForPainting");
-    QVERIFY(client->readyForPainting());
-    QVERIFY(Test::waitForWaylandSurface(client));
-    QCOMPARE(client->maximizeMode(), MaximizeVertical);
+    X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
+    QVERIFY(window);
+    QVERIFY(window->isDecorated());
+    QVERIFY(!window->hasStrut());
+    QVERIFY(!window->isHiddenInternal());
+    QVERIFY(!window->readyForPainting());
+    QMetaObject::invokeMethod(window, "setReadyForPainting");
+    QVERIFY(window->readyForPainting());
+    QVERIFY(Test::waitForWaylandSurface(window));
+    QCOMPARE(window->maximizeMode(), MaximizeVertical);
 
     // destroy window again
-    QSignalSpy windowClosedSpy(client, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
-    xcb_unmap_window(c.data(), w);
-    xcb_destroy_window(c.data(), w);
+    xcb_unmap_window(c.data(), windowId);
+    xcb_destroy_window(c.data(), windowId);
     xcb_flush(c.data());
     QVERIFY(windowClosedSpy.wait());
 }
@@ -168,11 +168,11 @@ void WindowRuleTest::testWindowClassChange()
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(c.data()));
 
-    xcb_window_t w = xcb_generate_id(c.data());
+    xcb_window_t windowId = xcb_generate_id(c.data());
     const QRect windowGeometry = QRect(0, 0, 10, 20);
     const uint32_t values[] = {
         XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW};
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
+    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
@@ -182,41 +182,41 @@ void WindowRuleTest::testWindowClassChange()
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.data(), w, &hints);
-    xcb_icccm_set_wm_class(c.data(), w, 23, "org.kde.bar\0org.kde.bar");
+    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
+    xcb_icccm_set_wm_class(c.data(), windowId, 23, "org.kde.bar\0org.kde.bar");
 
-    NETWinInfo info(c.data(), w, rootWindow(), NET::WMAllProperties, NET::WM2AllProperties);
+    NETWinInfo info(c.data(), windowId, rootWindow(), NET::WMAllProperties, NET::WM2AllProperties);
     info.setWindowType(NET::Normal);
-    xcb_map_window(c.data(), w);
+    xcb_map_window(c.data(), windowId);
     xcb_flush(c.data());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
-    X11Window *client = windowCreatedSpy.last().first().value<X11Window *>();
-    QVERIFY(client);
-    QVERIFY(client->isDecorated());
-    QVERIFY(!client->hasStrut());
-    QVERIFY(!client->isHiddenInternal());
-    QVERIFY(!client->readyForPainting());
-    QMetaObject::invokeMethod(client, "setReadyForPainting");
-    QVERIFY(client->readyForPainting());
-    QVERIFY(Test::waitForWaylandSurface(client));
-    QCOMPARE(client->keepAbove(), false);
+    X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
+    QVERIFY(window);
+    QVERIFY(window->isDecorated());
+    QVERIFY(!window->hasStrut());
+    QVERIFY(!window->isHiddenInternal());
+    QVERIFY(!window->readyForPainting());
+    QMetaObject::invokeMethod(window, "setReadyForPainting");
+    QVERIFY(window->readyForPainting());
+    QVERIFY(Test::waitForWaylandSurface(window));
+    QCOMPARE(window->keepAbove(), false);
 
     // now change class
-    QSignalSpy windowClassChangedSpy{client, &X11Window::windowClassChanged};
+    QSignalSpy windowClassChangedSpy{window, &X11Window::windowClassChanged};
     QVERIFY(windowClassChangedSpy.isValid());
-    xcb_icccm_set_wm_class(c.data(), w, 23, "org.kde.foo\0org.kde.foo");
+    xcb_icccm_set_wm_class(c.data(), windowId, 23, "org.kde.foo\0org.kde.foo");
     xcb_flush(c.data());
     QVERIFY(windowClassChangedSpy.wait());
-    QCOMPARE(client->keepAbove(), true);
+    QCOMPARE(window->keepAbove(), true);
 
     // destroy window
-    QSignalSpy windowClosedSpy(client, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
-    xcb_unmap_window(c.data(), w);
-    xcb_destroy_window(c.data(), w);
+    xcb_unmap_window(c.data(), windowId);
+    xcb_destroy_window(c.data(), windowId);
     xcb_flush(c.data());
     QVERIFY(windowClosedSpy.wait());
 }

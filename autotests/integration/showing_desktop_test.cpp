@@ -60,20 +60,20 @@ void ShowingDesktopTest::testRestoreFocus()
 {
     QScopedPointer<KWayland::Client::Surface> surface1(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface1(Test::createXdgToplevelSurface(surface1.data()));
-    auto client1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::blue);
+    auto window1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::blue);
     QScopedPointer<KWayland::Client::Surface> surface2(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.data()));
-    auto client2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(client1 != client2);
+    auto window2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(window1 != window2);
 
-    QCOMPARE(workspace()->activeWindow(), client2);
+    QCOMPARE(workspace()->activeWindow(), window2);
     workspace()->slotToggleShowDesktop();
     QVERIFY(workspace()->showingDesktop());
     workspace()->slotToggleShowDesktop();
     QVERIFY(!workspace()->showingDesktop());
 
     QVERIFY(workspace()->activeWindow());
-    QCOMPARE(workspace()->activeWindow(), client2);
+    QCOMPARE(workspace()->activeWindow(), window2);
 }
 
 void ShowingDesktopTest::testRestoreFocusWithDesktopWindow()
@@ -95,13 +95,13 @@ void ShowingDesktopTest::testRestoreFocusWithDesktopWindow()
     // now create some windows
     QScopedPointer<KWayland::Client::Surface> surface1(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface1(Test::createXdgToplevelSurface(surface1.data()));
-    auto client1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::blue);
+    auto window1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::blue);
     QScopedPointer<KWayland::Client::Surface> surface2(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.data()));
-    auto client2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(client1 != client2);
+    auto window2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(window1 != window2);
 
-    QCOMPARE(workspace()->activeWindow(), client2);
+    QCOMPARE(workspace()->activeWindow(), window2);
     workspace()->slotToggleShowDesktop();
     QVERIFY(workspace()->showingDesktop());
     QCOMPARE(workspace()->activeWindow(), desktop);
@@ -109,7 +109,7 @@ void ShowingDesktopTest::testRestoreFocusWithDesktopWindow()
     QVERIFY(!workspace()->showingDesktop());
 
     QVERIFY(workspace()->activeWindow());
-    QCOMPARE(workspace()->activeWindow(), client2);
+    QCOMPARE(workspace()->activeWindow(), window2);
 }
 
 WAYLANDTEST_MAIN(ShowingDesktopTest)

@@ -105,14 +105,14 @@ void XwaylandSelectionsTest::testSync()
     copyProcess->start();
     QVERIFY(copyProcess->waitForStarted());
 
-    Window *copyClient = nullptr;
+    Window *copyWindow = nullptr;
     QVERIFY(windowAddedSpy.wait());
-    copyClient = windowAddedSpy.first().first().value<Window *>();
-    QVERIFY(copyClient);
-    if (workspace()->activeWindow() != copyClient) {
-        workspace()->activateWindow(copyClient);
+    copyWindow = windowAddedSpy.first().first().value<Window *>();
+    QVERIFY(copyWindow);
+    if (workspace()->activeWindow() != copyWindow) {
+        workspace()->activateWindow(copyWindow);
     }
-    QCOMPARE(workspace()->activeWindow(), copyClient);
+    QCOMPARE(workspace()->activeWindow(), copyWindow);
     clipboardChangedSpy.wait();
 
     // start the paste process
@@ -128,19 +128,19 @@ void XwaylandSelectionsTest::testSync()
     QVERIFY(pasteProcess->waitForStarted());
 
     windowAddedSpy.clear();
-    Window *pasteClient = nullptr;
+    Window *pasteWindow = nullptr;
     QVERIFY(windowAddedSpy.wait());
-    pasteClient = windowAddedSpy.last().first().value<Window *>();
+    pasteWindow = windowAddedSpy.last().first().value<Window *>();
     QCOMPARE(windowAddedSpy.count(), 1);
-    QVERIFY(pasteClient);
+    QVERIFY(pasteWindow);
 
-    if (workspace()->activeWindow() != pasteClient) {
+    if (workspace()->activeWindow() != pasteWindow) {
         QSignalSpy windowActivatedSpy(workspace(), &Workspace::windowActivated);
         QVERIFY(windowActivatedSpy.isValid());
-        workspace()->activateWindow(pasteClient);
+        workspace()->activateWindow(pasteWindow);
         QVERIFY(windowActivatedSpy.wait());
     }
-    QTRY_COMPARE(workspace()->activeWindow(), pasteClient);
+    QTRY_COMPARE(workspace()->activeWindow(), pasteWindow);
     QVERIFY(finishedSpy.wait());
     QCOMPARE(finishedSpy.first().first().toInt(), 0);
 }

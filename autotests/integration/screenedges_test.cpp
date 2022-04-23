@@ -252,33 +252,33 @@ void ScreenEdgesTest::testClientEdge_data()
 
 void ScreenEdgesTest::testClientEdge()
 {
-    // This test verifies that a client will be shown when its screen edge is activated.
+    // This test verifies that a window will be shown when its screen edge is activated.
     QFETCH(QRect, geometry);
 
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    Window *client = Test::renderAndWaitForShown(surface.data(), geometry.size(), Qt::red);
-    QVERIFY(client);
-    QVERIFY(client->isActive());
-    client->move(geometry.topLeft());
+    Window *window = Test::renderAndWaitForShown(surface.data(), geometry.size(), Qt::red);
+    QVERIFY(window);
+    QVERIFY(window->isActive());
+    window->move(geometry.topLeft());
 
     // Reserve an electric border.
     QFETCH(ElectricBorder, border);
-    ScreenEdges::self()->reserve(client, border);
+    ScreenEdges::self()->reserve(window, border);
 
     // Hide the window.
-    client->hideClient();
-    QVERIFY(client->isHiddenInternal());
+    window->hideClient();
+    QVERIFY(window->isHiddenInternal());
 
     // Trigger the screen edge.
     QFETCH(QPointF, triggerPoint);
     quint32 timestamp = 0;
     Test::pointerMotion(triggerPoint, timestamp);
-    QVERIFY(client->isHiddenInternal());
+    QVERIFY(window->isHiddenInternal());
 
     timestamp += 150 + 1;
     Test::pointerMotion(triggerPoint, timestamp);
-    QTRY_VERIFY(!client->isHiddenInternal());
+    QTRY_VERIFY(!window->isHiddenInternal());
 }
 
 void ScreenEdgesTest::testObjectEdge_data()

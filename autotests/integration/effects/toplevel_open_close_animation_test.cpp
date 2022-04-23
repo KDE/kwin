@@ -112,22 +112,22 @@ void ToplevelOpenCloseAnimationTest::testAnimateToplevels()
     QVERIFY(effect);
     QVERIFY(!effect->isActive());
 
-    // Create the test client.
+    // Create the test window.
     using namespace KWayland::Client;
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    Window *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(client);
+    Window *window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
     QVERIFY(effect->isActive());
 
     // Eventually, the animation will be complete.
     QTRY_VERIFY(!effect->isActive());
 
-    // Close the test client, the effect should start animating the disappearing
-    // of the client.
-    QSignalSpy windowClosedSpy(client, &Window::windowClosed);
+    // Close the test window, the effect should start animating the disappearing
+    // of the window.
+    QSignalSpy windowClosedSpy(window, &Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
     shellSurface.reset();
     surface.reset();

@@ -324,19 +324,19 @@ void PointerInputTest::testWarpingBetweenWindows()
     // create windows
     QScopedPointer<KWayland::Client::Surface> surface1(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface1(Test::createXdgToplevelSurface(surface1.data()));
-    auto client1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::cyan);
+    auto window1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::cyan);
     QScopedPointer<KWayland::Client::Surface> surface2(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.data()));
-    auto client2 = Test::renderAndWaitForShown(surface2.data(), QSize(200, 100), Qt::red);
+    auto window2 = Test::renderAndWaitForShown(surface2.data(), QSize(200, 100), Qt::red);
 
     // place windows side by side
-    client1->move(QPoint(0, 0));
-    client2->move(QPoint(100, 0));
+    window1->move(QPoint(0, 0));
+    window2->move(QPoint(100, 0));
 
     quint32 timestamp = 0;
 
     // put the pointer at the center of the first window
-    Test::pointerMotion(client1->frameGeometry().center(), timestamp++);
+    Test::pointerMotion(window1->frameGeometry().center(), timestamp++);
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 1);
     QCOMPARE(enteredSpy.last().at(1).toPointF(), QPointF(49, 24));
@@ -345,7 +345,7 @@ void PointerInputTest::testWarpingBetweenWindows()
     QCOMPARE(pointer->enteredSurface(), surface1.data());
 
     // put the pointer at the center of the second window
-    Test::pointerMotion(client2->frameGeometry().center(), timestamp++);
+    Test::pointerMotion(window2->frameGeometry().center(), timestamp++);
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 2);
     QCOMPARE(enteredSpy.last().at(1).toPointF(), QPointF(99, 49));
@@ -410,7 +410,7 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
 
 void PointerInputTest::testUpdateFocusOnDecorationDestroy()
 {
-    // This test verifies that a maximized client gets it's pointer focus
+    // This test verifies that a maximized window gets it's pointer focus
     // if decoration was focused and then destroyed on maximize with BorderlessMaximizedWindows option.
 
     // create pointer for focus tracking
@@ -427,7 +427,7 @@ void PointerInputTest::testUpdateFocusOnDecorationDestroy()
     Workspace::self()->slotReconfigure();
     QCOMPARE(options->borderlessMaximizedWindows(), true);
 
-    // Create the test client.
+    // Create the test window.
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<Test::XdgToplevelDecorationV1> decoration(Test::createXdgToplevelDecorationV1(shellSurface.data()));
@@ -447,16 +447,16 @@ void PointerInputTest::testUpdateFocusOnDecorationDestroy()
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
 
-    // Map the client.
+    // Map the window.
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
-    Window *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(client);
-    QVERIFY(client->isActive());
-    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
-    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
-    QCOMPARE(client->isDecorated(), true);
+    Window *window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
+    QVERIFY(window->isActive());
+    QCOMPARE(window->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(window->isDecorated(), true);
 
-    // We should receive a configure event when the client becomes active.
+    // We should receive a configure event when the window becomes active.
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
     states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
@@ -465,7 +465,7 @@ void PointerInputTest::testUpdateFocusOnDecorationDestroy()
 
     // Simulate decoration hover
     quint32 timestamp = 0;
-    Test::pointerMotion(client->frameGeometry().topLeft(), timestamp++);
+    Test::pointerMotion(window->frameGeometry().topLeft(), timestamp++);
     QVERIFY(input()->pointer()->decoration());
 
     // Maximize when on decoration
@@ -477,15 +477,15 @@ void PointerInputTest::testUpdateFocusOnDecorationDestroy()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
 
-    QSignalSpy frameGeometryChangedSpy(client, &Window::frameGeometryChanged);
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.data(), QSize(1280, 1024), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(client->frameGeometry(), QRect(0, 0, 1280, 1024));
-    QCOMPARE(client->maximizeMode(), MaximizeFull);
-    QCOMPARE(client->requestedMaximizeMode(), MaximizeFull);
-    QCOMPARE(client->isDecorated(), false);
+    QCOMPARE(window->frameGeometry(), QRect(0, 0, 1280, 1024));
+    QCOMPARE(window->maximizeMode(), MaximizeFull);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
+    QCOMPARE(window->isDecorated(), false);
 
     // Window should have focus, BUG 411884
     QVERIFY(!input()->pointer()->decoration());
@@ -494,9 +494,9 @@ void PointerInputTest::testUpdateFocusOnDecorationDestroy()
     QVERIFY(buttonStateChangedSpy.wait());
     QCOMPARE(pointer->enteredSurface(), surface.data());
 
-    // Destroy the client.
+    // Destroy the window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(client));
+    QVERIFY(Test::waitForWindowDestroyed(window));
 }
 
 void PointerInputTest::testModifierClickUnrestrictedMove_data()
@@ -1349,16 +1349,16 @@ void PointerInputTest::testPopup()
     popupShellSurface->grab(*Test::waylandSeat(), 0); // FIXME: Serial.
     render(popupSurface, QSize(100, 50));
     QVERIFY(windowAddedSpy.wait());
-    auto popupClient = windowAddedSpy.last().first().value<Window *>();
-    QVERIFY(popupClient);
-    QVERIFY(popupClient != window);
+    auto popupWindow = windowAddedSpy.last().first().value<Window *>();
+    QVERIFY(popupWindow);
+    QVERIFY(popupWindow != window);
     QCOMPARE(window, workspace()->activeWindow());
-    QCOMPARE(popupClient->transientFor(), window);
-    QCOMPARE(popupClient->pos(), window->pos() + QPoint(80, 20));
-    QCOMPARE(popupClient->hasPopupGrab(), true);
+    QCOMPARE(popupWindow->transientFor(), window);
+    QCOMPARE(popupWindow->pos(), window->pos() + QPoint(80, 20));
+    QCOMPARE(popupWindow->hasPopupGrab(), true);
 
     // let's move the pointer into the center of the window
-    Cursors::self()->mouse()->setPos(popupClient->frameGeometry().center());
+    Cursors::self()->mouse()->setPos(popupWindow->frameGeometry().center());
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 2);
     QCOMPARE(leftSpy.count(), 1);
@@ -1366,7 +1366,7 @@ void PointerInputTest::testPopup()
 
     // let's move the pointer outside of the popup window
     // this should not really change anything, it gets a leave event
-    Cursors::self()->mouse()->setPos(popupClient->frameGeometry().bottomRight() + QPoint(2, 2));
+    Cursors::self()->mouse()->setPos(popupWindow->frameGeometry().bottomRight() + QPoint(2, 2));
     QVERIFY(leftSpy.wait());
     QCOMPARE(leftSpy.count(), 2);
     QVERIFY(doneReceivedSpy.isEmpty());
@@ -1434,13 +1434,13 @@ void PointerInputTest::testDecoCancelsPopup()
     QSignalSpy doneReceivedSpy(popupShellSurface, &Test::XdgPopup::doneReceived);
     QVERIFY(doneReceivedSpy.isValid());
     popupShellSurface->grab(*Test::waylandSeat(), 0); // FIXME: Serial.
-    auto popupClient = Test::renderAndWaitForShown(popupSurface, QSize(100, 50), Qt::red);
-    QVERIFY(popupClient);
-    QVERIFY(popupClient != window);
+    auto popupWindow = Test::renderAndWaitForShown(popupSurface, QSize(100, 50), Qt::red);
+    QVERIFY(popupWindow);
+    QVERIFY(popupWindow != window);
     QCOMPARE(window, workspace()->activeWindow());
-    QCOMPARE(popupClient->transientFor(), window);
-    QCOMPARE(popupClient->pos(), window->pos() + window->clientPos() + QPoint(80, 20));
-    QCOMPARE(popupClient->hasPopupGrab(), true);
+    QCOMPARE(popupWindow->transientFor(), window);
+    QCOMPARE(popupWindow->pos(), window->pos() + window->clientPos() + QPoint(80, 20));
+    QCOMPARE(popupWindow->hasPopupGrab(), true);
 
     // let's move the pointer into the center of the deco
     Cursors::self()->mouse()->setPos(window->frameGeometry().center().x(), window->y() + (window->height() - window->clientSize().height()) / 2);
@@ -1498,11 +1498,11 @@ void PointerInputTest::testWindowUnderCursorWhileButtonPressed()
     QVERIFY(popupShellSurface);
     render(popupSurface, QSize(99, 49));
     QVERIFY(windowAddedSpy.wait());
-    auto popupClient = windowAddedSpy.last().first().value<Window *>();
-    QVERIFY(popupClient);
-    QVERIFY(popupClient != window);
+    auto popupWindow = windowAddedSpy.last().first().value<Window *>();
+    QVERIFY(popupWindow);
+    QVERIFY(popupWindow != window);
     QVERIFY(window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
-    QVERIFY(popupClient->frameGeometry().contains(Cursors::self()->mouse()->pos()));
+    QVERIFY(popupWindow->frameGeometry().contains(Cursors::self()->mouse()->pos()));
     QVERIFY(!leftSpy.wait());
 
     Test::pointerButtonReleased(BTN_LEFT, timestamp++);
@@ -1643,33 +1643,33 @@ void PointerInputTest::testResizeCursor()
     QSignalSpy enteredSpy(pointer, &KWayland::Client::Pointer::entered);
     QVERIFY(enteredSpy.isValid());
 
-    // create a test client
+    // create a test window
     using namespace KWayland::Client;
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    Window *c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(c);
+    Window *window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
 
     // move the cursor to the test position
     QPoint cursorPos;
     QFETCH(Qt::Edges, edges);
 
     if (edges & Qt::LeftEdge) {
-        cursorPos.setX(c->frameGeometry().left());
+        cursorPos.setX(window->frameGeometry().left());
     } else if (edges & Qt::RightEdge) {
-        cursorPos.setX(c->frameGeometry().right());
+        cursorPos.setX(window->frameGeometry().right());
     } else {
-        cursorPos.setX(c->frameGeometry().center().x());
+        cursorPos.setX(window->frameGeometry().center().x());
     }
 
     if (edges & Qt::TopEdge) {
-        cursorPos.setY(c->frameGeometry().top());
+        cursorPos.setY(window->frameGeometry().top());
     } else if (edges & Qt::BottomEdge) {
-        cursorPos.setY(c->frameGeometry().bottom());
+        cursorPos.setY(window->frameGeometry().bottom());
     } else {
-        cursorPos.setY(c->frameGeometry().center().y());
+        cursorPos.setY(window->frameGeometry().center().y());
     }
 
     Cursors::self()->mouse()->setPos(cursorPos);
@@ -1686,11 +1686,11 @@ void PointerInputTest::testResizeCursor()
     pointer->setCursor(cursorSurface.data(), arrowCursor.hotSpot());
     QVERIFY(cursorRenderedSpy.wait());
 
-    // start resizing the client
+    // start resizing the window
     int timestamp = 1;
     Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
     Test::pointerButtonPressed(BTN_RIGHT, timestamp++);
-    QVERIFY(c->isInteractiveResize());
+    QVERIFY(window->isInteractiveResize());
 
     QFETCH(KWin::CursorShape, cursorShape);
     const PlatformCursorImage resizeCursor = loadReferenceThemeCursor(cursorShape);
@@ -1698,10 +1698,10 @@ void PointerInputTest::testResizeCursor()
     QCOMPARE(kwinApp()->platform()->cursorImage().image(), resizeCursor.image());
     QCOMPARE(kwinApp()->platform()->cursorImage().hotSpot(), resizeCursor.hotSpot());
 
-    // finish resizing the client
+    // finish resizing the window
     Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
     Test::pointerButtonReleased(BTN_RIGHT, timestamp++);
-    QVERIFY(!c->isInteractiveResize());
+    QVERIFY(!window->isInteractiveResize());
 
     QCOMPARE(kwinApp()->platform()->cursorImage().image(), arrowCursor.image());
     QCOMPARE(kwinApp()->platform()->cursorImage().hotSpot(), arrowCursor.hotSpot());
@@ -1733,17 +1733,17 @@ void PointerInputTest::testMoveCursor()
     QSignalSpy enteredSpy(pointer, &KWayland::Client::Pointer::entered);
     QVERIFY(enteredSpy.isValid());
 
-    // create a test client
+    // create a test window
     using namespace KWayland::Client;
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    Window *c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(c);
+    Window *window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
 
     // move cursor to the test position
-    Cursors::self()->mouse()->setPos(c->frameGeometry().center());
+    Cursors::self()->mouse()->setPos(window->frameGeometry().center());
 
     // wait for the enter event and set the cursor
     QVERIFY(enteredSpy.wait());
@@ -1757,21 +1757,21 @@ void PointerInputTest::testMoveCursor()
     pointer->setCursor(cursorSurface.data(), arrowCursor.hotSpot());
     QVERIFY(cursorRenderedSpy.wait());
 
-    // start moving the client
+    // start moving the window
     int timestamp = 1;
     Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);
-    QVERIFY(c->isInteractiveMove());
+    QVERIFY(window->isInteractiveMove());
 
     const PlatformCursorImage sizeAllCursor = loadReferenceThemeCursor(Qt::SizeAllCursor);
     QVERIFY(!sizeAllCursor.isNull());
     QCOMPARE(kwinApp()->platform()->cursorImage().image(), sizeAllCursor.image());
     QCOMPARE(kwinApp()->platform()->cursorImage().hotSpot(), sizeAllCursor.hotSpot());
 
-    // finish moving the client
+    // finish moving the window
     Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
     Test::pointerButtonReleased(BTN_LEFT, timestamp++);
-    QVERIFY(!c->isInteractiveMove());
+    QVERIFY(!window->isInteractiveMove());
 
     QCOMPARE(kwinApp()->platform()->cursorImage().image(), arrowCursor.image());
     QCOMPARE(kwinApp()->platform()->cursorImage().hotSpot(), arrowCursor.hotSpot());
@@ -1806,29 +1806,29 @@ void PointerInputTest::testDefaultInputRegion()
 {
     // This test verifies that a surface that hasn't specified the input region can be focused.
 
-    // Create a test client.
+    // Create a test window.
     using namespace KWayland::Client;
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    Window *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(client);
+    Window *window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
 
     // Move the point to the center of the surface.
-    Cursors::self()->mouse()->setPos(client->frameGeometry().center());
-    QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), client->surface());
+    Cursors::self()->mouse()->setPos(window->frameGeometry().center());
+    QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), window->surface());
 
-    // Destroy the test client.
+    // Destroy the test window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(client));
+    QVERIFY(Test::waitForWindowDestroyed(window));
 }
 
 void PointerInputTest::testEmptyInputRegion()
 {
     // This test verifies that a surface that has specified an empty input region can't be focused.
 
-    // Create a test client.
+    // Create a test window.
     using namespace KWayland::Client;
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
@@ -1836,16 +1836,16 @@ void PointerInputTest::testEmptyInputRegion()
     surface->setInputRegion(inputRegion.get());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    Window *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(client);
+    Window *window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
 
     // Move the point to the center of the surface.
-    Cursors::self()->mouse()->setPos(client->frameGeometry().center());
+    Cursors::self()->mouse()->setPos(window->frameGeometry().center());
     QVERIFY(!waylandServer()->seat()->focusedPointerSurface());
 
-    // Destroy the test client.
+    // Destroy the test window.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(client));
+    QVERIFY(Test::waitForWindowDestroyed(window));
 }
 
 }

@@ -75,31 +75,31 @@ void DontCrashEmptyDecorationTest::testBug361551()
     xcb_connection_t *c = xcb_connect(nullptr, nullptr);
     QVERIFY(!xcb_connection_has_error(c));
 
-    xcb_window_t w = xcb_generate_id(c);
-    xcb_create_window(c, XCB_COPY_FROM_PARENT, w, rootWindow(), 0, 0, 10, 10, 0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
-    xcb_map_window(c, w);
+    xcb_window_t windowId = xcb_generate_id(c);
+    xcb_create_window(c, XCB_COPY_FROM_PARENT, windowId, rootWindow(), 0, 0, 10, 10, 0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+    xcb_map_window(c, windowId);
     xcb_flush(c);
 
-    // we should get a client for it
+    // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
-    X11Window *client = windowCreatedSpy.first().first().value<X11Window *>();
-    QVERIFY(client);
-    QCOMPARE(client->window(), w);
-    QVERIFY(client->isDecorated());
+    X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
+    QVERIFY(window);
+    QCOMPARE(window->window(), windowId);
+    QVERIFY(window->isDecorated());
 
     // let's set a stupid geometry
-    client->moveResize({0, 0, 0, 0});
-    QCOMPARE(client->frameGeometry(), QRect(0, 0, 0, 0));
+    window->moveResize({0, 0, 0, 0});
+    QCOMPARE(window->frameGeometry(), QRect(0, 0, 0, 0));
 
     // and destroy the window again
-    xcb_unmap_window(c, w);
-    xcb_destroy_window(c, w);
+    xcb_unmap_window(c, windowId);
+    xcb_destroy_window(c, windowId);
     xcb_flush(c);
     xcb_disconnect(c);
 
-    QSignalSpy windowClosedSpy(client, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
     QVERIFY(windowClosedSpy.wait());
 }

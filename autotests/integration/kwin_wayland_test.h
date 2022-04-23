@@ -438,9 +438,9 @@ public:
     MockInputMethod(struct wl_registry *registry, int id, int version);
     ~MockInputMethod();
 
-    Window *client() const
+    Window *window() const
     {
-        return m_client;
+        return m_window;
     }
     KWayland::Client::Surface *inputPanelSurface() const
     {
@@ -461,7 +461,7 @@ protected:
 private:
     QPointer<KWayland::Client::Surface> m_inputSurface;
     QtWayland::zwp_input_panel_surface_v1 *m_inputMethodSurface = nullptr;
-    QPointer<Window> m_client;
+    QPointer<Window> m_window;
     struct ::zwp_input_method_context_v1 *m_context = nullptr;
 };
 
@@ -572,7 +572,7 @@ KWayland::Client::TextInputManager *waylandTextInputManager();
 QVector<KWayland::Client::Output *> waylandOutputs();
 QVector<WaylandOutputDeviceV2 *> waylandOutputDevicesV2();
 
-bool waitForWaylandSurface(Window *client);
+bool waitForWaylandSurface(Window *window);
 
 bool waitForWaylandPointer();
 bool waitForWaylandTouch();
@@ -637,9 +637,9 @@ Window *waitForWaylandWindowShown(int timeout = 5000);
 Window *renderAndWaitForShown(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format = QImage::Format_ARGB32, int timeout = 5000);
 
 /**
- * Waits for the @p client to be destroyed.
+ * Waits for the @p window to be destroyed.
  */
-bool waitForWindowDestroyed(Window *client);
+bool waitForWindowDestroyed(Window *window);
 
 /**
  * Locks the screen and waits till the screen is locked.
@@ -655,7 +655,7 @@ bool unlockScreen();
 
 void initWaylandWorkspace();
 
-Window *inputPanelClient();
+Window *inputPanelWindow();
 MockInputMethod *inputMethod();
 KWayland::Client::Surface *inputPanelSurface();
 

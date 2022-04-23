@@ -100,10 +100,10 @@ void ActivitiesTest::testSetOnActivitiesValidates()
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(c.data()));
 
-    xcb_window_t w = xcb_generate_id(c.data());
+    xcb_window_t windowId = xcb_generate_id(c.data());
     const QRect windowGeometry(0, 0, 100, 200);
 
-    auto cookie = xcb_create_window_checked(c.data(), 0, w, rootWindow(),
+    auto cookie = xcb_create_window_checked(c.data(), 0, windowId, rootWindow(),
                                             windowGeometry.x(),
                                             windowGeometry.y(),
                                             windowGeometry.width(),
@@ -114,34 +114,34 @@ void ActivitiesTest::testSetOnActivitiesValidates()
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.data(), w, &hints);
-    xcb_map_window(c.data(), w);
+    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
+    xcb_map_window(c.data(), windowId);
     xcb_flush(c.data());
 
-    // we should get a client for it
+    // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
-    X11Window *client = windowCreatedSpy.first().first().value<X11Window *>();
-    QVERIFY(client);
-    QCOMPARE(client->window(), w);
-    QVERIFY(client->isDecorated());
+    X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
+    QVERIFY(window);
+    QCOMPARE(window->window(), windowId);
+    QVERIFY(window->isDecorated());
 
     // verify the test machine doesn't have the following activities used
     QVERIFY(!Activities::self()->all().contains(QStringLiteral("foo")));
     QVERIFY(!Activities::self()->all().contains(QStringLiteral("bar")));
 
-    client->setOnActivities(QStringList{QStringLiteral("foo"), QStringLiteral("bar")});
-    QVERIFY(!client->activities().contains(QLatin1String("foo")));
-    QVERIFY(!client->activities().contains(QLatin1String("bar")));
+    window->setOnActivities(QStringList{QStringLiteral("foo"), QStringLiteral("bar")});
+    QVERIFY(!window->activities().contains(QLatin1String("foo")));
+    QVERIFY(!window->activities().contains(QLatin1String("bar")));
 
     // and destroy the window again
-    xcb_unmap_window(c.data(), w);
-    xcb_destroy_window(c.data(), w);
+    xcb_unmap_window(c.data(), windowId);
+    xcb_destroy_window(c.data(), windowId);
     xcb_flush(c.data());
     c.reset();
 
-    QSignalSpy windowClosedSpy(client, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
     QVERIFY(windowClosedSpy.wait());
 }

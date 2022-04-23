@@ -79,12 +79,12 @@ void MaximizeAnimationTest::cleanup()
 
 void MaximizeAnimationTest::testMaximizeRestore()
 {
-    // This test verifies that the maximize effect animates a client
+    // This test verifies that the maximize effect animates a window
     // when it's maximized or restored.
 
     using namespace KWayland::Client;
 
-    // Create the test client.
+    // Create the test window.
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
@@ -106,12 +106,12 @@ void MaximizeAnimationTest::testMaximizeRestore()
 
     // Draw contents of the surface.
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
-    Window *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(client);
-    QVERIFY(client->isActive());
-    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
+    Window *window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
+    QVERIFY(window->isActive());
+    QCOMPARE(window->maximizeMode(), MaximizeMode::MaximizeRestore);
 
-    // We should receive a configure event when the client becomes active.
+    // We should receive a configure event when the window becomes active.
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
     states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
@@ -129,10 +129,10 @@ void MaximizeAnimationTest::testMaximizeRestore()
     QVERIFY(effect);
     QVERIFY(!effect->isActive());
 
-    // Maximize the client.
-    QSignalSpy frameGeometryChangedSpy(client, &Window::frameGeometryChanged);
+    // Maximize the window.
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
-    QSignalSpy maximizeChangedSpy(client, qOverload<Window *, bool, bool>(&Window::clientMaximizedStateChanged));
+    QSignalSpy maximizeChangedSpy(window, qOverload<Window *, bool, bool>(&Window::clientMaximizedStateChanged));
     QVERIFY(maximizeChangedSpy.isValid());
 
     workspace()->slotWindowMaximize();
@@ -143,19 +143,19 @@ void MaximizeAnimationTest::testMaximizeRestore()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
 
-    // Draw contents of the maximized client.
+    // Draw contents of the maximized window.
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.data(), QSize(1280, 1024), Qt::red);
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(frameGeometryChangedSpy.count(), 1);
     QCOMPARE(maximizeChangedSpy.count(), 1);
-    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
+    QCOMPARE(window->maximizeMode(), MaximizeMode::MaximizeFull);
     QVERIFY(effect->isActive());
 
     // Eventually, the animation will be complete.
     QTRY_VERIFY(!effect->isActive());
 
-    // Restore the client.
+    // Restore the window.
     workspace()->slotWindowMaximize();
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 4);
@@ -164,21 +164,21 @@ void MaximizeAnimationTest::testMaximizeRestore()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
 
-    // Draw contents of the restored client.
+    // Draw contents of the restored window.
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(frameGeometryChangedSpy.count(), 2);
     QCOMPARE(maximizeChangedSpy.count(), 2);
-    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(window->maximizeMode(), MaximizeMode::MaximizeRestore);
     QVERIFY(effect->isActive());
 
     // Eventually, the animation will be complete.
     QTRY_VERIFY(!effect->isActive());
 
-    // Destroy the test client.
+    // Destroy the test window.
     surface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(client));
+    QVERIFY(Test::waitForWindowDestroyed(window));
 }
 
 WAYLANDTEST_MAIN(MaximizeAnimationTest)

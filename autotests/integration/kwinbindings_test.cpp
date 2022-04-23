@@ -218,10 +218,10 @@ void KWinBindingsTest::testWindowToDesktop()
     // now create a window
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QSignalSpy desktopChangedSpy(c, &Window::desktopChanged);
+    auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QSignalSpy desktopChangedSpy(window, &Window::desktopChanged);
     QVERIFY(desktopChangedSpy.isValid());
-    QCOMPARE(workspace()->activeWindow(), c);
+    QCOMPARE(workspace()->activeWindow(), window);
 
     QFETCH(int, desktop);
     VirtualDesktopManager::self()->setCount(desktop);
@@ -238,11 +238,11 @@ void KWinBindingsTest::testWindowToDesktop()
     };
     invokeShortcut(desktop);
     QVERIFY(desktopChangedSpy.wait());
-    QCOMPARE(c->desktop(), desktop);
+    QCOMPARE(window->desktop(), desktop);
     // back to desktop 1
     invokeShortcut(1);
     QVERIFY(desktopChangedSpy.wait());
-    QCOMPARE(c->desktop(), 1);
+    QCOMPARE(window->desktop(), 1);
     // invoke with one desktop too many
     invokeShortcut(desktop + 1);
     // that should fail

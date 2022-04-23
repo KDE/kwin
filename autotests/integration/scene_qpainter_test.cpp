@@ -336,9 +336,9 @@ void SceneQPainterTest::testX11Window()
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(c.data()));
     const QRect windowGeometry(0, 0, 100, 200);
-    xcb_window_t w = xcb_generate_id(c.data());
+    xcb_window_t windowId = xcb_generate_id(c.data());
     uint32_t value = kwinApp()->x11DefaultScreen()->white_pixel;
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
+    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
@@ -348,24 +348,24 @@ void SceneQPainterTest::testX11Window()
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.data(), w, &hints);
-    xcb_map_window(c.data(), w);
+    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
+    xcb_map_window(c.data(), windowId);
     xcb_flush(c.data());
 
-    // we should get a client for it
+    // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
-    X11Window *client = windowCreatedSpy.first().first().value<X11Window *>();
-    QVERIFY(client);
-    QCOMPARE(client->window(), w);
-    QCOMPARE(client->clientSize(), QSize(100, 200));
-    QVERIFY(Test::waitForWaylandSurface(client));
-    QVERIFY(waitForXwaylandBuffer(client, client->size()));
-    QImage compareImage(client->clientSize(), QImage::Format_RGB32);
+    X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
+    QVERIFY(window);
+    QCOMPARE(window->window(), windowId);
+    QCOMPARE(window->clientSize(), QSize(100, 200));
+    QVERIFY(Test::waitForWaylandSurface(window));
+    QVERIFY(waitForXwaylandBuffer(window, window->size()));
+    QImage compareImage(window->clientSize(), QImage::Format_RGB32);
     compareImage.fill(Qt::white);
-    auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(client->surface()->buffer());
-    QCOMPARE(buffer->data().copy(QRect(client->clientPos(), client->clientSize())), compareImage);
+    auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(window->surface()->buffer());
+    QCOMPARE(buffer->data().copy(QRect(window->clientPos(), window->clientSize())), compareImage);
 
     // enough time for rendering the window
     QTest::qWait(100);
@@ -379,18 +379,18 @@ void SceneQPainterTest::testX11Window()
     QVERIFY(frameRenderedSpy.isValid());
     QVERIFY(frameRenderedSpy.wait());
 
-    const QPoint startPos = client->pos() + client->clientPos();
+    const QPoint startPos = window->pos() + window->clientPos();
     auto image = grab(kwinApp()->platform()->enabledOutputs().constFirst());
-    QCOMPARE(image.copy(QRect(startPos, client->clientSize())), compareImage);
+    QCOMPARE(image.copy(QRect(startPos, window->clientSize())), compareImage);
 
     // and destroy the window again
-    xcb_unmap_window(c.data(), w);
+    xcb_unmap_window(c.data(), windowId);
     xcb_flush(c.data());
 
-    QSignalSpy windowClosedSpy(client, &X11Window::windowClosed);
+    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
     QVERIFY(windowClosedSpy.wait());
-    xcb_destroy_window(c.data(), w);
+    xcb_destroy_window(c.data(), windowId);
     c.reset();
 }
 
