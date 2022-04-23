@@ -489,12 +489,12 @@ void DebugConsoleTest::testClosingDebugConsole()
     QSignalSpy destroyedSpy(console, &QObject::destroyed);
     QVERIFY(destroyedSpy.isValid());
 
-    QSignalSpy clientAddedSpy(workspace(), &Workspace::internalClientAdded);
-    QVERIFY(clientAddedSpy.isValid());
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QVERIFY(windowAddedSpy.isValid());
     console->show();
     QCOMPARE(console->windowHandle()->isVisible(), true);
-    QTRY_COMPARE(clientAddedSpy.count(), 1);
-    InternalWindow *c = clientAddedSpy.first().first().value<InternalWindow *>();
+    QTRY_COMPARE(windowAddedSpy.count(), 1);
+    InternalWindow *c = windowAddedSpy.first().first().value<InternalWindow *>();
     QVERIFY(c->isInternal());
     QCOMPARE(c->internalWindow(), console->windowHandle());
     QVERIFY(c->isDecorated());

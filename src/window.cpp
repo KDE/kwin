@@ -237,7 +237,7 @@ void Window::getWmClientLeader()
 }
 
 /**
- * Returns sessionId for this client,
+ * Returns sessionId for this window,
  * taken either from its window or from the leader window.
  */
 QByteArray Window::sessionId() const
@@ -250,7 +250,7 @@ QByteArray Window::sessionId() const
 }
 
 /**
- * Returns command property for this client,
+ * Returns command property for this window,
  * taken either from its window or from the leader window.
  */
 QByteArray Window::wmCommand()
@@ -269,7 +269,7 @@ void Window::getWmClientMachine()
 }
 
 /**
- * Returns client machine for this client,
+ * Returns client machine for this window,
  * taken either from its window or from the leader window.
  */
 QByteArray Window::wmClientMachine(bool use_localhost) const
@@ -879,7 +879,7 @@ void Window::setActive(bool act)
         ? rules()->checkOpacityActive(qRound(opacity() * 100.0))
         : rules()->checkOpacityInactive(qRound(opacity() * 100.0));
     setOpacity(ruledOpacity / 100.0);
-    workspace()->setActiveClient(act ? this : nullptr);
+    workspace()->setActiveWindow(act ? this : nullptr);
 
     if (!m_active) {
         cancelAutoRaise();
@@ -891,8 +891,8 @@ void Window::setActive(bool act)
 
     StackingUpdatesBlocker blocker(workspace());
     updateLayer(); // active windows may get different layer
-    auto mainclients = mainClients();
-    for (auto it = mainclients.constBegin(); it != mainclients.constEnd(); ++it) {
+    auto mainwindows = mainWindows();
+    for (auto it = mainwindows.constBegin(); it != mainwindows.constEnd(); ++it) {
         if ((*it)->isFullScreen()) { // fullscreens go high even if their transient is active
             (*it)->updateLayer();
         }
@@ -1077,14 +1077,14 @@ void Window::cancelAutoRaise()
 
 void Window::autoRaise()
 {
-    workspace()->raiseClient(this);
+    workspace()->raiseWindow(this);
     cancelAutoRaise();
 }
 
 bool Window::isMostRecentlyRaised() const
 {
     // The last toplevel in the unconstrained stacking order is the most recently raised one.
-    return workspace()->topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop(), nullptr, true, false) == this;
+    return workspace()->topWindowOnDesktop(VirtualDesktopManager::self()->currentDesktop(), nullptr, true, false) == this;
 }
 
 bool Window::wantsTabFocus() const
@@ -1108,7 +1108,7 @@ void Window::demandAttention(bool set)
     }
     m_demandsAttention = set;
     doSetDemandsAttention();
-    workspace()->clientAttentionChanged(this, set);
+    workspace()->windowAttentionChanged(this, set);
     Q_EMIT demandsAttentionChanged();
 }
 
@@ -1183,9 +1183,9 @@ void Window::setDesktops(QVector<VirtualDesktop *> desktops)
                    // the (just moved) modal dialog will confusingly return to the mainwindow with
                    // the next desktop change
     {
-        const auto clients = mainClients();
-        for (Window *c2 : clients) {
-            c2->setDesktops(desktops);
+        const auto windows = mainWindows();
+        for (Window *other : windows) {
+            other->setDesktops(desktops);
         }
     }
 
@@ -1654,7 +1654,7 @@ bool Window::startInteractiveMoveResize()
     invalidateDecorationDoubleClickTimer();
 
     setInteractiveMoveResize(true);
-    workspace()->setMoveResizeClient(this);
+    workspace()->setMoveResizeWindow(this);
 
     if (maximizeMode() != MaximizeRestore) {
         switch (interactiveMoveResizeGravity()) {
@@ -1724,7 +1724,7 @@ void Window::finishInteractiveMoveResize(bool cancel)
         moveResize(initialInteractiveMoveResizeGeometry());
     }
     if (output() != interactiveMoveResizeStartOutput()) {
-        workspace()->sendClientToOutput(this, output()); // checks rule validity
+        workspace()->sendWindowToOutput(this, output()); // checks rule validity
         if (isFullScreen() || maximizeMode() != MaximizeRestore) {
             checkWorkspacePosition();
         }
@@ -1955,7 +1955,7 @@ void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
         // first resize (without checking constrains), then snap, then check bounds, then check constrains
         calculateMoveResizeGeom();
         // adjust new size to snap to other windows/borders
-        setMoveResizeGeometry(workspace()->adjustClientSize(this, moveResizeGeometry(), gravity));
+        setMoveResizeGeometry(workspace()->adjustWindowSize(this, moveResizeGeometry(), gravity));
 
         if (!isUnrestrictedInteractiveMoveResize()) {
             // Make sure the titlebar isn't behind a restricted area. We don't need to restrict
@@ -2091,7 +2091,7 @@ void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
             // first move, then snap, then check bounds
             QRect moveResizeGeom = moveResizeGeometry();
             moveResizeGeom.moveTopLeft(topleft);
-            moveResizeGeom.moveTopLeft(workspace()->adjustClientPosition(this, moveResizeGeom.topLeft(),
+            moveResizeGeom.moveTopLeft(workspace()->adjustWindowPosition(this, moveResizeGeom.topLeft(),
                                                                          isUnrestrictedInteractiveMoveResize()));
             setMoveResizeGeometry(moveResizeGeom);
 
@@ -2325,7 +2325,7 @@ void Window::setupWindowManagementInterface()
     });
     connect(w, &PlasmaWindowInterface::activeRequested, this, [this](bool set) {
         if (set) {
-            workspace()->activateClient(this, true);
+            workspace()->activateWindow(this, true);
         }
     });
     connect(w, &PlasmaWindowInterface::shadedRequested, this, [this](bool set) {
@@ -2363,7 +2363,6 @@ void Window::setupWindowManagementInterface()
         w->addPlasmaActivity(activity);
     }
 
-    // Notify clients on activities changes
     connect(this, &Window::activitiesChanged, w, [w, this] {
         const auto newActivities = QSet<QString>(m_activityList.begin(), m_activityList.end());
         const auto oldActivitiesList = w->plasmaActivities();
@@ -2441,14 +2440,14 @@ bool Window::performMouseCommand(Options::MouseCommand cmd, const QPoint &global
     bool replay = false;
     switch (cmd) {
     case Options::MouseRaise:
-        workspace()->raiseClient(this);
+        workspace()->raiseWindow(this);
         break;
     case Options::MouseLower: {
-        workspace()->lowerClient(this);
-        // used to be activateNextClient(this), then topClientOnDesktop
-        // since this is a mouseOp it's however safe to use the client under the mouse instead
+        workspace()->lowerWindow(this);
+        // used to be activateNextWindow(this), then topWindowOnDesktop
+        // since this is a mouseOp it's however safe to use the window under the mouse instead
         if (isActive() && options->focusPolicyIsReasonable()) {
-            Window *next = workspace()->clientUnderMouse(output());
+            Window *next = workspace()->windowUnderMouse(output());
             if (next && next != this) {
                 workspace()->requestFocus(next, false);
             }
@@ -2462,7 +2461,7 @@ bool Window::performMouseCommand(Options::MouseCommand cmd, const QPoint &global
         workspace()->showWindowMenu(QRect(globalPos, globalPos), this);
         break;
     case Options::MouseToggleRaiseAndLower:
-        workspace()->raiseOrLowerClient(this);
+        workspace()->raiseOrLowerWindow(this);
         break;
     case Options::MouseActivateAndRaise: {
         replay = isActive(); // for clickraise mode
@@ -2485,7 +2484,7 @@ bool Window::performMouseCommand(Options::MouseCommand cmd, const QPoint &global
     }
     case Options::MouseActivateAndLower:
         workspace()->requestFocus(this);
-        workspace()->lowerClient(this);
+        workspace()->lowerWindow(this);
         workspace()->setActiveOutput(globalPos);
         replay = replay || !rules()->checkAcceptFocus(acceptsFocus());
         break;
@@ -2553,7 +2552,7 @@ bool Window::performMouseCommand(Options::MouseCommand cmd, const QPoint &global
         break;
     case Options::MouseActivateRaiseAndMove:
     case Options::MouseActivateRaiseAndUnrestrictedMove:
-        workspace()->raiseClient(this);
+        workspace()->raiseWindow(this);
         workspace()->requestFocus(this);
         workspace()->setActiveOutput(globalPos);
         // fallthrough
@@ -2671,7 +2670,7 @@ bool Window::hasTransient(const Window *c, bool indirect) const
     return c->transientFor() == this;
 }
 
-QList<Window *> Window::mainClients() const
+QList<Window *> Window::mainWindows() const
 {
     if (const Window *t = transientFor()) {
         return QList<Window *>{const_cast<Window *>(t)};
@@ -2679,11 +2678,11 @@ QList<Window *> Window::mainClients() const
     return QList<Window *>();
 }
 
-QList<Window *> Window::allMainClients() const
+QList<Window *> Window::allMainWindows() const
 {
-    auto result = mainClients();
-    for (const auto *cl : result) {
-        result += cl->allMainClients();
+    auto result = mainWindows();
+    for (const auto *window : result) {
+        result += window->allMainWindows();
     }
     return result;
 }
@@ -2759,11 +2758,11 @@ bool Window::isActiveFullScreen() const
         return false;
     }
 
-    const auto ac = workspace()->mostRecentlyActivatedClient(); // instead of activeClient() - avoids flicker
+    const auto ac = workspace()->mostRecentlyActivatedWindow(); // instead of activeWindow() - avoids flicker
     // according to NETWM spec implementation notes suggests
     // "focused windows having state _NET_WM_STATE_FULLSCREEN" to be on the highest layer.
     // we'll also take the screen into account
-    return ac && (ac == this || !ac->isOnOutput(output()) || ac->allMainClients().contains(const_cast<Window *>(this)));
+    return ac && (ac == this || !ac->isOnOutput(output()) || ac->allMainWindows().contains(const_cast<Window *>(this)));
 }
 
 #define BORDER(which)                                             \
@@ -2833,7 +2832,7 @@ void Window::updateCursor()
 
 void Window::leaveInteractiveMoveResize()
 {
-    workspace()->setMoveResizeClient(nullptr);
+    workspace()->setMoveResizeWindow(nullptr);
     setInteractiveMoveResize(false);
     if (ScreenEdges::self()->isDesktopSwitchingMovingClients()) {
         ScreenEdges::self()->reserveDesktopSwitching(false, Qt::Vertical | Qt::Horizontal);
@@ -3224,7 +3223,7 @@ void Window::pointerEnterEvent(const QPoint &globalPos)
         return;
     }
 
-    if (options->isAutoRaise() && !isDesktop() && !isDock() && workspace()->focusChangeEnabled() && globalPos != workspace()->focusMousePosition() && workspace()->topClientOnDesktop(VirtualDesktopManager::self()->currentDesktop(), options->isSeparateScreenFocus() ? output() : nullptr) != this) {
+    if (options->isAutoRaise() && !isDesktop() && !isDock() && workspace()->focusChangeEnabled() && globalPos != workspace()->focusMousePosition() && workspace()->topWindowOnDesktop(VirtualDesktopManager::self()->currentDesktop(), options->isSeparateScreenFocus() ? output() : nullptr) != this) {
         startAutoRaise();
     }
 
@@ -3262,14 +3261,14 @@ QRect Window::iconGeometry() const
 
     const auto minGeometries = windowManagementInterface()->minimizedGeometries();
     for (auto i = minGeometries.constBegin(), end = minGeometries.constEnd(); i != end; ++i) {
-        Window *client = waylandServer()->findClient(i.key());
-        if (!client) {
+        Window *panel = waylandServer()->findWindow(i.key());
+        if (!panel) {
             continue;
         }
-        const int distance = QPoint(client->pos() - pos()).manhattanLength();
+        const int distance = QPoint(panel->pos() - pos()).manhattanLength();
         if (distance < minDistance) {
             minDistance = distance;
-            candidatePanel = client;
+            candidatePanel = panel;
             candidateGeom = i.value();
         }
     }
@@ -3294,7 +3293,7 @@ void Window::setVirtualKeyboardGeometry(const QRect &geo)
         m_keyboardGeometryRestore = QRect();
     } else if (geo.isEmpty()) {
         return;
-        // The keyboard has just been opened (rather than resized) save client geometry for a restore
+        // The keyboard has just been opened (rather than resized) save window geometry for a restore
     } else if (m_keyboardGeometryRestore.isEmpty()) {
         m_keyboardGeometryRestore = moveResizeGeometry();
     }
@@ -3455,7 +3454,7 @@ QString Window::shortcutCaptionSuffix() const
     return QLatin1String(" {") + shortcut().toString() + QLatin1Char('}');
 }
 
-Window *Window::findClientWithSameCaption() const
+Window *Window::findWindowWithSameCaption() const
 {
     auto fetchNameInternalPredicate = [this](const Window *cl) {
         return (!cl->isSpecialWindow() || cl->isToolbar()) && cl != this && cl->captionNormal() == captionNormal() && cl->captionSuffix() == captionSuffix();
@@ -3490,7 +3489,7 @@ void Window::evaluateWindowRules()
 }
 
 /**
- * Returns the list of activities the client window is on.
+ * Returns the list of activities the window window is on.
  * if it's on all activities, the list will be empty.
  * Don't use this, use isOnActivity() and friends (from class Window)
  */
@@ -3500,7 +3499,7 @@ QStringList Window::activities() const
 }
 
 /**
- * Sets whether the client is on @p activity.
+ * Sets whether the window is on @p activity.
  * If you remove it from its last activity, then it's on all activities.
  *
  * Note: If it was on all activities and you try to remove it from one, nothing will happen;
@@ -3535,7 +3534,7 @@ void Window::setOnActivity(const QString &activity, bool enable)
 }
 
 /**
- * set exactly which activities this client is on
+ * set exactly which activities this window is on
  */
 void Window::setOnActivities(const QStringList &newActivitiesList)
 {
@@ -3931,10 +3930,10 @@ void Window::sendToOutput(Output *newOutput)
     if (isActive()) {
         workspace()->setActiveOutput(newOutput);
         // might impact the layer of a fullscreen window
-        const auto clients = workspace()->allClientList();
-        for (Window *cc : clients) {
-            if (cc->isFullScreen() && cc->output() == newOutput) {
-                cc->updateLayer();
+        const auto windows = workspace()->allClientList();
+        for (Window *other : windows) {
+            if (other->isFullScreen() && other->output() == newOutput) {
+                other->updateLayer();
             }
         }
     }
@@ -4320,7 +4319,7 @@ bool Window::isFullScreenable() const
 /**
  * Returns @c true if the Window is currently being shown in full screen mode; otherwise @c false.
  *
- * A client in full screen mode occupies the entire screen with no window frame around it.
+ * A window in full screen mode occupies the entire screen with no window frame around it.
  *
  * Default implementation returns @c false.
  */
@@ -4519,7 +4518,7 @@ void Window::applyWindowRules()
     // MinSize, MaxSize handled by Geometry
     // IgnoreGeometry
     setDesktops(desktops());
-    workspace()->sendClientToOutput(this, output());
+    workspace()->sendWindowToOutput(this, output());
     setOnActivities(activities());
     // Type
     maximize(maximizeMode());
@@ -4540,9 +4539,9 @@ void Window::applyWindowRules()
     updateColorScheme();
     // FSP
     // AcceptFocus :
-    if (workspace()->mostRecentlyActivatedClient() == this
+    if (workspace()->mostRecentlyActivatedWindow() == this
         && !client_rules->checkAcceptFocus(true)) {
-        workspace()->activateNextClient(this);
+        workspace()->activateNextWindow(this);
     }
     // Autogrouping : Only checked on window manage
     // AutogroupInForeground : Only checked on window manage

@@ -92,9 +92,9 @@ void Deleted::copyToDeleted(Window *window)
     m_wasClient = true;
     m_minimized = window->isMinimized();
     m_modal = window->isModal();
-    m_mainClients = window->mainClients();
-    for (Window *c : qAsConst(m_mainClients)) {
-        connect(c, &Window::windowClosed, this, &Deleted::mainClientClosed);
+    m_mainWindows = window->mainWindows();
+    for (Window *w : qAsConst(m_mainWindows)) {
+        connect(w, &Window::windowClosed, this, &Deleted::mainWindowClosed);
     }
     m_fullscreen = window->isFullScreen();
     m_keepAbove = window->keepAbove();
@@ -169,9 +169,9 @@ NET::WindowType Deleted::windowType(bool direct, int supportedTypes) const
     return m_type;
 }
 
-void Deleted::mainClientClosed(Window *window)
+void Deleted::mainWindowClosed(Window *window)
 {
-    m_mainClients.removeAll(window);
+    m_mainWindows.removeAll(window);
 }
 
 xcb_window_t Deleted::frameId() const

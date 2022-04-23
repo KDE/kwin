@@ -90,7 +90,7 @@ void DontCrashCancelAnimationFromAnimationEndedTest::testScript()
     // let's render
     auto c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
     QVERIFY(c);
-    QCOMPARE(workspace()->activeClient(), c);
+    QCOMPARE(workspace()->activeWindow(), c);
 
     // make sure we animate
     QTest::qWait(200);

@@ -26,9 +26,9 @@ public:
     void rearrange();
     void scheduleRearrange();
 
-    void createClient(KWaylandServer::LayerSurfaceV1Interface *shellSurface);
-    void recreateClient(KWaylandServer::LayerSurfaceV1Interface *shellSurface);
-    void destroyClient(KWaylandServer::LayerSurfaceV1Interface *shellSurface);
+    void createWindow(KWaylandServer::LayerSurfaceV1Interface *shellSurface);
+    void recreateWindow(KWaylandServer::LayerSurfaceV1Interface *shellSurface);
+    void destroyWindow(KWaylandServer::LayerSurfaceV1Interface *shellSurface);
 
 private:
     QTimer *m_rearrangeTimer;

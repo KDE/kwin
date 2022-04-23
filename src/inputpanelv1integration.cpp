@@ -21,12 +21,12 @@ InputPanelV1Integration::InputPanelV1Integration(QObject *parent)
     InputPanelV1Interface *shell = new InputPanelV1Interface(waylandServer()->display(), this);
 
     connect(shell, &InputPanelV1Interface::inputPanelSurfaceAdded,
-            this, &InputPanelV1Integration::createClient);
+            this, &InputPanelV1Integration::createWindow);
 }
 
-void InputPanelV1Integration::createClient(InputPanelSurfaceV1Interface *shellSurface)
+void InputPanelV1Integration::createWindow(InputPanelSurfaceV1Interface *shellSurface)
 {
-    Q_EMIT clientCreated(new InputPanelV1Window(shellSurface));
+    Q_EMIT windowCreated(new InputPanelV1Window(shellSurface));
 }
 
 } // namespace KWin

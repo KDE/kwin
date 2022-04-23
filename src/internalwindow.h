@@ -54,7 +54,7 @@ public:
     bool takeFocus() override;
     void setNoBorder(bool set) override;
     void invalidateDecoration() override;
-    void destroyClient() override;
+    void destroyWindow() override;
     bool hasPopupGrab() const override;
     void popupDone() override;
     bool hitTest(const QPoint &point) const override;

@@ -159,19 +159,19 @@ void RootInfo::changeActiveWindow(xcb_window_t w, NET::RequestSource src, xcb_ti
             src = NET::FromTool;
         }
         if (src == NET::FromTool) {
-            workspace->activateClient(c, true); // force
-        } else if (c == workspace->mostRecentlyActivatedClient()) {
+            workspace->activateWindow(c, true); // force
+        } else if (c == workspace->mostRecentlyActivatedWindow()) {
             return; // WORKAROUND? With > 1 plasma activities, we cause this ourselves. bug #240673
         } else { // NET::FromApplication
             X11Window *c2;
-            if (workspace->allowClientActivation(c, timestamp, false, true)) {
-                workspace->activateClient(c);
+            if (workspace->allowWindowActivation(c, timestamp, false, true)) {
+                workspace->activateWindow(c);
                 // if activation of the requestor's window would be allowed, allow activation too
             } else if (active_window != XCB_WINDOW_NONE
                        && (c2 = workspace->findClient(Predicate::WindowMatch, active_window)) != nullptr
-                       && workspace->allowClientActivation(c2,
+                       && workspace->allowWindowActivation(c2,
                                                            timestampCompare(timestamp, c2->userTime() > 0 ? timestamp : c2->userTime()), false, true)) {
-                workspace->activateClient(c);
+                workspace->activateWindow(c);
             } else {
                 c->demandAttention();
             }
@@ -252,7 +252,7 @@ WinInfo::WinInfo(X11Window *c, xcb_window_t window,
 
 void WinInfo::changeDesktop(int desktop)
 {
-    Workspace::self()->sendClientToDesktop(m_client, desktop, true);
+    Workspace::self()->sendWindowToDesktop(m_client, desktop, true);
 }
 
 void WinInfo::changeFullscreenMonitors(NETFullscreenMonitors topology)

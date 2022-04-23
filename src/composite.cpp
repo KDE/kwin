@@ -387,20 +387,20 @@ void Compositor::startupWithWorkspace()
 
     m_state = State::On;
 
-    for (X11Window *c : Workspace::self()->clientList()) {
-        c->setupCompositing();
+    for (X11Window *window : Workspace::self()->clientList()) {
+        window->setupCompositing();
     }
-    for (Unmanaged *c : Workspace::self()->unmanagedList()) {
-        c->setupCompositing();
+    for (Unmanaged *window : Workspace::self()->unmanagedList()) {
+        window->setupCompositing();
     }
-    for (InternalWindow *client : workspace()->internalClients()) {
-        client->setupCompositing();
+    for (InternalWindow *window : workspace()->internalWindows()) {
+        window->setupCompositing();
     }
 
     if (auto *server = waylandServer()) {
-        const auto clients = server->clients();
-        for (Window *c : clients) {
-            c->setupCompositing();
+        const auto windows = server->windows();
+        for (Window *window : windows) {
+            window->setupCompositing();
         }
     }
 
@@ -503,23 +503,23 @@ void Compositor::stop()
     effects = nullptr;
 
     if (Workspace::self()) {
-        for (X11Window *c : Workspace::self()->clientList()) {
-            m_scene->removeToplevel(c);
+        for (X11Window *window : Workspace::self()->clientList()) {
+            m_scene->removeToplevel(window);
         }
-        for (Unmanaged *c : Workspace::self()->unmanagedList()) {
-            m_scene->removeToplevel(c);
+        for (Unmanaged *window : Workspace::self()->unmanagedList()) {
+            m_scene->removeToplevel(window);
         }
-        for (InternalWindow *client : workspace()->internalClients()) {
-            m_scene->removeToplevel(client);
+        for (InternalWindow *window : workspace()->internalWindows()) {
+            m_scene->removeToplevel(window);
         }
-        for (X11Window *c : Workspace::self()->clientList()) {
-            c->finishCompositing();
+        for (X11Window *window : Workspace::self()->clientList()) {
+            window->finishCompositing();
         }
-        for (Unmanaged *c : Workspace::self()->unmanagedList()) {
-            c->finishCompositing();
+        for (Unmanaged *window : Workspace::self()->unmanagedList()) {
+            window->finishCompositing();
         }
-        for (InternalWindow *client : workspace()->internalClients()) {
-            client->finishCompositing();
+        for (InternalWindow *window : workspace()->internalWindows()) {
+            window->finishCompositing();
         }
         if (auto *con = kwinApp()->x11Connection()) {
             xcb_composite_unredirect_subwindows(con, kwinApp()->x11RootWindow(),
@@ -531,13 +531,13 @@ void Compositor::stop()
     }
 
     if (waylandServer()) {
-        const QList<Window *> toRemoveTopLevel = waylandServer()->clients();
-        for (Window *c : toRemoveTopLevel) {
-            m_scene->removeToplevel(c);
+        const QList<Window *> toRemoveTopLevel = waylandServer()->windows();
+        for (Window *window : toRemoveTopLevel) {
+            m_scene->removeToplevel(window);
         }
-        const QList<Window *> toFinishCompositing = waylandServer()->clients();
-        for (Window *c : toFinishCompositing) {
-            c->finishCompositing();
+        const QList<Window *> toFinishCompositing = waylandServer()->windows();
+        for (Window *window : toFinishCompositing) {
+            window->finishCompositing();
         }
     }
 

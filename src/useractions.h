@@ -25,15 +25,15 @@ namespace KWin
 class Window;
 
 /**
- * @brief Menu shown for a Client.
+ * @brief Menu shown for a Window.
  *
  * The UserActionsMenu implements the Menu which is shown on:
  * @li context-menu event on Window decoration
  * @li window menu button
  * @li Keyboard Shortcut (by default Alt+F3)
  *
- * The menu contains various window management related actions for the Client the menu is opened
- * for, this is normally the active Client.
+ * The menu contains various window management related actions for the Window the menu is opened
+ * for, this is normally the active Window.
  *
  * The menu which is shown is tried to be as close as possible to the menu implemented in
  * libtaskmanager, though there are differences as there are some actions only the window manager
@@ -67,27 +67,27 @@ public:
     void grabInput();
 
     /**
-     * @returns Whether the menu has a Client set to operate on.
+     * @returns Whether the menu has a Window set to operate on.
      */
-    bool hasClient() const;
+    bool hasWindow() const;
     /**
-     * Checks whether the given Client @p c is the Client
+     * Checks whether the given Window @p window is the Window
      * for which the Menu is shown.
-     * @param c The Client to compare
-     * @returns Whether the Client is the one related to this Menu
+     * @param c The Window to compare
+     * @returns Whether the Window is the one related to this Menu
      */
-    bool isMenuClient(const Window *c) const;
+    bool isMenuWindow(const Window *window) const;
     /**
      * Closes the Menu and prepares it for next usage.
      */
     void close();
     /**
-     * @brief Shows the menu at the given @p pos for the given @p client.
+     * @brief Shows the menu at the given @p pos for the given @p window.
      *
      * @param pos The position where the menu should be shown.
-     * @param client The Client for which the Menu has to be shown.
+     * @param window The Window for which the Menu has to be shown.
      */
-    void show(const QRect &pos, Window *client);
+    void show(const QRect &pos, Window *window);
 
 public Q_SLOTS:
     /**
@@ -105,39 +105,39 @@ private Q_SLOTS:
     /**
      * The menu will become visible soon.
      *
-     * Adjust the items according to the respective Client.
+     * Adjust the items according to the respective Window.
      */
     void menuAboutToShow();
     /**
      * Adjusts the desktop popup to the current values and the location of
-     * the Client.
+     * the Window.
      */
     void desktopPopupAboutToShow();
     /**
      * Adjusts the multipleDesktopsMenu popup to the current values and the location of
-     * the Client, Wayland only.
+     * the Window, Wayland only.
      */
     void multipleDesktopsPopupAboutToShow();
     /**
      * Adjusts the screen popup to the current values and the location of
-     * the Client.
+     * the Window.
      */
     void screenPopupAboutToShow();
     /**
      * Adjusts the activity popup to the current values and the location of
-     * the Client.
+     * the Window.
      */
     void activityPopupAboutToShow();
     /**
-     * Toggles whether the Client is on the \a activity
+     * Toggles whether the Window is on the \a activity
      *
-     * @param action Invoked Action containing the Id of the Activity to toggle the Client on
+     * @param action Invoked Action containing the Id of the Activity to toggle the Window on
      */
     void slotToggleOnActivity(QAction *action);
     /**
      * Performs a window operation.
      *
-     * @param action Invoked Action containing the Window Operation to perform for the Client
+     * @param action Invoked Action containing the Window Operation to perform for the Window
      */
     void slotWindowOperation(QAction *action);
 
@@ -164,9 +164,9 @@ private:
      * Shows a helper Dialog to inform the user how to get back in case he triggered
      * an action which hides the window decoration (e.g. NoBorder or Fullscreen).
      * @param message The message type to be shown
-     * @param c The Client for which the dialog should be shown.
+     * @param window The Window for which the dialog should be shown.
      */
-    void helperDialog(const QString &message, Window *c);
+    void helperDialog(const QString &message, Window *window);
     /**
      * The actual main context menu which is show when the UserActionsMenu is invoked.
      */
@@ -203,9 +203,9 @@ private:
     QAction *m_closeOperation;
     QAction *m_shortcutOperation;
     /**
-     * The Client for which the menu is shown.
+     * The window for which the menu is shown.
      */
-    QPointer<Window> m_client;
+    QPointer<Window> m_window;
     QAction *m_rulesOperation = nullptr;
     QAction *m_applicationRulesOperation = nullptr;
 };

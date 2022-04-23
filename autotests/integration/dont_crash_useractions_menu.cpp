@@ -89,17 +89,17 @@ void TestDontCrashUseractionsMenu::testShowHideShowUseractionsMenu()
     workspace()->showWindowMenu(QRect(), client);
     auto userActionsMenu = workspace()->userActionsMenu();
     QTRY_VERIFY(userActionsMenu->isShown());
-    QVERIFY(userActionsMenu->hasClient());
+    QVERIFY(userActionsMenu->hasWindow());
 
     Test::keyboardKeyPressed(KEY_ESC, 0);
     Test::keyboardKeyReleased(KEY_ESC, 1);
     QTRY_VERIFY(!userActionsMenu->isShown());
-    QVERIFY(!userActionsMenu->hasClient());
+    QVERIFY(!userActionsMenu->hasWindow());
 
     // and show again, this triggers BUG 382063
     workspace()->showWindowMenu(QRect(), client);
     QTRY_VERIFY(userActionsMenu->isShown());
-    QVERIFY(userActionsMenu->hasClient());
+    QVERIFY(userActionsMenu->hasWindow());
 }
 
 WAYLANDTEST_MAIN(TestDontCrashUseractionsMenu)

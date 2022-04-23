@@ -85,7 +85,7 @@ class KWIN_EXPORT Window : public QObject
     /**
      * This property holds rectangle that the pixmap or buffer of this Window
      * occupies on the screen. This rectangle includes invisible portions of the
-     * client, e.g. client-side drop shadows, etc.
+     * window, e.g. client-side drop shadows, etc.
      */
     Q_PROPERTY(QRect bufferGeometry READ bufferGeometry)
 
@@ -293,26 +293,26 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(int stackingOrder READ stackingOrder NOTIFY stackingOrderChanged)
 
     /**
-     * Whether this Client is fullScreen. A Client might either be fullScreen due to the _NET_WM property
-     * or through a legacy support hack. The fullScreen state can only be changed if the Client does not
+     * Whether this Window is fullScreen. A Window might either be fullScreen due to the _NET_WM property
+     * or through a legacy support hack. The fullScreen state can only be changed if the Window does not
      * use the legacy hack. To be sure whether the state changed, connect to the notify signal.
      */
     Q_PROPERTY(bool fullScreen READ isFullScreen WRITE setFullScreen NOTIFY fullScreenChanged)
 
     /**
-     * Whether the Client can be set to fullScreen. The property is evaluated each time it is invoked.
+     * Whether the Window can be set to fullScreen. The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
      */
     Q_PROPERTY(bool fullScreenable READ isFullScreenable)
 
     /**
-     * Whether this Client is active or not. Use Workspace::activateClient() to activate a Client.
-     * @see Workspace::activateClient
+     * Whether this Window is active or not. Use Workspace::activateWindow() to activate a Window.
+     * @see Workspace::activateWindow
      */
     Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
 
     /**
-     * The desktop this Client is on. If the Client is on all desktops the property has value -1.
+     * The desktop this Window is on. If the Window is on all desktops the property has value -1.
      * This is a legacy property, use x11DesktopIds instead
      *
      * @deprecated Use the desktops property instead.
@@ -325,7 +325,7 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(QVector<KWin::VirtualDesktop *> desktops READ desktops WRITE setDesktops NOTIFY desktopChanged)
 
     /**
-     * Whether the Client is on all desktops. That is desktop is -1.
+     * Whether the Window is on all desktops. That is desktop is -1.
      */
     Q_PROPERTY(bool onAllDesktops READ isOnAllDesktops WRITE setOnAllDesktops NOTIFY desktopChanged)
 
@@ -352,7 +352,7 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(bool skipPager READ skipPager WRITE setSkipPager NOTIFY skipPagerChanged)
 
     /**
-     * Whether the Client should be excluded from window switching effects.
+     * Whether the Window should be excluded from window switching effects.
      */
     Q_PROPERTY(bool skipSwitcher READ skipSwitcher WRITE setSkipSwitcher NOTIFY skipSwitcherChanged)
 
@@ -364,39 +364,39 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(QIcon icon READ icon NOTIFY iconChanged)
 
     /**
-     * Whether the Client is set to be kept above other windows.
+     * Whether the Window is set to be kept above other windows.
      */
     Q_PROPERTY(bool keepAbove READ keepAbove WRITE setKeepAbove NOTIFY keepAboveChanged)
 
     /**
-     * Whether the Client is set to be kept below other windows.
+     * Whether the Window is set to be kept below other windows.
      */
     Q_PROPERTY(bool keepBelow READ keepBelow WRITE setKeepBelow NOTIFY keepBelowChanged)
 
     /**
-     * Whether the Client can be shaded. The property is evaluated each time it is invoked.
+     * Whether the Window can be shaded. The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
      */
     Q_PROPERTY(bool shadeable READ isShadeable)
 
     /**
-     * Whether the Client is shaded.
+     * Whether the Window is shaded.
      */
     Q_PROPERTY(bool shade READ isShade WRITE setShade NOTIFY shadeChanged)
 
     /**
-     * Whether the Client can be minimized. The property is evaluated each time it is invoked.
+     * Whether the Window can be minimized. The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
      */
     Q_PROPERTY(bool minimizable READ isMinimizable)
 
     /**
-     * Whether the Client is minimized.
+     * Whether the Window is minimized.
      */
     Q_PROPERTY(bool minimized READ isMinimized WRITE setMinimized NOTIFY minimizedChanged)
 
     /**
-     * The optional geometry representing the minimized Client in e.g a taskbar.
+     * The optional geometry representing the minimized Window in e.g a taskbar.
      * See _NET_WM_ICON_GEOMETRY at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      * The value is evaluated each time the getter is called.
      * Because of that no changed signal is provided.
@@ -416,14 +416,14 @@ class KWIN_EXPORT Window : public QObject
      * Whether window state _NET_WM_STATE_DEMANDS_ATTENTION is set. This state indicates that some
      * action in or with the window happened. For example, it may be set by the Window Manager if
      * the window requested activation but the Window Manager refused it, or the application may set
-     * it if it finished some work. This state may be set by both the Client and the Window Manager.
+     * it if it finished some work. This state may be set by both the Window and the Window Manager.
      * It should be unset by the Window Manager when it decides the window got the required attention
      * (usually, that it got activated).
      */
     Q_PROPERTY(bool demandsAttention READ isDemandingAttention WRITE demandAttention NOTIFY demandsAttentionChanged)
 
     /**
-     * The Caption of the Client. Read from WM_NAME property together with a suffix for hostname and shortcut.
+     * The Caption of the Window. Read from WM_NAME property together with a suffix for hostname and shortcut.
      * To read only the caption as provided by WM_NAME, use the getter with an additional @c false value.
      */
     Q_PROPERTY(QString caption READ caption NOTIFY captionChanged)
@@ -439,30 +439,30 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(QSize maxSize READ maxSize)
 
     /**
-     * Whether the Client can accept keyboard focus.
+     * Whether the Window can accept keyboard focus.
      * The value is evaluated each time the getter is called.
      * Because of that no changed signal is provided.
      */
     Q_PROPERTY(bool wantsInput READ wantsInput)
 
     /**
-     * Whether the Client is a transient Window to another Window.
+     * Whether the Window is a transient Window to another Window.
      * @see transientFor
      */
     Q_PROPERTY(bool transient READ isTransient NOTIFY transientChanged)
 
     /**
-     * The Client to which this Client is a transient if any.
+     * The Window to which this Window is a transient if any.
      */
     Q_PROPERTY(KWin::Window *transientFor READ transientFor NOTIFY transientChanged)
 
     /**
-     * Whether the Client represents a modal window.
+     * Whether the Window represents a modal window.
      */
     Q_PROPERTY(bool modal READ isModal NOTIFY modalChanged)
 
     /**
-     * The geometry of this Client. Be aware that depending on resize mode the frameGeometryChanged
+     * The geometry of this Window. Be aware that depending on resize mode the frameGeometryChanged
      * signal might be emitted at each resize step or only at the end of the resize operation.
      *
      * @deprecated Use frameGeometry
@@ -470,20 +470,20 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(QRect geometry READ frameGeometry WRITE moveResize NOTIFY frameGeometryChanged)
 
     /**
-     * The geometry of this Client. Be aware that depending on resize mode the frameGeometryChanged
+     * The geometry of this Window. Be aware that depending on resize mode the frameGeometryChanged
      * signal might be emitted at each resize step or only at the end of the resize operation.
      */
     Q_PROPERTY(QRect frameGeometry READ frameGeometry WRITE moveResize NOTIFY frameGeometryChanged)
 
     /**
-     * Whether the Client is currently being moved by the user.
-     * Notify signal is emitted when the Client starts or ends move/resize mode.
+     * Whether the Window is currently being moved by the user.
+     * Notify signal is emitted when the Window starts or ends move/resize mode.
      */
     Q_PROPERTY(bool move READ isInteractiveMove NOTIFY moveResizedChanged)
 
     /**
-     * Whether the Client is currently being resized by the user.
-     * Notify signal is emitted when the Client starts or ends move/resize mode.
+     * Whether the Window is currently being resized by the user.
+     * Notify signal is emitted when the Window starts or ends move/resize mode.
      */
     Q_PROPERTY(bool resize READ isInteractiveResize NOTIFY moveResizedChanged)
 
@@ -501,20 +501,20 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(bool noBorder READ noBorder WRITE setNoBorder)
 
     /**
-     * Whether the Client provides context help. Mostly needed by decorations to decide whether to
+     * Whether the Window provides context help. Mostly needed by decorations to decide whether to
      * show the help button or not.
      */
     Q_PROPERTY(bool providesContextHelp READ providesContextHelp CONSTANT)
 
     /**
-     * Whether the Client can be maximized both horizontally and vertically.
+     * Whether the Window can be maximized both horizontally and vertically.
      * The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
      */
     Q_PROPERTY(bool maximizable READ isMaximizable)
 
     /**
-     * Whether the Client is moveable. Even if it is not moveable, it might be possible to move
+     * Whether the Window is moveable. Even if it is not moveable, it might be possible to move
      * it to another screen. The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
      * @see moveableAcrossScreens
@@ -522,14 +522,14 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(bool moveable READ isMovable)
 
     /**
-     * Whether the Client can be moved to another screen. The property is evaluated each time it is invoked.
+     * Whether the Window can be moved to another screen. The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
      * @see moveable
      */
     Q_PROPERTY(bool moveableAcrossScreens READ isMovableAcrossScreens)
 
     /**
-     * Whether the Client can be resized. The property is evaluated each time it is invoked.
+     * Whether the Window can be resized. The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
      */
     Q_PROPERTY(bool resizeable READ isResizable)
@@ -546,17 +546,17 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(QByteArray desktopFileName READ desktopFileName NOTIFY desktopFileNameChanged)
 
     /**
-     * Whether an application menu is available for this Client
+     * Whether an application menu is available for this Window
      */
     Q_PROPERTY(bool hasApplicationMenu READ hasApplicationMenu NOTIFY hasApplicationMenuChanged)
 
     /**
-     * Whether the application menu for this Client is currently opened
+     * Whether the application menu for this Window is currently opened
      */
     Q_PROPERTY(bool applicationMenuActive READ applicationMenuActive NOTIFY applicationMenuActiveChanged)
 
     /**
-     * Whether this client is unresponsive.
+     * Whether this window is unresponsive.
      *
      * When an application failed to react on a ping request in time, it is
      * considered unresponsive. This usually indicates that the application froze or crashed.
@@ -564,7 +564,7 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(bool unresponsive READ unresponsive NOTIFY unresponsiveChanged)
 
     /**
-     * The color scheme set on this client
+     * The color scheme set on this window
      * Absolute file path, or name of palette in the user's config directory following KColorSchemes format.
      * An empty string indicates the default palette from kdeglobals is used.
      * @note this indicates the colour scheme requested, which might differ from the theme applied if the colorScheme cannot be found
@@ -574,7 +574,7 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(KWin::Layer layer READ layer)
 
     /**
-     * Whether this client is hidden. It's usually the case with auto-hide panels.
+     * Whether this window is hidden. It's usually the case with auto-hide panels.
      */
     Q_PROPERTY(bool hidden READ isHiddenInternal NOTIFY hiddenChanged)
 
@@ -586,9 +586,9 @@ public:
     /**
      * Returns the geometry of the pixmap or buffer attached to this Window.
      *
-     * For X11 clients, this method returns server-side geometry of the Window.
+     * For X11 windows, this method returns server-side geometry of the Window.
      *
-     * For Wayland clients, this method returns rectangle that the main surface
+     * For Wayland windows, this method returns rectangle that the main surface
      * occupies on the screen, in global screen coordinates.
      */
     QRect bufferGeometry() const;
@@ -605,7 +605,7 @@ public:
      * Returns the extents of the server-side decoration.
      *
      * Note that the returned margins object will have all margins set to 0 if
-     * the client doesn't have a server-side decoration.
+     * the window doesn't have a server-side decoration.
      *
      * Default implementation returns a margins object with all margins set to 0.
      */
@@ -647,7 +647,7 @@ public:
     QPoint mapToFrame(const QPoint &point) const;
     /**
      * Maps the specified @a point from the global screen coordinates to the surface-local
-     * coordinates of the main surface. For X11 clients, this function maps the specified point
+     * coordinates of the main surface. For X11 windows, this function maps the specified point
      * from the global screen coordinates to the buffer-local coordinates.
      */
     QPoint mapToLocal(const QPoint &point) const;
@@ -887,13 +887,13 @@ public:
         return m_active;
     }
     /**
-     * Sets the client's active state to \a act.
+     * Sets the window's active state to \a act.
      *
-     * This function does only change the visual appearance of the client,
+     * This function does only change the visual appearance of the window,
      * it does not change the focus setting. Use
      * Workspace::activateClient() or Workspace::requestFocus() instead.
      *
-     * If a client receives or looses the focus, it calls setActive() on
+     * If a window receives or looses the focus, it calls setActive() on
      * its own.
      */
     void setActive(bool);
@@ -963,16 +963,16 @@ public:
     const Window *transientFor() const;
     Window *transientFor();
     /**
-     * @returns @c true if c is the transient_for window for this client,
+     * @returns @c true if transient is the transient_for window for this window,
      *  or recursively the transient_for window
      * @todo: remove boolean trap
      */
-    virtual bool hasTransient(const Window *c, bool indirect) const;
+    virtual bool hasTransient(const Window *transient, bool indirect) const;
     const QList<Window *> &transients() const; // Is not indirect
-    virtual void addTransient(Window *client);
-    virtual void removeTransient(Window *cl);
-    virtual QList<Window *> mainClients() const; // Call once before loop , is not indirect
-    QList<Window *> allMainClients() const; // Call once before loop , is indirect
+    virtual void addTransient(Window *transient);
+    virtual void removeTransient(Window *transient);
+    virtual QList<Window *> mainWindows() const; // Call once before loop , is not indirect
+    QList<Window *> allMainWindows() const; // Call once before loop , is indirect
     /**
      * Returns true for "special" windows and false for windows which are "normal"
      * (normal=window which has a border, can be moved by the user, can be closed, etc.)
@@ -1004,7 +1004,7 @@ public:
 
     void setMinimized(bool set);
     /**
-     * Minimizes this client plus its transients
+     * Minimizes this window plus its transients
      */
     void minimize(bool avoid_animation = false);
     void unminimize(bool avoid_animation = false);
@@ -1053,7 +1053,7 @@ public:
     void toggleShade();
     void cancelShadeHoverTimer();
     /**
-     * Whether the Client can be shaded. Default implementation returns @c false.
+     * Whether the Window can be shaded. Default implementation returns @c false.
      */
     virtual bool isShadeable() const;
     virtual bool isMaximizable() const;
@@ -1313,7 +1313,7 @@ public:
      * Implementing subclasses can perform a windowing system solution for terminating.
      */
     virtual void killWindow() = 0;
-    virtual void destroyClient() = 0;
+    virtual void destroyWindow() = 0;
 
     enum class SameApplicationCheck {
         RelaxedForActive = 1 << 0,
@@ -1454,7 +1454,7 @@ Q_SIGNALS:
     void surfaceChanged();
 
     /**
-     * Emitted whenever the client's shadow changes.
+     * Emitted whenever the window's shadow changes.
      * @since 5.15
      */
     void shadowChanged();
@@ -1491,11 +1491,11 @@ Q_SIGNALS:
     void demandsAttentionChanged();
     void desktopPresenceChanged(KWin::Window *, int); // to be forwarded by Workspace
     void desktopChanged();
-    void activitiesChanged(KWin::Window *client);
+    void activitiesChanged(KWin::Window *window);
     void x11DesktopIdsChanged();
     void minimizedChanged();
-    void clientMinimized(KWin::Window *client, bool animate);
-    void clientUnminimized(KWin::Window *client, bool animate);
+    void clientMinimized(KWin::Window *window, bool animate);
+    void clientUnminimized(KWin::Window *window, bool animate);
     void paletteChanged(const QPalette &p);
     void colorSchemeChanged();
     void captionChanged();
@@ -1619,7 +1619,7 @@ protected:
      * Called from @ref setOnActivities just after the activity list member has been updated, but before
      * @ref updateActivities is called.
      *
-     * @param activityList the new list of activities set on that client
+     * @param activityList the new list of activities set on that window
      *
      * Default implementation does nothing
      */
@@ -1696,14 +1696,14 @@ protected:
     virtual void moveResizeInternal(const QRect &rect, MoveResizeMode mode) = 0;
 
     /**
-     * @returns whether the Client is currently in move resize mode
+     * @returns whether the Window is currently in move resize mode
      */
     bool isInteractiveMoveResize() const
     {
         return m_interactiveMoveResize.enabled;
     }
     /**
-     * Sets whether the Client is in move resize mode to @p enabled.
+     * Sets whether the Window is in move resize mode to @p enabled.
      */
     void setInteractiveMoveResize(bool enabled)
     {
@@ -1844,7 +1844,7 @@ protected:
      * Looks for another Window with same captionNormal and captionSuffix.
      * If no such Window exists @c nullptr is returned.
      */
-    Window *findClientWithSameCaption() const;
+    Window *findWindowWithSameCaption() const;
 
     void finishWindowRules();
     void discardTemporaryRules();
@@ -1854,7 +1854,7 @@ protected:
     void startShadeHoverTimer();
     void startShadeUnhoverTimer();
 
-    // The geometry that the client should be restored when the virtual keyboard closes
+    // The geometry that the window should be restored when the virtual keyboard closes
     QRect keyboardGeometryRestore() const;
     void setKeyboardGeometryRestore(const QRect &geom);
 

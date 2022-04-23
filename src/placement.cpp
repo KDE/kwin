@@ -561,7 +561,7 @@ void Placement::placeOnMainWindow(Window *c, const QRect &area, Policy nextPlace
     if (nextPlacement == Maximizing) { // maximize if needed
         placeMaximizing(c, area, NoPlacement);
     }
-    auto mainwindows = c->mainClients();
+    auto mainwindows = c->mainWindows();
     Window *place_on = nullptr;
     Window *place_on2 = nullptr;
     int mains_count = 0;
@@ -678,7 +678,7 @@ void Window::packTo(int left, int top)
     const Output *oldOutput = output();
     move(QPoint(left, top));
     if (output() != oldOutput) {
-        workspace()->sendClientToOutput(this, output()); // checks rule validity
+        workspace()->sendWindowToOutput(this, output()); // checks rule validity
         if (maximizeMode() != MaximizeRestore) {
             checkWorkspacePosition();
         }
@@ -690,55 +690,55 @@ void Window::packTo(int left, int top)
  */
 void Workspace::slotWindowMoveLeft()
 {
-    if (active_client && active_client->isMovable()) {
-        const QRect geometry = active_client->moveResizeGeometry();
-        active_client->packTo(packPositionLeft(active_client, geometry.left(), true),
-                              geometry.y());
+    if (m_activeWindow && m_activeWindow->isMovable()) {
+        const QRect geometry = m_activeWindow->moveResizeGeometry();
+        m_activeWindow->packTo(packPositionLeft(m_activeWindow, geometry.left(), true),
+                               geometry.y());
     }
 }
 
 void Workspace::slotWindowMoveRight()
 {
-    if (active_client && active_client->isMovable()) {
-        const QRect geometry = active_client->moveResizeGeometry();
-        active_client->packTo(packPositionRight(active_client, geometry.right(), true) - geometry.width() + 1,
-                              geometry.y());
+    if (m_activeWindow && m_activeWindow->isMovable()) {
+        const QRect geometry = m_activeWindow->moveResizeGeometry();
+        m_activeWindow->packTo(packPositionRight(m_activeWindow, geometry.right(), true) - geometry.width() + 1,
+                               geometry.y());
     }
 }
 
 void Workspace::slotWindowMoveUp()
 {
-    if (active_client && active_client->isMovable()) {
-        const QRect geometry = active_client->moveResizeGeometry();
-        active_client->packTo(geometry.x(),
-                              packPositionUp(active_client, geometry.top(), true));
+    if (m_activeWindow && m_activeWindow->isMovable()) {
+        const QRect geometry = m_activeWindow->moveResizeGeometry();
+        m_activeWindow->packTo(geometry.x(),
+                               packPositionUp(m_activeWindow, geometry.top(), true));
     }
 }
 
 void Workspace::slotWindowMoveDown()
 {
-    if (active_client && active_client->isMovable()) {
-        const QRect geometry = active_client->moveResizeGeometry();
-        active_client->packTo(geometry.x(),
-                              packPositionDown(active_client, geometry.bottom(), true) - geometry.height() + 1);
+    if (m_activeWindow && m_activeWindow->isMovable()) {
+        const QRect geometry = m_activeWindow->moveResizeGeometry();
+        m_activeWindow->packTo(geometry.x(),
+                               packPositionDown(m_activeWindow, geometry.bottom(), true) - geometry.height() + 1);
     }
 }
 
 /** Moves the active window to the center of the screen. */
 void Workspace::slotWindowCenter()
 {
-    if (active_client && active_client->isMovable()) {
-        const QRect geometry = active_client->moveResizeGeometry();
-        QPoint center = clientArea(MaximizeArea, active_client).center();
-        active_client->packTo(center.x() - (geometry.width() / 2),
-                              center.y() - (geometry.height() / 2));
+    if (m_activeWindow && m_activeWindow->isMovable()) {
+        const QRect geometry = m_activeWindow->moveResizeGeometry();
+        QPoint center = clientArea(MaximizeArea, m_activeWindow).center();
+        m_activeWindow->packTo(center.x() - (geometry.width() / 2),
+                               center.y() - (geometry.height() / 2));
     }
 }
 
 void Workspace::slotWindowExpandHorizontal()
 {
-    if (active_client) {
-        active_client->growHorizontal();
+    if (m_activeWindow) {
+        m_activeWindow->growHorizontal();
     }
 }
 
@@ -770,8 +770,8 @@ void Window::growHorizontal()
 
 void Workspace::slotWindowShrinkHorizontal()
 {
-    if (active_client) {
-        active_client->shrinkHorizontal();
+    if (m_activeWindow) {
+        m_activeWindow->shrinkHorizontal();
     }
 }
 
@@ -794,8 +794,8 @@ void Window::shrinkHorizontal()
 
 void Workspace::slotWindowExpandVertical()
 {
-    if (active_client) {
-        active_client->growVertical();
+    if (m_activeWindow) {
+        m_activeWindow->growVertical();
     }
 }
 
@@ -825,8 +825,8 @@ void Window::growVertical()
 
 void Workspace::slotWindowShrinkVertical()
 {
-    if (active_client) {
-        active_client->shrinkVertical();
+    if (m_activeWindow) {
+        m_activeWindow->shrinkVertical();
     }
 }
 
@@ -849,7 +849,7 @@ void Window::shrinkVertical()
 
 void Workspace::quickTileWindow(QuickTileMode mode)
 {
-    if (!active_client) {
+    if (!m_activeWindow) {
         return;
     }
 
@@ -870,7 +870,7 @@ void Workspace::quickTileWindow(QuickTileMode mode)
         m_quickTileCombineTimer->stop();
     }
 
-    active_client->setQuickTileMode(mode, true);
+    m_activeWindow->setQuickTileMode(mode, true);
 }
 
 int Workspace::packPositionLeft(const Window *client, int oldX, bool leftEdge) const

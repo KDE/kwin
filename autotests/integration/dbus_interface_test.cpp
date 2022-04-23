@@ -101,8 +101,8 @@ void TestDbusInterface::testGetWindowInfoInvalidUuid()
 
 void TestDbusInterface::testGetWindowInfoXdgShellClient()
 {
-    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
-    QVERIFY(clientAddedSpy.isValid());
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    QVERIFY(windowAddedSpy.isValid());
 
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
@@ -111,9 +111,9 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
 
     // now let's render
     Test::render(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(clientAddedSpy.isEmpty());
-    QVERIFY(clientAddedSpy.wait());
-    auto client = clientAddedSpy.first().first().value<Window *>();
+    QVERIFY(windowAddedSpy.isEmpty());
+    QVERIFY(windowAddedSpy.wait());
+    auto client = windowAddedSpy.first().first().value<Window *>();
     QVERIFY(client);
 
     const QVariantMap expectedData = {
@@ -194,7 +194,7 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
     // not testing fullscreen, maximizeHorizontal, maximizeVertical and noBorder as those require window geometry changes
 
     QCOMPARE(client->desktop(), 1);
-    workspace()->sendClientToDesktop(client, 2, false);
+    workspace()->sendWindowToDesktop(client, 2, false);
     QCOMPARE(client->desktop(), 2);
     reply = getWindowInfo(client->internalId());
     reply.waitForFinished();
@@ -254,7 +254,7 @@ void TestDbusInterface::testGetWindowInfoX11Client()
     xcb_flush(c.data());
 
     // we should get a client for it
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *client = windowCreatedSpy.first().first().value<X11Window *>();

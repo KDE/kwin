@@ -157,7 +157,7 @@ void X11DecorationRenderer::render(const QRegion &region)
 //      - it creates a new client and calls manage() for it
 //
 // Destroying a client:
-//  - destroyClient() - only when the window itself has been destroyed
+//  - destroyWindow() - only when the window itself has been destroyed
 //      - releaseWindow() - the window is kept, only the client itself is destroyed
 
 /**
@@ -261,7 +261,7 @@ X11Window::~X11Window()
     Q_ASSERT(!check_active_modal);
 }
 
-// Use destroyClient() or releaseWindow(), Client instances cannot be deleted directly
+// Use destroyWindow() or releaseWindow(), Client instances cannot be deleted directly
 void X11Window::deleteClient(X11Window *c)
 {
     delete c;
@@ -297,12 +297,12 @@ void X11Window::releaseWindow(bool on_shutdown)
     setModal(false); // Otherwise its mainwindow wouldn't get focus
     hidden = true; // So that it's not considered visible anymore (can't use hideClient(), it would set flags)
     if (!on_shutdown) {
-        workspace()->clientHidden(this);
+        workspace()->windowHidden(this);
     }
     m_frame.unmap(); // Destroying decoration would cause ugly visual effect
     destroyDecoration();
     cleanGrouping();
-    workspace()->removeX11Client(this);
+    workspace()->removeX11Window(this);
     if (!on_shutdown) {
         // Only when the window is being unmapped, not when closing down KWin (NETWM sections 5.5,5.7)
         info->setDesktop(0);
@@ -339,7 +339,7 @@ void X11Window::releaseWindow(bool on_shutdown)
  * Like releaseWindow(), but this one is called when the window has been already destroyed
  * (E.g. The application closed it)
  */
-void X11Window::destroyClient()
+void X11Window::destroyWindow()
 {
     markAsZombie();
     cleanTabBox();
@@ -358,10 +358,10 @@ void X11Window::destroyClient()
     blockGeometryUpdates();
     setModal(false);
     hidden = true; // So that it's not considered visible anymore
-    workspace()->clientHidden(this);
+    workspace()->windowHidden(this);
     destroyDecoration();
     cleanGrouping();
-    workspace()->removeX11Client(this);
+    workspace()->removeX11Window(this);
     m_client.reset(); // invalidate
     m_wrapper.reset();
     m_frame.reset();
@@ -513,13 +513,13 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         // same window as its parent.  this is necessary when an application
         // starts up on a different desktop than is currently displayed
         if (isTransient()) {
-            auto mainclients = mainClients();
+            auto mainwindows = mainWindows();
             bool on_current = false;
             bool on_all = false;
             Window *maincl = nullptr;
             // This is slightly duplicated from Placement::placeOnMainWindow()
-            for (auto it = mainclients.constBegin(); it != mainclients.constEnd(); ++it) {
-                if (mainclients.count() > 1 && // A group-transient
+            for (auto it = mainwindows.constBegin(); it != mainwindows.constEnd(); ++it) {
+                if (mainwindows.count() > 1 && // A group-transient
                     (*it)->isSpecialWindow() && // Don't consider toolbars etc when placing
                     !(info->state() & NET::Modal)) { // except when it's modal (blocks specials as well)
                     continue;
@@ -635,7 +635,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     } else if (isDialog() && hasNETSupport()) {
         // If the dialog is actually non-NETWM transient window, don't try to apply placement to it,
         // it breaks with too many things (xmms, display)
-        if (mainClients().count() >= 1) {
+        if (mainWindows().count() >= 1) {
 #if 1
             // #78082 - Ok, it seems there are after all some cases when an application has a good
             // reason to specify a position for its dialog. Too bad other WMs have never bothered
@@ -779,20 +779,20 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     // if client has initial state set to Iconic and is transient with a parent
     // window that is not Iconic, set init_state to Normal
     if (init_minimize && isTransient()) {
-        auto mainclients = mainClients();
-        for (auto it = mainclients.constBegin(); it != mainclients.constEnd(); ++it) {
+        auto mainwindows = mainWindows();
+        for (auto it = mainwindows.constBegin(); it != mainwindows.constEnd(); ++it) {
             if ((*it)->isShown()) {
                 init_minimize = false; // SELI TODO: Even e.g. for NET::Utility?
             }
         }
     }
     // If a dialog is shown for minimized window, minimize it too
-    if (!init_minimize && isTransient() && mainClients().count() > 0 && workspace()->sessionManager()->state() != SessionState::Saving) {
+    if (!init_minimize && isTransient() && mainWindows().count() > 0 && workspace()->sessionManager()->state() != SessionState::Saving) {
         bool visible_parent = false;
-        // Use allMainClients(), to include also main clients of group transients
+        // Use allMainWindows(), to include also main clients of group transients
         // that have been optimized out in X11Window::checkGroupTransients()
-        auto mainclients = allMainClients();
-        for (auto it = mainclients.constBegin(); it != mainclients.constEnd(); ++it) {
+        auto mainwindows = allMainWindows();
+        for (auto it = mainwindows.constBegin(); it != mainwindows.constEnd(); ++it) {
             if ((*it)->isShown()) {
                 visible_parent = true;
             }
@@ -890,9 +890,9 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     if (isShown()) {
         bool allow;
         if (session) {
-            allow = session->active && (!workspace()->wasUserInteraction() || workspace()->activeClient() == nullptr || workspace()->activeClient()->isDesktop());
+            allow = session->active && (!workspace()->wasUserInteraction() || workspace()->activeWindow() == nullptr || workspace()->activeWindow()->isDesktop());
         } else {
-            allow = workspace()->allowClientActivation(this, userTime(), false);
+            allow = workspace()->allowWindowActivation(this, userTime(), false);
         }
 
         const bool isSessionSaving = workspace()->sessionManager()->state() == SessionState::Saving;
@@ -906,16 +906,16 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         // If the window is on an inactive activity during session saving, temporarily force it to show.
         if (!isMapped && !session && isSessionSaving && !isOnCurrentActivity()) {
             setSessionActivityOverride(true);
-            const auto &clients = mainClients();
-            for (Window *c : qAsConst(clients)) {
-                if (X11Window *mc = dynamic_cast<X11Window *>(c)) {
-                    mc->setSessionActivityOverride(true);
+            const auto windows = mainWindows();
+            for (Window *w : windows) {
+                if (X11Window *mw = dynamic_cast<X11Window *>(w)) {
+                    mw->setSessionActivityOverride(true);
                 }
             }
         }
 
         if (isOnCurrentDesktop() && !isMapped && !allow && (!session || session->stackingOrder < 0)) {
-            workspace()->restackClientUnderActive(this);
+            workspace()->restackWindowUnderActive(this);
         }
 
         updateVisibility();
@@ -1449,8 +1449,8 @@ bool X11Window::isMinimizable() const
     if (isTransient()) {
         // #66868 - Let other xmms windows be minimized when the mainwindow is minimized
         bool shown_mainwindow = false;
-        auto mainclients = mainClients();
-        for (auto it = mainclients.constBegin(); it != mainclients.constEnd(); ++it) {
+        auto mainwindows = mainWindows();
+        for (auto it = mainwindows.constBegin(); it != mainwindows.constEnd(); ++it) {
             if ((*it)->isShown()) {
                 shown_mainwindow = true;
             }
@@ -1493,7 +1493,7 @@ QRect X11Window::iconGeometry() const
         return geom;
     } else {
         // Check all mainwindows of this window (recursively)
-        const auto &clients = mainClients();
+        const auto &clients = mainWindows();
         for (Window *amainwin : clients) {
             X11Window *mainwin = dynamic_cast<X11Window *>(amainwin);
             if (!mainwin) {
@@ -1536,7 +1536,7 @@ void X11Window::doSetShade(ShadeMode previousShadeMode)
                 workspace()->restack(this, shade_below, true);
             }
             if (isActive()) {
-                workspace()->activateNextClient(this);
+                workspace()->activateNextWindow(this);
             }
         } else if (isActive()) {
             workspace()->focusToNull();
@@ -1565,7 +1565,7 @@ void X11Window::doSetShade(ShadeMode previousShadeMode)
                 }
             }
             if (shade_below && shade_below->isNormalWindow()) {
-                workspace()->raiseClient(this);
+                workspace()->raiseWindow(this);
             } else {
                 shade_below = nullptr;
             }
@@ -1680,7 +1680,7 @@ void X11Window::internalHide()
         updateHiddenPreview();
     }
     addWorkspaceRepaint(visibleGeometry());
-    workspace()->clientHidden(this);
+    workspace()->windowHidden(this);
     Q_EMIT windowHidden(this);
 }
 
@@ -1701,7 +1701,7 @@ void X11Window::internalKeep()
     }
     updateHiddenPreview();
     addWorkspaceRepaint(visibleGeometry());
-    workspace()->clientHidden(this);
+    workspace()->windowHidden(this);
 }
 
 /**
@@ -1836,7 +1836,7 @@ void X11Window::killWindow()
     qCDebug(KWIN_CORE) << "X11Window::killWindow():" << caption();
     killProcess(false);
     m_client.kill(); // Always kill this client at the server
-    destroyClient();
+    destroyWindow();
 }
 
 /**
@@ -2141,12 +2141,12 @@ void X11Window::setCaption(const QString &_s, bool force)
     }
     QString shortcut_suffix = shortcutCaptionSuffix();
     cap_suffix = machine_suffix + shortcut_suffix;
-    if ((!isSpecialWindow() || isToolbar()) && findClientWithSameCaption()) {
+    if ((!isSpecialWindow() || isToolbar()) && findWindowWithSameCaption()) {
         int i = 2;
         do {
             cap_suffix = machine_suffix + QLatin1String(" <") + QString::number(i) + QLatin1Char('>') + LRM;
             i++;
-        } while (findClientWithSameCaption());
+        } while (findWindowWithSameCaption());
         info->setVisibleName(caption().toUtf8().constData());
         reset_name = false;
     }
@@ -2265,9 +2265,9 @@ void X11Window::getIcons()
         icon = group()->icon();
     }
     if (icon.isNull() && isTransient()) {
-        // Then mainclients
-        auto mainclients = mainClients();
-        for (auto it = mainclients.constBegin(); it != mainclients.constEnd() && icon.isNull(); ++it) {
+        // Then mainwindows
+        auto mainwindows = mainWindows();
+        for (auto it = mainwindows.constBegin(); it != mainwindows.constEnd() && icon.isNull(); ++it) {
             if (!(*it)->icon().isNull()) {
                 icon = (*it)->icon();
                 break;
@@ -3245,7 +3245,7 @@ xcb_window_t X11Window::verifyTransientFor(xcb_window_t new_transient_for, bool 
 void X11Window::addTransient(Window *cl)
 {
     Window::addTransient(cl);
-    if (workspace()->mostRecentlyActivatedClient() == this && cl->isModal()) {
+    if (workspace()->mostRecentlyActivatedWindow() == this && cl->isModal()) {
         check_active_modal = true;
     }
     //    qDebug() << "ADDTRANS:" << this << ":" << cl;
@@ -3339,7 +3339,7 @@ bool X11Window::hasTransientInternal(const X11Window *cl, bool indirect, QList<c
     return false;
 }
 
-QList<Window *> X11Window::mainClients() const
+QList<Window *> X11Window::mainWindows() const
 {
     if (!isTransient()) {
         return QList<Window *>();
@@ -3519,14 +3519,14 @@ void X11Window::checkActiveModal()
     // if the active window got new modal transient, activate it.
     // cannot be done in AddTransient(), because there may temporarily
     // exist loops, breaking findModal
-    X11Window *check_modal = dynamic_cast<X11Window *>(workspace()->mostRecentlyActivatedClient());
+    X11Window *check_modal = dynamic_cast<X11Window *>(workspace()->mostRecentlyActivatedWindow());
     if (check_modal != nullptr && check_modal->check_active_modal) {
         X11Window *new_modal = dynamic_cast<X11Window *>(check_modal->findModal());
         if (new_modal != nullptr && new_modal != check_modal) {
             if (!new_modal->isManaged()) {
                 return; // postpone check until end of manage()
             }
-            workspace()->activateClient(new_modal);
+            workspace()->activateWindow(new_modal);
         }
         check_modal->check_active_modal = false;
     }
@@ -4560,7 +4560,7 @@ void X11Window::setFullScreen(bool set, bool user)
 
     if (set) {
         m_fullscreenMode = FullScreenNormal;
-        workspace()->raiseClient(this);
+        workspace()->raiseWindow(this);
     } else {
         m_fullscreenMode = FullScreenNone;
     }
@@ -4585,7 +4585,7 @@ void X11Window::setFullScreen(bool set, bool user)
         Output *currentOutput = output();
         moveResize(QRect(fullscreenGeometryRestore().topLeft(), constrainFrameSize(fullscreenGeometryRestore().size())));
         if (currentOutput != output()) {
-            workspace()->sendClientToOutput(this, currentOutput);
+            workspace()->sendWindowToOutput(this, currentOutput);
         }
     }
 

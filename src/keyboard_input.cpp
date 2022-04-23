@@ -136,12 +136,12 @@ void KeyboardInputRedirection::init()
     connect(waylandServer(), &QObject::destroyed, this, [this] {
         m_inited = false;
     });
-    connect(workspace(), &Workspace::clientActivated, this, [this] {
-        disconnect(m_activeClientSurfaceChangedConnection);
-        if (auto c = workspace()->activeClient()) {
-            m_activeClientSurfaceChangedConnection = connect(c, &Window::surfaceChanged, this, &KeyboardInputRedirection::update);
+    connect(workspace(), &Workspace::windowActivated, this, [this] {
+        disconnect(m_activeWindowSurfaceChangedConnection);
+        if (auto window = workspace()->activeWindow()) {
+            m_activeWindowSurfaceChangedConnection = connect(window, &Window::surfaceChanged, this, &KeyboardInputRedirection::update);
         } else {
-            m_activeClientSurfaceChangedConnection = QMetaObject::Connection();
+            m_activeWindowSurfaceChangedConnection = QMetaObject::Connection();
         }
         update();
     });
@@ -199,7 +199,7 @@ void KeyboardInputRedirection::update()
             } while (it != stacking.begin());
         }
     } else if (!input()->isSelectingWindow()) {
-        found = workspace()->activeClient();
+        found = workspace()->activeWindow();
     }
     if (found && found->surface()) {
         if (found->surface() != seat->focusedKeyboardSurface()) {

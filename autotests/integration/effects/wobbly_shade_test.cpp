@@ -119,7 +119,7 @@ void WobblyWindowsShadeTest::testShadeMove()
     xcb_flush(c.data());
 
     // we should get a client for it
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *client = windowCreatedSpy.first().first().value<X11Window *>();
@@ -142,10 +142,10 @@ void WobblyWindowsShadeTest::testShadeMove()
     QVERIFY(windowStartUserMovedResizedSpy.isValid());
 
     // begin move
-    QVERIFY(workspace()->moveResizeClient() == nullptr);
+    QVERIFY(workspace()->moveResizeWindow() == nullptr);
     QCOMPARE(client->isInteractiveMove(), false);
     workspace()->slotWindowMove();
-    QCOMPARE(workspace()->moveResizeClient(), client);
+    QCOMPARE(workspace()->moveResizeWindow(), client);
     QCOMPARE(client->isInteractiveMove(), true);
     QCOMPARE(windowStartUserMovedResizedSpy.count(), 1);
 

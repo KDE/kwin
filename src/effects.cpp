@@ -164,7 +164,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
         }
         Q_EMIT desktopPresenceChanged(c->effectWindow(), old, c->desktop());
     });
-    connect(ws, &Workspace::clientAdded, this, [this](Window *c) {
+    connect(ws, &Workspace::windowAdded, this, [this](Window *c) {
         if (c->readyForPainting()) {
             slotClientShown(c);
         } else {
@@ -175,11 +175,11 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
         // it's never initially ready but has synthetic 50ms delay
         connect(u, &Window::windowShown, this, &EffectsHandlerImpl::slotUnmanagedShown);
     });
-    connect(ws, &Workspace::internalClientAdded, this, [this](InternalWindow *client) {
+    connect(ws, &Workspace::internalWindowAdded, this, [this](InternalWindow *client) {
         setupClientConnections(client);
         Q_EMIT windowAdded(client->effectWindow());
     });
-    connect(ws, &Workspace::clientActivated, this, [this](KWin::Window *c) {
+    connect(ws, &Workspace::windowActivated, this, [this](KWin::Window *c) {
         Q_EMIT windowActivated(c ? c->effectWindow() : nullptr);
     });
     connect(ws, &Workspace::deletedRemoved, this, [this](KWin::Deleted *d) {
@@ -246,7 +246,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     for (Unmanaged *u : ws->unmanagedList()) {
         setupUnmanagedConnections(u);
     }
-    for (InternalWindow *client : ws->internalClients()) {
+    for (InternalWindow *client : ws->internalWindows()) {
         setupClientConnections(client);
     }
 
@@ -911,13 +911,13 @@ void EffectsHandlerImpl::activateWindow(EffectWindow *c)
 {
     auto window = static_cast<EffectWindowImpl *>(c)->window();
     if (window->isClient()) {
-        Workspace::self()->activateClient(window, true);
+        Workspace::self()->activateWindow(window, true);
     }
 }
 
 EffectWindow *EffectsHandlerImpl::activeWindow() const
 {
-    return Workspace::self()->activeClient() ? Workspace::self()->activeClient()->effectWindow() : nullptr;
+    return Workspace::self()->activeWindow() ? Workspace::self()->activeWindow()->effectWindow() : nullptr;
 }
 
 void EffectsHandlerImpl::moveWindow(EffectWindow *w, const QPoint &pos, bool snap, double snapAdjust)
@@ -928,7 +928,7 @@ void EffectsHandlerImpl::moveWindow(EffectWindow *w, const QPoint &pos, bool sna
     }
 
     if (snap) {
-        window->move(Workspace::self()->adjustClientPosition(window, pos, true, snapAdjust));
+        window->move(Workspace::self()->adjustWindowPosition(window, pos, true, snapAdjust));
     } else {
         window->move(pos);
     }
@@ -938,7 +938,7 @@ void EffectsHandlerImpl::windowToDesktop(EffectWindow *w, int desktop)
 {
     auto window = static_cast<EffectWindowImpl *>(w)->window();
     if (window->isClient() && !window->isDesktop() && !window->isDock()) {
-        Workspace::self()->sendClientToDesktop(window, desktop, true);
+        Workspace::self()->sendWindowToDesktop(window, desktop, true);
     }
 }
 
@@ -969,7 +969,7 @@ void EffectsHandlerImpl::windowToScreen(EffectWindow *w, EffectScreen *screen)
     auto window = static_cast<EffectWindowImpl *>(w)->window();
     if (window->isClient() && !window->isDesktop() && !window->isDock()) {
         EffectScreenImpl *screenImpl = static_cast<EffectScreenImpl *>(screen);
-        Workspace::self()->sendClientToOutput(window, screenImpl->platformOutput());
+        Workspace::self()->sendWindowToOutput(window, screenImpl->platformOutput());
     }
 }
 
@@ -1108,7 +1108,7 @@ EffectWindow *EffectsHandlerImpl::findWindow(WId id) const
 EffectWindow *EffectsHandlerImpl::findWindow(KWaylandServer::SurfaceInterface *surf) const
 {
     if (waylandServer()) {
-        if (Window *w = waylandServer()->findClient(surf)) {
+        if (Window *w = waylandServer()->findWindow(surf)) {
             return w->effectWindow();
         }
     }
@@ -2197,13 +2197,13 @@ QWindow *EffectWindowImpl::internalWindow() const
 template<typename T>
 EffectWindowList getMainWindows(T *c)
 {
-    const auto mainclients = c->mainClients();
+    const auto mainwindows = c->mainWindows();
     EffectWindowList ret;
-    ret.reserve(mainclients.size());
-    std::transform(std::cbegin(mainclients), std::cend(mainclients),
+    ret.reserve(mainwindows.size());
+    std::transform(std::cbegin(mainwindows), std::cend(mainwindows),
                    std::back_inserter(ret),
-                   [](auto client) {
-                       return client->effectWindow();
+                   [](auto window) {
+                       return window->effectWindow();
                    });
     return ret;
 }

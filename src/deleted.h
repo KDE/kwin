@@ -49,9 +49,9 @@ public:
     {
         return m_modal;
     }
-    QList<Window *> mainClients() const override
+    QList<Window *> mainWindows() const override
     {
-        return m_mainClients;
+        return m_mainWindows;
     }
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     bool wasClient() const
@@ -93,7 +93,7 @@ public:
     bool takeFocus() override { return false; }
     bool wantsInput() const override { return false; }
     void killWindow() override { /* nothing to do */ }
-    void destroyClient() override { /* nothing to do */ }
+    void destroyWindow() override { /* nothing to do */ }
     void closeWindow() override { /* nothing to do */ }
     bool acceptsFocus() const override { return false; }
     bool belongsToSameApplication(const Window *other, SameApplicationChecks /*checks*/) const override { return other == this; }
@@ -126,7 +126,7 @@ public:
     }
 
 private Q_SLOTS:
-    void mainClientClosed(KWin::Window *client);
+    void mainWindowClosed(KWin::Window *window);
 
 private:
     Deleted(); // use create()
@@ -150,7 +150,7 @@ private:
     bool m_shade;
     bool m_minimized;
     bool m_modal;
-    QList<Window *> m_mainClients;
+    QList<Window *> m_mainWindows;
     bool m_wasClient;
     NET::WindowType m_type = NET::Unknown;
     QByteArray m_windowRole;

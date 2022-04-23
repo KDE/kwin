@@ -48,7 +48,7 @@ XdgSurfaceWindow::XdgSurfaceWindow(XdgSurfaceInterface *shellSurface)
     connect(shellSurface, &XdgSurfaceInterface::configureAcknowledged,
             this, &XdgSurfaceWindow::handleConfigureAcknowledged);
     connect(shellSurface, &XdgSurfaceInterface::resetOccurred,
-            this, &XdgSurfaceWindow::destroyClient);
+            this, &XdgSurfaceWindow::destroyWindow);
     connect(shellSurface->surface(), &SurfaceInterface::committed,
             this, &XdgSurfaceWindow::handleCommit);
 #if 0 // TODO: Refactor kwin core in order to uncomment this code.
@@ -56,9 +56,9 @@ XdgSurfaceWindow::XdgSurfaceWindow(XdgSurfaceInterface *shellSurface)
             this, &XdgSurfaceWindow::setReadyForPainting);
 #endif
     connect(shellSurface, &XdgSurfaceInterface::aboutToBeDestroyed,
-            this, &XdgSurfaceWindow::destroyClient);
+            this, &XdgSurfaceWindow::destroyWindow);
     connect(shellSurface->surface(), &SurfaceInterface::aboutToBeDestroyed,
-            this, &XdgSurfaceWindow::destroyClient);
+            this, &XdgSurfaceWindow::destroyWindow);
 
     // The effective window geometry is determined by two things: (a) the rectangle that bounds
     // the main surface and all of its sub-surfaces, (b) the client-specified window geometry, if
@@ -321,7 +321,7 @@ QRect XdgSurfaceWindow::frameRectToBufferRect(const QRect &rect) const
     return QRect(QPoint(left, top), surface()->size());
 }
 
-void XdgSurfaceWindow::destroyClient()
+void XdgSurfaceWindow::destroyWindow()
 {
     markAsZombie();
     if (isInteractiveMoveResize()) {
@@ -336,7 +336,7 @@ void XdgSurfaceWindow::destroyClient()
     RuleBook::self()->discardUsed(this, true);
     setDecoration(nullptr);
     cleanGrouping();
-    waylandServer()->removeClient(this);
+    waylandServer()->removeWindow(this);
     deleted->unrefWindow();
     delete this;
 }
@@ -505,7 +505,7 @@ void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
     });
     connect(shellSurface, &PlasmaShellSurfaceInterface::panelTakesFocusChanged, this, [this] {
         if (m_plasmaShellSurface->panelTakesFocus()) {
-            workspace()->activateClient(this);
+            workspace()->activateWindow(this);
         }
     });
     if (shellSurface->isPositionSet()) {
@@ -574,7 +574,7 @@ XdgToplevelWindow::XdgToplevelWindow(XdgToplevelInterface *shellSurface)
     connect(shellSurface, &XdgToplevelInterface::initializeRequested,
             this, &XdgToplevelWindow::initialize);
     connect(shellSurface, &XdgToplevelInterface::aboutToBeDestroyed,
-            this, &XdgToplevelWindow::destroyClient);
+            this, &XdgToplevelWindow::destroyWindow);
     connect(shellSurface, &XdgToplevelInterface::maximumSizeChanged,
             this, &XdgToplevelWindow::handleMaximumSizeChanged);
     connect(shellSurface, &XdgToplevelInterface::minimumSizeChanged,
@@ -813,7 +813,7 @@ void XdgToplevelWindow::showOnScreenEdge()
     // Use the singleshot to avoid use-after-free
     QTimer::singleShot(0, this, [this]() {
         showClient();
-        workspace()->raiseClient(this);
+        workspace()->raiseWindow(this);
         if (m_plasmaShellSurface && m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide) {
             m_plasmaShellSurface->showAutoHidingPanel();
         }
@@ -880,7 +880,7 @@ void XdgToplevelWindow::handleRoleCommit()
 void XdgToplevelWindow::doMinimize()
 {
     if (isMinimized()) {
-        workspace()->clientHidden(this);
+        workspace()->windowHidden(this);
     } else {
         Q_EMIT windowShown(this);
     }
@@ -1243,17 +1243,17 @@ void XdgToplevelWindow::handleTransientForChanged()
     if (!transientForSurface) {
         transientForSurface = waylandServer()->findForeignTransientForSurface(surface());
     }
-    Window *transientForClient = waylandServer()->findClient(transientForSurface);
-    if (transientForClient != transientFor()) {
+    Window *transientForWindow = waylandServer()->findWindow(transientForSurface);
+    if (transientForWindow != transientFor()) {
         if (transientFor()) {
             transientFor()->removeTransient(this);
         }
-        if (transientForClient) {
-            transientForClient->addTransient(this);
+        if (transientForWindow) {
+            transientForWindow->addTransient(this);
         }
-        setTransientFor(transientForClient);
+        setTransientFor(transientForWindow);
     }
-    m_isTransient = transientForClient;
+    m_isTransient = transientForWindow;
 }
 
 void XdgToplevelWindow::handleForeignTransientForChanged(SurfaceInterface *child)
@@ -1599,7 +1599,7 @@ void XdgToplevelWindow::setFullScreen(bool set, bool user)
             moveResize(QRect(fullscreenGeometryRestore().topLeft(),
                              constrainFrameSize(fullscreenGeometryRestore().size())));
             if (currentOutput != output()) {
-                workspace()->sendClientToOutput(this, currentOutput);
+                workspace()->sendWindowToOutput(this, currentOutput);
             }
         } else {
             // this can happen when the window was first shown already fullscreen,
@@ -1757,7 +1757,7 @@ XdgPopupWindow::XdgPopupWindow(XdgPopupInterface *shellSurface)
     connect(shellSurface, &XdgPopupInterface::repositionRequested,
             this, &XdgPopupWindow::handleRepositionRequested);
     connect(shellSurface, &XdgPopupInterface::aboutToBeDestroyed,
-            this, &XdgPopupWindow::destroyClient);
+            this, &XdgPopupWindow::destroyWindow);
 }
 
 void XdgPopupWindow::updateReactive()
@@ -1996,9 +1996,9 @@ void XdgPopupWindow::handleGrabRequested(SeatInterface *seat, quint32 serial)
 
 void XdgPopupWindow::initialize()
 {
-    Window *parentClient = waylandServer()->findClient(m_shellSurface->parentSurface());
-    parentClient->addTransient(this);
-    setTransientFor(parentClient);
+    Window *parent = waylandServer()->findWindow(m_shellSurface->parentSurface());
+    parent->addTransient(this);
+    setTransientFor(parent);
 
     updateReactive();
 

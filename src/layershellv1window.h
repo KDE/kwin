@@ -41,7 +41,7 @@ public:
     bool wantsInput() const override;
     StrutRect strutRect(StrutArea area) const override;
     bool hasStrut() const override;
-    void destroyClient() override;
+    void destroyWindow() override;
     void closeWindow() override;
     void setVirtualKeyboardGeometry(const QRect &geo) override;
 

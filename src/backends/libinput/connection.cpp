@@ -474,8 +474,8 @@ void Connection::processEvents()
             if (workspace()) {
 #ifndef KWIN_BUILD_TESTING
                 Output *output = tte->device()->output();
-                if (!output && workspace()->activeClient()) {
-                    output = workspace()->activeClient()->output();
+                if (!output && workspace()->activeWindow()) {
+                    output = workspace()->activeWindow()->output();
                 }
                 if (!output) {
                     output = workspace()->activeOutput();

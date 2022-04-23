@@ -38,7 +38,7 @@ InternalWindow::InternalWindow(QWindow *window)
     connect(m_internalWindow, &QWindow::heightChanged, this, &InternalWindow::updateInternalWindowGeometry);
     connect(m_internalWindow, &QWindow::windowTitleChanged, this, &InternalWindow::setCaption);
     connect(m_internalWindow, &QWindow::opacityChanged, this, &InternalWindow::setOpacity);
-    connect(m_internalWindow, &QWindow::destroyed, this, &InternalWindow::destroyClient);
+    connect(m_internalWindow, &QWindow::destroyed, this, &InternalWindow::destroyWindow);
 
     const QVariant windowType = m_internalWindow->property("kwin_windowType");
     if (!windowType.isNull()) {
@@ -355,7 +355,7 @@ void InternalWindow::invalidateDecoration()
     updateDecoration(true, true);
 }
 
-void InternalWindow::destroyClient()
+void InternalWindow::destroyWindow()
 {
     markAsZombie();
     if (isInteractiveMoveResize()) {
@@ -368,7 +368,7 @@ void InternalWindow::destroyClient()
 
     destroyDecoration();
 
-    workspace()->removeInternalClient(this);
+    workspace()->removeInternalWindow(this);
 
     deleted->unrefWindow();
     m_internalWindow = nullptr;
@@ -449,12 +449,12 @@ void InternalWindow::updateCaption()
     const QString oldSuffix = m_captionSuffix;
     const auto shortcut = shortcutCaptionSuffix();
     m_captionSuffix = shortcut;
-    if ((!isSpecialWindow() || isToolbar()) && findClientWithSameCaption()) {
+    if ((!isSpecialWindow() || isToolbar()) && findWindowWithSameCaption()) {
         int i = 2;
         do {
             m_captionSuffix = shortcut + QLatin1String(" <") + QString::number(i) + QLatin1Char('>');
             i++;
-        } while (findClientWithSameCaption());
+        } while (findWindowWithSameCaption());
     }
     if (m_captionSuffix != oldSuffix) {
         Q_EMIT captionChanged();
@@ -519,7 +519,7 @@ void InternalWindow::markAsMapped()
 {
     if (!ready_for_painting) {
         setReadyForPainting();
-        workspace()->addInternalClient(this);
+        workspace()->addInternalWindow(this);
     }
 }
 

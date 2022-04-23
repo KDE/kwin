@@ -147,8 +147,8 @@ int TabBoxHandlerImpl::numberOfDesktops() const
 
 QWeakPointer<TabBoxClient> TabBoxHandlerImpl::activeClient() const
 {
-    if (Workspace::self()->activeClient()) {
-        return qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(Workspace::self()->activeClient()->tabBoxClient());
+    if (Workspace::self()->activeWindow()) {
+        return qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(Workspace::self()->activeWindow()->tabBoxClient());
     } else {
         return QWeakPointer<TabBoxClient>();
     }
@@ -297,7 +297,7 @@ bool TabBoxHandlerImpl::isKWinCompositing() const
 
 void TabBoxHandlerImpl::raiseClient(TabBoxClient *c) const
 {
-    Workspace::self()->raiseClient(static_cast<TabBoxClientImpl *>(c)->client());
+    Workspace::self()->raiseWindow(static_cast<TabBoxClientImpl *>(c)->client());
 }
 
 void TabBoxHandlerImpl::restack(TabBoxClient *c, TabBoxClient *under)
@@ -621,8 +621,8 @@ void TabBox::reset(bool partial_reset)
     case TabBoxConfig::ClientTabBox:
         m_tabBox->createModel(partial_reset);
         if (!partial_reset) {
-            if (Workspace::self()->activeClient()) {
-                setCurrentClient(Workspace::self()->activeClient());
+            if (Workspace::self()->activeWindow()) {
+                setCurrentClient(Workspace::self()->activeWindow());
             }
             // it's possible that the active client is not part of the model
             // in that case the index is invalid
@@ -656,7 +656,7 @@ void TabBox::nextPrev(bool next)
 Window *TabBox::currentClient()
 {
     if (TabBoxClientImpl *client = static_cast<TabBoxClientImpl *>(m_tabBox->client(m_tabBox->currentIndex()))) {
-        if (!Workspace::self()->hasClient(client->client())) {
+        if (!Workspace::self()->hasWindow(client->client())) {
             return nullptr;
         }
         return client->client();
@@ -1273,16 +1273,16 @@ void TabBox::CDEWalkThroughWindows(bool forward)
     } while (nc && nc != c && ((!options_traverse_all && !nc->isOnDesktop(currentDesktop())) || nc->isMinimized() || !nc->wantsTabFocus() || nc->keepAbove() || nc->keepBelow() || !nc->isOnCurrentActivity()));
     if (nc) {
         if (c && c != nc) {
-            Workspace::self()->lowerClient(c);
+            Workspace::self()->lowerWindow(c);
         }
         if (options->focusPolicyIsReasonable()) {
-            Workspace::self()->activateClient(nc);
+            Workspace::self()->activateWindow(nc);
             shadeActivate(nc);
         } else {
             if (!nc->isOnDesktop(currentDesktop())) {
                 setCurrentDesktop(nc->desktop());
             }
-            Workspace::self()->raiseClient(nc);
+            Workspace::self()->raiseWindow(nc);
         }
     }
 }
@@ -1293,7 +1293,7 @@ void TabBox::KDEOneStepThroughWindows(bool forward, TabBoxMode mode)
     reset();
     nextPrev(forward);
     if (Window *c = currentClient()) {
-        Workspace::self()->activateClient(c);
+        Workspace::self()->activateWindow(c);
         shadeActivate(c);
     }
 }
@@ -1459,7 +1459,7 @@ void TabBox::accept(bool closeTabBox)
         close();
     }
     if (c) {
-        Workspace::self()->activateClient(c);
+        Workspace::self()->activateWindow(c);
         shadeActivate(c);
         if (c->isDesktop()) {
             Workspace::self()->setShowingDesktop(!Workspace::self()->showingDesktop(), !m_desktopListConfig.isHighlightWindows());
@@ -1560,8 +1560,8 @@ bool TabBox::establishTabBoxGrab()
     // the active client, which may not have it.
     Q_ASSERT(!m_forcedGlobalMouseGrab);
     m_forcedGlobalMouseGrab = true;
-    if (Workspace::self()->activeClient() != nullptr) {
-        Workspace::self()->activeClient()->updateMouseGrab();
+    if (Workspace::self()->activeWindow() != nullptr) {
+        Workspace::self()->activeWindow()->updateMouseGrab();
     }
     m_x11EventFilter.reset(new X11Filter);
     return true;
@@ -1577,8 +1577,8 @@ void TabBox::removeTabBoxGrab()
     ungrabXKeyboard();
     Q_ASSERT(m_forcedGlobalMouseGrab);
     m_forcedGlobalMouseGrab = false;
-    if (Workspace::self()->activeClient() != nullptr) {
-        Workspace::self()->activeClient()->updateMouseGrab();
+    if (Workspace::self()->activeWindow() != nullptr) {
+        Workspace::self()->activeWindow()->updateMouseGrab();
     }
     m_x11EventFilter.reset();
 }

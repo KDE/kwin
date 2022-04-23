@@ -238,13 +238,13 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
     QVERIFY(inhibitor);
 
     // Map the client.
-    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
-    QVERIFY(clientAddedSpy.isValid());
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    QVERIFY(windowAddedSpy.isValid());
     Test::render(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(clientAddedSpy.isEmpty());
-    QVERIFY(clientAddedSpy.wait());
-    QCOMPARE(clientAddedSpy.count(), 1);
-    Window *client = clientAddedSpy.last().first().value<Window *>();
+    QVERIFY(windowAddedSpy.isEmpty());
+    QVERIFY(windowAddedSpy.wait());
+    QCOMPARE(windowAddedSpy.count(), 1);
+    Window *client = windowAddedSpy.last().first().value<Window *>();
     QVERIFY(client);
     QCOMPARE(client->readyForPainting(), true);
 
@@ -275,9 +275,9 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
 
     // Map the client.
     Test::render(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(clientAddedSpy.wait());
-    QCOMPARE(clientAddedSpy.count(), 2);
-    client = clientAddedSpy.last().first().value<Window *>();
+    QVERIFY(windowAddedSpy.wait());
+    QCOMPARE(windowAddedSpy.count(), 2);
+    client = windowAddedSpy.last().first().value<Window *>();
     QVERIFY(client);
     QCOMPARE(client->readyForPainting(), true);
 

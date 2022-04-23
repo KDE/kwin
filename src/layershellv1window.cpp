@@ -49,9 +49,9 @@ LayerShellV1Window::LayerShellV1Window(LayerSurfaceV1Interface *shellSurface,
     setSkipTaskbar(true);
 
     connect(shellSurface, &LayerSurfaceV1Interface::aboutToBeDestroyed,
-            this, &LayerShellV1Window::destroyClient);
+            this, &LayerShellV1Window::destroyWindow);
     connect(shellSurface->surface(), &SurfaceInterface::aboutToBeDestroyed,
-            this, &LayerShellV1Window::destroyClient);
+            this, &LayerShellV1Window::destroyWindow);
 
     connect(output, &Output::geometryChanged,
             this, &LayerShellV1Window::scheduleRearrange);
@@ -172,7 +172,7 @@ bool LayerShellV1Window::hasStrut() const
     return m_shellSurface->exclusiveZone() > 0;
 }
 
-void LayerShellV1Window::destroyClient()
+void LayerShellV1Window::destroyWindow()
 {
     markAsZombie();
     cleanTabBox();
@@ -180,7 +180,7 @@ void LayerShellV1Window::destroyClient()
     Q_EMIT windowClosed(this, deleted);
     StackingUpdatesBlocker blocker(workspace());
     cleanGrouping();
-    waylandServer()->removeClient(this);
+    waylandServer()->removeWindow(this);
     deleted->unrefWindow();
     scheduleRearrange();
     delete this;
@@ -244,7 +244,7 @@ void LayerShellV1Window::handleSizeChanged()
 
 void LayerShellV1Window::handleUnmapped()
 {
-    m_integration->recreateClient(shellSurface());
+    m_integration->recreateWindow(shellSurface());
 }
 
 void LayerShellV1Window::handleCommitted()
@@ -261,7 +261,7 @@ void LayerShellV1Window::handleAcceptsFocusChanged()
     case LayerSurfaceV1Interface::TopLayer:
     case LayerSurfaceV1Interface::OverlayLayer:
         if (wantsInput()) {
-            workspace()->activateClient(this);
+            workspace()->activateWindow(this);
         }
         break;
     case LayerSurfaceV1Interface::BackgroundLayer:
@@ -274,14 +274,14 @@ void LayerShellV1Window::handleOutputEnabledChanged()
 {
     if (!m_desiredOutput->isEnabled()) {
         closeWindow();
-        destroyClient();
+        destroyWindow();
     }
 }
 
 void LayerShellV1Window::handleOutputDestroyed()
 {
     closeWindow();
-    destroyClient();
+    destroyWindow();
 }
 
 void LayerShellV1Window::setVirtualKeyboardGeometry(const QRect &geo)

@@ -228,7 +228,7 @@ bool Selection::handleSelectionRequest(xcb_selection_request_event_t *event)
         return false;
     }
 
-    if (qobject_cast<X11Window *>(workspace()->activeClient()) == nullptr) {
+    if (qobject_cast<X11Window *>(workspace()->activeWindow()) == nullptr) {
         // Receiving Wayland selection not allowed when no Xwayland surface active
         // filter the event, but don't act upon it
         sendSelectionNotify(event, false);

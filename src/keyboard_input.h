@@ -83,7 +83,7 @@ private:
     InputRedirection *m_input;
     bool m_inited = false;
     QScopedPointer<Xkb> m_xkb;
-    QMetaObject::Connection m_activeClientSurfaceChangedConnection;
+    QMetaObject::Connection m_activeWindowSurfaceChangedConnection;
     ModifiersChangedSpy *m_modifiersChangedSpy = nullptr;
     KeyboardLayout *m_keyboardLayout = nullptr;
 };

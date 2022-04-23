@@ -165,7 +165,7 @@ Window *LockScreenTest::showWindow()
     auto c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
 
     VERIFY(c);
-    COMPARE(workspace()->activeClient(), c);
+    COMPARE(workspace()->activeWindow(), c);
 
 #undef VERIFY
 #undef COMPARE
@@ -217,13 +217,13 @@ void LockScreenTest::testStackingOrder()
 {
     // This test verifies that the lockscreen greeter is placed above other windows.
 
-    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
-    QVERIFY(clientAddedSpy.isValid());
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    QVERIFY(windowAddedSpy.isValid());
 
     LOCK;
-    QVERIFY(clientAddedSpy.wait());
+    QVERIFY(windowAddedSpy.wait());
 
-    Window *client = clientAddedSpy.first().first().value<Window *>();
+    Window *client = windowAddedSpy.first().first().value<Window *>();
     QVERIFY(client);
     QVERIFY(client->isLockScreen());
     QCOMPARE(client->layer(), UnmanagedLayer);
@@ -571,7 +571,7 @@ void LockScreenTest::testMoveWindow()
     quint32 timestamp = 1;
 
     workspace()->slotWindowMove();
-    QCOMPARE(workspace()->moveResizeClient(), c);
+    QCOMPARE(workspace()->moveResizeWindow(), c);
     QVERIFY(c->isInteractiveMove());
     Test::keyboardKeyPressed(KEY_RIGHT, timestamp++);
     Test::keyboardKeyReleased(KEY_RIGHT, timestamp++);
@@ -585,14 +585,14 @@ void LockScreenTest::testMoveWindow()
 
     // while locking our window should continue to be in move resize
     LOCK;
-    QCOMPARE(workspace()->moveResizeClient(), c);
+    QCOMPARE(workspace()->moveResizeWindow(), c);
     QVERIFY(c->isInteractiveMove());
     Test::keyboardKeyPressed(KEY_RIGHT, timestamp++);
     Test::keyboardKeyReleased(KEY_RIGHT, timestamp++);
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
 
     UNLOCK;
-    QCOMPARE(workspace()->moveResizeClient(), c);
+    QCOMPARE(workspace()->moveResizeWindow(), c);
     QVERIFY(c->isInteractiveMove());
     Test::keyboardKeyPressed(KEY_RIGHT, timestamp++);
     Test::keyboardKeyReleased(KEY_RIGHT, timestamp++);

@@ -26,12 +26,12 @@ public:
     bool touchDown(qint32 id, const QPointF &pos, quint32 time) override;
 
 private:
-    void handleClientAdded(Window *client);
-    void handleClientRemoved(Window *client);
+    void handleWindowAdded(Window *client);
+    void handleWindowRemoved(Window *client);
     void disconnectClient(Window *client);
     void cancelPopups();
 
-    QVector<Window *> m_popupClients;
+    QVector<Window *> m_popupWindows;
 };
 }
 

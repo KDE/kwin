@@ -91,10 +91,10 @@ void Activities::toggleClientOnActivity(Window *c, const QString &activity, bool
             !dont_activate) {
             ws->requestFocus(c);
         } else {
-            ws->restackClientUnderActive(c);
+            ws->restackWindowUnderActive(c);
         }
     } else {
-        ws->raiseClient(c);
+        ws->raiseWindow(c);
     }
 
     // notifyWindowDesktopChanged( c, old_desktop );

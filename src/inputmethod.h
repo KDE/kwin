@@ -64,7 +64,7 @@ public:
     bool isAvailable() const;
 
     InputPanelV1Window *panel() const;
-    void setPanel(InputPanelV1Window *client);
+    void setPanel(InputPanelV1Window *panel);
     void setInputMethodCommand(const QString &path);
 
     KWaylandServer::InputMethodGrabV1 *keyboardGrab();
@@ -107,7 +107,7 @@ private:
     void setTextDirection(uint32_t serial, Qt::LayoutDirection direction);
     void startInputMethod();
     void stopInputMethod();
-    void setTrackedClient(Window *trackedClient);
+    void setTrackedWindow(Window *trackedWindow);
     void installKeyboardGrab(KWaylandServer::InputMethodGrabV1 *keyboardGrab);
     void updateModifiersMap(const QByteArray &modifiers);
 
@@ -123,8 +123,8 @@ private:
 
     bool m_enabled = true;
     quint32 m_serial = 0;
-    QPointer<InputPanelV1Window> m_inputClient;
-    QPointer<Window> m_trackedClient;
+    QPointer<InputPanelV1Window> m_panel;
+    QPointer<Window> m_trackedWindow;
     QPointer<KWaylandServer::InputMethodGrabV1> m_keyboardGrab;
 
     QProcess *m_inputMethodProcess = nullptr;

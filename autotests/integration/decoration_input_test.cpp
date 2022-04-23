@@ -110,7 +110,7 @@ Window *DecorationInputTest::showWindow()
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     auto c = Test::renderAndWaitForShown(surface, QSize(500, 50), Qt::blue);
     VERIFY(c);
-    COMPARE(workspace()->activeClient(), c);
+    COMPARE(workspace()->activeWindow(), c);
 
 #undef VERIFY
 #undef COMPARE
@@ -775,12 +775,12 @@ void DecorationInputTest::testTooltipDoesntEatKeyEvents()
     QSignalSpy keyEvent(keyboard, &KWayland::Client::Keyboard::keyChanged);
     QVERIFY(keyEvent.isValid());
 
-    QSignalSpy clientAddedSpy(workspace(), &Workspace::internalClientAdded);
-    QVERIFY(clientAddedSpy.isValid());
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::internalWindowAdded);
+    QVERIFY(windowAddedSpy.isValid());
     c->decoratedClient()->requestShowToolTip(QStringLiteral("test"));
     // now we should get an internal window
-    QVERIFY(clientAddedSpy.wait());
-    InternalWindow *internal = clientAddedSpy.first().first().value<InternalWindow *>();
+    QVERIFY(windowAddedSpy.wait());
+    InternalWindow *internal = windowAddedSpy.first().first().value<InternalWindow *>();
     QVERIFY(internal->isInternal());
     QVERIFY(internal->internalWindow()->flags().testFlag(Qt::ToolTip));
 

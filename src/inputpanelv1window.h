@@ -29,7 +29,7 @@ public:
     };
     Q_ENUM(Mode)
 
-    void destroyClient() override;
+    void destroyWindow() override;
     bool isPlaceable() const override
     {
         return false;

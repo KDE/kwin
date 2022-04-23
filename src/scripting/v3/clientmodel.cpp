@@ -17,8 +17,8 @@ namespace KWin::ScriptingModels::V3
 ClientModel::ClientModel(QObject *parent)
     : QAbstractListModel(parent)
 {
-    connect(workspace(), &Workspace::clientAdded, this, &ClientModel::handleClientAdded);
-    connect(workspace(), &Workspace::clientRemoved, this, &ClientModel::handleClientRemoved);
+    connect(workspace(), &Workspace::windowAdded, this, &ClientModel::handleClientAdded);
+    connect(workspace(), &Workspace::windowRemoved, this, &ClientModel::handleClientRemoved);
 
     m_clients = workspace()->allClientList();
     for (Window *client : qAsConst(m_clients)) {

@@ -33,15 +33,15 @@ XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface 
     : QObject(parent)
 {
     Workspace *ws = Workspace::self();
-    connect(ws, &Workspace::clientActivated, this, [this](Window *client) {
-        if (!m_currentActivationToken || !client || client->property("token").toString() == m_currentActivationToken->token) {
+    connect(ws, &Workspace::windowActivated, this, [this](Window *window) {
+        if (!m_currentActivationToken || !window || window->property("token").toString() == m_currentActivationToken->token) {
             return;
         }
         clear();
     });
     activation->setActivationTokenCreator([this](ClientConnection *client, SurfaceInterface *surface, uint serial, SeatInterface *seat, const QString &appId) -> QString {
         Workspace *ws = Workspace::self();
-        if (ws->activeClient() && ws->activeClient()->surface() != surface && !isPrivilegedInWindowManagement(client)) {
+        if (ws->activeWindow() && ws->activeWindow()->surface() != surface && !isPrivilegedInWindowManagement(client)) {
             qCWarning(KWIN_CORE) << "Cannot grant a token to" << client;
             return QStringLiteral("not-granted-666");
         }
@@ -68,26 +68,26 @@ XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface 
 void XdgActivationV1Integration::activateSurface(SurfaceInterface *surface, const QString &token)
 {
     Workspace *ws = Workspace::self();
-    auto client = waylandServer()->findClient(surface);
-    if (!client) {
+    auto window = waylandServer()->findWindow(surface);
+    if (!window) {
         qCWarning(KWIN_CORE) << "could not find the toplevel to activate" << surface;
         return;
     }
 
     if (!m_currentActivationToken || m_currentActivationToken->token != token) {
-        qCDebug(KWIN_CORE) << "Refusing to activate " << client << " (provided token: " << token << ", current token:" << (m_currentActivationToken ? m_currentActivationToken->token : QStringLiteral("null")) << ")";
-        client->demandAttention();
+        qCDebug(KWIN_CORE) << "Refusing to activate " << window << " (provided token: " << token << ", current token:" << (m_currentActivationToken ? m_currentActivationToken->token : QStringLiteral("null")) << ")";
+        window->demandAttention();
         return;
     }
 
-    auto ownerSurfaceClient = waylandServer()->findClient(m_currentActivationToken->surface);
-    qCDebug(KWIN_CORE) << "activating" << client << surface << "on behalf of" << m_currentActivationToken->surface << "into" << ownerSurfaceClient;
-    if (ws->activeClient() == ownerSurfaceClient || isPrivilegedInWindowManagement(m_currentActivationToken->client)) {
-        ws->activateClient(client);
+    auto ownerWindow = waylandServer()->findWindow(m_currentActivationToken->surface);
+    qCDebug(KWIN_CORE) << "activating" << window << surface << "on behalf of" << m_currentActivationToken->surface << "into" << ownerWindow;
+    if (ws->activeWindow() == ownerWindow || isPrivilegedInWindowManagement(m_currentActivationToken->client)) {
+        ws->activateWindow(window);
     } else {
-        qCWarning(KWIN_CORE) << "Activation requested while owner isn't active" << ownerSurfaceClient->desktopFileName()
+        qCWarning(KWIN_CORE) << "Activation requested while owner isn't active" << ownerWindow->desktopFileName()
                              << m_currentActivationToken->applicationId;
-        client->demandAttention();
+        window->demandAttention();
         clear();
     }
 }

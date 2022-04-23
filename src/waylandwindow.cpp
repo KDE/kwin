@@ -48,7 +48,7 @@ WaylandWindow::WaylandWindow(SurfaceInterface *surface)
             this, &WaylandWindow::updateIcon);
     connect(screens(), &Screens::changed, this, &WaylandWindow::updateClientOutputs);
     connect(surface->client(), &ClientConnection::aboutToBeDestroyed,
-            this, &WaylandWindow::destroyClient);
+            this, &WaylandWindow::destroyWindow);
 
     updateResourceName();
     updateIcon();
@@ -142,7 +142,7 @@ bool WaylandWindow::belongsToSameApplication(const Window *other, SameApplicatio
 
 bool WaylandWindow::belongsToDesktop() const
 {
-    const auto clients = waylandServer()->clients();
+    const auto clients = waylandServer()->windows();
 
     return std::any_of(clients.constBegin(), clients.constEnd(),
                        [this](const Window *client) {
@@ -183,12 +183,12 @@ void WaylandWindow::updateCaption()
     const QString oldSuffix = m_captionSuffix;
     const auto shortcut = shortcutCaptionSuffix();
     m_captionSuffix = shortcut;
-    if ((!isSpecialWindow() || isToolbar()) && findClientWithSameCaption()) {
+    if ((!isSpecialWindow() || isToolbar()) && findWindowWithSameCaption()) {
         int i = 2;
         do {
             m_captionSuffix = shortcut + QLatin1String(" <") + QString::number(i) + QLatin1Char('>');
             i++;
-        } while (findClientWithSameCaption());
+        } while (findWindowWithSameCaption());
     }
     if (m_captionSuffix != oldSuffix) {
         Q_EMIT captionChanged();
@@ -273,7 +273,7 @@ void WaylandWindow::hideClient()
     }
     m_isHidden = true;
     addWorkspaceRepaint(visibleGeometry());
-    workspace()->clientHidden(this);
+    workspace()->windowHidden(this);
     Q_EMIT windowHidden(this);
 }
 

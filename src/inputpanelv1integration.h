@@ -23,7 +23,7 @@ class InputPanelV1Integration : public WaylandShellIntegration
 public:
     explicit InputPanelV1Integration(QObject *parent = nullptr);
 
-    void createClient(KWaylandServer::InputPanelSurfaceV1Interface *shellSurface);
+    void createWindow(KWaylandServer::InputPanelSurfaceV1Interface *shellSurface);
 };
 
 } // namespace KWin

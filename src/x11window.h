@@ -94,7 +94,7 @@ class KWIN_EXPORT X11Window : public Window
     Q_PROPERTY(bool clientSideDecorated READ isClientSideDecorated NOTIFY clientSideDecoratedChanged)
 public:
     explicit X11Window();
-    ~X11Window() override; ///< Use destroyClient() or releaseWindow()
+    ~X11Window() override; ///< Use destroyWindow() or releaseWindow()
 
     xcb_window_t wrapperId() const;
     xcb_window_t inputId() const
@@ -116,7 +116,7 @@ public:
     bool isTransient() const override;
     bool groupTransient() const override;
     bool wasOriginallyGroupTransient() const;
-    QList<Window *> mainClients() const override; // Call once before loop , is not indirect
+    QList<Window *> mainWindows() const override; // Call once before loop , is not indirect
     bool hasTransient(const Window *c, bool indirect) const override;
     void checkTransient(xcb_window_t w);
     Window *findModal(bool allow_itself = false) override;
@@ -144,7 +144,7 @@ public:
 
     bool manage(xcb_window_t w, bool isMapped);
     void releaseWindow(bool on_shutdown = false);
-    void destroyClient() override;
+    void destroyWindow() override;
 
     QStringList activities() const override;
     void doSetOnActivities(const QStringList &newActivitiesList) override;

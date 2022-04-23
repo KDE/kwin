@@ -57,9 +57,9 @@ void Clipboard::wlSelectionChanged(KWaylandServer::AbstractDataSource *dsi)
     }
 
     if (!ownsSelection(dsi)) {
-        // Wayland native client provides new selection
+        // Wayland native window provides new selection
         if (!m_checkConnection) {
-            m_checkConnection = connect(workspace(), &Workspace::clientActivated,
+            m_checkConnection = connect(workspace(), &Workspace::windowActivated,
                                         this, &Clipboard::checkWlSource);
         }
         // remove previous source so checkWlSource() can create a new one
@@ -90,11 +90,11 @@ void Clipboard::checkWlSource()
     // Wayland source gets created when:
     // - the Wl selection exists,
     // - its source is not Xwayland,
-    // - a client is active,
-    // - this client is an Xwayland one.
+    // - a window is active,
+    // - this window is an Xwayland one.
     //
     // Otherwise the Wayland source gets destroyed to shield
-    // against snooping X clients.
+    // against snooping X windows.
 
     if (!dsi || ownsSelection(dsi)) {
         // Xwayland source or no source
@@ -103,12 +103,12 @@ void Clipboard::checkWlSource()
         removeSource();
         return;
     }
-    if (!qobject_cast<KWin::X11Window *>(workspace()->activeClient())) {
-        // no active client or active client is Wayland native
+    if (!qobject_cast<KWin::X11Window *>(workspace()->activeWindow())) {
+        // no active window or active window is Wayland native
         removeSource();
         return;
     }
-    // Xwayland client is active and we need a Wayland source
+    // Xwayland window is active and we need a Wayland source
     if (wlSource()) {
         // source already exists, nothing more to do
         return;
@@ -123,8 +123,8 @@ void Clipboard::checkWlSource()
 
 void Clipboard::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
 {
-    const Window *client = workspace()->activeClient();
-    if (!qobject_cast<const X11Window *>(client)) {
+    const Window *window = workspace()->activeWindow();
+    if (!qobject_cast<const X11Window *>(window)) {
         // clipboard is only allowed to be acquired when Xwayland has focus
         // TODO: can we make this stronger (window id comparison)?
         createX11Source(nullptr);

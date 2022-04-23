@@ -32,14 +32,14 @@ WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
     KWin::VirtualDesktopManager *vds = KWin::VirtualDesktopManager::self();
     connect(ws, &Workspace::desktopPresenceChanged, this, &WorkspaceWrapper::desktopPresenceChanged);
     connect(ws, &Workspace::currentDesktopChanged, this, &WorkspaceWrapper::currentDesktopChanged);
-    connect(ws, &Workspace::clientAdded, this, &WorkspaceWrapper::clientAdded);
-    connect(ws, &Workspace::clientAdded, this, &WorkspaceWrapper::setupClientConnections);
-    connect(ws, &Workspace::clientRemoved, this, &WorkspaceWrapper::clientRemoved);
-    connect(ws, &Workspace::clientActivated, this, &WorkspaceWrapper::clientActivated);
+    connect(ws, &Workspace::windowAdded, this, &WorkspaceWrapper::clientAdded);
+    connect(ws, &Workspace::windowAdded, this, &WorkspaceWrapper::setupClientConnections);
+    connect(ws, &Workspace::windowRemoved, this, &WorkspaceWrapper::clientRemoved);
+    connect(ws, &Workspace::windowActivated, this, &WorkspaceWrapper::clientActivated);
     connect(vds, &VirtualDesktopManager::countChanged, this, &WorkspaceWrapper::numberDesktopsChanged);
     connect(vds, &VirtualDesktopManager::layoutChanged, this, &WorkspaceWrapper::desktopLayoutChanged);
     connect(vds, &VirtualDesktopManager::currentChanged, this, &WorkspaceWrapper::currentVirtualDesktopChanged);
-    connect(ws, &Workspace::clientDemandsAttentionChanged, this, &WorkspaceWrapper::clientDemandsAttentionChanged);
+    connect(ws, &Workspace::windowDemandsAttentionChanged, this, &WorkspaceWrapper::clientDemandsAttentionChanged);
 #if KWIN_BUILD_ACTIVITIES
     if (KWin::Activities *activities = KWin::Activities::self()) {
         connect(activities, &Activities::currentChanged, this, &WorkspaceWrapper::currentActivityChanged);
@@ -96,7 +96,7 @@ void WorkspaceWrapper::setNumberOfDesktops(int count)
 
 Window *WorkspaceWrapper::activeClient() const
 {
-    return workspace()->activeClient();
+    return workspace()->activeWindow();
 }
 
 QString WorkspaceWrapper::currentActivity() const
@@ -231,7 +231,7 @@ SLOTWRAPPER(slotSwitchDesktopDown, DesktopBelow)
 
 void WorkspaceWrapper::setActiveClient(KWin::Window *client)
 {
-    KWin::Workspace::self()->activateClient(client);
+    KWin::Workspace::self()->activateWindow(client);
 }
 
 QSize WorkspaceWrapper::workspaceSize() const
@@ -423,7 +423,7 @@ void WorkspaceWrapper::sendClientToScreen(Window *client, int screen)
 {
     Output *output = kwinApp()->platform()->findOutput(screen);
     if (output) {
-        workspace()->sendClientToOutput(client, output);
+        workspace()->sendWindowToOutput(client, output);
     }
 }
 

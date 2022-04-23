@@ -115,16 +115,16 @@ void InputMethod::init()
 
 void InputMethod::show()
 {
-    if (m_inputClient) {
-        m_inputClient->showClient();
+    if (m_panel) {
+        m_panel->showClient();
         updateInputPanelState();
     }
 }
 
 void InputMethod::hide()
 {
-    if (m_inputClient) {
-        m_inputClient->hideClient();
+    if (m_panel) {
+        m_panel->hideClient();
         updateInputPanelState();
     }
 }
@@ -162,49 +162,49 @@ void InputMethod::setActive(bool active)
 
 InputPanelV1Window *InputMethod::panel() const
 {
-    return m_inputClient;
+    return m_panel;
 }
 
-void InputMethod::setPanel(InputPanelV1Window *client)
+void InputMethod::setPanel(InputPanelV1Window *panel)
 {
-    Q_ASSERT(client->isInputMethod());
-    if (m_inputClient) {
-        qCWarning(KWIN_VIRTUALKEYBOARD) << "Replacing input client" << m_inputClient << "with" << client;
-        disconnect(m_inputClient, nullptr, this, nullptr);
+    Q_ASSERT(panel->isInputMethod());
+    if (m_panel) {
+        qCWarning(KWIN_VIRTUALKEYBOARD) << "Replacing input panel" << m_panel << "with" << panel;
+        disconnect(m_panel, nullptr, this, nullptr);
     }
 
-    m_inputClient = client;
-    connect(client->surface(), &SurfaceInterface::inputChanged, this, &InputMethod::updateInputPanelState);
-    connect(client, &QObject::destroyed, this, [this] {
-        if (m_trackedClient) {
-            m_trackedClient->setVirtualKeyboardGeometry({});
+    m_panel = panel;
+    connect(panel->surface(), &SurfaceInterface::inputChanged, this, &InputMethod::updateInputPanelState);
+    connect(panel, &QObject::destroyed, this, [this] {
+        if (m_trackedWindow) {
+            m_trackedWindow->setVirtualKeyboardGeometry({});
         }
     });
-    connect(m_inputClient, &Window::frameGeometryChanged, this, &InputMethod::updateInputPanelState);
-    connect(m_inputClient, &Window::windowHidden, this, &InputMethod::updateInputPanelState);
-    connect(m_inputClient, &Window::windowClosed, this, &InputMethod::updateInputPanelState);
-    connect(m_inputClient, &Window::windowShown, this, &InputMethod::visibleChanged);
-    connect(m_inputClient, &Window::windowHidden, this, &InputMethod::visibleChanged);
-    connect(m_inputClient, &Window::windowClosed, this, &InputMethod::visibleChanged);
+    connect(m_panel, &Window::frameGeometryChanged, this, &InputMethod::updateInputPanelState);
+    connect(m_panel, &Window::windowHidden, this, &InputMethod::updateInputPanelState);
+    connect(m_panel, &Window::windowClosed, this, &InputMethod::updateInputPanelState);
+    connect(m_panel, &Window::windowShown, this, &InputMethod::visibleChanged);
+    connect(m_panel, &Window::windowHidden, this, &InputMethod::visibleChanged);
+    connect(m_panel, &Window::windowClosed, this, &InputMethod::visibleChanged);
     Q_EMIT visibleChanged();
     updateInputPanelState();
     Q_EMIT panelChanged();
 }
 
-void InputMethod::setTrackedClient(Window *trackedClient)
+void InputMethod::setTrackedWindow(Window *trackedWindow)
 {
-    // Reset the old client virtual keybaord geom if necessary
-    // Old and new clients could be the same if focus moves between subsurfaces
-    if (m_trackedClient == trackedClient) {
+    // Reset the old window virtual keybaord geom if necessary
+    // Old and new windows could be the same if focus moves between subsurfaces
+    if (m_trackedWindow == trackedWindow) {
         return;
     }
-    if (m_trackedClient) {
-        m_trackedClient->setVirtualKeyboardGeometry(QRect());
-        disconnect(m_trackedClient, &Window::frameGeometryChanged, this, &InputMethod::updateInputPanelState);
+    if (m_trackedWindow) {
+        m_trackedWindow->setVirtualKeyboardGeometry(QRect());
+        disconnect(m_trackedWindow, &Window::frameGeometryChanged, this, &InputMethod::updateInputPanelState);
     }
-    m_trackedClient = trackedClient;
-    if (m_trackedClient) {
-        connect(m_trackedClient, &Window::frameGeometryChanged, this, &InputMethod::updateInputPanelState, Qt::QueuedConnection);
+    m_trackedWindow = trackedWindow;
+    if (m_trackedWindow) {
+        connect(m_trackedWindow, &Window::frameGeometryChanged, this, &InputMethod::updateInputPanelState, Qt::QueuedConnection);
     }
     updateInputPanelState();
 }
@@ -212,7 +212,7 @@ void InputMethod::setTrackedClient(Window *trackedClient)
 void InputMethod::handleFocusedSurfaceChanged()
 {
     SurfaceInterface *focusedSurface = waylandServer()->seat()->focusedTextInputSurface();
-    setTrackedClient(waylandServer()->findClient(focusedSurface));
+    setTrackedWindow(waylandServer()->findWindow(focusedSurface));
     if (!focusedSurface) {
         setActive(false);
     }
@@ -267,8 +267,8 @@ void InputMethod::textInputInterfaceV2StateUpdated(quint32 serial, KWaylandServe
     if (!t2 || !t2->isEnabled()) {
         return;
     }
-    if (m_inputClient && shouldShowOnActive()) {
-        m_inputClient->allow();
+    if (m_panel && shouldShowOnActive()) {
+        m_panel->allow();
     }
     switch (reason) {
     case KWaylandServer::TextInputV2Interface::UpdateReason::StateChange:
@@ -616,21 +616,21 @@ void InputMethod::updateInputPanelState()
         return;
     }
 
-    if (m_inputClient && shouldShowOnActive()) {
-        m_inputClient->allow();
+    if (m_panel && shouldShowOnActive()) {
+        m_panel->allow();
     }
 
     QRect overlap = QRect(0, 0, 0, 0);
-    if (m_trackedClient) {
-        const bool bottomKeyboard = m_inputClient && m_inputClient->mode() != InputPanelV1Window::Overlay && m_inputClient->isShown();
-        m_trackedClient->setVirtualKeyboardGeometry(bottomKeyboard ? m_inputClient->inputGeometry() : QRect());
+    if (m_trackedWindow) {
+        const bool bottomKeyboard = m_panel && m_panel->mode() != InputPanelV1Window::Overlay && m_panel->isShown();
+        m_trackedWindow->setVirtualKeyboardGeometry(bottomKeyboard ? m_panel->inputGeometry() : QRect());
 
-        if (m_inputClient && m_inputClient->mode() != InputPanelV1Window::Overlay) {
-            overlap = m_trackedClient->frameGeometry() & m_inputClient->inputGeometry();
-            overlap.moveTo(m_trackedClient->mapToLocal(overlap.topLeft()));
+        if (m_panel && m_panel->mode() != InputPanelV1Window::Overlay) {
+            overlap = m_trackedWindow->frameGeometry() & m_panel->inputGeometry();
+            overlap.moveTo(m_trackedWindow->mapToLocal(overlap.topLeft()));
         }
     }
-    t->setInputPanelState(m_inputClient && m_inputClient->isShown(), overlap);
+    t->setInputPanelState(m_panel && m_panel->isShown(), overlap);
 }
 
 void InputMethod::setInputMethodCommand(const QString &command)
@@ -744,7 +744,7 @@ void InputMethod::updateModifiersMap(const QByteArray &modifiers)
 
 bool InputMethod::isVisible() const
 {
-    return m_inputClient && m_inputClient->isShown();
+    return m_panel && m_panel->isShown();
 }
 
 bool InputMethod::isAvailable() const

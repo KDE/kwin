@@ -871,43 +871,43 @@ QString DebugConsoleDelegate::displayText(const QVariant &value, const QLocale &
     return QStyledItemDelegate::displayText(value, locale);
 }
 
-static const int s_x11ClientId = 1;
+static const int s_x11WindowId = 1;
 static const int s_x11UnmanagedId = 2;
-static const int s_waylandClientId = 3;
+static const int s_waylandWindowId = 3;
 static const int s_workspaceInternalId = 4;
 static const quint32 s_propertyBitMask = 0xFFFF0000;
-static const quint32 s_clientBitMask = 0x0000FFFF;
+static const quint32 s_windowBitMask = 0x0000FFFF;
 static const quint32 s_idDistance = 10000;
 
 template<class T>
-void DebugConsoleModel::add(int parentRow, QVector<T *> &clients, T *client)
+void DebugConsoleModel::add(int parentRow, QVector<T *> &windows, T *window)
 {
-    beginInsertRows(index(parentRow, 0, QModelIndex()), clients.count(), clients.count());
-    clients.append(client);
+    beginInsertRows(index(parentRow, 0, QModelIndex()), windows.count(), windows.count());
+    windows.append(window);
     endInsertRows();
 }
 
 template<class T>
-void DebugConsoleModel::remove(int parentRow, QVector<T *> &clients, T *client)
+void DebugConsoleModel::remove(int parentRow, QVector<T *> &windows, T *window)
 {
-    const int remove = clients.indexOf(client);
+    const int remove = windows.indexOf(window);
     if (remove == -1) {
         return;
     }
     beginRemoveRows(index(parentRow, 0, QModelIndex()), remove, remove);
-    clients.removeAt(remove);
+    windows.removeAt(remove);
     endRemoveRows();
 }
 
 DebugConsoleModel::DebugConsoleModel(QObject *parent)
     : QAbstractItemModel(parent)
 {
-    const auto clients = workspace()->allClientList();
-    for (auto c : clients) {
-        handleClientAdded(c);
+    const auto windows = workspace()->allClientList();
+    for (auto window : windows) {
+        handleWindowAdded(window);
     }
-    connect(workspace(), &Workspace::clientAdded, this, &DebugConsoleModel::handleClientAdded);
-    connect(workspace(), &Workspace::clientRemoved, this, &DebugConsoleModel::handleClientRemoved);
+    connect(workspace(), &Workspace::windowAdded, this, &DebugConsoleModel::handleWindowAdded);
+    connect(workspace(), &Workspace::windowRemoved, this, &DebugConsoleModel::handleWindowRemoved);
 
     const auto unmangeds = workspace()->unmanagedList();
     for (auto u : unmangeds) {
@@ -919,43 +919,39 @@ DebugConsoleModel::DebugConsoleModel(QObject *parent)
     connect(workspace(), &Workspace::unmanagedRemoved, this, [this](Unmanaged *u) {
         remove(s_x11UnmanagedId - 1, m_unmanageds, u);
     });
-    for (InternalWindow *client : workspace()->internalClients()) {
-        m_internalClients.append(client);
+    for (InternalWindow *window : workspace()->internalWindows()) {
+        m_internalWindows.append(window);
     }
-    connect(workspace(), &Workspace::internalClientAdded, this, [this](InternalWindow *client) {
-        add(s_workspaceInternalId - 1, m_internalClients, client);
+    connect(workspace(), &Workspace::internalWindowAdded, this, [this](InternalWindow *window) {
+        add(s_workspaceInternalId - 1, m_internalWindows, window);
     });
-    connect(workspace(), &Workspace::internalClientRemoved, this, [this](InternalWindow *client) {
-        remove(s_workspaceInternalId - 1, m_internalClients, client);
+    connect(workspace(), &Workspace::internalWindowRemoved, this, [this](InternalWindow *window) {
+        remove(s_workspaceInternalId - 1, m_internalWindows, window);
     });
 }
 
-void DebugConsoleModel::handleClientAdded(Window *client)
+void DebugConsoleModel::handleWindowAdded(Window *window)
 {
-    X11Window *x11Client = qobject_cast<X11Window *>(client);
-    if (x11Client) {
-        add(s_x11ClientId - 1, m_x11Clients, x11Client);
+    if (auto x11 = qobject_cast<X11Window *>(window)) {
+        add(s_x11WindowId - 1, m_x11Windows, x11);
         return;
     }
 
-    WaylandWindow *waylandClient = qobject_cast<WaylandWindow *>(client);
-    if (waylandClient) {
-        add(s_waylandClientId - 1, m_waylandClients, waylandClient);
+    if (auto wayland = qobject_cast<WaylandWindow *>(window)) {
+        add(s_waylandWindowId - 1, m_waylandWindows, wayland);
         return;
     }
 }
 
-void DebugConsoleModel::handleClientRemoved(Window *client)
+void DebugConsoleModel::handleWindowRemoved(Window *window)
 {
-    X11Window *x11Client = qobject_cast<X11Window *>(client);
-    if (x11Client) {
-        remove(s_x11ClientId - 1, m_x11Clients, x11Client);
+    if (auto x11 = qobject_cast<X11Window *>(window)) {
+        remove(s_x11WindowId - 1, m_x11Windows, x11);
         return;
     }
 
-    WaylandWindow *waylandClient = qobject_cast<WaylandWindow *>(client);
-    if (waylandClient) {
-        remove(s_waylandClientId - 1, m_waylandClients, waylandClient);
+    if (auto wayland = qobject_cast<WaylandWindow *>(window)) {
+        remove(s_waylandWindowId - 1, m_waylandWindows, wayland);
         return;
     }
 }
@@ -989,14 +985,14 @@ int DebugConsoleModel::rowCount(const QModelIndex &parent) const
     }
 
     switch (parent.internalId()) {
-    case s_x11ClientId:
-        return m_x11Clients.count();
+    case s_x11WindowId:
+        return m_x11Windows.count();
     case s_x11UnmanagedId:
         return m_unmanageds.count();
-    case s_waylandClientId:
-        return m_waylandClients.count();
+    case s_waylandWindowId:
+        return m_waylandWindows.count();
     case s_workspaceInternalId:
-        return m_internalClients.count();
+        return m_internalWindows.count();
     default:
         break;
     }
@@ -1006,26 +1002,26 @@ int DebugConsoleModel::rowCount(const QModelIndex &parent) const
         return 0;
     }
 
-    if (parent.internalId() < s_idDistance * (s_x11ClientId + 1)) {
-        return propertyCount(parent, &DebugConsoleModel::x11Client);
+    if (parent.internalId() < s_idDistance * (s_x11WindowId + 1)) {
+        return propertyCount(parent, &DebugConsoleModel::x11Window);
     } else if (parent.internalId() < s_idDistance * (s_x11UnmanagedId + 1)) {
         return propertyCount(parent, &DebugConsoleModel::unmanaged);
-    } else if (parent.internalId() < s_idDistance * (s_waylandClientId + 1)) {
-        return propertyCount(parent, &DebugConsoleModel::waylandClient);
+    } else if (parent.internalId() < s_idDistance * (s_waylandWindowId + 1)) {
+        return propertyCount(parent, &DebugConsoleModel::waylandWindow);
     } else if (parent.internalId() < s_idDistance * (s_workspaceInternalId + 1)) {
-        return propertyCount(parent, &DebugConsoleModel::internalClient);
+        return propertyCount(parent, &DebugConsoleModel::internalWindow);
     }
 
     return 0;
 }
 
 template<class T>
-QModelIndex DebugConsoleModel::indexForClient(int row, int column, const QVector<T *> &clients, int id) const
+QModelIndex DebugConsoleModel::indexForWindow(int row, int column, const QVector<T *> &windows, int id) const
 {
     if (column != 0) {
         return QModelIndex();
     }
-    if (row >= clients.count()) {
+    if (row >= windows.count()) {
         return QModelIndex();
     }
     return createIndex(row, column, s_idDistance * id + row);
@@ -1056,29 +1052,29 @@ QModelIndex DebugConsoleModel::index(int row, int column, const QModelIndex &par
         // max of 2 columns
         return QModelIndex();
     }
-    // index for a client (second level)
+    // index for a window (second level)
     switch (parent.internalId()) {
-    case s_x11ClientId:
-        return indexForClient(row, column, m_x11Clients, s_x11ClientId);
+    case s_x11WindowId:
+        return indexForWindow(row, column, m_x11Windows, s_x11WindowId);
     case s_x11UnmanagedId:
-        return indexForClient(row, column, m_unmanageds, s_x11UnmanagedId);
-    case s_waylandClientId:
-        return indexForClient(row, column, m_waylandClients, s_waylandClientId);
+        return indexForWindow(row, column, m_unmanageds, s_x11UnmanagedId);
+    case s_waylandWindowId:
+        return indexForWindow(row, column, m_waylandWindows, s_waylandWindowId);
     case s_workspaceInternalId:
-        return indexForClient(row, column, m_internalClients, s_workspaceInternalId);
+        return indexForWindow(row, column, m_internalWindows, s_workspaceInternalId);
     default:
         break;
     }
 
     // index for a property (third level)
-    if (parent.internalId() < s_idDistance * (s_x11ClientId + 1)) {
-        return indexForProperty(row, column, parent, &DebugConsoleModel::x11Client);
+    if (parent.internalId() < s_idDistance * (s_x11WindowId + 1)) {
+        return indexForProperty(row, column, parent, &DebugConsoleModel::x11Window);
     } else if (parent.internalId() < s_idDistance * (s_x11UnmanagedId + 1)) {
         return indexForProperty(row, column, parent, &DebugConsoleModel::unmanaged);
-    } else if (parent.internalId() < s_idDistance * (s_waylandClientId + 1)) {
-        return indexForProperty(row, column, parent, &DebugConsoleModel::waylandClient);
+    } else if (parent.internalId() < s_idDistance * (s_waylandWindowId + 1)) {
+        return indexForProperty(row, column, parent, &DebugConsoleModel::waylandWindow);
     } else if (parent.internalId() < s_idDistance * (s_workspaceInternalId + 1)) {
-        return indexForProperty(row, column, parent, &DebugConsoleModel::internalClient);
+        return indexForProperty(row, column, parent, &DebugConsoleModel::internalWindow);
     }
 
     return QModelIndex();
@@ -1091,24 +1087,24 @@ QModelIndex DebugConsoleModel::parent(const QModelIndex &child) const
     }
     if (child.internalId() & s_propertyBitMask) {
         // a property
-        const quint32 parentId = child.internalId() & s_clientBitMask;
-        if (parentId < s_idDistance * (s_x11ClientId + 1)) {
-            return createIndex(parentId - (s_idDistance * s_x11ClientId), 0, parentId);
+        const quint32 parentId = child.internalId() & s_windowBitMask;
+        if (parentId < s_idDistance * (s_x11WindowId + 1)) {
+            return createIndex(parentId - (s_idDistance * s_x11WindowId), 0, parentId);
         } else if (parentId < s_idDistance * (s_x11UnmanagedId + 1)) {
             return createIndex(parentId - (s_idDistance * s_x11UnmanagedId), 0, parentId);
-        } else if (parentId < s_idDistance * (s_waylandClientId + 1)) {
-            return createIndex(parentId - (s_idDistance * s_waylandClientId), 0, parentId);
+        } else if (parentId < s_idDistance * (s_waylandWindowId + 1)) {
+            return createIndex(parentId - (s_idDistance * s_waylandWindowId), 0, parentId);
         } else if (parentId < s_idDistance * (s_workspaceInternalId + 1)) {
             return createIndex(parentId - (s_idDistance * s_workspaceInternalId), 0, parentId);
         }
         return QModelIndex();
     }
-    if (child.internalId() < s_idDistance * (s_x11ClientId + 1)) {
-        return createIndex(s_x11ClientId - 1, 0, s_x11ClientId);
+    if (child.internalId() < s_idDistance * (s_x11WindowId + 1)) {
+        return createIndex(s_x11WindowId - 1, 0, s_x11WindowId);
     } else if (child.internalId() < s_idDistance * (s_x11UnmanagedId + 1)) {
         return createIndex(s_x11UnmanagedId - 1, 0, s_x11UnmanagedId);
-    } else if (child.internalId() < s_idDistance * (s_waylandClientId + 1)) {
-        return createIndex(s_waylandClientId - 1, 0, s_waylandClientId);
+    } else if (child.internalId() < s_idDistance * (s_waylandWindowId + 1)) {
+        return createIndex(s_waylandWindowId - 1, 0, s_waylandWindowId);
     } else if (child.internalId() < s_idDistance * (s_workspaceInternalId + 1)) {
         return createIndex(s_workspaceInternalId - 1, 0, s_workspaceInternalId);
     }
@@ -1174,12 +1170,12 @@ QVariant DebugConsoleModel::propertyData(QObject *object, const QModelIndex &ind
 }
 
 template<class T>
-QVariant DebugConsoleModel::clientData(const QModelIndex &index, int role, const QVector<T *> clients, const std::function<QString(T *)> &toString) const
+QVariant DebugConsoleModel::windowData(const QModelIndex &index, int role, const QVector<T *> windows, const std::function<QString(T *)> &toString) const
 {
-    if (index.row() >= clients.count()) {
+    if (index.row() >= windows.count()) {
         return QVariant();
     }
-    auto c = clients.at(index.row());
+    auto c = windows.at(index.row());
     if (role == Qt::DisplayRole) {
         return toString(c);
     } else if (role == Qt::DecorationRole) {
@@ -1199,11 +1195,11 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
             return QVariant();
         }
         switch (index.internalId()) {
-        case s_x11ClientId:
-            return i18n("X11 Client Windows");
+        case s_x11WindowId:
+            return i18n("X11 Windows");
         case s_x11UnmanagedId:
             return i18n("X11 Unmanaged Windows");
-        case s_waylandClientId:
+        case s_waylandWindowId:
             return i18n("Wayland Windows");
         case s_workspaceInternalId:
             return i18n("Internal Windows");
@@ -1215,12 +1211,12 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
         if (index.column() >= 2 || role != Qt::DisplayRole) {
             return QVariant();
         }
-        if (Window *c = waylandClient(index)) {
-            return propertyData(c, index, role);
-        } else if (InternalWindow *c = internalClient(index)) {
-            return propertyData(c, index, role);
-        } else if (X11Window *c = x11Client(index)) {
-            return propertyData(c, index, role);
+        if (Window *w = waylandWindow(index)) {
+            return propertyData(w, index, role);
+        } else if (InternalWindow *w = internalWindow(index)) {
+            return propertyData(w, index, role);
+        } else if (X11Window *w = x11Window(index)) {
+            return propertyData(w, index, role);
         } else if (Unmanaged *u = unmanaged(index)) {
             return propertyData(u, index, role);
         }
@@ -1233,8 +1229,8 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
             return c->caption() + QLatin1Char(' ') + QString::fromUtf8(c->metaObject()->className());
         };
         switch (index.parent().internalId()) {
-        case s_x11ClientId:
-            return clientData<X11Window>(index, role, m_x11Clients, [](X11Window *c) -> QString {
+        case s_x11WindowId:
+            return windowData<X11Window>(index, role, m_x11Windows, [](X11Window *c) -> QString {
                 return QStringLiteral("0x%1: %2").arg(c->window(), 0, 16).arg(c->caption());
             });
         case s_x11UnmanagedId: {
@@ -1247,10 +1243,10 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
             }
             break;
         }
-        case s_waylandClientId:
-            return clientData<WaylandWindow>(index, role, m_waylandClients, generic);
+        case s_waylandWindowId:
+            return windowData<WaylandWindow>(index, role, m_waylandWindows, generic);
         case s_workspaceInternalId:
-            return clientData<InternalWindow>(index, role, m_internalClients, generic);
+            return windowData<InternalWindow>(index, role, m_internalWindows, generic);
         default:
             break;
         }
@@ -1260,33 +1256,33 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
 }
 
 template<class T>
-static T *clientForIndex(const QModelIndex &index, const QVector<T *> &clients, int id)
+static T *windowForIndex(const QModelIndex &index, const QVector<T *> &windows, int id)
 {
-    const qint32 row = (index.internalId() & s_clientBitMask) - (s_idDistance * id);
-    if (row < 0 || row >= clients.count()) {
+    const qint32 row = (index.internalId() & s_windowBitMask) - (s_idDistance * id);
+    if (row < 0 || row >= windows.count()) {
         return nullptr;
     }
-    return clients.at(row);
+    return windows.at(row);
 }
 
-WaylandWindow *DebugConsoleModel::waylandClient(const QModelIndex &index) const
+WaylandWindow *DebugConsoleModel::waylandWindow(const QModelIndex &index) const
 {
-    return clientForIndex(index, m_waylandClients, s_waylandClientId);
+    return windowForIndex(index, m_waylandWindows, s_waylandWindowId);
 }
 
-InternalWindow *DebugConsoleModel::internalClient(const QModelIndex &index) const
+InternalWindow *DebugConsoleModel::internalWindow(const QModelIndex &index) const
 {
-    return clientForIndex(index, m_internalClients, s_workspaceInternalId);
+    return windowForIndex(index, m_internalWindows, s_workspaceInternalId);
 }
 
-X11Window *DebugConsoleModel::x11Client(const QModelIndex &index) const
+X11Window *DebugConsoleModel::x11Window(const QModelIndex &index) const
 {
-    return clientForIndex(index, m_x11Clients, s_x11ClientId);
+    return windowForIndex(index, m_x11Windows, s_x11WindowId);
 }
 
 Unmanaged *DebugConsoleModel::unmanaged(const QModelIndex &index) const
 {
-    return clientForIndex(index, m_unmanageds, s_x11UnmanagedId);
+    return windowForIndex(index, m_unmanageds, s_x11UnmanagedId);
 }
 
 /////////////////////////////////////// SurfaceTreeModel
@@ -1313,11 +1309,11 @@ SurfaceTreeModel::SurfaceTreeModel(QObject *parent)
     for (auto c : workspace()->allClientList()) {
         watchSubsurfaces(c);
     }
-    connect(workspace(), &Workspace::clientAdded, this, [reset, watchSubsurfaces](Window *c) {
+    connect(workspace(), &Workspace::windowAdded, this, [reset, watchSubsurfaces](Window *c) {
         watchSubsurfaces(c);
         reset();
     });
-    connect(workspace(), &Workspace::clientRemoved, this, reset);
+    connect(workspace(), &Workspace::windowRemoved, this, reset);
     connect(workspace(), &Workspace::unmanagedAdded, this, reset);
     connect(workspace(), &Workspace::unmanagedRemoved, this, reset);
 }
@@ -1553,7 +1549,7 @@ int InputDeviceModel::rowCount(const QModelIndex &parent) const
 QModelIndex InputDeviceModel::parent(const QModelIndex &child) const
 {
     if (child.internalId() & s_propertyBitMask) {
-        const quintptr parentId = child.internalId() & s_clientBitMask;
+        const quintptr parentId = child.internalId() & s_windowBitMask;
         return createIndex(parentId - 1, 0, parentId);
     }
     return QModelIndex();

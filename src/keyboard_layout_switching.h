@@ -135,7 +135,7 @@ protected:
     void layoutChanged(uint index) override;
 
 private:
-    void clientActivated(Window *c);
+    void windowActivated(Window *window);
     QHash<Window *, quint32> m_layouts;
     QHash<QByteArray, quint32> m_layoutsRestored;
 };

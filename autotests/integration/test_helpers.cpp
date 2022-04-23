@@ -707,28 +707,28 @@ void render(KWayland::Client::Surface *surface, const QImage &img)
 
 Window *waitForWaylandWindowShown(int timeout)
 {
-    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
-    if (!clientAddedSpy.isValid()) {
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    if (!windowAddedSpy.isValid()) {
         return nullptr;
     }
-    if (!clientAddedSpy.wait(timeout)) {
+    if (!windowAddedSpy.wait(timeout)) {
         return nullptr;
     }
-    return clientAddedSpy.first().first().value<Window *>();
+    return windowAddedSpy.first().first().value<Window *>();
 }
 
 Window *renderAndWaitForShown(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format, int timeout)
 {
-    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
-    if (!clientAddedSpy.isValid()) {
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    if (!windowAddedSpy.isValid()) {
         return nullptr;
     }
     render(surface, size, color, format);
     flushWaylandConnection();
-    if (!clientAddedSpy.wait(timeout)) {
+    if (!windowAddedSpy.wait(timeout)) {
         return nullptr;
     }
-    return clientAddedSpy.first().first().value<Window *>();
+    return windowAddedSpy.first().first().value<Window *>();
 }
 
 void flushWaylandConnection()

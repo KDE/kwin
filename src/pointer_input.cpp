@@ -166,13 +166,13 @@ void PointerInputRedirection::init()
         update();
     });
     // connect the move resize of all window
-    auto setupMoveResizeConnection = [this](Window *c) {
-        connect(c, &Window::clientStartUserMovedResized, this, &PointerInputRedirection::updateOnStartMoveResize);
-        connect(c, &Window::clientFinishUserMovedResized, this, &PointerInputRedirection::update);
+    auto setupMoveResizeConnection = [this](Window *window) {
+        connect(window, &Window::clientStartUserMovedResized, this, &PointerInputRedirection::updateOnStartMoveResize);
+        connect(window, &Window::clientFinishUserMovedResized, this, &PointerInputRedirection::update);
     };
     const auto clients = workspace()->allClientList();
     std::for_each(clients.begin(), clients.end(), setupMoveResizeConnection);
-    connect(workspace(), &Workspace::clientAdded, this, setupMoveResizeConnection);
+    connect(workspace(), &Workspace::windowAdded, this, setupMoveResizeConnection);
 
     // warp the cursor to center of screen containing the workspace center
     if (const Output *output = kwinApp()->platform()->outputAt(workspace()->geometry().center())) {
@@ -550,7 +550,7 @@ void PointerInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl 
         },
         Qt::QueuedConnection);
 
-    // if our decoration gets destroyed whilst it has focus, we pass focus on to the same client
+    // if our decoration gets destroyed whilst it has focus, we pass focus on to the same window
     m_decorationDestroyedConnection = connect(now, &QObject::destroyed, this, &PointerInputRedirection::update, Qt::QueuedConnection);
 }
 
@@ -581,8 +581,8 @@ void PointerInputRedirection::focusUpdate(Window *focusOld, Window *focusNow)
         if (!focus()) {
             return;
         }
-        // TODO: can we check on the client instead?
-        if (workspace()->moveResizeClient()) {
+        // TODO: can we check on the window instead?
+        if (workspace()->moveResizeWindow()) {
             // don't update while moving
             return;
         }
@@ -595,7 +595,7 @@ void PointerInputRedirection::focusUpdate(Window *focusOld, Window *focusNow)
 
     m_constraintsConnection = connect(focusNow->surface(), &KWaylandServer::SurfaceInterface::pointerConstraintsChanged,
                                       this, &PointerInputRedirection::updatePointerConstraints);
-    m_constraintsActivatedConnection = connect(workspace(), &Workspace::clientActivated,
+    m_constraintsActivatedConnection = connect(workspace(), &Workspace::windowActivated,
                                                this, &PointerInputRedirection::updatePointerConstraints);
     updatePointerConstraints();
 }
@@ -640,11 +640,11 @@ void PointerInputRedirection::disconnectPointerConstraintsConnection()
 }
 
 template<typename T>
-static QRegion getConstraintRegion(Window *t, T *constraint)
+static QRegion getConstraintRegion(Window *window, T *constraint)
 {
-    const QRegion windowShape = t->inputShape();
+    const QRegion windowShape = window->inputShape();
     const QRegion intersected = constraint->region().isEmpty() ? windowShape : windowShape.intersected(constraint->region());
-    return intersected.translated(t->pos() + t->clientPos());
+    return intersected.translated(window->pos() + window->clientPos());
 }
 
 void PointerInputRedirection::setEnableConstraints(bool set)
@@ -671,7 +671,7 @@ void PointerInputRedirection::updatePointerConstraints()
     if (!supportsWarping()) {
         return;
     }
-    const bool canConstrain = m_enableConstraints && focus() == workspace()->activeClient();
+    const bool canConstrain = m_enableConstraints && focus() == workspace()->activeWindow();
     const auto cf = s->confinedPointer();
     if (cf) {
         if (cf->isConfined()) {
@@ -951,13 +951,13 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
 #endif
     connect(m_pointer, &PointerInputRedirection::decorationChanged, this, &CursorImage::updateDecoration);
     // connect the move resize of all window
-    auto setupMoveResizeConnection = [this](Window *c) {
-        connect(c, &Window::moveResizedChanged, this, &CursorImage::updateMoveResize);
-        connect(c, &Window::moveResizeCursorChanged, this, &CursorImage::updateMoveResize);
+    auto setupMoveResizeConnection = [this](Window *window) {
+        connect(window, &Window::moveResizedChanged, this, &CursorImage::updateMoveResize);
+        connect(window, &Window::moveResizeCursorChanged, this, &CursorImage::updateMoveResize);
     };
     const auto clients = workspace()->allClientList();
     std::for_each(clients.begin(), clients.end(), setupMoveResizeConnection);
-    connect(workspace(), &Workspace::clientAdded, this, setupMoveResizeConnection);
+    connect(workspace(), &Workspace::windowAdded, this, setupMoveResizeConnection);
     loadThemeCursor(Qt::ArrowCursor, &m_fallbackCursor);
 
     connect(&m_waylandImage, &WaylandCursorImage::themeChanged, this, [this] {
@@ -1028,9 +1028,9 @@ void CursorImage::updateDecoration()
 {
     disconnect(m_decorationConnection);
     auto deco = m_pointer->decoration();
-    Window *c = deco ? deco->client() : nullptr;
-    if (c) {
-        m_decorationConnection = connect(c, &Window::moveResizeCursorChanged, this, &CursorImage::updateDecorationCursor);
+    Window *window = deco ? deco->client() : nullptr;
+    if (window) {
+        m_decorationConnection = connect(window, &Window::moveResizeCursorChanged, this, &CursorImage::updateDecorationCursor);
     } else {
         m_decorationConnection = QMetaObject::Connection();
     }
@@ -1041,8 +1041,8 @@ void CursorImage::updateDecorationCursor()
 {
     m_decorationCursor = {};
     auto deco = m_pointer->decoration();
-    if (Window *c = deco ? deco->client() : nullptr) {
-        loadThemeCursor(c->cursor(), &m_decorationCursor);
+    if (Window *window = deco ? deco->client() : nullptr) {
+        loadThemeCursor(window->cursor(), &m_decorationCursor);
         if (m_currentSource == CursorSource::Decoration) {
             Q_EMIT changed();
         }
@@ -1053,8 +1053,8 @@ void CursorImage::updateDecorationCursor()
 void CursorImage::updateMoveResize()
 {
     m_moveResizeCursor = {};
-    if (Window *c = workspace()->moveResizeClient()) {
-        loadThemeCursor(c->cursor(), &m_moveResizeCursor);
+    if (Window *window = workspace()->moveResizeWindow()) {
+        loadThemeCursor(window->cursor(), &m_moveResizeCursor);
         if (m_currentSource == CursorSource::MoveResize) {
             Q_EMIT changed();
         }
@@ -1335,7 +1335,7 @@ void CursorImage::reevaluteSource()
         setSource(CursorSource::EffectsOverride);
         return;
     }
-    if (workspace() && workspace()->moveResizeClient()) {
+    if (workspace() && workspace()->moveResizeWindow()) {
         setSource(CursorSource::MoveResize);
         return;
     }

@@ -120,12 +120,12 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
             }
         }
 
-        for (const Window *client : Workspace::self()->allClientList()) {
-            if (!client->isNormalWindow()) {
+        for (const Window *window : Workspace::self()->allClientList()) {
+            if (!window->isNormalWindow()) {
                 continue;
             }
-            const QString appName = client->resourceClass();
-            const QString name = client->caption();
+            const QString appName = window->resourceClass();
+            const QString name = window->caption();
             if (!windowName.isEmpty() && !name.startsWith(windowName, Qt::CaseInsensitive)) {
                 continue;
             }
@@ -133,7 +133,7 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
                 continue;
             }
 
-            if (targetDesktop && !client->desktops().contains(targetDesktop) && !client->isOnAllDesktops()) {
+            if (targetDesktop && !window->desktops().contains(targetDesktop) && !window->isOnAllDesktops()) {
                 continue;
             }
             // check for windows when no keywords were used
@@ -145,8 +145,8 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
                 }
             }
             // blacklisted everything else: we have a match
-            if (actionSupported(client, action)) {
-                matches << windowsMatch(client, action);
+            if (actionSupported(window, action)) {
+                matches << windowsMatch(window, action);
             }
         }
 
@@ -170,16 +170,16 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
     }
 
     // check for matching desktops by name
-    for (const Window *client : Workspace::self()->allClientList()) {
-        if (!client->isNormalWindow()) {
+    for (const Window *window : Workspace::self()->allClientList()) {
+        if (!window->isNormalWindow()) {
             continue;
         }
-        const QString appName = client->resourceClass();
-        const QString name = client->caption();
+        const QString appName = window->resourceClass();
+        const QString name = window->caption();
         if (name.startsWith(term, Qt::CaseInsensitive) || appName.startsWith(term, Qt::CaseInsensitive)) {
-            matches << windowsMatch(client, action, 0.8, Plasma::QueryMatch::ExactMatch);
-        } else if ((name.contains(term, Qt::CaseInsensitive) || appName.contains(term, Qt::CaseInsensitive)) && actionSupported(client, action)) {
-            matches << windowsMatch(client, action, 0.7, Plasma::QueryMatch::PossibleMatch);
+            matches << windowsMatch(window, action, 0.8, Plasma::QueryMatch::ExactMatch);
+        } else if ((name.contains(term, Qt::CaseInsensitive) || appName.contains(term, Qt::CaseInsensitive)) && actionSupported(window, action)) {
+            matches << windowsMatch(window, action, 0.7, Plasma::QueryMatch::PossibleMatch);
         }
     }
 
@@ -189,12 +189,12 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
                 matches << desktopMatch(desktop, ActivateDesktopAction, 0.8);
             }
             // search for windows on desktop and list them with less relevance
-            for (const Window *client : Workspace::self()->allClientList()) {
-                if (!client->isNormalWindow()) {
+            for (const Window *window : Workspace::self()->allClientList()) {
+                if (!window->isNormalWindow()) {
                     continue;
                 }
-                if ((client->desktops().contains(desktop) || client->isOnAllDesktops()) && actionSupported(client, action)) {
-                    matches << windowsMatch(client, action, 0.5, Plasma::QueryMatch::PossibleMatch);
+                if ((window->desktops().contains(desktop) || window->isOnAllDesktops()) && actionSupported(window, action)) {
+                    matches << windowsMatch(window, action, 0.5, Plasma::QueryMatch::PossibleMatch);
                 }
             }
         }
@@ -219,31 +219,31 @@ void WindowsRunner::Run(const QString &id, const QString &actionId)
     }
 
     const auto uuid = QUuid::fromString(objectId);
-    const auto client = workspace()->findAbstractClient(uuid);
+    const auto window = workspace()->findAbstractClient(uuid);
     switch (action) {
     case ActivateAction:
-        workspace()->activateClient(client);
+        workspace()->activateWindow(window);
         break;
     case CloseAction:
-        client->closeWindow();
+        window->closeWindow();
         break;
     case MinimizeAction:
-        client->setMinimized(!client->isMinimized());
+        window->setMinimized(!window->isMinimized());
         break;
     case MaximizeAction:
-        client->setMaximize(client->maximizeMode() == MaximizeRestore, client->maximizeMode() == MaximizeRestore);
+        window->setMaximize(window->maximizeMode() == MaximizeRestore, window->maximizeMode() == MaximizeRestore);
         break;
     case FullscreenAction:
-        client->setFullScreen(!client->isFullScreen());
+        window->setFullScreen(!window->isFullScreen());
         break;
     case ShadeAction:
-        client->toggleShade();
+        window->toggleShade();
         break;
     case KeepAboveAction:
-        client->setKeepAbove(!client->keepAbove());
+        window->setKeepAbove(!window->keepAbove());
         break;
     case KeepBelowAction:
-        client->setKeepBelow(!client->keepBelow());
+        window->setKeepBelow(!window->keepBelow());
         break;
     case ActivateDesktopAction:
         Q_UNREACHABLE();
@@ -266,28 +266,28 @@ RemoteMatch WindowsRunner::desktopMatch(const VirtualDesktop *desktop, const Win
     return match;
 }
 
-RemoteMatch WindowsRunner::windowsMatch(const Window *client, const WindowsRunnerAction action, qreal relevance, Plasma::QueryMatch::Type type) const
+RemoteMatch WindowsRunner::windowsMatch(const Window *window, const WindowsRunnerAction action, qreal relevance, Plasma::QueryMatch::Type type) const
 {
     RemoteMatch match;
-    match.id = QString::number((int)action) + QLatin1Char('_') + client->internalId().toString();
-    match.text = client->caption();
-    match.iconName = client->icon().name();
+    match.id = QString::number((int)action) + QLatin1Char('_') + window->internalId().toString();
+    match.text = window->caption();
+    match.iconName = window->icon().name();
     match.relevance = relevance;
     match.type = type;
     QVariantMap properties;
 
-    const QVector<VirtualDesktop *> desktops = client->desktops();
-    bool allDesktops = client->isOnAllDesktops();
+    const QVector<VirtualDesktop *> desktops = window->desktops();
+    bool allDesktops = window->isOnAllDesktops();
 
     const VirtualDesktop *targetDesktop = VirtualDesktopManager::self()->currentDesktop();
     // Show on current desktop unless window is only attached to other desktop, in this case show on the first attached desktop
-    if (!allDesktops && !client->isOnCurrentDesktop() && !desktops.isEmpty()) {
+    if (!allDesktops && !window->isOnCurrentDesktop() && !desktops.isEmpty()) {
         targetDesktop = desktops.first();
     }
 
     // When there is no icon name, send a pixmap along instead
     if (match.iconName.isEmpty()) {
-        QImage convertedImage = client->icon().pixmap(QSize(16, 16)).toImage().convertToFormat(QImage::Format_RGBA8888);
+        QImage convertedImage = window->icon().pixmap(QSize(16, 16)).toImage().convertToFormat(QImage::Format_RGBA8888);
         RemoteImage remoteImage{
             convertedImage.width(),
             convertedImage.height(),
@@ -331,19 +331,19 @@ RemoteMatch WindowsRunner::windowsMatch(const Window *client, const WindowsRunne
     return match;
 }
 
-bool WindowsRunner::actionSupported(const Window *client, const WindowsRunnerAction action) const
+bool WindowsRunner::actionSupported(const Window *window, const WindowsRunnerAction action) const
 {
     switch (action) {
     case CloseAction:
-        return client->isCloseable();
+        return window->isCloseable();
     case MinimizeAction:
-        return client->isMinimizable();
+        return window->isMinimizable();
     case MaximizeAction:
-        return client->isMaximizable();
+        return window->isMaximizable();
     case ShadeAction:
-        return client->isShadeable();
+        return window->isShadeable();
     case FullscreenAction:
-        return client->isFullScreenable();
+        return window->isFullScreenable();
     case KeepAboveAction:
     case KeepBelowAction:
     case ActivateAction:

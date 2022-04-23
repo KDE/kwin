@@ -109,7 +109,7 @@ void PlasmaSurfaceTest::testRoleOnAllDesktops()
     // now render to map the window
     Window *c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
-    QCOMPARE(workspace()->activeClient(), c);
+    QCOMPARE(workspace()->activeWindow(), c);
 
     // currently the role is not yet set, so the window should not be on all desktops
     QCOMPARE(c->isOnAllDesktops(), false);

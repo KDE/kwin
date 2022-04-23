@@ -328,11 +328,11 @@ void TestXdgShellWindowRules::testPositionApply()
     QSignalSpy clientFinishUserMovedResizedSpy(m_client, &Window::clientFinishUserMovedResized);
     QVERIFY(clientFinishUserMovedResizedSpy.isValid());
 
-    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_client->isInteractiveMove());
     QVERIFY(!m_client->isInteractiveResize());
     workspace()->slotWindowMove();
-    QCOMPARE(workspace()->moveResizeClient(), m_client);
+    QCOMPARE(workspace()->moveResizeWindow(), m_client);
     QCOMPARE(clientStartMoveResizedSpy.count(), 1);
     QVERIFY(m_client->isInteractiveMove());
     QVERIFY(!m_client->isInteractiveResize());
@@ -346,7 +346,7 @@ void TestXdgShellWindowRules::testPositionApply()
 
     m_client->keyPressEvent(Qt::Key_Enter);
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
-    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_client->isInteractiveMove());
     QVERIFY(!m_client->isInteractiveResize());
     QCOMPARE(m_client->pos(), QPoint(50, 42));
@@ -380,11 +380,11 @@ void TestXdgShellWindowRules::testPositionRemember()
     QSignalSpy clientFinishUserMovedResizedSpy(m_client, &Window::clientFinishUserMovedResized);
     QVERIFY(clientFinishUserMovedResizedSpy.isValid());
 
-    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_client->isInteractiveMove());
     QVERIFY(!m_client->isInteractiveResize());
     workspace()->slotWindowMove();
-    QCOMPARE(workspace()->moveResizeClient(), m_client);
+    QCOMPARE(workspace()->moveResizeWindow(), m_client);
     QCOMPARE(clientStartMoveResizedSpy.count(), 1);
     QVERIFY(m_client->isInteractiveMove());
     QVERIFY(!m_client->isInteractiveResize());
@@ -398,7 +398,7 @@ void TestXdgShellWindowRules::testPositionRemember()
 
     m_client->keyPressEvent(Qt::Key_Enter);
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
-    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_client->isInteractiveMove());
     QVERIFY(!m_client->isInteractiveResize());
     QCOMPARE(m_client->pos(), QPoint(50, 42));
@@ -428,11 +428,11 @@ void TestXdgShellWindowRules::testPositionForce()
     // User should not be able to move the client.
     QSignalSpy clientStartMoveResizedSpy(m_client, &Window::clientStartUserMovedResized);
     QVERIFY(clientStartMoveResizedSpy.isValid());
-    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_client->isInteractiveMove());
     QVERIFY(!m_client->isInteractiveResize());
     workspace()->slotWindowMove();
-    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QCOMPARE(clientStartMoveResizedSpy.count(), 0);
     QVERIFY(!m_client->isInteractiveMove());
     QVERIFY(!m_client->isInteractiveResize());
@@ -477,11 +477,11 @@ void TestXdgShellWindowRules::testPositionApplyNow()
     QSignalSpy clientFinishUserMovedResizedSpy(m_client, &Window::clientFinishUserMovedResized);
     QVERIFY(clientFinishUserMovedResizedSpy.isValid());
 
-    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_client->isInteractiveMove());
     QVERIFY(!m_client->isInteractiveResize());
     workspace()->slotWindowMove();
-    QCOMPARE(workspace()->moveResizeClient(), m_client);
+    QCOMPARE(workspace()->moveResizeWindow(), m_client);
     QCOMPARE(clientStartMoveResizedSpy.count(), 1);
     QVERIFY(m_client->isInteractiveMove());
     QVERIFY(!m_client->isInteractiveResize());
@@ -495,7 +495,7 @@ void TestXdgShellWindowRules::testPositionApplyNow()
 
     m_client->keyPressEvent(Qt::Key_Enter);
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
-    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_client->isInteractiveMove());
     QVERIFY(!m_client->isInteractiveResize());
     QCOMPARE(m_client->pos(), QPoint(50, 42));
@@ -521,11 +521,11 @@ void TestXdgShellWindowRules::testPositionForceTemporarily()
     // User should not be able to move the client.
     QSignalSpy clientStartMoveResizedSpy(m_client, &Window::clientStartUserMovedResized);
     QVERIFY(clientStartMoveResizedSpy.isValid());
-    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_client->isInteractiveMove());
     QVERIFY(!m_client->isInteractiveResize());
     workspace()->slotWindowMove();
-    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QCOMPARE(clientStartMoveResizedSpy.count(), 0);
     QVERIFY(!m_client->isInteractiveMove());
     QVERIFY(!m_client->isInteractiveResize());
@@ -603,11 +603,11 @@ void TestXdgShellWindowRules::testSizeApply()
     QSignalSpy clientFinishUserMovedResizedSpy(m_client, &Window::clientFinishUserMovedResized);
     QVERIFY(clientFinishUserMovedResizedSpy.isValid());
 
-    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_client->isInteractiveMove());
     QVERIFY(!m_client->isInteractiveResize());
     workspace()->slotWindowResize();
-    QCOMPARE(workspace()->moveResizeClient(), m_client);
+    QCOMPARE(workspace()->moveResizeWindow(), m_client);
     QCOMPARE(clientStartMoveResizedSpy.count(), 1);
     QVERIFY(!m_client->isInteractiveMove());
     QVERIFY(m_client->isInteractiveResize());
@@ -639,7 +639,7 @@ void TestXdgShellWindowRules::testSizeApply()
 
     m_client->keyPressEvent(Qt::Key_Enter);
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
-    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_client->isInteractiveMove());
     QVERIFY(!m_client->isInteractiveResize());
 
@@ -704,11 +704,11 @@ void TestXdgShellWindowRules::testSizeRemember()
     QSignalSpy clientFinishUserMovedResizedSpy(m_client, &Window::clientFinishUserMovedResized);
     QVERIFY(clientFinishUserMovedResizedSpy.isValid());
 
-    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_client->isInteractiveMove());
     QVERIFY(!m_client->isInteractiveResize());
     workspace()->slotWindowResize();
-    QCOMPARE(workspace()->moveResizeClient(), m_client);
+    QCOMPARE(workspace()->moveResizeWindow(), m_client);
     QCOMPARE(clientStartMoveResizedSpy.count(), 1);
     QVERIFY(!m_client->isInteractiveMove());
     QVERIFY(m_client->isInteractiveResize());
@@ -740,7 +740,7 @@ void TestXdgShellWindowRules::testSizeRemember()
 
     m_client->keyPressEvent(Qt::Key_Enter);
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
-    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_client->isInteractiveMove());
     QVERIFY(!m_client->isInteractiveResize());
 
@@ -791,11 +791,11 @@ void TestXdgShellWindowRules::testSizeForce()
     // Any attempt to resize the client should not succeed.
     QSignalSpy clientStartMoveResizedSpy(m_client, &Window::clientStartUserMovedResized);
     QVERIFY(clientStartMoveResizedSpy.isValid());
-    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_client->isInteractiveMove());
     QVERIFY(!m_client->isInteractiveResize());
     workspace()->slotWindowResize();
-    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QCOMPARE(clientStartMoveResizedSpy.count(), 0);
     QVERIFY(!m_client->isInteractiveMove());
     QVERIFY(!m_client->isInteractiveResize());
@@ -887,11 +887,11 @@ void TestXdgShellWindowRules::testSizeForceTemporarily()
     // Any attempt to resize the client should not succeed.
     QSignalSpy clientStartMoveResizedSpy(m_client, &Window::clientStartUserMovedResized);
     QVERIFY(clientStartMoveResizedSpy.isValid());
-    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_client->isInteractiveMove());
     QVERIFY(!m_client->isInteractiveResize());
     workspace()->slotWindowResize();
-    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QCOMPARE(clientStartMoveResizedSpy.count(), 0);
     QVERIFY(!m_client->isInteractiveMove());
     QVERIFY(!m_client->isInteractiveResize());
@@ -2647,7 +2647,7 @@ void TestXdgShellWindowRules::testInactiveOpacityDontAffect()
     QVERIFY(m_client->isActive());
 
     // Make the client inactive.
-    workspace()->setActiveClient(nullptr);
+    workspace()->setActiveWindow(nullptr);
     QVERIFY(!m_client->isActive());
 
     // The opacity of the client should not be affected by the rule.
@@ -2665,7 +2665,7 @@ void TestXdgShellWindowRules::testInactiveOpacityForce()
     QCOMPARE(m_client->opacity(), 1.0);
 
     // Make the client inactive.
-    workspace()->setActiveClient(nullptr);
+    workspace()->setActiveWindow(nullptr);
     QVERIFY(!m_client->isActive());
 
     // The opacity should be forced by the rule.
@@ -2683,7 +2683,7 @@ void TestXdgShellWindowRules::testInactiveOpacityForceTemporarily()
     QCOMPARE(m_client->opacity(), 1.0);
 
     // Make the client inactive.
-    workspace()->setActiveClient(nullptr);
+    workspace()->setActiveWindow(nullptr);
     QVERIFY(!m_client->isActive());
 
     // The opacity should be forced by the rule.
@@ -2695,7 +2695,7 @@ void TestXdgShellWindowRules::testInactiveOpacityForceTemporarily()
 
     QVERIFY(m_client->isActive());
     QCOMPARE(m_client->opacity(), 1.0);
-    workspace()->setActiveClient(nullptr);
+    workspace()->setActiveWindow(nullptr);
     QVERIFY(!m_client->isActive());
     QCOMPARE(m_client->opacity(), 1.0);
 
@@ -2841,7 +2841,7 @@ void TestXdgShellWindowRules::testScreenDontAffect()
     QCOMPARE(m_client->output()->name(), outputs.at(0)->name());
 
     // The user can still move the client to another screen.
-    workspace()->sendClientToOutput(m_client, outputs.at(1));
+    workspace()->sendWindowToOutput(m_client, outputs.at(1));
     QCOMPARE(m_client->output()->name(), outputs.at(1)->name());
 
     destroyTestWindow();
@@ -2860,7 +2860,7 @@ void TestXdgShellWindowRules::testScreenApply()
     QCOMPARE(m_client->output()->name(), outputs.at(1)->name());
 
     // The user can move the client to another screen.
-    workspace()->sendClientToOutput(m_client, outputs.at(0));
+    workspace()->sendWindowToOutput(m_client, outputs.at(0));
     QCOMPARE(m_client->output()->name(), outputs.at(0)->name());
 
     destroyTestWindow();
@@ -2878,7 +2878,7 @@ void TestXdgShellWindowRules::testScreenRemember()
     QCOMPARE(m_client->output()->name(), outputs.at(0)->name());
 
     // Move the client to the second screen.
-    workspace()->sendClientToOutput(m_client, outputs.at(1));
+    workspace()->sendWindowToOutput(m_client, outputs.at(1));
     QCOMPARE(m_client->output()->name(), outputs.at(1)->name());
 
     // Close and reopen the client.
@@ -2904,7 +2904,7 @@ void TestXdgShellWindowRules::testScreenForce()
     QCOMPARE(m_client->output()->name(), outputs.at(1)->name());
 
     // User should not be able to move the client to another screen.
-    workspace()->sendClientToOutput(m_client, outputs.at(0));
+    workspace()->sendWindowToOutput(m_client, outputs.at(0));
     QCOMPARE(m_client->output()->name(), outputs.at(1)->name());
 
     // Disable the output where the window is on, so the client is moved the other screen
@@ -2946,7 +2946,7 @@ void TestXdgShellWindowRules::testScreenApplyNow()
     QCOMPARE(m_client->output()->name(), outputs.at(1)->name());
 
     // The user can move the client to another screen.
-    workspace()->sendClientToOutput(m_client, outputs.at(0));
+    workspace()->sendWindowToOutput(m_client, outputs.at(0));
     QCOMPARE(m_client->output()->name(), outputs.at(0)->name());
 
     // The rule should not be applied again.
@@ -2968,7 +2968,7 @@ void TestXdgShellWindowRules::testScreenForceTemporarily()
     QCOMPARE(m_client->output()->name(), outputs.at(1)->name());
 
     // User is not allowed to move it
-    workspace()->sendClientToOutput(m_client, outputs.at(0));
+    workspace()->sendWindowToOutput(m_client, outputs.at(0));
     QCOMPARE(m_client->output()->name(), outputs.at(1)->name());
 
     // Close and reopen the client.

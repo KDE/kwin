@@ -188,15 +188,15 @@ void VirtualDesktopPolicy::layoutChanged(uint index)
 WindowPolicy::WindowPolicy(KWin::Xkb *xkb, KWin::KeyboardLayout *layout)
     : Policy(xkb, layout)
 {
-    connect(workspace(), &Workspace::clientActivated, this, [this](Window *c) {
-        if (!c) {
+    connect(workspace(), &Workspace::windowActivated, this, [this](Window *window) {
+        if (!window) {
             return;
         }
         // ignore some special types
-        if (c->isDesktop() || c->isDock()) {
+        if (window->isDesktop() || window->isDock()) {
             return;
         }
-        setLayout(getLayout(m_layouts, c));
+        setLayout(getLayout(m_layouts, window));
     });
 }
 
@@ -211,20 +211,20 @@ void WindowPolicy::clearCache()
 
 void WindowPolicy::layoutChanged(uint index)
 {
-    auto c = workspace()->activeClient();
-    if (!c) {
+    auto window = workspace()->activeWindow();
+    if (!window) {
         return;
     }
     // ignore some special types
-    if (c->isDesktop() || c->isDock()) {
+    if (window->isDesktop() || window->isDock()) {
         return;
     }
 
-    auto it = m_layouts.find(c);
+    auto it = m_layouts.find(window);
     if (it == m_layouts.end()) {
-        m_layouts.insert(c, index);
-        connect(c, &Window::windowClosed, this, [this, c]() {
-            m_layouts.remove(c);
+        m_layouts.insert(window, index);
+        connect(window, &Window::windowClosed, this, [this, window]() {
+            m_layouts.remove(window);
         });
     } else {
         if (it.value() == index) {
@@ -237,7 +237,7 @@ void WindowPolicy::layoutChanged(uint index)
 ApplicationPolicy::ApplicationPolicy(KWin::Xkb *xkb, KWin::KeyboardLayout *layout, const KConfigGroup &config)
     : Policy(xkb, layout, config)
 {
-    connect(workspace(), &Workspace::clientActivated, this, &ApplicationPolicy::clientActivated);
+    connect(workspace(), &Workspace::windowActivated, this, &ApplicationPolicy::windowActivated);
 
     connect(workspace()->sessionManager(), &SessionManager::prepareSessionSaveRequested, this, [this](const QString &name) {
         Q_UNUSED(name)
@@ -274,29 +274,29 @@ ApplicationPolicy::~ApplicationPolicy()
 {
 }
 
-void ApplicationPolicy::clientActivated(Window *c)
+void ApplicationPolicy::windowActivated(Window *window)
 {
-    if (!c) {
+    if (!window) {
         return;
     }
     // ignore some special types
-    if (c->isDesktop() || c->isDock()) {
+    if (window->isDesktop() || window->isDock()) {
         return;
     }
-    auto it = m_layouts.constFind(c);
+    auto it = m_layouts.constFind(window);
     if (it != m_layouts.constEnd()) {
         setLayout(it.value());
         return;
     };
     for (it = m_layouts.constBegin(); it != m_layouts.constEnd(); it++) {
-        if (Window::belongToSameApplication(c, it.key())) {
+        if (Window::belongToSameApplication(window, it.key())) {
             const uint layout = it.value();
             setLayout(layout);
             layoutChanged(layout);
             return;
         }
     }
-    setLayout(m_layoutsRestored.take(c->desktopFileName()));
+    setLayout(m_layoutsRestored.take(window->desktopFileName()));
     if (const uint index = m_xkb->currentLayout()) {
         layoutChanged(index);
     }
@@ -309,20 +309,20 @@ void ApplicationPolicy::clearCache()
 
 void ApplicationPolicy::layoutChanged(uint index)
 {
-    auto c = workspace()->activeClient();
-    if (!c) {
+    auto window = workspace()->activeWindow();
+    if (!window) {
         return;
     }
     // ignore some special types
-    if (c->isDesktop() || c->isDock()) {
+    if (window->isDesktop() || window->isDock()) {
         return;
     }
 
-    auto it = m_layouts.find(c);
+    auto it = m_layouts.find(window);
     if (it == m_layouts.end()) {
-        m_layouts.insert(c, index);
-        connect(c, &Window::windowClosed, this, [this, c]() {
-            m_layouts.remove(c);
+        m_layouts.insert(window, index);
+        connect(window, &Window::windowClosed, this, [this, window]() {
+            m_layouts.remove(window);
         });
     } else {
         if (it.value() == index) {
@@ -332,7 +332,7 @@ void ApplicationPolicy::layoutChanged(uint index)
     }
     // update all layouts for the application
     for (it = m_layouts.begin(); it != m_layouts.end(); it++) {
-        if (Window::belongToSameApplication(it.key(), c)) {
+        if (Window::belongToSameApplication(it.key(), window)) {
             it.value() = index;
         }
     }

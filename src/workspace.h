@@ -71,7 +71,7 @@ public:
     bool workspaceEvent(xcb_generic_event_t *);
     bool workspaceEvent(QEvent *);
 
-    bool hasClient(const Window *);
+    bool hasWindow(const Window *);
 
     /**
      * @brief Finds the first Client matching the condition expressed by passed in @p func.
@@ -157,89 +157,89 @@ public:
     void setActiveOutput(const QPoint &pos);
 
     /**
-     * Returns the active client, i.e. the client that has the focus (or None
-     * if no client has the focus)
+     * Returns the active window, i.e. the window that has the focus (or None
+     * if no window has the focus)
      */
-    Window *activeClient() const;
+    Window *activeWindow() const;
     /**
-     * Client that was activated, but it's not yet really activeClient(), because
+     * Window that was activated, but it's not yet really activeWindow(), because
      * we didn't process yet the matching FocusIn event. Used mostly in focus
      * stealing prevention code.
      */
-    Window *mostRecentlyActivatedClient() const;
+    Window *mostRecentlyActivatedWindow() const;
 
-    Window *clientUnderMouse(Output *output) const;
+    Window *windowUnderMouse(Output *output) const;
 
-    void activateClient(Window *, bool force = false);
-    bool requestFocus(Window *c, bool force = false);
+    void activateWindow(Window *window, bool force = false);
+    bool requestFocus(Window *window, bool force = false);
     enum ActivityFlag {
         ActivityFocus = 1 << 0, // focus the window
         ActivityFocusForce = 1 << 1 | ActivityFocus, // focus even if Dock etc.
         ActivityRaise = 1 << 2 // raise the window
     };
     Q_DECLARE_FLAGS(ActivityFlags, ActivityFlag)
-    bool takeActivity(Window *c, ActivityFlags flags);
-    bool allowClientActivation(const Window *c, xcb_timestamp_t time = -1U, bool focus_in = false,
+    bool takeActivity(Window *window, ActivityFlags flags);
+    bool allowWindowActivation(const Window *window, xcb_timestamp_t time = -1U, bool focus_in = false,
                                bool ignore_desktop = false);
     bool restoreFocus();
-    void gotFocusIn(const Window *);
-    void setShouldGetFocus(Window *);
-    bool activateNextClient(Window *c);
+    void gotFocusIn(const Window *window);
+    void setShouldGetFocus(Window *window);
+    bool activateNextWindow(Window *window);
     bool focusChangeEnabled()
     {
         return block_focus == 0;
     }
 
     /**
-     * Indicates that the client c is being moved or resized by the user.
+     * Indicates that the given @a window is being moved or resized by the user.
      */
-    void setMoveResizeClient(Window *c);
+    void setMoveResizeWindow(Window *window);
 
-    QRect adjustClientArea(Window *client, const QRect &area) const;
-    QPoint adjustClientPosition(Window *c, QPoint pos, bool unrestricted, double snapAdjust = 1.0);
-    QRect adjustClientSize(Window *c, QRect moveResizeGeom, Gravity gravity);
-    void raiseClient(Window *c, bool nogroup = false);
-    void lowerClient(Window *c, bool nogroup = false);
-    void raiseClientRequest(Window *c, NET::RequestSource src = NET::FromApplication, xcb_timestamp_t timestamp = 0);
-    void lowerClientRequest(X11Window *c, NET::RequestSource src, xcb_timestamp_t timestamp);
-    void lowerClientRequest(Window *c);
-    void restackClientUnderActive(Window *);
-    void restack(Window *c, Window *under, bool force = false);
-    void raiseOrLowerClient(Window *);
+    QRect adjustClientArea(Window *window, const QRect &area) const;
+    QPoint adjustWindowPosition(Window *window, QPoint pos, bool unrestricted, double snapAdjust = 1.0);
+    QRect adjustWindowSize(Window *window, QRect moveResizeGeom, Gravity gravity);
+    void raiseWindow(Window *window, bool nogroup = false);
+    void lowerWindow(Window *window, bool nogroup = false);
+    void raiseWindowRequest(Window *window, NET::RequestSource src = NET::FromApplication, xcb_timestamp_t timestamp = 0);
+    void lowerWindowRequest(X11Window *window, NET::RequestSource src, xcb_timestamp_t timestamp);
+    void lowerWindowRequest(Window *window);
+    void restackWindowUnderActive(Window *window);
+    void restack(Window *window, Window *under, bool force = false);
+    void raiseOrLowerWindow(Window *window);
     void resetUpdateToolWindowsTimer();
-    void restoreSessionStackingOrder(X11Window *c);
-    void updateStackingOrder(bool propagate_new_clients = false);
+    void restoreSessionStackingOrder(X11Window *window);
+    void updateStackingOrder(bool propagate_new_windows = false);
     void forceRestacking();
 
     void constrain(Window *below, Window *above);
     void unconstrain(Window *below, Window *above);
 
-    void clientHidden(Window *);
-    void clientAttentionChanged(Window *c, bool set);
+    void windowHidden(Window *);
+    void windowAttentionChanged(Window *, bool set);
 
     /**
-     * @return List of clients currently managed by Workspace
+     * @return List of windows currently managed by Workspace
      */
     const QList<X11Window *> &clientList() const
     {
         return m_x11Clients;
     }
     /**
-     * @return List of unmanaged "clients" currently registered in Workspace
+     * @return List of unmanaged "windows" currently registered in Workspace
      */
     const QList<Unmanaged *> &unmanagedList() const
     {
         return m_unmanaged;
     }
     /**
-     * @return List of deleted "clients" currently managed by Workspace
+     * @return List of deleted "windows" currently managed by Workspace
      */
     const QList<Deleted *> &deletedList() const
     {
         return deleted;
     }
     /**
-     * @returns List of all clients (either X11 or Wayland) currently managed by Workspace
+     * @returns List of all windows (either X11 or Wayland) currently managed by Workspace
      */
     const QList<Window *> allClientList() const
     {
@@ -247,11 +247,11 @@ public:
     }
 
     /**
-     * @returns List of all internal clients currently managed by Workspace
+     * @returns List of all internal windows currently managed by Workspace
      */
-    const QList<InternalWindow *> &internalClients() const
+    const QList<InternalWindow *> &internalWindows() const
     {
-        return m_internalClients;
+        return m_internalWindows;
     }
 
     void stackScreenEdgesUnderOverrideRedirect();
@@ -279,22 +279,22 @@ public:
     int oldDisplayHeight() const;
 
     /**
-     * Returns the list of clients sorted in stacking order, with topmost client
+     * Returns the list of windows sorted in stacking order, with topmost window
      * at the last position
      */
     const QList<Window *> &stackingOrder() const;
     QList<Window *> xStackingOrder() const;
     QList<Window *> unconstrainedStackingOrder() const;
-    QList<X11Window *> ensureStackingOrder(const QList<X11Window *> &clients) const;
-    QList<Window *> ensureStackingOrder(const QList<Window *> &clients) const;
+    QList<X11Window *> ensureStackingOrder(const QList<X11Window *> &windows) const;
+    QList<Window *> ensureStackingOrder(const QList<Window *> &windows) const;
 
-    Window *topClientOnDesktop(VirtualDesktop *desktop, Output *output = nullptr, bool unconstrained = false,
-                                       bool only_normal = true) const;
+    Window *topWindowOnDesktop(VirtualDesktop *desktop, Output *output = nullptr, bool unconstrained = false,
+                               bool only_normal = true) const;
     Window *findDesktop(bool topmost, VirtualDesktop *desktop) const;
-    void sendClientToDesktop(Window *c, int desktop, bool dont_activate);
-    void windowToPreviousDesktop(Window *c);
-    void windowToNextDesktop(Window *c);
-    void sendClientToOutput(Window *client, Output *output);
+    void sendWindowToDesktop(Window *window, int desktop, bool dont_activate);
+    void windowToPreviousDesktop(Window *window);
+    void windowToNextDesktop(Window *window);
+    void sendWindowToOutput(Window *window, Output *output);
 
     void addManualOverlay(xcb_window_t id)
     {
@@ -306,7 +306,7 @@ public:
     }
 
     /**
-     * Shows the menu operations menu for the client and makes it active if
+     * Shows the menu operations menu for the window and makes it active if
      * it's not already.
      */
     void showWindowMenu(const QRect &pos, Window *cl);
@@ -315,7 +315,7 @@ public:
         return m_userActionsMenu;
     }
 
-    void showApplicationMenu(const QRect &pos, Window *c, int actionId);
+    void showApplicationMenu(const QRect &pos, Window *window, int actionId);
 
     void updateMinimizedOfTransients(Window *);
     void updateOnAllDesktopsOfTransients(Window *);
@@ -339,8 +339,8 @@ public:
     void setShowingDesktop(bool showing, bool animated = true);
     bool showingDesktop() const;
 
-    void removeX11Client(X11Window *); // Only called from X11Window::destroyClient() or X11Window::releaseWindow()
-    void setActiveClient(Window *);
+    void removeX11Window(X11Window *); // Only called from X11Window::destroyWindow() or X11Window::releaseWindow()
+    void setActiveWindow(Window *window);
     Group *findGroup(xcb_window_t leader) const;
     void addGroup(Group *group);
     void removeGroup(Group *group);
@@ -355,7 +355,7 @@ public:
 
     void focusToNull(); // SELI TODO: Public?
 
-    void clientShortcutUpdated(Window *c);
+    void windowShortcutUpdated(Window *window);
     bool shortcutAvailable(const QKeySequence &cut, Window *ignore = nullptr) const;
     bool globalShortcutsDisabled() const;
     void disableGlobalShortcutsForClient(bool disable);
@@ -363,10 +363,10 @@ public:
     void setWasUserInteraction();
     bool wasUserInteraction() const;
 
-    int packPositionLeft(const Window *client, int oldX, bool leftEdge) const;
-    int packPositionRight(const Window *client, int oldX, bool rightEdge) const;
-    int packPositionUp(const Window *client, int oldY, bool topEdge) const;
-    int packPositionDown(const Window *client, int oldY, bool bottomEdge) const;
+    int packPositionLeft(const Window *window, int oldX, bool leftEdge) const;
+    int packPositionRight(const Window *window, int oldX, bool rightEdge) const;
+    int packPositionUp(const Window *window, int oldY, bool topEdge) const;
+    int packPositionDown(const Window *window, int oldY, bool bottomEdge) const;
 
     void cancelDelayFocus();
     void requestDelayFocus(Window *);
@@ -382,13 +382,13 @@ public:
     QPoint focusMousePosition() const;
 
     /**
-     * Returns a client that is currently being moved or resized by the user.
+     * Returns a window that is currently being moved or resized by the user.
      *
-     * If none of clients is being moved or resized, @c null will be returned.
+     * If none of windows is being moved or resized, @c null will be returned.
      */
-    Window *moveResizeClient()
+    Window *moveResizeWindow()
     {
-        return movingClient;
+        return m_moveResizeWindow;
     }
 
     void markXStackingOrderAsDirty();
@@ -405,28 +405,11 @@ public:
 
     ShortcutDialog *shortcutDialog() const
     {
-        return client_keys_dialog;
+        return m_windowKeysDialog;
     }
 
-    /**
-     * Adds the internal client to Workspace.
-     *
-     * This method will be called by InternalClient when it's mapped.
-     *
-     * @see internalClientAdded
-     * @internal
-     */
-    void addInternalClient(InternalWindow *client);
-
-    /**
-     * Removes the internal client from Workspace.
-     *
-     * This method is meant to be called only by InternalClient.
-     *
-     * @see internalClientRemoved
-     * @internal
-     */
-    void removeInternalClient(InternalWindow *client);
+    void addInternalWindow(InternalWindow *window);
+    void removeInternalWindow(InternalWindow *window);
 
     /**
      * @internal
@@ -435,7 +418,7 @@ public:
     void setInitialDesktop(int desktop);
 
 public Q_SLOTS:
-    void performWindowOperation(KWin::Window *c, Options::WindowOperation op);
+    void performWindowOperation(KWin::Window *window, Options::WindowOperation op);
     // Keybindings
     // void slotSwitchToWindow( int );
     void slotWindowToDesktop(VirtualDesktop *desktop);
@@ -530,11 +513,11 @@ Q_SIGNALS:
     void currentDesktopChanged(int, KWin::Window *);
     void currentDesktopChanging(uint currentDesktop, QPointF delta, KWin::Window *); // for realtime animations
     void currentDesktopChangingCancelled();
-    void clientAdded(KWin::Window *);
-    void clientRemoved(KWin::Window *);
-    void clientActivated(KWin::Window *);
-    void clientDemandsAttentionChanged(KWin::Window *, bool);
-    void clientMinimizedChanged(KWin::Window *);
+    void windowAdded(KWin::Window *);
+    void windowRemoved(KWin::Window *);
+    void windowActivated(KWin::Window *);
+    void windowDemandsAttentionChanged(KWin::Window *, bool);
+    void windowMinimizedChanged(KWin::Window *);
     void groupAdded(KWin::Group *);
     void unmanagedAdded(KWin::Unmanaged *);
     void unmanagedRemoved(KWin::Unmanaged *);
@@ -548,14 +531,14 @@ Q_SIGNALS:
     void stackingOrderChanged();
 
     /**
-     * This signal is emitted whenever an internal client is created.
+     * This signal is emitted whenever an internal window is created.
      */
-    void internalClientAdded(KWin::InternalWindow *client);
+    void internalWindowAdded(KWin::InternalWindow *window);
 
     /**
-     * This signal is emitted whenever an internal client gets removed.
+     * This signal is emitted whenever an internal window gets removed.
      */
-    void internalClientRemoved(KWin::InternalWindow *client);
+    void internalWindowRemoved(KWin::InternalWindow *window);
 
 private:
     void init();
@@ -567,38 +550,38 @@ private:
                       Slot slot, const QVariant &data = QVariant());
     template<typename T, typename Slot>
     void initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut, T *receiver, Slot slot, const QVariant &data = QVariant());
-    void setupWindowShortcut(Window *c);
-    bool switchWindow(Window *c, Direction direction, QPoint curPos, VirtualDesktop *desktop);
+    void setupWindowShortcut(Window *window);
+    bool switchWindow(Window *window, Direction direction, QPoint curPos, VirtualDesktop *desktop);
 
-    void propagateClients(bool propagate_new_clients); // Called only from updateStackingOrder
+    void propagateWindows(bool propagate_new_windows); // Called only from updateStackingOrder
     QList<Window *> constrainedStackingOrder();
-    void raiseClientWithinApplication(Window *c);
-    void lowerClientWithinApplication(Window *c);
-    bool allowFullClientRaising(const Window *c, xcb_timestamp_t timestamp);
+    void raiseWindowWithinApplication(Window *window);
+    void lowerWindowWithinApplication(Window *window);
+    bool allowFullClientRaising(const Window *window, xcb_timestamp_t timestamp);
     void blockStackingUpdates(bool block);
     void updateToolWindows(bool also_hide);
     void fixPositionAfterCrash(xcb_window_t w, const xcb_get_geometry_reply_t *geom);
     void saveOldScreenSizes();
-    void addToStack(Window *toplevel);
+    void addToStack(Window *window);
     void replaceInStack(Window *original, Deleted *deleted);
-    void removeFromStack(Window *toplevel);
+    void removeFromStack(Window *window);
 
-    /// This is the right way to create a new client
-    X11Window *createClient(xcb_window_t w, bool is_mapped);
-    void setupClientConnections(Window *client);
-    void addClient(X11Window *c);
-    Unmanaged *createUnmanaged(xcb_window_t w);
+    /// This is the right way to create a new X11 window
+    X11Window *createX11Window(xcb_window_t windowId, bool is_mapped);
+    void addX11Window(X11Window *c);
+    void setupWindowConnections(Window *window);
+    Unmanaged *createUnmanaged(xcb_window_t windowId);
     void addUnmanaged(Unmanaged *c);
 
-    void addShellClient(Window *client);
-    void removeShellClient(Window *client);
+    void addWaylandWindow(Window *window);
+    void removeWaylandWindow(Window *window);
 
     //---------------------------------------------------------------------
 
     void closeActivePopup();
-    void updateClientVisibilityOnDesktopChange(VirtualDesktop *newDesktop);
-    void activateClientOnNewDesktop(VirtualDesktop *desktop);
-    Window *findClientToActivateOnDesktop(VirtualDesktop *desktop);
+    void updateWindowVisibilityOnDesktopChange(VirtualDesktop *newDesktop);
+    void activateWindowOnNewDesktop(VirtualDesktop *desktop);
+    Window *findWindowToActivateOnDesktop(VirtualDesktop *desktop);
     void removeAbstractClient(Window *client);
 
     struct Constraint
@@ -615,27 +598,27 @@ private:
 
     QList<Constraint *> m_constraints;
     QWidget *active_popup;
-    Window *active_popup_client;
+    Window *m_activePopupWindow;
 
     int m_initialDesktop;
     void updateXStackingOrder();
     void updateTabbox();
 
     Output *m_activeOutput = nullptr;
-    Window *active_client;
-    Window *last_active_client;
-    Window *movingClient;
+    Window *m_activeWindow;
+    Window *m_lastActiveWindow;
+    Window *m_moveResizeWindow;
 
-    // Delay(ed) window focus timer and client
+    // Delay(ed) window focus timer and window
     QTimer *delayFocusTimer;
-    Window *delayfocus_client;
+    Window *m_delayFocusWindow;
     QPoint focusMousePos;
 
     QList<X11Window *> m_x11Clients;
     QList<Window *> m_allClients;
     QList<Unmanaged *> m_unmanaged;
     QList<Deleted *> deleted;
-    QList<InternalWindow *> m_internalClients;
+    QList<InternalWindow *> m_internalWindows;
 
     QList<Window *> unconstrained_stacking_order; // Topmost last
     QList<Window *> stacking_order; // Topmost last
@@ -664,9 +647,9 @@ private:
 
     void modalActionsSwitch(bool enabled);
 
-    ShortcutDialog *client_keys_dialog;
-    Window *client_keys_client;
-    bool global_shortcuts_disabled_for_client;
+    ShortcutDialog *m_windowKeysDialog = nullptr;
+    Window *m_windowKeysWindow = nullptr;
+    bool m_globalShortcutsDisabledForWindow = false;
 
     // Timer to collect requests for 'reconfigure'
     QTimer reconfigureTimer;
@@ -690,9 +673,9 @@ private:
     QHash<const VirtualDesktop *, StrutRects> m_oldRestrictedAreas;
     bool m_inUpdateClientArea = false;
 
-    int set_active_client_recursion;
-    int block_stacking_updates; // When > 0, stacking updates are temporarily disabled
-    bool blocked_propagating_new_clients; // Propagate also new clients after enabling stacking updates?
+    int m_setActiveWindowRecursion = 0;
+    int m_blockStackingUpdates = 0; // When > 0, stacking updates are temporarily disabled
+    bool m_blockedPropagatingNewWindows; // Propagate also new windows after enabling stacking updates?
     QScopedPointer<Xcb::Window> m_nullFocus;
     friend class StackingUpdatesBlocker;
 
@@ -749,14 +732,14 @@ inline bool Workspace::initializing() const
     return workspaceInit;
 }
 
-inline Window *Workspace::activeClient() const
+inline Window *Workspace::activeWindow() const
 {
-    return active_client;
+    return m_activeWindow;
 }
 
-inline Window *Workspace::mostRecentlyActivatedClient() const
+inline Window *Workspace::mostRecentlyActivatedWindow() const
 {
-    return should_get_focus.count() > 0 ? should_get_focus.last() : active_client;
+    return should_get_focus.count() > 0 ? should_get_focus.last() : m_activeWindow;
 }
 
 inline void Workspace::addGroup(Group *group)
@@ -793,7 +776,7 @@ inline bool Workspace::showingDesktop() const
 
 inline bool Workspace::globalShortcutsDisabled() const
 {
-    return global_shortcuts_disabled_for_client;
+    return m_globalShortcutsDisabledForWindow;
 }
 
 inline void Workspace::forceRestacking()

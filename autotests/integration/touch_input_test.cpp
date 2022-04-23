@@ -111,7 +111,7 @@ Window *TouchInputTest::showWindow(bool decorated)
     auto c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
 
     VERIFY(c);
-    COMPARE(workspace()->activeClient(), c);
+    COMPARE(workspace()->activeWindow(), c);
 
 #undef VERIFY
 #undef COMPARE

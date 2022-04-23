@@ -33,13 +33,13 @@ InputPanelV1Window::InputPanelV1Window(InputPanelSurfaceV1Interface *panelSurfac
     setSkipPager(true);
     setSkipTaskbar(true);
 
-    connect(surface(), &SurfaceInterface::aboutToBeDestroyed, this, &InputPanelV1Window::destroyClient);
+    connect(surface(), &SurfaceInterface::aboutToBeDestroyed, this, &InputPanelV1Window::destroyWindow);
     connect(surface(), &SurfaceInterface::sizeChanged, this, &InputPanelV1Window::reposition);
     connect(surface(), &SurfaceInterface::mapped, this, &InputPanelV1Window::updateDepth);
 
     connect(panelSurface, &InputPanelSurfaceV1Interface::topLevel, this, &InputPanelV1Window::showTopLevel);
     connect(panelSurface, &InputPanelSurfaceV1Interface::overlayPanel, this, &InputPanelV1Window::showOverlayPanel);
-    connect(panelSurface, &InputPanelSurfaceV1Interface::destroyed, this, &InputPanelV1Window::destroyClient);
+    connect(panelSurface, &InputPanelSurfaceV1Interface::destroyed, this, &InputPanelV1Window::destroyWindow);
 
     InputMethod::self()->setPanel(this);
 }
@@ -102,7 +102,7 @@ void KWin::InputPanelV1Window::reposition()
     } break;
     case Overlay: {
         auto textInputSurface = waylandServer()->seat()->focusedTextInputSurface();
-        auto textClient = waylandServer()->findClient(textInputSurface);
+        auto textWindow = waylandServer()->findWindow(textInputSurface);
         QRect cursorRectangle;
         auto textInputV2 = waylandServer()->seat()->textInputV2();
         if (textInputV2 && textInputV2->isEnabled() && textInputV2->surface() == textInputSurface) {
@@ -112,8 +112,8 @@ void KWin::InputPanelV1Window::reposition()
         if (textInputV3 && textInputV3->isEnabled() && textInputV3->surface() == textInputSurface) {
             cursorRectangle = textInputV3->cursorRectangle();
         }
-        if (textClient) {
-            cursorRectangle.translate(textClient->bufferGeometry().topLeft());
+        if (textWindow) {
+            cursorRectangle.translate(textWindow->bufferGeometry().topLeft());
             const QRect screen = Workspace::self()->clientArea(PlacementArea, this, cursorRectangle.bottomLeft());
 
             // Reuse the similar logic like xdg popup
@@ -140,14 +140,14 @@ void KWin::InputPanelV1Window::reposition()
     }
 }
 
-void InputPanelV1Window::destroyClient()
+void InputPanelV1Window::destroyWindow()
 {
     markAsZombie();
 
     Deleted *deleted = Deleted::create(this);
     Q_EMIT windowClosed(this, deleted);
     StackingUpdatesBlocker blocker(workspace());
-    waylandServer()->removeClient(this);
+    waylandServer()->removeWindow(this);
     deleted->unrefWindow();
 
     delete this;

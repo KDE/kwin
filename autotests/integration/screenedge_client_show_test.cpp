@@ -70,7 +70,7 @@ void ScreenEdgeClientShowTest::init()
 {
     workspace()->setActiveOutput(QPoint(640, 512));
     Cursors::self()->mouse()->setPos(QPoint(640, 512));
-    QVERIFY(waylandServer()->clients().isEmpty());
+    QVERIFY(waylandServer()->windows().isEmpty());
 }
 
 struct XcbConnectionDeleter
@@ -125,7 +125,7 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11()
     xcb_map_window(c.data(), w);
     xcb_flush(c.data());
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *client = windowCreatedSpy.last().first().value<X11Window *>();
@@ -229,7 +229,7 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowX11Touch()
     xcb_map_window(c.data(), w);
     xcb_flush(c.data());
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *client = windowCreatedSpy.last().first().value<X11Window *>();

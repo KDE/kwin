@@ -99,7 +99,7 @@ void XwaylandServerRestartTest::testRestart()
     xcb_map_window(c.data(), window);
     xcb_flush(c.data());
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *client = windowCreatedSpy.last().first().value<X11Window *>();

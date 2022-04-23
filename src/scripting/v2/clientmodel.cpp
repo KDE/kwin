@@ -36,8 +36,8 @@ ClientLevel::ClientLevel(ClientModel *model, AbstractLevel *parent)
     }
 #endif
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, this, &ClientLevel::reInit);
-    connect(Workspace::self(), &Workspace::clientAdded, this, &ClientLevel::clientAdded);
-    connect(Workspace::self(), &Workspace::clientRemoved, this, &ClientLevel::clientRemoved);
+    connect(Workspace::self(), &Workspace::windowAdded, this, &ClientLevel::clientAdded);
+    connect(Workspace::self(), &Workspace::windowRemoved, this, &ClientLevel::clientRemoved);
     connect(model, &ClientModel::exclusionsChanged, this, &ClientLevel::reInit);
 }
 

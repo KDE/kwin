@@ -124,7 +124,7 @@ void TabBoxTest::testCapsLock()
     QCOMPARE(input()->keyboardModifiers(), Qt::NoModifier);
     QCOMPARE(tabboxClosedSpy.count(), 1);
     QCOMPARE(TabBox::TabBox::self()->isGrabbed(), false);
-    QCOMPARE(workspace()->activeClient(), c2);
+    QCOMPARE(workspace()->activeWindow(), c2);
 
     surface3.reset();
     QVERIFY(Test::waitForWindowDestroyed(c3));
@@ -175,7 +175,7 @@ void TabBoxTest::testMoveForward()
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     QCOMPARE(tabboxClosedSpy.count(), 1);
     QCOMPARE(TabBox::TabBox::self()->isGrabbed(), false);
-    QCOMPARE(workspace()->activeClient(), c2);
+    QCOMPARE(workspace()->activeWindow(), c2);
 
     surface3.reset();
     QVERIFY(Test::waitForWindowDestroyed(c3));
@@ -230,7 +230,7 @@ void TabBoxTest::testMoveBackward()
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     QCOMPARE(tabboxClosedSpy.count(), 1);
     QCOMPARE(TabBox::TabBox::self()->isGrabbed(), false);
-    QCOMPARE(workspace()->activeClient(), c1);
+    QCOMPARE(workspace()->activeWindow(), c1);
 
     surface3.reset();
     QVERIFY(Test::waitForWindowDestroyed(c3));

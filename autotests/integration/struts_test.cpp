@@ -92,7 +92,7 @@ void StrutsTest::init()
 
     workspace()->setActiveOutput(QPoint(640, 512));
     Cursors::self()->mouse()->setPos(QPoint(640, 512));
-    QVERIFY(waylandServer()->clients().isEmpty());
+    QVERIFY(waylandServer()->windows().isEmpty());
 }
 
 void StrutsTest::cleanup()
@@ -141,7 +141,7 @@ void StrutsTest::testWaylandStruts()
     const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
 
     // no, struts yet
-    QVERIFY(waylandServer()->clients().isEmpty());
+    QVERIFY(waylandServer()->windows().isEmpty());
     // first screen
     QCOMPARE(workspace()->clientArea(PlacementArea, outputs[0], desktop), QRect(0, 0, 1280, 1024));
     QCOMPARE(workspace()->clientArea(MovementArea, outputs[0], desktop), QRect(0, 0, 1280, 1024));
@@ -622,7 +622,7 @@ void StrutsTest::testX11Struts()
     xcb_flush(c.data());
 
     // we should get a client for it
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *client = windowCreatedSpy.first().first().value<X11Window *>();
@@ -739,7 +739,7 @@ void StrutsTest::test363804()
     xcb_flush(c.data());
 
     // we should get a client for it
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *client = windowCreatedSpy.first().first().value<X11Window *>();
@@ -824,7 +824,7 @@ void StrutsTest::testLeftScreenSmallerBottomAligned()
     xcb_flush(c.data());
 
     // we should get a client for it
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *client = windowCreatedSpy.first().first().value<X11Window *>();
@@ -941,7 +941,7 @@ void StrutsTest::testWindowMoveWithPanelBetweenScreens()
     xcb_flush(c.data());
 
     // we should get a client for it
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *client = windowCreatedSpy.first().first().value<X11Window *>();
@@ -987,7 +987,7 @@ void StrutsTest::testWindowMoveWithPanelBetweenScreens()
     const QRect origGeo = client2->frameGeometry();
     Cursors::self()->mouse()->setPos(origGeo.center());
     workspace()->performWindowOperation(client2, Options::MoveOp);
-    QTRY_COMPARE(workspace()->moveResizeClient(), client2);
+    QTRY_COMPARE(workspace()->moveResizeWindow(), client2);
     QVERIFY(client2->isInteractiveMove());
     // move to next screen - step is 8 pixel, so 800 pixel
     for (int i = 0; i < 100; i++) {
@@ -996,7 +996,7 @@ void StrutsTest::testWindowMoveWithPanelBetweenScreens()
     }
     client2->keyPressEvent(Qt::Key_Enter);
     QCOMPARE(client2->isInteractiveMove(), false);
-    QVERIFY(workspace()->moveResizeClient() == nullptr);
+    QVERIFY(workspace()->moveResizeWindow() == nullptr);
     QCOMPARE(client2->frameGeometry(), QRect(origGeo.translated(-800, 0)));
 }
 

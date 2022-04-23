@@ -114,9 +114,9 @@ void InputMethodTest::cleanup()
 
 void InputMethodTest::testOpenClose()
 {
-    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
-    QSignalSpy clientRemovedSpy(workspace(), &Workspace::clientRemoved);
-    QVERIFY(clientAddedSpy.isValid());
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    QSignalSpy windowRemovedSpy(workspace(), &Workspace::windowRemoved);
+    QVERIFY(windowAddedSpy.isValid());
 
     // Create an xdg_toplevel surface and wait for the compositor to catch up.
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
@@ -139,9 +139,9 @@ void InputMethodTest::testOpenClose()
     // Show the keyboard
     touchNow();
     textInput->showInputPanel();
-    QVERIFY(clientAddedSpy.wait());
+    QVERIFY(windowAddedSpy.wait());
 
-    Window *keyboardClient = clientAddedSpy.last().first().value<Window *>();
+    Window *keyboardClient = windowAddedSpy.last().first().value<Window *>();
     QVERIFY(keyboardClient);
     QVERIFY(keyboardClient->isInputMethod());
 
@@ -201,8 +201,8 @@ void InputMethodTest::testEnableActive()
 {
     QVERIFY(!InputMethod::self()->isActive());
 
-    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
-    QSignalSpy clientRemovedSpy(workspace(), &Workspace::clientRemoved);
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    QSignalSpy windowRemovedSpy(workspace(), &Workspace::windowRemoved);
 
     QSignalSpy activateSpy(InputMethod::self(), &InputMethod::activeChanged);
 
@@ -223,13 +223,13 @@ void InputMethodTest::testEnableActive()
     QVERIFY(!textInput.isNull());
     textInput->enable(surface.data());
     QVERIFY(surfaceConfigureRequestedSpy.wait());
-    QCOMPARE(clientAddedSpy.count(), 1);
+    QCOMPARE(windowAddedSpy.count(), 1);
 
     // Show the keyboard
     textInput->showInputPanel();
-    QVERIFY(clientAddedSpy.wait());
+    QVERIFY(windowAddedSpy.wait());
 
-    QCOMPARE(workspace()->activeClient(), client);
+    QCOMPARE(workspace()->activeWindow(), client);
 
     activateSpy.clear();
     textInput->enable(surface.get());
@@ -253,9 +253,9 @@ void InputMethodTest::testHidePanel()
     QVERIFY(!InputMethod::self()->isActive());
 
     touchNow();
-    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
-    QSignalSpy clientRemovedSpy(workspace(), &Workspace::clientRemoved);
-    QVERIFY(clientAddedSpy.isValid());
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    QSignalSpy windowRemovedSpy(workspace(), &Workspace::windowRemoved);
+    QVERIFY(windowAddedSpy.isValid());
 
     QSignalSpy activateSpy(InputMethod::self(), &InputMethod::activeChanged);
     QScopedPointer<TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
@@ -268,21 +268,21 @@ void InputMethodTest::testHidePanel()
 
     textInput->enable(surface.get());
     textInput->showInputPanel();
-    QVERIFY(clientAddedSpy.wait());
+    QVERIFY(windowAddedSpy.wait());
 
-    QCOMPARE(workspace()->activeClient(), client);
+    QCOMPARE(workspace()->activeWindow(), client);
 
-    QCOMPARE(clientAddedSpy.count(), 2);
+    QCOMPARE(windowAddedSpy.count(), 2);
     QVERIFY(activateSpy.count() || activateSpy.wait());
     QVERIFY(InputMethod::self()->isActive());
 
     auto keyboardClient = Test::inputPanelClient();
     auto ipsurface = Test::inputPanelSurface();
     QVERIFY(keyboardClient);
-    clientRemovedSpy.clear();
+    windowRemovedSpy.clear();
     delete ipsurface;
     QVERIFY(InputMethod::self()->isVisible());
-    QVERIFY(clientRemovedSpy.count() || clientRemovedSpy.wait());
+    QVERIFY(windowRemovedSpy.count() || windowRemovedSpy.wait());
     QVERIFY(!InputMethod::self()->isVisible());
 
     // Destroy the test client.
@@ -295,9 +295,9 @@ void InputMethodTest::testSwitchFocusedSurfaces()
     touchNow();
     QVERIFY(!InputMethod::self()->isActive());
 
-    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
-    QSignalSpy clientRemovedSpy(workspace(), &Workspace::clientRemoved);
-    QVERIFY(clientAddedSpy.isValid());
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    QSignalSpy windowRemovedSpy(workspace(), &Workspace::windowRemoved);
+    QVERIFY(windowAddedSpy.isValid());
 
     QSignalSpy activateSpy(InputMethod::self(), &InputMethod::activeChanged);
     QScopedPointer<TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
@@ -310,11 +310,11 @@ void InputMethodTest::testSwitchFocusedSurfaces()
         auto surface = Test::createSurface();
         auto shellSurface = Test::createXdgToplevelSurface(surface);
         clients += Test::renderAndWaitForShown(surface, QSize(1280, 1024), Qt::red);
-        QCOMPARE(workspace()->activeClient(), clients.constLast());
+        QCOMPARE(workspace()->activeWindow(), clients.constLast());
         surfaces += surface;
         toplevels += shellSurface;
     }
-    QCOMPARE(clientAddedSpy.count(), 3);
+    QCOMPARE(windowAddedSpy.count(), 3);
     waylandServer()->seat()->setFocusedTextInputSurface(clients.constFirst()->surface());
 
     QVERIFY(!InputMethod::self()->isActive());

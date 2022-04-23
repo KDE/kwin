@@ -63,7 +63,7 @@ void XWaylandInputTest::init()
     Cursors::self()->mouse()->setPos(QPoint(640, 512));
     xcb_warp_pointer(connection(), XCB_WINDOW_NONE, kwinApp()->x11RootWindow(), 0, 0, 0, 0, 640, 512);
     xcb_flush(connection());
-    QVERIFY(waylandServer()->clients().isEmpty());
+    QVERIFY(waylandServer()->windows().isEmpty());
 }
 
 struct XcbConnectionDeleter
@@ -159,7 +159,7 @@ void XWaylandInputTest::testPointerEnterLeaveSsd()
     xcb_map_window(c.data(), w);
     xcb_flush(c.data());
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *client = windowCreatedSpy.last().first().value<X11Window *>();
@@ -248,7 +248,7 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
     xcb_map_window(c.data(), window);
     xcb_flush(c.data());
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *client = windowCreatedSpy.last().first().value<X11Window *>();

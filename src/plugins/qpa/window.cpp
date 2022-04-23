@@ -150,7 +150,7 @@ void Window::unmap()
         return;
     }
 
-    m_handle->destroyClient();
+    m_handle->destroyWindow();
     m_handle = nullptr;
 
     m_contentFBO = nullptr;

@@ -158,7 +158,7 @@ void QuickTilingTest::testQuickTiling()
     // Map the client.
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
-    QCOMPARE(workspace()->activeClient(), c);
+    QCOMPARE(workspace()->activeWindow(), c);
     QCOMPARE(c->frameGeometry(), QRect(0, 0, 100, 50));
     QCOMPARE(c->quickTileMode(), QuickTileMode(QuickTileFlag::None));
 
@@ -234,7 +234,7 @@ void QuickTilingTest::testQuickMaximizing()
     // Map the client.
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
-    QCOMPARE(workspace()->activeClient(), c);
+    QCOMPARE(workspace()->activeWindow(), c);
     QCOMPARE(c->frameGeometry(), QRect(0, 0, 100, 50));
     QCOMPARE(c->quickTileMode(), QuickTileMode(QuickTileFlag::None));
     QCOMPARE(c->maximizeMode(), MaximizeRestore);
@@ -344,7 +344,7 @@ void QuickTilingTest::testQuickTilingKeyboardMove()
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
     QVERIFY(c);
-    QCOMPARE(workspace()->activeClient(), c);
+    QCOMPARE(workspace()->activeWindow(), c);
     QCOMPARE(c->frameGeometry(), QRect(0, 0, 100, 50));
     QCOMPARE(c->quickTileMode(), QuickTileMode(QuickTileFlag::None));
     QCOMPARE(c->maximizeMode(), MaximizeRestore);
@@ -353,7 +353,7 @@ void QuickTilingTest::testQuickTilingKeyboardMove()
     QVERIFY(quickTileChangedSpy.isValid());
 
     workspace()->performWindowOperation(c, Options::UnrestrictedMoveOp);
-    QCOMPARE(c, workspace()->moveResizeClient());
+    QCOMPARE(c, workspace()->moveResizeWindow());
     QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(49, 24));
 
     QFETCH(QPoint, targetPos);
@@ -379,7 +379,7 @@ void QuickTilingTest::testQuickTilingKeyboardMove()
     Test::keyboardKeyPressed(KEY_ENTER, timestamp++);
     Test::keyboardKeyReleased(KEY_ENTER, timestamp++);
     QCOMPARE(Cursors::self()->mouse()->pos(), targetPos);
-    QVERIFY(!workspace()->moveResizeClient());
+    QVERIFY(!workspace()->moveResizeWindow());
 
     QCOMPARE(quickTileChangedSpy.count(), 1);
     QTEST(c->quickTileMode(), "expectedMode");
@@ -409,7 +409,7 @@ void QuickTilingTest::testQuickTilingPointerMove()
     // let's render
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
-    QCOMPARE(workspace()->activeClient(), c);
+    QCOMPARE(workspace()->activeWindow(), c);
     QCOMPARE(c->frameGeometry(), QRect(0, 0, 100, 50));
     QCOMPARE(c->quickTileMode(), QuickTileMode(QuickTileFlag::None));
     QCOMPARE(c->maximizeMode(), MaximizeRestore);
@@ -424,7 +424,7 @@ void QuickTilingTest::testQuickTilingPointerMove()
     // tiled if the user drags it to a screen edge or a corner
     QSignalSpy quickTileChangedSpy(c, &Window::quickTileModeChanged);
     workspace()->performWindowOperation(c, Options::UnrestrictedMoveOp);
-    QCOMPARE(c, workspace()->moveResizeClient());
+    QCOMPARE(c, workspace()->moveResizeWindow());
     QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(49, 24));
 
     QFETCH(QPoint, pointerPos);
@@ -443,7 +443,7 @@ void QuickTilingTest::testQuickTilingPointerMove()
     // verify that geometry restore is correct after user untiles the window, but changes
     // their mind and tiles the window again while still holding left button
     workspace()->performWindowOperation(c, Options::UnrestrictedMoveOp);
-    QCOMPARE(c, workspace()->moveResizeClient());
+    QCOMPARE(c, workspace()->moveResizeWindow());
 
     Test::pointerButtonPressed(BTN_LEFT, timestamp++); // untile the window
     Test::pointerMotion(QPoint(1280, 1024) / 2, timestamp++);
@@ -505,7 +505,7 @@ void QuickTilingTest::testQuickTilingTouchMove()
     QVERIFY(c);
     QVERIFY(c->isDecorated());
     const auto decoration = c->decoration();
-    QCOMPARE(workspace()->activeClient(), c);
+    QCOMPARE(workspace()->activeWindow(), c);
     QCOMPARE(c->frameGeometry(), QRect(-decoration->borderLeft(), 0, 1000 + decoration->borderLeft() + decoration->borderRight(), 50 + decoration->borderTop() + decoration->borderBottom()));
     QCOMPARE(c->quickTileMode(), QuickTileMode(QuickTileFlag::None));
     QCOMPARE(c->maximizeMode(), MaximizeRestore);
@@ -522,12 +522,12 @@ void QuickTilingTest::testQuickTilingTouchMove()
     QSignalSpy clientStartUserMovedResizedSpy(c, &Window::clientStartUserMovedResized);
     Test::touchDown(0, QPointF(c->frameGeometry().center().x(), c->frameGeometry().y() + decoration->borderTop() / 2), timestamp++);
     QVERIFY(clientStartUserMovedResizedSpy.wait());
-    QCOMPARE(c, workspace()->moveResizeClient());
+    QCOMPARE(c, workspace()->moveResizeWindow());
 
     QFETCH(QPoint, targetPos);
     Test::touchMotion(0, targetPos, timestamp++);
     Test::touchUp(0, timestamp++);
-    QVERIFY(!workspace()->moveResizeClient());
+    QVERIFY(!workspace()->moveResizeWindow());
 
     // When there are no borders, there is no change to them when quick-tiling.
     // TODO: we should test both cases with fixed fake decoration for autotests.
@@ -592,7 +592,7 @@ void QuickTilingTest::testX11QuickTiling()
     xcb_flush(c.data());
 
     // we should get a client for it
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *client = windowCreatedSpy.first().first().value<X11Window *>();
@@ -674,7 +674,7 @@ void QuickTilingTest::testX11QuickTilingAfterVertMaximize()
     xcb_flush(c.data());
 
     // we should get a client for it
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *client = windowCreatedSpy.first().first().value<X11Window *>();
@@ -746,7 +746,7 @@ void QuickTilingTest::testShortcut()
     // Map the client.
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
-    QCOMPARE(workspace()->activeClient(), c);
+    QCOMPARE(workspace()->activeWindow(), c);
     QCOMPARE(c->frameGeometry(), QRect(0, 0, 100, 50));
     QCOMPARE(c->quickTileMode(), QuickTileMode(QuickTileFlag::None));
 
@@ -833,7 +833,7 @@ void QuickTilingTest::testScript()
     // Map the client.
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
-    QCOMPARE(workspace()->activeClient(), c);
+    QCOMPARE(workspace()->activeWindow(), c);
     QCOMPARE(c->frameGeometry(), QRect(0, 0, 100, 50));
     QCOMPARE(c->quickTileMode(), QuickTileMode(QuickTileFlag::None));
 

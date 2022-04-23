@@ -127,7 +127,7 @@ class KWIN_EXPORT Options : public QObject
      */
     Q_PROPERTY(bool rollOverDesktops READ isRollOverDesktops WRITE setRollOverDesktops NOTIFY rollOverDesktopsChanged)
     /**
-     * 0 - 4 , see Workspace::allowClientActivation()
+     * 0 - 4 , see Workspace::allowWindowActivation()
      */
     Q_PROPERTY(int focusStealingPreventionLevel READ focusStealingPreventionLevel WRITE setFocusStealingPreventionLevel NOTIFY focusStealingPreventionLevelChanged)
     Q_PROPERTY(KWin::Options::WindowOperation operationTitlebarDblClick READ operationTitlebarDblClick WRITE setOperationTitlebarDblClick NOTIFY operationTitlebarDblClickChanged)
@@ -370,7 +370,7 @@ public:
     /**
      * Returns the focus stealing prevention level.
      *
-     * @see allowClientActivation
+     * @see allowWindowActivation
      */
     int focusStealingPreventionLevel() const
     {

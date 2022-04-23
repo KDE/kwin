@@ -124,7 +124,7 @@ void PlasmaWindowTest::testCreateDestroyX11PlasmaWindow()
     xcb_flush(c.data());
 
     // we should get a client for it
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *client = windowCreatedSpy.first().first().value<X11Window *>();
@@ -265,12 +265,12 @@ void PlasmaWindowTest::testLockScreenNoPlasmaWindow()
     QVERIFY(plasmaWindowCreatedSpy.isValid());
 
     // this time we use a QSignalSpy on XdgShellClient as it'a a little bit more complex setup
-    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
-    QVERIFY(clientAddedSpy.isValid());
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    QVERIFY(windowAddedSpy.isValid());
     // lock
     ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
-    QVERIFY(clientAddedSpy.wait());
-    QVERIFY(clientAddedSpy.first().first().value<Window *>()->isLockScreen());
+    QVERIFY(windowAddedSpy.wait());
+    QVERIFY(windowAddedSpy.first().first().value<Window *>()->isLockScreen());
     // should not be sent to the client
     QVERIFY(plasmaWindowCreatedSpy.isEmpty());
     QVERIFY(!plasmaWindowCreatedSpy.wait());

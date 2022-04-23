@@ -196,7 +196,7 @@ void TestPointerConstraints::testConfinedPointer()
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
 
     // deactivate the client, this should unconfine
-    workspace()->activateClient(nullptr);
+    workspace()->activateWindow(nullptr);
     QVERIFY(unconfinedSpy.wait());
     QCOMPARE(input()->pointer()->isConstrained(), false);
 
@@ -208,16 +208,16 @@ void TestPointerConstraints::testConfinedPointer()
     QVERIFY(unconfinedSpy2.isValid());
 
     // activate it again, this confines again
-    workspace()->activateClient(static_cast<Window *>(input()->pointer()->focus()));
+    workspace()->activateWindow(static_cast<Window *>(input()->pointer()->focus()));
     QVERIFY(confinedSpy2.wait());
     QCOMPARE(input()->pointer()->isConstrained(), true);
 
     // deactivate the client one more time with the persistent life time constraint, this should unconfine
-    workspace()->activateClient(nullptr);
+    workspace()->activateWindow(nullptr);
     QVERIFY(unconfinedSpy2.wait());
     QCOMPARE(input()->pointer()->isConstrained(), false);
     // activate it again, this confines again
-    workspace()->activateClient(static_cast<Window *>(input()->pointer()->focus()));
+    workspace()->activateWindow(static_cast<Window *>(input()->pointer()->focus()));
     QVERIFY(confinedSpy2.wait());
     QCOMPARE(input()->pointer()->isConstrained(), true);
 
@@ -301,7 +301,7 @@ void TestPointerConstraints::testLockedPointer()
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), c->frameGeometry().center());
 
     // deactivate the client, this should unlock
-    workspace()->activateClient(nullptr);
+    workspace()->activateWindow(nullptr);
     QCOMPARE(input()->pointer()->isConstrained(), false);
     QVERIFY(unlockedSpy.wait());
 
@@ -314,7 +314,7 @@ void TestPointerConstraints::testLockedPointer()
     QVERIFY(lockedSpy2.isValid());
 
     // activate the client again, this should lock again
-    workspace()->activateClient(static_cast<Window *>(input()->pointer()->focus()));
+    workspace()->activateWindow(static_cast<Window *>(input()->pointer()->focus()));
     QVERIFY(lockedSpy2.wait());
     QCOMPARE(input()->pointer()->isConstrained(), true);
 

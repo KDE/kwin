@@ -55,32 +55,32 @@ public:
     QModelIndex parent(const QModelIndex &child) const override;
 
 private Q_SLOTS:
-    void handleClientAdded(Window *client);
-    void handleClientRemoved(Window *client);
+    void handleWindowAdded(Window *window);
+    void handleWindowRemoved(Window *window);
 
 private:
     template<class T>
-    QModelIndex indexForClient(int row, int column, const QVector<T *> &clients, int id) const;
+    QModelIndex indexForWindow(int row, int column, const QVector<T *> &windows, int id) const;
     template<class T>
     QModelIndex indexForProperty(int row, int column, const QModelIndex &parent, T *(DebugConsoleModel::*filter)(const QModelIndex &) const) const;
     template<class T>
     int propertyCount(const QModelIndex &parent, T *(DebugConsoleModel::*filter)(const QModelIndex &) const) const;
     QVariant propertyData(QObject *object, const QModelIndex &index, int role) const;
     template<class T>
-    QVariant clientData(const QModelIndex &index, int role, const QVector<T *> clients, const std::function<QString(T *)> &toString) const;
+    QVariant windowData(const QModelIndex &index, int role, const QVector<T *> windows, const std::function<QString(T *)> &toString) const;
     template<class T>
-    void add(int parentRow, QVector<T *> &clients, T *client);
+    void add(int parentRow, QVector<T *> &windows, T *window);
     template<class T>
-    void remove(int parentRow, QVector<T *> &clients, T *client);
-    WaylandWindow *waylandClient(const QModelIndex &index) const;
-    InternalWindow *internalClient(const QModelIndex &index) const;
-    X11Window *x11Client(const QModelIndex &index) const;
+    void remove(int parentRow, QVector<T *> &windows, T *window);
+    WaylandWindow *waylandWindow(const QModelIndex &index) const;
+    InternalWindow *internalWindow(const QModelIndex &index) const;
+    X11Window *x11Window(const QModelIndex &index) const;
     Unmanaged *unmanaged(const QModelIndex &index) const;
     int topLevelRowCount() const;
 
-    QVector<WaylandWindow *> m_waylandClients;
-    QVector<InternalWindow *> m_internalClients;
-    QVector<X11Window *> m_x11Clients;
+    QVector<WaylandWindow *> m_waylandWindows;
+    QVector<InternalWindow *> m_internalWindows;
+    QVector<X11Window *> m_x11Windows;
     QVector<Unmanaged *> m_unmanageds;
 };
 

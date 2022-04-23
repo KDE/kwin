@@ -51,7 +51,7 @@ public:
     bool takeFocus() override { return false; }
     bool wantsInput() const override { return false; }
     void killWindow() override { /* nothing to do */ }
-    void destroyClient() override { /* nothing to do */ }
+    void destroyWindow() override { /* nothing to do */ }
     void closeWindow() override { /* nothing to do */ }
     bool acceptsFocus() const override { return false; }
     bool belongsToSameApplication(const Window *other, SameApplicationChecks /*checks*/) const override { return other == this; }
