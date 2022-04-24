@@ -283,8 +283,8 @@ void GlobalShortcutsTest::testComponseKey()
     action->setObjectName(QStringLiteral("globalshortcuts-accent"));
     QSignalSpy triggeredSpy(action.get(), &QAction::triggered);
     QVERIFY(triggeredSpy.isValid());
-    KGlobalAccel::self()->setShortcut(action.get(), QList<QKeySequence>{Qt::UNICODE_ACCEL}, KGlobalAccel::NoAutoloading);
-    input()->registerShortcut(Qt::UNICODE_ACCEL, action.get());
+    KGlobalAccel::self()->setShortcut(action.get(), QList<QKeySequence>{Qt::NoModifier}, KGlobalAccel::NoAutoloading);
+    input()->registerShortcut(Qt::NoModifier, action.get());
 
     // press & release `
     quint32 timestamp = 0;
