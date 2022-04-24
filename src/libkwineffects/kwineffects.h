@@ -2234,12 +2234,6 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
     Q_PROPERTY(bool skipsCloseAnimation READ skipsCloseAnimation)
 
     /**
-     * Interface to the corresponding wayland surface.
-     * relevant only in Wayland, on X11 it will be nullptr
-     */
-    Q_PROPERTY(KWaylandServer::SurfaceInterface *surface READ surface)
-
-    /**
      * Whether the window is fullscreen.
      * @since 5.6
      */
