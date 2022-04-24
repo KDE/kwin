@@ -27,6 +27,7 @@
 #include <QOpenGLFramebufferObject>
 #include <QTimer>
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <QQuickGraphicsDevice>
 #include <QQuickOpenGLUtils>
 #include <QQuickRenderTarget>
 #include <private/qeventpoint_p.h> // for QMutableEventPoint
@@ -146,7 +147,11 @@ OffscreenQuickView::OffscreenQuickView(QObject *parent, QWindow *renderWindow, E
     if (!usingGl) {
         qCDebug(LIBKWINEFFECTS) << "QtQuick Software rendering mode detected";
         d->m_useBlit = true;
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         d->m_renderControl->initialize(nullptr);
+#else
+        d->m_renderControl->initialize();
+#endif
     } else {
         QSurfaceFormat format;
         format.setOption(QSurfaceFormat::ResetNotification);
@@ -165,7 +170,12 @@ OffscreenQuickView::OffscreenQuickView(QObject *parent, QWindow *renderWindow, E
         d->m_offscreenSurface->create();
 
         d->m_glcontext->makeCurrent(d->m_offscreenSurface.get());
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         d->m_renderControl->initialize(d->m_glcontext.get());
+#else
+        d->m_view->setGraphicsDevice(QQuickGraphicsDevice::fromOpenGLContext(d->m_glcontext.get()));
+        d->m_renderControl->initialize();
+#endif
         d->m_glcontext->doneCurrent();
 
         // On Wayland, contexts are implicitly shared and QOpenGLContext::globalShareContext() is null.
@@ -295,7 +305,11 @@ void OffscreenQuickView::update()
     }
 
     if (d->m_useBlit) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         d->m_image = d->m_renderControl->grab();
+#else
+        d->m_image = d->m_view->grabWindow();
+#endif
     }
 
     if (usingGl) {
