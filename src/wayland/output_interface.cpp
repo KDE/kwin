@@ -412,4 +412,9 @@ OutputInterface *OutputInterface::get(wl_resource *native)
     return nullptr;
 }
 
+Display *OutputInterface::display() const
+{
+    return d->display;
+}
+
 } // namespace KWaylandServer

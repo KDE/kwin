@@ -25,6 +25,16 @@
 
 namespace KWaylandServer
 {
+
+static QRegion map_helper(const QMatrix4x4 &matrix, const QRegion &region)
+{
+    QRegion result;
+    for (const QRect &rect : region) {
+        result += matrix.mapRect(rect);
+    }
+    return result;
+}
+
 SurfaceInterfacePrivate::SurfaceInterfacePrivate(SurfaceInterface *q)
     : q(q)
 {
@@ -346,6 +356,12 @@ SurfaceInterface::SurfaceInterface(CompositorInterface *compositor, wl_resource 
     d->compositor = compositor;
     d->init(resource);
     d->client = compositor->display()->getConnection(d->resource()->client());
+
+    d->scaleOverride = d->client->scaleOverride();
+    connect(d->client, &ClientConnection::scaleOverrideChanged, this, [this]() {
+        d->scaleOverride = d->client->scaleOverride();
+        // TODO before merging we should do some applyState() with the current state
+    });
 }
 
 SurfaceInterface::~SurfaceInterface()
@@ -407,6 +423,7 @@ QMatrix4x4 SurfaceInterfacePrivate::buildSurfaceToBufferMatrix()
     }
 
     surfaceToBufferMatrix.scale(current.bufferScale, current.bufferScale);
+    surfaceToBufferMatrix.scale(scaleOverride, scaleOverride);
 
     switch (current.bufferTransform) {
     case KWin::Output::Transform::Normal:
@@ -590,6 +607,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         } else {
             surfaceSize = implicitSurfaceSize;
         }
+        surfaceSize = implicitSurfaceSize;
 
         const QRect surfaceRect(QPoint(0, 0), surfaceSize);
         inputRegion = current.input & surfaceRect;
@@ -599,6 +617,13 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         } else {
             opaqueRegion = current.opaque & surfaceRect;
         }
+
+        const QMatrix4x4 scaleOverrideMatrix(QTransform::fromScale(1. / scaleOverride, 1. / scaleOverride));
+
+        opaqueRegion = map_helper(scaleOverrideMatrix, opaqueRegion);
+        inputRegion = map_helper(scaleOverrideMatrix, inputRegion);
+        surfaceSize = surfaceSize / scaleOverride;
+        implicitSurfaceSize = implicitSurfaceSize / scaleOverride;
     } else {
         surfaceSize = QSize();
         implicitSurfaceSize = QSize();
@@ -765,7 +790,7 @@ ClientBuffer *SurfaceInterface::buffer() const
 
 QPoint SurfaceInterface::offset() const
 {
-    return d->current.offset;
+    return d->current.offset / d->scaleOverride;
 }
 
 SurfaceInterface *SurfaceInterface::get(wl_resource *native)
@@ -992,15 +1017,6 @@ QPointF SurfaceInterface::mapFromBuffer(const QPointF &point) const
     return d->bufferToSurfaceMatrix.map(point);
 }
 
-static QRegion map_helper(const QMatrix4x4 &matrix, const QRegion &region)
-{
-    QRegion result;
-    for (const QRect &rect : region) {
-        result += matrix.mapRect(rect);
-    }
-    return result;
-}
-
 QRegion SurfaceInterface::mapToBuffer(const QRegion &region) const
 {
     return map_helper(d->surfaceToBufferMatrix, region);
@@ -1041,6 +1057,21 @@ QPointF SurfaceInterface::mapToChild(SurfaceInterface *child, const QPointF &poi
 QSize SurfaceInterface::bufferSize() const
 {
     return d->bufferSize;
+}
+
+qreal SurfaceInterface::scaleOverride() const
+{
+    return d->scaleOverride;
+}
+
+QPoint SurfaceInterface::toSurfaceLocal(const QPoint &point) const
+{
+    return QPoint(point.x() * d->scaleOverride, point.y() * d->scaleOverride);
+}
+
+QPointF SurfaceInterface::toSurfaceLocal(const QPointF &point) const
+{
+    return QPointF(point.x() * d->scaleOverride, point.y() * d->scaleOverride);
 }
 
 } // namespace KWaylandServer

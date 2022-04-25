@@ -27,6 +27,8 @@ public:
     gid_t group = 0;
     QString executablePath;
 
+    qreal scaleOverride = 1.0;
+
 private:
     static void destroyListenerCallback(wl_listener *listener, void *data);
     ClientConnection *q;
@@ -145,4 +147,13 @@ QString ClientConnection::executablePath() const
     return d->executablePath;
 }
 
+void ClientConnection::setScaleOverride(qreal scaleOveride)
+{
+    d->scaleOverride = scaleOveride;
+}
+
+qreal ClientConnection::scaleOverride() const
+{
+    return d->scaleOverride;
+}
 }

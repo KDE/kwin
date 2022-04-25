@@ -526,9 +526,13 @@ void SeatInterface::setDragTarget(AbstractDropHandler *dropTarget,
     } else if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Touch && d->globalTouch.focus.firstTouchPos != globalPosition) {
         notifyTouchMotion(d->globalTouch.ids.first(), globalPosition);
     }
+
+    QMatrix4x4 surfaceInputTransformation = inputTransformation;
+    surfaceInputTransformation.scale(surface->scaleOverride());
+
     if (d->drag.target) {
         d->drag.surface = surface;
-        d->drag.transformation = inputTransformation;
+        d->drag.transformation = surfaceInputTransformation;
         d->drag.target->updateDragTarget(surface, serial);
     } else {
         d->drag.surface = nullptr;
