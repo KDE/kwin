@@ -1125,15 +1125,8 @@ EffectWindow *EffectsHandlerImpl::findWindow(QWindow *w) const
 
 EffectWindow *EffectsHandlerImpl::findWindow(const QUuid &id) const
 {
-    if (const auto client = workspace()->findAbstractClient([&id](const Window *c) {
-            return c->internalId() == id;
-        })) {
-        return client->effectWindow();
-    }
-    if (const auto unmanaged = workspace()->findUnmanaged([&id](const Unmanaged *c) {
-            return c->internalId() == id;
-        })) {
-        return unmanaged->effectWindow();
+    if (Window *window = workspace()->findToplevel(id)) {
+        return window->effectWindow();
     }
     return nullptr;
 }
