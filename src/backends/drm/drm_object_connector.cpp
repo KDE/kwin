@@ -347,8 +347,8 @@ bool DrmConnector::updateProperties()
             return false;
         } else {
             generateCommonModes();
-            if (!m_pipeline->pending.mode) {
-                m_pipeline->pending.mode = m_modes.constFirst();
+            if (!m_pipeline->mode()) {
+                m_pipeline->setMode(m_modes.constFirst());
                 m_pipeline->applyPendingChanges();
             }
             if (m_pipeline->output()) {

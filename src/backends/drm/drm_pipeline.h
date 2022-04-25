@@ -89,30 +89,28 @@ public:
     void setOutput(DrmOutput *output);
     DrmOutput *output() const;
 
-    struct State
-    {
-        DrmCrtc *crtc = nullptr;
-        bool active = true; // whether or not the pipeline should be currently used
-        bool enabled = true; // whether or not the pipeline needs a crtc
-        QSharedPointer<DrmConnectorMode> mode;
-        uint32_t overscan = 0;
-        Output::RgbRange rgbRange = Output::RgbRange::Automatic;
-        RenderLoopPrivate::SyncMode syncMode = RenderLoopPrivate::SyncMode::Fixed;
-        QSharedPointer<ColorTransformation> colorTransformation;
-        QSharedPointer<DrmGammaRamp> gamma;
+    DrmCrtc *crtc() const;
+    QSharedPointer<DrmConnectorMode> mode() const;
+    bool active() const;
+    bool enabled() const;
+    DrmPipelineLayer *layer() const;
+    DrmPlane::Transformations renderOrientation() const;
+    DrmPlane::Transformations bufferOrientation() const;
+    RenderLoopPrivate::SyncMode syncMode() const;
+    uint32_t overscan() const;
+    Output::RgbRange rgbRange() const;
 
-        QSharedPointer<DrmPipelineLayer> layer;
-
-        QPoint cursorPos;
-        QPoint cursorHotspot;
-        QSharedPointer<DrmDumbBuffer> cursorBo;
-
-        // the transformation that this pipeline will apply to submitted buffers
-        DrmPlane::Transformations bufferOrientation = DrmPlane::Transformation::Rotate0;
-        // the transformation that buffers submitted to the pipeline should have
-        DrmPlane::Transformations renderOrientation = DrmPlane::Transformation::Rotate0;
-    };
-    State pending;
+    void setCrtc(DrmCrtc *crtc);
+    void setMode(const QSharedPointer<DrmConnectorMode> &mode);
+    void setActive(bool active);
+    void setEnable(bool enable);
+    void setLayer(const QSharedPointer<DrmPipelineLayer> &layer);
+    void setRenderOrientation(DrmPlane::Transformations orientation);
+    void setBufferOrientation(DrmPlane::Transformations orientation);
+    void setSyncMode(RenderLoopPrivate::SyncMode mode);
+    void setOverscan(uint32_t overscan);
+    void setRgbRange(Output::RgbRange range);
+    void setColorTransformation(const QSharedPointer<ColorTransformation> &transformation);
 
     enum class CommitMode {
         Test,
@@ -157,6 +155,31 @@ private:
     bool m_pageflipPending = false;
     bool m_modesetPresentPending = false;
 
+    struct State
+    {
+        DrmCrtc *crtc = nullptr;
+        bool active = true; // whether or not the pipeline should be currently used
+        bool enabled = true; // whether or not the pipeline needs a crtc
+        QSharedPointer<DrmConnectorMode> mode;
+        uint32_t overscan = 0;
+        Output::RgbRange rgbRange = Output::RgbRange::Automatic;
+        RenderLoopPrivate::SyncMode syncMode = RenderLoopPrivate::SyncMode::Fixed;
+        QSharedPointer<ColorTransformation> colorTransformation;
+        QSharedPointer<DrmGammaRamp> gamma;
+
+        QSharedPointer<DrmPipelineLayer> layer;
+
+        QPoint cursorPos;
+        QPoint cursorHotspot;
+        QSharedPointer<DrmDumbBuffer> cursorBo;
+
+        // the transformation that this pipeline will apply to submitted buffers
+        DrmPlane::Transformations bufferOrientation = DrmPlane::Transformation::Rotate0;
+        // the transformation that buffers submitted to the pipeline should have
+        DrmPlane::Transformations renderOrientation = DrmPlane::Transformation::Rotate0;
+    };
+    // the state that is to be tested next
+    State m_pending;
     // the state that will be applied at the next real atomic commit
     State m_next;
     // the state that is already committed

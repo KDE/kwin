@@ -60,11 +60,11 @@ bool DrmPipeline::testScanout()
 
 bool DrmPipeline::present()
 {
-    Q_ASSERT(pending.crtc);
+    Q_ASSERT(m_pending.crtc);
     if (gpu()->atomicModeSetting()) {
         return commitPipelines({this}, CommitMode::Commit);
     } else {
-        if (pending.layer->hasDirectScanoutBuffer()) {
+        if (m_pending.layer->hasDirectScanoutBuffer()) {
             // already presented
             return true;
         }
@@ -113,7 +113,7 @@ bool DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline *> &pipelines,
         return false;
     };
     for (const auto &pipeline : pipelines) {
-        if (pipeline->activePending() && !pipeline->pending.layer->checkTestBuffer()) {
+        if (pipeline->activePending() && !pipeline->m_pending.layer->checkTestBuffer()) {
             qCWarning(KWIN_DRM) << "Checking test buffer failed for" << mode;
             return failed();
         }
@@ -173,35 +173,35 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
     if (activePending()) {
         flags |= DRM_MODE_PAGE_FLIP_EVENT;
     }
-    if (pending.crtc) {
-        pending.crtc->setPending(DrmCrtc::PropertyIndex::VrrEnabled, pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive);
-        const auto currentTransformation = pending.gamma ? pending.gamma->lut().transformation() : nullptr;
-        if (pending.colorTransformation != currentTransformation) {
-            pending.gamma = QSharedPointer<DrmGammaRamp>::create(pending.crtc, pending.colorTransformation);
+    if (m_pending.crtc) {
+        m_pending.crtc->setPending(DrmCrtc::PropertyIndex::VrrEnabled, m_pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive);
+        const auto currentTransformation = m_pending.gamma ? m_pending.gamma->lut().transformation() : nullptr;
+        if (m_pending.colorTransformation != currentTransformation) {
+            m_pending.gamma = QSharedPointer<DrmGammaRamp>::create(m_pending.crtc, m_pending.colorTransformation);
         }
-        pending.crtc->setPending(DrmCrtc::PropertyIndex::Gamma_LUT, pending.gamma ? pending.gamma->blobId() : 0);
-        const auto modeSize = pending.mode->size();
-        const auto buffer = pending.layer->currentBuffer().data();
-        pending.crtc->primaryPlane()->set(QPoint(0, 0), buffer ? buffer->size() : bufferSize(), QPoint(0, 0), modeSize);
-        pending.crtc->primaryPlane()->setBuffer(activePending() ? buffer : nullptr);
+        m_pending.crtc->setPending(DrmCrtc::PropertyIndex::Gamma_LUT, m_pending.gamma ? m_pending.gamma->blobId() : 0);
+        const auto modeSize = m_pending.mode->size();
+        const auto buffer = m_pending.layer->currentBuffer().data();
+        m_pending.crtc->primaryPlane()->set(QPoint(0, 0), buffer ? buffer->size() : bufferSize(), QPoint(0, 0), modeSize);
+        m_pending.crtc->primaryPlane()->setBuffer(activePending() ? buffer : nullptr);
 
-        if (pending.crtc->cursorPlane()) {
-            pending.crtc->cursorPlane()->set(QPoint(0, 0), gpu()->cursorSize(), pending.cursorPos, gpu()->cursorSize());
-            pending.crtc->cursorPlane()->setBuffer(activePending() ? pending.cursorBo.get() : nullptr);
-            pending.crtc->cursorPlane()->setPending(DrmPlane::PropertyIndex::CrtcId, (activePending() && pending.cursorBo) ? pending.crtc->id() : 0);
+        if (m_pending.crtc->cursorPlane()) {
+            m_pending.crtc->cursorPlane()->set(QPoint(0, 0), gpu()->cursorSize(), m_pending.cursorPos, gpu()->cursorSize());
+            m_pending.crtc->cursorPlane()->setBuffer(activePending() ? m_pending.cursorBo.get() : nullptr);
+            m_pending.crtc->cursorPlane()->setPending(DrmPlane::PropertyIndex::CrtcId, (activePending() && m_pending.cursorBo) ? m_pending.crtc->id() : 0);
         }
     }
     if (!m_connector->atomicPopulate(req)) {
         return false;
     }
-    if (pending.crtc) {
-        if (!pending.crtc->atomicPopulate(req)) {
+    if (m_pending.crtc) {
+        if (!m_pending.crtc->atomicPopulate(req)) {
             return false;
         }
-        if (!pending.crtc->primaryPlane()->atomicPopulate(req)) {
+        if (!m_pending.crtc->primaryPlane()->atomicPopulate(req)) {
             return false;
         }
-        if (pending.crtc->cursorPlane() && !pending.crtc->cursorPlane()->atomicPopulate(req)) {
+        if (m_pending.crtc->cursorPlane() && !m_pending.crtc->cursorPlane()->atomicPopulate(req)) {
             return false;
         }
     }
@@ -210,49 +210,49 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
 
 void DrmPipeline::prepareAtomicModeset()
 {
-    if (!pending.crtc) {
+    if (!m_pending.crtc) {
         m_connector->setPending(DrmConnector::PropertyIndex::CrtcId, 0);
         return;
     }
 
-    m_connector->setPending(DrmConnector::PropertyIndex::CrtcId, activePending() ? pending.crtc->id() : 0);
+    m_connector->setPending(DrmConnector::PropertyIndex::CrtcId, activePending() ? m_pending.crtc->id() : 0);
     if (const auto &prop = m_connector->getProp(DrmConnector::PropertyIndex::Broadcast_RGB)) {
-        prop->setEnum(pending.rgbRange);
+        prop->setEnum(m_pending.rgbRange);
     }
     if (const auto &prop = m_connector->getProp(DrmConnector::PropertyIndex::LinkStatus)) {
         prop->setEnum(DrmConnector::LinkStatus::Good);
     }
     if (const auto overscan = m_connector->getProp(DrmConnector::PropertyIndex::Overscan)) {
-        overscan->setPending(pending.overscan);
+        overscan->setPending(m_pending.overscan);
     } else if (const auto underscan = m_connector->getProp(DrmConnector::PropertyIndex::Underscan)) {
         const uint32_t hborder = calculateUnderscan();
-        underscan->setEnum(pending.overscan != 0 ? DrmConnector::UnderscanOptions::On : DrmConnector::UnderscanOptions::Off);
-        m_connector->getProp(DrmConnector::PropertyIndex::Underscan_vborder)->setPending(pending.overscan);
+        underscan->setEnum(m_pending.overscan != 0 ? DrmConnector::UnderscanOptions::On : DrmConnector::UnderscanOptions::Off);
+        m_connector->getProp(DrmConnector::PropertyIndex::Underscan_vborder)->setPending(m_pending.overscan);
         m_connector->getProp(DrmConnector::PropertyIndex::Underscan_hborder)->setPending(hborder);
     }
     if (const auto bpc = m_connector->getProp(DrmConnector::PropertyIndex::MaxBpc)) {
         bpc->setPending(bpc->maxValue());
     }
 
-    pending.crtc->setPending(DrmCrtc::PropertyIndex::Active, activePending());
-    pending.crtc->setPending(DrmCrtc::PropertyIndex::ModeId, activePending() ? pending.mode->blobId() : 0);
+    m_pending.crtc->setPending(DrmCrtc::PropertyIndex::Active, activePending());
+    m_pending.crtc->setPending(DrmCrtc::PropertyIndex::ModeId, activePending() ? m_pending.mode->blobId() : 0);
 
-    pending.crtc->primaryPlane()->setPending(DrmPlane::PropertyIndex::CrtcId, activePending() ? pending.crtc->id() : 0);
-    pending.crtc->primaryPlane()->setTransformation(pending.bufferOrientation);
-    if (pending.crtc->cursorPlane()) {
-        pending.crtc->cursorPlane()->setTransformation(DrmPlane::Transformation::Rotate0);
+    m_pending.crtc->primaryPlane()->setPending(DrmPlane::PropertyIndex::CrtcId, activePending() ? m_pending.crtc->id() : 0);
+    m_pending.crtc->primaryPlane()->setTransformation(m_pending.bufferOrientation);
+    if (m_pending.crtc->cursorPlane()) {
+        m_pending.crtc->cursorPlane()->setTransformation(DrmPlane::Transformation::Rotate0);
     }
 }
 
 uint32_t DrmPipeline::calculateUnderscan()
 {
-    const auto size = pending.mode->size();
+    const auto size = m_pending.mode->size();
     const float aspectRatio = size.width() / static_cast<float>(size.height());
-    uint32_t hborder = pending.overscan * aspectRatio;
+    uint32_t hborder = m_pending.overscan * aspectRatio;
     if (hborder > 128) {
         // overscan only goes from 0-100 so we cut off the 101-128 value range of underscan_vborder
         hborder = 128;
-        pending.overscan = 128 / aspectRatio;
+        m_pending.overscan = 128 / aspectRatio;
     }
     return hborder;
 }
@@ -260,11 +260,11 @@ uint32_t DrmPipeline::calculateUnderscan()
 void DrmPipeline::atomicCommitFailed()
 {
     m_connector->rollbackPending();
-    if (pending.crtc) {
-        pending.crtc->rollbackPending();
-        pending.crtc->primaryPlane()->rollbackPending();
-        if (pending.crtc->cursorPlane()) {
-            pending.crtc->cursorPlane()->rollbackPending();
+    if (m_pending.crtc) {
+        m_pending.crtc->rollbackPending();
+        m_pending.crtc->primaryPlane()->rollbackPending();
+        if (m_pending.crtc->cursorPlane()) {
+            m_pending.crtc->cursorPlane()->rollbackPending();
         }
     }
 }
@@ -272,11 +272,11 @@ void DrmPipeline::atomicCommitFailed()
 void DrmPipeline::atomicCommitSuccessful(CommitMode mode)
 {
     m_connector->commitPending();
-    if (pending.crtc) {
-        pending.crtc->commitPending();
-        pending.crtc->primaryPlane()->commitPending();
-        if (pending.crtc->cursorPlane()) {
-            pending.crtc->cursorPlane()->commitPending();
+    if (m_pending.crtc) {
+        m_pending.crtc->commitPending();
+        m_pending.crtc->primaryPlane()->commitPending();
+        if (m_pending.crtc->cursorPlane()) {
+            m_pending.crtc->cursorPlane()->commitPending();
         }
     }
     if (mode != CommitMode::Test) {
@@ -284,16 +284,16 @@ void DrmPipeline::atomicCommitSuccessful(CommitMode mode)
             m_pageflipPending = true;
         }
         m_connector->commit();
-        if (pending.crtc) {
-            pending.crtc->commit();
-            pending.crtc->primaryPlane()->setNext(pending.layer->currentBuffer());
-            pending.crtc->primaryPlane()->commit();
-            if (pending.crtc->cursorPlane()) {
-                pending.crtc->cursorPlane()->setNext(pending.cursorBo);
-                pending.crtc->cursorPlane()->commit();
+        if (m_pending.crtc) {
+            m_pending.crtc->commit();
+            m_pending.crtc->primaryPlane()->setNext(m_pending.layer->currentBuffer());
+            m_pending.crtc->primaryPlane()->commit();
+            if (m_pending.crtc->cursorPlane()) {
+                m_pending.crtc->cursorPlane()->setNext(m_pending.cursorBo);
+                m_pending.crtc->cursorPlane()->commit();
             }
         }
-        m_current = pending;
+        m_current = m_pending;
         if (mode == CommitMode::CommitModeset && activePending()) {
             pageFlipped(std::chrono::steady_clock::now().time_since_epoch());
         }
@@ -302,67 +302,67 @@ void DrmPipeline::atomicCommitSuccessful(CommitMode mode)
 
 bool DrmPipeline::setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const QPoint &hotspot)
 {
-    if (pending.cursorBo == buffer && pending.cursorHotspot == hotspot) {
+    if (m_pending.cursorBo == buffer && m_pending.cursorHotspot == hotspot) {
         return true;
     }
     bool result;
     const bool visibleBefore = isCursorVisible();
-    pending.cursorBo = buffer;
-    pending.cursorHotspot = hotspot;
+    m_pending.cursorBo = buffer;
+    m_pending.cursorHotspot = hotspot;
     // explicitly check for the cursor plane and not for AMS, as we might not always have one
-    if (pending.crtc->cursorPlane()) {
+    if (m_pending.crtc->cursorPlane()) {
         result = commitPipelines({this}, CommitMode::Test);
     } else {
         result = setCursorLegacy();
     }
     if (result) {
-        m_next = pending;
+        m_next = m_pending;
         if (m_output && (visibleBefore || isCursorVisible())) {
             m_output->renderLoop()->scheduleRepaint();
         }
     } else {
-        pending = m_next;
+        m_pending = m_next;
     }
     return result;
 }
 
 bool DrmPipeline::moveCursor(QPoint pos)
 {
-    if (pending.cursorPos == pos) {
+    if (m_pending.cursorPos == pos) {
         return true;
     }
     const bool visibleBefore = isCursorVisible();
     bool result;
-    pending.cursorPos = pos;
+    m_pending.cursorPos = pos;
     // explicitly check for the cursor plane and not for AMS, as we might not always have one
-    if (pending.crtc->cursorPlane()) {
+    if (m_pending.crtc->cursorPlane()) {
         result = commitPipelines({this}, CommitMode::Test);
     } else {
         result = moveCursorLegacy();
     }
     if (result) {
-        m_next = pending;
+        m_next = m_pending;
         if (m_output && (visibleBefore || isCursorVisible())) {
             m_output->renderLoop()->scheduleRepaint();
         }
     } else {
-        pending = m_next;
+        m_pending = m_next;
     }
     return result;
 }
 
 void DrmPipeline::applyPendingChanges()
 {
-    if (!pending.crtc) {
-        pending.active = false;
+    if (!m_pending.crtc) {
+        m_pending.active = false;
     }
-    m_next = pending;
+    m_next = m_pending;
 }
 
 QSize DrmPipeline::bufferSize() const
 {
-    const auto modeSize = pending.mode->size();
-    if (pending.bufferOrientation & (DrmPlane::Transformation::Rotate90 | DrmPlane::Transformation::Rotate270)) {
+    const auto modeSize = m_pending.mode->size();
+    if (m_pending.bufferOrientation & (DrmPlane::Transformation::Rotate90 | DrmPlane::Transformation::Rotate270)) {
         return modeSize.transposed();
     }
     return modeSize;
@@ -370,8 +370,8 @@ QSize DrmPipeline::bufferSize() const
 
 bool DrmPipeline::isCursorVisible() const
 {
-    const QRect mode = QRect(QPoint(), pending.mode->size());
-    return pending.cursorBo && QRect(pending.cursorPos, pending.cursorBo->size()).intersects(mode);
+    const QRect mode = QRect(QPoint(), m_pending.mode->size());
+    return m_pending.cursorBo && QRect(m_pending.cursorPos, m_pending.cursorBo->size()).intersects(mode);
 }
 
 DrmConnector *DrmPipeline::connector() const
@@ -414,9 +414,9 @@ static const QMap<uint32_t, QVector<uint64_t>> legacyFormats = {
 
 QMap<uint32_t, QVector<uint64_t>> DrmPipeline::formats() const
 {
-    if (pending.crtc) {
-        if (pending.crtc->primaryPlane()) {
-            return pending.crtc->primaryPlane()->formats();
+    if (m_pending.crtc) {
+        if (m_pending.crtc->primaryPlane()) {
+            return m_pending.crtc->primaryPlane()->formats();
         } else {
             return legacyFormats;
         }
@@ -427,23 +427,23 @@ QMap<uint32_t, QVector<uint64_t>> DrmPipeline::formats() const
 
 bool DrmPipeline::needsModeset() const
 {
-    return pending.crtc != m_current.crtc
-        || pending.active != m_current.active
-        || pending.mode != m_current.mode
-        || pending.rgbRange != m_current.rgbRange
-        || pending.bufferOrientation != m_current.bufferOrientation
+    return m_pending.crtc != m_current.crtc
+        || m_pending.active != m_current.active
+        || m_pending.mode != m_current.mode
+        || m_pending.rgbRange != m_current.rgbRange
+        || m_pending.bufferOrientation != m_current.bufferOrientation
         || m_connector->linkStatus() == DrmConnector::LinkStatus::Bad
         || m_modesetPresentPending;
 }
 
 bool DrmPipeline::activePending() const
 {
-    return pending.crtc && pending.mode && pending.active;
+    return m_pending.crtc && m_pending.mode && m_pending.active;
 }
 
 void DrmPipeline::revertPendingChanges()
 {
-    pending = m_next;
+    m_pending = m_next;
 }
 
 bool DrmPipeline::pageflipPending() const
@@ -547,15 +547,119 @@ void DrmPipeline::printDebugInfo() const
 {
     qCDebug(KWIN_DRM) << "Drm objects:";
     printProps(m_connector, PrintMode::All);
-    if (pending.crtc) {
-        printProps(pending.crtc, PrintMode::All);
-        if (pending.crtc->primaryPlane()) {
-            printProps(pending.crtc->primaryPlane(), PrintMode::All);
+    if (m_pending.crtc) {
+        printProps(m_pending.crtc, PrintMode::All);
+        if (m_pending.crtc->primaryPlane()) {
+            printProps(m_pending.crtc->primaryPlane(), PrintMode::All);
         }
-        if (pending.crtc->cursorPlane()) {
-            printProps(pending.crtc->cursorPlane(), PrintMode::All);
+        if (m_pending.crtc->cursorPlane()) {
+            printProps(m_pending.crtc->cursorPlane(), PrintMode::All);
         }
     }
 }
 
+DrmCrtc *DrmPipeline::crtc() const
+{
+    return m_pending.crtc;
+}
+
+QSharedPointer<DrmConnectorMode> DrmPipeline::mode() const
+{
+    return m_pending.mode;
+}
+
+bool DrmPipeline::active() const
+{
+    return m_pending.active;
+}
+
+bool DrmPipeline::enabled() const
+{
+    return m_pending.enabled;
+}
+
+DrmPipelineLayer *DrmPipeline::layer() const
+{
+    return m_pending.layer.get();
+}
+
+DrmPlane::Transformations DrmPipeline::renderOrientation() const
+{
+    return m_pending.renderOrientation;
+}
+
+DrmPlane::Transformations DrmPipeline::bufferOrientation() const
+{
+    return m_pending.bufferOrientation;
+}
+
+RenderLoopPrivate::SyncMode DrmPipeline::syncMode() const
+{
+    return m_pending.syncMode;
+}
+
+uint32_t DrmPipeline::overscan() const
+{
+    return m_pending.overscan;
+}
+
+Output::RgbRange DrmPipeline::rgbRange() const
+{
+    return m_pending.rgbRange;
+}
+
+void DrmPipeline::setCrtc(DrmCrtc *crtc)
+{
+    m_pending.crtc = crtc;
+}
+
+void DrmPipeline::setMode(const QSharedPointer<DrmConnectorMode> &mode)
+{
+    m_pending.mode = mode;
+}
+
+void DrmPipeline::setActive(bool active)
+{
+    m_pending.active = active;
+}
+
+void DrmPipeline::setEnable(bool enable)
+{
+    m_pending.enabled = enable;
+}
+
+void DrmPipeline::setLayer(const QSharedPointer<DrmPipelineLayer> &layer)
+{
+    m_pending.layer = layer;
+}
+
+void DrmPipeline::setRenderOrientation(DrmPlane::Transformations orientation)
+{
+    m_pending.renderOrientation = orientation;
+}
+
+void DrmPipeline::setBufferOrientation(DrmPlane::Transformations orientation)
+{
+    m_pending.bufferOrientation = orientation;
+}
+
+void DrmPipeline::setSyncMode(RenderLoopPrivate::SyncMode mode)
+{
+    m_pending.syncMode = mode;
+}
+
+void DrmPipeline::setOverscan(uint32_t overscan)
+{
+    m_pending.overscan = overscan;
+}
+
+void DrmPipeline::setRgbRange(Output::RgbRange range)
+{
+    m_pending.rgbRange = range;
+}
+
+void DrmPipeline::setColorTransformation(const QSharedPointer<ColorTransformation> &transformation)
+{
+    m_pending.colorTransformation = transformation;
+}
 }

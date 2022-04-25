@@ -276,7 +276,7 @@ bool DrmGpu::updateOutputs()
                 qCDebug(KWIN_DRM, "New %soutput on GPU %s: %s", conn->isNonDesktop() ? "non-desktop " : "", qPrintable(m_devNode), qPrintable(conn->modelName()));
                 m_pipelines << conn->pipeline();
                 if (conn->isNonDesktop()) {
-                    conn->pipeline()->pending.active = false;
+                    conn->pipeline()->setActive(false);
                     conn->pipeline()->applyPendingChanges();
                     auto leaseOutput = new DrmLeaseOutput(conn->pipeline(), m_leaseDevice);
                     m_leaseOutputs << leaseOutput;
@@ -315,16 +315,16 @@ bool DrmGpu::updateOutputs()
     }
 
     for (const auto &pipeline : qAsConst(m_pipelines)) {
-        if (!pipeline->pending.layer) {
-            pipeline->pending.layer = m_platform->renderBackend()->createDrmPipelineLayer(pipeline);
+        if (!pipeline->layer()) {
+            pipeline->setLayer(m_platform->renderBackend()->createDrmPipelineLayer(pipeline));
             pipeline->applyPendingChanges();
         }
     }
     if (testPendingConfiguration()) {
         for (const auto &pipeline : qAsConst(m_pipelines)) {
             pipeline->applyPendingChanges();
-            if (pipeline->output() && !pipeline->pending.crtc) {
-                pipeline->pending.enabled = false;
+            if (pipeline->output() && !pipeline->crtc()) {
+                pipeline->setEnable(false);
                 pipeline->output()->setEnabled(false);
             }
         }
@@ -335,7 +335,7 @@ bool DrmGpu::updateOutputs()
         }
         for (const auto &output : qAsConst(addedOutputs)) {
             output->setEnabled(false);
-            output->pipeline()->pending.enabled = false;
+            output->pipeline()->setEnable(false);
             output->pipeline()->applyPendingChanges();
         }
     }
@@ -353,15 +353,15 @@ bool DrmGpu::checkCrtcAssignment(QVector<DrmConnector *> connectors, const QVect
         // remaining connectors can't be powered
         for (const auto &conn : qAsConst(connectors)) {
             qCWarning(KWIN_DRM) << "disabling connector" << conn->modelName() << "without a crtc";
-            conn->pipeline()->pending.crtc = nullptr;
+            conn->pipeline()->setCrtc(nullptr);
         }
         return testPipelines();
     }
     auto connector = connectors.takeFirst();
     auto pipeline = connector->pipeline();
-    if (!pipeline->pending.enabled) {
+    if (!pipeline->enabled()) {
         // disabled pipelines don't need CRTCs
-        pipeline->pending.crtc = nullptr;
+        pipeline->setCrtc(nullptr);
         return checkCrtcAssignment(connectors, crtcs);
     }
     DrmCrtc *currentCrtc = nullptr;
@@ -375,7 +375,7 @@ bool DrmGpu::checkCrtcAssignment(QVector<DrmConnector *> connectors, const QVect
             currentCrtc = *it;
             auto crtcsLeft = crtcs;
             crtcsLeft.removeOne(currentCrtc);
-            pipeline->pending.crtc = currentCrtc;
+            pipeline->setCrtc(currentCrtc);
             if (checkCrtcAssignment(connectors, crtcsLeft)) {
                 return true;
             }
@@ -385,7 +385,7 @@ bool DrmGpu::checkCrtcAssignment(QVector<DrmConnector *> connectors, const QVect
         if (connector->isCrtcSupported(crtc) && crtc != currentCrtc) {
             auto crtcsLeft = crtcs;
             crtcsLeft.removeOne(crtc);
-            pipeline->pending.crtc = crtc;
+            pipeline->setCrtc(crtc);
             if (checkCrtcAssignment(connectors, crtcsLeft)) {
                 return true;
             }
@@ -407,7 +407,7 @@ bool DrmGpu::testPendingConfiguration()
     for (const auto &output : qAsConst(m_leaseOutputs)) {
         if (output->lease()) {
             connectors.removeOne(output->pipeline()->connector());
-            crtcs.removeOne(output->pipeline()->pending.crtc);
+            crtcs.removeOne(output->pipeline()->crtc());
         }
     }
     if (m_atomicModeSetting) {
@@ -422,8 +422,8 @@ bool DrmGpu::testPendingConfiguration()
         // try again without hw rotation
         bool hwRotationUsed = false;
         for (const auto &pipeline : qAsConst(m_pipelines)) {
-            hwRotationUsed |= (pipeline->pending.bufferOrientation != DrmPlane::Transformations(DrmPlane::Transformation::Rotate0));
-            pipeline->pending.bufferOrientation = DrmPlane::Transformation::Rotate0;
+            hwRotationUsed |= (pipeline->bufferOrientation() != DrmPlane::Transformations(DrmPlane::Transformation::Rotate0));
+            pipeline->setBufferOrientation(DrmPlane::Transformation::Rotate0);
         }
         return hwRotationUsed ? checkCrtcAssignment(connectors, crtcs) : false;
     }
@@ -434,8 +434,8 @@ bool DrmGpu::testPipelines()
     // pipelines that are enabled but not active need to be activated for the test
     QVector<DrmPipeline *> inactivePipelines;
     for (const auto &pipeline : qAsConst(m_pipelines)) {
-        if (!pipeline->pending.active) {
-            pipeline->pending.active = true;
+        if (!pipeline->active()) {
+            pipeline->setActive(true);
             inactivePipelines << pipeline;
         }
     }
@@ -443,7 +443,7 @@ bool DrmGpu::testPipelines()
     bool test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test, unused);
     // disable inactive pipelines again
     for (const auto &pipeline : qAsConst(inactivePipelines)) {
-        pipeline->pending.active = false;
+        pipeline->setActive(false);
     }
     if (!inactivePipelines.isEmpty() && test) {
         test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test, unused);
@@ -566,7 +566,7 @@ void DrmGpu::removeOutput(DrmOutput *output)
     qCDebug(KWIN_DRM) << "Removing output" << output;
     m_drmOutputs.removeOne(output);
     m_pipelines.removeOne(output->pipeline());
-    output->pipeline()->pending.layer.reset();
+    output->pipeline()->setLayer(nullptr);
     m_outputs.removeOne(output);
     Q_EMIT outputRemoved(output);
     delete output;
@@ -665,7 +665,7 @@ void DrmGpu::removeLeaseOutput(DrmLeaseOutput *output)
     qCDebug(KWIN_DRM) << "Removing leased output" << output;
     m_leaseOutputs.removeOne(output);
     m_pipelines.removeOne(output->pipeline());
-    output->pipeline()->pending.layer.reset();
+    output->pipeline()->setLayer(nullptr);
     delete output;
 }
 
@@ -738,7 +738,7 @@ bool DrmGpu::maybeModeset()
         }
     }
     bool presentPendingForAll = std::all_of(pipelines.constBegin(), pipelines.constEnd(), [](const auto &pipeline) {
-        return pipeline->modesetPresentPending() || !pipeline->pending.active;
+        return pipeline->modesetPresentPending() || !pipeline->active();
     });
     if (!presentPendingForAll) {
         // commit only once all pipelines are ready for presentation
@@ -766,10 +766,10 @@ QVector<DrmObject *> DrmGpu::unusedObjects() const
     QVector<DrmObject *> ret = m_allObjects;
     for (const auto &pipeline : m_pipelines) {
         ret.removeOne(pipeline->connector());
-        if (pipeline->pending.crtc) {
-            ret.removeOne(pipeline->pending.crtc);
-            ret.removeOne(pipeline->pending.crtc->primaryPlane());
-            ret.removeOne(pipeline->pending.crtc->cursorPlane());
+        if (pipeline->crtc()) {
+            ret.removeOne(pipeline->crtc());
+            ret.removeOne(pipeline->crtc()->primaryPlane());
+            ret.removeOne(pipeline->crtc()->cursorPlane());
         }
     }
     return ret;
@@ -783,7 +783,7 @@ QSize DrmGpu::cursorSize() const
 void DrmGpu::recreateSurfaces()
 {
     for (const auto &pipeline : qAsConst(m_pipelines)) {
-        pipeline->pending.layer = m_platform->renderBackend()->createDrmPipelineLayer(pipeline);
+        pipeline->setLayer(m_platform->renderBackend()->createDrmPipelineLayer(pipeline));
         pipeline->applyPendingChanges();
     }
     for (const auto &output : qAsConst(m_outputs)) {

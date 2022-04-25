@@ -41,7 +41,7 @@ OutputLayerBeginFrameInfo EglGbmLayer::beginFrame()
     m_scanoutBuffer.reset();
     m_dmabufFeedback.renderingSurface();
 
-    return m_surface.startRendering(m_pipeline->bufferSize(), m_pipeline->pending.renderOrientation, m_pipeline->pending.bufferOrientation, m_pipeline->formats());
+    return m_surface.startRendering(m_pipeline->bufferSize(), m_pipeline->renderOrientation(), m_pipeline->bufferOrientation(), m_pipeline->formats());
 }
 
 void EglGbmLayer::aboutToStartPainting(const QRegion &damagedRegion)
@@ -52,7 +52,7 @@ void EglGbmLayer::aboutToStartPainting(const QRegion &damagedRegion)
 void EglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(renderedRegion)
-    const auto ret = m_surface.endRendering(m_pipeline->pending.renderOrientation, damagedRegion);
+    const auto ret = m_surface.endRendering(m_pipeline->renderOrientation(), damagedRegion);
     if (ret.has_value()) {
         std::tie(m_currentBuffer, m_currentDamage) = ret.value();
     }

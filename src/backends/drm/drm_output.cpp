@@ -47,7 +47,7 @@ DrmOutput::DrmOutput(DrmPipeline *pipeline)
 {
     m_pipeline->setOutput(this);
     const auto conn = m_pipeline->connector();
-    m_renderLoop->setRefreshRate(m_pipeline->pending.mode->refreshRate());
+    m_renderLoop->setRefreshRate(m_pipeline->mode()->refreshRate());
 
     Capabilities capabilities = Capability::Dpms;
     if (conn->hasOverscan()) {
@@ -79,7 +79,7 @@ DrmOutput::DrmOutput(DrmPipeline *pipeline)
     });
 
     const QList<QSharedPointer<OutputMode>> modes = getModes();
-    QSharedPointer<OutputMode> currentMode = m_pipeline->pending.mode;
+    QSharedPointer<OutputMode> currentMode = m_pipeline->mode();
     if (!currentMode) {
         currentMode = modes.constFirst();
     }
@@ -119,7 +119,7 @@ void DrmOutput::updateCursor()
         m_setCursorSuccessful = false;
         return;
     }
-    if (!m_pipeline->pending.crtc) {
+    if (!m_pipeline->crtc()) {
         return;
     }
     const Cursor *cursor = Cursors::self()->currentCursor();
@@ -136,7 +136,7 @@ void DrmOutput::updateCursor()
         m_pipeline->setCursor(nullptr);
         return;
     }
-    const auto plane = m_pipeline->pending.crtc->cursorPlane();
+    const auto plane = m_pipeline->crtc()->cursorPlane();
     if (!m_cursor || (plane && !plane->formats().value(m_cursor->drmFormat()).contains(DRM_FORMAT_MOD_LINEAR))) {
         if (plane && (!plane->formats().contains(DRM_FORMAT_ARGB8888) || !plane->formats().value(DRM_FORMAT_ARGB8888).contains(DRM_FORMAT_MOD_LINEAR))) {
             m_pipeline->setCursor(nullptr);
@@ -173,7 +173,7 @@ void DrmOutput::updateCursor()
 
 void DrmOutput::moveCursor()
 {
-    if (!m_setCursorSuccessful || !m_pipeline->pending.crtc) {
+    if (!m_setCursorSuccessful || !m_pipeline->crtc()) {
         return;
     }
     Cursor *cursor = Cursors::self()->currentCursor();
@@ -231,7 +231,7 @@ bool DrmOutput::setDrmDpmsMode(DpmsMode mode)
         setDpmsModeInternal(mode);
         return true;
     }
-    m_pipeline->pending.active = active;
+    m_pipeline->setActive(active);
     if (DrmPipeline::commitPipelines({m_pipeline}, active ? DrmPipeline::CommitMode::Test : DrmPipeline::CommitMode::CommitModeset)) {
         m_pipeline->applyPendingChanges();
         setDpmsModeInternal(mode);
@@ -285,14 +285,14 @@ void DrmOutput::updateModes()
 {
     const QList<QSharedPointer<OutputMode>> modes = getModes();
 
-    if (m_pipeline->pending.crtc) {
-        const auto currentMode = m_pipeline->connector()->findMode(m_pipeline->pending.crtc->queryCurrentMode());
-        if (currentMode != m_pipeline->pending.mode) {
+    if (m_pipeline->crtc()) {
+        const auto currentMode = m_pipeline->connector()->findMode(m_pipeline->crtc()->queryCurrentMode());
+        if (currentMode != m_pipeline->mode()) {
             // DrmConnector::findCurrentMode might fail
-            m_pipeline->pending.mode = currentMode ? currentMode : m_pipeline->connector()->modes().constFirst();
+            m_pipeline->setMode(currentMode ? currentMode : m_pipeline->connector()->modes().constFirst());
             if (m_gpu->testPendingConfiguration()) {
                 m_pipeline->applyPendingChanges();
-                m_renderLoop->setRefreshRate(m_pipeline->pending.mode->refreshRate());
+                m_renderLoop->setRefreshRate(m_pipeline->mode()->refreshRate());
             } else {
                 qCWarning(KWIN_DRM) << "Setting changed mode failed!";
                 m_pipeline->revertPendingChanges();
@@ -300,7 +300,7 @@ void DrmOutput::updateModes()
         }
     }
 
-    QSharedPointer<OutputMode> currentMode = m_pipeline->pending.mode;
+    QSharedPointer<OutputMode> currentMode = m_pipeline->mode();
     if (!currentMode) {
         currentMode = modes.constFirst();
     }
@@ -311,8 +311,8 @@ void DrmOutput::updateModes()
 bool DrmOutput::present()
 {
     RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop);
-    if (m_pipeline->pending.syncMode != renderLoopPrivate->presentMode) {
-        m_pipeline->pending.syncMode = renderLoopPrivate->presentMode;
+    if (m_pipeline->syncMode() != renderLoopPrivate->presentMode) {
+        m_pipeline->setSyncMode(renderLoopPrivate->presentMode);
         if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test)) {
             m_pipeline->applyPendingChanges();
         } else {
@@ -321,7 +321,7 @@ bool DrmOutput::present()
     }
     bool modeset = gpu()->needsModeset();
     if (modeset ? m_pipeline->maybeModeset() : m_pipeline->present()) {
-        Q_EMIT outputChange(m_pipeline->pending.layer->currentDamage());
+        Q_EMIT outputChange(m_pipeline->layer()->currentDamage());
         return true;
     } else if (!modeset) {
         qCWarning(KWIN_DRM) << "Presentation failed!" << strerror(errno);
@@ -346,7 +346,7 @@ bool DrmOutput::queueChanges(const OutputConfiguration &config)
     static int envOnlySoftwareRotations = qEnvironmentVariableIntValue("KWIN_DRM_SW_ROTATIONS_ONLY", &valid) == 1 || !valid;
 
     const auto props = config.constChangeSet(this);
-    m_pipeline->pending.active = props->enabled;
+    m_pipeline->setActive(props->enabled);
     const auto modelist = m_connector->modes();
     const auto it = std::find_if(modelist.begin(), modelist.end(), [&props](const auto &mode) {
         return mode->size() == props->modeSize && mode->refreshRate() == props->refreshRate;
@@ -355,14 +355,14 @@ bool DrmOutput::queueChanges(const OutputConfiguration &config)
         qCWarning(KWIN_DRM).nospace() << "Could not find mode " << props->modeSize << "@" << props->refreshRate << " for output " << this;
         return false;
     }
-    m_pipeline->pending.mode = *it;
-    m_pipeline->pending.overscan = props->overscan;
-    m_pipeline->pending.rgbRange = props->rgbRange;
-    m_pipeline->pending.renderOrientation = outputToPlaneTransform(props->transform);
+    m_pipeline->setMode(*it);
+    m_pipeline->setOverscan(props->overscan);
+    m_pipeline->setRgbRange(props->rgbRange);
+    m_pipeline->setRenderOrientation(outputToPlaneTransform(props->transform));
     if (!envOnlySoftwareRotations && m_gpu->atomicModeSetting()) {
-        m_pipeline->pending.bufferOrientation = m_pipeline->pending.renderOrientation;
+        m_pipeline->setBufferOrientation(m_pipeline->renderOrientation());
     }
-    m_pipeline->pending.enabled = props->enabled;
+    m_pipeline->setEnable(props->enabled);
     return true;
 }
 
@@ -375,7 +375,7 @@ void DrmOutput::applyQueuedChanges(const OutputConfiguration &config)
     m_pipeline->applyPendingChanges();
 
     auto props = config.constChangeSet(this);
-    setEnabled(props->enabled && m_pipeline->pending.crtc);
+    setEnabled(props->enabled && m_pipeline->crtc());
     if (!isEnabled() && m_pipeline->needsModeset()) {
         m_gpu->maybeModeset();
     }
@@ -383,11 +383,11 @@ void DrmOutput::applyQueuedChanges(const OutputConfiguration &config)
     setScale(props->scale);
     setTransformInternal(props->transform);
 
-    const auto &mode = m_pipeline->pending.mode;
+    const auto mode = m_pipeline->mode();
     setCurrentModeInternal(mode);
     m_renderLoop->setRefreshRate(mode->refreshRate());
-    setOverscanInternal(m_pipeline->pending.overscan);
-    setRgbRangeInternal(m_pipeline->pending.rgbRange);
+    setOverscanInternal(m_pipeline->overscan());
+    setRgbRangeInternal(m_pipeline->rgbRange());
     setVrrPolicy(props->vrrPolicy);
 
     m_renderLoop->scheduleRepaint();
@@ -406,12 +406,12 @@ bool DrmOutput::usesSoftwareCursor() const
 
 DrmOutputLayer *DrmOutput::outputLayer() const
 {
-    return m_pipeline->pending.layer.data();
+    return m_pipeline->layer();
 }
 
 void DrmOutput::setColorTransformation(const QSharedPointer<ColorTransformation> &transformation)
 {
-    m_pipeline->pending.colorTransformation = transformation;
+    m_pipeline->setColorTransformation(transformation);
     if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test)) {
         m_pipeline->applyPendingChanges();
         m_renderLoop->scheduleRepaint();
