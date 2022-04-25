@@ -315,6 +315,21 @@ public:
      */
     static SurfaceInterface *get(quint32 id, const ClientConnection *client);
 
+    /**
+     * @see ClientConnection::setScaleOverride
+     */
+    qreal scaleOverride() const;
+    /**
+     * Convert a co-ordinate from kwin logical space to surface logical space
+     * @internal
+     */
+    QPoint toSurfaceLocal(const QPoint &point) const;
+    /**
+     * Convert a co-ordinate from kwin logical space to surface logical space
+     * @internal
+     */
+    QPointF toSurfaceLocal(const QPointF &point) const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the underlying wl_surface resource is about to be freed.
