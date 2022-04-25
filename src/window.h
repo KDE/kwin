@@ -7,8 +7,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_ABSTRACT_CLIENT_H
-#define KWIN_ABSTRACT_CLIENT_H
+#pragma once
 
 #include "cursor.h"
 #include "options.h"
@@ -2315,5 +2314,3 @@ KWIN_EXPORT QDebug operator<<(QDebug debug, const Window *toplevel);
 Q_DECLARE_METATYPE(KWin::Window *)
 Q_DECLARE_METATYPE(QList<KWin::Window *>)
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Window::SameApplicationChecks)
-
-#endif
