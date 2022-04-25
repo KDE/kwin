@@ -47,6 +47,9 @@ public:
     bool doneOnce = false;
     QPointer<OutputInterface> output;
 
+    void sendLogicalPosition(Resource *resource, const QPoint &position);
+    void sendLogicalSize(Resource *resource, const QSize &size);
+
 protected:
     void zxdg_output_v1_bind_resource(Resource *resource) override;
     void zxdg_output_v1_destroy(Resource *resource) override;
@@ -125,7 +128,7 @@ void XdgOutputV1Interface::setLogicalSize(const QSize &size)
 
     const auto outputResources = d->resourceMap();
     for (auto resource : outputResources) {
-        d->send_logical_size(resource->handle, size.width(), size.height());
+        d->sendLogicalSize(resource, size);
     }
 }
 
@@ -144,7 +147,7 @@ void XdgOutputV1Interface::setLogicalPosition(const QPoint &pos)
 
     const auto outputResources = d->resourceMap();
     for (auto resource : outputResources) {
-        d->send_logical_position(resource->handle, pos.x(), pos.y());
+        d->sendLogicalPosition(resource, pos);
     }
 }
 
@@ -188,8 +191,8 @@ void XdgOutputV1InterfacePrivate::zxdg_output_v1_destroy(Resource *resource)
 
 void XdgOutputV1InterfacePrivate::zxdg_output_v1_bind_resource(Resource *resource)
 {
-    send_logical_position(resource->handle, pos.x(), pos.y());
-    send_logical_size(resource->handle, size.width(), size.height());
+    sendLogicalPosition(resource, pos);
+    sendLogicalSize(resource, size);
     if (resource->version() >= ZXDG_OUTPUT_V1_NAME_SINCE_VERSION) {
         send_name(resource->handle, name);
     }
@@ -208,4 +211,24 @@ void XdgOutputV1InterfacePrivate::zxdg_output_v1_bind_resource(Resource *resourc
     }
 }
 
+void XdgOutputV1InterfacePrivate::sendLogicalSize(Resource *resource, const QSize &size)
+{
+    if (!output) {
+        return;
+    }
+    ClientConnection *connection = output->display()->getConnection(resource->client());
+    qreal scaleOverride = connection->scaleOverride();
+
+    send_logical_size(resource->handle, size.width() * scaleOverride, size.height() * scaleOverride);
+}
+
+void XdgOutputV1InterfacePrivate::sendLogicalPosition(Resource *resource, const QPoint &pos)
+{
+    if (!output) {
+        return;
+    }
+    ClientConnection *connection = output->display()->getConnection(resource->client());
+    qreal scaleOverride = connection->scaleOverride();
+    send_logical_position(resource->handle, pos.x() * scaleOverride, pos.y() * scaleOverride);
+}
 }

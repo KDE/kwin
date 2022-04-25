@@ -174,7 +174,7 @@ void PointerInterface::sendEnter(SurfaceInterface *surface, const QPointF &posit
         Q_EMIT focusedSurfaceChanged();
     });
 
-    d->sendEnter(position, serial);
+    d->sendEnter(d->focusedSurface->toSurfaceLocal(position), serial);
     d->sendFrame();
     d->lastPosition = position;
 
@@ -262,9 +262,11 @@ void PointerInterface::sendMotion(const QPointF &position)
         return;
     }
 
+    const QPointF localPos = d->focusedSurface->toSurfaceLocal(position);
+
     const auto pointerResources = d->pointersForClient(d->focusedSurface->client());
     for (PointerInterfacePrivate::Resource *resource : pointerResources) {
-        d->send_motion(resource->handle, d->seat->timestamp(), wl_fixed_from_double(position.x()), wl_fixed_from_double(position.y()));
+        d->send_motion(resource->handle, d->seat->timestamp(), wl_fixed_from_double(localPos.x()), wl_fixed_from_double(localPos.y()));
     }
 }
 

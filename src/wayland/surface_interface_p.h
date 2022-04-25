@@ -113,6 +113,7 @@ public:
     ClientBuffer *bufferRef = nullptr;
     bool mapped = false;
     bool hasCacheState = false;
+    qreal scaleOverride = 1.;
 
     QVector<OutputInterface *> outputs;
 

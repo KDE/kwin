@@ -76,6 +76,8 @@ void RelativePointerV1Interface::sendRelativeMotion(const QSizeF &delta, const Q
         return;
     }
 
+    auto scaleOverride = pointer->focusedSurface()->scaleOverride();
+
     ClientConnection *focusedClient = pointer->focusedSurface()->client();
     const QList<Resource *> pointerResources = resourceMap().values(focusedClient->client());
     for (Resource *pointerResource : pointerResources) {
@@ -83,10 +85,10 @@ void RelativePointerV1Interface::sendRelativeMotion(const QSizeF &delta, const Q
             send_relative_motion(pointerResource->handle,
                                  microseconds >> 32,
                                  microseconds & 0xffffffff,
-                                 wl_fixed_from_double(delta.width()),
-                                 wl_fixed_from_double(delta.height()),
-                                 wl_fixed_from_double(deltaNonAccelerated.width()),
-                                 wl_fixed_from_double(deltaNonAccelerated.height()));
+                                 wl_fixed_from_double(delta.width() * scaleOverride),
+                                 wl_fixed_from_double(delta.height() * scaleOverride),
+                                 wl_fixed_from_double(deltaNonAccelerated.width() * scaleOverride),
+                                 wl_fixed_from_double(deltaNonAccelerated.height() * scaleOverride));
         }
     }
 }
