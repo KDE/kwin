@@ -37,16 +37,16 @@ public:
     };
     Q_DECLARE_FLAGS(Flags, Flag)
 
-    OutputMode(const QSize &size, int refreshRate, Flags flags = {});
+    OutputMode(const QSize &size, uint32_t refreshRate, Flags flags = {});
     virtual ~OutputMode() = default;
 
     QSize size() const;
-    int refreshRate() const;
+    uint32_t refreshRate() const;
     Flags flags() const;
 
 private:
     const QSize m_size;
-    const int m_refreshRate;
+    const uint32_t m_refreshRate;
     const Flags m_flags;
 };
 

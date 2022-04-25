@@ -38,7 +38,7 @@ QDebug operator<<(QDebug debug, const Output *output)
     return debug;
 }
 
-OutputMode::OutputMode(const QSize &size, int refreshRate, Flags flags)
+OutputMode::OutputMode(const QSize &size, uint32_t refreshRate, Flags flags)
     : m_size(size)
     , m_refreshRate(refreshRate)
     , m_flags(flags)
@@ -50,7 +50,7 @@ QSize OutputMode::size() const
     return m_size;
 }
 
-int OutputMode::refreshRate() const
+uint32_t OutputMode::refreshRate() const
 {
     return m_refreshRate;
 }
