@@ -417,6 +417,7 @@ include_directories(BEFORE
     ${CMAKE_CURRENT_SOURCE_DIR}/src/effects
     ${CMAKE_CURRENT_SOURCE_DIR}/src/tabbox
     ${CMAKE_CURRENT_SOURCE_DIR}/src/platformsupport
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/colors
 )
 
 if (KF5DocTools_FOUND)

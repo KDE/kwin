@@ -5,7 +5,8 @@
 */
 
 #include "colordevice.h"
-#include "colors.h"
+#include "colorpipelinestage.h"
+#include "colortransformation.h"
 #include "output.h"
 #include "utils/common.h"
 
@@ -23,17 +24,6 @@ struct CmsDeleter;
 
 template<typename T>
 using CmsScopedPointer = QScopedPointer<T, CmsDeleter<T>>;
-
-template<>
-struct CmsDeleter<cmsStage>
-{
-    static inline void cleanup(cmsStage *stage)
-    {
-        if (stage) {
-            cmsStageFree(stage);
-        }
-    }
-};
 
 template<>
 struct CmsDeleter<cmsToneCurve>
@@ -69,21 +59,15 @@ public:
     uint brightness = 100;
     uint temperature = 6500;
 
-    CmsScopedPointer<cmsStage> temperatureStage;
-    CmsScopedPointer<cmsStage> brightnessStage;
-    CmsScopedPointer<cmsStage> calibrationStage;
+    QSharedPointer<ColorPipelineStage> temperatureStage;
+    QSharedPointer<ColorPipelineStage> brightnessStage;
+    QSharedPointer<ColorPipelineStage> calibrationStage;
 
     QSharedPointer<ColorTransformation> transformation;
 };
 
 void ColorDevicePrivate::rebuildPipeline()
 {
-    cmsPipeline *pipeline = cmsPipelineAlloc(nullptr, 3, 3);
-    if (!pipeline) {
-        qCWarning(KWIN_CORE) << "Failed to allocate cmsPipeline!";
-        return;
-    }
-
     if (dirtyCurves & DirtyCalibrationToneCurve) {
         updateCalibrationToneCurves();
     }
@@ -93,25 +77,12 @@ void ColorDevicePrivate::rebuildPipeline()
     if (dirtyCurves & DirtyTemperatureToneCurve) {
         updateTemperatureToneCurves();
     }
-
     dirtyCurves = DirtyToneCurves();
 
-    if (calibrationStage) {
-        if (!cmsPipelineInsertStage(pipeline, cmsAT_END, calibrationStage.data())) {
-            qCWarning(KWIN_CORE) << "Failed to insert the color calibration pipeline stage";
-        }
+    const auto tmp = QSharedPointer<ColorTransformation>::create(QVector{calibrationStage, brightnessStage, temperatureStage});
+    if (tmp->valid()) {
+        transformation = tmp;
     }
-    if (temperatureStage) {
-        if (!cmsPipelineInsertStage(pipeline, cmsAT_END, temperatureStage.data())) {
-            qCWarning(KWIN_CORE) << "Failed to insert the  color temperature pipeline stage";
-        }
-    }
-    if (brightnessStage) {
-        if (!cmsPipelineInsertStage(pipeline, cmsAT_END, brightnessStage.data())) {
-            qCWarning(KWIN_CORE) << "Failed to insert the color brightness pipeline stage";
-        }
-    }
-    transformation = QSharedPointer<ColorTransformation>::create(pipeline);
 }
 
 static qreal interpolate(qreal a, qreal b, qreal blendFactor)
@@ -164,7 +135,7 @@ void ColorDevicePrivate::updateTemperatureToneCurves()
     // The ownership of the tone curves will be moved to the pipeline stage.
     cmsToneCurve *toneCurves[] = {redCurve.take(), greenCurve.take(), blueCurve.take()};
 
-    temperatureStage.reset(cmsStageAllocToneCurves(nullptr, 3, toneCurves));
+    temperatureStage = QSharedPointer<ColorPipelineStage>::create(cmsStageAllocToneCurves(nullptr, 3, toneCurves));
     if (!temperatureStage) {
         qCWarning(KWIN_CORE) << "Failed to create the color temperature pipeline stage";
     }
@@ -201,7 +172,7 @@ void ColorDevicePrivate::updateBrightnessToneCurves()
     // The ownership of the tone curves will be moved to the pipeline stage.
     cmsToneCurve *toneCurves[] = {redCurve.take(), greenCurve.take(), blueCurve.take()};
 
-    brightnessStage.reset(cmsStageAllocToneCurves(nullptr, 3, toneCurves));
+    brightnessStage = QSharedPointer<ColorPipelineStage>::create(cmsStageAllocToneCurves(nullptr, 3, toneCurves));
     if (!brightnessStage) {
         qCWarning(KWIN_CORE) << "Failed to create the color brightness pipeline stage";
     }
@@ -231,11 +202,7 @@ void ColorDevicePrivate::updateCalibrationToneCurves()
             cmsDupToneCurve(vcgt[1]),
             cmsDupToneCurve(vcgt[2]),
         };
-
-        calibrationStage.reset(cmsStageAllocToneCurves(nullptr, 3, toneCurves));
-        if (!calibrationStage) {
-            qCWarning(KWIN_CORE) << "Failed to create the color calibration pipeline stage";
-        }
+        calibrationStage = QSharedPointer<ColorPipelineStage>::create(cmsStageAllocToneCurves(nullptr, 3, toneCurves));
     }
 
     cmsCloseProfile(handle);

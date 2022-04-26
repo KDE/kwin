@@ -31,9 +31,11 @@ target_sources(kwin PRIVATE
     appmenu.cpp
     atoms.cpp
     client_machine.cpp
-    colordevice.cpp
-    colormanager.cpp
-    colors.cpp
+    colors/colordevice.cpp
+    colors/colorlut.cpp
+    colors/colormanager.cpp
+    colors/colorpipelinestage.cpp
+    colors/colortransformation.cpp
     composite.cpp
     cursor.cpp
     cursordelegate_opengl.cpp

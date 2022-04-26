@@ -9,26 +9,13 @@
 #pragma once
 
 #include <QSharedPointer>
-#include <QVector>
 
 #include "kwin_export.h"
-
-typedef struct _cmsPipeline_struct cmsPipeline;
 
 namespace KWin
 {
 
-class KWIN_EXPORT ColorTransformation
-{
-public:
-    ColorTransformation(cmsPipeline *pipeline);
-    ~ColorTransformation();
-
-    std::tuple<uint16_t, uint16_t, uint16_t> transform(uint16_t r, uint16_t g, uint16_t b) const;
-
-private:
-    cmsPipeline *const m_pipeline;
-};
+class ColorTransformation;
 
 class KWIN_EXPORT ColorLUT
 {

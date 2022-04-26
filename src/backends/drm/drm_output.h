@@ -9,7 +9,6 @@
 #ifndef KWIN_DRM_OUTPUT_H
 #define KWIN_DRM_OUTPUT_H
 
-#include "colors.h"
 #include "drm_abstract_output.h"
 #include "drm_object.h"
 #include "drm_object_plane.h"

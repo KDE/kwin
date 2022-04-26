@@ -17,7 +17,7 @@
 #include <chrono>
 #include <xf86drmMode.h>
 
-#include "colors.h"
+#include "colorlut.h"
 #include "drm_object_plane.h"
 #include "output.h"
 #include "renderloop_p.h"
