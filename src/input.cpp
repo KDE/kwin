@@ -351,7 +351,7 @@ public:
         }
 
         auto window = input()->findToplevel(event->globalPos());
-        if (window->isClient() && window->isLockScreen()) {
+        if (window && window->isClient() && window->isLockScreen()) {
             workspace()->activateWindow(window);
         }
 
