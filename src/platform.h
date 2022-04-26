@@ -107,13 +107,6 @@ public:
     void setSceneEglGlobalShareContext(EGLContext context);
 
     /**
-     * Implementing subclasses should provide a size in case the backend represents
-     * a basic screen and uses the BasicScreens.
-     *
-     * Base implementation returns an invalid size.
-     */
-    virtual QSize screenSize() const;
-    /**
      * Implement this method to receive configuration change requests through KWayland's
      * OutputManagement interface.
      *

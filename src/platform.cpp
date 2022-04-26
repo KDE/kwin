@@ -272,11 +272,6 @@ void Platform::setSceneEglDisplay(EGLDisplay display)
     m_eglDisplay = display;
 }
 
-QSize Platform::screenSize() const
-{
-    return QSize();
-}
-
 bool Platform::requiresCompositing() const
 {
     return true;
