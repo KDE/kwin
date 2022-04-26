@@ -27,18 +27,17 @@ ColorPipelineStage::~ColorPipelineStage()
     }
 }
 
-QSharedPointer<ColorPipelineStage> ColorPipelineStage::dup() const
+std::unique_ptr<ColorPipelineStage> ColorPipelineStage::dup() const
 {
     if (m_stage) {
         auto dup = cmsStageDup(m_stage);
         if (dup) {
-            return QSharedPointer<ColorPipelineStage>::create(dup);
+            return std::make_unique<ColorPipelineStage>(dup);
         } else {
             qCWarning(KWIN_CORE) << "Failed to duplicate cmsStage!";
         }
     }
     return nullptr;
-    ;
 }
 
 cmsStage *ColorPipelineStage::stage() const

@@ -25,7 +25,7 @@ class ColorPipelineStage;
 class KWIN_EXPORT ColorTransformation
 {
 public:
-    ColorTransformation(const QVector<QSharedPointer<ColorPipelineStage>> &stages);
+    ColorTransformation(std::vector<std::unique_ptr<ColorPipelineStage>> &&stages);
     ~ColorTransformation();
 
     bool valid() const;
@@ -34,7 +34,7 @@ public:
 
 private:
     cmsPipeline *const m_pipeline;
-    QVector<QSharedPointer<ColorPipelineStage>> m_stages;
+    const std::vector<std::unique_ptr<ColorPipelineStage>> m_stages;
     bool m_valid = true;
 };
 

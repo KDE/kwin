@@ -9,27 +9,20 @@
 namespace KWin
 {
 
-ColorTransformation::ColorTransformation(const QVector<QSharedPointer<ColorPipelineStage>> &stages)
+ColorTransformation::ColorTransformation(std::vector<std::unique_ptr<ColorPipelineStage>> &&stages)
     : m_pipeline(cmsPipelineAlloc(nullptr, 3, 3))
+    , m_stages(std::move(stages))
 {
     if (!m_pipeline) {
         qCWarning(KWIN_CORE) << "Failed to allocate cmsPipeline!";
         m_valid = false;
         return;
     }
-    for (const auto &stage : stages) {
-        if (stage) {
-            const auto dup = stage->dup();
-            if (!dup) {
-                m_valid = false;
-                return;
-            }
-            m_stages << dup;
-            if (!cmsPipelineInsertStage(m_pipeline, cmsAT_END, dup->stage())) {
-                qCWarning(KWIN_CORE) << "Failed to insert cmsPipeline stage!";
-                m_valid = false;
-                return;
-            }
+    for (auto &stage : m_stages) {
+        if (!cmsPipelineInsertStage(m_pipeline, cmsAT_END, stage->stage())) {
+            qCWarning(KWIN_CORE) << "Failed to insert cmsPipeline stage!";
+            m_valid = false;
+            return;
         }
     }
 }

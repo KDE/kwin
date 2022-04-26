@@ -10,7 +10,7 @@
 
 #include "kwin_export.h"
 
-#include <QSharedPointer>
+#include <memory>
 
 typedef struct _cmsStage_struct cmsStage;
 
@@ -23,7 +23,7 @@ public:
     ColorPipelineStage(cmsStage *stage);
     ~ColorPipelineStage();
 
-    QSharedPointer<ColorPipelineStage> dup() const;
+    std::unique_ptr<ColorPipelineStage> dup() const;
     cmsStage *stage() const;
 
 private:

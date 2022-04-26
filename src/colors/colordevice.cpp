@@ -59,9 +59,9 @@ public:
     uint brightness = 100;
     uint temperature = 6500;
 
-    QSharedPointer<ColorPipelineStage> temperatureStage;
-    QSharedPointer<ColorPipelineStage> brightnessStage;
-    QSharedPointer<ColorPipelineStage> calibrationStage;
+    std::unique_ptr<ColorPipelineStage> temperatureStage;
+    std::unique_ptr<ColorPipelineStage> brightnessStage;
+    std::unique_ptr<ColorPipelineStage> calibrationStage;
 
     QSharedPointer<ColorTransformation> transformation;
 };
@@ -79,7 +79,30 @@ void ColorDevicePrivate::rebuildPipeline()
     }
     dirtyCurves = DirtyToneCurves();
 
-    const auto tmp = QSharedPointer<ColorTransformation>::create(QVector{calibrationStage, brightnessStage, temperatureStage});
+    std::vector<std::unique_ptr<ColorPipelineStage>> stages;
+    if (calibrationStage) {
+        if (auto s = calibrationStage->dup()) {
+            stages.push_back(std::move(s));
+        } else {
+            return;
+        }
+    }
+    if (brightnessStage) {
+        if (auto s = brightnessStage->dup()) {
+            stages.push_back(std::move(s));
+        } else {
+            return;
+        }
+    }
+    if (temperatureStage) {
+        if (auto s = temperatureStage->dup()) {
+            stages.push_back(std::move(s));
+        } else {
+            return;
+        }
+    }
+
+    const auto tmp = QSharedPointer<ColorTransformation>::create(std::move(stages));
     if (tmp->valid()) {
         transformation = tmp;
     }
@@ -135,7 +158,7 @@ void ColorDevicePrivate::updateTemperatureToneCurves()
     // The ownership of the tone curves will be moved to the pipeline stage.
     cmsToneCurve *toneCurves[] = {redCurve.take(), greenCurve.take(), blueCurve.take()};
 
-    temperatureStage = QSharedPointer<ColorPipelineStage>::create(cmsStageAllocToneCurves(nullptr, 3, toneCurves));
+    temperatureStage = std::make_unique<ColorPipelineStage>(cmsStageAllocToneCurves(nullptr, 3, toneCurves));
     if (!temperatureStage) {
         qCWarning(KWIN_CORE) << "Failed to create the color temperature pipeline stage";
     }
@@ -172,7 +195,7 @@ void ColorDevicePrivate::updateBrightnessToneCurves()
     // The ownership of the tone curves will be moved to the pipeline stage.
     cmsToneCurve *toneCurves[] = {redCurve.take(), greenCurve.take(), blueCurve.take()};
 
-    brightnessStage = QSharedPointer<ColorPipelineStage>::create(cmsStageAllocToneCurves(nullptr, 3, toneCurves));
+    brightnessStage = std::make_unique<ColorPipelineStage>(cmsStageAllocToneCurves(nullptr, 3, toneCurves));
     if (!brightnessStage) {
         qCWarning(KWIN_CORE) << "Failed to create the color brightness pipeline stage";
     }
@@ -202,7 +225,7 @@ void ColorDevicePrivate::updateCalibrationToneCurves()
             cmsDupToneCurve(vcgt[1]),
             cmsDupToneCurve(vcgt[2]),
         };
-        calibrationStage = QSharedPointer<ColorPipelineStage>::create(cmsStageAllocToneCurves(nullptr, 3, toneCurves));
+        calibrationStage = std::make_unique<ColorPipelineStage>(cmsStageAllocToneCurves(nullptr, 3, toneCurves));
     }
 
     cmsCloseProfile(handle);
