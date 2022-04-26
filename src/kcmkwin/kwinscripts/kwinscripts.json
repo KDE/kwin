@@ -1,8 +1,20 @@
 {
     "KPlugin": {
         "Description": "Manage KWin scripts",
+        "Description[ca]": "Gestiona els scripts del KWin",
+        "Description[es]": "Gestión de guiones de KWin",
+        "Description[nl]": "KWin-scripts beheren",
+        "Description[pl]": "Zarządzanie skryptami KWin",
+        "Description[uk]": "Керування скриптами KWin",
+        "Description[x-test]": "xxManage KWin scriptsxx",
         "Icon": "preferences-system-windows-actions",
         "Name": "KWin Scripts",
+        "Name[ca]": "Scripts del KWin",
+        "Name[es]": "Guiones de KWin",
+        "Name[nl]": "KWin-scripts",
+        "Name[pl]": "Skrypty KWin",
+        "Name[uk]": "Скрипти KWin",
+        "Name[x-test]": "xxKWin Scriptsxx",
         "ServiceTypes": [
             "KCModule"
         ]
