@@ -783,12 +783,15 @@ WaylandServer::LockScreenPresentationWatcher::LockScreenPresentationWatcher(Wayl
 {
     connect(server, &WaylandServer::windowAdded, this, [this](Window *window) {
         if (window->isLockScreen()) {
-            connect(window->output()->renderLoop(), &RenderLoop::framePresented, this, [this, window]() {
-                // only signal lockScreenShown once all outputs have been presented at least once
-                m_signaledOutputs << window->output();
-                if (m_signaledOutputs.size() == kwinApp()->platform()->enabledOutputs().size()) {
-                    ScreenLocker::KSldApp::self()->lockScreenShown();
-                    delete this;
+            // only signal lockScreenShown once all outputs have been presented at least once
+            connect(window->output()->renderLoop(), &RenderLoop::framePresented, this, [this, windowGuard = QPointer(window)]() {
+                // window might be destroyed before a frame is presented, so it's wrapped in QPointer
+                if (windowGuard) {
+                    m_signaledOutputs << windowGuard->output();
+                    if (m_signaledOutputs.size() == kwinApp()->platform()->enabledOutputs().size()) {
+                        ScreenLocker::KSldApp::self()->lockScreenShown();
+                        delete this;
+                    }
                 }
             });
         }
