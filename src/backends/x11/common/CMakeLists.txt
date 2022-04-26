@@ -4,5 +4,9 @@ endif()
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-int-to-void-pointer-cast")
 endif()
-add_library(eglx11common STATIC eglonxbackend.cpp)
+add_library(eglx11common STATIC
+    eglonxbackend.cpp
+    kwinxrenderutils.cpp
+    logging.cpp
+)
 target_link_libraries(eglx11common kwin)

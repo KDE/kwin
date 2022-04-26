@@ -17,7 +17,7 @@ set(X11PLATFORM_SOURCES
 
 add_library(KWinX11Platform MODULE ${X11PLATFORM_SOURCES})
 set_target_properties(KWinX11Platform PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org.kde.kwin.platforms/")
-target_link_libraries(KWinX11Platform eglx11common kwin kwinxrenderutils KF5::Crash X11::X11)
+target_link_libraries(KWinX11Platform eglx11common kwin KF5::Crash X11::X11)
 if (QT_MAJOR_VERSION EQUAL "5")
     target_link_libraries(KWinX11Platform Qt::X11Extras)
 endif()
