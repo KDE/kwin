@@ -168,7 +168,7 @@ bool EglGbmLayerSurface::createGbmSurface(const QSize &size, uint32_t format, co
     if (!allowModifiers) {
 #else
     // modifiers have to be disabled with multi-gpu if gbm_bo_get_fd_for_plane is not available
-    if (!allowModifiers || m_pipeline->gpu() != m_eglBackend->gpu()) {
+    if (!allowModifiers || m_gpu != m_eglBackend->gpu()) {
 #endif
         int flags = GBM_BO_USE_RENDERING;
         if (m_gpu == m_eglBackend->gpu()) {
