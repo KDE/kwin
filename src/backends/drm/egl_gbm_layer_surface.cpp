@@ -164,12 +164,7 @@ bool EglGbmLayerSurface::createGbmSurface(const QSize &size, uint32_t format, co
     const auto config = m_eglBackend->config(format);
 
     QSharedPointer<GbmSurface> gbmSurface;
-#if HAVE_GBM_BO_GET_FD_FOR_PLANE
     if (!allowModifiers) {
-#else
-    // modifiers have to be disabled with multi-gpu if gbm_bo_get_fd_for_plane is not available
-    if (!allowModifiers || m_pipeline->gpu() != m_eglBackend->gpu()) {
-#endif
         int flags = GBM_BO_USE_RENDERING;
         if (m_gpu == m_eglBackend->gpu()) {
             flags |= GBM_BO_USE_SCANOUT;
@@ -272,7 +267,6 @@ QSharedPointer<DrmBuffer> EglGbmLayerSurface::importDmabuf()
 {
     const auto bo = m_gbmSurface->currentBuffer()->getBo();
     gbm_bo *importedBuffer;
-#if HAVE_GBM_BO_GET_FD_FOR_PLANE
     if (gbm_bo_get_handle_for_plane(bo, 0).s32 != -1) {
         gbm_import_fd_modifier_data data = {
             .width = gbm_bo_get_width(bo),
@@ -298,7 +292,6 @@ QSharedPointer<DrmBuffer> EglGbmLayerSurface::importDmabuf()
         }
         importedBuffer = gbm_bo_import(m_gpu->gbmDevice(), GBM_BO_IMPORT_FD_MODIFIER, &data, GBM_BO_USE_SCANOUT);
     } else {
-#endif
         gbm_import_fd_data data = {
             .fd = gbm_bo_get_fd(bo),
             .width = gbm_bo_get_width(bo),
@@ -311,9 +304,7 @@ QSharedPointer<DrmBuffer> EglGbmLayerSurface::importDmabuf()
             return nullptr;
         }
         importedBuffer = gbm_bo_import(m_gpu->gbmDevice(), GBM_BO_IMPORT_FD_MODIFIER, &data, GBM_BO_USE_SCANOUT);
-#if HAVE_GBM_BO_GET_FD_FOR_PLANE
     }
-#endif
     if (!importedBuffer) {
         qCWarning(KWIN_DRM, "failed to import gbm_bo for multi-gpu usage: %s", strerror(errno));
         return nullptr;

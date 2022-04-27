@@ -239,11 +239,6 @@ set_package_properties(Libdrm PROPERTIES TYPE REQUIRED PURPOSE "Required for drm
 
 find_package(gbm)
 set_package_properties(gbm PROPERTIES TYPE REQUIRED PURPOSE "Required for egl output of drm backend.")
-if (${gbm_VERSION} GREATER_EQUAL 21.1)
-    set(HAVE_GBM_BO_GET_FD_FOR_PLANE 1)
-else()
-    set(HAVE_GBM_BO_GET_FD_FOR_PLANE 0)
-endif()
 
 pkg_check_modules(Libxcvt IMPORTED_TARGET libxcvt>=0.1.1)
 add_feature_info(Libxcvt Libxcvt_FOUND "Required for generating modes in the drm backend")
