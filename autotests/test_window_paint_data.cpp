@@ -27,8 +27,8 @@ public:
     QVariant data(int role) const override;
     QRect decorationInnerRect() const override;
     void deleteProperty(long int atom) const override;
-    void disablePainting(int reason) override;
-    void enablePainting(int reason) override;
+    void refVisible(int reason) override;
+    void unrefVisible(int reason) override;
     void addRepaint(const QRect &r) override;
     void addRepaint(int x, int y, int w, int h) override;
     void addRepaintFull() override;
@@ -37,7 +37,6 @@ public:
     EffectWindow *findModal() override;
     EffectWindow *transientFor() override;
     const EffectWindowGroup *group() const override;
-    bool isPaintingEnabled() override;
     EffectWindowList mainWindows() const override;
     QByteArray readProperty(long int atom, long int type, int format) const override;
     void refWindow() override;
@@ -366,12 +365,12 @@ void MockEffectWindow::deleteProperty(long int atom) const
     Q_UNUSED(atom)
 }
 
-void MockEffectWindow::disablePainting(int reason)
+void MockEffectWindow::refVisible(int reason)
 {
     Q_UNUSED(reason)
 }
 
-void MockEffectWindow::enablePainting(int reason)
+void MockEffectWindow::unrefVisible(int reason)
 {
     Q_UNUSED(reason)
 }
@@ -419,11 +418,6 @@ EffectWindow *MockEffectWindow::transientFor()
 const EffectWindowGroup *MockEffectWindow::group() const
 {
     return nullptr;
-}
-
-bool MockEffectWindow::isPaintingEnabled()
-{
-    return true;
 }
 
 EffectWindowList MockEffectWindow::mainWindows() const

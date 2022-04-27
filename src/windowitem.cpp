@@ -13,6 +13,7 @@
 #include "surfaceitem_wayland.h"
 #include "surfaceitem_x11.h"
 #include "window.h"
+#include "workspace.h"
 
 namespace KWin
 {
@@ -26,6 +27,14 @@ WindowItem::WindowItem(Window *window, Item *parent)
 
     connect(window, &Window::shadowChanged, this, &WindowItem::updateShadowItem);
     updateShadowItem();
+
+    connect(window, &Window::minimizedChanged, this, &WindowItem::updateVisibility);
+    connect(window, &Window::hiddenChanged, this, &WindowItem::updateVisibility);
+    connect(window, &Window::activitiesChanged, this, &WindowItem::updateVisibility);
+    connect(window, &Window::desktopChanged, this, &WindowItem::updateVisibility);
+    connect(workspace(), &Workspace::currentActivityChanged, this, &WindowItem::updateVisibility);
+    connect(workspace(), &Workspace::currentDesktopChanged, this, &WindowItem::updateVisibility);
+    updateVisibility();
 
     connect(window, &Window::windowClosed, this, &WindowItem::handleWindowClosed);
 }
@@ -50,10 +59,90 @@ Window *WindowItem::window() const
     return m_window;
 }
 
+void WindowItem::refVisible(int reason)
+{
+    if (reason & PAINT_DISABLED_BY_HIDDEN) {
+        m_forceVisibleByHiddenCount++;
+    }
+    if (reason & PAINT_DISABLED_BY_DELETE) {
+        m_forceVisibleByDeleteCount++;
+    }
+    if (reason & PAINT_DISABLED_BY_DESKTOP) {
+        m_forceVisibleByDesktopCount++;
+    }
+    if (reason & PAINT_DISABLED_BY_MINIMIZE) {
+        m_forceVisibleByMinimizeCount++;
+    }
+    if (reason & PAINT_DISABLED_BY_ACTIVITY) {
+        m_forceVisibleByActivityCount++;
+    }
+    updateVisibility();
+}
+
+void WindowItem::unrefVisible(int reason)
+{
+    if (reason & PAINT_DISABLED_BY_HIDDEN) {
+        Q_ASSERT(m_forceVisibleByHiddenCount > 0);
+        m_forceVisibleByHiddenCount--;
+    }
+    if (reason & PAINT_DISABLED_BY_DELETE) {
+        Q_ASSERT(m_forceVisibleByDeleteCount > 0);
+        m_forceVisibleByDeleteCount--;
+    }
+    if (reason & PAINT_DISABLED_BY_DESKTOP) {
+        Q_ASSERT(m_forceVisibleByDesktopCount > 0);
+        m_forceVisibleByDesktopCount--;
+    }
+    if (reason & PAINT_DISABLED_BY_MINIMIZE) {
+        Q_ASSERT(m_forceVisibleByMinimizeCount > 0);
+        m_forceVisibleByMinimizeCount--;
+    }
+    if (reason & PAINT_DISABLED_BY_ACTIVITY) {
+        Q_ASSERT(m_forceVisibleByActivityCount > 0);
+        m_forceVisibleByActivityCount--;
+    }
+    updateVisibility();
+}
+
 void WindowItem::handleWindowClosed(Window *original, Deleted *deleted)
 {
     Q_UNUSED(original)
     m_window = deleted;
+}
+
+bool WindowItem::computeVisibility() const
+{
+    if (m_window->isDeleted()) {
+        if (m_forceVisibleByDeleteCount == 0) {
+            return false;
+        }
+    }
+    if (!m_window->isOnCurrentDesktop()) {
+        if (m_forceVisibleByDesktopCount == 0) {
+            return false;
+        }
+    }
+    if (!m_window->isOnCurrentActivity()) {
+        if (m_forceVisibleByActivityCount == 0) {
+            return false;
+        }
+    }
+    if (m_window->isMinimized()) {
+        if (m_forceVisibleByMinimizeCount == 0) {
+            return false;
+        }
+    }
+    if (m_window->isHiddenInternal()) {
+        if (m_forceVisibleByHiddenCount == 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void WindowItem::updateVisibility()
+{
+    setVisible(computeVisibility());
 }
 
 void WindowItem::updateSurfaceItem(SurfaceItem *surfaceItem)

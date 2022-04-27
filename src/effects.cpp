@@ -49,6 +49,7 @@
 #include "wayland_server.h"
 #include "waylandwindow.h"
 #include "window_property_notify_x11_filter.h"
+#include "windowitem.h"
 #include "workspace.h"
 
 #include <Plasma/Theme>
@@ -1915,19 +1916,14 @@ EffectWindowImpl::~EffectWindowImpl()
     }
 }
 
-bool EffectWindowImpl::isPaintingEnabled()
+void EffectWindowImpl::refVisible(int reason)
 {
-    return sceneWindow()->isPaintingEnabled();
+    m_sceneWindow->windowItem()->refVisible(reason);
 }
 
-void EffectWindowImpl::enablePainting(int reason)
+void EffectWindowImpl::unrefVisible(int reason)
 {
-    sceneWindow()->enablePainting(reason);
-}
-
-void EffectWindowImpl::disablePainting(int reason)
-{
-    sceneWindow()->disablePainting(reason);
+    m_sceneWindow->windowItem()->unrefVisible(reason);
 }
 
 void EffectWindowImpl::addRepaint(const QRect &r)

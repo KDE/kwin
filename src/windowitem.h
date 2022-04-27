@@ -34,10 +34,21 @@ class KWIN_EXPORT WindowItem : public Item
     Q_OBJECT
 
 public:
+    enum {
+        PAINT_DISABLED_BY_HIDDEN = 1 << 0,
+        PAINT_DISABLED_BY_DELETE = 1 << 1,
+        PAINT_DISABLED_BY_DESKTOP = 1 << 2,
+        PAINT_DISABLED_BY_MINIMIZE = 1 << 3,
+        PAINT_DISABLED_BY_ACTIVITY = 1 << 5
+    };
+
     SurfaceItem *surfaceItem() const;
     DecorationItem *decorationItem() const;
     ShadowItem *shadowItem() const;
     Window *window() const;
+
+    void refVisible(int reason);
+    void unrefVisible(int reason);
 
 protected:
     explicit WindowItem(Window *window, Item *parent = nullptr);
@@ -51,10 +62,18 @@ private Q_SLOTS:
     void updateSurfaceVisibility();
 
 private:
+    bool computeVisibility() const;
+    void updateVisibility();
+
     Window *m_window;
     QScopedPointer<SurfaceItem> m_surfaceItem;
     QScopedPointer<DecorationItem> m_decorationItem;
     QScopedPointer<ShadowItem> m_shadowItem;
+    int m_forceVisibleByHiddenCount = 0;
+    int m_forceVisibleByDeleteCount = 0;
+    int m_forceVisibleByDesktopCount = 0;
+    int m_forceVisibleByMinimizeCount = 0;
+    int m_forceVisibleByActivityCount = 0;
 };
 
 /**

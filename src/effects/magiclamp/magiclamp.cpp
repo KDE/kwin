@@ -70,7 +70,6 @@ void MagicLampEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, 
     if (m_animations.contains(w)) {
         // We'll transform this window
         data.setTransformed();
-        w->enablePainting(EffectWindow::PAINT_DISABLED_BY_MINIMIZE);
     }
 
     effects->prePaintWindow(w, data, presentTime);
@@ -342,6 +341,7 @@ void MagicLampEffect::slotWindowMinimized(EffectWindow *w)
     if (animation.timeLine.running()) {
         animation.timeLine.toggleDirection();
     } else {
+        animation.visibleRef = EffectWindowVisibleRef(w, EffectWindow::PAINT_DISABLED_BY_MINIMIZE);
         animation.timeLine.setDirection(TimeLine::Forward);
         animation.timeLine.setDuration(m_duration);
         animation.timeLine.setEasingCurve(QEasingCurve::Linear);

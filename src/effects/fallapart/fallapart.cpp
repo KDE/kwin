@@ -59,7 +59,6 @@ void FallApartEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, 
 
             animationIt->progress += time / animationTime(1000.);
             data.setTransformed();
-            w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DELETE);
         } else {
             unredirect(w);
             windows.remove(w);
@@ -181,6 +180,7 @@ void FallApartEffect::slotWindowClosed(EffectWindow *c)
     FallApartAnimation &animation = windows[c];
     animation.progress = 0;
     animation.deletedRef = EffectWindowDeletedRef(c);
+    animation.visibleRef = EffectWindowVisibleRef(c, EffectWindow::PAINT_DISABLED_BY_DELETE);
 
     redirect(c);
 }

@@ -76,6 +76,7 @@ public:
     bool waitAtSource;
     bool keepAlive;
     EffectWindowDeletedRef deletedRef;
+    EffectWindowVisibleRef visibleRef;
     PreviousWindowPixmapLockPtr previousWindowPixmapLock;
     AnimationEffect::TerminationFlags terminationFlags;
     std::chrono::milliseconds lastPresentTime;

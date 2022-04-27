@@ -432,7 +432,6 @@ void Window::setReadyForPainting()
     if (!ready_for_painting) {
         ready_for_painting = true;
         if (Compositor::compositing()) {
-            addRepaintFull();
             Q_EMIT windowShown(this);
         }
     }
@@ -1200,7 +1199,6 @@ void Window::setDesktops(QVector<VirtualDesktop *> desktops)
 
     Q_EMIT desktopChanged();
     if (wasOnCurrentDesktop != isOnCurrentDesktop()) {
-        addWorkspaceRepaint(visibleGeometry());
         Q_EMIT desktopPresenceChanged(this, was_desk);
     }
     Q_EMIT x11DesktopIdsChanged();
@@ -1443,7 +1441,6 @@ void Window::minimize(bool avoid_animation)
     }
 
     // TODO: merge signal with s_minimized
-    addWorkspaceRepaint(visibleGeometry());
     Q_EMIT clientMinimized(this, !avoid_animation);
     Q_EMIT minimizedChanged();
 }

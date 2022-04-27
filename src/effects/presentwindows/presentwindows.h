@@ -67,6 +67,7 @@ private:
     struct WindowData
     {
         EffectWindowDeletedRef deletedRef;
+        EffectWindowVisibleRef visibleRef;
         std::chrono::milliseconds lastPresentTime = std::chrono::milliseconds::zero();
         bool visible;
         bool deleted;

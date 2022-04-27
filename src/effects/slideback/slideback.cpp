@@ -296,8 +296,7 @@ void SlideBackEffect::slotTabBoxClosed()
 
 bool SlideBackEffect::isWindowUsable(EffectWindow *w)
 {
-    return w && (w->isNormalWindow() || w->isDialog()) && !w->keepAbove() && !w->isDeleted() && !w->isMinimized()
-        && w->isPaintingEnabled();
+    return w && (w->isNormalWindow() || w->isDialog()) && !w->keepAbove() && !w->isDeleted() && !w->isMinimized();
 }
 
 bool SlideBackEffect::intersects(EffectWindow *windowUnder, const QRect &windowOverGeometry)

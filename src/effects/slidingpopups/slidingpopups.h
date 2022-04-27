@@ -83,6 +83,7 @@ private:
     struct Animation
     {
         EffectWindowDeletedRef deletedRef;
+        EffectWindowVisibleRef visibleRef;
         AnimationKind kind;
         TimeLine timeLine;
         std::chrono::milliseconds lastPresentTime = std::chrono::milliseconds::zero();

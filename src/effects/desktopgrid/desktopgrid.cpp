@@ -257,11 +257,6 @@ void DesktopGridEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mi
     // so with normal screen painting second screen paint would erase parts of the first paint
     data.mask |= PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_BACKGROUND_FIRST;
 
-    const EffectWindowList windows = effects->stackingOrder();
-    for (auto *w : windows) {
-        w->setData(WindowForceBlurRole, QVariant(true));
-    }
-
     effects->prePaintScreen(data, presentTime);
 }
 
@@ -360,10 +355,6 @@ void DesktopGridEffect::postPaintScreen()
         lastPresentTime = std::chrono::milliseconds::zero();
     }
 
-    for (auto &w : effects->stackingOrder()) {
-        w->setData(WindowForceBlurRole, QVariant());
-    }
-
     effects->postPaintScreen();
 }
 
@@ -372,19 +363,18 @@ void DesktopGridEffect::postPaintScreen()
 
 void DesktopGridEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
-    w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
-    if (w->isMinimized() && isUsingPresentWindows()) {
-        w->enablePainting(EffectWindow::PAINT_DISABLED_BY_MINIMIZE);
-    }
-    if (windowMove && wasWindowMove && windowMove->findModal() == w) {
-        w->disablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
-    }
     data.setTransformed();
     effects->prePaintWindow(w, data, presentTime);
 }
 
 void DesktopGridEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
+    if (w->isMinimized() && !isUsingPresentWindows()) {
+        return;
+    }
+    if (windowMove && wasWindowMove && windowMove->findModal() == w) {
+        return;
+    }
     if (!w->isOnDesktop(paintingDesktop)) {
         return;
     }
@@ -1152,6 +1142,12 @@ void DesktopGridEffect::setup()
     }
     setHighlightedDesktop(effects->currentDesktop());
 
+    const EffectWindowList windows = effects->stackingOrder();
+    for (auto *w : windows) {
+        w->refVisible(EffectWindow::PAINT_DISABLED_BY_MINIMIZE | EffectWindow::PAINT_DISABLED_BY_DESKTOP);
+        w->setData(WindowForceBlurRole, QVariant(true));
+    }
+
     // Soft highlighting
     qDeleteAll(hoverTimeline);
     hoverTimeline.clear();
@@ -1348,6 +1344,11 @@ void DesktopGridEffect::finish()
         }
         m_managers.clear();
         m_proxy = nullptr;
+    }
+
+    for (auto &w : effects->stackingOrder()) {
+        w->unrefVisible(EffectWindow::PAINT_DISABLED_BY_MINIMIZE | EffectWindow::PAINT_DISABLED_BY_DESKTOP);
+        w->setData(WindowForceBlurRole, QVariant());
     }
 
     effects->addRepaintFull();

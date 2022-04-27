@@ -232,7 +232,7 @@ SurfaceItem *Scene::scanoutCandidate() const
         for (int i = stacking_order.count() - 1; i >= 0; i--) {
             SceneWindow *sceneWindow = stacking_order[i];
             Window *window = sceneWindow->window();
-            if (window->isOnOutput(painted_screen) && sceneWindow->isVisible() && window->opacity() > 0) {
+            if (window->isOnOutput(painted_screen) && window->opacity() > 0) {
                 if (!window->isClient() || !window->isFullScreen() || window->opacity() != 1.0) {
                     break;
                 }
@@ -338,16 +338,13 @@ void Scene::preparePaintGenericScreen()
         data.mask = m_paintContext.mask;
         data.paint = infiniteRegion(); // no clipping, so doesn't really matter
 
-        sceneWindow->resetPaintingEnabled();
         effects->prePaintWindow(effectWindow(sceneWindow), data, m_expectedPresentTimestamp);
-        if (sceneWindow->isPaintingEnabled()) {
-            m_paintContext.phase2Data.append(Phase2Data{
-                .window = sceneWindow,
-                .region = infiniteRegion(),
-                .opaque = data.opaque,
-                .mask = data.mask,
-            });
-        }
+        m_paintContext.phase2Data.append(Phase2Data{
+            .window = sceneWindow,
+            .region = infiniteRegion(),
+            .opaque = data.opaque,
+            .mask = data.mask,
+        });
     }
 
     m_paintContext.damage = renderTargetRect();
@@ -373,16 +370,13 @@ void Scene::preparePaintSimpleScreen()
             }
         }
 
-        sceneWindow->resetPaintingEnabled();
         effects->prePaintWindow(effectWindow(sceneWindow), data, m_expectedPresentTimestamp);
-        if (sceneWindow->isPaintingEnabled()) {
-            m_paintContext.phase2Data.append(Phase2Data{
-                .window = sceneWindow,
-                .region = data.paint,
-                .opaque = data.opaque,
-                .mask = data.mask,
-            });
-        }
+        m_paintContext.phase2Data.append(Phase2Data{
+            .window = sceneWindow,
+            .region = data.paint,
+            .opaque = data.opaque,
+            .mask = data.mask,
+        });
     }
 
     // Perform an occlusion cull pass, remove surface damage occluded by opaque windows.
@@ -664,7 +658,6 @@ SurfaceTexture *Scene::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 SceneWindow::SceneWindow(Window *client, QObject *parent)
     : QObject(parent)
     , m_window(client)
-    , disable_painting(0)
 {
     if (qobject_cast<WaylandWindow *>(client)) {
         m_windowItem.reset(new WindowItemWayland(m_window));
@@ -727,60 +720,6 @@ QRegion SceneWindow::decorationShape() const
 {
     const QRect decorationInnerRect = m_window->rect() - m_window->frameMargins();
     return QRegion(m_window->rect()) - decorationInnerRect;
-}
-
-bool SceneWindow::isVisible() const
-{
-    if (m_window->isDeleted()) {
-        return false;
-    }
-    if (!m_window->isOnCurrentDesktop()) {
-        return false;
-    }
-    if (!m_window->isOnCurrentActivity()) {
-        return false;
-    }
-    if (m_window->isClient()) {
-        return m_window->isShown();
-    }
-    return true; // Unmanaged is always visible
-}
-
-bool SceneWindow::isPaintingEnabled() const
-{
-    return !disable_painting;
-}
-
-void SceneWindow::resetPaintingEnabled()
-{
-    disable_painting = 0;
-    if (m_window->isDeleted()) {
-        disable_painting |= PAINT_DISABLED_BY_DELETE;
-    }
-    if (!m_window->isOnCurrentDesktop()) {
-        disable_painting |= PAINT_DISABLED_BY_DESKTOP;
-    }
-    if (!m_window->isOnCurrentActivity()) {
-        disable_painting |= PAINT_DISABLED_BY_ACTIVITY;
-    }
-    if (m_window->isClient()) {
-        if (m_window->isMinimized()) {
-            disable_painting |= PAINT_DISABLED_BY_MINIMIZE;
-        }
-        if (m_window->isHiddenInternal()) {
-            disable_painting |= PAINT_DISABLED;
-        }
-    }
-}
-
-void SceneWindow::enablePainting(int reason)
-{
-    disable_painting &= ~reason;
-}
-
-void SceneWindow::disablePainting(int reason)
-{
-    disable_painting |= reason;
 }
 
 WindowItem *SceneWindow::windowItem() const

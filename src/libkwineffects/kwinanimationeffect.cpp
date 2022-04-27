@@ -258,6 +258,7 @@ quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, int 
     AniData &animation = it->first.last();
     animation.id = ret_id;
 
+    animation.visibleRef = EffectWindowVisibleRef(w, EffectWindow::PAINT_DISABLED_BY_MINIMIZE | EffectWindow::PAINT_DISABLED_BY_DESKTOP | EffectWindow::PAINT_DISABLED_BY_DELETE);
     animation.timeLine.setDirection(TimeLine::Forward);
     animation.timeLine.setDuration(std::chrono::milliseconds(ms));
     animation.timeLine.setEasingCurve(curve);
@@ -504,32 +505,16 @@ void AnimationEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, 
     Q_D(AnimationEffect);
     AniMap::const_iterator entry = d->m_animations.constFind(w);
     if (entry != d->m_animations.constEnd()) {
-        bool isUsed = false;
-        bool paintDeleted = false;
         for (QList<AniData>::const_iterator anim = entry->first.constBegin(); anim != entry->first.constEnd(); ++anim) {
             if (anim->startTime > clock() && !anim->waitAtSource) {
                 continue;
             }
 
-            isUsed = true;
             if (anim->attribute == Opacity || anim->attribute == CrossFadePrevious) {
                 data.setTranslucent();
             } else if (!(anim->attribute == Brightness || anim->attribute == Saturation)) {
                 data.setTransformed();
             }
-
-            paintDeleted |= anim->keepAlive;
-        }
-        if (isUsed) {
-            if (w->isMinimized()) {
-                w->enablePainting(EffectWindow::PAINT_DISABLED_BY_MINIMIZE);
-            } else if (w->isDeleted() && paintDeleted) {
-                w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DELETE);
-            } else if (!w->isOnCurrentDesktop()) {
-                w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
-            }
-            //            if( !w->isPaintingEnabled() && !effects->activeFullScreenEffect() )
-            //                effects->addLayerRepaint(w->expandedGeometry());
         }
     }
     effects->prePaintWindow(w, data, presentTime);

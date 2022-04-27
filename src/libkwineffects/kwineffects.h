@@ -2354,9 +2354,6 @@ public:
     explicit EffectWindow(QObject *parent = nullptr);
     ~EffectWindow() override;
 
-    virtual void enablePainting(int reason) = 0;
-    virtual void disablePainting(int reason) = 0;
-    virtual bool isPaintingEnabled() = 0;
     Q_SCRIPTABLE virtual void addRepaint(const QRect &r) = 0;
     Q_SCRIPTABLE virtual void addRepaint(int x, int y, int w, int h) = 0;
     Q_SCRIPTABLE virtual void addRepaintFull() = 0;
@@ -2365,6 +2362,9 @@ public:
 
     virtual void refWindow() = 0;
     virtual void unrefWindow() = 0;
+
+    virtual void refVisible(int reason) = 0;
+    virtual void unrefVisible(int reason) = 0;
 
     virtual bool isDeleted() const = 0;
 
@@ -2772,6 +2772,64 @@ public:
 
 private:
     EffectWindow *m_window;
+};
+
+/**
+ * The EffectWindowVisibleRef provides a convenient way to force the visible status of a
+ * window until an effect is finished animating it.
+ */
+class KWINEFFECTS_EXPORT EffectWindowVisibleRef
+{
+public:
+    EffectWindowVisibleRef()
+        : m_window(nullptr)
+    {
+    }
+
+    explicit EffectWindowVisibleRef(EffectWindow *window, int reason)
+        : m_window(window)
+        , m_reason(reason)
+    {
+        m_window->refVisible(reason);
+    }
+
+    EffectWindowVisibleRef(const EffectWindowVisibleRef &other)
+        : m_window(other.m_window)
+        , m_reason(other.m_reason)
+    {
+        if (m_window) {
+            m_window->refVisible(m_reason);
+        }
+    }
+
+    ~EffectWindowVisibleRef()
+    {
+        if (m_window) {
+            m_window->unrefVisible(m_reason);
+        }
+    }
+
+    EffectWindowVisibleRef &operator=(const EffectWindowVisibleRef &other)
+    {
+        if (other.m_window) {
+            other.m_window->refVisible(other.m_reason);
+        }
+        if (m_window) {
+            m_window->unrefVisible(m_reason);
+        }
+        m_window = other.m_window;
+        m_reason = other.m_reason;
+        return *this;
+    }
+
+    bool isNull() const
+    {
+        return m_window == nullptr;
+    }
+
+private:
+    EffectWindow *m_window;
+    int m_reason;
 };
 
 class KWINEFFECTS_EXPORT EffectWindowGroup

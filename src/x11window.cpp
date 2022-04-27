@@ -1351,10 +1351,6 @@ void X11Window::updateShape()
     // Decoration mask (i.e. 'else' here) setting is done in setMask()
     // when the decoration calls it or when the decoration is created/destroyed
     updateInputShape();
-    if (Compositor::compositing()) {
-        addRepaintFull();
-        addWorkspaceRepaint(visibleGeometry()); // In case shape change removes part of this window
-    }
     Q_EMIT geometryShapeChanged(this, frameGeometry());
 }
 
@@ -1518,9 +1514,6 @@ void X11Window::doSetShade(ShadeMode previousShadeMode)
 {
     // TODO: All this unmapping, resizing etc. feels too much duplicated from elsewhere
     if (isShade()) {
-        // shade_mode == ShadeNormal
-        addWorkspaceRepaint(visibleGeometry());
-        // Shade
         shade_geometry_change = true;
         QSize s(implicitSize());
         s.setHeight(borderTop() + borderBottom());
@@ -1679,7 +1672,6 @@ void X11Window::internalHide()
     if (old == Kept) {
         updateHiddenPreview();
     }
-    addWorkspaceRepaint(visibleGeometry());
     workspace()->windowHidden(this);
     Q_EMIT windowHidden(this);
 }
@@ -1700,7 +1692,6 @@ void X11Window::internalKeep()
         workspace()->focusToNull(); // get rid of input focus, bug #317484
     }
     updateHiddenPreview();
-    addWorkspaceRepaint(visibleGeometry());
     workspace()->windowHidden(this);
 }
 
@@ -1726,7 +1717,6 @@ void X11Window::map()
     } else {
         exportMappingState(XCB_ICCCM_WM_STATE_ICONIC);
     }
-    addLayerRepaint(visibleGeometry());
 }
 
 /**

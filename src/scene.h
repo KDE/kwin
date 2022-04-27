@@ -295,26 +295,6 @@ public:
     // access to the internal window class
     // TODO eventually get rid of this
     Window *window() const;
-    // should the window be painted
-    bool isPaintingEnabled() const;
-    void resetPaintingEnabled();
-    // Flags explaining why painting should be disabled
-    enum {
-        // SceneWindow will not be painted
-        PAINT_DISABLED = 1 << 0,
-        // SceneWindow will not be painted because it is deleted
-        PAINT_DISABLED_BY_DELETE = 1 << 1,
-        // SceneWindow will not be painted because of which desktop it's on
-        PAINT_DISABLED_BY_DESKTOP = 1 << 2,
-        // SceneWindow will not be painted because it is minimized
-        PAINT_DISABLED_BY_MINIMIZE = 1 << 3,
-        // SceneWindow will not be painted because it's not on the current activity
-        PAINT_DISABLED_BY_ACTIVITY = 1 << 5
-    };
-    void enablePainting(int reason);
-    void disablePainting(int reason);
-    // is the window visible at all
-    bool isVisible() const;
     QRegion decorationShape() const;
     void setWindow(Window *window);
     void referencePreviousPixmap();
@@ -332,7 +312,6 @@ private:
 
     void updateWindowPosition();
 
-    int disable_painting;
     QScopedPointer<WindowItem> m_windowItem;
     Q_DISABLE_COPY(SceneWindow)
 };

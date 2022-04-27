@@ -332,8 +332,6 @@ void PresentWindowsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &d
             effects->prePaintWindow(w, data, presentTime);
             return;
         }
-        w->enablePainting(EffectWindow::PAINT_DISABLED_BY_MINIMIZE); // Display always
-        w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
 
         // The animation code assumes that the time diff cannot be 0, let's work around it.
         int time;
@@ -357,15 +355,6 @@ void PresentWindowsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &d
             winData->opacity = qMax(0.0, winData->opacity - time / m_fadeDuration);
         }
 
-        if (winData->opacity <= 0.0) {
-            // don't disable painting for panels if show panel is set
-            if (!(m_showPanel && w->isDock())) {
-                w->disablePainting(EffectWindow::PAINT_DISABLED);
-            }
-        } else if (winData->opacity != 1.0) {
-            data.setTranslucent();
-        }
-
         const bool isInMotion = m_motionManager.isManaging(w);
         // Calculate window's brightness
         if (w == m_highlightedWindow || !m_activated) {
@@ -383,18 +372,14 @@ void PresentWindowsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &d
                 // it's possible that another effect has referenced the window
                 // we have to keep the window in the list to prevent flickering
                 winData->deletedRef = EffectWindowDeletedRef{};
-            } else {
-                w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DELETE);
             }
-        }
-
-        // desktop windows on other desktops (Plasma activity per desktop) should not be painted
-        if (w->isDesktop() && !w->isOnCurrentDesktop()) {
-            w->disablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
         }
 
         if (isInMotion) {
             data.setTransformed(); // We will be moving this window
+        }
+        if (winData->opacity != 1.0) {
+            data.setTranslucent();
         }
     }
     effects->prePaintWindow(w, data, presentTime);
@@ -403,6 +388,11 @@ void PresentWindowsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &d
 void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
     if (m_activated || m_motionManager.areWindowsMoving()) {
+        // desktop windows on other desktops (Plasma activity per desktop) should not be painted
+        if (w->isDesktop() && !w->isOnCurrentDesktop()) {
+            return;
+        }
+
         DataHash::const_iterator winData = m_windowData.constFind(w);
         if (winData == m_windowData.constEnd() || (w->isDock() && m_showPanel)) {
             // we are darkening the panel to communicate that it's not interactive
@@ -1701,6 +1691,8 @@ void PresentWindowsEffect::setActive(bool active)
             if (w->isOnCurrentDesktop() && !w->isMinimized()) {
                 winData->opacity = 1.0;
             }
+
+            winData->visibleRef = EffectWindowVisibleRef(w, EffectWindow::PAINT_DISABLED_BY_DESKTOP | EffectWindow::PAINT_DISABLED_BY_MINIMIZE);
 
             winData->highlight = 1.0;
             winData->textFrame = effects->effectFrame(EffectFrameUnstyled, false);

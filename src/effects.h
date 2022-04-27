@@ -384,9 +384,8 @@ public:
     explicit EffectWindowImpl(Window *window);
     ~EffectWindowImpl() override;
 
-    void enablePainting(int reason) override;
-    void disablePainting(int reason) override;
-    bool isPaintingEnabled() override;
+    void refVisible(int reason) override;
+    void unrefVisible(int reason) override;
 
     void addRepaint(const QRect &r) override;
     void addRepaint(int x, int y, int w, int h) override;

@@ -17,6 +17,7 @@ namespace KWin
 
 struct MagicLampAnimation
 {
+    EffectWindowVisibleRef visibleRef;
     TimeLine timeLine;
     std::chrono::milliseconds lastPresentTime = std::chrono::milliseconds::zero();
 };

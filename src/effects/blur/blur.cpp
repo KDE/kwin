@@ -535,9 +535,6 @@ void BlurEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::
 
     effects->prePaintWindow(w, data, presentTime);
 
-    if (!w->isPaintingEnabled()) {
-        return;
-    }
     if (!m_shader || !m_shader->isValid()) {
         return;
     }

@@ -1281,8 +1281,6 @@ bool Unmanaged::windowEvent(xcb_generic_event_t *e)
     default: {
         if (eventType == Xcb::Extensions::self()->shapeNotifyEvent()) {
             detectShape(window());
-            addRepaintFull();
-            addWorkspaceRepaint(frameGeometry()); // in case shape change removes part of this window
             Q_EMIT geometryShapeChanged(this, frameGeometry());
         }
         if (eventType == Xcb::Extensions::self()->damageNotifyEvent()) {
