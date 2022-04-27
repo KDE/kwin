@@ -8,6 +8,7 @@
 */
 #include "scene_qpainter_virtual_backend.h"
 #include "cursor.h"
+#include "renderoutput.h"
 #include "screens.h"
 #include "softwarevsyncmonitor.h"
 #include "virtual_backend.h"
@@ -73,8 +74,8 @@ void VirtualQPainterBackend::present(Output *output)
     }
 }
 
-VirtualQPainterLayer *VirtualQPainterBackend::primaryLayer(Output *output)
+VirtualQPainterLayer *VirtualQPainterBackend::primaryLayer(RenderOutput *output)
 {
-    return m_outputs[output].get();
+    return m_outputs[output->platformOutput()].get();
 }
 }

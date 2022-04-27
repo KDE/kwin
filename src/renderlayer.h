@@ -20,7 +20,7 @@ namespace KWin
 
 class OutputLayer;
 class RenderLayerDelegate;
-class RenderLoop;
+class RenderOutput;
 
 /**
  * The RenderLayer class represents a composited layer.
@@ -37,13 +37,13 @@ class KWIN_EXPORT RenderLayer : public QObject
     Q_OBJECT
 
 public:
-    explicit RenderLayer(RenderLoop *loop, RenderLayer *superlayer = nullptr);
+    explicit RenderLayer(RenderOutput *output, RenderLayer *superlayer = nullptr);
     ~RenderLayer() override;
 
     OutputLayer *outputLayer() const;
     void setOutputLayer(OutputLayer *layer);
 
-    RenderLoop *loop() const;
+    RenderOutput *output() const;
     RenderLayerDelegate *delegate() const;
     void setDelegate(RenderLayerDelegate *delegate);
 
@@ -82,7 +82,7 @@ private:
     void updateEffectiveVisibility();
     bool computeEffectiveVisibility() const;
 
-    RenderLoop *m_loop;
+    RenderOutput *const m_output;
     QScopedPointer<RenderLayerDelegate> m_delegate;
     QRegion m_repaints;
     QRect m_boundingRect;

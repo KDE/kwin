@@ -26,6 +26,7 @@
 #include "qpainterbackend.h"
 #include "renderlayer.h"
 #include "renderloop.h"
+#include "renderoutput.h"
 #include "scene.h"
 #include "scenes/opengl/scene_opengl.h"
 #include "scenes/qpainter/scene_qpainter.h"
@@ -39,8 +40,8 @@
 #include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "x11window.h"
 #include "x11syncmanager.h"
+#include "x11window.h"
 
 #include <kwinglplatform.h>
 #include <kwingltexture.h>
@@ -364,22 +365,12 @@ void Compositor::startupWithWorkspace()
     Q_ASSERT(m_scene);
     m_scene->initialize();
 
-    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        auto workspaceLayer = new RenderLayer(outputs.constFirst()->renderLoop());
-        workspaceLayer->setDelegate(new SceneDelegate(m_scene));
-        workspaceLayer->setGeometry(workspace()->geometry());
-        connect(workspace(), &Workspace::geometryChanged, workspaceLayer, [workspaceLayer]() {
-            workspaceLayer->setGeometry(workspace()->geometry());
-        });
-        addSuperLayer(workspaceLayer);
-    } else {
-        for (Output *output : outputs) {
-            addOutput(output);
-        }
-        connect(kwinApp()->platform(), &Platform::outputEnabled, this, &Compositor::addOutput);
-        connect(kwinApp()->platform(), &Platform::outputDisabled, this, &Compositor::removeOutput);
+    const QVector<RenderOutput *> outputs = kwinApp()->platform()->renderOutputs();
+    for (const auto output : outputs) {
+        addOutput(output);
     }
+    connect(kwinApp()->platform(), &Platform::renderOutputAdded, this, &Compositor::addOutput);
+    connect(kwinApp()->platform(), &Platform::renderOutputRemoved, this, &Compositor::removeOutput);
 
     m_state = State::On;
 
@@ -421,18 +412,16 @@ Output *Compositor::findOutput(RenderLoop *loop) const
     return nullptr;
 }
 
-void Compositor::addOutput(Output *output)
+void Compositor::addOutput(RenderOutput *output)
 {
-    Q_ASSERT(kwinApp()->operationMode() != Application::OperationModeX11);
-
-    auto workspaceLayer = new RenderLayer(output->renderLoop());
+    auto workspaceLayer = new RenderLayer(output);
     workspaceLayer->setDelegate(new SceneDelegate(m_scene, output));
     workspaceLayer->setGeometry(output->rect());
-    connect(output, &Output::geometryChanged, workspaceLayer, [output, workspaceLayer]() {
+    connect(output, &RenderOutput::geometryChanged, workspaceLayer, [output, workspaceLayer]() {
         workspaceLayer->setGeometry(output->rect());
     });
 
-    auto cursorLayer = new RenderLayer(output->renderLoop());
+    auto cursorLayer = new RenderLayer(output);
     cursorLayer->setVisible(false);
     if (m_backend->compositingType() == OpenGLCompositing) {
         cursorLayer->setDelegate(new CursorDelegateOpenGL());
@@ -449,36 +438,39 @@ void Compositor::addOutput(Output *output)
         cursorLayer->addRepaintFull();
     };
     updateCursorLayer();
-    connect(output, &Output::geometryChanged, cursorLayer, updateCursorLayer);
+    connect(output, &RenderOutput::geometryChanged, cursorLayer, updateCursorLayer);
     connect(Cursors::self(), &Cursors::currentCursorChanged, cursorLayer, updateCursorLayer);
     connect(Cursors::self(), &Cursors::hiddenChanged, cursorLayer, updateCursorLayer);
     connect(Cursors::self(), &Cursors::positionChanged, cursorLayer, updateCursorLayer);
 
-    addSuperLayer(workspaceLayer);
+    const bool newOutput = std::none_of(m_superlayers.constBegin(), m_superlayers.constEnd(), [output](const auto &layer) {
+        return layer->output()->platformOutput() == output->platformOutput();
+    });
+    if (newOutput) {
+        connect(output->platformOutput()->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
+    }
+    m_superlayers[output] = workspaceLayer;
 }
 
-void Compositor::removeOutput(Output *output)
+void Compositor::removeOutput(RenderOutput *output)
 {
-    removeSuperLayer(m_superlayers[output->renderLoop()]);
-}
-
-void Compositor::addSuperLayer(RenderLayer *layer)
-{
-    m_superlayers.insert(layer->loop(), layer);
-    connect(layer->loop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
-}
-
-void Compositor::removeSuperLayer(RenderLayer *layer)
-{
-    m_superlayers.remove(layer->loop());
-    disconnect(layer->loop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
-    delete layer;
+    const auto it = m_superlayers.find(output);
+    Q_ASSERT(it != m_superlayers.end());
+    delete *it;
+    m_superlayers.erase(it);
+    const bool allRemoved = std::none_of(m_superlayers.constBegin(), m_superlayers.constEnd(), [output](const auto &layer) {
+        return layer->output()->platformOutput() == output->platformOutput();
+    });
+    if (allRemoved) {
+        disconnect(output->platformOutput()->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
+    }
 }
 
 void Compositor::scheduleRepaint()
 {
-    for (auto it = m_superlayers.constBegin(); it != m_superlayers.constEnd(); ++it) {
-        it.key()->scheduleRepaint();
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    for (const auto output : outputs) {
+        output->renderLoop()->scheduleRepaint();
     }
 }
 
@@ -526,11 +518,11 @@ void Compositor::stop()
 
     const auto superlayers = m_superlayers;
     for (auto it = superlayers.begin(); it != superlayers.end(); ++it) {
-        removeSuperLayer(*it);
+        removeOutput(it.key());
     }
 
-    disconnect(kwinApp()->platform(), &Platform::outputEnabled, this, &Compositor::addOutput);
-    disconnect(kwinApp()->platform(), &Platform::outputDisabled, this, &Compositor::removeOutput);
+    disconnect(kwinApp()->platform(), &Platform::renderOutputAdded, this, &Compositor::addOutput);
+    disconnect(kwinApp()->platform(), &Platform::renderOutputRemoved, this, &Compositor::removeOutput);
 
     delete m_scene;
     m_scene = nullptr;
@@ -632,57 +624,64 @@ void Compositor::composite(RenderLoop *renderLoop)
         return;
     }
 
-    Output *output = findOutput(renderLoop);
-    OutputLayer *outputLayer = m_backend->primaryLayer(output);
-    fTraceDuration("Paint (", output->name(), ")");
-
-    RenderLayer *superLayer = m_superlayers[renderLoop];
-    prePaintPass(superLayer);
-    superLayer->setOutputLayer(outputLayer);
-
-    SurfaceItem *scanoutCandidate = superLayer->delegate()->scanoutCandidate();
-    renderLoop->setFullscreenSurface(scanoutCandidate);
+    Output *platformOutput = findOutput(renderLoop);
+    fTraceDuration("Paint (", platformOutput->name(), ")");
 
     renderLoop->beginFrame();
-    bool directScanout = false;
-    if (scanoutCandidate) {
-        const auto sublayers = superLayer->sublayers();
-        const bool scanoutPossible = std::none_of(sublayers.begin(), sublayers.end(), [](RenderLayer *sublayer) {
-            return sublayer->isVisible();
-        });
-        if (scanoutPossible && !output->directScanoutInhibited()) {
-            directScanout = outputLayer->scanout(scanoutCandidate);
+
+    const auto outputs = kwinApp()->platform()->renderOutputs();
+    for (const auto &output : outputs) {
+        if (output->platformOutput() != platformOutput) {
+            continue;
         }
+        OutputLayer *outputLayer = m_backend->primaryLayer(output);
+        RenderLayer *superLayer = m_superlayers[output];
+        prePaintPass(superLayer);
+        superLayer->setOutputLayer(outputLayer);
+
+        SurfaceItem *scanoutCandidate = superLayer->delegate()->scanoutCandidate();
+        renderLoop->setFullscreenSurface(scanoutCandidate);
+
+        bool directScanout = false;
+        if (scanoutCandidate) {
+            const auto sublayers = superLayer->sublayers();
+            const bool scanoutPossible = std::none_of(sublayers.begin(), sublayers.end(), [](RenderLayer *sublayer) {
+                return sublayer->isVisible();
+            });
+            if (scanoutPossible) {
+                directScanout = outputLayer->scanout(scanoutCandidate);
+            }
+        }
+
+        if (!directScanout) {
+            QRegion surfaceDamage = outputLayer->repaints();
+            outputLayer->resetRepaints();
+            preparePaintPass(superLayer, &surfaceDamage);
+
+            OutputLayerBeginFrameInfo beginInfo = outputLayer->beginFrame();
+            beginInfo.renderTarget.setDevicePixelRatio(platformOutput->scale());
+
+            const QRegion bufferDamage = surfaceDamage.united(beginInfo.repaint).intersected(superLayer->rect());
+            outputLayer->aboutToStartPainting(bufferDamage);
+
+            paintPass(superLayer, &beginInfo.renderTarget, bufferDamage);
+            outputLayer->endFrame(bufferDamage, surfaceDamage);
+        }
+
+        postPaintPass(superLayer);
     }
 
-    if (!directScanout) {
-        QRegion surfaceDamage = outputLayer->repaints();
-        outputLayer->resetRepaints();
-        preparePaintPass(superLayer, &surfaceDamage);
-
-        OutputLayerBeginFrameInfo beginInfo = outputLayer->beginFrame();
-        beginInfo.renderTarget.setDevicePixelRatio(output->scale());
-
-        const QRegion bufferDamage = surfaceDamage.united(beginInfo.repaint).intersected(superLayer->rect());
-        outputLayer->aboutToStartPainting(bufferDamage);
-
-        paintPass(superLayer, &beginInfo.renderTarget, bufferDamage);
-        outputLayer->endFrame(bufferDamage, surfaceDamage);
-    }
     renderLoop->endFrame();
-
-    postPaintPass(superLayer);
-
-    m_backend->present(output);
+    m_backend->present(platformOutput);
 
     // TODO: Put it inside the cursor layer once the cursor layer can be backed by a real output layer.
     if (waylandServer()) {
         const std::chrono::milliseconds frameTime =
-            std::chrono::duration_cast<std::chrono::milliseconds>(output->renderLoop()->lastPresentationTimestamp());
+            std::chrono::duration_cast<std::chrono::milliseconds>(platformOutput->renderLoop()->lastPresentationTimestamp());
 
         if (!Cursors::self()->isCursorHidden()) {
             Cursor *cursor = Cursors::self()->currentCursor();
-            if (cursor->geometry().intersects(output->geometry())) {
+            if (cursor->geometry().intersects(platformOutput->geometry())) {
                 cursor->markAsRendered(frameTime);
             }
         }

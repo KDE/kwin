@@ -89,7 +89,7 @@ public:
     void doneCurrent() override;
     OverlayWindow *overlayWindow() const override;
     void init() override;
-    OutputLayer *primaryLayer(Output *output) override;
+    OutputLayer *primaryLayer(RenderOutput *output) override;
 
     Display *display() const
     {

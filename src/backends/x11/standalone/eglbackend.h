@@ -48,7 +48,7 @@ public:
     OutputLayerBeginFrameInfo beginFrame();
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
     void present(Output *output) override;
-    OutputLayer *primaryLayer(Output *output) override;
+    OutputLayer *primaryLayer(RenderOutput *output) override;
 
 private:
     void screenGeometryChanged();

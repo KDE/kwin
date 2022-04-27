@@ -9,6 +9,7 @@
 #ifndef KWIN_X11_PLATFORM_H
 #define KWIN_X11_PLATFORM_H
 #include "platform.h"
+#include "renderoutput.h"
 
 #include <kwin_export.h>
 
@@ -26,6 +27,20 @@ class XInputIntegration;
 class WindowSelector;
 class X11EventFilter;
 class X11Output;
+class X11StandalonePlatform;
+
+class X11RenderOutput : public RenderOutput
+{
+public:
+    X11RenderOutput(X11StandalonePlatform *platform);
+
+    QRect geometry() const override;
+    Output *platformOutput() const override;
+    bool usesSoftwareCursor() const override;
+
+private:
+    X11StandalonePlatform *const m_platform;
+};
 
 class KWIN_EXPORT X11StandalonePlatform : public Platform
 {
@@ -68,6 +83,7 @@ public:
     RenderLoop *renderLoop() const;
     Outputs outputs() const override;
     Outputs enabledOutputs() const override;
+    QVector<RenderOutput *> renderOutputs() const override;
 
 private:
     /**
@@ -98,6 +114,7 @@ private:
     std::unique_ptr<X11EventFilter> m_randrEventFilter;
     std::unique_ptr<RenderLoop> m_renderLoop;
     QVector<Output *> m_outputs;
+    const std::unique_ptr<X11RenderOutput> m_renderOutput;
 };
 
 }

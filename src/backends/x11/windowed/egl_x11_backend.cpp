@@ -11,6 +11,7 @@
 #include "basiceglsurfacetexture_internal.h"
 #include "basiceglsurfacetexture_wayland.h"
 #include "main.h"
+#include "renderoutput.h"
 #include "screens.h"
 #include "softwarevsyncmonitor.h"
 #include "x11windowed_backend.h"
@@ -134,9 +135,9 @@ void EglX11Backend::presentSurface(EGLSurface surface, const QRegion &damage, co
     }
 }
 
-OutputLayer *EglX11Backend::primaryLayer(Output *output)
+OutputLayer *EglX11Backend::primaryLayer(RenderOutput *output)
 {
-    return m_outputs[output].get();
+    return m_outputs[output->platformOutput()].get();
 }
 
 std::unique_ptr<SurfaceTexture> EglX11Backend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)

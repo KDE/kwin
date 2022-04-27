@@ -29,6 +29,7 @@
 #include "logging.h"
 #include "options.h"
 #include "renderloop_p.h"
+#include "renderoutput.h"
 #include "screens.h"
 #include "shadowbuffer.h"
 #include "surfaceitem_wayland.h"
@@ -209,9 +210,9 @@ void EglGbmBackend::present(Output *output)
     static_cast<DrmAbstractOutput *>(output)->present();
 }
 
-OutputLayer *EglGbmBackend::primaryLayer(Output *output)
+OutputLayer *EglGbmBackend::primaryLayer(RenderOutput *output)
 {
-    return static_cast<DrmAbstractOutput *>(output)->outputLayer();
+    return static_cast<DrmAbstractOutput *>(output->platformOutput())->outputLayer();
 }
 
 std::shared_ptr<GLTexture> EglGbmBackend::textureForOutput(Output *output) const

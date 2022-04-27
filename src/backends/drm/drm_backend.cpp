@@ -525,6 +525,8 @@ void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
         m_enabledOutputs << output;
         Q_EMIT output->gpu()->outputEnabled(output);
         Q_EMIT outputEnabled(output);
+        m_renderOutputs << output->renderOutput();
+        Q_EMIT renderOutputAdded(output->renderOutput());
         checkOutputsAreOn();
         if (m_placeHolderOutput) {
             qCDebug(KWIN_DRM) << "removing placeholder output";
@@ -554,6 +556,8 @@ void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
             input()->prependInputEventFilter(m_placeholderFilter.get());
         }
         m_enabledOutputs.removeOne(output);
+        m_renderOutputs.removeOne(output->renderOutput());
+        Q_EMIT renderOutputRemoved(output->renderOutput());
         Q_EMIT output->gpu()->outputDisabled(output);
         Q_EMIT outputDisabled(output);
     }
@@ -751,5 +755,10 @@ void DrmBackend::releaseBuffers()
     for (const auto &gpu : qAsConst(m_gpus)) {
         gpu->releaseBuffers();
     }
+}
+
+QVector<RenderOutput *> DrmBackend::renderOutputs() const
+{
+    return m_renderOutputs;
 }
 }

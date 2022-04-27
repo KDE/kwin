@@ -65,7 +65,7 @@ public:
     std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
 
     void present(Output *output) override;
-    OutputLayer *primaryLayer(Output *output) override;
+    OutputLayer *primaryLayer(RenderOutput *output) override;
 
     void init() override;
     bool prefer10bpc() const override;

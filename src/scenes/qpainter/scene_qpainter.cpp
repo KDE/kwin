@@ -18,6 +18,7 @@
 #include "output.h"
 #include "platform.h"
 #include "renderloop.h"
+#include "renderoutput.h"
 #include "screens.h"
 #include "surfaceitem.h"
 #include "window.h"

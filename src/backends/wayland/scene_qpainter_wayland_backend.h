@@ -86,7 +86,7 @@ public:
     ~WaylandQPainterBackend() override;
 
     void present(Output *output) override;
-    OutputLayer *primaryLayer(Output *output) override;
+    OutputLayer *primaryLayer(RenderOutput *output) override;
 
 private:
     void createOutput(Output *waylandOutput);

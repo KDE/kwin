@@ -196,7 +196,7 @@ void EglBackend::presentSurface(EGLSurface surface, const QRegion &damage, const
     }
 }
 
-OutputLayer *EglBackend::primaryLayer(Output *output)
+OutputLayer *EglBackend::primaryLayer(RenderOutput *output)
 {
     Q_UNUSED(output)
     return m_layer.get();

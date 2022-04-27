@@ -217,7 +217,7 @@ static void convertFromGLImage(QImage &img, int w, int h)
     img = img.mirrored();
 }
 
-OutputLayer *EglGbmBackend::primaryLayer(Output *output)
+OutputLayer *EglGbmBackend::primaryLayer(RenderOutput *output)
 {
     Q_UNUSED(output)
     return m_layer.get();

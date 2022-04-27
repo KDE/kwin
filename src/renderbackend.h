@@ -17,6 +17,7 @@ namespace KWin
 class Output;
 class OverlayWindow;
 class OutputLayer;
+class RenderOutput;
 
 /**
  * The RenderBackend class is the base class for all rendering backends.
@@ -33,7 +34,7 @@ public:
 
     virtual bool checkGraphicsReset();
 
-    virtual OutputLayer *primaryLayer(Output *output) = 0;
+    virtual OutputLayer *primaryLayer(RenderOutput *output) = 0;
     virtual void present(Output *output) = 0;
 };
 

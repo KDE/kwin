@@ -28,6 +28,7 @@
 #if KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
+#include "renderoutput.h"
 #include "screenedge.h"
 #include "shadow.h"
 #include "shadowitem.h"
@@ -436,6 +437,11 @@ bool Window::isOnActiveOutput() const
 }
 
 bool Window::isOnOutput(Output *output) const
+{
+    return output->geometry().intersects(frameGeometry());
+}
+
+bool Window::isOnOutput(RenderOutput *output) const
 {
     return output->geometry().intersects(frameGeometry());
 }

@@ -8,6 +8,7 @@
 */
 #include "scene_qpainter_x11_backend.h"
 #include "main.h"
+#include "renderoutput.h"
 #include "screens.h"
 #include "softwarevsyncmonitor.h"
 #include "x11windowed_backend.h"
@@ -94,8 +95,8 @@ void X11WindowedQPainterBackend::present(Output *output)
                   buffer.sizeInBytes(), buffer.constBits());
 }
 
-OutputLayer *X11WindowedQPainterBackend::primaryLayer(Output *output)
+OutputLayer *X11WindowedQPainterBackend::primaryLayer(RenderOutput *output)
 {
-    return m_outputs[output].get();
+    return m_outputs[output->platformOutput()].get();
 }
 }

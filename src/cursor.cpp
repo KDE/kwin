@@ -15,6 +15,7 @@
 #include "main.h"
 #include "output.h"
 #include "platform.h"
+#include "renderoutput.h"
 #include "scene.h"
 #include "utils/common.h"
 #include "utils/xcbutils.h"
@@ -171,7 +172,7 @@ void Cursor::slotKGlobalSettingsNotifyChange(int type, int arg)
     }
 }
 
-bool Cursor::isOnOutput(Output *output) const
+bool Cursor::isOnOutput(RenderOutput *output) const
 {
     if (Cursors::self()->isCursorHidden()) {
         return false;

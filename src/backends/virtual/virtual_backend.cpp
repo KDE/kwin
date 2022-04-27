@@ -69,6 +69,8 @@ bool VirtualBackend::initialize()
         dummyOutput->init(QPoint(0, 0), initialWindowSize());
         m_outputs << dummyOutput;
         m_outputsEnabled << dummyOutput;
+        m_renderOutputs << dummyOutput->renderOutput();
+        Q_EMIT renderOutputAdded(dummyOutput->renderOutput());
         Q_EMIT outputAdded(dummyOutput);
         Q_EMIT outputEnabled(dummyOutput);
     }
@@ -129,12 +131,16 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
         }
         m_outputs.append(vo);
         m_outputsEnabled.append(vo);
+        m_renderOutputs.append(vo->renderOutput());
         Q_EMIT outputAdded(vo);
+        Q_EMIT renderOutputAdded(vo->renderOutput());
         Q_EMIT outputEnabled(vo);
     }
 
     for (VirtualOutput *output : disabled) {
         m_outputsEnabled.removeOne(output);
+        m_renderOutputs.removeOne(output->renderOutput());
+        Q_EMIT renderOutputRemoved(output->renderOutput());
         Q_EMIT outputDisabled(output);
     }
 
@@ -152,10 +158,14 @@ void VirtualBackend::enableOutput(VirtualOutput *output, bool enable)
     if (enable) {
         Q_ASSERT(!m_outputsEnabled.contains(output));
         m_outputsEnabled << output;
+        m_renderOutputs.append(output->renderOutput());
+        Q_EMIT renderOutputAdded(output->renderOutput());
         Q_EMIT outputEnabled(output);
     } else {
         Q_ASSERT(m_outputsEnabled.contains(output));
         m_outputsEnabled.removeOne(output);
+        m_renderOutputs.removeOne(output->renderOutput());
+        Q_EMIT renderOutputRemoved(output->renderOutput());
         Q_EMIT outputDisabled(output);
     }
 
@@ -178,11 +188,16 @@ void VirtualBackend::removeOutput(Output *output)
 QImage VirtualBackend::captureOutput(Output *output) const
 {
     if (auto backend = qobject_cast<VirtualQPainterBackend *>(Compositor::self()->backend())) {
-        if (auto layer = backend->primaryLayer(output)) {
+        if (auto layer = backend->primaryLayer(static_cast<VirtualOutput *>(output)->renderOutput())) {
             return *layer->image();
         }
     }
     return QImage();
+}
+
+QVector<RenderOutput *> VirtualBackend::renderOutputs() const
+{
+    return m_renderOutputs;
 }
 
 } // namespace KWin

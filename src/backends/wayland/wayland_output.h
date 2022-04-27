@@ -32,6 +32,9 @@ class LockedPointer;
 
 namespace KWin
 {
+class RenderOutput;
+class SimpleRenderOutput;
+
 namespace Wayland
 {
 class WaylandBackend;
@@ -82,6 +85,8 @@ public:
     void updateEnablement(bool enable) override;
     void setDpmsMode(DpmsMode mode) override;
 
+    RenderOutput *renderOutput() const;
+
 Q_SIGNALS:
     void sizeChanged(const QSize &size);
     void frameRendered();
@@ -97,6 +102,7 @@ private:
     KWayland::Client::Surface *m_surface;
     WaylandBackend *m_backend;
     QTimer m_turnOffTimer;
+    const std::unique_ptr<SimpleRenderOutput> m_renderOutput;
 
     bool m_rendered = false;
 };

@@ -89,7 +89,7 @@ public:
 
     void init() override;
     void present(Output *output) override;
-    OutputLayer *primaryLayer(Output *output) override;
+    OutputLayer *primaryLayer(RenderOutput *output) override;
 
     bool havePlatformBase() const
     {

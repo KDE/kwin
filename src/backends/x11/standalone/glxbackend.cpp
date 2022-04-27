@@ -859,7 +859,7 @@ OverlayWindow *GlxBackend::overlayWindow() const
     return m_overlayWindow.get();
 }
 
-OutputLayer *GlxBackend::primaryLayer(Output *output)
+OutputLayer *GlxBackend::primaryLayer(RenderOutput *output)
 {
     Q_UNUSED(output)
     return m_layer.get();

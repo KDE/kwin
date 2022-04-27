@@ -29,6 +29,7 @@ class Scene;
 class Window;
 class X11Window;
 class X11SyncManager;
+class RenderOutput;
 
 class KWIN_EXPORT Compositor : public QObject
 {
@@ -136,11 +137,8 @@ private:
     bool attemptQPainterCompositing();
 
     Output *findOutput(RenderLoop *loop) const;
-    void addOutput(Output *output);
-    void removeOutput(Output *output);
-
-    void addSuperLayer(RenderLayer *layer);
-    void removeSuperLayer(RenderLayer *layer);
+    void addOutput(RenderOutput *output);
+    void removeOutput(RenderOutput *output);
 
     void prePaintPass(RenderLayer *layer);
     void postPaintPass(RenderLayer *layer);
@@ -154,7 +152,7 @@ private:
     QTimer m_unusedSupportPropertyTimer;
     Scene *m_scene = nullptr;
     RenderBackend *m_backend = nullptr;
-    QHash<RenderLoop *, RenderLayer *> m_superlayers;
+    QHash<RenderOutput *, RenderLayer *> m_superlayers;
 };
 
 class KWIN_EXPORT WaylandCompositor final : public Compositor

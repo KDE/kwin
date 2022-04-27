@@ -25,6 +25,8 @@ namespace KWin
 
 class SoftwareVsyncMonitor;
 class X11WindowedBackend;
+class RenderOutput;
+class SimpleRenderOutput;
 
 /**
  * Wayland outputs in a nested X11 setup
@@ -69,6 +71,8 @@ public:
 
     bool usesSoftwareCursor() const override;
 
+    RenderOutput *renderOutput() const;
+
 private:
     void initXInputForWindow();
     void vblank(std::chrono::nanoseconds timestamp);
@@ -79,7 +83,8 @@ private:
     std::unique_ptr<SoftwareVsyncMonitor> m_vsyncMonitor;
     QPoint m_hostPosition;
 
-    X11WindowedBackend *m_backend;
+    X11WindowedBackend *const m_backend;
+    const std::unique_ptr<SimpleRenderOutput> m_renderOutput;
 };
 
 }

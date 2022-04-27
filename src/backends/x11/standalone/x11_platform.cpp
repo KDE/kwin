@@ -31,6 +31,7 @@
 #include "overlaywindow_x11.h"
 #include "renderloop.h"
 #include "screenedges_filter.h"
+#include "screens.h"
 #include "utils/c_ptr.h"
 #include "utils/xcbutils.h"
 #include "window.h"
@@ -96,12 +97,34 @@ bool XrandrEventFilter::event(xcb_generic_event_t *event)
     return false;
 }
 
+X11RenderOutput::X11RenderOutput(X11StandalonePlatform *platform)
+    : m_platform(platform)
+{
+    connect(screens(), &Screens::geometryChanged, this, &RenderOutput::geometryChanged);
+}
+
+QRect X11RenderOutput::geometry() const
+{
+    return screens()->geometry();
+}
+
+Output *X11RenderOutput::platformOutput() const
+{
+    return m_platform->enabledOutputs().constFirst();
+}
+
+bool X11RenderOutput::usesSoftwareCursor() const
+{
+    return false;
+}
+
 X11StandalonePlatform::X11StandalonePlatform(QObject *parent)
     : Platform(parent)
     , m_session(Session::create(Session::Type::Noop))
     , m_updateOutputsTimer(new QTimer(this))
     , m_x11Display(QX11Info::display())
     , m_renderLoop(std::make_unique<RenderLoop>())
+    , m_renderOutput(std::make_unique<X11RenderOutput>(this))
 {
 #if HAVE_X11_XINPUT
     if (!qEnvironmentVariableIsSet("KWIN_NO_XI2")) {
@@ -684,4 +707,8 @@ void X11StandalonePlatform::updateRefreshRate()
     m_renderLoop->setRefreshRate(refreshRate);
 }
 
+QVector<RenderOutput *> X11StandalonePlatform::renderOutputs() const
+{
+    return {m_renderOutput.get()};
+}
 }

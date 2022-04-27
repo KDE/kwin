@@ -15,6 +15,7 @@
 #include "drm_qpainter_layer.h"
 #include "drm_virtual_output.h"
 #include "renderloop_p.h"
+#include "renderoutput.h"
 
 #include <drm_fourcc.h>
 
@@ -39,9 +40,9 @@ void DrmQPainterBackend::present(Output *output)
     static_cast<DrmAbstractOutput *>(output)->present();
 }
 
-OutputLayer *DrmQPainterBackend::primaryLayer(Output *output)
+OutputLayer *DrmQPainterBackend::primaryLayer(RenderOutput *output)
 {
-    return static_cast<DrmAbstractOutput *>(output)->outputLayer();
+    return static_cast<DrmAbstractOutput *>(output->platformOutput())->outputLayer();
 }
 
 std::shared_ptr<DrmPipelineLayer> DrmQPainterBackend::createPrimaryLayer(DrmPipeline *pipeline)

@@ -50,8 +50,7 @@ class SceneDelegate : public RenderLayerDelegate
     Q_OBJECT
 
 public:
-    explicit SceneDelegate(Scene *scene, QObject *parent = nullptr);
-    explicit SceneDelegate(Scene *scene, Output *output, QObject *parent = nullptr);
+    explicit SceneDelegate(Scene *scene, RenderOutput *output, QObject *parent = nullptr);
     ~SceneDelegate() override;
 
     QRect viewport() const;
@@ -63,8 +62,8 @@ public:
     void paint(RenderTarget *renderTarget, const QRegion &region) override;
 
 private:
-    Scene *m_scene;
-    Output *m_output = nullptr;
+    Scene *const m_scene;
+    RenderOutput *const m_output;
 };
 
 class KWIN_EXPORT Scene : public QObject
@@ -96,7 +95,7 @@ public:
     virtual bool initFailed() const = 0;
 
     SurfaceItem *scanoutCandidate() const;
-    void prePaint(Output *output);
+    void prePaint(RenderOutput *output);
     void postPaint();
     virtual void paint(RenderTarget *renderTarget, const QRegion &region) = 0;
 
@@ -225,7 +224,7 @@ protected:
     };
 
     // The screen that is being currently painted
-    Output *painted_screen = nullptr;
+    RenderOutput *painted_screen = nullptr;
 
     // windows in their stacking order
     QVector<WindowItem *> stacking_order;

@@ -16,12 +16,15 @@ namespace KWin
 class DrmBackend;
 class DrmGpu;
 class DrmOutputLayer;
+class RenderOutput;
+class SimpleRenderOutput;
 
 class DrmAbstractOutput : public Output
 {
     Q_OBJECT
 public:
     DrmAbstractOutput(DrmGpu *gpu);
+    ~DrmAbstractOutput();
 
     RenderLoop *renderLoop() const override;
     void frameFailed() const;
@@ -31,10 +34,12 @@ public:
 
     virtual bool present() = 0;
     virtual DrmOutputLayer *outputLayer() const = 0;
+    RenderOutput *renderOutput() const;
 
 protected:
     friend class DrmGpu;
 
+    std::unique_ptr<SimpleRenderOutput> m_renderOutput;
     std::unique_ptr<RenderLoop> m_renderLoop;
     DrmGpu *const m_gpu;
 };

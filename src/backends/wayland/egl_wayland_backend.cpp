@@ -21,6 +21,7 @@
 #include "logging.h"
 #include "options.h"
 
+#include "renderoutput.h"
 #include "screens.h"
 #include "wayland_server.h"
 
@@ -391,9 +392,9 @@ void EglWaylandBackend::present(Output *output)
     m_outputs[output]->present();
 }
 
-OutputLayer *EglWaylandBackend::primaryLayer(Output *output)
+OutputLayer *EglWaylandBackend::primaryLayer(RenderOutput *output)
 {
-    return m_outputs[output].get();
+    return m_outputs[output->platformOutput()].get();
 }
 
 }

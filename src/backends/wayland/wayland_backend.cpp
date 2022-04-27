@@ -843,6 +843,8 @@ void WaylandBackend::destroyOutputs()
 {
     while (!m_outputs.isEmpty()) {
         WaylandOutput *output = m_outputs.takeLast();
+        m_renderOutputs.removeOne(output->renderOutput());
+        Q_EMIT renderOutputRemoved(output->renderOutput());
         Q_EMIT outputDisabled(output);
         Q_EMIT outputRemoved(output);
         delete output;
@@ -967,7 +969,9 @@ Outputs WaylandBackend::enabledOutputs() const
 void WaylandBackend::addConfiguredOutput(WaylandOutput *output)
 {
     m_outputs << output;
+    m_renderOutputs << output->renderOutput();
     Q_EMIT outputAdded(output);
+    Q_EMIT renderOutputAdded(output->renderOutput());
     Q_EMIT outputEnabled(output);
 
     m_pendingInitialOutputs--;
@@ -1004,6 +1008,8 @@ void WaylandBackend::removeVirtualOutput(Output *output)
 {
     WaylandOutput *waylandOutput = dynamic_cast<WaylandOutput *>(output);
     if (waylandOutput && m_outputs.removeAll(waylandOutput)) {
+        m_renderOutputs.removeOne(waylandOutput->renderOutput());
+        Q_EMIT renderOutputRemoved(waylandOutput->renderOutput());
         Q_EMIT outputDisabled(waylandOutput);
         Q_EMIT outputRemoved(waylandOutput);
         delete waylandOutput;
@@ -1036,6 +1042,10 @@ std::shared_ptr<DmaBufTexture> WaylandBackend::createDmaBufTexture(const QSize &
     return std::make_shared<DmaBufTexture>(m_eglBackend->importDmaBufAsTexture(attributes), attributes);
 }
 
+QVector<RenderOutput *> WaylandBackend::renderOutputs() const
+{
+    return m_renderOutputs;
+}
 }
 
 } // KWin

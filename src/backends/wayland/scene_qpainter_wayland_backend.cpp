@@ -14,6 +14,7 @@
 #include "composite.h"
 #include "kwineffects.h"
 #include "logging.h"
+#include "renderoutput.h"
 
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Client/shm_pool.h>
@@ -182,9 +183,9 @@ void WaylandQPainterBackend::present(Output *output)
     m_outputs[output]->present();
 }
 
-OutputLayer *WaylandQPainterBackend::primaryLayer(Output *output)
+OutputLayer *WaylandQPainterBackend::primaryLayer(RenderOutput *output)
 {
-    return m_outputs[output].get();
+    return m_outputs[output->platformOutput()].get();
 }
 }
 }

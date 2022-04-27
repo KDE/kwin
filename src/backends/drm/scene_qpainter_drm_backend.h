@@ -30,7 +30,7 @@ public:
     ~DrmQPainterBackend();
 
     void present(Output *output) override;
-    OutputLayer *primaryLayer(Output *output) override;
+    OutputLayer *primaryLayer(RenderOutput *output) override;
 
     std::shared_ptr<DrmPipelineLayer> createPrimaryLayer(DrmPipeline *pipeline) override;
     std::shared_ptr<DrmOverlayLayer> createCursorLayer(DrmPipeline *pipeline) override;

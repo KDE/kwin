@@ -8,6 +8,7 @@
 */
 #include "wayland_output.h"
 #include "renderloop.h"
+#include "renderoutput.h"
 #include "wayland_backend.h"
 #include "wayland_server.h"
 
@@ -29,6 +30,7 @@ WaylandOutput::WaylandOutput(const QString &name, Surface *surface, WaylandBacke
     , m_renderLoop(std::make_unique<RenderLoop>())
     , m_surface(surface)
     , m_backend(backend)
+    , m_renderOutput(std::make_unique<SimpleRenderOutput>(this))
 {
     setInformation(Information{
         .name = name,
@@ -104,6 +106,11 @@ void WaylandOutput::setDpmsMode(DpmsMode mode)
             Q_EMIT wakeUp();
         }
     }
+}
+
+RenderOutput *WaylandOutput::renderOutput() const
+{
+    return m_renderOutput.get();
 }
 
 XdgShellOutput::XdgShellOutput(const QString &name, Surface *surface, XdgShell *xdgShell, WaylandBackend *backend, int number)

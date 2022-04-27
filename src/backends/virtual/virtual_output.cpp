@@ -10,6 +10,7 @@
 #include "virtual_backend.h"
 
 #include "renderloop_p.h"
+#include "renderoutput.h"
 #include "softwarevsyncmonitor.h"
 
 namespace KWin
@@ -20,6 +21,7 @@ VirtualOutput::VirtualOutput(VirtualBackend *parent)
     , m_backend(parent)
     , m_renderLoop(std::make_unique<RenderLoop>())
     , m_vsyncMonitor(SoftwareVsyncMonitor::create())
+    , m_renderOutput(std::make_unique<SimpleRenderOutput>(this))
 {
     connect(m_vsyncMonitor.get(), &VsyncMonitor::vblankOccurred, this, &VirtualOutput::vblank);
 
@@ -71,4 +73,8 @@ void VirtualOutput::updateEnablement(bool enable)
     m_backend->enableOutput(this, enable);
 }
 
+RenderOutput *VirtualOutput::renderOutput() const
+{
+    return m_renderOutput.get();
+}
 }

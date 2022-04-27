@@ -8,7 +8,9 @@
 */
 
 #include "output.h"
+
 #include "outputconfiguration.h"
+#include "renderoutput.h"
 
 #include <KConfigGroup>
 #include <KLocalizedString>

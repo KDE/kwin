@@ -19,6 +19,8 @@ namespace KWin
 
 class SoftwareVsyncMonitor;
 class VirtualBackend;
+class RenderOutput;
+class SimpleRenderOutput;
 
 class VirtualOutput : public Output
 {
@@ -34,6 +36,7 @@ public:
     void init(const QPoint &logicalPosition, const QSize &pixelSize);
     void setGeometry(const QRect &geo);
     void updateEnablement(bool enable) override;
+    RenderOutput *renderOutput() const;
 
 private:
     void vblank(std::chrono::nanoseconds timestamp);
@@ -47,6 +50,7 @@ private:
     int m_gammaSize = 200;
     bool m_gammaResult = true;
     int m_identifier;
+    const std::unique_ptr<SimpleRenderOutput> m_renderOutput;
 };
 
 }

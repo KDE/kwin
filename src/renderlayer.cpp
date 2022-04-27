@@ -5,15 +5,17 @@
 */
 
 #include "renderlayer.h"
+#include "output.h"
 #include "outputlayer.h"
 #include "renderlayerdelegate.h"
 #include "renderloop.h"
+#include "renderoutput.h"
 
 namespace KWin
 {
 
-RenderLayer::RenderLayer(RenderLoop *loop, RenderLayer *superlayer)
-    : m_loop(loop)
+RenderLayer::RenderLayer(RenderOutput *output, RenderLayer *superlayer)
+    : m_output(output)
 {
     setSuperlayer(superlayer);
 }
@@ -85,9 +87,9 @@ void RenderLayer::removeSublayer(RenderLayer *sublayer)
     updateBoundingRect();
 }
 
-RenderLoop *RenderLayer::loop() const
+RenderOutput *RenderLayer::output() const
 {
-    return m_loop;
+    return m_output;
 }
 
 RenderLayerDelegate *RenderLayer::delegate() const
@@ -171,7 +173,7 @@ void RenderLayer::addRepaint(const QRegion &region)
     }
     if (!region.isEmpty()) {
         m_repaints += region;
-        m_loop->scheduleRepaint();
+        m_output->platformOutput()->renderLoop()->scheduleRepaint();
     }
 }
 

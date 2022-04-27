@@ -17,7 +17,7 @@
 namespace KWin
 {
 
-class Output;
+class RenderOutput;
 
 /**
  * The Item class is the base class for items in the scene.
@@ -99,8 +99,8 @@ public:
 
     void scheduleRepaint(const QRegion &region);
     void scheduleFrame();
-    QRegion repaints(Output *output) const;
-    void resetRepaints(Output *output);
+    QRegion repaints(RenderOutput *output) const;
+    void resetRepaints(RenderOutput *output);
 
     WindowQuadList quads() const;
     virtual void preprocess();
@@ -134,7 +134,7 @@ private:
 
     bool computeEffectiveVisibility() const;
     void updateEffectiveVisibility();
-    void removeRepaints(Output *output);
+    void removeRepaints(RenderOutput *output);
 
     QPointer<Item> m_parentItem;
     QList<Item *> m_childItems;
@@ -146,7 +146,7 @@ private:
     int m_z = 0;
     bool m_explicitVisible = true;
     bool m_effectiveVisible = true;
-    QMap<Output *, QRegion> m_repaints;
+    QMap<RenderOutput *, QRegion> m_repaints;
     mutable std::optional<WindowQuadList> m_quads;
     mutable std::optional<QList<Item *>> m_sortedChildItems;
 };

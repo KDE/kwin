@@ -25,6 +25,7 @@ namespace KWin
 {
 
 class Output;
+class RenderOutput;
 
 namespace ExtendedCursor
 {
@@ -183,7 +184,7 @@ public:
     /**
      * Returns @c true if the cursor is visible on the given output; otherwise returns @c false.
      */
-    bool isOnOutput(Output *output) const;
+    bool isOnOutput(RenderOutput *output) const;
 
     void updateCursor(const QImage &image, const QPoint &hotspot);
     void markAsRendered(std::chrono::milliseconds timestamp);

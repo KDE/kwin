@@ -44,6 +44,7 @@
 #include "inputpanelv1window.h"
 #include "kwinglutils.h"
 #include "platform.h"
+#include "renderoutput.h"
 #include "utils/xcbutils.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
@@ -579,7 +580,7 @@ void EffectsHandlerImpl::setActiveFullScreenEffect(Effect *e)
     if (activeChanged) {
         const auto delegates = m_scene->delegates();
         for (SceneDelegate *delegate : delegates) {
-            RenderLoop *loop = delegate->layer()->loop();
+            RenderLoop *loop = delegate->layer()->output()->platformOutput()->renderLoop();
             if (fullscreen_effect) {
                 loop->setLatencyPolicy(LatencyPolicy::LatencyExtremelyHigh);
             } else {
@@ -1794,10 +1795,16 @@ void EffectsHandlerImpl::renderScreen(EffectScreen *screen)
     RenderTarget renderTarget(GLFramebuffer::currentFramebuffer());
     renderTarget.setDevicePixelRatio(screen->devicePixelRatio());
 
-    auto output = static_cast<EffectScreenImpl *>(screen)->platformOutput();
-    m_scene->prePaint(output);
-    m_scene->paint(&renderTarget, output->geometry());
-    m_scene->postPaint();
+    const auto platformOutput = static_cast<EffectScreenImpl *>(screen)->platformOutput();
+    const auto outputs = kwinApp()->platform()->renderOutputs();
+    for (const auto &output : outputs) {
+        if (output->platformOutput() != platformOutput) {
+            continue;
+        }
+        m_scene->prePaint(output);
+        m_scene->paint(&renderTarget, output->geometry());
+        m_scene->postPaint();
+    }
 }
 
 bool EffectsHandlerImpl::isCursorHidden() const

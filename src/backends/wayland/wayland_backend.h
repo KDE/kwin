@@ -292,6 +292,7 @@ public:
     WaylandOutput *findOutput(KWayland::Client::Surface *nativeSurface) const;
     Outputs outputs() const override;
     Outputs enabledOutputs() const override;
+    QVector<RenderOutput *> renderOutputs() const override;
     QVector<WaylandOutput *> waylandOutputs() const
     {
         return m_outputs;
@@ -349,6 +350,7 @@ private:
 
     QThread *m_connectionThread;
     QVector<WaylandOutput *> m_outputs;
+    QVector<RenderOutput *> m_renderOutputs;
     int m_pendingInitialOutputs = 0;
 
     WaylandCursor *m_waylandCursor = nullptr;

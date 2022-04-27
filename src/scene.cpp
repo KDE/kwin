@@ -61,6 +61,7 @@
 #include "platform.h"
 #include "renderlayer.h"
 #include "renderloop.h"
+#include "renderoutput.h"
 #include "shadow.h"
 #include "shadowitem.h"
 #include "surfaceitem.h"
@@ -77,14 +78,7 @@
 namespace KWin
 {
 
-SceneDelegate::SceneDelegate(Scene *scene, QObject *parent)
-    : RenderLayerDelegate(parent)
-    , m_scene(scene)
-{
-    m_scene->addDelegate(this);
-}
-
-SceneDelegate::SceneDelegate(Scene *scene, Output *output, QObject *parent)
+SceneDelegate::SceneDelegate(Scene *scene, RenderOutput *output, QObject *parent)
     : RenderLayerDelegate(parent)
     , m_scene(scene)
     , m_output(output)
@@ -254,21 +248,15 @@ SurfaceItem *Scene::scanoutCandidate() const
     return candidate;
 }
 
-void Scene::prePaint(Output *output)
+void Scene::prePaint(RenderOutput *output)
 {
     createStackingOrder();
 
-    if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        painted_screen = kwinApp()->platform()->enabledOutputs().constFirst();
-        setRenderTargetRect(geometry());
-        setRenderTargetScale(1);
-    } else {
-        painted_screen = output;
-        setRenderTargetRect(painted_screen->geometry());
-        setRenderTargetScale(painted_screen->scale());
-    }
+    painted_screen = output;
+    setRenderTargetRect(painted_screen->geometry());
+    setRenderTargetScale(painted_screen->platformOutput()->scale());
 
-    const RenderLoop *renderLoop = painted_screen->renderLoop();
+    const RenderLoop *renderLoop = painted_screen->platformOutput()->renderLoop();
     const std::chrono::milliseconds presentTime =
         std::chrono::duration_cast<std::chrono::milliseconds>(renderLoop->nextPresentationTimestamp());
 
@@ -287,7 +275,7 @@ void Scene::prePaint(Output *output)
 
     ScreenPrePaintData prePaintData;
     prePaintData.mask = 0;
-    prePaintData.screen = EffectScreenImpl::get(painted_screen);
+    prePaintData.screen = EffectScreenImpl::get(painted_screen->platformOutput());
 
     effects->prePaintScreen(prePaintData, m_expectedPresentTimestamp);
     m_paintContext.damage = prePaintData.paint;
@@ -301,7 +289,7 @@ void Scene::prePaint(Output *output)
     }
 }
 
-static void resetRepaintsHelper(Item *item, Output *output)
+static void resetRepaintsHelper(Item *item, RenderOutput *output)
 {
     item->resetRepaints(output);
 
@@ -311,7 +299,7 @@ static void resetRepaintsHelper(Item *item, Output *output)
     }
 }
 
-static void accumulateRepaints(Item *item, Output *output, QRegion *repaints)
+static void accumulateRepaints(Item *item, RenderOutput *output, QRegion *repaints)
 {
     *repaints += item->repaints(output);
     item->resetRepaints(output);
@@ -394,7 +382,7 @@ void Scene::postPaint()
 
     if (waylandServer()) {
         const std::chrono::milliseconds frameTime =
-            std::chrono::duration_cast<std::chrono::milliseconds>(painted_screen->renderLoop()->lastPresentationTimestamp());
+            std::chrono::duration_cast<std::chrono::milliseconds>(painted_screen->platformOutput()->renderLoop()->lastPresentationTimestamp());
 
         for (WindowItem *windowItem : std::as_const(stacking_order)) {
             Window *window = windowItem->window();
@@ -477,7 +465,7 @@ QRegion Scene::mapToRenderTarget(const QRegion &region) const
 
 void Scene::paintScreen(const QRegion &region)
 {
-    ScreenPaintData data(m_renderTargetProjectionMatrix, EffectScreenImpl::get(painted_screen));
+    ScreenPaintData data(m_renderTargetProjectionMatrix, EffectScreenImpl::get(painted_screen->platformOutput()));
     effects->paintScreen(m_paintContext.mask, region, data);
 
     m_paintScreenCount = 0;

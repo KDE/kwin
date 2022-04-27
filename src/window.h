@@ -54,6 +54,7 @@ class Shadow;
 class SurfaceItem;
 class VirtualDesktop;
 class WindowItem;
+class RenderOutput;
 
 /**
  * Enum to describe the reason why a Window has to be released.
@@ -630,6 +631,7 @@ public:
     int width() const;
     int height() const;
     bool isOnOutput(Output *output) const;
+    bool isOnOutput(RenderOutput *output) const;
     bool isOnActiveOutput() const;
     int screen() const; // the screen where the center is
     Output *output() const;
