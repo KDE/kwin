@@ -352,7 +352,11 @@ void Item::updateEffectiveVisibility()
     }
 
     m_effectiveVisible = effectiveVisible;
-    scheduleRepaintInternal(boundingRect());
+    if (!m_effectiveVisible) {
+        Compositor::self()->scene()->addRepaint(mapToGlobal(boundingRect()));
+    } else {
+        scheduleRepaintInternal(boundingRect());
+    }
 
     for (Item *childItem : qAsConst(m_childItems)) {
         childItem->updateEffectiveVisibility();
