@@ -1875,7 +1875,7 @@ private:
     QUuid m_internalId;
     Xcb::Window m_client;
     bool is_shape;
-    EffectWindowImpl *effect_window;
+    EffectWindowImpl *m_effectWindow;
     Shadow *m_shadow = nullptr;
     QByteArray resource_name;
     QByteArray resource_class;
@@ -2198,12 +2198,12 @@ inline const QRegion &Window::opaqueRegion() const
 
 inline EffectWindowImpl *Window::effectWindow()
 {
-    return effect_window;
+    return m_effectWindow;
 }
 
 inline const EffectWindowImpl *Window::effectWindow() const
 {
-    return effect_window;
+    return m_effectWindow;
 }
 
 inline bool Window::isOnAllDesktops() const

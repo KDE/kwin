@@ -71,7 +71,7 @@ Window::Window()
     , m_internalId(QUuid::createUuid())
     , m_client()
     , is_shape(false)
-    , effect_window(nullptr)
+    , m_effectWindow(nullptr)
     , m_clientMachine(new ClientMachine(this))
     , m_wmClientLeader(XCB_WINDOW_NONE)
     , m_skipCloseAnimation(false)
@@ -181,9 +181,9 @@ void Window::copyToDeleted(Window *c)
     m_client.reset(c->m_client, false);
     ready_for_painting = c->ready_for_painting;
     is_shape = c->is_shape;
-    effect_window = c->effect_window;
-    if (effect_window != nullptr) {
-        effect_window->setWindow(this);
+    m_effectWindow = c->m_effectWindow;
+    if (m_effectWindow != nullptr) {
+        m_effectWindow->setWindow(this);
     }
     m_shadow = c->m_shadow;
     if (m_shadow) {
@@ -342,7 +342,7 @@ bool Window::setupCompositing()
         return false;
     }
 
-    effect_window = new EffectWindowImpl(this);
+    m_effectWindow = new EffectWindowImpl(this);
     updateShadow();
     Compositor::self()->scene()->addToplevel(this);
 
@@ -363,7 +363,7 @@ void Window::finishCompositing(ReleaseReason releaseReason)
     if (m_shadow && m_shadow->toplevel() == this) { // otherwise it's already passed to Deleted, don't free data
         deleteShadow();
     }
-    if (effect_window && effect_window->window() == this) { // otherwise it's already passed to Deleted, don't free data
+    if (m_effectWindow && m_effectWindow->window() == this) { // otherwise it's already passed to Deleted, don't free data
         deleteEffectWindow();
     }
 }
@@ -443,8 +443,8 @@ void Window::deleteShadow()
 
 void Window::deleteEffectWindow()
 {
-    delete effect_window;
-    effect_window = nullptr;
+    delete m_effectWindow;
+    m_effectWindow = nullptr;
 }
 
 int Window::screen() const
