@@ -487,7 +487,6 @@ bool WaylandServer::init(InitializationFlags flags)
     m_xdgOutputManagerV1 = new XdgOutputManagerV1Interface(m_display, m_display);
     new SubCompositorInterface(m_display, m_display);
     m_XdgForeign = new XdgForeignV2Interface(m_display, m_display);
-    m_keyState = new KeyStateInterface(m_display, m_display);
     m_inputMethod = new InputMethodV1Interface(m_display, m_display);
 
     auto activation = new KWaylandServer::XdgActivationV1Interface(m_display, this);
@@ -524,9 +523,7 @@ void WaylandServer::windowShown(Window *window)
 
 void WaylandServer::initWorkspace()
 {
-    // TODO: Moe the keyboard leds somewhere else.
-    updateKeyState(input()->keyboard()->xkb()->leds());
-    connect(input()->keyboard(), &KeyboardInputRedirection::ledsChanged, this, &WaylandServer::updateKeyState);
+    new KeyStateInterface(m_display, m_display);
 
     VirtualDesktopManager::self()->setVirtualDesktopManagement(m_virtualDesktopManagement);
 
@@ -745,17 +742,6 @@ void WaylandServer::simulateUserActivity()
     if (m_idle) {
         m_idle->simulateUserActivity();
     }
-}
-
-void WaylandServer::updateKeyState(KWin::LEDs leds)
-{
-    if (!m_keyState) {
-        return;
-    }
-
-    m_keyState->setState(KeyStateInterface::Key::CapsLock, leds & KWin::LED::CapsLock ? KeyStateInterface::State::Locked : KeyStateInterface::State::Unlocked);
-    m_keyState->setState(KeyStateInterface::Key::NumLock, leds & KWin::LED::NumLock ? KeyStateInterface::State::Locked : KeyStateInterface::State::Unlocked);
-    m_keyState->setState(KeyStateInterface::Key::ScrollLock, leds & KWin::LED::ScrollLock ? KeyStateInterface::State::Locked : KeyStateInterface::State::Unlocked);
 }
 
 bool WaylandServer::isKeyboardShortcutsInhibited() const

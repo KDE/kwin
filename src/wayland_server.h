@@ -42,7 +42,6 @@ class PrimaryOutputV1Interface;
 class OutputManagementV2Interface;
 class XdgForeignV2Interface;
 class XdgOutputManagerV1Interface;
-class KeyStateInterface;
 class LinuxDmaBufV1ClientBufferIntegration;
 class LinuxDmaBufV1ClientBuffer;
 class TabletManagerV2Interface;
@@ -210,7 +209,6 @@ public:
     SocketPairConnection createConnection();
 
     void simulateUserActivity();
-    void updateKeyState(KWin::LEDs leds);
 
     QSet<KWaylandServer::LinuxDmaBufV1ClientBuffer *> linuxDmabufBuffers() const
     {
@@ -291,7 +289,6 @@ private:
     QPointer<KWaylandServer::ClientConnection> m_inputMethodServerConnection;
     KWaylandServer::ClientConnection *m_screenLockerClientConnection = nullptr;
     KWaylandServer::XdgForeignV2Interface *m_XdgForeign = nullptr;
-    KWaylandServer::KeyStateInterface *m_keyState = nullptr;
     KWaylandServer::PrimaryOutputV1Interface *m_primary = nullptr;
     XdgActivationV1Integration *m_xdgActivationIntegration = nullptr;
     QList<Window *> m_windows;
