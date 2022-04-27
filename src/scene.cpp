@@ -602,11 +602,6 @@ void Scene::paintWindow(SceneWindow *w, int mask, const QRegion &region)
     effects->paintWindow(effectWindow(w), mask, region, data);
 }
 
-void Scene::paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data)
-{
-    static_cast<EffectsHandlerImpl *>(effects)->paintDesktop(desktop, mask, region, data);
-}
-
 // the function that'll be eventually called by paintWindow() above
 void Scene::finalPaintWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
 {
@@ -766,14 +761,8 @@ void SceneWindow::resetPaintingEnabled()
     if (toplevel->isDeleted()) {
         disable_painting |= PAINT_DISABLED_BY_DELETE;
     }
-    if (static_cast<EffectsHandlerImpl *>(effects)->isDesktopRendering()) {
-        if (!toplevel->isOnDesktop(static_cast<EffectsHandlerImpl *>(effects)->currentRenderedDesktop())) {
-            disable_painting |= PAINT_DISABLED_BY_DESKTOP;
-        }
-    } else {
-        if (!toplevel->isOnCurrentDesktop()) {
-            disable_painting |= PAINT_DISABLED_BY_DESKTOP;
-        }
+    if (!toplevel->isOnCurrentDesktop()) {
+        disable_painting |= PAINT_DISABLED_BY_DESKTOP;
     }
     if (!toplevel->isOnCurrentActivity()) {
         disable_painting |= PAINT_DISABLED_BY_ACTIVITY;

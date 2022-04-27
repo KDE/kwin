@@ -64,7 +64,6 @@ public:
 protected:
     void paintBackground(const QRegion &region) override;
     QMatrix4x4 transformation(int mask, const ScreenPaintData &data) const;
-    void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data) override;
     void paintOffscreenQuickView(OffscreenQuickView *w) override;
 
     void paintSimpleScreen(int mask, const QRegion &region) override;

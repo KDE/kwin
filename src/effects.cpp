@@ -121,8 +121,6 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     , fullscreen_effect(nullptr)
     , m_compositor(compositor)
     , m_scene(scene)
-    , m_desktopRendering(false)
-    , m_currentRenderedDesktop(0)
     , m_effectLoader(new EffectLoader(this))
     , m_trackingCursorChanges(0)
 {
@@ -374,22 +372,6 @@ void EffectsHandlerImpl::paintScreen(int mask, const QRegion &region, ScreenPain
     } else {
         m_scene->finalPaintScreen(mask, region, data);
     }
-}
-
-void EffectsHandlerImpl::paintDesktop(int desktop, int mask, QRegion region, ScreenPaintData &data)
-{
-    if (desktop < 1 || desktop > numberOfDesktops()) {
-        return;
-    }
-    m_currentRenderedDesktop = desktop;
-    m_desktopRendering = true;
-    // save the paint screen iterator
-    EffectsIterator savedIterator = m_currentPaintScreenIterator;
-    m_currentPaintScreenIterator = m_activeEffects.constBegin();
-    effects->paintScreen(mask, region, data);
-    // restore the saved iterator
-    m_currentPaintScreenIterator = savedIterator;
-    m_desktopRendering = false;
 }
 
 void EffectsHandlerImpl::postPaintScreen()

@@ -152,15 +152,6 @@ void SceneOpenGL::paintBackground(const QRegion &region)
     }
 }
 
-void SceneOpenGL::paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data)
-{
-    const QRect r = region.boundingRect();
-    glEnable(GL_SCISSOR_TEST);
-    glScissor(r.x(), geometry().size().height() - r.y() - r.height(), r.width(), r.height());
-    KWin::Scene::paintDesktop(desktop, mask, region, data);
-    glDisable(GL_SCISSOR_TEST);
-}
-
 void SceneOpenGL::paintOffscreenQuickView(OffscreenQuickView *w)
 {
     GLTexture *t = w->bufferAsTexture();

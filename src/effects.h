@@ -61,10 +61,6 @@ public:
     ~EffectsHandlerImpl() override;
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
-    /**
-     * Special hook to perform a paintScreen but just with the windows on @p desktop.
-     */
-    void paintDesktop(int desktop, int mask, QRegion region, ScreenPaintData &data);
     void postPaintScreen() override;
     void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void paintWindow(EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) override;
@@ -203,21 +199,6 @@ public:
      * @returns whether or not any effect is currently active where KWin should not use direct scanout
      */
     bool blocksDirectScanout() const;
-
-    /**
-     * @returns Whether we are currently in a desktop rendering process triggered by paintDesktop hook
-     */
-    bool isDesktopRendering() const
-    {
-        return m_desktopRendering;
-    }
-    /**
-     * @returns the desktop currently being rendered in the paintDesktop hook.
-     */
-    int currentRenderedDesktop() const
-    {
-        return m_currentRenderedDesktop;
-    }
 
     KWaylandServer::Display *waylandDisplay() const override;
 
@@ -367,8 +348,6 @@ private:
     QHash<QByteArray, qulonglong> m_managedProperties;
     Compositor *m_compositor;
     Scene *m_scene;
-    bool m_desktopRendering;
-    int m_currentRenderedDesktop;
     QList<Effect *> m_grabbedMouseEffects;
     EffectLoader *m_effectLoader;
     int m_trackingCursorChanges;

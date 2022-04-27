@@ -202,8 +202,6 @@ public:
     virtual SurfaceTexture *createSurfaceTextureX11(SurfacePixmapX11 *pixmap);
     virtual SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
 
-    virtual void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data);
-
     QMatrix4x4 renderTargetProjectionMatrix() const;
     QRect renderTargetRect() const;
     void setRenderTargetRect(const QRect &rect);

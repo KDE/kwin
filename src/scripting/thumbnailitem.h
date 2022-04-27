@@ -128,28 +128,4 @@ private:
     bool m_dirty = false;
 };
 
-class DesktopThumbnailItem : public ThumbnailItemBase
-{
-    Q_OBJECT
-    Q_PROPERTY(int desktop READ desktop WRITE setDesktop NOTIFY desktopChanged)
-
-public:
-    explicit DesktopThumbnailItem(QQuickItem *parent = nullptr);
-
-    int desktop() const;
-    void setDesktop(int desktop);
-
-Q_SIGNALS:
-    void desktopChanged();
-
-protected:
-    QImage fallbackImage() const override;
-    QRectF paintedRect() const override;
-    void invalidateOffscreenTexture() override;
-    void updateOffscreenTexture() override;
-
-private:
-    int m_desktop = 1;
-};
-
 } // namespace KWin
