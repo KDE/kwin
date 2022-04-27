@@ -504,15 +504,6 @@ void Compositor::stop()
 
     if (Workspace::self()) {
         for (X11Window *window : Workspace::self()->clientList()) {
-            m_scene->removeToplevel(window);
-        }
-        for (Unmanaged *window : Workspace::self()->unmanagedList()) {
-            m_scene->removeToplevel(window);
-        }
-        for (InternalWindow *window : workspace()->internalWindows()) {
-            m_scene->removeToplevel(window);
-        }
-        for (X11Window *window : Workspace::self()->clientList()) {
             window->finishCompositing();
         }
         for (Unmanaged *window : Workspace::self()->unmanagedList()) {
@@ -531,10 +522,6 @@ void Compositor::stop()
     }
 
     if (waylandServer()) {
-        const QList<Window *> toRemoveTopLevel = waylandServer()->windows();
-        for (Window *window : toRemoveTopLevel) {
-            m_scene->removeToplevel(window);
-        }
         const QList<Window *> toFinishCompositing = waylandServer()->windows();
         for (Window *window : toFinishCompositing) {
             window->finishCompositing();

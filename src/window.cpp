@@ -185,6 +185,10 @@ void Window::copyToDeleted(Window *c)
     if (m_effectWindow != nullptr) {
         m_effectWindow->setWindow(this);
     }
+    m_sceneWindow = c->m_sceneWindow;
+    if (m_sceneWindow != nullptr) {
+        m_sceneWindow->setToplevel(this);
+    }
     m_shadow = c->m_shadow;
     if (m_shadow) {
         m_shadow->setToplevel(this);
@@ -344,7 +348,9 @@ bool Window::setupCompositing()
 
     m_effectWindow = new EffectWindowImpl(this);
     updateShadow();
-    Compositor::self()->scene()->addToplevel(this);
+
+    m_sceneWindow = Compositor::self()->scene()->createWindow(this);
+    m_effectWindow->setSceneWindow(m_sceneWindow);
 
     connect(windowItem(), &WindowItem::positionChanged, this, &Window::visibleGeometryChanged);
     connect(windowItem(), &WindowItem::boundingRectChanged, this, &Window::visibleGeometryChanged);
@@ -365,6 +371,9 @@ void Window::finishCompositing(ReleaseReason releaseReason)
     }
     if (m_effectWindow && m_effectWindow->window() == this) { // otherwise it's already passed to Deleted, don't free data
         deleteEffectWindow();
+    }
+    if (m_sceneWindow && m_sceneWindow->window() == this) { // otherwise it's already passed to Deleted, don't free data
+        deleteSceneWindow();
     }
 }
 
@@ -447,6 +456,12 @@ void Window::deleteEffectWindow()
     m_effectWindow = nullptr;
 }
 
+void Window::deleteSceneWindow()
+{
+    delete m_sceneWindow;
+    m_sceneWindow = nullptr;
+}
+
 int Window::screen() const
 {
     return kwinApp()->platform()->enabledOutputs().indexOf(m_output);
@@ -500,16 +515,16 @@ void Window::updateShadow()
 
 SurfaceItem *Window::surfaceItem() const
 {
-    if (effectWindow() && effectWindow()->sceneWindow()) {
-        return effectWindow()->sceneWindow()->surfaceItem();
+    if (m_sceneWindow) {
+        return m_sceneWindow->surfaceItem();
     }
     return nullptr;
 }
 
 WindowItem *Window::windowItem() const
 {
-    if (effectWindow() && effectWindow()->sceneWindow()) {
-        return effectWindow()->sceneWindow()->windowItem();
+    if (m_sceneWindow) {
+        return m_sceneWindow->windowItem();
     }
     return nullptr;
 }

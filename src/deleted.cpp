@@ -48,6 +48,7 @@ Deleted::~Deleted()
         workspace()->removeDeleted(this);
     }
     deleteEffectWindow();
+    deleteSceneWindow();
     deleteShadow();
 }
 

@@ -53,14 +53,13 @@ void WindowScreenCastSource::render(GLFramebuffer *target)
     projectionMatrix.ortho(geometry.x(), geometry.x() + geometry.width(),
                            geometry.y(), geometry.y() + geometry.height(), -1, 1);
 
-    EffectWindowImpl *effectWindow = m_window->effectWindow();
-    WindowPaintData data(effectWindow);
+    WindowPaintData data(m_window->effectWindow());
     data.setProjectionMatrix(projectionMatrix);
 
     GLFramebuffer::pushFramebuffer(target);
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
-    effectWindow->sceneWindow()->performPaint(Scene::PAINT_WINDOW_TRANSFORMED, infiniteRegion(), data);
+    m_window->sceneWindow()->performPaint(Scene::PAINT_WINDOW_TRANSFORMED, infiniteRegion(), data);
     GLFramebuffer::popFramebuffer();
 }
 

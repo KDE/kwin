@@ -50,6 +50,7 @@ class Output;
 class ClientMachine;
 class Deleted;
 class EffectWindowImpl;
+class SceneWindow;
 class Shadow;
 class SurfaceItem;
 class VirtualDesktop;
@@ -732,6 +733,7 @@ public:
     void addWorkspaceRepaint(const QRegion &region);
     EffectWindowImpl *effectWindow();
     const EffectWindowImpl *effectWindow() const;
+    SceneWindow *sceneWindow() const;
     SurfaceItem *surfaceItem() const;
     WindowItem *windowItem() const;
     /**
@@ -1547,6 +1549,7 @@ protected:
     void disownDataPassedToDeleted();
     void deleteShadow();
     void deleteEffectWindow();
+    void deleteSceneWindow();
     void setDepth(int depth);
 
     Output *m_output = nullptr;
@@ -1876,6 +1879,7 @@ private:
     Xcb::Window m_client;
     bool is_shape;
     EffectWindowImpl *m_effectWindow;
+    SceneWindow *m_sceneWindow = nullptr;
     Shadow *m_shadow = nullptr;
     QByteArray resource_name;
     QByteArray resource_class;
@@ -2204,6 +2208,11 @@ inline EffectWindowImpl *Window::effectWindow()
 inline const EffectWindowImpl *Window::effectWindow() const
 {
     return m_effectWindow;
+}
+
+inline SceneWindow *Window::sceneWindow() const
+{
+    return m_sceneWindow;
 }
 
 inline bool Window::isOnAllDesktops() const

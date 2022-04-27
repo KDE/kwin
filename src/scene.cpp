@@ -143,13 +143,10 @@ Scene::Scene(QObject *parent)
 
 Scene::~Scene()
 {
-    Q_ASSERT(m_windows.isEmpty());
 }
 
 void Scene::initialize()
 {
-    connect(workspace(), &Workspace::deletedRemoved, this, &Scene::removeToplevel);
-
     connect(workspace(), &Workspace::currentActivityChanged, this, &Scene::addRepaintFull);
     connect(workspace(), &Workspace::currentDesktopChanged, this, &Scene::addRepaintFull);
     connect(workspace(), &Workspace::stackingOrderChanged, this, &Scene::addRepaintFull);
@@ -411,7 +408,7 @@ void Scene::postPaint()
         const std::chrono::milliseconds frameTime =
             std::chrono::duration_cast<std::chrono::milliseconds>(painted_screen->renderLoop()->lastPresentationTimestamp());
 
-        for (SceneWindow *window : std::as_const(m_windows)) {
+        for (SceneWindow *window : std::as_const(stacking_order)) {
             Window *toplevel = window->window();
             if (!toplevel->isOnOutput(painted_screen)) {
                 continue;
@@ -555,37 +552,6 @@ void Scene::paintSimpleScreen(int, const QRegion &region)
     }
 }
 
-void Scene::addToplevel(Window *c)
-{
-    Q_ASSERT(!m_windows.contains(c));
-    SceneWindow *w = createWindow(c);
-    m_windows[c] = w;
-
-    connect(c, &Window::windowClosed, this, &Scene::windowClosed);
-
-    c->effectWindow()->setSceneWindow(w);
-}
-
-void Scene::removeToplevel(Window *toplevel)
-{
-    Q_ASSERT(m_windows.contains(toplevel));
-    delete m_windows.take(toplevel);
-    toplevel->effectWindow()->setSceneWindow(nullptr);
-}
-
-void Scene::windowClosed(Window *toplevel, Deleted *deleted)
-{
-    if (!deleted) {
-        removeToplevel(toplevel);
-        return;
-    }
-
-    Q_ASSERT(m_windows.contains(toplevel));
-    auto window = m_windows.take(toplevel);
-    window->updateToplevel(deleted);
-    m_windows[deleted] = window;
-}
-
 void Scene::createStackingOrder()
 {
     // Create a list of all windows in the stacking order
@@ -616,8 +582,8 @@ void Scene::createStackingOrder()
 
     // TODO: cache the stacking_order in case it has not changed
     for (Window *c : std::as_const(windows)) {
-        Q_ASSERT(m_windows.contains(c));
-        stacking_order.append(m_windows[c]);
+        Q_ASSERT(c->sceneWindow());
+        stacking_order.append(c->sceneWindow());
     }
 }
 
@@ -730,9 +696,9 @@ SceneWindow::~SceneWindow()
 {
 }
 
-void SceneWindow::updateToplevel(Deleted *deleted)
+void SceneWindow::setToplevel(Window *window)
 {
-    toplevel = deleted;
+    toplevel = window;
 }
 
 void SceneWindow::referencePreviousPixmap()

@@ -421,15 +421,14 @@ void WindowThumbnailItem::updateOffscreenTexture()
     projectionMatrix.ortho(geometry.x(), geometry.x() + geometry.width(),
                            geometry.y(), geometry.y() + geometry.height(), -1, 1);
 
-    EffectWindowImpl *effectWindow = m_client->effectWindow();
-    WindowPaintData data(effectWindow);
+    WindowPaintData data(m_client->effectWindow());
     data.setProjectionMatrix(projectionMatrix);
 
     // The thumbnail must be rendered using kwin's opengl context as VAOs are not
     // shared across contexts. Unfortunately, this also introduces a latency of 1
     // frame, which is not ideal, but it is acceptable for things such as thumbnails.
     const int mask = Scene::PAINT_WINDOW_TRANSFORMED;
-    effectWindow->sceneWindow()->performPaint(mask, infiniteRegion(), data);
+    m_client->sceneWindow()->performPaint(mask, infiniteRegion(), data);
     GLFramebuffer::popFramebuffer();
 
     // The fence is needed to avoid the case where qtquick renderer starts using

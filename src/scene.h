@@ -121,15 +121,7 @@ public:
      * @param toplevel The window to be added.
      * @note You can add a toplevel to scene only once.
      */
-    void addToplevel(Window *toplevel);
-
-    /**
-     * Removes the Window from the Scene.
-     *
-     * @param toplevel The window to be removed.
-     * @note You can remove a toplevel from the scene only once.
-     */
-    void removeToplevel(Window *toplevel);
+    virtual SceneWindow *createWindow(Window *toplevel) = 0;
 
     /**
      * @brief Creates the Scene backend of an EffectFrame.
@@ -223,12 +215,7 @@ public:
 Q_SIGNALS:
     void frameRendered();
 
-public Q_SLOTS:
-    // a window has been closed
-    void windowClosed(Window *c, Deleted *deleted);
-
 protected:
-    virtual SceneWindow *createWindow(Window *toplevel) = 0;
     void createStackingOrder();
     void clearStackingOrder();
     // shared implementation, starts painting the screen
@@ -280,7 +267,6 @@ protected:
 private:
     std::chrono::milliseconds m_expectedPresentTimestamp = std::chrono::milliseconds::zero();
     QList<SceneDelegate *> m_delegates;
-    QHash<Window *, SceneWindow *> m_windows;
     QRect m_geometry;
     QMatrix4x4 m_renderTargetProjectionMatrix;
     QRect m_renderTargetRect;
@@ -332,7 +318,7 @@ public:
     // is the window visible at all
     bool isVisible() const;
     QRegion decorationShape() const;
-    void updateToplevel(Deleted *deleted);
+    void setToplevel(Window *window);
     void referencePreviousPixmap();
     void unreferencePreviousPixmap();
     WindowItem *windowItem() const;
