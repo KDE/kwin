@@ -190,7 +190,7 @@ void SceneQPainterWindow::renderItem(QPainter *painter, Item *item) const
         if (childItem->z() >= 0) {
             break;
         }
-        if (childItem->isVisible()) {
+        if (childItem->explicitVisible()) {
             renderItem(painter, childItem);
         }
     }
@@ -206,7 +206,7 @@ void SceneQPainterWindow::renderItem(QPainter *painter, Item *item) const
         if (childItem->z() < 0) {
             continue;
         }
-        if (childItem->isVisible()) {
+        if (childItem->explicitVisible()) {
             renderItem(painter, childItem);
         }
     }

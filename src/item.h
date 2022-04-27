@@ -82,6 +82,7 @@ public:
      */
     void stackAfter(Item *sibling);
 
+    bool explicitVisible() const;
     bool isVisible() const;
     void setVisible(bool visible);
 
@@ -131,7 +132,7 @@ private:
     QPoint m_position;
     QSize m_size = QSize(0, 0);
     int m_z = 0;
-    bool m_visible = true;
+    bool m_explicitVisible = true;
     bool m_effectiveVisible = true;
     QMap<Output *, QRegion> m_repaints;
     mutable std::optional<WindowQuadList> m_quads;

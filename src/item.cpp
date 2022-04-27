@@ -326,6 +326,11 @@ void Item::removeRepaints(Output *output)
     m_repaints.remove(output);
 }
 
+bool Item::explicitVisible() const
+{
+    return m_explicitVisible;
+}
+
 bool Item::isVisible() const
 {
     return m_effectiveVisible;
@@ -333,15 +338,15 @@ bool Item::isVisible() const
 
 void Item::setVisible(bool visible)
 {
-    if (m_visible != visible) {
-        m_visible = visible;
+    if (m_explicitVisible != visible) {
+        m_explicitVisible = visible;
         updateEffectiveVisibility();
     }
 }
 
 bool Item::computeEffectiveVisibility() const
 {
-    return m_visible && (!m_parentItem || m_parentItem->isVisible());
+    return m_explicitVisible && (!m_parentItem || m_parentItem->isVisible());
 }
 
 void Item::updateEffectiveVisibility()

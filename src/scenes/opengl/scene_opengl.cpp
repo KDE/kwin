@@ -420,7 +420,7 @@ void OpenGLWindow::createRenderNode(Item *item, RenderContext *context)
         if (childItem->z() >= 0) {
             break;
         }
-        if (childItem->isVisible()) {
+        if (childItem->explicitVisible()) {
             createRenderNode(childItem, context);
         }
     }
@@ -475,7 +475,7 @@ void OpenGLWindow::createRenderNode(Item *item, RenderContext *context)
         if (childItem->z() < 0) {
             continue;
         }
-        if (childItem->isVisible()) {
+        if (childItem->explicitVisible()) {
             createRenderNode(childItem, context);
         }
     }
