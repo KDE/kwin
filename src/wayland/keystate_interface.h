@@ -24,22 +24,7 @@ class KWIN_EXPORT KeyStateInterface : public QObject
 
 public:
     explicit KeyStateInterface(Display *display, QObject *parent = nullptr);
-    virtual ~KeyStateInterface();
-
-    enum class Key {
-        CapsLock = 0,
-        NumLock = 1,
-        ScrollLock = 2,
-    };
-    Q_ENUM(Key);
-    enum State {
-        Unlocked = 0,
-        Latched = 1,
-        Locked = 2,
-    };
-    Q_ENUM(State)
-
-    void setState(Key k, State s);
+    ~KeyStateInterface() override;
 
 private:
     QScopedPointer<KeyStateInterfacePrivate> d;
