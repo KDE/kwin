@@ -16,7 +16,7 @@
 #include "screenedgeitem.h"
 #include "scripting_logging.h"
 #include "scriptingutils.h"
-#include "thumbnailitem.h"
+#include "windowthumbnailitem.h"
 #include "workspace_wrapper.h"
 
 #include "v2/clientmodel.h"

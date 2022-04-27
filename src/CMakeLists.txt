@@ -119,7 +119,7 @@ target_sources(kwin PRIVATE
     scripting/scripting.cpp
     scripting/scripting_logging.cpp
     scripting/scriptingutils.cpp
-    scripting/thumbnailitem.cpp
+    scripting/windowthumbnailitem.cpp
     scripting/workspace_wrapper.cpp
     session.cpp
     session_consolekit.cpp

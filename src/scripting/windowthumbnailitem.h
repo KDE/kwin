@@ -19,9 +19,12 @@ class GLFramebuffer;
 class GLTexture;
 class ThumbnailTextureProvider;
 
-class ThumbnailItemBase : public QQuickItem
+class WindowThumbnailItem : public QQuickItem
 {
     Q_OBJECT
+    Q_PROPERTY(QUuid wId READ wId WRITE setWId NOTIFY wIdChanged)
+    Q_PROPERTY(KWin::Window *client READ client WRITE setClient NOTIFY clientChanged)
+
     Q_PROPERTY(QSize sourceSize READ sourceSize WRITE setSourceSize NOTIFY sourceSizeChanged)
     /**
      * TODO Plasma 6: Remove.
@@ -40,25 +43,22 @@ class ThumbnailItemBase : public QQuickItem
     Q_PROPERTY(QQuickItem *clipTo READ clipTo WRITE setClipTo NOTIFY clipToChanged)
 
 public:
-    explicit ThumbnailItemBase(QQuickItem *parent = nullptr);
-    ~ThumbnailItemBase() override;
+    explicit WindowThumbnailItem(QQuickItem *parent = nullptr);
+    ~WindowThumbnailItem() override;
 
-    qreal brightness() const
-    {
-        return 1;
-    }
+    QUuid wId() const;
+    void setWId(const QUuid &wId);
+
+    Window *client() const;
+    void setClient(Window *client);
+
+    qreal brightness() const;
     void setBrightness(qreal brightness);
 
-    qreal saturation() const
-    {
-        return 1;
-    }
+    qreal saturation() const;
     void setSaturation(qreal saturation);
 
-    QQuickItem *clipTo() const
-    {
-        return nullptr;
-    }
+    QQuickItem *clipTo() const;
     void setClipTo(QQuickItem *clip);
 
     QSize sourceSize() const;
@@ -68,20 +68,30 @@ public:
     bool isTextureProvider() const override;
     QSGNode *updatePaintNode(QSGNode *oldNode, QQuickItem::UpdatePaintNodeData *) override;
 
+protected:
+    void releaseResources() override;
+
 Q_SIGNALS:
+    void wIdChanged();
+    void clientChanged();
     void brightnessChanged();
     void saturationChanged();
     void clipToChanged();
     void sourceSizeChanged();
 
-protected:
-    void releaseResources() override;
-
-    virtual QImage fallbackImage() const = 0;
-    virtual QRectF paintedRect() const = 0;
-    virtual void invalidateOffscreenTexture() = 0;
-    virtual void updateOffscreenTexture() = 0;
+private:
+    QImage fallbackImage() const;
+    QRectF paintedRect() const;
+    void invalidateOffscreenTexture();
+    void updateOffscreenTexture();
     void destroyOffscreenTexture();
+    void updateImplicitSize();
+    void updateFrameRenderingConnection();
+
+    QSize m_sourceSize;
+    QUuid m_wId;
+    QPointer<Window> m_client;
+    bool m_dirty = false;
 
     mutable ThumbnailTextureProvider *m_provider = nullptr;
     QSharedPointer<GLTexture> m_offscreenTexture;
@@ -89,43 +99,7 @@ protected:
     GLsync m_acquireFence = 0;
     qreal m_devicePixelRatio = 1;
 
-private:
-    void updateFrameRenderingConnection();
     QMetaObject::Connection m_frameRenderingConnection;
-
-    QSize m_sourceSize;
-};
-
-class WindowThumbnailItem : public ThumbnailItemBase
-{
-    Q_OBJECT
-    Q_PROPERTY(QUuid wId READ wId WRITE setWId NOTIFY wIdChanged)
-    Q_PROPERTY(KWin::Window *client READ client WRITE setClient NOTIFY clientChanged)
-
-public:
-    explicit WindowThumbnailItem(QQuickItem *parent = nullptr);
-
-    QUuid wId() const;
-    void setWId(const QUuid &wId);
-
-    Window *client() const;
-    void setClient(Window *client);
-
-Q_SIGNALS:
-    void wIdChanged();
-    void clientChanged();
-
-protected:
-    QImage fallbackImage() const override;
-    QRectF paintedRect() const override;
-    void invalidateOffscreenTexture() override;
-    void updateOffscreenTexture() override;
-    void updateImplicitSize();
-
-private:
-    QUuid m_wId;
-    QPointer<Window> m_client;
-    bool m_dirty = false;
 };
 
 } // namespace KWin

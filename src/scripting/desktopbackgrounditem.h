@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "thumbnailitem.h"
+#include "windowthumbnailitem.h"
 
 namespace KWin
 {

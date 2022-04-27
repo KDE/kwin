@@ -6,7 +6,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "thumbnailitem.h"
+#include "windowthumbnailitem.h"
 #include "composite.h"
 #include "effects.h"
 #include "renderbackend.h"
@@ -100,21 +100,21 @@ private:
     QScopedPointer<ThumbnailTextureProvider> m_provider;
 };
 
-ThumbnailItemBase::ThumbnailItemBase(QQuickItem *parent)
+WindowThumbnailItem::WindowThumbnailItem(QQuickItem *parent)
     : QQuickItem(parent)
 {
     setFlag(ItemHasContents);
     updateFrameRenderingConnection();
 
     connect(Compositor::self(), &Compositor::aboutToToggleCompositing,
-            this, &ThumbnailItemBase::destroyOffscreenTexture);
+            this, &WindowThumbnailItem::destroyOffscreenTexture);
     connect(Compositor::self(), &Compositor::compositingToggled,
-            this, &ThumbnailItemBase::updateFrameRenderingConnection);
+            this, &WindowThumbnailItem::updateFrameRenderingConnection);
     connect(this, &QQuickItem::windowChanged,
-            this, &ThumbnailItemBase::updateFrameRenderingConnection);
+            this, &WindowThumbnailItem::updateFrameRenderingConnection);
 }
 
-ThumbnailItemBase::~ThumbnailItemBase()
+WindowThumbnailItem::~WindowThumbnailItem()
 {
     destroyOffscreenTexture();
 
@@ -128,7 +128,7 @@ ThumbnailItemBase::~ThumbnailItemBase()
     }
 }
 
-void ThumbnailItemBase::releaseResources()
+void WindowThumbnailItem::releaseResources()
 {
     if (m_provider) {
         window()->scheduleRenderJob(new ThumbnailTextureProviderCleanupJob(m_provider),
@@ -137,12 +137,12 @@ void ThumbnailItemBase::releaseResources()
     }
 }
 
-bool ThumbnailItemBase::isTextureProvider() const
+bool WindowThumbnailItem::isTextureProvider() const
 {
     return true;
 }
 
-QSGTextureProvider *ThumbnailItemBase::textureProvider() const
+QSGTextureProvider *WindowThumbnailItem::textureProvider() const
 {
     if (QQuickItem::isTextureProvider()) {
         return QQuickItem::textureProvider();
@@ -153,7 +153,7 @@ QSGTextureProvider *ThumbnailItemBase::textureProvider() const
     return m_provider;
 }
 
-void ThumbnailItemBase::updateFrameRenderingConnection()
+void WindowThumbnailItem::updateFrameRenderingConnection()
 {
     disconnect(m_frameRenderingConnection);
 
@@ -165,16 +165,16 @@ void ThumbnailItemBase::updateFrameRenderingConnection()
     }
 
     if (Compositor::self()->backend()->compositingType() == OpenGLCompositing) {
-        m_frameRenderingConnection = connect(Compositor::self()->scene(), &Scene::frameRendered, this, &ThumbnailItemBase::updateOffscreenTexture);
+        m_frameRenderingConnection = connect(Compositor::self()->scene(), &Scene::frameRendered, this, &WindowThumbnailItem::updateOffscreenTexture);
     }
 }
 
-QSize ThumbnailItemBase::sourceSize() const
+QSize WindowThumbnailItem::sourceSize() const
 {
     return m_sourceSize;
 }
 
-void ThumbnailItemBase::setSourceSize(const QSize &sourceSize)
+void WindowThumbnailItem::setSourceSize(const QSize &sourceSize)
 {
     if (m_sourceSize != sourceSize) {
         m_sourceSize = sourceSize;
@@ -183,7 +183,7 @@ void ThumbnailItemBase::setSourceSize(const QSize &sourceSize)
     }
 }
 
-void ThumbnailItemBase::destroyOffscreenTexture()
+void WindowThumbnailItem::destroyOffscreenTexture()
 {
     if (!Compositor::compositing()) {
         return;
@@ -206,7 +206,7 @@ void ThumbnailItemBase::destroyOffscreenTexture()
     }
 }
 
-QSGNode *ThumbnailItemBase::updatePaintNode(QSGNode *oldNode, QQuickItem::UpdatePaintNodeData *)
+QSGNode *WindowThumbnailItem::updatePaintNode(QSGNode *oldNode, QQuickItem::UpdatePaintNodeData *)
 {
     if (Compositor::compositing() && !m_offscreenTexture) {
         return oldNode;
@@ -249,27 +249,37 @@ QSGNode *ThumbnailItemBase::updatePaintNode(QSGNode *oldNode, QQuickItem::Update
     return node;
 }
 
-void ThumbnailItemBase::setSaturation(qreal saturation)
+qreal WindowThumbnailItem::saturation() const
+{
+    return 1;
+}
+
+void WindowThumbnailItem::setSaturation(qreal saturation)
 {
     Q_UNUSED(saturation)
     qCWarning(KWIN_SCRIPTING) << "ThumbnailItem.saturation is removed. Use a shader effect to change saturation";
 }
 
-void ThumbnailItemBase::setBrightness(qreal brightness)
+qreal WindowThumbnailItem::brightness() const
+{
+    return 1;
+}
+
+void WindowThumbnailItem::setBrightness(qreal brightness)
 {
     Q_UNUSED(brightness)
     qCWarning(KWIN_SCRIPTING) << "ThumbnailItem.brightness is removed. Use a shader effect to change brightness";
 }
 
-void ThumbnailItemBase::setClipTo(QQuickItem *clip)
+QQuickItem *WindowThumbnailItem::clipTo() const
+{
+    return nullptr;
+}
+
+void WindowThumbnailItem::setClipTo(QQuickItem *clip)
 {
     Q_UNUSED(clip)
     qCWarning(KWIN_SCRIPTING) << "ThumbnailItem.clipTo is removed and it has no replacements";
-}
-
-WindowThumbnailItem::WindowThumbnailItem(QQuickItem *parent)
-    : ThumbnailItemBase(parent)
-{
 }
 
 QUuid WindowThumbnailItem::wId() const
