@@ -539,7 +539,7 @@ void EffectsHandlerImpl::slotWindowClosed(KWin::Window *c, KWin::Deleted *d)
 {
     c->disconnect(this);
     if (d) {
-        Q_EMIT windowClosed(c->effectWindow());
+        Q_EMIT windowClosed(d->effectWindow());
     }
 }
 

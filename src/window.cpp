@@ -181,15 +181,15 @@ void Window::copyToDeleted(Window *c)
     m_client.reset(c->m_client, false);
     ready_for_painting = c->ready_for_painting;
     is_shape = c->is_shape;
-    m_effectWindow = c->m_effectWindow;
+    m_effectWindow = std::exchange(c->m_effectWindow, nullptr);
     if (m_effectWindow != nullptr) {
         m_effectWindow->setWindow(this);
     }
-    m_sceneWindow = c->m_sceneWindow;
+    m_sceneWindow = std::exchange(c->m_sceneWindow, nullptr);
     if (m_sceneWindow != nullptr) {
         m_sceneWindow->setToplevel(this);
     }
-    m_shadow = c->m_shadow;
+    m_shadow = std::exchange(c->m_shadow, nullptr);
     if (m_shadow) {
         m_shadow->setToplevel(this);
     }
@@ -366,15 +366,9 @@ void Window::finishCompositing(ReleaseReason releaseReason)
             item->destroyDamage();
         }
     }
-    if (m_shadow && m_shadow->toplevel() == this) { // otherwise it's already passed to Deleted, don't free data
-        deleteShadow();
-    }
-    if (m_effectWindow && m_effectWindow->window() == this) { // otherwise it's already passed to Deleted, don't free data
-        deleteEffectWindow();
-    }
-    if (m_sceneWindow && m_sceneWindow->window() == this) { // otherwise it's already passed to Deleted, don't free data
-        deleteSceneWindow();
-    }
+    deleteShadow();
+    deleteEffectWindow();
+    deleteSceneWindow();
 }
 
 void Window::addRepaint(const QRect &rect)
