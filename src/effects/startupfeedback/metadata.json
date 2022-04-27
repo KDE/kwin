@@ -29,7 +29,7 @@
         "Description[tr]": "Başlangıç geri bildirimi için yardımcı efekti",
         "Description[uk]": "Допоміжний ефект перегляду повідомлень, що надсилаються програмою під час запуску",
         "Description[x-test]": "xxHelper effect for startup feedbackxx",
-        "Description[zh_CN]": "程序启动反馈辅助效果",
+        "Description[zh_CN]": "程序启动动效反馈辅助效果",
         "EnabledByDefault": true,
         "Id": "startupfeedback",
         "License": "GPL",
@@ -60,7 +60,7 @@
         "Name[tr]": "Başlangıç Geri Bildirimi",
         "Name[uk]": "Повідомлення під час запуску",
         "Name[x-test]": "xxStartup Feedbackxx",
-        "Name[zh_CN]": "程序启动反馈"
+        "Name[zh_CN]": "程序启动动效"
     },
     "org.kde.kwin.effect": {
         "internal": true
