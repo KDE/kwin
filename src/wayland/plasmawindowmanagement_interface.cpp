@@ -187,7 +187,7 @@ void PlasmaWindowManagementInterfacePrivate::sendStackingOrderUuidsChanged(wl_re
 
 void PlasmaWindowManagementInterfacePrivate::org_kde_plasma_window_management_bind_resource(Resource *resource)
 {
-    for (auto window : windows) {
+    for (const auto window : qAsConst(windows)) {
         if (resource->version() >= ORG_KDE_PLASMA_WINDOW_MANAGEMENT_WINDOW_WITH_UUID_SINCE_VERSION) {
             send_window_with_uuid(resource->handle, window->d->windowId, window->d->uuid);
         } else {
@@ -216,7 +216,7 @@ void PlasmaWindowManagementInterfacePrivate::org_kde_plasma_window_management_sh
 
 void PlasmaWindowManagementInterfacePrivate::org_kde_plasma_window_management_get_window(Resource *resource, uint32_t id, uint32_t internal_window_id)
 {
-    for (auto window : windows) {
+    for (const auto window : qAsConst(windows)) {
         if (window->d->windowId == internal_window_id) {
             window->d->add(resource->client(), id, resource->version());
             return;
@@ -339,10 +339,10 @@ void PlasmaWindowInterfacePrivate::org_kde_plasma_window_destroy(Resource *resou
 
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_bind_resource(Resource *resource)
 {
-    for (const auto &desk : plasmaVirtualDesktops) {
+    for (const auto &desk : qAsConst(plasmaVirtualDesktops)) {
         send_virtual_desktop_entered(resource->handle, desk);
     }
-    for (const auto &activity : plasmaActivities) {
+    for (const auto &activity : qAsConst(plasmaActivities)) {
         if (resource->version() >= ORG_KDE_PLASMA_WINDOW_ACTIVITY_ENTERED_SINCE_VERSION) {
             send_activity_entered(resource->handle, activity);
         }
@@ -838,11 +838,12 @@ void PlasmaWindowInterface::setOnAllDesktops(bool set)
             return;
         }
         // enters the desktops which are active (usually only one  but not a given)
-        for (auto desk : d->wm->plasmaVirtualDesktopManagementInterface()->desktops()) {
-            if (desk->isActive() && !d->plasmaVirtualDesktops.contains(desk->id())) {
-                d->plasmaVirtualDesktops << desk->id();
+        const auto desktops = d->wm->plasmaVirtualDesktopManagementInterface()->desktops();
+        for (const auto desktop : desktops) {
+            if (desktop->isActive() && !d->plasmaVirtualDesktops.contains(desktop->id())) {
+                d->plasmaVirtualDesktops << desktop->id();
                 for (auto resource : clientResources) {
-                    d->send_virtual_desktop_entered(resource->handle, desk->id());
+                    d->send_virtual_desktop_entered(resource->handle, desktop->id());
                 }
             }
         }
@@ -1031,7 +1032,7 @@ QString PlasmaWindowInterface::uuid() const
 class PlasmaWindowActivationFeedbackInterfacePrivate : public QtWaylandServer::org_kde_plasma_activation_feedback
 {
 public:
-    PlasmaWindowActivationFeedbackInterfacePrivate(Display *display);
+    explicit PlasmaWindowActivationFeedbackInterfacePrivate(Display *display);
 
 protected:
     void org_kde_plasma_activation_feedback_destroy(Resource *resource) override;
@@ -1040,7 +1041,7 @@ protected:
 class PlasmaWindowActivationInterfacePrivate : public QtWaylandServer::org_kde_plasma_activation
 {
 public:
-    PlasmaWindowActivationInterfacePrivate(PlasmaWindowActivationInterface *q)
+    explicit PlasmaWindowActivationInterfacePrivate(PlasmaWindowActivationInterface *q)
         : QtWaylandServer::org_kde_plasma_activation()
         , q(q)
     {
