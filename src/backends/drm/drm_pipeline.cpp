@@ -231,7 +231,11 @@ void DrmPipeline::prepareAtomicModeset()
         m_connector->getProp(DrmConnector::PropertyIndex::Underscan_hborder)->setPending(hborder);
     }
     if (const auto bpc = m_connector->getProp(DrmConnector::PropertyIndex::MaxBpc)) {
-        bpc->setPending(bpc->maxValue());
+        uint64_t preferred = 8;
+        if (auto backend = dynamic_cast<EglGbmBackend *>(gpu()->platform()->renderBackend()); backend && backend->prefer10bpc()) {
+            preferred = 10;
+        }
+        bpc->setPending(std::min(bpc->maxValue(), preferred));
     }
 
     m_pending.crtc->setPending(DrmCrtc::PropertyIndex::Active, activePending());
