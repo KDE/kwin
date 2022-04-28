@@ -237,7 +237,7 @@ protected:
     // shared implementation, starts painting the window
     virtual void paintWindow(SceneWindow *w, int mask, const QRegion &region);
     // called after all effects had their drawWindow() called
-    virtual void finalDrawWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data);
+    void finalDrawWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data);
 
     virtual void paintOffscreenQuickView(OffscreenQuickView *w) = 0;
 

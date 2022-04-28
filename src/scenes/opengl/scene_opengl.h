@@ -70,7 +70,6 @@ protected:
     void paintSimpleScreen(int mask, const QRegion &region) override;
     void paintGenericScreen(int mask, const ScreenPaintData &data) override;
     SceneWindow *createWindow(Window *t) override;
-    void finalDrawWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data) override;
 
 private:
     void doPaintBackground(const QVector<float> &vertices);

@@ -311,14 +311,6 @@ SceneWindow *SceneOpenGL::createWindow(Window *t)
     return new OpenGLWindow(t, this);
 }
 
-void SceneOpenGL::finalDrawWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
-{
-    if (!m_filter.filterAcceptsWindow(w->window())) {
-        return;
-    }
-    performPaintWindow(w, mask, region, data);
-}
-
 void SceneOpenGL::performPaintWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
 {
     if (mask & PAINT_WINDOW_LANCZOS) {

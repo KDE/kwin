@@ -616,9 +616,6 @@ void Scene::finalPaintWindow(EffectWindowImpl *w, int mask, const QRegion &regio
 // will be eventually called from drawWindow()
 void Scene::finalDrawWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
 {
-    if (!m_filter.filterAcceptsWindow(w->window())) {
-        return;
-    }
     w->sceneWindow()->performPaint(mask, region, data);
 }
 
