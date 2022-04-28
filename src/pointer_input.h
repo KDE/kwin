@@ -40,7 +40,6 @@ namespace Decoration
 class DecoratedClientImpl;
 }
 
-uint32_t qtMouseButtonToButton(Qt::MouseButton button);
 
 class KWIN_EXPORT PointerInputRedirection : public InputDeviceHandler
 {

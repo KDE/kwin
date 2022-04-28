@@ -12,8 +12,10 @@
 
 #include "libinput_logging.h"
 #include "main.h"
+#include "mousebuttons.h"
 #include "output.h"
 #include "platform.h"
+#include "pointer_input.h"
 
 #include <QDBusArgument>
 #include <QDBusConnection>
@@ -333,31 +335,14 @@ Device::Device(libinput_device *device, QObject *parent)
         m_size = QSizeF(width, height);
     }
     if (m_pointer) {
-        if (libinput_device_pointer_has_button(m_device, BTN_LEFT) == 1) {
-            m_supportedButtons |= Qt::LeftButton;
-        }
-        if (libinput_device_pointer_has_button(m_device, BTN_MIDDLE) == 1) {
-            m_supportedButtons |= Qt::MiddleButton;
-        }
-        if (libinput_device_pointer_has_button(m_device, BTN_RIGHT) == 1) {
-            m_supportedButtons |= Qt::RightButton;
-        }
-        if (libinput_device_pointer_has_button(m_device, BTN_SIDE) == 1) {
-            m_supportedButtons |= Qt::ExtraButton1;
-        }
-        if (libinput_device_pointer_has_button(m_device, BTN_EXTRA) == 1) {
-            m_supportedButtons |= Qt::ExtraButton2;
-        }
-        if (libinput_device_pointer_has_button(m_device, BTN_BACK) == 1) {
-            m_supportedButtons |= Qt::BackButton;
-        }
-        if (libinput_device_pointer_has_button(m_device, BTN_FORWARD) == 1) {
-            m_supportedButtons |= Qt::ForwardButton;
-        }
-        if (libinput_device_pointer_has_button(m_device, BTN_TASK) == 1) {
-            m_supportedButtons |= Qt::TaskButton;
+        // 0x120 is the first joystick Button
+        for (int button = BTN_LEFT; button < 0x120; ++button) {
+            if (libinput_device_pointer_has_button(m_device, button)) {
+                m_supportedButtons |= buttonToQtMouseButton(button);
+            }
         }
     }
+
     if (m_keyboard) {
         m_alphaNumericKeyboard = checkAlphaNumericKeyboard(m_device);
     }

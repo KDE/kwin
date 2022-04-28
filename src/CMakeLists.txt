@@ -82,6 +82,7 @@ target_sources(kwin PRIVATE
     linux_dmabuf.cpp
     main.cpp
     modifier_only_shortcuts.cpp
+    mousebuttons.cpp
     moving_client_x11_filter.cpp
     netinfo.cpp
     onscreennotification.cpp

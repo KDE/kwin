@@ -24,6 +24,7 @@
 #include "inputmethod.h"
 #include "keyboard_input.h"
 #include "main.h"
+#include "mousebuttons.h"
 #include "pointer_input.h"
 #include "session.h"
 #include "tablet_input.h"
