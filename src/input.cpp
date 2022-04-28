@@ -1225,7 +1225,7 @@ class InternalWindowEventFilter : public InputEventFilter
         if (!input()->pointer()->focus() || !input()->pointer()->focus()->isInternal()) {
             return false;
         }
-        QWindow *internal = static_cast<InternalWindow *>(input()->pointer()->focus())->internalWindow();
+        QWindow *internal = static_cast<InternalWindow *>(input()->pointer()->focus())->handle();
         QMouseEvent mouseEvent(event->type(),
                                event->pos() - internal->position(),
                                event->globalPos(),
@@ -1238,7 +1238,7 @@ class InternalWindowEventFilter : public InputEventFilter
         if (!input()->pointer()->focus() || !input()->pointer()->focus()->isInternal()) {
             return false;
         }
-        QWindow *internal = static_cast<InternalWindow *>(input()->pointer()->focus())->internalWindow();
+        QWindow *internal = static_cast<InternalWindow *>(input()->pointer()->focus())->handle();
         const QPointF localPos = event->globalPosition() - internal->position();
         const Qt::Orientation orientation = (event->angleDelta().x() != 0) ? Qt::Horizontal : Qt::Vertical;
         const int delta = event->angleDelta().x() != 0 ? event->angleDelta().x() : event->angleDelta().y();
@@ -1256,7 +1256,7 @@ class InternalWindowEventFilter : public InputEventFilter
         const QList<InternalWindow *> &windows = workspace()->internalWindows();
         QWindow *found = nullptr;
         for (auto it = windows.crbegin(); it != windows.crend(); ++it) {
-            if (QWindow *w = (*it)->internalWindow()) {
+            if (QWindow *w = (*it)->handle()) {
                 if (!w->isVisible()) {
                     continue;
                 }
@@ -1319,7 +1319,7 @@ class InternalWindowEventFilter : public InputEventFilter
         }
         touch->setInternalPressId(id);
         // Qt's touch event API is rather complex, let's do fake mouse events instead
-        QWindow *internal = static_cast<InternalWindow *>(input()->touch()->focus())->internalWindow();
+        QWindow *internal = static_cast<InternalWindow *>(input()->touch()->focus())->handle();
         m_lastGlobalTouchPos = pos;
         m_lastLocalTouchPos = pos - internal->position();
 
@@ -1345,7 +1345,7 @@ class InternalWindowEventFilter : public InputEventFilter
             // ignore, but filter out
             return true;
         }
-        QWindow *internal = static_cast<InternalWindow *>(input()->touch()->focus())->internalWindow();
+        QWindow *internal = static_cast<InternalWindow *>(input()->touch()->focus())->handle();
         m_lastGlobalTouchPos = pos;
         m_lastLocalTouchPos = pos - QPointF(internal->x(), internal->y());
 
@@ -1368,7 +1368,7 @@ class InternalWindowEventFilter : public InputEventFilter
         if (!input()->touch()->focus() || !input()->touch()->focus()->isInternal()) {
             return removed;
         }
-        QWindow *internal = static_cast<InternalWindow *>(input()->touch()->focus())->internalWindow();
+        QWindow *internal = static_cast<InternalWindow *>(input()->touch()->focus())->handle();
         // send mouse up
         QMouseEvent e(QEvent::MouseButtonRelease, m_lastLocalTouchPos, m_lastGlobalTouchPos, Qt::LeftButton, Qt::MouseButtons(), input()->keyboardModifiers());
         e.setAccepted(false);

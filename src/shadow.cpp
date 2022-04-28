@@ -109,7 +109,7 @@ Shadow *Shadow::createShadowFromInternalWindow(Window *window)
     if (!internalWindow) {
         return nullptr;
     }
-    const QWindow *handle = internalWindow->internalWindow();
+    const QWindow *handle = internalWindow->handle();
     if (!handle) {
         return nullptr;
     }
@@ -304,7 +304,7 @@ bool Shadow::updateShadow()
     }
 
     if (InternalWindow *window = qobject_cast<InternalWindow *>(m_window)) {
-        if (init(window->internalWindow())) {
+        if (init(window->handle())) {
             return true;
         }
     }

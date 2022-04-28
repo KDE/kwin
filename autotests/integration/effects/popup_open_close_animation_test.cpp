@@ -245,7 +245,7 @@ void PopupOpenCloseAnimationTest::testAnimateDecorationTooltips()
     InternalWindow *tooltip = tooltipAddedSpy.first().first().value<InternalWindow *>();
     QVERIFY(tooltip->isInternal());
     QVERIFY(tooltip->isPopupWindow());
-    QVERIFY(tooltip->internalWindow()->flags().testFlag(Qt::ToolTip));
+    QVERIFY(tooltip->handle()->flags().testFlag(Qt::ToolTip));
     QVERIFY(effect->isActive());
 
     // Eventually, the animation will be complete.

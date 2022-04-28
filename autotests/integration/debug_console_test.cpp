@@ -496,7 +496,7 @@ void DebugConsoleTest::testClosingDebugConsole()
     QTRY_COMPARE(windowAddedSpy.count(), 1);
     InternalWindow *window = windowAddedSpy.first().first().value<InternalWindow *>();
     QVERIFY(window->isInternal());
-    QCOMPARE(window->internalWindow(), console->windowHandle());
+    QCOMPARE(window->handle(), console->windowHandle());
     QVERIFY(window->isDecorated());
     QCOMPARE(window->isMinimizable(), false);
     window->closeWindow();

@@ -2164,7 +2164,7 @@ EffectWindow *EffectWindowImpl::transientFor()
 QWindow *EffectWindowImpl::internalWindow() const
 {
     if (auto window = qobject_cast<InternalWindow *>(m_window)) {
-        return window->internalWindow();
+        return window->handle();
     }
     return nullptr;
 }

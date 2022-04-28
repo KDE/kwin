@@ -1883,7 +1883,7 @@ Window *Workspace::findInternal(QWindow *w) const
         return findUnmanaged(w->winId());
     }
     for (InternalWindow *window : m_internalWindows) {
-        if (window->internalWindow() == w) {
+        if (window->handle() == w) {
             return window;
         }
     }

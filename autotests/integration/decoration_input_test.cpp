@@ -782,7 +782,7 @@ void DecorationInputTest::testTooltipDoesntEatKeyEvents()
     QVERIFY(windowAddedSpy.wait());
     InternalWindow *internal = windowAddedSpy.first().first().value<InternalWindow *>();
     QVERIFY(internal->isInternal());
-    QVERIFY(internal->internalWindow()->flags().testFlag(Qt::ToolTip));
+    QVERIFY(internal->handle()->flags().testFlag(Qt::ToolTip));
 
     // now send a key
     quint32 timestamp = 0;

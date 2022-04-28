@@ -19,7 +19,7 @@ class KWIN_EXPORT InternalWindow : public Window
     Q_OBJECT
 
 public:
-    explicit InternalWindow(QWindow *window);
+    explicit InternalWindow(QWindow *handle);
     ~InternalWindow() override;
 
     bool eventFilter(QObject *watched, QEvent *event) override;
@@ -64,7 +64,7 @@ public:
     void present(const QSharedPointer<QOpenGLFramebufferObject> fbo);
     void present(const QImage &image, const QRegion &damage);
     qreal bufferScale() const;
-    QWindow *internalWindow() const;
+    QWindow *handle() const;
 
 protected:
     bool acceptsFocus() const override;
@@ -84,7 +84,7 @@ private:
     void createDecoration(const QRect &oldGeometry);
     void destroyDecoration();
 
-    QWindow *m_internalWindow = nullptr;
+    QWindow *m_handle = nullptr;
     QString m_captionNormal;
     QString m_captionSuffix;
     NET::WindowType m_windowType = NET::Normal;
