@@ -152,19 +152,19 @@ void TabletInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *
         return;
     }
 
-    const auto pos = m_lastPosition - now->client()->pos();
+    const auto pos = m_lastPosition - now->window()->pos();
     QHoverEvent event(QEvent::HoverEnter, pos, pos);
     QCoreApplication::instance()->sendEvent(now->decoration(), &event);
-    now->client()->processDecorationMove(pos.toPoint(), m_lastPosition.toPoint());
+    now->window()->processDecorationMove(pos.toPoint(), m_lastPosition.toPoint());
 
     m_decorationGeometryConnection = connect(
-        decoration()->client(), &Window::frameGeometryChanged, this, [this]() {
+        decoration()->window(), &Window::frameGeometryChanged, this, [this]() {
             // ensure maximize button gets the leave event when maximizing/restore a window, see BUG 385140
             const auto oldDeco = decoration();
             update();
-            if (oldDeco && oldDeco == decoration() && !decoration()->client()->isInteractiveMove() && !decoration()->client()->isInteractiveResize()) {
+            if (oldDeco && oldDeco == decoration() && !decoration()->window()->isInteractiveMove() && !decoration()->window()->isInteractiveResize()) {
                 // position of window did not change, we need to send HoverMotion manually
-                const QPointF p = m_lastPosition - decoration()->client()->pos();
+                const QPointF p = m_lastPosition - decoration()->window()->pos();
                 QHoverEvent event(QEvent::HoverMove, p, p);
                 QCoreApplication::instance()->sendEvent(decoration()->decoration(), &event);
             }

@@ -283,15 +283,15 @@ public Q_SLOTS:
     Q_SCRIPTABLE QString debug(const QString &name, const QString &parameter = QString()) const;
 
 protected Q_SLOTS:
-    void slotClientShown(KWin::Window *);
+    void slotWindowShown(KWin::Window *);
     void slotUnmanagedShown(KWin::Window *);
-    void slotWindowClosed(KWin::Window *c, KWin::Deleted *d);
-    void slotClientMaximized(KWin::Window *c, MaximizeMode maxMode);
-    void slotOpacityChanged(KWin::Window *t, qreal oldOpacity);
+    void slotWindowClosed(KWin::Window *original, KWin::Deleted *d);
+    void slotClientMaximized(KWin::Window *window, MaximizeMode maxMode);
+    void slotOpacityChanged(KWin::Window *window, qreal oldOpacity);
     void slotClientModalityChanged();
-    void slotGeometryShapeChanged(KWin::Window *t, const QRect &old);
-    void slotFrameGeometryChanged(Window *toplevel, const QRect &oldGeometry);
-    void slotWindowDamaged(KWin::Window *t, const QRegion &r);
+    void slotGeometryShapeChanged(KWin::Window *window, const QRect &old);
+    void slotFrameGeometryChanged(Window *window, const QRect &oldGeometry);
+    void slotWindowDamaged(KWin::Window *window, const QRegion &r);
     void slotOutputEnabled(Output *output);
     void slotOutputDisabled(Output *output);
 
@@ -299,7 +299,7 @@ protected:
     void connectNotify(const QMetaMethod &signal) override;
     void disconnectNotify(const QMetaMethod &signal) override;
     void effectsChanged();
-    void setupClientConnections(KWin::Window *client);
+    void setupWindowConnections(KWin::Window *window);
     void setupUnmanagedConnections(KWin::Unmanaged *u);
 
     /**
@@ -381,7 +381,7 @@ class EffectWindowImpl : public EffectWindow
 {
     Q_OBJECT
 public:
-    explicit EffectWindowImpl(Window *toplevel);
+    explicit EffectWindowImpl(Window *window);
     ~EffectWindowImpl() override;
 
     void enablePainting(int reason) override;
@@ -512,12 +512,12 @@ public:
     QVariant data(int role) const override;
 
 private:
-    Window *toplevel;
-    SceneWindow *sw; // This one is used only during paint pass.
+    Window *m_window;
+    SceneWindow *m_sceneWindow; // This one is used only during paint pass.
     QHash<int, QVariant> dataMap;
     bool managed = false;
-    bool waylandClient;
-    bool x11Client;
+    bool m_waylandWindow;
+    bool m_x11Window;
 };
 
 class EffectWindowGroupImpl
@@ -650,22 +650,22 @@ EffectWindow *effectWindow(SceneWindow *w);
 
 inline const SceneWindow *EffectWindowImpl::sceneWindow() const
 {
-    return sw;
+    return m_sceneWindow;
 }
 
 inline SceneWindow *EffectWindowImpl::sceneWindow()
 {
-    return sw;
+    return m_sceneWindow;
 }
 
 inline const Window *EffectWindowImpl::window() const
 {
-    return toplevel;
+    return m_window;
 }
 
 inline Window *EffectWindowImpl::window()
 {
-    return toplevel;
+    return m_window;
 }
 
 } // namespace

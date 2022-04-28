@@ -36,12 +36,12 @@ SurfacePixmap *SurfaceItemInternal::createPixmap()
     return new SurfacePixmapInternal(this);
 }
 
-void SurfaceItemInternal::handleBufferGeometryChanged(Window *toplevel, const QRect &old)
+void SurfaceItemInternal::handleBufferGeometryChanged(Window *window, const QRect &old)
 {
-    if (toplevel->bufferGeometry().size() != old.size()) {
+    if (window->bufferGeometry().size() != old.size()) {
         discardPixmap();
     }
-    setSize(toplevel->bufferGeometry().size());
+    setSize(window->bufferGeometry().size());
 }
 
 SurfacePixmapInternal::SurfacePixmapInternal(SurfaceItemInternal *item, QObject *parent)

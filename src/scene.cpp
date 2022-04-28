@@ -230,16 +230,16 @@ SurfaceItem *Scene::scanoutCandidate() const
     SurfaceItem *candidate = nullptr;
     if (!static_cast<EffectsHandlerImpl *>(effects)->blocksDirectScanout()) {
         for (int i = stacking_order.count() - 1; i >= 0; i--) {
-            SceneWindow *window = stacking_order[i];
-            Window *toplevel = window->window();
-            if (toplevel->isOnOutput(painted_screen) && window->isVisible() && toplevel->opacity() > 0) {
-                if (!toplevel->isClient() || !toplevel->isFullScreen() || toplevel->opacity() != 1.0) {
+            SceneWindow *sceneWindow = stacking_order[i];
+            Window *window = sceneWindow->window();
+            if (window->isOnOutput(painted_screen) && sceneWindow->isVisible() && window->opacity() > 0) {
+                if (!window->isClient() || !window->isFullScreen() || window->opacity() != 1.0) {
                     break;
                 }
-                if (!window->surfaceItem()) {
+                if (!sceneWindow->surfaceItem()) {
                     break;
                 }
-                SurfaceItem *topMost = findTopMostSurface(window->surfaceItem());
+                SurfaceItem *topMost = findTopMostSurface(sceneWindow->surfaceItem());
                 auto pixmap = topMost->pixmap();
                 if (!pixmap) {
                     break;
@@ -250,7 +250,7 @@ SurfaceItem *Scene::scanoutCandidate() const
                     break;
                 }
                 // and it has to be completely opaque
-                if (pixmap->hasAlphaChannel() && !topMost->opaque().contains(QRect(0, 0, window->width(), window->height()))) {
+                if (pixmap->hasAlphaChannel() && !topMost->opaque().contains(QRect(0, 0, sceneWindow->width(), sceneWindow->height()))) {
                     break;
                 }
                 candidate = topMost;
@@ -356,19 +356,19 @@ void Scene::preparePaintGenericScreen()
 void Scene::preparePaintSimpleScreen()
 {
     for (SceneWindow *sceneWindow : std::as_const(stacking_order)) {
-        const Window *toplevel = sceneWindow->window();
+        const Window *window = sceneWindow->window();
         WindowPrePaintData data;
         data.mask = m_paintContext.mask;
         accumulateRepaints(sceneWindow->windowItem(), painted_screen, &data.paint);
 
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass.
-        if (toplevel->opacity() == 1.0) {
+        if (window->opacity() == 1.0) {
             const SurfaceItem *surfaceItem = sceneWindow->surfaceItem();
             if (Q_LIKELY(surfaceItem)) {
                 data.opaque = surfaceItem->mapToGlobal(surfaceItem->opaque());
             }
 
-            if (toplevel->isClient() && !toplevel->decorationHasAlpha()) {
+            if (window->isClient() && !window->decorationHasAlpha()) {
                 data.opaque |= sceneWindow->decorationShape().translated(sceneWindow->pos());
             }
         }
@@ -408,12 +408,12 @@ void Scene::postPaint()
         const std::chrono::milliseconds frameTime =
             std::chrono::duration_cast<std::chrono::milliseconds>(painted_screen->renderLoop()->lastPresentationTimestamp());
 
-        for (SceneWindow *window : std::as_const(stacking_order)) {
-            Window *toplevel = window->window();
-            if (!toplevel->isOnOutput(painted_screen)) {
+        for (SceneWindow *sceneWindow : std::as_const(stacking_order)) {
+            Window *window = sceneWindow->window();
+            if (!window->isOnOutput(painted_screen)) {
                 continue;
             }
-            if (auto surface = toplevel->surface()) {
+            if (auto surface = window->surface()) {
                 surface->frameRendered(frameTime.count());
             }
         }
@@ -663,20 +663,20 @@ SurfaceTexture *Scene::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 
 SceneWindow::SceneWindow(Window *client, QObject *parent)
     : QObject(parent)
-    , toplevel(client)
+    , m_window(client)
     , disable_painting(0)
 {
     if (qobject_cast<WaylandWindow *>(client)) {
-        m_windowItem.reset(new WindowItemWayland(toplevel));
+        m_windowItem.reset(new WindowItemWayland(m_window));
     } else if (qobject_cast<X11Window *>(client) || qobject_cast<Unmanaged *>(client)) {
-        m_windowItem.reset(new WindowItemX11(toplevel));
+        m_windowItem.reset(new WindowItemX11(m_window));
     } else if (auto internalClient = qobject_cast<InternalWindow *>(client)) {
         m_windowItem.reset(new WindowItemInternal(internalClient));
     } else {
         Q_UNREACHABLE();
     }
 
-    connect(toplevel, &Window::frameGeometryChanged, this, &SceneWindow::updateWindowPosition);
+    connect(m_window, &Window::frameGeometryChanged, this, &SceneWindow::updateWindowPosition);
     updateWindowPosition();
 }
 
@@ -684,9 +684,9 @@ SceneWindow::~SceneWindow()
 {
 }
 
-void SceneWindow::setToplevel(Window *window)
+void SceneWindow::setWindow(Window *window)
 {
-    toplevel = window;
+    m_window = window;
 }
 
 void SceneWindow::referencePreviousPixmap()
@@ -725,23 +725,23 @@ void SceneWindow::unreferencePreviousPixmap_helper(SurfaceItem *item)
 
 QRegion SceneWindow::decorationShape() const
 {
-    const QRect decorationInnerRect = toplevel->rect() - toplevel->frameMargins();
-    return QRegion(toplevel->rect()) - decorationInnerRect;
+    const QRect decorationInnerRect = m_window->rect() - m_window->frameMargins();
+    return QRegion(m_window->rect()) - decorationInnerRect;
 }
 
 bool SceneWindow::isVisible() const
 {
-    if (toplevel->isDeleted()) {
+    if (m_window->isDeleted()) {
         return false;
     }
-    if (!toplevel->isOnCurrentDesktop()) {
+    if (!m_window->isOnCurrentDesktop()) {
         return false;
     }
-    if (!toplevel->isOnCurrentActivity()) {
+    if (!m_window->isOnCurrentActivity()) {
         return false;
     }
-    if (toplevel->isClient()) {
-        return toplevel->isShown();
+    if (m_window->isClient()) {
+        return m_window->isShown();
     }
     return true; // Unmanaged is always visible
 }
@@ -754,20 +754,20 @@ bool SceneWindow::isPaintingEnabled() const
 void SceneWindow::resetPaintingEnabled()
 {
     disable_painting = 0;
-    if (toplevel->isDeleted()) {
+    if (m_window->isDeleted()) {
         disable_painting |= PAINT_DISABLED_BY_DELETE;
     }
-    if (!toplevel->isOnCurrentDesktop()) {
+    if (!m_window->isOnCurrentDesktop()) {
         disable_painting |= PAINT_DISABLED_BY_DESKTOP;
     }
-    if (!toplevel->isOnCurrentActivity()) {
+    if (!m_window->isOnCurrentActivity()) {
         disable_painting |= PAINT_DISABLED_BY_ACTIVITY;
     }
-    if (toplevel->isClient()) {
-        if (toplevel->isMinimized()) {
+    if (m_window->isClient()) {
+        if (m_window->isMinimized()) {
             disable_painting |= PAINT_DISABLED_BY_MINIMIZE;
         }
-        if (toplevel->isHiddenInternal()) {
+        if (m_window->isHiddenInternal()) {
             disable_painting |= PAINT_DISABLED;
         }
     }

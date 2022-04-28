@@ -206,9 +206,9 @@ Scene::EffectFrame *SceneOpenGL::createEffectFrame(EffectFrameImpl *frame)
     return new SceneOpenGL::EffectFrame(frame, this);
 }
 
-Shadow *SceneOpenGL::createShadow(Window *toplevel)
+Shadow *SceneOpenGL::createShadow(Window *window)
 {
-    return new SceneOpenGLShadow(toplevel);
+    return new SceneOpenGLShadow(window);
 }
 
 DecorationRenderer *SceneOpenGL::createDecorationRenderer(Decoration::DecoratedClientImpl *impl)
@@ -318,8 +318,8 @@ void SceneOpenGL::performPaintWindow(EffectWindowImpl *w, int mask, const QRegio
 // OpenGLWindow
 //****************************************
 
-OpenGLWindow::OpenGLWindow(Window *toplevel, SceneOpenGL *scene)
-    : SceneWindow(toplevel)
+OpenGLWindow::OpenGLWindow(Window *window, SceneOpenGL *scene)
+    : SceneWindow(window)
     , m_scene(scene)
 {
 }
@@ -1174,8 +1174,8 @@ QSharedPointer<GLTexture> DecorationShadowTextureCache::getTexture(SceneOpenGLSh
     return d.texture;
 }
 
-SceneOpenGLShadow::SceneOpenGLShadow(Window *toplevel)
-    : Shadow(toplevel)
+SceneOpenGLShadow::SceneOpenGLShadow(Window *window)
+    : Shadow(window)
 {
 }
 
@@ -1349,7 +1349,7 @@ void SceneOpenGLDecorationRenderer::render(const QRegion &region)
     }
 
     QRect left, top, right, bottom;
-    client()->client()->layoutDecorationRects(left, top, right, bottom);
+    client()->window()->layoutDecorationRects(left, top, right, bottom);
 
     const qreal devicePixelRatio = effectiveDevicePixelRatio();
     const int topHeight = std::ceil(top.height() * devicePixelRatio);
@@ -1451,7 +1451,7 @@ static int align(int value, int align)
 void SceneOpenGLDecorationRenderer::resizeTexture()
 {
     QRect left, top, right, bottom;
-    client()->client()->layoutDecorationRects(left, top, right, bottom);
+    client()->window()->layoutDecorationRects(left, top, right, bottom);
     QSize size;
 
     size.rwidth() = qMax(qMax(top.width(), bottom.width()),

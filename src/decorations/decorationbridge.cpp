@@ -140,8 +140,8 @@ void DecorationBridge::initPlugin()
 
 static void recreateDecorations()
 {
-    Workspace::self()->forEachAbstractClient([](Window *c) {
-        c->invalidateDecoration();
+    Workspace::self()->forEachAbstractClient([](Window *window) {
+        window->invalidateDecoration();
     });
 }
 
@@ -238,7 +238,7 @@ std::unique_ptr<KDecoration2::DecorationSettingsPrivate> DecorationBridge::setti
     return std::unique_ptr<SettingsImpl>(new SettingsImpl(parent));
 }
 
-KDecoration2::Decoration *DecorationBridge::createDecoration(Window *client)
+KDecoration2::Decoration *DecorationBridge::createDecoration(Window *window)
 {
     if (m_noPlugin) {
         return nullptr;
@@ -251,7 +251,7 @@ KDecoration2::Decoration *DecorationBridge::createDecoration(Window *client)
     if (!m_theme.isEmpty()) {
         args.insert(QStringLiteral("theme"), m_theme);
     }
-    auto deco = m_factory->create<KDecoration2::Decoration>(client, QVariantList({args}));
+    auto deco = m_factory->create<KDecoration2::Decoration>(window, QVariantList({args}));
     deco->setSettings(m_settings);
     deco->init();
     return deco;

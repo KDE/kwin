@@ -42,7 +42,7 @@ public:
     const QSharedPointer<QOpenGLFramebufferObject> &contentFBO() const;
     QSharedPointer<QOpenGLFramebufferObject> swapFBO();
 
-    InternalWindow *client() const;
+    InternalWindow *internalWindow() const;
     EGLSurface eglSurface() const;
 
 private:

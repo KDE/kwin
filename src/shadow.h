@@ -67,20 +67,20 @@ public:
      * This method takes care of creating an instance of the
      * Shadow class for the current Compositing Backend.
      *
-     * If there is no shadow defined for @p toplevel this method
+     * If there is no shadow defined for @p window this method
      * will return @c NULL.
-     * @param toplevel The Window for which the shadow should be created
+     * @param window The Window for which the shadow should be created
      * @return Created Shadow or @c NULL in case there is no shadow defined.
      */
-    static Shadow *createShadow(Window *toplevel);
+    static Shadow *createShadow(Window *window);
 
-    Window *toplevel() const;
+    Window *window() const;
     /**
-     * Reparents the shadow to @p toplevel.
+     * Reparents the shadow to @p window.
      * Used when a window is deleted.
-     * @param toplevel The new parent
+     * @param window The new parent
      */
-    void setToplevel(Window *toplevel);
+    void setWindow(Window *window);
 
     bool hasDecorationShadow() const
     {
@@ -124,7 +124,7 @@ public Q_SLOTS:
     void geometryChanged();
 
 protected:
-    Shadow(Window *toplevel);
+    Shadow(Window *window);
 
     inline const QPixmap &shadowPixmap(ShadowElements element) const
     {
@@ -135,16 +135,16 @@ protected:
     void setShadowElement(const QPixmap &shadow, ShadowElements element);
 
 private:
-    static Shadow *createShadowFromX11(Window *toplevel);
-    static Shadow *createShadowFromDecoration(Window *toplevel);
-    static Shadow *createShadowFromWayland(Window *toplevel);
-    static Shadow *createShadowFromInternalWindow(Window *toplevel);
+    static Shadow *createShadowFromX11(Window *window);
+    static Shadow *createShadowFromDecoration(Window *window);
+    static Shadow *createShadowFromWayland(Window *window);
+    static Shadow *createShadowFromInternalWindow(Window *window);
     static QVector<uint32_t> readX11ShadowProperty(xcb_window_t id);
     bool init(const QVector<uint32_t> &data);
     bool init(KDecoration2::Decoration *decoration);
     bool init(const QPointer<KWaylandServer::ShadowInterface> &shadow);
     bool init(const QWindow *window);
-    Window *m_topLevel;
+    Window *m_window;
     // shadow pixmaps
     QPixmap m_shadowElements[ShadowElementsCount];
     // shadow offsets

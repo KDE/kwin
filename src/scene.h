@@ -115,13 +115,13 @@ public:
     /**
      * Adds the Window to the Scene.
      *
-     * If the toplevel gets deleted, then the scene will try automatically
+     * If the window gets deleted, then the scene will try automatically
      * to re-bind an underlying scene window to the corresponding Deleted.
      *
-     * @param toplevel The window to be added.
-     * @note You can add a toplevel to scene only once.
+     * @param window The window to be added.
+     * @note You can add a window to scene only once.
      */
-    virtual SceneWindow *createWindow(Window *toplevel) = 0;
+    virtual SceneWindow *createWindow(Window *window) = 0;
 
     /**
      * @brief Creates the Scene backend of an EffectFrame.
@@ -135,9 +135,9 @@ public:
      * An implementing class has to create a proper instance. It is not allowed to
      * return @c null.
      *
-     * @param toplevel The Window for which the Shadow needs to be created.
+     * @param window The Window for which the Shadow needs to be created.
      */
-    virtual Shadow *createShadow(Window *toplevel) = 0;
+    virtual Shadow *createShadow(Window *window) = 0;
     // Flags controlling how painting is done.
     enum {
         // SceneWindow (or at least part of it) will be painted opaque.
@@ -316,7 +316,7 @@ public:
     // is the window visible at all
     bool isVisible() const;
     QRegion decorationShape() const;
-    void setToplevel(Window *window);
+    void setWindow(Window *window);
     void referencePreviousPixmap();
     void unreferencePreviousPixmap();
     WindowItem *windowItem() const;
@@ -324,7 +324,7 @@ public:
     ShadowItem *shadowItem() const;
 
 protected:
-    Window *toplevel;
+    Window *m_window;
 
 private:
     void referencePreviousPixmap_helper(SurfaceItem *item);
@@ -356,47 +356,47 @@ protected:
 
 inline int SceneWindow::x() const
 {
-    return toplevel->x();
+    return m_window->x();
 }
 
 inline int SceneWindow::y() const
 {
-    return toplevel->y();
+    return m_window->y();
 }
 
 inline int SceneWindow::width() const
 {
-    return toplevel->width();
+    return m_window->width();
 }
 
 inline int SceneWindow::height() const
 {
-    return toplevel->height();
+    return m_window->height();
 }
 
 inline QRect SceneWindow::geometry() const
 {
-    return toplevel->frameGeometry();
+    return m_window->frameGeometry();
 }
 
 inline QSize SceneWindow::size() const
 {
-    return toplevel->size();
+    return m_window->size();
 }
 
 inline QPoint SceneWindow::pos() const
 {
-    return toplevel->pos();
+    return m_window->pos();
 }
 
 inline QRect SceneWindow::rect() const
 {
-    return toplevel->rect();
+    return m_window->rect();
 }
 
 inline Window *SceneWindow::window() const
 {
-    return toplevel;
+    return m_window;
 }
 
 } // namespace

@@ -28,7 +28,7 @@ public:
     void paintGenericScreen(int mask, const ScreenPaintData &data) override;
     bool initFailed() const override;
     EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
-    Shadow *createShadow(Window *toplevel) override;
+    Shadow *createShadow(Window *window) override;
     DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
     SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
@@ -49,7 +49,7 @@ public:
 
 protected:
     void paintBackground(const QRegion &region) override;
-    SceneWindow *createWindow(Window *toplevel) override;
+    SceneWindow *createWindow(Window *window) override;
     void paintOffscreenQuickView(OffscreenQuickView *w) override;
 
 private:
@@ -106,7 +106,7 @@ private:
 class SceneQPainterShadow : public Shadow
 {
 public:
-    SceneQPainterShadow(Window *toplevel);
+    SceneQPainterShadow(Window *window);
     ~SceneQPainterShadow() override;
 
 protected:

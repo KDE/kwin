@@ -25,22 +25,22 @@ namespace KWin
 namespace Decoration
 {
 
-DecoratedClientImpl::DecoratedClientImpl(Window *client, KDecoration2::DecoratedClient *decoratedClient, KDecoration2::Decoration *decoration)
+DecoratedClientImpl::DecoratedClientImpl(Window *window, KDecoration2::DecoratedClient *decoratedClient, KDecoration2::Decoration *decoration)
     : QObject()
     , ApplicationMenuEnabledDecoratedClientPrivate(decoratedClient, decoration)
-    , m_client(client)
-    , m_clientSize(client->clientSize())
+    , m_window(window)
+    , m_clientSize(window->clientSize())
 {
-    client->setDecoratedClient(QPointer<DecoratedClientImpl>(this));
-    connect(client, &Window::activeChanged, this, [decoratedClient, client]() {
-        Q_EMIT decoratedClient->activeChanged(client->isActive());
+    window->setDecoratedClient(QPointer<DecoratedClientImpl>(this));
+    connect(window, &Window::activeChanged, this, [decoratedClient, window]() {
+        Q_EMIT decoratedClient->activeChanged(window->isActive());
     });
-    connect(client, &Window::clientGeometryChanged, this, [decoratedClient, this]() {
-        if (m_client->clientSize() == m_clientSize) {
+    connect(window, &Window::clientGeometryChanged, this, [decoratedClient, this]() {
+        if (m_window->clientSize() == m_clientSize) {
             return;
         }
         const auto oldSize = m_clientSize;
-        m_clientSize = m_client->clientSize();
+        m_clientSize = m_window->clientSize();
         if (oldSize.width() != m_clientSize.width()) {
             Q_EMIT decoratedClient->widthChanged(m_clientSize.width());
         }
@@ -49,30 +49,30 @@ DecoratedClientImpl::DecoratedClientImpl(Window *client, KDecoration2::Decorated
         }
         Q_EMIT decoratedClient->sizeChanged(m_clientSize);
     });
-    connect(client, &Window::desktopChanged, this, [decoratedClient, client]() {
-        Q_EMIT decoratedClient->onAllDesktopsChanged(client->isOnAllDesktops());
+    connect(window, &Window::desktopChanged, this, [decoratedClient, window]() {
+        Q_EMIT decoratedClient->onAllDesktopsChanged(window->isOnAllDesktops());
     });
-    connect(client, &Window::captionChanged, this, [decoratedClient, client]() {
-        Q_EMIT decoratedClient->captionChanged(client->caption());
+    connect(window, &Window::captionChanged, this, [decoratedClient, window]() {
+        Q_EMIT decoratedClient->captionChanged(window->caption());
     });
-    connect(client, &Window::iconChanged, this, [decoratedClient, client]() {
-        Q_EMIT decoratedClient->iconChanged(client->icon());
+    connect(window, &Window::iconChanged, this, [decoratedClient, window]() {
+        Q_EMIT decoratedClient->iconChanged(window->icon());
     });
-    connect(client, &Window::shadeChanged, this, &Decoration::DecoratedClientImpl::signalShadeChange);
-    connect(client, &Window::keepAboveChanged, decoratedClient, &KDecoration2::DecoratedClient::keepAboveChanged);
-    connect(client, &Window::keepBelowChanged, decoratedClient, &KDecoration2::DecoratedClient::keepBelowChanged);
-    connect(client, &Window::quickTileModeChanged, decoratedClient, [this, decoratedClient]() {
+    connect(window, &Window::shadeChanged, this, &Decoration::DecoratedClientImpl::signalShadeChange);
+    connect(window, &Window::keepAboveChanged, decoratedClient, &KDecoration2::DecoratedClient::keepAboveChanged);
+    connect(window, &Window::keepBelowChanged, decoratedClient, &KDecoration2::DecoratedClient::keepBelowChanged);
+    connect(window, &Window::quickTileModeChanged, decoratedClient, [this, decoratedClient]() {
         Q_EMIT decoratedClient->adjacentScreenEdgesChanged(adjacentScreenEdges());
     });
-    connect(client, &Window::closeableChanged, decoratedClient, &KDecoration2::DecoratedClient::closeableChanged);
-    connect(client, &Window::shadeableChanged, decoratedClient, &KDecoration2::DecoratedClient::shadeableChanged);
-    connect(client, &Window::minimizeableChanged, decoratedClient, &KDecoration2::DecoratedClient::minimizeableChanged);
-    connect(client, &Window::maximizeableChanged, decoratedClient, &KDecoration2::DecoratedClient::maximizeableChanged);
+    connect(window, &Window::closeableChanged, decoratedClient, &KDecoration2::DecoratedClient::closeableChanged);
+    connect(window, &Window::shadeableChanged, decoratedClient, &KDecoration2::DecoratedClient::shadeableChanged);
+    connect(window, &Window::minimizeableChanged, decoratedClient, &KDecoration2::DecoratedClient::minimizeableChanged);
+    connect(window, &Window::maximizeableChanged, decoratedClient, &KDecoration2::DecoratedClient::maximizeableChanged);
 
-    connect(client, &Window::paletteChanged, decoratedClient, &KDecoration2::DecoratedClient::paletteChanged);
+    connect(window, &Window::paletteChanged, decoratedClient, &KDecoration2::DecoratedClient::paletteChanged);
 
-    connect(client, &Window::hasApplicationMenuChanged, decoratedClient, &KDecoration2::DecoratedClient::hasApplicationMenuChanged);
-    connect(client, &Window::applicationMenuActiveChanged, decoratedClient, &KDecoration2::DecoratedClient::applicationMenuActiveChanged);
+    connect(window, &Window::hasApplicationMenuChanged, decoratedClient, &KDecoration2::DecoratedClient::hasApplicationMenuChanged);
+    connect(window, &Window::applicationMenuActiveChanged, decoratedClient, &KDecoration2::DecoratedClient::applicationMenuActiveChanged);
 
     m_toolTipWakeUp.setSingleShot(true);
     connect(&m_toolTipWakeUp, &QTimer::timeout, this, [this]() {
@@ -93,13 +93,13 @@ DecoratedClientImpl::~DecoratedClientImpl()
 
 void DecoratedClientImpl::signalShadeChange()
 {
-    Q_EMIT decoratedClient()->shadedChanged(m_client->isShade());
+    Q_EMIT decoratedClient()->shadedChanged(m_window->isShade());
 }
 
 #define DELEGATE(type, name, clientName)   \
     type DecoratedClientImpl::name() const \
     {                                      \
-        return m_client->clientName();     \
+        return m_window->clientName();     \
     }
 
 #define DELEGATE2(type, name) DELEGATE(type, name, name)
@@ -125,7 +125,7 @@ DELEGATE2(QIcon, icon)
 #define DELEGATE(type, name, clientName)   \
     type DecoratedClientImpl::name() const \
     {                                      \
-        return m_client->clientName();     \
+        return m_window->clientName();     \
     }
 
 DELEGATE(bool, isKeepAbove, keepAbove)
@@ -139,7 +139,7 @@ DELEGATE(WId, decorationId, frameId)
 #define DELEGATE(name, op)                                                \
     void DecoratedClientImpl::name()                                      \
     {                                                                     \
-        Workspace::self()->performWindowOperation(m_client, Options::op); \
+        Workspace::self()->performWindowOperation(m_window, Options::op); \
     }
 
 DELEGATE(requestToggleShade, ShadeOp)
@@ -152,7 +152,7 @@ DELEGATE(requestToggleKeepBelow, KeepBelowOp)
 #define DELEGATE(name, clientName)   \
     void DecoratedClientImpl::name() \
     {                                \
-        m_client->clientName();      \
+        m_window->clientName();      \
     }
 
 DELEGATE(requestContextHelp, showContextHelp)
@@ -162,12 +162,12 @@ DELEGATE(requestMinimize, minimize)
 
 void DecoratedClientImpl::requestClose()
 {
-    QMetaObject::invokeMethod(m_client, &Window::closeWindow, Qt::QueuedConnection);
+    QMetaObject::invokeMethod(m_window, &Window::closeWindow, Qt::QueuedConnection);
 }
 
 QColor DecoratedClientImpl::color(KDecoration2::ColorGroup group, KDecoration2::ColorRole role) const
 {
-    auto dp = m_client->decorationPalette();
+    auto dp = m_window->decorationPalette();
     if (dp) {
         return dp->color(group, role);
     }
@@ -196,12 +196,12 @@ void DecoratedClientImpl::requestHideToolTip()
 
 void DecoratedClientImpl::requestShowWindowMenu(const QRect &rect)
 {
-    Workspace::self()->showWindowMenu(QRect(m_client->pos() + rect.topLeft(), m_client->pos() + rect.bottomRight()), m_client);
+    Workspace::self()->showWindowMenu(QRect(m_window->pos() + rect.topLeft(), m_window->pos() + rect.bottomRight()), m_window);
 }
 
 void DecoratedClientImpl::requestShowApplicationMenu(const QRect &rect, int actionId)
 {
-    Workspace::self()->showApplicationMenu(rect, m_client, actionId);
+    Workspace::self()->showApplicationMenu(rect, m_window, actionId);
 }
 
 void DecoratedClientImpl::showApplicationMenu(int actionId)
@@ -216,7 +216,7 @@ void DecoratedClientImpl::requestToggleMaximization(Qt::MouseButtons buttons)
 
 void DecoratedClientImpl::delayedRequestToggleMaximization(Options::WindowOperation operation)
 {
-    Workspace::self()->performWindowOperation(m_client, operation);
+    Workspace::self()->performWindowOperation(m_window, operation);
 }
 
 int DecoratedClientImpl::width() const
@@ -236,7 +236,7 @@ QSize DecoratedClientImpl::size() const
 
 bool DecoratedClientImpl::isMaximizedVertically() const
 {
-    return m_client->requestedMaximizeMode() & MaximizeVertical;
+    return m_window->requestedMaximizeMode() & MaximizeVertical;
 }
 
 bool DecoratedClientImpl::isMaximized() const
@@ -246,13 +246,13 @@ bool DecoratedClientImpl::isMaximized() const
 
 bool DecoratedClientImpl::isMaximizedHorizontally() const
 {
-    return m_client->requestedMaximizeMode() & MaximizeHorizontal;
+    return m_window->requestedMaximizeMode() & MaximizeHorizontal;
 }
 
 Qt::Edges DecoratedClientImpl::adjacentScreenEdges() const
 {
     Qt::Edges edges;
-    const QuickTileMode mode = m_client->quickTileMode();
+    const QuickTileMode mode = m_window->quickTileMode();
     if (mode.testFlag(QuickTileFlag::Left)) {
         edges |= Qt::LeftEdge;
         if (!mode.testFlag(QuickTileFlag::Top) && !mode.testFlag(QuickTileFlag::Bottom)) {
@@ -278,12 +278,12 @@ Qt::Edges DecoratedClientImpl::adjacentScreenEdges() const
 
 bool DecoratedClientImpl::hasApplicationMenu() const
 {
-    return m_client->hasApplicationMenu();
+    return m_window->hasApplicationMenu();
 }
 
 bool DecoratedClientImpl::isApplicationMenuActive() const
 {
-    return m_client->applicationMenuActive();
+    return m_window->applicationMenuActive();
 }
 
 }

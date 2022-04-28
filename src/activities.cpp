@@ -60,51 +60,51 @@ void Activities::slotCurrentChanged(const QString &newActivity)
 
 void Activities::slotRemoved(const QString &activity)
 {
-    const auto clients = Workspace::self()->allClientList();
-    for (auto *const client : clients) {
-        if (client->isDesktop()) {
+    const auto windows = Workspace::self()->allClientList();
+    for (auto *const window : windows) {
+        if (window->isDesktop()) {
             continue;
         }
-        client->setOnActivity(activity, false);
+        window->setOnActivity(activity, false);
     }
     // toss out any session data for it
     KConfigGroup cg(KSharedConfig::openConfig(), QByteArray("SubSession: ").append(activity.toUtf8()).constData());
     cg.deleteGroup();
 }
 
-void Activities::toggleClientOnActivity(Window *c, const QString &activity, bool dont_activate)
+void Activities::toggleWindowOnActivity(Window *window, const QString &activity, bool dont_activate)
 {
-    // int old_desktop = c->desktop();
-    bool was_on_activity = c->isOnActivity(activity);
-    bool was_on_all = c->isOnAllActivities();
+    // int old_desktop = window->desktop();
+    bool was_on_activity = window->isOnActivity(activity);
+    bool was_on_all = window->isOnAllActivities();
     // note: all activities === no activities
     bool enable = was_on_all || !was_on_activity;
-    c->setOnActivity(activity, enable);
-    if (c->isOnActivity(activity) == was_on_activity && c->isOnAllActivities() == was_on_all) { // No change
+    window->setOnActivity(activity, enable);
+    if (window->isOnActivity(activity) == was_on_activity && window->isOnAllActivities() == was_on_all) { // No change
         return;
     }
 
     Workspace *ws = Workspace::self();
-    if (c->isOnCurrentActivity()) {
-        if (c->wantsTabFocus() && options->focusPolicyIsReasonable() && !was_on_activity && // for stickyness changes
-                                                                                            // FIXME not sure if the line above refers to the correct activity
+    if (window->isOnCurrentActivity()) {
+        if (window->wantsTabFocus() && options->focusPolicyIsReasonable() && !was_on_activity && // for stickyness changes
+                                                                                                 // FIXME not sure if the line above refers to the correct activity
             !dont_activate) {
-            ws->requestFocus(c);
+            ws->requestFocus(window);
         } else {
-            ws->restackWindowUnderActive(c);
+            ws->restackWindowUnderActive(window);
         }
     } else {
-        ws->raiseWindow(c);
+        ws->raiseWindow(window);
     }
 
     // notifyWindowDesktopChanged( c, old_desktop );
 
-    const auto transients_stacking_order = ws->ensureStackingOrder(c->transients());
-    for (auto *const c : transients_stacking_order) {
-        if (!c) {
+    const auto transients_stacking_order = ws->ensureStackingOrder(window->transients());
+    for (auto *const window : transients_stacking_order) {
+        if (!window) {
             continue;
         }
-        toggleClientOnActivity(c, activity, dont_activate);
+        toggleWindowOnActivity(window, activity, dont_activate);
     }
     ws->updateClientArea();
 }
@@ -156,12 +156,12 @@ void Activities::reallyStop(const QString &id)
 
     QSet<QByteArray> saveSessionIds;
     QSet<QByteArray> dontCloseSessionIds;
-    const auto clients = ws->allClientList();
-    for (auto *const c : clients) {
-        if (c->isDesktop()) {
+    const auto windows = ws->allClientList();
+    for (auto *const window : windows) {
+        if (window->isDesktop()) {
             continue;
         }
-        const QByteArray sessionId = c->sessionId();
+        const QByteArray sessionId = window->sessionId();
         if (sessionId.isEmpty()) {
             continue; // TODO support old wm_command apps too?
         }
@@ -171,12 +171,12 @@ void Activities::reallyStop(const QString &id)
         // if it's on the activity that's closing, it needs saving
         // but if a process is on some other open activity, I don't wanna close it yet
         // this is, of course, complicated by a process having many windows.
-        if (c->isOnAllActivities()) {
+        if (window->isOnAllActivities()) {
             dontCloseSessionIds << sessionId;
             continue;
         }
 
-        const QStringList activities = c->activities();
+        const QStringList activities = window->activities();
         for (const QString &activityId : activities) {
             if (activityId == id) {
                 saveSessionIds << sessionId;

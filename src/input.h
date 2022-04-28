@@ -443,7 +443,7 @@ public:
      * according to the stacking order.
      * @return Window* at device position.
      *
-     * This will be null if no toplevel is at the position
+     * This will be null if no window is at the position
      */
     Window *hover() const;
     /**
@@ -451,7 +451,7 @@ public:
      * be different from the Window at the position of the pointer).
      * @return Window* with pointer focus.
      *
-     * This will be null if no toplevel has focus
+     * This will be null if no window has focus
      */
     Window *focus() const;
 
@@ -463,7 +463,7 @@ public:
 
     virtual QPointF position() const = 0;
 
-    void setFocus(Window *toplevel);
+    void setFocus(Window *window);
     void setDecoration(Decoration::DecoratedClientImpl *decoration);
 
 Q_SIGNALS:
@@ -500,7 +500,7 @@ protected:
     }
 
 private:
-    bool setHover(Window *toplevel);
+    bool setHover(Window *window);
     void updateFocus();
     void updateDecoration();
 

@@ -531,19 +531,19 @@ void PointerInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl 
         return;
     }
 
-    auto pos = m_pos - now->client()->pos();
+    auto pos = m_pos - now->window()->pos();
     QHoverEvent event(QEvent::HoverEnter, pos, pos);
     QCoreApplication::instance()->sendEvent(now->decoration(), &event);
-    now->client()->processDecorationMove(pos.toPoint(), m_pos.toPoint());
+    now->window()->processDecorationMove(pos.toPoint(), m_pos.toPoint());
 
     m_decorationGeometryConnection = connect(
-        decoration()->client(), &Window::frameGeometryChanged, this, [this]() {
+        decoration()->window(), &Window::frameGeometryChanged, this, [this]() {
             // ensure maximize button gets the leave event when maximizing/restore a window, see BUG 385140
             const auto oldDeco = decoration();
             update();
-            if (oldDeco && oldDeco == decoration() && !decoration()->client()->isInteractiveMove() && !decoration()->client()->isInteractiveResize() && !areButtonsPressed()) {
+            if (oldDeco && oldDeco == decoration() && !decoration()->window()->isInteractiveMove() && !decoration()->window()->isInteractiveResize() && !areButtonsPressed()) {
                 // position of window did not change, we need to send HoverMotion manually
-                const QPointF p = m_pos - decoration()->client()->pos();
+                const QPointF p = m_pos - decoration()->window()->pos();
                 QHoverEvent event(QEvent::HoverMove, p, p);
                 QCoreApplication::instance()->sendEvent(decoration()->decoration(), &event);
             }
@@ -1028,7 +1028,7 @@ void CursorImage::updateDecoration()
 {
     disconnect(m_decorationConnection);
     auto deco = m_pointer->decoration();
-    Window *window = deco ? deco->client() : nullptr;
+    Window *window = deco ? deco->window() : nullptr;
     if (window) {
         m_decorationConnection = connect(window, &Window::moveResizeCursorChanged, this, &CursorImage::updateDecorationCursor);
     } else {
@@ -1041,7 +1041,7 @@ void CursorImage::updateDecorationCursor()
 {
     m_decorationCursor = {};
     auto deco = m_pointer->decoration();
-    if (Window *window = deco ? deco->client() : nullptr) {
+    if (Window *window = deco ? deco->window() : nullptr) {
         loadThemeCursor(window->cursor(), &m_decorationCursor);
         if (m_currentSource == CursorSource::Decoration) {
             Q_EMIT changed();

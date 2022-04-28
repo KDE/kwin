@@ -127,30 +127,30 @@ Window::~Window()
     delete info;
 }
 
-QDebug operator<<(QDebug debug, const Window *toplevel)
+QDebug operator<<(QDebug debug, const Window *window)
 {
     QDebugStateSaver saver(debug);
     debug.nospace();
-    if (toplevel) {
-        debug << toplevel->metaObject()->className() << '(' << static_cast<const void *>(toplevel);
-        if (toplevel->window()) {
-            debug << ", windowId=0x" << Qt::hex << toplevel->window() << Qt::dec;
+    if (window) {
+        debug << window->metaObject()->className() << '(' << static_cast<const void *>(window);
+        if (window->window()) {
+            debug << ", windowId=0x" << Qt::hex << window->window() << Qt::dec;
         }
-        if (const KWaylandServer::SurfaceInterface *surface = toplevel->surface()) {
+        if (const KWaylandServer::SurfaceInterface *surface = window->surface()) {
             debug << ", surface=" << surface;
         }
-        if (toplevel->isClient()) {
-            if (!toplevel->isPopupWindow()) {
-                debug << ", caption=" << toplevel->caption();
+        if (window->isClient()) {
+            if (!window->isPopupWindow()) {
+                debug << ", caption=" << window->caption();
             }
-            if (toplevel->transientFor()) {
-                debug << ", transientFor=" << toplevel->transientFor();
+            if (window->transientFor()) {
+                debug << ", transientFor=" << window->transientFor();
             }
         }
         if (debug.verbosity() > 2) {
-            debug << ", frameGeometry=" << toplevel->frameGeometry();
-            debug << ", resourceName=" << toplevel->resourceName();
-            debug << ", resourceClass=" << toplevel->resourceClass();
+            debug << ", frameGeometry=" << window->frameGeometry();
+            debug << ", resourceName=" << window->resourceName();
+            debug << ", resourceClass=" << window->resourceClass();
         }
         debug << ')';
     } else {
@@ -187,11 +187,11 @@ void Window::copyToDeleted(Window *c)
     }
     m_sceneWindow = std::exchange(c->m_sceneWindow, nullptr);
     if (m_sceneWindow != nullptr) {
-        m_sceneWindow->setToplevel(this);
+        m_sceneWindow->setWindow(this);
     }
     m_shadow = std::exchange(c->m_shadow, nullptr);
     if (m_shadow) {
-        m_shadow->setToplevel(this);
+        m_shadow->setWindow(this);
     }
     resource_name = c->resourceName();
     resource_class = c->resourceClass();
@@ -1092,7 +1092,7 @@ void Window::autoRaise()
 
 bool Window::isMostRecentlyRaised() const
 {
-    // The last toplevel in the unconstrained stacking order is the most recently raised one.
+    // The last window in the unconstrained stacking order is the most recently raised one.
     return workspace()->topWindowOnDesktop(VirtualDesktopManager::self()->currentDesktop(), nullptr, true, false) == this;
 }
 

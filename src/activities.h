@@ -36,11 +36,11 @@ public:
     bool start(const QString &id);
     void setCurrent(const QString &activity);
     /**
-     * Adds/removes client \a c to/from \a activity.
+     * Adds/removes window \a window to/from \a activity.
      *
      * Takes care of transients as well.
      */
-    void toggleClientOnActivity(KWin::Window *c, const QString &activity, bool dont_activate);
+    void toggleWindowOnActivity(Window *window, const QString &activity, bool dont_activate);
 
     QStringList running() const;
     QStringList all() const;

@@ -47,7 +47,7 @@ Decoration::DecoratedClientImpl *DecorationRenderer::client() const
 void DecorationRenderer::invalidate()
 {
     if (m_client) {
-        addDamage(m_client->client()->rect());
+        addDamage(m_client->window()->rect());
     }
     m_imageSizesDirty = true;
 }
@@ -93,7 +93,7 @@ QImage DecorationRenderer::renderToImage(const QRect &geo)
 
     // Guess the pixel format of the X pixmap into which the QImage will be copied.
     QImage::Format format;
-    const int depth = client()->client()->depth();
+    const int depth = client()->window()->depth();
     switch (depth) {
     case 30:
         format = QImage::Format_A2RGB30_Premultiplied;

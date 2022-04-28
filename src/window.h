@@ -784,7 +784,7 @@ public:
     virtual QMatrix4x4 inputTransformation() const;
 
     /**
-     * Returns @c true if the toplevel can accept input at the specified position @a point.
+     * Returns @c true if the window can accept input at the specified position @a point.
      */
     virtual bool hitTest(const QPoint &point) const;
 
@@ -806,7 +806,7 @@ public:
         return false;
     }
     /**
-     * This method should be invoked for Toplevels with a popup grab when
+     * This method should be invoked for windows with a popup grab when
      * the grab ends.
      *
      * The default implementation does nothing.
@@ -818,7 +818,7 @@ public:
     /**
      * @brief Finds the Window matching the condition expressed in @p func in @p list.
      *
-     * The method is templated to operate on either a list of Toplevels or on a list of
+     * The method is templated to operate on either a list of windows or on a list of
      * a subclass type of Window.
      * @param list The list to search in
      * @param func The condition function (compare std::find_if)
@@ -1410,18 +1410,18 @@ protected Q_SLOTS:
 Q_SIGNALS:
     void stackingOrderChanged();
     void shadeChanged();
-    void opacityChanged(KWin::Window *toplevel, qreal oldOpacity);
-    void damaged(KWin::Window *toplevel, const QRegion &damage);
+    void opacityChanged(KWin::Window *window, qreal oldOpacity);
+    void damaged(KWin::Window *window, const QRegion &damage);
     void inputTransformationChanged();
     /**
      * This signal is emitted when the Window's frame geometry changes.
      * @deprecated since 5.19, use frameGeometryChanged instead
      */
     void geometryChanged();
-    void geometryShapeChanged(KWin::Window *toplevel, const QRect &old);
-    void windowClosed(KWin::Window *toplevel, KWin::Deleted *deleted);
-    void windowShown(KWin::Window *toplevel);
-    void windowHidden(KWin::Window *toplevel);
+    void geometryShapeChanged(KWin::Window *window, const QRect &old);
+    void windowClosed(KWin::Window *window, KWin::Deleted *deleted);
+    void windowShown(KWin::Window *window);
+    void windowHidden(KWin::Window *window);
     /**
      * Signal emitted when the window's shape state changed. That is if it did not have a shape
      * and received one or if the shape was withdrawn. Think of Chromium enabling/disabling KWin's
@@ -1464,15 +1464,15 @@ Q_SIGNALS:
     /**
      * This signal is emitted when the Window's buffer geometry changes.
      */
-    void bufferGeometryChanged(KWin::Window *toplevel, const QRect &oldGeometry);
+    void bufferGeometryChanged(KWin::Window *window, const QRect &oldGeometry);
     /**
      * This signal is emitted when the Window's frame geometry changes.
      */
-    void frameGeometryChanged(KWin::Window *toplevel, const QRect &oldGeometry);
+    void frameGeometryChanged(KWin::Window *window, const QRect &oldGeometry);
     /**
      * This signal is emitted when the Window's client geometry has changed.
      */
-    void clientGeometryChanged(KWin::Window *toplevel, const QRect &oldGeometry);
+    void clientGeometryChanged(KWin::Window *window, const QRect &oldGeometry);
 
     /**
      * This signal is emitted when the visible geometry has changed.
@@ -2316,7 +2316,7 @@ inline void Window::setPendingMoveResizeMode(MoveResizeMode mode)
     m_pendingMoveResizeMode = MoveResizeMode(uint(m_pendingMoveResizeMode) | uint(mode));
 }
 
-KWIN_EXPORT QDebug operator<<(QDebug debug, const Window *toplevel);
+KWIN_EXPORT QDebug operator<<(QDebug debug, const Window *window);
 
 } // namespace KWin
 

@@ -122,11 +122,11 @@ void X11DecorationRenderer::render(const QRegion &region)
     xcb_connection_t *c = kwinApp()->x11Connection();
     if (m_gc == XCB_NONE) {
         m_gc = xcb_generate_id(c);
-        xcb_create_gc(c, m_gc, client()->client()->frameId(), 0, nullptr);
+        xcb_create_gc(c, m_gc, client()->window()->frameId(), 0, nullptr);
     }
 
     QRect left, top, right, bottom;
-    client()->client()->layoutDecorationRects(left, top, right, bottom);
+    client()->window()->layoutDecorationRects(left, top, right, bottom);
 
     const QRect geometry = region.boundingRect();
     left = left.intersected(geometry);
@@ -139,8 +139,8 @@ void X11DecorationRenderer::render(const QRegion &region)
             return;
         }
         QImage image = renderToImage(geo);
-        xcb_put_image(c, XCB_IMAGE_FORMAT_Z_PIXMAP, client()->client()->frameId(), m_gc,
-                      image.width(), image.height(), geo.x(), geo.y(), 0, client()->client()->depth(),
+        xcb_put_image(c, XCB_IMAGE_FORMAT_Z_PIXMAP, client()->window()->frameId(), m_gc,
+                      image.width(), image.height(), geo.x(), geo.y(), 0, client()->window()->depth(),
                       image.sizeInBytes(), image.constBits());
     };
     renderPart(left);

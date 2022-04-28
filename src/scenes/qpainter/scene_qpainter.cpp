@@ -98,9 +98,9 @@ void SceneQPainter::paintOffscreenQuickView(OffscreenQuickView *w)
     painter->restore();
 }
 
-SceneWindow *SceneQPainter::createWindow(Window *toplevel)
+SceneWindow *SceneQPainter::createWindow(Window *window)
 {
-    return new SceneQPainterWindow(this, toplevel);
+    return new SceneQPainterWindow(this, window);
 }
 
 Scene::EffectFrame *SceneQPainter::createEffectFrame(EffectFrameImpl *frame)
@@ -108,9 +108,9 @@ Scene::EffectFrame *SceneQPainter::createEffectFrame(EffectFrameImpl *frame)
     return new QPainterEffectFrame(frame, this);
 }
 
-Shadow *SceneQPainter::createShadow(Window *toplevel)
+Shadow *SceneQPainter::createShadow(Window *window)
 {
-    return new SceneQPainterShadow(toplevel);
+    return new SceneQPainterShadow(window);
 }
 
 //****************************************
@@ -245,7 +245,7 @@ void SceneQPainterWindow::renderDecorationItem(QPainter *painter, DecorationItem
 {
     const auto renderer = static_cast<const SceneQPainterDecorationRenderer *>(decorationItem->renderer());
     QRect dtr, dlr, drr, dbr;
-    toplevel->layoutDecorationRects(dlr, dtr, drr, dbr);
+    m_window->layoutDecorationRects(dlr, dtr, drr, dbr);
 
     painter->drawImage(dtr, renderer->image(SceneQPainterDecorationRenderer::DecorationPart::Top));
     painter->drawImage(dlr, renderer->image(SceneQPainterDecorationRenderer::DecorationPart::Left));
@@ -348,8 +348,8 @@ void QPainterEffectFrame::render(const QRegion &region, double opacity, double f
 //****************************************
 // QPainterShadow
 //****************************************
-SceneQPainterShadow::SceneQPainterShadow(Window *toplevel)
-    : Shadow(toplevel)
+SceneQPainterShadow::SceneQPainterShadow(Window *window)
+    : Shadow(window)
 {
 }
 
@@ -418,7 +418,7 @@ void SceneQPainterDecorationRenderer::render(const QRegion &region)
 void SceneQPainterDecorationRenderer::resizeImages()
 {
     QRect left, top, right, bottom;
-    client()->client()->layoutDecorationRects(left, top, right, bottom);
+    client()->window()->layoutDecorationRects(left, top, right, bottom);
 
     auto checkAndCreate = [this](int index, const QSize &size) {
         auto dpr = effectiveDevicePixelRatio();

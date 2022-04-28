@@ -282,9 +282,9 @@ TabBoxClientList TabBoxHandlerImpl::stackingOrder() const
 {
     const QList<Window *> stacking = Workspace::self()->stackingOrder();
     TabBoxClientList ret;
-    for (Window *toplevel : stacking) {
-        if (toplevel->isClient()) {
-            ret.append(qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(toplevel->tabBoxClient()));
+    for (Window *window : stacking) {
+        if (window->isClient()) {
+            ret.append(qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(window->tabBoxClient()));
         }
     }
     return ret;
@@ -329,9 +329,9 @@ void TabBoxHandlerImpl::shadeClient(TabBoxClient *c, bool b) const
 QWeakPointer<TabBoxClient> TabBoxHandlerImpl::desktopClient() const
 {
     const auto stackingOrder = Workspace::self()->stackingOrder();
-    for (Window *toplevel : stackingOrder) {
-        if (toplevel->isClient() && toplevel->isDesktop() && toplevel->isOnCurrentDesktop() && toplevel->output() == workspace()->activeOutput()) {
-            return qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(toplevel->tabBoxClient());
+    for (Window *window : stackingOrder) {
+        if (window->isClient() && window->isDesktop() && window->isOnCurrentDesktop() && window->output() == workspace()->activeOutput()) {
+            return qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(window->tabBoxClient());
         }
     }
     return QWeakPointer<TabBoxClient>();
@@ -1041,9 +1041,9 @@ void TabBox::navigatingThroughWindows(bool forward, const QKeySequence &shortcut
         //  CDE style raise / lower
         CDEWalkThroughWindows(forward);
     } else {
-        workspace()->forEachAbstractClient([](Window *toplevel) {
-            if (toplevel->isPopupWindow()) {
-                toplevel->popupDone();
+        workspace()->forEachAbstractClient([](Window *window) {
+            if (window->isPopupWindow()) {
+                window->popupDone();
             }
         });
         if (areModKeysDepressed(shortcut)) {

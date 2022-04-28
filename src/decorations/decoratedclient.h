@@ -28,7 +28,7 @@ class DecoratedClientImpl : public QObject, public KDecoration2::ApplicationMenu
 {
     Q_OBJECT
 public:
-    explicit DecoratedClientImpl(Window *client, KDecoration2::DecoratedClient *decoratedClient, KDecoration2::Decoration *decoration);
+    explicit DecoratedClientImpl(Window *window, KDecoration2::DecoratedClient *decoratedClient, KDecoration2::Decoration *decoration);
     ~DecoratedClientImpl() override;
     QString caption() const override;
     WId decorationId() const override;
@@ -77,9 +77,9 @@ public:
 
     void showApplicationMenu(int actionId) override;
 
-    Window *client()
+    Window *window()
     {
-        return m_client;
+        return m_window;
     }
     KDecoration2::DecoratedClient *decoratedClient()
     {
@@ -92,7 +92,7 @@ private Q_SLOTS:
     void delayedRequestToggleMaximization(Options::WindowOperation operation);
 
 private:
-    Window *m_client;
+    Window *m_window;
     QSize m_clientSize;
 
     QString m_toolTipText;
