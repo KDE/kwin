@@ -59,7 +59,7 @@ private:
 
         connect(m_window, &Window::damaged, this, &WindowStream::includeDamage);
         m_damagedRegion = m_window->visibleGeometry();
-        m_window->addRepaintFull();
+        m_window->output()->renderLoop()->scheduleRepaint();
     }
 
     void stopFeeding()
