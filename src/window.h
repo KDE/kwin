@@ -1016,8 +1016,6 @@ public:
     }
     virtual void setFullScreen(bool set, bool user = true);
 
-    virtual void setClientShown(bool shown);
-
     QRect geometryRestore() const;
     virtual MaximizeMode maximizeMode() const;
     virtual MaximizeMode requestedMaximizeMode() const;

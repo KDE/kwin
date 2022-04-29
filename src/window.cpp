@@ -802,11 +802,6 @@ bool Window::isTransient() const
     return false;
 }
 
-void Window::setClientShown(bool shown)
-{
-    Q_UNUSED(shown)
-}
-
 xcb_timestamp_t Window::userTime() const
 {
     return XCB_TIME_CURRENT_TIME;

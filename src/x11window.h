@@ -258,14 +258,6 @@ public:
     StrutRect strutRect(StrutArea area) const override;
     bool hasStrut() const override;
 
-    /**
-     * If shown is true the client is mapped and raised, if false
-     * the client is unmapped and hidden, this function is called
-     * when the tabbing group of the client switches its visible
-     * client.
-     */
-    void setClientShown(bool shown) override;
-
     bool isClientSideDecorated() const;
 
     Xcb::Property fetchFirstInTabBox() const;

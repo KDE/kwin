@@ -2188,28 +2188,6 @@ void X11Window::fetchIconicName()
     }
 }
 
-void X11Window::setClientShown(bool shown)
-{
-    if (isZombie()) {
-        return; // Don't change shown status if this client is being deleted
-    }
-    if (shown != hidden) {
-        return; // nothing to change
-    }
-    hidden = !shown;
-    if (shown) {
-        map();
-        takeFocus();
-        autoRaise();
-        FocusChain::self()->update(this, FocusChain::MakeFirst);
-    } else {
-        unmap();
-        // Don't move tabs to the end of the list when another tab get's activated
-        FocusChain::self()->update(this, FocusChain::MakeLast);
-        addWorkspaceRepaint(visibleGeometry());
-    }
-}
-
 void X11Window::getMotifHints()
 {
     const bool wasClosable = isCloseable();
