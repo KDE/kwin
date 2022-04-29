@@ -571,19 +571,15 @@ void Scene::createStackingOrder()
     // TODO? This cannot be used so carelessly - needs protections against broken clients, the
     // window should not get focus before it's displayed, handle unredirected windows properly and
     // so on.
-    for (Window *win : windows) {
-        if (!win->readyForPainting()) {
-            windows.removeAll(win);
+    for (Window *window : std::as_const(windows)) {
+        if (!window->readyForPainting()) {
+            continue;
         }
-        if (!m_filter.filterAcceptsWindow(win)) {
-            windows.removeAll(win);
+        if (!m_filter.filterAcceptsWindow(window)) {
+            continue;
         }
-    }
-
-    // TODO: cache the stacking_order in case it has not changed
-    for (Window *c : std::as_const(windows)) {
-        Q_ASSERT(c->sceneWindow());
-        stacking_order.append(c->sceneWindow());
+        Q_ASSERT(window->sceneWindow());
+        stacking_order.append(window->sceneWindow());
     }
 }
 
