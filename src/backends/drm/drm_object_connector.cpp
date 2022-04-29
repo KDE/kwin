@@ -333,20 +333,22 @@ bool DrmConnector::updateProperties()
     }
 
     // update modes
-    bool equal = m_conn->count_modes == m_modes.count();
+    bool equal = m_conn->count_modes == m_driverModes.count();
     for (int i = 0; equal && i < m_conn->count_modes; i++) {
-        equal &= checkIfEqual(m_modes[i]->nativeMode(), &m_conn->modes[i]);
+        equal &= checkIfEqual(m_driverModes[i]->nativeMode(), &m_conn->modes[i]);
     }
     if (!equal) {
         // reload modes
-        m_modes.clear();
+        m_driverModes.clear();
         for (int i = 0; i < m_conn->count_modes; i++) {
-            m_modes.append(QSharedPointer<DrmConnectorMode>::create(this, m_conn->modes[i]));
+            m_driverModes.append(QSharedPointer<DrmConnectorMode>::create(this, m_conn->modes[i]));
         }
-        if (m_modes.isEmpty()) {
+        if (m_driverModes.isEmpty()) {
             return false;
         } else {
-            generateCommonModes();
+            m_modes.clear();
+            m_modes.append(m_driverModes);
+            m_modes.append(generateCommonModes());
             if (!m_pipeline->mode()) {
                 m_pipeline->setMode(m_modes.constFirst());
                 m_pipeline->applyPendingChanges();
@@ -415,11 +417,12 @@ static const QVector<QSize> s_commonModes = {
     QSize(1280, 720),
 };
 
-void DrmConnector::generateCommonModes()
+QList<QSharedPointer<DrmConnectorMode>> DrmConnector::generateCommonModes()
 {
+    QList<QSharedPointer<DrmConnectorMode>> ret;
     uint32_t maxBandwidthEstimation = 0;
     QSize maxSize;
-    for (const auto &mode : qAsConst(m_modes)) {
+    for (const auto &mode : qAsConst(m_driverModes)) {
         if (mode->size().width() > maxSize.width() || mode->size().height() > maxSize.height()) {
             maxSize = mode->size();
             maxBandwidthEstimation = std::max(maxBandwidthEstimation, static_cast<uint32_t>(mode->size().width() * mode->size().height() * mode->refreshRate()));
@@ -427,16 +430,17 @@ void DrmConnector::generateCommonModes()
     }
     for (const auto &size : s_commonModes) {
         uint32_t bandwidthEstimation = size.width() * size.height() * 60000;
-        const auto it = std::find_if(m_modes.constBegin(), m_modes.constEnd(), [size](const auto &mode) {
+        const auto it = std::find_if(m_driverModes.constBegin(), m_driverModes.constEnd(), [size](const auto &mode) {
             return mode->size() == size;
         });
-        if (it == m_modes.constEnd() && size.width() <= maxSize.width() && size.height() <= maxSize.height() && bandwidthEstimation < maxBandwidthEstimation) {
-            generateMode(size, 60000);
+        if (it == m_driverModes.constEnd() && size.width() <= maxSize.width() && size.height() <= maxSize.height() && bandwidthEstimation < maxBandwidthEstimation) {
+            ret << generateMode(size, 60000);
         }
     }
+    return ret;
 }
 
-void DrmConnector::generateMode(const QSize &size, uint32_t refreshRate)
+QSharedPointer<DrmConnectorMode> DrmConnector::generateMode(const QSize &size, uint32_t refreshRate)
 {
     auto modeInfo = libxcvt_gen_mode_info(size.width(), size.height(), refreshRate, false, false);
 
@@ -456,9 +460,8 @@ void DrmConnector::generateMode(const QSize &size, uint32_t refreshRate)
     mode.type = DRM_MODE_TYPE_USERDEF;
     sprintf(mode.name, "%dx%d@%d", size.width(), size.height(), mode.vrefresh);
 
-    m_modes << QSharedPointer<DrmConnectorMode>::create(this, mode);
-
     free(modeInfo);
+    return QSharedPointer<DrmConnectorMode>::create(this, mode);
 }
 
 QDebug &operator<<(QDebug &s, const KWin::DrmConnector *obj)
