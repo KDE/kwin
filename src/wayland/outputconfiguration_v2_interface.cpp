@@ -66,6 +66,9 @@ void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_mode(Res
     Q_UNUSED(resource)
     OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
     OutputDeviceModeV2Interface *mode = OutputDeviceModeV2Interface::get(modeResource);
+    if (!mode) {
+        return;
+    }
 
     pendingChanges(output)->d->size = mode->size();
     pendingChanges(output)->d->refreshRate = mode->refreshRate();
