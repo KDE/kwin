@@ -19,6 +19,7 @@
 
 struct libinput_device
 {
+    void *userData = nullptr;
     bool keyboard = false;
     bool pointer = false;
     bool touch = false;

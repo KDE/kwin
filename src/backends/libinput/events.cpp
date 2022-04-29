@@ -83,7 +83,7 @@ Event::~Event()
 Device *Event::device() const
 {
     if (!m_device) {
-        m_device = Device::getDevice(libinput_event_get_device(m_event));
+        m_device = Device::get(libinput_event_get_device(m_event));
     }
     return m_device;
 }

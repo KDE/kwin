@@ -956,3 +956,14 @@ void libinput_device_led_update(struct libinput_device *device,
     Q_UNUSED(device)
     Q_UNUSED(leds)
 }
+
+void libinput_device_set_user_data(struct libinput_device *device, void *user_data)
+{
+    device->userData = user_data;
+}
+
+void *
+libinput_device_get_user_data(struct libinput_device *device)
+{
+    return device->userData;
+}

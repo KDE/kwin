@@ -26,7 +26,6 @@ class TestLibinputDevice : public QObject
     Q_OBJECT
 private Q_SLOTS:
     void initTestCase();
-    void testStaticGetter();
     void testDeviceType_data();
     void testDeviceType();
     void testGestureSupport_data();
@@ -179,48 +178,6 @@ T dbusProperty(const QString &name, const char *property)
 void TestLibinputDevice::initTestCase()
 {
     QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.kwin.tests.libinputdevice"));
-}
-
-void TestLibinputDevice::testStaticGetter()
-{
-    // this test verifies that the static getter for Device works as expected
-    QVERIFY(Device::devices().isEmpty());
-
-    // create some device
-    libinput_device device1;
-    libinput_device device2;
-    // at the moment not yet known to Device
-    QVERIFY(!Device::getDevice(&device1));
-    QVERIFY(!Device::getDevice(&device2));
-    QVERIFY(Device::devices().isEmpty());
-
-    // now create a Device for one
-    Device *d1 = new Device(&device1);
-    QCOMPARE(Device::devices().count(), 1);
-    QCOMPARE(Device::devices().first(), d1);
-    QCOMPARE(Device::getDevice(&device1), d1);
-    QVERIFY(!Device::getDevice(&device2));
-
-    // and a second Device
-    Device *d2 = new Device(&device2);
-    QCOMPARE(Device::devices().count(), 2);
-    QCOMPARE(Device::devices().first(), d1);
-    QCOMPARE(Device::devices().last(), d2);
-    QCOMPARE(Device::getDevice(&device1), d1);
-    QCOMPARE(Device::getDevice(&device2), d2);
-
-    // now delete d1
-    delete d1;
-    QCOMPARE(Device::devices().count(), 1);
-    QCOMPARE(Device::devices().first(), d2);
-    QCOMPARE(Device::getDevice(&device2), d2);
-    QVERIFY(!Device::getDevice(&device1));
-
-    // and delete d2
-    delete d2;
-    QVERIFY(!Device::getDevice(&device1));
-    QVERIFY(!Device::getDevice(&device2));
-    QVERIFY(Device::devices().isEmpty());
 }
 
 void TestLibinputDevice::testDeviceType_data()

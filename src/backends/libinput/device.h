@@ -620,16 +620,9 @@ public:
     void setLeds(LEDs leds) override;
 
     /**
-     * All created Devices
-     */
-    static QVector<Device *> devices()
-    {
-        return s_devices;
-    }
-    /**
      * Gets the Device for @p native. @c null if there is no Device for @p native.
      */
-    static Device *getDevice(libinput_device *native);
+    static Device *get(libinput_device *native);
 
 Q_SIGNALS:
     void tapButtonMapChanged();
@@ -736,7 +729,6 @@ private:
     enum libinput_config_click_method m_clickMethod;
 
     LEDs m_leds;
-    static QVector<Device *> s_devices;
 };
 
 }
