@@ -274,19 +274,21 @@ bool DrmGpu::updateOutputs()
         if (conn->isConnected() && updateSuccess) {
             if (conn->isNonDesktop() ? !findLeaseOutput(conn->id()) : !findOutput(conn->id())) {
                 qCDebug(KWIN_DRM, "New %soutput on GPU %s: %s", conn->isNonDesktop() ? "non-desktop " : "", qPrintable(m_devNode), qPrintable(conn->modelName()));
-                m_pipelines << conn->pipeline();
+                const auto pipeline = conn->pipeline();
+                m_pipelines << pipeline;
                 if (conn->isNonDesktop()) {
-                    conn->pipeline()->setActive(false);
-                    conn->pipeline()->applyPendingChanges();
-                    auto leaseOutput = new DrmLeaseOutput(conn->pipeline(), m_leaseDevice);
+                    auto leaseOutput = new DrmLeaseOutput(pipeline, m_leaseDevice);
                     m_leaseOutputs << leaseOutput;
                 } else {
-                    auto output = new DrmOutput(conn->pipeline());
+                    auto output = new DrmOutput(pipeline);
                     m_drmOutputs << output;
                     m_outputs << output;
                     addedOutputs << output;
                     Q_EMIT outputAdded(output);
                 }
+                pipeline->setLayer(m_platform->renderBackend()->createDrmPipelineLayer(pipeline));
+                pipeline->setActive(!conn->isNonDesktop());
+                pipeline->applyPendingChanges();
             }
         } else if (auto output = findOutput(conn->id())) {
             removeOutput(output);
@@ -314,12 +316,6 @@ bool DrmGpu::updateOutputs()
         plane->updateProperties();
     }
 
-    for (const auto &pipeline : qAsConst(m_pipelines)) {
-        if (!pipeline->layer()) {
-            pipeline->setLayer(m_platform->renderBackend()->createDrmPipelineLayer(pipeline));
-            pipeline->applyPendingChanges();
-        }
-    }
     if (testPendingConfiguration()) {
         for (const auto &pipeline : qAsConst(m_pipelines)) {
             pipeline->applyPendingChanges();
