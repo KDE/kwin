@@ -859,10 +859,18 @@ void VirtualDesktopManager::initShortcuts()
 
 void VirtualDesktopManager::gestureReleasedY()
 {
+    // Note that if desktop wrapping is disabled and there's no desktop above or below,
+    // above() and below() will return the current desktop.
+    VirtualDesktop *target = m_current;
     if (m_currentDesktopOffset.y() <= -GESTURE_SWITCH_THRESHOLD) {
-        slotUp();
+        target = above(m_current, isNavigationWrappingAround());
     } else if (m_currentDesktopOffset.y() >= GESTURE_SWITCH_THRESHOLD) {
-        slotDown();
+        target = below(m_current, isNavigationWrappingAround());
+    }
+
+    // If the current desktop has not changed, consider that the gesture has been canceled.
+    if (m_current != target) {
+        setCurrent(target);
     } else {
         Q_EMIT currentChangingCancelled();
     }
@@ -871,10 +879,18 @@ void VirtualDesktopManager::gestureReleasedY()
 
 void VirtualDesktopManager::gestureReleasedX()
 {
+    // Note that if desktop wrapping is disabled and there's no desktop to left or right,
+    // toLeft() and toRight() will return the current desktop.
+    VirtualDesktop *target = m_current;
     if (m_currentDesktopOffset.x() <= -GESTURE_SWITCH_THRESHOLD) {
-        slotLeft();
+        target = toLeft(m_current, isNavigationWrappingAround());
     } else if (m_currentDesktopOffset.x() >= GESTURE_SWITCH_THRESHOLD) {
-        slotRight();
+        target = toRight(m_current, isNavigationWrappingAround());
+    }
+
+    // If the current desktop has not changed, consider that the gesture has been canceled.
+    if (m_current != target) {
+        setCurrent(target);
     } else {
         Q_EMIT currentChangingCancelled();
     }
