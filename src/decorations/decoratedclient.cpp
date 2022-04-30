@@ -165,7 +165,7 @@ DELEGATE(requestMinimize, minimize)
 
 void DecoratedClientImpl::requestClose()
 {
-    if (!m_client->isDeleted()) {
+    if (!m_window->isDeleted()) {
         QMetaObject::invokeMethod(m_window, &Window::closeWindow, Qt::QueuedConnection);
     }
 }
@@ -182,7 +182,7 @@ QColor DecoratedClientImpl::color(KDecoration2::ColorGroup group, KDecoration2::
 
 void DecoratedClientImpl::requestShowToolTip(const QString &text)
 {
-    if (!DecorationBridge::self()->showToolTips() || m_client->isDeleted()) {
+    if (!DecorationBridge::self()->showToolTips() || m_window->isDeleted()) {
         return;
     }
 
@@ -201,35 +201,35 @@ void DecoratedClientImpl::requestHideToolTip()
 
 void DecoratedClientImpl::requestShowWindowMenu(const QRect &rect)
 {
-    if (!m_client->isDeleted()) {
+    if (!m_window->isDeleted()) {
         Workspace::self()->showWindowMenu(QRect(m_window->pos() + rect.topLeft(), m_window->pos() + rect.bottomRight()), m_window);
     }
 }
 
 void DecoratedClientImpl::requestShowApplicationMenu(const QRect &rect, int actionId)
 {
-    if (!m_client->isDeleted()) {
+    if (!m_window->isDeleted()) {
         Workspace::self()->showApplicationMenu(rect, m_window, actionId);
     }
 }
 
 void DecoratedClientImpl::showApplicationMenu(int actionId)
 {
-    if (!m_client->isDeleted()) {
+    if (!m_window->isDeleted()) {
         decoration()->showApplicationMenu(actionId);
     }
 }
 
 void DecoratedClientImpl::requestToggleMaximization(Qt::MouseButtons buttons)
 {
-    if (!m_client->isDeleted()) {
+    if (!m_window->isDeleted()) {
         QMetaObject::invokeMethod(this, "delayedRequestToggleMaximization", Qt::QueuedConnection, Q_ARG(Options::WindowOperation, options->operationMaxButtonClick(buttons)));
     }
 }
 
 void DecoratedClientImpl::delayedRequestToggleMaximization(Options::WindowOperation operation)
 {
-    if (!m_client->isDeleted()) {
+    if (!m_window->isDeleted()) {
         Workspace::self()->performWindowOperation(m_window, operation);
     }
 }

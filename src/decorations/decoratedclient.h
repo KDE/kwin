@@ -81,9 +81,9 @@ public:
     {
         return m_window;
     }
-    void setClient(AbstractClient *window)
+    void setClient(Window *window)
     {
-        m_client = window;
+        m_window = window;
     }
     KDecoration2::DecoratedClient *decoratedClient()
     {
