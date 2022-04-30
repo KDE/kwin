@@ -137,7 +137,6 @@ QRect SceneDelegate::viewport() const
 
 Scene::Scene(QObject *parent)
     : QObject(parent)
-    , m_filter(this)
 {
 }
 
@@ -569,7 +568,7 @@ void Scene::createStackingOrder()
         if (!window->readyForPainting()) {
             continue;
         }
-        if (!m_filter.filterAcceptsWindow(window)) {
+        if (!window->windowItem()->isVisible()) {
             continue;
         }
         Q_ASSERT(window->sceneWindow());
@@ -752,22 +751,6 @@ Scene::EffectFrame::EffectFrame(EffectFrameImpl *frame)
 
 Scene::EffectFrame::~EffectFrame()
 {
-}
-
-//****************************************
-// ScreenLockerFilter
-//****************************************
-
-ScreenLockerFilter::ScreenLockerFilter(Scene *s)
-{
-    QObject::connect(waylandServer(), &WaylandServer::lockStateChanged, s, &Scene::addRepaintFull);
-}
-
-ScreenLockerFilter::~ScreenLockerFilter() = default;
-
-bool ScreenLockerFilter::filterAcceptsWindow(Window *w) const
-{
-    return !waylandServer() || !waylandServer()->isScreenLocked() || (w->isLockScreen() || w->isInputMethod());
 }
 
 } // namespace

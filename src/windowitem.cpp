@@ -12,6 +12,7 @@
 #include "surfaceitem_internal.h"
 #include "surfaceitem_wayland.h"
 #include "surfaceitem_x11.h"
+#include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
 
@@ -28,6 +29,9 @@ WindowItem::WindowItem(Window *window, Item *parent)
     connect(window, &Window::shadowChanged, this, &WindowItem::updateShadowItem);
     updateShadowItem();
 
+    if (waylandServer()) {
+        connect(waylandServer(), &WaylandServer::lockStateChanged, this, &WindowItem::updateVisibility);
+    }
     connect(window, &Window::minimizedChanged, this, &WindowItem::updateVisibility);
     connect(window, &Window::hiddenChanged, this, &WindowItem::updateVisibility);
     connect(window, &Window::activitiesChanged, this, &WindowItem::updateVisibility);
@@ -112,6 +116,9 @@ void WindowItem::handleWindowClosed(Window *original, Deleted *deleted)
 
 bool WindowItem::computeVisibility() const
 {
+    if (waylandServer() && waylandServer()->isScreenLocked()) {
+        return m_window->isLockScreen() || m_window->isInputMethod();
+    }
     if (m_window->isDeleted()) {
         if (m_forceVisibleByDeleteCount == 0) {
             return false;

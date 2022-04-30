@@ -47,15 +47,6 @@ class SurfacePixmapX11;
 class SurfaceTexture;
 class WindowItem;
 
-class ScreenLockerFilter
-{
-public:
-    ScreenLockerFilter(Scene *scene);
-    ~ScreenLockerFilter();
-
-    bool filterAcceptsWindow(Window *w) const;
-};
-
 class SceneDelegate : public RenderLayerDelegate
 {
     Q_OBJECT
@@ -260,7 +251,6 @@ protected:
 
     // windows in their stacking order
     QVector<SceneWindow *> stacking_order;
-    ScreenLockerFilter m_filter;
 
 private:
     std::chrono::milliseconds m_expectedPresentTimestamp = std::chrono::milliseconds::zero();
