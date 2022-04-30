@@ -232,14 +232,6 @@ void DesktopGridEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mi
     lastPresentTime = presentTime;
     if (timelineRunning) {
         timeline.setCurrentTime(timeline.currentTime() + (timeline.direction() == QTimeLine::Forward ? time : -time));
-
-        if ((timeline.currentTime() <= 0 && timeline.direction() == QTimeLine::Backward)) {
-            timelineRunning = false;
-            // defer until the event loop to finish
-            QTimer::singleShot(0, [this]() {
-                finish();
-            });
-        }
     }
     for (int i = 0; i < effects->numberOfDesktops(); i++) {
         auto item = hoverTimeline[i];
@@ -340,21 +332,27 @@ void DesktopGridEffect::postPaintScreen()
 {
     bool resetLastPresentTime = true;
 
-    if (timelineRunning || activated ? timeline.currentValue() != 1 : timeline.currentValue() != 0) {
-        effects->addRepaintFull(); // Repaint during zoom
-        resetLastPresentTime = false;
-    }
-    if (isUsingPresentWindows() && isMotionManagerMovingWindows()) {
-        effects->addRepaintFull();
-        resetLastPresentTime = false;
-    }
-    if (activated) {
-        for (int i = 0; i < effects->numberOfDesktops(); i++) {
-            if (hoverTimeline[i]->currentValue() != 0.0 && hoverTimeline[i]->currentValue() != 1.0) {
-                // Repaint during soft highlighting
-                effects->addRepaintFull();
-                resetLastPresentTime = false;
-                break;
+    const bool finished = timelineRunning && (timeline.currentTime() <= 0 && timeline.direction() == QTimeLine::Backward);
+    if (finished) {
+        timelineRunning = false;
+        finish();
+    } else {
+        if (timelineRunning || activated ? timeline.currentValue() != 1 : timeline.currentValue() != 0) {
+            effects->addRepaintFull(); // Repaint during zoom
+            resetLastPresentTime = false;
+        }
+        if (isUsingPresentWindows() && isMotionManagerMovingWindows()) {
+            effects->addRepaintFull();
+            resetLastPresentTime = false;
+        }
+        if (activated) {
+            for (int i = 0; i < effects->numberOfDesktops(); i++) {
+                if (hoverTimeline[i]->currentValue() != 0.0 && hoverTimeline[i]->currentValue() != 1.0) {
+                    // Repaint during soft highlighting
+                    effects->addRepaintFull();
+                    resetLastPresentTime = false;
+                    break;
+                }
             }
         }
     }
