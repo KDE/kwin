@@ -251,12 +251,11 @@ void DesktopGridEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mi
                 }
             }
         }
-        // PAINT_SCREEN_BACKGROUND_FIRST is needed because screen will be actually painted more than once,
-        // so with normal screen painting second screen paint would erase parts of the first paint
-        if (timeline.currentValue() != 0 || (isUsingPresentWindows() && isMotionManagerMovingWindows())) {
-            data.mask |= PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_BACKGROUND_FIRST;
-        }
     }
+
+    // PAINT_SCREEN_BACKGROUND_FIRST is needed because screen will be actually painted more than once,
+    // so with normal screen painting second screen paint would erase parts of the first paint
+    data.mask |= PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_BACKGROUND_FIRST;
 
     const EffectWindowList windows = effects->stackingOrder();
     for (auto *w : windows) {
@@ -373,80 +372,74 @@ void DesktopGridEffect::postPaintScreen()
 
 void DesktopGridEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
-    if (timeline.currentValue() != 0 || (isUsingPresentWindows() && isMotionManagerMovingWindows())) {
-        w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
-        if (w->isMinimized() && isUsingPresentWindows()) {
-            w->enablePainting(EffectWindow::PAINT_DISABLED_BY_MINIMIZE);
-        }
-        if (windowMove && wasWindowMove && windowMove->findModal() == w) {
-            w->disablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
-        }
-        data.setTransformed();
+    w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
+    if (w->isMinimized() && isUsingPresentWindows()) {
+        w->enablePainting(EffectWindow::PAINT_DISABLED_BY_MINIMIZE);
     }
+    if (windowMove && wasWindowMove && windowMove->findModal() == w) {
+        w->disablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
+    }
+    data.setTransformed();
     effects->prePaintWindow(w, data, presentTime);
 }
 
 void DesktopGridEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
-    if (timeline.currentValue() != 0 || (isUsingPresentWindows() && isMotionManagerMovingWindows())) {
-        if (!w->isOnDesktop(paintingDesktop)) {
-            return;
-        }
-        if (isUsingPresentWindows() && w == windowMove && wasWindowMove && ((!wasWindowCopy && sourceDesktop == paintingDesktop) || (sourceDesktop != highlightedDesktop && highlightedDesktop == paintingDesktop))) {
-            return; // will be painted on top of all other windows
-        }
+    if (!w->isOnDesktop(paintingDesktop)) {
+        return;
+    }
+    if (isUsingPresentWindows() && w == windowMove && wasWindowMove && ((!wasWindowCopy && sourceDesktop == paintingDesktop) || (sourceDesktop != highlightedDesktop && highlightedDesktop == paintingDesktop))) {
+        return; // will be painted on top of all other windows
+    }
 
-        qreal xScale = data.xScale();
-        qreal yScale = data.yScale();
+    qreal xScale = data.xScale();
+    qreal yScale = data.yScale();
 
-        data.multiplyBrightness(1.0 - (0.3 * (1.0 - hoverTimeline[paintingDesktop - 1]->currentValue())));
+    data.multiplyBrightness(1.0 - (0.3 * (1.0 - hoverTimeline[paintingDesktop - 1]->currentValue())));
 
-        const QList<EffectScreen *> screens = effects->screens();
-        for (EffectScreen *screen : screens) {
-            QRect screenGeom = effects->clientArea(ScreenArea, screen, effects->currentDesktop());
+    const QList<EffectScreen *> screens = effects->screens();
+    for (EffectScreen *screen : screens) {
+        QRect screenGeom = effects->clientArea(ScreenArea, screen, effects->currentDesktop());
 
-            QRectF transformedGeo = w->frameGeometry();
-            if (isUsingPresentWindows()) {
-                WindowMotionManager &manager = m_managers[screen][paintingDesktop - 1];
-                if (manager.isManaging(w)) {
-                    transformedGeo = manager.transformedGeometry(w);
-                    if (!manager.areWindowsMoving() && timeline.currentValue() == 1.0) {
-                        mask |= PAINT_WINDOW_LANCZOS;
-                    }
-                } else if (w->screen() != screen) {
-                    continue; // we don't want parts of overlapping windows on the other screen
+        QRectF transformedGeo = w->frameGeometry();
+        if (isUsingPresentWindows()) {
+            WindowMotionManager &manager = m_managers[screen][paintingDesktop - 1];
+            if (manager.isManaging(w)) {
+                transformedGeo = manager.transformedGeometry(w);
+                if (!manager.areWindowsMoving() && timeline.currentValue() == 1.0) {
+                    mask |= PAINT_WINDOW_LANCZOS;
                 }
-                if (w->isDesktop() && !transformedGeo.intersects(screenGeom)) {
-                    continue;
-                }
-            } else if (!transformedGeo.intersects(screenGeom)) {
-                continue; // Nothing is being displayed, don't bother
+            } else if (w->screen() != screen) {
+                continue; // we don't want parts of overlapping windows on the other screen
             }
-            WindowPaintData d = data;
-
-            QPointF newPos = scalePos(transformedGeo.topLeft().toPoint(), paintingDesktop, screen);
-            double progress = timeline.currentValue();
-            d.setXScale(interpolate(1, xScale * scale[screen] * (float)transformedGeo.width() / (float)w->frameGeometry().width(), progress));
-            d.setYScale(interpolate(1, yScale * scale[screen] * (float)transformedGeo.height() / (float)w->frameGeometry().height(), progress));
-            d += QPoint(qRound(newPos.x() - w->x()), qRound(newPos.y() - w->y()));
-
-            if (isUsingPresentWindows() && (w->isDock() || w->isSkipSwitcher())) {
-                // fade out panels if present windows is used
-                d.multiplyOpacity((1.0 - timeline.currentValue()));
+            if (w->isDesktop() && !transformedGeo.intersects(screenGeom)) {
+                continue;
             }
-            if (isUsingPresentWindows() && w->isMinimized()) {
-                d.multiplyOpacity(timeline.currentValue());
-            }
-
-            if (w->isDesktop() && timeline.currentValue() == 1.0) {
-                // desktop windows are not in a motion manager and can always be rendered with
-                // lanczos sampling except for animations
-                mask |= PAINT_WINDOW_LANCZOS;
-            }
-            effects->paintWindow(w, mask, effects->clientArea(ScreenArea, screen, 0), d);
+        } else if (!transformedGeo.intersects(screenGeom)) {
+            continue; // Nothing is being displayed, don't bother
         }
-    } else {
-        effects->paintWindow(w, mask, region, data);
+        WindowPaintData d = data;
+
+        QPointF newPos = scalePos(transformedGeo.topLeft().toPoint(), paintingDesktop, screen);
+        double progress = timeline.currentValue();
+        d.setXScale(interpolate(1, xScale * scale[screen] * (float)transformedGeo.width() / (float)w->frameGeometry().width(), progress));
+        d.setYScale(interpolate(1, yScale * scale[screen] * (float)transformedGeo.height() / (float)w->frameGeometry().height(), progress));
+        d += QPoint(qRound(newPos.x() - w->x()), qRound(newPos.y() - w->y()));
+
+        if (isUsingPresentWindows() && (w->isDock() || w->isSkipSwitcher())) {
+            // fade out panels if present windows is used
+            d.multiplyOpacity((1.0 - timeline.currentValue()));
+        }
+        if (isUsingPresentWindows() && w->isMinimized()) {
+            d.multiplyOpacity(timeline.currentValue());
+        }
+
+        if (w->isDesktop() && timeline.currentValue() == 1.0) {
+            // desktop windows are not in a motion manager and can always be rendered with
+            // lanczos sampling except for animations
+            mask |= PAINT_WINDOW_LANCZOS;
+        }
+        effects->paintWindow(w, mask, effects->clientArea(ScreenArea, screen, 0), d);
     }
 }
 
