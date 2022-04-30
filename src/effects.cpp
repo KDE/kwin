@@ -1546,14 +1546,9 @@ QStringList EffectsHandlerImpl::activeEffects() const
 
 bool EffectsHandlerImpl::blocksDirectScanout() const
 {
-    for (QVector<KWin::EffectPair>::const_iterator it = loaded_effects.constBegin(),
-                                                   end = loaded_effects.constEnd();
-         it != end; ++it) {
-        if (it->second->isActive() && it->second->blocksDirectScanout()) {
-            return true;
-        }
-    }
-    return false;
+    return std::any_of(m_activeEffects.constBegin(), m_activeEffects.constEnd(), [](const Effect *effect) {
+        return effect->blocksDirectScanout();
+    });
 }
 
 KWaylandServer::Display *EffectsHandlerImpl::waylandDisplay() const
