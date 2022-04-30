@@ -138,19 +138,18 @@ void SlideEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &
     const int h = effects->desktopGridHeight();
     bool wrappingX = false, wrappingY = false;
 
-    QPointF drawPosition = forcePositivePosition(m_currentPosition);
-
+    QPointF drawPosition = m_currentPosition;
     if (wrap) {
         drawPosition = constrainToDrawableRange(drawPosition);
-    }
 
-    // If we're wrapping, draw the desktop in the second position.
-    if (drawPosition.x() > w - 1) {
-        wrappingX = true;
-    }
+        // If we're wrapping, draw the desktop in the second position.
+        if (drawPosition.x() > w - 1) {
+            wrappingX = true;
+        }
 
-    if (drawPosition.y() > h - 1) {
-        wrappingY = true;
+        if (drawPosition.y() > h - 1) {
+            wrappingY = true;
+        }
     }
 
     // When we enter a virtual desktop that has a window in fullscreen mode,
@@ -442,7 +441,7 @@ void SlideEffect::desktopChanging(uint old, QPointF desktopOffset, EffectWindow 
     if (wrap) {
         m_currentPosition = forcePositivePosition(m_currentPosition);
     } else {
-        m_currentPosition = moveInsideDesktopGrid(m_currentPosition);
+        m_currentPosition = maybeOvershoot(m_currentPosition);
     }
 
     m_active = true;
@@ -460,21 +459,26 @@ void SlideEffect::desktopChangingCancelled()
     startAnimation(effects->currentDesktop(), effects->currentDesktop(), nullptr);
 }
 
-QPointF SlideEffect::moveInsideDesktopGrid(QPointF p)
+QPointF SlideEffect::maybeOvershoot(const QPointF &point) const
 {
-    if (p.x() < 0) {
-        p.setX(0);
+    QPointF constrainted = point;
+
+    const QSize gridSize = effects->desktopGridSize();
+    if (constrainted.x() < 0) {
+        constrainted.setX(-m_maxOvershootSize * m_overshootCurve.valueForProgress(-point.x()));
+    } else if (constrainted.x() > gridSize.width() - 1) {
+        const qreal overshoot = point.x() - (gridSize.width() - 1);
+        constrainted.setX((gridSize.width() - 1) + m_maxOvershootSize * m_overshootCurve.valueForProgress(overshoot));
     }
-    if (p.y() < 0) {
-        p.setY(0);
+
+    if (constrainted.y() < 0) {
+        constrainted.setY(-m_maxOvershootSize * m_overshootCurve.valueForProgress(-point.y()));
+    } else if (constrainted.y() > gridSize.height() - 1) {
+        const qreal overshoot = point.y() - (gridSize.height() - 1);
+        constrainted.setY((gridSize.height() - 1) + m_maxOvershootSize * m_overshootCurve.valueForProgress(overshoot));
     }
-    if (p.x() > effects->desktopGridWidth() - 1) {
-        p.setX(effects->desktopGridWidth() - 1);
-    }
-    if (p.y() > effects->desktopGridHeight() - 1) {
-        p.setY(effects->desktopGridHeight() - 1);
-    }
-    return p;
+
+    return constrainted;
 }
 
 void SlideEffect::windowAdded(EffectWindow *w)

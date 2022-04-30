@@ -94,9 +94,9 @@ private:
     bool isTranslated(const EffectWindow *w) const;
     bool isPainted(const EffectWindow *w) const;
     bool shouldElevate(const EffectWindow *w) const;
-    QPointF moveInsideDesktopGrid(QPointF p);
     QPointF constrainToDrawableRange(QPointF p);
     QPointF forcePositivePosition(QPointF p) const;
+    QPointF maybeOvershoot(const QPointF &point) const;
     void optimizePath(); // Find the best path to target desktop
 
     void startAnimation(int old, int current, EffectWindow *movingWindow = nullptr);
@@ -121,6 +121,9 @@ private:
     std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
     bool m_gestureActive = false; // If we're currently animating a gesture
     QPointF m_currentPosition; // Should always be kept up to date with where on the grid we're seeing.
+
+    QEasingCurve m_overshootCurve = QEasingCurve::OutCubic;
+    qreal m_maxOvershootSize = 0.05;
 
     struct
     {
