@@ -4017,24 +4017,31 @@ void Window::sendToOutput(Output *newOutput)
 
 void Window::updateGeometryRestoresForFullscreen(Output *output)
 {
-    QRect screenArea = workspace()->clientArea(MaximizeArea, this, output);
-    QRect newFullScreenGeometryRestore = screenArea;
-    if (!(maximizeMode() & MaximizeVertical)) {
-        newFullScreenGeometryRestore.setHeight(geometryRestore().height());
-    }
-    if (!(maximizeMode() & MaximizeHorizontal)) {
-        newFullScreenGeometryRestore.setWidth(geometryRestore().width());
-    }
-    newFullScreenGeometryRestore.setSize(newFullScreenGeometryRestore.size().boundedTo(screenArea.size()));
-    QSize move = (screenArea.size() - newFullScreenGeometryRestore.size()) / 2;
-    newFullScreenGeometryRestore.translate(move.width(), move.height());
+    const QRect screenArea = workspace()->clientArea(MaximizeArea, this, output);
 
-    QRect newGeometryRestore = QRect(screenArea.topLeft(), geometryRestore().size().boundedTo(screenArea.size()));
-    move = (screenArea.size() - newGeometryRestore.size()) / 2;
-    newGeometryRestore.translate(move.width(), move.height());
+    // TODO: Reuse geometry calculation code in checkWorkspacePosition().
+    if (fullscreenGeometryRestore().isValid() && !screenArea.contains(fullscreenGeometryRestore().center())) {
+        QRect restore = screenArea;
+        if (!(requestedMaximizeMode() & MaximizeVertical)) {
+            restore.setHeight(fullscreenGeometryRestore().height());
+        }
+        if (!(requestedMaximizeMode() & MaximizeHorizontal)) {
+            restore.setWidth(fullscreenGeometryRestore().width());
+        }
+        restore.setSize(restore.size().boundedTo(screenArea.size()));
+        const QSize move = (screenArea.size() - restore.size()) / 2;
+        restore.translate(move.width(), move.height());
 
-    setFullscreenGeometryRestore(newFullScreenGeometryRestore);
-    setGeometryRestore(newGeometryRestore);
+        setFullscreenGeometryRestore(restore);
+    }
+
+    if (geometryRestore().isValid() && !screenArea.contains(geometryRestore().center())) {
+        QRect restore = QRect(screenArea.topLeft(), geometryRestore().size().boundedTo(screenArea.size()));
+        const QSize move = (screenArea.size() - restore.size()) / 2;
+        restore.translate(move.width(), move.height());
+
+        setGeometryRestore(restore);
+    }
 }
 
 void Window::checkWorkspacePosition(QRect oldGeometry, const VirtualDesktop *oldDesktop)
