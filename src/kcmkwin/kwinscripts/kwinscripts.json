@@ -2,6 +2,7 @@
     "KPlugin": {
         "Description": "Manage KWin scripts",
         "Description[ar]": "أدر سكربتات كوين",
+        "Description[az]": "Kwin skriptlərini idarə edin",
         "Description[ca@valencia]": "Gestiona els scripts de KWin",
         "Description[ca]": "Gestiona els scripts del KWin",
         "Description[es]": "Gestión de guiones de KWin",
@@ -18,6 +19,7 @@
         "Icon": "preferences-system-windows-actions",
         "Name": "KWin Scripts",
         "Name[ar]": "سكربتات كوين",
+        "Name[az]": "Kwin skriptləri",
         "Name[ca@valencia]": "Scripts de KWin",
         "Name[ca]": "Scripts del KWin",
         "Name[es]": "Guiones de KWin",
