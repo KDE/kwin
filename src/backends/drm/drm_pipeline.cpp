@@ -615,6 +615,9 @@ static const QMap<uint32_t, QVector<uint64_t>> legacyFormats = {{DRM_FORMAT_XRGB
 
 void DrmPipeline::setCrtc(DrmCrtc *crtc)
 {
+    if (crtc && m_pending.crtc && crtc->gammaRampSize() != m_pending.crtc->gammaRampSize() && m_pending.colorTransformation) {
+        m_pending.gamma = QSharedPointer<DrmGammaRamp>::create(crtc, m_pending.colorTransformation);
+    }
     m_pending.crtc = crtc;
     if (crtc) {
         m_pending.formats = crtc->primaryPlane() ? crtc->primaryPlane()->formats() : legacyFormats;
