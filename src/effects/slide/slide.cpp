@@ -133,24 +133,48 @@ void SlideEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::millisec
 
 void SlideEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
-    const bool wrap = effects->optionRollOverDesktops();
     const int w = effects->desktopGridWidth();
     const int h = effects->desktopGridHeight();
     bool wrappingX = false, wrappingY = false;
 
-    QPointF drawPosition = forcePositivePosition(m_currentPosition);
+    QPointF drawPosition = m_currentPosition;
 
-    if (wrap) {
+    if (effects->optionRollOverDesktops()) {
         drawPosition = constrainToDrawableRange(drawPosition);
-    }
 
-    // If we're wrapping, draw the desktop in the second position.
-    if (drawPosition.x() > w - 1) {
-        wrappingX = true;
-    }
+        // If we're wrapping, draw the desktop in the second position.
+        if (drawPosition.x() > w - 1) {
+            wrappingX = true;
+        }
 
-    if (drawPosition.y() > h - 1) {
-        wrappingY = true;
+        if (drawPosition.y() > h - 1) {
+            wrappingY = true;
+        }
+    } else {
+        const QRectF rect = effects->renderTargetRect();
+        const qreal overshootSize = 0.05;
+
+        // If there's no desktop to slide to left or right, stretch the screen horizontally.
+        if (m_currentPosition.x() < 0) {
+            drawPosition.setX(0);
+            data.setTransformOrigin(QVector3D(rect.x(), rect.y() + rect.height() / 2, 0));
+            data.setXScale(1 - overshootSize * m_currentPosition.x());
+        } else if (m_currentPosition.x() > w - 1) {
+            drawPosition.setX(w - 1);
+            data.setTransformOrigin(QVector3D(rect.x() + rect.width(), rect.y() + rect.height() / 2, 0));
+            data.setXScale(1 + overshootSize * (m_currentPosition.x() - (w - 1)));
+        }
+
+        // If there's no desktop to slide above or below, stretch the screen vertically.
+        if (m_currentPosition.y() < 0) {
+            drawPosition.setY(0);
+            data.setTransformOrigin(QVector3D(rect.x() + rect.width() / 2, rect.y(), 0));
+            data.setYScale(1 - overshootSize * m_currentPosition.y());
+        } else if (m_currentPosition.y() > h - 1) {
+            drawPosition.setY(h - 1);
+            data.setTransformOrigin(QVector3D(rect.x() + rect.width() / 2, rect.y() + rect.height(), 0));
+            data.setYScale(1 + overshootSize * (m_currentPosition.y() - (h - 1)));
+        }
     }
 
     // When we enter a virtual desktop that has a window in fullscreen mode,
@@ -444,8 +468,6 @@ void SlideEffect::desktopChanging(uint old, QPointF desktopOffset, EffectWindow 
 
     if (effects->optionRollOverDesktops()) {
         m_currentPosition = forcePositivePosition(m_currentPosition);
-    } else {
-        m_currentPosition = moveInsideDesktopGrid(m_currentPosition);
     }
 
     effects->setActiveFullScreenEffect(this);
@@ -459,23 +481,6 @@ void SlideEffect::desktopChangingCancelled()
     if (effects->activeFullScreenEffect() == this) {
         startAnimation(effects->currentDesktop(), effects->currentDesktop(), nullptr);
     }
-}
-
-QPointF SlideEffect::moveInsideDesktopGrid(QPointF p)
-{
-    if (p.x() < 0) {
-        p.setX(0);
-    }
-    if (p.y() < 0) {
-        p.setY(0);
-    }
-    if (p.x() > effects->desktopGridWidth() - 1) {
-        p.setX(effects->desktopGridWidth() - 1);
-    }
-    if (p.y() > effects->desktopGridHeight() - 1) {
-        p.setY(effects->desktopGridHeight() - 1);
-    }
-    return p;
 }
 
 void SlideEffect::windowAdded(EffectWindow *w)

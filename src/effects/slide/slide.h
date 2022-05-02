@@ -87,7 +87,6 @@ private:
     bool isTranslated(const EffectWindow *w) const;
     bool isPainted(const EffectWindow *w) const;
     bool shouldElevate(const EffectWindow *w) const;
-    QPointF moveInsideDesktopGrid(QPointF p);
     QPointF constrainToDrawableRange(QPointF p);
     QPointF forcePositivePosition(QPointF p) const;
     void optimizePath(); // Find the best path to target desktop
