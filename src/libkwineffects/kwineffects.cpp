@@ -53,11 +53,11 @@ public:
         , rotationAngle(0.)
     {
     }
+    QVector3D transformOrigin;
     QVector3D scale;
     QVector3D translation;
 
     QVector3D rotationAxis;
-    QVector3D rotationOrigin;
     qreal rotationAngle;
 };
 
@@ -171,9 +171,9 @@ QVector3D PaintData::rotationAxis() const
     return d->rotationAxis;
 }
 
-QVector3D PaintData::rotationOrigin() const
+QVector3D PaintData::transformOrigin() const
 {
-    return d->rotationOrigin;
+    return d->transformOrigin;
 }
 
 void PaintData::setRotationAngle(qreal angle)
@@ -201,9 +201,9 @@ void PaintData::setRotationAxis(const QVector3D &axis)
     d->rotationAxis = axis;
 }
 
-void PaintData::setRotationOrigin(const QVector3D &origin)
+void PaintData::setTransformOrigin(const QVector3D &origin)
 {
-    d->rotationOrigin = origin;
+    d->transformOrigin = origin;
 }
 
 class WindowPaintDataPrivate
@@ -246,7 +246,7 @@ WindowPaintData::WindowPaintData(const WindowPaintData &other)
     setYScale(other.yScale());
     setZScale(other.zScale());
     translate(other.translation());
-    setRotationOrigin(other.rotationOrigin());
+    setTransformOrigin(other.transformOrigin());
     setRotationAxis(other.rotationAxis());
     setRotationAngle(other.rotationAngle());
     setOpacity(other.opacity());
@@ -442,7 +442,7 @@ ScreenPaintData::ScreenPaintData(const ScreenPaintData &other)
     setXScale(other.xScale());
     setYScale(other.yScale());
     setZScale(other.zScale());
-    setRotationOrigin(other.rotationOrigin());
+    setTransformOrigin(other.transformOrigin());
     setRotationAxis(other.rotationAxis());
     setRotationAngle(other.rotationAngle());
     d->projectionMatrix = other.d->projectionMatrix;
@@ -457,7 +457,7 @@ ScreenPaintData &ScreenPaintData::operator=(const ScreenPaintData &rhs)
     setXTranslation(rhs.xTranslation());
     setYTranslation(rhs.yTranslation());
     setZTranslation(rhs.zTranslation());
-    setRotationOrigin(rhs.rotationOrigin());
+    setTransformOrigin(rhs.transformOrigin());
     setRotationAxis(rhs.rotationAxis());
     setRotationAngle(rhs.rotationAngle());
     d->projectionMatrix = rhs.d->projectionMatrix;

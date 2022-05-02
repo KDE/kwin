@@ -130,32 +130,32 @@ void GlideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowP
     switch (params.edge) {
     case RotationEdge::Top:
         data.setRotationAxis(Qt::XAxis);
-        data.setRotationOrigin(QVector3D(0, 0, 0));
+        data.setTransformOrigin(QVector3D(0, 0, 0));
         data.setRotationAngle(-interpolate(params.angle.from, params.angle.to, t));
         break;
 
     case RotationEdge::Right:
         data.setRotationAxis(Qt::YAxis);
-        data.setRotationOrigin(QVector3D(w->width(), 0, 0));
+        data.setTransformOrigin(QVector3D(w->width(), 0, 0));
         data.setRotationAngle(-interpolate(params.angle.from, params.angle.to, t));
         break;
 
     case RotationEdge::Bottom:
         data.setRotationAxis(Qt::XAxis);
-        data.setRotationOrigin(QVector3D(0, w->height(), 0));
+        data.setTransformOrigin(QVector3D(0, w->height(), 0));
         data.setRotationAngle(interpolate(params.angle.from, params.angle.to, t));
         break;
 
     case RotationEdge::Left:
         data.setRotationAxis(Qt::YAxis);
-        data.setRotationOrigin(QVector3D(0, 0, 0));
+        data.setTransformOrigin(QVector3D(0, 0, 0));
         data.setRotationAngle(interpolate(params.angle.from, params.angle.to, t));
         break;
 
     default:
         // Fallback to Top.
         data.setRotationAxis(Qt::XAxis);
-        data.setRotationOrigin(QVector3D(0, 0, 0));
+        data.setTransformOrigin(QVector3D(0, 0, 0));
         data.setRotationAngle(-interpolate(params.angle.from, params.angle.to, t));
         break;
     }

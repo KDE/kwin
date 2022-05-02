@@ -2951,20 +2951,20 @@ public:
      */
     qreal rotationAngle() const;
     /**
-     * Sets the rotation origin.
-     * @param origin The new rotation origin.
+     * Sets the transform origin.
+     * @param origin The new transform origin.
      * @since 4.10
-     * @see rotationOrigin()
+     * @see transformOrigin()
      */
-    void setRotationOrigin(const QVector3D &origin);
+    void setTransformOrigin(const QVector3D &origin);
     /**
-     * Returns the rotation origin. That is the point in space which is fixed during the rotation.
+     * Returns the transform origin. That is the point in space which is fixed during the transform.
      * Initially this is 0/0/0.
-     * @returns The rotation's origin
+     * @returns The transform's origin
      * @since 4.10
-     * @see setRotationOrigin()
+     * @see setTransformOrigin()
      */
-    QVector3D rotationOrigin() const;
+    QVector3D transformOrigin() const;
     /**
      * Sets the rotation axis.
      * Set a component to 1.0 to rotate around this axis and to 0.0 to disable rotation around the

@@ -633,7 +633,7 @@ void AnimationEffect::paintWindow(EffectWindow *w, int mask, QRegion region, Win
                     QPointF pt2(xCoord(geo, tAnchor), yCoord(geo, tAnchor));
                     pt += static_cast<qreal>(prgrs) * (pt2 - pt);
                 }
-                data.setRotationOrigin(QVector3D(pt));
+                data.setTransformOrigin(QVector3D(pt));
                 break;
             }
             case Generic:

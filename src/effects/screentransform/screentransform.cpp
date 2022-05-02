@@ -112,7 +112,7 @@ void ScreenTransformEffect::paintScreen(int mask, const QRegion &region, KWin::S
         if (state.isSecondHalf()) {
             data.setRotationAngle(state.m_angle / 2 * (1 - state.m_timeLine.value()));
             auto center = screen->geometry().center();
-            data.setRotationOrigin(QVector3D(center.x(), center.y(), 0));
+            data.setTransformOrigin(QVector3D(center.x(), center.y(), 0));
             effects->addRepaintFull();
         }
     }

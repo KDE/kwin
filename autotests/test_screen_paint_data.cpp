@@ -45,7 +45,7 @@ void TestScreenPaintData::testCtor()
     QCOMPARE(data.zTranslation(), 0.0);
     QCOMPARE(data.translation(), QVector3D());
     QCOMPARE(data.rotationAngle(), 0.0);
-    QCOMPARE(data.rotationOrigin(), QVector3D());
+    QCOMPARE(data.transformOrigin(), QVector3D());
     QCOMPARE(data.rotationAxis(), QVector3D(0.0, 0.0, 1.0));
     QCOMPARE(data.screen(), nullptr);
 }
@@ -63,13 +63,13 @@ void TestScreenPaintData::testCopyCtor()
     QCOMPARE(data2.zTranslation(), 0.0);
     QCOMPARE(data2.translation(), QVector3D());
     QCOMPARE(data2.rotationAngle(), 0.0);
-    QCOMPARE(data2.rotationOrigin(), QVector3D());
+    QCOMPARE(data2.transformOrigin(), QVector3D());
     QCOMPARE(data2.rotationAxis(), QVector3D(0.0, 0.0, 1.0));
 
     data2.setScale(QVector3D(0.5, 2.0, 3.0));
     data2.translate(0.5, 2.0, 3.0);
     data2.setRotationAngle(45.0);
-    data2.setRotationOrigin(QVector3D(1.0, 2.0, 3.0));
+    data2.setTransformOrigin(QVector3D(1.0, 2.0, 3.0));
     data2.setRotationAxis(QVector3D(1.0, 1.0, 0.0));
 
     ScreenPaintData data3(data2);
@@ -81,7 +81,7 @@ void TestScreenPaintData::testCopyCtor()
     QCOMPARE(data3.zTranslation(), 3.0);
     QCOMPARE(data3.translation(), QVector3D(0.5, 2.0, 3.0));
     QCOMPARE(data3.rotationAngle(), 45.0);
-    QCOMPARE(data3.rotationOrigin(), QVector3D(1.0, 2.0, 3.0));
+    QCOMPARE(data3.transformOrigin(), QVector3D(1.0, 2.0, 3.0));
     QCOMPARE(data3.rotationAxis(), QVector3D(1.0, 1.0, 0.0));
 }
 
@@ -93,7 +93,7 @@ void TestScreenPaintData::testAssignmentOperator()
     data2.setScale(QVector3D(0.5, 2.0, 3.0));
     data2.translate(0.5, 2.0, 3.0);
     data2.setRotationAngle(45.0);
-    data2.setRotationOrigin(QVector3D(1.0, 2.0, 3.0));
+    data2.setTransformOrigin(QVector3D(1.0, 2.0, 3.0));
     data2.setRotationAxis(QVector3D(1.0, 1.0, 0.0));
 
     data = data2;
@@ -106,7 +106,7 @@ void TestScreenPaintData::testAssignmentOperator()
     QCOMPARE(data.zTranslation(), 3.0);
     QCOMPARE(data.translation(), QVector3D(0.5, 2.0, 3.0));
     QCOMPARE(data.rotationAngle(), 45.0);
-    QCOMPARE(data.rotationOrigin(), QVector3D(1.0, 2.0, 3.0));
+    QCOMPARE(data.transformOrigin(), QVector3D(1.0, 2.0, 3.0));
     QCOMPARE(data.rotationAxis(), QVector3D(1.0, 1.0, 0.0));
     // data 2
     QCOMPARE(data2.xScale(), 0.5);
@@ -117,7 +117,7 @@ void TestScreenPaintData::testAssignmentOperator()
     QCOMPARE(data2.zTranslation(), 3.0);
     QCOMPARE(data2.translation(), QVector3D(0.5, 2.0, 3.0));
     QCOMPARE(data2.rotationAngle(), 45.0);
-    QCOMPARE(data2.rotationOrigin(), QVector3D(1.0, 2.0, 3.0));
+    QCOMPARE(data2.transformOrigin(), QVector3D(1.0, 2.0, 3.0));
     QCOMPARE(data2.rotationAxis(), QVector3D(1.0, 1.0, 0.0));
 }
 
@@ -250,9 +250,9 @@ void TestScreenPaintData::testSetAngle()
 void TestScreenPaintData::testSetRotationOrigin()
 {
     ScreenPaintData data;
-    QCOMPARE(data.rotationOrigin(), QVector3D());
-    data.setRotationOrigin(QVector3D(1.0, 2.0, 3.0));
-    QCOMPARE(data.rotationOrigin(), QVector3D(1.0, 2.0, 3.0));
+    QCOMPARE(data.transformOrigin(), QVector3D());
+    data.setTransformOrigin(QVector3D(1.0, 2.0, 3.0));
+    QCOMPARE(data.transformOrigin(), QVector3D(1.0, 2.0, 3.0));
 }
 
 void TestScreenPaintData::testSetRotationAxis()

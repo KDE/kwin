@@ -491,7 +491,7 @@ void TestWindowPaintData::testCtor()
     QCOMPARE(data.zTranslation(), 0.0);
     QCOMPARE(data.translation(), QVector3D());
     QCOMPARE(data.rotationAngle(), 0.0);
-    QCOMPARE(data.rotationOrigin(), QVector3D());
+    QCOMPARE(data.transformOrigin(), QVector3D());
     QCOMPARE(data.rotationAxis(), QVector3D(0.0, 0.0, 1.0));
     QCOMPARE(data.opacity(), 0.5);
     QCOMPARE(data.brightness(), 1.0);
@@ -512,7 +512,7 @@ void TestWindowPaintData::testCopyCtor()
     QCOMPARE(data2.zTranslation(), 0.0);
     QCOMPARE(data2.translation(), QVector3D());
     QCOMPARE(data2.rotationAngle(), 0.0);
-    QCOMPARE(data2.rotationOrigin(), QVector3D());
+    QCOMPARE(data2.transformOrigin(), QVector3D());
     QCOMPARE(data2.rotationAxis(), QVector3D(0.0, 0.0, 1.0));
     QCOMPARE(data2.opacity(), 1.0);
     QCOMPARE(data2.brightness(), 1.0);
@@ -521,7 +521,7 @@ void TestWindowPaintData::testCopyCtor()
     data2.setScale(QVector3D(0.5, 2.0, 3.0));
     data2.translate(0.5, 2.0, 3.0);
     data2.setRotationAngle(45.0);
-    data2.setRotationOrigin(QVector3D(1.0, 2.0, 3.0));
+    data2.setTransformOrigin(QVector3D(1.0, 2.0, 3.0));
     data2.setRotationAxis(QVector3D(1.0, 1.0, 0.0));
     data2.setOpacity(0.1);
     data2.setBrightness(0.3);
@@ -536,7 +536,7 @@ void TestWindowPaintData::testCopyCtor()
     QCOMPARE(data3.zTranslation(), 3.0);
     QCOMPARE(data3.translation(), QVector3D(0.5, 2.0, 3.0));
     QCOMPARE(data3.rotationAngle(), 45.0);
-    QCOMPARE(data3.rotationOrigin(), QVector3D(1.0, 2.0, 3.0));
+    QCOMPARE(data3.transformOrigin(), QVector3D(1.0, 2.0, 3.0));
     QCOMPARE(data3.rotationAxis(), QVector3D(1.0, 1.0, 0.0));
     QCOMPARE(data3.opacity(), 0.1);
     QCOMPARE(data3.brightness(), 0.3);
