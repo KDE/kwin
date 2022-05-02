@@ -175,10 +175,6 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
     }
     if (m_pending.crtc) {
         m_pending.crtc->setPending(DrmCrtc::PropertyIndex::VrrEnabled, m_pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive);
-        const auto currentTransformation = m_pending.gamma ? m_pending.gamma->lut().transformation() : nullptr;
-        if (m_pending.colorTransformation != currentTransformation) {
-            m_pending.gamma = QSharedPointer<DrmGammaRamp>::create(m_pending.crtc, m_pending.colorTransformation);
-        }
         m_pending.crtc->setPending(DrmCrtc::PropertyIndex::Gamma_LUT, m_pending.gamma ? m_pending.gamma->blobId() : 0);
         const auto modeSize = m_pending.mode->size();
         const auto buffer = m_pending.layer->currentBuffer().data();
@@ -675,5 +671,6 @@ void DrmPipeline::setRgbRange(Output::RgbRange range)
 void DrmPipeline::setColorTransformation(const QSharedPointer<ColorTransformation> &transformation)
 {
     m_pending.colorTransformation = transformation;
+    m_pending.gamma = QSharedPointer<DrmGammaRamp>::create(m_pending.crtc, transformation);
 }
 }
