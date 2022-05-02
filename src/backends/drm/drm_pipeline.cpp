@@ -416,7 +416,8 @@ QMap<uint32_t, QVector<uint64_t>> DrmPipeline::formats() const
 
 bool DrmPipeline::pruneModifier()
 {
-    if (m_pending.layer->currentBuffer()->modifier() == DRM_FORMAT_MOD_NONE
+    if (!m_pending.layer->currentBuffer()
+        || m_pending.layer->currentBuffer()->modifier() == DRM_FORMAT_MOD_NONE
         || m_pending.layer->currentBuffer()->modifier() == DRM_FORMAT_MOD_INVALID) {
         return false;
     }
