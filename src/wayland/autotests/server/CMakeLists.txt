@@ -106,12 +106,12 @@ ecm_mark_as_test(testViewporterInterface)
 add_executable(testScreencastV1Interface)
 if (QT_MAJOR_VERSION EQUAL "5")
     ecm_add_qtwayland_client_protocol(SCREENCAST_SRCS
-        PROTOCOL PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/screencast.xml
+        PROTOCOL PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/zkde-screencast-unstable-v1.xml
         BASENAME zkde-screencast-unstable-v1
     )
 else()
     qt6_generate_wayland_protocol_client_sources(testScreencastV1Interface FILES
-        ${PLASMA_WAYLAND_PROTOCOLS_DIR}/screencast.xml)
+        ${PLASMA_WAYLAND_PROTOCOLS_DIR}/zkde-screencast-unstable-v1.xml)
 endif()
 target_sources(testScreencastV1Interface PRIVATE test_screencast.cpp ${SCREENCAST_SRCS})
 target_link_libraries(testScreencastV1Interface Qt::Test kwin Wayland::Client KF5::WaylandClient)

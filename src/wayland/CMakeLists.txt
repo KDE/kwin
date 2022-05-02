@@ -160,7 +160,7 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     BASENAME wp-primary-selection-unstable-v1
 )
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
-    PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/screencast.xml
+    PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/zkde-screencast-unstable-v1.xml
     BASENAME zkde-screencast-unstable-v1
 )
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
