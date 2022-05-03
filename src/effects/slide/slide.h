@@ -64,15 +64,8 @@ public:
     void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
 
-    bool isActive() const override
-    {
-        return m_active;
-    }
-
-    int requestedEffectChainPosition() const override
-    {
-        return 50;
-    }
+    bool isActive() const override;
+    int requestedEffectChainPosition() const override;
 
     static bool supported();
 
@@ -109,7 +102,13 @@ private:
     bool m_slideBackground;
     int m_fullAnimationDuration; // Miliseconds for 1 complete desktop switch
 
-    bool m_active = false;
+    enum class State {
+        Inactive,
+        ActiveAnimation,
+        ActiveGesture,
+    };
+
+    State m_state = State::Inactive;
     TimeLine m_timeLine;
 
     // When the desktop isn't desktopChanging(), these two variables are used to control the animation path.
@@ -119,7 +118,6 @@ private:
 
     EffectWindow *m_movingWindow = nullptr;
     std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
-    bool m_gestureActive = false; // If we're currently animating a gesture
     QPointF m_currentPosition; // Should always be kept up to date with where on the grid we're seeing.
 
     struct
@@ -160,6 +158,16 @@ inline bool SlideEffect::slideDocks() const
 inline bool SlideEffect::slideBackground() const
 {
     return m_slideBackground;
+}
+
+inline bool SlideEffect::isActive() const
+{
+    return m_state != State::Inactive;
+}
+
+inline int SlideEffect::requestedEffectChainPosition() const
+{
+    return 50;
 }
 
 } // namespace KWin

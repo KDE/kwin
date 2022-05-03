@@ -98,7 +98,7 @@ void SlideEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::millisec
     m_lastPresentTime = presentTime;
     m_timeLine.update(timeDelta);
 
-    if (!m_gestureActive) { // When animating
+    if (m_state == State::ActiveAnimation) {
         m_currentPosition = m_startPos + (m_endPos - m_startPos) * m_timeLine.value();
     }
 
@@ -306,7 +306,7 @@ void SlideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowP
 
 void SlideEffect::postPaintScreen()
 {
-    if (m_timeLine.done() && !m_gestureActive) {
+    if (m_state == State::ActiveAnimation && m_timeLine.done()) {
         finishedSwitching();
     }
 
@@ -361,7 +361,7 @@ void SlideEffect::startAnimation(int old, int current, EffectWindow *movingWindo
     }
 
     // Set up animation
-    m_active = true;
+    m_state = State::ActiveAnimation;
     m_timeLine.reset();
 
     m_startPos = m_currentPosition;
@@ -390,7 +390,7 @@ void SlideEffect::startAnimation(int old, int current, EffectWindow *movingWindo
 
 void SlideEffect::finishedSwitching()
 {
-    if (!m_active) {
+    if (m_state == State::Inactive) {
         return;
     }
     const EffectWindowList windows = effects->stackingOrder();
@@ -406,7 +406,7 @@ void SlideEffect::finishedSwitching()
 
     m_paintCtx.fullscreenWindows.clear();
     m_movingWindow = nullptr;
-    m_active = false;
+    m_state = State::Inactive;
     m_lastPresentTime = std::chrono::milliseconds::zero();
     effects->setActiveFullScreenEffect(nullptr);
     m_currentPosition = effects->desktopGridCoords(effects->currentDesktop());
@@ -419,7 +419,6 @@ void SlideEffect::desktopChanged(int old, int current, EffectWindow *with)
         return;
     }
 
-    m_gestureActive = false;
     startAnimation(old, current, with);
 }
 
@@ -429,7 +428,7 @@ void SlideEffect::desktopChanging(uint old, QPointF desktopOffset, EffectWindow 
         return;
     }
 
-    m_gestureActive = true;
+    m_state = State::ActiveGesture;
     m_movingWindow = with;
 
     const bool wrap = effects->optionRollOverDesktops();
@@ -445,7 +444,6 @@ void SlideEffect::desktopChanging(uint old, QPointF desktopOffset, EffectWindow 
         m_currentPosition = moveInsideDesktopGrid(m_currentPosition);
     }
 
-    m_active = true;
     effects->setActiveFullScreenEffect(this);
     effects->addRepaintFull();
 }
@@ -456,7 +454,6 @@ void SlideEffect::desktopChangingCancelled()
         return;
     }
 
-    m_gestureActive = false;
     startAnimation(effects->currentDesktop(), effects->currentDesktop(), nullptr);
 }
 
@@ -479,7 +476,7 @@ QPointF SlideEffect::moveInsideDesktopGrid(QPointF p)
 
 void SlideEffect::windowAdded(EffectWindow *w)
 {
-    if (!m_active) {
+    if (m_state == State::Inactive) {
         return;
     }
     if (shouldElevate(w)) {
@@ -492,7 +489,7 @@ void SlideEffect::windowAdded(EffectWindow *w)
 
 void SlideEffect::windowDeleted(EffectWindow *w)
 {
-    if (!m_active) {
+    if (m_state == State::Inactive) {
         return;
     }
     if (w == m_movingWindow) {
