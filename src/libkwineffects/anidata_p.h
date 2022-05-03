@@ -85,6 +85,7 @@ public:
     FPx2 from, to;
     TimeLine timeLine;
     uint meta;
+    qint64 frozenTime;
     qint64 startTime;
     QSharedPointer<FullScreenEffectLock> fullScreenEffectLock;
     bool waitAtSource;

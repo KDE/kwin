@@ -11,6 +11,7 @@
 #include "kwinanimationeffect.h"
 #include "anidata_p.h"
 
+#include <QAction>
 #include <QDateTime>
 #include <QTimer>
 #include <QVector3D>
@@ -310,6 +311,31 @@ bool AnimationEffect::retarget(quint64 animationId, FPx2 newTarget, int newRemai
     return false; // no animation found
 }
 
+bool AnimationEffect::freezeInTime(quint64 animationId, qint64 frozenTime)
+{
+    Q_D(AnimationEffect);
+
+    if (animationId == d->m_justEndedAnimation) {
+        return false; // this is just ending, do not try to retarget it
+    }
+    for (AniMap::iterator entry = d->m_animations.begin(),
+                          mapEnd = d->m_animations.end();
+         entry != mapEnd; ++entry) {
+        for (QList<AniData>::iterator anim = entry->first.begin(),
+                                      animEnd = entry->first.end();
+             anim != animEnd; ++anim) {
+            if (anim->id == animationId) {
+                if (frozenTime >= 0) {
+                    anim->timeLine.setElapsed(std::chrono::milliseconds(frozenTime));
+                }
+                anim->frozenTime = frozenTime;
+                return true;
+            }
+        }
+    }
+    return false; // no animation found
+}
+
 bool AnimationEffect::redirect(quint64 animationId, Direction direction, TerminationFlags terminationFlags)
 {
     Q_D(AnimationEffect);
@@ -405,7 +431,7 @@ void AnimationEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
     for (auto entry = d->m_animations.begin(); entry != d->m_animations.end(); ++entry) {
         for (auto anim = entry->first.begin(); anim != entry->first.end(); ++anim) {
             if (anim->startTime <= clock()) {
-                if (anim->lastPresentTime.count()) {
+                if (anim->lastPresentTime.count() && anim->frozenTime < 0) {
                     anim->timeLine.update(presentTime - anim->lastPresentTime);
                 }
                 anim->lastPresentTime = presentTime;

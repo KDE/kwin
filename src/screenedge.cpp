@@ -1260,6 +1260,11 @@ ElectricBorderAction ScreenEdges::actionForTouchEdge(Edge *edge) const
     return ElectricActionNone;
 }
 
+ElectricBorderAction ScreenEdges::actionForTouchBorder(ElectricBorder border) const
+{
+    return m_touchCallbacks.value(border);
+}
+
 void ScreenEdges::reserveDesktopSwitching(bool isToReserve, Qt::Orientations o)
 {
     if (!o) {

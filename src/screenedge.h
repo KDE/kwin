@@ -358,6 +358,8 @@ public:
     ElectricBorderAction actionBottomLeft() const;
     ElectricBorderAction actionLeft() const;
 
+    ElectricBorderAction actionForTouchBorder(ElectricBorder border) const;
+
     GestureRecognizer *gestureRecognizer() const
     {
         return m_gestureRecognizer;

@@ -21,6 +21,7 @@ class KPluginMetaData;
 
 namespace KWin
 {
+
 class KWIN_EXPORT ScriptedEffect : public KWin::AnimationEffect
 {
     Q_OBJECT
@@ -30,6 +31,7 @@ class KWIN_EXPORT ScriptedEffect : public KWin::AnimationEffect
     Q_ENUMS(MetaType)
     Q_ENUMS(EasingCurve)
     Q_ENUMS(SessionState)
+    Q_ENUMS(ElectricBorder)
     /**
      * The plugin ID of the effect
      */
@@ -38,6 +40,7 @@ class KWIN_EXPORT ScriptedEffect : public KWin::AnimationEffect
      * True if we are the active fullscreen effect
      */
     Q_PROPERTY(bool isActiveFullScreenEffect READ isActiveFullScreenEffect NOTIFY isActiveFullScreenEffectChanged)
+
 public:
     // copied from kwineffects.h
     enum DataRole {
@@ -67,7 +70,7 @@ public:
     }
     QString activeConfig() const;
     void setActiveConfig(const QString &name);
-    static ScriptedEffect *create(const QString &effectName, const QString &pathToScript, int chainPosition);
+    static ScriptedEffect *create(const QString &effectName, const QString &pathToScript, int chainPosition, const QString &exclusiveCategory);
     static ScriptedEffect *create(const KPluginMetaData &effect);
     static bool supported();
     ~ScriptedEffect() override;
@@ -116,6 +119,7 @@ public:
     Q_SCRIPTABLE void registerShortcut(const QString &objectName, const QString &text,
                                        const QString &keySequence, const QJSValue &callback);
     Q_SCRIPTABLE bool registerScreenEdge(int edge, const QJSValue &callback);
+    Q_SCRIPTABLE bool registerRealtimeScreenEdge(int edge, const QJSValue &callback);
     Q_SCRIPTABLE bool unregisterScreenEdge(int edge);
     Q_SCRIPTABLE bool registerTouchScreenEdge(int edge, const QJSValue &callback);
     Q_SCRIPTABLE bool unregisterTouchScreenEdge(int edge);
@@ -136,6 +140,8 @@ public:
                                int newRemainingTime = -1);
     Q_SCRIPTABLE bool retarget(const QList<quint64> &animationIds, const QJSValue &newTarget,
                                int newRemainingTime = -1);
+    Q_SCRIPTABLE bool freezeInTime(quint64 animationId, qint64 frozenTime);
+    Q_SCRIPTABLE bool freezeInTime(const QList<quint64> &animationIds, qint64 frozenTime);
 
     Q_SCRIPTABLE bool redirect(quint64 animationId, Direction direction,
                                TerminationFlags terminationFlags = TerminateAtSource);
@@ -148,9 +154,16 @@ public:
     Q_SCRIPTABLE bool cancel(quint64 animationId);
     Q_SCRIPTABLE bool cancel(const QList<quint64> &animationIds);
 
+    Q_SCRIPTABLE QList<int> touchEdgesForAction(const QString &action) const;
+
     QHash<int, QJSValueList> &screenEdgeCallbacks()
     {
         return m_screenEdgeCallbacks;
+    }
+
+    QHash<int, QJSValueList> &realtimeScreenEdgeCallbacks()
+    {
+        return m_realtimeScreenEdgeCallbacks;
     }
 
     QString pluginId() const;
@@ -184,13 +197,14 @@ private:
     QJSEngine *m_engine;
     QString m_effectName;
     QString m_scriptFile;
+    QString m_exclusiveCategory;
     QHash<int, QJSValueList> m_screenEdgeCallbacks;
+    QHash<int, QJSValueList> m_realtimeScreenEdgeCallbacks;
     KConfigLoader *m_config;
     int m_chainPosition;
     QHash<int, QAction *> m_touchScreenEdgeCallbacks;
     Effect *m_activeFullScreenEffect = nullptr;
 };
-
 }
 
 #endif // KWIN_SCRIPTEDEFFECT_H

@@ -415,6 +415,8 @@ protected:
      */
     bool retarget(quint64 animationId, FPx2 newTarget, int newRemainingTime = -1);
 
+    bool freezeInTime(quint64 animationId, qint64 frozenTime);
+
     /**
      * Changes the direction of the animation.
      *
