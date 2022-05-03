@@ -4,6 +4,7 @@
 set(slide_SOURCES
     main.cpp
     slide.cpp
+    springmotion.cpp
 )
 
 kconfig_add_kcfg_files(slide_SOURCES

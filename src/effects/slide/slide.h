@@ -15,6 +15,8 @@
 // kwineffects
 #include <kwineffects.h>
 
+#include "springmotion.h"
+
 namespace KWin
 {
 
@@ -45,7 +47,6 @@ namespace KWin
 class SlideEffect : public Effect
 {
     Q_OBJECT
-    Q_PROPERTY(int duration READ duration)
     Q_PROPERTY(int horizontalGap READ horizontalGap)
     Q_PROPERTY(int verticalGap READ verticalGap)
     Q_PROPERTY(bool slideDocks READ slideDocks)
@@ -69,7 +70,6 @@ public:
 
     static bool supported();
 
-    int duration() const;
     int horizontalGap() const;
     int verticalGap() const;
     bool slideDocks() const;
@@ -101,7 +101,6 @@ private:
     int m_vGap;
     bool m_slideDocks;
     bool m_slideBackground;
-    int m_fullAnimationDuration; // Miliseconds for 1 complete desktop switch
 
     enum class State {
         Inactive,
@@ -110,7 +109,8 @@ private:
     };
 
     State m_state = State::Inactive;
-    TimeLine m_timeLine;
+    SpringMotion m_motionX;
+    SpringMotion m_motionY;
 
     // When the desktop isn't desktopChanging(), these two variables are used to control the animation path.
     // They use desktops as a unit.
@@ -135,11 +135,6 @@ private:
 
     EffectWindowList m_elevatedWindows;
 };
-
-inline int SlideEffect::duration() const
-{
-    return m_fullAnimationDuration;
-}
 
 inline int SlideEffect::horizontalGap() const
 {
