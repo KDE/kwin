@@ -23,6 +23,7 @@ namespace KWin
 class KWinTouchScreenData;
 class KWinTouchScreenEdgeConfigForm;
 class KWinTouchScreenScriptSettings;
+class KWinTouchScreenEdgeEffectSettings;
 
 class KWinScreenEdgesConfig : public KCModule
 {
@@ -43,18 +44,18 @@ protected:
 private:
     KWinTouchScreenEdgeConfigForm *m_form;
     KSharedConfigPtr m_config;
+    QStringList m_effects; // list of effect IDs ordered in the list they are presented in the menu
     QStringList m_scripts; // list of script IDs ordered in the list they are presented in the menu
     QHash<QString, KWinTouchScreenScriptSettings *> m_scriptSettings;
+    QHash<QString, KWinTouchScreenEdgeEffectSettings *> m_effectSettings;
     KWinTouchScreenData *m_data;
 
     enum EffectActions {
         PresentWindowsAll = ELECTRIC_ACTION_COUNT, // Start at the end of built in actions
         PresentWindowsCurrent,
         PresentWindowsClass,
-        DesktopGrid,
         TabBox,
         TabBoxAlternative,
-        Overview,
         EffectCount
     };
 

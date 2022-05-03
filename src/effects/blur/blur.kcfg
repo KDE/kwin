@@ -4,7 +4,7 @@
     xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
     http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
     <kcfgfile arg="true"/>
-    <group name="Effect-Blur">
+    <group name="Effect-blur">
         <entry name="BlurStrength" type="Int">
             <default>15</default>
         </entry>

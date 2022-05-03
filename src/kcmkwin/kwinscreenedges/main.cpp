@@ -23,6 +23,7 @@
 
 #include "kwinscreenedgeconfigform.h"
 #include "kwinscreenedgedata.h"
+#include "kwinscreenedgeeffectsettings.h"
 #include "kwinscreenedgescriptsettings.h"
 #include "kwinscreenedgesettings.h"
 
@@ -60,6 +61,9 @@ void KWinScreenEdgesConfig::load()
     for (KWinScreenEdgeScriptSettings *setting : qAsConst(m_scriptSettings)) {
         setting->load();
     }
+    for (KWinScreenEdgeEffectSettings *setting : qAsConst(m_effectSettings)) {
+        setting->load();
+    }
 
     monitorLoadSettings();
     monitorLoadDefaultSettings();
@@ -76,6 +80,9 @@ void KWinScreenEdgesConfig::save()
     for (KWinScreenEdgeScriptSettings *setting : qAsConst(m_scriptSettings)) {
         setting->save();
     }
+    for (KWinScreenEdgeEffectSettings *setting : qAsConst(m_effectSettings)) {
+        setting->save();
+    }
 
     // Reload saved settings to ScreenEdge UI
     monitorLoadSettings();
@@ -89,9 +96,10 @@ void KWinScreenEdgesConfig::save()
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
-    interface.reconfigureEffect(QStringLiteral("overview"));
     interface.reconfigureEffect(QStringLiteral("presentwindows"));
-    interface.reconfigureEffect(QStringLiteral("desktopgrid"));
+    for (const auto &effectId : qAsConst(m_effects)) {
+        interface.reconfigureEffect(effectId);
+    }
 
     KCModule::save();
 }
@@ -122,25 +130,37 @@ void KWinScreenEdgesConfig::monitorInit()
     m_form->monitorAddItem(i18n("Activity Manager"));
     m_form->monitorAddItem(i18n("Application Launcher"));
 
-    // TODO: Find a better way to get the display name of the present windows, the
-    // desktop grid, and the overview effect. Maybe install metadata.json files?
+    // TODO: Find a better way to get the display name of the present windows,
+    // Maybe install metadata.json files?
     const QString presentWindowsName = i18n("Present Windows");
     m_form->monitorAddItem(i18n("%1 - All Desktops", presentWindowsName));
     m_form->monitorAddItem(i18n("%1 - Current Desktop", presentWindowsName));
     m_form->monitorAddItem(i18n("%1 - Current Application", presentWindowsName));
-    m_form->monitorAddItem(i18n("Desktop Grid"));
 
     m_form->monitorAddItem(i18n("Toggle window switching"));
     m_form->monitorAddItem(i18n("Toggle alternative window switching"));
 
-    m_form->monitorAddItem(i18n("Toggle Overview"));
+    KConfigGroup config(m_config, "Plugins");
+    const auto effects = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Script"), QStringLiteral("kwin/builtin-effects/")) << KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Script"), QStringLiteral("kwin/effects/"));
+
+    for (const KPluginMetaData &effect : effects) {
+        if (!effect.value(QStringLiteral("X-KWin-Border-Activate"), false)) {
+            continue;
+        }
+
+        if (!config.readEntry(effect.pluginId() + QStringLiteral("Enabled"), effect.isEnabledByDefault())) {
+            continue;
+        }
+        m_effects << effect.pluginId();
+        m_form->monitorAddItem(effect.name());
+        m_effectSettings[effect.pluginId()] = new KWinScreenEdgeEffectSettings(effect.pluginId(), this);
+    }
 
     const QString scriptFolder = QStringLiteral("kwin/scripts/");
     const auto scripts = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Script"), scriptFolder);
 
-    KConfigGroup config(m_config, "Plugins");
     for (const KPluginMetaData &script : scripts) {
-        if (script.value(QStringLiteral("X-KWin-Border-Activate")) != QLatin1String("true")) {
+        if (script.value(QStringLiteral("X-KWin-Border-Activate")) != true) {
             continue;
         }
 
@@ -178,21 +198,22 @@ void KWinScreenEdgesConfig::monitorLoadSettings()
     // PresentWindows BorderActivateClass
     m_form->monitorChangeEdge(m_data->settings()->borderActivateClass(), PresentWindowsClass);
 
-    // Desktop Grid
-    m_form->monitorChangeEdge(m_data->settings()->borderActivateDesktopGrid(), DesktopGrid);
-
     // TabBox
     m_form->monitorChangeEdge(m_data->settings()->borderActivateTabBox(), TabBox);
     // Alternative TabBox
     m_form->monitorChangeEdge(m_data->settings()->borderAlternativeActivate(), TabBoxAlternative);
 
-    // Overview
-    m_form->monitorChangeEdge(m_data->settings()->borderActivateOverview(), Overview);
+    // Dinamically loaded effects
+    int lastIndex = EffectCount;
+    for (int i = 0; i < m_effects.size(); i++) {
+        m_form->monitorChangeEdge(m_effectSettings[m_effects[i]]->borderActivate(), lastIndex);
+        ++lastIndex;
+    }
 
     // Scripts
     for (int i = 0; i < m_scripts.size(); i++) {
-        int index = EffectCount + i;
-        m_form->monitorChangeEdge(m_scriptSettings[m_scripts[i]]->borderActivate(), index);
+        m_form->monitorChangeEdge(m_scriptSettings[m_scripts[i]]->borderActivate(), lastIndex);
+        ++lastIndex;
     }
 }
 
@@ -219,16 +240,10 @@ void KWinScreenEdgesConfig::monitorLoadDefaultSettings()
     // PresentWindows BorderActivateClass
     m_form->monitorChangeDefaultEdge(m_data->settings()->defaultBorderActivateClassValue(), PresentWindowsClass);
 
-    // Desktop Grid
-    m_form->monitorChangeDefaultEdge(m_data->settings()->defaultBorderActivateDesktopGridValue(), DesktopGrid);
-
     // TabBox
     m_form->monitorChangeDefaultEdge(m_data->settings()->defaultBorderActivateTabBoxValue(), TabBox);
     // Alternative TabBox
     m_form->monitorChangeDefaultEdge(m_data->settings()->defaultBorderAlternativeActivateValue(), TabBoxAlternative);
-
-    // Overview
-    m_form->monitorChangeDefaultEdge(m_data->settings()->defaultBorderActivateOverviewValue(), Overview);
 }
 
 void KWinScreenEdgesConfig::monitorSaveSettings()
@@ -250,20 +265,21 @@ void KWinScreenEdgesConfig::monitorSaveSettings()
     m_data->settings()->setBorderActivatePresentWindows(m_form->monitorCheckEffectHasEdge(PresentWindowsCurrent));
     m_data->settings()->setBorderActivateClass(m_form->monitorCheckEffectHasEdge(PresentWindowsClass));
 
-    // Desktop Grid
-    m_data->settings()->setBorderActivateDesktopGrid(m_form->monitorCheckEffectHasEdge(DesktopGrid));
-
     // TabBox
     m_data->settings()->setBorderActivateTabBox(m_form->monitorCheckEffectHasEdge(TabBox));
     m_data->settings()->setBorderAlternativeActivate(m_form->monitorCheckEffectHasEdge(TabBoxAlternative));
 
-    // Overview
-    m_data->settings()->setBorderActivateOverview(m_form->monitorCheckEffectHasEdge(Overview));
+    // Dinamically loaded effects
+    int lastIndex = EffectCount;
+    for (int i = 0; i < m_effects.size(); i++) {
+        m_effectSettings[m_effects[i]]->setBorderActivate(m_form->monitorCheckEffectHasEdge(lastIndex));
+        ++lastIndex;
+    }
 
     // Scripts
     for (int i = 0; i < m_scripts.size(); i++) {
-        int index = EffectCount + i;
-        m_scriptSettings[m_scripts[i]]->setBorderActivate(m_form->monitorCheckEffectHasEdge(index));
+        m_scriptSettings[m_scripts[i]]->setBorderActivate(m_form->monitorCheckEffectHasEdge(lastIndex));
+        ++lastIndex;
     }
 }
 
@@ -276,14 +292,6 @@ void KWinScreenEdgesConfig::monitorShowEvent()
     bool enabled = config.readEntry("presentwindowsEnabled", true);
     m_form->monitorItemSetEnabled(PresentWindowsCurrent, enabled);
     m_form->monitorItemSetEnabled(PresentWindowsAll, enabled);
-
-    // Desktop Grid
-    enabled = config.readEntry("desktopgridEnabled", true);
-    m_form->monitorItemSetEnabled(DesktopGrid, enabled);
-
-    // Overview
-    enabled = config.readEntry("overviewEnabled", true);
-    m_form->monitorItemSetEnabled(Overview, enabled);
 
     // tabbox, depends on reasonable focus policy.
     KConfigGroup config2(m_config, "Windows");

@@ -4,7 +4,7 @@
       xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
                           http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
     <kcfgfile arg="true"/>
-    <group name="Effect-ThumbnailAside">
+    <group name="Effect-thumbnailaside">
         <entry name="MaxWidth" type="Int">
             <default>200</default>
         </entry>

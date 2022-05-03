@@ -4,7 +4,7 @@
     xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
     http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
     <kcfgfile arg="true"/>
-    <group name="Effect-Kscreen">
+    <group name="Effect-kscreen">
         <entry name="Duration" type="Int">
             <default>0</default>
         </entry>

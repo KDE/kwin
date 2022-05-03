@@ -69,6 +69,7 @@
         "Name[zh_CN]": "虚拟桌面平铺网格"
     },
     "X-KDE-ConfigModule": "kwin_desktopgrid_config",
+    "X-KWin-Border-Activate": true,
     "org.kde.kwin.effect": {
         "video": "https://files.kde.org/plasma/kwin/effect-videos/desktop_grid.mp4"
     }

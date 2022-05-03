@@ -4,7 +4,7 @@
     xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
     http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
     <kcfgfile arg="true"/>
-    <group name="Effect-DesktopGrid">
+    <group name="Effect-desktopgrid">
             <entry name="BorderActivate" type="IntList" />
             <entry name="TouchBorderActivate" type="IntList" />
             <entry name="ZoomDuration" type="Int">

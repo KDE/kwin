@@ -9,7 +9,7 @@
       xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
                           http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
     <kcfgfile arg="true"/>
-    <group name="Effect-Overview">
+    <group name="Effect-overview">
         <entry name="LayoutMode" type="Int">
             <default>1</default>
         </entry>
