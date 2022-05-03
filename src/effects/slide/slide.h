@@ -93,6 +93,7 @@ private:
     void optimizePath(); // Find the best path to target desktop
 
     void startAnimation(int old, int current, EffectWindow *movingWindow = nullptr);
+    void prepareSwitching();
     void finishedSwitching();
 
 private:

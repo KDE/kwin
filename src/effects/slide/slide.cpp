@@ -345,28 +345,17 @@ void SlideEffect::startAnimation(int old, int current, EffectWindow *movingWindo
 {
     Q_UNUSED(old)
 
-    m_movingWindow = movingWindow;
-
-    const bool wrap = effects->optionRollOverDesktops();
-
-    // Handle stacking order
-    const auto windows = effects->stackingOrder();
-    for (EffectWindow *w : windows) {
-        if (shouldElevate(w)) {
-            effects->setElevatedWindow(w, true);
-            m_elevatedWindows << w;
-        }
-        w->setData(WindowForceBackgroundContrastRole, QVariant(true));
-        w->setData(WindowForceBlurRole, QVariant(true));
+    if (m_state == State::Inactive) {
+        prepareSwitching();
     }
 
-    // Set up animation
     m_state = State::ActiveAnimation;
+    m_movingWindow = movingWindow;
     m_timeLine.reset();
 
     m_startPos = m_currentPosition;
     m_endPos = effects->desktopGridCoords(current);
-    if (wrap) {
+    if (effects->optionRollOverDesktops()) {
         optimizePath();
     }
 
@@ -386,6 +375,19 @@ void SlideEffect::startAnimation(int old, int current, EffectWindow *movingWindo
 
     effects->setActiveFullScreenEffect(this);
     effects->addRepaintFull();
+}
+
+void SlideEffect::prepareSwitching()
+{
+    const auto windows = effects->stackingOrder();
+    for (EffectWindow *w : windows) {
+        if (shouldElevate(w)) {
+            effects->setElevatedWindow(w, true);
+            m_elevatedWindows << w;
+        }
+        w->setData(WindowForceBackgroundContrastRole, QVariant(true));
+        w->setData(WindowForceBlurRole, QVariant(true));
+    }
 }
 
 void SlideEffect::finishedSwitching()
@@ -428,17 +430,19 @@ void SlideEffect::desktopChanging(uint old, QPointF desktopOffset, EffectWindow 
         return;
     }
 
+    if (m_state == State::Inactive) {
+        prepareSwitching();
+    }
+
     m_state = State::ActiveGesture;
     m_movingWindow = with;
-
-    const bool wrap = effects->optionRollOverDesktops();
 
     // Find desktop position based on animationDelta
     QPoint gridPos = effects->desktopGridCoords(old);
     m_currentPosition.setX(gridPos.x() + desktopOffset.x());
     m_currentPosition.setY(gridPos.y() + desktopOffset.y());
 
-    if (wrap) {
+    if (effects->optionRollOverDesktops()) {
         m_currentPosition = forcePositivePosition(m_currentPosition);
     } else {
         m_currentPosition = moveInsideDesktopGrid(m_currentPosition);
@@ -450,11 +454,11 @@ void SlideEffect::desktopChanging(uint old, QPointF desktopOffset, EffectWindow 
 
 void SlideEffect::desktopChangingCancelled()
 {
-    if (effects->hasActiveFullScreenEffect() && effects->activeFullScreenEffect() != this) {
-        return;
+    // If the fingers have been lifted and the current desktop didn't change, start animation
+    // to move back to the original virtual desktop.
+    if (effects->activeFullScreenEffect() == this) {
+        startAnimation(effects->currentDesktop(), effects->currentDesktop(), nullptr);
     }
-
-    startAnimation(effects->currentDesktop(), effects->currentDesktop(), nullptr);
 }
 
 QPointF SlideEffect::moveInsideDesktopGrid(QPointF p)
