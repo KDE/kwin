@@ -15,6 +15,7 @@
         "Description[sv]": "Hantera Kwin-skript",
         "Description[tr]": "KWin Betiklerini Yönet",
         "Description[uk]": "Керування скриптами KWin",
+        "Description[vi]": "Quản lí các kịch bản KWin",
         "Description[x-test]": "xxManage KWin scriptsxx",
         "Icon": "preferences-system-windows-actions",
         "Name": "KWin Scripts",
@@ -32,6 +33,7 @@
         "Name[sv]": "Kwin-skript",
         "Name[tr]": "KWin Betikleri",
         "Name[uk]": "Скрипти KWin",
+        "Name[vi]": "Kịch bản KWin",
         "Name[x-test]": "xxKWin Scriptsxx",
         "ServiceTypes": [
             "KCModule"
