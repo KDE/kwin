@@ -24,7 +24,7 @@ kcmutils_generate_module_data(
 
 ki18n_wrap_ui(kcm_kwinscreenedges_PART_SRCS main.ui)
 kconfig_add_kcfg_files(kcm_kwinscreenedges_PART_SRCS kwinscreenedgesettings.kcfgc kwinscreenedgescriptsettings.kcfgc kwinscreenedgeeffectsettings.kcfgc)
-add_library(kcm_kwinscreenedges MODULE ${kcm_kwinscreenedges_PART_SRCS})
+kcoreaddons_add_plugin(kcm_kwinscreenedges SOURCES ${kcm_kwinscreenedges_PART_SRCS} INSTALL_NAMESPACE "plasma/kcms/systemsettings_qwidgets")
 set(kcm_screenedges_LIBS
     Qt::DBus
 
@@ -55,8 +55,7 @@ kcmutils_generate_module_data(
 
 ki18n_wrap_ui(kcm_kwintouchscreenedges_PART_SRCS main.ui touch.ui)
 kconfig_add_kcfg_files(kcm_kwintouchscreenedges_PART_SRCS kwintouchscreensettings.kcfgc kwintouchscreenscriptsettings.kcfgc kwintouchscreenedgeeffectsettings.kcfgc)
-add_library(kcm_kwintouchscreen MODULE ${kcm_kwintouchscreenedges_PART_SRCS})
+kcoreaddons_add_plugin(kcm_kwintouchscreen SOURCES ${kcm_kwintouchscreenedges_PART_SRCS} INSTALL_NAMESPACE "plasma/kcms/systemsettings_qwidgets")
 target_link_libraries(kcm_kwintouchscreen ${X11_LIBRARIES} ${kcm_screenedges_LIBS})
 
-install(TARGETS kcm_kwinscreenedges kcm_kwintouchscreen DESTINATION ${KDE_INSTALL_PLUGINDIR})
-install(FILES kwinscreenedges.desktop kwintouchscreen.desktop DESTINATION ${KDE_INSTALL_KSERVICESDIR})
+install(FILES kwinscreenedges.desktop kwintouchscreen.desktop DESTINATION ${KDE_INSTALL_APPDIR})

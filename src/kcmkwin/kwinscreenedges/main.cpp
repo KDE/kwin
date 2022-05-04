@@ -27,7 +27,7 @@
 #include "kwinscreenedgescriptsettings.h"
 #include "kwinscreenedgesettings.h"
 
-K_PLUGIN_FACTORY(KWinScreenEdgesConfigFactory, registerPlugin<KWin::KWinScreenEdgesConfig>(); registerPlugin<KWin::KWinScreenEdgeData>();)
+K_PLUGIN_FACTORY_WITH_JSON(KWinScreenEdgesConfigFactory, "kwinscreenedges.json", registerPlugin<KWin::KWinScreenEdgesConfig>(); registerPlugin<KWin::KWinScreenEdgeData>();)
 
 namespace KWin
 {
