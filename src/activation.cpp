@@ -549,112 +549,6 @@ void Workspace::setShouldGetFocus(Window *window)
     updateStackingOrder(); // e.g. fullscreens have different layer when active/not-active
 }
 
-namespace FSP
-{
-enum Level {
-    None = 0,
-    Low,
-    Medium,
-    High,
-    Extreme,
-};
-}
-
-// focus_in -> the window got FocusIn event
-// ignore_desktop - call comes from _NET_ACTIVE_WINDOW message, don't refuse just because of window
-//     is on a different desktop
-bool Workspace::allowWindowActivation(const KWin::Window *window, xcb_timestamp_t time, bool focus_in, bool ignore_desktop)
-{
-    // options->focusStealingPreventionLevel :
-    // 0 - none    - old KWin behaviour, new windows always get focus
-    // 1 - low     - focus stealing prevention is applied normally, when unsure, activation is allowed
-    // 2 - normal  - focus stealing prevention is applied normally, when unsure, activation is not allowed,
-    //              this is the default
-    // 3 - high    - new window gets focus only if it belongs to the active application,
-    //              or when no window is currently active
-    // 4 - extreme - no window gets focus without user intervention
-    if (time == -1U) {
-        time = window->userTime();
-    }
-    int level = window->rules()->checkFSP(options->focusStealingPreventionLevel());
-    if (sessionManager()->state() == SessionState::Saving && level <= FSP::Medium) { // <= normal
-        return true;
-    }
-    Window *ac = mostRecentlyActivatedWindow();
-    if (focus_in) {
-        if (should_get_focus.contains(const_cast<Window *>(window))) {
-            return true; // FocusIn was result of KWin's action
-        }
-        // Before getting FocusIn, the active Client already
-        // got FocusOut, and therefore got deactivated.
-        ac = m_lastActiveWindow;
-    }
-    if (time == 0) { // explicitly asked not to get focus
-        if (!window->rules()->checkAcceptFocus(false)) {
-            return false;
-        }
-    }
-    const int protection = ac ? ac->rules()->checkFPP(2) : 0;
-
-    // stealing is unconditionally allowed (NETWM behavior)
-    if (level == FSP::None || protection == FSP::None) {
-        return true;
-    }
-
-    // The active window "grabs" the focus or stealing is generally forbidden
-    if (level == FSP::Extreme || protection == FSP::Extreme) {
-        return false;
-    }
-
-    // Desktop switching is only allowed in the "no protection" case
-    if (!ignore_desktop && !window->isOnCurrentDesktop()) {
-        return false; // allow only with level == 0
-    }
-
-    // No active window, it's ok to pass focus
-    // NOTICE that extreme protection needs to be handled before to allow protection on unmanged windows
-    if (ac == nullptr || ac->isDesktop()) {
-        qCDebug(KWIN_CORE) << "Activation: No window active, allowing";
-        return true; // no active window -> always allow
-    }
-
-    // TODO window urgency  -> return true?
-
-    // Unconditionally allow intra-window passing around for lower stealing protections
-    // unless the active window has High interest
-    if (Window::belongToSameApplication(window, ac, Window::SameApplicationCheck::RelaxedForActive) && protection < FSP::High) {
-        qCDebug(KWIN_CORE) << "Activation: Belongs to active application";
-        return true;
-    }
-
-    if (!window->isOnCurrentDesktop()) { // we allowed explicit self-activation across virtual desktops
-        return false; // inside a window or if no window was active, but not otherwise
-    }
-
-    // High FPS, not intr-window change. Only allow if the active window has only minor interest
-    if (level > FSP::Medium && protection > FSP::Low) {
-        return false;
-    }
-
-    if (time == -1U) { // no time known
-        qCDebug(KWIN_CORE) << "Activation: No timestamp at all";
-        // Only allow for Low protection unless active window has High interest in focus
-        if (level < FSP::Medium && protection < FSP::High) {
-            return true;
-        }
-        // no timestamp at all, don't activate - because there's also creation timestamp
-        // done on CreateNotify, this case should happen only in case application
-        // maps again already used window, i.e. this won't happen after app startup
-        return false;
-    }
-
-    // Low or medium FSP, usertime comparism is possible
-    const xcb_timestamp_t user_time = ac->userTime();
-    qCDebug(KWIN_CORE) << "Activation, compared:" << window << ":" << time << ":" << user_time
-                       << ":" << (NET::timestampCompare(time, user_time) >= 0);
-    return NET::timestampCompare(time, user_time) >= 0; // time >= user_time
-}
-
 // basically the same like allowWindowActivation(), this time allowing
 // a window to be fully raised upon its own request (XRaiseWindow),
 // if refused, it will be raised only on top of windows belonging
@@ -882,7 +776,7 @@ void X11Window::startupIdChanged()
     }
     const xcb_timestamp_t timestamp = asn_id.timestamp();
     if (timestamp != 0) {
-        bool activate = workspace()->allowWindowActivation(this, timestamp);
+        bool activate = allowWindowActivation(timestamp);
         if (asn_data.desktop() != 0 && !isOnCurrentDesktop()) {
             activate = false; // it was started on different desktop than current one
         }
@@ -899,6 +793,113 @@ void X11Window::updateUrgency()
     if (info->urgency()) {
         demandAttention();
     }
+}
+
+namespace FSP
+{
+enum Level {
+    None = 0,
+    Low,
+    Medium,
+    High,
+    Extreme,
+};
+}
+
+// focus_in -> the window got FocusIn event
+// ignore_desktop - call comes from _NET_ACTIVE_WINDOW message, don't refuse just because of window
+//     is on a different desktop
+bool X11Window::allowWindowActivation(xcb_timestamp_t time, bool focus_in, bool ignore_desktop)
+{
+    auto window = this;
+    // options->focusStealingPreventionLevel :
+    // 0 - none    - old KWin behaviour, new windows always get focus
+    // 1 - low     - focus stealing prevention is applied normally, when unsure, activation is allowed
+    // 2 - normal  - focus stealing prevention is applied normally, when unsure, activation is not allowed,
+    //              this is the default
+    // 3 - high    - new window gets focus only if it belongs to the active application,
+    //              or when no window is currently active
+    // 4 - extreme - no window gets focus without user intervention
+    if (time == -1U) {
+        time = window->userTime();
+    }
+    const FSP::Level level = (FSP::Level)window->rules()->checkFSP(options->focusStealingPreventionLevel());
+    if (workspace()->sessionManager()->state() == SessionState::Saving && level <= FSP::Medium) { // <= normal
+        return true;
+    }
+    Window *ac = workspace()->mostRecentlyActivatedWindow();
+    if (focus_in) {
+        if (workspace()->inShouldGetFocus(window)) {
+            return true; // FocusIn was result of KWin's action
+        }
+        // Before getting FocusIn, the active Client already
+        // got FocusOut, and therefore got deactivated.
+        ac = workspace()->lastActiveWindow();
+    }
+    if (time == 0) { // explicitly asked not to get focus
+        if (!window->rules()->checkAcceptFocus(false)) {
+            return false;
+        }
+    }
+    const FSP::Level protection = (FSP::Level)(ac ? ac->rules()->checkFPP(2) : FSP::None);
+
+    // stealing is unconditionally allowed (NETWM behavior)
+    if (level == FSP::None || protection == FSP::None) {
+        return true;
+    }
+
+    // The active window "grabs" the focus or stealing is generally forbidden
+    if (level == FSP::Extreme || protection == FSP::Extreme) {
+        return false;
+    }
+
+    // Desktop switching is only allowed in the "no protection" case
+    if (!ignore_desktop && !window->isOnCurrentDesktop()) {
+        return false; // allow only with level == 0
+    }
+
+    // No active window, it's ok to pass focus
+    // NOTICE that extreme protection needs to be handled before to allow protection on unmanged windows
+    if (ac == nullptr || ac->isDesktop()) {
+        qCDebug(KWIN_CORE) << "Activation: No window active, allowing";
+        return true; // no active window -> always allow
+    }
+
+    // TODO window urgency  -> return true?
+
+    // Unconditionally allow intra-window passing around for lower stealing protections
+    // unless the active window has High interest
+    if (Window::belongToSameApplication(window, ac, Window::SameApplicationCheck::RelaxedForActive) && protection < FSP::High) {
+        qCDebug(KWIN_CORE) << "Activation: Belongs to active application";
+        return true;
+    }
+
+    if (!window->isOnCurrentDesktop()) { // we allowed explicit self-activation across virtual desktops
+        return false; // inside a window or if no window was active, but not otherwise
+    }
+
+    // High FPS, not intr-window change. Only allow if the active window has only minor interest
+    if (level > FSP::Medium && protection > FSP::Low) {
+        return false;
+    }
+
+    if (time == -1U) { // no time known
+        qCDebug(KWIN_CORE) << "Activation: No timestamp at all";
+        // Only allow for Low protection unless active window has High interest in focus
+        if (level < FSP::Medium && protection < FSP::High) {
+            return true;
+        }
+        // no timestamp at all, don't activate - because there's also creation timestamp
+        // done on CreateNotify, this case should happen only in case application
+        // maps again already used window, i.e. this won't happen after app startup
+        return false;
+    }
+
+    // Low or medium FSP, usertime comparism is possible
+    const xcb_timestamp_t user_time = ac->userTime();
+    qCDebug(KWIN_CORE) << "Activation, compared:" << window << ":" << time << ":" << user_time
+                       << ":" << (NET::timestampCompare(time, user_time) >= 0);
+    return NET::timestampCompare(time, user_time) >= 0; // time >= user_time
 }
 
 //****************************************

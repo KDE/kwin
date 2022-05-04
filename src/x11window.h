@@ -305,6 +305,9 @@ public:
     void handleSync();
     void handleSyncTimeout();
 
+    bool allowWindowActivation(xcb_timestamp_t time = -1U, bool focus_in = false,
+                               bool ignore_desktop = false);
+
     static void cleanupX11();
 
 public Q_SLOTS:

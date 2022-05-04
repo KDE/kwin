@@ -179,8 +179,6 @@ public:
     };
     Q_DECLARE_FLAGS(ActivityFlags, ActivityFlag)
     bool takeActivity(Window *window, ActivityFlags flags);
-    bool allowWindowActivation(const Window *window, xcb_timestamp_t time = -1U, bool focus_in = false,
-                               bool ignore_desktop = false);
     bool restoreFocus();
     void gotFocusIn(const Window *window);
     void setShouldGetFocus(Window *window);
@@ -416,6 +414,15 @@ public:
      * Used by session management
      */
     void setInitialDesktop(int desktop);
+
+    bool inShouldGetFocus(Window *w) const
+    {
+        return should_get_focus.contains(w);
+    }
+    Window *lastActiveWindow() const
+    {
+        return m_lastActiveWindow;
+    }
 
 public Q_SLOTS:
     void performWindowOperation(KWin::Window *window, Options::WindowOperation op);

@@ -892,7 +892,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         if (session) {
             allow = session->active && (!workspace()->wasUserInteraction() || workspace()->activeWindow() == nullptr || workspace()->activeWindow()->isDesktop());
         } else {
-            allow = workspace()->allowWindowActivation(this, userTime(), false);
+            allow = allowWindowActivation(userTime(), false);
         }
 
         const bool isSessionSaving = workspace()->sessionManager()->state() == SessionState::Saving;
