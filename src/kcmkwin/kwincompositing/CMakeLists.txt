@@ -17,7 +17,7 @@ qt_add_dbus_interface(kwincompositing_SRC
 
 ki18n_wrap_ui(kwincompositing_SRC compositing.ui)
 
-add_library(kwincompositing MODULE ${kwincompositing_SRC})
+kcoreaddons_add_plugin(kwincompositing SOURCES ${kwincompositing_SRC} INSTALL_NAMESPACE "plasma/kcms/systemsettings_qwidgets")
 
 target_link_libraries(kwincompositing
     Qt::DBus
@@ -30,5 +30,4 @@ target_link_libraries(kwincompositing
     KF5::WindowSystem
 )
 
-install(TARGETS kwincompositing DESTINATION ${KDE_INSTALL_PLUGINDIR})
-install(FILES kwincompositing.desktop DESTINATION ${KDE_INSTALL_KSERVICESDIR})
+install(FILES kwincompositing.desktop DESTINATION ${KDE_INSTALL_APPDIR})
