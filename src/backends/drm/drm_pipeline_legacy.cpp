@@ -16,6 +16,7 @@
 #include "logging.h"
 
 #include <errno.h>
+#include <gbm.h>
 
 namespace KWin
 {
@@ -124,23 +125,21 @@ bool DrmPipeline::applyPendingChangesLegacy()
 
 bool DrmPipeline::setCursorLegacy()
 {
-    const QSize &s = m_pending.cursorFb ? m_pending.cursorFb->buffer()->size() : QSize(64, 64);
-    int ret = drmModeSetCursor2(gpu()->fd(), m_pending.crtc->id(),
-                                m_pending.cursorFb ? m_pending.cursorFb->buffer()->handles()[0] : 0,
-                                s.width(), s.height(),
+    const auto bo = cursorLayer()->currentBuffer();
+    const uint32_t handle = bo && bo->buffer() && cursorLayer()->isVisible() ? bo->buffer()->handles()[0] : 0;
+    const QSize s = gpu()->cursorSize();
+    int ret = drmModeSetCursor2(gpu()->fd(), m_pending.crtc->id(), handle, s.width(), s.height(),
                                 m_pending.cursorHotspot.x(), m_pending.cursorHotspot.y());
     if (ret == -ENOTSUP) {
         // for NVIDIA case that does not support drmModeSetCursor2
-        ret = drmModeSetCursor(gpu()->fd(), m_pending.crtc->id(),
-                               m_pending.cursorFb ? m_pending.cursorFb->buffer()->handles()[0] : 0,
-                               s.width(), s.height());
+        ret = drmModeSetCursor(gpu()->fd(), m_pending.crtc->id(), handle, s.width(), s.height());
     }
     return ret == 0;
 }
 
 bool DrmPipeline::moveCursorLegacy()
 {
-    return drmModeMoveCursor(gpu()->fd(), m_pending.crtc->id(), m_pending.cursorPos.x(), m_pending.cursorPos.y()) == 0;
+    return drmModeMoveCursor(gpu()->fd(), m_pending.crtc->id(), cursorLayer()->position().x(), cursorLayer()->position().y()) == 0;
 }
 
 }

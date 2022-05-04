@@ -27,6 +27,7 @@ GbmSurface::GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, uint32_t
     , m_eglBackend(static_cast<EglGbmBackend *>(gpu->platform()->renderBackend()))
     , m_size(size)
     , m_format(format)
+    , m_flags(flags)
     , m_fbo(new GLFramebuffer(0, size))
 {
     if (!m_surface) {
@@ -45,6 +46,7 @@ GbmSurface::GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, QVector<
     , m_size(size)
     , m_format(format)
     , m_modifiers(modifiers)
+    , m_flags(0)
     , m_fbo(new GLFramebuffer(0, size))
 {
     if (!m_surface) {
@@ -147,4 +149,8 @@ QRegion GbmSurface::repaintRegion() const
     }
 }
 
+uint32_t GbmSurface::flags() const
+{
+    return m_flags;
+}
 }

@@ -31,6 +31,7 @@ set(DRM_SOURCES
     egl_gbm_layer_surface.cpp
     dmabuf_feedback.cpp
     drm_dumb_buffer.cpp
+    egl_gbm_cursor_layer.cpp
 )
 
 add_library(KWinWaylandDrmBackend MODULE ${DRM_SOURCES})

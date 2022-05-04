@@ -44,13 +44,18 @@ OutputLayer *DrmQPainterBackend::primaryLayer(Output *output)
     return static_cast<DrmAbstractOutput *>(output)->outputLayer();
 }
 
-QSharedPointer<DrmPipelineLayer> DrmQPainterBackend::createDrmPipelineLayer(DrmPipeline *pipeline)
+QSharedPointer<DrmPipelineLayer> DrmQPainterBackend::createPrimaryLayer(DrmPipeline *pipeline)
 {
     if (pipeline->output()) {
         return QSharedPointer<DrmQPainterLayer>::create(pipeline);
     } else {
         return QSharedPointer<DrmLeaseQPainterLayer>::create(pipeline);
     }
+}
+
+QSharedPointer<DrmOverlayLayer> DrmQPainterBackend::createCursorLayer(DrmPipeline *pipeline)
+{
+    return QSharedPointer<DrmCursorQPainterLayer>::create(pipeline);
 }
 
 QSharedPointer<DrmOutputLayer> DrmQPainterBackend::createLayer(DrmVirtualOutput *output)

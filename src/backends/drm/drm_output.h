@@ -29,6 +29,7 @@ class DrmConnector;
 class DrmGpu;
 class DrmPipeline;
 class DumbSwapchain;
+class GLTexture;
 
 class KWIN_EXPORT DrmOutput : public DrmAbstractOutput
 {
@@ -61,14 +62,16 @@ private:
 
     void updateCursor();
     void moveCursor();
+    void renderCursorOpengl(const QSize &cursorSize);
+    void renderCursorQPainter();
 
     DrmPipeline *m_pipeline;
     DrmConnector *m_connector;
 
-    QSharedPointer<DumbSwapchain> m_cursor;
     bool m_setCursorSuccessful = false;
     bool m_moveCursorSuccessful = false;
-    QRect m_lastCursorGeometry;
+    bool m_cursorTextureDirty = true;
+    std::unique_ptr<GLTexture> m_cursorTexture;
     QTimer m_turnOffTimer;
 };
 

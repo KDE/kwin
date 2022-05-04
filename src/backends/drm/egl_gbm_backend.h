@@ -68,7 +68,8 @@ public:
 
     void init() override;
     bool prefer10bpc() const override;
-    QSharedPointer<DrmPipelineLayer> createDrmPipelineLayer(DrmPipeline *pipeline) override;
+    QSharedPointer<DrmPipelineLayer> createPrimaryLayer(DrmPipeline *pipeline) override;
+    QSharedPointer<DrmOverlayLayer> createCursorLayer(DrmPipeline *pipeline) override;
     QSharedPointer<DrmOutputLayer> createLayer(DrmVirtualOutput *output) override;
 
     QSharedPointer<GLTexture> textureForOutput(Output *requestedOutput) const override;

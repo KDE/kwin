@@ -287,7 +287,7 @@ bool DrmGpu::updateOutputs()
                     addedOutputs << output;
                     Q_EMIT outputAdded(output);
                 }
-                pipeline->setLayer(m_platform->renderBackend()->createDrmPipelineLayer(pipeline));
+                pipeline->setLayers(m_platform->renderBackend()->createPrimaryLayer(pipeline), m_platform->renderBackend()->createCursorLayer(pipeline));
                 pipeline->setActive(!conn->isNonDesktop());
                 pipeline->applyPendingChanges();
             }
@@ -567,7 +567,7 @@ void DrmGpu::removeOutput(DrmOutput *output)
     qCDebug(KWIN_DRM) << "Removing output" << output;
     m_drmOutputs.removeOne(output);
     m_pipelines.removeOne(output->pipeline());
-    output->pipeline()->setLayer(nullptr);
+    output->pipeline()->setLayers(nullptr, nullptr);
     m_outputs.removeOne(output);
     Q_EMIT outputRemoved(output);
     delete output;
@@ -666,7 +666,7 @@ void DrmGpu::removeLeaseOutput(DrmLeaseOutput *output)
     qCDebug(KWIN_DRM) << "Removing leased output" << output;
     m_leaseOutputs.removeOne(output);
     m_pipelines.removeOne(output->pipeline());
-    output->pipeline()->setLayer(nullptr);
+    output->pipeline()->setLayers(nullptr, nullptr);
     delete output;
 }
 
@@ -790,7 +790,7 @@ void DrmGpu::releaseBuffers()
         crtc->releaseBuffers();
     }
     for (const auto &pipeline : qAsConst(m_pipelines)) {
-        pipeline->layer()->releaseBuffers();
+        pipeline->primaryLayer()->releaseBuffers();
     }
     for (const auto &output : qAsConst(m_outputs)) {
         if (const auto virtualOutput = qobject_cast<DrmVirtualOutput *>(output)) {
@@ -802,7 +802,7 @@ void DrmGpu::releaseBuffers()
 void DrmGpu::recreateSurfaces()
 {
     for (const auto &pipeline : qAsConst(m_pipelines)) {
-        pipeline->setLayer(m_platform->renderBackend()->createDrmPipelineLayer(pipeline));
+        pipeline->setLayers(m_platform->renderBackend()->createPrimaryLayer(pipeline), m_platform->renderBackend()->createCursorLayer(pipeline));
         pipeline->applyPendingChanges();
     }
     for (const auto &output : qAsConst(m_outputs)) {

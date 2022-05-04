@@ -41,6 +41,24 @@ private:
     QRegion m_currentDamage;
 };
 
+class DrmCursorQPainterLayer : public DrmOverlayLayer
+{
+public:
+    DrmCursorQPainterLayer(DrmPipeline *pipeline);
+
+    OutputLayerBeginFrameInfo beginFrame() override;
+    void endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion) override;
+
+    bool checkTestBuffer() override;
+    std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
+    QRegion currentDamage() const override;
+    void releaseBuffers() override;
+
+private:
+    std::shared_ptr<DumbSwapchain> m_swapchain;
+    std::shared_ptr<DrmFramebuffer> m_currentFramebuffer;
+};
+
 class DrmVirtualQPainterLayer : public DrmOutputLayer
 {
 public:

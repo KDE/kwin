@@ -14,6 +14,7 @@
 
 #include <QSharedPointer>
 #include <epoxy/egl.h>
+#include <gbm.h>
 
 struct gbm_bo;
 
@@ -45,7 +46,7 @@ public:
     QSharedPointer<GLTexture> createTexture(EGLDisplay eglDisplay) const;
 
     static std::shared_ptr<GbmBuffer> importBuffer(DrmGpu *gpu, KWaylandServer::LinuxDmaBufV1ClientBuffer *clientBuffer);
-    static std::shared_ptr<GbmBuffer> importBuffer(DrmGpu *gpu, GbmBuffer *buffer);
+    static std::shared_ptr<GbmBuffer> importBuffer(DrmGpu *gpu, GbmBuffer *buffer, uint32_t flags = GBM_BO_USE_SCANOUT);
 
 private:
     void createFds() override;

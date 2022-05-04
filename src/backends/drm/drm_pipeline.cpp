@@ -31,6 +31,9 @@
 namespace KWin
 {
 
+static const QMap<uint32_t, QVector<uint64_t>> legacyFormats = {{DRM_FORMAT_XRGB8888, {}}};
+static const QMap<uint32_t, QVector<uint64_t>> legacyCursorFormats = {{DRM_FORMAT_ARGB8888, {}}};
+
 DrmPipeline::DrmPipeline(DrmConnector *conn)
     : m_connector(conn)
 {
@@ -182,9 +185,11 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
         m_pending.crtc->primaryPlane()->setBuffer(activePending() ? fb : nullptr);
 
         if (m_pending.crtc->cursorPlane()) {
-            m_pending.crtc->cursorPlane()->set(QPoint(0, 0), gpu()->cursorSize(), m_pending.cursorPos, gpu()->cursorSize());
-            m_pending.crtc->cursorPlane()->setBuffer(activePending() ? m_pending.cursorFb.get() : nullptr);
-            m_pending.crtc->cursorPlane()->setPending(DrmPlane::PropertyIndex::CrtcId, (activePending() && m_pending.cursorFb) ? m_pending.crtc->id() : 0);
+            const auto layer = cursorLayer();
+            bool active = activePending() && layer->isVisible();
+            m_pending.crtc->cursorPlane()->set(QPoint(0, 0), gpu()->cursorSize(), layer->position(), gpu()->cursorSize());
+            m_pending.crtc->cursorPlane()->setBuffer(active ? layer->currentBuffer().get() : nullptr);
+            m_pending.crtc->cursorPlane()->setPending(DrmPlane::PropertyIndex::CrtcId, active ? m_pending.crtc->id() : 0);
         }
     }
     if (!m_connector->atomicPopulate(req)) {
@@ -289,7 +294,7 @@ void DrmPipeline::atomicCommitSuccessful(CommitMode mode)
             m_pending.crtc->primaryPlane()->setNext(m_pending.layer->currentBuffer());
             m_pending.crtc->primaryPlane()->commit();
             if (m_pending.crtc->cursorPlane()) {
-                m_pending.crtc->cursorPlane()->setNext(m_pending.cursorFb);
+                m_pending.crtc->cursorPlane()->setNext(cursorLayer()->currentBuffer());
                 m_pending.crtc->cursorPlane()->commit();
             }
         }
@@ -300,40 +305,30 @@ void DrmPipeline::atomicCommitSuccessful(CommitMode mode)
     }
 }
 
-bool DrmPipeline::setCursor(const std::shared_ptr<DrmFramebuffer> &buffer, const QPoint &hotspot)
+bool DrmPipeline::setCursor(const QPoint &hotspot)
 {
-    if (m_pending.cursorFb == buffer && m_pending.cursorHotspot == hotspot) {
-        return true;
-    }
     bool result;
-    const bool visibleBefore = isCursorVisible();
-    m_pending.cursorFb = buffer;
     m_pending.cursorHotspot = hotspot;
     // explicitly check for the cursor plane and not for AMS, as we might not always have one
     if (m_pending.crtc->cursorPlane()) {
         result = commitPipelines({this}, CommitMode::Test);
+        if (result && m_output) {
+            m_output->renderLoop()->scheduleRepaint();
+        }
     } else {
         result = setCursorLegacy();
     }
     if (result) {
         m_next = m_pending;
-        if (m_output && (visibleBefore || isCursorVisible())) {
-            m_output->renderLoop()->scheduleRepaint();
-        }
     } else {
         m_pending = m_next;
     }
     return result;
 }
 
-bool DrmPipeline::moveCursor(QPoint pos)
+bool DrmPipeline::moveCursor()
 {
-    if (m_pending.cursorPos == pos) {
-        return true;
-    }
-    const bool visibleBefore = isCursorVisible();
     bool result;
-    m_pending.cursorPos = pos;
     // explicitly check for the cursor plane and not for AMS, as we might not always have one
     if (m_pending.crtc->cursorPlane()) {
         result = commitPipelines({this}, CommitMode::Test);
@@ -342,7 +337,7 @@ bool DrmPipeline::moveCursor(QPoint pos)
     }
     if (result) {
         m_next = m_pending;
-        if (m_output && (visibleBefore || isCursorVisible())) {
+        if (m_output) {
             m_output->renderLoop()->scheduleRepaint();
         }
     } else {
@@ -366,12 +361,6 @@ QSize DrmPipeline::bufferSize() const
         return modeSize.transposed();
     }
     return modeSize;
-}
-
-bool DrmPipeline::isCursorVisible() const
-{
-    const QRect mode = QRect(QPoint(), m_pending.mode->size());
-    return m_pending.cursorFb && (!m_pending.cursorFb->buffer() || QRect(m_pending.cursorPos, m_pending.cursorFb->buffer()->size()).intersects(mode));
 }
 
 DrmConnector *DrmPipeline::connector() const
@@ -412,6 +401,15 @@ DrmOutput *DrmPipeline::output() const
 QMap<uint32_t, QVector<uint64_t>> DrmPipeline::formats() const
 {
     return m_pending.formats;
+}
+
+QMap<uint32_t, QVector<uint64_t>> DrmPipeline::cursorFormats() const
+{
+    if (m_pending.crtc && m_pending.crtc->cursorPlane()) {
+        return m_pending.crtc->cursorPlane()->formats();
+    } else {
+        return legacyCursorFormats;
+    }
 }
 
 bool DrmPipeline::pruneModifier()
@@ -582,9 +580,14 @@ bool DrmPipeline::enabled() const
     return m_pending.enabled;
 }
 
-DrmPipelineLayer *DrmPipeline::layer() const
+DrmPipelineLayer *DrmPipeline::primaryLayer() const
 {
     return m_pending.layer.get();
+}
+
+DrmOverlayLayer *DrmPipeline::cursorLayer() const
+{
+    return m_pending.cursorLayer.get();
 }
 
 DrmPlane::Transformations DrmPipeline::renderOrientation() const
@@ -611,8 +614,6 @@ Output::RgbRange DrmPipeline::rgbRange() const
 {
     return m_pending.rgbRange;
 }
-
-static const QMap<uint32_t, QVector<uint64_t>> legacyFormats = {{DRM_FORMAT_XRGB8888, {}}};
 
 void DrmPipeline::setCrtc(DrmCrtc *crtc)
 {
@@ -642,9 +643,10 @@ void DrmPipeline::setEnable(bool enable)
     m_pending.enabled = enable;
 }
 
-void DrmPipeline::setLayer(const QSharedPointer<DrmPipelineLayer> &layer)
+void DrmPipeline::setLayers(const QSharedPointer<DrmPipelineLayer> &primaryLayer, const QSharedPointer<DrmOverlayLayer> &cursorLayer)
 {
-    m_pending.layer = layer;
+    m_pending.layer = primaryLayer;
+    m_pending.cursorLayer = cursorLayer;
 }
 
 void DrmPipeline::setRenderOrientation(DrmPlane::Transformations orientation)

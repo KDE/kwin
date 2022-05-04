@@ -31,6 +31,7 @@ class DrmCrtc;
 class GammaRamp;
 class DrmConnectorMode;
 class DrmPipelineLayer;
+class DrmOverlayLayer;
 
 class DrmGammaRamp
 {
@@ -65,8 +66,8 @@ public:
     void applyPendingChanges();
     void revertPendingChanges();
 
-    bool setCursor(const std::shared_ptr<DrmFramebuffer> &buffer, const QPoint &hotspot = QPoint());
-    bool moveCursor(QPoint pos);
+    bool setCursor(const QPoint &hotspot = QPoint());
+    bool moveCursor();
 
     DrmConnector *connector() const;
     DrmCrtc *currentCrtc() const;
@@ -83,6 +84,7 @@ public:
     QSize bufferSize() const;
 
     QMap<uint32_t, QVector<uint64_t>> formats() const;
+    QMap<uint32_t, QVector<uint64_t>> cursorFormats() const;
     bool pruneModifier();
 
     void setOutput(DrmOutput *output);
@@ -92,7 +94,8 @@ public:
     QSharedPointer<DrmConnectorMode> mode() const;
     bool active() const;
     bool enabled() const;
-    DrmPipelineLayer *layer() const;
+    DrmPipelineLayer *primaryLayer() const;
+    DrmOverlayLayer *cursorLayer() const;
     DrmPlane::Transformations renderOrientation() const;
     DrmPlane::Transformations bufferOrientation() const;
     RenderLoopPrivate::SyncMode syncMode() const;
@@ -103,7 +106,7 @@ public:
     void setMode(const QSharedPointer<DrmConnectorMode> &mode);
     void setActive(bool active);
     void setEnable(bool enable);
-    void setLayer(const QSharedPointer<DrmPipelineLayer> &layer);
+    void setLayers(const QSharedPointer<DrmPipelineLayer> &primaryLayer, const QSharedPointer<DrmOverlayLayer> &cursorLayer);
     void setRenderOrientation(DrmPlane::Transformations orientation);
     void setBufferOrientation(DrmPlane::Transformations orientation);
     void setSyncMode(RenderLoopPrivate::SyncMode mode);
@@ -121,7 +124,6 @@ public:
 
 private:
     bool activePending() const;
-    bool isCursorVisible() const;
     bool isBufferForDirectScanout() const;
     uint32_t calculateUnderscan();
 
@@ -168,10 +170,8 @@ private:
         QSharedPointer<DrmGammaRamp> gamma;
 
         QSharedPointer<DrmPipelineLayer> layer;
-
-        QPoint cursorPos;
+        QSharedPointer<DrmOverlayLayer> cursorLayer;
         QPoint cursorHotspot;
-        std::shared_ptr<DrmFramebuffer> cursorFb;
 
         // the transformation that this pipeline will apply to submitted buffers
         DrmPlane::Transformations bufferOrientation = DrmPlane::Transformation::Rotate0;

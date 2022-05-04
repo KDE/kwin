@@ -84,6 +84,53 @@ void DrmQPainterLayer::releaseBuffers()
     m_swapchain.reset();
 }
 
+DrmCursorQPainterLayer::DrmCursorQPainterLayer(DrmPipeline *pipeline)
+    : DrmOverlayLayer(pipeline)
+{
+}
+
+OutputLayerBeginFrameInfo DrmCursorQPainterLayer::beginFrame()
+{
+    if (!m_swapchain) {
+        m_swapchain = std::make_shared<DumbSwapchain>(m_pipeline->gpu(), m_pipeline->gpu()->cursorSize(), DRM_FORMAT_ARGB8888);
+    }
+    QRegion needsRepaint;
+    if (!m_swapchain->acquireBuffer(&needsRepaint)) {
+        return {};
+    }
+    return OutputLayerBeginFrameInfo{
+        .renderTarget = RenderTarget(m_swapchain->currentBuffer()->image()),
+        .repaint = needsRepaint,
+    };
+}
+
+void DrmCursorQPainterLayer::endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion)
+{
+    Q_UNUSED(renderedRegion)
+    m_swapchain->releaseBuffer(m_swapchain->currentBuffer(), damagedRegion);
+    m_currentFramebuffer = DrmFramebuffer::createFramebuffer(m_swapchain->currentBuffer());
+}
+
+bool DrmCursorQPainterLayer::checkTestBuffer()
+{
+    return false;
+}
+
+std::shared_ptr<DrmFramebuffer> DrmCursorQPainterLayer::currentBuffer() const
+{
+    return m_currentFramebuffer;
+}
+
+QRegion DrmCursorQPainterLayer::currentDamage() const
+{
+    return {};
+}
+
+void DrmCursorQPainterLayer::releaseBuffers()
+{
+    m_swapchain.reset();
+}
+
 DrmVirtualQPainterLayer::DrmVirtualQPainterLayer(DrmVirtualOutput *output)
     : m_output(output)
 {

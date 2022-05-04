@@ -20,6 +20,7 @@
 #include "drm_pipeline.h"
 #include "dumb_swapchain.h"
 #include "egl_dmabuf.h"
+#include "egl_gbm_cursor_layer.h"
 #include "egl_gbm_layer.h"
 #include "gbm_surface.h"
 #include "kwineglutils_p.h"
@@ -237,13 +238,18 @@ EGLConfig EglGbmBackend::config(uint32_t format) const
     return m_configs.value(format, EGL_NO_CONFIG_KHR);
 }
 
-QSharedPointer<DrmPipelineLayer> EglGbmBackend::createDrmPipelineLayer(DrmPipeline *pipeline)
+QSharedPointer<DrmPipelineLayer> EglGbmBackend::createPrimaryLayer(DrmPipeline *pipeline)
 {
     if (pipeline->output()) {
         return QSharedPointer<EglGbmLayer>::create(this, pipeline);
     } else {
         return QSharedPointer<DrmLeaseEglGbmLayer>::create(pipeline);
     }
+}
+
+QSharedPointer<DrmOverlayLayer> EglGbmBackend::createCursorLayer(DrmPipeline *pipeline)
+{
+    return QSharedPointer<EglGbmCursorLayer>::create(this, pipeline);
 }
 
 QSharedPointer<DrmOutputLayer> EglGbmBackend::createLayer(DrmVirtualOutput *output)

@@ -196,7 +196,7 @@ std::shared_ptr<GbmBuffer> GbmBuffer::importBuffer(DrmGpu *gpu, KWaylandServer::
     }
 }
 
-std::shared_ptr<GbmBuffer> GbmBuffer::importBuffer(DrmGpu *gpu, GbmBuffer *buffer)
+std::shared_ptr<GbmBuffer> GbmBuffer::importBuffer(DrmGpu *gpu, GbmBuffer *buffer, uint32_t flags)
 {
     const auto fds = buffer->fds();
     if (fds[0] == -1) {
@@ -219,7 +219,7 @@ std::shared_ptr<GbmBuffer> GbmBuffer::importBuffer(DrmGpu *gpu, GbmBuffer *buffe
         data.strides[i] = strides[i];
         data.offsets[i] = offsets[i];
     }
-    gbm_bo *bo = gbm_bo_import(gpu->gbmDevice(), GBM_BO_IMPORT_FD_MODIFIER, &data, GBM_BO_USE_SCANOUT);
+    gbm_bo *bo = gbm_bo_import(gpu->gbmDevice(), GBM_BO_IMPORT_FD_MODIFIER, &data, flags);
     if (bo) {
         return std::make_shared<GbmBuffer>(gpu, bo);
     } else {

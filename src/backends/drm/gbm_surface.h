@@ -45,6 +45,7 @@ public:
     bool isValid() const;
     uint32_t format() const;
     QVector<uint64_t> modifiers() const;
+    uint32_t flags() const;
     int bufferAge() const;
     QRegion repaintRegion() const;
 
@@ -55,6 +56,7 @@ private:
     QSize m_size;
     const uint32_t m_format;
     const QVector<uint64_t> m_modifiers;
+    const uint32_t m_flags;
     int m_bufferAge = 0;
     DamageJournal m_damageJournal;
 

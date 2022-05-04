@@ -17,13 +17,15 @@ class DrmPipelineLayer;
 class DrmVirtualOutput;
 class DrmPipeline;
 class DrmOutputLayer;
+class DrmOverlayLayer;
 
 class DrmRenderBackend
 {
 public:
     virtual ~DrmRenderBackend() = default;
 
-    virtual QSharedPointer<DrmPipelineLayer> createDrmPipelineLayer(DrmPipeline *pipeline) = 0;
+    virtual QSharedPointer<DrmPipelineLayer> createPrimaryLayer(DrmPipeline *pipeline) = 0;
+    virtual QSharedPointer<DrmOverlayLayer> createCursorLayer(DrmPipeline *pipeline) = 0;
     virtual QSharedPointer<DrmOutputLayer> createLayer(DrmVirtualOutput *output) = 0;
 };
 

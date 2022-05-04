@@ -19,6 +19,8 @@
 #include "drm_dumb_buffer.h"
 #include "drm_layer.h"
 #include "dumb_swapchain.h"
+#include "egl_gbm_backend.h"
+#include "kwinglutils.h"
 #include "logging.h"
 #include "main.h"
 #include "outputconfiguration.h"
@@ -102,16 +104,6 @@ DrmOutput::~DrmOutput()
     m_pipeline->setOutput(nullptr);
 }
 
-static bool isCursorSpriteCompatible(const QImage *buffer, const QImage *sprite)
-{
-    // Note that we need compare the rects in the device independent pixels because the
-    // buffer and the cursor sprite image may have different scale factors.
-    const QRect bufferRect(QPoint(0, 0), buffer->size() / buffer->devicePixelRatio());
-    const QRect spriteRect(QPoint(0, 0), sprite->size() / sprite->devicePixelRatio());
-
-    return bufferRect.contains(spriteRect);
-}
-
 void DrmOutput::updateCursor()
 {
     static bool valid;
@@ -120,56 +112,40 @@ void DrmOutput::updateCursor()
         m_setCursorSuccessful = false;
         return;
     }
-    if (!m_pipeline->crtc()) {
+    const auto layer = m_pipeline->cursorLayer();
+    if (!m_pipeline->crtc() || !layer) {
         return;
     }
     const Cursor *cursor = Cursors::self()->currentCursor();
-    if (!cursor) {
-        m_pipeline->setCursor(nullptr);
+    if (!cursor || cursor->image().isNull() || Cursors::self()->isCursorHidden()) {
+        if (layer->isVisible()) {
+            layer->setVisible(false);
+            m_pipeline->setCursor();
+        }
         return;
     }
     const QImage cursorImage = cursor->image();
-    if (cursorImage.isNull() || Cursors::self()->isCursorHidden()) {
-        m_pipeline->setCursor(nullptr);
-        return;
-    }
-    if (m_cursor && m_cursor->isEmpty()) {
-        m_pipeline->setCursor(nullptr);
-        return;
-    }
-    const auto plane = m_pipeline->crtc()->cursorPlane();
-    if (!m_cursor || (plane && !plane->formats().value(m_cursor->drmFormat()).contains(DRM_FORMAT_MOD_LINEAR))) {
-        if (plane && (!plane->formats().contains(DRM_FORMAT_ARGB8888) || !plane->formats().value(DRM_FORMAT_ARGB8888).contains(DRM_FORMAT_MOD_LINEAR))) {
-            m_pipeline->setCursor(nullptr);
-            m_setCursorSuccessful = false;
-            return;
+    const QMatrix4x4 monitorMatrix = logicalToNativeMatrix(geometry(), scale(), transform());
+    const QSize surfaceSize = m_gpu->cursorSize() / scale();
+    const QRect cursorRect = monitorMatrix.mapRect(QRect(cursor->geometry().topLeft(), surfaceSize));
+    if (cursorRect.width() > m_gpu->cursorSize().width() || cursorRect.height() > m_gpu->cursorSize().height()) {
+        if (layer->isVisible()) {
+            layer->setVisible(false);
+            m_pipeline->setCursor();
         }
-        m_cursor = QSharedPointer<DumbSwapchain>::create(m_gpu, m_gpu->cursorSize(), plane ? DRM_FORMAT_ARGB8888 : DRM_FORMAT_XRGB8888, QImage::Format::Format_ARGB32_Premultiplied);
-        if (!m_cursor || m_cursor->isEmpty()) {
-            m_pipeline->setCursor(nullptr);
-            m_setCursorSuccessful = false;
-            return;
-        }
-    }
-    m_cursor->releaseBuffer(m_cursor->currentBuffer());
-    m_cursor->acquireBuffer();
-    QImage *c = m_cursor->currentBuffer()->image();
-    c->setDevicePixelRatio(scale());
-    if (!isCursorSpriteCompatible(c, &cursorImage)) {
-        // If the cursor image is too big, fall back to rendering the software cursor.
-        m_pipeline->setCursor(nullptr);
         m_setCursorSuccessful = false;
         return;
     }
-    c->fill(Qt::transparent);
-    QPainter p;
-    p.begin(c);
-    p.setWorldTransform(logicalToNativeMatrix(cursor->rect(), 1, transform()).toTransform());
-    p.setRenderHint(QPainter::SmoothPixmapTransform);
-    p.drawImage(QPoint(0, 0), cursorImage);
-    p.end();
-    m_setCursorSuccessful = m_pipeline->setCursor(DrmFramebuffer::createFramebuffer(m_cursor->currentBuffer()), logicalToNativeMatrix(cursor->rect(), scale(), transform()).map(cursor->hotspot()));
-    moveCursor();
+    if (dynamic_cast<EglGbmBackend *>(m_gpu->platform()->renderBackend())) {
+        renderCursorOpengl(cursor->geometry().size() * scale());
+    } else {
+        renderCursorQPainter();
+    }
+    layer->setPosition(cursorRect.topLeft());
+    layer->setVisible(cursor->geometry().intersects(geometry()));
+    if (layer->isVisible()) {
+        m_setCursorSuccessful = m_pipeline->setCursor(logicalToNativeMatrix(QRect(QPoint(), cursorRect.size()), scale(), transform()).map(cursor->hotspot()));
+    }
 }
 
 void DrmOutput::moveCursor()
@@ -177,12 +153,24 @@ void DrmOutput::moveCursor()
     if (!m_setCursorSuccessful || !m_pipeline->crtc()) {
         return;
     }
+    const auto layer = m_pipeline->cursorLayer();
     Cursor *cursor = Cursors::self()->currentCursor();
+    if (!cursor || cursor->image().isNull() || Cursors::self()->isCursorHidden() || !cursor->geometry().intersects(geometry())) {
+        if (layer->isVisible()) {
+            layer->setVisible(false);
+            m_pipeline->setCursor();
+        }
+        return;
+    }
     const QMatrix4x4 monitorMatrix = logicalToNativeMatrix(geometry(), scale(), transform());
-    const QMatrix4x4 hotspotMatrix = logicalToNativeMatrix(cursor->rect(), scale(), transform());
-    m_moveCursorSuccessful = m_pipeline->moveCursor(monitorMatrix.map(cursor->pos()) - hotspotMatrix.map(cursor->hotspot()));
+    const QSize surfaceSize = m_gpu->cursorSize() / scale();
+    const QRect cursorRect = monitorMatrix.mapRect(QRect(cursor->geometry().topLeft(), surfaceSize));
+    layer->setVisible(true);
+    layer->setPosition(cursorRect.topLeft());
+    m_moveCursorSuccessful = m_pipeline->moveCursor();
+    layer->setVisible(m_moveCursorSuccessful);
     if (!m_moveCursorSuccessful) {
-        m_pipeline->setCursor(nullptr);
+        m_pipeline->setCursor();
     }
 }
 
@@ -322,7 +310,7 @@ bool DrmOutput::present()
     }
     bool modeset = gpu()->needsModeset();
     if (modeset ? m_pipeline->maybeModeset() : m_pipeline->present()) {
-        Q_EMIT outputChange(m_pipeline->layer()->currentDamage());
+        Q_EMIT outputChange(m_pipeline->primaryLayer()->currentDamage());
         return true;
     } else if (!modeset) {
         qCWarning(KWIN_DRM) << "Presentation failed!" << strerror(errno);
@@ -393,6 +381,8 @@ void DrmOutput::applyQueuedChanges(const OutputConfiguration &config)
 
     m_renderLoop->scheduleRepaint();
     Q_EMIT changed();
+
+    updateCursor();
 }
 
 void DrmOutput::revertQueuedChanges()
@@ -407,7 +397,7 @@ bool DrmOutput::usesSoftwareCursor() const
 
 DrmOutputLayer *DrmOutput::outputLayer() const
 {
-    return m_pipeline->layer();
+    return m_pipeline->primaryLayer();
 }
 
 void DrmOutput::setColorTransformation(const QSharedPointer<ColorTransformation> &transformation)
@@ -419,5 +409,77 @@ void DrmOutput::setColorTransformation(const QSharedPointer<ColorTransformation>
     } else {
         m_pipeline->revertPendingChanges();
     }
+}
+
+void DrmOutput::renderCursorOpengl(const QSize &cursorSize)
+{
+    const auto layer = m_pipeline->cursorLayer();
+    auto allocateTexture = [this]() {
+        const QImage img = Cursors::self()->currentCursor()->image();
+        if (img.isNull()) {
+            m_cursorTextureDirty = false;
+            return;
+        }
+        m_cursorTexture.reset(new GLTexture(img));
+        m_cursorTexture->setWrapMode(GL_CLAMP_TO_EDGE);
+        m_cursorTextureDirty = false;
+    };
+
+    if (!m_cursorTexture) {
+        allocateTexture();
+
+        // handle shape update on case cursor image changed
+        connect(Cursors::self(), &Cursors::currentCursorChanged, this, [this]() {
+            m_cursorTextureDirty = true;
+        });
+    } else if (m_cursorTextureDirty) {
+        const QImage image = Cursors::self()->currentCursor()->image();
+        if (image.size() == m_cursorTexture->size()) {
+            m_cursorTexture->update(image);
+            m_cursorTextureDirty = false;
+        } else {
+            allocateTexture();
+        }
+    }
+
+    const auto [renderTarget, repaint] = layer->beginFrame();
+
+    QMatrix4x4 mvp;
+    mvp.ortho(QRect(QPoint(), renderTarget.size()));
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    m_cursorTexture->bind();
+    ShaderBinder binder(ShaderTrait::MapTexture);
+    binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
+    m_cursorTexture->render(QRect(0, 0, cursorSize.width(), cursorSize.height()));
+    m_cursorTexture->unbind();
+    glDisable(GL_BLEND);
+
+    layer->endFrame(infiniteRegion(), infiniteRegion());
+}
+
+void DrmOutput::renderCursorQPainter()
+{
+    const auto layer = m_pipeline->cursorLayer();
+    const Cursor *cursor = Cursors::self()->currentCursor();
+    const QImage cursorImage = cursor->image();
+
+    const auto [renderTarget, repaint] = layer->beginFrame();
+
+    QImage *c = std::get<QImage *>(renderTarget.nativeHandle());
+    c->setDevicePixelRatio(scale());
+    c->fill(Qt::transparent);
+
+    QPainter p;
+    p.begin(c);
+    p.setWorldTransform(logicalToNativeMatrix(cursor->rect(), 1, transform()).toTransform());
+    p.setRenderHint(QPainter::SmoothPixmapTransform);
+    p.drawImage(QPoint(0, 0), cursorImage);
+    p.end();
+
+    layer->endFrame(infiniteRegion(), infiniteRegion());
 }
 }

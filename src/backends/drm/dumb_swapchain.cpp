@@ -17,13 +17,13 @@
 namespace KWin
 {
 
-DumbSwapchain::DumbSwapchain(DrmGpu *gpu, const QSize &size, uint32_t drmFormat, QImage::Format imageFormat)
+DumbSwapchain::DumbSwapchain(DrmGpu *gpu, const QSize &size, uint32_t drmFormat)
     : m_size(size)
     , m_format(drmFormat)
 {
     for (int i = 0; i < 2; i++) {
         auto buffer = DrmDumbBuffer::createDumbBuffer(gpu, size, drmFormat);
-        if (!buffer->map(imageFormat)) {
+        if (!buffer->map(QImage::Format::Format_ARGB32)) {
             break;
         }
         buffer->image()->fill(Qt::black);
