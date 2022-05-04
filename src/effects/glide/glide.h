@@ -21,6 +21,7 @@ namespace KWin
 
 struct GlideAnimation
 {
+    EffectWindowDeletedRef deletedRef;
     TimeLine timeLine;
     std::chrono::milliseconds lastPresentTime = std::chrono::milliseconds::zero();
 };

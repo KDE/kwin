@@ -379,11 +379,10 @@ void PresentWindowsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &d
         // Closed windows
         if (winData->deleted) {
             data.setTranslucent();
-            if (winData->opacity <= 0.0 && winData->referenced) {
+            if (winData->opacity <= 0.0 && !winData->deletedRef.isNull()) {
                 // it's possible that another effect has referenced the window
                 // we have to keep the window in the list to prevent flickering
-                winData->referenced = false;
-                w->unrefWindow();
+                winData->deletedRef = EffectWindowDeletedRef{};
             } else {
                 w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DELETE);
             }
@@ -549,10 +548,7 @@ void PresentWindowsEffect::slotWindowClosed(EffectWindow *w)
     }
 
     winData->deleted = true;
-    if (!winData->referenced) {
-        winData->referenced = true;
-        w->refWindow();
-    }
+    winData->deletedRef = EffectWindowDeletedRef(w);
 
     if (m_highlightedWindow == w) {
         setHighlightedWindow(findFirstWindow());
@@ -1701,7 +1697,6 @@ void PresentWindowsEffect::setActive(bool active)
             winData = m_windowData.insert(w, WindowData());
             winData->visible = isVisibleWindow(w);
             winData->deleted = false;
-            winData->referenced = false;
             winData->opacity = 0.0;
             if (w->isOnCurrentDesktop() && !w->isMinimized()) {
                 winData->opacity = 1.0;

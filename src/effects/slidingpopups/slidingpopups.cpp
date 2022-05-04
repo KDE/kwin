@@ -195,9 +195,7 @@ void SlidingPopupsEffect::postPaintWindow(EffectWindow *w)
     auto animationIt = m_animations.find(w);
     if (animationIt != m_animations.end()) {
         if ((*animationIt).timeLine.done()) {
-            if (w->isDeleted()) {
-                w->unrefWindow();
-            } else {
+            if (!w->isDeleted()) {
                 w->setData(WindowForceBackgroundContrastRole, QVariant());
                 w->setData(WindowForceBlurRole, QVariant());
             }
@@ -545,11 +543,8 @@ void SlidingPopupsEffect::slideOut(EffectWindow *w)
         return;
     }
 
-    if (w->isDeleted()) {
-        w->refWindow();
-    }
-
     Animation &animation = m_animations[w];
+    animation.deletedRef = EffectWindowDeletedRef(w);
     animation.kind = AnimationKind::Out;
     animation.timeLine.setDirection(TimeLine::Backward);
     animation.timeLine.setDuration((*dataIt).slideOutDuration);
@@ -575,9 +570,7 @@ void SlidingPopupsEffect::stopAnimations()
     for (auto it = m_animations.constBegin(); it != m_animations.constEnd(); ++it) {
         EffectWindow *w = it.key();
 
-        if (w->isDeleted()) {
-            w->unrefWindow();
-        } else {
+        if (!w->isDeleted()) {
             w->setData(WindowForceBackgroundContrastRole, QVariant());
             w->setData(WindowForceBlurRole, QVariant());
         }

@@ -63,7 +63,6 @@ void FallApartEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, 
         } else {
             unredirect(w);
             windows.remove(w);
-            w->unrefWindow();
         }
     }
     effects->prePaintWindow(w, data, presentTime);
@@ -178,8 +177,11 @@ void FallApartEffect::slotWindowClosed(EffectWindow *c)
         return;
     }
     c->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
-    windows[c].progress = 0;
-    c->refWindow();
+
+    FallApartAnimation &animation = windows[c];
+    animation.progress = 0;
+    animation.deletedRef = EffectWindowDeletedRef(c);
+
     redirect(c);
 }
 
@@ -199,13 +201,10 @@ void FallApartEffect::slotWindowDataChanged(EffectWindow *w, int role)
     }
 
     auto it = windows.find(w);
-    if (it == windows.end()) {
-        return;
+    if (it != windows.end()) {
+        unredirect(it.key());
+        windows.erase(it);
     }
-
-    unredirect(it.key());
-    it.key()->unrefWindow();
-    windows.erase(it);
 }
 
 bool FallApartEffect::isActive() const

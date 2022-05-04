@@ -33,21 +33,6 @@ private:
 typedef QSharedPointer<FullScreenEffectLock> FullScreenEffectLockPtr;
 
 /**
- * Keeps windows alive during animation after they got closed
- */
-class KeepAliveLock
-{
-public:
-    KeepAliveLock(EffectWindow *w);
-    ~KeepAliveLock();
-
-private:
-    EffectWindow *m_window;
-    Q_DISABLE_COPY(KeepAliveLock)
-};
-typedef QSharedPointer<KeepAliveLock> KeepAliveLockPtr;
-
-/**
  * References the previous window pixmap to prevent discarding.
  */
 class PreviousWindowPixmapLock
@@ -90,7 +75,7 @@ public:
     QSharedPointer<FullScreenEffectLock> fullScreenEffectLock;
     bool waitAtSource;
     bool keepAlive;
-    KeepAliveLockPtr keepAliveLock;
+    EffectWindowDeletedRef deletedRef;
     PreviousWindowPixmapLockPtr previousWindowPixmapLock;
     AnimationEffect::TerminationFlags terminationFlags;
     std::chrono::milliseconds lastPresentTime;

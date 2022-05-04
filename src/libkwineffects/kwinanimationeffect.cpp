@@ -998,21 +998,11 @@ void AnimationEffect::_windowClosed(EffectWindow *w)
         return;
     }
 
-    KeepAliveLockPtr keepAliveLock;
-
     QList<AniData> &animations = (*it).first;
-    for (auto animationIt = animations.begin();
-         animationIt != animations.end();
-         ++animationIt) {
-        if (!(*animationIt).keepAlive) {
-            continue;
+    for (auto animationIt = animations.begin(); animationIt != animations.end(); ++animationIt) {
+        if (animationIt->keepAlive) {
+            animationIt->deletedRef = EffectWindowDeletedRef(w);
         }
-
-        if (keepAliveLock.isNull()) {
-            keepAliveLock = KeepAliveLockPtr::create(w);
-        }
-
-        (*animationIt).keepAliveLock = keepAliveLock;
     }
 }
 

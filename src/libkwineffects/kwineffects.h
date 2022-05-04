@@ -2720,6 +2720,60 @@ private:
     QScopedPointer<Private> d;
 };
 
+/**
+ * The EffectWindowDeletedRef provides a convenient way to prevent deleting a closed
+ * window until an effect has finished animating it.
+ */
+class KWINEFFECTS_EXPORT EffectWindowDeletedRef
+{
+public:
+    EffectWindowDeletedRef()
+        : m_window(nullptr)
+    {
+    }
+
+    explicit EffectWindowDeletedRef(EffectWindow *window)
+        : m_window(window)
+    {
+        m_window->refWindow();
+    }
+
+    EffectWindowDeletedRef(const EffectWindowDeletedRef &other)
+        : m_window(other.m_window)
+    {
+        if (m_window) {
+            m_window->refWindow();
+        }
+    }
+
+    ~EffectWindowDeletedRef()
+    {
+        if (m_window) {
+            m_window->unrefWindow();
+        }
+    }
+
+    EffectWindowDeletedRef &operator=(const EffectWindowDeletedRef &other)
+    {
+        if (other.m_window) {
+            other.m_window->refWindow();
+        }
+        if (m_window) {
+            m_window->unrefWindow();
+        }
+        m_window = other.m_window;
+        return *this;
+    }
+
+    bool isNull() const
+    {
+        return m_window == nullptr;
+    }
+
+private:
+    EffectWindow *m_window;
+};
+
 class KWINEFFECTS_EXPORT EffectWindowGroup
 {
 public:

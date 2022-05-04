@@ -66,10 +66,10 @@ private:
     // Structures
     struct WindowData
     {
+        EffectWindowDeletedRef deletedRef;
         std::chrono::milliseconds lastPresentTime = std::chrono::milliseconds::zero();
         bool visible;
         bool deleted;
-        bool referenced;
         double opacity;
         double highlight;
         EffectFrame *textFrame;
