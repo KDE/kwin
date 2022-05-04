@@ -37,6 +37,7 @@ public:
 
 private Q_SLOTS:
     void handleBufferGeometryChanged(Window *window, const QRect &old);
+    void handleGeometryShapeChanged();
 
 protected:
     SurfacePixmap *createPixmap() override;

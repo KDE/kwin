@@ -18,7 +18,7 @@ SurfaceItemX11::SurfaceItemX11(Window *window, Item *parent)
     connect(window, &Window::bufferGeometryChanged,
             this, &SurfaceItemX11::handleBufferGeometryChanged);
     connect(window, &Window::geometryShapeChanged,
-            this, &SurfaceItemX11::discardQuads);
+            this, &SurfaceItemX11::handleGeometryShapeChanged);
 
     m_damageHandle = xcb_generate_id(kwinApp()->x11Connection());
     xcb_damage_create(kwinApp()->x11Connection(), m_damageHandle, window->frameId(),
@@ -121,6 +121,12 @@ void SurfaceItemX11::handleBufferGeometryChanged(Window *window, const QRect &ol
         discardPixmap();
     }
     setSize(window->bufferGeometry().size());
+}
+
+void SurfaceItemX11::handleGeometryShapeChanged()
+{
+    scheduleRepaint(boundingRect());
+    discardQuads();
 }
 
 QRegion SurfaceItemX11::shape() const
