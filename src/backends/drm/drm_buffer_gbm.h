@@ -4,11 +4,11 @@
 
     SPDX-FileCopyrightText: 2017 Roman Gilg <subdiff@gmail.com>
     SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2022 Xaver Hugl <xaver.hugl@gmail.com>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_DRM_BUFFER_GBM_H
-#define KWIN_DRM_BUFFER_GBM_H
+#pragma once
 
 #include "drm_buffer.h"
 
@@ -29,47 +29,32 @@ namespace KWin
 class GbmSurface;
 class GLTexture;
 
-class GbmBuffer : public QObject
+class GbmBuffer : public DrmGpuBuffer
 {
-    Q_OBJECT
 public:
-    GbmBuffer(GbmSurface *surface, gbm_bo *bo);
-    GbmBuffer(DrmGpu *gpu, KWaylandServer::LinuxDmaBufV1ClientBuffer *clientBuffer);
-    virtual ~GbmBuffer();
+    GbmBuffer(DrmGpu *gpu, gbm_bo *bo);
+    GbmBuffer(DrmGpu *gpu, gbm_bo *bo, const std::shared_ptr<GbmSurface> &surface);
+    GbmBuffer(DrmGpu *gpu, gbm_bo *bo, KWaylandServer::LinuxDmaBufV1ClientBuffer *clientBuffer);
+    ~GbmBuffer() override;
 
-    void releaseBuffer();
-    bool map(uint32_t flags);
-
+    gbm_bo *bo() const;
     void *mappedData() const;
-    uint32_t stride() const;
     KWaylandServer::ClientBuffer *clientBuffer() const;
-    gbm_bo *getBo() const;
+
+    bool map(uint32_t flags);
     QSharedPointer<GLTexture> createTexture(EGLDisplay eglDisplay) const;
 
-protected:
-    GbmSurface *m_surface = nullptr;
-    gbm_bo *m_bo = nullptr;
-    KWaylandServer::ClientBuffer *m_clientBuffer = nullptr;
-
-    void *m_data = nullptr;
-    void *m_mapping = nullptr;
-    uint32_t m_stride = 0;
-};
-
-class DrmGbmBuffer : public DrmBuffer, public GbmBuffer
-{
-public:
-    DrmGbmBuffer(DrmGpu *gpu, GbmSurface *surface, gbm_bo *bo);
-    DrmGbmBuffer(DrmGpu *gpu, KWaylandServer::LinuxDmaBufV1ClientBuffer *clientBuffer);
-    ~DrmGbmBuffer() override;
-
-    bool needsModeChange(DrmBuffer *b) const override;
-    bool hasBo() const;
+    static std::shared_ptr<GbmBuffer> importBuffer(DrmGpu *gpu, KWaylandServer::LinuxDmaBufV1ClientBuffer *clientBuffer);
+    static std::shared_ptr<GbmBuffer> importBuffer(DrmGpu *gpu, GbmBuffer *buffer);
 
 private:
-    void initialize();
+    void createFds() override;
+
+    gbm_bo *const m_bo;
+    const std::shared_ptr<GbmSurface> m_surface;
+    KWaylandServer::ClientBuffer *const m_clientBuffer = nullptr;
+    void *m_data = nullptr;
+    void *m_mapping = nullptr;
 };
 
 }
-
-#endif

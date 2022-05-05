@@ -107,7 +107,7 @@ DrmPlane::TypeIndex DrmPlane::type() const
     return prop->enumForValue<DrmPlane::TypeIndex>(prop->current());
 }
 
-void DrmPlane::setNext(const QSharedPointer<DrmBuffer> &b)
+void DrmPlane::setNext(const std::shared_ptr<DrmFramebuffer> &b)
 {
     m_next = b;
 }
@@ -148,9 +148,9 @@ void DrmPlane::set(const QPoint &srcPos, const QSize &srcSize, const QPoint &dst
     setPending(PropertyIndex::CrtcH, dstSize.height());
 }
 
-void DrmPlane::setBuffer(DrmBuffer *buffer)
+void DrmPlane::setBuffer(DrmFramebuffer *buffer)
 {
-    setPending(PropertyIndex::FbId, buffer ? buffer->bufferId() : 0);
+    setPending(PropertyIndex::FbId, buffer ? buffer->framebufferId() : 0);
 }
 
 bool DrmPlane::needsModeset() const
@@ -175,17 +175,17 @@ QMap<uint32_t, QVector<uint64_t>> DrmPlane::formats() const
     return m_supportedFormats;
 }
 
-QSharedPointer<DrmBuffer> DrmPlane::current() const
+std::shared_ptr<DrmFramebuffer> DrmPlane::current() const
 {
     return m_current;
 }
 
-QSharedPointer<DrmBuffer> DrmPlane::next() const
+std::shared_ptr<DrmFramebuffer> DrmPlane::next() const
 {
     return m_next;
 }
 
-void DrmPlane::setCurrent(const QSharedPointer<DrmBuffer> &b)
+void DrmPlane::setCurrent(const std::shared_ptr<DrmFramebuffer> &b)
 {
     m_current = b;
 }

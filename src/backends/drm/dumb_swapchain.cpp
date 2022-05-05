@@ -9,6 +9,7 @@
 
 #include "dumb_swapchain.h"
 #include "drm_buffer.h"
+#include "drm_dumb_buffer.h"
 #include "drm_gpu.h"
 #include "kwineffects.h"
 #include "logging.h"
@@ -21,10 +22,7 @@ DumbSwapchain::DumbSwapchain(DrmGpu *gpu, const QSize &size, uint32_t drmFormat,
     , m_format(drmFormat)
 {
     for (int i = 0; i < 2; i++) {
-        auto buffer = QSharedPointer<DrmDumbBuffer>::create(gpu, size, drmFormat);
-        if (!buffer->bufferId()) {
-            break;
-        }
+        auto buffer = DrmDumbBuffer::createDumbBuffer(gpu, size, drmFormat);
         if (!buffer->map(imageFormat)) {
             break;
         }
@@ -41,7 +39,7 @@ DumbSwapchain::DumbSwapchain(DrmGpu *gpu, const QSize &size, uint32_t drmFormat,
     }
 }
 
-QSharedPointer<DrmDumbBuffer> DumbSwapchain::acquireBuffer(QRegion *needsRepaint)
+std::shared_ptr<DrmDumbBuffer> DumbSwapchain::acquireBuffer(QRegion *needsRepaint)
 {
     if (m_slots.isEmpty()) {
         return {};
@@ -53,12 +51,12 @@ QSharedPointer<DrmDumbBuffer> DumbSwapchain::acquireBuffer(QRegion *needsRepaint
     return m_slots[index].buffer;
 }
 
-QSharedPointer<DrmDumbBuffer> DumbSwapchain::currentBuffer() const
+std::shared_ptr<DrmDumbBuffer> DumbSwapchain::currentBuffer() const
 {
     return m_slots[index].buffer;
 }
 
-void DumbSwapchain::releaseBuffer(QSharedPointer<DrmDumbBuffer> buffer, const QRegion &damage)
+void DumbSwapchain::releaseBuffer(const std::shared_ptr<DrmDumbBuffer> &buffer, const QRegion &damage)
 {
     Q_ASSERT(m_slots[index].buffer == buffer);
 

@@ -19,17 +19,11 @@
 #include <epoxy/egl.h>
 #include <optional>
 
-namespace KWaylandServer
-{
-class SurfaceInterface;
-class LinuxDmaBufV1ClientBuffer;
-}
-
 namespace KWin
 {
 
 class EglGbmBackend;
-class DrmGbmBuffer;
+class GbmBuffer;
 
 class EglGbmLayer : public DrmPipelineLayer
 {
@@ -41,14 +35,14 @@ public:
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     bool scanout(SurfaceItem *surfaceItem) override;
     bool checkTestBuffer() override;
-    QSharedPointer<DrmBuffer> currentBuffer() const override;
+    std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
     bool hasDirectScanoutBuffer() const override;
     QRegion currentDamage() const override;
     QSharedPointer<GLTexture> texture() const override;
 
 private:
-    QSharedPointer<DrmGbmBuffer> m_scanoutBuffer;
-    QSharedPointer<DrmBuffer> m_currentBuffer;
+    std::shared_ptr<DrmFramebuffer> m_scanoutBuffer;
+    std::shared_ptr<DrmFramebuffer> m_currentBuffer;
     QRegion m_currentDamage;
 
     EglGbmLayerSurface m_surface;

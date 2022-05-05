@@ -3,68 +3,68 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2022 Xaver Hugl <xaver.hugl@gmail.com>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_DRM_BUFFER_H
-#define KWIN_DRM_BUFFER_H
+#pragma once
 
 #include <QImage>
+#include <QSharedPointer>
 #include <QSize>
+#include <array>
+#include <optional>
 
 namespace KWin
 {
 
 class DrmGpu;
+class DrmFramebuffer;
 
-class DrmBuffer
+class DrmGpuBuffer
 {
 public:
-    DrmBuffer(DrmGpu *gpu, uint32_t format, uint64_t modifier);
-    virtual ~DrmBuffer() = default;
+    DrmGpuBuffer(DrmGpu *gpu, QSize size, uint32_t format, uint64_t modifier, const std::array<uint32_t, 4> &handles, const std::array<uint32_t, 4> &strides, const std::array<uint32_t, 4> &offsets, uint32_t planeCount);
+    virtual ~DrmGpuBuffer();
 
-    virtual bool needsModeChange(DrmBuffer *b) const
-    {
-        Q_UNUSED(b)
-        return false;
-    }
-
-    quint32 bufferId() const;
-    const QSize &size() const;
     DrmGpu *gpu() const;
     uint32_t format() const;
     uint64_t modifier() const;
+    QSize size() const;
+    std::array<int, 4> fds();
+    std::array<uint32_t, 4> handles() const;
+    std::array<uint32_t, 4> strides() const;
+    std::array<uint32_t, 4> offsets() const;
+    uint32_t planeCount() const;
 
 protected:
-    quint32 m_bufferId = 0;
-    QSize m_size;
-    DrmGpu *m_gpu;
-    uint32_t m_format;
-    uint64_t m_modifier;
+    virtual void createFds();
+
+    DrmGpu *const m_gpu;
+    const QSize m_size;
+    const uint32_t m_format;
+    const uint64_t m_modifier;
+    const std::array<uint32_t, 4> m_handles;
+    const std::array<uint32_t, 4> m_strides;
+    const std::array<uint32_t, 4> m_offsets;
+    const uint32_t m_planeCount;
+    std::array<int, 4> m_fds;
 };
 
-class DrmDumbBuffer : public DrmBuffer
+class DrmFramebuffer
 {
 public:
-    DrmDumbBuffer(DrmGpu *gpu, const QSize &size, uint32_t drmFormat);
-    ~DrmDumbBuffer() override;
+    DrmFramebuffer(const std::shared_ptr<DrmGpuBuffer> &buffer, uint32_t fbId);
+    ~DrmFramebuffer();
 
-    bool needsModeChange(DrmBuffer *b) const override;
+    uint32_t framebufferId() const;
+    DrmGpuBuffer *buffer() const;
 
-    bool map(QImage::Format format = QImage::Format_RGB32);
-    quint32 handle() const;
-    QImage *image() const;
-    void *data() const;
-    quint32 stride() const;
+    static std::shared_ptr<DrmFramebuffer> createFramebuffer(const std::shared_ptr<DrmGpuBuffer> &buffer);
 
-private:
-    quint32 m_handle = 0;
-    quint64 m_bufferSize = 0;
-    void *m_memory = nullptr;
-    QImage *m_image = nullptr;
-    quint32 m_stride = 0;
+protected:
+    const std::shared_ptr<DrmGpuBuffer> m_buffer;
+    const uint32_t m_framebufferId;
 };
 
 }
-
-#endif

@@ -26,13 +26,14 @@ class LinuxDmaBufV1ClientBuffer;
 namespace KWin
 {
 
-class DrmBuffer;
+class DrmFramebuffer;
 class GbmSurface;
 class DumbSwapchain;
 class ShadowBuffer;
 class EglGbmBackend;
 class SurfaceItem;
 class GLTexture;
+class GbmBuffer;
 
 class EglGbmLayerSurface : public QObject
 {
@@ -43,13 +44,13 @@ public:
 
     OutputLayerBeginFrameInfo startRendering(const QSize &bufferSize, DrmPlane::Transformations renderOrientation, DrmPlane::Transformations bufferOrientation, const QMap<uint32_t, QVector<uint64_t>> &formats);
     void aboutToStartPainting(DrmOutput *output, const QRegion &damagedRegion);
-    std::optional<std::tuple<QSharedPointer<DrmBuffer>, QRegion>> endRendering(DrmPlane::Transformations renderOrientation, const QRegion &damagedRegion);
+    std::optional<std::tuple<std::shared_ptr<DrmFramebuffer>, QRegion>> endRendering(DrmPlane::Transformations renderOrientation, const QRegion &damagedRegion);
 
     bool doesSurfaceFit(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
     QSharedPointer<GLTexture> texture() const;
     void destroyResources();
     EglGbmBackend *eglBackend() const;
-    QSharedPointer<DrmBuffer> renderTestBuffer(const QSize &bufferSize, const QMap<uint32_t, QVector<uint64_t>> &formats);
+    std::shared_ptr<DrmFramebuffer> renderTestBuffer(const QSize &bufferSize, const QMap<uint32_t, QVector<uint64_t>> &formats);
 
 private:
     bool checkGbmSurface(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats);
@@ -60,9 +61,9 @@ private:
     bool doesShadowBufferFit(ShadowBuffer *buffer, const QSize &size, DrmPlane::Transformations renderOrientation, DrmPlane::Transformations bufferOrientation) const;
     bool doesSwapchainFit(DumbSwapchain *swapchain) const;
 
-    QSharedPointer<DrmBuffer> importBuffer();
-    QSharedPointer<DrmBuffer> importDmabuf();
-    QSharedPointer<DrmBuffer> importWithCpu();
+    std::shared_ptr<DrmFramebuffer> importBuffer();
+    std::shared_ptr<DrmFramebuffer> importDmabuf();
+    std::shared_ptr<DrmFramebuffer> importWithCpu();
 
     enum class MultiGpuImportMode {
         Dmabuf,
@@ -73,12 +74,13 @@ private:
     MultiGpuImportMode m_importMode = MultiGpuImportMode::Dmabuf;
 
     QRegion m_currentDamage;
-    QSharedPointer<GbmSurface> m_gbmSurface;
-    QSharedPointer<GbmSurface> m_oldGbmSurface;
-    QSharedPointer<ShadowBuffer> m_shadowBuffer;
-    QSharedPointer<ShadowBuffer> m_oldShadowBuffer;
-    QSharedPointer<DumbSwapchain> m_importSwapchain;
-    QSharedPointer<DumbSwapchain> m_oldImportSwapchain;
+    std::shared_ptr<GbmBuffer> m_currentBuffer;
+    std::shared_ptr<GbmSurface> m_gbmSurface;
+    std::shared_ptr<GbmSurface> m_oldGbmSurface;
+    std::shared_ptr<ShadowBuffer> m_shadowBuffer;
+    std::shared_ptr<ShadowBuffer> m_oldShadowBuffer;
+    std::shared_ptr<DumbSwapchain> m_importSwapchain;
+    std::shared_ptr<DumbSwapchain> m_oldImportSwapchain;
 
     DrmGpu *const m_gpu;
     EglGbmBackend *const m_eglBackend;

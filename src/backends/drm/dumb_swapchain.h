@@ -27,9 +27,9 @@ class DumbSwapchain
 public:
     DumbSwapchain(DrmGpu *gpu, const QSize &size, uint32_t drmFormat, QImage::Format imageFormat = QImage::Format_RGB32);
 
-    QSharedPointer<DrmDumbBuffer> acquireBuffer(QRegion *needsRepaint = nullptr);
-    QSharedPointer<DrmDumbBuffer> currentBuffer() const;
-    void releaseBuffer(QSharedPointer<DrmDumbBuffer> buffer, const QRegion &damage = {});
+    std::shared_ptr<DrmDumbBuffer> acquireBuffer(QRegion *needsRepaint = nullptr);
+    std::shared_ptr<DrmDumbBuffer> currentBuffer() const;
+    void releaseBuffer(const std::shared_ptr<DrmDumbBuffer> &buffer, const QRegion &damage = {});
 
     qsizetype slotCount() const;
     QSize size() const;
@@ -39,7 +39,7 @@ public:
 private:
     struct Slot
     {
-        QSharedPointer<DrmDumbBuffer> buffer;
+        std::shared_ptr<DrmDumbBuffer> buffer;
         int age = 0;
     };
 

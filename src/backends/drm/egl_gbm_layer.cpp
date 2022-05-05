@@ -79,7 +79,7 @@ bool EglGbmLayer::checkTestBuffer()
 QSharedPointer<GLTexture> EglGbmLayer::texture() const
 {
     if (m_scanoutBuffer) {
-        return m_scanoutBuffer->createTexture(m_surface.eglBackend()->eglDisplay());
+        return static_cast<GbmBuffer *>(m_scanoutBuffer->buffer())->createTexture(m_surface.eglBackend()->eglDisplay());
     } else {
         return m_surface.texture();
     }
@@ -108,14 +108,13 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
         m_dmabufFeedback.scanoutFailed(surface, formats);
         return false;
     }
-    m_scanoutBuffer = QSharedPointer<DrmGbmBuffer>::create(m_pipeline->gpu(), buffer);
-    if (!m_scanoutBuffer || !m_scanoutBuffer->bufferId()) {
+    const auto gbmBuffer = GbmBuffer::importBuffer(m_pipeline->gpu(), buffer);
+    if (!gbmBuffer) {
         m_dmabufFeedback.scanoutFailed(surface, formats);
-        m_scanoutBuffer.reset();
         return false;
     }
-
-    if (m_pipeline->testScanout()) {
+    m_scanoutBuffer = DrmFramebuffer::createFramebuffer(gbmBuffer);
+    if (m_scanoutBuffer && m_pipeline->testScanout()) {
         m_dmabufFeedback.scanoutSuccessful(surface);
         m_currentBuffer = m_scanoutBuffer;
         m_currentDamage = surfaceItem->damage();
@@ -128,7 +127,7 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
     }
 }
 
-QSharedPointer<DrmBuffer> EglGbmLayer::currentBuffer() const
+std::shared_ptr<DrmFramebuffer> EglGbmLayer::currentBuffer() const
 {
     return m_scanoutBuffer ? m_scanoutBuffer : m_currentBuffer;
 }

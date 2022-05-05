@@ -10,6 +10,7 @@
 #include "drm_buffer_gbm.h"
 #include "gbm_surface.h"
 
+#include "config-kwin.h"
 #include "drm_gpu.h"
 #include "kwineglimagetexture.h"
 #include "kwineglutils_p.h"
@@ -17,31 +18,141 @@
 #include "wayland/clientbuffer.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
 
-// system
-#include <sys/mman.h>
-// c++
 #include <cerrno>
-// drm
 #include <drm_fourcc.h>
 #include <gbm.h>
+#include <sys/mman.h>
+#include <unistd.h>
 #include <xf86drm.h>
 #include <xf86drmMode.h>
 
 namespace KWin
 {
 
-GbmBuffer::GbmBuffer(GbmSurface *surface, gbm_bo *bo)
-    : m_surface(surface)
+static std::array<uint32_t, 4> getHandles(gbm_bo *bo)
+{
+    std::array<uint32_t, 4> ret;
+    for (int i = 0; i < gbm_bo_get_plane_count(bo); i++) {
+        ret[i] = gbm_bo_get_handle(bo).u32;
+    }
+    return ret;
+}
+
+static std::array<uint32_t, 4> getStrides(gbm_bo *bo)
+{
+    std::array<uint32_t, 4> ret;
+    for (int i = 0; i < gbm_bo_get_plane_count(bo); i++) {
+        ret[i] = gbm_bo_get_stride_for_plane(bo, i);
+    }
+    return ret;
+}
+
+static std::array<uint32_t, 4> getOffsets(gbm_bo *bo)
+{
+    std::array<uint32_t, 4> ret;
+    for (int i = 0; i < gbm_bo_get_plane_count(bo); i++) {
+        ret[i] = gbm_bo_get_offset(bo, i);
+    }
+    return ret;
+}
+
+GbmBuffer::GbmBuffer(DrmGpu *gpu, gbm_bo *bo, const std::shared_ptr<GbmSurface> &surface)
+    : DrmGpuBuffer(gpu, QSize(gbm_bo_get_width(bo), gbm_bo_get_height(bo)), gbm_bo_get_format(bo), gbm_bo_get_modifier(bo), getHandles(bo), getStrides(bo), getOffsets(bo), gbm_bo_get_plane_count(bo))
     , m_bo(bo)
-    , m_stride(gbm_bo_get_stride(m_bo))
+    , m_surface(surface)
 {
 }
 
-GbmBuffer::GbmBuffer(DrmGpu *gpu, KWaylandServer::LinuxDmaBufV1ClientBuffer *clientBuffer)
-    : m_clientBuffer(clientBuffer)
+GbmBuffer::GbmBuffer(DrmGpu *gpu, gbm_bo *bo)
+    : DrmGpuBuffer(gpu, QSize(gbm_bo_get_width(bo), gbm_bo_get_height(bo)), gbm_bo_get_format(bo), gbm_bo_get_modifier(bo), getHandles(bo), getStrides(bo), getOffsets(bo), gbm_bo_get_plane_count(bo))
+    , m_bo(bo)
 {
-    clientBuffer->ref();
+}
+
+GbmBuffer::GbmBuffer(DrmGpu *gpu, gbm_bo *bo, KWaylandServer::LinuxDmaBufV1ClientBuffer *clientBuffer)
+    : DrmGpuBuffer(gpu, QSize(gbm_bo_get_width(bo), gbm_bo_get_height(bo)), gbm_bo_get_format(bo), gbm_bo_get_modifier(bo), getHandles(bo), getStrides(bo), getOffsets(bo), gbm_bo_get_plane_count(bo))
+    , m_bo(bo)
+    , m_clientBuffer(clientBuffer)
+{
+    m_clientBuffer->ref();
+}
+
+GbmBuffer::~GbmBuffer()
+{
+    if (m_clientBuffer) {
+        m_clientBuffer->unref();
+    }
+    if (m_mapping) {
+        gbm_bo_unmap(m_bo, m_mapping);
+    }
+    if (m_surface) {
+        m_surface->releaseBuffer(this);
+    } else {
+        gbm_bo_destroy(m_bo);
+    }
+}
+
+gbm_bo *GbmBuffer::bo() const
+{
+    return m_bo;
+}
+
+void *GbmBuffer::mappedData() const
+{
+    return m_data;
+}
+
+KWaylandServer::ClientBuffer *GbmBuffer::clientBuffer() const
+{
+    return m_clientBuffer;
+}
+
+bool GbmBuffer::map(uint32_t flags)
+{
+    if (m_data) {
+        return true;
+    }
+    uint32_t stride = m_strides[0];
+    m_data = gbm_bo_map(m_bo, 0, 0, m_size.width(), m_size.height(), flags, &stride, &m_mapping);
+    return m_data;
+}
+
+QSharedPointer<GLTexture> GbmBuffer::createTexture(EGLDisplay eglDisplay) const
+{
+    EGLImageKHR image = eglCreateImageKHR(eglDisplay, nullptr, EGL_NATIVE_PIXMAP_KHR, m_bo, nullptr);
+    if (image != EGL_NO_IMAGE_KHR) {
+        return QSharedPointer<EGLImageTexture>::create(eglDisplay, image, GL_RGBA8, QSize(gbm_bo_get_width(m_bo), gbm_bo_get_height(m_bo)));
+    } else {
+        qCWarning(KWIN_DRM) << "Failed to record frame: Error creating EGLImageKHR - " << getEglErrorString();
+        return nullptr;
+    }
+}
+
+void GbmBuffer::createFds()
+{
+#if HAVE_GBM_BO_GET_FD_FOR_PLANE
+    for (uint32_t i = 0; i < m_planeCount; i++) {
+        m_fds[i] = gbm_bo_get_fd_for_plane(m_bo, i);
+        if (m_fds[i] == -1) {
+            for (uint32_t i2 = 0; i2 < i; i2++) {
+                close(m_fds[i2]);
+            }
+            return;
+        }
+    }
+    return;
+#else
+    if (m_planeCount > 1) {
+        return;
+    }
+    m_fds[0] = gbm_bo_get_fd(m_bo);
+#endif
+}
+
+std::shared_ptr<GbmBuffer> GbmBuffer::importBuffer(DrmGpu *gpu, KWaylandServer::LinuxDmaBufV1ClientBuffer *clientBuffer)
+{
     const auto planes = clientBuffer->planes();
+    gbm_bo *bo;
     if (planes.first().modifier != DRM_FORMAT_MOD_INVALID || planes.first().offset > 0 || planes.count() > 1) {
         gbm_import_fd_modifier_data data = {};
         data.format = clientBuffer->format();
@@ -54,7 +165,7 @@ GbmBuffer::GbmBuffer(DrmGpu *gpu, KWaylandServer::LinuxDmaBufV1ClientBuffer *cli
             data.offsets[i] = planes[i].offset;
             data.strides[i] = planes[i].stride;
         }
-        m_bo = gbm_bo_import(gpu->gbmDevice(), GBM_BO_IMPORT_FD_MODIFIER, &data, GBM_BO_USE_SCANOUT);
+        bo = gbm_bo_import(gpu->gbmDevice(), GBM_BO_IMPORT_FD_MODIFIER, &data, GBM_BO_USE_SCANOUT);
     } else {
         const auto &plane = planes.first();
         gbm_import_fd_data data = {};
@@ -63,169 +174,43 @@ GbmBuffer::GbmBuffer(DrmGpu *gpu, KWaylandServer::LinuxDmaBufV1ClientBuffer *cli
         data.height = (uint32_t)clientBuffer->size().height();
         data.stride = plane.stride;
         data.format = clientBuffer->format();
-        m_bo = gbm_bo_import(gpu->gbmDevice(), GBM_BO_IMPORT_FD, &data, GBM_BO_USE_SCANOUT);
+        bo = gbm_bo_import(gpu->gbmDevice(), GBM_BO_IMPORT_FD, &data, GBM_BO_USE_SCANOUT);
     }
-    if (m_bo) {
-        m_stride = gbm_bo_get_stride(m_bo);
-    } else if (errno != EINVAL) {
-        qCWarning(KWIN_DRM) << "Importing buffer for direct scanout failed:" << strerror(errno);
-    }
-}
-
-GbmBuffer::~GbmBuffer()
-{
-    releaseBuffer();
-}
-
-void GbmBuffer::releaseBuffer()
-{
-    if (m_clientBuffer) {
-        m_clientBuffer->unref();
-        m_clientBuffer = nullptr;
-    }
-    if (!m_bo) {
-        return;
-    }
-    if (m_mapping) {
-        gbm_bo_unmap(m_bo, m_mapping);
-    }
-    if (m_surface) {
-        m_surface->releaseBuffer(this);
-        m_surface = nullptr;
+    if (bo) {
+        return std::make_shared<GbmBuffer>(gpu, bo, clientBuffer);
     } else {
-        gbm_bo_destroy(m_bo);
-    }
-    m_bo = nullptr;
-}
-
-bool GbmBuffer::map(uint32_t flags)
-{
-    if (m_data) {
-        return true;
-    }
-    if (!m_bo) {
-        return false;
-    }
-    m_data = gbm_bo_map(m_bo, 0, 0, gbm_bo_get_width(m_bo), gbm_bo_get_height(m_bo), flags, &m_stride, &m_mapping);
-    return m_data;
-}
-
-KWaylandServer::ClientBuffer *GbmBuffer::clientBuffer() const
-{
-    return m_clientBuffer;
-}
-
-gbm_bo *GbmBuffer::getBo() const
-{
-    return m_bo;
-}
-
-void *GbmBuffer::mappedData() const
-{
-    return m_data;
-}
-
-uint32_t GbmBuffer::stride() const
-{
-    return m_stride;
-}
-
-QSharedPointer<GLTexture> GbmBuffer::createTexture(EGLDisplay eglDisplay) const
-{
-    if (!m_bo) {
         return nullptr;
     }
-    EGLImageKHR image = eglCreateImageKHR(eglDisplay, nullptr, EGL_NATIVE_PIXMAP_KHR, m_bo, nullptr);
-    if (image == EGL_NO_IMAGE_KHR) {
-        qCWarning(KWIN_DRM) << "Failed to record frame: Error creating EGLImageKHR - " << getEglErrorString();
+}
+
+std::shared_ptr<GbmBuffer> GbmBuffer::importBuffer(DrmGpu *gpu, GbmBuffer *buffer)
+{
+    const auto fds = buffer->fds();
+    if (!fds[0]) {
         return nullptr;
     }
-    return QSharedPointer<EGLImageTexture>::create(eglDisplay, image, GL_RGBA8, QSize(gbm_bo_get_width(m_bo), gbm_bo_get_height(m_bo)));
-}
-
-DrmGbmBuffer::DrmGbmBuffer(DrmGpu *gpu, GbmSurface *surface, gbm_bo *bo)
-    : DrmBuffer(gpu, gbm_bo_get_format(bo), surface && surface->modifiers().isEmpty() ? DRM_FORMAT_MOD_INVALID : gbm_bo_get_modifier(bo))
-    , GbmBuffer(surface, bo)
-{
-    initialize();
-}
-
-DrmGbmBuffer::DrmGbmBuffer(DrmGpu *gpu, KWaylandServer::LinuxDmaBufV1ClientBuffer *clientBuffer)
-    : DrmBuffer(gpu, clientBuffer->format(), clientBuffer->planes().constFirst().modifier)
-    , GbmBuffer(gpu, clientBuffer)
-{
-    initialize();
-}
-
-DrmGbmBuffer::~DrmGbmBuffer()
-{
-    if (m_bufferId) {
-        if (drmModeRmFB(m_gpu->fd(), m_bufferId) != 0) {
-            qCCritical(KWIN_DRM) << "drmModeRmFB on GPU" << m_gpu->devNode() << "failed!" << strerror(errno);
-        }
+    const auto strides = buffer->strides();
+    const auto offsets = buffer->offsets();
+    gbm_import_fd_modifier_data data = {
+        .width = (uint32_t)buffer->size().width(),
+        .height = (uint32_t)buffer->size().height(),
+        .format = buffer->format(),
+        .num_fds = (uint32_t)buffer->planeCount(),
+        .fds = {},
+        .strides = {},
+        .offsets = {},
+        .modifier = buffer->modifier(),
+    };
+    for (uint32_t i = 0; i < data.num_fds; i++) {
+        data.fds[i] = fds[i];
+        data.strides[i] = strides[i];
+        data.offsets[i] = offsets[i];
     }
-}
-
-void DrmGbmBuffer::initialize()
-{
-    if (!m_bo) {
-        return;
-    }
-    m_size = QSize(gbm_bo_get_width(m_bo), gbm_bo_get_height(m_bo));
-    uint32_t handles[4] = {};
-    uint32_t strides[4] = {};
-    uint32_t offsets[4] = {};
-    uint64_t modifiers[4] = {};
-
-    if (gbm_bo_get_handle_for_plane(m_bo, 0).s32 != -1) {
-        for (int i = 0; i < gbm_bo_get_plane_count(m_bo); i++) {
-            handles[i] = gbm_bo_get_handle_for_plane(m_bo, i).u32;
-            strides[i] = gbm_bo_get_stride_for_plane(m_bo, i);
-            offsets[i] = gbm_bo_get_offset(m_bo, i);
-            modifiers[i] = m_modifier;
-        }
+    gbm_bo *bo = gbm_bo_import(gpu->gbmDevice(), GBM_BO_IMPORT_FD_MODIFIER, &data, GBM_BO_USE_SCANOUT);
+    if (bo) {
+        return std::make_shared<GbmBuffer>(gpu, bo);
     } else {
-        handles[0] = gbm_bo_get_handle(m_bo).u32;
-        strides[0] = gbm_bo_get_stride(m_bo);
-        modifiers[0] = DRM_FORMAT_MOD_INVALID;
-    }
-
-    if (modifiers[0] != DRM_FORMAT_MOD_INVALID && m_gpu->addFB2ModifiersSupported()) {
-        if (drmModeAddFB2WithModifiers(m_gpu->fd(), m_size.width(), m_size.height(), m_format, handles, strides, offsets, modifiers, &m_bufferId, DRM_MODE_FB_MODIFIERS)) {
-            if (m_surface) {
-                gbm_format_name_desc name;
-                gbm_format_get_name(m_format, &name);
-                qCCritical(KWIN_DRM) << "drmModeAddFB2WithModifiers on GPU" << m_gpu->devNode() << "failed for a buffer with format" << name.name << "and modifier" << modifiers[0] << strerror(errno);
-            }
-        }
-    } else {
-        if (drmModeAddFB2(m_gpu->fd(), m_size.width(), m_size.height(), m_format, handles, strides, offsets, &m_bufferId, 0)) {
-            // fallback
-            if (drmModeAddFB(m_gpu->fd(), m_size.width(), m_size.height(), 24, 32, strides[0], handles[0], &m_bufferId) != 0) {
-                if (m_surface) {
-                    gbm_format_name_desc name;
-                    gbm_format_get_name(m_format, &name);
-                    qCCritical(KWIN_DRM) << "drmModeAddFB2 and drmModeAddFB both failed on GPU" << m_gpu->devNode() << "for a buffer with format" << name.name << "and modifier" << modifiers[0] << strerror(errno);
-                }
-            }
-        }
-    }
-
-    gbm_bo_set_user_data(m_bo, this, nullptr);
-}
-
-bool DrmGbmBuffer::needsModeChange(DrmBuffer *b) const
-{
-    if (DrmGbmBuffer *sb = dynamic_cast<DrmGbmBuffer *>(b)) {
-        return hasBo() != sb->hasBo();
-    } else {
-        return true;
+        return nullptr;
     }
 }
-
-bool DrmGbmBuffer::hasBo() const
-{
-    return m_bo != nullptr;
-}
-
 }

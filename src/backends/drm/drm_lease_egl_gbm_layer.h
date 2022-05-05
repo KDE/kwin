@@ -25,10 +25,10 @@ public:
     void endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion) override;
 
     bool checkTestBuffer() override;
-    QSharedPointer<DrmBuffer> currentBuffer() const override;
+    std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
 
 private:
-    QSharedPointer<DrmBuffer> m_buffer;
+    std::shared_ptr<DrmFramebuffer> m_framebuffer;
 };
 
 }

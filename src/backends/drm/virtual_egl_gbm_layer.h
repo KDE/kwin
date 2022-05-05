@@ -49,10 +49,10 @@ private:
     void destroyResources();
 
     QPointer<KWaylandServer::SurfaceInterface> m_scanoutSurface;
-    QSharedPointer<GbmBuffer> m_currentBuffer;
+    std::shared_ptr<GbmBuffer> m_currentBuffer;
     QRegion m_currentDamage;
-    QSharedPointer<GbmSurface> m_gbmSurface;
-    QSharedPointer<GbmSurface> m_oldGbmSurface;
+    std::shared_ptr<GbmSurface> m_gbmSurface;
+    std::shared_ptr<GbmSurface> m_oldGbmSurface;
 
     DrmVirtualOutput *const m_output;
     EglGbmBackend *const m_eglBackend;

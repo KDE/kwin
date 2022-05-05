@@ -9,6 +9,8 @@
 #include "egl_gbm_layer_surface.h"
 
 #include "config-kwin.h"
+#include "drm_buffer_gbm.h"
+#include "drm_dumb_buffer.h"
 #include "drm_gpu.h"
 #include "drm_output.h"
 #include "dumb_swapchain.h"
@@ -63,10 +65,10 @@ OutputLayerBeginFrameInfo EglGbmLayerSurface::startRendering(const QSize &buffer
 
     // shadow buffer
     const QSize renderSize = (renderOrientation & (DrmPlane::Transformation::Rotate90 | DrmPlane::Transformation::Rotate270)) ? m_gbmSurface->size().transposed() : m_gbmSurface->size();
-    if (doesShadowBufferFit(m_shadowBuffer.data(), renderSize, renderOrientation, bufferOrientation)) {
+    if (doesShadowBufferFit(m_shadowBuffer.get(), renderSize, renderOrientation, bufferOrientation)) {
         m_oldShadowBuffer.reset();
     } else {
-        if (doesShadowBufferFit(m_oldShadowBuffer.data(), renderSize, renderOrientation, bufferOrientation)) {
+        if (doesShadowBufferFit(m_oldShadowBuffer.get(), renderSize, renderOrientation, bufferOrientation)) {
             m_shadowBuffer = m_oldShadowBuffer;
         } else {
             if (renderOrientation != bufferOrientation) {
@@ -74,7 +76,7 @@ OutputLayerBeginFrameInfo EglGbmLayerSurface::startRendering(const QSize &buffer
                 if (!format.has_value()) {
                     return {};
                 }
-                m_shadowBuffer = QSharedPointer<ShadowBuffer>::create(renderSize, format.value());
+                m_shadowBuffer = std::make_shared<ShadowBuffer>(renderSize, format.value());
                 if (!m_shadowBuffer->isComplete()) {
                     return {};
                 }
@@ -111,7 +113,7 @@ void EglGbmLayerSurface::aboutToStartPainting(DrmOutput *output, const QRegion &
     }
 }
 
-std::optional<std::tuple<QSharedPointer<DrmBuffer>, QRegion>> EglGbmLayerSurface::endRendering(DrmPlane::Transformations renderOrientation, const QRegion &damagedRegion)
+std::optional<std::tuple<std::shared_ptr<DrmFramebuffer>, QRegion>> EglGbmLayerSurface::endRendering(DrmPlane::Transformations renderOrientation, const QRegion &damagedRegion)
 {
     if (m_shadowBuffer) {
         GLFramebuffer::popFramebuffer();
@@ -119,27 +121,28 @@ std::optional<std::tuple<QSharedPointer<DrmBuffer>, QRegion>> EglGbmLayerSurface
         m_shadowBuffer->render(renderOrientation);
     }
     GLFramebuffer::popFramebuffer();
-    QSharedPointer<DrmBuffer> buffer;
     if (m_gpu == m_eglBackend->gpu()) {
-        buffer = m_gbmSurface->swapBuffersForDrm(damagedRegion);
+        const auto buffer = m_gbmSurface->swapBuffers(damagedRegion);
+        if (buffer) {
+            return std::tuple(DrmFramebuffer::createFramebuffer(buffer), damagedRegion);
+        }
     } else {
         if (m_gbmSurface->swapBuffers(damagedRegion)) {
-            buffer = importBuffer();
+            const auto buffer = importBuffer();
+            if (buffer) {
+                return std::tuple(buffer, damagedRegion);
+            }
         }
     }
-    if (buffer) {
-        return std::tuple(buffer, damagedRegion);
-    } else {
-        return {};
-    }
+    return {};
 }
 
 bool EglGbmLayerSurface::checkGbmSurface(const QSize &bufferSize, const QMap<uint32_t, QVector<uint64_t>> &formats)
 {
-    if (doesGbmSurfaceFit(m_gbmSurface.data(), bufferSize, formats)) {
+    if (doesGbmSurfaceFit(m_gbmSurface.get(), bufferSize, formats)) {
         m_oldGbmSurface.reset();
     } else {
-        if (doesGbmSurfaceFit(m_oldGbmSurface.data(), bufferSize, formats)) {
+        if (doesGbmSurfaceFit(m_oldGbmSurface.get(), bufferSize, formats)) {
             m_gbmSurface = m_oldGbmSurface;
         } else {
             if (!createGbmSurface(bufferSize, formats)) {
@@ -163,7 +166,7 @@ bool EglGbmLayerSurface::createGbmSurface(const QSize &size, uint32_t format, co
 
     const auto config = m_eglBackend->config(format);
 
-    QSharedPointer<GbmSurface> gbmSurface;
+    std::shared_ptr<GbmSurface> gbmSurface;
 #if HAVE_GBM_BO_GET_FD_FOR_PLANE
     if (!allowModifiers) {
 #else
@@ -176,14 +179,14 @@ bool EglGbmLayerSurface::createGbmSurface(const QSize &size, uint32_t format, co
         } else {
             flags |= GBM_BO_USE_LINEAR;
         }
-        gbmSurface = QSharedPointer<GbmSurface>::create(m_eglBackend->gpu(), size, format, flags, config);
+        gbmSurface = std::make_shared<GbmSurface>(m_eglBackend->gpu(), size, format, flags, config);
     } else {
-        gbmSurface = QSharedPointer<GbmSurface>::create(m_eglBackend->gpu(), size, format, modifiers, config);
+        gbmSurface = std::make_shared<GbmSurface>(m_eglBackend->gpu(), size, format, modifiers, config);
         if (!gbmSurface->isValid()) {
             // the egl / gbm implementation may reject the modifier list from another gpu
             // as a fallback use linear, to at least make CPU copy more efficient
             const QVector<uint64_t> linear = {DRM_FORMAT_MOD_LINEAR};
-            gbmSurface = QSharedPointer<GbmSurface>::create(m_eglBackend->gpu(), size, format, linear, config);
+            gbmSurface = std::make_shared<GbmSurface>(m_eglBackend->gpu(), size, format, linear, config);
         }
     }
     if (gbmSurface->isValid()) {
@@ -245,7 +248,7 @@ bool EglGbmLayerSurface::doesShadowBufferFit(ShadowBuffer *buffer, const QSize &
     }
 }
 
-QSharedPointer<DrmBuffer> EglGbmLayerSurface::importBuffer()
+std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer()
 {
     if (m_importMode == MultiGpuImportMode::Dmabuf) {
         if (const auto buffer = importDmabuf()) {
@@ -268,69 +271,25 @@ QSharedPointer<DrmBuffer> EglGbmLayerSurface::importBuffer()
     return nullptr;
 }
 
-QSharedPointer<DrmBuffer> EglGbmLayerSurface::importDmabuf()
+std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importDmabuf()
 {
-    const auto bo = m_gbmSurface->currentBuffer()->getBo();
-    gbm_bo *importedBuffer;
-#if HAVE_GBM_BO_GET_FD_FOR_PLANE
-    if (gbm_bo_get_handle_for_plane(bo, 0).s32 != -1) {
-        gbm_import_fd_modifier_data data = {
-            .width = gbm_bo_get_width(bo),
-            .height = gbm_bo_get_height(bo),
-            .format = gbm_bo_get_format(bo),
-            .num_fds = static_cast<uint32_t>(gbm_bo_get_plane_count(bo)),
-            .fds = {},
-            .strides = {},
-            .offsets = {},
-            .modifier = gbm_bo_get_modifier(bo),
-        };
-        for (uint32_t i = 0; i < data.num_fds; i++) {
-            data.fds[i] = gbm_bo_get_fd_for_plane(bo, i);
-            if (data.fds[i] < 0) {
-                qCWarning(KWIN_DRM, "failed to export gbm_bo plane %d as dma-buf: %s", i, strerror(errno));
-                for (uint32_t f = 0; f < i; f++) {
-                    close(data.fds[f]);
-                }
-                return nullptr;
-            }
-            data.strides[i] = gbm_bo_get_stride_for_plane(bo, i);
-            data.offsets[i] = gbm_bo_get_offset(bo, i);
-        }
-        importedBuffer = gbm_bo_import(m_gpu->gbmDevice(), GBM_BO_IMPORT_FD_MODIFIER, &data, GBM_BO_USE_SCANOUT);
-    } else {
-#endif
-        gbm_import_fd_data data = {
-            .fd = gbm_bo_get_fd(bo),
-            .width = gbm_bo_get_width(bo),
-            .height = gbm_bo_get_height(bo),
-            .stride = gbm_bo_get_stride(bo),
-            .format = gbm_bo_get_format(bo),
-        };
-        if (data.fd < 0) {
-            qCWarning(KWIN_DRM, "failed to export gbm_bo as dma-buf: %s", strerror(errno));
-            return nullptr;
-        }
-        importedBuffer = gbm_bo_import(m_gpu->gbmDevice(), GBM_BO_IMPORT_FD_MODIFIER, &data, GBM_BO_USE_SCANOUT);
-#if HAVE_GBM_BO_GET_FD_FOR_PLANE
-    }
-#endif
-    if (!importedBuffer) {
+    const auto imported = GbmBuffer::importBuffer(m_gpu, m_currentBuffer.get());
+    if (!imported) {
         qCWarning(KWIN_DRM, "failed to import gbm_bo for multi-gpu usage: %s", strerror(errno));
         return nullptr;
     }
-    const auto buffer = QSharedPointer<DrmGbmBuffer>::create(m_gpu, nullptr, importedBuffer);
-    return buffer->bufferId() ? buffer : nullptr;
+    return DrmFramebuffer::createFramebuffer(imported);
 }
 
-QSharedPointer<DrmBuffer> EglGbmLayerSurface::importWithCpu()
+std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithCpu()
 {
-    if (doesSwapchainFit(m_importSwapchain.data())) {
+    if (doesSwapchainFit(m_importSwapchain.get())) {
         m_oldImportSwapchain.reset();
     } else {
-        if (doesSwapchainFit(m_oldImportSwapchain.data())) {
+        if (doesSwapchainFit(m_oldImportSwapchain.get())) {
             m_importSwapchain = m_oldImportSwapchain;
         } else {
-            const auto swapchain = QSharedPointer<DumbSwapchain>::create(m_gpu, m_gbmSurface->size(), m_gbmSurface->format());
+            const auto swapchain = std::make_shared<DumbSwapchain>(m_gpu, m_gbmSurface->size(), m_gbmSurface->format());
             if (swapchain->isEmpty()) {
                 return nullptr;
             }
@@ -338,20 +297,19 @@ QSharedPointer<DrmBuffer> EglGbmLayerSurface::importWithCpu()
         }
     }
 
-    const auto bo = m_gbmSurface->currentBuffer();
-    if (!bo->map(GBM_BO_TRANSFER_READ)) {
+    if (!m_currentBuffer->map(GBM_BO_TRANSFER_READ)) {
         qCWarning(KWIN_DRM, "mapping a gbm_bo failed: %s", strerror(errno));
         return nullptr;
     }
     const auto importBuffer = m_importSwapchain->acquireBuffer();
-    if (bo->stride() != importBuffer->stride()) {
-        qCCritical(KWIN_DRM, "stride of gbm_bo (%d) and dumb buffer (%d) don't match!", bo->stride(), importBuffer->stride());
+    if (m_currentBuffer->planeCount() != 1 || m_currentBuffer->strides()[0] != importBuffer->strides()[0]) {
+        qCCritical(KWIN_DRM, "stride of gbm_bo (%d) and dumb buffer (%d) don't match!", m_currentBuffer->strides()[0], importBuffer->strides()[0]);
         return nullptr;
     }
-    if (!memcpy(importBuffer->data(), bo->mappedData(), importBuffer->size().height() * importBuffer->stride())) {
+    if (!memcpy(importBuffer->data(), m_currentBuffer->mappedData(), importBuffer->size().height() * importBuffer->strides()[0])) {
         return nullptr;
     }
-    return importBuffer;
+    return DrmFramebuffer::createFramebuffer(importBuffer);
 }
 
 bool EglGbmLayerSurface::doesSwapchainFit(DumbSwapchain *swapchain) const
@@ -366,7 +324,7 @@ EglGbmBackend *EglGbmLayerSurface::eglBackend() const
 
 bool EglGbmLayerSurface::doesSurfaceFit(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const
 {
-    return doesGbmSurfaceFit(m_gbmSurface.data(), size, formats);
+    return doesGbmSurfaceFit(m_gbmSurface.get(), size, formats);
 }
 
 QSharedPointer<GLTexture> EglGbmLayerSurface::texture() const
@@ -374,27 +332,24 @@ QSharedPointer<GLTexture> EglGbmLayerSurface::texture() const
     if (m_shadowBuffer) {
         return m_shadowBuffer->texture();
     }
-    GbmBuffer *gbmBuffer = m_gbmSurface->currentBuffer().data();
-    if (!gbmBuffer) {
+    if (!m_currentBuffer) {
         qCWarning(KWIN_DRM) << "Failed to record frame: No gbm buffer!";
         return nullptr;
     }
-    return gbmBuffer->createTexture(m_eglBackend->eglDisplay());
+    return m_currentBuffer->createTexture(m_eglBackend->eglDisplay());
 }
 
-QSharedPointer<DrmBuffer> EglGbmLayerSurface::renderTestBuffer(const QSize &bufferSize, const QMap<uint32_t, QVector<uint64_t>> &formats)
+std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::renderTestBuffer(const QSize &bufferSize, const QMap<uint32_t, QVector<uint64_t>> &formats)
 {
     if (!checkGbmSurface(bufferSize, formats) || !m_gbmSurface->makeContextCurrent()) {
         return nullptr;
     }
     glClear(GL_COLOR_BUFFER_BIT);
-    if (m_gpu == m_eglBackend->gpu()) {
-        return m_gbmSurface->swapBuffersForDrm(infiniteRegion());
+    m_currentBuffer = m_gbmSurface->swapBuffers(infiniteRegion());
+    if (m_currentBuffer) {
+        return DrmFramebuffer::createFramebuffer(m_currentBuffer);
     } else {
-        if (m_gbmSurface->swapBuffers(infiniteRegion())) {
-            return importBuffer();
-        }
+        return nullptr;
     }
-    return nullptr;
 }
 }

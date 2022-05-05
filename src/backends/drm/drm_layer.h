@@ -18,7 +18,7 @@ namespace KWin
 {
 
 class SurfaceItem;
-class DrmBuffer;
+class DrmFramebuffer;
 class GLTexture;
 class DrmPipeline;
 
@@ -37,7 +37,7 @@ public:
     DrmPipelineLayer(DrmPipeline *pipeline);
 
     virtual bool checkTestBuffer() = 0;
-    virtual QSharedPointer<DrmBuffer> currentBuffer() const = 0;
+    virtual std::shared_ptr<DrmFramebuffer> currentBuffer() const = 0;
     virtual bool hasDirectScanoutBuffer() const;
 
 protected:

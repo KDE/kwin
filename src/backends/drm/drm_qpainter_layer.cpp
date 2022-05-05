@@ -10,6 +10,7 @@
 #include "drm_abstract_output.h"
 #include "drm_backend.h"
 #include "drm_buffer.h"
+#include "drm_dumb_buffer.h"
 #include "drm_gpu.h"
 #include "drm_output.h"
 #include "drm_pipeline.h"
@@ -33,7 +34,7 @@ DrmQPainterLayer::DrmQPainterLayer(DrmQPainterBackend *backend, DrmPipeline *pip
 OutputLayerBeginFrameInfo DrmQPainterLayer::beginFrame()
 {
     if (!doesSwapchainFit()) {
-        m_swapchain = QSharedPointer<DumbSwapchain>::create(m_pipeline->gpu(), m_pipeline->bufferSize(), DRM_FORMAT_XRGB8888);
+        m_swapchain = std::make_shared<DumbSwapchain>(m_pipeline->gpu(), m_pipeline->bufferSize(), DRM_FORMAT_XRGB8888);
     }
     QRegion needsRepaint;
     if (!m_swapchain->acquireBuffer(&needsRepaint)) {
@@ -55,7 +56,7 @@ void DrmQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &da
 bool DrmQPainterLayer::checkTestBuffer()
 {
     if (!doesSwapchainFit()) {
-        m_swapchain = QSharedPointer<DumbSwapchain>::create(m_pipeline->gpu(), m_pipeline->bufferSize(), DRM_FORMAT_XRGB8888);
+        m_swapchain = std::make_shared<DumbSwapchain>(m_pipeline->gpu(), m_pipeline->bufferSize(), DRM_FORMAT_XRGB8888);
     }
     return !m_swapchain->isEmpty();
 }
@@ -65,9 +66,9 @@ bool DrmQPainterLayer::doesSwapchainFit() const
     return m_swapchain && m_swapchain->size() == m_pipeline->bufferSize();
 }
 
-QSharedPointer<DrmBuffer> DrmQPainterLayer::currentBuffer() const
+std::shared_ptr<DrmFramebuffer> DrmQPainterLayer::currentBuffer() const
 {
-    return m_swapchain ? m_swapchain->currentBuffer() : nullptr;
+    return m_swapchain ? m_currentFramebuffer : nullptr;
 }
 
 QRegion DrmQPainterLayer::currentDamage() const
@@ -113,15 +114,20 @@ DrmLeaseQPainterLayer::DrmLeaseQPainterLayer(DrmQPainterBackend *backend, DrmPip
 bool DrmLeaseQPainterLayer::checkTestBuffer()
 {
     const auto size = m_pipeline->bufferSize();
-    if (!m_buffer || m_buffer->size() != size) {
-        m_buffer = QSharedPointer<DrmDumbBuffer>::create(m_pipeline->gpu(), size, DRM_FORMAT_XRGB8888);
+    if (!m_framebuffer || m_buffer->size() != size) {
+        m_buffer = DrmDumbBuffer::createDumbBuffer(m_pipeline->gpu(), size, DRM_FORMAT_XRGB8888);
+        if (m_buffer) {
+            m_framebuffer = DrmFramebuffer::createFramebuffer(m_buffer);
+        } else {
+            m_framebuffer.reset();
+        }
     }
-    return m_buffer->bufferId() != 0;
+    return m_framebuffer != nullptr;
 }
 
-QSharedPointer<DrmBuffer> DrmLeaseQPainterLayer::currentBuffer() const
+std::shared_ptr<DrmFramebuffer> DrmLeaseQPainterLayer::currentBuffer() const
 {
-    return m_buffer;
+    return m_framebuffer;
 }
 
 OutputLayerBeginFrameInfo DrmLeaseQPainterLayer::beginFrame()

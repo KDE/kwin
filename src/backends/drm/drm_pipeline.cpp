@@ -177,14 +177,14 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
         m_pending.crtc->setPending(DrmCrtc::PropertyIndex::VrrEnabled, m_pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive);
         m_pending.crtc->setPending(DrmCrtc::PropertyIndex::Gamma_LUT, m_pending.gamma ? m_pending.gamma->blobId() : 0);
         const auto modeSize = m_pending.mode->size();
-        const auto buffer = m_pending.layer->currentBuffer().data();
-        m_pending.crtc->primaryPlane()->set(QPoint(0, 0), buffer ? buffer->size() : bufferSize(), QPoint(0, 0), modeSize);
-        m_pending.crtc->primaryPlane()->setBuffer(activePending() ? buffer : nullptr);
+        const auto fb = m_pending.layer->currentBuffer().get();
+        m_pending.crtc->primaryPlane()->set(QPoint(0, 0), fb ? fb->buffer()->size() : bufferSize(), QPoint(0, 0), modeSize);
+        m_pending.crtc->primaryPlane()->setBuffer(activePending() ? fb : nullptr);
 
         if (m_pending.crtc->cursorPlane()) {
             m_pending.crtc->cursorPlane()->set(QPoint(0, 0), gpu()->cursorSize(), m_pending.cursorPos, gpu()->cursorSize());
-            m_pending.crtc->cursorPlane()->setBuffer(activePending() ? m_pending.cursorBo.get() : nullptr);
-            m_pending.crtc->cursorPlane()->setPending(DrmPlane::PropertyIndex::CrtcId, (activePending() && m_pending.cursorBo) ? m_pending.crtc->id() : 0);
+            m_pending.crtc->cursorPlane()->setBuffer(activePending() ? m_pending.cursorFb.get() : nullptr);
+            m_pending.crtc->cursorPlane()->setPending(DrmPlane::PropertyIndex::CrtcId, (activePending() && m_pending.cursorFb) ? m_pending.crtc->id() : 0);
         }
     }
     if (!m_connector->atomicPopulate(req)) {
@@ -289,7 +289,7 @@ void DrmPipeline::atomicCommitSuccessful(CommitMode mode)
             m_pending.crtc->primaryPlane()->setNext(m_pending.layer->currentBuffer());
             m_pending.crtc->primaryPlane()->commit();
             if (m_pending.crtc->cursorPlane()) {
-                m_pending.crtc->cursorPlane()->setNext(m_pending.cursorBo);
+                m_pending.crtc->cursorPlane()->setNext(m_pending.cursorFb);
                 m_pending.crtc->cursorPlane()->commit();
             }
         }
@@ -300,14 +300,14 @@ void DrmPipeline::atomicCommitSuccessful(CommitMode mode)
     }
 }
 
-bool DrmPipeline::setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const QPoint &hotspot)
+bool DrmPipeline::setCursor(const std::shared_ptr<DrmFramebuffer> &buffer, const QPoint &hotspot)
 {
-    if (m_pending.cursorBo == buffer && m_pending.cursorHotspot == hotspot) {
+    if (m_pending.cursorFb == buffer && m_pending.cursorHotspot == hotspot) {
         return true;
     }
     bool result;
     const bool visibleBefore = isCursorVisible();
-    m_pending.cursorBo = buffer;
+    m_pending.cursorFb = buffer;
     m_pending.cursorHotspot = hotspot;
     // explicitly check for the cursor plane and not for AMS, as we might not always have one
     if (m_pending.crtc->cursorPlane()) {
@@ -371,7 +371,7 @@ QSize DrmPipeline::bufferSize() const
 bool DrmPipeline::isCursorVisible() const
 {
     const QRect mode = QRect(QPoint(), m_pending.mode->size());
-    return m_pending.cursorBo && QRect(m_pending.cursorPos, m_pending.cursorBo->size()).intersects(mode);
+    return m_pending.cursorFb && QRect(m_pending.cursorPos, m_pending.cursorFb->buffer()->size()).intersects(mode);
 }
 
 DrmConnector *DrmPipeline::connector() const
@@ -417,15 +417,15 @@ QMap<uint32_t, QVector<uint64_t>> DrmPipeline::formats() const
 bool DrmPipeline::pruneModifier()
 {
     if (!m_pending.layer->currentBuffer()
-        || m_pending.layer->currentBuffer()->modifier() == DRM_FORMAT_MOD_NONE
-        || m_pending.layer->currentBuffer()->modifier() == DRM_FORMAT_MOD_INVALID) {
+        || m_pending.layer->currentBuffer()->buffer()->modifier() == DRM_FORMAT_MOD_NONE
+        || m_pending.layer->currentBuffer()->buffer()->modifier() == DRM_FORMAT_MOD_INVALID) {
         return false;
     }
-    auto &modifiers = m_pending.formats[m_pending.layer->currentBuffer()->format()];
+    auto &modifiers = m_pending.formats[m_pending.layer->currentBuffer()->buffer()->format()];
     if (modifiers.count() <= 1) {
         return false;
     }
-    modifiers.removeOne(m_pending.layer->currentBuffer()->modifier());
+    modifiers.removeOne(m_pending.layer->currentBuffer()->buffer()->modifier());
     return true;
 }
 

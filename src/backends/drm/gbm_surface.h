@@ -6,12 +6,12 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_DRM_GBM_SURFACE_H
-#define KWIN_DRM_GBM_SURFACE_H
+#pragma once
 
 #include <QVector>
 #include <cstdint>
 #include <epoxy/egl.h>
+#include <memory>
 #include <optional>
 
 #include "drm_buffer_gbm.h"
@@ -26,7 +26,7 @@ namespace KWin
 class GLFramebuffer;
 class EglGbmBackend;
 
-class GbmSurface
+class GbmSurface : public std::enable_shared_from_this<GbmSurface>
 {
 public:
     explicit GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, uint32_t flags, EGLConfig config);
@@ -35,12 +35,9 @@ public:
 
     bool makeContextCurrent() const;
 
-    QSharedPointer<DrmGbmBuffer> swapBuffersForDrm(const QRegion &dirty);
-    QSharedPointer<GbmBuffer> swapBuffers(const QRegion &dirty);
+    std::shared_ptr<GbmBuffer> swapBuffers(const QRegion &dirty);
     void releaseBuffer(GbmBuffer *buffer);
 
-    QSharedPointer<GbmBuffer> currentBuffer() const;
-    QSharedPointer<DrmGbmBuffer> currentDrmBuffer() const;
     GLFramebuffer *fbo() const;
 
     EGLSurface eglSurface() const;
@@ -61,12 +58,7 @@ private:
     int m_bufferAge = 0;
     DamageJournal m_damageJournal;
 
-    QSharedPointer<GbmBuffer> m_currentBuffer;
-    QSharedPointer<DrmGbmBuffer> m_currentDrmBuffer;
-    QVector<GbmBuffer *> m_lockedBuffers;
     QScopedPointer<GLFramebuffer> m_fbo;
 };
 
 }
-
-#endif

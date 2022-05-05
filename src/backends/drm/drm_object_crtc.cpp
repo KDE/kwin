@@ -61,19 +61,22 @@ int DrmCrtc::pipeIndex() const
     return m_pipeIndex;
 }
 
-QSharedPointer<DrmBuffer> DrmCrtc::current() const
+std::shared_ptr<DrmFramebuffer> DrmCrtc::current() const
 {
     return m_currentBuffer;
 }
-QSharedPointer<DrmBuffer> DrmCrtc::next() const
+
+std::shared_ptr<DrmFramebuffer> DrmCrtc::next() const
 {
     return m_nextBuffer;
 }
-void DrmCrtc::setCurrent(const QSharedPointer<DrmBuffer> &buffer)
+
+void DrmCrtc::setCurrent(const std::shared_ptr<DrmFramebuffer> &buffer)
 {
     m_currentBuffer = buffer;
 }
-void DrmCrtc::setNext(const QSharedPointer<DrmBuffer> &buffer)
+
+void DrmCrtc::setNext(const std::shared_ptr<DrmFramebuffer> &buffer)
 {
     m_nextBuffer = buffer;
 }

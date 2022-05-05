@@ -59,10 +59,6 @@ GbmSurface::GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, QVector<
 
 GbmSurface::~GbmSurface()
 {
-    auto buffers = m_lockedBuffers;
-    for (auto buffer : buffers) {
-        buffer->releaseBuffer();
-    }
     if (m_eglSurface != EGL_NO_SURFACE) {
         eglDestroySurface(m_eglBackend->eglDisplay(), m_eglSurface);
     }
@@ -83,7 +79,7 @@ bool GbmSurface::makeContextCurrent() const
     return true;
 }
 
-QSharedPointer<DrmGbmBuffer> GbmSurface::swapBuffersForDrm(const QRegion &dirty)
+std::shared_ptr<GbmBuffer> GbmSurface::swapBuffers(const QRegion &dirty)
 {
     auto error = eglSwapBuffers(m_eglBackend->eglDisplay(), m_eglSurface);
     if (error != EGL_TRUE) {
@@ -94,54 +90,16 @@ QSharedPointer<DrmGbmBuffer> GbmSurface::swapBuffersForDrm(const QRegion &dirty)
     if (!bo) {
         return nullptr;
     }
-    auto buffer = QSharedPointer<DrmGbmBuffer>::create(m_eglBackend->gpu(), this, bo);
-    m_currentBuffer = buffer;
-    m_lockedBuffers << m_currentBuffer.get();
-    if (!buffer->bufferId()) {
-        return nullptr;
-    }
-    m_currentDrmBuffer = buffer;
     if (m_eglBackend->supportsBufferAge()) {
         eglQuerySurface(m_eglBackend->eglDisplay(), m_eglSurface, EGL_BUFFER_AGE_EXT, &m_bufferAge);
         m_damageJournal.add(dirty);
     }
-    return buffer;
-}
-
-QSharedPointer<GbmBuffer> GbmSurface::swapBuffers(const QRegion &dirty)
-{
-    auto error = eglSwapBuffers(m_eglBackend->eglDisplay(), m_eglSurface);
-    if (error != EGL_TRUE) {
-        qCCritical(KWIN_DRM) << "an error occurred while swapping buffers" << getEglErrorString();
-        return nullptr;
-    }
-    auto bo = gbm_surface_lock_front_buffer(m_surface);
-    if (!bo) {
-        return nullptr;
-    }
-    m_currentBuffer = QSharedPointer<GbmBuffer>::create(this, bo);
-    m_lockedBuffers << m_currentBuffer.get();
-    if (m_eglBackend->supportsBufferAge()) {
-        eglQuerySurface(m_eglBackend->eglDisplay(), m_eglSurface, EGL_BUFFER_AGE_EXT, &m_bufferAge);
-        m_damageJournal.add(dirty);
-    }
-    return m_currentBuffer;
+    return std::make_shared<GbmBuffer>(m_eglBackend->gpu(), bo, shared_from_this());
 }
 
 void GbmSurface::releaseBuffer(GbmBuffer *buffer)
 {
-    gbm_surface_release_buffer(m_surface, buffer->getBo());
-    m_lockedBuffers.removeOne(buffer);
-}
-
-QSharedPointer<GbmBuffer> GbmSurface::currentBuffer() const
-{
-    return m_currentBuffer;
-}
-
-QSharedPointer<DrmGbmBuffer> GbmSurface::currentDrmBuffer() const
-{
-    return m_currentDrmBuffer;
+    gbm_surface_release_buffer(m_surface, buffer->bo());
 }
 
 GLFramebuffer *GbmSurface::fbo() const

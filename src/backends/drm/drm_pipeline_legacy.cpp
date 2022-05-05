@@ -22,12 +22,12 @@ namespace KWin
 
 bool DrmPipeline::presentLegacy()
 {
-    const auto buffer = m_pending.layer->currentBuffer();
-    if ((!m_pending.crtc->current() || m_pending.crtc->current()->needsModeChange(buffer.get())) && !legacyModeset()) {
+    if (!m_pending.crtc->current() && !legacyModeset()) {
         return false;
     }
-    if (drmModePageFlip(gpu()->fd(), m_pending.crtc->id(), buffer ? buffer->bufferId() : 0, DRM_MODE_PAGE_FLIP_EVENT, nullptr) != 0) {
-        qCWarning(KWIN_DRM) << "Page flip failed:" << strerror(errno) << buffer;
+    const auto buffer = m_pending.layer->currentBuffer();
+    if (drmModePageFlip(gpu()->fd(), m_pending.crtc->id(), buffer->framebufferId(), DRM_MODE_PAGE_FLIP_EVENT, nullptr) != 0) {
+        qCWarning(KWIN_DRM) << "Page flip failed:" << strerror(errno);
         return false;
     }
     m_pageflipPending = true;
@@ -38,16 +38,19 @@ bool DrmPipeline::presentLegacy()
 bool DrmPipeline::legacyModeset()
 {
     uint32_t connId = m_connector->id();
-    if (!m_pending.layer->checkTestBuffer() || drmModeSetCrtc(gpu()->fd(), m_pending.crtc->id(), m_pending.layer->currentBuffer()->bufferId(), 0, 0, &connId, 1, m_pending.mode->nativeMode()) != 0) {
+    if (!m_pending.layer->checkTestBuffer()) {
+        return false;
+    }
+    const auto buffer = m_pending.layer->currentBuffer();
+    if (drmModeSetCrtc(gpu()->fd(), m_pending.crtc->id(), buffer->framebufferId(), 0, 0, &connId, 1, m_pending.mode->nativeMode()) != 0) {
         qCWarning(KWIN_DRM) << "Modeset failed!" << strerror(errno);
-        m_pending = m_next;
         return false;
     }
     // make sure the buffer gets kept alive, or the modeset gets reverted by the kernel
     if (m_pending.crtc->current()) {
-        m_pending.crtc->setNext(m_pending.layer->currentBuffer());
+        m_pending.crtc->setNext(buffer);
     } else {
-        m_pending.crtc->setCurrent(m_pending.layer->currentBuffer());
+        m_pending.crtc->setCurrent(buffer);
     }
     return true;
 }
@@ -121,15 +124,15 @@ bool DrmPipeline::applyPendingChangesLegacy()
 
 bool DrmPipeline::setCursorLegacy()
 {
-    const QSize &s = m_pending.cursorBo ? m_pending.cursorBo->size() : QSize(64, 64);
+    const QSize &s = m_pending.cursorFb ? m_pending.cursorFb->buffer()->size() : QSize(64, 64);
     int ret = drmModeSetCursor2(gpu()->fd(), m_pending.crtc->id(),
-                                m_pending.cursorBo ? m_pending.cursorBo->handle() : 0,
+                                m_pending.cursorFb ? m_pending.cursorFb->buffer()->handles()[0] : 0,
                                 s.width(), s.height(),
                                 m_pending.cursorHotspot.x(), m_pending.cursorHotspot.y());
     if (ret == -ENOTSUP) {
         // for NVIDIA case that does not support drmModeSetCursor2
         ret = drmModeSetCursor(gpu()->fd(), m_pending.crtc->id(),
-                               m_pending.cursorBo ? m_pending.cursorBo->handle() : 0,
+                               m_pending.cursorFb ? m_pending.cursorFb->buffer()->handles()[0] : 0,
                                s.width(), s.height());
     }
     return ret == 0;

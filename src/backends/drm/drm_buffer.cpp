@@ -3,6 +3,7 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2022 Xaver Hugl <xaver.hugl@gmail.com>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -17,138 +18,124 @@
 #include <cerrno>
 // drm
 #include <drm_fourcc.h>
+#include <unistd.h>
 #include <xf86drm.h>
 #include <xf86drmMode.h>
 
 namespace KWin
 {
 
-DrmBuffer::DrmBuffer(DrmGpu *gpu, uint32_t format, uint64_t modifier)
+DrmGpuBuffer::DrmGpuBuffer(DrmGpu *gpu, QSize size, uint32_t format, uint64_t modifier, const std::array<uint32_t, 4> &handles, const std::array<uint32_t, 4> &strides, const std::array<uint32_t, 4> &offsets, uint32_t planeCount)
     : m_gpu(gpu)
+    , m_size(size)
     , m_format(format)
     , m_modifier(modifier)
+    , m_handles(handles)
+    , m_strides(strides)
+    , m_offsets(offsets)
+    , m_planeCount(planeCount)
 {
 }
 
-quint32 DrmBuffer::bufferId() const
+DrmGpuBuffer::~DrmGpuBuffer()
 {
-    return m_bufferId;
-}
-
-const QSize &DrmBuffer::size() const
-{
-    return m_size;
-}
-
-DrmGpu *DrmBuffer::gpu() const
-{
-    return m_gpu;
-}
-
-uint32_t DrmBuffer::format() const
-{
-    return m_format;
-}
-
-uint64_t DrmBuffer::modifier() const
-{
-    return m_modifier;
-}
-
-// DrmDumbBuffer
-DrmDumbBuffer::DrmDumbBuffer(DrmGpu *gpu, const QSize &size, uint32_t drmFormat)
-    : DrmBuffer(gpu, drmFormat, DRM_FORMAT_MOD_LINEAR)
-{
-    m_size = size;
-    drm_mode_create_dumb createArgs;
-    memset(&createArgs, 0, sizeof createArgs);
-    createArgs.bpp = 32;
-    createArgs.width = size.width();
-    createArgs.height = size.height();
-    if (drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_CREATE_DUMB, &createArgs) != 0) {
-        qCWarning(KWIN_DRM) << "DRM_IOCTL_MODE_CREATE_DUMB failed" << strerror(errno);
-        return;
-    }
-    m_handle = createArgs.handle;
-    m_bufferSize = createArgs.size;
-    m_stride = createArgs.pitch;
-    uint32_t handles[4] = {m_handle, 0, 0, 0};
-    uint32_t strides[4] = {m_stride, 0, 0, 0};
-    uint32_t offsets[4] = {0, 0, 0, 0};
-    if (drmModeAddFB2(m_gpu->fd(), size.width(), size.height(), drmFormat, handles, strides, offsets, &m_bufferId, 0) != 0) {
-        if (drmModeAddFB(m_gpu->fd(), size.width(), size.height(), 24, 32, m_stride, createArgs.handle, &m_bufferId) != 0) {
-            qCWarning(KWIN_DRM) << "drmModeAddFB2 and drmModeAddFB both failed!" << strerror(errno);
-        } else {
-            qCWarning(KWIN_DRM) << "drmModeAddFB2 failed! Falling back to drmModeAddFB with XRGB8888" << strerror(errno);
-            m_format = DRM_FORMAT_XRGB8888;
+    for (uint32_t i = 0; i < m_planeCount; i++) {
+        if (m_fds[i] != -1) {
+            close(m_fds[i]);
         }
     }
 }
 
-DrmDumbBuffer::~DrmDumbBuffer()
+DrmGpu *DrmGpuBuffer::gpu() const
 {
-    if (m_bufferId) {
-        drmModeRmFB(m_gpu->fd(), m_bufferId);
-    }
-
-    delete m_image;
-    if (m_memory) {
-        munmap(m_memory, m_bufferSize);
-    }
-    if (m_handle) {
-        drm_mode_destroy_dumb destroyArgs;
-        destroyArgs.handle = m_handle;
-        drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_DESTROY_DUMB, &destroyArgs);
-    }
+    return m_gpu;
 }
 
-bool DrmDumbBuffer::needsModeChange(DrmBuffer *b) const
+uint32_t DrmGpuBuffer::format() const
 {
-    if (DrmDumbBuffer *db = dynamic_cast<DrmDumbBuffer *>(b)) {
-        return m_stride != db->stride();
+    return m_format;
+}
+
+uint64_t DrmGpuBuffer::modifier() const
+{
+    return m_modifier;
+}
+
+QSize DrmGpuBuffer::size() const
+{
+    return m_size;
+}
+
+std::array<int, 4> DrmGpuBuffer::fds()
+{
+    if (m_fds[0] == -1) {
+        createFds();
+    }
+    return m_fds;
+}
+
+std::array<uint32_t, 4> DrmGpuBuffer::handles() const
+{
+    return m_handles;
+}
+
+std::array<uint32_t, 4> DrmGpuBuffer::strides() const
+{
+    return m_strides;
+}
+
+std::array<uint32_t, 4> DrmGpuBuffer::offsets() const
+{
+    return m_offsets;
+}
+
+uint32_t DrmGpuBuffer::planeCount() const
+{
+    return m_planeCount;
+}
+
+void DrmGpuBuffer::createFds()
+{
+}
+
+DrmFramebuffer::DrmFramebuffer(const std::shared_ptr<DrmGpuBuffer> &buffer, uint32_t fbId)
+    : m_buffer(buffer)
+    , m_framebufferId(fbId)
+{
+}
+
+DrmFramebuffer::~DrmFramebuffer()
+{
+    drmModeRmFB(m_buffer->gpu()->fd(), m_framebufferId);
+}
+
+uint32_t DrmFramebuffer::framebufferId() const
+{
+    return m_framebufferId;
+}
+
+DrmGpuBuffer *DrmFramebuffer::buffer() const
+{
+    return m_buffer.get();
+}
+
+std::shared_ptr<DrmFramebuffer> DrmFramebuffer::createFramebuffer(const std::shared_ptr<DrmGpuBuffer> &buffer)
+{
+    const auto size = buffer->size();
+    const auto handles = buffer->handles();
+    const auto strides = buffer->strides();
+    const auto offsets = buffer->offsets();
+
+    uint32_t framebufferId = 0;
+    int ret = drmModeAddFB2(buffer->gpu()->fd(), size.width(), size.height(), buffer->format(), handles.data(), strides.data(), offsets.data(), &framebufferId, 0);
+    if (ret == EOPNOTSUPP && handles.size() == 1) {
+        ret = drmModeAddFB(buffer->gpu()->fd(), size.width(), size.height(), 24, 32, strides[0], handles[0], &framebufferId);
+    }
+    if (ret == 0) {
+        return std::make_shared<DrmFramebuffer>(buffer, framebufferId);
     } else {
-        return true;
+        qCWarning(KWIN_DRM) << "Could not create drm framebuffer!" << strerror(errno);
+        return nullptr;
     }
 }
-
-bool DrmDumbBuffer::map(QImage::Format format)
-{
-    if (!m_handle || !m_bufferId) {
-        return false;
-    }
-    drm_mode_map_dumb mapArgs;
-    memset(&mapArgs, 0, sizeof mapArgs);
-    mapArgs.handle = m_handle;
-    if (drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_MAP_DUMB, &mapArgs) != 0) {
-        return false;
-    }
-    void *address = mmap(nullptr, m_bufferSize, PROT_WRITE, MAP_SHARED, m_gpu->fd(), mapArgs.offset);
-    if (address == MAP_FAILED) {
-        return false;
-    }
-    m_memory = address;
-    m_image = new QImage((uchar *)m_memory, m_size.width(), m_size.height(), m_stride, format);
-    return !m_image->isNull();
-}
-
-quint32 DrmDumbBuffer::handle() const
-{
-    return m_handle;
-}
-
-QImage *DrmDumbBuffer::image() const
-{
-    return m_image;
-}
-
-void *DrmDumbBuffer::data() const
-{
-    return m_memory;
-}
-
-quint32 DrmDumbBuffer::stride() const
-{
-    return m_stride;
-}
-
 }

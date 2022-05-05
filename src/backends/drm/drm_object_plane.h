@@ -11,13 +11,15 @@
 #include "drm_object.h"
 
 #include <QMap>
-#include <QSharedPointer>
+#include <QPoint>
+#include <QSize>
+#include <memory>
 #include <qobjectdefs.h>
 
 namespace KWin
 {
 
-class DrmBuffer;
+class DrmFramebuffer;
 class DrmCrtc;
 
 class DrmPlane : public DrmObject
@@ -71,13 +73,13 @@ public:
     bool isCrtcSupported(int pipeIndex) const;
     QMap<uint32_t, QVector<uint64_t>> formats() const;
 
-    QSharedPointer<DrmBuffer> current() const;
-    QSharedPointer<DrmBuffer> next() const;
-    void setCurrent(const QSharedPointer<DrmBuffer> &b);
-    void setNext(const QSharedPointer<DrmBuffer> &b);
+    std::shared_ptr<DrmFramebuffer> current() const;
+    std::shared_ptr<DrmFramebuffer> next() const;
+    void setCurrent(const std::shared_ptr<DrmFramebuffer> &b);
+    void setNext(const std::shared_ptr<DrmFramebuffer> &b);
     void flipBuffer();
 
-    void setBuffer(DrmBuffer *buffer);
+    void setBuffer(DrmFramebuffer *buffer);
     void set(const QPoint &srcPos, const QSize &srcSize, const QPoint &dstPos, const QSize &dstSize);
 
     bool setTransformation(Transformations t);
@@ -85,8 +87,8 @@ public:
     Transformations supportedTransformations() const;
 
 private:
-    QSharedPointer<DrmBuffer> m_current;
-    QSharedPointer<DrmBuffer> m_next;
+    std::shared_ptr<DrmFramebuffer> m_current;
+    std::shared_ptr<DrmFramebuffer> m_next;
 
     QMap<uint32_t, QVector<uint64_t>> m_supportedFormats;
     uint32_t m_possibleCrtcs;

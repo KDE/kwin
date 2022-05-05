@@ -63,10 +63,10 @@ void VirtualEglGbmLayer::aboutToStartPainting(const QRegion &damagedRegion)
 OutputLayerBeginFrameInfo VirtualEglGbmLayer::beginFrame()
 {
     // gbm surface
-    if (doesGbmSurfaceFit(m_gbmSurface.data())) {
+    if (doesGbmSurfaceFit(m_gbmSurface.get())) {
         m_oldGbmSurface.reset();
     } else {
-        if (doesGbmSurfaceFit(m_oldGbmSurface.data())) {
+        if (doesGbmSurfaceFit(m_oldGbmSurface.get())) {
             m_gbmSurface = m_oldGbmSurface;
         } else {
             if (!createGbmSurface()) {
@@ -113,11 +113,11 @@ bool VirtualEglGbmLayer::createGbmSurface()
             const auto modifiers = it.value();
             const bool allowModifiers = m_eglBackend->gpu()->addFB2ModifiersSupported() && ((m_eglBackend->gpu()->isNVidia() && !modifiersEnvSet) || (modifiersEnvSet && modifiersEnv));
 
-            QSharedPointer<GbmSurface> gbmSurface;
+            std::shared_ptr<GbmSurface> gbmSurface;
             if (!allowModifiers) {
-                gbmSurface = QSharedPointer<GbmSurface>::create(m_eglBackend->gpu(), size, it.key(), GBM_BO_USE_RENDERING, config);
+                gbmSurface = std::make_shared<GbmSurface>(m_eglBackend->gpu(), size, it.key(), GBM_BO_USE_RENDERING, config);
             } else {
-                gbmSurface = QSharedPointer<GbmSurface>::create(m_eglBackend->gpu(), size, it.key(), it.value(), config);
+                gbmSurface = std::make_shared<GbmSurface>(m_eglBackend->gpu(), size, it.key(), it.value(), config);
             }
             if (!gbmSurface->isValid()) {
                 continue;
@@ -137,17 +137,11 @@ bool VirtualEglGbmLayer::doesGbmSurfaceFit(GbmSurface *surf) const
 
 QSharedPointer<GLTexture> VirtualEglGbmLayer::texture() const
 {
-    GbmBuffer *gbmBuffer = m_gbmSurface->currentBuffer().get();
-    if (!gbmBuffer) {
+    if (!m_currentBuffer) {
         qCWarning(KWIN_DRM) << "Failed to record frame: No gbm buffer!";
         return nullptr;
     }
-    EGLImageKHR image = eglCreateImageKHR(m_eglBackend->eglDisplay(), nullptr, EGL_NATIVE_PIXMAP_KHR, gbmBuffer->getBo(), nullptr);
-    if (image == EGL_NO_IMAGE_KHR) {
-        qCWarning(KWIN_DRM) << "Failed to record frame: Error creating EGLImageKHR - " << glGetError();
-        return nullptr;
-    }
-    return QSharedPointer<EGLImageTexture>::create(m_eglBackend->eglDisplay(), image, GL_RGBA8, m_gbmSurface->size());
+    return m_currentBuffer->createTexture(m_eglBackend->eglDisplay());
 }
 
 bool VirtualEglGbmLayer::scanout(SurfaceItem *surfaceItem)
@@ -166,8 +160,8 @@ bool VirtualEglGbmLayer::scanout(SurfaceItem *surfaceItem)
     if (!buffer || buffer->planes().isEmpty() || buffer->size() != m_output->pixelSize()) {
         return false;
     }
-    const auto scanoutBuffer = QSharedPointer<GbmBuffer>::create(m_output->gpu(), buffer);
-    if (!scanoutBuffer->getBo()) {
+    const auto scanoutBuffer = GbmBuffer::importBuffer(m_output->gpu(), buffer);
+    if (!scanoutBuffer) {
         return false;
     }
     // damage tracking for screen casting

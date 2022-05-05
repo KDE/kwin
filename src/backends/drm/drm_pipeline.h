@@ -28,8 +28,6 @@ namespace KWin
 class DrmGpu;
 class DrmConnector;
 class DrmCrtc;
-class DrmBuffer;
-class DrmDumbBuffer;
 class GammaRamp;
 class DrmConnectorMode;
 class DrmPipelineLayer;
@@ -67,7 +65,7 @@ public:
     void applyPendingChanges();
     void revertPendingChanges();
 
-    bool setCursor(const QSharedPointer<DrmDumbBuffer> &buffer, const QPoint &hotspot = QPoint());
+    bool setCursor(const std::shared_ptr<DrmFramebuffer> &buffer, const QPoint &hotspot = QPoint());
     bool moveCursor(QPoint pos);
 
     DrmConnector *connector() const;
@@ -173,7 +171,7 @@ private:
 
         QPoint cursorPos;
         QPoint cursorHotspot;
-        QSharedPointer<DrmDumbBuffer> cursorBo;
+        std::shared_ptr<DrmFramebuffer> cursorFb;
 
         // the transformation that this pipeline will apply to submitted buffers
         DrmPlane::Transformations bufferOrientation = DrmPlane::Transformation::Rotate0;

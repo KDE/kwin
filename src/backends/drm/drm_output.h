@@ -25,13 +25,7 @@
 namespace KWin
 {
 
-class DrmBackend;
-class DrmBuffer;
-class DrmDumbBuffer;
-class DrmPlane;
 class DrmConnector;
-class DrmCrtc;
-class Cursor;
 class DrmGpu;
 class DrmPipeline;
 class DumbSwapchain;

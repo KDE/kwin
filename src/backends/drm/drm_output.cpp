@@ -16,6 +16,7 @@
 
 #include "composite.h"
 #include "cursor.h"
+#include "drm_dumb_buffer.h"
 #include "drm_layer.h"
 #include "dumb_swapchain.h"
 #include "logging.h"
@@ -167,7 +168,7 @@ void DrmOutput::updateCursor()
     p.setRenderHint(QPainter::SmoothPixmapTransform);
     p.drawImage(QPoint(0, 0), cursorImage);
     p.end();
-    m_setCursorSuccessful = m_pipeline->setCursor(m_cursor->currentBuffer(), logicalToNativeMatrix(cursor->rect(), scale(), transform()).map(cursor->hotspot()));
+    m_setCursorSuccessful = m_pipeline->setCursor(DrmFramebuffer::createFramebuffer(m_cursor->currentBuffer()), logicalToNativeMatrix(cursor->rect(), scale(), transform()).map(cursor->hotspot()));
     moveCursor();
 }
 
