@@ -4566,6 +4566,18 @@ void Window::applyWindowRules()
     setDesktopFileName(rules()->checkDesktopFile(desktopFileName()).toUtf8());
 }
 
+void Window::setLastUsageSerial(quint32 serial)
+{
+    if (m_lastUsageSerial < serial) {
+        m_lastUsageSerial = serial;
+    }
+}
+
+quint32 Window::lastUsageSerial() const
+{
+    return m_lastUsageSerial;
+}
+
 } // namespace KWin
 
 #include "moc_window.cpp"

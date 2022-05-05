@@ -11,6 +11,7 @@
 
 #include "kwin_export.h"
 #include <QObject>
+#include <QPointer>
 #include <QSharedPointer>
 
 namespace KWaylandServer
@@ -36,7 +37,7 @@ public:
 
         const QString token;
         const KWaylandServer::ClientConnection *client;
-        const KWaylandServer::SurfaceInterface *surface;
+        QPointer<const KWaylandServer::SurfaceInterface> surface;
         const uint serial;
         const KWaylandServer::SeatInterface *seat;
         QString applicationId;

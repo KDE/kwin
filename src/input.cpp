@@ -2635,6 +2635,64 @@ void InputRedirection::setLastInputHandler(QObject *device)
     m_lastInputDevice = device;
 }
 
+class WindowInteractedSpy : public InputEventSpy
+{
+public:
+    void keyEvent(KeyEvent *event) override
+    {
+        if (event->isAutoRepeat() || event->type() != QEvent::KeyPress) {
+            return;
+        }
+        update();
+    }
+
+    void pointerEvent(KWin::MouseEvent *event) override
+    {
+        if (event->type() != QEvent::MouseButtonPress) {
+            return;
+        }
+        update();
+    }
+
+    void tabletPadButtonEvent(uint, bool pressed, const KWin::TabletPadId &) override
+    {
+        if (!pressed) {
+            return;
+        }
+        update();
+    }
+
+    void tabletToolButtonEvent(uint, bool pressed, const KWin::TabletToolId &) override
+    {
+        if (!pressed) {
+            return;
+        }
+        update();
+    }
+
+    void tabletToolEvent(KWin::TabletEvent *event) override
+    {
+        if (event->type() != QEvent::TabletPress) {
+            return;
+        }
+        update();
+    }
+
+    void touchDown(qint32, const QPointF &, quint32) override
+    {
+        update();
+    }
+
+    void update()
+    {
+        auto window = workspace()->activeWindow();
+        if (!window) {
+            return;
+        }
+        window->setLastUsageSerial(waylandServer()->seat()->display()->serial());
+    }
+};
+
 class UserActivitySpy : public InputEventSpy
 {
 public:
@@ -2793,6 +2851,7 @@ void InputRedirection::setupInputFilters()
     }
     installInputEventSpy(new HideCursorSpy);
     installInputEventSpy(new UserActivitySpy);
+    installInputEventSpy(new WindowInteractedSpy);
     if (hasGlobalShortcutSupport) {
         installInputEventFilter(new TerminateServerFilter);
     }

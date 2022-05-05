@@ -1399,6 +1399,12 @@ public:
      */
     static QString iconFromDesktopFile(const QString &fileName);
 
+    /**
+     * Sets the last user usage serial of the surface as @p serial
+     */
+    void setLastUsageSerial(quint32 serial);
+    quint32 lastUsageSerial() const;
+
 public Q_SLOTS:
     virtual void closeWindow() = 0;
 
@@ -1980,6 +1986,7 @@ private:
     QKeySequence _shortcut;
 
     WindowRules m_rules;
+    quint32 m_lastUsageSerial = 0;
 };
 
 /**

@@ -37,6 +37,15 @@ XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface 
         if (!m_currentActivationToken || !window || window->property("token").toString() == m_currentActivationToken->token) {
             return;
         }
+
+        // We check that it's not the app that we are trying to activate
+        if (window->desktopFileName() != m_currentActivationToken->applicationId) {
+            // But also that the new one has been requested after the token was requested
+            if (window->lastUsageSerial() < m_currentActivationToken->serial) {
+                return;
+            }
+        }
+
         clear();
     });
     activation->setActivationTokenCreator([this](ClientConnection *client, SurfaceInterface *surface, uint serial, SeatInterface *seat, const QString &appId) -> QString {
@@ -82,10 +91,10 @@ void XdgActivationV1Integration::activateSurface(SurfaceInterface *surface, cons
 
     auto ownerWindow = waylandServer()->findWindow(m_currentActivationToken->surface);
     qCDebug(KWIN_CORE) << "activating" << window << surface << "on behalf of" << m_currentActivationToken->surface << "into" << ownerWindow;
-    if (ws->activeWindow() == ownerWindow || isPrivilegedInWindowManagement(m_currentActivationToken->client)) {
+    if (ws->activeWindow() == ownerWindow || ws->activeWindow()->lastUsageSerial() < m_currentActivationToken->serial || isPrivilegedInWindowManagement(m_currentActivationToken->client)) {
         ws->activateWindow(window);
     } else {
-        qCWarning(KWIN_CORE) << "Activation requested while owner isn't active" << ownerWindow->desktopFileName()
+        qCWarning(KWIN_CORE) << "Activation requested while owner isn't active" << (ownerWindow ? ownerWindow->desktopFileName() : "null")
                              << m_currentActivationToken->applicationId;
         window->demandAttention();
         clear();
