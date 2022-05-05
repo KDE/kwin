@@ -586,9 +586,8 @@ void Scene::paintWindow(WindowItem *item, int mask, const QRegion &region)
         return;
     }
 
-    EffectWindowImpl *effectWindow = item->window()->effectWindow();
-    WindowPaintData data(effectWindow, screenProjectionMatrix());
-    effects->paintWindow(effectWindow, mask, region, data);
+    WindowPaintData data(screenProjectionMatrix());
+    effects->paintWindow(item->window()->effectWindow(), mask, region, data);
 }
 
 // the function that'll be eventually called by paintWindow() above

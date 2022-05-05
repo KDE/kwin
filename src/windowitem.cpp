@@ -43,6 +43,9 @@ WindowItem::WindowItem(Window *window, Item *parent)
     connect(workspace(), &Workspace::currentDesktopChanged, this, &WindowItem::updateVisibility);
     updateVisibility();
 
+    connect(window, &Window::opacityChanged, this, &WindowItem::updateOpacity);
+    updateOpacity();
+
     connect(window, &Window::windowClosed, this, &WindowItem::handleWindowClosed);
 }
 
@@ -227,6 +230,11 @@ void WindowItem::updateDecorationItem()
     } else {
         m_decorationItem.reset();
     }
+}
+
+void WindowItem::updateOpacity()
+{
+    setOpacity(m_window->opacity());
 }
 
 WindowItemX11::WindowItemX11(Window *window, Item *parent)

@@ -120,37 +120,14 @@ void SceneQPainter::render(Item *item, int mask, const QRegion &_region, const W
     painter->save();
     painter->setClipRegion(region);
     painter->setClipping(true);
+    painter->setOpacity(data.opacity());
 
     if (mask & Scene::PAINT_WINDOW_TRANSFORMED) {
         painter->translate(data.xTranslation(), data.yTranslation());
         painter->scale(data.xScale(), data.yScale());
     }
 
-    const bool opaque = qFuzzyCompare(1.0, data.opacity());
-    QImage tempImage;
-    QPainter tempPainter;
-    if (!opaque) {
-        // need a temp render target which we later on blit to the screen
-        tempImage = QImage(boundingRect.size(), QImage::Format_ARGB32_Premultiplied);
-        tempImage.fill(Qt::transparent);
-        tempPainter.begin(&tempImage);
-        tempPainter.save();
-        tempPainter.translate(-boundingRect.topLeft());
-        painter = &tempPainter;
-    }
-
     renderItem(painter, item);
-
-    if (!opaque) {
-        tempPainter.restore();
-        tempPainter.setCompositionMode(QPainter::CompositionMode_DestinationIn);
-        QColor translucent(Qt::transparent);
-        translucent.setAlphaF(data.opacity());
-        tempPainter.fillRect(QRect(QPoint(0, 0), boundingRect.size()), translucent);
-        tempPainter.end();
-        painter = scenePainter();
-        painter->drawImage(boundingRect.topLeft(), tempImage);
-    }
 
     painter->restore();
 }
@@ -161,6 +138,7 @@ void SceneQPainter::renderItem(QPainter *painter, Item *item) const
 
     painter->save();
     painter->translate(item->position());
+    painter->setOpacity(painter->opacity() * item->opacity());
 
     for (Item *childItem : sortedChildItems) {
         if (childItem->z() >= 0) {

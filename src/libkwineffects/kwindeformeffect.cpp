@@ -114,7 +114,7 @@ GLTexture *DeformEffectPrivate::maybeRender(EffectWindow *window, DeformOffscree
         QMatrix4x4 projectionMatrix;
         projectionMatrix.ortho(QRect(0, 0, geometry.width(), geometry.height()));
 
-        WindowPaintData data(window);
+        WindowPaintData data;
         data.setXTranslation(-geometry.x());
         data.setYTranslation(-geometry.y());
         data.setOpacity(1.0);

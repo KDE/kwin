@@ -44,8 +44,8 @@ public:
     {
         QVector<RenderNode> renderNodes;
         QStack<QMatrix4x4> transforms;
+        QStack<qreal> opacityStack;
         const QRegion clip;
-        const WindowPaintData &paintData;
         const bool hardwareClipping;
     };
 

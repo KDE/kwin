@@ -219,18 +219,18 @@ public:
     QMatrix4x4 screenProjectionMatrix;
 };
 
-WindowPaintData::WindowPaintData(EffectWindow *w)
-    : WindowPaintData(w, QMatrix4x4())
+WindowPaintData::WindowPaintData()
+    : WindowPaintData(QMatrix4x4())
 {
 }
 
-WindowPaintData::WindowPaintData(EffectWindow *w, const QMatrix4x4 &screenProjectionMatrix)
+WindowPaintData::WindowPaintData(const QMatrix4x4 &screenProjectionMatrix)
     : PaintData()
     , shader(nullptr)
     , d(new WindowPaintDataPrivate())
 {
     d->screenProjectionMatrix = screenProjectionMatrix;
-    setOpacity(w->opacity());
+    setOpacity(1.0);
     setSaturation(1.0);
     setBrightness(1.0);
     setScreen(0);

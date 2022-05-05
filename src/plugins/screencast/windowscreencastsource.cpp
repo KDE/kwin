@@ -55,7 +55,7 @@ void WindowScreenCastSource::render(GLFramebuffer *target)
     projectionMatrix.ortho(geometry.x(), geometry.x() + geometry.width(),
                            geometry.y(), geometry.y() + geometry.height(), -1, 1);
 
-    WindowPaintData data(m_window->effectWindow());
+    WindowPaintData data;
     data.setProjectionMatrix(projectionMatrix);
 
     GLFramebuffer::pushFramebuffer(target);

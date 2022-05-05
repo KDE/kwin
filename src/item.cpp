@@ -33,6 +33,19 @@ Item::~Item()
     }
 }
 
+qreal Item::opacity() const
+{
+    return m_opacity;
+}
+
+void Item::setOpacity(qreal opacity)
+{
+    if (m_opacity != opacity) {
+        m_opacity = opacity;
+        scheduleRepaint(boundingRect());
+    }
+}
+
 int Item::z() const
 {
     return m_z;

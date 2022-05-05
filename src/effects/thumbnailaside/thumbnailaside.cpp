@@ -57,7 +57,7 @@ void ThumbnailAsideEffect::paintScreen(int mask, const QRegion &region, ScreenPa
     const QMatrix4x4 projectionMatrix = data.projectionMatrix();
     for (const Data &d : qAsConst(windows)) {
         if (painted.intersects(d.rect)) {
-            WindowPaintData data(d.window, projectionMatrix);
+            WindowPaintData data(projectionMatrix);
             data.multiplyOpacity(opacity);
             QRect region;
             setPositionTransformations(data, region, d.window, d.rect, Qt::KeepAspectRatio);

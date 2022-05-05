@@ -3109,8 +3109,8 @@ private:
 class KWINEFFECTS_EXPORT WindowPaintData : public PaintData
 {
 public:
-    explicit WindowPaintData(EffectWindow *w);
-    explicit WindowPaintData(EffectWindow *w, const QMatrix4x4 &screenProjectionMatrix);
+    WindowPaintData();
+    explicit WindowPaintData(const QMatrix4x4 &screenProjectionMatrix);
     WindowPaintData(const WindowPaintData &other);
     ~WindowPaintData() override;
     /**

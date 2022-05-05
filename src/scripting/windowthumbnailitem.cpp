@@ -432,7 +432,7 @@ void WindowThumbnailItem::updateOffscreenTexture()
     projectionMatrix.ortho(geometry.x(), geometry.x() + geometry.width(),
                            geometry.y(), geometry.y() + geometry.height(), -1, 1);
 
-    WindowPaintData data(m_client->effectWindow());
+    WindowPaintData data;
     data.setProjectionMatrix(projectionMatrix);
 
     // The thumbnail must be rendered using kwin's opengl context as VAOs are not

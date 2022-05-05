@@ -331,10 +331,7 @@ void Window::setOpacity(qreal opacity)
     }
     const qreal oldOpacity = m_opacity;
     m_opacity = opacity;
-    if (Compositor::compositing()) {
-        addRepaintFull();
-        Q_EMIT opacityChanged(this, oldOpacity);
-    }
+    Q_EMIT opacityChanged(this, oldOpacity);
 }
 
 bool Window::setupCompositing()
