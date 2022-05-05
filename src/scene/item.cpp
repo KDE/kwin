@@ -6,20 +6,19 @@
 
 #include "scene/item.h"
 #include "composite.h"
-#include "core/output.h"
+#include "core/renderlayer.h"
 #include "core/renderloop.h"
-#include "main.h"
 #include "scene/scene.h"
 #include "utils/common.h"
-#include "workspace.h"
 
 namespace KWin
 {
 
 Item::Item(Item *parent)
+    : m_scene(Compositor::self()->scene())
 {
     setParentItem(parent);
-    connect(workspace(), &Workspace::outputRemoved, this, &Item::removeRepaints);
+    connect(m_scene, &Scene::delegateRemoved, this, &Item::removeRepaints);
 }
 
 Item::~Item()
@@ -27,7 +26,7 @@ Item::~Item()
     setParentItem(nullptr);
     for (const auto &dirty : std::as_const(m_repaints)) {
         if (!dirty.isEmpty()) {
-            Compositor::self()->scene()->addRepaint(dirty);
+            m_scene->addRepaint(dirty);
         }
     }
 }
@@ -293,19 +292,14 @@ void Item::scheduleRepaint(const QRegion &region)
 
 void Item::scheduleRepaintInternal(const QRegion &region)
 {
-    const QList<Output *> outputs = workspace()->outputs();
     const QRegion globalRegion = mapToGlobal(region);
-    if (kwinApp()->operationMode() != Application::OperationModeX11) {
-        for (const auto &output : outputs) {
-            const QRegion dirtyRegion = globalRegion & output->geometry();
-            if (!dirtyRegion.isEmpty()) {
-                m_repaints[output] += dirtyRegion;
-                output->renderLoop()->scheduleRepaint(this);
-            }
+    const QList<SceneDelegate *> delegates = m_scene->delegates();
+    for (SceneDelegate *delegate : delegates) {
+        const QRegion dirtyRegion = globalRegion & delegate->viewport();
+        if (!dirtyRegion.isEmpty()) {
+            m_repaints[delegate] += dirtyRegion;
+            delegate->layer()->loop()->scheduleRepaint(this);
         }
-    } else {
-        m_repaints[outputs.constFirst()] += globalRegion;
-        outputs.constFirst()->renderLoop()->scheduleRepaint(this);
     }
 }
 
@@ -314,16 +308,12 @@ void Item::scheduleFrame()
     if (!isVisible()) {
         return;
     }
-    const QList<Output *> outputs = workspace()->outputs();
-    if (kwinApp()->operationMode() != Application::OperationModeX11) {
-        const QRect geometry = mapToGlobal(rect()).toAlignedRect();
-        for (const Output *output : outputs) {
-            if (output->geometry().intersects(geometry)) {
-                output->renderLoop()->scheduleRepaint(this);
-            }
+    const QRect geometry = mapToGlobal(rect()).toRect();
+    const QList<SceneDelegate *> delegates = m_scene->delegates();
+    for (SceneDelegate *delegate : delegates) {
+        if (delegate->viewport().intersects(geometry)) {
+            delegate->layer()->loop()->scheduleRepaint(this);
         }
-    } else {
-        outputs.constFirst()->renderLoop()->scheduleRepaint(this);
     }
 }
 
@@ -349,19 +339,19 @@ WindowQuadList Item::quads() const
     return m_quads.value();
 }
 
-QRegion Item::repaints(Output *output) const
+QRegion Item::repaints(SceneDelegate *delegate) const
 {
-    return m_repaints.value(output);
+    return m_repaints.value(delegate);
 }
 
-void Item::resetRepaints(Output *output)
+void Item::resetRepaints(SceneDelegate *delegate)
 {
-    m_repaints.insert(output, QRegion());
+    m_repaints.insert(delegate, QRegion());
 }
 
-void Item::removeRepaints(Output *output)
+void Item::removeRepaints(SceneDelegate *delegate)
 {
-    m_repaints.remove(output);
+    m_repaints.remove(delegate);
 }
 
 bool Item::explicitVisible() const
@@ -401,7 +391,7 @@ void Item::updateEffectiveVisibility()
 
     m_effectiveVisible = effectiveVisible;
     if (!m_effectiveVisible) {
-        Compositor::self()->scene()->addRepaint(mapToGlobal(boundingRect()).toAlignedRect());
+        m_scene->addRepaint(mapToGlobal(boundingRect()).toAlignedRect());
     } else {
         scheduleRepaintInternal(boundingRect().toAlignedRect());
     }

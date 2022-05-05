@@ -111,7 +111,7 @@ SurfaceItem *SceneDelegate::scanoutCandidate() const
 
 void SceneDelegate::prePaint()
 {
-    m_scene->prePaint(m_output);
+    m_scene->prePaint(this);
 }
 
 void SceneDelegate::postPaint()
@@ -122,6 +122,11 @@ void SceneDelegate::postPaint()
 void SceneDelegate::paint(RenderTarget *renderTarget, const QRegion &region)
 {
     m_scene->paint(renderTarget, region.translated(viewport().topLeft()));
+}
+
+Output *SceneDelegate::output() const
+{
+    return m_output;
 }
 
 QRect SceneDelegate::viewport() const
@@ -235,6 +240,7 @@ void Scene::addDelegate(SceneDelegate *delegate)
 void Scene::removeDelegate(SceneDelegate *delegate)
 {
     m_delegates.removeOne(delegate);
+    Q_EMIT delegateRemoved(delegate);
 }
 
 static SurfaceItem *findTopMostSurface(SurfaceItem *item)
@@ -286,16 +292,17 @@ SurfaceItem *Scene::scanoutCandidate() const
     return candidate;
 }
 
-void Scene::prePaint(Output *output)
+void Scene::prePaint(SceneDelegate *delegate)
 {
     createStackingOrder();
 
+    painted_delegate = delegate;
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         painted_screen = workspace()->outputs().constFirst();
         m_renderer->setRenderTargetRect(geometry());
         m_renderer->setRenderTargetScale(1);
     } else {
-        painted_screen = output;
+        painted_screen = painted_delegate->output();
         m_renderer->setRenderTargetRect(painted_screen->fractionalGeometry());
         m_renderer->setRenderTargetScale(painted_screen->scale());
     }
@@ -336,31 +343,31 @@ void Scene::prePaint(Output *output)
     }
 }
 
-static void resetRepaintsHelper(Item *item, Output *output)
+static void resetRepaintsHelper(Item *item, SceneDelegate *delegate)
 {
-    item->resetRepaints(output);
+    item->resetRepaints(delegate);
 
     const auto childItems = item->childItems();
     for (Item *childItem : childItems) {
-        resetRepaintsHelper(childItem, output);
+        resetRepaintsHelper(childItem, delegate);
     }
 }
 
-static void accumulateRepaints(Item *item, Output *output, QRegion *repaints)
+static void accumulateRepaints(Item *item, SceneDelegate *delegate, QRegion *repaints)
 {
-    *repaints += item->repaints(output);
-    item->resetRepaints(output);
+    *repaints += item->repaints(delegate);
+    item->resetRepaints(delegate);
 
     const auto childItems = item->childItems();
     for (Item *childItem : childItems) {
-        accumulateRepaints(childItem, output, repaints);
+        accumulateRepaints(childItem, delegate, repaints);
     }
 }
 
 void Scene::preparePaintGenericScreen()
 {
     for (WindowItem *windowItem : std::as_const(stacking_order)) {
-        resetRepaintsHelper(windowItem, painted_screen);
+        resetRepaintsHelper(windowItem, painted_delegate);
 
         WindowPrePaintData data;
         data.mask = m_paintContext.mask;
@@ -384,7 +391,7 @@ void Scene::preparePaintSimpleScreen()
         Window *window = windowItem->window();
         WindowPrePaintData data;
         data.mask = m_paintContext.mask;
-        accumulateRepaints(windowItem, painted_screen, &data.paint);
+        accumulateRepaints(windowItem, painted_delegate, &data.paint);
 
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass.
         if (window->opacity() == 1.0) {
@@ -419,7 +426,7 @@ void Scene::preparePaintSimpleScreen()
     }
 
     if (m_dndIcon) {
-        accumulateRepaints(m_dndIcon.get(), painted_screen, &m_paintContext.damage);
+        accumulateRepaints(m_dndIcon.get(), painted_delegate, &m_paintContext.damage);
     }
 }
 

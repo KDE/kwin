@@ -51,6 +51,7 @@ public:
     explicit SceneDelegate(Scene *scene, Output *output, QObject *parent = nullptr);
     ~SceneDelegate() override;
 
+    Output *output() const;
     QRect viewport() const;
 
     QRegion repaints() const override;
@@ -90,7 +91,7 @@ public:
     void removeDelegate(SceneDelegate *delegate);
 
     SurfaceItem *scanoutCandidate() const;
-    void prePaint(Output *output);
+    void prePaint(SceneDelegate *delegate);
     void postPaint();
     void paint(RenderTarget *renderTarget, const QRegion &region);
 
@@ -146,6 +147,7 @@ public:
 Q_SIGNALS:
     void preFrameRender();
     void frameRendered();
+    void delegateRemoved(SceneDelegate *delegate);
 
 protected:
     void createStackingOrder();
@@ -185,6 +187,7 @@ protected:
 
     // The screen that is being currently painted
     Output *painted_screen = nullptr;
+    SceneDelegate *painted_delegate = nullptr;
 
     // windows in their stacking order
     QVector<WindowItem *> stacking_order;

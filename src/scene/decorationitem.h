@@ -18,6 +18,7 @@ namespace KWin
 
 class Window;
 class Deleted;
+class Output;
 
 namespace Decoration
 {

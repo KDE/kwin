@@ -1859,7 +1859,12 @@ void EffectsHandlerImpl::renderScreen(EffectScreen *screen)
     renderTarget.setDevicePixelRatio(screen->devicePixelRatio());
 
     auto output = static_cast<EffectScreenImpl *>(screen)->platformOutput();
-    m_scene->prePaint(output);
+
+    RenderLayer layer(output->renderLoop());
+    SceneDelegate delegate(m_scene, output);
+    delegate.setLayer(&layer);
+
+    m_scene->prePaint(&delegate);
     m_scene->paint(&renderTarget, output->geometry());
     m_scene->postPaint();
 }
