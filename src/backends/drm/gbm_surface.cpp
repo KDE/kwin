@@ -3,6 +3,7 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2017 Martin Flöser <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2022 Xaver Hugl <xaver.hugl@gmail.com>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -22,41 +23,16 @@
 namespace KWin
 {
 
-GbmSurface::GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, uint32_t flags, EGLConfig config)
-    : m_surface(gbm_surface_create(gpu->gbmDevice(), size.width(), size.height(), format, flags))
-    , m_eglBackend(static_cast<EglGbmBackend *>(gpu->platform()->renderBackend()))
-    , m_size(size)
-    , m_format(format)
-    , m_flags(flags)
-    , m_fbo(new GLFramebuffer(0, size))
-{
-    if (!m_surface) {
-        qCCritical(KWIN_DRM) << "Could not create gbm surface!" << strerror(errno);
-        return;
-    }
-    m_eglSurface = eglCreatePlatformWindowSurfaceEXT(m_eglBackend->eglDisplay(), config, m_surface, nullptr);
-    if (m_eglSurface == EGL_NO_SURFACE) {
-        qCCritical(KWIN_DRM) << "Creating EGL surface failed!" << getEglErrorString();
-    }
-}
-
-GbmSurface::GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, QVector<uint64_t> modifiers, EGLConfig config)
-    : m_surface(gbm_surface_create_with_modifiers(gpu->gbmDevice(), size.width(), size.height(), format, modifiers.isEmpty() ? nullptr : modifiers.constData(), modifiers.count()))
-    , m_eglBackend(static_cast<EglGbmBackend *>(gpu->platform()->renderBackend()))
+GbmSurface::GbmSurface(EglGbmBackend *backend, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, uint32_t flags, gbm_surface *surface, EGLSurface eglSurface)
+    : m_surface(surface)
+    , m_eglBackend(backend)
+    , m_eglSurface(eglSurface)
     , m_size(size)
     , m_format(format)
     , m_modifiers(modifiers)
-    , m_flags(0)
+    , m_flags(flags)
     , m_fbo(new GLFramebuffer(0, size))
 {
-    if (!m_surface) {
-        qCCritical(KWIN_DRM) << "Could not create gbm surface!" << strerror(errno);
-        return;
-    }
-    m_eglSurface = eglCreatePlatformWindowSurfaceEXT(m_eglBackend->eglDisplay(), config, m_surface, nullptr);
-    if (m_eglSurface == EGL_NO_SURFACE) {
-        qCCritical(KWIN_DRM) << "Creating EGL surface failed!" << getEglErrorString();
-    }
 }
 
 GbmSurface::~GbmSurface()
@@ -120,11 +96,6 @@ QSize GbmSurface::size() const
     return m_size;
 }
 
-bool GbmSurface::isValid() const
-{
-    return m_surface != nullptr && m_eglSurface != EGL_NO_SURFACE;
-}
-
 uint32_t GbmSurface::format() const
 {
     return m_format;
@@ -152,5 +123,39 @@ QRegion GbmSurface::repaintRegion() const
 uint32_t GbmSurface::flags() const
 {
     return m_flags;
+}
+
+std::variant<std::shared_ptr<GbmSurface>, GbmSurface::Error> GbmSurface::createSurface(EglGbmBackend *backend, const QSize &size, uint32_t format, uint32_t flags, EGLConfig config)
+{
+    gbm_surface *surface = gbm_surface_create(backend->gpu()->gbmDevice(), size.width(), size.height(), format, flags);
+    if (!surface) {
+        qCWarning(KWIN_DRM) << "Creating gbm surface failed!" << strerror(errno);
+        return Error::Unknown;
+    }
+    EGLSurface eglSurface = eglCreatePlatformWindowSurfaceEXT(backend->eglDisplay(), config, surface, nullptr);
+    if (eglSurface == EGL_NO_SURFACE) {
+        qCCritical(KWIN_DRM) << "Creating EGL surface failed!" << getEglErrorString();
+        return Error::Unknown;
+    }
+    return std::make_shared<GbmSurface>(backend, size, format, QVector<uint64_t>{}, flags, surface, eglSurface);
+}
+
+std::variant<std::shared_ptr<GbmSurface>, GbmSurface::Error> GbmSurface::createSurface(EglGbmBackend *backend, const QSize &size, uint32_t format, QVector<uint64_t> modifiers, EGLConfig config)
+{
+    gbm_surface *surface = gbm_surface_create_with_modifiers(backend->gpu()->gbmDevice(), size.width(), size.height(), format, modifiers.data(), modifiers.size());
+    if (!surface) {
+        if (errno == ENOSYS) {
+            return Error::ModifiersUnsupported;
+        } else {
+            qCWarning(KWIN_DRM) << "Creating gbm surface failed!" << strerror(errno);
+            return Error::Unknown;
+        }
+    }
+    EGLSurface eglSurface = eglCreatePlatformWindowSurfaceEXT(backend->eglDisplay(), config, surface, nullptr);
+    if (eglSurface == EGL_NO_SURFACE) {
+        qCCritical(KWIN_DRM) << "Creating EGL surface failed!" << getEglErrorString();
+        return Error::Unknown;
+    }
+    return std::make_shared<GbmSurface>(backend, size, format, modifiers, 0, surface, eglSurface);
 }
 }

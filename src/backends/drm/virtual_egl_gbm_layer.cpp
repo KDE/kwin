@@ -97,27 +97,32 @@ bool VirtualEglGbmLayer::createGbmSurface()
 {
     static bool modifiersEnvSet = false;
     static const bool modifiersEnv = qEnvironmentVariableIntValue("KWIN_DRM_USE_MODIFIERS", &modifiersEnvSet) != 0;
+    const bool allowModifiers = ((m_eglBackend->gpu()->isNVidia() && !modifiersEnvSet) || (modifiersEnvSet && modifiersEnv));
 
     const auto tranches = m_eglBackend->dmabuf()->tranches();
     for (const auto &tranche : tranches) {
         for (auto it = tranche.formatTable.constBegin(); it != tranche.formatTable.constEnd(); it++) {
             const auto size = m_output->pixelSize();
             const auto config = m_eglBackend->config(it.key());
+            const auto format = it.key();
             const auto modifiers = it.value();
-            const bool allowModifiers = m_eglBackend->gpu()->addFB2ModifiersSupported() && ((m_eglBackend->gpu()->isNVidia() && !modifiersEnvSet) || (modifiersEnvSet && modifiersEnv));
 
-            std::shared_ptr<GbmSurface> gbmSurface;
-            if (!allowModifiers) {
-                gbmSurface = std::make_shared<GbmSurface>(m_eglBackend->gpu(), size, it.key(), GBM_BO_USE_RENDERING, config);
-            } else {
-                gbmSurface = std::make_shared<GbmSurface>(m_eglBackend->gpu(), size, it.key(), it.value(), config);
+            if (allowModifiers && !modifiers.isEmpty()) {
+                const auto ret = GbmSurface::createSurface(m_eglBackend, size, format, modifiers, config);
+                if (const auto surface = std::get_if<std::shared_ptr<GbmSurface>>(&ret)) {
+                    m_oldGbmSurface = m_gbmSurface;
+                    m_gbmSurface = *surface;
+                    return true;
+                } else if (std::get<GbmSurface::Error>(ret) != GbmSurface::Error::ModifiersUnsupported) {
+                    continue;
+                }
             }
-            if (!gbmSurface->isValid()) {
-                continue;
+            const auto ret = GbmSurface::createSurface(m_eglBackend, size, format, GBM_BO_USE_RENDERING, config);
+            if (const auto surface = std::get_if<std::shared_ptr<GbmSurface>>(&ret)) {
+                m_oldGbmSurface = m_gbmSurface;
+                m_gbmSurface = *surface;
+                return true;
             }
-            m_oldGbmSurface = m_gbmSurface;
-            m_gbmSurface = gbmSurface;
-            return true;
         }
     }
     return false;

@@ -12,7 +12,7 @@
 #include <cstdint>
 #include <epoxy/egl.h>
 #include <memory>
-#include <optional>
+#include <variant>
 
 #include "drm_buffer_gbm.h"
 #include "utils/damagejournal.h"
@@ -29,8 +29,7 @@ class EglGbmBackend;
 class GbmSurface : public std::enable_shared_from_this<GbmSurface>
 {
 public:
-    explicit GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, uint32_t flags, EGLConfig config);
-    explicit GbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, QVector<uint64_t> modifiers, EGLConfig config);
+    explicit GbmSurface(EglGbmBackend *backend, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, uint32_t flags, gbm_surface *surface, EGLSurface eglSurface);
     ~GbmSurface();
 
     bool makeContextCurrent() const;
@@ -48,6 +47,14 @@ public:
     uint32_t flags() const;
     int bufferAge() const;
     QRegion repaintRegion() const;
+
+    enum class Error {
+        ModifiersUnsupported,
+        EglError,
+        Unknown
+    };
+    static std::variant<std::shared_ptr<GbmSurface>, Error> createSurface(EglGbmBackend *backend, const QSize &size, uint32_t format, uint32_t flags, EGLConfig config);
+    static std::variant<std::shared_ptr<GbmSurface>, Error> createSurface(EglGbmBackend *backend, const QSize &size, uint32_t format, QVector<uint64_t> modifiers, EGLConfig config);
 
 private:
     gbm_surface *m_surface;

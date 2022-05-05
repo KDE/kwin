@@ -163,37 +163,35 @@ bool EglGbmLayerSurface::createGbmSurface(const QSize &size, uint32_t format, co
 {
     static bool modifiersEnvSet = false;
     static const bool modifiersEnv = qEnvironmentVariableIntValue("KWIN_DRM_USE_MODIFIERS", &modifiersEnvSet) != 0;
-    const bool allowModifiers = m_eglBackend->gpu()->addFB2ModifiersSupported() && m_gpu->addFB2ModifiersSupported()
-        && (!modifiersEnvSet || (modifiersEnvSet && modifiersEnv)) && !modifiers.isEmpty();
-
-    const auto config = m_eglBackend->config(format);
-
-    std::shared_ptr<GbmSurface> gbmSurface;
-#if HAVE_GBM_BO_GET_FD_FOR_PLANE
-    if (!allowModifiers) {
-#else
-    // modifiers have to be disabled with multi-gpu if gbm_bo_get_fd_for_plane is not available
-    if (!allowModifiers || m_gpu != m_eglBackend->gpu()) {
+    bool allowModifiers = m_gpu->addFB2ModifiersSupported() && (!modifiersEnvSet || (modifiersEnvSet && modifiersEnv)) && !modifiers.isEmpty();
+#if !HAVE_GBM_BO_GET_FD_FOR_PLANE
+    allowModifiers &= m_gpu == m_eglBackend->gpu();
 #endif
-        int gbmFlags = flags | GBM_BO_USE_RENDERING;
-        if (m_gpu == m_eglBackend->gpu()) {
-            gbmFlags |= GBM_BO_USE_SCANOUT;
-        } else {
-            gbmFlags |= GBM_BO_USE_LINEAR;
-        }
-        gbmSurface = std::make_shared<GbmSurface>(m_eglBackend->gpu(), size, format, gbmFlags, config);
-    } else {
-        gbmSurface = std::make_shared<GbmSurface>(m_eglBackend->gpu(), size, format, modifiers, config);
-        if (!gbmSurface->isValid()) {
-            // the egl / gbm implementation may reject the modifier list from another gpu
-            // as a fallback use linear, to at least make CPU copy more efficient
-            const QVector<uint64_t> linear = {DRM_FORMAT_MOD_LINEAR};
-            gbmSurface = std::make_shared<GbmSurface>(m_eglBackend->gpu(), size, format, linear, config);
+    const auto config = m_eglBackend->config(format);
+    if (!config) {
+        return false;
+    }
+
+    if (allowModifiers) {
+        const auto ret = GbmSurface::createSurface(m_eglBackend, size, format, modifiers, config);
+        if (const auto surface = std::get_if<std::shared_ptr<GbmSurface>>(&ret)) {
+            m_oldGbmSurface = m_gbmSurface;
+            m_gbmSurface = *surface;
+            return true;
+        } else if (std::get<GbmSurface::Error>(ret) != GbmSurface::Error::ModifiersUnsupported) {
+            return false;
         }
     }
-    if (gbmSurface->isValid()) {
+    int gbmFlags = flags | GBM_BO_USE_RENDERING;
+    if (m_gpu == m_eglBackend->gpu()) {
+        gbmFlags |= GBM_BO_USE_SCANOUT;
+    } else {
+        gbmFlags |= GBM_BO_USE_LINEAR;
+    }
+    const auto ret = GbmSurface::createSurface(m_eglBackend, size, format, gbmFlags, config);
+    if (const auto surface = std::get_if<std::shared_ptr<GbmSurface>>(&ret)) {
         m_oldGbmSurface = m_gbmSurface;
-        m_gbmSurface = gbmSurface;
+        m_gbmSurface = *surface;
         return true;
     } else {
         return false;
