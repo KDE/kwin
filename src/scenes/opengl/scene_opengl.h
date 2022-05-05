@@ -43,7 +43,7 @@ public:
     struct RenderContext
     {
         QVector<RenderNode> renderNodes;
-        QStack<QMatrix4x4> transforms;
+        QStack<QMatrix4x4> transformStack;
         QStack<qreal> opacityStack;
         const QRegion clip;
         const bool hardwareClipping;
