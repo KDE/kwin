@@ -100,7 +100,6 @@ public:
     void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
 
     // User interaction
-    bool borderActivated(ElectricBorder border) override;
     void windowInputMouseEvent(QEvent *e) override;
     void grabbedKeyboardEvent(QKeyEvent *e) override;
     bool isActive() const override;
@@ -218,9 +217,6 @@ public Q_SLOTS:
     }
     void toggleActiveClass();
 
-    // slots for global shortcut changed
-    // needed to toggle the effect
-    void globalShortcutChanged(QAction *action, const QKeySequence &seq);
     // EffectsHandler
     void slotWindowAdded(KWin::EffectWindow *w);
     void slotWindowClosed(KWin::EffectWindow *w);
@@ -282,9 +278,6 @@ private:
     friend class PresentWindowsEffectProxy;
 
     // User configuration settings
-    QList<ElectricBorder> m_borderActivate;
-    QList<ElectricBorder> m_borderActivateAll;
-    QList<ElectricBorder> m_borderActivateClass;
     int m_layoutMode;
     bool m_showCaptions;
     bool m_showIcons;
@@ -321,11 +314,6 @@ private:
     EffectFrame *m_filterFrame;
     QString m_windowFilter;
 
-    // Shortcut - needed to toggle the effect
-    QList<QKeySequence> shortcut;
-    QList<QKeySequence> shortcutAll;
-    QList<QKeySequence> shortcutClass;
-
     // Atoms
     // Present windows for all windows of given desktop
     // -1 for all desktops
@@ -348,10 +336,6 @@ private:
         qint32 id = 0;
         bool active = false;
     } m_touch;
-
-    QAction *m_exposeAction;
-    QAction *m_exposeAllAction;
-    QAction *m_exposeClassAction;
 };
 
 } // namespace

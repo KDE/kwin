@@ -70,6 +70,6 @@
     },
     "X-KDE-ConfigModule": "kwin_presentwindows_config",
     "org.kde.kwin.effect": {
-        "video": "https://files.kde.org/plasma/kwin/effect-videos/present_windows.mp4"
+        "internal": true
     }
 }

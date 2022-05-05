@@ -89,7 +89,7 @@ void KWinScreenEdgesConfig::save()
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
-    interface.reconfigureEffect(QStringLiteral("presentwindows"));
+    interface.reconfigureEffect(QStringLiteral("windowview"));
     for (const auto &effectId : qAsConst(m_effects)) {
         interface.reconfigureEffect(effectId);
     }
@@ -268,7 +268,7 @@ void KWinScreenEdgesConfig::monitorShowEvent()
     KConfigGroup config(m_config, "Plugins");
 
     // Present Windows
-    bool enabled = config.readEntry("presentwindowsEnabled", true);
+    bool enabled = config.readEntry("windowviewEnabled", true);
     m_form->monitorItemSetEnabled(PresentWindowsCurrent, enabled);
     m_form->monitorItemSetEnabled(PresentWindowsAll, enabled);
 

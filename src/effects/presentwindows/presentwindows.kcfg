@@ -47,13 +47,5 @@
         <entry name="RightButtonDesktop" type="Int">
             <default>0</default>
         </entry>
-        <entry name="BorderActivate" type="IntList" />
-        <entry name="BorderActivateAll" type="IntList">
-            <default code="true">QList&lt;int&gt;() &lt;&lt; int(ElectricTopLeft)</default>
-        </entry>
-        <entry name="BorderActivateClass" type="IntList" />
-        <entry name="TouchBorderActivate" type="IntList" />
-        <entry name="TouchBorderActivateAll" type="IntList"/>
-        <entry name="TouchBorderActivateClass" type="IntList" />
     </group>
 </kcfg>

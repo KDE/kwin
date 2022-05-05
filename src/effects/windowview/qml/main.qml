@@ -5,10 +5,13 @@
 */
 
 import QtQuick 2.12
+import QtQuick.Layouts 1.4
 import QtGraphicalEffects 1.12
 import org.kde.kwin 3.0 as KWinComponents
 import org.kde.kwin.private.effects 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.extras 2.0 as PlasmaExtras
+import org.kde.KWin.Effect.WindowView 1.0
 
 Item {
     id: container
@@ -61,26 +64,70 @@ Item {
         }
     }
 
-    WindowHeap {
+    ColumnLayout {
         width: targetScreen.geometry.width
         height: targetScreen.geometry.height
-        focus: true
-        padding: PlasmaCore.Units.largeSpacing
-        animationDuration: container.animationDuration
-        animationEnabled: container.animationEnabled
-        dragEnabled: false
-        organized: container.organized
-        showOnly: selectedIds
-        model: KWinComponents.ClientFilterModel {
-            activity: KWinComponents.Workspace.currentActivity
-            desktop: KWinComponents.Workspace.currentVirtualDesktop
-            screenName: targetScreen.name
-            clientModel: stackModel
-            windowType: ~KWinComponents.ClientFilterModel.Dock &
-                    ~KWinComponents.ClientFilterModel.Desktop &
-                    ~KWinComponents.ClientFilterModel.Notification;
+        PlasmaExtras.SearchField {
+            id: searchField
+            Layout.alignment: Qt.AlignCenter
+            Layout.topMargin: PlasmaCore.Units.gridUnit
+            Layout.preferredWidth: Math.min(parent.width, 20 * PlasmaCore.Units.gridUnit)
+            focus: true
+            Keys.priority: Keys.AfterItem
+            Keys.onPressed: {
+                switch (event.key) {
+                case Qt.Key_Down:
+                    heap.forceActiveFocus();
+                    break;
+                case Qt.Key_Return:
+                case Qt.Key_Enter:
+                    heap.forceActiveFocus();
+                    if (heap.count === 1) {
+                        heap.activateIndex(0);
+                    }
+                    break;
+                default:
+                    break;
+                }
+            }
+            Keys.onEnterPressed: {
+                heap.forceActiveFocus();
+                if (heap.count === 1) {
+                    heap.activateCurrentClient();
+                }
+            }
         }
-        onActivated: effect.deactivate(animationDuration);
+        WindowHeap {
+            id: heap
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            focus: true
+            padding: PlasmaCore.Units.largeSpacing
+            animationDuration: container.animationDuration
+            animationEnabled: container.animationEnabled
+            dragEnabled: false
+            organized: container.organized
+            showOnly: container.effect.mode === WindowView.ModeWindowClass ? "activeClass" : selectedIds
+            layout: effect.layout
+            model: KWinComponents.ClientFilterModel {
+                activity: KWinComponents.Workspace.currentActivity
+                desktop: container.effect.mode == WindowView.ModeCurrentDesktop ? KWinComponents.Workspace.currentVirtualDesktop : undefined
+                screenName: targetScreen.name
+                clientModel: stackModel
+                filter: searchField.text
+                windowType: ~KWinComponents.ClientFilterModel.Dock &
+                        ~KWinComponents.ClientFilterModel.Desktop &
+                        ~KWinComponents.ClientFilterModel.Notification;
+            }
+            onActivated: effect.deactivate(animationDuration);
+        }
+    }
+    PlasmaExtras.PlaceholderMessage {
+        anchors.centerIn: parent
+        width: parent.width - (PlasmaCore.Units.gridUnit * 8)
+        visible: heap.count === 0
+        iconName: "edit-none"
+        text: searchField.text.length > 0 ? i18nd("kwin_effects", "No Matches") : i18nd("kwin_effects", "No Windows")
     }
 
     Repeater {

@@ -52,9 +52,6 @@ PresentWindowsEffect::PresentWindowsEffect()
     , m_lastPresentTime(std::chrono::milliseconds::zero())
     , m_filterFrame(nullptr)
     , m_closeView(nullptr)
-    , m_exposeAction(new QAction(this))
-    , m_exposeAllAction(new QAction(this))
-    , m_exposeClassAction(new QAction(this))
 {
     initConfig<PresentWindowsConfig>();
 
@@ -65,43 +62,6 @@ PresentWindowsEffect::PresentWindowsEffect()
     };
     announceSupportProperties();
     connect(effects, &EffectsHandler::xcbConnectionChanged, this, announceSupportProperties);
-
-    QAction *exposeAction = m_exposeAction;
-    exposeAction->setObjectName(QStringLiteral("Expose"));
-    exposeAction->setText(i18n("Toggle Present Windows (Current desktop)"));
-    KGlobalAccel::self()->setDefaultShortcut(exposeAction, QList<QKeySequence>() << (Qt::CTRL | Qt::Key_F9));
-    KGlobalAccel::self()->setShortcut(exposeAction, QList<QKeySequence>() << (Qt::CTRL | Qt::Key_F9));
-    shortcut = KGlobalAccel::self()->shortcut(exposeAction);
-    effects->registerGlobalShortcut(Qt::CTRL | Qt::Key_F9, exposeAction);
-    connect(exposeAction, &QAction::triggered, this, &PresentWindowsEffect::toggleActive);
-
-    QAction *exposeAllAction = m_exposeAllAction;
-    exposeAllAction->setObjectName(QStringLiteral("ExposeAll"));
-    exposeAllAction->setText(i18n("Toggle Present Windows (All desktops)"));
-    KGlobalAccel::self()->setDefaultShortcut(exposeAllAction, QList<QKeySequence>() << (Qt::CTRL | Qt::Key_F10) << Qt::Key_LaunchC);
-    KGlobalAccel::self()->setShortcut(exposeAllAction, QList<QKeySequence>() << (Qt::CTRL | Qt::Key_F10) << Qt::Key_LaunchC);
-    shortcutAll = KGlobalAccel::self()->shortcut(exposeAllAction);
-    effects->registerGlobalShortcut(Qt::CTRL + Qt::Key_F10, exposeAllAction);
-    connect(exposeAllAction, &QAction::triggered, this, &PresentWindowsEffect::toggleActiveAllDesktops);
-
-    effects->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Down, 4, new QAction(this), [this](qreal progress) {
-        m_mode = ModeAllDesktops;
-        if (progress > .2 && !m_activated) {
-            setActive(true);
-        } else if (progress <= .2 && m_activated) {
-            setActive(false);
-        }
-    });
-
-    QAction *exposeClassAction = m_exposeClassAction;
-    exposeClassAction->setObjectName(QStringLiteral("ExposeClass"));
-    exposeClassAction->setText(i18n("Toggle Present Windows (Window class)"));
-    KGlobalAccel::self()->setDefaultShortcut(exposeClassAction, QList<QKeySequence>() << (Qt::CTRL | Qt::Key_F7));
-    KGlobalAccel::self()->setShortcut(exposeClassAction, QList<QKeySequence>() << (Qt::CTRL | Qt::Key_F7));
-    effects->registerGlobalShortcut(Qt::CTRL | Qt::Key_F7, exposeClassAction);
-    connect(exposeClassAction, &QAction::triggered, this, &PresentWindowsEffect::toggleActiveClass);
-    shortcutClass = KGlobalAccel::self()->shortcut(exposeClassAction);
-    connect(KGlobalAccel::self(), &KGlobalAccel::globalShortcutChanged, this, &PresentWindowsEffect::globalShortcutChanged);
 
     reconfigure(ReconfigureAll);
     connect(effects, &EffectsHandler::windowAdded, this, &PresentWindowsEffect::slotWindowAdded);
@@ -132,30 +92,6 @@ PresentWindowsEffect::~PresentWindowsEffect()
 void PresentWindowsEffect::reconfigure(ReconfigureFlags)
 {
     PresentWindowsConfig::self()->read();
-    for (ElectricBorder border : qAsConst(m_borderActivate)) {
-        effects->unreserveElectricBorder(border, this);
-    }
-    for (ElectricBorder border : qAsConst(m_borderActivateAll)) {
-        effects->unreserveElectricBorder(border, this);
-    }
-    m_borderActivate.clear();
-    m_borderActivateAll.clear();
-
-    const auto borderActivate = PresentWindowsConfig::borderActivate();
-    for (int i : borderActivate) {
-        m_borderActivate.append(ElectricBorder(i));
-        effects->reserveElectricBorder(ElectricBorder(i), this);
-    }
-    const auto activateAll = PresentWindowsConfig::borderActivateAll();
-    for (int i : activateAll) {
-        m_borderActivateAll.append(ElectricBorder(i));
-        effects->reserveElectricBorder(ElectricBorder(i), this);
-    }
-    const auto activateClass = PresentWindowsConfig::borderActivateClass();
-    for (int i : activateClass) {
-        m_borderActivateClass.append(ElectricBorder(i));
-        effects->reserveElectricBorder(ElectricBorder(i), this);
-    }
 
     m_layoutMode = PresentWindowsConfig::layoutMode();
     m_showCaptions = PresentWindowsConfig::drawWindowCaptions();
@@ -178,25 +114,6 @@ void PresentWindowsEffect::reconfigure(ReconfigureFlags)
     m_leftButtonDesktop = (DesktopMouseAction)PresentWindowsConfig::leftButtonDesktop();
     m_middleButtonDesktop = (DesktopMouseAction)PresentWindowsConfig::middleButtonDesktop();
     m_rightButtonDesktop = (DesktopMouseAction)PresentWindowsConfig::rightButtonDesktop();
-
-    // touch screen edges
-    const QVector<ElectricBorder> relevantBorders{ElectricLeft, ElectricTop, ElectricRight, ElectricBottom};
-    for (auto e : relevantBorders) {
-        effects->unregisterTouchBorder(e, m_exposeAction);
-        effects->unregisterTouchBorder(e, m_exposeAllAction);
-        effects->unregisterTouchBorder(e, m_exposeClassAction);
-    }
-    auto touchEdge = [&relevantBorders](const QList<int> touchBorders, QAction *action) {
-        for (int i : touchBorders) {
-            if (!relevantBorders.contains(ElectricBorder(i))) {
-                continue;
-            }
-            effects->registerTouchBorder(ElectricBorder(i), action);
-        }
-    };
-    touchEdge(PresentWindowsConfig::touchBorderActivate(), m_exposeAction);
-    touchEdge(PresentWindowsConfig::touchBorderActivateAll(), m_exposeAllAction);
-    touchEdge(PresentWindowsConfig::touchBorderActivateClass(), m_exposeClassAction);
 }
 
 void *PresentWindowsEffect::proxy()
@@ -583,35 +500,6 @@ void PresentWindowsEffect::slotWindowFrameGeometryChanged(EffectWindow *w, const
     rearrangeWindows();
 }
 
-bool PresentWindowsEffect::borderActivated(ElectricBorder border)
-{
-    int mode = 0;
-    if (m_borderActivate.contains(border)) {
-        mode |= 1;
-    } else if (m_borderActivateAll.contains(border)) {
-        mode |= 2;
-    } else if (m_borderActivateClass.contains(border)) {
-        mode |= 4;
-    }
-
-    if (!mode) {
-        return false;
-    }
-
-    if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this) {
-        return true;
-    }
-
-    if (mode & 1) {
-        toggleActive();
-    } else if (mode & 2) {
-        toggleActiveAllDesktops();
-    } else if (mode & 4) {
-        toggleActiveClass();
-    }
-    return true;
-}
-
 void PresentWindowsEffect::windowInputMouseEvent(QEvent *e)
 {
     QMouseEvent *me = dynamic_cast<QMouseEvent *>(e);
@@ -820,21 +708,6 @@ void PresentWindowsEffect::mouseActionDesktop(DesktopMouseAction &action)
 void PresentWindowsEffect::grabbedKeyboardEvent(QKeyEvent *e)
 {
     if (e->type() == QEvent::KeyPress) {
-        // check for global shortcuts
-        // HACK: keyboard grab disables the global shortcuts so we have to check for global shortcut (bug 156155)
-        if (m_mode == ModeCurrentDesktop && shortcut.contains(e->key() | e->modifiers())) {
-            toggleActive();
-            return;
-        }
-        if (m_mode == ModeAllDesktops && shortcutAll.contains(e->key() | e->modifiers())) {
-            toggleActiveAllDesktops();
-            return;
-        }
-        if (m_mode == ModeWindowClass && shortcutClass.contains(e->key() | e->modifiers())) {
-            toggleActiveClass();
-            return;
-        }
-
         switch (e->key()) {
             // Wrap only if not auto-repeating
         case Qt::Key_Left:
@@ -2130,20 +2003,6 @@ EffectWindow *PresentWindowsEffect::findFirstWindow() const
         }
     }
     return topLeft;
-}
-
-void PresentWindowsEffect::globalShortcutChanged(QAction *action, const QKeySequence &seq)
-{
-    if (action->objectName() == QStringLiteral("Expose")) {
-        shortcut.clear();
-        shortcut.append(seq);
-    } else if (action->objectName() == QStringLiteral("ExposeAll")) {
-        shortcutAll.clear();
-        shortcutAll.append(seq);
-    } else if (action->objectName() == QStringLiteral("ExposeClass")) {
-        shortcutClass.clear();
-        shortcutClass.append(seq);
-    }
 }
 
 bool PresentWindowsEffect::isActive() const

@@ -50,7 +50,7 @@
             <default>None</default>
         </entry>
     </group>
-    <group name="Effect-PresentWindows">
+    <group name="Effect-windowview">
         <entry key="BorderActivateAll" type="IntList">
             <default>ElectricTopLeft</default>
         </entry>

@@ -29,11 +29,18 @@ FocusScope {
     property bool dragEnabled: true
     property real padding: 0
     property var showOnly: []
+    property string activeClass
+    readonly property alias count: windowsRepeater.count
 
     required property bool organized
     readonly property bool effectiveOrganized: expoLayout.ready && organized
 
     signal activated()
+
+    function activateIndex(index) {
+        KWinComponents.Workspace.activeClient = windowsRepeater.itemAt(index).client;
+        activated();
+    }
 
     ExpoLayout {
         id: expoLayout
@@ -54,7 +61,25 @@ FocusScope {
 
                 readonly property bool selected: heap.selectedIndex == index
                 readonly property bool hidden: {
-                    return heap.showOnly.length && heap.showOnly.indexOf(client.internalId) == -1;
+                    if (heap.showOnly === "activeClass") {
+                        return heap.activeClass !== String(thumb.client.resourceName); // thumb.client.resourceName is not an actual String as comes from a QByteArray so === would fail
+                    } else {
+                        return heap.showOnly.length && heap.showOnly.indexOf(client.internalId) == -1;
+                    }
+                }
+
+                Component.onCompleted: {
+                    if (thumb.client.active) {
+                        heap.activeClass = thumb.client.resourceName;
+                    }
+                }
+                Connections {
+                    target: thumb.client
+                    function onActiveChanged() {
+                        if (thumb.client.active) {
+                            heap.activeClass = thumb.client.resourceName;
+                        }
+                    }
                 }
 
                 state: {
