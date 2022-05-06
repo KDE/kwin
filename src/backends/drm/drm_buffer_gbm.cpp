@@ -186,7 +186,7 @@ std::shared_ptr<GbmBuffer> GbmBuffer::importBuffer(DrmGpu *gpu, KWaylandServer::
 std::shared_ptr<GbmBuffer> GbmBuffer::importBuffer(DrmGpu *gpu, GbmBuffer *buffer)
 {
     const auto fds = buffer->fds();
-    if (!fds[0]) {
+    if (fds[0] == -1) {
         return nullptr;
     }
     const auto strides = buffer->strides();
