@@ -134,9 +134,18 @@ std::shared_ptr<DrmFramebuffer> DrmFramebuffer::createFramebuffer(const std::sha
     const auto offsets = buffer->offsets();
 
     uint32_t framebufferId = 0;
-    int ret = drmModeAddFB2(buffer->gpu()->fd(), size.width(), size.height(), buffer->format(), handles.data(), strides.data(), offsets.data(), &framebufferId, 0);
-    if (ret == EOPNOTSUPP && handles.size() == 1) {
-        ret = drmModeAddFB(buffer->gpu()->fd(), size.width(), size.height(), 24, 32, strides[0], handles[0], &framebufferId);
+    int ret;
+    if (buffer->gpu()->addFB2ModifiersSupported() && buffer->modifier() != DRM_FORMAT_MOD_INVALID) {
+        uint64_t modifier[4];
+        for (uint32_t i = 0; i < 4; i++) {
+            modifier[i] = i < buffer->planeCount() ? buffer->modifier() : 0;
+        }
+        ret = drmModeAddFB2WithModifiers(buffer->gpu()->fd(), size.width(), size.height(), buffer->format(), handles.data(), strides.data(), offsets.data(), modifier, &framebufferId, DRM_MODE_FB_MODIFIERS);
+    } else {
+        ret = drmModeAddFB2(buffer->gpu()->fd(), size.width(), size.height(), buffer->format(), handles.data(), strides.data(), offsets.data(), &framebufferId, 0);
+        if (ret == EOPNOTSUPP && handles.size() == 1) {
+            ret = drmModeAddFB(buffer->gpu()->fd(), size.width(), size.height(), 24, 32, strides[0], handles[0], &framebufferId);
+        }
     }
     if (ret == 0) {
         return std::make_shared<DrmFramebuffer>(buffer, framebufferId);
