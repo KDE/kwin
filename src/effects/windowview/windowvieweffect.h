@@ -20,6 +20,7 @@ class WindowViewEffect : public QuickSceneEffect
     Q_OBJECT
     Q_PROPERTY(int animationDuration READ animationDuration NOTIFY animationDurationChanged)
     Q_PROPERTY(int layout READ layout NOTIFY layoutChanged)
+    Q_PROPERTY(bool ignoreMinimized READ ignoreMinimized NOTIFY ignoreMinimizedChanged)
     Q_PROPERTY(PresentWindowsMode mode READ mode NOTIFY modeChanged)
     Q_PROPERTY(qreal partialActivationFactor READ partialActivationFactor NOTIFY partialActivationFactorChanged)
     Q_PROPERTY(bool gestureInProgress READ gestureInProgress NOTIFY gestureInProgressChanged)
@@ -48,6 +49,8 @@ public:
     int layout() const;
     void setLayout(int layout);
 
+    bool ignoreMinimized() const;
+
     void reconfigure(ReconfigureFlags) override;
     int requestedEffectChainPosition() const override;
 
@@ -72,6 +75,7 @@ Q_SIGNALS:
     void gestureInProgressChanged();
     void modeChanged();
     void layoutChanged();
+    void ignoreMinimizedChanged();
 
 protected:
     QVariantMap initialProperties(EffectScreen *screen) override;

@@ -115,6 +115,7 @@ Item {
                 screenName: targetScreen.name
                 clientModel: stackModel
                 filter: searchField.text
+                minimizedWindows: !effect.ignoreMinimized
                 windowType: ~KWinComponents.ClientFilterModel.Dock &
                         ~KWinComponents.ClientFilterModel.Desktop &
                         ~KWinComponents.ClientFilterModel.Notification;

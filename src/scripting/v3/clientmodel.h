@@ -59,6 +59,7 @@ class ClientFilterModel : public QSortFilterProxyModel
     Q_PROPERTY(QString filter READ filter WRITE setFilter NOTIFY filterChanged)
     Q_PROPERTY(QString screenName READ screenName WRITE setScreenName RESET resetScreenName NOTIFY screenNameChanged)
     Q_PROPERTY(WindowTypes windowType READ windowType WRITE setWindowType RESET resetWindowType NOTIFY windowTypeChanged)
+    Q_PROPERTY(bool minimizedWindows READ minimizedWindows WRITE setMinimizedWindows NOTIFY minimizedWindowsChanged)
 
 public:
     enum WindowType {
@@ -96,6 +97,9 @@ public:
     void setWindowType(WindowTypes windowType);
     void resetWindowType();
 
+    void setMinimizedWindows(bool show);
+    bool minimizedWindows() const;
+
 protected:
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
 
@@ -106,6 +110,7 @@ Q_SIGNALS:
     void clientModelChanged();
     void filterChanged();
     void windowTypeChanged();
+    void minimizedWindowsChanged();
 
 private:
     WindowTypes windowTypeMask(Window *client) const;
@@ -116,6 +121,7 @@ private:
     QPointer<VirtualDesktop> m_desktop;
     QString m_filter;
     std::optional<WindowTypes> m_windowType;
+    bool m_showMinimizedWindows = true;
 };
 
 } // namespace ScriptingModels::V3

@@ -12,7 +12,7 @@
     <x>0</x>
     <y>0</y>
     <width>455</width>
-    <height>177</height>
+    <height>201</height>
    </rect>
   </property>
   <layout class="QFormLayout" name="formLayout">
@@ -37,16 +37,13 @@
      </item>
     </widget>
    </item>
-   <item row="2" column="0" colspan="2">
+   <item row="3" column="0" colspan="2">
     <widget class="KShortcutsEditor" name="shortcutsEditor">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
-     </property>
-     <property name="actionTypes">
-       <enum>KShortcutsEditor::GlobalAction</enum>
      </property>
     </widget>
    </item>
@@ -59,6 +56,20 @@
    </item>
    <item row="1" column="1">
     <widget class="QCheckBox" name="kcfg_BlurBackground"/>
+   </item>
+   <item row="2" column="1">
+    <widget class="QCheckBox" name="kcfg_IgnoreMinimized">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Ignore minimized windows:</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

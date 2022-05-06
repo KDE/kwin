@@ -13,6 +13,9 @@
         <entry name="LayoutMode" type="Int">
             <default>1</default>
         </entry>
+        <entry name="IgnoreMinimized" type="bool">
+            <default>false</default>
+        </entry>
 
         <entry name="BlurBackground" type="Bool">
             <default>true</default>

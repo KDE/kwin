@@ -201,6 +201,7 @@ FocusScope {
                     desktop: KWinComponents.Workspace.currentVirtualDesktop
                     screenName: targetScreen.name
                     clientModel: stackModel
+                    minimizedWindows: !effect.ignoreMinimized
                     windowType: ~KWinComponents.ClientFilterModel.Dock &
                             ~KWinComponents.ClientFilterModel.Desktop &
                             ~KWinComponents.ClientFilterModel.Notification;
