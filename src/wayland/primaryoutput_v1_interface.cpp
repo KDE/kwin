@@ -17,7 +17,7 @@
 
 namespace KWaylandServer
 {
-static const quint32 s_version = 1;
+static const quint32 s_version = 2;
 
 class PrimaryOutputV1InterfacePrivate : public QtWaylandServer::kde_primary_output_v1
 {
@@ -32,6 +32,10 @@ public:
         if (!m_outputName.isEmpty()) {
             send_primary_output(resource->handle, m_outputName);
         }
+    }
+    void kde_primary_output_v1_destroy(Resource *resource) override
+    {
+        wl_resource_destroy(resource->handle);
     }
 
     QString m_outputName;
