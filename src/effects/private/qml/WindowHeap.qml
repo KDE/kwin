@@ -21,12 +21,16 @@ FocusScope {
         Down
     }
 
+    property bool supportsCloseWindows: false
+    property bool supportsDragUpGesture: false
+    property bool showCaptions: true
     property alias model: windowsRepeater.model
     property alias layout: expoLayout.mode
     property int selectedIndex: -1
     property int animationDuration: PlasmaCore.Units.longDuration
     property bool animationEnabled: false
     property bool dragEnabled: true
+    property bool absolutePositioning: true
     property real padding: 0
     property var showOnly: []
     property string activeClass
@@ -34,6 +38,7 @@ FocusScope {
 
     required property bool organized
     readonly property bool effectiveOrganized: expoLayout.ready && organized
+    property bool dragActive: false
 
     signal activated()
 
@@ -181,6 +186,7 @@ FocusScope {
 
                     PC3.Label {
                         id: caption
+                        visible: heap.showCaptions
                         width: Math.min(implicitWidth, thumbSource.width)
                         anchors.top: parent.bottom
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -208,8 +214,8 @@ FocusScope {
                         name: "initial"
                         PropertyChanges {
                             target: thumb
-                            x: thumb.client.x - targetScreen.geometry.x - expoLayout.Kirigami.ScenePosition.x
-                            y: thumb.client.y - targetScreen.geometry.y - expoLayout.Kirigami.ScenePosition.y
+                            x: thumb.client.x - targetScreen.geometry.x - (heap.absolutePositioning ?  expoLayout.Kirigami.ScenePosition.x : 0)
+                            y: thumb.client.y - targetScreen.geometry.y - (heap.absolutePositioning ?  expoLayout.Kirigami.ScenePosition.y : 0)
                             width: thumb.client.width
                             height: thumb.client.height
                         }
@@ -226,8 +232,8 @@ FocusScope {
                         name: "partial"
                         PropertyChanges {
                             target: thumb
-                            x: (thumb.client.x - targetScreen.geometry.x - expoLayout.Kirigami.ScenePosition.x) * (1 - effect.partialActivationFactor) + cell.x * effect.partialActivationFactor
-                            y: (thumb.client.y - targetScreen.geometry.y - expoLayout.Kirigami.ScenePosition.y) * (1 - effect.partialActivationFactor) + cell.y * effect.partialActivationFactor
+                            x: (thumb.client.x - targetScreen.geometry.x - (heap.absolutePositioning ?  expoLayout.Kirigami.ScenePosition.x : 0)) * (1 - effect.partialActivationFactor) + cell.x * effect.partialActivationFactor
+                            y: (thumb.client.y - targetScreen.geometry.y - (heap.absolutePositioning ?  expoLayout.Kirigami.ScenePosition.y : 0)) * (1 - effect.partialActivationFactor) + cell.y * effect.partialActivationFactor
                             width: thumb.client.width * (1 - effect.partialActivationFactor) + cell.width * effect.partialActivationFactor
                             height: thumb.client.height * (1 - effect.partialActivationFactor) + cell.height * effect.partialActivationFactor
                             opacity: thumb.client.minimized ? effect.partialActivationFactor : 1
@@ -321,6 +327,7 @@ FocusScope {
                 }
 
                 TapHandler {
+                    enabled: heap.supportsCloseWindows
                     acceptedPointerTypes: PointerDevice.GenericPointer | PointerDevice.Pen
                     acceptedButtons: Qt.MiddleButton
                     onTapped: thumb.client.closeWindow()
@@ -332,6 +339,9 @@ FocusScope {
                     target: null
 
                     readonly property double targetScale: {
+                        if (!heap.supportsDragUpGesture) {
+                            return 1;
+                        }
                         const localPressPosition = centroid.scenePressPosition.y - expoLayout.Kirigami.ScenePosition.y;
                         if (localPressPosition == 0) {
                             return 0.1
@@ -342,6 +352,7 @@ FocusScope {
                     }
 
                     onActiveChanged: {
+                        heap.dragActive = active;
                         if (active) {
                             thumb.activeDragHandler = dragHandler;
                         } else {
@@ -359,12 +370,18 @@ FocusScope {
                     id: touchDragHandler
                     acceptedDevices: PointerDevice.TouchScreen
                     readonly property double targetOpacity: {
+                        if (!heap.supportsCloseWindows) {
+                            return 1;
+                        }
                         const startDistance = heap.Kirigami.ScenePosition.y + heap.height - centroid.scenePressPosition.y;
                         const localPosition = heap.Kirigami.ScenePosition.y + heap.height - centroid.scenePosition.y;
                         return Math.min(localPosition / startDistance, 1);
                     }
 
                     onActiveChanged: {
+                        if (!heap.supportsCloseWindows) {
+                            return;
+                        }
                         if (!active) {
                             if (targetOpacity < 0.4) {
                                 thumb.client.closeWindow();
@@ -375,7 +392,7 @@ FocusScope {
 
                 PC3.Button {
                     id: closeButton
-                    visible: (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && thumb.client.closeable && !dragHandler.active
+                    visible: heap.supportsCloseWindows && (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && thumb.client.closeable && !dragHandler.active
                     anchors {
                         right: thumbSource.right
                         rightMargin: PlasmaCore.Units.smallSpacing

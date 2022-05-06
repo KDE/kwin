@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>574</width>
-    <height>250</height>
+    <height>312</height>
    </rect>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -17,105 +17,8 @@
       <string>Appearance</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Zoom &amp;duration:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy">
-         <cstring>kcfg_ZoomDuration</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QSpinBox" name="kcfg_ZoomDuration">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="specialValueText">
-         <string comment="Duration of zoom">Default</string>
-        </property>
-        <property name="maximum">
-         <number>5000</number>
-        </property>
-        <property name="singleStep">
-         <number>10</number>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Border wid&amp;th:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy">
-         <cstring>kcfg_BorderWidth</cstring>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="1">
-       <widget class="QSpinBox" name="kcfg_BorderWidth">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="maximum">
-         <number>100</number>
-        </property>
-        <property name="value">
-         <number>10</number>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_6">
-        <property name="text">
-         <string>Desktop &amp;name alignment:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy">
-         <cstring>desktopNameAlignmentCombo</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QComboBox" name="desktopNameAlignmentCombo">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>&amp;Layout mode:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy">
-         <cstring>kcfg_LayoutMode</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QComboBox" name="kcfg_LayoutMode">
+       <widget class="QComboBox" name="kcfg_DesktopLayoutMode">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -139,7 +42,7 @@
         </item>
        </widget>
       </item>
-      <item row="4" column="0">
+      <item row="3" column="0">
        <widget class="QLabel" name="layoutRowsLabel">
         <property name="text">
          <string>N&amp;umber of rows:</string>
@@ -152,7 +55,7 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
+      <item row="3" column="1">
        <widget class="QSpinBox" name="kcfg_CustomLayoutRows">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -171,50 +74,7 @@
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="clickBehaviorLabel">
-        <property name="text">
-         <string>Click behavior:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy">
-         <cstring>switchDesktopAndActivateWindow</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="QRadioButton" name="switchDesktopAndActivateWindow">
-        <property name="toolTip">
-         <string>If the Present Windows effect is enabled, it will be automatically triggered.</string>
-        </property>
-        <property name="text">
-         <string>Switch desktop and activate window</string>
-        </property>
-        <attribute name="buttonGroup">
-         <string notr="true">clickBehaviorButtonGroup</string>
-        </attribute>
-       </widget>
-      </item>
-      <item row="6" column="1">
-       <widget class="QRadioButton" name="switchDesktopOnly">
-        <property name="text">
-         <string>Switch desktop only</string>
-        </property>
-        <attribute name="buttonGroup">
-         <string notr="true">clickBehaviorButtonGroup</string>
-        </attribute>
-       </widget>
-      </item>
-      <item row="7" column="0" colspan="2">
-       <widget class="QCheckBox" name="kcfg_ShowAddRemove">
-        <property name="text">
-         <string>Show buttons to alter count of virtual desktops</string>
-        </property>
-       </widget>
-      </item>
-      <item row="8" column="0" colspan="2">
+      <item row="5" column="0" colspan="2">
        <spacer name="verticalSpacer">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -227,6 +87,76 @@
         </property>
        </spacer>
       </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="desktopNameAlignmentCombo">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>Desktop &amp;name alignment:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>desktopNameAlignmentCombo</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="2">
+       <widget class="QCheckBox" name="kcfg_ShowAddRemove">
+        <property name="text">
+         <string>Show buttons to alter count of virtual desktops</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>&amp;Grid layout mode:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>kcfg_DesktopLayoutMode</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QComboBox" name="kcfg_LayoutMode">
+        <item>
+         <property name="text">
+          <string>Closest</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Natural</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Windows layout:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>kcfg_LayoutMode</cstring>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -237,15 +167,12 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="0" colspan="2">
-       <widget class="KShortcutsEditor" name="shortcutEditor" native="true">
+       <widget class="KShortcutsEditor" name="shortcutEditor">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="actionTypes">
-            <enum>KShortcutsEditor::GlobalAction</enum>
         </property>
        </widget>
       </item>
@@ -258,20 +185,17 @@
   <customwidget>
    <class>KShortcutsEditor</class>
    <extends>QWidget</extends>
-   <header location="global">KShortcutsEditor</header>
+   <header>kshortcutseditor.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>kcfg_ZoomDuration</tabstop>
-  <tabstop>kcfg_BorderWidth</tabstop>
   <tabstop>desktopNameAlignmentCombo</tabstop>
+  <tabstop>kcfg_DesktopLayoutMode</tabstop>
   <tabstop>kcfg_LayoutMode</tabstop>
   <tabstop>kcfg_CustomLayoutRows</tabstop>
+  <tabstop>kcfg_ShowAddRemove</tabstop>
  </tabstops>
  <resources/>
  <connections/>
- <buttongroups>
-  <buttongroup name="clickBehaviorButtonGroup"/>
- </buttongroups>
 </ui>

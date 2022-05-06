@@ -235,7 +235,10 @@ void QuickSceneEffect::handleScreenRemoved(EffectScreen *screen)
 void QuickSceneEffect::addScreen(EffectScreen *screen)
 {
     QuickSceneView *view = new QuickSceneView(this, screen);
-    view->setRootItem(qobject_cast<QQuickItem *>(d->qmlComponent->createWithInitialProperties(initialProperties(screen))));
+    auto properties = initialProperties(screen);
+    properties["width"] = view->geometry().width();
+    properties["height"] = view->geometry().height();
+    view->setRootItem(qobject_cast<QQuickItem *>(d->qmlComponent->createWithInitialProperties(properties)));
     view->setAutomaticRepaint(false);
 
     connect(view, &QuickSceneView::repaintNeeded, this, [view]() {

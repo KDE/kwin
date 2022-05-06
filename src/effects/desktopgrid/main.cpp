@@ -1,16 +1,17 @@
 /*
-    SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2022 Marco Martin <mart@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "desktopgrid.h"
+#include "desktopgrideffect.h"
 
 namespace KWin
 {
 
-KWIN_EFFECT_FACTORY(DesktopGridEffect,
-                    "metadata.json.stripped")
+KWIN_EFFECT_FACTORY_SUPPORTED(DesktopGridEffect,
+                              "metadata.json.stripped",
+                              return DesktopGridEffect::supported();)
 
 } // namespace KWin
 

@@ -832,9 +832,9 @@ class KWINEFFECTS_EXPORT EffectsHandler : public QObject
     Q_PROPERTY(int currentDesktop READ currentDesktop WRITE setCurrentDesktop NOTIFY desktopChanged)
     Q_PROPERTY(QString currentActivity READ currentActivity NOTIFY currentActivityChanged)
     Q_PROPERTY(KWin::EffectWindow *activeWindow READ activeWindow WRITE activateWindow NOTIFY windowActivated)
-    Q_PROPERTY(QSize desktopGridSize READ desktopGridSize)
-    Q_PROPERTY(int desktopGridWidth READ desktopGridWidth)
-    Q_PROPERTY(int desktopGridHeight READ desktopGridHeight)
+    Q_PROPERTY(QSize desktopGridSize READ desktopGridSize NOTIFY desktopGridSizeChanged)
+    Q_PROPERTY(int desktopGridWidth READ desktopGridWidth NOTIFY desktopGridWidthChanged)
+    Q_PROPERTY(int desktopGridHeight READ desktopGridHeight NOTIFY desktopGridHeightChanged)
     Q_PROPERTY(int workspaceWidth READ workspaceWidth)
     Q_PROPERTY(int workspaceHeight READ workspaceHeight)
     /**
@@ -1530,6 +1530,24 @@ Q_SIGNALS:
      * @since 4.11.4
      */
     void desktopPresenceChanged(KWin::EffectWindow *window, int oldDesktop, int newDesktop);
+    /**
+     * Emitted when the virtual desktop grid layout changes
+     * @param size new size
+     * @since 5.25
+     */
+    void desktopGridSizeChanged(const QSize &size);
+    /**
+     * Emitted when the virtual desktop grid layout changes
+     * @param width new width
+     * @since 5.25
+     */
+    void desktopGridWidthChanged(int width);
+    /**
+     * Emitted when the virtual desktop grid layout changes
+     * @param height new height
+     * @since 5.25
+     */
+    void desktopGridHeightChanged(int height);
     /**
      * Signal emitted when the number of currently existing desktops is changed.
      * @param old The previous number of desktops in used.
