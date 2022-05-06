@@ -34,6 +34,7 @@ DrmGpuBuffer::DrmGpuBuffer(DrmGpu *gpu, QSize size, uint32_t format, uint64_t mo
     , m_strides(strides)
     , m_offsets(offsets)
     , m_planeCount(planeCount)
+    , m_fds({-1, -1, -1, -1})
 {
 }
 
