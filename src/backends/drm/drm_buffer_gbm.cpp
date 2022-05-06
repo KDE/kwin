@@ -136,6 +136,7 @@ void GbmBuffer::createFds()
         if (m_fds[i] == -1) {
             for (uint32_t i2 = 0; i2 < i; i2++) {
                 close(m_fds[i2]);
+                m_fds[i2] = -1;
             }
             return;
         }
