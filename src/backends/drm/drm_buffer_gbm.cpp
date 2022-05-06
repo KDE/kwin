@@ -32,8 +32,12 @@ namespace KWin
 static std::array<uint32_t, 4> getHandles(gbm_bo *bo)
 {
     std::array<uint32_t, 4> ret;
-    for (int i = 0; i < gbm_bo_get_plane_count(bo); i++) {
+    int i = 0;
+    for (; i < gbm_bo_get_plane_count(bo); i++) {
         ret[i] = gbm_bo_get_handle(bo).u32;
+    }
+    for (; i < 4; i++) {
+        ret[i] = 0;
     }
     return ret;
 }
@@ -41,8 +45,12 @@ static std::array<uint32_t, 4> getHandles(gbm_bo *bo)
 static std::array<uint32_t, 4> getStrides(gbm_bo *bo)
 {
     std::array<uint32_t, 4> ret;
-    for (int i = 0; i < gbm_bo_get_plane_count(bo); i++) {
+    int i = 0;
+    for (; i < gbm_bo_get_plane_count(bo); i++) {
         ret[i] = gbm_bo_get_stride_for_plane(bo, i);
+    }
+    for (; i < 4; i++) {
+        ret[i] = 0;
     }
     return ret;
 }
@@ -50,8 +58,12 @@ static std::array<uint32_t, 4> getStrides(gbm_bo *bo)
 static std::array<uint32_t, 4> getOffsets(gbm_bo *bo)
 {
     std::array<uint32_t, 4> ret;
-    for (int i = 0; i < gbm_bo_get_plane_count(bo); i++) {
+    int i = 0;
+    for (; i < gbm_bo_get_plane_count(bo); i++) {
         ret[i] = gbm_bo_get_offset(bo, i);
+    }
+    for (; i < 4; i++) {
+        ret[i] = 0;
     }
     return ret;
 }
