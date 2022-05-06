@@ -158,7 +158,7 @@ void KWinScreenEdgesConfig::monitorInit()
     const auto scripts = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Script"), scriptFolder);
 
     for (const KPluginMetaData &script : scripts) {
-        if (script.value(QStringLiteral("X-KWin-Border-Activate")) != true) {
+        if (script.value(QStringLiteral("X-KWin-Border-Activate"), false) != true) {
             continue;
         }
 
