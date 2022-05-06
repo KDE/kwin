@@ -38,13 +38,6 @@ VirtualEglGbmLayer::VirtualEglGbmLayer(EglGbmBackend *eglBackend, DrmVirtualOutp
     : m_output(output)
     , m_eglBackend(eglBackend)
 {
-    connect(eglBackend, &EglGbmBackend::aboutToBeDestroyed, this, &VirtualEglGbmLayer::destroyResources);
-}
-
-void VirtualEglGbmLayer::destroyResources()
-{
-    m_gbmSurface.reset();
-    m_oldGbmSurface.reset();
 }
 
 void VirtualEglGbmLayer::aboutToStartPainting(const QRegion &damagedRegion)
@@ -172,4 +165,10 @@ bool VirtualEglGbmLayer::scanout(SurfaceItem *surfaceItem)
     return true;
 }
 
+void VirtualEglGbmLayer::releaseBuffers()
+{
+    m_currentBuffer.reset();
+    m_gbmSurface.reset();
+    m_oldGbmSurface.reset();
+}
 }

@@ -695,4 +695,10 @@ DrmRenderBackend *DrmBackend::renderBackend() const
     return m_renderBackend;
 }
 
+void DrmBackend::releaseBuffers()
+{
+    for (const auto &gpu : qAsConst(m_gpus)) {
+        gpu->releaseBuffers();
+    }
+}
 }

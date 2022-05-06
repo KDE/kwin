@@ -137,4 +137,10 @@ bool EglGbmLayer::hasDirectScanoutBuffer() const
     return m_scanoutBuffer != nullptr;
 }
 
+void EglGbmLayer::releaseBuffers()
+{
+    m_currentBuffer.reset();
+    m_scanoutBuffer.reset();
+    m_surface.destroyResources();
+}
 }

@@ -12,6 +12,7 @@
 
 #include "abstract_egl_backend.h"
 #include "drm_backend.h"
+#include "drm_layer.h"
 #include "drm_lease_output.h"
 #include "drm_object_connector.h"
 #include "drm_object_crtc.h"
@@ -778,6 +779,24 @@ QVector<DrmObject *> DrmGpu::unusedObjects() const
 QSize DrmGpu::cursorSize() const
 {
     return m_cursorSize;
+}
+
+void DrmGpu::releaseBuffers()
+{
+    for (const auto &plane : qAsConst(m_planes)) {
+        plane->releaseBuffers();
+    }
+    for (const auto &crtc : qAsConst(m_crtcs)) {
+        crtc->releaseBuffers();
+    }
+    for (const auto &pipeline : qAsConst(m_pipelines)) {
+        pipeline->layer()->releaseBuffers();
+    }
+    for (const auto &output : qAsConst(m_outputs)) {
+        if (const auto virtualOutput = qobject_cast<DrmVirtualOutput *>(output)) {
+            virtualOutput->outputLayer()->releaseBuffers();
+        }
+    }
 }
 
 void DrmGpu::recreateSurfaces()

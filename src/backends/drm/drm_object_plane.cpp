@@ -201,4 +201,13 @@ void DrmPlane::disable()
     setPending(PropertyIndex::FbId, 0);
 }
 
+void DrmPlane::releaseBuffers()
+{
+    if (m_next) {
+        m_next->releaseBuffer();
+    }
+    if (m_current) {
+        m_current->releaseBuffer();
+    }
+}
 }

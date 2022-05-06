@@ -82,6 +82,7 @@ public:
     bool needsModeset() const;
     bool maybeModeset();
 
+    void releaseBuffers();
     void recreateSurfaces();
 
 Q_SIGNALS:

@@ -30,6 +30,7 @@ DrmQPainterBackend::DrmQPainterBackend(DrmBackend *backend)
 
 DrmQPainterBackend::~DrmQPainterBackend()
 {
+    m_backend->releaseBuffers();
     m_backend->setRenderBackend(nullptr);
 }
 
@@ -46,9 +47,9 @@ OutputLayer *DrmQPainterBackend::primaryLayer(Output *output)
 QSharedPointer<DrmPipelineLayer> DrmQPainterBackend::createDrmPipelineLayer(DrmPipeline *pipeline)
 {
     if (pipeline->output()) {
-        return QSharedPointer<DrmQPainterLayer>::create(this, pipeline);
+        return QSharedPointer<DrmQPainterLayer>::create(pipeline);
     } else {
-        return QSharedPointer<DrmLeaseQPainterLayer>::create(this, pipeline);
+        return QSharedPointer<DrmLeaseQPainterLayer>::create(pipeline);
     }
 }
 

@@ -42,11 +42,11 @@ public:
 
     QRegion currentDamage() const override;
     QSharedPointer<GLTexture> texture() const override;
+    void releaseBuffers() override;
 
 private:
     bool createGbmSurface();
     bool doesGbmSurfaceFit(GbmSurface *surf) const;
-    void destroyResources();
 
     QPointer<KWaylandServer::SurfaceInterface> m_scanoutSurface;
     std::shared_ptr<GbmBuffer> m_currentBuffer;

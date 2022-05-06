@@ -29,6 +29,7 @@ public:
 
     virtual QSharedPointer<GLTexture> texture() const;
     virtual QRegion currentDamage() const;
+    virtual void releaseBuffers() = 0;
 };
 
 class DrmPipelineLayer : public DrmOutputLayer

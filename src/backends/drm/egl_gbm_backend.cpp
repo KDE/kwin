@@ -56,7 +56,7 @@ EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend)
 
 EglGbmBackend::~EglGbmBackend()
 {
-    Q_EMIT aboutToBeDestroyed();
+    m_backend->releaseBuffers();
     cleanup();
     m_backend->setRenderBackend(nullptr);
 }
@@ -242,7 +242,7 @@ QSharedPointer<DrmPipelineLayer> EglGbmBackend::createDrmPipelineLayer(DrmPipeli
     if (pipeline->output()) {
         return QSharedPointer<EglGbmLayer>::create(this, pipeline);
     } else {
-        return QSharedPointer<DrmLeaseEglGbmLayer>::create(this, pipeline);
+        return QSharedPointer<DrmLeaseEglGbmLayer>::create(pipeline);
     }
 }
 

@@ -45,6 +45,7 @@ EglGbmLayerSurface::~EglGbmLayerSurface()
 
 void EglGbmLayerSurface::destroyResources()
 {
+    m_currentBuffer.reset();
     if (m_gbmSurface && (m_shadowBuffer || m_oldShadowBuffer)) {
         m_gbmSurface->makeContextCurrent();
     }

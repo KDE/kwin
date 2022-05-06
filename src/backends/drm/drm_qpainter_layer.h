@@ -24,13 +24,14 @@ class DrmFramebuffer;
 class DrmQPainterLayer : public DrmPipelineLayer
 {
 public:
-    DrmQPainterLayer(DrmQPainterBackend *backend, DrmPipeline *pipeline);
+    DrmQPainterLayer(DrmPipeline *pipeline);
 
     OutputLayerBeginFrameInfo beginFrame() override;
     void endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion) override;
     bool checkTestBuffer() override;
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
     QRegion currentDamage() const override;
+    void releaseBuffers() override;
 
 private:
     bool doesSwapchainFit() const;
@@ -49,6 +50,7 @@ public:
     void endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion) override;
 
     QRegion currentDamage() const override;
+    void releaseBuffers() override;
 
 private:
     QImage m_image;
@@ -59,13 +61,14 @@ private:
 class DrmLeaseQPainterLayer : public DrmPipelineLayer
 {
 public:
-    DrmLeaseQPainterLayer(DrmQPainterBackend *backend, DrmPipeline *pipeline);
+    DrmLeaseQPainterLayer(DrmPipeline *pipeline);
 
     OutputLayerBeginFrameInfo beginFrame() override;
     void endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion) override;
 
     bool checkTestBuffer() override;
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
+    void releaseBuffers() override;
 
 private:
     std::shared_ptr<DrmFramebuffer> m_framebuffer;

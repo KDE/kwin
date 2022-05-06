@@ -58,13 +58,19 @@ public:
     ~DrmFramebuffer();
 
     uint32_t framebufferId() const;
+    /**
+     * may be nullptr
+     */
     DrmGpuBuffer *buffer() const;
+
+    void releaseBuffer();
 
     static std::shared_ptr<DrmFramebuffer> createFramebuffer(const std::shared_ptr<DrmGpuBuffer> &buffer);
 
 protected:
-    const std::shared_ptr<DrmGpuBuffer> m_buffer;
     const uint32_t m_framebufferId;
+    DrmGpu *const m_gpu;
+    std::shared_ptr<DrmGpuBuffer> m_buffer;
 };
 
 }

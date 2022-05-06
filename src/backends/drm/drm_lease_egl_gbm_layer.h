@@ -19,13 +19,14 @@ class EglGbmBackend;
 class DrmLeaseEglGbmLayer : public DrmPipelineLayer
 {
 public:
-    DrmLeaseEglGbmLayer(EglGbmBackend *backend, DrmPipeline *pipeline);
+    DrmLeaseEglGbmLayer(DrmPipeline *pipeline);
 
     OutputLayerBeginFrameInfo beginFrame() override;
     void endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion) override;
 
     bool checkTestBuffer() override;
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
+    void releaseBuffers() override;
 
 private:
     std::shared_ptr<DrmFramebuffer> m_framebuffer;

@@ -71,6 +71,8 @@ public:
     void setRenderBackend(DrmRenderBackend *backend);
     DrmRenderBackend *renderBackend() const;
 
+    void releaseBuffers();
+
 public Q_SLOTS:
     void turnOutputsOn();
     void sceneInitialized() override;

@@ -39,6 +39,7 @@ public:
     bool hasDirectScanoutBuffer() const override;
     QRegion currentDamage() const override;
     QSharedPointer<GLTexture> texture() const override;
+    void releaseBuffers() override;
 
 private:
     std::shared_ptr<DrmFramebuffer> m_scanoutBuffer;

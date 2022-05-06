@@ -20,12 +20,9 @@
 namespace KWin
 {
 
-DrmLeaseEglGbmLayer::DrmLeaseEglGbmLayer(EglGbmBackend *backend, DrmPipeline *pipeline)
+DrmLeaseEglGbmLayer::DrmLeaseEglGbmLayer(DrmPipeline *pipeline)
     : DrmPipelineLayer(pipeline)
 {
-    connect(backend, &EglGbmBackend::aboutToBeDestroyed, this, [this]() {
-        m_framebuffer.reset();
-    });
 }
 
 bool DrmLeaseEglGbmLayer::checkTestBuffer()
@@ -67,5 +64,10 @@ void DrmLeaseEglGbmLayer::endFrame(const QRegion &damagedRegion, const QRegion &
 {
     Q_UNUSED(damagedRegion)
     Q_UNUSED(renderedRegion)
+}
+
+void DrmLeaseEglGbmLayer::releaseBuffers()
+{
+    m_framebuffer.reset();
 }
 }

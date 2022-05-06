@@ -371,7 +371,7 @@ QSize DrmPipeline::bufferSize() const
 bool DrmPipeline::isCursorVisible() const
 {
     const QRect mode = QRect(QPoint(), m_pending.mode->size());
-    return m_pending.cursorFb && QRect(m_pending.cursorPos, m_pending.cursorFb->buffer()->size()).intersects(mode);
+    return m_pending.cursorFb && (!m_pending.cursorFb->buffer() || QRect(m_pending.cursorPos, m_pending.cursorFb->buffer()->size()).intersects(mode));
 }
 
 DrmConnector *DrmPipeline::connector() const

@@ -86,6 +86,8 @@ public:
     Transformations transformation();
     Transformations supportedTransformations() const;
 
+    void releaseBuffers();
+
 private:
     std::shared_ptr<DrmFramebuffer> m_current;
     std::shared_ptr<DrmFramebuffer> m_next;

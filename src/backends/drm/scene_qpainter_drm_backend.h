@@ -36,9 +36,6 @@ public:
     QSharedPointer<DrmPipelineLayer> createDrmPipelineLayer(DrmPipeline *pipeline) override;
     QSharedPointer<DrmOutputLayer> createLayer(DrmVirtualOutput *output) override;
 
-Q_SIGNALS:
-    void aboutToBeDestroyed();
-
 private:
     DrmBackend *m_backend;
 };

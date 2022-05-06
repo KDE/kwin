@@ -108,4 +108,13 @@ void DrmCrtc::disable()
     setPending(PropertyIndex::ModeId, 0);
 }
 
+void DrmCrtc::releaseBuffers()
+{
+    if (m_nextBuffer) {
+        m_nextBuffer->releaseBuffer();
+    }
+    if (m_currentBuffer) {
+        m_currentBuffer->releaseBuffer();
+    }
+}
 }

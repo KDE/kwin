@@ -78,9 +78,6 @@ public:
     std::optional<GbmFormat> gbmFormatForDrmFormat(uint32_t format) const;
     DrmGpu *gpu() const;
 
-Q_SIGNALS:
-    void aboutToBeDestroyed();
-
 private:
     bool initializeEgl();
     bool initBufferConfigs();

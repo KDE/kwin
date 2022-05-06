@@ -99,14 +99,15 @@ void DrmGpuBuffer::createFds()
 }
 
 DrmFramebuffer::DrmFramebuffer(const std::shared_ptr<DrmGpuBuffer> &buffer, uint32_t fbId)
-    : m_buffer(buffer)
-    , m_framebufferId(fbId)
+    : m_framebufferId(fbId)
+    , m_gpu(buffer->gpu())
+    , m_buffer(buffer)
 {
 }
 
 DrmFramebuffer::~DrmFramebuffer()
 {
-    drmModeRmFB(m_buffer->gpu()->fd(), m_framebufferId);
+    drmModeRmFB(m_gpu->fd(), m_framebufferId);
 }
 
 uint32_t DrmFramebuffer::framebufferId() const
@@ -117,6 +118,11 @@ uint32_t DrmFramebuffer::framebufferId() const
 DrmGpuBuffer *DrmFramebuffer::buffer() const
 {
     return m_buffer.get();
+}
+
+void DrmFramebuffer::releaseBuffer()
+{
+    m_buffer.reset();
 }
 
 std::shared_ptr<DrmFramebuffer> DrmFramebuffer::createFramebuffer(const std::shared_ptr<DrmGpuBuffer> &buffer)

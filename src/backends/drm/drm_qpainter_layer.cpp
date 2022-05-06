@@ -23,12 +23,9 @@
 namespace KWin
 {
 
-DrmQPainterLayer::DrmQPainterLayer(DrmQPainterBackend *backend, DrmPipeline *pipeline)
+DrmQPainterLayer::DrmQPainterLayer(DrmPipeline *pipeline)
     : DrmPipelineLayer(pipeline)
 {
-    connect(backend, &DrmQPainterBackend::aboutToBeDestroyed, this, [this]() {
-        m_swapchain.reset();
-    });
 }
 
 OutputLayerBeginFrameInfo DrmQPainterLayer::beginFrame()
@@ -76,6 +73,11 @@ QRegion DrmQPainterLayer::currentDamage() const
     return m_currentDamage;
 }
 
+void DrmQPainterLayer::releaseBuffers()
+{
+    m_swapchain.reset();
+}
+
 DrmVirtualQPainterLayer::DrmVirtualQPainterLayer(DrmVirtualOutput *output)
     : m_output(output)
 {
@@ -103,12 +105,13 @@ QRegion DrmVirtualQPainterLayer::currentDamage() const
     return m_currentDamage;
 }
 
-DrmLeaseQPainterLayer::DrmLeaseQPainterLayer(DrmQPainterBackend *backend, DrmPipeline *pipeline)
+void DrmVirtualQPainterLayer::releaseBuffers()
+{
+}
+
+DrmLeaseQPainterLayer::DrmLeaseQPainterLayer(DrmPipeline *pipeline)
     : DrmPipelineLayer(pipeline)
 {
-    connect(backend, &DrmQPainterBackend::aboutToBeDestroyed, this, [this]() {
-        m_buffer.reset();
-    });
 }
 
 bool DrmLeaseQPainterLayer::checkTestBuffer()
@@ -139,5 +142,10 @@ void DrmLeaseQPainterLayer::endFrame(const QRegion &damagedRegion, const QRegion
 {
     Q_UNUSED(damagedRegion)
     Q_UNUSED(renderedRegion)
+}
+
+void DrmLeaseQPainterLayer::releaseBuffers()
+{
+    m_buffer.reset();
 }
 }

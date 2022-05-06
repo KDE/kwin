@@ -53,6 +53,7 @@ public:
     void setCurrent(const std::shared_ptr<DrmFramebuffer> &buffer);
     void setNext(const std::shared_ptr<DrmFramebuffer> &buffer);
     void flipBuffer();
+    void releaseBuffers();
 
 private:
     DrmScopedPointer<drmModeCrtc> m_crtc;
