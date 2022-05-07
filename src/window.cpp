@@ -349,7 +349,7 @@ bool Window::setupCompositing()
     m_effectWindow = new EffectWindowImpl(this);
     updateShadow();
 
-    m_sceneWindow = Compositor::self()->scene()->createWindow(this);
+    m_sceneWindow = new SceneWindow(this);
     m_effectWindow->setSceneWindow(m_sceneWindow);
 
     connect(windowItem(), &WindowItem::positionChanged, this, &Window::visibleGeometryChanged);

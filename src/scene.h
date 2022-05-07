@@ -104,17 +104,6 @@ public:
     virtual void paint(RenderTarget *renderTarget, const QRegion &region) = 0;
 
     /**
-     * Adds the Window to the Scene.
-     *
-     * If the window gets deleted, then the scene will try automatically
-     * to re-bind an underlying scene window to the corresponding Deleted.
-     *
-     * @param window The window to be added.
-     * @note You can add a window to scene only once.
-     */
-    virtual SceneWindow *createWindow(Window *window) = 0;
-
-    /**
      * @brief Creates the Scene backend of an EffectFrame.
      *
      * @param frame The EffectFrame this Scene::EffectFrame belongs to.
@@ -197,6 +186,8 @@ public:
 
     QRegion mapToRenderTarget(const QRegion &region) const;
 
+    virtual void render(Item *item, int mask, const QRegion &region, const WindowPaintData &data) = 0;
+
 Q_SIGNALS:
     void frameRendered();
 
@@ -268,8 +259,6 @@ class SceneWindow : public QObject
 public:
     explicit SceneWindow(Window *client, QObject *parent = nullptr);
     ~SceneWindow() override;
-    // perform the actual painting of the window
-    virtual void performPaint(int mask, const QRegion &region, const WindowPaintData &data) = 0;
     int x() const;
     int y() const;
     int width() const;

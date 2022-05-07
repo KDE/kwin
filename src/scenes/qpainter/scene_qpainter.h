@@ -32,6 +32,7 @@ public:
     DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
     SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
+    void render(Item *item, int mask, const QRegion &region, const WindowPaintData &data) override;
 
     bool animationsSupported() const override
     {
@@ -49,29 +50,17 @@ public:
 
 protected:
     void paintBackground(const QRegion &region) override;
-    SceneWindow *createWindow(Window *window) override;
     void paintOffscreenQuickView(OffscreenQuickView *w) override;
 
 private:
     explicit SceneQPainter(QPainterBackend *backend, QObject *parent = nullptr);
-    QPainterBackend *m_backend;
-    QScopedPointer<QPainter> m_painter;
-};
 
-class SceneQPainterWindow : public SceneWindow
-{
-    Q_OBJECT
-
-public:
-    SceneQPainterWindow(SceneQPainter *scene, Window *c);
-    ~SceneQPainterWindow() override;
-    void performPaint(int mask, const QRegion &region, const WindowPaintData &data) override;
-
-private:
     void renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceItem) const;
     void renderDecorationItem(QPainter *painter, DecorationItem *decorationItem) const;
     void renderItem(QPainter *painter, Item *item) const;
-    SceneQPainter *m_scene;
+
+    QPainterBackend *m_backend;
+    QScopedPointer<QPainter> m_painter;
 };
 
 class QPainterEffectFrame : public Scene::EffectFrame

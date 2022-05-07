@@ -198,6 +198,11 @@ DecorationRenderer *DecorationItem::renderer() const
     return m_renderer.data();
 }
 
+Window *DecorationItem::window() const
+{
+    return m_window;
+}
+
 WindowQuad buildQuad(const QRect &partRect, const QPoint &textureOffset,
                      const qreal devicePixelRatio, bool rotated)
 {

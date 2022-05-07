@@ -292,26 +292,7 @@ void SceneOpenGL::doPaintBackground(const QVector<float> &vertices)
     vbo->render(GL_TRIANGLES);
 }
 
-SceneWindow *SceneOpenGL::createWindow(Window *t)
-{
-    return new OpenGLWindow(t, this);
-}
-
-//****************************************
-// OpenGLWindow
-//****************************************
-
-OpenGLWindow::OpenGLWindow(Window *window, SceneOpenGL *scene)
-    : SceneWindow(window)
-    , m_scene(scene)
-{
-}
-
-OpenGLWindow::~OpenGLWindow()
-{
-}
-
-QVector4D OpenGLWindow::modulate(float opacity, float brightness) const
+QVector4D SceneOpenGL::modulate(float opacity, float brightness) const
 {
     const float a = opacity;
     const float rgb = opacity * brightness;
@@ -319,7 +300,7 @@ QVector4D OpenGLWindow::modulate(float opacity, float brightness) const
     return QVector4D(rgb, rgb, rgb, a);
 }
 
-void OpenGLWindow::setBlendEnabled(bool enabled)
+void SceneOpenGL::setBlendEnabled(bool enabled)
 {
     if (enabled && !m_blendingEnabled) {
         glEnable(GL_BLEND);
@@ -359,7 +340,7 @@ static GLTexture *bindSurfaceTexture(SurfaceItem *surfaceItem)
     return platformSurfaceTexture->texture();
 }
 
-static WindowQuadList clipQuads(const Item *item, const OpenGLWindow::RenderContext *context)
+static WindowQuadList clipQuads(const Item *item, const SceneOpenGL::RenderContext *context)
 {
     const WindowQuadList quads = item->quads();
     if (context->clip != infiniteRegion() && !context->hardwareClipping) {
@@ -390,7 +371,7 @@ static WindowQuadList clipQuads(const Item *item, const OpenGLWindow::RenderCont
     return quads;
 }
 
-void OpenGLWindow::createRenderNode(Item *item, RenderContext *context)
+void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
 {
     const QList<Item *> sortedChildItems = item->sortedChildItems();
 
@@ -466,7 +447,7 @@ void OpenGLWindow::createRenderNode(Item *item, RenderContext *context)
     context->transforms.pop();
 }
 
-QMatrix4x4 OpenGLWindow::modelViewProjectionMatrix(int mask, const WindowPaintData &data) const
+QMatrix4x4 SceneOpenGL::modelViewProjectionMatrix(int mask, const WindowPaintData &data) const
 {
     const QMatrix4x4 pMatrix = data.projectionMatrix();
     const QMatrix4x4 mvMatrix = data.modelViewMatrix();
@@ -484,10 +465,10 @@ QMatrix4x4 OpenGLWindow::modelViewProjectionMatrix(int mask, const WindowPaintDa
     // with the default projection matrix.  If the effect hasn't specified a
     // model-view matrix, mvMatrix will be the identity matrix.
     if (mask & Scene::PAINT_SCREEN_TRANSFORMED) {
-        return m_scene->screenProjectionMatrix() * mvMatrix;
+        return screenProjectionMatrix() * mvMatrix;
     }
 
-    return m_scene->renderTargetProjectionMatrix() * mvMatrix;
+    return renderTargetProjectionMatrix() * mvMatrix;
 }
 
 static QMatrix4x4 transformForPaintData(int mask, const WindowPaintData &data)
@@ -517,7 +498,7 @@ static QMatrix4x4 transformForPaintData(int mask, const WindowPaintData &data)
     return matrix;
 }
 
-void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPaintData &data)
+void SceneOpenGL::render(Item *item, int mask, const QRegion &region, const WindowPaintData &data)
 {
     if (region.isEmpty()) {
         return;
@@ -531,9 +512,9 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
 
     renderContext.transforms.push(QMatrix4x4());
 
-    windowItem()->setTransform(transformForPaintData(mask, data));
+    item->setTransform(transformForPaintData(mask, data));
 
-    createRenderNode(windowItem(), &renderContext);
+    createRenderNode(item, &renderContext);
 
     int quadCount = 0;
     for (const RenderNode &node : qAsConst(renderContext.renderNodes)) {
@@ -605,7 +586,7 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
     // The scissor region must be in the render target local coordinate system.
     QRegion scissorRegion = infiniteRegion();
     if (renderContext.hardwareClipping) {
-        scissorRegion = m_scene->mapToRenderTarget(region);
+        scissorRegion = mapToRenderTarget(region);
     }
 
     const QMatrix4x4 modelViewProjection = modelViewProjectionMatrix(mask, data);

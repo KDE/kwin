@@ -15,6 +15,7 @@
 #include "scripting_logging.h"
 #include "virtualdesktops.h"
 #include "window.h"
+#include "windowitem.h"
 #include "workspace.h"
 
 #include <kwingltexture.h>
@@ -438,7 +439,7 @@ void WindowThumbnailItem::updateOffscreenTexture()
     // shared across contexts. Unfortunately, this also introduces a latency of 1
     // frame, which is not ideal, but it is acceptable for things such as thumbnails.
     const int mask = Scene::PAINT_WINDOW_TRANSFORMED;
-    m_client->sceneWindow()->performPaint(mask, infiniteRegion(), data);
+    Compositor::self()->scene()->render(m_client->windowItem(), mask, infiniteRegion(), data);
     GLFramebuffer::popFramebuffer();
 
     // The fence is needed to avoid the case where qtquick renderer starts using

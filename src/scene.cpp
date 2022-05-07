@@ -600,7 +600,7 @@ void Scene::finalPaintWindow(EffectWindowImpl *w, int mask, const QRegion &regio
 // will be eventually called from drawWindow()
 void Scene::finalDrawWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
 {
-    w->sceneWindow()->performPaint(mask, region, data);
+    render(w->sceneWindow()->windowItem(), mask, region, data);
 }
 
 bool Scene::makeOpenGLContextCurrent()

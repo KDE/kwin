@@ -28,6 +28,27 @@ class KWIN_EXPORT SceneOpenGL
 {
     Q_OBJECT
 public:
+    struct RenderNode
+    {
+        GLTexture *texture = nullptr;
+        WindowQuadList quads;
+        QMatrix4x4 transformMatrix;
+        int firstVertex = 0;
+        int vertexCount = 0;
+        qreal opacity = 1;
+        bool hasAlpha = false;
+        TextureCoordinateType coordinateType = UnnormalizedCoordinates;
+    };
+
+    struct RenderContext
+    {
+        QVector<RenderNode> renderNodes;
+        QStack<QMatrix4x4> transforms;
+        const QRegion clip;
+        const WindowPaintData &paintData;
+        const bool hardwareClipping;
+    };
+
     class EffectFrame;
     explicit SceneOpenGL(OpenGLBackend *backend, QObject *parent = nullptr);
     ~SceneOpenGL() override;
@@ -43,6 +64,7 @@ public:
     SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     SurfaceTexture *createSurfaceTextureX11(SurfacePixmapX11 *pixmap) override;
     SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
+    void render(Item *item, int mask, const QRegion &region, const WindowPaintData &data) override;
 
     OpenGLBackend *backend() const
     {
@@ -67,55 +89,18 @@ protected:
 
     void paintSimpleScreen(int mask, const QRegion &region) override;
     void paintGenericScreen(int mask, const ScreenPaintData &data) override;
-    SceneWindow *createWindow(Window *t) override;
 
 private:
     void doPaintBackground(const QVector<float> &vertices);
-
-    bool init_ok = true;
-    OpenGLBackend *m_backend;
-    QMatrix4x4 m_screenProjectionMatrix;
-    GLuint vao = 0;
-};
-
-class OpenGLWindow final : public SceneWindow
-{
-    Q_OBJECT
-
-public:
-    struct RenderNode
-    {
-        GLTexture *texture = nullptr;
-        WindowQuadList quads;
-        QMatrix4x4 transformMatrix;
-        int firstVertex = 0;
-        int vertexCount = 0;
-        qreal opacity = 1;
-        bool hasAlpha = false;
-        TextureCoordinateType coordinateType = UnnormalizedCoordinates;
-    };
-
-    struct RenderContext
-    {
-        QVector<RenderNode> renderNodes;
-        QStack<QMatrix4x4> transforms;
-        const QRegion clip;
-        const WindowPaintData &paintData;
-        const bool hardwareClipping;
-    };
-
-    OpenGLWindow(Window *window, SceneOpenGL *scene);
-    ~OpenGLWindow() override;
-
-    void performPaint(int mask, const QRegion &region, const WindowPaintData &data) override;
-
-private:
     QMatrix4x4 modelViewProjectionMatrix(int mask, const WindowPaintData &data) const;
     QVector4D modulate(float opacity, float brightness) const;
     void setBlendEnabled(bool enabled);
     void createRenderNode(Item *item, RenderContext *context);
 
-    SceneOpenGL *m_scene;
+    bool init_ok = true;
+    OpenGLBackend *m_backend;
+    QMatrix4x4 m_screenProjectionMatrix;
+    GLuint vao = 0;
     bool m_blendingEnabled = false;
 };
 

@@ -81,6 +81,7 @@ public:
     explicit DecorationItem(KDecoration2::Decoration *decoration, Window *window, Item *parent = nullptr);
 
     DecorationRenderer *renderer() const;
+    Window *window() const;
 
 private Q_SLOTS:
     void handleFrameGeometryChanged();
