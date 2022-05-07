@@ -44,7 +44,7 @@
 #include <QTranslator>
 #include <qplatformdefs.h>
 
-#ifdef __has_include(<malloc.h>)
+#if __has_include(<malloc.h>)
 #include <malloc.h>
 #endif
 #include <unistd.h>
