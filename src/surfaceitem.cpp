@@ -38,16 +38,6 @@ void SurfaceItem::setSurfaceToBufferMatrix(const QMatrix4x4 &matrix)
     m_surfaceToBufferMatrix = matrix;
 }
 
-QRegion SurfaceItem::shape() const
-{
-    return QRegion();
-}
-
-QRegion SurfaceItem::opaque() const
-{
-    return QRegion();
-}
-
 void SurfaceItem::addDamage(const QRegion &region)
 {
     m_damage += region;

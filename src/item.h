@@ -48,6 +48,9 @@ public:
      */
     QRect boundingRect() const;
 
+    virtual QRegion shape() const;
+    virtual QRegion opaque() const;
+
     /**
      * Returns the visual parent of the item. Note that the visual parent differs from
      * the QObject parent.

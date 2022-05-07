@@ -353,19 +353,21 @@ void Scene::preparePaintSimpleScreen()
 {
     for (SceneWindow *sceneWindow : std::as_const(stacking_order)) {
         const Window *window = sceneWindow->window();
+        const WindowItem *windowItem = sceneWindow->windowItem();
         WindowPrePaintData data;
         data.mask = m_paintContext.mask;
         accumulateRepaints(sceneWindow->windowItem(), painted_screen, &data.paint);
 
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass.
         if (window->opacity() == 1.0) {
-            const SurfaceItem *surfaceItem = sceneWindow->surfaceItem();
+            const SurfaceItem *surfaceItem = windowItem->surfaceItem();
             if (Q_LIKELY(surfaceItem)) {
                 data.opaque = surfaceItem->mapToGlobal(surfaceItem->opaque());
             }
 
-            if (window->isClient() && !window->decorationHasAlpha()) {
-                data.opaque |= sceneWindow->decorationShape().translated(sceneWindow->pos());
+            const DecorationItem *decorationItem = windowItem->decorationItem();
+            if (decorationItem) {
+                data.opaque |= decorationItem->mapToGlobal(decorationItem->opaque());
             }
         }
 
@@ -713,12 +715,6 @@ void SceneWindow::unreferencePreviousPixmap_helper(SurfaceItem *item)
     for (Item *child : children) {
         unreferencePreviousPixmap_helper(static_cast<SurfaceItem *>(child));
     }
-}
-
-QRegion SceneWindow::decorationShape() const
-{
-    const QRect decorationInnerRect = m_window->rect() - m_window->frameMargins();
-    return QRegion(m_window->rect()) - decorationInnerRect;
 }
 
 WindowItem *SceneWindow::windowItem() const

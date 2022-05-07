@@ -157,6 +157,16 @@ void Item::updateBoundingRect()
     }
 }
 
+QRegion Item::shape() const
+{
+    return rect();
+}
+
+QRegion Item::opaque() const
+{
+    return QRegion();
+}
+
 QPoint Item::rootPosition() const
 {
     QPoint ret = position();
@@ -182,11 +192,17 @@ void Item::setTransform(const QMatrix4x4 &transform)
 
 QRegion Item::mapToGlobal(const QRegion &region) const
 {
+    if (region.isEmpty()) {
+        return QRegion();
+    }
     return region.translated(rootPosition());
 }
 
 QRect Item::mapToGlobal(const QRect &rect) const
 {
+    if (rect.isEmpty()) {
+        return QRect();
+    }
     return rect.translated(rootPosition());
 }
 

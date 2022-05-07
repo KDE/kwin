@@ -147,6 +147,18 @@ DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Window *win
     handleOutputChanged();
 }
 
+QRegion DecorationItem::shape() const
+{
+    QRect left, top, right, bottom;
+    m_window->layoutDecorationRects(left, top, right, bottom);
+    return QRegion(left).united(top).united(right).united(bottom);
+}
+
+QRegion DecorationItem::opaque() const
+{
+    return m_window->decorationHasAlpha() ? QRegion() : shape();
+}
+
 void DecorationItem::preprocess()
 {
     const QRegion damage = m_renderer->damage();

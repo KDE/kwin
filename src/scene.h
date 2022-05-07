@@ -270,7 +270,6 @@ public:
     // access to the internal window class
     // TODO eventually get rid of this
     Window *window() const;
-    QRegion decorationShape() const;
     void setWindow(Window *window);
     void referencePreviousPixmap();
     void unreferencePreviousPixmap();

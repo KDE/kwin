@@ -28,9 +28,6 @@ public:
 
     Window *window() const;
 
-    virtual QRegion shape() const;
-    virtual QRegion opaque() const;
-
     void addDamage(const QRegion &region);
     void resetDamage();
     QRegion damage() const;
