@@ -1790,12 +1790,6 @@ Window *Workspace::findAbstractClient(std::function<bool(const Window *)> func) 
     return nullptr;
 }
 
-Window *Workspace::findAbstractClient(const QUuid &internalId) const
-{
-    auto t = findToplevel(internalId);
-    return t && t->isClient() ? t : nullptr;
-}
-
 Unmanaged *Workspace::findUnmanaged(std::function<bool(const Unmanaged *)> func) const
 {
     return Window::findInList(m_unmanaged, func);

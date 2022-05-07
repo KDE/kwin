@@ -218,8 +218,11 @@ void WindowsRunner::Run(const QString &id, const QString &actionId)
         return;
     }
 
-    const auto uuid = QUuid::fromString(objectId);
-    const auto window = workspace()->findAbstractClient(uuid);
+    const auto window = workspace()->findToplevel(QUuid::fromString(objectId));
+    if (!window || !window->isClient()) {
+        return;
+    }
+
     switch (action) {
     case ActivateAction:
         workspace()->activateWindow(window);

@@ -103,7 +103,6 @@ public:
      */
     X11Window *findClient(std::function<bool(const X11Window *)> func) const;
     Window *findAbstractClient(std::function<bool(const Window *)> func) const;
-    Window *findAbstractClient(const QUuid &internalId) const;
     /**
      * @brief Finds the Client matching the given match @p predicate for the given window.
      *
