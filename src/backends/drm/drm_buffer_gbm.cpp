@@ -29,43 +29,36 @@
 namespace KWin
 {
 
-static std::array<uint32_t, 4> getHandles(gbm_bo *bo)
+static std::array<uint32_t, 4> getBoAttribute(gbm_bo *bo, uint32_t (*accessor)(gbm_bo *, int))
 {
     std::array<uint32_t, 4> ret;
     int i = 0;
-    for (; i < gbm_bo_get_plane_count(bo); i++) {
-        ret[i] = gbm_bo_get_handle(bo).u32;
+    int planes = gbm_bo_get_plane_count(bo);
+    Q_ASSERT(planes >= 0 && planes < (int)ret.size());
+    for (; i < planes; i++) {
+        ret[i] = accessor(bo, i);
     }
-    for (; i < 4; i++) {
+    for (; i < ret.size(); i++) {
         ret[i] = 0;
     }
     return ret;
+}
+
+static std::array<uint32_t, 4> getHandles(gbm_bo *bo)
+{
+    return getBoAttribute(bo, [](gbm_bo *bo, int) {
+        return gbm_bo_get_handle(bo).u32;
+    });
 }
 
 static std::array<uint32_t, 4> getStrides(gbm_bo *bo)
 {
-    std::array<uint32_t, 4> ret;
-    int i = 0;
-    for (; i < gbm_bo_get_plane_count(bo); i++) {
-        ret[i] = gbm_bo_get_stride_for_plane(bo, i);
-    }
-    for (; i < 4; i++) {
-        ret[i] = 0;
-    }
-    return ret;
+    return getBoAttribute(bo, &gbm_bo_get_stride_for_plane);
 }
 
 static std::array<uint32_t, 4> getOffsets(gbm_bo *bo)
 {
-    std::array<uint32_t, 4> ret;
-    int i = 0;
-    for (; i < gbm_bo_get_plane_count(bo); i++) {
-        ret[i] = gbm_bo_get_offset(bo, i);
-    }
-    for (; i < 4; i++) {
-        ret[i] = 0;
-    }
-    return ret;
+    return getBoAttribute(bo, &gbm_bo_get_offset);
 }
 
 GbmBuffer::GbmBuffer(DrmGpu *gpu, gbm_bo *bo, const std::shared_ptr<GbmSurface> &surface)
