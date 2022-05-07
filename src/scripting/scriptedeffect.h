@@ -55,7 +55,6 @@ public:
         WindowBlurBehindRole, ///< For single windows to blur behind
         WindowForceBackgroundContrastRole, ///< For fullscreen effects to enforce the background contrast,
         WindowBackgroundContrastRole, ///< For single windows to enable Background contrast
-        LanczosCacheRole
     };
     enum EasingCurve {
         GaussianCurve = 128

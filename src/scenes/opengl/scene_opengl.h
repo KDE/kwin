@@ -21,7 +21,6 @@
 
 namespace KWin
 {
-class LanczosFilter;
 class OpenGLBackend;
 
 class KWIN_EXPORT SceneOpenGL
@@ -72,11 +71,9 @@ protected:
 
 private:
     void doPaintBackground(const QVector<float> &vertices);
-    void performPaintWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data);
 
     bool init_ok = true;
     OpenGLBackend *m_backend;
-    LanczosFilter *m_lanczosFilter = nullptr;
     QMatrix4x4 m_screenProjectionMatrix;
     GLuint vao = 0;
 };

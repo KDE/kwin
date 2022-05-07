@@ -24,7 +24,6 @@
 #include "cursor.h"
 #include "decorations/decoratedclient.h"
 #include "effects.h"
-#include "lanczosfilter.h"
 #include "main.h"
 #include "output.h"
 #include "overlaywindow.h"
@@ -75,10 +74,6 @@ SceneOpenGL::~SceneOpenGL()
 {
     if (init_ok) {
         makeOpenGLContextCurrent();
-    }
-    if (m_lanczosFilter) {
-        delete m_lanczosFilter;
-        m_lanczosFilter = nullptr;
     }
     SceneOpenGL::EffectFrame::cleanup();
 }
@@ -300,18 +295,6 @@ void SceneOpenGL::doPaintBackground(const QVector<float> &vertices)
 SceneWindow *SceneOpenGL::createWindow(Window *t)
 {
     return new OpenGLWindow(t, this);
-}
-
-void SceneOpenGL::performPaintWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
-{
-    if (mask & PAINT_WINDOW_LANCZOS) {
-        if (!m_lanczosFilter) {
-            m_lanczosFilter = new LanczosFilter(this);
-        }
-        m_lanczosFilter->performPaint(w, mask, region, data);
-    } else {
-        w->sceneWindow()->performPaint(mask, region, data);
-    }
 }
 
 //****************************************
