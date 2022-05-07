@@ -31,6 +31,7 @@ class DecoratedClientImpl;
 class Output;
 class DecorationRenderer;
 class Deleted;
+class DragAndDropIconItem;
 class EffectWindowImpl;
 class GLTexture;
 class Item;
@@ -229,6 +230,9 @@ protected:
     QVector<WindowItem *> stacking_order;
 
 private:
+    void createDndIconItem();
+    void destroyDndIconItem();
+
     std::chrono::milliseconds m_expectedPresentTimestamp = std::chrono::milliseconds::zero();
     QList<SceneDelegate *> m_delegates;
     QRect m_geometry;
@@ -238,6 +242,7 @@ private:
     // how many times finalPaintScreen() has been called
     int m_paintScreenCount = 0;
     PaintContext m_paintContext;
+    std::unique_ptr<DragAndDropIconItem> m_dndIcon;
 };
 
 } // namespace

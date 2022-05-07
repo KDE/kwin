@@ -58,12 +58,14 @@
 #include "core/renderlayer.h"
 #include "core/renderloop.h"
 #include "deleted.h"
+#include "dndiconitem.h"
 #include "effects.h"
 #include "internalwindow.h"
 #include "shadow.h"
 #include "shadowitem.h"
 #include "surfaceitem.h"
 #include "unmanaged.h"
+#include "wayland/seat_interface.h"
 #include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "waylandwindow.h"
@@ -144,6 +146,36 @@ void Scene::initialize()
     connect(workspace(), &Workspace::geometryChanged, this, [this]() {
         setGeometry(workspace()->geometry());
     });
+
+    if (waylandServer()) {
+        connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::dragStarted, this, &Scene::createDndIconItem);
+        connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::dragEnded, this, &Scene::destroyDndIconItem);
+    }
+}
+
+void Scene::createDndIconItem()
+{
+    KWaylandServer::DragAndDropIcon *dragIcon = waylandServer()->seat()->dragIcon();
+    if (!dragIcon) {
+        return;
+    }
+    m_dndIcon = std::make_unique<DragAndDropIconItem>(dragIcon);
+    if (waylandServer()->seat()->isDragPointer()) {
+        m_dndIcon->setPosition(waylandServer()->seat()->pointerPos());
+        connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::pointerPosChanged, m_dndIcon.get(), [this]() {
+            m_dndIcon->setPosition(waylandServer()->seat()->pointerPos());
+        });
+    } else if (waylandServer()->seat()->isDragTouch()) {
+        m_dndIcon->setPosition(waylandServer()->seat()->firstTouchPointPosition());
+        connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::touchMoved, m_dndIcon.get(), [this]() {
+            m_dndIcon->setPosition(waylandServer()->seat()->firstTouchPointPosition());
+        });
+    }
+}
+
+void Scene::destroyDndIconItem()
+{
+    m_dndIcon.reset();
 }
 
 void Scene::addRepaintFull()
@@ -381,6 +413,10 @@ void Scene::preparePaintSimpleScreen()
             opaque += paintData.opaque;
         }
     }
+
+    if (m_dndIcon) {
+        accumulateRepaints(m_dndIcon.get(), painted_screen, &m_paintContext.damage);
+    }
 }
 
 void Scene::postPaint()
@@ -403,6 +439,10 @@ void Scene::postPaint()
             if (auto surface = window->surface()) {
                 surface->frameRendered(frameTime.count());
             }
+        }
+
+        if (m_dndIcon) {
+            m_dndIcon->frameRendered(frameTime.count());
         }
     }
 
@@ -524,6 +564,13 @@ void Scene::paintSimpleScreen(int, const QRegion &region)
 
     for (const Phase2Data &paintData : std::as_const(m_paintContext.phase2Data)) {
         paintWindow(paintData.item, paintData.mask, paintData.region);
+    }
+
+    if (m_dndIcon) {
+        const QRegion repaint = region & m_dndIcon->mapToGlobal(m_dndIcon->boundingRect()).toRect();
+        if (!repaint.isEmpty()) {
+            render(m_dndIcon.get(), 0, repaint, WindowPaintData(m_renderTargetProjectionMatrix));
+        }
     }
 }
 

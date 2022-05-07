@@ -60,10 +60,6 @@ target_sources(kwin PRIVATE
     cursordelegate_opengl.cpp
     cursordelegate_qpainter.cpp
     cursorsource.cpp
-    tiles/customtile.cpp
-    tiles/tile.cpp
-    tiles/tilemanager.cpp
-    tiles/quicktile.cpp
     dbusinterface.cpp
     debug_console.cpp
     decorationitem.cpp
@@ -74,6 +70,7 @@ target_sources(kwin PRIVATE
     decorations/settings.cpp
     deleted.cpp
     dmabuftexture.cpp
+    dndiconitem.cpp
     dpmsinputeventfilter.cpp
     effectloader.cpp
     effects.cpp
@@ -148,6 +145,10 @@ target_sources(kwin PRIVATE
     syncalarmx11filter.cpp
     tablet_input.cpp
     tabletmodemanager.cpp
+    tiles/customtile.cpp
+    tiles/quicktile.cpp
+    tiles/tile.cpp
+    tiles/tilemanager.cpp
     touch_input.cpp
     unmanaged.cpp
     useractions.cpp

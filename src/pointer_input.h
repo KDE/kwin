@@ -225,8 +225,6 @@ private:
     void updateDecoration();
     void updateDecorationCursor();
     void updateMoveResize();
-    void updateDrag();
-    void updateDragCursor();
 
     void handlePointerChanged();
     void handleFocusedSurfaceChanged();
@@ -245,11 +243,6 @@ private:
         std::unique_ptr<ShapeCursorSource> cursor;
         QMetaObject::Connection connection;
     } m_decoration;
-    struct
-    {
-        std::unique_ptr<ImageCursorSource> cursor;
-        QMetaObject::Connection connection;
-    } m_drag;
     struct
     {
         QMetaObject::Connection connection;
