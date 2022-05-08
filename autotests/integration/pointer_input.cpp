@@ -298,8 +298,8 @@ void PointerInputTest::testWarpingDuringFilter()
     QCOMPARE(window->pos(), QPoint(0, 0));
     QVERIFY(window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
 
-    // is PresentWindows effect for top left screen edge loaded
-    QVERIFY(static_cast<EffectsHandlerImpl *>(effects)->isEffectLoaded("presentwindows"));
+    // is WindowView effect for top left screen edge loaded
+    QVERIFY(static_cast<EffectsHandlerImpl *>(effects)->isEffectLoaded("windowview"));
     QVERIFY(movedSpy.isEmpty());
     quint32 timestamp = 0;
     Test::pointerMotion(QPoint(0, 0), timestamp++);
@@ -1569,9 +1569,9 @@ void PointerInputTest::testConfineToScreenGeometry()
     // this test verifies that pointer belongs to at least one screen
     // after moving it to off-screen area
 
-    // unload the Present Windows effect because it pushes back
+    // unload the Window View effect because it pushes back
     // pointer if it's at (0, 0)
-    static_cast<EffectsHandlerImpl *>(effects)->unloadEffect(QStringLiteral("presentwindows"));
+    static_cast<EffectsHandlerImpl *>(effects)->unloadEffect(QStringLiteral("windowview"));
 
     // setup screen layout
     const QVector<QRect> geometries{
