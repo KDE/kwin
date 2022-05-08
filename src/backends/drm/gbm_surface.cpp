@@ -75,6 +75,7 @@ bool GbmSurface::makeContextCurrent() const
     }
     if (!GLPlatform::instance()->isGLES()) {
         glDrawBuffer(GL_BACK);
+        glReadBuffer(GL_BACK);
     }
     return true;
 }
