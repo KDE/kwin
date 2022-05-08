@@ -123,12 +123,13 @@ std::optional<std::tuple<std::shared_ptr<DrmFramebuffer>, QRegion>> EglGbmLayerS
     }
     GLFramebuffer::popFramebuffer();
     if (m_gpu == m_eglBackend->gpu()) {
-        const auto buffer = m_gbmSurface->swapBuffers(damagedRegion);
-        if (buffer) {
+        if (const auto buffer = m_gbmSurface->swapBuffers(damagedRegion)) {
+            m_currentBuffer = buffer;
             return std::tuple(DrmFramebuffer::createFramebuffer(buffer), damagedRegion);
         }
     } else {
-        if (m_gbmSurface->swapBuffers(damagedRegion)) {
+        if (const auto gbmBuffer = m_gbmSurface->swapBuffers(damagedRegion)) {
+            m_currentBuffer = gbmBuffer;
             const auto buffer = importBuffer();
             if (buffer) {
                 return std::tuple(buffer, damagedRegion);
