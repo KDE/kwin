@@ -377,6 +377,7 @@ bool EglGbmBackend::makeContextCurrent(const Output::RenderData &render) const
     }
     if (!GLPlatform::instance()->isGLES()) {
         glDrawBuffer(GL_BACK);
+        glReadBuffer(GL_BACK);
     }
     return true;
 }
