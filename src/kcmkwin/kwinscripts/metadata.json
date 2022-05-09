@@ -21,6 +21,7 @@
         "Description[uk]": "Керування скриптами KWin",
         "Description[vi]": "Quản lí các kịch bản KWin",
         "Description[x-test]": "xxManage KWin scriptsxx",
+        "Description[zh_CN]": "管理 KWin 脚本",
         "Icon": "preferences-system-windows-actions",
         "Name": "KWin Scripts",
         "Name[ar]": "سكربتات كوين",
@@ -44,6 +45,7 @@
         "Name[uk]": "Скрипти KWin",
         "Name[vi]": "Kịch bản KWin",
         "Name[x-test]": "xxKWin Scriptsxx",
+        "Name[zh_CN]": "KWin 脚本",
         "ServiceTypes": [
             "KCModule"
         ]
