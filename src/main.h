@@ -198,6 +198,12 @@ public:
 
     void setXwaylandScale(qreal scale);
 
+    bool xwaylandClientSideScales() const
+    {
+        return m_xwaylandClientSideScales;
+    }
+    void setXwaylandClientSideScales(bool scales);
+
     /**
      * Returns @c true if we're in the middle of destroying the X11 connection.
      */
@@ -304,6 +310,8 @@ protected:
     static int crashes;
 
 private:
+    void reconnectScales();
+
     QList<QPointer<X11EventFilterContainer>> m_eventFilters;
     QList<QPointer<X11EventFilterContainer>> m_genericEventFilters;
     QScopedPointer<XcbEventFilter> m_eventFilter;
@@ -322,6 +330,8 @@ private:
     bool m_terminating = false;
     bool m_isClosingX11Connection = false;
     qreal m_xwaylandScale = 1;
+    bool m_xwaylandClientSideScales = false;
+    QMetaObject::Connection m_scaleConnection;
 };
 
 inline static Application *kwinApp()

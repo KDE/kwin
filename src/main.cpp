@@ -19,6 +19,7 @@
 #include "input.h"
 #include "inputmethod.h"
 #include "options.h"
+#include "output.h"
 #include "pluginmanager.h"
 #include "screens.h"
 #if KWIN_BUILD_SCREENLOCKER
@@ -384,6 +385,32 @@ void Application::setXwaylandScale(qreal scale)
         m_xwaylandScale = scale;
         Q_EMIT xwaylandScaleChanged();
     }
+}
+
+void Application::setXwaylandClientSideScales(bool scales)
+{
+    if (!scales) {
+        kwinApp()->setXwaylandScale(1);
+        disconnect(kwinApp()->platform(), &Platform::primaryOutputChanged, this, &Application::reconnectScales);
+    } else {
+        connect(kwinApp()->platform(), &Platform::primaryOutputChanged, this, &Application::reconnectScales, Qt::UniqueConnection);
+        reconnectScales();
+    }
+}
+
+void Application::reconnectScales()
+{
+    if (!kwinApp()->platform()->primaryOutput()) {
+        return;
+    }
+    if (m_scaleConnection) {
+        disconnect(m_scaleConnection);
+    }
+
+    setXwaylandScale(kwinApp()->platform()->primaryOutput()->scale());
+    m_scaleConnection = connect(kwinApp()->platform()->primaryOutput(), &Output::scaleChanged, this, [this] {
+        setXwaylandScale(kwinApp()->platform()->primaryOutput()->scale());
+    });
 }
 
 void Application::unregisterEventFilter(X11EventFilter *filter)
