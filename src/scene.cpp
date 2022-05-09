@@ -737,16 +737,4 @@ void SceneWindow::updateWindowPosition()
     m_windowItem->setPosition(pos());
 }
 
-//****************************************
-// Scene::EffectFrame
-//****************************************
-Scene::EffectFrame::EffectFrame(EffectFrameImpl *frame)
-    : m_effectFrame(frame)
-{
-}
-
-Scene::EffectFrame::~EffectFrame()
-{
-}
-
 } // namespace

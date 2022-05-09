@@ -27,7 +27,6 @@ public:
     void paint(RenderTarget *renderTarget, const QRegion &region) override;
     void paintGenericScreen(int mask, const ScreenPaintData &data) override;
     bool initFailed() const override;
-    EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
     Shadow *createShadow(Window *window) override;
     DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
     SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
@@ -61,35 +60,6 @@ private:
 
     QPainterBackend *m_backend;
     QScopedPointer<QPainter> m_painter;
-};
-
-class QPainterEffectFrame : public Scene::EffectFrame
-{
-public:
-    QPainterEffectFrame(EffectFrameImpl *frame, SceneQPainter *scene);
-    ~QPainterEffectFrame() override;
-    void crossFadeIcon() override
-    {
-    }
-    void crossFadeText() override
-    {
-    }
-    void free() override
-    {
-    }
-    void freeIconFrame() override
-    {
-    }
-    void freeTextFrame() override
-    {
-    }
-    void freeSelection() override
-    {
-    }
-    void render(const QRegion &region, double opacity, double frameOpacity) override;
-
-private:
-    SceneQPainter *m_scene;
 };
 
 class SceneQPainterShadow : public Shadow

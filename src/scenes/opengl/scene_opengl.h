@@ -54,7 +54,6 @@ public:
     ~SceneOpenGL() override;
     bool initFailed() const override;
     void paint(RenderTarget *renderTarget, const QRegion &region) override;
-    Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
     Shadow *createShadow(Window *window) override;
     bool makeOpenGLContextCurrent() override;
     void doneOpenGLContextCurrent() override;
@@ -102,44 +101,6 @@ private:
     QMatrix4x4 m_screenProjectionMatrix;
     GLuint vao = 0;
     bool m_blendingEnabled = false;
-};
-
-class SceneOpenGL::EffectFrame
-    : public Scene::EffectFrame
-{
-public:
-    EffectFrame(EffectFrameImpl *frame, SceneOpenGL *scene);
-    ~EffectFrame() override;
-
-    void free() override;
-    void freeIconFrame() override;
-    void freeTextFrame() override;
-    void freeSelection() override;
-
-    void render(const QRegion &region, double opacity, double frameOpacity) override;
-
-    void crossFadeIcon() override;
-    void crossFadeText() override;
-
-    static void cleanup();
-
-private:
-    void updateTexture();
-    void updateTextTexture();
-
-    GLTexture *m_texture;
-    GLTexture *m_textTexture;
-    GLTexture *m_oldTextTexture;
-    QPixmap *m_textPixmap; // need to keep the pixmap around to workaround some driver problems
-    GLTexture *m_iconTexture;
-    GLTexture *m_oldIconTexture;
-    GLTexture *m_selectionTexture;
-    GLVertexBuffer *m_unstyledVBO;
-    SceneOpenGL *m_scene;
-
-    static GLTexture *m_unstyledTexture;
-    static QPixmap *m_unstyledPixmap; // need to keep the pixmap around to workaround some driver problems
-    static void updateUnstyledTexture(); // Update OpenGL unstyled frame texture
 };
 
 /**

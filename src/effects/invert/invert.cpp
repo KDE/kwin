@@ -102,17 +102,6 @@ void InvertEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region, 
     }
 }
 
-void InvertEffect::paintEffectFrame(KWin::EffectFrame *frame, const QRegion &region, double opacity, double frameOpacity)
-{
-    if (m_valid && m_allWindows) {
-        frame->setShader(m_shader);
-        ShaderBinder binder(m_shader);
-        effects->paintEffectFrame(frame, region, opacity, frameOpacity);
-    } else {
-        effects->paintEffectFrame(frame, region, opacity, frameOpacity);
-    }
-}
-
 void InvertEffect::slotWindowClosed(EffectWindow *w)
 {
     m_windows.removeOne(w);

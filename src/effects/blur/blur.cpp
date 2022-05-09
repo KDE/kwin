@@ -649,19 +649,6 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region, Wi
     effects->drawWindow(w, mask, region, data);
 }
 
-void BlurEffect::paintEffectFrame(EffectFrame *frame, const QRegion &region, double opacity, double frameOpacity)
-{
-    const QRect screen = effects->virtualScreenGeometry();
-    bool valid = m_renderTargetsValid && m_shader && m_shader->isValid();
-
-    QRegion shape = frame->geometry().adjusted(-borderSize, -borderSize, borderSize, borderSize) & screen;
-
-    if (valid && !shape.isEmpty() && region.intersects(shape.boundingRect()) && frame->style() != EffectFrameNone) {
-        doBlur(shape, screen, opacity * frameOpacity, frame->screenProjectionMatrix(), false, frame->geometry());
-    }
-    effects->paintEffectFrame(frame, region, opacity, frameOpacity);
-}
-
 void BlurEffect::generateNoiseTexture()
 {
     if (m_noiseStrength == 0) {

@@ -42,7 +42,6 @@
 #include "inputmethod.h"
 #include "inputpanelv1window.h"
 #include "kwinglutils.h"
-#include "kwinoffscreenquickview.h"
 #include "platform.h"
 #include "utils/xcbutils.h"
 #include "virtualdesktops.h"
@@ -52,13 +51,15 @@
 #include "windowitem.h"
 #include "workspace.h"
 
-#include <Plasma/Theme>
-
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecorationSettings>
 
 #include <QDebug>
 #include <QMouseEvent>
+#include <QQmlEngine>
+#include <QQuickItem>
+#include <QQuickWindow>
+#include <QStandardPaths>
 #include <QWheelEvent>
 
 namespace KWin
@@ -408,17 +409,6 @@ void EffectsHandlerImpl::paintWindow(EffectWindow *w, int mask, const QRegion &r
     }
 }
 
-void EffectsHandlerImpl::paintEffectFrame(EffectFrame *frame, const QRegion &region, double opacity, double frameOpacity)
-{
-    if (m_currentPaintEffectFrameIterator != m_activeEffects.constEnd()) {
-        (*m_currentPaintEffectFrameIterator++)->paintEffectFrame(frame, region, opacity, frameOpacity);
-        --m_currentPaintEffectFrameIterator;
-    } else {
-        const EffectFrameImpl *frameImpl = static_cast<const EffectFrameImpl *>(frame);
-        frameImpl->finalRender(region, opacity, frameOpacity);
-    }
-}
-
 void EffectsHandlerImpl::postPaintWindow(EffectWindow *w)
 {
     if (m_currentPaintWindowIterator != m_activeEffects.constEnd()) {
@@ -471,7 +461,6 @@ void EffectsHandlerImpl::startPaint()
     m_currentDrawWindowIterator = m_activeEffects.constBegin();
     m_currentPaintWindowIterator = m_activeEffects.constBegin();
     m_currentPaintScreenIterator = m_activeEffects.constBegin();
-    m_currentPaintEffectFrameIterator = m_activeEffects.constBegin();
 }
 
 void EffectsHandlerImpl::slotClientMaximized(Window *window, MaximizeMode maxMode)
@@ -2289,240 +2278,356 @@ EffectWindowList EffectWindowGroupImpl::members() const
 // EffectFrameImpl
 //****************************************
 
-EffectFrameImpl::EffectFrameImpl(EffectFrameStyle style, bool staticSize, QPoint position, Qt::Alignment alignment)
-    : QObject(nullptr)
-    , EffectFrame()
+EffectFrameQuickScene::EffectFrameQuickScene(EffectFrameStyle style, bool staticSize, QPoint position,
+                                             Qt::Alignment alignment, QObject *parent)
+    : OffscreenQuickScene(parent)
     , m_style(style)
     , m_static(staticSize)
     , m_point(position)
     , m_alignment(alignment)
-    , m_shader(nullptr)
-    , m_theme(new Plasma::Theme(this))
 {
-    if (m_style == EffectFrameStyled) {
-        m_frame.setImagePath(QStringLiteral("widgets/background"));
-        m_frame.setCacheAllRenderedFrames(true);
-        connect(m_theme, &Plasma::Theme::themeChanged, this, &EffectFrameImpl::plasmaThemeChanged);
+
+    QString name;
+    switch (style) {
+    case EffectFrameNone:
+        name = QStringLiteral("none");
+        break;
+    case EffectFrameUnstyled:
+        name = QStringLiteral("unstyled");
+        break;
+    case EffectFrameStyled:
+        name = QStringLiteral("styled");
+        break;
     }
-    m_selection.setImagePath(QStringLiteral("widgets/viewitem"));
-    m_selection.setElementPrefix(QStringLiteral("hover"));
-    m_selection.setCacheAllRenderedFrames(true);
-    m_selection.setEnabledBorders(Plasma::FrameSvg::AllBorders);
 
-    m_sceneFrame = Compositor::self()->scene()->createEffectFrame(this);
+    const QString defaultPath = QStringLiteral(KWIN_NAME "/frames/plasma/frame_%1.qml").arg(name);
+    // TODO read from kwinApp()->config() "QmlPath" like Outline/OnScreenNotification
+    // *if* someone really needs this to be configurable.
+    const QString path = QStandardPaths::locate(QStandardPaths::GenericDataLocation, defaultPath);
+
+    setSource(QUrl::fromLocalFile(path), QVariantMap{{QStringLiteral("effectFrame"), QVariant::fromValue(this)}});
+
+    if (rootItem()) {
+        connect(rootItem(), &QQuickItem::implicitWidthChanged, this, &EffectFrameQuickScene::reposition);
+        connect(rootItem(), &QQuickItem::implicitHeightChanged, this, &EffectFrameQuickScene::reposition);
+    }
 }
 
-EffectFrameImpl::~EffectFrameImpl()
+EffectFrameQuickScene::~EffectFrameQuickScene() = default;
+
+EffectFrameStyle EffectFrameQuickScene::style() const
 {
-    delete m_sceneFrame;
+    return m_style;
 }
 
-const QFont &EffectFrameImpl::font() const
+bool EffectFrameQuickScene::isStatic() const
+{
+    return m_static;
+}
+
+const QFont &EffectFrameQuickScene::font() const
 {
     return m_font;
 }
 
-void EffectFrameImpl::setFont(const QFont &font)
+void EffectFrameQuickScene::setFont(const QFont &font)
 {
     if (m_font == font) {
         return;
     }
+
     m_font = font;
-    QRect oldGeom = m_geometry;
-    if (!m_text.isEmpty()) {
-        autoResize();
+    Q_EMIT fontChanged(font);
+    reposition();
+}
+
+const QIcon &EffectFrameQuickScene::icon() const
+{
+    return m_icon;
+}
+
+void EffectFrameQuickScene::setIcon(const QIcon &icon)
+{
+    m_icon = icon;
+    Q_EMIT iconChanged(icon);
+    reposition();
+}
+
+const QSize &EffectFrameQuickScene::iconSize() const
+{
+    return m_iconSize;
+}
+
+void EffectFrameQuickScene::setIconSize(const QSize &iconSize)
+{
+    if (m_iconSize == iconSize) {
+        return;
     }
-    if (oldGeom == m_geometry) {
-        // Wasn't updated in autoResize()
-        m_sceneFrame->freeTextFrame();
+
+    m_iconSize = iconSize;
+    Q_EMIT iconSizeChanged(iconSize);
+    reposition();
+}
+
+const QString &EffectFrameQuickScene::text() const
+{
+    return m_text;
+}
+
+void EffectFrameQuickScene::setText(const QString &text)
+{
+    if (m_text == text) {
+        return;
     }
+
+    m_text = text;
+    Q_EMIT textChanged(text);
+    reposition();
+}
+
+qreal EffectFrameQuickScene::frameOpacity() const
+{
+    return m_frameOpacity;
+}
+
+void EffectFrameQuickScene::setFrameOpacity(qreal frameOpacity)
+{
+    if (m_frameOpacity != frameOpacity) {
+        m_frameOpacity = frameOpacity;
+        Q_EMIT frameOpacityChanged(frameOpacity);
+    }
+}
+
+bool EffectFrameQuickScene::crossFadeEnabled() const
+{
+    return m_crossFadeEnabled;
+}
+
+void EffectFrameQuickScene::setCrossFadeEnabled(bool enabled)
+{
+    if (m_crossFadeEnabled != enabled) {
+        m_crossFadeEnabled = enabled;
+        Q_EMIT crossFadeEnabledChanged(enabled);
+    }
+}
+
+qreal EffectFrameQuickScene::crossFadeProgress() const
+{
+    return m_crossFadeProgress;
+}
+
+void EffectFrameQuickScene::setCrossFadeProgress(qreal progress)
+{
+    if (m_crossFadeProgress != progress) {
+        m_crossFadeProgress = progress;
+        Q_EMIT crossFadeProgressChanged(progress);
+    }
+}
+
+Qt::Alignment EffectFrameQuickScene::alignment() const
+{
+    return m_alignment;
+}
+
+void EffectFrameQuickScene::setAlignment(Qt::Alignment alignment)
+{
+    if (m_alignment == alignment) {
+        return;
+    }
+
+    m_alignment = alignment;
+    reposition();
+}
+
+QPoint EffectFrameQuickScene::position() const
+{
+    return m_point;
+}
+
+void EffectFrameQuickScene::setPosition(const QPoint &point)
+{
+    if (m_point == point) {
+        return;
+    }
+
+    m_point = point;
+    reposition();
+}
+
+void EffectFrameQuickScene::reposition()
+{
+    if (!rootItem() || m_point.x() < 0 || m_point.y() < 0) {
+        return;
+    }
+
+    QSizeF size;
+    if (m_static) {
+        size = rootItem()->size();
+    } else {
+        size = QSizeF(rootItem()->implicitWidth(), rootItem()->implicitHeight());
+    }
+
+    QRect geometry(QPoint(), size.toSize());
+
+    if (m_alignment & Qt::AlignLeft)
+        geometry.moveLeft(m_point.x());
+    else if (m_alignment & Qt::AlignRight)
+        geometry.moveLeft(m_point.x() - geometry.width());
+    else
+        geometry.moveLeft(m_point.x() - geometry.width() / 2);
+    if (m_alignment & Qt::AlignTop)
+        geometry.moveTop(m_point.y());
+    else if (m_alignment & Qt::AlignBottom)
+        geometry.moveTop(m_point.y() - geometry.height());
+    else
+        geometry.moveTop(m_point.y() - geometry.height() / 2);
+
+    if (geometry == this->geometry()) {
+        return;
+    }
+
+    setGeometry(geometry);
+}
+
+EffectFrameImpl::EffectFrameImpl(EffectFrameStyle style, bool staticSize, QPoint position, Qt::Alignment alignment)
+    : QObject(nullptr)
+    , EffectFrame()
+    , m_view(new EffectFrameQuickScene(style, staticSize, position, alignment, nullptr))
+{
+    connect(m_view, &OffscreenQuickScene::repaintNeeded, this, [this] {
+        effects->addRepaint(geometry());
+    });
+    connect(m_view, &OffscreenQuickScene::geometryChanged, this, [this](const QRect &oldGeometry, const QRect &newGeometry) {
+        effects->addRepaint(oldGeometry);
+        m_geometry = newGeometry;
+        effects->addRepaint(newGeometry);
+    });
+}
+
+EffectFrameImpl::~EffectFrameImpl()
+{
+    // Effects often destroy their cached TextFrames in pre/postPaintScreen.
+    // Destroying an OffscreenQuickView changes GL context, which we
+    // must not do during effect rendering.
+    // Delay destruction of the view until after the rendering.
+    m_view->deleteLater();
+}
+
+Qt::Alignment EffectFrameImpl::alignment() const
+{
+    return m_view->alignment();
+}
+
+void EffectFrameImpl::setAlignment(Qt::Alignment alignment)
+{
+    m_view->setAlignment(alignment);
+}
+
+const QFont &EffectFrameImpl::font() const
+{
+    return m_view->font();
+}
+
+void EffectFrameImpl::setFont(const QFont &font)
+{
+    m_view->setFont(font);
 }
 
 void EffectFrameImpl::free()
 {
-    m_sceneFrame->free();
+    m_view->hide();
 }
 
 const QRect &EffectFrameImpl::geometry() const
 {
+    // Can't forward to OffscreenQuickScene::geometry() because we return a reference.
     return m_geometry;
 }
 
 void EffectFrameImpl::setGeometry(const QRect &geometry, bool force)
 {
-    QRect oldGeom = m_geometry;
-    m_geometry = geometry;
-    if (m_geometry == oldGeom && !force) {
-        return;
-    }
-    effects->addRepaint(oldGeom);
-    effects->addRepaint(m_geometry);
-    if (m_geometry.size() == oldGeom.size() && !force) {
-        return;
-    }
-
-    if (m_style == EffectFrameStyled) {
-        qreal left, top, right, bottom;
-        m_frame.getMargins(left, top, right, bottom); // m_geometry is the inner geometry
-        m_frame.resizeFrame(m_geometry.adjusted(-left, -top, right, bottom).size());
-    }
-
-    free();
+    Q_UNUSED(force)
+    m_view->setGeometry(geometry);
 }
 
 const QIcon &EffectFrameImpl::icon() const
 {
-    return m_icon;
+    return m_view->icon();
 }
 
 void EffectFrameImpl::setIcon(const QIcon &icon)
 {
-    m_icon = icon;
-    if (isCrossFade()) {
-        m_sceneFrame->crossFadeIcon();
+    m_view->setIcon(icon);
+
+    if (m_view->iconSize().isEmpty() && !icon.availableSizes().isEmpty()) { // Set a size if we don't already have one
+        setIconSize(icon.availableSizes().constFirst());
     }
-    if (m_iconSize.isEmpty() && !m_icon.availableSizes().isEmpty()) { // Set a size if we don't already have one
-        setIconSize(m_icon.availableSizes().constFirst());
-    }
-    m_sceneFrame->freeIconFrame();
 }
 
 const QSize &EffectFrameImpl::iconSize() const
 {
-    return m_iconSize;
+    return m_view->iconSize();
 }
 
 void EffectFrameImpl::setIconSize(const QSize &size)
 {
-    if (m_iconSize == size) {
-        return;
-    }
-    m_iconSize = size;
-    autoResize();
-    m_sceneFrame->freeIconFrame();
-}
-
-void EffectFrameImpl::plasmaThemeChanged()
-{
-    free();
-}
-
-void EffectFrameImpl::render(const QRegion &region, double opacity, double frameOpacity)
-{
-    if (m_geometry.isEmpty()) {
-        return; // Nothing to display
-    }
-    m_shader = nullptr;
-    setScreenProjectionMatrix(static_cast<EffectsHandlerImpl *>(effects)->scene()->screenProjectionMatrix());
-    effects->paintEffectFrame(this, region, opacity, frameOpacity);
-}
-
-void EffectFrameImpl::finalRender(QRegion region, double opacity, double frameOpacity) const
-{
-    region = infiniteRegion(); // TODO: Old region doesn't seem to work with OpenGL
-
-    m_sceneFrame->render(region, opacity, frameOpacity);
-}
-
-Qt::Alignment EffectFrameImpl::alignment() const
-{
-    return m_alignment;
-}
-
-void EffectFrameImpl::align(QRect &geometry)
-{
-    if (m_alignment & Qt::AlignLeft) {
-        geometry.moveLeft(m_point.x());
-    } else if (m_alignment & Qt::AlignRight) {
-        geometry.moveLeft(m_point.x() - geometry.width());
-    } else {
-        geometry.moveLeft(m_point.x() - geometry.width() / 2);
-    }
-    if (m_alignment & Qt::AlignTop) {
-        geometry.moveTop(m_point.y());
-    } else if (m_alignment & Qt::AlignBottom) {
-        geometry.moveTop(m_point.y() - geometry.height());
-    } else {
-        geometry.moveTop(m_point.y() - geometry.height() / 2);
-    }
-}
-
-void EffectFrameImpl::setAlignment(Qt::Alignment alignment)
-{
-    m_alignment = alignment;
-    align(m_geometry);
-    setGeometry(m_geometry);
+    m_view->setIconSize(size);
 }
 
 void EffectFrameImpl::setPosition(const QPoint &point)
 {
-    m_point = point;
-    QRect geometry = m_geometry; // this is important, setGeometry need call repaint for old & new geometry
-    align(geometry);
-    setGeometry(geometry);
+    m_view->setPosition(point);
+}
+
+void EffectFrameImpl::render(const QRegion &region, double opacity, double frameOpacity)
+{
+    Q_UNUSED(region);
+
+    if (!m_view->rootItem()) {
+        return;
+    }
+
+    m_view->show();
+
+    m_view->setOpacity(opacity);
+    m_view->setFrameOpacity(frameOpacity);
+
+    effects->renderOffscreenQuickView(m_view);
 }
 
 const QString &EffectFrameImpl::text() const
 {
-    return m_text;
+    return m_view->text();
 }
 
 void EffectFrameImpl::setText(const QString &text)
 {
-    if (m_text == text) {
-        return;
-    }
-    if (isCrossFade()) {
-        m_sceneFrame->crossFadeText();
-    }
-    m_text = text;
-    QRect oldGeom = m_geometry;
-    autoResize();
-    if (oldGeom == m_geometry) {
-        // Wasn't updated in autoResize()
-        m_sceneFrame->freeTextFrame();
-    }
+    m_view->setText(text);
 }
 
-void EffectFrameImpl::setSelection(const QRect &selection)
+EffectFrameStyle EffectFrameImpl::style() const
 {
-    if (selection == m_selectionGeometry) {
-        return;
-    }
-    m_selectionGeometry = selection;
-    if (m_selectionGeometry.size() != m_selection.frameSize().toSize()) {
-        m_selection.resizeFrame(m_selectionGeometry.size());
-    }
-    // TODO; optimize to only recreate when resizing
-    m_sceneFrame->freeSelection();
+    return m_view->style();
 }
 
-void EffectFrameImpl::autoResize()
+bool EffectFrameImpl::isCrossFade() const
 {
-    if (m_static) {
-        return; // Not automatically resizing
-    }
-
-    QRect geometry;
-    // Set size
-    if (!m_text.isEmpty()) {
-        QFontMetrics metrics(m_font);
-        geometry.setSize(metrics.size(0, m_text));
-    }
-    if (!m_icon.isNull() && !m_iconSize.isEmpty()) {
-        geometry.setLeft(-m_iconSize.width());
-        if (m_iconSize.height() > geometry.height()) {
-            geometry.setHeight(m_iconSize.height());
-        }
-    }
-
-    align(geometry);
-    setGeometry(geometry);
+    return m_view->crossFadeEnabled();
 }
 
-QColor EffectFrameImpl::styledTextColor()
+void EffectFrameImpl::enableCrossFade(bool enable)
 {
-    return m_theme->color(Plasma::Theme::TextColor);
+    m_view->setCrossFadeEnabled(enable);
+}
+
+qreal EffectFrameImpl::crossFadeProgress() const
+{
+    return m_view->crossFadeProgress();
+}
+
+void EffectFrameImpl::setCrossFadeProgress(qreal progress)
+{
+    m_view->setCrossFadeProgress(progress);
 }
 
 } // namespace

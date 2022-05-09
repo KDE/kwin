@@ -409,12 +409,6 @@ void ContrastEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region
     effects->drawWindow(w, mask, region, data);
 }
 
-void ContrastEffect::paintEffectFrame(EffectFrame *frame, const QRegion &region, double opacity, double frameOpacity)
-{
-    // FIXME: this is a no-op for now, it should figure out the right contrast, intensity, saturation
-    effects->paintEffectFrame(frame, region, opacity, frameOpacity);
-}
-
 void ContrastEffect::doContrast(EffectWindow *w, const QRegion &shape, const QRect &screen, const float opacity, const QMatrix4x4 &screenProjection)
 {
     const QRegion actualShape = shape & screen;

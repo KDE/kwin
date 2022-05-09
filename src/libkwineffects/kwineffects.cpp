@@ -584,11 +584,6 @@ void Effect::postPaintWindow(EffectWindow *w)
     effects->postPaintWindow(w);
 }
 
-void Effect::paintEffectFrame(KWin::EffectFrame *frame, const QRegion &region, double opacity, double frameOpacity)
-{
-    effects->paintEffectFrame(frame, region, opacity, frameOpacity);
-}
-
 bool Effect::provides(Feature)
 {
     return false;
@@ -1583,16 +1578,6 @@ bool EffectFrame::isCrossFade() const
 void EffectFrame::enableCrossFade(bool enable)
 {
     d->crossFading = enable;
-}
-
-QMatrix4x4 EffectFrame::screenProjectionMatrix() const
-{
-    return d->screenProjectionMatrix;
-}
-
-void EffectFrame::setScreenProjectionMatrix(const QMatrix4x4 &spm)
-{
-    d->screenProjectionMatrix = spm;
 }
 
 /***************************************************************
