@@ -3178,10 +3178,8 @@ Window *InputRedirection::findManagedToplevel(const QPoint &pos)
             // a deleted window doesn't get mouse events
             continue;
         }
-        if (window->isClient()) {
-            if (!window->isOnCurrentActivity() || !window->isOnCurrentDesktop() || window->isMinimized() || window->isHiddenInternal()) {
-                continue;
-            }
+        if (!window->isOnCurrentActivity() || !window->isOnCurrentDesktop() || window->isMinimized() || window->isHiddenInternal()) {
+            continue;
         }
         if (!window->readyForPainting()) {
             continue;
