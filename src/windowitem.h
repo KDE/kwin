@@ -42,6 +42,8 @@ public:
         PAINT_DISABLED_BY_ACTIVITY = 1 << 5
     };
 
+    ~WindowItem() override;
+
     SurfaceItem *surfaceItem() const;
     DecorationItem *decorationItem() const;
     ShadowItem *shadowItem() const;
@@ -60,6 +62,7 @@ private Q_SLOTS:
     void updateShadowItem();
     void updateSurfacePosition();
     void updateSurfaceVisibility();
+    void updatePosition();
 
 private:
     bool computeVisibility() const;

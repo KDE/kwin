@@ -495,9 +495,8 @@ public:
     Window *window();
 
     void setWindow(Window *w); // internal
-    void setSceneWindow(SceneWindow *w); // internal
-    const SceneWindow *sceneWindow() const; // internal
-    SceneWindow *sceneWindow(); // internal
+    void setWindowItem(WindowItem *item); // internal
+    WindowItem *windowItem() const; // internal
 
     void elevate(bool elevate);
 
@@ -506,7 +505,7 @@ public:
 
 private:
     Window *m_window;
-    SceneWindow *m_sceneWindow; // This one is used only during paint pass.
+    WindowItem *m_windowItem; // This one is used only during paint pass.
     QHash<int, QVariant> dataMap;
     bool managed = false;
     bool m_waylandWindow;
@@ -660,17 +659,9 @@ inline EffectWindowGroupImpl::EffectWindowGroupImpl(Group *g)
 {
 }
 
-EffectWindow *effectWindow(Window *w);
-EffectWindow *effectWindow(SceneWindow *w);
-
-inline const SceneWindow *EffectWindowImpl::sceneWindow() const
+inline WindowItem *EffectWindowImpl::windowItem() const
 {
-    return m_sceneWindow;
-}
-
-inline SceneWindow *EffectWindowImpl::sceneWindow()
-{
-    return m_sceneWindow;
+    return m_windowItem;
 }
 
 inline const Window *EffectWindowImpl::window() const

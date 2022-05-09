@@ -30,6 +30,7 @@
 #include "shadow.h"
 #include "surfaceitem_x11.h"
 #include "virtualdesktops.h"
+#include "windowitem.h"
 #include "workspace.h"
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
@@ -259,6 +260,11 @@ X11Window::~X11Window()
     Q_ASSERT(m_wrapper == XCB_WINDOW_NONE);
     Q_ASSERT(m_frame == XCB_WINDOW_NONE);
     Q_ASSERT(!check_active_modal);
+}
+
+WindowItem *X11Window::createItem()
+{
+    return new WindowItemX11(this);
 }
 
 // Use destroyWindow() or releaseWindow(), Client instances cannot be deleted directly

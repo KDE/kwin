@@ -29,6 +29,9 @@ WindowItem::WindowItem(Window *window, Item *parent)
     connect(window, &Window::shadowChanged, this, &WindowItem::updateShadowItem);
     updateShadowItem();
 
+    connect(window, &Window::frameGeometryChanged, this, &WindowItem::updatePosition);
+    updatePosition();
+
     if (waylandServer()) {
         connect(waylandServer(), &WaylandServer::lockStateChanged, this, &WindowItem::updateVisibility);
     }
@@ -41,6 +44,10 @@ WindowItem::WindowItem(Window *window, Item *parent)
     updateVisibility();
 
     connect(window, &Window::windowClosed, this, &WindowItem::handleWindowClosed);
+}
+
+WindowItem::~WindowItem()
+{
 }
 
 SurfaceItem *WindowItem::surfaceItem() const
@@ -150,6 +157,11 @@ bool WindowItem::computeVisibility() const
 void WindowItem::updateVisibility()
 {
     setVisible(computeVisibility());
+}
+
+void WindowItem::updatePosition()
+{
+    setPosition(m_window->pos());
 }
 
 void WindowItem::updateSurfaceItem(SurfaceItem *surfaceItem)

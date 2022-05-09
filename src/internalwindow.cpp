@@ -12,6 +12,7 @@
 #include "deleted.h"
 #include "platform.h"
 #include "surfaceitem.h"
+#include "windowitem.h"
 #include "workspace.h"
 
 #include <KDecoration2/Decoration>
@@ -66,6 +67,11 @@ InternalWindow::InternalWindow(QWindow *handle)
 
 InternalWindow::~InternalWindow()
 {
+}
+
+WindowItem *InternalWindow::createItem()
+{
+    return new WindowItemInternal(this);
 }
 
 bool InternalWindow::isClient() const

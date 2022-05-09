@@ -1113,7 +1113,7 @@ EffectWindowList EffectsHandlerImpl::stackingOrder() const
     QList<Window *> list = Workspace::self()->xStackingOrder();
     EffectWindowList ret;
     for (Window *t : list) {
-        if (EffectWindow *w = effectWindow(t)) {
+        if (EffectWindow *w = t->effectWindow()) {
             ret.append(w);
         }
     }
@@ -1886,7 +1886,7 @@ EffectScreen::Transform EffectScreenImpl::transform() const
 EffectWindowImpl::EffectWindowImpl(Window *window)
     : EffectWindow(window)
     , m_window(window)
-    , m_sceneWindow(nullptr)
+    , m_windowItem(nullptr)
 {
     // Deleted windows are not managed. So, when windowClosed signal is
     // emitted, effects can't distinguish managed windows from unmanaged
@@ -1907,12 +1907,12 @@ EffectWindowImpl::~EffectWindowImpl()
 
 void EffectWindowImpl::refVisible(int reason)
 {
-    m_sceneWindow->windowItem()->refVisible(reason);
+    m_windowItem->refVisible(reason);
 }
 
 void EffectWindowImpl::unrefVisible(int reason)
 {
-    m_sceneWindow->windowItem()->unrefVisible(reason);
+    m_windowItem->unrefVisible(reason);
 }
 
 void EffectWindowImpl::addRepaint(const QRect &r)
@@ -2091,9 +2091,9 @@ void EffectWindowImpl::setWindow(Window *w)
     setParent(w);
 }
 
-void EffectWindowImpl::setSceneWindow(SceneWindow *w)
+void EffectWindowImpl::setWindowItem(WindowItem *item)
 {
-    m_sceneWindow = w;
+    m_windowItem = item;
 }
 
 QRect EffectWindowImpl::decorationInnerRect() const
@@ -2191,19 +2191,6 @@ QVariant EffectWindowImpl::data(int role) const
     return dataMap.value(role);
 }
 
-EffectWindow *effectWindow(Window *w)
-{
-    EffectWindowImpl *ret = w->effectWindow();
-    return ret;
-}
-
-EffectWindow *effectWindow(SceneWindow *w)
-{
-    EffectWindowImpl *ret = w->window()->effectWindow();
-    ret->setSceneWindow(w);
-    return ret;
-}
-
 void EffectWindowImpl::elevate(bool elevate)
 {
     effects->setElevatedWindow(this, elevate);
@@ -2232,16 +2219,12 @@ void EffectWindowImpl::closeWindow()
 
 void EffectWindowImpl::referencePreviousWindowPixmap()
 {
-    if (m_sceneWindow) {
-        m_sceneWindow->referencePreviousPixmap();
-    }
+    // TODO: Implement.
 }
 
 void EffectWindowImpl::unreferencePreviousWindowPixmap()
 {
-    if (m_sceneWindow) {
-        m_sceneWindow->unreferencePreviousPixmap();
-    }
+    // TODO: Implement.
 }
 
 bool EffectWindowImpl::isManaged() const

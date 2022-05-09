@@ -37,7 +37,6 @@ class GLTexture;
 class Item;
 class RenderLoop;
 class Scene;
-class SceneWindow;
 class Shadow;
 class ShadowItem;
 class SurfaceItem;
@@ -114,11 +113,11 @@ public:
     virtual Shadow *createShadow(Window *window) = 0;
     // Flags controlling how painting is done.
     enum {
-        // SceneWindow (or at least part of it) will be painted opaque.
+        // WindowItem (or at least part of it) will be painted opaque.
         PAINT_WINDOW_OPAQUE = 1 << 0,
-        // SceneWindow (or at least part of it) will be painted translucent.
+        // WindowItem (or at least part of it) will be painted translucent.
         PAINT_WINDOW_TRANSLUCENT = 1 << 1,
-        // SceneWindow will be painted with transformed geometry.
+        // WindowItem will be painted with transformed geometry.
         PAINT_WINDOW_TRANSFORMED = 1 << 2,
         // Paint only a region of the screen (can be optimized, cannot
         // be used together with TRANSFORMED flags).
@@ -205,7 +204,7 @@ protected:
     // called after all effects had their paintWindow() called
     void finalPaintWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data);
     // shared implementation, starts painting the window
-    virtual void paintWindow(SceneWindow *w, int mask, const QRegion &region);
+    virtual void paintWindow(WindowItem *w, int mask, const QRegion &region);
     // called after all effects had their drawWindow() called
     void finalDrawWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data);
 
@@ -214,7 +213,7 @@ protected:
     // saved data for 2nd pass of optimized screen painting
     struct Phase2Data
     {
-        SceneWindow *window = nullptr;
+        WindowItem *item = nullptr;
         QRegion region;
         QRegion opaque;
         int mask = 0;
@@ -231,7 +230,7 @@ protected:
     Output *painted_screen = nullptr;
 
     // windows in their stacking order
-    QVector<SceneWindow *> stacking_order;
+    QVector<WindowItem *> stacking_order;
 
 private:
     std::chrono::milliseconds m_expectedPresentTimestamp = std::chrono::milliseconds::zero();
@@ -244,90 +243,6 @@ private:
     int m_paintScreenCount = 0;
     PaintContext m_paintContext;
 };
-
-// The base class for windows representations in composite backends
-class SceneWindow : public QObject
-{
-    Q_OBJECT
-
-public:
-    explicit SceneWindow(Window *client, QObject *parent = nullptr);
-    ~SceneWindow() override;
-    int x() const;
-    int y() const;
-    int width() const;
-    int height() const;
-    QRect geometry() const;
-    QPoint pos() const;
-    QSize size() const;
-    QRect rect() const;
-    // access to the internal window class
-    // TODO eventually get rid of this
-    Window *window() const;
-    void setWindow(Window *window);
-    void referencePreviousPixmap();
-    void unreferencePreviousPixmap();
-    WindowItem *windowItem() const;
-    SurfaceItem *surfaceItem() const;
-    ShadowItem *shadowItem() const;
-
-protected:
-    Window *m_window;
-
-private:
-    void referencePreviousPixmap_helper(SurfaceItem *item);
-    void unreferencePreviousPixmap_helper(SurfaceItem *item);
-
-    void updateWindowPosition();
-
-    QScopedPointer<WindowItem> m_windowItem;
-    Q_DISABLE_COPY(SceneWindow)
-};
-
-inline int SceneWindow::x() const
-{
-    return m_window->x();
-}
-
-inline int SceneWindow::y() const
-{
-    return m_window->y();
-}
-
-inline int SceneWindow::width() const
-{
-    return m_window->width();
-}
-
-inline int SceneWindow::height() const
-{
-    return m_window->height();
-}
-
-inline QRect SceneWindow::geometry() const
-{
-    return m_window->frameGeometry();
-}
-
-inline QSize SceneWindow::size() const
-{
-    return m_window->size();
-}
-
-inline QPoint SceneWindow::pos() const
-{
-    return m_window->pos();
-}
-
-inline QRect SceneWindow::rect() const
-{
-    return m_window->rect();
-}
-
-inline Window *SceneWindow::window() const
-{
-    return m_window;
-}
 
 } // namespace
 

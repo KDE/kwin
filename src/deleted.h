@@ -100,6 +100,7 @@ public:
     void moveResizeInternal(const QRect & /*rect*/, KWin::Window::MoveResizeMode /*mode*/) override { /* nothing to do */ }
     void updateCaption() override { /* nothing to do */ }
     void resizeWithChecks(const QSize&) override { /* nothing to do */ }
+    WindowItem *createItem() override;
 
     /**
      * Returns whether the client was a popup.

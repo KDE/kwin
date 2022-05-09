@@ -58,6 +58,7 @@ public:
     void moveResizeInternal(const QRect & /*rect*/, KWin::Window::MoveResizeMode /*mode*/) override { /* nothing to do */ }
     void updateCaption() override { /* nothing to do */ }
     void resizeWithChecks(const QSize&) override { /* nothing to do */ }
+    WindowItem *createItem() override;
 
 public Q_SLOTS:
     void release(ReleaseReason releaseReason = ReleaseReason::Release);

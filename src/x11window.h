@@ -351,6 +351,7 @@ protected:
     QSize resizeIncrements() const override;
     bool acceptsFocus() const override;
     void moveResizeInternal(const QRect &rect, MoveResizeMode mode) override;
+    WindowItem *createItem() override;
 
     // Signals for the scripting interface
     // Signals make an excellent way for communication

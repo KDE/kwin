@@ -48,8 +48,13 @@ Deleted::~Deleted()
         workspace()->removeDeleted(this);
     }
     deleteEffectWindow();
-    deleteSceneWindow();
+    deleteItem();
     deleteShadow();
+}
+
+WindowItem *Deleted::createItem()
+{
+    Q_UNREACHABLE();
 }
 
 Deleted *Deleted::create(Window *c)

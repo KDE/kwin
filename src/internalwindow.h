@@ -72,6 +72,7 @@ protected:
     void doInteractiveResizeSync() override;
     void updateCaption() override;
     void moveResizeInternal(const QRect &rect, MoveResizeMode mode) override;
+    WindowItem *createItem() override;
 
 private:
     void requestGeometry(const QRect &rect);

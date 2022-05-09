@@ -44,6 +44,7 @@ protected:
     bool belongsToDesktop() const override;
     void doSetActive() override;
     void updateCaption() override;
+    WindowItem *createItem() override;
 
     void cleanGrouping();
     void updateGeometry(const QRect &rect);

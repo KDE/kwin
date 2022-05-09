@@ -14,6 +14,7 @@
 #include "wayland/display.h"
 #include "wayland/surface_interface.h"
 #include "wayland_server.h"
+#include "windowitem.h"
 #include "workspace.h"
 
 #include <QFileInfo>
@@ -52,6 +53,11 @@ WaylandWindow::WaylandWindow(SurfaceInterface *surface)
 
     updateResourceName();
     updateIcon();
+}
+
+WindowItem *WaylandWindow::createItem()
+{
+    return new WindowItemWayland(this);
 }
 
 QString WaylandWindow::captionNormal() const

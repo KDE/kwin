@@ -229,16 +229,16 @@ SurfaceItem *Scene::scanoutCandidate() const
     SurfaceItem *candidate = nullptr;
     if (!static_cast<EffectsHandlerImpl *>(effects)->blocksDirectScanout()) {
         for (int i = stacking_order.count() - 1; i >= 0; i--) {
-            SceneWindow *sceneWindow = stacking_order[i];
-            Window *window = sceneWindow->window();
+            WindowItem *windowItem = stacking_order[i];
+            Window *window = windowItem->window();
             if (window->isOnOutput(painted_screen) && window->opacity() > 0) {
                 if (!window->isClient() || !window->isFullScreen() || window->opacity() != 1.0) {
                     break;
                 }
-                if (!sceneWindow->surfaceItem()) {
+                if (!windowItem->surfaceItem()) {
                     break;
                 }
-                SurfaceItem *topMost = findTopMostSurface(sceneWindow->surfaceItem());
+                SurfaceItem *topMost = findTopMostSurface(windowItem->surfaceItem());
                 auto pixmap = topMost->pixmap();
                 if (!pixmap) {
                     break;
@@ -249,7 +249,7 @@ SurfaceItem *Scene::scanoutCandidate() const
                     break;
                 }
                 // and it has to be completely opaque
-                if (pixmap->hasAlphaChannel() && !topMost->opaque().contains(QRect(0, 0, sceneWindow->width(), sceneWindow->height()))) {
+                if (pixmap->hasAlphaChannel() && !topMost->opaque().contains(QRect(0, 0, window->width(), window->height()))) {
                     break;
                 }
                 candidate = topMost;
@@ -330,16 +330,16 @@ static void accumulateRepaints(Item *item, Output *output, QRegion *repaints)
 
 void Scene::preparePaintGenericScreen()
 {
-    for (SceneWindow *sceneWindow : std::as_const(stacking_order)) {
-        resetRepaintsHelper(sceneWindow->windowItem(), painted_screen);
+    for (WindowItem *windowItem : std::as_const(stacking_order)) {
+        resetRepaintsHelper(windowItem, painted_screen);
 
         WindowPrePaintData data;
         data.mask = m_paintContext.mask;
         data.paint = infiniteRegion(); // no clipping, so doesn't really matter
 
-        effects->prePaintWindow(effectWindow(sceneWindow), data, m_expectedPresentTimestamp);
+        effects->prePaintWindow(windowItem->window()->effectWindow(), data, m_expectedPresentTimestamp);
         m_paintContext.phase2Data.append(Phase2Data{
-            .window = sceneWindow,
+            .item = windowItem,
             .region = infiniteRegion(),
             .opaque = data.opaque,
             .mask = data.mask,
@@ -351,12 +351,11 @@ void Scene::preparePaintGenericScreen()
 
 void Scene::preparePaintSimpleScreen()
 {
-    for (SceneWindow *sceneWindow : std::as_const(stacking_order)) {
-        const Window *window = sceneWindow->window();
-        const WindowItem *windowItem = sceneWindow->windowItem();
+    for (WindowItem *windowItem : std::as_const(stacking_order)) {
+        Window *window = windowItem->window();
         WindowPrePaintData data;
         data.mask = m_paintContext.mask;
-        accumulateRepaints(sceneWindow->windowItem(), painted_screen, &data.paint);
+        accumulateRepaints(windowItem, painted_screen, &data.paint);
 
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass.
         if (window->opacity() == 1.0) {
@@ -371,9 +370,9 @@ void Scene::preparePaintSimpleScreen()
             }
         }
 
-        effects->prePaintWindow(effectWindow(sceneWindow), data, m_expectedPresentTimestamp);
+        effects->prePaintWindow(window->effectWindow(), data, m_expectedPresentTimestamp);
         m_paintContext.phase2Data.append(Phase2Data{
-            .window = sceneWindow,
+            .item = windowItem,
             .region = data.paint,
             .opaque = data.opaque,
             .mask = data.mask,
@@ -393,8 +392,8 @@ void Scene::preparePaintSimpleScreen()
 
 void Scene::postPaint()
 {
-    for (SceneWindow *w : std::as_const(stacking_order)) {
-        effects->postPaintWindow(effectWindow(w));
+    for (WindowItem *w : std::as_const(stacking_order)) {
+        effects->postPaintWindow(w->window()->effectWindow());
     }
 
     effects->postPaintScreen();
@@ -403,8 +402,8 @@ void Scene::postPaint()
         const std::chrono::milliseconds frameTime =
             std::chrono::duration_cast<std::chrono::milliseconds>(painted_screen->renderLoop()->lastPresentationTimestamp());
 
-        for (SceneWindow *sceneWindow : std::as_const(stacking_order)) {
-            Window *window = sceneWindow->window();
+        for (WindowItem *windowItem : std::as_const(stacking_order)) {
+            Window *window = windowItem->window();
             if (!window->isOnOutput(painted_screen)) {
                 continue;
             }
@@ -515,7 +514,7 @@ void Scene::paintGenericScreen(int, const ScreenPaintData &)
     }
 
     for (const Phase2Data &paintData : std::as_const(m_paintContext.phase2Data)) {
-        paintWindow(paintData.window, paintData.mask, paintData.region);
+        paintWindow(paintData.item, paintData.mask, paintData.region);
     }
 }
 
@@ -531,8 +530,7 @@ void Scene::paintSimpleScreen(int, const QRegion &region)
         data->region = visible;
 
         if (!(data->mask & PAINT_WINDOW_TRANSFORMED)) {
-            const Item *item = data->window->windowItem();
-            data->region &= item->mapToGlobal(item->boundingRect());
+            data->region &= data->item->mapToGlobal(data->item->boundingRect());
 
             if (!(data->mask & PAINT_WINDOW_TRANSLUCENT)) {
                 visible -= data->opaque;
@@ -543,7 +541,7 @@ void Scene::paintSimpleScreen(int, const QRegion &region)
     paintBackground(visible);
 
     for (const Phase2Data &paintData : std::as_const(m_paintContext.phase2Data)) {
-        paintWindow(paintData.window, paintData.mask, paintData.region);
+        paintWindow(paintData.item, paintData.mask, paintData.region);
     }
 }
 
@@ -573,8 +571,7 @@ void Scene::createStackingOrder()
         if (!window->windowItem()->isVisible()) {
             continue;
         }
-        Q_ASSERT(window->sceneWindow());
-        stacking_order.append(window->sceneWindow());
+        stacking_order.append(window->windowItem());
     }
 }
 
@@ -583,14 +580,15 @@ void Scene::clearStackingOrder()
     stacking_order.clear();
 }
 
-void Scene::paintWindow(SceneWindow *w, int mask, const QRegion &region)
+void Scene::paintWindow(WindowItem *item, int mask, const QRegion &region)
 {
     if (region.isEmpty()) { // completely clipped
         return;
     }
 
-    WindowPaintData data(w->window()->effectWindow(), screenProjectionMatrix());
-    effects->paintWindow(effectWindow(w), mask, region, data);
+    EffectWindowImpl *effectWindow = item->window()->effectWindow();
+    WindowPaintData data(effectWindow, screenProjectionMatrix());
+    effects->paintWindow(effectWindow, mask, region, data);
 }
 
 // the function that'll be eventually called by paintWindow() above
@@ -602,7 +600,7 @@ void Scene::finalPaintWindow(EffectWindowImpl *w, int mask, const QRegion &regio
 // will be eventually called from drawWindow()
 void Scene::finalDrawWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
 {
-    render(w->sceneWindow()->windowItem(), mask, region, data);
+    render(w->windowItem(), mask, region, data);
 }
 
 bool Scene::makeOpenGLContextCurrent()
@@ -650,91 +648,6 @@ SurfaceTexture *Scene::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
     Q_UNUSED(pixmap)
     return nullptr;
-}
-
-//****************************************
-// SceneWindow
-//****************************************
-
-SceneWindow::SceneWindow(Window *client, QObject *parent)
-    : QObject(parent)
-    , m_window(client)
-{
-    if (qobject_cast<WaylandWindow *>(client)) {
-        m_windowItem.reset(new WindowItemWayland(m_window));
-    } else if (qobject_cast<X11Window *>(client) || qobject_cast<Unmanaged *>(client)) {
-        m_windowItem.reset(new WindowItemX11(m_window));
-    } else if (auto internalClient = qobject_cast<InternalWindow *>(client)) {
-        m_windowItem.reset(new WindowItemInternal(internalClient));
-    } else {
-        Q_UNREACHABLE();
-    }
-
-    connect(m_window, &Window::frameGeometryChanged, this, &SceneWindow::updateWindowPosition);
-    updateWindowPosition();
-}
-
-SceneWindow::~SceneWindow()
-{
-}
-
-void SceneWindow::setWindow(Window *window)
-{
-    m_window = window;
-}
-
-void SceneWindow::referencePreviousPixmap()
-{
-    if (surfaceItem()) {
-        referencePreviousPixmap_helper(surfaceItem());
-    }
-}
-
-void SceneWindow::referencePreviousPixmap_helper(SurfaceItem *item)
-{
-    item->referencePreviousPixmap();
-
-    const QList<Item *> children = item->childItems();
-    for (Item *child : children) {
-        referencePreviousPixmap_helper(static_cast<SurfaceItem *>(child));
-    }
-}
-
-void SceneWindow::unreferencePreviousPixmap()
-{
-    if (surfaceItem()) {
-        unreferencePreviousPixmap_helper(surfaceItem());
-    }
-}
-
-void SceneWindow::unreferencePreviousPixmap_helper(SurfaceItem *item)
-{
-    item->unreferencePreviousPixmap();
-
-    const QList<Item *> children = item->childItems();
-    for (Item *child : children) {
-        unreferencePreviousPixmap_helper(static_cast<SurfaceItem *>(child));
-    }
-}
-
-WindowItem *SceneWindow::windowItem() const
-{
-    return m_windowItem.data();
-}
-
-SurfaceItem *SceneWindow::surfaceItem() const
-{
-    return m_windowItem->surfaceItem();
-}
-
-ShadowItem *SceneWindow::shadowItem() const
-{
-    return m_windowItem->shadowItem();
-}
-
-void SceneWindow::updateWindowPosition()
-{
-    m_windowItem->setPosition(pos());
 }
 
 } // namespace
