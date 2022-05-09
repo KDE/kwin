@@ -48,14 +48,20 @@ void DrmQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &da
     Q_UNUSED(renderedRegion)
     m_currentDamage = damagedRegion;
     m_swapchain->releaseBuffer(m_swapchain->currentBuffer(), damagedRegion);
+    m_currentFramebuffer = DrmFramebuffer::createFramebuffer(m_swapchain->currentBuffer());
 }
 
 bool DrmQPainterLayer::checkTestBuffer()
 {
     if (!doesSwapchainFit()) {
         m_swapchain = std::make_shared<DumbSwapchain>(m_pipeline->gpu(), m_pipeline->bufferSize(), DRM_FORMAT_XRGB8888);
+        if (!m_swapchain->isEmpty()) {
+            m_currentFramebuffer = DrmFramebuffer::createFramebuffer(m_swapchain->currentBuffer());
+        } else {
+            m_currentFramebuffer.reset();
+        }
     }
-    return !m_swapchain->isEmpty();
+    return m_currentFramebuffer != nullptr;
 }
 
 bool DrmQPainterLayer::doesSwapchainFit() const
@@ -65,7 +71,7 @@ bool DrmQPainterLayer::doesSwapchainFit() const
 
 std::shared_ptr<DrmFramebuffer> DrmQPainterLayer::currentBuffer() const
 {
-    return m_swapchain ? m_currentFramebuffer : nullptr;
+    return m_currentFramebuffer;
 }
 
 QRegion DrmQPainterLayer::currentDamage() const
