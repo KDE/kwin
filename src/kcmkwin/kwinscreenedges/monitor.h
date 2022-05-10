@@ -65,6 +65,7 @@ Q_SIGNALS:
 
 protected:
     void resizeEvent(QResizeEvent *e) override;
+    bool event(QEvent *event) override;
 
 private:
     class Corner;

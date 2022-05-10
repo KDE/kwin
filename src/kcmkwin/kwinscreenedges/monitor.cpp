@@ -53,8 +53,6 @@ static QScreen *screenFromWidget(const QWidget *widget)
 Monitor::Monitor(QWidget *parent)
     : ScreenPreviewWidget(parent)
 {
-    QRect avail = screenFromWidget(this)->geometry();
-    setRatio((qreal)avail.width() / (qreal)avail.height());
     for (int i = 0;
          i < 8;
          ++i) {
@@ -95,6 +93,17 @@ void Monitor::resizeEvent(QResizeEvent *e)
 {
     ScreenPreviewWidget::resizeEvent(e);
     checkSize();
+}
+
+bool Monitor::event(QEvent *event)
+{
+    const bool r = ScreenPreviewWidget::event(event);
+    if (event->type() == QEvent::ScreenChangeInternal) {
+        QRect avail = screenFromWidget(this)->geometry();
+        setRatio((qreal)avail.width() / (qreal)avail.height());
+        checkSize();
+    }
+    return r;
 }
 
 void Monitor::checkSize()
