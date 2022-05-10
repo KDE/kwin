@@ -12,7 +12,6 @@
 #include "kwinglutils.h"
 #include "anidata_p.h"
 
-#include <QAction>
 #include <QDateTime>
 #include <QTimer>
 #include <QVector3D>
