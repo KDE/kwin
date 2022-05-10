@@ -17,6 +17,7 @@
 #include "subsurface_interface_p.h"
 #include "surface_interface_p.h"
 #include "surfacerole_p.h"
+#include "surfacesuspension_v1_interface_p.h"
 #include "utils.h"
 
 #include <wayland-server.h>
@@ -344,12 +345,23 @@ SurfaceInterface::SurfaceInterface(CompositorInterface *compositor, wl_resource 
     , d(new SurfaceInterfacePrivate(this))
 {
     d->compositor = compositor;
+    d->suspension.reset(new SurfaceSuspensionV1Interface(this));
     d->init(resource);
     d->client = compositor->display()->getConnection(d->resource()->client());
 }
 
 SurfaceInterface::~SurfaceInterface()
 {
+}
+
+bool SurfaceInterface::isSuspended() const
+{
+    return d->suspension->isSuspended();
+}
+
+void SurfaceInterface::setSuspended(bool suspended)
+{
+    d->suspension->setSuspended(suspended);
 }
 
 uint32_t SurfaceInterface::id() const

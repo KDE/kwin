@@ -112,6 +112,7 @@ Q_SIGNALS:
      * has changed.
      */
     void boundingRectChanged();
+    void visibleChanged();
 
 protected:
     virtual WindowQuadList buildQuads() const;

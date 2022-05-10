@@ -175,6 +175,10 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/drm-lease/drm-lease-v1.xml
     BASENAME drm-lease-v1
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/surface-suspension-v1.xml
+    BASENAME wp-surface-suspension-v1
+)
 
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
@@ -236,6 +240,7 @@ target_sources(kwin PRIVATE
     subcompositor_interface.cpp
     surface_interface.cpp
     surfacerole.cpp
+    surfacesuspension_v1_interface.cpp
     tablet_v2_interface.cpp
     textinput.cpp
     textinput_v2_interface.cpp

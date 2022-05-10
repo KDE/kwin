@@ -48,6 +48,11 @@ SurfaceItemWayland::SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface
         setPosition(subsurface->position());
     }
 
+    m_surface->setSuspended(!isVisible());
+    connect(this, &Item::visibleChanged, surface, [this]() {
+        m_surface->setSuspended(!isVisible());
+    });
+
     handleChildSubSurfacesChanged();
     setSize(surface->size());
     setSurfaceToBufferMatrix(surface->surfaceToBufferMatrix());

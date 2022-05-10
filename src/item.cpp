@@ -382,6 +382,8 @@ void Item::updateEffectiveVisibility()
     for (Item *childItem : qAsConst(m_childItems)) {
         childItem->updateEffectiveVisibility();
     }
+
+    Q_EMIT visibleChanged();
 }
 
 static bool compareZ(const Item *a, const Item *b)

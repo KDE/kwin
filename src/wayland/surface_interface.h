@@ -306,6 +306,9 @@ public:
      */
     LinuxDmaBufV1Feedback *dmabufFeedbackV1() const;
 
+    bool isSuspended() const;
+    void setSuspended(bool suspended);
+
     /**
      * @returns The SurfaceInterface for the @p native resource.
      */

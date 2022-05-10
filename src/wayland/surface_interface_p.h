@@ -18,6 +18,7 @@ namespace KWaylandServer
 {
 class IdleInhibitorV1Interface;
 class SurfaceRole;
+class SurfaceSuspensionV1Interface;
 class ViewportInterface;
 
 struct SurfaceState
@@ -124,6 +125,7 @@ public:
     QVector<IdleInhibitorV1Interface *> idleInhibitors;
     ViewportInterface *viewportExtension = nullptr;
     QScopedPointer<LinuxDmaBufV1Feedback> dmabufFeedbackV1;
+    QScopedPointer<SurfaceSuspensionV1Interface> suspension;
     ClientConnection *client = nullptr;
 
 protected:

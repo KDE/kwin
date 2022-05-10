@@ -54,6 +54,7 @@
 #include "wayland/server_decoration_palette_interface.h"
 #include "wayland/shadow_interface.h"
 #include "wayland/subcompositor_interface.h"
+#include "wayland/surfacesuspension_v1_interface.h"
 #include "wayland/tablet_v2_interface.h"
 #include "wayland/viewporter_interface.h"
 #include "wayland/xdgactivation_v1_interface.h"
@@ -409,6 +410,7 @@ bool WaylandServer::init(InitializationFlags flags)
     });
 
     new ViewporterInterface(m_display, m_display);
+    new SurfaceSuspensionManagerV1Interface(m_display, m_display);
     m_display->createShm();
     m_seat = new SeatInterface(m_display, m_display);
     new PointerGesturesV1Interface(m_display, m_display);
