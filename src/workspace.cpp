@@ -508,6 +508,7 @@ void Workspace::setupWindowConnections(Window *window)
 {
     connect(window, &Window::desktopPresenceChanged, this, &Workspace::desktopPresenceChanged);
     connect(window, &Window::minimizedChanged, this, std::bind(&Workspace::windowMinimizedChanged, this, window));
+    connect(window, &Window::fullScreenChanged, ScreenEdges::self(), &ScreenEdges::checkBlocking);
 }
 
 void Workspace::constrain(Window *below, Window *above)
@@ -652,7 +653,6 @@ X11Window *Workspace::createX11Window(xcb_window_t windowId, bool is_mapped)
     if (X11Compositor *compositor = X11Compositor::self()) {
         connect(window, &X11Window::blockingCompositingChanged, compositor, &X11Compositor::updateClientCompositeBlocking);
     }
-    connect(window, &X11Window::clientFullScreenSet, ScreenEdges::self(), &ScreenEdges::checkBlocking);
     if (!window->manage(windowId, is_mapped)) {
         X11Window::deleteClient(window);
         return nullptr;
