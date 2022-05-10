@@ -370,6 +370,8 @@ void X11StandalonePlatform::startInteractivePositionSelection(std::function<void
 void X11StandalonePlatform::setupActionForGlobalAccel(QAction *action)
 {
     connect(KGlobalAccel::self(), &KGlobalAccel::globalShortcutActiveChanged, kwinApp(), [action](QAction *triggeredAction, bool active) {
+        Q_UNUSED(active)
+
         if (triggeredAction != action)
             return;
 

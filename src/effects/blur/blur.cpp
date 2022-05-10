@@ -782,6 +782,8 @@ void BlurEffect::doBlur(const QRegion &shape, const QRect &screen, const float o
 
 void BlurEffect::upscaleRenderToScreen(GLVertexBuffer *vbo, int vboStart, int blurRectCount, const QMatrix4x4 &screenProjection, QPoint windowPosition)
 {
+    Q_UNUSED(windowPosition)
+
     m_renderTextures[1]->bind();
 
     m_shader->bind(BlurShader::UpSampleType);
