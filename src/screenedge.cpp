@@ -212,8 +212,7 @@ void Edge::unreserve()
 }
 void Edge::unreserve(QObject *object)
 {
-    if (m_callBacks.contains(object)) {
-        m_callBacks.remove(object);
+    if (m_callBacks.remove(object) > 0) {
         disconnect(object, &QObject::destroyed, this, qOverload<QObject *>(&Edge::unreserve));
         unreserve();
     }
