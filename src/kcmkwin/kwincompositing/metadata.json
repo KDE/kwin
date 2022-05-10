@@ -1,8 +1,22 @@
 {
     "KPlugin": {
         "Description": "Compositor Settings for Desktop Effects",
+        "Description[ca@valencia]": "Configuració del compositor per als efectes de l'escriptori",
+        "Description[ca]": "Arranjament del compositor per als efectes d'escriptori",
+        "Description[es]": "Preferencias del compositor para los efectos del escritorio",
+        "Description[nl]": "Instellingen van compositor configureren voor bureaubladeffecten",
+        "Description[sv]": "Sammansättningsinställningar för skrivbordseffekter",
+        "Description[uk]": "Параметри засобу композиції для ефектів стільниці",
+        "Description[x-test]": "xxCompositor Settings for Desktop Effectsxx",
         "Icon": "preferences-desktop",
         "Name": "Compositor",
+        "Name[ca@valencia]": "Compositor",
+        "Name[ca]": "Compositor",
+        "Name[es]": "Compositor",
+        "Name[nl]": "Compositor",
+        "Name[sv]": "Sammansättning",
+        "Name[uk]": "Засіб композиції",
+        "Name[x-test]": "xxCompositorxx",
         "ServiceTypes": [
             "KCModule"
         ]

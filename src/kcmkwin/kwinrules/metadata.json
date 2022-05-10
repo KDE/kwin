@@ -2,12 +2,26 @@
     "Categories": "Qt;KDE;X-KDE-settings-looknfeel;",
     "KPlugin": {
         "Description": "Individual Window Behavior",
+        "Description[ca@valencia]": "Comportament individual de les finestres",
+        "Description[ca]": "Comportament individual de les finestres",
+        "Description[es]": "Comportamiento de ventanas individuales",
+        "Description[nl]": "Individueel venstergedrag",
+        "Description[sv]": "Individuellt fönsterbeteende",
+        "Description[uk]": "Поведінка окремих вікон",
+        "Description[x-test]": "xxIndividual Window Behaviorxx",
         "FormFactors": [
             "desktop",
             "tablet"
         ],
         "Icon": "preferences-system-windows-actions",
         "Name": "Window Rules",
+        "Name[ca@valencia]": "Regles de les finestres",
+        "Name[ca]": "Regles de les finestres",
+        "Name[es]": "Reglas de las ventanas",
+        "Name[nl]": "Vensterregels",
+        "Name[sv]": "Fönsterregler",
+        "Name[uk]": "Правила вікон",
+        "Name[x-test]": "xxWindow Rulesxx",
         "ServiceTypes": [
             "KCModule"
         ]

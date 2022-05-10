@@ -1,8 +1,22 @@
 {
     "KPlugin": {
         "Description": "Configure active screen corners and edges",
+        "Description[ca@valencia]": "Configura les cantonades i vores actives de la pantalla",
+        "Description[ca]": "Configura les cantonades i vores actives de la pantalla",
+        "Description[es]": "Configurar las esquinas y los bordes activos de la pantalla",
+        "Description[nl]": "Actieve schermhoeken en -randen configureren",
+        "Description[sv]": "Anpassa aktiva skärmhörn och kanter",
+        "Description[uk]": "Налаштовування активних кутів і країв екрана",
+        "Description[x-test]": "xxConfigure active screen corners and edgesxx",
         "Icon": "preferences-desktop-gestures-screenedges",
         "Name": "Screen Edges",
+        "Name[ca@valencia]": "Vores de la pantalla",
+        "Name[ca]": "Vores de la pantalla",
+        "Name[es]": "Bordes de la pantalla",
+        "Name[nl]": "Schermranden",
+        "Name[sv]": "Skärmkanter",
+        "Name[uk]": "Краї екрана",
+        "Name[x-test]": "xxScreen Edgesxx",
         "ServiceTypes": [
             "KCModule"
         ]

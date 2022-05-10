@@ -1,8 +1,22 @@
 {
     "KPlugin": {
         "Description": "Navigation Through Windows",
+        "Description[ca@valencia]": "Navegació per les finestres",
+        "Description[ca]": "Navegació per les finestres",
+        "Description[es]": "Navegación a través de las ventanas",
+        "Description[nl]": "Navigatie door vensters",
+        "Description[sv]": "Navigering via fönster",
+        "Description[uk]": "Навігація вікнами",
+        "Description[x-test]": "xxNavigation Through Windowsxx",
         "Icon": "preferences-system-tabbox",
         "Name": "Task Switcher",
+        "Name[ca@valencia]": "Commutador de tasques",
+        "Name[ca]": "Commutador de tasques",
+        "Name[es]": "Selector de tareas",
+        "Name[nl]": "Taakschakelaar",
+        "Name[sv]": "Aktivitetsbyte",
+        "Name[uk]": "Перемикання задач",
+        "Name[x-test]": "xxTask Switcherxx",
         "ServiceTypes": [
             "KCModule"
         ]

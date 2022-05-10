@@ -1,12 +1,26 @@
 {
     "KPlugin": {
         "Description": "Configure compositor settings for desktop effects",
+        "Description[ca@valencia]": "Configura la configuració del compositor per als efectes de l'escriptori",
+        "Description[ca]": "Configura l'arranjament del compositor per als efectes d'escriptori",
+        "Description[es]": "Configurar las preferencias del compositor para los efectos del escritorio",
+        "Description[nl]": "Instellingen van compositor configureren voor bureaubladeffecten",
+        "Description[sv]": "Anpassa sammansättningsinställningar för skrivbordseffekter",
+        "Description[uk]": "Налаштовування параметрів засобу композиції для ефектів стільниці",
+        "Description[x-test]": "xxConfigure compositor settings for desktop effectsxx",
         "FormFactors": [
             "desktop",
             "tablet"
         ],
         "Icon": "preferences-desktop-effects",
         "Name": "Desktop Effects",
+        "Name[ca@valencia]": "Efectes de l'escriptori",
+        "Name[ca]": "Efectes d'escriptori",
+        "Name[es]": "Efectos del escritorio",
+        "Name[nl]": "Bureaubladeffecten",
+        "Name[sv]": "Skrivbordseffekter",
+        "Name[uk]": "Ефекти стільниці",
+        "Name[x-test]": "xxDesktop Effectsxx",
         "ServiceTypes": [
             "KCModule"
         ]

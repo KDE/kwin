@@ -2,11 +2,25 @@
     "Categories": "Qt;KDE;X-KDE-settings-translations;",
     "KPlugin": {
         "Description": "Configure navigation, number and layout of virtual desktops",
+        "Description[ca@valencia]": "Configura la navegació, el nombre i la disposició dels escriptoris virtuals",
+        "Description[ca]": "Configura la navegació, el nombre i la disposició dels escriptoris virtuals",
+        "Description[es]": "Configurar la navegación, el número y la disposición de los escritorios virtuales",
+        "Description[nl]": "Navigatie, aantal en indeling van virtuele bureaubladen configureren",
+        "Description[sv]": "Anpassa navigering, antal och layout av virtuella skrivbord",
+        "Description[uk]": "Налаштовування навігації, кількості та компонування віртуальних стільниць",
+        "Description[x-test]": "xxConfigure navigation, number and layout of virtual desktopsxx",
         "FormFactors": [
             "desktop"
         ],
         "Icon": "preferences-desktop-virtual",
         "Name": "Virtual Desktops",
+        "Name[ca@valencia]": "Escriptoris virtuals",
+        "Name[ca]": "Escriptoris virtuals",
+        "Name[es]": "Escritorios virtuales",
+        "Name[nl]": "Virtuele bureaubladen",
+        "Name[sv]": "Virtuella skrivbord",
+        "Name[uk]": "Віртуальні стільниці",
+        "Name[x-test]": "xxVirtual Desktopsxx",
         "ServiceTypes": [
             "KCModule"
         ]

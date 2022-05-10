@@ -1,8 +1,22 @@
 {
     "KPlugin": {
         "Description": "Configure touch screen swipe gestures",
+        "Description[ca@valencia]": "Configura els gestos de lliscament en la pantalla tàctil",
+        "Description[ca]": "Configura els gestos de lliscament en la pantalla tàctil",
+        "Description[es]": "Configurar los gestos de deslizamiento de la pantalla táctil",
+        "Description[nl]": "Veeggebaren voor aanraakscherm configureren",
+        "Description[sv]": "Anpassa draggester för pekskärm",
+        "Description[uk]": "Налаштовування жестів на сенсорному екрані",
+        "Description[x-test]": "xxConfigure touch screen swipe gesturesxx",
         "Icon": "preferences-desktop-gestures-touch",
         "Name": "Touch Screen",
+        "Name[ca@valencia]": "Pantalla tàctil",
+        "Name[ca]": "Pantalla tàctil",
+        "Name[es]": "Pantalla táctil",
+        "Name[nl]": "Aanraakscherm",
+        "Name[sv]": "Pekskärm",
+        "Name[uk]": "Сенсорний екран",
+        "Name[x-test]": "xxTouch Screenxx",
         "ServiceTypes": [
             "KCModule"
         ]

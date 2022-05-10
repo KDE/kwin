@@ -2,8 +2,22 @@
     "Categories": "Qt;KDE;",
     "KPlugin": {
         "Description": "Select which virtual keyboard to use",
+        "Description[ca@valencia]": "Seleccioneu el teclat virtual a usar",
+        "Description[ca]": "Seleccioneu el teclat virtual a usar",
+        "Description[es]": "Seleccionar el teclado virtual que se debe usar",
+        "Description[nl]": "Het te gebruiken virtuele toetsenbord selecteren",
+        "Description[sv]": "Välj vilket virtuellt tangentbord som ska användas",
+        "Description[uk]": "Вибір віртуальної клавіатури",
+        "Description[x-test]": "xxSelect which virtual keyboard to usexx",
         "Icon": "input-keyboard-virtual",
         "Name": "Virtual Keyboard",
+        "Name[ca@valencia]": "Teclat virtual",
+        "Name[ca]": "Teclat virtual",
+        "Name[es]": "Teclado virtual",
+        "Name[nl]": "Virtueel toetsenbord",
+        "Name[sv]": "Virtuellt tangentbord",
+        "Name[uk]": "Віртуальна клавіатура",
+        "Name[x-test]": "xxVirtual Keyboardxx",
         "ServiceTypes": [
             "KCModule"
         ]
