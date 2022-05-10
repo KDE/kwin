@@ -46,7 +46,7 @@ add_executable(kwin_rules_dialog main.cpp)
 target_link_libraries(kwin_rules_dialog KWinRulesObjects)
 install(TARGETS kwin_rules_dialog DESTINATION ${KDE_INSTALL_LIBEXECDIR})
 
-kcoreaddons_add_plugin(kcm_kwinrules SOURCES kcmrules.cpp INSTALL_NAMESPACE "plasma/kcms/systemsettigs")
+kcoreaddons_add_plugin(kcm_kwinrules SOURCES kcmrules.cpp INSTALL_NAMESPACE "plasma/kcms/systemsettings")
 target_link_libraries(kcm_kwinrules KWinRulesObjects)
 
 install(FILES kcm_kwinrules.desktop DESTINATION ${KDE_INSTALL_APPDIR})
