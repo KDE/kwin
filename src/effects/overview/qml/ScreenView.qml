@@ -196,6 +196,7 @@ FocusScope {
                 animationDuration: effect.animationDuration
                 animationEnabled: container.animationEnabled
                 organized: container.organized
+                supportsCloseWindows: true
                 model: KWinComponents.ClientFilterModel {
                     activity: KWinComponents.Workspace.currentActivity
                     desktop: KWinComponents.Workspace.currentVirtualDesktop

@@ -109,6 +109,7 @@ Item {
             organized: container.organized
             showOnly: container.effect.mode === WindowView.ModeWindowClass ? "activeClass" : selectedIds
             layout: effect.layout
+            supportsCloseWindows: true
             model: KWinComponents.ClientFilterModel {
                 activity: KWinComponents.Workspace.currentActivity
                 desktop: container.effect.mode == WindowView.ModeCurrentDesktop ? KWinComponents.Workspace.currentVirtualDesktop : undefined
