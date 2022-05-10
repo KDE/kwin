@@ -1065,7 +1065,7 @@ public:
             m_gestureCancelled = true;
             return true;
         } else {
-            m_touchPoints.insert(id, {pos, QSize()});
+            m_touchPoints.insert(id, pos);
             if (m_touchPoints.count() == 1) {
                 m_lastTouchDownTime = time;
             } else {
@@ -1078,7 +1078,7 @@ public:
                 float xfactor = output->physicalSize().width() / (float)output->geometry().width();
                 float yfactor = output->physicalSize().height() / (float)output->geometry().height();
                 bool distanceMatch = std::any_of(m_touchPoints.constBegin(), m_touchPoints.constEnd(), [pos, xfactor, yfactor](const auto &point) {
-                    QPointF p = pos - point.pos;
+                    QPointF p = pos - point;
                     return std::abs(xfactor * p.x()) + std::abs(yfactor * p.y()) < 50;
                 });
                 if (!distanceMatch) {
@@ -1103,19 +1103,15 @@ public:
             if (m_gestureCancelled) {
                 return true;
             }
-            // only track one finger for simplicity
-            if (id != m_touchPoints.begin().key()) {
-                return true;
-            }
-            auto &point = m_touchPoints[id];
-            QPointF dist = pos - point.pos;
             auto output = kwinApp()->platform()->outputAt(pos.toPoint());
-            float xfactor = output->physicalSize().width() / (float)output->geometry().width();
-            float yfactor = output->physicalSize().height() / (float)output->geometry().height();
-            QSize delta = QSize(xfactor * dist.x(), yfactor * dist.y()) * 10;
-            point.distance += delta;
-            point.pos = pos;
-            input()->shortcuts()->processSwipeUpdate(DeviceType::Touchscreen, delta);
+            const float xfactor = output->physicalSize().width() / (float)output->geometry().width();
+            const float yfactor = output->physicalSize().height() / (float)output->geometry().height();
+
+            auto &point = m_touchPoints[id];
+            const QPointF dist = pos - point;
+            const QSizeF delta = QSizeF(xfactor * dist.x(), yfactor * dist.y());
+            input()->shortcuts()->processSwipeUpdate(DeviceType::Touchscreen, 5 * delta / m_touchPoints.size());
+            point = pos;
             return true;
         }
         return false;
@@ -1144,17 +1140,12 @@ public:
     }
 
 private:
-    struct TouchPoint
-    {
-        QPointF pos;
-        QSize distance;
-    };
     bool m_gestureTaken = false;
     bool m_gestureCancelled = false;
     bool m_touchGestureCancelSent = false;
     uint32_t m_lastTouchDownTime = 0;
     QPointF m_lastAverageDistance;
-    QMap<int32_t, TouchPoint> m_touchPoints;
+    QMap<int32_t, QPointF> m_touchPoints;
 
     QTimer *m_powerDown = nullptr;
 };
@@ -3247,9 +3238,9 @@ void InputRedirection::registerGlobalAccel(KGlobalAccelInterface *interface)
     m_shortcuts->setKGlobalAccelInterface(interface);
 }
 
-void InputRedirection::registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action)
+void InputRedirection::registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
 {
-    m_shortcuts->registerTouchscreenSwipe(action, direction, fingerCount);
+    m_shortcuts->registerTouchscreenSwipe(action, progressCallback, direction, fingerCount);
 }
 
 void InputRedirection::warpPointer(const QPointF &pos)

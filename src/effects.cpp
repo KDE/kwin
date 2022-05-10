@@ -786,9 +786,9 @@ void EffectsHandlerImpl::registerTouchpadPinchShortcut(PinchDirection direction,
     input()->registerTouchpadPinchShortcut(direction, fingerCount, action);
 }
 
-void EffectsHandlerImpl::registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action)
+void EffectsHandlerImpl::registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
 {
-    input()->registerTouchscreenSwipeShortcut(direction, fingerCount, action);
+    input()->registerTouchscreenSwipeShortcut(direction, fingerCount, action, progressCallback);
 }
 
 void *EffectsHandlerImpl::getProxy(QString name)

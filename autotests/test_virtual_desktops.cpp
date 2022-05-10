@@ -45,7 +45,7 @@ void InputRedirection::registerRealtimeTouchpadSwipeShortcut(SwipeDirection, uin
     Q_UNUSED(fingerCount)
 }
 
-void InputRedirection::registerTouchscreenSwipeShortcut(SwipeDirection, uint fingerCount, QAction *)
+void InputRedirection::registerTouchscreenSwipeShortcut(SwipeDirection, uint, QAction *, std::function<void(qreal)>)
 {
 }
 

@@ -108,7 +108,7 @@ WindowViewEffect::WindowViewEffect()
         }
     });
 
-    effects->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Down, 4, m_realtimeToggleAction, [this](qreal progress) {
+    const auto gestureCallback = [this](qreal progress) {
         if (m_status == Status::Active) {
             return;
         }
@@ -121,7 +121,9 @@ WindowViewEffect::WindowViewEffect()
         if (!isRunning()) {
             partialActivate();
         }
-    });
+    };
+    effects->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Down, 4, m_realtimeToggleAction, gestureCallback);
+    effects->registerTouchscreenSwipeShortcut(SwipeDirection::Down, 3, m_realtimeToggleAction, gestureCallback);
 
     reconfigure(ReconfigureAll);
 }

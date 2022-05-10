@@ -107,7 +107,7 @@ public:
     void registerTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action) override;
     void registerRealtimeTouchpadPinchShortcut(PinchDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback) override;
     void registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *action) override;
-    void registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action) override;
+    void registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback) override;
     void *getProxy(QString name) override;
     void startMousePolling() override;
     void stopMousePolling() override;

@@ -809,31 +809,22 @@ void VirtualDesktopManager::initShortcuts()
     connect(m_swipeGestureReleasedX.get(), &QAction::triggered, this, &VirtualDesktopManager::gestureReleasedX);
     connect(m_swipeGestureReleasedY.get(), &QAction::triggered, this, &VirtualDesktopManager::gestureReleasedY);
 
-    // These take the live feedback from a gesture
-    input()->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Left, 3, m_swipeGestureReleasedX.get(), [this](qreal cb) {
+    const auto left = [this](qreal cb) {
         if (grid().width() > 1) {
             m_currentDesktopOffset.setX(cb);
             Q_EMIT currentChanging(current(), m_currentDesktopOffset);
         }
-    });
-    input()->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Right, 3, m_swipeGestureReleasedX.get(), [this](qreal cb) {
+    };
+    const auto right = [this](qreal cb) {
         if (grid().width() > 1) {
             m_currentDesktopOffset.setX(-cb);
             Q_EMIT currentChanging(current(), m_currentDesktopOffset);
         }
-    });
-    input()->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Left, 4, m_swipeGestureReleasedX.get(), [this](qreal cb) {
-        if (grid().width() > 1) {
-            m_currentDesktopOffset.setX(cb);
-            Q_EMIT currentChanging(current(), m_currentDesktopOffset);
-        }
-    });
-    input()->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Right, 4, m_swipeGestureReleasedX.get(), [this](qreal cb) {
-        if (grid().width() > 1) {
-            m_currentDesktopOffset.setX(-cb);
-            Q_EMIT currentChanging(current(), m_currentDesktopOffset);
-        }
-    });
+    };
+    input()->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Left, 3, m_swipeGestureReleasedX.get(), left);
+    input()->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Right, 3, m_swipeGestureReleasedX.get(), right);
+    input()->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Left, 4, m_swipeGestureReleasedX.get(), left);
+    input()->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Right, 4, m_swipeGestureReleasedX.get(), right);
     input()->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Down, 3, m_swipeGestureReleasedY.get(), [this](qreal cb) {
         if (grid().height() > 1) {
             m_currentDesktopOffset.setY(-cb);
@@ -846,9 +837,8 @@ void VirtualDesktopManager::initShortcuts()
             Q_EMIT currentChanging(current(), m_currentDesktopOffset);
         }
     });
-
-    input()->registerTouchscreenSwipeShortcut(SwipeDirection::Left, 3, slotRightAction);
-    input()->registerTouchscreenSwipeShortcut(SwipeDirection::Right, 3, slotLeftAction);
+    input()->registerTouchscreenSwipeShortcut(SwipeDirection::Left, 3, m_swipeGestureReleasedX.get(), left);
+    input()->registerTouchscreenSwipeShortcut(SwipeDirection::Right, 3, m_swipeGestureReleasedX.get(), right);
 
     // axis events
     input()->registerAxisShortcut(Qt::ControlModifier | Qt::AltModifier, PointerAxisDown,
