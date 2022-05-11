@@ -78,6 +78,11 @@ public:
      * system.
      */
     QRect mapToGlobal(const QRect &rect) const;
+    /**
+     * Maps the given @a rect from the scene's coordinate system to the item's coordinate
+     * system.
+     */
+    QRect mapFromGlobal(const QRect &rect) const;
 
     /**
      * Moves this item right before the specified @a sibling in the parent's children list.

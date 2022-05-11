@@ -382,10 +382,8 @@ public:
     void unrefVisible(int reason) override;
 
     void addRepaint(const QRect &r) override;
-    void addRepaint(int x, int y, int w, int h) override;
     void addRepaintFull() override;
     void addLayerRepaint(const QRect &r) override;
-    void addLayerRepaint(int x, int y, int w, int h) override;
 
     void refWindow() override;
     void unrefWindow() override;

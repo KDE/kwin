@@ -365,43 +365,6 @@ void Window::finishCompositing(ReleaseReason releaseReason)
     deleteItem();
 }
 
-void Window::addRepaint(const QRect &rect)
-{
-    addRepaint(QRegion(rect));
-}
-
-void Window::addRepaint(int x, int y, int width, int height)
-{
-    addRepaint(QRegion(x, y, width, height));
-}
-
-void Window::addRepaint(const QRegion &region)
-{
-    if (auto item = windowItem()) {
-        item->scheduleRepaint(region);
-    }
-}
-
-void Window::addLayerRepaint(const QRect &rect)
-{
-    addLayerRepaint(QRegion(rect));
-}
-
-void Window::addLayerRepaint(int x, int y, int width, int height)
-{
-    addLayerRepaint(QRegion(x, y, width, height));
-}
-
-void Window::addLayerRepaint(const QRegion &region)
-{
-    addRepaint(region.translated(-pos()));
-}
-
-void Window::addRepaintFull()
-{
-    addLayerRepaint(visibleGeometry());
-}
-
 void Window::addWorkspaceRepaint(int x, int y, int w, int h)
 {
     addWorkspaceRepaint(QRect(x, y, w, h));

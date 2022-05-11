@@ -1917,27 +1917,17 @@ void EffectWindowImpl::unrefVisible(int reason)
 
 void EffectWindowImpl::addRepaint(const QRect &r)
 {
-    m_window->addRepaint(r);
-}
-
-void EffectWindowImpl::addRepaint(int x, int y, int w, int h)
-{
-    m_window->addRepaint(x, y, w, h);
+    m_windowItem->scheduleRepaint(r);
 }
 
 void EffectWindowImpl::addRepaintFull()
 {
-    m_window->addRepaintFull();
+    m_windowItem->scheduleRepaint(m_windowItem->boundingRect());
 }
 
 void EffectWindowImpl::addLayerRepaint(const QRect &r)
 {
-    m_window->addLayerRepaint(r);
-}
-
-void EffectWindowImpl::addLayerRepaint(int x, int y, int w, int h)
-{
-    m_window->addLayerRepaint(x, y, w, h);
+    m_windowItem->scheduleRepaint(m_windowItem->mapFromGlobal(r));
 }
 
 const EffectWindowGroup *EffectWindowImpl::group() const

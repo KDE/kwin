@@ -219,6 +219,14 @@ QRect Item::mapToGlobal(const QRect &rect) const
     return rect.translated(rootPosition());
 }
 
+QRect Item::mapFromGlobal(const QRect &rect) const
+{
+    if (rect.isEmpty()) {
+        return QRect();
+    }
+    return rect.translated(-rootPosition());
+}
+
 void Item::stackBefore(Item *sibling)
 {
     if (Q_UNLIKELY(!sibling)) {
