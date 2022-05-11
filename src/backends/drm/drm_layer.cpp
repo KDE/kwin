@@ -61,5 +61,3 @@ bool DrmOverlayLayer::isVisible() const
     return m_visible;
 }
 }
-
-#include "drm_layer.moc"

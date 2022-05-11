@@ -9,7 +9,6 @@
 #pragma once
 #include "outputlayer.h"
 
-#include <QObject>
 #include <QRegion>
 #include <QSharedPointer>
 #include <optional>
