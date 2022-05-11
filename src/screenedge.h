@@ -367,6 +367,7 @@ public:
 
     bool handleDndNotify(xcb_window_t window, const QPoint &point);
     bool handleEnterNotifiy(xcb_window_t window, const QPoint &point, const QDateTime &timestamp);
+    bool remainActiveOnFullscreen() const;
 
 public Q_SLOTS:
     void reconfigure();
@@ -405,6 +406,7 @@ private:
     Edge *createEdge(ElectricBorder border, int x, int y, int width, int height, Output *output, bool createAction = true);
     void setActionForBorder(ElectricBorder border, ElectricBorderAction *oldValue, ElectricBorderAction newValue);
     void setActionForTouchBorder(ElectricBorder border, ElectricBorderAction newValue);
+    void setRemainActiveOnFullscreen(bool remainActive);
     ElectricBorderAction actionForEdge(Edge *edge) const;
     ElectricBorderAction actionForTouchEdge(Edge *edge) const;
     void createEdgeForClient(Window *client, ElectricBorder border);
@@ -428,6 +430,7 @@ private:
     QMap<ElectricBorder, ElectricBorderAction> m_touchCallbacks;
     int m_cornerOffset;
     GestureRecognizer *m_gestureRecognizer;
+    bool m_remainActiveOnFullscreen = false;
 
     KWIN_SINGLETON(ScreenEdges)
 };

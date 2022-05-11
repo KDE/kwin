@@ -29,6 +29,9 @@ public:
     KWinScreenEdgesConfigForm(QWidget *parent = nullptr);
     ~KWinScreenEdgesConfigForm() override;
 
+    void setRemainActiveOnFullscreen(bool remainActive);
+    bool remainActiveOnFullscreen() const;
+
     // value is between 0. and 1.
     void setElectricBorderCornerRatio(double value);
     void setDefaultElectricBorderCornerRatio(double value);
@@ -55,6 +58,8 @@ private Q_SLOTS:
     void updateDefaultIndicators();
 
 private:
+    bool m_remainActiveOnFullscreen = true;
+
     // electricBorderCornerRatio value between 0. and 1.
     double m_referenceCornerRatio = 0.;
     double m_defaultCornerRatio = 0.;

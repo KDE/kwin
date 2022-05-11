@@ -575,13 +575,8 @@ void Edge::setGeometry(const QRect &geometry)
 
 void Edge::checkBlocking()
 {
-    if (isCorner()) {
-        return;
-    }
-    bool newValue = false;
-    if (Window *client = Workspace::self()->activeWindow()) {
-        newValue = client->isFullScreen() && client->frameGeometry().contains(m_geometry.center());
-    }
+    Window *client = Workspace::self()->activeWindow();
+    const bool newValue = !m_edges->remainActiveOnFullscreen() && client && client->isFullScreen() && client->frameGeometry().contains(m_geometry.center());
     if (newValue == m_blocked) {
         return;
     }
@@ -828,6 +823,9 @@ void ScreenEdges::reconfigure()
     if (!m_config) {
         return;
     }
+    KConfigGroup screenEdgesConfig = m_config->group("ScreenEdges");
+    setRemainActiveOnFullscreen(screenEdgesConfig.readEntry("RemainActiveOnFullscreen", false));
+
     // TODO: migrate settings to a group ScreenEdges
     KConfigGroup windowsConfig = m_config->group("Windows");
     setTimeThreshold(windowsConfig.readEntry("ElectricBorderDelay", 150));
@@ -1069,6 +1067,11 @@ static bool isBottomScreen(const QRect &screen, const QRect &fullArea)
     return true;
 }
 
+bool ScreenEdges::remainActiveOnFullscreen() const
+{
+    return m_remainActiveOnFullscreen;
+}
+
 void ScreenEdges::recreateEdges()
 {
     QList<Edge *> oldEdges(m_edges);
@@ -1218,9 +1221,7 @@ Edge *ScreenEdges::createEdge(ElectricBorder border, int x, int y, int width, in
         }
     }
     connect(edge, &Edge::approaching, this, &ScreenEdges::approaching);
-    if (edge->isScreenEdge()) {
-        connect(this, &ScreenEdges::checkBlocking, edge, &Edge::checkBlocking);
-    }
+    connect(this, &ScreenEdges::checkBlocking, edge, &Edge::checkBlocking);
     return edge;
 }
 
@@ -1581,6 +1582,11 @@ QVector<xcb_window_t> ScreenEdges::windows() const
         }
     }
     return wins;
+}
+
+void ScreenEdges::setRemainActiveOnFullscreen(bool remainActive)
+{
+    m_remainActiveOnFullscreen = remainActive;
 }
 
 } // namespace

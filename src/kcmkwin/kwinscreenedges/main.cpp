@@ -67,6 +67,7 @@ void KWinScreenEdgesConfig::load()
 
     monitorLoadSettings();
     monitorLoadDefaultSettings();
+    m_form->setRemainActiveOnFullscreen(m_data->settings()->remainActiveOnFullscreen());
     m_form->setElectricBorderCornerRatio(m_data->settings()->electricBorderCornerRatio());
     m_form->setDefaultElectricBorderCornerRatio(m_data->settings()->defaultElectricBorderCornerRatioValue());
     m_form->reload();
@@ -75,6 +76,7 @@ void KWinScreenEdgesConfig::load()
 void KWinScreenEdgesConfig::save()
 {
     monitorSaveSettings();
+    m_data->settings()->setRemainActiveOnFullscreen(m_form->remainActiveOnFullscreen());
     m_data->settings()->setElectricBorderCornerRatio(m_form->electricBorderCornerRatio());
     m_data->settings()->save();
     for (KWinScreenEdgeScriptSettings *setting : qAsConst(m_scriptSettings)) {
@@ -87,6 +89,7 @@ void KWinScreenEdgesConfig::save()
     // Reload saved settings to ScreenEdge UI
     monitorLoadSettings();
     m_form->setElectricBorderCornerRatio(m_data->settings()->electricBorderCornerRatio());
+    m_form->setRemainActiveOnFullscreen(m_data->settings()->remainActiveOnFullscreen());
     m_form->reload();
 
     // Reload KWin.

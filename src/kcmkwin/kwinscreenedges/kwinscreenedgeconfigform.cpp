@@ -27,6 +27,7 @@ KWinScreenEdgesConfigForm::KWinScreenEdgesConfigForm(QWidget *parent)
     connect(ui->kcfg_ElectricBorderMaximize, &QCheckBox::stateChanged, this, &KWinScreenEdgesConfigForm::groupChanged);
     connect(ui->kcfg_ElectricBorderTiling, &QCheckBox::stateChanged, this, &KWinScreenEdgesConfigForm::groupChanged);
 
+    connect(ui->remainActiveOnFullscreen, &QCheckBox::stateChanged, this, &KWinScreenEdgesConfigForm::onChanged);
     connect(ui->electricBorderCornerRatioSpin, qOverload<int>(&QSpinBox::valueChanged), this, &KWinScreenEdgesConfigForm::onChanged);
     connect(ui->electricBorderCornerRatioSpin, qOverload<int>(&QSpinBox::valueChanged), this, &KWinScreenEdgesConfigForm::updateDefaultIndicators);
 }
@@ -45,6 +46,13 @@ void KWinScreenEdgesConfigForm::setElectricBorderCornerRatio(double value)
 void KWinScreenEdgesConfigForm::setDefaultElectricBorderCornerRatio(double value)
 {
     m_defaultCornerRatio = value;
+    updateDefaultIndicators();
+}
+
+void KWinScreenEdgesConfigForm::setRemainActiveOnFullscreen(bool remainActive)
+{
+    m_remainActiveOnFullscreen = remainActive;
+    ui->remainActiveOnFullscreen->setChecked(remainActive);
     updateDefaultIndicators();
 }
 
@@ -67,6 +75,7 @@ void KWinScreenEdgesConfigForm::reload()
 void KWinScreenEdgesConfigForm::setDefaults()
 {
     ui->electricBorderCornerRatioSpin->setValue(m_defaultCornerRatio * 100.);
+    ui->remainActiveOnFullscreen->setChecked(false);
     KWinScreenEdge::setDefaults();
 }
 
@@ -78,6 +87,11 @@ void KWinScreenEdgesConfigForm::setDefaultsIndicatorsVisible(bool visible)
     }
 }
 
+bool KWinScreenEdgesConfigForm::remainActiveOnFullscreen() const
+{
+    return ui->remainActiveOnFullscreen->isChecked();
+}
+
 Monitor *KWinScreenEdgesConfigForm::monitor() const
 {
     return ui->monitor;
@@ -85,12 +99,12 @@ Monitor *KWinScreenEdgesConfigForm::monitor() const
 
 bool KWinScreenEdgesConfigForm::isSaveNeeded() const
 {
-    return m_referenceCornerRatio != electricBorderCornerRatio();
+    return m_referenceCornerRatio != electricBorderCornerRatio() || m_remainActiveOnFullscreen != remainActiveOnFullscreen();
 }
 
 bool KWinScreenEdgesConfigForm::isDefault() const
 {
-    return m_defaultCornerRatio == electricBorderCornerRatio();
+    return m_defaultCornerRatio == electricBorderCornerRatio() && m_remainActiveOnFullscreen == false;
 }
 
 void KWinScreenEdgesConfigForm::sanitizeCooldown()
@@ -115,6 +129,8 @@ void KWinScreenEdgesConfigForm::updateDefaultIndicators()
 {
     ui->electricBorderCornerRatioSpin->setProperty("_kde_highlight_neutral", m_defaultIndicatorVisible && (electricBorderCornerRatio() != m_defaultCornerRatio));
     ui->electricBorderCornerRatioSpin->update();
+    ui->remainActiveOnFullscreen->setProperty("_kde_highlight_neutral", m_defaultIndicatorVisible && remainActiveOnFullscreen() == false);
+    ui->remainActiveOnFullscreen->update();
 }
 
 } // namespace
