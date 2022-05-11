@@ -145,6 +145,7 @@ void DrmOutput::updateCursor()
     layer->setVisible(cursor->geometry().intersects(geometry()));
     if (layer->isVisible()) {
         m_setCursorSuccessful = m_pipeline->setCursor(logicalToNativeMatrix(QRect(QPoint(), cursorRect.size()), scale(), transform()).map(cursor->hotspot()));
+        layer->setVisible(m_setCursorSuccessful);
     }
 }
 
