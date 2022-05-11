@@ -7,6 +7,8 @@
         "Description[es]": "Comportamiento de ventanas individuales",
         "Description[nl]": "Individueel venstergedrag",
         "Description[sv]": "Individuellt fönsterbeteende",
+        "Description[ta]": "தனிப்பட்ட சாளரங்களின் நடத்தை",
+        "Description[tr]": "Bireysel Pencere Davranışı",
         "Description[uk]": "Поведінка окремих вікон",
         "Description[x-test]": "xxIndividual Window Behaviorxx",
         "FormFactors": [
@@ -19,7 +21,10 @@
         "Name[ca]": "Regles de les finestres",
         "Name[es]": "Reglas de las ventanas",
         "Name[nl]": "Vensterregels",
+        "Name[sl]": "Pravila oken",
         "Name[sv]": "Fönsterregler",
+        "Name[ta]": "சாளர விதிமுறைகள்",
+        "Name[tr]": "Pencere Kuralları",
         "Name[uk]": "Правила вікон",
         "Name[x-test]": "xxWindow Rulesxx",
         "ServiceTypes": [

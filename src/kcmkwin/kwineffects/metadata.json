@@ -5,7 +5,10 @@
         "Description[ca]": "Configura l'arranjament del compositor per als efectes d'escriptori",
         "Description[es]": "Configurar las preferencias del compositor para los efectos del escritorio",
         "Description[nl]": "Instellingen van compositor configureren voor bureaubladeffecten",
+        "Description[sl]": "Konfiguriraj upravljalnika skladnje za učinke namizja",
         "Description[sv]": "Anpassa sammansättningsinställningar för skrivbordseffekter",
+        "Description[ta]": "பணிமேடை அசைவூட்டங்களுக்கான சாளரநிரல் அமைப்புகளை மாற்றுங்கள்",
+        "Description[tr]": "Masaüstü efektleri için bileşikleştirici ayarlarını yapılandır",
         "Description[uk]": "Налаштовування параметрів засобу композиції для ефектів стільниці",
         "Description[x-test]": "xxConfigure compositor settings for desktop effectsxx",
         "FormFactors": [
@@ -18,7 +21,10 @@
         "Name[ca]": "Efectes d'escriptori",
         "Name[es]": "Efectos del escritorio",
         "Name[nl]": "Bureaubladeffecten",
+        "Name[sl]": "Namizni učinki",
         "Name[sv]": "Skrivbordseffekter",
+        "Name[ta]": "பணிமேடை அசைவூட்டங்கள்",
+        "Name[tr]": "Masaüstü Efektleri",
         "Name[uk]": "Ефекти стільниці",
         "Name[x-test]": "xxDesktop Effectsxx",
         "ServiceTypes": [

@@ -7,6 +7,8 @@
         "Description[es]": "Configurar la navegación, el número y la disposición de los escritorios virtuales",
         "Description[nl]": "Navigatie, aantal en indeling van virtuele bureaubladen configureren",
         "Description[sv]": "Anpassa navigering, antal och layout av virtuella skrivbord",
+        "Description[ta]": "பணிமேடைகளின் எண்ணிக்கை, தளவமைப்பு, மற்றும் அவற்றுக்கிடையேயான உலாவலை அமைக்கும்",
+        "Description[tr]": "Dolaşımı, sanal masaüstlerinin sayısını ve yerleşimini yapılandır",
         "Description[uk]": "Налаштовування навігації, кількості та компонування віртуальних стільниць",
         "Description[x-test]": "xxConfigure navigation, number and layout of virtual desktopsxx",
         "FormFactors": [
@@ -18,7 +20,10 @@
         "Name[ca]": "Escriptoris virtuals",
         "Name[es]": "Escritorios virtuales",
         "Name[nl]": "Virtuele bureaubladen",
+        "Name[sl]": "Navidezna namizja",
         "Name[sv]": "Virtuella skrivbord",
+        "Name[ta]": "மெய்நிகர் பணிமேடைகள்",
+        "Name[tr]": "Sanal Masaüstleri",
         "Name[uk]": "Віртуальні стільниці",
         "Name[x-test]": "xxVirtual Desktopsxx",
         "ServiceTypes": [

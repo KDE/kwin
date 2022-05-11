@@ -7,6 +7,8 @@
         "Description[es]": "Configurar las barras de título y los bordes de las ventanas",
         "Description[nl]": "Titelbalken en randen van venster configureren",
         "Description[sv]": "Anpassa namnlister och kanter för fönster",
+        "Description[ta]": "சாளர விளிம்புகளையும் தலைப்புப்பட்டைகளையும் அமையுங்கள்",
+        "Description[tr]": "Masaüstü pencere başlık çubukları ve kenarlıklarını yapılandır",
         "Description[uk]": "Налаштовування смужок заголовків та рамок вікон",
         "Description[x-test]": "xxConfigure window titlebars and bordersxx",
         "FormFactors": [
@@ -19,7 +21,10 @@
         "Name[ca]": "Decoració de les finestres",
         "Name[es]": "Decoraciones de las ventanas",
         "Name[nl]": "Vensterdecoraties",
+        "Name[sl]": "Dekoracije oken",
         "Name[sv]": "Fönsterdekorationer",
+        "Name[ta]": "சாளர விளிம்புகள்",
+        "Name[tr]": "Pencere Dekorasyonları",
         "Name[uk]": "Обрамлення вікон",
         "Name[x-test]": "xxWindow Decorationsxx",
         "ServiceTypes": [
