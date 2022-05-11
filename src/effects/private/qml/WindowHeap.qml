@@ -335,7 +335,7 @@ FocusScope {
 
                 component DragManager : DragHandler {
                     id: dragHandler
-                    enabled: heap.dragEnabled
+                    enabled: heap.dragEnabled || heap.supportsCloseWindows
                     target: null
 
                     readonly property double targetScale: {
@@ -365,6 +365,7 @@ FocusScope {
                     id: dragHandler
                     readonly property double targetOpacity: 1
                     acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad | PointerDevice.Stylus
+                    enabled: heap.dragEnabled
                 }
                 DragManager {
                     id: touchDragHandler
