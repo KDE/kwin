@@ -58,7 +58,7 @@
     "X-KDE-Keywords[x-test]": "xxsoftware keyboardxx,xxvirtual keyboardxx,xxtouch keyboardxx,xxon screen keyboardxx,xxinput methodsxx",
     "X-KDE-Keywords[zh_CN]": "software keyboard,virtual keyboard,touch keyboard,on screen keyboard,input methods,软件键盘,虚拟键盘,屏幕键盘,,屏上键盘,输入方式,输入法",
     "X-KDE-OnlyShowOnQtPlatforms": [
-        "wayland;"
+        "wayland"
     ],
     "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "input-devices"
