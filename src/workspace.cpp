@@ -796,7 +796,7 @@ void Workspace::addWaylandWindow(Window *window)
     m_allClients.append(window);
     addToStack(window);
 
-    updateStackingOrder(true);
+    updateStackingOrder();
     updateClientArea();
     if (window->wantsInput() && !window->isMinimized()) {
         activateWindow(window);
@@ -804,7 +804,7 @@ void Workspace::addWaylandWindow(Window *window)
     updateTabbox();
     connect(window, &Window::windowShown, this, [this, window] {
         window->updateLayer();
-        updateStackingOrder(true);
+        updateStackingOrder();
         updateClientArea();
         if (window->wantsInput()) {
             activateWindow(window);
@@ -812,7 +812,7 @@ void Workspace::addWaylandWindow(Window *window)
     });
     connect(window, &Window::windowHidden, this, [this] {
         // TODO: update tabbox if it's displayed
-        updateStackingOrder(true);
+        updateStackingOrder();
         updateClientArea();
     });
     Q_EMIT windowAdded(window);
@@ -1912,7 +1912,7 @@ void Workspace::addInternalWindow(InternalWindow *window)
         Placement::self()->place(window, area);
     }
 
-    updateStackingOrder(true);
+    updateStackingOrder();
     updateClientArea();
 
     Q_EMIT internalWindowAdded(window);
@@ -1922,7 +1922,7 @@ void Workspace::removeInternalWindow(InternalWindow *window)
 {
     m_internalWindows.removeOne(window);
 
-    updateStackingOrder(true);
+    updateStackingOrder();
     updateClientArea();
 
     Q_EMIT internalWindowRemoved(window);
