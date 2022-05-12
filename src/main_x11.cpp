@@ -14,6 +14,7 @@
 
 #include "platform.h"
 #include "sm.h"
+#include "tabletmodemanager.h"
 #include "utils/xcbutils.h"
 #include "workspace.h"
 
@@ -274,6 +275,8 @@ void ApplicationX11::performStartup()
     owner->claim(m_replace || wasCrash(), true);
 
     createAtoms();
+
+    TabletModeManager::create(this);
 }
 
 bool ApplicationX11::notify(QObject *o, QEvent *e)

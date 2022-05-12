@@ -8,28 +8,40 @@
 #ifndef KWIN_TABLETMODEMANAGER_H
 #define KWIN_TABLETMODEMANAGER_H
 
+#include <KConfigWatcher>
 #include <QObject>
+#include <config-kwin.h>
+#include <kwin_export.h>
 #include <kwinglobals.h>
 
 namespace KWin
 {
 
-class TabletModeManager : public QObject
+class KWIN_EXPORT TabletModeManager : public QObject
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.KWin.TabletModeManager")
     // assuming such a switch is not pluggable for now
     Q_PROPERTY(bool tabletModeAvailable READ isTabletModeAvailable NOTIFY tabletModeAvailableChanged)
-    Q_PROPERTY(bool tabletMode READ isTablet NOTIFY tabletModeChanged)
+    Q_PROPERTY(bool tabletMode READ effectiveTabletMode NOTIFY tabletModeChanged)
 
 public:
+    enum class ConfiguredMode {
+        Auto,
+        Off,
+        On
+    };
+
     ~TabletModeManager() override = default;
 
     void setTabletModeAvailable(bool detecting);
     bool isTabletModeAvailable() const;
 
+    bool effectiveTabletMode() const;
     bool isTablet() const;
     void setIsTablet(bool tablet);
+
+    ConfiguredMode configuredMode() const;
 
 Q_SIGNALS:
     void tabletModeAvailableChanged(bool available);
@@ -37,10 +49,13 @@ Q_SIGNALS:
 
 private:
     void hasTabletModeInputChanged(bool set);
+    void refreshSettings();
 
+    KConfigWatcher::Ptr m_settingsWatcher;
     bool m_tabletModeAvailable = false;
     bool m_isTabletMode = false;
     bool m_detecting = false;
+    ConfiguredMode m_configuredMode = ConfiguredMode::Auto;
     KWIN_SINGLETON_VARIABLE(TabletModeManager, s_manager)
 };
 }

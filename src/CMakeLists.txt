@@ -134,6 +134,7 @@ target_sources(kwin PRIVATE
     surfaceitem_x11.cpp
     syncalarmx11filter.cpp
     tablet_input.cpp
+    tabletmodemanager.cpp
     hide_cursor_spy.cpp
     touch_input.cpp
     udev.cpp
@@ -296,10 +297,8 @@ kcoreaddons_target_static_plugins(kwin_x11 "kwin/effects/plugins")
 install(TARGETS kwin ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 install(TARGETS kwin_x11 ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
-add_executable(kwin_wayland
-    main_wayland.cpp
-    tabletmodemanager.cpp
-)
+add_executable(kwin_wayland main_wayland.cpp)
+
 target_link_libraries(kwin_wayland
     kwin
     KF5::Crash
