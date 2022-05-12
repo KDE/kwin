@@ -5,7 +5,6 @@
 */
 
 #include "renderloop.h"
-#include "options.h"
 #include "renderloop_p.h"
 #include "surfaceitem.h"
 #include "utils/common.h"
@@ -57,7 +56,7 @@ void RenderLoopPrivate::scheduleRepaint()
     const std::chrono::nanoseconds safetyMargin = std::chrono::milliseconds(3);
 
     std::chrono::nanoseconds renderTime;
-    switch (options->latencyPolicy()) {
+    switch (q->latencyPolicy()) {
     case LatencyExteremelyLow:
         renderTime = std::chrono::nanoseconds(long(vblankInterval.count() * 0.1));
         break;
@@ -228,6 +227,21 @@ void RenderLoop::scheduleRepaint(Item *item)
     } else {
         d->delayScheduleRepaint();
     }
+}
+
+LatencyPolicy RenderLoop::latencyPolicy() const
+{
+    return d->latencyPolicy.value_or(options->latencyPolicy());
+}
+
+void RenderLoop::setLatencyPolicy(LatencyPolicy policy)
+{
+    d->latencyPolicy = policy;
+}
+
+void RenderLoop::resetLatencyPolicy()
+{
+    d->latencyPolicy.reset();
 }
 
 std::chrono::nanoseconds RenderLoop::lastPresentationTimestamp() const

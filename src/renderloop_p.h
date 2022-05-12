@@ -11,6 +11,8 @@
 
 #include <QTimer>
 
+#include <optional>
+
 namespace KWin
 {
 
@@ -41,6 +43,7 @@ public:
     bool pendingReschedule = false;
     bool pendingRepaint = false;
     RenderLoop::VrrPolicy vrrPolicy = RenderLoop::VrrPolicy::Never;
+    std::optional<LatencyPolicy> latencyPolicy;
     Item *fullscreenItem = nullptr;
 
     enum class SyncMode {
