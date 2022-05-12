@@ -26,6 +26,7 @@
 #include "osd.h"
 #include "pointer_input.h"
 #include "renderbackend.h"
+#include "renderlayer.h"
 #include "unmanaged.h"
 #include "x11window.h"
 #if KWIN_BUILD_TABBOX
@@ -576,6 +577,15 @@ void EffectsHandlerImpl::setActiveFullScreenEffect(Effect *e)
     fullscreen_effect = e;
     Q_EMIT activeFullScreenEffectChanged();
     if (activeChanged) {
+        const auto delegates = m_scene->delegates();
+        for (SceneDelegate *delegate : delegates) {
+            RenderLoop *loop = delegate->layer()->loop();
+            if (fullscreen_effect) {
+                loop->setLatencyPolicy(LatencyPolicy::LatencyExtremelyHigh);
+            } else {
+                loop->resetLatencyPolicy();
+            }
+        }
         Q_EMIT hasActiveFullScreenEffectChanged();
     }
 }

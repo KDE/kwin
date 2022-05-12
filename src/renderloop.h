@@ -7,6 +7,7 @@
 #pragma once
 
 #include "kwinglobals.h"
+#include "options.h"
 
 #include <QObject>
 
@@ -108,6 +109,22 @@ public:
      * Set the policy regarding the use of variable refresh rate with RenderLoop
      */
     void setVrrPolicy(VrrPolicy vrrPolicy);
+
+    /**
+     * Returns the latency policy for this render loop.
+     */
+    LatencyPolicy latencyPolicy() const;
+
+    /**
+     * Sets the latecy policy of this render loop to @a policy. By default,
+     * the latency policy of this render loop matches options->latencyPolicy().
+     */
+    void setLatencyPolicy(LatencyPolicy policy);
+
+    /**
+     * Resets the latency policy to the default value.
+     */
+    void resetLatencyPolicy();
 
 Q_SIGNALS:
     /**
