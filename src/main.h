@@ -190,14 +190,6 @@ public:
         return m_defaultScreen;
     }
 
-    /**
-     * Returns @c true if we're in the middle of destroying the X11 connection.
-     */
-    bool isClosingX11Connection() const
-    {
-        return m_isClosingX11Connection;
-    }
-
 #if KWIN_BUILD_ACTIVITIES
     bool usesKActivities() const
     {
@@ -286,10 +278,6 @@ protected:
     {
         m_terminating = true;
     }
-    void setClosingX11Connection(bool set)
-    {
-        m_isClosingX11Connection = set;
-    }
 
 protected:
     static int crashes;
@@ -311,7 +299,6 @@ private:
 #endif
     Platform *m_platform = nullptr;
     bool m_terminating = false;
-    bool m_isClosingX11Connection = false;
 };
 
 inline static Application *kwinApp()

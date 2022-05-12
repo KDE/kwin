@@ -152,7 +152,6 @@ void Xwayland::uninstallSocketNotifier()
 void Xwayland::handleXwaylandFinished()
 {
     disconnect(kwinApp()->platform(), &Platform::primaryOutputChanged, this, &Xwayland::updatePrimary);
-    m_app->setClosingX11Connection(true);
 
     delete m_xrandrEventsFilter;
     m_xrandrEventsFilter = nullptr;
@@ -165,8 +164,6 @@ void Xwayland::handleXwaylandFinished()
     m_selectionOwner.reset();
 
     destroyX11Connection();
-
-    m_app->setClosingX11Connection(false);
 }
 
 void Xwayland::handleXwaylandReady()
