@@ -196,7 +196,7 @@ void TouchInputRedirection::cancel()
     // the compositor will not receive any TOUCH_MOTION or TOUCH_UP events for that slot.
     if (!m_activeTouchPoints.isEmpty()) {
         m_activeTouchPoints.clear();
-        waylandServer()->seat()->notifyTouchCancel();
+        input()->processFilters(std::bind(&InputEventFilter::touchCancel, std::placeholders::_1));
     }
 }
 

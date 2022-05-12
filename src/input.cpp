@@ -1088,7 +1088,9 @@ public:
             }
             if (m_touchPoints.count() >= 3 && !m_gestureCancelled) {
                 m_gestureTaken = true;
+                m_syntheticCancel = true;
                 input()->processFilters(std::bind(&InputEventFilter::touchCancel, std::placeholders::_1));
+                m_syntheticCancel = false;
                 input()->shortcuts()->processSwipeStart(DeviceType::Touchscreen, m_touchPoints.count());
                 return true;
             }
@@ -1128,10 +1130,21 @@ public:
             }
             m_gestureTaken &= m_touchPoints.count() > 0;
             m_gestureCancelled &= m_gestureTaken;
-            m_touchGestureCancelSent &= m_gestureTaken;
             return true;
         }
         return false;
+    }
+
+    bool touchCancel() override
+    {
+        if (m_syntheticCancel) {
+            return false;
+        }
+        const bool oldGestureTaken = m_gestureTaken;
+        m_gestureTaken = false;
+        m_gestureCancelled = false;
+        m_touchPoints.clear();
+        return oldGestureTaken;
     }
 
     bool touchFrame() override
@@ -1142,7 +1155,7 @@ public:
 private:
     bool m_gestureTaken = false;
     bool m_gestureCancelled = false;
-    bool m_touchGestureCancelSent = false;
+    bool m_syntheticCancel = false;
     uint32_t m_lastTouchDownTime = 0;
     QPointF m_lastAverageDistance;
     QMap<int32_t, QPointF> m_touchPoints;
