@@ -146,8 +146,6 @@ Scene::~Scene()
 
 void Scene::initialize()
 {
-    connect(workspace(), &Workspace::currentActivityChanged, this, &Scene::addRepaintFull);
-    connect(workspace(), &Workspace::currentDesktopChanged, this, &Scene::addRepaintFull);
     connect(workspace(), &Workspace::stackingOrderChanged, this, &Scene::addRepaintFull);
 
     setGeometry(workspace()->geometry());
