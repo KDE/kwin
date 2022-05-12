@@ -108,7 +108,6 @@ void Workspace::updateStackingOrder(bool propagate_new_windows)
     stacking_order = new_stacking_order;
     if (changed || propagate_new_windows) {
         propagateWindows(propagate_new_windows);
-        markXStackingOrderAsDirty();
 
         for (int i = 0; i < stacking_order.size(); ++i) {
             stacking_order[i]->setStackingOrder(i);
@@ -628,15 +627,6 @@ QList<Window *> Workspace::ensureStackingOrder(const QList<Window *> &list) cons
     return ensureStackingOrderInList(stacking_order, list);
 }
 
-// Returns all windows in their stacking order on the root window.
-QList<Window *> Workspace::xStackingOrder() const
-{
-    if (m_xStackingDirty) {
-        const_cast<Workspace *>(this)->updateXStackingOrder();
-    }
-    return x_stacking;
-}
-
 QList<Window *> Workspace::unconstrainedStackingOrder() const
 {
     return unconstrained_stacking_order;
@@ -644,30 +634,27 @@ QList<Window *> Workspace::unconstrainedStackingOrder() const
 
 void Workspace::updateXStackingOrder()
 {
-    // use our own stacking order, not the X one, as they may differ
-    x_stacking = stacking_order;
+    // we use our stacking order for managed windows, but X's for override-redirect windows
+    Xcb::Tree tree(kwinApp()->x11RootWindow());
+    xcb_window_t *windows = tree.children();
 
-    if (m_xStackingQueryTree && !m_xStackingQueryTree->isNull()) {
-        std::unique_ptr<Xcb::Tree> tree{std::move(m_xStackingQueryTree)};
-        xcb_window_t *windows = tree->children();
-        const auto count = tree->data()->children_len;
-        int foundUnmanagedCount = m_unmanaged.count();
-        for (unsigned int i = 0; i < count; ++i) {
-            for (auto it = m_unmanaged.constBegin(); it != m_unmanaged.constEnd(); ++it) {
-                Unmanaged *u = *it;
-                if (u->window() == windows[i]) {
-                    x_stacking.append(u);
-                    foundUnmanagedCount--;
-                    break;
-                }
-            }
-            if (foundUnmanagedCount == 0) {
-                break;
-            }
+    const auto count = tree.data()->children_len;
+    int remainingCount = m_unmanaged.count();
+    for (unsigned int i = 0; i < count; ++i) {
+        auto window = findUnmanaged(windows[i]);
+        if (window) {
+            unconstrained_stacking_order.removeAll(window);
+            unconstrained_stacking_order.append(window);
+            remainingCount--;
+        }
+        if (remainingCount == 0) {
+            break;
         }
     }
 
-    m_xStackingDirty = false;
+    if (!m_unmanaged.isEmpty()) {
+        updateStackingOrder();
+    }
 }
 
 //*******************************

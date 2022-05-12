@@ -640,6 +640,7 @@ public:
     QRect visibleGeometry() const;
     virtual bool isClient() const;
     virtual bool isDeleted() const;
+    virtual bool isUnmanaged() const;
 
     /**
      * Maps the specified @a point from the global screen coordinates to the frame coordinates.

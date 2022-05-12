@@ -546,7 +546,7 @@ void Scene::paintSimpleScreen(int, const QRegion &region)
 void Scene::createStackingOrder()
 {
     // Create a list of all windows in the stacking order
-    QList<Window *> windows = Workspace::self()->xStackingOrder();
+    QList<Window *> windows = workspace()->stackingOrder();
 
     // Move elevated windows to the top of the stacking order
     const QList<EffectWindow *> elevatedList = static_cast<EffectsHandlerImpl *>(effects)->elevatedWindows();

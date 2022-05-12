@@ -214,6 +214,11 @@ bool Unmanaged::isOutline() const
     return m_outline;
 }
 
+bool Unmanaged::isUnmanaged() const
+{
+    return true;
+}
+
 QWindow *Unmanaged::findInternalWindow() const
 {
     const QWindowList windows = kwinApp()->topLevelWindows();

@@ -364,7 +364,6 @@ void Compositor::startupWithWorkspace()
             this, &Compositor::cleanupX11, Qt::UniqueConnection);
     initializeX11();
 
-    Workspace::self()->markXStackingOrderAsDirty();
     Q_ASSERT(m_scene);
     m_scene->initialize();
 
@@ -891,7 +890,7 @@ void X11Compositor::composite(RenderLoop *renderLoop)
         return;
     }
 
-    QList<Window *> windows = Workspace::self()->xStackingOrder();
+    QList<Window *> windows = workspace()->stackingOrder();
     QList<SurfaceItemX11 *> dirtyItems;
 
     // Reset the damage state of each window and fetch the damage region

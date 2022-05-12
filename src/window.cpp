@@ -533,6 +533,11 @@ bool Window::isClient() const
     return false;
 }
 
+bool Window::isUnmanaged() const
+{
+    return false;
+}
+
 bool Window::isDeleted() const
 {
     return false;
@@ -902,7 +907,7 @@ Layer Window::belongsToLayer() const
     // and the docks move into the NotificationLayer (which is between Above- and
     // ActiveLayer, so that active fullscreen windows will still cover everything)
     // Since the desktop is also activated, nothing should be in the ActiveLayer, though
-    if (isInternal()) {
+    if (isUnmanaged() || isInternal()) {
         return UnmanagedLayer;
     }
     if (isLockScreen()) {

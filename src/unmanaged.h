@@ -30,12 +30,9 @@ public:
     QStringList activities() const override;
     QVector<VirtualDesktop *> desktops() const override;
     QPoint clientPos() const override;
-    Layer layer() const override
-    {
-        return UnmanagedLayer;
-    }
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     bool isOutline() const override;
+    bool isUnmanaged() const override;
 
     QString captionNormal() const override { return {}; }
     QString captionSuffix() const override { return {}; }

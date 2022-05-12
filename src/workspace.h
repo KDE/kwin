@@ -280,7 +280,6 @@ public:
      * at the last position
      */
     const QList<Window *> &stackingOrder() const;
-    QList<Window *> xStackingOrder() const;
     QList<Window *> unconstrainedStackingOrder() const;
     QList<X11Window *> ensureStackingOrder(const QList<X11Window *> &windows) const;
     QList<Window *> ensureStackingOrder(const QList<Window *> &windows) const;
@@ -387,8 +386,6 @@ public:
     {
         return m_moveResizeWindow;
     }
-
-    void markXStackingOrderAsDirty();
 
     void quickTileWindow(QuickTileMode mode);
 
@@ -630,9 +627,6 @@ private:
     QList<Window *> stacking_order; // Topmost last
     QVector<xcb_window_t> manual_overlays; // Topmost last
     bool force_restacking;
-    QList<Window *> x_stacking; // From XQueryTree()
-    std::unique_ptr<Xcb::Tree> m_xStackingQueryTree;
-    bool m_xStackingDirty = false;
     QList<Window *> should_get_focus; // Last is most recent
     QList<Window *> attention_chain;
 
