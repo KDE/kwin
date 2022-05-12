@@ -427,6 +427,8 @@ void DrmOutput::renderCursorOpengl(const QSize &cursorSize)
         m_cursorTextureDirty = false;
     };
 
+    const auto [renderTarget, repaint] = layer->beginFrame();
+
     if (!m_cursorTexture) {
         allocateTexture();
 
@@ -443,8 +445,6 @@ void DrmOutput::renderCursorOpengl(const QSize &cursorSize)
             allocateTexture();
         }
     }
-
-    const auto [renderTarget, repaint] = layer->beginFrame();
 
     QMatrix4x4 mvp;
     mvp.ortho(QRect(QPoint(), renderTarget.size()));
