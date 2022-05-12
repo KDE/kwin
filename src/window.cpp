@@ -911,6 +911,9 @@ Layer Window::belongsToLayer() const
     if (isInputMethod()) {
         return UnmanagedLayer;
     }
+    if (isLockScreenOverlay() && waylandServer() && waylandServer()->isScreenLocked()) {
+        return UnmanagedLayer;
+    }
     if (isDesktop()) {
         return workspace()->showingDesktop() ? AboveLayer : DesktopLayer;
     }
@@ -4495,6 +4498,20 @@ quint32 Window::lastUsageSerial() const
 uint32_t Window::interactiveMoveResizeCount() const
 {
     return m_interactiveMoveResize.counter;
+}
+
+void Window::setLockScreenOverlay(bool allowed)
+{
+    if (m_lockScreenOverlay == allowed) {
+        return;
+    }
+    m_lockScreenOverlay = allowed;
+    Q_EMIT lockScreenOverlayChanged();
+}
+
+bool Window::isLockScreenOverlay() const
+{
+    return m_lockScreenOverlay;
 }
 
 } // namespace KWin

@@ -37,6 +37,7 @@
 #include "wayland/keyboard_shortcuts_inhibit_v1_interface.h"
 #include "wayland/keystate_interface.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
+#include "wayland/lockscreen_overlay_v1_interface.h"
 #include "wayland/output_interface.h"
 #include "wayland/outputdevice_v2_interface.h"
 #include "wayland/outputmanagement_v2_interface.h"
@@ -136,6 +137,7 @@ public:
         QByteArrayLiteral("org_kde_kwin_keystate"),
         QByteArrayLiteral("zkde_screencast_unstable_v1"),
         QByteArrayLiteral("org_kde_plasma_activation_feedback"),
+        QByteArrayLiteral("kde_lockscreen_overlay_v1"),
     };
 
     const QSet<QByteArray> inputmethodInterfaces = {"zwp_input_panel_v1", "zwp_input_method_v1"};
@@ -470,6 +472,15 @@ bool WaylandServer::init(InitializationFlags flags)
     } else {
         connect(static_cast<Application *>(qApp), &Application::workspaceCreated, this, init);
     }
+
+    auto aboveLockscreen = new KWaylandServer::LockscreenOverlayV1Interface(m_display, this);
+    connect(aboveLockscreen, &KWaylandServer::LockscreenOverlayV1Interface::allowRequested, this, [](SurfaceInterface *surface) {
+        auto w = waylandServer()->findWindow(surface);
+        if (!w) {
+            return;
+        }
+        w->setLockScreenOverlay(true);
+    });
 
     return true;
 }

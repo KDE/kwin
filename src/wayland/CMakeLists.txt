@@ -175,6 +175,10 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/drm-lease/drm-lease-v1.xml
     BASENAME drm-lease-v1
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-lockscreen-overlay-v1.xml
+    BASENAME kde-lockscreen-overlay-v1
+)
 
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
@@ -208,6 +212,7 @@ target_sources(kwin PRIVATE
     keystate_interface.cpp
     layershell_v1_interface.cpp
     linuxdmabufv1clientbuffer.cpp
+    lockscreen_overlay_v1_interface.cpp
     output_interface.cpp
     outputdevice_v2_interface.cpp
     outputmanagement_v2_interface.cpp

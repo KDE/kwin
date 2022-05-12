@@ -29,7 +29,7 @@ static bool isPrivilegedInWindowManagement(const ClientConnection *client)
 {
     Q_ASSERT(client);
     auto requestedInterfaces = client->property("requestedInterfaces").toStringList();
-    return requestedInterfaces.contains(QLatin1String("org_kde_plasma_window_management"));
+    return requestedInterfaces.contains(QLatin1String("org_kde_plasma_window_management")) || requestedInterfaces.contains(QLatin1String("kde_lockscreen_overlay_v1"));
 }
 
 static const QString windowDesktopFileName(Window *window)

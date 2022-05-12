@@ -35,6 +35,7 @@ WindowItem::WindowItem(Window *window, Item *parent)
     if (waylandServer()) {
         connect(waylandServer(), &WaylandServer::lockStateChanged, this, &WindowItem::updateVisibility);
     }
+    connect(window, &Window::lockScreenOverlayChanged, this, &WindowItem::updateVisibility);
     connect(window, &Window::minimizedChanged, this, &WindowItem::updateVisibility);
     connect(window, &Window::hiddenChanged, this, &WindowItem::updateVisibility);
     connect(window, &Window::activitiesChanged, this, &WindowItem::updateVisibility);
@@ -127,7 +128,7 @@ void WindowItem::handleWindowClosed(Window *original, Deleted *deleted)
 bool WindowItem::computeVisibility() const
 {
     if (waylandServer() && waylandServer()->isScreenLocked()) {
-        return m_window->isLockScreen() || m_window->isInputMethod();
+        return m_window->isLockScreen() || m_window->isInputMethod() || m_window->isLockScreenOverlay();
     }
     if (m_window->isDeleted()) {
         if (m_forceVisibleByDeleteCount == 0) {

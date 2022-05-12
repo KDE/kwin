@@ -544,7 +544,7 @@ private:
     {
         if (KWaylandServer::SurfaceInterface *s = (waylandServer()->seat()->*method)()) {
             if (Window *t = waylandServer()->findWindow(s)) {
-                return t->isLockScreen() || t->isInputMethod();
+                return t->isLockScreen() || t->isInputMethod() || t->isLockScreenOverlay();
             }
             return false;
         }
@@ -3261,7 +3261,7 @@ Window *InputRedirection::findManagedToplevel(const QPointF &pos)
             continue;
         }
         if (isScreenLocked) {
-            if (!window->isLockScreen() && !window->isInputMethod()) {
+            if (!window->isLockScreen() && !window->isInputMethod() && !window->isLockScreenOverlay()) {
                 continue;
             }
         }

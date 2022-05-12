@@ -48,6 +48,13 @@ if (QT_MAJOR_VERSION EQUAL "5")
         PROTOCOL ${WaylandProtocols_DATADIR}/staging/xdg-activation/xdg-activation-v1.xml
         BASENAME xdg-activation-v1
     )
+
+    add_executable(lockscreenoverlaytest lockscreenoverlaytest.cpp)
+    target_link_libraries(lockscreenoverlaytest Qt::Widgets Qt::WaylandClient Qt::WaylandClientPrivate Wayland::Client KF5::WindowSystem)
+    ecm_add_qtwayland_client_protocol(lockscreenoverlaytest
+        PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-lockscreen-overlay-v1.xml
+        BASENAME kde-lockscreen-overlay-v1
+    )
 endif()
 
 if (TARGET Qt6::Gui)
