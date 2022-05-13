@@ -61,6 +61,9 @@ if (lcms2_FOUND AND NOT TARGET lcms2::lcms2)
     set_target_properties(lcms2::lcms2 PROPERTIES
         IMPORTED_LOCATION "${lcms2_LIBRARY}"
         INTERFACE_COMPILE_OPTIONS "${lcms2_DEFINITIONS}"
+        # Don't use the register keyword to allow compiling in C++17 mode.
+        # See https://github.com/mm2/Little-CMS/issues/243
+        INTERFACE_COMPILE_DEFINITIONS "CMS_NO_REGISTER_KEYWORD=1"
         INTERFACE_INCLUDE_DIRECTORIES "${lcms2_INCLUDE_DIR}"
     )
 endif()
