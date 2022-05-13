@@ -32,7 +32,7 @@
         "Description[vi]": "Cho phép bạn xem tổng quan các bàn làm việc ảo và các cửa sổ",
         "Description[x-test]": "xxAllows you to overview virtual desktops and windowsxx",
         "Description[zh_CN]": "显示包含当前所有虚拟桌面和窗口的桌面概览",
-        "EnabledByDefault": false,
+        "EnabledByDefault": true,
         "Id": "overview",
         "License": "GPL",
         "Name": "Overview",
