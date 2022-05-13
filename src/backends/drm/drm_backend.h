@@ -44,7 +44,7 @@ public:
     InputBackend *createInputBackend() override;
     QPainterBackend *createQPainterBackend() override;
     OpenGLBackend *createOpenGLBackend() override;
-    DmaBufTexture *createDmaBufTexture(const QSize &size) override;
+    QSharedPointer<DmaBufTexture> createDmaBufTexture(const QSize &size) override;
     Session *session() const override;
     bool initialize() override;
 

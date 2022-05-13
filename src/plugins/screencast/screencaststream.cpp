@@ -142,14 +142,16 @@ void ScreenCastStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
     spa_data->flags = SPA_DATA_FLAG_READWRITE;
 
     if (spa_data[0].type != SPA_ID_INVALID && spa_data[0].type & (1 << SPA_DATA_DmaBuf)) {
-        dmabuf.reset(kwinApp()->platform()->createDmaBufTexture(stream->m_resolution));
+        dmabuf = kwinApp()->platform()->createDmaBufTexture(stream->m_resolution);
     }
 
     if (dmabuf) {
+        const DmaBufAttributes dmabufAttribs = dmabuf->attributes();
+
         spa_data->type = SPA_DATA_DmaBuf;
-        spa_data->fd = dmabuf->fd();
+        spa_data->fd = dmabufAttribs.fd[0];
         spa_data->data = nullptr;
-        spa_data->maxsize = dmabuf->stride() * stream->m_resolution.height();
+        spa_data->maxsize = dmabufAttribs.pitch[0] * stream->m_resolution.height();
 
         stream->m_dmabufDataForPwBuffer.insert(buffer, dmabuf);
 #ifdef F_SEAL_SEAL // Disable memfd on systems that don't have it, like BSD < 12
@@ -399,7 +401,7 @@ void ScreenCastStream::recordFrame(const QRegion &damagedRegion)
     } else {
         auto &buf = m_dmabufDataForPwBuffer[buffer];
 
-        spa_data->chunk->stride = buf->stride();
+        spa_data->chunk->stride = buf->attributes().pitch[0];
         spa_data->chunk->size = spa_data->maxsize;
 
         m_source->render(buf->framebuffer());

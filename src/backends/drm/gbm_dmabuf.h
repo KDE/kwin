@@ -7,27 +7,28 @@
 #pragma once
 
 #include "dmabuftexture.h"
-#include <QSize>
-#include <epoxy/egl.h>
+
 #include <gbm.h>
 
 namespace KWin
 {
 
-class GbmDmaBuf : public DmaBufTexture
+inline DmaBufAttributes dmaBufAttributesForBo(gbm_bo *bo)
 {
-public:
-    ~GbmDmaBuf();
+    DmaBufAttributes attributes;
+    attributes.planeCount = gbm_bo_get_plane_count(bo);
+    attributes.width = gbm_bo_get_width(bo);
+    attributes.height = gbm_bo_get_height(bo);
+    attributes.format = gbm_bo_get_format(bo);
 
-    int fd() const override;
-    quint32 stride() const override;
+    for (int i = 0; i < attributes.planeCount; ++i) {
+        attributes.fd[i] = gbm_bo_get_fd_for_plane(bo, i);
+        attributes.offset[i] = gbm_bo_get_offset(bo, i);
+        attributes.pitch[i] = gbm_bo_get_stride_for_plane(bo, i);
+        attributes.modifier[i] = gbm_bo_get_modifier(bo);
+    }
 
-    static GbmDmaBuf *createBuffer(const QSize &size, gbm_device *device);
-
-private:
-    GbmDmaBuf(GLTexture *texture, gbm_bo *bo, int fd);
-    struct gbm_bo *const m_bo;
-    const int m_fd;
-};
-
+    return attributes;
 }
+
+} // namespace KWin

@@ -27,6 +27,8 @@ class SurfaceInterface;
 
 namespace KWin
 {
+
+struct DmaBufAttributes;
 class Output;
 class DrmAbstractOutput;
 class DrmBuffer;
@@ -78,6 +80,11 @@ public:
     EGLConfig config(uint32_t format) const;
     std::optional<GbmFormat> gbmFormatForDrmFormat(uint32_t format) const;
     DrmGpu *gpu() const;
+
+    EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &attributes);
+    EGLImageKHR importDmaBufAsImage(gbm_bo *bo);
+    QSharedPointer<GLTexture> importDmaBufAsTexture(const DmaBufAttributes &attributes);
+    QSharedPointer<GLTexture> importDmaBufAsTexture(gbm_bo *bo);
 
 private:
     bool initializeEgl();

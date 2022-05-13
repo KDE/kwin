@@ -80,6 +80,12 @@ QPainterBackend *Platform::createQPainterBackend()
     return nullptr;
 }
 
+QSharedPointer<DmaBufTexture> Platform::createDmaBufTexture(const QSize &size)
+{
+    Q_UNUSED(size)
+    return {};
+}
+
 Edge *Platform::createScreenEdge(ScreenEdges *edges)
 {
     return new Edge(edges);

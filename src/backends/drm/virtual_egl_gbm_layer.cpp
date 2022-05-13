@@ -17,7 +17,6 @@
 #include "egl_dmabuf.h"
 #include "egl_gbm_backend.h"
 #include "gbm_surface.h"
-#include "kwineglimagetexture.h"
 #include "kwineglutils_p.h"
 #include "logging.h"
 #include "shadowbuffer.h"
@@ -139,7 +138,7 @@ QSharedPointer<GLTexture> VirtualEglGbmLayer::texture() const
         qCWarning(KWIN_DRM) << "Failed to record frame: No gbm buffer!";
         return nullptr;
     }
-    return m_currentBuffer->createTexture(m_eglBackend->eglDisplay());
+    return m_eglBackend->importDmaBufAsTexture(m_currentBuffer->bo());
 }
 
 bool VirtualEglGbmLayer::scanout(SurfaceItem *surfaceItem)

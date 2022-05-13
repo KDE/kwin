@@ -79,7 +79,7 @@ bool EglGbmLayer::checkTestBuffer()
 QSharedPointer<GLTexture> EglGbmLayer::texture() const
 {
     if (m_scanoutBuffer) {
-        return static_cast<GbmBuffer *>(m_scanoutBuffer->buffer())->createTexture(m_surface.eglBackend()->eglDisplay());
+        return m_surface.eglBackend()->importDmaBufAsTexture(static_cast<GbmBuffer *>(m_scanoutBuffer->buffer())->bo());
     } else {
         return m_surface.texture();
     }

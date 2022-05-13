@@ -24,7 +24,6 @@ set(DRM_SOURCES
     egl_gbm_layer.cpp
     drm_buffer_gbm.cpp
     gbm_surface.cpp
-    gbm_dmabuf.cpp
     placeholderinputeventfilter.cpp
     virtual_egl_gbm_layer.cpp
     drm_lease_egl_gbm_layer.cpp

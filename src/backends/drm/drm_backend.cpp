@@ -13,6 +13,7 @@
 #include "backends/libinput/libinputbackend.h"
 #include "composite.h"
 #include "cursor.h"
+#include "drm_fourcc.h"
 #include "drm_gpu.h"
 #include "drm_object_connector.h"
 #include "drm_object_crtc.h"
@@ -623,11 +624,37 @@ void DrmBackend::removeVirtualOutput(Output *output)
     primaryGpu()->removeVirtualOutput(virtualOutput);
 }
 
-DmaBufTexture *DrmBackend::createDmaBufTexture(const QSize &size)
+QSharedPointer<DmaBufTexture> DrmBackend::createDmaBufTexture(const QSize &size)
 {
     if (const auto eglBackend = dynamic_cast<EglGbmBackend *>(m_renderBackend); eglBackend && primaryGpu()->gbmDevice()) {
         eglBackend->makeCurrent();
-        return GbmDmaBuf::createBuffer(size, primaryGpu()->gbmDevice());
+
+        const int format = GBM_FORMAT_ARGB8888;
+        const uint64_t modifiers[] = {DRM_FORMAT_MOD_LINEAR};
+
+        gbm_bo *bo = gbm_bo_create_with_modifiers(primaryGpu()->gbmDevice(),
+                                                  size.width(),
+                                                  size.height(),
+                                                  format,
+                                                  modifiers, 1);
+
+        // If modifiers are not supported fallback to gbm_bo_create().
+        if (!bo && errno == ENOSYS) {
+            bo = gbm_bo_create(primaryGpu()->gbmDevice(),
+                               size.width(),
+                               size.height(),
+                               format,
+                               GBM_BO_USE_RENDERING | GBM_BO_USE_LINEAR);
+        }
+        if (!bo) {
+            return nullptr;
+        }
+
+        // The bo will be kept around until the last fd is closed.
+        const DmaBufAttributes attributes = dmaBufAttributesForBo(bo);
+        gbm_bo_destroy(bo);
+
+        return QSharedPointer<DmaBufTexture>::create(eglBackend->importDmaBufAsTexture(attributes), attributes);
     } else {
         return nullptr;
     }

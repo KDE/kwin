@@ -10,7 +10,6 @@
 #include "wayland_backend.h"
 
 #if HAVE_WAYLAND_EGL
-#include "../drm/gbm_dmabuf.h"
 #include "egl_wayland_backend.h"
 #include <gbm.h>
 #endif
@@ -989,15 +988,6 @@ void WaylandBackend::addConfiguredOutput(WaylandOutput *output)
         setReady(true);
         Q_EMIT screensQueried();
     }
-}
-
-DmaBufTexture *WaylandBackend::createDmaBufTexture(const QSize &size)
-{
-#if HAVE_WAYLAND_EGL
-    return GbmDmaBuf::createBuffer(size, m_gbmDevice);
-#else
-    return nullptr;
-#endif
 }
 
 void WaylandBackend::createDpmsFilter()

@@ -260,7 +260,6 @@ public:
     InputBackend *createInputBackend() override;
     OpenGLBackend *createOpenGLBackend() override;
     QPainterBackend *createQPainterBackend() override;
-    DmaBufTexture *createDmaBufTexture(const QSize &size) override;
 
     void flush();
 

@@ -6,7 +6,7 @@ set(WAYLAND_BACKEND_SOURCES
 )
 
 if (HAVE_WAYLAND_EGL)
-    set(WAYLAND_BACKEND_SOURCES egl_wayland_backend.cpp ${WAYLAND_BACKEND_SOURCES} ../drm/gbm_dmabuf.cpp)
+    set(WAYLAND_BACKEND_SOURCES egl_wayland_backend.cpp ${WAYLAND_BACKEND_SOURCES})
 endif()
 
 add_library(KWinWaylandWaylandBackend MODULE ${WAYLAND_BACKEND_SOURCES})

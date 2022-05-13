@@ -66,11 +66,7 @@ public:
     virtual InputBackend *createInputBackend();
     virtual OpenGLBackend *createOpenGLBackend();
     virtual QPainterBackend *createQPainterBackend();
-    virtual DmaBufTexture *createDmaBufTexture(const QSize &size)
-    {
-        Q_UNUSED(size);
-        return nullptr;
-    }
+    virtual QSharedPointer<DmaBufTexture> createDmaBufTexture(const QSize &size);
 
     /**
      * Allows the platform to create a platform specific screen edge.

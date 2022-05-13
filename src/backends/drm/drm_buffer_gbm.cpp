@@ -12,7 +12,6 @@
 
 #include "config-kwin.h"
 #include "drm_gpu.h"
-#include "kwineglimagetexture.h"
 #include "kwineglutils_p.h"
 #include "logging.h"
 #include "wayland/clientbuffer.h"
@@ -127,17 +126,6 @@ bool GbmBuffer::map(uint32_t flags)
     uint32_t stride = m_strides[0];
     m_data = gbm_bo_map(m_bo, 0, 0, m_size.width(), m_size.height(), flags, &stride, &m_mapping);
     return m_data;
-}
-
-QSharedPointer<GLTexture> GbmBuffer::createTexture(EGLDisplay eglDisplay) const
-{
-    EGLImageKHR image = eglCreateImageKHR(eglDisplay, nullptr, EGL_NATIVE_PIXMAP_KHR, m_bo, nullptr);
-    if (image != EGL_NO_IMAGE_KHR) {
-        return QSharedPointer<EGLImageTexture>::create(eglDisplay, image, GL_RGBA8, QSize(gbm_bo_get_width(m_bo), gbm_bo_get_height(m_bo)));
-    } else {
-        qCWarning(KWIN_DRM) << "Failed to record frame: Error creating EGLImageKHR - " << getEglErrorString();
-        return nullptr;
-    }
 }
 
 void GbmBuffer::createFds()

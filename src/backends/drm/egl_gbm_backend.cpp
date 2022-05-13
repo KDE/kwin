@@ -22,6 +22,7 @@
 #include "egl_dmabuf.h"
 #include "egl_gbm_cursor_layer.h"
 #include "egl_gbm_layer.h"
+#include "gbm_dmabuf.h"
 #include "gbm_surface.h"
 #include "kwineglutils_p.h"
 #include "linux_dmabuf.h"
@@ -267,4 +268,99 @@ bool operator==(const GbmFormat &lhs, const GbmFormat &rhs)
     return lhs.drmFormat == rhs.drmFormat;
 }
 
+EGLImageKHR EglGbmBackend::importDmaBufAsImage(const DmaBufAttributes &dmabuf)
+{
+    QVector<EGLint> attribs;
+    attribs.reserve(6 + dmabuf.planeCount * 10 + 1);
+
+    attribs
+        << EGL_WIDTH << dmabuf.width
+        << EGL_HEIGHT << dmabuf.height
+        << EGL_LINUX_DRM_FOURCC_EXT << dmabuf.format;
+
+    attribs
+        << EGL_DMA_BUF_PLANE0_FD_EXT << dmabuf.fd[0]
+        << EGL_DMA_BUF_PLANE0_OFFSET_EXT << dmabuf.offset[0]
+        << EGL_DMA_BUF_PLANE0_PITCH_EXT << dmabuf.pitch[0];
+    if (dmabuf.modifier[0] != DRM_FORMAT_MOD_INVALID) {
+        attribs
+            << EGL_DMA_BUF_PLANE0_MODIFIER_LO_EXT << EGLint(dmabuf.modifier[0] & 0xffffffff)
+            << EGL_DMA_BUF_PLANE0_MODIFIER_HI_EXT << EGLint(dmabuf.modifier[0] >> 32);
+    }
+
+    if (dmabuf.planeCount > 1) {
+        attribs
+            << EGL_DMA_BUF_PLANE1_FD_EXT << dmabuf.fd[1]
+            << EGL_DMA_BUF_PLANE1_OFFSET_EXT << dmabuf.offset[1]
+            << EGL_DMA_BUF_PLANE1_PITCH_EXT << dmabuf.pitch[1];
+        if (dmabuf.modifier[1] != DRM_FORMAT_MOD_INVALID) {
+            attribs
+                << EGL_DMA_BUF_PLANE1_MODIFIER_LO_EXT << EGLint(dmabuf.modifier[1] & 0xffffffff)
+                << EGL_DMA_BUF_PLANE1_MODIFIER_HI_EXT << EGLint(dmabuf.modifier[1] >> 32);
+        }
+    }
+
+    if (dmabuf.planeCount > 2) {
+        attribs
+            << EGL_DMA_BUF_PLANE2_FD_EXT << dmabuf.fd[2]
+            << EGL_DMA_BUF_PLANE2_OFFSET_EXT << dmabuf.offset[2]
+            << EGL_DMA_BUF_PLANE2_PITCH_EXT << dmabuf.pitch[2];
+        if (dmabuf.modifier[2] != DRM_FORMAT_MOD_INVALID) {
+            attribs
+                << EGL_DMA_BUF_PLANE2_MODIFIER_LO_EXT << EGLint(dmabuf.modifier[2] & 0xffffffff)
+                << EGL_DMA_BUF_PLANE2_MODIFIER_HI_EXT << EGLint(dmabuf.modifier[2] >> 32);
+        }
+    }
+
+    if (dmabuf.planeCount > 3) {
+        attribs
+            << EGL_DMA_BUF_PLANE3_FD_EXT << dmabuf.fd[3]
+            << EGL_DMA_BUF_PLANE3_OFFSET_EXT << dmabuf.offset[3]
+            << EGL_DMA_BUF_PLANE3_PITCH_EXT << dmabuf.pitch[3];
+        if (dmabuf.modifier[3] != DRM_FORMAT_MOD_INVALID) {
+            attribs
+                << EGL_DMA_BUF_PLANE3_MODIFIER_LO_EXT << EGLint(dmabuf.modifier[3] & 0xffffffff)
+                << EGL_DMA_BUF_PLANE3_MODIFIER_HI_EXT << EGLint(dmabuf.modifier[3] >> 32);
+        }
+    }
+
+    attribs << EGL_NONE;
+
+    return eglCreateImageKHR(eglDisplay(), EGL_NO_CONTEXT, EGL_LINUX_DMA_BUF_EXT, nullptr, attribs.data());
 }
+
+EGLImageKHR EglGbmBackend::importDmaBufAsImage(gbm_bo *bo)
+{
+    const DmaBufAttributes dmabuf = dmaBufAttributesForBo(bo);
+    EGLImage image = importDmaBufAsImage(dmabuf);
+
+    for (int i = 0; i < dmabuf.planeCount; ++i) {
+        close(dmabuf.fd[i]);
+    }
+
+    return image;
+}
+
+QSharedPointer<GLTexture> EglGbmBackend::importDmaBufAsTexture(const DmaBufAttributes &attributes)
+{
+    EGLImageKHR image = importDmaBufAsImage(attributes);
+    if (image != EGL_NO_IMAGE_KHR) {
+        return QSharedPointer<EGLImageTexture>::create(eglDisplay(), image, GL_RGBA8, QSize(attributes.width, attributes.height));
+    } else {
+        qCWarning(KWIN_DRM) << "Failed to record frame: Error creating EGLImageKHR - " << getEglErrorString();
+        return nullptr;
+    }
+}
+
+QSharedPointer<GLTexture> EglGbmBackend::importDmaBufAsTexture(gbm_bo *bo)
+{
+    EGLImageKHR image = importDmaBufAsImage(bo);
+    if (image != EGL_NO_IMAGE_KHR) {
+        return QSharedPointer<EGLImageTexture>::create(eglDisplay(), image, GL_RGBA8, QSize(gbm_bo_get_width(bo), gbm_bo_get_height(bo)));
+    } else {
+        qCWarning(KWIN_DRM) << "Failed to record frame: Error creating EGLImageKHR - " << getEglErrorString();
+        return nullptr;
+    }
+}
+
+} // namespace KWin
