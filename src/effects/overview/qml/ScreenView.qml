@@ -129,16 +129,8 @@ FocusScope {
         }
     }
 
-    ExpoArea {
-        id: heapArea
-        screen: targetScreen
-    }
-
     Column {
-        x: heapArea.x
-        y: heapArea.y
-        width: heapArea.width
-        height: heapArea.height
+        anchors.fill: parent
 
         Item {
             id: topBar
@@ -236,15 +228,19 @@ FocusScope {
 
         KWinComponents.WindowThumbnailItem {
             id: windowThumbnail
-            visible: !model.client.hidden
+            visible: !model.client.hidden && opacity > 0
             wId: model.client.internalId
             x: model.client.x - targetScreen.geometry.x
             y: model.client.y - targetScreen.geometry.y
             width: model.client.width
             height: model.client.height
+            opacity: container.effect.gestureInProgress
+                ? 1 - container.effect.partialActivationFactor
+                : (model.client.hidden || container.organized) ? 0 : 1
 
-            TapHandler {
-                onTapped: effect.deactivate();
+            Behavior on opacity {
+                enabled: !container.effect.gestureInProgress
+                NumberAnimation { duration: animationDuration; easing.type: Easing.OutCubic }
             }
         }
     }
