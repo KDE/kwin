@@ -42,7 +42,9 @@ public:
     VirtualQPainterBackend(VirtualBackend *backend);
     ~VirtualQPainterBackend() override;
 
+    void prepare(Output *output) override;
     void present(Output *output) override;
+
     VirtualQPainterLayer *primaryLayer(Output *output) override;
 
 private:

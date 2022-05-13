@@ -47,6 +47,7 @@ public:
     SurfaceTexture *createSurfaceTextureX11(SurfacePixmapX11 *texture) override;
     OutputLayerBeginFrameInfo beginFrame();
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
+    void prepare(Output *output) override;
     void present(Output *output) override;
     OutputLayer *primaryLayer(Output *output) override;
 

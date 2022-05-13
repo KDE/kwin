@@ -43,6 +43,10 @@ DrmVirtualOutput::~DrmVirtualOutput()
 {
 }
 
+void DrmVirtualOutput::prepare()
+{
+}
+
 bool DrmVirtualOutput::present()
 {
     m_vsyncMonitor->arm();

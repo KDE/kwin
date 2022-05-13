@@ -639,6 +639,10 @@ void Compositor::composite(RenderLoop *renderLoop)
     OutputLayer *outputLayer = m_backend->primaryLayer(output);
     fTraceDuration("Paint (", output->name(), ")");
 
+    renderLoop->beginFrame();
+
+    m_backend->prepare(output);
+
     RenderLayer *superLayer = m_superlayers[renderLoop];
     prePaintPass(superLayer);
     superLayer->setOutputLayer(outputLayer);
@@ -646,7 +650,6 @@ void Compositor::composite(RenderLoop *renderLoop)
     SurfaceItem *scanoutCandidate = superLayer->delegate()->scanoutCandidate();
     renderLoop->setFullscreenSurface(scanoutCandidate);
 
-    renderLoop->beginFrame();
     bool directScanout = false;
     if (scanoutCandidate) {
         const auto sublayers = superLayer->sublayers();

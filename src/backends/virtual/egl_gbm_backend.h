@@ -43,8 +43,10 @@ public:
     SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
     OutputLayer *primaryLayer(Output *output) override;
-    void present(Output *output) override;
     void init() override;
+
+    void prepare(Output *output) override;
+    void present(Output *output) override;
 
     OutputLayerBeginFrameInfo beginFrame();
 

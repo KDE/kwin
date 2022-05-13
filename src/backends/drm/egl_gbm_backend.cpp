@@ -204,6 +204,11 @@ SurfaceTexture *EglGbmBackend::createSurfaceTextureWayland(SurfacePixmapWayland 
     return new BasicEGLSurfaceTextureWayland(this, pixmap);
 }
 
+void EglGbmBackend::prepare(Output *output)
+{
+    static_cast<DrmAbstractOutput *>(output)->prepare();
+}
+
 void EglGbmBackend::present(Output *output)
 {
     static_cast<DrmAbstractOutput *>(output)->present();

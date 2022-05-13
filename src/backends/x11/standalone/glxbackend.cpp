@@ -806,6 +806,11 @@ void GlxBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedR
     m_lastRenderedRegion = renderedRegion;
 }
 
+void GlxBackend::prepare(Output *output)
+{
+    Q_UNUSED(output)
+}
+
 void GlxBackend::present(Output *output)
 {
     Q_UNUSED(output)

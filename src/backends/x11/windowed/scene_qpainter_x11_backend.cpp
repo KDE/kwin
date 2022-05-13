@@ -63,6 +63,11 @@ void X11WindowedQPainterBackend::createOutputs()
     }
 }
 
+void X11WindowedQPainterBackend::prepare(Output *output)
+{
+    Q_UNUSED(output)
+}
+
 void X11WindowedQPainterBackend::present(Output *output)
 {
     static_cast<X11WindowedOutput *>(output)->vsyncMonitor()->arm();

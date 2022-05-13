@@ -100,6 +100,11 @@ bool EglX11Backend::createSurfaces()
     return true;
 }
 
+void EglX11Backend::prepare(Output *output)
+{
+    Q_UNUSED(output)
+}
+
 void EglX11Backend::present(Output *output)
 {
     const auto &renderOutput = m_outputs[output];

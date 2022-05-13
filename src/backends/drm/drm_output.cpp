@@ -94,9 +94,11 @@ DrmOutput::DrmOutput(DrmPipeline *pipeline)
         setDrmDpmsMode(DpmsMode::Off);
     });
 
-    connect(Cursors::self(), &Cursors::currentCursorChanged, this, &DrmOutput::updateCursor);
-    connect(Cursors::self(), &Cursors::hiddenChanged, this, &DrmOutput::updateCursor);
-    connect(Cursors::self(), &Cursors::positionChanged, this, &DrmOutput::moveCursor);
+    if (!isSoftwareCursorForced()) {
+        connect(Cursors::self(), &Cursors::currentCursorChanged, this, &DrmOutput::markCursorBitmapDirty);
+        connect(Cursors::self(), &Cursors::hiddenChanged, this, &DrmOutput::markCursorBitmapDirty);
+        connect(Cursors::self(), &Cursors::positionChanged, this, &DrmOutput::markCursorPositionDirty);
+    }
 }
 
 DrmOutput::~DrmOutput()
@@ -104,12 +106,55 @@ DrmOutput::~DrmOutput()
     m_pipeline->setOutput(nullptr);
 }
 
-void DrmOutput::updateCursor()
+bool DrmOutput::isSoftwareCursorForced() const
 {
     static bool valid;
     static const bool forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR", &valid) == 1 && valid;
     // hardware cursors are broken with the NVidia proprietary driver
-    if (forceSoftwareCursor || (!valid && m_gpu->isNVidia())) {
+    return forceSoftwareCursor || (!valid && m_gpu->isNVidia());
+}
+
+bool DrmOutput::areCursorUpdatesAllowed()
+{
+    const auto layer = m_pipeline->cursorLayer();
+    if (!m_pipeline->crtc() || !layer) {
+        return false;
+    }
+
+    const Cursor *cursor = Cursors::self()->currentCursor();
+    if (!cursor || (!layer->isVisible() && !cursor->isOnOutput(this))) {
+        return false;
+    }
+
+    return true;
+}
+
+void DrmOutput::markCursorBitmapDirty()
+{
+    if (!m_cursorBitmapDirty) {
+        if (areCursorUpdatesAllowed()) {
+            m_cursorBitmapDirty = true;
+            m_renderLoop->scheduleRepaint();
+        }
+    }
+}
+
+void DrmOutput::markCursorPositionDirty()
+{
+    if (!m_cursorPositionDirty) {
+        if (areCursorUpdatesAllowed()) {
+            m_cursorPositionDirty = true;
+            m_renderLoop->scheduleRepaint();
+        }
+    }
+}
+
+void DrmOutput::updateCursor()
+{
+    m_cursorBitmapDirty = false;
+    m_cursorPositionDirty = false;
+
+    if (isSoftwareCursorForced()) {
         m_setCursorSuccessful = false;
         return;
     }
@@ -152,6 +197,8 @@ void DrmOutput::updateCursor()
 
 void DrmOutput::moveCursor()
 {
+    m_cursorPositionDirty = false;
+
     if (!m_setCursorSuccessful || !m_pipeline->crtc()) {
         return;
     }
@@ -299,6 +346,15 @@ void DrmOutput::updateModes()
     setModesInternal(modes, currentMode);
 }
 
+void DrmOutput::prepare()
+{
+    if (m_cursorBitmapDirty) {
+        updateCursor();
+    } else if (m_cursorPositionDirty) {
+        moveCursor();
+    }
+}
+
 bool DrmOutput::present()
 {
     RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop);
@@ -384,7 +440,8 @@ void DrmOutput::applyQueuedChanges(const OutputConfiguration &config)
     m_renderLoop->scheduleRepaint();
     Q_EMIT changed();
 
-    updateCursor();
+    markCursorBitmapDirty();
+    markCursorPositionDirty();
 }
 
 void DrmOutput::revertQueuedChanges()

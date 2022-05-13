@@ -63,6 +63,11 @@ void VirtualQPainterBackend::createOutputs()
     }
 }
 
+void VirtualQPainterBackend::prepare(Output *output)
+{
+    Q_UNUSED(output)
+}
+
 void VirtualQPainterBackend::present(Output *output)
 {
     static_cast<VirtualOutput *>(output)->vsyncMonitor()->arm();

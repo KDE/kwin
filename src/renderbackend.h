@@ -34,6 +34,8 @@ public:
     virtual bool checkGraphicsReset();
 
     virtual OutputLayer *primaryLayer(Output *output) = 0;
+
+    virtual void prepare(Output *output) = 0;
     virtual void present(Output *output) = 0;
 };
 

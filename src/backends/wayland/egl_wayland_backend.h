@@ -83,6 +83,7 @@ public:
     SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
 
     void init() override;
+    void prepare(Output *output) override;
     void present(Output *output) override;
     OutputLayer *primaryLayer(Output *output) override;
 

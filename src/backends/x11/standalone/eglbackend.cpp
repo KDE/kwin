@@ -149,6 +149,11 @@ void EglBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedR
     m_lastRenderedRegion = renderedRegion;
 }
 
+void EglBackend::prepare(Output *output)
+{
+    Q_UNUSED(output)
+}
+
 void EglBackend::present(Output *output)
 {
     Q_UNUSED(output)

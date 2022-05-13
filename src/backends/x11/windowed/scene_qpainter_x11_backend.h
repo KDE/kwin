@@ -44,7 +44,9 @@ public:
     X11WindowedQPainterBackend(X11WindowedBackend *backend);
     ~X11WindowedQPainterBackend() override;
 
+    void prepare(Output *output) override;
     void present(Output *output) override;
+
     OutputLayer *primaryLayer(Output *output) override;
 
 private:

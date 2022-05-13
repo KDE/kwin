@@ -30,7 +30,9 @@ public:
     DrmQPainterBackend(DrmBackend *backend);
     ~DrmQPainterBackend();
 
+    void prepare(Output *output) override;
     void present(Output *output) override;
+
     OutputLayer *primaryLayer(Output *output) override;
 
     QSharedPointer<DrmPipelineLayer> createPrimaryLayer(DrmPipeline *pipeline) override;

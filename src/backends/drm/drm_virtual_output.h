@@ -34,7 +34,9 @@ public:
     DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size, Type type);
     ~DrmVirtualOutput() override;
 
+    void prepare() override;
     bool present() override;
+
     DrmOutputLayer *outputLayer() const override;
     void recreateSurface();
 

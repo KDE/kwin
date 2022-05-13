@@ -176,6 +176,11 @@ void WaylandQPainterBackend::createOutput(Output *waylandOutput)
     m_outputs.insert(waylandOutput, output);
 }
 
+void WaylandQPainterBackend::prepare(Output *output)
+{
+    Q_UNUSED(output)
+}
+
 void WaylandQPainterBackend::present(Output *output)
 {
     m_outputs[output]->present();

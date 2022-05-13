@@ -41,7 +41,9 @@ public:
     DrmConnector *connector() const;
     DrmPipeline *pipeline() const;
 
+    void prepare() override;
     bool present() override;
+
     DrmOutputLayer *outputLayer() const override;
 
     bool queueChanges(const OutputConfiguration &config);
@@ -60,6 +62,11 @@ private:
 
     QList<QSharedPointer<OutputMode>> getModes() const;
 
+    bool isSoftwareCursorForced() const;
+    bool areCursorUpdatesAllowed();
+    void markCursorBitmapDirty();
+    void markCursorPositionDirty();
+
     void updateCursor();
     void moveCursor();
     void renderCursorOpengl(const QSize &cursorSize);
@@ -68,6 +75,8 @@ private:
     DrmPipeline *m_pipeline;
     DrmConnector *m_connector;
 
+    bool m_cursorBitmapDirty = true;
+    bool m_cursorPositionDirty = true;
     bool m_setCursorSuccessful = false;
     bool m_moveCursorSuccessful = false;
     bool m_cursorTextureDirty = true;

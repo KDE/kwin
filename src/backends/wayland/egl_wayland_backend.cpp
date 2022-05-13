@@ -381,6 +381,11 @@ SurfaceTexture *EglWaylandBackend::createSurfaceTextureWayland(SurfacePixmapWayl
     return new BasicEGLSurfaceTextureWayland(this, pixmap);
 }
 
+void EglWaylandBackend::prepare(Output *output)
+{
+    Q_UNUSED(output)
+}
+
 void EglWaylandBackend::present(Output *output)
 {
     m_outputs[output]->present();

@@ -222,6 +222,11 @@ OutputLayer *EglGbmBackend::primaryLayer(Output *output)
     return m_layer.get();
 }
 
+void EglGbmBackend::prepare(Output *output)
+{
+    Q_UNUSED(output)
+}
+
 void EglGbmBackend::present(Output *output)
 {
     glFlush();
