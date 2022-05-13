@@ -11,6 +11,7 @@
         "Description[ta]": "சாளரங்களுக்கிடையே உலாவல்",
         "Description[tr]": "Pencereler Arası Dolaşım",
         "Description[uk]": "Навігація вікнами",
+        "Description[vi]": "Điều hướng qua các cửa sổ",
         "Description[x-test]": "xxNavigation Through Windowsxx",
         "Icon": "preferences-system-tabbox",
         "Name": "Task Switcher",
@@ -24,6 +25,7 @@
         "Name[ta]": "பணி மாற்றி",
         "Name[tr]": "Görev Değiştirici",
         "Name[uk]": "Перемикання задач",
+        "Name[vi]": "Trình chuyển tác vụ",
         "Name[x-test]": "xxTask Switcherxx",
         "ServiceTypes": [
             "KCModule"

@@ -11,6 +11,7 @@
         "Description[ta]": "பணிமேடை அசைவூட்டங்களுக்கான அமைப்புகள்",
         "Description[tr]": "Masaüstü Efektleri için Bileşikleştirici Ayarları",
         "Description[uk]": "Параметри засобу композиції для ефектів стільниці",
+        "Description[vi]": "Các thiết lập trình kết hợp cho các hiệu ứng bàn làm việc",
         "Description[x-test]": "xxCompositor Settings for Desktop Effectsxx",
         "Icon": "preferences-desktop",
         "Name": "Compositor",
@@ -24,6 +25,7 @@
         "Name[ta]": "சாளரநிரல்",
         "Name[tr]": "Bileşikleştirici",
         "Name[uk]": "Засіб композиції",
+        "Name[vi]": "Trình kết hợp",
         "Name[x-test]": "xxCompositorxx",
         "ServiceTypes": [
             "KCModule"

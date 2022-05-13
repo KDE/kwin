@@ -12,6 +12,7 @@
         "Description[ta]": "பயன்படுத்தவேண்டிய மெய்நிகர் விசைப்பலகையை தேர்ந்தெடுங்கள்",
         "Description[tr]": "Hangi sanal klavyenin kullanılacağını seçin",
         "Description[uk]": "Вибір віртуальної клавіатури",
+        "Description[vi]": "Chọn bàn phím ảo để dùng",
         "Description[x-test]": "xxSelect which virtual keyboard to usexx",
         "Icon": "input-keyboard-virtual",
         "Name": "Virtual Keyboard",
@@ -25,6 +26,7 @@
         "Name[ta]": "மெய்நிகர் விசைப்பலகை",
         "Name[tr]": "Sanal Klavye",
         "Name[uk]": "Віртуальна клавіатура",
+        "Name[vi]": "Bàn phím ảo",
         "Name[x-test]": "xxVirtual Keyboardxx",
         "ServiceTypes": [
             "KCModule"

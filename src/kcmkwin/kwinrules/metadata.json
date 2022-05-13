@@ -12,6 +12,7 @@
         "Description[ta]": "தனிப்பட்ட சாளரங்களின் நடத்தை",
         "Description[tr]": "Bireysel Pencere Davranışı",
         "Description[uk]": "Поведінка окремих вікон",
+        "Description[vi]": "Ứng xử của riêng từng cửa sổ",
         "Description[x-test]": "xxIndividual Window Behaviorxx",
         "FormFactors": [
             "desktop",
@@ -29,6 +30,7 @@
         "Name[ta]": "சாளர விதிமுறைகள்",
         "Name[tr]": "Pencere Kuralları",
         "Name[uk]": "Правила вікон",
+        "Name[vi]": "Luật cửa sổ",
         "Name[x-test]": "xxWindow Rulesxx",
         "ServiceTypes": [
             "KCModule"

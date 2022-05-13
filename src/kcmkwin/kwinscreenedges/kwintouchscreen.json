@@ -11,6 +11,7 @@
         "Description[ta]": "தொடுதிரையில் பயன்படுத்தக்கூடிய சைகைகளை அமையுங்கள்",
         "Description[tr]": "Dokunmatik ekran süpürme hareketlerini yapılandır",
         "Description[uk]": "Налаштовування жестів на сенсорному екрані",
+        "Description[vi]": "Cấu hình các động tác hất của màn hình cảm ứng",
         "Description[x-test]": "xxConfigure touch screen swipe gesturesxx",
         "Icon": "preferences-desktop-gestures-touch",
         "Name": "Touch Screen",
@@ -24,6 +25,7 @@
         "Name[ta]": "தொடுதிரை",
         "Name[tr]": "Dokunmatik Ekran",
         "Name[uk]": "Сенсорний екран",
+        "Name[vi]": "Màn hình cảm ứng",
         "Name[x-test]": "xxTouch Screenxx",
         "ServiceTypes": [
             "KCModule"

@@ -12,6 +12,7 @@
         "Description[ta]": "பணிமேடைகளின் எண்ணிக்கை, தளவமைப்பு, மற்றும் அவற்றுக்கிடையேயான உலாவலை அமைக்கும்",
         "Description[tr]": "Dolaşımı, sanal masaüstlerinin sayısını ve yerleşimini yapılandır",
         "Description[uk]": "Налаштовування навігації, кількості та компонування віртуальних стільниць",
+        "Description[vi]": "Cấu hình điều hướng, số lượng và bố cục của các bàn làm việc ảo",
         "Description[x-test]": "xxConfigure navigation, number and layout of virtual desktopsxx",
         "FormFactors": [
             "desktop"
@@ -28,6 +29,7 @@
         "Name[ta]": "மெய்நிகர் பணிமேடைகள்",
         "Name[tr]": "Sanal Masaüstleri",
         "Name[uk]": "Віртуальні стільниці",
+        "Name[vi]": "Bàn làm việc ảo",
         "Name[x-test]": "xxVirtual Desktopsxx",
         "ServiceTypes": [
             "KCModule"

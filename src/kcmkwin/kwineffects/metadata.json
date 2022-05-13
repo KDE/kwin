@@ -11,6 +11,7 @@
         "Description[ta]": "பணிமேடை அசைவூட்டங்களுக்கான சாளரநிரல் அமைப்புகளை மாற்றுங்கள்",
         "Description[tr]": "Masaüstü efektleri için bileşikleştirici ayarlarını yapılandır",
         "Description[uk]": "Налаштовування параметрів засобу композиції для ефектів стільниці",
+        "Description[vi]": "Cấu hình các thiết lập trình kết hợp cho các hiệu ứng bàn làm việc",
         "Description[x-test]": "xxConfigure compositor settings for desktop effectsxx",
         "FormFactors": [
             "desktop",
@@ -28,6 +29,7 @@
         "Name[ta]": "பணிமேடை அசைவூட்டங்கள்",
         "Name[tr]": "Masaüstü Efektleri",
         "Name[uk]": "Ефекти стільниці",
+        "Name[vi]": "Hiệu ứng bàn làm việc",
         "Name[x-test]": "xxDesktop Effectsxx",
         "ServiceTypes": [
             "KCModule"

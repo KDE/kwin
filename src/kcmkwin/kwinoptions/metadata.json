@@ -12,6 +12,7 @@
         "Description[ta]": "சாளர நடத்தையையும் செயல்களையும் அமையுங்கள்",
         "Description[tr]": "Pencere eylemlerini ve davranışını yapılandır",
         "Description[uk]": "Налаштовування реакції та поведінки вікон",
+        "Description[vi]": "Cấu hình các hành động và ứng xử của cửa sổ",
         "Description[x-test]": "xxConfigure window actions and behaviorxx",
         "Icon": "preferences-system-windows-actions",
         "Name": "Window Behavior",
@@ -25,6 +26,7 @@
         "Name[ta]": "சாளர நடத்தை",
         "Name[tr]": "Pencere Davranışı",
         "Name[uk]": "Поведінка вікон",
+        "Name[vi]": "Ứng xử của cửa sổ",
         "Name[x-test]": "xxWindow Behaviorxx",
         "ServiceTypes": [
             "KCModule"

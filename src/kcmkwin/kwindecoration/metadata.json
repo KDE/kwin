@@ -12,6 +12,7 @@
         "Description[ta]": "சாளர விளிம்புகளையும் தலைப்புப்பட்டைகளையும் அமையுங்கள்",
         "Description[tr]": "Masaüstü pencere başlık çubukları ve kenarlıklarını yapılandır",
         "Description[uk]": "Налаштовування смужок заголовків та рамок вікон",
+        "Description[vi]": "Cấu hình thanh tiêu đề và viền của cửa sổ",
         "Description[x-test]": "xxConfigure window titlebars and bordersxx",
         "FormFactors": [
             "desktop",
@@ -29,6 +30,7 @@
         "Name[ta]": "சாளர விளிம்புகள்",
         "Name[tr]": "Pencere Dekorasyonları",
         "Name[uk]": "Обрамлення вікон",
+        "Name[vi]": "Trang trí cửa sổ",
         "Name[x-test]": "xxWindow Decorationsxx",
         "ServiceTypes": [
             "KCModule"
