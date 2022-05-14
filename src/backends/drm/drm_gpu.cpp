@@ -791,6 +791,7 @@ void DrmGpu::releaseBuffers()
     }
     for (const auto &pipeline : qAsConst(m_pipelines)) {
         pipeline->primaryLayer()->releaseBuffers();
+        pipeline->cursorLayer()->releaseBuffers();
     }
     for (const auto &output : qAsConst(m_outputs)) {
         if (const auto virtualOutput = qobject_cast<DrmVirtualOutput *>(output)) {
