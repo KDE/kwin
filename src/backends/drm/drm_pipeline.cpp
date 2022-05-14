@@ -266,9 +266,13 @@ void DrmPipeline::prepareAtomicModeset()
     m_pending.crtc->setPending(DrmCrtc::PropertyIndex::ModeId, m_pending.mode->blobId());
 
     m_pending.crtc->primaryPlane()->setPending(DrmPlane::PropertyIndex::CrtcId, m_pending.crtc->id());
-    m_pending.crtc->primaryPlane()->setTransformation(m_pending.bufferOrientation);
+    if (const auto rotation = m_pending.crtc->primaryPlane()->getProp(DrmPlane::PropertyIndex::Rotation)) {
+        rotation->setEnum(m_pending.bufferOrientation);
+    }
     if (m_pending.crtc->cursorPlane()) {
-        m_pending.crtc->cursorPlane()->setTransformation(DrmPlane::Transformation::Rotate0);
+        if (const auto rotation = m_pending.crtc->cursorPlane()->getProp(DrmPlane::PropertyIndex::Rotation)) {
+            rotation->setEnum(DrmPlane::Transformation::Rotate0);
+        }
     }
 }
 
@@ -296,7 +300,7 @@ void DrmPipeline::checkHardwareRotation()
     if (m_pending.crtc && m_pending.crtc->primaryPlane()) {
         const bool supported = (m_pending.bufferOrientation & m_pending.crtc->primaryPlane()->supportedTransformations());
         if (!supported) {
-            m_pending.bufferOrientation = DrmPlane::Transformations(DrmPlane::Transformation::Rotate0);
+            m_pending.bufferOrientation = DrmPlane::Transformation::Rotate0;
         }
     } else {
         m_pending.bufferOrientation = DrmPlane::Transformation::Rotate0;

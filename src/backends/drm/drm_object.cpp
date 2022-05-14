@@ -32,7 +32,7 @@ bool DrmObject::initProps()
         return false;
     }
     if (KWIN_DRM().isDebugEnabled()) {
-        auto debug = QMessageLogger(QT_MESSAGELOG_FILE, QT_MESSAGELOG_LINE, QT_MESSAGELOG_FUNC, KWIN_DRM().categoryName()).debug().nospace();
+        auto debug = QMessageLogger(QT_MESSAGELOG_FILE, QT_MESSAGELOG_LINE, QT_MESSAGELOG_FUNC, KWIN_DRM().categoryName()).debug().nospace().noquote();
         switch (m_objectType) {
         case DRM_MODE_OBJECT_CONNECTOR:
             debug << "Connector ";
@@ -53,16 +53,7 @@ bool DrmObject::initProps()
             }
             const auto &prop = m_props[i];
             if (prop) {
-                debug << prop->name() << "=";
-                if (m_propertyDefinitions[i].enumNames.isEmpty()) {
-                    debug << prop->current();
-                } else {
-                    if (prop->hasEnum(prop->current())) {
-                        debug << prop->enumNames().at(prop->enumForValue<uint32_t>(prop->current()));
-                    } else {
-                        debug << "invalid value: " << prop->current();
-                    }
-                }
+                debug << prop->name() << "=" << prop->valueString(prop->current());
             } else {
                 debug << m_propertyDefinitions[i].name << " not found";
             }

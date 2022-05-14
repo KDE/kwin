@@ -3,7 +3,7 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2016 Roman Gilg <subdiff@gmail.com>
-    SPDX-FileCopyrightText: 2021 Xaver Hugl <xaver.hugl@gmail.com>
+    SPDX-FileCopyrightText: 2021-2022 Xaver Hugl <xaver.hugl@gmail.com>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -25,6 +25,7 @@ DrmProperty::DrmProperty(DrmObject *obj, drmModePropertyRes *prop, uint64_t val,
     , m_current(val)
     , m_immutable(prop->flags & DRM_MODE_PROP_IMMUTABLE)
     , m_isBlob(prop->flags & DRM_MODE_PROP_BLOB)
+    , m_isBitmask(prop->flags & DRM_MODE_PROP_BITMASK)
     , m_obj(obj)
 {
     if (!enumNames.isEmpty()) {
@@ -38,8 +39,6 @@ DrmProperty::DrmProperty(DrmObject *obj, drmModePropertyRes *prop, uint64_t val,
     }
     updateBlob();
 }
-
-DrmProperty::~DrmProperty() = default;
 
 void DrmProperty::commit()
 {
@@ -77,18 +76,17 @@ bool DrmProperty::setPropertyLegacy(uint64_t value)
 
 void DrmProperty::initEnumMap(drmModePropertyRes *prop)
 {
-    if ((!(prop->flags & DRM_MODE_PROP_ENUM) && !(prop->flags & DRM_MODE_PROP_BITMASK))
-        || prop->count_enums < 1) {
-        qCWarning(KWIN_DRM) << "Property '" << prop->name << "' ( id ="
-                            << m_propId << ") should be enum valued, but it is not.";
-        return;
-    }
-
     for (int i = 0; i < prop->count_enums; i++) {
         struct drm_mode_property_enum *en = &prop->enums[i];
         int j = m_enumNames.indexOf(QByteArray(en->name));
         if (j >= 0) {
-            m_enumMap[j] = en->value;
+            if (m_isBitmask) {
+                m_enumToPropertyMap[1 << j] = 1 << en->value;
+                m_propertyToEnumMap[1 << en->value] = 1 << j;
+            } else {
+                m_enumToPropertyMap[j] = en->value;
+                m_propertyToEnumMap[en->value] = j;
+            }
         } else {
             qCWarning(KWIN_DRM, "%s has unrecognized enum '%s'", qPrintable(m_propName), en->name);
         }
@@ -121,19 +119,9 @@ uint64_t DrmProperty::current() const
     return m_current;
 }
 
-QVector<QByteArray> DrmProperty::enumNames() const
-{
-    return m_enumNames;
-}
-
-bool DrmProperty::hasEnum(uint64_t value) const
-{
-    return m_enumMap.contains(value);
-}
-
 bool DrmProperty::hasAllEnums() const
 {
-    return m_enumMap.count() == m_enumNames.count();
+    return m_enumToPropertyMap.count() == m_enumNames.count();
 }
 
 uint32_t DrmProperty::propId() const
@@ -149,6 +137,11 @@ const QByteArray &DrmProperty::name() const
 bool DrmProperty::isImmutable() const
 {
     return m_immutable;
+}
+
+bool DrmProperty::isBitmask() const
+{
+    return m_isBitmask;
 }
 
 bool DrmProperty::isLegacy() const
@@ -188,5 +181,44 @@ void DrmProperty::updateBlob()
 drmModePropertyBlobRes *DrmProperty::immutableBlob() const
 {
     return m_immutableBlob.get();
+}
+
+QString DrmProperty::valueString(uint64_t value) const
+{
+    if (m_isBitmask) {
+        QString ret;
+        bool first = true;
+        for (uint64_t mask = 1; mask >= value && mask != 0; mask <<= 1) {
+            if (value & mask) {
+                if (!first) {
+                    ret += " | ";
+                }
+                first = false;
+                uint64_t enumValue = enumForValue<uint64_t>(mask);
+                int enumIndex = 0;
+                while (!(enumValue & (1ull << enumIndex)) && enumIndex < 64) {
+                    enumIndex++;
+                }
+                if (enumIndex < m_enumNames.size()) {
+                    ret += m_enumNames[enumIndex];
+                }
+            }
+        }
+        return ret;
+    } else if (!m_enumNames.isEmpty()) {
+        if (const uint64_t index = enumForValue<uint64_t>(value); index < (uint)m_enumNames.size()) {
+            return m_enumNames[index];
+        } else {
+            return QStringLiteral("invalid value: %d").arg(value);
+        }
+    } else if (m_propName == QStringLiteral("SRC_X") || m_propName == QStringLiteral("SRC_Y") || m_propName == QStringLiteral("SRC_W") || m_propName == QStringLiteral("SRC_H")) {
+        QString ret;
+        ret.setNum(value / (float)(1ul << 16));
+        return ret;
+    } else {
+        QString ret;
+        ret.setNum(value);
+        return ret;
+    }
 }
 }

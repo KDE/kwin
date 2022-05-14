@@ -3,6 +3,7 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2016 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2022 Xaver Hugl <xaver.hugl@gmail.com>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -81,7 +82,6 @@ public:
     void setBuffer(DrmFramebuffer *buffer);
     void set(const QPoint &srcPos, const QSize &srcSize, const QPoint &dstPos, const QSize &dstSize);
 
-    bool setTransformation(Transformations t);
     Transformations transformation();
     Transformations supportedTransformations() const;
 

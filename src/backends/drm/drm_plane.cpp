@@ -3,6 +3,7 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2016 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2022 Xaver Hugl <xaver.hugl@gmail.com>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -53,18 +54,22 @@ bool DrmPlane::init()
 
     bool success = initProps();
     if (success) {
-        m_supportedTransformations = Transformations();
-        auto checkSupport = [this](uint64_t value, Transformation t) {
-            if (propHasEnum(PropertyIndex::Rotation, value)) {
-                m_supportedTransformations |= t;
-            }
-        };
-        checkSupport(0, Transformation::Rotate0);
-        checkSupport(1, Transformation::Rotate90);
-        checkSupport(2, Transformation::Rotate180);
-        checkSupport(3, Transformation::Rotate270);
-        checkSupport(4, Transformation::ReflectX);
-        checkSupport(5, Transformation::ReflectY);
+        if (const auto prop = getProp(PropertyIndex::Rotation)) {
+            m_supportedTransformations = Transformations();
+            auto checkSupport = [this, prop](Transformation t) {
+                if (prop->hasEnum(t)) {
+                    m_supportedTransformations |= t;
+                }
+            };
+            checkSupport(Transformation::Rotate0);
+            checkSupport(Transformation::Rotate90);
+            checkSupport(Transformation::Rotate180);
+            checkSupport(Transformation::Rotate270);
+            checkSupport(Transformation::ReflectX);
+            checkSupport(Transformation::ReflectY);
+        } else {
+            m_supportedTransformations = Transformation::Rotate0;
+        }
 
         // read formats from blob if available and if modifiers are supported, and from the plane object if not
         if (const auto formatProp = getProp(PropertyIndex::In_Formats); formatProp && formatProp->immutableBlob() && gpu()->addFB2ModifiersSupported()) {
@@ -94,15 +99,6 @@ DrmPlane::TypeIndex DrmPlane::type() const
 void DrmPlane::setNext(const std::shared_ptr<DrmFramebuffer> &b)
 {
     m_next = b;
-}
-
-bool DrmPlane::setTransformation(Transformations t)
-{
-    if (m_supportedTransformations & t) {
-        return setPending(PropertyIndex::Rotation, t);
-    } else {
-        return false;
-    }
 }
 
 DrmPlane::Transformations DrmPlane::transformation()
