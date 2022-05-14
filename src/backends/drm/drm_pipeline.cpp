@@ -110,6 +110,7 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline 
         return Error::OutofMemory;
     }
     for (const auto &pipeline : pipelines) {
+        pipeline->checkHardwareRotation();
         if (pipeline->activePending()) {
             if (!pipeline->m_pending.layer->checkTestBuffer()) {
                 qCWarning(KWIN_DRM) << "Checking test buffer failed for" << mode;
@@ -288,6 +289,18 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req)
         }
     }
     return true;
+}
+
+void DrmPipeline::checkHardwareRotation()
+{
+    if (m_pending.crtc && m_pending.crtc->primaryPlane()) {
+        const bool supported = (m_pending.bufferOrientation & m_pending.crtc->primaryPlane()->supportedTransformations());
+        if (!supported) {
+            m_pending.bufferOrientation = DrmPlane::Transformations(DrmPlane::Transformation::Rotate0);
+        }
+    } else {
+        m_pending.bufferOrientation = DrmPlane::Transformation::Rotate0;
+    }
 }
 
 uint32_t DrmPipeline::calculateUnderscan()

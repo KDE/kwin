@@ -141,6 +141,7 @@ private:
     bool isBufferForDirectScanout() const;
     uint32_t calculateUnderscan();
     static Error errnoToError();
+    void checkHardwareRotation();
 
     // legacy only
     Error presentLegacy();
