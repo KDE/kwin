@@ -68,7 +68,6 @@ private:
     void markCursorPositionDirty();
 
     void updateCursor();
-    void moveCursor();
     void renderCursorOpengl(const QSize &cursorSize);
     void renderCursorQPainter();
 
@@ -77,8 +76,6 @@ private:
 
     bool m_cursorBitmapDirty = true;
     bool m_cursorPositionDirty = true;
-    bool m_setCursorSuccessful = false;
-    bool m_moveCursorSuccessful = false;
     bool m_cursorTextureDirty = true;
     std::unique_ptr<GLTexture> m_cursorTexture;
     QTimer m_turnOffTimer;

@@ -151,11 +151,13 @@ void DrmOutput::markCursorPositionDirty()
 
 void DrmOutput::updateCursor()
 {
+    const bool oldCursorBitmapDirty = m_cursorBitmapDirty;
+
     m_cursorBitmapDirty = false;
     m_cursorPositionDirty = false;
 
     if (isSoftwareCursorForced()) {
-        m_setCursorSuccessful = false;
+        // TODO:
         return;
     }
     const auto layer = m_pipeline->cursorLayer();
@@ -163,11 +165,8 @@ void DrmOutput::updateCursor()
         return;
     }
     const Cursor *cursor = Cursors::self()->currentCursor();
-    if (!cursor || cursor->image().isNull() || Cursors::self()->isCursorHidden()) {
-        if (layer->isVisible()) {
-            layer->setVisible(false);
-            m_pipeline->setCursor();
-        }
+    if (!cursor || !cursor->isOnOutput(this)) {
+        layer->setVisible(false);
         return;
     }
     const QImage cursorImage = cursor->image();
@@ -175,52 +174,20 @@ void DrmOutput::updateCursor()
     const QSize surfaceSize = m_gpu->cursorSize() / scale();
     const QRect cursorRect = monitorMatrix.mapRect(QRect(cursor->geometry().topLeft(), surfaceSize));
     if (cursorRect.width() > m_gpu->cursorSize().width() || cursorRect.height() > m_gpu->cursorSize().height()) {
-        if (layer->isVisible()) {
-            layer->setVisible(false);
-            m_pipeline->setCursor();
-        }
-        m_setCursorSuccessful = false;
+        // TODO:
+        layer->setVisible(false);
         return;
     }
-    if (dynamic_cast<EglGbmBackend *>(m_gpu->platform()->renderBackend())) {
-        renderCursorOpengl(cursor->geometry().size() * scale());
-    } else {
-        renderCursorQPainter();
+    if (oldCursorBitmapDirty) {
+        if (dynamic_cast<EglGbmBackend *>(m_gpu->platform()->renderBackend())) {
+            renderCursorOpengl(cursor->geometry().size() * scale());
+        } else {
+            renderCursorQPainter();
+        }
     }
     layer->setPosition(cursorRect.topLeft());
     layer->setVisible(cursor->geometry().intersects(geometry()));
-    if (layer->isVisible()) {
-        m_setCursorSuccessful = m_pipeline->setCursor(logicalToNativeMatrix(QRect(QPoint(), cursorRect.size()), scale(), transform()).map(cursor->hotspot()));
-        layer->setVisible(m_setCursorSuccessful);
-    }
-}
-
-void DrmOutput::moveCursor()
-{
-    m_cursorPositionDirty = false;
-
-    if (!m_setCursorSuccessful || !m_pipeline->crtc()) {
-        return;
-    }
-    const auto layer = m_pipeline->cursorLayer();
-    Cursor *cursor = Cursors::self()->currentCursor();
-    if (!cursor || cursor->image().isNull() || Cursors::self()->isCursorHidden() || !cursor->geometry().intersects(geometry())) {
-        if (layer->isVisible()) {
-            layer->setVisible(false);
-            m_pipeline->setCursor();
-        }
-        return;
-    }
-    const QMatrix4x4 monitorMatrix = logicalToNativeMatrix(geometry(), scale(), transform());
-    const QSize surfaceSize = m_gpu->cursorSize() / scale();
-    const QRect cursorRect = monitorMatrix.mapRect(QRect(cursor->geometry().topLeft(), surfaceSize));
-    layer->setVisible(true);
-    layer->setPosition(cursorRect.topLeft());
-    m_moveCursorSuccessful = m_pipeline->moveCursor();
-    layer->setVisible(m_moveCursorSuccessful);
-    if (!m_moveCursorSuccessful) {
-        m_pipeline->setCursor();
-    }
+    // TODO: layer->setOrigin(hotspot);
 }
 
 QList<QSharedPointer<OutputMode>> DrmOutput::getModes() const
@@ -348,10 +315,17 @@ void DrmOutput::updateModes()
 
 void DrmOutput::prepare()
 {
-    if (m_cursorBitmapDirty) {
+    if (m_cursorBitmapDirty || m_cursorPositionDirty) {
         updateCursor();
-    } else if (m_cursorPositionDirty) {
-        moveCursor();
+    }
+
+    // TODO: It would be nice to use libliftoff.
+    const bool ok = DrmPipeline::commitPipelines({pipeline()}, DrmPipeline::CommitMode::Test);
+    if (!ok) {
+        DrmOverlayLayer *cursorLayer = m_pipeline->cursorLayer();
+        if (cursorLayer) {
+            cursorLayer->setVisible(false);
+        }
     }
 }
 
@@ -451,7 +425,7 @@ void DrmOutput::revertQueuedChanges()
 
 bool DrmOutput::usesSoftwareCursor() const
 {
-    return !m_setCursorSuccessful || !m_moveCursorSuccessful;
+    return !m_pipeline->cursorLayer() || !m_pipeline->cursorLayer()->isVisible();
 }
 
 DrmOutputLayer *DrmOutput::outputLayer() const
