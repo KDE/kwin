@@ -143,31 +143,57 @@ XdgSurfaceInterfacePrivate::XdgSurfaceInterfacePrivate(XdgSurfaceInterface *xdgS
 {
 }
 
-void XdgSurfaceInterfacePrivate::commit()
+void XdgSurfaceInterfacePrivate::unassignRole()
+{
+    toplevel = nullptr;
+    popup = nullptr;
+    current = nullptr;
+    pending = nullptr;
+}
+
+void XdgSurfaceInterfacePrivate::assignRole(XdgToplevelInterface *toplevel)
+{
+    this->toplevel = toplevel;
+
+    XdgSurfaceRole<XdgToplevelState> *role = XdgToplevelInterfacePrivate::get(toplevel);
+    current = &role->current.base;
+    pending = &role->pending.base;
+}
+
+void XdgSurfaceInterfacePrivate::assignRole(XdgPopupInterface *popup)
+{
+    this->popup = popup;
+
+    XdgSurfaceRole<XdgPopupState> *role = XdgPopupInterfacePrivate::get(popup);
+    current = &role->current.base;
+    pending = &role->pending.base;
+}
+
+void XdgSurfaceInterfacePrivate::applyState(XdgSurfaceState *next)
 {
     if (surface->buffer()) {
         firstBufferAttached = true;
     }
 
-    if (next.acknowledgedConfigureIsSet) {
-        current.acknowledgedConfigure = next.acknowledgedConfigure;
-        next.acknowledgedConfigureIsSet = false;
-        Q_EMIT q->configureAcknowledged(current.acknowledgedConfigure);
+    if (next->acknowledgedConfigureIsSet) {
+        current->acknowledgedConfigure = next->acknowledgedConfigure;
+        next->acknowledgedConfigureIsSet = false;
+        Q_EMIT q->configureAcknowledged(current->acknowledgedConfigure);
     }
 
-    if (next.windowGeometryIsSet) {
-        current.windowGeometry = next.windowGeometry;
-        next.windowGeometryIsSet = false;
-        Q_EMIT q->windowGeometryChanged(current.windowGeometry);
+    if (next->windowGeometryIsSet) {
+        current->windowGeometry = next->windowGeometry;
+        next->windowGeometryIsSet = false;
+        Q_EMIT q->windowGeometryChanged(current->windowGeometry);
     }
 }
 
-void XdgSurfaceInterfacePrivate::reset()
+void XdgSurfaceInterfacePrivate::resetState()
 {
     firstBufferAttached = false;
     isConfigured = false;
-    current = XdgSurfaceState{};
-    next = XdgSurfaceState{};
+    *current = XdgSurfaceState{};
+    *pending = XdgSurfaceState{};
     Q_EMIT q->resetOccurred();
 }
 
@@ -202,7 +228,7 @@ void XdgSurfaceInterfacePrivate::xdg_surface_get_toplevel(Resource *resource, ui
 
     wl_resource *toplevelResource = wl_resource_create(resource->client(), &xdg_toplevel_interface, resource->version(), id);
 
-    toplevel = new XdgToplevelInterface(q, toplevelResource);
+    auto toplevel = new XdgToplevelInterface(q, toplevelResource);
     Q_EMIT shell->toplevelCreated(toplevel);
 }
 
@@ -231,13 +257,13 @@ void XdgSurfaceInterfacePrivate::xdg_surface_get_popup(Resource *resource, uint3
 
     wl_resource *popupResource = wl_resource_create(resource->client(), &xdg_popup_interface, resource->version(), id);
 
-    popup = new XdgPopupInterface(q, parentSurface, positioner, popupResource);
+    auto popup = new XdgPopupInterface(q, parentSurface, positioner, popupResource);
     Q_EMIT shell->popupCreated(popup);
 }
 
 void XdgSurfaceInterfacePrivate::xdg_surface_set_window_geometry(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
 {
-    if (!toplevel && !popup) {
+    if (Q_UNLIKELY(!pending)) {
         wl_resource_post_error(resource->handle, error_not_constructed, "xdg_surface must have a role");
         return;
     }
@@ -247,15 +273,19 @@ void XdgSurfaceInterfacePrivate::xdg_surface_set_window_geometry(Resource *resou
         return;
     }
 
-    next.windowGeometry = QRect(x, y, width, height);
-    next.windowGeometryIsSet = true;
+    pending->windowGeometry = QRect(x, y, width, height);
+    pending->windowGeometryIsSet = true;
 }
 
 void XdgSurfaceInterfacePrivate::xdg_surface_ack_configure(Resource *resource, uint32_t serial)
 {
-    Q_UNUSED(resource)
-    next.acknowledgedConfigure = serial;
-    next.acknowledgedConfigureIsSet = true;
+    if (Q_UNLIKELY(!pending)) {
+        wl_resource_post_error(resource->handle, error_not_constructed, "xdg_surface must have a role");
+        return;
+    }
+
+    pending->acknowledgedConfigure = serial;
+    pending->acknowledgedConfigureIsSet = true;
 }
 
 XdgSurfaceInterface::XdgSurfaceInterface(XdgShellInterface *shell, SurfaceInterface *surface, ::wl_resource *resource)
@@ -297,7 +327,7 @@ bool XdgSurfaceInterface::isConfigured() const
 
 QRect XdgSurfaceInterface::windowGeometry() const
 {
-    return d->current.windowGeometry;
+    return d->current->windowGeometry;
 }
 
 XdgSurfaceInterface *XdgSurfaceInterface::get(::wl_resource *resource)
@@ -309,7 +339,7 @@ XdgSurfaceInterface *XdgSurfaceInterface::get(::wl_resource *resource)
 }
 
 XdgToplevelInterfacePrivate::XdgToplevelInterfacePrivate(XdgToplevelInterface *toplevel, XdgSurfaceInterface *surface)
-    : SurfaceRole(surface->surface(), QByteArrayLiteral("xdg_toplevel"))
+    : XdgSurfaceRole(surface->surface(), QByteArrayLiteral("xdg_toplevel"))
     , q(toplevel)
     , xdgSurface(surface)
 {
@@ -323,14 +353,14 @@ void XdgToplevelInterfacePrivate::commit()
         return;
     }
 
-    xdgSurfacePrivate->commit();
+    xdgSurfacePrivate->applyState(&pending.base);
 
-    if (current.minimumSize != next.minimumSize) {
-        current.minimumSize = next.minimumSize;
+    if (current.minimumSize != pending.minimumSize) {
+        current.minimumSize = pending.minimumSize;
         Q_EMIT q->minimumSizeChanged(current.minimumSize);
     }
-    if (current.maximumSize != next.maximumSize) {
-        current.maximumSize = next.maximumSize;
+    if (current.maximumSize != pending.maximumSize) {
+        current.maximumSize = pending.maximumSize;
         Q_EMIT q->maximumSizeChanged(current.maximumSize);
     }
 
@@ -342,11 +372,12 @@ void XdgToplevelInterfacePrivate::commit()
 void XdgToplevelInterfacePrivate::reset()
 {
     auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
-    xdgSurfacePrivate->reset();
+    xdgSurfacePrivate->resetState();
 
     windowTitle = QString();
     windowClass = QString();
-    current = next = State();
+    current = XdgToplevelState{};
+    pending = XdgToplevelState{};
 
     Q_EMIT q->resetOccurred();
 }
@@ -439,7 +470,7 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_set_max_size(Resource *resource, 
         wl_resource_post_error(resource->handle, -1, "width and height must be positive or zero");
         return;
     }
-    next.maximumSize = QSize(width, height);
+    pending.maximumSize = QSize(width, height);
 }
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_set_min_size(Resource *resource, int32_t width, int32_t height)
@@ -448,7 +479,7 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_set_min_size(Resource *resource, 
         wl_resource_post_error(resource->handle, -1, "width and height must be positive or zero");
         return;
     }
-    next.minimumSize = QSize(width, height);
+    pending.minimumSize = QSize(width, height);
 }
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_set_maximized(Resource *resource)
@@ -495,11 +526,18 @@ XdgToplevelInterfacePrivate *XdgToplevelInterfacePrivate::get(wl_resource *resou
 XdgToplevelInterface::XdgToplevelInterface(XdgSurfaceInterface *surface, ::wl_resource *resource)
     : d(new XdgToplevelInterfacePrivate(this, surface))
 {
+    XdgSurfaceInterfacePrivate *surfacePrivate = XdgSurfaceInterfacePrivate::get(surface);
+    surfacePrivate->assignRole(this);
+
     d->init(resource);
 }
 
 XdgToplevelInterface::~XdgToplevelInterface()
 {
+    if (d->xdgSurface) {
+        XdgSurfaceInterfacePrivate *surfacePrivate = XdgSurfaceInterfacePrivate::get(d->xdgSurface);
+        surfacePrivate->unassignRole();
+    }
 }
 
 XdgShellInterface *XdgToplevelInterface::shell() const
@@ -620,7 +658,7 @@ XdgPopupInterfacePrivate *XdgPopupInterfacePrivate::get(XdgPopupInterface *popup
 }
 
 XdgPopupInterfacePrivate::XdgPopupInterfacePrivate(XdgPopupInterface *popup, XdgSurfaceInterface *surface)
-    : SurfaceRole(surface->surface(), QByteArrayLiteral("xdg_popup"))
+    : XdgSurfaceRole(surface->surface(), QByteArrayLiteral("xdg_popup"))
     , q(popup)
     , xdgSurface(surface)
 {
@@ -642,7 +680,7 @@ void XdgPopupInterfacePrivate::commit()
         return;
     }
 
-    xdgSurfacePrivate->commit();
+    xdgSurfacePrivate->applyState(&pending.base);
 
     if (!xdgSurfacePrivate->isConfigured) {
         Q_EMIT q->initializeRequested();
@@ -652,7 +690,7 @@ void XdgPopupInterfacePrivate::commit()
 void XdgPopupInterfacePrivate::reset()
 {
     auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
-    xdgSurfacePrivate->reset();
+    xdgSurfacePrivate->resetState();
 }
 
 void XdgPopupInterfacePrivate::xdg_popup_destroy_resource(Resource *resource)
@@ -690,6 +728,9 @@ void XdgPopupInterfacePrivate::xdg_popup_reposition(Resource *resource, ::wl_res
 XdgPopupInterface::XdgPopupInterface(XdgSurfaceInterface *surface, SurfaceInterface *parentSurface, const XdgPositioner &positioner, ::wl_resource *resource)
     : d(new XdgPopupInterfacePrivate(this, surface))
 {
+    XdgSurfaceInterfacePrivate *surfacePrivate = XdgSurfaceInterfacePrivate::get(surface);
+    surfacePrivate->assignRole(this);
+
     d->parentSurface = parentSurface;
     d->positioner = positioner;
     d->init(resource);
@@ -697,6 +738,10 @@ XdgPopupInterface::XdgPopupInterface(XdgSurfaceInterface *surface, SurfaceInterf
 
 XdgPopupInterface::~XdgPopupInterface()
 {
+    if (d->xdgSurface) {
+        XdgSurfaceInterfacePrivate *surfacePrivate = XdgSurfaceInterfacePrivate::get(d->xdgSurface);
+        surfacePrivate->unassignRole();
+    }
 }
 
 SurfaceInterface *XdgPopupInterface::parentSurface() const

@@ -83,12 +83,40 @@ protected:
     void xdg_positioner_set_parent_configure(Resource *resource, uint32_t serial) override;
 };
 
-struct XdgSurfaceState
+class XdgSurfaceState
 {
+public:
     QRect windowGeometry;
     quint32 acknowledgedConfigure;
     bool acknowledgedConfigureIsSet = false;
     bool windowGeometryIsSet = false;
+};
+
+class XdgToplevelState
+{
+public:
+    XdgSurfaceState base;
+    QSize minimumSize;
+    QSize maximumSize;
+};
+
+class XdgPopupState
+{
+public:
+    XdgSurfaceState base;
+};
+
+template<typename State>
+class XdgSurfaceRole : public SurfaceRole
+{
+public:
+    XdgSurfaceRole(SurfaceInterface *surface, const QByteArray &name)
+        : SurfaceRole(surface, name)
+    {
+    }
+
+    State pending;
+    State current;
 };
 
 class XdgSurfaceInterfacePrivate : public QtWaylandServer::xdg_surface
@@ -96,8 +124,16 @@ class XdgSurfaceInterfacePrivate : public QtWaylandServer::xdg_surface
 public:
     XdgSurfaceInterfacePrivate(XdgSurfaceInterface *xdgSurface);
 
-    void commit();
-    void reset();
+    void applyState(XdgSurfaceState *next);
+    void resetState();
+
+    void unassignRole();
+    void assignRole(XdgToplevelInterface *toplevel);
+    void assignRole(XdgPopupInterface *popup);
+
+    // These two point into XdgSurfaceRole's state and are valid as long as a role is assigned.
+    XdgSurfaceState *current = nullptr;
+    XdgSurfaceState *pending = nullptr;
 
     XdgSurfaceInterface *q;
     XdgShellInterface *shell;
@@ -106,9 +142,6 @@ public:
     QPointer<SurfaceInterface> surface;
     bool firstBufferAttached = false;
     bool isConfigured = false;
-
-    XdgSurfaceState next;
-    XdgSurfaceState current;
 
     static XdgSurfaceInterfacePrivate *get(XdgSurfaceInterface *surface);
 
@@ -121,7 +154,7 @@ protected:
     void xdg_surface_ack_configure(Resource *resource, uint32_t serial) override;
 };
 
-class XdgToplevelInterfacePrivate : public SurfaceRole, public QtWaylandServer::xdg_toplevel
+class XdgToplevelInterfacePrivate : public XdgSurfaceRole<XdgToplevelState>, public QtWaylandServer::xdg_toplevel
 {
 public:
     XdgToplevelInterfacePrivate(XdgToplevelInterface *toplevel, XdgSurfaceInterface *surface);
@@ -135,19 +168,9 @@ public:
     XdgToplevelInterface *q;
     QPointer<XdgToplevelInterface> parentXdgToplevel;
     QPointer<XdgToplevelDecorationV1Interface> decoration;
-    XdgSurfaceInterface *xdgSurface;
-
+    QPointer<XdgSurfaceInterface> xdgSurface;
     QString windowTitle;
     QString windowClass;
-
-    struct State
-    {
-        QSize minimumSize;
-        QSize maximumSize;
-    };
-
-    State next;
-    State current;
 
 protected:
     void xdg_toplevel_destroy_resource(Resource *resource) override;
@@ -167,7 +190,7 @@ protected:
     void xdg_toplevel_set_minimized(Resource *resource) override;
 };
 
-class XdgPopupInterfacePrivate : public SurfaceRole, public QtWaylandServer::xdg_popup
+class XdgPopupInterfacePrivate : public XdgSurfaceRole<XdgPopupState>, public QtWaylandServer::xdg_popup
 {
 public:
     static XdgPopupInterfacePrivate *get(XdgPopupInterface *popup);
@@ -179,7 +202,7 @@ public:
 
     XdgPopupInterface *q;
     SurfaceInterface *parentSurface;
-    XdgSurfaceInterface *xdgSurface;
+    QPointer<XdgSurfaceInterface> xdgSurface;
     XdgPositioner positioner;
 
 protected:
