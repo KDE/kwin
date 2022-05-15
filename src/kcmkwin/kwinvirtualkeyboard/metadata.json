@@ -2,7 +2,7 @@
     "Categories": "Qt;KDE;",
     "KPlugin": {
         "Description": "Select which virtual keyboard to use",
-        "Description[ca@valencia]": "Seleccioneu el teclat virtual a usar",
+        "Description[ca@valencia]": "Seleccioneu el teclat virtual a utilitzar",
         "Description[ca]": "Seleccioneu el teclat virtual a usar",
         "Description[es]": "Seleccionar el teclado virtual que se debe usar",
         "Description[fr]": "Sélectionner quel clavier virtuel à utiliser",
