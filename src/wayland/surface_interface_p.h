@@ -42,6 +42,7 @@ struct SurfaceState
     bool contrastIsSet = false;
     bool slideIsSet = false;
     bool subsurfaceOrderChanged = false;
+    bool subsurfacePositionChanged = false;
     bool bufferScaleIsSet = false;
     bool bufferTransformIsSet = false;
     bool contentTypeIsSet = false;
@@ -65,6 +66,9 @@ struct SurfaceState
         // placed above the parent surface.
         QList<SubSurfaceInterface *> below;
         QList<SubSurfaceInterface *> above;
+
+        // Subsurface position is here becase it is a part of the parent surface's state.
+        QHash<SubSurfaceInterface *, QPoint> position;
     } subsurface;
 
     struct

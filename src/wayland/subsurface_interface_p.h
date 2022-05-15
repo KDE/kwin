@@ -41,11 +41,9 @@ public:
 
     SubSurfaceInterface *q;
     QPoint position = QPoint(0, 0);
-    QPoint pendingPosition = QPoint(0, 0);
     SubSurfaceInterface::Mode mode = SubSurfaceInterface::Mode::Synchronized;
     QPointer<SurfaceInterface> surface;
     QPointer<SurfaceInterface> parent;
-    bool hasPendingPosition = false;
 
 protected:
     void subsurface_destroy_resource(Resource *resource) override;
