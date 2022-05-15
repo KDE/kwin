@@ -91,13 +91,46 @@ struct XdgSurfaceState
     bool windowGeometryIsSet = false;
 };
 
+struct XdgToplevelState
+{
+    XdgSurfaceState base;
+    QSize minimumSize;
+    QSize maximumSize;
+};
+
+struct XdgPopupState
+{
+    XdgSurfaceState base;
+};
+
+template<typename State>
+class XdgSurfaceRole : public SurfaceRole
+{
+public:
+    XdgSurfaceRole(SurfaceInterface *surface, const QByteArray &name)
+        : SurfaceRole(surface, name)
+    {
+    }
+
+    State pending;
+    State current;
+};
+
 class XdgSurfaceInterfacePrivate : public QtWaylandServer::xdg_surface
 {
 public:
     XdgSurfaceInterfacePrivate(XdgSurfaceInterface *xdgSurface);
 
-    void commit();
-    void reset();
+    void applyState(XdgSurfaceState *next);
+    void resetState();
+
+    void unassignRole();
+    void assignRole(XdgToplevelInterface *toplevel);
+    void assignRole(XdgPopupInterface *popup);
+
+    // These two point into XdgSurfaceRole's state and are valid as long as a role is assigned.
+    XdgSurfaceState *current = nullptr;
+    XdgSurfaceState *pending = nullptr;
 
     XdgSurfaceInterface *q;
     XdgShellInterface *shell = nullptr;
@@ -107,9 +140,6 @@ public:
     bool firstBufferAttached = false;
     bool isConfigured = false;
     bool isInitialized = false;
-
-    XdgSurfaceState next;
-    XdgSurfaceState current;
 
     static XdgSurfaceInterfacePrivate *get(XdgSurfaceInterface *surface);
 
@@ -122,7 +152,7 @@ protected:
     void xdg_surface_ack_configure(Resource *resource, uint32_t serial) override;
 };
 
-class XdgToplevelInterfacePrivate : public SurfaceRole, public QtWaylandServer::xdg_toplevel
+class XdgToplevelInterfacePrivate : public XdgSurfaceRole<XdgToplevelState>, public QtWaylandServer::xdg_toplevel
 {
 public:
     XdgToplevelInterfacePrivate(XdgToplevelInterface *toplevel, XdgSurfaceInterface *surface);
@@ -137,18 +167,8 @@ public:
     QPointer<XdgToplevelInterface> parentXdgToplevel;
     QPointer<XdgToplevelDecorationV1Interface> decoration;
     XdgSurfaceInterface *xdgSurface;
-
     QString windowTitle;
     QString windowClass;
-
-    struct State
-    {
-        QSize minimumSize;
-        QSize maximumSize;
-    };
-
-    State next;
-    State current;
 
 protected:
     void xdg_toplevel_destroy_resource(Resource *resource) override;
@@ -168,7 +188,7 @@ protected:
     void xdg_toplevel_set_minimized(Resource *resource) override;
 };
 
-class XdgPopupInterfacePrivate : public SurfaceRole, public QtWaylandServer::xdg_popup
+class XdgPopupInterfacePrivate : public XdgSurfaceRole<XdgPopupState>, public QtWaylandServer::xdg_popup
 {
 public:
     static XdgPopupInterfacePrivate *get(XdgPopupInterface *popup);
