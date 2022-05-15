@@ -103,12 +103,15 @@ void SubSurfaceInterfacePrivate::subsurface_destroy(Resource *resource)
 
 void SubSurfaceInterfacePrivate::subsurface_set_position(Resource *resource, int32_t x, int32_t y)
 {
-    Q_UNUSED(resource)
-    if (pendingPosition == QPoint(x, y)) {
+    if (!parent) {
+        wl_resource_post_error(resource->handle, error_bad_surface, "no parent");
         return;
     }
-    pendingPosition = QPoint(x, y);
-    hasPendingPosition = true;
+
+    SurfaceInterfacePrivate *parentPrivate = SurfaceInterfacePrivate::get(parent);
+
+    parentPrivate->pending.subsurface.position[q] = QPoint(x, y);
+    parentPrivate->pending.subsurfacePositionChanged = true;
 }
 
 void SubSurfaceInterfacePrivate::subsurface_place_above(Resource *resource, struct ::wl_resource *sibling_resource)
@@ -175,10 +178,13 @@ void SubSurfaceInterfacePrivate::commit()
 
 void SubSurfaceInterfacePrivate::parentCommit()
 {
-    if (hasPendingPosition) {
-        hasPendingPosition = false;
-        position = pendingPosition;
-        Q_EMIT q->positionChanged(position);
+    auto parentPrivate = SurfaceInterfacePrivate::get(parent);
+    if (parentPrivate->current.subsurfacePositionChanged) {
+        const QPoint &pos = parentPrivate->current.subsurface.position[q];
+        if (position != pos) {
+            position = pos;
+            Q_EMIT q->positionChanged(pos);
+        }
     }
 
     if (mode == SubSurfaceInterface::Mode::Synchronized) {

@@ -69,10 +69,13 @@ void SurfaceInterfacePrivate::removeChild(SubSurfaceInterface *child)
     // protocol is not precise on how to handle the addition of new sub surfaces
     pending.subsurface.below.removeAll(child);
     pending.subsurface.above.removeAll(child);
+    pending.subsurface.position.remove(child);
     cached.subsurface.below.removeAll(child);
     cached.subsurface.above.removeAll(child);
+    cached.subsurface.position.remove(child);
     current.subsurface.below.removeAll(child);
     current.subsurface.above.removeAll(child);
+    current.subsurface.position.remove(child);
     Q_EMIT q->childSubSurfaceRemoved(child);
     Q_EMIT q->childSubSurfacesChanged();
 }
@@ -486,6 +489,11 @@ void SurfaceState::mergeInto(SurfaceState *target)
     if (target->subsurfaceOrderChanged) {
         target->subsurface.below = subsurface.below;
         target->subsurface.above = subsurface.above;
+    }
+
+    target->subsurfacePositionChanged = subsurfacePositionChanged;
+    if (target->subsurfacePositionChanged) {
+        target->subsurface.position = subsurface.position;
     }
 
     wl_list_insert_list(&target->frameCallbacks, &frameCallbacks);
