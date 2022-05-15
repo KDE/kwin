@@ -464,59 +464,70 @@ QMatrix4x4 SurfaceInterfacePrivate::buildSurfaceToBufferMatrix()
 
 void SurfaceState::mergeInto(SurfaceState *target)
 {
-    if (bufferIsSet) {
+    target->bufferIsSet = bufferIsSet;
+    if (target->bufferIsSet) {
         target->buffer = buffer;
         target->offset = offset;
         target->damage = damage;
         target->bufferDamage = bufferDamage;
-        target->bufferIsSet = bufferIsSet;
     }
-    if (viewport.sourceGeometryIsSet) {
+
+    target->viewport.sourceGeometryIsSet = viewport.sourceGeometryIsSet;
+    if (target->viewport.sourceGeometryIsSet) {
         target->viewport.sourceGeometry = viewport.sourceGeometry;
-        target->viewport.sourceGeometryIsSet = true;
     }
-    if (viewport.destinationSizeIsSet) {
+
+    target->viewport.destinationSizeIsSet = viewport.destinationSizeIsSet;
+    if (target->viewport.destinationSizeIsSet) {
         target->viewport.destinationSize = viewport.destinationSize;
-        target->viewport.destinationSizeIsSet = true;
     }
-    if (childrenChanged) {
+
+    target->childrenChanged = childrenChanged;
+    if (target->childrenChanged) {
         target->below = below;
         target->above = above;
-        target->childrenChanged = true;
     }
+
     wl_list_insert_list(&target->frameCallbacks, &frameCallbacks);
 
-    if (shadowIsSet) {
+    target->shadowIsSet = shadowIsSet;
+    if (target->shadowIsSet) {
         target->shadow = shadow;
-        target->shadowIsSet = true;
     }
-    if (blurIsSet) {
+
+    target->blurIsSet = blurIsSet;
+    if (target->blurIsSet) {
         target->blur = blur;
-        target->blurIsSet = true;
     }
-    if (contrastIsSet) {
+
+    target->contrastIsSet = contrastIsSet;
+    if (target->contrastIsSet) {
         target->contrast = contrast;
-        target->contrastIsSet = true;
     }
-    if (slideIsSet) {
+
+    target->slideIsSet = slideIsSet;
+    if (target->slideIsSet) {
         target->slide = slide;
-        target->slideIsSet = true;
     }
-    if (inputIsSet) {
+
+    target->inputIsSet = inputIsSet;
+    if (target->inputIsSet) {
         target->input = input;
-        target->inputIsSet = true;
     }
-    if (opaqueIsSet) {
+
+    target->opaqueIsSet = opaqueIsSet;
+    if (target->opaqueIsSet) {
         target->opaque = opaque;
-        target->opaqueIsSet = true;
     }
-    if (bufferScaleIsSet) {
+
+    target->bufferScaleIsSet = bufferScaleIsSet;
+    if (target->bufferScaleIsSet) {
         target->bufferScale = bufferScale;
-        target->bufferScaleIsSet = true;
     }
-    if (bufferTransformIsSet) {
+
+    target->bufferTransformIsSet = bufferTransformIsSet;
+    if (target->bufferTransformIsSet) {
         target->bufferTransform = bufferTransform;
-        target->bufferTransformIsSet = true;
     }
 
     *this = SurfaceState{};
