@@ -41,7 +41,7 @@ struct SurfaceState
     bool blurIsSet = false;
     bool contrastIsSet = false;
     bool slideIsSet = false;
-    bool childrenChanged = false;
+    bool subsurfaceOrderChanged = false;
     bool bufferScaleIsSet = false;
     bool bufferTransformIsSet = false;
     bool contentTypeIsSet = false;
@@ -58,11 +58,14 @@ struct SurfaceState
     KWin::ContentType contentType = KWin::ContentType::None;
     PresentationHint presentationHint = PresentationHint::VSync;
 
-    // Subsurfaces are stored in two lists. The below list contains subsurfaces that
-    // are below their parent surface; the above list contains subsurfaces that are
-    // placed above the parent surface.
-    QList<SubSurfaceInterface *> below;
-    QList<SubSurfaceInterface *> above;
+    struct
+    {
+        // Subsurfaces are stored in two lists. The below list contains subsurfaces that
+        // are below their parent surface; the above list contains subsurfaces that are
+        // placed above the parent surface.
+        QList<SubSurfaceInterface *> below;
+        QList<SubSurfaceInterface *> above;
+    } subsurface;
 
     struct
     {

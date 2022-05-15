@@ -65,9 +65,9 @@ SurfaceInterfacePrivate::~SurfaceInterfacePrivate()
 void SurfaceInterfacePrivate::addChild(SubSurfaceInterface *child)
 {
     // protocol is not precise on how to handle the addition of new sub surfaces
-    pending.above.append(child);
-    cached.above.append(child);
-    current.above.append(child);
+    pending.subsurface.above.append(child);
+    cached.subsurface.above.append(child);
+    current.subsurface.above.append(child);
     child->surface()->setOutputs(outputs);
     if (preferredBufferScale.has_value()) {
         child->surface()->setPreferredBufferScale(preferredBufferScale.value());
@@ -83,12 +83,12 @@ void SurfaceInterfacePrivate::addChild(SubSurfaceInterface *child)
 void SurfaceInterfacePrivate::removeChild(SubSurfaceInterface *child)
 {
     // protocol is not precise on how to handle the addition of new sub surfaces
-    pending.below.removeAll(child);
-    pending.above.removeAll(child);
-    cached.below.removeAll(child);
-    cached.above.removeAll(child);
-    current.below.removeAll(child);
-    current.above.removeAll(child);
+    pending.subsurface.below.removeAll(child);
+    pending.subsurface.above.removeAll(child);
+    cached.subsurface.below.removeAll(child);
+    cached.subsurface.above.removeAll(child);
+    current.subsurface.below.removeAll(child);
+    current.subsurface.above.removeAll(child);
     Q_EMIT q->childSubSurfaceRemoved(child);
     Q_EMIT q->childSubSurfacesChanged();
 }
@@ -100,23 +100,23 @@ bool SurfaceInterfacePrivate::raiseChild(SubSurfaceInterface *subsurface, Surfac
     QList<SubSurfaceInterface *> *anchorList;
     int anchorIndex;
 
-    pending.below.removeOne(subsurface);
-    pending.above.removeOne(subsurface);
+    pending.subsurface.below.removeOne(subsurface);
+    pending.subsurface.above.removeOne(subsurface);
 
     if (anchor == q) {
         // Pretend as if the parent surface were before the first child in the above list.
-        anchorList = &pending.above;
+        anchorList = &pending.subsurface.above;
         anchorIndex = -1;
-    } else if (anchorIndex = pending.above.indexOf(anchor->subSurface()); anchorIndex != -1) {
-        anchorList = &pending.above;
-    } else if (anchorIndex = pending.below.indexOf(anchor->subSurface()); anchorIndex != -1) {
-        anchorList = &pending.below;
+    } else if (anchorIndex = pending.subsurface.above.indexOf(anchor->subSurface()); anchorIndex != -1) {
+        anchorList = &pending.subsurface.above;
+    } else if (anchorIndex = pending.subsurface.below.indexOf(anchor->subSurface()); anchorIndex != -1) {
+        anchorList = &pending.subsurface.below;
     } else {
         return false; // The anchor belongs to other sub-surface tree.
     }
 
     anchorList->insert(anchorIndex + 1, subsurface);
-    pending.childrenChanged = true;
+    pending.subsurfaceOrderChanged = true;
     return true;
 }
 
@@ -127,23 +127,23 @@ bool SurfaceInterfacePrivate::lowerChild(SubSurfaceInterface *subsurface, Surfac
     QList<SubSurfaceInterface *> *anchorList;
     int anchorIndex;
 
-    pending.below.removeOne(subsurface);
-    pending.above.removeOne(subsurface);
+    pending.subsurface.below.removeOne(subsurface);
+    pending.subsurface.above.removeOne(subsurface);
 
     if (anchor == q) {
         // Pretend as if the parent surface were after the last child in the below list.
-        anchorList = &pending.below;
-        anchorIndex = pending.below.count();
-    } else if (anchorIndex = pending.above.indexOf(anchor->subSurface()); anchorIndex != -1) {
-        anchorList = &pending.above;
-    } else if (anchorIndex = pending.below.indexOf(anchor->subSurface()); anchorIndex != -1) {
-        anchorList = &pending.below;
+        anchorList = &pending.subsurface.below;
+        anchorIndex = pending.subsurface.below.count();
+    } else if (anchorIndex = pending.subsurface.above.indexOf(anchor->subSurface()); anchorIndex != -1) {
+        anchorList = &pending.subsurface.above;
+    } else if (anchorIndex = pending.subsurface.below.indexOf(anchor->subSurface()); anchorIndex != -1) {
+        anchorList = &pending.subsurface.below;
     } else {
         return false; // The anchor belongs to other sub-surface tree.
     }
 
     anchorList->insert(anchorIndex, subsurface);
-    pending.childrenChanged = true;
+    pending.subsurfaceOrderChanged = true;
     return true;
 }
 
@@ -400,10 +400,10 @@ void SurfaceInterface::frameRendered(quint32 msec)
         wl_resource_destroy(resource);
     }
 
-    for (SubSurfaceInterface *subsurface : std::as_const(d->current.below)) {
+    for (SubSurfaceInterface *subsurface : std::as_const(d->current.subsurface.below)) {
         subsurface->surface()->frameRendered(msec);
     }
-    for (SubSurfaceInterface *subsurface : std::as_const(d->current.above)) {
+    for (SubSurfaceInterface *subsurface : std::as_const(d->current.subsurface.above)) {
         subsurface->surface()->frameRendered(msec);
     }
 }
@@ -515,10 +515,10 @@ void SurfaceState::mergeInto(SurfaceState *target)
         target->viewport.destinationSize = viewport.destinationSize;
     }
 
-    target->childrenChanged = childrenChanged;
-    if (target->childrenChanged) {
-        target->below = below;
-        target->above = above;
+    target->subsurfaceOrderChanged = subsurfaceOrderChanged;
+    if (target->subsurfaceOrderChanged) {
+        target->subsurface.below = subsurface.below;
+        target->subsurface.above = subsurface.above;
     }
 
     wl_list_insert_list(&target->frameCallbacks, &frameCallbacks);
@@ -572,8 +572,7 @@ void SurfaceState::mergeInto(SurfaceState *target)
     }
 
     *this = SurfaceState{};
-    below = target->below;
-    above = target->above;
+    subsurface = target->subsurface;
     wl_list_init(&frameCallbacks);
 }
 
@@ -586,7 +585,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     const bool blurChanged = next->blurIsSet;
     const bool contrastChanged = next->contrastIsSet;
     const bool slideChanged = next->slideIsSet;
-    const bool childrenChanged = next->childrenChanged;
+    const bool subsurfaceOrderChanged = next->subsurfaceOrderChanged;
     const bool visibilityChanged = bufferChanged && bool(current.buffer) != bool(next->buffer);
 
     const QSizeF oldSurfaceSize = surfaceSize;
@@ -701,7 +700,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     if (slideChanged) {
         Q_EMIT q->slideOnShowHideChanged();
     }
-    if (childrenChanged) {
+    if (subsurfaceOrderChanged) {
         Q_EMIT q->childSubSurfacesChanged();
     }
 
@@ -716,11 +715,11 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     }
 
     // The position of a sub-surface is applied when its parent is committed.
-    for (SubSurfaceInterface *subsurface : std::as_const(current.below)) {
+    for (SubSurfaceInterface *subsurface : std::as_const(current.subsurface.below)) {
         auto subsurfacePrivate = SubSurfaceInterfacePrivate::get(subsurface);
         subsurfacePrivate->parentCommit();
     }
-    for (SubSurfaceInterface *subsurface : std::as_const(current.above)) {
+    for (SubSurfaceInterface *subsurface : std::as_const(current.subsurface.above)) {
         auto subsurfacePrivate = SubSurfaceInterfacePrivate::get(subsurface);
         subsurfacePrivate->parentCommit();
     }
@@ -782,11 +781,11 @@ void SurfaceInterfacePrivate::updateEffectiveMapped()
         Q_EMIT q->unmapped();
     }
 
-    for (SubSurfaceInterface *subsurface : std::as_const(current.below)) {
+    for (SubSurfaceInterface *subsurface : std::as_const(current.subsurface.below)) {
         auto surfacePrivate = SurfaceInterfacePrivate::get(subsurface->surface());
         surfacePrivate->updateEffectiveMapped();
     }
-    for (SubSurfaceInterface *subsurface : std::as_const(current.above)) {
+    for (SubSurfaceInterface *subsurface : std::as_const(current.subsurface.above)) {
         auto surfacePrivate = SurfaceInterfacePrivate::get(subsurface->surface());
         surfacePrivate->updateEffectiveMapped();
     }
@@ -859,12 +858,12 @@ SurfaceInterface *SurfaceInterface::get(quint32 id, const ClientConnection *clie
 
 QList<SubSurfaceInterface *> SurfaceInterface::below() const
 {
-    return d->current.below;
+    return d->current.subsurface.below;
 }
 
 QList<SubSurfaceInterface *> SurfaceInterface::above() const
 {
-    return d->current.above;
+    return d->current.subsurface.above;
 }
 
 SubSurfaceInterface *SurfaceInterface::subSurface() const
@@ -881,11 +880,11 @@ QRectF SurfaceInterface::boundingRect() const
 {
     QRectF rect(QPoint(0, 0), size());
 
-    for (const SubSurfaceInterface *subSurface : std::as_const(d->current.below)) {
+    for (const SubSurfaceInterface *subSurface : std::as_const(d->current.subsurface.below)) {
         const SurfaceInterface *childSurface = subSurface->surface();
         rect |= childSurface->boundingRect().translated(subSurface->position());
     }
-    for (const SubSurfaceInterface *subSurface : std::as_const(d->current.above)) {
+    for (const SubSurfaceInterface *subSurface : std::as_const(d->current.subsurface.above)) {
         const SurfaceInterface *childSurface = subSurface->surface();
         rect |= childSurface->boundingRect().translated(subSurface->position());
     }
@@ -966,10 +965,10 @@ void SurfaceInterface::setOutputs(const QVector<OutputInterface *> &outputs)
     }
 
     d->outputs = outputs;
-    for (auto child : std::as_const(d->current.below)) {
+    for (auto child : std::as_const(d->current.subsurface.below)) {
         child->surface()->setOutputs(outputs);
     }
-    for (auto child : std::as_const(d->current.above)) {
+    for (auto child : std::as_const(d->current.subsurface.above)) {
         child->surface()->setOutputs(outputs);
     }
 }
@@ -980,7 +979,7 @@ SurfaceInterface *SurfaceInterface::surfaceAt(const QPointF &position)
         return nullptr;
     }
 
-    for (auto it = d->current.above.crbegin(); it != d->current.above.crend(); ++it) {
+    for (auto it = d->current.subsurface.above.crbegin(); it != d->current.subsurface.above.crend(); ++it) {
         const SubSurfaceInterface *current = *it;
         SurfaceInterface *surface = current->surface();
         if (auto s = surface->surfaceAt(position - current->position())) {
@@ -993,7 +992,7 @@ SurfaceInterface *SurfaceInterface::surfaceAt(const QPointF &position)
         return this;
     }
 
-    for (auto it = d->current.below.crbegin(); it != d->current.below.crend(); ++it) {
+    for (auto it = d->current.subsurface.below.crbegin(); it != d->current.subsurface.below.crend(); ++it) {
         const SubSurfaceInterface *current = *it;
         SurfaceInterface *surface = current->surface();
         if (auto s = surface->surfaceAt(position - current->position())) {
@@ -1011,7 +1010,7 @@ SurfaceInterface *SurfaceInterface::inputSurfaceAt(const QPointF &position)
         return nullptr;
     }
 
-    for (auto it = d->current.above.crbegin(); it != d->current.above.crend(); ++it) {
+    for (auto it = d->current.subsurface.above.crbegin(); it != d->current.subsurface.above.crend(); ++it) {
         const SubSurfaceInterface *current = *it;
         auto surface = current->surface();
         if (auto s = surface->inputSurfaceAt(position - current->position())) {
@@ -1024,7 +1023,7 @@ SurfaceInterface *SurfaceInterface::inputSurfaceAt(const QPointF &position)
         return this;
     }
 
-    for (auto it = d->current.below.crbegin(); it != d->current.below.crend(); ++it) {
+    for (auto it = d->current.subsurface.below.crbegin(); it != d->current.subsurface.below.crend(); ++it) {
         const SubSurfaceInterface *current = *it;
         auto surface = current->surface();
         if (auto s = surface->inputSurfaceAt(position - current->position())) {
@@ -1136,10 +1135,10 @@ void SurfaceInterface::setPreferredBufferScale(qreal scale)
         d->send_preferred_buffer_scale(std::ceil(scale));
     }
 
-    for (auto child : qAsConst(d->current.below)) {
+    for (auto child : qAsConst(d->current.subsurface.below)) {
         child->surface()->setPreferredBufferScale(scale);
     }
-    for (auto child : qAsConst(d->current.above)) {
+    for (auto child : qAsConst(d->current.subsurface.above)) {
         child->surface()->setPreferredBufferScale(scale);
     }
 }
@@ -1155,10 +1154,10 @@ void SurfaceInterface::setPreferredBufferTransform(KWin::OutputTransform transfo
         d->send_preferred_buffer_transform(uint32_t(transform.kind()));
     }
 
-    for (auto child : qAsConst(d->current.below)) {
+    for (auto child : qAsConst(d->current.subsurface.below)) {
         child->surface()->setPreferredBufferTransform(transform);
     }
-    for (auto child : qAsConst(d->current.above)) {
+    for (auto child : qAsConst(d->current.subsurface.above)) {
         child->surface()->setPreferredBufferTransform(transform);
     }
 }
