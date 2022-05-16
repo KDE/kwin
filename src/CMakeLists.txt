@@ -302,9 +302,6 @@ target_link_libraries(kwin_wayland
     KWinXwaylandServerModule
 )
 kcoreaddons_target_static_plugins(kwin_wayland "kwin/effects/plugins")
-if (HAVE_LIBCAP)
-    target_link_libraries(kwin_wayland ${Libcap_LIBRARIES})
-endif()
 
 install(TARGETS kwin_wayland ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 if (HAVE_LIBCAP)

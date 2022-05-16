@@ -24,6 +24,7 @@
 #include "libinput_logging.h"
 #include "session.h"
 #include "udev.h"
+#include "utils/realtime.h"
 
 #include <QDBusConnection>
 #include <QMutexLocker>
@@ -150,6 +151,9 @@ void Connection::setup()
 void Connection::doSetup()
 {
     Q_ASSERT(!m_notifier);
+
+    gainRealTime();
+
     m_notifier = new QSocketNotifier(m_input->fileDescriptor(), QSocketNotifier::Read, this);
     connect(m_notifier, &QSocketNotifier::activated, this, &Connection::handleEvent);
 
