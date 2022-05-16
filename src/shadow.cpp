@@ -31,7 +31,7 @@ namespace KWin
 
 Shadow::Shadow(Window *window)
     : m_window(window)
-    , m_cachedSize(window->size())
+    , m_cachedSize(window->size().toSize()) // DAVE?1
     , m_decorationShadow(nullptr)
 {
     connect(m_window, &Window::frameGeometryChanged, this, &Shadow::geometryChanged);
@@ -331,10 +331,10 @@ void Shadow::setWindow(Window *window)
 }
 void Shadow::geometryChanged()
 {
-    if (m_cachedSize == m_window->size()) {
+    if (m_cachedSize == m_window->size().toSize()) {
         return;
     }
-    m_cachedSize = m_window->size();
+    m_cachedSize = m_window->size().toSize();
     Q_EMIT rectChanged();
 }
 

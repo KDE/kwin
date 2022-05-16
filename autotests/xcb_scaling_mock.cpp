@@ -12,17 +12,17 @@
 namespace KWin
 {
 
-uint32_t Xcb::toXNative(uint value)
+uint32_t Xcb::toXNative(qreal value)
 {
     return value;
 }
 
-uint32_t Xcb::fromXNative(uint value)
+qreal Xcb::fromXNative(uint value)
 {
     return value;
 }
 
-QSize Xcb::fromXNative(const QSize &value)
+QSizeF Xcb::fromXNative(const QSize &value)
 {
     return value;
 }

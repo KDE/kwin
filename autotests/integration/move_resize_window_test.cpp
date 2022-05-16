@@ -551,7 +551,7 @@ void MoveResizeWindowTest::testClientSideMove()
     QVERIFY(window);
 
     // move pointer into center of geometry
-    const QRect startGeometry = window->frameGeometry();
+    const QRectF startGeometry = window->frameGeometry();
     Cursors::self()->mouse()->setPos(startGeometry.center());
     QVERIFY(pointerEnteredSpy.wait());
     QCOMPARE(pointerEnteredSpy.first().last().toPoint(), QPoint(49, 24));
@@ -569,7 +569,7 @@ void MoveResizeWindowTest::testClientSideMove()
     // move a bit
     QSignalSpy clientMoveStepSpy(window, &Window::clientStepUserMovedResized);
     QVERIFY(clientMoveStepSpy.isValid());
-    const QPoint startPoint = startGeometry.center();
+    const QPointF startPoint = startGeometry.center();
     const int dragDistance = QApplication::startDragDistance();
     // Why?
     Test::pointerMotion(startPoint + QPoint(dragDistance, dragDistance) + QPoint(6, 6), timestamp++);
@@ -657,7 +657,7 @@ void MoveResizeWindowTest::testNetMove()
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
     QCOMPARE(window->window(), windowId);
-    const QRect origGeo = window->frameGeometry();
+    const QRectF origGeo = window->frameGeometry();
 
     // let's move the cursor outside the window
     Cursors::self()->mouse()->setPos(screens()->geometry(0).center());

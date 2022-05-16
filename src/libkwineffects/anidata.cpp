@@ -43,7 +43,7 @@ PreviousWindowPixmapLock::~PreviousWindowPixmapLock()
 
     // Add synthetic repaint to prevent glitches after cross-fading
     // translucent windows.
-    effects->addRepaint(m_window->expandedGeometry());
+    effects->addRepaint(m_window->expandedGeometry().toAlignedRect());
 }
 
 AniData::AniData()

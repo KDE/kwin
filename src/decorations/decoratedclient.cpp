@@ -29,7 +29,7 @@ DecoratedClientImpl::DecoratedClientImpl(Window *window, KDecoration2::Decorated
     : QObject()
     , ApplicationMenuEnabledDecoratedClientPrivate(decoratedClient, decoration)
     , m_window(window)
-    , m_clientSize(window->clientSize())
+    , m_clientSize(window->clientSize().toSize()) // DAVE!!!!!!!!
 {
     window->setDecoratedClient(QPointer<DecoratedClientImpl>(this));
     connect(window, &Window::activeChanged, this, [decoratedClient, window]() {
@@ -40,7 +40,7 @@ DecoratedClientImpl::DecoratedClientImpl(Window *window, KDecoration2::Decorated
             return;
         }
         const auto oldSize = m_clientSize;
-        m_clientSize = m_window->clientSize();
+        m_clientSize = m_window->clientSize().toSize(); // DAVE!!!!!!!
         if (oldSize.width() != m_clientSize.width()) {
             Q_EMIT decoratedClient->widthChanged(m_clientSize.width());
         }
@@ -196,7 +196,7 @@ void DecoratedClientImpl::requestHideToolTip()
 
 void DecoratedClientImpl::requestShowWindowMenu(const QRect &rect)
 {
-    Workspace::self()->showWindowMenu(QRect(m_window->pos() + rect.topLeft(), m_window->pos() + rect.bottomRight()), m_window);
+    Workspace::self()->showWindowMenu(QRectF(m_window->pos() + rect.topLeft(), m_window->pos() + rect.bottomRight()).toRect(), m_window);
 }
 
 void DecoratedClientImpl::requestShowApplicationMenu(const QRect &rect, int actionId)

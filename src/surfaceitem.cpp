@@ -117,7 +117,7 @@ void SurfaceItem::discardPixmap()
             m_pixmap.reset();
         }
     }
-    addDamage(rect());
+    addDamage(rect().toAlignedRect());
 }
 
 void SurfaceItem::preprocess()
@@ -175,12 +175,12 @@ bool SurfacePixmap::hasAlphaChannel() const
     return m_hasAlphaChannel;
 }
 
-QSize SurfacePixmap::size() const
+QSizeF SurfacePixmap::size() const
 {
     return m_size;
 }
 
-QRect SurfacePixmap::contentsRect() const
+QRectF SurfacePixmap::contentsRect() const
 {
     return m_contentsRect;
 }

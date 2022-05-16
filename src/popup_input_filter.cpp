@@ -57,7 +57,7 @@ bool PopupInputFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
         }
         if (pointerFocus && pointerFocus->isDecorated()) {
             // test whether it is on the decoration
-            const QRect clientRect = QRect(pointerFocus->clientPos(), pointerFocus->clientSize()).translated(pointerFocus->pos());
+            const QRectF clientRect = QRectF(pointerFocus->clientPos(), pointerFocus->clientSize()).translated(pointerFocus->pos());
             if (!clientRect.contains(event->globalPos())) {
                 cancelPopups();
                 return true;
@@ -96,7 +96,7 @@ bool PopupInputFilter::touchDown(qint32 id, const QPointF &pos, quint32 time)
     if (m_popupWindows.isEmpty()) {
         return false;
     }
-    auto pointerFocus = input()->findToplevel(pos.toPoint());
+    auto pointerFocus = input()->findToplevel(pos);
     if (!pointerFocus || !Window::belongToSameApplication(pointerFocus, m_popupWindows.constLast())) {
         // a touch on a window (or no window) not belonging to the popup window
         cancelPopups();
@@ -105,8 +105,8 @@ bool PopupInputFilter::touchDown(qint32 id, const QPointF &pos, quint32 time)
     }
     if (pointerFocus && pointerFocus->isDecorated()) {
         // test whether it is on the decoration
-        const QRect clientRect = QRect(pointerFocus->clientPos(), pointerFocus->clientSize()).translated(pointerFocus->pos());
-        if (!clientRect.contains(pos.toPoint())) {
+        const QRectF clientRect = QRectF(pointerFocus->clientPos(), pointerFocus->clientSize()).translated(pointerFocus->pos());
+        if (!clientRect.contains(pos)) {
             cancelPopups();
             return true;
         }

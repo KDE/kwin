@@ -3142,7 +3142,7 @@ Qt::MouseButtons InputRedirection::qtButtonStates() const
     return m_pointer->buttons();
 }
 
-Window *InputRedirection::findToplevel(const QPoint &pos)
+Window *InputRedirection::findToplevel(const QPointF &pos)
 {
     if (!Workspace::self()) {
         return nullptr;
@@ -3164,7 +3164,7 @@ Window *InputRedirection::findToplevel(const QPoint &pos)
     return findManagedToplevel(pos);
 }
 
-Window *InputRedirection::findManagedToplevel(const QPoint &pos)
+Window *InputRedirection::findManagedToplevel(const QPointF &pos)
 {
     if (!Workspace::self()) {
         return nullptr;

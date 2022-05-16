@@ -79,14 +79,14 @@ bool InternalWindow::isClient() const
     return true;
 }
 
-bool InternalWindow::hitTest(const QPoint &point) const
+bool InternalWindow::hitTest(const QPointF &point) const
 {
     if (!Window::hitTest(point)) {
         return false;
     }
 
     const QRegion mask = m_handle->mask();
-    if (!mask.isEmpty() && !mask.contains(mapToLocal(point))) {
+    if (!mask.isEmpty() && !mask.contains(mapToLocal(point).toPoint())) { // DAVE?
         return false;
     } else if (m_handle->property("outputOnly").toBool()) {
         return false;
@@ -95,7 +95,7 @@ bool InternalWindow::hitTest(const QPoint &point) const
     return true;
 }
 
-void InternalWindow::pointerEnterEvent(const QPoint &globalPos)
+void InternalWindow::pointerEnterEvent(const QPointF &globalPos)
 {
     Window::pointerEnterEvent(globalPos);
 
@@ -147,12 +147,12 @@ QString InternalWindow::captionSuffix() const
     return m_captionSuffix;
 }
 
-QSize InternalWindow::minSize() const
+QSizeF InternalWindow::minSize() const
 {
     return m_handle->minimumSize();
 }
 
-QSize InternalWindow::maxSize() const
+QSizeF InternalWindow::maxSize() const
 {
     return m_handle->maximumSize();
 }
@@ -268,23 +268,23 @@ void InternalWindow::showClient()
 {
 }
 
-void InternalWindow::resizeWithChecks(const QSize &size)
+void InternalWindow::resizeWithChecks(const QSizeF &size)
 {
     if (!m_handle) {
         return;
     }
-    const QRect area = workspace()->clientArea(WorkArea, this);
+    const QRectF area = workspace()->clientArea(WorkArea, this);
     resize(size.boundedTo(area.size()));
 }
 
-void InternalWindow::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
+void InternalWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
 {
     if (areGeometryUpdatesBlocked()) {
         setPendingMoveResizeMode(mode);
         return;
     }
 
-    const QSize requestedClientSize = frameSizeToClientSize(rect.size());
+    const QSizeF requestedClientSize = frameSizeToClientSize(rect.size());
     if (clientSize() == requestedClientSize) {
         commitGeometry(rect);
     } else {
@@ -315,7 +315,7 @@ void InternalWindow::setNoBorder(bool set)
     updateDecoration(true);
 }
 
-void InternalWindow::createDecoration(const QRect &oldGeometry)
+void InternalWindow::createDecoration(const QRectF &oldGeometry)
 {
     setDecoration(QSharedPointer<KDecoration2::Decoration>(Decoration::DecorationBridge::self()->createDecoration(this)));
     moveResize(oldGeometry);
@@ -325,7 +325,7 @@ void InternalWindow::createDecoration(const QRect &oldGeometry)
 
 void InternalWindow::destroyDecoration()
 {
-    const QSize clientSize = frameSizeToClientSize(moveResizeGeometry().size());
+    const QSizeF clientSize = frameSizeToClientSize(moveResizeGeometry().size());
     setDecoration(nullptr);
     resize(clientSize);
 }
@@ -338,7 +338,7 @@ void InternalWindow::updateDecoration(bool check_workspace_pos, bool force)
 
     GeometryUpdatesBlocker blocker(this);
 
-    const QRect oldFrameGeometry = frameGeometry();
+    const QRectF oldFrameGeometry = frameGeometry();
     if (force) {
         destroyDecoration();
     }
@@ -396,15 +396,15 @@ void InternalWindow::present(const QSharedPointer<QOpenGLFramebufferObject> fbo)
 {
     Q_ASSERT(m_internalImage.isNull());
 
-    const QSize bufferSize = fbo->size() / bufferScale();
+    const QSizeF bufferSize = fbo->size() / bufferScale();
 
-    commitGeometry(QRect(pos(), clientSizeToFrameSize(bufferSize)));
+    commitGeometry(QRectF(pos(), clientSizeToFrameSize(bufferSize)));
     markAsMapped();
 
     m_internalFBO = fbo;
 
     setDepth(32);
-    surfaceItem()->addDamage(surfaceItem()->rect());
+    surfaceItem()->addDamage(surfaceItem()->rect().toAlignedRect());
 }
 
 void InternalWindow::present(const QImage &image, const QRegion &damage)
@@ -413,7 +413,7 @@ void InternalWindow::present(const QImage &image, const QRegion &damage)
 
     const QSize bufferSize = image.size() / bufferScale();
 
-    commitGeometry(QRect(pos(), clientSizeToFrameSize(bufferSize)));
+    commitGeometry(QRectF(pos(), clientSizeToFrameSize(bufferSize)));
     markAsMapped();
 
     m_internalImage = image;
@@ -467,18 +467,18 @@ void InternalWindow::updateCaption()
     }
 }
 
-void InternalWindow::requestGeometry(const QRect &rect)
+void InternalWindow::requestGeometry(const QRectF &rect)
 {
     if (m_handle) {
-        m_handle->setGeometry(frameRectToClientRect(rect));
+        m_handle->setGeometry(frameRectToClientRect(rect).toRect());
     }
 }
 
-void InternalWindow::commitGeometry(const QRect &rect)
+void InternalWindow::commitGeometry(const QRectF &rect)
 {
     // The client geometry and the buffer geometry are the same.
-    const QRect oldClientGeometry = m_clientGeometry;
-    const QRect oldFrameGeometry = m_frameGeometry;
+    const QRectF oldClientGeometry = m_clientGeometry;
+    const QRectF oldFrameGeometry = m_frameGeometry;
     const Output *oldOutput = m_output;
 
     m_clientGeometry = frameRectToClientRect(rect);
@@ -543,7 +543,7 @@ void InternalWindow::syncGeometryToInternalWindow()
 void InternalWindow::updateInternalWindowGeometry()
 {
     if (!isInteractiveMoveResize()) {
-        const QRect rect = clientRectToFrameRect(m_handle->geometry());
+        const QRectF rect = clientRectToFrameRect(m_handle->geometry());
         setMoveResizeGeometry(rect);
         commitGeometry(rect);
     }

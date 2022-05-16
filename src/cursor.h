@@ -160,6 +160,7 @@ public:
     /**
      * Warps the mouse cursor to new @p pos.
      */
+    void setPos(const QPointF &pos);
     void setPos(const QPoint &pos);
     void setPos(int x, int y);
     xcb_cursor_t x11Cursor(CursorShape shape);

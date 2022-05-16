@@ -984,7 +984,7 @@ void StrutsTest::testWindowMoveWithPanelBetweenScreens()
     QCOMPARE(window2->clientSize(), QSize(200, 300));
     QCOMPARE(window2->pos(), QPoint(1500, 400));
 
-    const QRect origGeo = window2->frameGeometry();
+    const QRectF origGeo = window2->frameGeometry();
     Cursors::self()->mouse()->setPos(origGeo.center());
     workspace()->performWindowOperation(window2, Options::MoveOp);
     QTRY_COMPARE(workspace()->moveResizeWindow(), window2);
@@ -997,7 +997,7 @@ void StrutsTest::testWindowMoveWithPanelBetweenScreens()
     window2->keyPressEvent(Qt::Key_Enter);
     QCOMPARE(window2->isInteractiveMove(), false);
     QVERIFY(workspace()->moveResizeWindow() == nullptr);
-    QCOMPARE(window2->frameGeometry(), QRect(origGeo.translated(-800, 0)));
+    QCOMPARE(window2->frameGeometry(), QRectF(origGeo.translated(-800, 0)));
 }
 
 }

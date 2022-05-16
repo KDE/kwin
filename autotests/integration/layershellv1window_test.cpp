@@ -116,7 +116,7 @@ void LayerShellV1WindowTest::testOutput()
     QVERIFY(window);
 
     // Verify that the window is on the requested screen.
-    QVERIFY(output->geometry().contains(window->frameGeometry()));
+    QVERIFY(output->geometry().contains(window->frameGeometry().toRect()));
 
     // Destroy the window.
     shellSurface.reset();

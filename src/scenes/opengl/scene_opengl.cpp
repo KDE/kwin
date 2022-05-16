@@ -877,9 +877,10 @@ void SceneOpenGLDecorationRenderer::render(const QRegion &region)
         return;
     }
 
-    QRect left, top, right, bottom;
+    QRectF left, top, right, bottom;
     client()->window()->layoutDecorationRects(left, top, right, bottom);
 
+    // DAVE :(
     const qreal devicePixelRatio = effectiveDevicePixelRatio();
     const int topHeight = std::ceil(top.height() * devicePixelRatio);
     const int bottomHeight = std::ceil(bottom.height() * devicePixelRatio);
@@ -892,10 +893,10 @@ void SceneOpenGLDecorationRenderer::render(const QRegion &region)
 
     const QRect dirtyRect = region.boundingRect();
 
-    renderPart(top.intersected(dirtyRect), top, topPosition, devicePixelRatio);
-    renderPart(bottom.intersected(dirtyRect), bottom, bottomPosition, devicePixelRatio);
-    renderPart(left.intersected(dirtyRect), left, leftPosition, devicePixelRatio, true);
-    renderPart(right.intersected(dirtyRect), right, rightPosition, devicePixelRatio, true);
+    renderPart(top.toRect().intersected(dirtyRect), top.toRect(), topPosition, devicePixelRatio);
+    renderPart(bottom.toRect().intersected(dirtyRect), bottom.toRect(), bottomPosition, devicePixelRatio);
+    renderPart(left.toRect().intersected(dirtyRect), left.toRect(), leftPosition, devicePixelRatio, true);
+    renderPart(right.toRect().intersected(dirtyRect), right.toRect(), rightPosition, devicePixelRatio, true);
 }
 
 void SceneOpenGLDecorationRenderer::renderPart(const QRect &rect, const QRect &partRect,
@@ -979,7 +980,7 @@ static int align(int value, int align)
 
 void SceneOpenGLDecorationRenderer::resizeTexture()
 {
-    QRect left, top, right, bottom;
+    QRectF left, top, right, bottom;
     client()->window()->layoutDecorationRects(left, top, right, bottom);
     QSize size;
 

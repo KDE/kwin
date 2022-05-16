@@ -103,7 +103,7 @@ NET::WindowType XdgSurfaceWindow::windowType(bool direct, int supported_types) c
     return m_windowType;
 }
 
-QRect XdgSurfaceWindow::inputGeometry() const
+QRectF XdgSurfaceWindow::inputGeometry() const
 {
     return isDecorated() ? Window::inputGeometry() : bufferGeometry();
 }
@@ -187,7 +187,7 @@ void XdgSurfaceWindow::handleRoleCommit()
 {
 }
 
-void XdgSurfaceWindow::maybeUpdateMoveResizeGeometry(const QRect &rect)
+void XdgSurfaceWindow::maybeUpdateMoveResizeGeometry(const QRectF &rect)
 {
     // We are about to send a configure event, ignore the committed window geometry.
     if (m_configureTimer->isActive()) {
@@ -206,9 +206,9 @@ void XdgSurfaceWindow::maybeUpdateMoveResizeGeometry(const QRect &rect)
     setMoveResizeGeometry(rect);
 }
 
-static QRect gravitateGeometry(const QRect &rect, const QRect &bounds, Gravity gravity)
+static QRectF gravitateGeometry(const QRectF &rect, const QRectF &bounds, Gravity gravity)
 {
-    QRect geometry = rect;
+    QRectF geometry = rect;
 
     switch (gravity) {
     case Gravity::TopLeft:
@@ -239,7 +239,7 @@ static QRect gravitateGeometry(const QRect &rect, const QRect &bounds, Gravity g
 
 void XdgSurfaceWindow::handleNextWindowGeometry()
 {
-    const QRect boundingGeometry = surface()->boundingRect();
+    const QRectF boundingGeometry = surface()->boundingRect();
 
     // The effective window geometry is defined as the intersection of the window geometry
     // and the rectangle that bounds the main surface and all of its sub-surfaces. If the
@@ -258,7 +258,7 @@ void XdgSurfaceWindow::handleNextWindowGeometry()
         qCWarning(KWIN_CORE) << "Committed empty window geometry, dealing with a buggy client!";
     }
 
-    QRect frameGeometry(pos(), clientSizeToFrameSize(m_windowGeometry.size()));
+    QRectF frameGeometry(pos(), clientSizeToFrameSize(m_windowGeometry.size()));
     if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
         if (configureEvent->flags & XdgSurfaceConfigure::ConfigurePosition) {
             frameGeometry = gravitateGeometry(frameGeometry, configureEvent->bounds, configureEvent->gravity);
@@ -289,7 +289,7 @@ void XdgSurfaceWindow::resetHaveNextWindowGeometry()
     m_haveNextWindowGeometry = false;
 }
 
-void XdgSurfaceWindow::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
+void XdgSurfaceWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
 {
     if (areGeometryUpdatesBlocked()) {
         setPendingMoveResizeMode(mode);
@@ -297,7 +297,7 @@ void XdgSurfaceWindow::moveResizeInternal(const QRect &rect, MoveResizeMode mode
     }
 
     if (mode != MoveResizeMode::Move) {
-        const QSize requestedClientSize = frameSizeToClientSize(rect.size());
+        const QSizeF requestedClientSize = frameSizeToClientSize(rect.size());
         if (requestedClientSize == clientSize()) {
             updateGeometry(rect);
         } else {
@@ -310,15 +310,15 @@ void XdgSurfaceWindow::moveResizeInternal(const QRect &rect, MoveResizeMode mode
             configureEvent->flags.setFlag(XdgSurfaceConfigure::ConfigurePosition, false);
         }
         m_configureFlags.setFlag(XdgSurfaceConfigure::ConfigurePosition, false);
-        updateGeometry(QRect(rect.topLeft(), size()));
+        updateGeometry(QRectF(rect.topLeft(), size()));
     }
 }
 
-QRect XdgSurfaceWindow::frameRectToBufferRect(const QRect &rect) const
+QRectF XdgSurfaceWindow::frameRectToBufferRect(const QRectF &rect) const
 {
-    const int left = rect.left() + borderLeft() - m_windowGeometry.left();
-    const int top = rect.top() + borderTop() - m_windowGeometry.top();
-    return QRect(QPoint(left, top), surface()->size());
+    const qreal left = rect.left() + borderLeft() - m_windowGeometry.left();
+    const qreal top = rect.top() + borderTop() - m_windowGeometry.top();
+    return QRectF(QPoint(left, top), surface()->size());
 }
 
 void XdgSurfaceWindow::destroyWindow()
@@ -360,7 +360,7 @@ void XdgSurfaceWindow::updateShowOnScreenEdge()
     const PlasmaShellSurfaceInterface::PanelBehavior panelBehavior = m_plasmaShellSurface->panelBehavior();
     if ((panelBehavior == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide && isHidden()) || panelBehavior == PlasmaShellSurfaceInterface::PanelBehavior::WindowsCanCover) {
         // Screen edge API requires an edge, thus we need to figure out which edge the window borders.
-        const QRect clientGeometry = frameGeometry();
+        const QRectF clientGeometry = frameGeometry();
         Qt::Edges edges;
 
         const auto outputs = kwinApp()->platform()->enabledOutputs();
@@ -624,12 +624,12 @@ MaximizeMode XdgToplevelWindow::requestedMaximizeMode() const
     return m_requestedMaximizeMode;
 }
 
-QSize XdgToplevelWindow::minSize() const
+QSizeF XdgToplevelWindow::minSize() const
 {
     return rules()->checkMinSize(m_shellSurface->minimumSize());
 }
 
-QSize XdgToplevelWindow::maxSize() const
+QSizeF XdgToplevelWindow::maxSize() const
 {
     return rules()->checkMaxSize(m_shellSurface->maximumSize());
 }
@@ -680,8 +680,8 @@ bool XdgToplevelWindow::isResizable() const
     if (rules()->checkSize(QSize()).isValid()) {
         return false;
     }
-    const QSize min = minSize();
-    const QSize max = maxSize();
+    const QSizeF min = minSize();
+    const QSizeF max = maxSize();
     return min.width() < max.width() || min.height() < max.height();
 }
 
@@ -776,7 +776,7 @@ StrutRect XdgToplevelWindow::strutRect(StrutArea area) const
         return StrutRect();
     }
 
-    const QRect windowRect = frameGeometry();
+    const QRect windowRect = frameGeometry().toRect();
     const QRect outputRect = output()->geometry();
 
     const bool left = windowRect.left() == outputRect.left();
@@ -854,20 +854,20 @@ XdgSurfaceConfigure *XdgToplevelWindow::sendRoleConfigure() const
         framePadding.setHeight(m_nextDecoration->borderTop() + m_nextDecoration->borderBottom());
     }
 
-    QSize nextClientSize = moveResizeGeometry().size();
+    QSizeF nextClientSize = moveResizeGeometry().size();
     if (!nextClientSize.isEmpty()) {
         nextClientSize.rwidth() -= framePadding.width();
         nextClientSize.rheight() -= framePadding.height();
     }
 
     if (nextClientSize.isEmpty()) {
-        QSize bounds = workspace()->clientArea(PlacementArea, this, output()).size();
+        QSizeF bounds = workspace()->clientArea(PlacementArea, this, output()).size();
         bounds.rwidth() -= framePadding.width();
         bounds.rheight() -= framePadding.height();
-        m_shellSurface->sendConfigureBounds(bounds);
+        m_shellSurface->sendConfigureBounds(bounds.toSize()); // DAVE rounding
     }
 
-    const quint32 serial = m_shellSurface->sendConfigure(nextClientSize, m_nextStates);
+    const quint32 serial = m_shellSurface->sendConfigure(nextClientSize.toSize(), m_nextStates);
 
     XdgToplevelConfigure *configureEvent = new XdgToplevelConfigure();
     configureEvent->bounds = moveResizeGeometry();
@@ -1357,11 +1357,11 @@ void XdgToplevelWindow::initialize()
     setupWindowRules(false);
 
     // Move or resize the window only if enforced by a window rule.
-    const QPoint forcedPosition = rules()->checkPosition(invalidPoint, true);
+    const QPointF forcedPosition = rules()->checkPosition(invalidPoint, true);
     if (forcedPosition != invalidPoint) {
         move(forcedPosition);
     }
-    const QSize forcedSize = rules()->checkSize(QSize(), true);
+    const QSizeF forcedSize = rules()->checkSize(QSize(), true);
     if (forcedSize.isValid()) {
         resize(forcedSize);
     }
@@ -1400,8 +1400,8 @@ void XdgToplevelWindow::initialize()
         needsPlacement = false;
     }
     if (needsPlacement) {
-        const QRect area = workspace()->clientArea(PlacementArea, this, workspace()->activeOutput());
-        Placement::self()->place(this, area);
+        const QRectF area = workspace()->clientArea(PlacementArea, this, workspace()->activeOutput());
+        Placement::self()->place(this, area.toRect());
     }
 
     configureDecoration();
@@ -1614,15 +1614,15 @@ void XdgToplevelWindow::setFullScreen(bool set, bool user)
         m_fullScreenRequestedOutput.clear();
         if (fullscreenGeometryRestore().isValid()) {
             Output *currentOutput = output();
-            moveResize(QRect(fullscreenGeometryRestore().topLeft(),
-                             constrainFrameSize(fullscreenGeometryRestore().size())));
+            moveResize(QRectF(fullscreenGeometryRestore().topLeft(),
+                              constrainFrameSize(fullscreenGeometryRestore().size())));
             if (currentOutput != output()) {
                 workspace()->sendWindowToOutput(this, currentOutput);
             }
         } else {
             // this can happen when the window was first shown already fullscreen,
             // so let the client set the size by itself
-            moveResize(QRect(workspace()->clientArea(PlacementArea, this).topLeft(), QSize(0, 0)));
+            moveResize(QRectF(workspace()->clientArea(PlacementArea, this).topLeft(), QSize(0, 0)));
         }
     }
 
@@ -1643,10 +1643,10 @@ void XdgToplevelWindow::changeMaximize(bool horizontal, bool vertical, bool adju
         return;
     }
 
-    const QRect clientArea = isElectricBorderMaximizing() ? workspace()->clientArea(MaximizeArea, this, Cursors::self()->mouse()->pos()) : workspace()->clientArea(MaximizeArea, this, moveResizeGeometry().center());
+    const QRectF clientArea = isElectricBorderMaximizing() ? workspace()->clientArea(MaximizeArea, this, Cursors::self()->mouse()->pos()) : workspace()->clientArea(MaximizeArea, this, moveResizeGeometry().center());
 
     const MaximizeMode oldMode = m_requestedMaximizeMode;
-    const QRect oldGeometry = moveResizeGeometry();
+    const QRectF oldGeometry = moveResizeGeometry();
 
     // 'adjust == true' means to update the size only, e.g. after changing workspace size
     if (!adjust) {
@@ -1684,7 +1684,7 @@ void XdgToplevelWindow::changeMaximize(bool horizontal, bool vertical, bool adju
     }
 
     if (quickTileMode() == QuickTileMode(QuickTileFlag::None)) {
-        QRect savedGeometry = geometryRestore();
+        QRectF savedGeometry = geometryRestore();
         if (!adjust && !(oldMode & MaximizeVertical)) {
             savedGeometry.setTop(oldGeometry.top());
             savedGeometry.setBottom(oldGeometry.bottom());
@@ -1697,7 +1697,7 @@ void XdgToplevelWindow::changeMaximize(bool horizontal, bool vertical, bool adju
     }
 
     const MaximizeMode delta = m_requestedMaximizeMode ^ oldMode;
-    QRect geometry = oldGeometry;
+    QRectF geometry = oldGeometry;
 
     if (adjust || (delta & MaximizeHorizontal)) {
         if (m_requestedMaximizeMode & MaximizeHorizontal) {
@@ -1846,16 +1846,16 @@ bool XdgPopupWindow::hasTransientPlacementHint() const
     return true;
 }
 
-QRect XdgPopupWindow::transientPlacement(const QRect &bounds) const
+QRectF XdgPopupWindow::transientPlacement(const QRectF &bounds) const
 {
     const XdgPositioner positioner = m_shellSurface->positioner();
 
     const QSize desiredSize = positioner.size();
 
-    const QPoint parentPosition = transientFor()->framePosToClientPos(transientFor()->pos());
+    const QPointF parentPosition = transientFor()->framePosToClientPos(transientFor()->pos());
 
     // returns if a target is within the supplied bounds, optional edges argument states which side to check
-    auto inBounds = [bounds](const QRect &target, Qt::Edges edges = Qt::LeftEdge | Qt::RightEdge | Qt::TopEdge | Qt::BottomEdge) -> bool {
+    auto inBounds = [bounds](const QRectF &target, Qt::Edges edges = Qt::LeftEdge | Qt::RightEdge | Qt::TopEdge | Qt::BottomEdge) -> bool {
         if (edges & Qt::LeftEdge && target.left() < bounds.left()) {
             return false;
         }
@@ -1872,7 +1872,7 @@ QRect XdgPopupWindow::transientPlacement(const QRect &bounds) const
         return true;
     };
 
-    QRect popupRect(popupOffset(positioner.anchorRect(), positioner.anchorEdges(), positioner.gravityEdges(), desiredSize) + positioner.offset() + parentPosition, desiredSize);
+    QRectF popupRect(popupOffset(positioner.anchorRect(), positioner.anchorEdges(), positioner.gravityEdges(), desiredSize) + positioner.offset() + parentPosition, desiredSize);
 
     // if that fits, we don't need to do anything
     if (inBounds(popupRect)) {
@@ -1891,7 +1891,7 @@ QRect XdgPopupWindow::transientPlacement(const QRect &bounds) const
             if (flippedGravity & (Qt::LeftEdge | Qt::RightEdge)) {
                 flippedGravity ^= (Qt::LeftEdge | Qt::RightEdge);
             }
-            auto flippedPopupRect = QRect(popupOffset(positioner.anchorRect(), flippedAnchorEdge, flippedGravity, desiredSize) + positioner.offset() + parentPosition, desiredSize);
+            auto flippedPopupRect = QRectF(popupOffset(positioner.anchorRect(), flippedAnchorEdge, flippedGravity, desiredSize) + positioner.offset() + parentPosition, desiredSize);
 
             // if it still doesn't fit we should continue with the unflipped version
             if (inBounds(flippedPopupRect, Qt::LeftEdge | Qt::RightEdge)) {
@@ -1908,7 +1908,7 @@ QRect XdgPopupWindow::transientPlacement(const QRect &bounds) const
         }
     }
     if (positioner.resizeConstraintAdjustments() & Qt::Horizontal) {
-        QRect unconstrainedRect = popupRect;
+        QRectF unconstrainedRect = popupRect;
 
         if (!inBounds(unconstrainedRect, Qt::LeftEdge)) {
             unconstrainedRect.setLeft(bounds.left());
@@ -1933,7 +1933,7 @@ QRect XdgPopupWindow::transientPlacement(const QRect &bounds) const
             if (flippedGravity & (Qt::TopEdge | Qt::BottomEdge)) {
                 flippedGravity ^= (Qt::TopEdge | Qt::BottomEdge);
             }
-            auto flippedPopupRect = QRect(popupOffset(positioner.anchorRect(), flippedAnchorEdge, flippedGravity, desiredSize) + positioner.offset() + parentPosition, desiredSize);
+            auto flippedPopupRect = QRectF(popupOffset(positioner.anchorRect(), flippedAnchorEdge, flippedGravity, desiredSize) + positioner.offset() + parentPosition, desiredSize);
 
             // if it still doesn't fit we should continue with the unflipped version
             if (inBounds(flippedPopupRect, Qt::TopEdge | Qt::BottomEdge)) {
@@ -1950,7 +1950,7 @@ QRect XdgPopupWindow::transientPlacement(const QRect &bounds) const
         }
     }
     if (positioner.resizeConstraintAdjustments() & Qt::Vertical) {
-        QRect unconstrainedRect = popupRect;
+        QRectF unconstrainedRect = popupRect;
 
         if (!inBounds(unconstrainedRect, Qt::TopEdge)) {
             unconstrainedRect.setTop(bounds.top());
@@ -1993,10 +1993,10 @@ bool XdgPopupWindow::acceptsFocus() const
 
 XdgSurfaceConfigure *XdgPopupWindow::sendRoleConfigure() const
 {
-    const QPoint parentPosition = transientFor()->framePosToClientPos(transientFor()->pos());
-    const QPoint popupPosition = moveResizeGeometry().topLeft() - parentPosition;
+    const QPointF parentPosition = transientFor()->framePosToClientPos(transientFor()->pos());
+    const QPointF popupPosition = moveResizeGeometry().topLeft() - parentPosition;
 
-    const quint32 serial = m_shellSurface->sendConfigure(QRect(popupPosition, moveResizeGeometry().size()));
+    const quint32 serial = m_shellSurface->sendConfigure(QRect(popupPosition.toPoint(), moveResizeGeometry().size().toSize())); // DAVE rounding
 
     XdgSurfaceConfigure *configureEvent = new XdgSurfaceConfigure();
     configureEvent->bounds = moveResizeGeometry();
@@ -2020,8 +2020,8 @@ void XdgPopupWindow::initialize()
 
     updateReactive();
 
-    const QRect area = workspace()->clientArea(PlacementArea, this, workspace()->activeOutput());
-    Placement::self()->place(this, area);
+    const QRectF area = workspace()->clientArea(PlacementArea, this, workspace()->activeOutput());
+    Placement::self()->place(this, area.toRect());
     scheduleConfigure();
 }
 

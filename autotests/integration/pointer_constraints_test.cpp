@@ -35,7 +35,7 @@
 using namespace KWin;
 using namespace KWayland::Client;
 
-typedef std::function<QPoint(const QRect &)> PointerFunc;
+typedef std::function<QPointF(const QRectF &)> PointerFunc;
 Q_DECLARE_METATYPE(PointerFunc)
 
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_pointer_constraints-0");
@@ -100,10 +100,10 @@ void TestPointerConstraints::testConfinedPointer_data()
     QTest::addColumn<PointerFunc>("positionFunction");
     QTest::addColumn<int>("xOffset");
     QTest::addColumn<int>("yOffset");
-    PointerFunc bottomLeft = &QRect::bottomLeft;
-    PointerFunc bottomRight = &QRect::bottomRight;
-    PointerFunc topRight = &QRect::topRight;
-    PointerFunc topLeft = &QRect::topLeft;
+    PointerFunc bottomLeft = &QRectF::bottomLeft;
+    PointerFunc bottomRight = &QRectF::bottomRight;
+    PointerFunc topRight = &QRectF::topRight;
+    PointerFunc topLeft = &QRectF::topLeft;
 
     QTest::newRow("XdgWmBase - bottomLeft") << bottomLeft << -1 << 1;
     QTest::newRow("XdgWmBase - bottomRight") << bottomRight << 1 << 1;
@@ -147,7 +147,7 @@ void TestPointerConstraints::testConfinedPointer()
 
     // TODO: test relative motion
     QFETCH(PointerFunc, positionFunction);
-    const QPoint position = positionFunction(window->frameGeometry());
+    const QPointF position = positionFunction(window->frameGeometry());
     KWin::Cursors::self()->mouse()->setPos(position);
     QCOMPARE(pointerPositionChangedSpy.count(), 1);
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), position);

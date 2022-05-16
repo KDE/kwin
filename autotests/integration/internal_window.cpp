@@ -805,7 +805,7 @@ void InternalWindowTest::testReentrantMoveResize()
 
     // Let's pretend that there is a script that really wants the window to be at (100, 100).
     connect(window, &Window::frameGeometryChanged, this, [window]() {
-        window->moveResize(QRect(QPoint(100, 100), window->size()));
+        window->moveResize(QRectF(QPoint(100, 100), window->size()));
     });
 
     // Trigger the lambda above.

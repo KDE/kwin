@@ -12,6 +12,7 @@
 // Qt
 #include <QDebug>
 // xcb
+#include <cmath>
 #include <xcb/composite.h>
 #include <xcb/damage.h>
 #include <xcb/glx.h>
@@ -611,29 +612,33 @@ bool Shm::init()
     return true;
 }
 
-uint32_t toXNative(uint value)
+uint32_t toXNative(qreal value)
 {
-    return kwinApp()->xwaylandScale() * value;
+    //debug helper, check for things getting mangled
+    if (!qFuzzyIsNull(std::fmod(kwinApp()->xwaylandScale() * value, 1))) {
+        qCritical(KWIN_CORE) << "precious lost! floating value sent to X";
+    }
+    return std::round(kwinApp()->xwaylandScale() * value);
 }
 
-QRect toXNative(const QRect &r)
+QRect toXNative(const QRectF &r)
 {
     return QRect(toXNative(r.x()), toXNative(r.y()), toXNative(r.width()), toXNative(r.height()));
 }
 
-uint32_t fromXNative(uint value)
+qreal fromXNative(uint value)
 {
     return value / kwinApp()->xwaylandScale();
 }
 
-QRect fromXNative(const QRect &r)
+QRectF fromXNative(const QRect &r)
 {
-    return QRect(fromXNative(r.x()), fromXNative(r.y()), fromXNative(r.width()), fromXNative(r.height()));
+    return QRectF(fromXNative(r.x()), fromXNative(r.y()), fromXNative(r.width()), fromXNative(r.height()));
 }
 
-QSize fromXNative(const QSize &s)
+QSizeF fromXNative(const QSize &s)
 {
-    return QSize(fromXNative(s.width()), fromXNative(s.height()));
+    return QSizeF(fromXNative(s.width()), fromXNative(s.height()));
 }
 
 } // namespace Xcb

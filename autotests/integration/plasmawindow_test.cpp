@@ -155,7 +155,7 @@ void PlasmaWindowTest::testCreateDestroyX11PlasmaWindow()
     QVERIFY(destroyedSpy.isValid());
 
     // now shade the window
-    const QRect geoBeforeShade = window->frameGeometry();
+    const QRectF geoBeforeShade = window->frameGeometry();
     QVERIFY(geoBeforeShade.isValid());
     QVERIFY(!geoBeforeShade.isEmpty());
     workspace()->slotWindowShade();

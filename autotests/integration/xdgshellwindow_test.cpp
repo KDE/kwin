@@ -1087,7 +1087,7 @@ void TestXdgShellWindow::testXdgWindowGeometryIsntSet()
     QCOMPARE(window->bufferGeometry().size(), QSize(200, 100));
     QCOMPARE(window->frameGeometry().size(), QSize(200, 100));
 
-    const QPoint oldPosition = window->pos();
+    const QPointF oldPosition = window->pos();
 
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
@@ -1125,7 +1125,7 @@ void TestXdgShellWindow::testXdgWindowGeometryAttachBuffer()
     QCOMPARE(window->bufferGeometry().size(), QSize(200, 100));
     QCOMPARE(window->frameGeometry().size(), QSize(200, 100));
 
-    const QPoint oldPosition = window->pos();
+    const QPointF oldPosition = window->pos();
 
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
@@ -1172,7 +1172,7 @@ void TestXdgShellWindow::testXdgWindowGeometryAttachSubSurface()
     QCOMPARE(window->bufferGeometry().size(), QSize(200, 100));
     QCOMPARE(window->frameGeometry().size(), QSize(200, 100));
 
-    const QPoint oldPosition = window->pos();
+    const QPointF oldPosition = window->pos();
 
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
@@ -1484,7 +1484,7 @@ void TestXdgShellWindow::testReentrantSetFrameGeometry()
 
     // Let's pretend that there is a script that really wants the window to be at (100, 100).
     connect(window, &Window::frameGeometryChanged, this, [window]() {
-        window->moveResize(QRect(QPoint(100, 100), window->size()));
+        window->moveResize(QRectF(QPointF(100, 100), window->size()));
     });
 
     // Trigger the lambda above.

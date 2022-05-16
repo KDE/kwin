@@ -769,7 +769,7 @@ void Workspace::addWaylandWindow(Window *window)
     window->updateLayer();
 
     if (window->isPlaceable()) {
-        const QRect area = clientArea(PlacementArea, window, activeOutput());
+        const QRectF area = clientArea(PlacementArea, window, activeOutput());
         bool placementDone = false;
         if (window->isRequestedFullScreen()) {
             placementDone = true;
@@ -781,7 +781,7 @@ void Workspace::addWaylandWindow(Window *window)
             placementDone = true;
         }
         if (!placementDone) {
-            Placement::self()->place(window, area);
+            Placement::self()->place(window, area.toRect());
         }
     }
     m_allClients.append(window);
@@ -1893,8 +1893,8 @@ void Workspace::addInternalWindow(InternalWindow *window)
     window->updateLayer();
 
     if (window->isPlaceable()) {
-        const QRect area = clientArea(PlacementArea, window, workspace()->activeOutput());
-        Placement::self()->place(window, area);
+        const QRectF area = clientArea(PlacementArea, window, workspace()->activeOutput());
+        Placement::self()->place(window, area.toRect());
     }
 
     updateStackingOrder(true);
@@ -2082,16 +2082,16 @@ static bool hasOffscreenXineramaStrut(Window *window)
     return !region.isEmpty();
 }
 
-QRect Workspace::adjustClientArea(Window *window, const QRect &area) const
+QRectF Workspace::adjustClientArea(Window *window, const QRectF &area) const
 {
-    QRect adjustedArea = area;
+    QRectF adjustedArea = area;
 
-    QRect strutLeft = window->strutRect(StrutAreaLeft);
-    QRect strutRight = window->strutRect(StrutAreaRight);
-    QRect strutTop = window->strutRect(StrutAreaTop);
-    QRect strutBottom = window->strutRect(StrutAreaBottom);
+    QRectF strutLeft = window->strutRect(StrutAreaLeft);
+    QRectF strutRight = window->strutRect(StrutAreaRight);
+    QRectF strutTop = window->strutRect(StrutAreaTop);
+    QRectF strutBottom = window->strutRect(StrutAreaBottom);
 
-    QRect screenArea = clientArea(ScreenArea, window);
+    QRectF screenArea = clientArea(ScreenArea, window);
     // HACK: workarea handling is not xinerama aware, so if this strut
     // reserves place at a xinerama edge that's inside the virtual screen,
     // ignore the strut for workspace setting.
@@ -2164,7 +2164,7 @@ void Workspace::updateClientArea()
         if (!window->hasStrut()) {
             continue;
         }
-        QRect r = adjustClientArea(window, m_geometry);
+        QRectF r = adjustClientArea(window, m_geometry);
 
         // This happens sometimes when the workspace size changes and the
         // struted windows haven't repositioned yet
@@ -2197,11 +2197,11 @@ void Workspace::updateClientArea()
         const auto vds = window->isOnAllDesktops() ? desktops : window->desktops();
         for (VirtualDesktop *vd : vds) {
             if (!hasOffscreenStrut) {
-                workAreas[vd] &= r;
+                workAreas[vd] &= r.toRect(); // DAVE
             }
             restrictedAreas[vd] += strutRegion;
             for (Output *output : outputs) {
-                const auto geo = screenAreas[vd][output].intersected(adjustClientArea(window, output->geometry()));
+                const auto geo = screenAreas[vd][output].intersected(adjustClientArea(window, output->geometry()).toRect());
                 // ignore the geometry if it results in the screen getting removed completely
                 if (!geo.isEmpty()) {
                     screenAreas[vd][output] = geo;
@@ -2240,9 +2240,9 @@ void Workspace::updateClientArea()
  * geometry minus windows on the dock. Placement algorithms should
  * refer to this rather than Screens::geometry.
  */
-QRect Workspace::clientArea(clientAreaOption opt, const Output *output, const VirtualDesktop *desktop) const
+QRectF Workspace::clientArea(clientAreaOption opt, const Output *output, const VirtualDesktop *desktop) const
 {
-    QRect workArea;
+    QRectF workArea;
 
     const Output *effectiveOutput = output;
     if (is_multihead) {
@@ -2282,19 +2282,19 @@ QRect Workspace::clientArea(clientAreaOption opt, const Output *output, const Vi
             return workArea;
         }
     case FullArea:
-        return QRect(QPoint(0, 0), m_geometry.size());
+        return QRectF(QPoint(0, 0), m_geometry.size());
 
     default:
         Q_UNREACHABLE();
     }
 }
 
-QRect Workspace::clientArea(clientAreaOption opt, const Window *window) const
+QRectF Workspace::clientArea(clientAreaOption opt, const Window *window) const
 {
     return clientArea(opt, window, window->output());
 }
 
-QRect Workspace::clientArea(clientAreaOption opt, const Window *window, const Output *output) const
+QRectF Workspace::clientArea(clientAreaOption opt, const Window *window, const Output *output) const
 {
     const VirtualDesktop *desktop;
     if (window->isOnCurrentDesktop()) {
@@ -2306,7 +2306,7 @@ QRect Workspace::clientArea(clientAreaOption opt, const Window *window, const Ou
     return clientArea(opt, output, desktop);
 }
 
-QRect Workspace::clientArea(clientAreaOption opt, const Window *window, const QPoint &pos) const
+QRectF Workspace::clientArea(clientAreaOption opt, const Window *window, const QPointF &pos) const
 {
     return clientArea(opt, window, kwinApp()->platform()->outputAt(pos));
 }
@@ -2375,7 +2375,7 @@ void Workspace::setActiveOutput(Output *output)
     m_activeOutput = output;
 }
 
-void Workspace::setActiveOutput(const QPoint &pos)
+void Workspace::setActiveOutput(const QPointF &pos)
 {
     setActiveOutput(kwinApp()->platform()->outputAt(pos));
 }
@@ -2389,14 +2389,14 @@ void Workspace::setActiveOutput(const QPoint &pos)
  * effective snap zones. When 1.0, it means that the snap zones will be
  * used without change.
  */
-QPoint Workspace::adjustWindowPosition(Window *window, QPoint pos, bool unrestricted, double snapAdjust)
+QPointF Workspace::adjustWindowPosition(Window *window, QPointF pos, bool unrestricted, double snapAdjust)
 {
-    QSize borderSnapZone(options->borderSnapZone(), options->borderSnapZone());
-    QRect maxRect;
+    QSizeF borderSnapZone(options->borderSnapZone(), options->borderSnapZone());
+    QRectF maxRect;
     int guideMaximized = MaximizeRestore;
     if (window->maximizeMode() != MaximizeRestore) {
         maxRect = clientArea(MaximizeArea, window, pos + window->rect().center());
-        QRect geo = window->frameGeometry();
+        QRectF geo = window->frameGeometry();
         if (window->maximizeMode() & MaximizeHorizontal && (geo.x() == maxRect.left() || geo.right() == maxRect.right())) {
             guideMaximized |= MaximizeHorizontal;
             borderSnapZone.setWidth(qMax(borderSnapZone.width() + 2, maxRect.width() / 16));
@@ -2556,7 +2556,7 @@ QPoint Workspace::adjustWindowPosition(Window *window, QPoint pos, bool unrestri
     return pos;
 }
 
-QRect Workspace::adjustWindowSize(Window *window, QRect moveResizeGeom, Gravity gravity)
+QRectF Workspace::adjustWindowSize(Window *window, QRectF moveResizeGeom, Gravity gravity)
 {
     // adapted from adjustWindowPosition on 29May2004
     // this function is called when resizing a window and will modify
@@ -2564,7 +2564,8 @@ QRect Workspace::adjustWindowSize(Window *window, QRect moveResizeGeom, Gravity 
     if (options->windowSnapZone() || options->borderSnapZone()) { // || options->centerSnapZone )
         const bool sOWO = options->isSnapOnlyWhenOverlapping();
 
-        const QRect maxRect = clientArea(MovementArea, window, window->rect().center());
+        const QRectF maxRect = clientArea(MovementArea, window, window->rect().center());
+        // DAVE
         const int xmin = maxRect.left();
         const int xmax = maxRect.right(); // desk size
         const int ymin = maxRect.top();
@@ -2699,32 +2700,32 @@ QRect Workspace::adjustWindowSize(Window *window, QRect moveResizeGeom, Gravity 
     if ((sOWO ? (newcy < ly) : true)     \
         && (newcx == lrx || newrx == lx) \
         && qAbs(ly - newcy) < deltaY) {  \
-        deltaY = qAbs(ly - newcy + 1);   \
-        newcy = ly + 1;                  \
+        deltaY = qAbs(ly - newcy);       \
+        newcy = ly;                      \
     }
 
 #define SNAP_WINDOW_C_BOTTOM             \
     if ((sOWO ? (newry > lry) : true)    \
         && (newcx == lrx || newrx == lx) \
         && qAbs(lry - newry) < deltaY) { \
-        deltaY = qAbs(lry - newry - 1);  \
-        newry = lry - 1;                 \
+        deltaY = qAbs(lry - newry);      \
+        newry = lry;                     \
     }
 
 #define SNAP_WINDOW_C_LEFT               \
     if ((sOWO ? (newcx < lx) : true)     \
         && (newcy == lry || newry == ly) \
         && qAbs(lx - newcx) < deltaX) {  \
-        deltaX = qAbs(lx - newcx + 1);   \
-        newcx = lx + 1;                  \
+        deltaX = qAbs(lx - newcx);       \
+        newcx = lx;                      \
     }
 
 #define SNAP_WINDOW_C_RIGHT              \
     if ((sOWO ? (newrx > lrx) : true)    \
         && (newcy == lry || newry == ly) \
         && qAbs(lrx - newrx) < deltaX) { \
-        deltaX = qAbs(lrx - newrx - 1);  \
-        newrx = lrx - 1;                 \
+        deltaX = qAbs(lrx - newrx);      \
+        newrx = lrx;                     \
     }
 
                     switch (gravity) {
@@ -2786,7 +2787,7 @@ QRect Workspace::adjustWindowSize(Window *window, QRect moveResizeGeom, Gravity 
         //    // 2) Snap to the horizontal and vertical center lines of the screen
         //    }
 
-        moveResizeGeom = QRect(QPoint(newcx, newcy), QPoint(newrx, newry));
+        moveResizeGeom = QRectF(QPoint(newcx, newcy), QPoint(newrx, newry));
     }
     return moveResizeGeom;
 }

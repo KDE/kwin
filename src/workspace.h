@@ -138,10 +138,10 @@ public:
      */
     Window *findInternal(QWindow *w) const;
 
-    QRect clientArea(clientAreaOption, const Output *output, const VirtualDesktop *desktop) const;
-    QRect clientArea(clientAreaOption, const Window *window) const;
-    QRect clientArea(clientAreaOption, const Window *window, const Output *output) const;
-    QRect clientArea(clientAreaOption, const Window *window, const QPoint &pos) const;
+    QRectF clientArea(clientAreaOption, const Output *output, const VirtualDesktop *desktop) const;
+    QRectF clientArea(clientAreaOption, const Window *window) const;
+    QRectF clientArea(clientAreaOption, const Window *window, const Output *output) const;
+    QRectF clientArea(clientAreaOption, const Window *window, const QPointF &pos) const;
 
     /**
      * Returns the geometry of this Workspace, i.e. the bounding rectangle of all outputs.
@@ -153,7 +153,7 @@ public:
 
     Output *activeOutput() const;
     void setActiveOutput(Output *output);
-    void setActiveOutput(const QPoint &pos);
+    void setActiveOutput(const QPointF &pos);
 
     /**
      * Returns the active window, i.e. the window that has the focus (or None
@@ -192,9 +192,9 @@ public:
      */
     void setMoveResizeWindow(Window *window);
 
-    QRect adjustClientArea(Window *window, const QRect &area) const;
-    QPoint adjustWindowPosition(Window *window, QPoint pos, bool unrestricted, double snapAdjust = 1.0);
-    QRect adjustWindowSize(Window *window, QRect moveResizeGeom, Gravity gravity);
+    QRectF adjustClientArea(Window *window, const QRectF &area) const;
+    QPointF adjustWindowPosition(Window *window, QPointF pos, bool unrestricted, double snapAdjust = 1.0);
+    QRectF adjustWindowSize(Window *window, QRectF moveResizeGeom, Gravity gravity);
     void raiseWindow(Window *window, bool nogroup = false);
     void lowerWindow(Window *window, bool nogroup = false);
     void raiseWindowRequest(Window *window, NET::RequestSource src = NET::FromApplication, xcb_timestamp_t timestamp = 0);

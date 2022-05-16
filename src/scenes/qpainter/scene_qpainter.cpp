@@ -107,7 +107,7 @@ void SceneQPainter::render(Item *item, int mask, const QRegion &_region, const W
 {
     QRegion region = _region;
 
-    const QRect boundingRect = item->mapToGlobal(item->boundingRect());
+    const QRect boundingRect = item->mapToGlobal(item->boundingRect()).toAlignedRect();
     if (!(mask & (Scene::PAINT_WINDOW_TRANSFORMED | Scene::PAINT_SCREEN_TRANSFORMED))) {
         region &= boundingRect;
     }
@@ -198,7 +198,7 @@ void SceneQPainter::renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceIte
 void SceneQPainter::renderDecorationItem(QPainter *painter, DecorationItem *decorationItem) const
 {
     const auto renderer = static_cast<const SceneQPainterDecorationRenderer *>(decorationItem->renderer());
-    QRect dtr, dlr, drr, dbr;
+    QRectF dtr, dlr, drr, dbr;
     decorationItem->window()->layoutDecorationRects(dlr, dtr, drr, dbr);
 
     painter->drawImage(dtr, renderer->image(SceneQPainterDecorationRenderer::DecorationPart::Top));
@@ -294,13 +294,13 @@ void SceneQPainterDecorationRenderer::render(const QRegion &region)
 
 void SceneQPainterDecorationRenderer::resizeImages()
 {
-    QRect left, top, right, bottom;
+    QRectF left, top, right, bottom;
     client()->window()->layoutDecorationRects(left, top, right, bottom);
 
-    auto checkAndCreate = [this](int index, const QSize &size) {
+    auto checkAndCreate = [this](int index, const QSizeF &size) {
         auto dpr = effectiveDevicePixelRatio();
         if (m_images[index].size() != size * dpr || m_images[index].devicePixelRatio() != dpr) {
-            m_images[index] = QImage(size * dpr, QImage::Format_ARGB32_Premultiplied);
+            m_images[index] = QImage(size.toSize() * dpr, QImage::Format_ARGB32_Premultiplied); // DAVE
             m_images[index].setDevicePixelRatio(dpr);
             m_images[index].fill(Qt::transparent);
         }

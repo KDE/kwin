@@ -91,7 +91,7 @@ void DeformEffect::deform(EffectWindow *window, int mask, WindowPaintData &data,
 
 GLTexture *DeformEffectPrivate::maybeRender(EffectWindow *window, DeformOffscreenData *offscreenData)
 {
-    const QRect geometry = window->expandedGeometry();
+    const QRect geometry = window->expandedGeometry().toAlignedRect();
     QSize textureSize = geometry.size();
 
     if (const EffectScreen *screen = window->screen()) {
@@ -195,8 +195,8 @@ void DeformEffect::drawWindow(EffectWindow *window, int mask, const QRegion &reg
         return;
     }
 
-    const QRect expandedGeometry = window->expandedGeometry();
-    const QRect frameGeometry = window->frameGeometry();
+    const QRectF expandedGeometry = window->expandedGeometry();
+    const QRectF frameGeometry = window->frameGeometry();
 
     QRectF visibleRect = expandedGeometry;
     visibleRect.moveTopLeft(expandedGeometry.topLeft() - frameGeometry.topLeft());

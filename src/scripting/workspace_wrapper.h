@@ -244,8 +244,8 @@ public:
      * @returns The specified screen geometry
      * @deprecated use clientArea(ClientAreaOption option, KWin::Output *output, KWin::VirtualDesktop *desktop)
      */
-    Q_SCRIPTABLE QRect clientArea(ClientAreaOption option, int screen, int desktop) const; // TODO Plasma 6: Drop
-    Q_SCRIPTABLE QRect clientArea(ClientAreaOption option, KWin::Output *output, KWin::VirtualDesktop *desktop) const;
+    Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, int screen, int desktop) const; // TODO Plasma 6: Drop
+    Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, KWin::Output *output, KWin::VirtualDesktop *desktop) const;
     /**
      * Overloaded method for convenience.
      * @param option The type of area which should be considered
@@ -254,15 +254,15 @@ public:
      * @returns The specified screen geometry
      * @deprecated use clientArea(ClientAreaOption option, const QPoint &point, KWin::VirtualDesktop *desktop)
      */
-    Q_SCRIPTABLE QRect clientArea(ClientAreaOption option, const QPoint &point, int desktop) const; // TODO Plasma 6: Drop
-    Q_SCRIPTABLE QRect clientArea(ClientAreaOption option, const QPoint &point, KWin::VirtualDesktop *desktop) const;
+    Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, const QPoint &point, int desktop) const; // TODO Plasma 6: Drop
+    Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, const QPoint &point, KWin::VirtualDesktop *desktop) const;
     /**
      * Overloaded method for convenience.
      * @param client The Client for which the area should be retrieved
      * @returns The specified screen geometry
      */
-    Q_SCRIPTABLE QRect clientArea(ClientAreaOption option, KWin::Window *client) const;
-    Q_SCRIPTABLE QRect clientArea(ClientAreaOption option, const KWin::Window *client) const;
+    Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, KWin::Window *client) const;
+    Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, const KWin::Window *client) const;
     /**
      * Returns the name for the given @p desktop.
      */

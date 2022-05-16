@@ -144,11 +144,11 @@ void SlidingPopupsEffect::paintWindow(EffectWindow *w, int mask, QRegion region,
     }
 
     const AnimationData &animData = m_animationsData[w];
-    const int slideLength = (animData.slideLength > 0) ? animData.slideLength : m_slideLength;
+    const qreal slideLength = (animData.slideLength > 0) ? animData.slideLength : m_slideLength;
 
     const QRect screenRect = effects->clientArea(FullScreenArea, w->screen(), effects->currentDesktop());
     int splitPoint = 0;
-    const QRect geo = w->expandedGeometry();
+    const QRectF geo = w->expandedGeometry();
     const qreal t = (*animationIt).timeLine.value();
 
     switch (animData.location) {
@@ -316,7 +316,7 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow *w, long atom)
     setupAnimData(w);
 }
 
-void SlidingPopupsEffect::slotWindowFrameGeometryChanged(EffectWindow *w, const QRect &)
+void SlidingPopupsEffect::slotWindowFrameGeometryChanged(EffectWindow *w, const QRectF &)
 {
     if (w == effects->inputPanel()) {
         setupInputPanelSlide();
@@ -326,40 +326,40 @@ void SlidingPopupsEffect::slotWindowFrameGeometryChanged(EffectWindow *w, const 
 void SlidingPopupsEffect::setupAnimData(EffectWindow *w)
 {
     const QRect screenRect = effects->clientArea(FullScreenArea, w->screen(), effects->currentDesktop());
-    const QRect windowGeo = w->frameGeometry();
+    const QRectF windowGeo = w->frameGeometry();
     AnimationData &animData = m_animationsData[w];
 
     if (animData.offset == -1) {
         switch (animData.location) {
         case Location::Left:
-            animData.offset = qMax(windowGeo.left() - screenRect.left(), 0);
+            animData.offset = std::max<qreal>(windowGeo.left() - screenRect.left(), 0);
             break;
         case Location::Top:
-            animData.offset = qMax(windowGeo.top() - screenRect.top(), 0);
+            animData.offset = std::max<qreal>(windowGeo.top() - screenRect.top(), 0);
             break;
         case Location::Right:
-            animData.offset = qMax(screenRect.right() - windowGeo.right(), 0);
+            animData.offset = std::max<qreal>(screenRect.right() - windowGeo.right(), 0);
             break;
         case Location::Bottom:
         default:
-            animData.offset = qMax(screenRect.bottom() - windowGeo.bottom(), 0);
+            animData.offset = std::max<qreal>(screenRect.bottom() - windowGeo.bottom(), 0);
             break;
         }
     }
     // sanitize
     switch (animData.location) {
     case Location::Left:
-        animData.offset = qMax(windowGeo.left() - screenRect.left(), animData.offset);
+        animData.offset = std::max<qreal>(windowGeo.left() - screenRect.left(), animData.offset);
         break;
     case Location::Top:
-        animData.offset = qMax(windowGeo.top() - screenRect.top(), animData.offset);
+        animData.offset = std::max<qreal>(windowGeo.top() - screenRect.top(), animData.offset);
         break;
     case Location::Right:
-        animData.offset = qMax(screenRect.right() - windowGeo.right(), animData.offset);
+        animData.offset = std::max<qreal>(screenRect.right() - windowGeo.right(), animData.offset);
         break;
     case Location::Bottom:
     default:
-        animData.offset = qMax(screenRect.bottom() - windowGeo.bottom(), animData.offset);
+        animData.offset = std::max<qreal>(screenRect.bottom() - windowGeo.bottom(), animData.offset);
         break;
     }
 

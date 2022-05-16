@@ -1216,11 +1216,11 @@ void X11Window::NETMoveResize(int x_root, int y_root, NET::Direction direction)
         updateCursor();
     } else if (direction == NET::KeyboardMove) {
         // ignore mouse coordinates given in the message, mouse position is used by the moving algorithm
-        Cursors::self()->mouse()->setPos(frameGeometry().center());
+        Cursors::self()->mouse()->setPos(frameGeometry().center().toPoint()); // DAVE
         performMouseCommand(Options::MouseUnrestrictedMove, frameGeometry().center());
     } else if (direction == NET::KeyboardSize) {
         // ignore mouse coordinates given in the message, mouse position is used by the resizing algorithm
-        Cursors::self()->mouse()->setPos(frameGeometry().bottomRight());
+        Cursors::self()->mouse()->setPos(frameGeometry().bottomRight().toPoint()); // DAVE
         performMouseCommand(Options::MouseUnrestrictedResize, frameGeometry().bottomRight());
     }
 }
@@ -1313,7 +1313,7 @@ void Unmanaged::configureNotifyEvent(xcb_configure_notify_event_t *e)
     }
     QRect newgeom(Xcb::fromXNative(e->x), Xcb::fromXNative(e->y), Xcb::fromXNative(e->width), Xcb::fromXNative(e->height));
     if (newgeom != m_frameGeometry) {
-        QRect old = m_frameGeometry;
+        QRectF old = m_frameGeometry;
         m_clientGeometry = newgeom;
         m_frameGeometry = newgeom;
         m_bufferGeometry = newgeom;

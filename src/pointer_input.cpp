@@ -100,8 +100,8 @@ static bool screenContainsPos(const QPointF &pos)
 static QPointF confineToBoundingBox(const QPointF &pos, const QRectF &boundingBox)
 {
     return QPointF(
-        qBound(boundingBox.left(), pos.x(), boundingBox.right() - 1.0),
-        qBound(boundingBox.top(), pos.y(), boundingBox.bottom() - 1.0));
+        qBound(boundingBox.left(), pos.x(), boundingBox.right()),
+        qBound(boundingBox.top(), pos.y(), boundingBox.bottom()));
 }
 
 PointerInputRedirection::PointerInputRedirection(InputRedirection *parent)
@@ -644,7 +644,7 @@ static QRegion getConstraintRegion(Window *window, T *constraint)
 {
     const QRegion windowShape = window->inputShape();
     const QRegion intersected = constraint->region().isEmpty() ? windowShape : windowShape.intersected(constraint->region());
-    return intersected.translated(window->pos() + window->clientPos());
+    return intersected.translated(window->pos().toPoint() + window->clientPos().toPoint()); // DAVE
 }
 
 void PointerInputRedirection::setEnableConstraints(bool set)

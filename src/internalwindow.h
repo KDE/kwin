@@ -26,8 +26,8 @@ public:
 
     QString captionNormal() const override;
     QString captionSuffix() const override;
-    QSize minSize() const override;
-    QSize maxSize() const override;
+    QSizeF minSize() const override;
+    QSizeF maxSize() const override;
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     void killWindow() override;
     bool isClient() const override;
@@ -49,7 +49,7 @@ public:
     bool isHiddenInternal() const override;
     void hideClient() override;
     void showClient() override;
-    void resizeWithChecks(const QSize &size) override;
+    void resizeWithChecks(const QSizeF &size) override;
     Window *findModal(bool allow_itself = false) override;
     bool takeFocus() override;
     void setNoBorder(bool set) override;
@@ -57,8 +57,8 @@ public:
     void destroyWindow() override;
     bool hasPopupGrab() const override;
     void popupDone() override;
-    bool hitTest(const QPoint &point) const override;
-    void pointerEnterEvent(const QPoint &globalPos) override;
+    bool hitTest(const QPointF &point) const override;
+    void pointerEnterEvent(const QPointF &globalPos) override;
     void pointerLeaveEvent() override;
 
     void present(const QSharedPointer<QOpenGLFramebufferObject> fbo);
@@ -71,18 +71,18 @@ protected:
     bool belongsToSameApplication(const Window *other, SameApplicationChecks checks) const override;
     void doInteractiveResizeSync() override;
     void updateCaption() override;
-    void moveResizeInternal(const QRect &rect, MoveResizeMode mode) override;
+    void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
     WindowItem *createItem() override;
 
 private:
-    void requestGeometry(const QRect &rect);
-    void commitGeometry(const QRect &rect);
+    void requestGeometry(const QRectF &rect);
+    void commitGeometry(const QRectF &rect);
     void setCaption(const QString &caption);
     void markAsMapped();
     void syncGeometryToInternalWindow();
     void updateInternalWindowGeometry();
     void updateDecoration(bool check_workspace_pos, bool force = false);
-    void createDecoration(const QRect &oldGeometry);
+    void createDecoration(const QRectF &oldGeometry);
     void destroyDecoration();
 
     QWindow *m_handle = nullptr;

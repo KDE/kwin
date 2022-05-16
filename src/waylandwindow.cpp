@@ -96,12 +96,12 @@ Window *WaylandWindow::findModal(bool allow_itself)
     return nullptr;
 }
 
-void WaylandWindow::resizeWithChecks(const QSize &size)
+void WaylandWindow::resizeWithChecks(const QSizeF &size)
 {
-    const QRect area = workspace()->clientArea(WorkArea, this);
+    const QRectF area = workspace()->clientArea(WorkArea, this);
 
-    int width = size.width();
-    int height = size.height();
+    qreal width = size.width();
+    qreal height = size.height();
 
     // don't allow growing larger than workarea
     if (width > area.width()) {
@@ -110,7 +110,7 @@ void WaylandWindow::resizeWithChecks(const QSize &size)
     if (height > area.height()) {
         height = area.height();
     }
-    resize(QSize(width, height));
+    resize(QSizeF(width, height));
 }
 
 void WaylandWindow::killWindow()
@@ -161,7 +161,7 @@ bool WaylandWindow::belongsToDesktop() const
 
 void WaylandWindow::updateClientOutputs()
 {
-    surface()->setOutputs(waylandServer()->display()->outputsIntersecting(frameGeometry()));
+    surface()->setOutputs(waylandServer()->display()->outputsIntersecting(frameGeometry().toAlignedRect()));
 }
 
 void WaylandWindow::updateIcon()
@@ -281,16 +281,16 @@ void WaylandWindow::hideClient()
     Q_EMIT windowHidden(this);
 }
 
-QRect WaylandWindow::frameRectToBufferRect(const QRect &rect) const
+QRectF WaylandWindow::frameRectToBufferRect(const QRectF &rect) const
 {
-    return QRect(rect.topLeft(), surface()->size());
+    return QRectF(rect.topLeft(), surface()->size());
 }
 
-void WaylandWindow::updateGeometry(const QRect &rect)
+void WaylandWindow::updateGeometry(const QRectF &rect)
 {
-    const QRect oldClientGeometry = m_clientGeometry;
-    const QRect oldFrameGeometry = m_frameGeometry;
-    const QRect oldBufferGeometry = m_bufferGeometry;
+    const QRectF oldClientGeometry = m_clientGeometry;
+    const QRectF oldFrameGeometry = m_frameGeometry;
+    const QRectF oldBufferGeometry = m_bufferGeometry;
     const Output *oldOutput = m_output;
 
     m_clientGeometry = frameRectToClientRect(rect);
