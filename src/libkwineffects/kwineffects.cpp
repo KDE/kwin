@@ -609,7 +609,7 @@ void Effect::drawWindow(EffectWindow *w, int mask, const QRegion &region, Window
 void Effect::setPositionTransformations(WindowPaintData &data, QRect &region, EffectWindow *w,
                                         const QRect &r, Qt::AspectRatioMode aspect)
 {
-    QSize size = w->size();
+    QSizeF size = w->size();
     size.scale(r.size(), aspect);
     data.setXScale(size.width() / double(w->width()));
     data.setYScale(size.height() / double(w->height()));

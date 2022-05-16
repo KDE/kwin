@@ -134,8 +134,8 @@ void MinimizeAnimationTest::testMinimizeUnminimize()
     // otherwise it won't start animation.
     auto plasmaWindow = plasmaWindowCreatedSpy.last().first().value<PlasmaWindow *>();
     QVERIFY(plasmaWindow);
-    const QRect iconRect = QRect(0, 0, 42, 36);
-    plasmaWindow->setMinimizedGeometry(panelSurface.data(), iconRect);
+    const QRectF iconRect = QRect(0, 0, 42, 36);
+    plasmaWindow->setMinimizedGeometry(panelSurface.data(), iconRect.toRect());
     Test::flushWaylandConnection();
     QTRY_COMPARE(window->iconGeometry(), iconRect.translated(panel->frameGeometry().topLeft()));
 

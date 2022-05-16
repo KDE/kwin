@@ -280,7 +280,7 @@ void PlasmaSurfaceTest::testPanelTypeHasStrut()
     QVERIFY(window->isDock());
     QCOMPARE(window->frameGeometry(), QRect(0, 0, 100, 50));
     QTEST(window->hasStrut(), "expectedStrut");
-    QTEST(workspace()->clientArea(MaximizeArea, output, desktop), "expectedMaxArea");
+    QTEST(workspace()->clientArea(MaximizeArea, output, desktop).toRect(), "expectedMaxArea");
     QTEST(window->layer(), "expectedLayer");
 }
 

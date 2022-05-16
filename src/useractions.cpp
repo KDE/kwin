@@ -1128,9 +1128,9 @@ void Workspace::setupWindowShortcut(Window *window)
     m_windowKeysDialog = new ShortcutDialog(window->shortcut());
     m_windowKeysWindow = window;
     connect(m_windowKeysDialog, &ShortcutDialog::dialogDone, this, &Workspace::setupWindowShortcutDone);
-    QRect r = clientArea(ScreenArea, window);
+    QRect r = clientArea(ScreenArea, window).toRect();
     QSize size = m_windowKeysDialog->sizeHint();
-    QPoint pos = window->pos() + window->clientPos();
+    QPoint pos = window->pos().toPoint() + window->clientPos().toPoint();
     if (pos.x() + size.width() >= r.right()) {
         pos.setX(r.right() - size.width());
     }
@@ -1736,7 +1736,7 @@ void Workspace::slotWindowOperations()
     if (!m_activeWindow) {
         return;
     }
-    QPoint pos = m_activeWindow->pos() + m_activeWindow->clientPos();
+    QPoint pos = m_activeWindow->pos().toPoint() + m_activeWindow->clientPos().toPoint();
     showWindowMenu(QRect(pos, pos), m_activeWindow);
 }
 
@@ -1747,7 +1747,7 @@ void Workspace::showWindowMenu(const QRect &pos, Window *window)
 
 void Workspace::showApplicationMenu(const QRect &pos, Window *window, int actionId)
 {
-    ApplicationMenu::self()->showApplicationMenu(window->pos() + pos.bottomLeft(), window, actionId);
+    ApplicationMenu::self()->showApplicationMenu(window->pos().toPoint() + pos.bottomLeft(), window, actionId);
 }
 
 /**

@@ -58,7 +58,7 @@ private:
         connect(Compositor::self()->scene(), &Scene::frameRendered, this, &WindowStream::bufferToStream);
 
         connect(m_window, &Window::damaged, this, &WindowStream::includeDamage);
-        m_damagedRegion = m_window->visibleGeometry();
+        m_damagedRegion = m_window->visibleGeometry().toAlignedRect();
         m_window->output()->renderLoop()->scheduleRepaint();
     }
 

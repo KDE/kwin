@@ -36,11 +36,17 @@ namespace Xcb
 
 typedef xcb_window_t WindowId;
 
-uint32_t KWIN_EXPORT toXNative(uint value);
-QRect KWIN_EXPORT toXNative(const QRect &value);
-uint KWIN_EXPORT fromXNative(uint32_t value);
-QRect KWIN_EXPORT fromXNative(const QRect &value);
-QSize KWIN_EXPORT fromXNative(const QSize &value);
+uint32_t KWIN_EXPORT toXNative(qreal value);
+QRect KWIN_EXPORT toXNative(const QRectF &value);
+qreal KWIN_EXPORT fromXNative(uint32_t value);
+QRectF KWIN_EXPORT fromXNative(const QRect &value);
+QSizeF KWIN_EXPORT fromXNative(const QSize &value);
+
+/** Floors a given value to using the scale as a base
+ *  Use when flooring to ints from Xwayland
+ *  i.e floor(a/scale) * scale
+ */
+qreal KWIN_EXPORT nativeFloor(qreal value);
 
 // forward declaration of methods
 static void defineCursor(xcb_window_t window, xcb_cursor_t cursor);
@@ -584,22 +590,22 @@ public:
     {
     }
 
-    inline QRect rect()
+    inline QRectF rect()
     {
         const xcb_get_geometry_reply_t *geometry = data();
         if (!geometry) {
             return QRect();
         }
-        return QRect(Xcb::fromXNative(geometry->x), Xcb::fromXNative(geometry->y), Xcb::fromXNative(geometry->width), Xcb::fromXNative(geometry->height));
+        return QRectF(Xcb::fromXNative(geometry->x), Xcb::fromXNative(geometry->y), Xcb::fromXNative(geometry->width), Xcb::fromXNative(geometry->height));
     }
 
-    inline QSize size()
+    inline QSizeF size()
     {
         const xcb_get_geometry_reply_t *geometry = data();
         if (!geometry) {
             return QSize();
         }
-        return QSize(Xcb::fromXNative(geometry->width), Xcb::fromXNative(geometry->height));
+        return QSizeF(Xcb::fromXNative(geometry->width), Xcb::fromXNative(geometry->height));
     }
 };
 
@@ -992,7 +998,7 @@ public:
     {
         return testFlag(NormalHints::SizeHints::WindowGravity);
     }
-    QSize maxSize() const
+    QSizeF maxSize() const
     {
         if (!hasMaxSize()) {
             return QSize(INT_MAX, INT_MAX);
@@ -1000,7 +1006,7 @@ public:
         const QSize size(qMax(m_sizeHints->maxWidth, 1), qMax(m_sizeHints->maxHeight, 1));
         return fromXNative(size);
     }
-    QSize minSize() const
+    QSizeF minSize() const
     {
         if (!hasMinSize()) {
             // according to ICCCM 4.1.23 base size should be used as a fallback
@@ -1009,7 +1015,7 @@ public:
         const QSize size(m_sizeHints->minWidth, m_sizeHints->minHeight);
         return fromXNative(size);
     }
-    QSize baseSize() const
+    QSizeF baseSize() const
     {
         // Note: not using minSize as fallback
         if (!hasBaseSize()) {
@@ -1018,13 +1024,12 @@ public:
         const QSize size(m_sizeHints->baseWidth, m_sizeHints->baseHeight);
         return fromXNative(size);
     }
-    QSize resizeIncrements() const
+    QSizeF resizeIncrements() const
     {
         if (!hasResizeIncrements()) {
             return QSize(1, 1);
         }
-        const QSize size(qMax(m_sizeHints->widthInc, 1), qMax(m_sizeHints->heightInc, 1));
-        return fromXNative(size);
+        return QSizeF(qMax(fromXNative(m_sizeHints->widthInc), 1.), qMax(fromXNative(m_sizeHints->heightInc), 1.));
     }
     xcb_gravity_t windowGravity() const
     {
@@ -1477,7 +1482,7 @@ public:
      * @param values The values to be passed to xcb_create_window
      * @param parent The parent window
      */
-    Window(const QRect &geometry, uint32_t mask = 0, const uint32_t *values = nullptr, xcb_window_t parent = rootWindow());
+    Window(const QRectF &geometry, uint32_t mask = 0, const uint32_t *values = nullptr, xcb_window_t parent = rootWindow());
     /**
      * Creates an xcb_window_t and manages it. It's a convenient method to create a window with
      * depth and visual being copied from parent and border being @c 0.
@@ -1487,7 +1492,7 @@ public:
      * @param values The values to be passed to xcb_create_window
      * @param parent The parent window
      */
-    Window(const QRect &geometry, uint16_t windowClass, uint32_t mask = 0, const uint32_t *values = nullptr, xcb_window_t parent = rootWindow());
+    Window(const QRectF &geometry, uint16_t windowClass, uint32_t mask = 0, const uint32_t *values = nullptr, xcb_window_t parent = rootWindow());
     Window(const Window &other) = delete;
     ~Window();
 
@@ -1501,7 +1506,7 @@ public:
      * @param values The values to be passed to xcb_create_window
      * @param parent The parent window
      */
-    void create(const QRect &geometry, uint32_t mask = 0, const uint32_t *values = nullptr, xcb_window_t parent = rootWindow());
+    void create(const QRectF &geometry, uint32_t mask = 0, const uint32_t *values = nullptr, xcb_window_t parent = rootWindow());
     /**
      * Creates a new window for which the responsibility is taken over. If a window had been managed
      * before it is freed.
@@ -1513,7 +1518,7 @@ public:
      * @param values The values to be passed to xcb_create_window
      * @param parent The parent window
      */
-    void create(const QRect &geometry, uint16_t windowClass, uint32_t mask = 0, const uint32_t *values = nullptr, xcb_window_t parent = rootWindow());
+    void create(const QRectF &geometry, uint16_t windowClass, uint32_t mask = 0, const uint32_t *values = nullptr, xcb_window_t parent = rootWindow());
     /**
      * Frees the existing window and starts to manage the new @p window.
      * If @p destroy is @c true the new managed window will be destroyed together with this
@@ -1525,7 +1530,7 @@ public:
      * @returns @c true if a window is managed, @c false otherwise.
      */
     bool isValid() const;
-    inline const QRect &geometry() const
+    inline const QRectF &geometry() const
     {
         return m_logicGeometry;
     }
@@ -1533,17 +1538,17 @@ public:
      * Configures the window with a new geometry.
      * @param geometry The new window geometry to be used
      */
-    void setGeometry(const QRect &geometry);
-    void setGeometry(uint32_t x, uint32_t y, uint32_t width, uint32_t height);
-    void move(const QPoint &pos);
-    void move(uint32_t x, uint32_t y);
-    void resize(const QSize &size);
-    void resize(uint32_t width, uint32_t height);
+    void setGeometry(const QRectF &geometry);
+    void setGeometry(qreal x, qreal y, qreal width, qreal height);
+    void move(const QPointF &pos);
+    void move(qreal x, qreal y);
+    void resize(const QSizeF &size);
+    void resize(qreal width, qreal height);
     void raise();
     void lower();
     void map();
     void unmap();
-    void reparent(xcb_window_t parent, int x = 0, int y = 0);
+    void reparent(xcb_window_t parent, qreal x = 0, qreal y = 0);
     void changeProperty(xcb_atom_t property, xcb_atom_t type, uint8_t format, uint32_t length,
                         const void *data, uint8_t mode = XCB_PROP_MODE_REPLACE);
     void deleteProperty(xcb_atom_t property);
@@ -1568,11 +1573,11 @@ public:
     operator xcb_window_t() const;
 
 private:
-    xcb_window_t doCreate(const QRect &geometry, uint16_t windowClass, uint32_t mask = 0, const uint32_t *values = nullptr, xcb_window_t parent = rootWindow());
+    xcb_window_t doCreate(const QRectF &geometry, uint16_t windowClass, uint32_t mask = 0, const uint32_t *values = nullptr, xcb_window_t parent = rootWindow());
     void destroy();
     xcb_window_t m_window;
     bool m_destroy;
-    QRect m_logicGeometry;
+    QRectF m_logicGeometry;
 };
 
 inline Window::Window(xcb_window_t window, bool destroy)
@@ -1581,13 +1586,13 @@ inline Window::Window(xcb_window_t window, bool destroy)
 {
 }
 
-inline Window::Window(const QRect &geometry, uint32_t mask, const uint32_t *values, xcb_window_t parent)
+inline Window::Window(const QRectF &geometry, uint32_t mask, const uint32_t *values, xcb_window_t parent)
     : m_window(doCreate(geometry, XCB_COPY_FROM_PARENT, mask, values, parent))
     , m_destroy(true)
 {
 }
 
-inline Window::Window(const QRect &geometry, uint16_t windowClass, uint32_t mask, const uint32_t *values, xcb_window_t parent)
+inline Window::Window(const QRectF &geometry, uint16_t windowClass, uint32_t mask, const uint32_t *values, xcb_window_t parent)
     : m_window(doCreate(geometry, windowClass, mask, values, parent))
     , m_destroy(true)
 {
@@ -1617,18 +1622,18 @@ inline Window::operator xcb_window_t() const
     return m_window;
 }
 
-inline void Window::create(const QRect &geometry, uint16_t windowClass, uint32_t mask, const uint32_t *values, xcb_window_t parent)
+inline void Window::create(const QRectF &geometry, uint16_t windowClass, uint32_t mask, const uint32_t *values, xcb_window_t parent)
 {
     destroy();
     m_window = doCreate(geometry, windowClass, mask, values, parent);
 }
 
-inline void Window::create(const QRect &geometry, uint32_t mask, const uint32_t *values, xcb_window_t parent)
+inline void Window::create(const QRectF &geometry, uint32_t mask, const uint32_t *values, xcb_window_t parent)
 {
     create(geometry, XCB_COPY_FROM_PARENT, mask, values, parent);
 }
 
-inline xcb_window_t Window::doCreate(const QRect &geometry, uint16_t windowClass, uint32_t mask, const uint32_t *values, xcb_window_t parent)
+inline xcb_window_t Window::doCreate(const QRectF &geometry, uint16_t windowClass, uint32_t mask, const uint32_t *values, xcb_window_t parent)
 {
     m_logicGeometry = geometry;
     xcb_window_t w = xcb_generate_id(connection());
@@ -1645,12 +1650,12 @@ inline void Window::reset(xcb_window_t window, bool shouldDestroy)
     m_destroy = shouldDestroy;
 }
 
-inline void Window::setGeometry(const QRect &geometry)
+inline void Window::setGeometry(const QRectF &geometry)
 {
     setGeometry(geometry.x(), geometry.y(), geometry.width(), geometry.height());
 }
 
-inline void Window::setGeometry(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
+inline void Window::setGeometry(qreal x, qreal y, qreal width, qreal height)
 {
     m_logicGeometry.setRect(x, y, width, height);
     if (!isValid()) {
@@ -1661,12 +1666,12 @@ inline void Window::setGeometry(uint32_t x, uint32_t y, uint32_t width, uint32_t
     xcb_configure_window(connection(), m_window, mask, values);
 }
 
-inline void Window::move(const QPoint &pos)
+inline void Window::move(const QPointF &pos)
 {
     move(pos.x(), pos.y());
 }
 
-inline void Window::move(uint32_t x, uint32_t y)
+inline void Window::move(qreal x, qreal y)
 {
     m_logicGeometry.moveTo(x, y);
     if (!isValid()) {
@@ -1675,14 +1680,14 @@ inline void Window::move(uint32_t x, uint32_t y)
     moveWindow(m_window, x, y);
 }
 
-inline void Window::resize(const QSize &size)
+inline void Window::resize(const QSizeF &size)
 {
     resize(size.width(), size.height());
 }
 
-inline void Window::resize(uint32_t width, uint32_t height)
+inline void Window::resize(qreal width, qreal height)
 {
-    m_logicGeometry.setSize(QSize(width, height));
+    m_logicGeometry.setSize(QSizeF(width, height));
     if (!isValid()) {
         return;
     }
@@ -1718,7 +1723,7 @@ inline void Window::unmap()
     xcb_unmap_window(connection(), m_window);
 }
 
-inline void Window::reparent(xcb_window_t parent, int x, int y)
+inline void Window::reparent(xcb_window_t parent, qreal x, qreal y)
 {
     if (!isValid()) {
         return;

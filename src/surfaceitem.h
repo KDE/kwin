@@ -76,8 +76,8 @@ public:
     SurfaceTexture *texture() const;
 
     bool hasAlphaChannel() const;
-    QSize size() const;
-    QRect contentsRect() const;
+    QSizeF size() const;
+    QRectF contentsRect() const;
 
     bool isDiscarded() const;
     void markAsDiscarded();
@@ -88,8 +88,8 @@ public:
     virtual bool isValid() const = 0;
 
 protected:
-    QSize m_size;
-    QRect m_contentsRect;
+    QSizeF m_size;
+    QRectF m_contentsRect;
     bool m_hasAlphaChannel = false;
 
 private:

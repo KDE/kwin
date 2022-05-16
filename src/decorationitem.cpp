@@ -47,7 +47,7 @@ Decoration::DecoratedClientImpl *DecorationRenderer::client() const
 void DecorationRenderer::invalidate()
 {
     if (m_client) {
-        addDamage(m_client->window()->rect());
+        addDamage(m_client->window()->rect().toAlignedRect());
     }
     m_imageSizesDirty = true;
 }
@@ -141,17 +141,20 @@ DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Window *win
             this, &DecorationItem::discardQuads);
 
     connect(renderer(), &DecorationRenderer::damaged,
-            this, &DecorationItem::scheduleRepaint);
+            this, [this](const QRegion &region) {
+                scheduleRepaint(region);
+            });
 
-    setSize(window->size());
+    // this toSize is to match that DecoratedWindow also rounds
+    setSize(window->size().toSize());
     handleOutputChanged();
 }
 
 QRegion DecorationItem::shape() const
 {
-    QRect left, top, right, bottom;
+    QRectF left, top, right, bottom;
     m_window->layoutDecorationRects(left, top, right, bottom);
-    return QRegion(left).united(top).united(right).united(bottom);
+    return QRegion(left.toRect()).united(top.toRect()).united(right.toRect()).united(bottom.toRect());
 }
 
 QRegion DecorationItem::opaque() const
@@ -193,7 +196,7 @@ void DecorationItem::handleOutputScaleChanged()
 
 void DecorationItem::handleFrameGeometryChanged()
 {
-    setSize(m_window->size());
+    setSize(m_window->size().toSize());
 }
 
 void DecorationItem::handleWindowClosed(Window *original, Deleted *deleted)
@@ -215,10 +218,10 @@ Window *DecorationItem::window() const
     return m_window;
 }
 
-WindowQuad buildQuad(const QRect &partRect, const QPoint &textureOffset,
+WindowQuad buildQuad(const QRectF &partRect, const QPoint &textureOffset,
                      const qreal devicePixelRatio, bool rotated)
 {
-    const QRect &r = partRect;
+    const QRectF &r = partRect;
     const int p = DecorationRenderer::TexturePad;
 
     const int x0 = r.x();
@@ -257,7 +260,7 @@ WindowQuadList DecorationItem::buildQuads() const
         return WindowQuadList();
     }
 
-    QRect left, top, right, bottom;
+    QRectF left, top, right, bottom;
     const qreal devicePixelRatio = m_renderer->effectiveDevicePixelRatio();
     const int texturePad = DecorationRenderer::TexturePad;
 

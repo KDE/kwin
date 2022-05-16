@@ -81,7 +81,7 @@ void ThumbnailAsideEffect::slotWindowDamaged(EffectWindow *w, const QRegion &)
     }
 }
 
-void ThumbnailAsideEffect::slotWindowFrameGeometryChanged(EffectWindow *w, const QRect &old)
+void ThumbnailAsideEffect::slotWindowFrameGeometryChanged(EffectWindow *w, const QRectF &old)
 {
     for (const Data &d : qAsConst(windows)) {
         if (d.window == w) {
@@ -149,7 +149,7 @@ void ThumbnailAsideEffect::arrange()
     }
     int height = 0;
     QVector<int> pos(windows.size());
-    int mwidth = 0;
+    qreal mwidth = 0;
     for (const Data &d : qAsConst(windows)) {
         height += d.window->height();
         mwidth = qMax(mwidth, d.window->width());

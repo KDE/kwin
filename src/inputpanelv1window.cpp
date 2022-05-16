@@ -75,13 +75,13 @@ void KWin::InputPanelV1Window::reposition()
 
     switch (m_mode) {
     case Toplevel: {
-        QSize panelSize = surface()->size();
+        QSizeF panelSize = surface()->size();
         if (!panelSize.isValid() || panelSize.isEmpty()) {
             return;
         }
 
-        QRect availableArea;
-        QRect outputArea;
+        QRectF availableArea;
+        QRectF outputArea;
         if (m_output) {
             outputArea = m_output->geometry();
             if (waylandServer()->isScreenLocked()) {
@@ -96,7 +96,7 @@ void KWin::InputPanelV1Window::reposition()
 
         panelSize = panelSize.boundedTo(availableArea.size());
 
-        QRect geo(availableArea.bottomLeft() - QPoint{0, panelSize.height()}, panelSize);
+        QRectF geo(availableArea.bottomLeft() - QPointF{0, panelSize.height()}, panelSize);
         geo.translate((availableArea.width() - panelSize.width()) / 2, availableArea.height() - outputArea.height());
         moveResize(geo);
     } break;
@@ -113,11 +113,11 @@ void KWin::InputPanelV1Window::reposition()
             cursorRectangle = textInputV3->cursorRectangle();
         }
         if (textWindow) {
-            cursorRectangle.translate(textWindow->bufferGeometry().topLeft());
-            const QRect screen = Workspace::self()->clientArea(PlacementArea, this, cursorRectangle.bottomLeft());
+            cursorRectangle.translate(textWindow->bufferGeometry().topLeft().toPoint());
+            const QRectF screen = Workspace::self()->clientArea(PlacementArea, this, cursorRectangle.bottomLeft());
 
             // Reuse the similar logic like xdg popup
-            QRect popupRect(popupOffset(cursorRectangle, Qt::BottomEdge | Qt::LeftEdge, Qt::RightEdge | Qt::BottomEdge, surface()->size()), surface()->size());
+            QRectF popupRect(popupOffset(cursorRectangle, Qt::BottomEdge | Qt::LeftEdge, Qt::RightEdge | Qt::BottomEdge, surface()->size()), surface()->size());
 
             if (popupRect.left() < screen.left()) {
                 popupRect.moveLeft(screen.left());
@@ -127,7 +127,7 @@ void KWin::InputPanelV1Window::reposition()
             }
             if (popupRect.top() < screen.top() || popupRect.bottom() > screen.bottom()) {
                 auto flippedPopupRect =
-                    QRect(popupOffset(cursorRectangle, Qt::TopEdge | Qt::LeftEdge, Qt::RightEdge | Qt::TopEdge, surface()->size()), surface()->size());
+                    QRectF(popupOffset(cursorRectangle, Qt::TopEdge | Qt::LeftEdge, Qt::RightEdge | Qt::TopEdge, surface()->size()), surface()->size());
 
                 // if it still doesn't fit we should continue with the unflipped version
                 if (flippedPopupRect.top() >= screen.top() || flippedPopupRect.bottom() <= screen.bottom()) {
@@ -158,9 +158,9 @@ NET::WindowType InputPanelV1Window::windowType(bool, int) const
     return NET::Utility;
 }
 
-QRect InputPanelV1Window::inputGeometry() const
+QRectF InputPanelV1Window::inputGeometry() const
 {
-    return readyForPainting() ? surface()->input().boundingRect().translated(pos()) : QRect();
+    return readyForPainting() ? QRectF(surface()->input().boundingRect()).translated(pos()) : QRectF();
 }
 
 void InputPanelV1Window::setOutput(OutputInterface *outputIface)
@@ -176,7 +176,7 @@ void InputPanelV1Window::setOutput(OutputInterface *outputIface)
     }
 }
 
-void InputPanelV1Window::moveResizeInternal(const QRect &rect, MoveResizeMode mode)
+void InputPanelV1Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
 {
     Q_UNUSED(mode)
     updateGeometry(rect);

@@ -203,7 +203,7 @@ void QuickTilingTest::testQuickTiling()
     QCOMPARE(window->output(), outputs[1]);
     // quick tile should not be changed
     QCOMPARE(window->quickTileMode(), mode);
-    QTEST(window->frameGeometry(), "secondScreen");
+    QTEST(window->frameGeometry().toRect(), "secondScreen");
 
     // now try to toggle again
     window->setQuickTileMode(mode, true);
@@ -354,7 +354,7 @@ void QuickTilingTest::testQuickTilingKeyboardMove()
 
     workspace()->performWindowOperation(window, Options::UnrestrictedMoveOp);
     QCOMPARE(window, workspace()->moveResizeWindow());
-    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(49, 24));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(50, 25));
 
     QFETCH(QPoint, targetPos);
     quint32 timestamp = 1;
@@ -425,7 +425,7 @@ void QuickTilingTest::testQuickTilingPointerMove()
     QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
     workspace()->performWindowOperation(window, Options::UnrestrictedMoveOp);
     QCOMPARE(window, workspace()->moveResizeWindow());
-    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(49, 24));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(50, 25));
 
     QFETCH(QPoint, pointerPos);
     QFETCH(QSize, tileSize);
@@ -602,11 +602,11 @@ void QuickTilingTest::testX11QuickTiling()
     // now quick tile
     QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
     QVERIFY(quickTileChangedSpy.isValid());
-    const QRect origGeo = window->frameGeometry();
+    const QRectF origGeo = window->frameGeometry();
     QFETCH(QuickTileMode, mode);
     window->setQuickTileMode(mode, true);
     QCOMPARE(window->quickTileMode(), mode);
-    QTEST(window->frameGeometry(), "expectedGeometry");
+    QTEST(window->frameGeometry().toRect(), "expectedGeometry");
     QCOMPARE(window->geometryRestore(), origGeo);
     QEXPECT_FAIL("maximize", "For maximize we get two changed signals", Continue);
     QCOMPARE(quickTileChangedSpy.count(), 1);
@@ -681,7 +681,7 @@ void QuickTilingTest::testX11QuickTilingAfterVertMaximize()
     QVERIFY(window);
     QCOMPARE(window->window(), windowId);
 
-    const QRect origGeo = window->frameGeometry();
+    const QRectF origGeo = window->frameGeometry();
     QCOMPARE(window->maximizeMode(), MaximizeRestore);
     // vertically maximize the window
     window->maximize(window->maximizeMode() ^ MaximizeVertical);
@@ -695,7 +695,7 @@ void QuickTilingTest::testX11QuickTilingAfterVertMaximize()
     QFETCH(QuickTileMode, mode);
     window->setQuickTileMode(mode, true);
     QCOMPARE(window->quickTileMode(), mode);
-    QTEST(window->frameGeometry(), "expectedGeometry");
+    QTEST(window->frameGeometry().toRect(), "expectedGeometry");
     QEXPECT_FAIL("", "We get two changed events", Continue);
     QCOMPARE(quickTileChangedSpy.count(), 1);
 

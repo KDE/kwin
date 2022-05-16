@@ -263,24 +263,24 @@ static VirtualDesktop *resolveVirtualDesktop(int desktopId)
     }
 }
 
-QRect WorkspaceWrapper::clientArea(ClientAreaOption option, const QPoint &p, int desktop) const
+QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, const QPoint &p, int desktop) const
 {
     const Output *output = kwinApp()->platform()->outputAt(p);
     const VirtualDesktop *virtualDesktop = resolveVirtualDesktop(desktop);
     return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), output, virtualDesktop);
 }
 
-QRect WorkspaceWrapper::clientArea(ClientAreaOption option, const QPoint &p, VirtualDesktop *desktop) const
+QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, const QPoint &p, VirtualDesktop *desktop) const
 {
     return workspace()->clientArea(static_cast<clientAreaOption>(option), kwinApp()->platform()->outputAt(p), desktop);
 }
 
-QRect WorkspaceWrapper::clientArea(ClientAreaOption option, const KWin::Window *c) const
+QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, const KWin::Window *c) const
 {
     return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), c);
 }
 
-QRect WorkspaceWrapper::clientArea(ClientAreaOption option, KWin::Window *c) const
+QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, KWin::Window *c) const
 {
     return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), c);
 }
@@ -302,7 +302,7 @@ static Output *resolveOutput(int outputId)
     return kwinApp()->platform()->findOutput(outputId);
 }
 
-QRect WorkspaceWrapper::clientArea(ClientAreaOption option, int outputId, int desktopId) const
+QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, int outputId, int desktopId) const
 {
     VirtualDesktop *desktop = resolveDesktop(desktopId);
     if (Q_UNLIKELY(!desktop)) {
@@ -317,7 +317,7 @@ QRect WorkspaceWrapper::clientArea(ClientAreaOption option, int outputId, int de
     return workspace()->clientArea(static_cast<clientAreaOption>(option), output, desktop);
 }
 
-QRect WorkspaceWrapper::clientArea(ClientAreaOption option, Output *output, VirtualDesktop *desktop) const
+QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, Output *output, VirtualDesktop *desktop) const
 {
     return workspace()->clientArea(static_cast<clientAreaOption>(option), output, desktop);
 }

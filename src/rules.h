@@ -10,7 +10,7 @@
 #ifndef KWIN_RULES_H
 #define KWIN_RULES_H
 
-#include <QRect>
+#include <QRectF>
 #include <QVector>
 #include <netwm_def.h>
 
@@ -43,12 +43,12 @@ public:
     bool contains(const Rules *rule) const;
     void remove(Rules *rule);
     Placement::Policy checkPlacement(Placement::Policy placement) const;
-    QRect checkGeometry(QRect rect, bool init = false) const;
+    QRectF checkGeometry(QRectF rect, bool init = false) const;
     // use 'invalidPoint' with checkPosition, unlike QSize() and QRect(), QPoint() is a valid point
-    QPoint checkPosition(QPoint pos, bool init = false) const;
-    QSize checkSize(QSize s, bool init = false) const;
-    QSize checkMinSize(QSize s) const;
-    QSize checkMaxSize(QSize s) const;
+    QPointF checkPosition(QPointF pos, bool init = false) const;
+    QSizeF checkSize(QSizeF s, bool init = false) const;
+    QSizeF checkMinSize(QSizeF s) const;
+    QSizeF checkMaxSize(QSizeF s) const;
     int checkOpacityActive(int s) const;
     int checkOpacityInactive(int s) const;
     bool checkIgnoreGeometry(bool ignore, bool init = false) const;
@@ -152,12 +152,12 @@ public:
     bool isTemporary() const;
     bool discardTemporary(bool force); // removes if temporary and forced or too old
     bool applyPlacement(Placement::Policy &placement) const;
-    bool applyGeometry(QRect &rect, bool init) const;
+    bool applyGeometry(QRectF &rect, bool init) const;
     // use 'invalidPoint' with applyPosition, unlike QSize() and QRect(), QPoint() is a valid point
-    bool applyPosition(QPoint &pos, bool init) const;
-    bool applySize(QSize &s, bool init) const;
-    bool applyMinSize(QSize &s) const;
-    bool applyMaxSize(QSize &s) const;
+    bool applyPosition(QPointF &pos, bool init) const;
+    bool applySize(QSizeF &s, bool init) const;
+    bool applyMinSize(QSizeF &s) const;
+    bool applyMaxSize(QSizeF &s) const;
     bool applyOpacityActive(int &s) const;
     bool applyOpacityInactive(int &s) const;
     bool applyIgnoreGeometry(bool &ignore, bool init) const;

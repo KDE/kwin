@@ -106,9 +106,9 @@ public:
     };
     QSize elementSize(ShadowElements element) const;
 
-    QRect rect() const
+    QRectF rect() const
     {
-        return QRect(QPoint(0, 0), m_cachedSize);
+        return QRectF(QPoint(0, 0), m_cachedSize);
     }
     QMargins offset() const
     {
@@ -150,7 +150,7 @@ private:
     // shadow offsets
     QMargins m_offset;
     // caches
-    QSize m_cachedSize;
+    QSizeF m_cachedSize;
     // Decoration based shadows
     QSharedPointer<KDecoration2::DecorationShadow> m_decorationShadow;
 };

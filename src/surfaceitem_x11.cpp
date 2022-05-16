@@ -115,7 +115,7 @@ void SurfaceItemX11::destroyDamage()
     }
 }
 
-void SurfaceItemX11::handleBufferGeometryChanged(Window *window, const QRect &old)
+void SurfaceItemX11::handleBufferGeometryChanged(Window *window, const QRectF &old)
 {
     if (window->bufferGeometry().size() != old.size()) {
         discardPixmap();
@@ -131,10 +131,10 @@ void SurfaceItemX11::handleGeometryShapeChanged()
 
 QRegion SurfaceItemX11::shape() const
 {
-    const QRect clipRect = window()->clientGeometry().translated(-window()->bufferGeometry().topLeft());
+    const QRectF clipRect = window()->clientGeometry().translated(-window()->bufferGeometry().topLeft());
     const QRegion shape = window()->shapeRegion();
 
-    return shape & clipRect;
+    return shape & clipRect.toAlignedRect();
 }
 
 QRegion SurfaceItemX11::opaque() const
@@ -205,7 +205,7 @@ void SurfacePixmapX11::create()
         xcb_free_pixmap(connection, pixmap);
         return;
     }
-    const QRect bufferGeometry = window->bufferGeometry();
+    const QRectF bufferGeometry = window->bufferGeometry();
     if (windowGeometry.size() != bufferGeometry.size()) {
         qCDebug(KWIN_CORE, "Failed to create window pixmap for window 0x%x (mismatched geometry)",
                 window->window());
@@ -216,7 +216,7 @@ void SurfacePixmapX11::create()
     m_pixmap = pixmap;
     m_hasAlphaChannel = window->hasAlpha();
     m_size = bufferGeometry.size();
-    m_contentsRect = QRect(window->clientPos(), window->clientSize());
+    m_contentsRect = QRectF(window->clientPos(), window->clientSize());
 }
 
 } // namespace KWin

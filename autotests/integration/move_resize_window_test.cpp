@@ -349,7 +349,7 @@ void MoveResizeWindowTest::testPackTo()
 
     QFETCH(QString, methodCall);
     QMetaObject::invokeMethod(workspace(), methodCall.toLocal8Bit().constData());
-    QTEST(window->frameGeometry(), "expectedGeometry");
+    QTEST(window->frameGeometry().toRect(), "expectedGeometry");
     surface.reset();
     QVERIFY(Test::waitForWindowDestroyed(window));
 }
@@ -418,7 +418,7 @@ void MoveResizeWindowTest::testPackAgainstClient()
 
     QFETCH(QString, methodCall);
     QMetaObject::invokeMethod(workspace(), methodCall.toLocal8Bit().constData());
-    QTEST(window->frameGeometry(), "expectedGeometry");
+    QTEST(window->frameGeometry().toRect(), "expectedGeometry");
 }
 
 void MoveResizeWindowTest::testGrowShrink_data()
@@ -475,7 +475,7 @@ void MoveResizeWindowTest::testGrowShrink()
     QVERIFY(frameGeometryChangedSpy.isValid());
     m_connection->flush();
     QVERIFY(frameGeometryChangedSpy.wait());
-    QTEST(window->frameGeometry(), "expectedGeometry");
+    QTEST(window->frameGeometry().toRect(), "expectedGeometry");
 }
 
 void MoveResizeWindowTest::testPointerMoveEnd_data()
@@ -551,10 +551,10 @@ void MoveResizeWindowTest::testClientSideMove()
     QVERIFY(window);
 
     // move pointer into center of geometry
-    const QRect startGeometry = window->frameGeometry();
+    const QRectF startGeometry = window->frameGeometry();
     Cursors::self()->mouse()->setPos(startGeometry.center());
     QVERIFY(pointerEnteredSpy.wait());
-    QCOMPARE(pointerEnteredSpy.first().last().toPoint(), QPoint(49, 24));
+    QCOMPARE(pointerEnteredSpy.first().last().toPoint(), QPoint(50, 25));
     // simulate press
     quint32 timestamp = 1;
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);
@@ -569,7 +569,7 @@ void MoveResizeWindowTest::testClientSideMove()
     // move a bit
     QSignalSpy clientMoveStepSpy(window, &Window::clientStepUserMovedResized);
     QVERIFY(clientMoveStepSpy.isValid());
-    const QPoint startPoint = startGeometry.center();
+    const QPointF startPoint = startGeometry.center();
     const int dragDistance = QApplication::startDragDistance();
     // Why?
     Test::pointerMotion(startPoint + QPoint(dragDistance, dragDistance) + QPoint(6, 6), timestamp++);
@@ -580,7 +580,7 @@ void MoveResizeWindowTest::testClientSideMove()
     QVERIFY(pointerEnteredSpy.wait());
     QCOMPARE(window->isInteractiveMove(), false);
     QCOMPARE(window->frameGeometry(), startGeometry.translated(QPoint(dragDistance, dragDistance) + QPoint(6, 6)));
-    QCOMPARE(pointerEnteredSpy.last().last().toPoint(), QPoint(49, 24));
+    QCOMPARE(pointerEnteredSpy.last().last().toPoint(), QPoint(50, 25));
 }
 
 void MoveResizeWindowTest::testPlasmaShellSurfaceMovable_data()
@@ -657,7 +657,7 @@ void MoveResizeWindowTest::testNetMove()
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
     QCOMPARE(window->window(), windowId);
-    const QRect origGeo = window->frameGeometry();
+    const QRectF origGeo = window->frameGeometry();
 
     // let's move the cursor outside the window
     Cursors::self()->mouse()->setPos(screens()->geometry(0).center());
@@ -762,7 +762,7 @@ void MoveResizeWindowTest::testAdjustClientGeometryOfAutohidingX11Panel()
     QVERIFY(testWindow->isMovable());
     // panel is not yet hidden, we should snap against it
     QFETCH(QPoint, targetPoint);
-    QTEST(Workspace::self()->adjustWindowPosition(testWindow, targetPoint, false), "expectedAdjustedPoint");
+    QTEST(Workspace::self()->adjustWindowPosition(testWindow, targetPoint, false).toPoint(), "expectedAdjustedPoint");
 
     // now let's hide the panel
     QSignalSpy panelHiddenSpy(panel, &Window::windowHidden);
@@ -843,7 +843,7 @@ void MoveResizeWindowTest::testAdjustClientGeometryOfAutohidingWaylandPanel()
     QVERIFY(testWindow->isMovable());
     // panel is not yet hidden, we should snap against it
     QFETCH(QPoint, targetPoint);
-    QTEST(Workspace::self()->adjustWindowPosition(testWindow, targetPoint, false), "expectedAdjustedPoint");
+    QTEST(Workspace::self()->adjustWindowPosition(testWindow, targetPoint, false).toPoint(), "expectedAdjustedPoint");
 
     // now let's hide the panel
     QSignalSpy panelHiddenSpy(panel, &Window::windowHidden);
@@ -907,7 +907,7 @@ void MoveResizeWindowTest::testResizeForVirtualKeyboard()
     Test::render(surface.data(), toplevelConfigureRequestedSpy.last().first().toSize(), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
 
-    QCOMPARE(window->frameGeometry(), QRect(100, 0, 500, 101));
+    QCOMPARE(window->frameGeometry(), QRect(100, 0, 500, 100));
     window->setVirtualKeyboardGeometry(QRect());
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
@@ -951,7 +951,7 @@ void MoveResizeWindowTest::testResizeForVirtualKeyboardWithMaximize()
     // render at the new size
     Test::render(surface.data(), toplevelConfigureRequestedSpy.last().first().toSize(), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->frameGeometry(), QRect(100, 0, 500, 101));
+    QCOMPARE(window->frameGeometry(), QRect(100, 0, 500, 100));
 
     window->setMaximize(true, true);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
@@ -1004,7 +1004,7 @@ void MoveResizeWindowTest::testResizeForVirtualKeyboardWithFullScreen()
     // render at the new size
     Test::render(surface.data(), toplevelConfigureRequestedSpy.last().first().toSize(), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->frameGeometry(), QRect(100, 0, 500, 101));
+    QCOMPARE(window->frameGeometry(), QRect(100, 0, 500, 100));
 
     window->setFullScreen(true, true);
     QVERIFY(surfaceConfigureRequestedSpy.wait());

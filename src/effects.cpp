@@ -294,8 +294,8 @@ void EffectsHandlerImpl::setupWindowConnections(Window *window)
     connect(window, &Window::clientStartUserMovedResized, this, [this](Window *window) {
         Q_EMIT windowStartUserMovedResized(window->effectWindow());
     });
-    connect(window, &Window::clientStepUserMovedResized, this, [this](Window *window, const QRect &geometry) {
-        Q_EMIT windowStepUserMovedResized(window->effectWindow(), geometry);
+    connect(window, &Window::clientStepUserMovedResized, this, [this](Window *window, const QRectF &geometry) {
+        Q_EMIT windowStepUserMovedResized(window->effectWindow(), geometry.toRect());
     });
     connect(window, &Window::clientFinishUserMovedResized, this, [this](Window *window) {
         Q_EMIT windowFinishUserMovedResized(window->effectWindow());
@@ -550,7 +550,7 @@ void EffectsHandlerImpl::slotWindowDamaged(Window *window, const QRegion &r)
     Q_EMIT windowDamaged(window->effectWindow(), r);
 }
 
-void EffectsHandlerImpl::slotGeometryShapeChanged(Window *window, const QRect &old)
+void EffectsHandlerImpl::slotGeometryShapeChanged(Window *window, const QRectF &old)
 {
     // during late cleanup effectWindow() may be already NULL
     // in some functions that may still call this
@@ -560,7 +560,7 @@ void EffectsHandlerImpl::slotGeometryShapeChanged(Window *window, const QRect &o
     Q_EMIT windowGeometryShapeChanged(window->effectWindow(), old);
 }
 
-void EffectsHandlerImpl::slotFrameGeometryChanged(Window *window, const QRect &oldGeometry)
+void EffectsHandlerImpl::slotFrameGeometryChanged(Window *window, const QRectF &oldGeometry)
 {
     // effectWindow() might be nullptr during tear down of the client.
     if (window->effectWindow()) {
@@ -1247,6 +1247,11 @@ void EffectsHandlerImpl::addRepaint(const QRect &r)
     m_compositor->scene()->addRepaint(r);
 }
 
+void EffectsHandlerImpl::addRepaint(const QRectF &r)
+{
+    m_compositor->scene()->addRepaint(r.toAlignedRect());
+}
+
 void EffectsHandlerImpl::addRepaint(const QRegion &r)
 {
     m_compositor->scene()->addRepaint(r);
@@ -1274,20 +1279,20 @@ static VirtualDesktop *resolveVirtualDesktop(int desktopId)
 QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectScreen *screen, int desktop) const
 {
     const EffectScreenImpl *screenImpl = static_cast<const EffectScreenImpl *>(screen);
-    return Workspace::self()->clientArea(opt, screenImpl->platformOutput(), resolveVirtualDesktop(desktop));
+    return Workspace::self()->clientArea(opt, screenImpl->platformOutput(), resolveVirtualDesktop(desktop)).toRect();
 }
 
 QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectWindow *effectWindow) const
 {
     const Window *window = static_cast<const EffectWindowImpl *>(effectWindow)->window();
-    return Workspace::self()->clientArea(opt, window);
+    return Workspace::self()->clientArea(opt, window).toRect();
 }
 
 QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const QPoint &p, int desktop) const
 {
     const Output *output = kwinApp()->platform()->outputAt(p);
     const VirtualDesktop *virtualDesktop = resolveVirtualDesktop(desktop);
-    return Workspace::self()->clientArea(opt, output, virtualDesktop);
+    return Workspace::self()->clientArea(opt, output, virtualDesktop).toRect();
 }
 
 QRect EffectsHandlerImpl::virtualScreenGeometry() const
@@ -1939,7 +1944,7 @@ void EffectWindowImpl::unrefVisible(int reason)
 
 void EffectWindowImpl::addRepaint(const QRect &r)
 {
-    m_windowItem->scheduleRepaint(r);
+    m_windowItem->scheduleRepaint(QRegion(r));
 }
 
 void EffectWindowImpl::addRepaintFull()
@@ -1989,18 +1994,18 @@ EffectScreen *EffectWindowImpl::screen() const
 
 WINDOW_HELPER(double, opacity, opacity)
 WINDOW_HELPER(bool, hasAlpha, hasAlpha)
-WINDOW_HELPER(int, x, x)
-WINDOW_HELPER(int, y, y)
-WINDOW_HELPER(int, width, width)
-WINDOW_HELPER(int, height, height)
-WINDOW_HELPER(QPoint, pos, pos)
-WINDOW_HELPER(QSize, size, size)
-WINDOW_HELPER(QRect, geometry, frameGeometry)
-WINDOW_HELPER(QRect, frameGeometry, frameGeometry)
-WINDOW_HELPER(QRect, bufferGeometry, bufferGeometry)
-WINDOW_HELPER(QRect, clientGeometry, clientGeometry)
-WINDOW_HELPER(QRect, expandedGeometry, visibleGeometry)
-WINDOW_HELPER(QRect, rect, rect)
+WINDOW_HELPER(qreal, x, x)
+WINDOW_HELPER(qreal, y, y)
+WINDOW_HELPER(qreal, width, width)
+WINDOW_HELPER(qreal, height, height)
+WINDOW_HELPER(QPointF, pos, pos)
+WINDOW_HELPER(QSizeF, size, size)
+WINDOW_HELPER(QRectF, geometry, frameGeometry)
+WINDOW_HELPER(QRectF, frameGeometry, frameGeometry)
+WINDOW_HELPER(QRectF, bufferGeometry, bufferGeometry)
+WINDOW_HELPER(QRectF, clientGeometry, clientGeometry)
+WINDOW_HELPER(QRectF, expandedGeometry, visibleGeometry)
+WINDOW_HELPER(QRectF, rect, rect)
 WINDOW_HELPER(int, desktop, desktop)
 WINDOW_HELPER(bool, isDesktop, isDesktop)
 WINDOW_HELPER(bool, isDock, isDock)
@@ -2059,7 +2064,7 @@ MANAGED_HELPER(bool, isMovable, isMovable, false)
 MANAGED_HELPER(bool, isMovableAcrossScreens, isMovableAcrossScreens, false)
 MANAGED_HELPER(bool, isUserMove, isInteractiveMove, false)
 MANAGED_HELPER(bool, isUserResize, isInteractiveResize, false)
-MANAGED_HELPER(QRect, iconGeometry, iconGeometry, QRect())
+MANAGED_HELPER(QRectF, iconGeometry, iconGeometry, QRectF())
 MANAGED_HELPER(bool, isSpecialWindow, isSpecialWindow, true)
 MANAGED_HELPER(bool, acceptsFocus, wantsInput, true) // We don't actually know...
 MANAGED_HELPER(QIcon, icon, icon, QIcon())
@@ -2080,9 +2085,9 @@ QString EffectWindowImpl::windowClass() const
     return m_window->resourceName() + QLatin1Char(' ') + m_window->resourceClass();
 }
 
-QRect EffectWindowImpl::contentsRect() const
+QRectF EffectWindowImpl::contentsRect() const
 {
-    return QRect(m_window->clientPos(), m_window->clientSize());
+    return QRectF(m_window->clientPos(), m_window->clientSize());
 }
 
 NET::WindowType EffectWindowImpl::windowType() const
@@ -2090,7 +2095,7 @@ NET::WindowType EffectWindowImpl::windowType() const
     return m_window->windowType();
 }
 
-QSize EffectWindowImpl::basicUnit() const
+QSizeF EffectWindowImpl::basicUnit() const
 {
     if (auto window = qobject_cast<X11Window *>(m_window)) {
         return window->basicUnit();
@@ -2109,7 +2114,7 @@ void EffectWindowImpl::setWindowItem(WindowItem *item)
     m_windowItem = item;
 }
 
-QRect EffectWindowImpl::decorationInnerRect() const
+QRectF EffectWindowImpl::decorationInnerRect() const
 {
     return m_window->rect() - m_window->frameMargins();
 }

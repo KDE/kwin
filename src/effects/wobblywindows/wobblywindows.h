@@ -167,7 +167,7 @@ private:
 
         // for resizing. Only sides that have moved will wobble
         bool can_wobble_top, can_wobble_left, can_wobble_right, can_wobble_bottom;
-        QRect resize_original_rect;
+        QRectF resize_original_rect;
 
         std::chrono::milliseconds clock;
     };
@@ -196,7 +196,7 @@ private:
     bool m_moveWobble;
     bool m_resizeWobble;
 
-    void initWobblyInfo(WindowWobblyInfos &wwi, QRect geometry) const;
+    void initWobblyInfo(WindowWobblyInfos &wwi, QRectF geometry) const;
     void freeWobblyInfo(WindowWobblyInfos &wwi) const;
 
     WobblyWindowsEffect::Pair computeBezierPoint(const WindowWobblyInfos &wwi, Pair point) const;

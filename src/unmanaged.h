@@ -29,7 +29,7 @@ public:
     int desktop() const override;
     QStringList activities() const override;
     QVector<VirtualDesktop *> desktops() const override;
-    QPoint clientPos() const override;
+    QPointF clientPos() const override;
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     bool isOutline() const override;
     bool isUnmanaged() const override;
@@ -52,9 +52,13 @@ public:
     void closeWindow() override { /* nothing to do */ }
     bool acceptsFocus() const override { return false; }
     bool belongsToSameApplication(const Window *other, SameApplicationChecks /*checks*/) const override { return other == this; }
-    void moveResizeInternal(const QRect & /*rect*/, KWin::Window::MoveResizeMode /*mode*/) override { /* nothing to do */ }
+    void moveResizeInternal(const QRectF & /*rect*/, KWin::Window::MoveResizeMode /*mode*/) override
+    { /* nothing to do */
+    }
     void updateCaption() override { /* nothing to do */ }
-    void resizeWithChecks(const QSize&) override { /* nothing to do */ }
+    void resizeWithChecks(const QSizeF &) override
+    { /* nothing to do */
+    }
     WindowItem *createItem() override;
 
 public Q_SLOTS:

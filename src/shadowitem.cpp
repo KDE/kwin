@@ -37,7 +37,7 @@ Shadow *ShadowItem::shadow() const
 
 void ShadowItem::updateGeometry()
 {
-    const QRect rect = m_shadow->rect() + m_shadow->offset();
+    const QRectF rect = m_shadow->rect() + m_shadow->offset();
 
     setPosition(rect.topLeft());
     setSize(rect.size());

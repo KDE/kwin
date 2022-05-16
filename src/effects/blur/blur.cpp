@@ -428,7 +428,7 @@ QRegion BlurEffect::decorationBlurRegion(const EffectWindow *w) const
         return QRegion();
     }
 
-    QRegion decorationRegion = QRegion(w->decoration()->rect()) - w->decorationInnerRect();
+    QRegion decorationRegion = QRegion(w->decoration()->rect()) - w->decorationInnerRect().toRect();
     //! we return only blurred regions that belong to decoration region
     return decorationRegion.intersected(w->decoration()->blurRegion());
 }
@@ -460,11 +460,11 @@ QRegion BlurEffect::blurRegion(const EffectWindow *w) const
             if (w->decorationHasAlpha() && decorationSupportsBlurBehind(w)) {
                 region = decorationBlurRegion(w);
             }
-            region |= appRegion.translated(w->contentsRect().topLeft()) & w->decorationInnerRect();
+            region |= appRegion.translated(w->contentsRect().topLeft().toPoint()) & w->decorationInnerRect().toRect();
         } else {
             // An empty region means that the blur effect should be enabled
             // for the whole window.
-            region = w->rect();
+            region = w->rect().toRect();
         }
     } else if (w->decorationHasAlpha() && decorationSupportsBlurBehind(w)) {
         // If the client hasn't specified a blur region, we'll only enable
@@ -560,7 +560,7 @@ void BlurEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::
 
     // in case this window has regions to be blurred
     const QRect screen = effects->virtualScreenGeometry();
-    const QRegion blurArea = blurRegion(w).translated(w->pos()) & screen;
+    const QRegion blurArea = blurRegion(w).translated(w->pos().toPoint()) & screen;
     const QRegion expandedBlur = (w->isDock() ? blurArea : expand(blurArea)) & screen;
 
     // if this window or a window underneath the blurred area is painted again we have to
@@ -614,7 +614,7 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region, Wi
 {
     if (shouldBlur(w, mask, data)) {
         const QRect screen = effects->renderTargetRect();
-        QRegion shape = region & blurRegion(w).translated(w->pos()) & screen;
+        QRegion shape = region & blurRegion(w).translated(w->pos().toPoint()) & screen;
 
         // let's do the evil parts - someone wants to blur behind a transformed window
         const bool translated = data.xTranslation() || data.yTranslation();
@@ -641,7 +641,7 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region, Wi
         const bool transientForIsDock = (modal ? modal->isDock() : false);
 
         if (!shape.isEmpty()) {
-            doBlur(shape, screen, data.opacity(), data.screenProjectionMatrix(), w->isDock() || transientForIsDock, w->frameGeometry());
+            doBlur(shape, screen, data.opacity(), data.screenProjectionMatrix(), w->isDock() || transientForIsDock, w->frameGeometry().toRect());
         }
     }
 

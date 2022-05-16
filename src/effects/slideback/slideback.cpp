@@ -64,9 +64,9 @@ void SlideBackEffect::windowRaised(EffectWindow *w)
         } else {
             if (isWindowUsable(tmp) && tmp->isOnCurrentDesktop() && w->isOnCurrentDesktop()) {
                 // Do we have to move it?
-                if (intersects(w, tmp->frameGeometry())) {
+                if (intersects(w, tmp->frameGeometry().toRect())) {
                     QRect slideRect;
-                    slideRect = getSlideDestination(getModalGroupGeometry(w), tmp->frameGeometry());
+                    slideRect = getSlideDestination(getModalGroupGeometry(w), tmp->frameGeometry().toRect());
                     effects->setElevatedWindow(tmp, true);
                     elevatedList.append(tmp);
                     motionManager.manage(tmp);
@@ -190,7 +190,7 @@ void SlideBackEffect::postPaintWindow(EffectWindow *w)
                 if (coveringWindows.contains(w)) {
                     EffectWindowList tmpList;
                     for (EffectWindow *tmp : qAsConst(elevatedList)) {
-                        QRect elevatedGeometry = tmp->frameGeometry();
+                        QRect elevatedGeometry = tmp->frameGeometry().toRect();
                         if (motionManager.isManaging(tmp)) {
                             elevatedGeometry = motionManager.transformedGeometry(tmp).toAlignedRect();
                         }
@@ -220,7 +220,7 @@ void SlideBackEffect::postPaintWindow(EffectWindow *w)
                     }
                 } else {
                     // Move the window back where it belongs
-                    motionManager.moveWindow(w, w->frameGeometry());
+                    motionManager.moveWindow(w, w->frameGeometry().toRect());
                     destinationList.remove(w);
                 }
             }
@@ -309,7 +309,7 @@ EffectWindowList SlideBackEffect::usableWindows(const EffectWindowList &allWindo
 {
     EffectWindowList retList;
     auto isWindowVisible = [](const EffectWindow *window) {
-        return window && effects->virtualScreenGeometry().intersects(window->frameGeometry());
+        return window && effects->virtualScreenGeometry().intersects(window->frameGeometry().toAlignedRect());
     };
     for (EffectWindow *tmp : qAsConst(allWindows)) {
         if (isWindowUsable(tmp) && isWindowVisible(tmp)) {
@@ -321,7 +321,7 @@ EffectWindowList SlideBackEffect::usableWindows(const EffectWindowList &allWindo
 
 QRect SlideBackEffect::getModalGroupGeometry(EffectWindow *w)
 {
-    QRect modalGroupGeometry = w->frameGeometry();
+    QRect modalGroupGeometry = w->frameGeometry().toRect();
     if (w->isModal()) {
         const auto mainWindows = w->mainWindows();
         for (EffectWindow *modalWindow : mainWindows) {
