@@ -22,7 +22,12 @@ class ViewportInterface;
 
 struct SurfaceState
 {
+    SurfaceState();
+
     void mergeInto(SurfaceState *target);
+
+    quint32 serial = 0;
+    quint32 locks = 0;
 
     QRegion damage = QRegion();
     QRegion bufferDamage = QRegion();
@@ -86,12 +91,11 @@ public:
     void installPointerConstraint(ConfinedPointerV1Interface *confinement);
     void installIdleInhibitor(IdleInhibitorV1Interface *inhibitor);
 
-    void commitToCache();
-    void commitFromCache();
-
-    void commitSubSurface();
     QMatrix4x4 buildSurfaceToBufferMatrix();
     void applyState(SurfaceState *next);
+
+    quint32 lockState(SurfaceState *state);
+    void unlockState(quint32 serial);
 
     bool computeEffectiveMapped() const;
     void updateEffectiveMapped();
@@ -99,9 +103,9 @@ public:
     CompositorInterface *compositor;
     SurfaceInterface *q;
     SurfaceRole *role = nullptr;
-    SurfaceState current;
-    SurfaceState pending;
-    SurfaceState cached;
+    SurfaceState *current;
+    SurfaceState *pending;
+    QList<SurfaceState *> stashed;
     SubSurfaceInterface *subSurface = nullptr;
     QMatrix4x4 surfaceToBufferMatrix;
     QMatrix4x4 bufferToSurfaceMatrix;
@@ -112,7 +116,6 @@ public:
     QRegion opaqueRegion;
     ClientBuffer *bufferRef = nullptr;
     bool mapped = false;
-    bool hasCacheState = false;
 
     QVector<OutputInterface *> outputs;
 

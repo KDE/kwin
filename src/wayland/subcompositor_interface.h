@@ -115,7 +115,11 @@ Q_SIGNALS:
 
 private:
     SubSurfaceInterface(SurfaceInterface *surface, SurfaceInterface *parent, wl_resource *resource);
+
+    void commit();
+
     QScopedPointer<SubSurfaceInterfacePrivate> d;
+    friend class SurfaceInterfacePrivate;
     friend class SubSurfaceInterfacePrivate;
     friend class SubCompositorInterfacePrivate;
 };

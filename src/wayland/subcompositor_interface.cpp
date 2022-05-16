@@ -164,7 +164,10 @@ void SubSurfaceInterfacePrivate::subsurface_set_desync(Resource *)
     mode = SubSurfaceInterface::Mode::Desynchronized;
     if (!q->isSynchronized()) {
         auto surfacePrivate = SurfaceInterfacePrivate::get(surface);
-        surfacePrivate->commitFromCache();
+        while (!locks.isEmpty()) {
+            SubSurfaceStateLock lock = locks.takeFirst();
+            surfacePrivate->unlockState(lock.serial);
+        }
     }
     Q_EMIT q->modeChanged(SubSurfaceInterface::Mode::Desynchronized);
 }
@@ -173,7 +176,7 @@ void SubSurfaceInterfacePrivate::commit()
 {
 }
 
-void SubSurfaceInterfacePrivate::parentCommit()
+void SubSurfaceInterfacePrivate::parentCommit(quint32 serial)
 {
     if (hasPendingPosition) {
         hasPendingPosition = false;
@@ -183,7 +186,10 @@ void SubSurfaceInterfacePrivate::parentCommit()
 
     if (mode == SubSurfaceInterface::Mode::Synchronized) {
         auto surfacePrivate = SurfaceInterfacePrivate::get(surface);
-        surfacePrivate->commitFromCache();
+        while (!locks.isEmpty() && locks[0].parentSerial == serial) {
+            SubSurfaceStateLock lock = locks.takeFirst();
+            surfacePrivate->unlockState(lock.serial);
+        }
     }
 }
 
@@ -259,6 +265,24 @@ SurfaceInterface *SubSurfaceInterface::mainSurface() const
         return parentPrivate->subSurface->mainSurface();
     }
     return d->parent;
+}
+
+void SubSurfaceInterface::commit()
+{
+    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(d->surface);
+    if (isSynchronized()) {
+        const quint32 serial = surfacePrivate->lockState(surfacePrivate->pending);
+        const quint32 parentSerial = SurfaceInterfacePrivate::get(d->parent)->pending->serial;
+        d->locks.append(SubSurfaceStateLock{
+            .serial = serial,
+            .parentSerial = parentSerial,
+        });
+    } else {
+        while (!d->locks.isEmpty()) {
+            SubSurfaceStateLock lock = d->locks.takeFirst();
+            surfacePrivate->unlockState(lock.serial);
+        }
+    }
 }
 
 } // namespace KWaylandServer
