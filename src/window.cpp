@@ -905,7 +905,7 @@ Layer Window::belongsToLayer() const
     if (isUnmanaged() || isInternal()) {
         return UnmanagedLayer;
     }
-    if (isLockScreen()) {
+    if (isLockScreen() && !waylandServer()) {
         return UnmanagedLayer;
     }
     if (isInputMethod()) {
