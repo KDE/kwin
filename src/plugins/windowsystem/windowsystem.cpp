@@ -9,6 +9,12 @@
 
 #include <QGuiApplication>
 #include <QWindow>
+#include <wayland/display.h>
+#include <wayland/seat_interface.h>
+#include <wayland_server.h>
+#include <window.h>
+#include <workspace.h>
+#include <xdgactivationv1.h>
 
 Q_DECLARE_METATYPE(NET::WindowType)
 
@@ -17,7 +23,7 @@ namespace KWin
 
 WindowSystem::WindowSystem()
     : QObject()
-    , KWindowSystemPrivate()
+    , KWindowSystemPrivateV2()
 {
 }
 
@@ -313,4 +319,30 @@ QRect WindowSystem::workArea(int desktop)
     return {};
 }
 
+void WindowSystem::requestToken(QWindow *win, uint32_t serial, const QString &appId)
+{
+    Q_UNUSED(win); // it's coming from within kwin, it doesn't matter the window
+
+    auto seat = KWin::waylandServer()->seat();
+    auto token = KWin::waylandServer()->xdgActivationIntegration()->requestToken(true, nullptr, seat->display()->serial(), seat, appId);
+    // Ensure that xdgActivationTokenArrived is always emitted asynchronously
+    QTimer::singleShot(0, [serial, token] {
+        Q_EMIT KWindowSystem::self()->xdgActivationTokenArrived(serial, token);
+    });
+}
+
+void WindowSystem::setCurrentToken(const QString &token)
+{
+    Q_UNUSED(token)
+    // KWin cannot activate own windows
+}
+
+quint32 WindowSystem::lastInputSerial(QWindow *window)
+{
+    auto w = workspace()->findInternal(window);
+    if (!w) {
+        return 0;
+    }
+    return w->lastUsageSerial();
+}
 }

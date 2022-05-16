@@ -36,13 +36,15 @@ public:
         ~ActivationToken();
 
         const QString token;
-        const KWaylandServer::ClientConnection *client;
+        const bool isPrivileged;
         QPointer<const KWaylandServer::SurfaceInterface> surface;
         const uint serial;
         const KWaylandServer::SeatInterface *seat;
         QString applicationId;
         QSharedPointer<KWaylandServer::PlasmaWindowActivationInterface> activation;
     };
+
+    QString requestToken(bool isPrivileged, KWaylandServer::SurfaceInterface *surface, uint serial, KWaylandServer::SeatInterface *seat, const QString &appId);
     void activateSurface(KWaylandServer::SurfaceInterface *surface, const QString &token);
 
 private:

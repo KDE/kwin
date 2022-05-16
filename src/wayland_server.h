@@ -55,6 +55,7 @@ namespace KWin
 
 class Window;
 class Output;
+class XdgActivationV1Integration;
 class XdgPopupWindow;
 class XdgSurfaceWindow;
 class XdgToplevelWindow;
@@ -232,6 +233,11 @@ public:
      */
     QString socketName() const;
 
+    XdgActivationV1Integration *xdgActivationIntegration() const
+    {
+        return m_xdgActivationIntegration;
+    }
+
 Q_SIGNALS:
     void windowAdded(KWin::Window *);
     void windowRemoved(KWin::Window *);
@@ -287,6 +293,7 @@ private:
     KWaylandServer::XdgForeignV2Interface *m_XdgForeign = nullptr;
     KWaylandServer::KeyStateInterface *m_keyState = nullptr;
     KWaylandServer::PrimaryOutputV1Interface *m_primary = nullptr;
+    XdgActivationV1Integration *m_xdgActivationIntegration = nullptr;
     QList<Window *> m_windows;
     InitializationFlags m_initFlags;
     QHash<Output *, WaylandOutput *> m_waylandOutputs;

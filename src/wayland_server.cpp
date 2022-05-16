@@ -492,7 +492,7 @@ bool WaylandServer::init(InitializationFlags flags)
 
     auto activation = new KWaylandServer::XdgActivationV1Interface(m_display, this);
     auto init = [this, activation] {
-        new XdgActivationV1Integration(activation, this);
+        m_xdgActivationIntegration = new XdgActivationV1Integration(activation, this);
     };
     if (Workspace::self()) {
         init();

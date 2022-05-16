@@ -25,6 +25,7 @@ namespace KWin
 
 static bool isPrivilegedInWindowManagement(const ClientConnection *client)
 {
+    Q_ASSERT(client);
     auto requestedInterfaces = client->property("requestedInterfaces").toStringList();
     return requestedInterfaces.contains(QLatin1String("org_kde_plasma_window_management"));
 }
@@ -50,28 +51,34 @@ XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface 
     });
     activation->setActivationTokenCreator([this](ClientConnection *client, SurfaceInterface *surface, uint serial, SeatInterface *seat, const QString &appId) -> QString {
         Workspace *ws = Workspace::self();
-        if (ws->activeWindow() && ws->activeWindow()->surface() != surface && !isPrivilegedInWindowManagement(client)) {
+        Q_ASSERT(client); // Should always be available as it's coming straight from the wayland implementation
+        const bool isPrivileged = isPrivilegedInWindowManagement(client);
+        if (!isPrivileged && ws->activeWindow() && ws->activeWindow()->surface() != surface) {
             qCWarning(KWIN_CORE) << "Cannot grant a token to" << client;
             return QStringLiteral("not-granted-666");
         }
 
-        static int i = 0;
-        const auto newToken = QStringLiteral("kwin-%1").arg(++i);
-
-        if (m_currentActivationToken) {
-            clear();
-        }
-        QSharedPointer<PlasmaWindowActivationInterface> pwActivation(waylandServer()->plasmaActivationFeedback()->createActivation(appId));
-        m_currentActivationToken.reset(new ActivationToken{newToken, client, surface, serial, seat, appId, pwActivation});
-        if (!appId.isEmpty()) {
-            const auto icon = QIcon::fromTheme(Window::iconFromDesktopFile(appId), QIcon::fromTheme(QStringLiteral("system-run")));
-            Q_EMIT effects->startupAdded(m_currentActivationToken->token, icon);
-        }
-
-        return newToken;
+        return requestToken(isPrivileged, surface, serial, seat, appId);
     });
 
     connect(activation, &XdgActivationV1Interface::activateRequested, this, &XdgActivationV1Integration::activateSurface);
+}
+
+QString XdgActivationV1Integration::requestToken(bool isPrivileged, SurfaceInterface *surface, uint serial, SeatInterface *seat, const QString &appId)
+{
+    static int i = 0;
+    const auto newToken = QStringLiteral("kwin-%1").arg(++i);
+
+    if (m_currentActivationToken) {
+        clear();
+    }
+    QSharedPointer<PlasmaWindowActivationInterface> pwActivation(waylandServer()->plasmaActivationFeedback()->createActivation(appId));
+    m_currentActivationToken.reset(new ActivationToken{newToken, isPrivileged, surface, serial, seat, appId, pwActivation});
+    if (!appId.isEmpty()) {
+        const auto icon = QIcon::fromTheme(Window::iconFromDesktopFile(appId), QIcon::fromTheme(QStringLiteral("system-run")));
+        Q_EMIT effects->startupAdded(m_currentActivationToken->token, icon);
+    }
+    return newToken;
 }
 
 void XdgActivationV1Integration::activateSurface(SurfaceInterface *surface, const QString &token)
@@ -91,7 +98,7 @@ void XdgActivationV1Integration::activateSurface(SurfaceInterface *surface, cons
 
     auto ownerWindow = waylandServer()->findWindow(m_currentActivationToken->surface);
     qCDebug(KWIN_CORE) << "activating" << window << surface << "on behalf of" << m_currentActivationToken->surface << "into" << ownerWindow;
-    if (ws->activeWindow() == ownerWindow || ws->activeWindow()->lastUsageSerial() < m_currentActivationToken->serial || isPrivilegedInWindowManagement(m_currentActivationToken->client)) {
+    if (ws->activeWindow() == ownerWindow || ws->activeWindow()->lastUsageSerial() < m_currentActivationToken->serial || m_currentActivationToken->isPrivileged) {
         ws->activateWindow(window);
     } else {
         qCWarning(KWIN_CORE) << "Activation requested while owner isn't active" << (ownerWindow ? ownerWindow->desktopFileName() : "null")
