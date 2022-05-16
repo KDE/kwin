@@ -6,7 +6,9 @@
         "Description[ca]": "Configura les barres de títols i les vores de les finestres",
         "Description[es]": "Configurar las barras de título y los bordes de las ventanas",
         "Description[fr]": "Configurer les barres de titre et les bordures des fenêtres",
+        "Description[ko]": "창 제목 표시줄과 경계선 설정",
         "Description[nl]": "Titelbalken en randen van venster configureren",
+        "Description[pl]": "Ustawienia pasków tytułów i obramowań okien",
         "Description[sl]": "Konfiguriraj naslovne vrstice in meje oken",
         "Description[sv]": "Anpassa namnlister och kanter för fönster",
         "Description[ta]": "சாளர விளிம்புகளையும் தலைப்புப்பட்டைகளையும் அமையுங்கள்",
@@ -14,6 +16,7 @@
         "Description[uk]": "Налаштовування смужок заголовків та рамок вікон",
         "Description[vi]": "Cấu hình thanh tiêu đề và viền của cửa sổ",
         "Description[x-test]": "xxConfigure window titlebars and bordersxx",
+        "Description[zh_CN]": "配置窗口标题栏和边框",
         "FormFactors": [
             "desktop",
             "tablet"
@@ -24,7 +27,9 @@
         "Name[ca]": "Decoració de les finestres",
         "Name[es]": "Decoraciones de las ventanas",
         "Name[fr]": "Décorations de fenêtres",
+        "Name[ko]": "창 장식",
         "Name[nl]": "Vensterdecoraties",
+        "Name[pl]": "Wygląd okien",
         "Name[sl]": "Dekoracije oken",
         "Name[sv]": "Fönsterdekorationer",
         "Name[ta]": "சாளர விளிம்புகள்",
@@ -32,6 +37,7 @@
         "Name[uk]": "Обрамлення вікон",
         "Name[vi]": "Trang trí cửa sổ",
         "Name[x-test]": "xxWindow Decorationsxx",
+        "Name[zh_CN]": "窗口装饰元素",
         "ServiceTypes": [
             "KCModule"
         ]

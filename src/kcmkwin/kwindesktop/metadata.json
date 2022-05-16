@@ -6,7 +6,9 @@
         "Description[ca]": "Configura la navegació, el nombre i la disposició dels escriptoris virtuals",
         "Description[es]": "Configurar la navegación, el número y la disposición de los escritorios virtuales",
         "Description[fr]": "Configurer la navigation, le nombre et la disposition des bureaux virtuels",
+        "Description[ko]": "가상 바탕 화면 탐색, 개수, 레이아웃 설정",
         "Description[nl]": "Navigatie, aantal en indeling van virtuele bureaubladen configureren",
+        "Description[pl]": "Ustawienia poruszania się, liczby oraz układu wirtualnych klawiatur",
         "Description[sl]": "Konfiguriraj krmarjenje, število in postavitev navideznih namizij",
         "Description[sv]": "Anpassa navigering, antal och layout av virtuella skrivbord",
         "Description[ta]": "பணிமேடைகளின் எண்ணிக்கை, தளவமைப்பு, மற்றும் அவற்றுக்கிடையேயான உலாவலை அமைக்கும்",
@@ -14,6 +16,7 @@
         "Description[uk]": "Налаштовування навігації, кількості та компонування віртуальних стільниць",
         "Description[vi]": "Cấu hình điều hướng, số lượng và bố cục của các bàn làm việc ảo",
         "Description[x-test]": "xxConfigure navigation, number and layout of virtual desktopsxx",
+        "Description[zh_CN]": "配置虚拟桌面的数量、排列方式和切换方式",
         "FormFactors": [
             "desktop"
         ],
@@ -23,7 +26,9 @@
         "Name[ca]": "Escriptoris virtuals",
         "Name[es]": "Escritorios virtuales",
         "Name[fr]": "Bureaux virtuels",
+        "Name[ko]": "가상 바탕 화면",
         "Name[nl]": "Virtuele bureaubladen",
+        "Name[pl]": "Pulpity wirtualne",
         "Name[sl]": "Navidezna namizja",
         "Name[sv]": "Virtuella skrivbord",
         "Name[ta]": "மெய்நிகர் பணிமேடைகள்",
@@ -31,6 +36,7 @@
         "Name[uk]": "Віртуальні стільниці",
         "Name[vi]": "Bàn làm việc ảo",
         "Name[x-test]": "xxVirtual Desktopsxx",
+        "Name[zh_CN]": "虚拟桌面",
         "ServiceTypes": [
             "KCModule"
         ]

@@ -5,7 +5,9 @@
         "Description[ca]": "Configura l'arranjament del compositor per als efectes d'escriptori",
         "Description[es]": "Configurar las preferencias del compositor para los efectos del escritorio",
         "Description[fr]": "Configurer les paramètres du compositeur pour les effets de bureau",
+        "Description[ko]": "데스크톱 효과에 사용되는 컴포지터 설정",
         "Description[nl]": "Instellingen van compositor configureren voor bureaubladeffecten",
+        "Description[pl]": "Ustawienia kompozytora dla efektów pulpitu",
         "Description[sl]": "Konfiguriraj upravljalnika skladnje za učinke namizja",
         "Description[sv]": "Anpassa sammansättningsinställningar för skrivbordseffekter",
         "Description[ta]": "பணிமேடை அசைவூட்டங்களுக்கான சாளரநிரல் அமைப்புகளை மாற்றுங்கள்",
@@ -13,6 +15,7 @@
         "Description[uk]": "Налаштовування параметрів засобу композиції для ефектів стільниці",
         "Description[vi]": "Cấu hình các thiết lập trình kết hợp cho các hiệu ứng bàn làm việc",
         "Description[x-test]": "xxConfigure compositor settings for desktop effectsxx",
+        "Description[zh_CN]": "配置桌面特效的显示混合器设置",
         "FormFactors": [
             "desktop",
             "tablet"
@@ -23,7 +26,9 @@
         "Name[ca]": "Efectes d'escriptori",
         "Name[es]": "Efectos del escritorio",
         "Name[fr]": "Effets de bureau",
+        "Name[ko]": "데스크톱 효과",
         "Name[nl]": "Bureaubladeffecten",
+        "Name[pl]": "Efekty pulpitu",
         "Name[sl]": "Namizni učinki",
         "Name[sv]": "Skrivbordseffekter",
         "Name[ta]": "பணிமேடை அசைவூட்டங்கள்",
@@ -31,6 +36,7 @@
         "Name[uk]": "Ефекти стільниці",
         "Name[vi]": "Hiệu ứng bàn làm việc",
         "Name[x-test]": "xxDesktop Effectsxx",
+        "Name[zh_CN]": "桌面特效",
         "ServiceTypes": [
             "KCModule"
         ]
