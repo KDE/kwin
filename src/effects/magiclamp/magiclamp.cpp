@@ -78,8 +78,8 @@ void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
         // 0 = not minimized, 1 = fully minimized
         const qreal progress = (*animationIt).timeLine.value();
 
-        QRect geo = w->frameGeometry();
-        QRect icon = w->iconGeometry();
+        QRect geo = w->frameGeometry().toRect();
+        QRect icon = w->iconGeometry().toRect();
         IconPosition position = Top;
         // If there's no icon geometry, minimize to the center of the screen
         if (!icon.isValid()) {

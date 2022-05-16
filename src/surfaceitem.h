@@ -77,7 +77,7 @@ public:
 
     bool hasAlphaChannel() const;
     QSize size() const;
-    QRect contentsRect() const;
+    QRectF contentsRect() const;
 
     bool isDiscarded() const;
     void markAsDiscarded();
@@ -89,7 +89,7 @@ public:
 
 protected:
     QSize m_size;
-    QRect m_contentsRect;
+    QRectF m_contentsRect;
     bool m_hasAlphaChannel = false;
 
 private:

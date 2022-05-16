@@ -555,7 +555,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     const bool childrenChanged = next->childrenChanged;
     const bool visibilityChanged = bufferChanged && bool(current.buffer) != bool(next->buffer);
 
-    const QSize oldSurfaceSize = surfaceSize;
+    const QSizeF oldSurfaceSize = surfaceSize;
     const QSize oldBufferSize = bufferSize;
     const QMatrix4x4 oldSurfaceToBufferMatrix = surfaceToBufferMatrix;
     const QRegion oldInputRegion = inputRegion;
@@ -609,13 +609,13 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
             surfaceSize = implicitSurfaceSize;
         }
 
-        const QRect surfaceRect(QPoint(0, 0), surfaceSize);
-        inputRegion = current.input & surfaceRect;
+        const QRectF surfaceRect(QPoint(0, 0), surfaceSize);
+        inputRegion = current.input & surfaceRect.toAlignedRect();
 
         if (!current.buffer->hasAlphaChannel()) {
-            opaqueRegion = surfaceRect;
+            opaqueRegion = surfaceRect.toAlignedRect();
         } else {
-            opaqueRegion = current.opaque & surfaceRect;
+            opaqueRegion = current.opaque & surfaceRect.toAlignedRect();
         }
 
         QMatrix4x4 scaleOverrideMatrix;
@@ -628,9 +628,8 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         surfaceSize = surfaceSize / scaleOverride;
         implicitSurfaceSize = implicitSurfaceSize / scaleOverride;
     } else {
-        // not QSize() because that will initialize width and height to -1
-        surfaceSize = QSize(0, 0);
-        implicitSurfaceSize = QSize(0, 0);
+        surfaceSize = QSizeF(0, 0);
+        implicitSurfaceSize = QSizeF(0, 0);
         bufferSize = QSize(0, 0);
         inputRegion = QRegion();
         opaqueRegion = QRegion();
@@ -842,14 +841,14 @@ SubSurfaceInterface *SurfaceInterface::subSurface() const
     return d->subSurface;
 }
 
-QSize SurfaceInterface::size() const
+QSizeF SurfaceInterface::size() const
 {
     return d->surfaceSize;
 }
 
-QRect SurfaceInterface::boundingRect() const
+QRectF SurfaceInterface::boundingRect() const
 {
-    QRect rect(QPoint(0, 0), size());
+    QRectF rect(QPoint(0, 0), size());
 
     for (const SubSurfaceInterface *subSurface : qAsConst(d->current.below)) {
         const SurfaceInterface *childSurface = subSurface->surface();

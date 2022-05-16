@@ -1151,6 +1151,7 @@ public:
      *  affect the current painting.
      */
     Q_SCRIPTABLE virtual void addRepaintFull() = 0;
+    Q_SCRIPTABLE virtual void addRepaint(const QRectF &r) = 0;
     Q_SCRIPTABLE virtual void addRepaint(const QRect &r) = 0;
     Q_SCRIPTABLE virtual void addRepaint(const QRegion &r) = 0;
     Q_SCRIPTABLE virtual void addRepaint(int x, int y, int w, int h) = 0;
@@ -1616,14 +1617,14 @@ Q_SIGNALS:
      * @see windowUserMovedResized
      * @since 4.7
      */
-    void windowGeometryShapeChanged(KWin::EffectWindow *w, const QRect &old);
+    void windowGeometryShapeChanged(KWin::EffectWindow *w, const QRectF &old);
     /**
      * This signal is emitted when the frame geometry of a window changed.
      * @param window The window whose geometry changed
      * @param oldGeometry The previous geometry
      * @since 5.19
      */
-    void windowFrameGeometryChanged(KWin::EffectWindow *window, const QRect &oldGeometry);
+    void windowFrameGeometryChanged(KWin::EffectWindow *window, const QRectF &oldGeometry);
     /**
      * Signal emitted when the windows opacity is changed.
      * @param w The window whose opacity level is changed.
@@ -2028,20 +2029,20 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool alpha READ hasAlpha CONSTANT)
-    Q_PROPERTY(QRect geometry READ geometry)
-    Q_PROPERTY(QRect expandedGeometry READ expandedGeometry)
-    Q_PROPERTY(int height READ height)
+    Q_PROPERTY(QRectF geometry READ geometry)
+    Q_PROPERTY(QRectF expandedGeometry READ expandedGeometry)
+    Q_PROPERTY(qreal height READ height)
     Q_PROPERTY(qreal opacity READ opacity)
-    Q_PROPERTY(QPoint pos READ pos)
+    Q_PROPERTY(QPointF pos READ pos)
     Q_PROPERTY(KWin::EffectScreen *screen READ screen)
-    Q_PROPERTY(QSize size READ size)
-    Q_PROPERTY(int width READ width)
-    Q_PROPERTY(int x READ x)
-    Q_PROPERTY(int y READ y)
+    Q_PROPERTY(QSizeF size READ size)
+    Q_PROPERTY(qreal width READ width)
+    Q_PROPERTY(qreal x READ x)
+    Q_PROPERTY(qreal y READ y)
     Q_PROPERTY(int desktop READ desktop)
     Q_PROPERTY(bool onAllDesktops READ isOnAllDesktops)
     Q_PROPERTY(bool onCurrentDesktop READ isOnCurrentDesktop)
-    Q_PROPERTY(QRect rect READ rect)
+    Q_PROPERTY(QRectF rect READ rect)
     Q_PROPERTY(QString windowClass READ windowClass)
     Q_PROPERTY(QString windowRole READ windowRole)
     /**
@@ -2176,7 +2177,7 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
      * By how much the window wishes to grow/shrink at least. Usually QSize(1,1).
      * MAY BE DISOBEYED BY THE WM! It's only for information, do NOT rely on it at all.
      */
-    Q_PROPERTY(QSize basicUnit READ basicUnit)
+    Q_PROPERTY(QSizeF basicUnit READ basicUnit)
     /**
      * Whether the window is currently being moved by the user.
      */
@@ -2189,7 +2190,7 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
      * The optional geometry representing the minimized Client in e.g a taskbar.
      * See _NET_WM_ICON_GEOMETRY at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    Q_PROPERTY(QRect iconGeometry READ iconGeometry)
+    Q_PROPERTY(QRectF iconGeometry READ iconGeometry)
     /**
      * Returns whether the window is any of special windows types (desktop, dock, splash, ...),
      * i.e. window types that usually don't have a window frame and the user does not use window
@@ -2204,12 +2205,12 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
     /**
      * Geometry of the actual window contents inside the whole (including decorations) window.
      */
-    Q_PROPERTY(QRect contentsRect READ contentsRect)
+    Q_PROPERTY(QRectF contentsRect READ contentsRect)
     /**
      * Geometry of the transparent rect in the decoration.
      * May be different from contentsRect if the decoration is extended into the client area.
      */
-    Q_PROPERTY(QRect decorationInnerRect READ decorationInnerRect)
+    Q_PROPERTY(QRectF decorationInnerRect READ decorationInnerRect)
     Q_PROPERTY(bool hasDecoration READ hasDecoration)
     Q_PROPERTY(QStringList activities READ activities)
     Q_PROPERTY(bool onCurrentActivity READ isOnCurrentActivity)
@@ -2376,26 +2377,26 @@ public:
      */
     virtual QVector<uint> desktops() const = 0;
 
-    virtual int x() const = 0;
-    virtual int y() const = 0;
-    virtual int width() const = 0;
-    virtual int height() const = 0;
+    virtual qreal x() const = 0;
+    virtual qreal y() const = 0;
+    virtual qreal width() const = 0;
+    virtual qreal height() const = 0;
     /**
      * By how much the window wishes to grow/shrink at least. Usually QSize(1,1).
      * MAY BE DISOBEYED BY THE WM! It's only for information, do NOT rely on it at all.
      */
-    virtual QSize basicUnit() const = 0;
+    virtual QSizeF basicUnit() const = 0;
     /**
      * @deprecated Use frameGeometry() instead.
      */
-    virtual QRect KWIN_DEPRECATED geometry() const = 0;
+    virtual QRectF KWIN_DEPRECATED geometry() const = 0;
     /**
      * Returns the geometry of the window excluding server-side and client-side
      * drop-shadows.
      *
      * @since 5.18
      */
-    virtual QRect frameGeometry() const = 0;
+    virtual QRectF frameGeometry() const = 0;
     /**
      * Returns the geometry of the pixmap or buffer attached to this window.
      *
@@ -2406,34 +2407,34 @@ public:
      *
      * @since 5.18
      */
-    virtual QRect bufferGeometry() const = 0;
-    virtual QRect clientGeometry() const = 0;
+    virtual QRectF bufferGeometry() const = 0;
+    virtual QRectF clientGeometry() const = 0;
     /**
      * Geometry of the window including decoration and potentially shadows.
      * May be different from geometry() if the window has a shadow.
      * @since 4.9
      */
-    virtual QRect expandedGeometry() const = 0;
+    virtual QRectF expandedGeometry() const = 0;
     virtual EffectScreen *screen() const = 0;
-    virtual QPoint pos() const = 0;
-    virtual QSize size() const = 0;
-    virtual QRect rect() const = 0;
+    virtual QPointF pos() const = 0;
+    virtual QSizeF size() const = 0;
+    virtual QRectF rect() const = 0;
     virtual bool isMovable() const = 0;
     virtual bool isMovableAcrossScreens() const = 0;
     virtual bool isUserMove() const = 0;
     virtual bool isUserResize() const = 0;
-    virtual QRect iconGeometry() const = 0;
+    virtual QRectF iconGeometry() const = 0;
 
     /**
      * Geometry of the actual window contents inside the whole (including decorations) window.
      */
-    virtual QRect contentsRect() const = 0;
+    virtual QRectF contentsRect() const = 0;
     /**
      * Geometry of the transparent rect in the decoration.
      * May be different from contentsRect() if the decoration is extended into the client area.
      * @since 4.5
      */
-    virtual QRect decorationInnerRect() const = 0;
+    virtual QRectF decorationInnerRect() const = 0;
     bool hasDecoration() const;
     virtual bool decorationHasAlpha() const = 0;
     /**

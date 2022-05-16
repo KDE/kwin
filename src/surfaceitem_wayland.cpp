@@ -55,7 +55,7 @@ SurfaceItemWayland::SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface
 
 QRegion SurfaceItemWayland::shape() const
 {
-    return QRegion(rect());
+    return QRegion(rect().toAlignedRect());
 }
 
 QRegion SurfaceItemWayland::opaque() const
@@ -204,10 +204,10 @@ SurfaceItemXwayland::SurfaceItemXwayland(Window *window, Item *parent)
 
 QRegion SurfaceItemXwayland::shape() const
 {
-    const QRect clipRect = rect() & window()->clientGeometry().translated(-window()->bufferGeometry().topLeft());
+    const QRectF clipRect = rect() & window()->clientGeometry().translated(-window()->bufferGeometry().topLeft());
     const QRegion shape = window()->shapeRegion();
 
-    return shape & clipRect;
+    return shape & clipRect.toRect();
 }
 
 } // namespace KWin

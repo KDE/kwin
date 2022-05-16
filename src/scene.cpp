@@ -524,7 +524,7 @@ void Scene::paintSimpleScreen(int, const QRegion &region)
         data->region = visible;
 
         if (!(data->mask & PAINT_WINDOW_TRANSFORMED)) {
-            data->region &= data->item->mapToGlobal(data->item->boundingRect());
+            data->region &= data->item->mapToGlobal(data->item->boundingRect()).toAlignedRect();
 
             if (!(data->mask & PAINT_WINDOW_TRANSLUCENT)) {
                 visible -= data->opaque;

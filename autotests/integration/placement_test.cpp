@@ -27,9 +27,9 @@ static const QString s_socketName = QStringLiteral("wayland_test_kwin_placement-
 
 struct PlaceWindowResult
 {
-    QSize initiallyConfiguredSize;
+    QSizeF initiallyConfiguredSize;
     Test::XdgToplevel::States initiallyConfiguredStates;
-    QRect finalGeometry;
+    QRectF finalGeometry;
 };
 
 class TestPlacement : public QObject
@@ -119,13 +119,13 @@ PlaceWindowResult TestPlacement::createAndPlaceWindow(const QSize &defaultSize, 
     rc.initiallyConfiguredStates = toplevelConfigureRequestedSpy[0][1].value<Test::XdgToplevel::States>();
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy[0][0].toUInt());
 
-    QSize size = rc.initiallyConfiguredSize;
+    QSizeF size = rc.initiallyConfiguredSize;
 
     if (size.isEmpty()) {
         size = defaultSize;
     }
 
-    auto window = Test::renderAndWaitForShown(surface, size, Qt::red);
+    auto window = Test::renderAndWaitForShown(surface, size.toSize(), Qt::red);
 
     rc.finalGeometry = window->frameGeometry();
     return rc;
@@ -148,8 +148,8 @@ void TestPlacement::testPlaceSmart()
         // exact placement isn't a defined concept that should be tested
         // but the goal of smart placement is to make sure windows don't overlap until they need to
         // 4 windows of 600, 500 should fit without overlap
-        QVERIFY(!usedArea.intersects(windowPlacement.finalGeometry));
-        usedArea += windowPlacement.finalGeometry;
+        QVERIFY(!usedArea.intersects(windowPlacement.finalGeometry.toRect()));
+        usedArea += windowPlacement.finalGeometry.toRect();
     }
 }
 
@@ -264,7 +264,7 @@ void TestPlacement::testPlaceUnderMouse()
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     Window *window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::red);
     QVERIFY(window);
-    QCOMPARE(window->frameGeometry(), QRect(151, 276, 100, 50));
+    QCOMPARE(window->frameGeometry(), QRect(150, 275, 100, 50));
 
     shellSurface.reset();
     QVERIFY(Test::waitForWindowDestroyed(window));

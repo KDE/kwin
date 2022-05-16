@@ -295,11 +295,11 @@ QRegion ContrastEffect::contrastRegion(const EffectWindow *w) const
     if (value.isValid()) {
         const QRegion appRegion = qvariant_cast<QRegion>(value);
         if (!appRegion.isEmpty()) {
-            region |= appRegion.translated(w->contentsRect().topLeft()) & w->decorationInnerRect();
+            region |= appRegion.translated(w->contentsRect().topLeft().toPoint()) & w->decorationInnerRect().toRect();
         } else {
             // An empty region means that the blur effect should be enabled
             // for the whole window.
-            region = w->decorationInnerRect();
+            region = w->decorationInnerRect().toRect();
         }
     }
 
@@ -376,7 +376,7 @@ void ContrastEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region
 {
     if (shouldContrast(w, mask, data)) {
         const QRect screen = effects->renderTargetRect();
-        QRegion shape = region & contrastRegion(w).translated(w->pos()) & screen;
+        QRegion shape = region & contrastRegion(w).translated(w->pos().toPoint()) & screen;
 
         // let's do the evil parts - someone wants to blur behind a transformed window
         const bool translated = data.xTranslation() || data.yTranslation();

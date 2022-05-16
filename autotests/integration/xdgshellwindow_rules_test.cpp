@@ -1141,7 +1141,7 @@ void TestXdgShellWindowRules::testMaximizeForce()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
 
     // Any attempt to change the maximized state should not succeed.
-    const QRect oldGeometry = m_window->frameGeometry();
+    const QRectF oldGeometry = m_window->frameGeometry();
     workspace()->slotWindowMaximize();
     QVERIFY(!m_surfaceConfigureRequestedSpy->wait(100));
     QCOMPARE(m_window->maximizeMode(), MaximizeMode::MaximizeFull);
@@ -1248,7 +1248,7 @@ void TestXdgShellWindowRules::testMaximizeApplyNow()
     QCOMPARE(m_window->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
 
     // The rule should be discarded after it's been applied.
-    const QRect oldGeometry = m_window->frameGeometry();
+    const QRectF oldGeometry = m_window->frameGeometry();
     m_window->evaluateWindowRules();
     QVERIFY(!m_surfaceConfigureRequestedSpy->wait(100));
     QCOMPARE(m_window->maximizeMode(), MaximizeMode::MaximizeRestore);
@@ -1291,7 +1291,7 @@ void TestXdgShellWindowRules::testMaximizeForceTemporarily()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
 
     // Any attempt to change the maximized state should not succeed.
-    const QRect oldGeometry = m_window->frameGeometry();
+    const QRectF oldGeometry = m_window->frameGeometry();
     workspace()->slotWindowMaximize();
     QVERIFY(!m_surfaceConfigureRequestedSpy->wait(100));
     QCOMPARE(m_window->maximizeMode(), MaximizeMode::MaximizeFull);

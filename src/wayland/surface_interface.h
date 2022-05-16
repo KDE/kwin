@@ -70,7 +70,7 @@ class KWIN_EXPORT SurfaceInterface : public QObject
     Q_PROPERTY(QRegion input READ input NOTIFY inputChanged)
     Q_PROPERTY(qint32 bufferScale READ bufferScale NOTIFY bufferScaleChanged)
     Q_PROPERTY(KWin::Output::Transform bufferTransform READ bufferTransform NOTIFY bufferTransformChanged)
-    Q_PROPERTY(QSize size READ size NOTIFY sizeChanged)
+    Q_PROPERTY(QSizeF size READ size NOTIFY sizeChanged)
 public:
     explicit SurfaceInterface(CompositorInterface *compositor, wl_resource *resource);
     ~SurfaceInterface() override;
@@ -181,13 +181,13 @@ public:
      * Note that there is no direct relationship between the surface size and the buffer size.
      * In order to determine the size of the currently attached buffer, use buffer()->size().
      */
-    QSize size() const;
+    QSizeF size() const;
     /**
      * Returns the rectangle that bounds this surface and all of its sub-surfaces.
      *
      * QPoint(0, 0) corresponds to the upper left corner of this surface.
      */
-    QRect boundingRect() const;
+    QRectF boundingRect() const;
     /**
      * Returns the size of the attached buffer, in device pixels.
      *

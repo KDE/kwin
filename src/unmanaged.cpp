@@ -97,7 +97,7 @@ void Unmanaged::initialize()
     // though the window has been painted.  To avoid this we mark the whole window as damaged
     // and schedule a repaint immediately after creating the damage object.
     if (auto item = surfaceItem()) {
-        item->addDamage(item->rect());
+        item->addDamage(item->rect().toAlignedRect());
     }
 }
 
@@ -194,7 +194,7 @@ QVector<VirtualDesktop *> Unmanaged::desktops() const
     return QVector<VirtualDesktop *>();
 }
 
-QPoint Unmanaged::clientPos() const
+QPointF Unmanaged::clientPos() const
 {
     return QPoint(0, 0); // unmanaged windows don't have decorations
 }

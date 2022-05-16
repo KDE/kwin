@@ -203,11 +203,11 @@ void StrutsTest::testWaylandStruts()
     QCOMPARE(workspace()->clientArea(FullArea, outputs[0], desktop), QRect(0, 0, 2560, 1024));
 
     // now verify the actual updated client areas
-    QTEST(workspace()->clientArea(PlacementArea, outputs[0], desktop), "screen0Maximized");
-    QTEST(workspace()->clientArea(MaximizeArea, outputs[0], desktop), "screen0Maximized");
-    QTEST(workspace()->clientArea(PlacementArea, outputs[1], desktop), "screen1Maximized");
-    QTEST(workspace()->clientArea(MaximizeArea, outputs[1], desktop), "screen1Maximized");
-    QTEST(workspace()->clientArea(WorkArea, outputs[0], desktop), "workArea");
+    QTEST(workspace()->clientArea(PlacementArea, outputs[0], desktop).toRect(), "screen0Maximized");
+    QTEST(workspace()->clientArea(MaximizeArea, outputs[0], desktop).toRect(), "screen0Maximized");
+    QTEST(workspace()->clientArea(PlacementArea, outputs[1], desktop).toRect(), "screen1Maximized");
+    QTEST(workspace()->clientArea(MaximizeArea, outputs[1], desktop).toRect(), "screen1Maximized");
+    QTEST(workspace()->clientArea(WorkArea, outputs[0], desktop).toRect(), "workArea");
     QTEST(workspace()->restrictedMoveArea(desktop), "restrictedMoveArea");
 
     // delete all surfaces
@@ -647,11 +647,11 @@ void StrutsTest::testX11Struts()
     QCOMPARE(workspace()->clientArea(FullArea, outputs[0], desktop), QRect(0, 0, 2560, 1024));
 
     // now verify the actual updated client areas
-    QTEST(workspace()->clientArea(PlacementArea, outputs[0], desktop), "screen0Maximized");
-    QTEST(workspace()->clientArea(MaximizeArea, outputs[0], desktop), "screen0Maximized");
-    QTEST(workspace()->clientArea(PlacementArea, outputs[1], desktop), "screen1Maximized");
-    QTEST(workspace()->clientArea(MaximizeArea, outputs[1], desktop), "screen1Maximized");
-    QTEST(workspace()->clientArea(WorkArea, outputs[0], desktop), "workArea");
+    QTEST(workspace()->clientArea(PlacementArea, outputs[0], desktop).toRect(), "screen0Maximized");
+    QTEST(workspace()->clientArea(MaximizeArea, outputs[0], desktop).toRect(), "screen0Maximized");
+    QTEST(workspace()->clientArea(PlacementArea, outputs[1], desktop).toRect(), "screen1Maximized");
+    QTEST(workspace()->clientArea(MaximizeArea, outputs[1], desktop).toRect(), "screen1Maximized");
+    QTEST(workspace()->clientArea(WorkArea, outputs[0], desktop).toRect(), "workArea");
     QTEST(workspace()->restrictedMoveArea(desktop), "restrictedMoveArea");
 
     // and destroy the window again
@@ -983,7 +983,7 @@ void StrutsTest::testWindowMoveWithPanelBetweenScreens()
     QCOMPARE(window2->clientSize(), QSize(200, 300));
     QCOMPARE(window2->pos(), QPoint(1500, 400));
 
-    const QRect origGeo = window2->frameGeometry();
+    const QRectF origGeo = window2->frameGeometry();
     Cursors::self()->mouse()->setPos(origGeo.center());
     workspace()->performWindowOperation(window2, Options::MoveOp);
     QTRY_COMPARE(workspace()->moveResizeWindow(), window2);
@@ -996,7 +996,7 @@ void StrutsTest::testWindowMoveWithPanelBetweenScreens()
     window2->keyPressEvent(Qt::Key_Enter);
     QCOMPARE(window2->isInteractiveMove(), false);
     QVERIFY(workspace()->moveResizeWindow() == nullptr);
-    QCOMPARE(window2->frameGeometry(), QRect(origGeo.translated(-800, 0)));
+    QCOMPARE(window2->frameGeometry(), QRectF(origGeo.translated(-800, 0)));
 }
 
 }

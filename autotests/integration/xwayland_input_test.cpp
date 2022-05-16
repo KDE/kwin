@@ -268,13 +268,13 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
     Cursors::self()->mouse()->setPos(window->frameGeometry().center());
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), window->surface());
     QVERIFY(enteredSpy.wait());
-    QCOMPARE(enteredSpy.last().first(), QPoint(59, 104));
+    QCOMPARE(enteredSpy.last().first(), QPointF(60, 105));
 
     // Move out of the window, should trigger a leave.
     QVERIFY(leftSpy.isEmpty());
     Cursors::self()->mouse()->setPos(window->frameGeometry().bottomRight() + QPoint(100, 100));
     QVERIFY(leftSpy.wait());
-    QCOMPARE(leftSpy.last().first(), QPoint(59, 104));
+    QCOMPARE(leftSpy.last().first(), QPointF(60, 105));
 
     // Destroy the window.
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);

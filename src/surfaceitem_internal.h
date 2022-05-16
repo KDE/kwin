@@ -28,7 +28,7 @@ public:
     QRegion shape() const override;
 
 private Q_SLOTS:
-    void handleBufferGeometryChanged(Window *window, const QRect &old);
+    void handleBufferGeometryChanged(Window *window, const QRectF &old);
 
 protected:
     std::unique_ptr<SurfacePixmap> createPixmap() override;

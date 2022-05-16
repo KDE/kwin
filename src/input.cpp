@@ -3190,7 +3190,7 @@ void InputRedirection::removeIdleInhibitor(Window *inhibitor)
     }
 }
 
-Window *InputRedirection::findToplevel(const QPoint &pos)
+Window *InputRedirection::findToplevel(const QPointF &pos)
 {
     if (!Workspace::self()) {
         return nullptr;
@@ -3212,7 +3212,7 @@ Window *InputRedirection::findToplevel(const QPoint &pos)
     return findManagedToplevel(pos);
 }
 
-Window *InputRedirection::findManagedToplevel(const QPoint &pos)
+Window *InputRedirection::findManagedToplevel(const QPointF &pos)
 {
     if (!Workspace::self()) {
         return nullptr;
@@ -3419,7 +3419,7 @@ void InputDeviceHandler::updateDecoration()
     Decoration::DecoratedClientImpl *decoration = nullptr;
     auto hover = m_hover.window.data();
     if (hover && hover->decoratedClient()) {
-        if (!hover->clientGeometry().contains(position().toPoint())) {
+        if (!hover->clientGeometry().toRect().contains(position().toPoint())) {
             // input device above decoration
             decoration = hover->decoratedClient();
         }
@@ -3436,7 +3436,7 @@ void InputDeviceHandler::update()
 
     Window *window = nullptr;
     if (positionValid()) {
-        window = input()->findToplevel(position().toPoint());
+        window = input()->findToplevel(position());
     }
     // Always set the window at the position of the input device.
     setHover(window);

@@ -80,7 +80,7 @@ void Deleted::copyToDeleted(Window *window)
     desk = window->desktop();
     m_desktops = window->desktops();
     activityList = window->activities();
-    contentsRect = QRect(window->clientPos(), window->clientSize());
+    contentsRect = QRectF(window->clientPos(), window->clientSize());
     m_layer = window->layer();
     m_frame = window->frameId();
     m_type = window->windowType();
@@ -150,12 +150,12 @@ QVector<VirtualDesktop *> Deleted::desktops() const
     return m_desktops;
 }
 
-QPoint Deleted::clientPos() const
+QPointF Deleted::clientPos() const
 {
     return contentsRect.topLeft();
 }
 
-void Deleted::layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const
+void Deleted::layoutDecorationRects(QRectF &left, QRectF &top, QRectF &right, QRectF &bottom) const
 {
     left = decoration_left;
     top = decoration_top;

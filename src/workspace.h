@@ -138,10 +138,10 @@ public:
      */
     Window *findInternal(QWindow *w) const;
 
-    QRect clientArea(clientAreaOption, const Output *output, const VirtualDesktop *desktop) const;
-    QRect clientArea(clientAreaOption, const Window *window) const;
-    QRect clientArea(clientAreaOption, const Window *window, const Output *output) const;
-    QRect clientArea(clientAreaOption, const Window *window, const QPoint &pos) const;
+    QRectF clientArea(clientAreaOption, const Output *output, const VirtualDesktop *desktop) const;
+    QRectF clientArea(clientAreaOption, const Window *window) const;
+    QRectF clientArea(clientAreaOption, const Window *window, const Output *output) const;
+    QRectF clientArea(clientAreaOption, const Window *window, const QPointF &pos) const;
 
     /**
      * Returns the geometry of this Workspace, i.e. the bounding rectangle of all outputs.
@@ -153,7 +153,7 @@ public:
 
     Output *activeOutput() const;
     void setActiveOutput(Output *output);
-    void setActiveOutput(const QPoint &pos);
+    void setActiveOutput(const QPointF &pos);
 
     /**
      * Returns the active window, i.e. the window that has the focus (or None
@@ -192,9 +192,9 @@ public:
      */
     void setMoveResizeWindow(Window *window);
 
-    QRect adjustClientArea(Window *window, const QRect &area) const;
-    QPoint adjustWindowPosition(Window *window, QPoint pos, bool unrestricted, double snapAdjust = 1.0);
-    QRect adjustWindowSize(Window *window, QRect moveResizeGeom, Gravity gravity);
+    QRectF adjustClientArea(Window *window, const QRectF &area) const;
+    QPointF adjustWindowPosition(Window *window, QPointF pos, bool unrestricted, double snapAdjust = 1.0);
+    QRectF adjustWindowSize(Window *window, QRectF moveResizeGeom, Gravity gravity);
     void raiseWindow(Window *window, bool nogroup = false);
     void lowerWindow(Window *window, bool nogroup = false);
     void raiseWindowRequest(Window *window, NET::RequestSource src = NET::FromApplication, xcb_timestamp_t timestamp = 0);
@@ -359,10 +359,10 @@ public:
     void setWasUserInteraction();
     bool wasUserInteraction() const;
 
-    int packPositionLeft(const Window *window, int oldX, bool leftEdge) const;
-    int packPositionRight(const Window *window, int oldX, bool rightEdge) const;
-    int packPositionUp(const Window *window, int oldY, bool topEdge) const;
-    int packPositionDown(const Window *window, int oldY, bool bottomEdge) const;
+    qreal packPositionLeft(const Window *window, qreal oldX, bool leftEdge) const;
+    qreal packPositionRight(const Window *window, qreal oldX, bool rightEdge) const;
+    qreal packPositionUp(const Window *window, qreal oldY, bool topEdge) const;
+    qreal packPositionDown(const Window *window, qreal oldY, bool bottomEdge) const;
 
     void cancelDelayFocus();
     void requestDelayFocus(Window *);
@@ -374,8 +374,8 @@ public:
      * since an active window doesn't receive mouse events, it must also be invoked if a (potentially)
      * active window might be moved/resize away from the cursor (causing a leave event)
      */
-    void updateFocusMousePosition(const QPoint &pos);
-    QPoint focusMousePosition() const;
+    void updateFocusMousePosition(const QPointF &pos);
+    QPointF focusMousePosition() const;
 
     /**
      * Returns a window that is currently being moved or resized by the user.
@@ -615,7 +615,7 @@ private:
     // Delay(ed) window focus timer and window
     QTimer *delayFocusTimer;
     Window *m_delayFocusWindow;
-    QPoint focusMousePos;
+    QPointF focusMousePos;
 
     QList<X11Window *> m_x11Clients;
     QList<Window *> m_allClients;
@@ -663,9 +663,9 @@ private:
     QScopedPointer<KStartupInfo> m_startup;
     QScopedPointer<ColorMapper> m_colorMapper;
 
-    QHash<const VirtualDesktop *, QRect> m_workAreas;
+    QHash<const VirtualDesktop *, QRectF> m_workAreas;
     QHash<const VirtualDesktop *, StrutRects> m_restrictedAreas;
-    QHash<const VirtualDesktop *, QHash<const Output *, QRect>> m_screenAreas;
+    QHash<const VirtualDesktop *, QHash<const Output *, QRectF>> m_screenAreas;
     QRect m_geometry;
 
     QHash<const Output *, QRect> m_oldScreenGeometries;
@@ -785,12 +785,12 @@ inline void Workspace::forceRestacking()
     StackingUpdatesBlocker blocker(this); // Do restacking if not blocked
 }
 
-inline void Workspace::updateFocusMousePosition(const QPoint &pos)
+inline void Workspace::updateFocusMousePosition(const QPointF &pos)
 {
     focusMousePos = pos;
 }
 
-inline QPoint Workspace::focusMousePosition() const
+inline QPointF Workspace::focusMousePosition() const
 {
     return focusMousePos;
 }

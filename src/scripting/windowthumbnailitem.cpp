@@ -342,7 +342,7 @@ void WindowThumbnailItem::updateImplicitSize()
 {
     QSize frameSize;
     if (m_client) {
-        frameSize = m_client->frameGeometry().size();
+        frameSize = m_client->frameGeometry().toAlignedRect().size();
     }
     setImplicitSize(frameSize.width(), frameSize.height());
 }
@@ -373,8 +373,8 @@ QRectF WindowThumbnailItem::paintedRect() const
         return centeredSize(boundingRect(), iconSize);
     }
 
-    const QRect visibleGeometry = m_client->visibleGeometry();
-    const QRect frameGeometry = m_client->frameGeometry();
+    const QRectF visibleGeometry = m_client->visibleGeometry();
+    const QRectF frameGeometry = m_client->frameGeometry();
     const QSizeF scaled = QSizeF(frameGeometry.size()).scaled(boundingRect().size(), Qt::KeepAspectRatio);
 
     const qreal xScale = scaled.width() / frameGeometry.width();
@@ -404,8 +404,8 @@ void WindowThumbnailItem::updateOffscreenTexture()
     }
     Q_ASSERT(window());
 
-    const QRect geometry = m_client->visibleGeometry();
-    QSize textureSize = geometry.size();
+    const QRectF geometry = m_client->visibleGeometry();
+    QSize textureSize = geometry.toAlignedRect().size();
     if (sourceSize().width() > 0) {
         textureSize.setWidth(sourceSize().width());
     }

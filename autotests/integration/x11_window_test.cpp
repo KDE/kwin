@@ -32,6 +32,7 @@ class X11WindowTest : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void initTestCase_data();
     void initTestCase();
     void init();
     void cleanup();
@@ -52,6 +53,13 @@ private Q_SLOTS:
     void testActivateFocusedWindow();
     void testReentrantMoveResize();
 };
+
+void X11WindowTest::initTestCase_data()
+{
+    QTest::addColumn<qreal>("scale");
+    QTest::newRow("normal") << 1.0;
+    QTest::newRow("scaled2x") << 2.0;
+}
 
 void X11WindowTest::initTestCase()
 {
@@ -90,6 +98,9 @@ struct XcbConnectionDeleter
 void X11WindowTest::testMinimumSize()
 {
     // This test verifies that the minimum size constraint is correctly applied.
+
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
@@ -138,42 +149,43 @@ void X11WindowTest::testMinimumSize()
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(-8, 0));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 0);
     QVERIFY(!frameGeometryChangedSpy.wait(1000));
-    QCOMPARE(window->clientSize().width(), 100);
+    QCOMPARE(window->clientSize().width(), 100 / scale);
 
     window->keyPressEvent(Qt::Key_Right);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos);
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 0);
     QVERIFY(!frameGeometryChangedSpy.wait(1000));
-    QCOMPARE(window->clientSize().width(), 100);
+    QCOMPARE(window->clientSize().width(), 100 / scale);
 
     window->keyPressEvent(Qt::Key_Right);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->clientSize().width(), 108);
+    // whilst X11 window size goes through scale, the increment is a logical value kwin side
+    QCOMPARE(window->clientSize().width(), 100 / scale + 8);
 
     window->keyPressEvent(Qt::Key_Up);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, -8));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
     QVERIFY(!frameGeometryChangedSpy.wait(1000));
-    QCOMPARE(window->clientSize().height(), 200);
+    QCOMPARE(window->clientSize().height(), 200 / scale);
 
     window->keyPressEvent(Qt::Key_Down);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
     QVERIFY(!frameGeometryChangedSpy.wait(1000));
-    QCOMPARE(window->clientSize().height(), 200);
+    QCOMPARE(window->clientSize().height(), 200 / scale);
 
     window->keyPressEvent(Qt::Key_Down);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 8));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 2);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->clientSize().height(), 208);
+    QCOMPARE(window->clientSize().height(), 200 / scale + 8);
 
     // Finish the resize operation.
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 0);
@@ -195,6 +207,8 @@ void X11WindowTest::testMinimumSize()
 void X11WindowTest::testMaximumSize()
 {
     // This test verifies that the maximum size constraint is correctly applied.
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
@@ -243,42 +257,42 @@ void X11WindowTest::testMaximumSize()
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 0);
     QVERIFY(!frameGeometryChangedSpy.wait(1000));
-    QCOMPARE(window->clientSize().width(), 100);
+    QCOMPARE(window->clientSize().width(), 100 / scale);
 
     window->keyPressEvent(Qt::Key_Left);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos);
     QVERIFY(!clientStepUserMovedResizedSpy.wait(1000));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 0);
-    QCOMPARE(window->clientSize().width(), 100);
+    QCOMPARE(window->clientSize().width(), 100 / scale);
 
     window->keyPressEvent(Qt::Key_Left);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(-8, 0));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->clientSize().width(), 92);
+    QCOMPARE(window->clientSize().width(), 100 / scale - 8);
 
     window->keyPressEvent(Qt::Key_Down);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(-8, 8));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
     QVERIFY(!frameGeometryChangedSpy.wait(1000));
-    QCOMPARE(window->clientSize().height(), 200);
+    QCOMPARE(window->clientSize().height(), 200 / scale);
 
     window->keyPressEvent(Qt::Key_Up);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(-8, 0));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
     QVERIFY(!frameGeometryChangedSpy.wait(1000));
-    QCOMPARE(window->clientSize().height(), 200);
+    QCOMPARE(window->clientSize().height(), 200 / scale);
 
     window->keyPressEvent(Qt::Key_Up);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(-8, -8));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 2);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->clientSize().height(), 192);
+    QCOMPARE(window->clientSize().height(), 200 / scale - 8);
 
     // Finish the resize operation.
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 0);
@@ -300,6 +314,8 @@ void X11WindowTest::testMaximumSize()
 void X11WindowTest::testResizeIncrements()
 {
     // This test verifies that the resize increments constraint is correctly applied.
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
@@ -349,14 +365,21 @@ void X11WindowTest::testResizeIncrements()
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->clientSize(), QSize(106, 200));
+
+    //  100 + 8 logical pixels, rounded to resize increments. This will differ on scale
+    const qreal horizontalResizeInc = 3 / scale;
+    const qreal verticalResizeInc = 5 / scale;
+    const qreal expectedHorizontalResizeInc = std::floor(8. / horizontalResizeInc) * horizontalResizeInc;
+    const qreal expectedVerticalResizeInc = std::floor(8. / verticalResizeInc) * verticalResizeInc;
+
+    QCOMPARE(window->clientSize(), QSizeF(100, 200) / scale + QSizeF(expectedHorizontalResizeInc, 0));
 
     window->keyPressEvent(Qt::Key_Down);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 8));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 2);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->clientSize(), QSize(106, 205));
+    QCOMPARE(window->clientSize(), QSize(100, 200) / scale + QSizeF(expectedHorizontalResizeInc, expectedVerticalResizeInc));
 
     // Finish the resize operation.
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 0);
@@ -377,6 +400,9 @@ void X11WindowTest::testResizeIncrements()
 
 void X11WindowTest::testResizeIncrementsNoBaseSize()
 {
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
     // Create an xcb window.
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(c.data()));
@@ -425,14 +451,21 @@ void X11WindowTest::testResizeIncrementsNoBaseSize()
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->clientSize(), QSize(106, 200));
+
+    //  100 + 8 pixels, rounded to resize increments. This will differ on scale
+    const qreal horizontalResizeInc = 3 / scale;
+    const qreal verticalResizeInc = 5 / scale;
+    const qreal expectedHorizontalResizeInc = std::floor(8. / horizontalResizeInc) * horizontalResizeInc;
+    const qreal expectedVerticalResizeInc = std::floor(8. / verticalResizeInc) * verticalResizeInc;
+
+    QCOMPARE(window->clientSize(), QSizeF(100, 200) / scale + QSizeF(expectedHorizontalResizeInc, 0));
 
     window->keyPressEvent(Qt::Key_Down);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 8));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 2);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->clientSize(), QSize(106, 205));
+    QCOMPARE(window->clientSize(), QSizeF(100, 200) / scale + QSizeF(expectedHorizontalResizeInc, expectedVerticalResizeInc));
 
     // Finish the resize operation.
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 0);
@@ -453,6 +486,9 @@ void X11WindowTest::testResizeIncrementsNoBaseSize()
 
 void X11WindowTest::testTrimCaption_data()
 {
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
     QTest::addColumn<QByteArray>("originalTitle");
     QTest::addColumn<QByteArray>("expectedTitle");
 
@@ -467,6 +503,9 @@ void X11WindowTest::testTrimCaption_data()
 
 void X11WindowTest::testTrimCaption()
 {
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
     // this test verifies that caption is properly trimmed
 
     // create an xcb window
@@ -514,6 +553,9 @@ void X11WindowTest::testTrimCaption()
 
 void X11WindowTest::testFullscreenLayerWithActiveWaylandWindow()
 {
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
     // this test verifies that an X11 fullscreen window does not stay in the active layer
     // when a Wayland window is active, see BUG: 375759
     QCOMPARE(kwinApp()->platform()->enabledOutputs().count(), 1);
@@ -635,6 +677,8 @@ void X11WindowTest::testFullscreenLayerWithActiveWaylandWindow()
 void X11WindowTest::testFocusInWithWaylandLastActiveWindow()
 {
     // this test verifies that Workspace::allowWindowActivation does not crash if last client was a Wayland client
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
 
     // create an X11 window
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
@@ -693,6 +737,9 @@ void X11WindowTest::testFocusInWithWaylandLastActiveWindow()
 
 void X11WindowTest::testX11WindowId()
 {
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
     // create an X11 window
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(c.data()));
@@ -766,6 +813,9 @@ void X11WindowTest::testX11WindowId()
 
 void X11WindowTest::testCaptionChanges()
 {
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
     // verifies that caption is updated correctly when the X11 window updates it
     // BUG: 383444
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
@@ -816,6 +866,9 @@ void X11WindowTest::testCaptionChanges()
 
 void X11WindowTest::testCaptionWmName()
 {
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
     // this test verifies that a caption set through WM_NAME is read correctly
 
     // open glxgears as that one only uses WM_NAME
@@ -839,6 +892,9 @@ void X11WindowTest::testCaptionWmName()
 
 void X11WindowTest::testCaptionMultipleWindows()
 {
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
     // BUG 384760
     // create first window
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
@@ -916,6 +972,9 @@ void X11WindowTest::testFullscreenWindowGroups()
     // then a second window is created which is in the same window group
     // BUG: 388310
 
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(c.data()));
     const QRect windowGeometry(0, 0, 100, 200);
@@ -990,6 +1049,9 @@ void X11WindowTest::testActivateFocusedWindow()
     // case no FocusIn event will be generated and the window won't be marked as active. This test
     // verifies that we handle that subtle case properly.
 
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> connection(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(connection.data()));
 
@@ -1055,6 +1117,9 @@ void X11WindowTest::testReentrantMoveResize()
     // This test verifies that calling moveResize() from a slot connected directly
     // to the frameGeometryChanged() signal won't cause an infinite recursion.
 
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
     // Create a test window.
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(c.data()));
@@ -1084,7 +1149,7 @@ void X11WindowTest::testReentrantMoveResize()
 
     // Let's pretend that there is a script that really wants the window to be at (100, 100).
     connect(window, &Window::frameGeometryChanged, this, [window]() {
-        window->moveResize(QRect(QPoint(100, 100), window->size()));
+        window->moveResize(QRectF(QPointF(100, 100), window->size()));
     });
 
     // Trigger the lambda above.

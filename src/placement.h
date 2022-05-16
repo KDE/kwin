@@ -50,10 +50,10 @@ public:
         Maximizing
     };
 
-    void place(Window *c, const QRect &area);
-    void placeSmart(Window *c, const QRect &area, Policy next = Unknown);
+    void place(Window *c, const QRectF &area);
+    void placeSmart(Window *c, const QRectF &area, Policy next = Unknown);
 
-    void placeCentered(Window *c, const QRect &area, Policy next = Unknown);
+    void placeCentered(Window *c, const QRectF &area, Policy next = Unknown);
 
     void reinitCascading(int desktop);
 
@@ -69,7 +69,7 @@ public:
     static const char *policyToString(Policy policy);
 
 private:
-    void place(Window *c, const QRect &area, Policy policy, Policy nextPlacement = Unknown);
+    void place(Window *c, const QRectF &area, Policy policy, Policy nextPlacement = Unknown);
     void placeUnderMouse(Window *c, const QRect &area, Policy next = Unknown);
     void placeOnMainWindow(Window *c, const QRect &area, Policy next = Unknown);
     void placeTransient(Window *c);

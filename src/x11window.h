@@ -75,7 +75,7 @@ class KWIN_EXPORT X11Window : public Window
      * The value is evaluated each time the getter is called.
      * Because of that no changed signal is provided.
      */
-    Q_PROPERTY(QSize basicUnit READ basicUnit)
+    Q_PROPERTY(QSizeF basicUnit READ basicUnit)
     /**
      * A client can block compositing. That is while the Client is alive and the state is set,
      * Compositing is suspended and is resumed when there are no Clients blocking compositing any
@@ -103,13 +103,13 @@ public:
     }
     xcb_window_t frameId() const override;
 
-    QRect inputGeometry() const override;
+    QRectF inputGeometry() const override;
 
-    QPoint framePosToClientPos(const QPoint &point) const override;
-    QPoint clientPosToFramePos(const QPoint &point) const override;
-    QSize frameSizeToClientSize(const QSize &size) const override;
-    QSize clientSizeToFrameSize(const QSize &size) const override;
-    QRect frameRectToBufferRect(const QRect &rect) const;
+    QPointF framePosToClientPos(const QPointF &point) const override;
+    QPointF clientPosToFramePos(const QPointF &point) const override;
+    QSizeF frameSizeToClientSize(const QSizeF &size) const override;
+    QSizeF clientSizeToFrameSize(const QSizeF &size) const override;
+    QRectF frameRectToBufferRect(const QRectF &rect) const;
 
     QMatrix4x4 inputTransformation() const override;
 
@@ -131,10 +131,10 @@ public:
 
     bool hasNETSupport() const;
 
-    QSize minSize() const override;
-    QSize maxSize() const override;
-    QSize basicUnit() const;
-    QPoint inputPos() const
+    QSizeF minSize() const override;
+    QSizeF maxSize() const override;
+    QSizeF basicUnit() const;
+    QPointF inputPos() const
     {
         return input_offset;
     } // Inside of geometry()
@@ -159,7 +159,7 @@ public:
     MaximizeMode maximizeMode() const override;
 
     bool isMinimizable() const override;
-    QRect iconGeometry() const override;
+    QRectF iconGeometry() const override;
 
     bool isFullScreenable() const override;
     void setFullScreen(bool set, bool user = true) override;
@@ -193,10 +193,10 @@ public:
     void updateShape();
 
     /// resizeWithChecks() resizes according to gravity, and checks workarea position
-    void resizeWithChecks(const QSize &size) override;
-    void resizeWithChecks(int w, int h, xcb_gravity_t gravity);
-    void resizeWithChecks(const QSize &s, xcb_gravity_t gravity);
-    QSize constrainClientSize(const QSize &size, SizeMode mode = SizeModeAny) const override;
+    void resizeWithChecks(const QSizeF &size) override;
+    void resizeWithChecks(qreal w, qreal h, xcb_gravity_t gravity);
+    void resizeWithChecks(const QSizeF &s, xcb_gravity_t gravity);
+    QSizeF constrainClientSize(const QSizeF &size, SizeMode mode = SizeModeAny) const override;
 
     bool providesContextHelp() const override;
 
@@ -231,8 +231,8 @@ public:
     void updateMouseGrab() override;
     xcb_window_t moveResizeGrabWindow() const;
 
-    QPoint gravityAdjustment(xcb_gravity_t gravity) const;
-    const QPoint calculateGravitation(bool invert) const;
+    QPointF gravityAdjustment(xcb_gravity_t gravity) const;
+    const QPointF calculateGravitation(bool invert) const;
 
     void NETMoveResize(int x_root, int y_root, NET::Direction direction);
     void NETMoveResizeWindow(int flags, int x, int y, int width, int height);
@@ -349,9 +349,9 @@ protected:
     bool doStartInteractiveMoveResize() override;
     bool isWaitingForInteractiveMoveResizeSync() const override;
     void doInteractiveResizeSync() override;
-    QSize resizeIncrements() const override;
+    QSizeF resizeIncrements() const override;
     bool acceptsFocus() const override;
-    void moveResizeInternal(const QRect &rect, MoveResizeMode mode) override;
+    void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
     WindowItem *createItem() override;
 
     // Signals for the scripting interface
@@ -453,7 +453,7 @@ private:
     void maybeCreateX11DecorationRenderer();
     void maybeDestroyX11DecorationRenderer();
     void updateDecoration(bool check_workspace_pos, bool force = false);
-    void createDecoration(const QRect &oldgeom);
+    void createDecoration(const QRectF &oldgeom);
     void destroyDecoration();
 
     Xcb::Window m_client;
@@ -526,18 +526,18 @@ private:
     bool needsXWindowMove;
 
     Xcb::Window m_decoInputExtent;
-    QPoint input_offset;
+    QPointF input_offset;
 
     QTimer *m_focusOutTimer;
 
     QMetaObject::Connection m_edgeRemoveConnection;
     QMetaObject::Connection m_edgeGeometryTrackingConnection;
 
-    QMargins m_clientFrameExtents;
+    QMarginsF m_clientFrameExtents;
     Output *m_lastOutput = nullptr;
-    QRect m_lastBufferGeometry;
-    QRect m_lastFrameGeometry;
-    QRect m_lastClientGeometry;
+    QRectF m_lastBufferGeometry;
+    QRectF m_lastFrameGeometry;
+    QRectF m_lastClientGeometry;
     QScopedPointer<X11DecorationRenderer> m_decorationRenderer;
 };
 
@@ -618,12 +618,12 @@ inline bool X11Window::isManaged() const
     return m_managed;
 }
 
-inline void X11Window::resizeWithChecks(const QSize &s)
+inline void X11Window::resizeWithChecks(const QSizeF &s)
 {
     resizeWithChecks(s.width(), s.height(), XCB_GRAVITY_BIT_FORGET);
 }
 
-inline void X11Window::resizeWithChecks(const QSize &s, xcb_gravity_t gravity)
+inline void X11Window::resizeWithChecks(const QSizeF &s, xcb_gravity_t gravity)
 {
     resizeWithChecks(s.width(), s.height(), gravity);
 }

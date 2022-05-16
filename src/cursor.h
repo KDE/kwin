@@ -159,6 +159,11 @@ public:
     QPoint pos();
     /**
      * Warps the mouse cursor to new @p pos.
+     * Values will be rounded to an integer
+     */
+    void setPos(const QPointF &pos);
+    /**
+     * Warps the mouse cursor to new @p pos.
      */
     void setPos(const QPoint &pos);
     void setPos(int x, int y);

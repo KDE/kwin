@@ -158,7 +158,7 @@ Qt::MouseButton KWIN_EXPORT x11ToQtMouseButton(int button);
 Qt::MouseButtons KWIN_EXPORT x11ToQtMouseButtons(int state);
 Qt::KeyboardModifiers KWIN_EXPORT x11ToQtKeyboardModifiers(int state);
 
-KWIN_EXPORT QPoint popupOffset(const QRect &anchorRect, const Qt::Edges anchorEdge, const Qt::Edges gravity, const QSize popupSize);
+KWIN_EXPORT QPointF popupOffset(const QRectF &anchorRect, const Qt::Edges anchorEdge, const Qt::Edges gravity, const QSizeF popupSize);
 
 } // namespace
 

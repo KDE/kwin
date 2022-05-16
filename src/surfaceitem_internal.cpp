@@ -28,7 +28,7 @@ SurfaceItemInternal::SurfaceItemInternal(InternalWindow *window, Item *parent)
 
 QRegion SurfaceItemInternal::shape() const
 {
-    return QRegion(rect());
+    return QRegion(rect().toAlignedRect());
 }
 
 std::unique_ptr<SurfacePixmap> SurfaceItemInternal::createPixmap()
@@ -36,7 +36,7 @@ std::unique_ptr<SurfacePixmap> SurfaceItemInternal::createPixmap()
     return std::make_unique<SurfacePixmapInternal>(this);
 }
 
-void SurfaceItemInternal::handleBufferGeometryChanged(Window *window, const QRect &old)
+void SurfaceItemInternal::handleBufferGeometryChanged(Window *window, const QRectF &old)
 {
     if (window->bufferGeometry().size() != old.size()) {
         discardPixmap();

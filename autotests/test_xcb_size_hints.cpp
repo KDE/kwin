@@ -191,12 +191,12 @@ void TestXcbSizeHints::testSizeHints()
     QCOMPARE(geoHints.hasResizeIncrements(), resizeInc.isValid());
     QCOMPARE(geoHints.hasSize(), userSize.isValid());
     QCOMPARE(geoHints.hasWindowGravity(), gravity != 0);
-    QTEST(geoHints.baseSize(), "expectedBaseSize");
+    QTEST(geoHints.baseSize().toSize(), "expectedBaseSize");
     QTEST(geoHints.maxAspect(), "expectedMaxAspect");
-    QTEST(geoHints.maxSize(), "expectedMaxSize");
+    QTEST(geoHints.maxSize().toSize(), "expectedMaxSize");
     QTEST(geoHints.minAspect(), "expectedMinAspect");
-    QTEST(geoHints.minSize(), "expectedMinSize");
-    QTEST(geoHints.resizeIncrements(), "expectedResizeIncrements");
+    QTEST(geoHints.minSize().toSize(), "expectedMinSize");
+    QTEST(geoHints.resizeIncrements().toSize(), "expectedResizeIncrements");
     QTEST(qint32(geoHints.windowGravity()), "expectedGravity");
 
     auto sizeHints = geoHints.m_sizeHints;

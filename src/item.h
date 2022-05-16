@@ -33,11 +33,11 @@ public:
     qreal opacity() const;
     void setOpacity(qreal opacity);
 
-    QPoint position() const;
-    void setPosition(const QPoint &point);
+    QPointF position() const;
+    void setPosition(const QPointF &point);
 
-    QSize size() const;
-    void setSize(const QSize &size);
+    QSizeF size() const;
+    void setSize(const QSizeF &size);
 
     int z() const;
     void setZ(int z);
@@ -45,11 +45,11 @@ public:
     /**
      * Returns the enclosing rectangle of the item. The rect equals QRect(0, 0, width(), height()).
      */
-    QRect rect() const;
+    QRectF rect() const;
     /**
      * Returns the enclosing rectangle of the item and all of its descendants.
      */
-    QRect boundingRect() const;
+    QRectF boundingRect() const;
 
     virtual QRegion shape() const;
     virtual QRegion opaque() const;
@@ -63,7 +63,7 @@ public:
     QList<Item *> childItems() const;
     QList<Item *> sortedChildItems() const;
 
-    QPoint rootPosition() const;
+    QPointF rootPosition() const;
 
     QMatrix4x4 transform() const;
     void setTransform(const QMatrix4x4 &transform);
@@ -77,12 +77,12 @@ public:
      * Maps the given @a rect from the item's coordinate system to the scene's coordinate
      * system.
      */
-    QRect mapToGlobal(const QRect &rect) const;
+    QRectF mapToGlobal(const QRectF &rect) const;
     /**
      * Maps the given @a rect from the scene's coordinate system to the item's coordinate
      * system.
      */
-    QRect mapFromGlobal(const QRect &rect) const;
+    QRectF mapFromGlobal(const QRectF &rect) const;
 
     /**
      * Moves this item right before the specified @a sibling in the parent's children list.
@@ -97,6 +97,7 @@ public:
     bool isVisible() const;
     void setVisible(bool visible);
 
+    void scheduleRepaint(const QRectF &region);
     void scheduleRepaint(const QRegion &region);
     void scheduleFrame();
     QRegion repaints(Output *output) const;
@@ -139,9 +140,9 @@ private:
     QPointer<Item> m_parentItem;
     QList<Item *> m_childItems;
     QMatrix4x4 m_transform;
-    QRect m_boundingRect;
-    QPoint m_position;
-    QSize m_size = QSize(0, 0);
+    QRectF m_boundingRect;
+    QPointF m_position;
+    QSizeF m_size = QSize(0, 0);
     qreal m_opacity = 1;
     int m_z = 0;
     bool m_explicitVisible = true;

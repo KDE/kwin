@@ -391,7 +391,7 @@ void DecorationInputTest::testPressToMove()
     QVERIFY(!window->isInteractiveMove());
     QFETCH(QPoint, offset);
     MOTION(QPoint(window->frameGeometry().center().x(), window->y() + window->clientPos().y() / 2) + offset);
-    const QPoint oldPos = window->pos();
+    const QPointF oldPos = window->pos();
     QVERIFY(window->isInteractiveMove());
     QCOMPARE(startMoveResizedSpy.count(), 1);
 
@@ -450,7 +450,7 @@ void DecorationInputTest::testTapToMove()
     QFETCH(QPoint, offset);
     QCOMPARE(input()->touch()->decorationPressId(), 0);
     Test::touchMotion(0, p + offset, timestamp++);
-    const QPoint oldPos = window->pos();
+    const QPointF oldPos = window->pos();
     QVERIFY(window->isInteractiveMove());
     QCOMPARE(startMoveResizedSpy.count(), 1);
 

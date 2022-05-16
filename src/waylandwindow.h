@@ -25,7 +25,7 @@ public:
     bool isLockScreen() const override;
     bool isLocalhost() const override;
     Window *findModal(bool allow_itself = false) override;
-    void resizeWithChecks(const QSize &size) override;
+    void resizeWithChecks(const QSizeF &size) override;
     void killWindow() override;
     QByteArray windowRole() const override;
     bool isShown() const override;
@@ -33,7 +33,7 @@ public:
     void hideClient() override;
     void showClient() override;
 
-    virtual QRect frameRectToBufferRect(const QRect &rect) const;
+    virtual QRectF frameRectToBufferRect(const QRectF &rect) const;
     bool isHidden() const;
 
     void updateDepth();
@@ -47,7 +47,7 @@ protected:
     WindowItem *createItem() override;
 
     void cleanGrouping();
-    void updateGeometry(const QRect &rect);
+    void updateGeometry(const QRectF &rect);
 
 private:
     void updateClientOutputs();

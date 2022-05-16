@@ -137,7 +137,7 @@ void MinimizeAnimationTest::testMinimizeUnminimize()
     const QRect iconRect = QRect(0, 0, 42, 36);
     plasmaWindow->setMinimizedGeometry(panelSurface.data(), iconRect);
     Test::flushWaylandConnection();
-    QTRY_COMPARE(window->iconGeometry(), iconRect.translated(panel->frameGeometry().topLeft()));
+    QTRY_COMPARE(window->iconGeometry(), iconRect.translated(panel->frameGeometry().topLeft().toPoint()));
 
     // Load effect that will be tested.
     QFETCH(QString, effectName);

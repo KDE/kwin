@@ -198,6 +198,11 @@ QPoint Cursor::pos()
     return m_pos;
 }
 
+void Cursor::setPos(const QPointF &pos)
+{
+    setPos(pos.toPoint());
+}
+
 void Cursor::setPos(const QPoint &pos)
 {
     // first query the current pos to not warp to the already existing pos

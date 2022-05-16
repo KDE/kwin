@@ -109,12 +109,12 @@ QList<Item *> Item::childItems() const
     return m_childItems;
 }
 
-QPoint Item::position() const
+QPointF Item::position() const
 {
     return m_position;
 }
 
-void Item::setPosition(const QPoint &point)
+void Item::setPosition(const QPointF &point)
 {
     if (m_position != point) {
         scheduleRepaint(boundingRect());
@@ -127,12 +127,12 @@ void Item::setPosition(const QPoint &point)
     }
 }
 
-QSize Item::size() const
+QSizeF Item::size() const
 {
     return m_size;
 }
 
-void Item::setSize(const QSize &size)
+void Item::setSize(const QSizeF &size)
 {
     if (m_size != size) {
         scheduleRepaint(rect());
@@ -144,19 +144,19 @@ void Item::setSize(const QSize &size)
     }
 }
 
-QRect Item::rect() const
+QRectF Item::rect() const
 {
-    return QRect(QPoint(0, 0), size());
+    return QRectF(QPoint(0, 0), size());
 }
 
-QRect Item::boundingRect() const
+QRectF Item::boundingRect() const
 {
     return m_boundingRect;
 }
 
 void Item::updateBoundingRect()
 {
-    QRect boundingRect = rect();
+    QRectF boundingRect = rect();
     for (Item *item : qAsConst(m_childItems)) {
         boundingRect |= item->boundingRect().translated(item->position());
     }
@@ -171,7 +171,7 @@ void Item::updateBoundingRect()
 
 QRegion Item::shape() const
 {
-    return rect();
+    return rect().toAlignedRect();
 }
 
 QRegion Item::opaque() const
@@ -179,9 +179,9 @@ QRegion Item::opaque() const
     return QRegion();
 }
 
-QPoint Item::rootPosition() const
+QPointF Item::rootPosition() const
 {
-    QPoint ret = position();
+    QPointF ret = position();
 
     Item *parent = parentItem();
     while (parent) {
@@ -207,10 +207,10 @@ QRegion Item::mapToGlobal(const QRegion &region) const
     if (region.isEmpty()) {
         return QRegion();
     }
-    return region.translated(rootPosition());
+    return region.translated(rootPosition().toPoint());
 }
 
-QRect Item::mapToGlobal(const QRect &rect) const
+QRectF Item::mapToGlobal(const QRectF &rect) const
 {
     if (rect.isEmpty()) {
         return QRect();
@@ -218,7 +218,7 @@ QRect Item::mapToGlobal(const QRect &rect) const
     return rect.translated(rootPosition());
 }
 
-QRect Item::mapFromGlobal(const QRect &rect) const
+QRectF Item::mapFromGlobal(const QRectF &rect) const
 {
     if (rect.isEmpty()) {
         return QRect();
@@ -314,7 +314,7 @@ void Item::scheduleFrame()
     }
     const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
-        const QRect geometry = mapToGlobal(rect());
+        const QRect geometry = mapToGlobal(rect()).toAlignedRect();
         for (const Output *output : outputs) {
             if (output->geometry().intersects(geometry)) {
                 output->renderLoop()->scheduleRepaint(this);
@@ -380,6 +380,11 @@ void Item::setVisible(bool visible)
     }
 }
 
+void Item::scheduleRepaint(const QRectF &region)
+{
+    scheduleRepaint(QRegion(region.toAlignedRect()));
+}
+
 bool Item::computeEffectiveVisibility() const
 {
     return m_explicitVisible && (!m_parentItem || m_parentItem->isVisible());
@@ -394,9 +399,9 @@ void Item::updateEffectiveVisibility()
 
     m_effectiveVisible = effectiveVisible;
     if (!m_effectiveVisible) {
-        Compositor::self()->scene()->addRepaint(mapToGlobal(boundingRect()));
+        Compositor::self()->scene()->addRepaint(mapToGlobal(boundingRect()).toAlignedRect());
     } else {
-        scheduleRepaintInternal(boundingRect());
+        scheduleRepaintInternal(boundingRect().toAlignedRect());
     }
 
     for (Item *childItem : qAsConst(m_childItems)) {

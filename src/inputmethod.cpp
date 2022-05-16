@@ -620,17 +620,17 @@ void InputMethod::updateInputPanelState()
         m_panel->allow();
     }
 
-    QRect overlap = QRect(0, 0, 0, 0);
+    QRectF overlap = QRectF(0, 0, 0, 0);
     if (m_trackedWindow) {
         const bool bottomKeyboard = m_panel && m_panel->mode() != InputPanelV1Window::Overlay && m_panel->isShown();
-        m_trackedWindow->setVirtualKeyboardGeometry(bottomKeyboard ? m_panel->inputGeometry() : QRect());
+        m_trackedWindow->setVirtualKeyboardGeometry(bottomKeyboard ? m_panel->inputGeometry() : QRectF());
 
         if (m_panel && m_panel->mode() != InputPanelV1Window::Overlay) {
             overlap = m_trackedWindow->frameGeometry() & m_panel->inputGeometry();
             overlap.moveTo(m_trackedWindow->mapToLocal(overlap.topLeft()));
         }
     }
-    t->setInputPanelState(m_panel && m_panel->isShown(), overlap);
+    t->setInputPanelState(m_panel && m_panel->isShown(), overlap.toRect());
 }
 
 void InputMethod::setInputMethodCommand(const QString &command)

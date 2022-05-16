@@ -20,7 +20,7 @@ namespace KWin
 static const int s_lineWidth = 4;
 static const QColor s_lineColor = QColor(128, 128, 128, 128);
 
-static QRegion computeDirtyRegion(const QRect &windowRect)
+static QRegion computeDirtyRegion(const QRectF &windowRect)
 {
     const QMargins outlineMargins(
         s_lineWidth / 2,
@@ -34,7 +34,7 @@ static QRegion computeDirtyRegion(const QRect &windowRect)
     for (EffectScreen *screen : screens) {
         const QRect screenRect = effects->clientArea(ScreenArea, screen, effects->currentDesktop());
 
-        QRect screenWindowRect = windowRect;
+        QRectF screenWindowRect = windowRect;
         screenWindowRect.moveCenter(screenRect.center());
 
         QRect verticalBarRect(0, 0, s_lineWidth, screenRect.height());
@@ -47,13 +47,13 @@ static QRegion computeDirtyRegion(const QRect &windowRect)
         horizontalBarRect.adjust(-1, -1, 1, 1);
         dirtyRegion += horizontalBarRect;
 
-        const QRect outlineOuterRect = screenWindowRect
-                                           .marginsAdded(outlineMargins)
-                                           .adjusted(-1, -1, 1, 1);
-        const QRect outlineInnerRect = screenWindowRect
-                                           .marginsRemoved(outlineMargins)
-                                           .adjusted(1, 1, -1, -1);
-        dirtyRegion += QRegion(outlineOuterRect) - QRegion(outlineInnerRect);
+        const QRectF outlineOuterRect = screenWindowRect
+                                            .marginsAdded(outlineMargins)
+                                            .adjusted(-1, -1, 1, 1);
+        const QRectF outlineInnerRect = screenWindowRect
+                                            .marginsRemoved(outlineMargins)
+                                            .adjusted(1, 1, -1, -1);
+        dirtyRegion += QRegion(outlineOuterRect.toRect()) - QRegion(outlineInnerRect.toRect());
     }
 
     return dirtyRegion;
@@ -246,7 +246,7 @@ void SnapHelperEffect::slotWindowFinishUserMovedResized(EffectWindow *w)
     effects->addRepaint(computeDirtyRegion(m_geometry));
 }
 
-void SnapHelperEffect::slotWindowFrameGeometryChanged(EffectWindow *w, const QRect &old)
+void SnapHelperEffect::slotWindowFrameGeometryChanged(EffectWindow *w, const QRectF &old)
 {
     if (w != m_window) {
         return;

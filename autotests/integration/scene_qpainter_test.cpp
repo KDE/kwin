@@ -361,11 +361,11 @@ void SceneQPainterTest::testX11Window()
     QCOMPARE(window->window(), windowId);
     QCOMPARE(window->clientSize(), QSize(100, 200));
     QVERIFY(Test::waitForWaylandSurface(window));
-    QVERIFY(waitForXwaylandBuffer(window, window->size()));
-    QImage compareImage(window->clientSize(), QImage::Format_RGB32);
+    QVERIFY(waitForXwaylandBuffer(window, window->size().toSize()));
+    QImage compareImage(window->clientSize().toSize(), QImage::Format_RGB32);
     compareImage.fill(Qt::white);
     auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(window->surface()->buffer());
-    QCOMPARE(buffer->data().copy(QRect(window->clientPos(), window->clientSize())), compareImage);
+    QCOMPARE(buffer->data().copy(QRectF(window->clientPos(), window->clientSize()).toRect()), compareImage);
 
     // enough time for rendering the window
     QTest::qWait(100);
@@ -379,9 +379,9 @@ void SceneQPainterTest::testX11Window()
     QVERIFY(frameRenderedSpy.isValid());
     QVERIFY(frameRenderedSpy.wait());
 
-    const QPoint startPos = window->pos() + window->clientPos();
+    const QPointF startPos = window->pos() + window->clientPos();
     auto image = grab(kwinApp()->platform()->enabledOutputs().constFirst());
-    QCOMPARE(image.copy(QRect(startPos, window->clientSize())), compareImage);
+    QCOMPARE(image.copy(QRectF(startPos, window->clientSize()).toAlignedRect()), compareImage);
 
     // and destroy the window again
     xcb_unmap_window(c.data(), windowId);

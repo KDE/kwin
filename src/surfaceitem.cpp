@@ -117,7 +117,7 @@ void SurfaceItem::discardPixmap()
             m_pixmap.reset();
         }
     }
-    addDamage(rect());
+    addDamage(rect().toAlignedRect());
 }
 
 void SurfaceItem::preprocess()
@@ -180,7 +180,7 @@ QSize SurfacePixmap::size() const
     return m_size;
 }
 
-QRect SurfacePixmap::contentsRect() const
+QRectF SurfacePixmap::contentsRect() const
 {
     return m_contentsRect;
 }

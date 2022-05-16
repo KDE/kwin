@@ -340,7 +340,7 @@ void PointerInputTest::testWarpingBetweenWindows()
     Test::pointerMotion(window1->frameGeometry().center(), timestamp++);
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 1);
-    QCOMPARE(enteredSpy.last().at(1).toPointF(), QPointF(49, 24));
+    QCOMPARE(enteredSpy.last().at(1), QPoint(50, 25));
     QCOMPARE(leftSpy.count(), 0);
     QCOMPARE(motionSpy.count(), 0);
     QCOMPARE(pointer->enteredSurface(), surface1.data());
@@ -349,7 +349,7 @@ void PointerInputTest::testWarpingBetweenWindows()
     Test::pointerMotion(window2->frameGeometry().center(), timestamp++);
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 2);
-    QCOMPARE(enteredSpy.last().at(1).toPointF(), QPointF(99, 49));
+    QCOMPARE(enteredSpy.last().at(1).toPointF(), QPointF(100, 50));
     QCOMPARE(leftSpy.count(), 1);
     QCOMPARE(motionSpy.count(), 0);
     QCOMPARE(pointer->enteredSurface(), surface2.data());
@@ -1662,7 +1662,7 @@ void PointerInputTest::testResizeCursor()
     if (edges & Qt::LeftEdge) {
         cursorPos.setX(window->frameGeometry().left());
     } else if (edges & Qt::RightEdge) {
-        cursorPos.setX(window->frameGeometry().right());
+        cursorPos.setX(window->frameGeometry().right() - 1);
     } else {
         cursorPos.setX(window->frameGeometry().center().x());
     }
@@ -1670,7 +1670,7 @@ void PointerInputTest::testResizeCursor()
     if (edges & Qt::TopEdge) {
         cursorPos.setY(window->frameGeometry().top());
     } else if (edges & Qt::BottomEdge) {
-        cursorPos.setY(window->frameGeometry().bottom());
+        cursorPos.setY(window->frameGeometry().bottom() - 1);
     } else {
         cursorPos.setY(window->frameGeometry().center().y());
     }

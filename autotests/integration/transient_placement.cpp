@@ -497,7 +497,7 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     QVERIFY(parent);
 
     QVERIFY(!parent->isDecorated());
-    parent->move({0, output->geometry().height() - 600});
+    parent->move(QPointF(0, output->geometry().height() - 600));
     parent->keepInArea(workspace()->clientArea(PlacementArea, parent));
     QCOMPARE(parent->frameGeometry(), QRect(0, output->geometry().height() - 600 - 50, 800, 600));
 

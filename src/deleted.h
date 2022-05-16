@@ -29,10 +29,10 @@ public:
     int desktop() const override;
     QStringList activities() const override;
     QVector<VirtualDesktop *> desktops() const override;
-    QPoint clientPos() const override;
+    QPointF clientPos() const override;
     bool isDeleted() const override;
     xcb_window_t frameId() const override;
-    void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const override;
+    void layoutDecorationRects(QRectF &left, QRectF &top, QRectF &right, QRectF &bottom) const override;
     Layer layer() const override
     {
         return m_layer;
@@ -97,9 +97,13 @@ public:
     void closeWindow() override { /* nothing to do */ }
     bool acceptsFocus() const override { return false; }
     bool belongsToSameApplication(const Window *other, SameApplicationChecks /*checks*/) const override { return other == this; }
-    void moveResizeInternal(const QRect & /*rect*/, KWin::Window::MoveResizeMode /*mode*/) override { /* nothing to do */ }
+    void moveResizeInternal(const QRectF & /*rect*/, KWin::Window::MoveResizeMode /*mode*/) override
+    { /* nothing to do */
+    }
     void updateCaption() override { /* nothing to do */ }
-    void resizeWithChecks(const QSize&) override { /* nothing to do */ }
+    void resizeWithChecks(const QSizeF &) override
+    { /* nothing to do */
+    }
     WindowItem *createItem() override;
 
     /**
@@ -139,14 +143,14 @@ private:
     int delete_refcount;
     int desk;
     QStringList activityList;
-    QRect contentsRect; // for clientPos()/clientSize()
+    QRectF contentsRect; // for clientPos()/clientSize()
     xcb_window_t m_frame;
     QVector<VirtualDesktop *> m_desktops;
 
-    QRect decoration_left;
-    QRect decoration_right;
-    QRect decoration_top;
-    QRect decoration_bottom;
+    QRectF decoration_left;
+    QRectF decoration_right;
+    QRectF decoration_top;
+    QRectF decoration_bottom;
     Layer m_layer;
     bool m_shade;
     bool m_minimized;

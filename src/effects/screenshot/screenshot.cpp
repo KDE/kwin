@@ -223,7 +223,7 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
     EffectWindow *window = screenshot->window;
 
     WindowPaintData d;
-    QRect geometry = window->expandedGeometry();
+    QRectF geometry = window->expandedGeometry();
     qreal devicePixelRatio = 1;
     if (window->hasDecoration() && !(screenshot->flags & ScreenShotIncludeDecoration)) {
         geometry = window->clientGeometry();
@@ -237,7 +237,7 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
     QScopedPointer<GLTexture> offscreenTexture;
     QScopedPointer<GLFramebuffer> target;
     if (effects->isOpenGLCompositing()) {
-        offscreenTexture.reset(new GLTexture(GL_RGBA8, geometry.size() * devicePixelRatio));
+        offscreenTexture.reset(new GLTexture(GL_RGBA8, QSizeF(geometry.size() * devicePixelRatio).toSize()));
         offscreenTexture->setFilter(GL_LINEAR);
         offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
         target.reset(new GLFramebuffer(offscreenTexture.data()));

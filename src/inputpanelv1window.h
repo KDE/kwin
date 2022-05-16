@@ -70,7 +70,7 @@ public:
         return true;
     }
     NET::WindowType windowType(bool /*direct*/, int /*supported_types*/) const override;
-    QRect inputGeometry() const override;
+    QRectF inputGeometry() const override;
 
     Mode mode() const
     {
@@ -79,7 +79,7 @@ public:
     void allow();
 
 protected:
-    void moveResizeInternal(const QRect &rect, MoveResizeMode mode) override;
+    void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
 
 private:
     void showTopLevel(KWaylandServer::OutputInterface *output, KWaylandServer::InputPanelSurfaceV1Interface::Position position);

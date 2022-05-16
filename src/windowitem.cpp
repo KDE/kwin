@@ -187,8 +187,8 @@ void WindowItem::updateSurfaceItem(SurfaceItem *surfaceItem)
 
 void WindowItem::updateSurfacePosition()
 {
-    const QRect bufferGeometry = m_window->bufferGeometry();
-    const QRect frameGeometry = m_window->frameGeometry();
+    const QRectF bufferGeometry = m_window->bufferGeometry();
+    const QRectF frameGeometry = m_window->frameGeometry();
 
     m_surfaceItem->setPosition(bufferGeometry.topLeft() - frameGeometry.topLeft());
 }
