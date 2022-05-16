@@ -39,38 +39,45 @@ protected:
     void zwlr_layer_shell_v1_destroy(Resource *resource) override;
 };
 
-class LayerSurfaceV1State
+struct LayerSurfaceV1Commit
 {
-public:
+    std::optional<LayerSurfaceV1Interface::Layer> layer;
+    std::optional<Qt::Edges> anchor;
+    std::optional<QMargins> margins;
+    std::optional<QSize> desiredSize;
+    std::optional<int> exclusiveZone;
+    std::optional<quint32> acknowledgedConfigure;
+    std::optional<bool> acceptsFocus;
+};
+
+struct LayerSurfaceV1State
+{
+    QQueue<quint32> serials;
     LayerSurfaceV1Interface::Layer layer = LayerSurfaceV1Interface::BottomLayer;
     Qt::Edges anchor;
     QMargins margins;
     QSize desiredSize = QSize(0, 0);
     int exclusiveZone = 0;
-    quint32 acknowledgedConfigure;
-    bool acknowledgedConfigureIsSet = false;
     bool acceptsFocus = false;
+    bool configured = false;
+    bool closed = false;
+    bool committed = false;
+    bool firstBufferAttached = false;
 };
 
-class LayerSurfaceV1InterfacePrivate : public SurfaceRole, public QtWaylandServer::zwlr_layer_surface_v1
+class LayerSurfaceV1InterfacePrivate : public SurfaceRole, public SurfaceExtension<LayerSurfaceV1Commit>, public QtWaylandServer::zwlr_layer_surface_v1
 {
 public:
     LayerSurfaceV1InterfacePrivate(LayerSurfaceV1Interface *q, SurfaceInterface *surface);
 
-    void commit() override;
+    void apply(LayerSurfaceV1Commit *commit) override;
 
     LayerSurfaceV1Interface *q;
     LayerShellV1Interface *shell;
     QPointer<SurfaceInterface> surface;
     QPointer<OutputInterface> output;
-    LayerSurfaceV1State current;
-    LayerSurfaceV1State pending;
-    QQueue<quint32> serials;
     QString scope;
-    bool isClosed = false;
-    bool isConfigured = false;
-    bool isCommitted = false;
-    bool firstBufferAttached = false;
+    LayerSurfaceV1State state;
 
 protected:
     void zwlr_layer_surface_v1_destroy_resource(Resource *resource) override;
@@ -150,6 +157,7 @@ Display *LayerShellV1Interface::display() const
 
 LayerSurfaceV1InterfacePrivate::LayerSurfaceV1InterfacePrivate(LayerSurfaceV1Interface *q, SurfaceInterface *surface)
     : SurfaceRole(surface, QByteArrayLiteral("layer_surface_v1"))
+    , SurfaceExtension(surface)
     , q(q)
     , surface(surface)
 {
@@ -177,19 +185,19 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_anchor(Resource *
     pending.anchor = Qt::Edges();
 
     if (anchor & anchor_top) {
-        pending.anchor |= Qt::TopEdge;
+        *pending.anchor |= Qt::TopEdge;
     }
 
     if (anchor & anchor_right) {
-        pending.anchor |= Qt::RightEdge;
+        *pending.anchor |= Qt::RightEdge;
     }
 
     if (anchor & anchor_bottom) {
-        pending.anchor |= Qt::BottomEdge;
+        *pending.anchor |= Qt::BottomEdge;
     }
 
     if (anchor & anchor_left) {
-        pending.anchor |= Qt::LeftEdge;
+        *pending.anchor |= Qt::LeftEdge;
     }
 }
 
@@ -223,19 +231,18 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_get_popup(Resource *r
 
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_ack_configure(Resource *resource, uint32_t serial)
 {
-    if (!serials.contains(serial)) {
+    if (!state.serials.contains(serial)) {
         wl_resource_post_error(resource->handle, error_invalid_surface_state, "invalid configure serial %d", serial);
         return;
     }
-    while (!serials.isEmpty()) {
-        const quint32 head = serials.takeFirst();
+    while (!state.serials.isEmpty()) {
+        const quint32 head = state.serials.takeFirst();
         if (head == serial) {
             break;
         }
     }
-    if (!isClosed) {
+    if (!state.closed) {
         pending.acknowledgedConfigure = serial;
-        pending.acknowledgedConfigureIsSet = true;
     }
 }
 
@@ -253,19 +260,17 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_layer(Resource *r
     pending.layer = LayerSurfaceV1Interface::Layer(layer);
 }
 
-void LayerSurfaceV1InterfacePrivate::commit()
+void LayerSurfaceV1InterfacePrivate::apply(LayerSurfaceV1Commit *commit)
 {
-    if (isClosed) {
+    if (state.closed) {
         return;
     }
 
-    if (pending.acknowledgedConfigureIsSet) {
-        current.acknowledgedConfigure = pending.acknowledgedConfigure;
-        pending.acknowledgedConfigureIsSet = false;
-        Q_EMIT q->configureAcknowledged(pending.acknowledgedConfigure);
+    if (commit->acknowledgedConfigure.has_value()) {
+        Q_EMIT q->configureAcknowledged(commit->acknowledgedConfigure.value());
     }
 
-    if (Q_UNLIKELY(surface->isMapped() && !isConfigured)) {
+    if (Q_UNLIKELY(surface->isMapped() && !state.configured)) {
         wl_resource_post_error(resource()->handle,
                                error_invalid_surface_state,
                                "a buffer has been attached to a layer surface prior "
@@ -273,57 +278,79 @@ void LayerSurfaceV1InterfacePrivate::commit()
         return;
     }
 
-    if (Q_UNLIKELY(pending.desiredSize.width() == 0 && (!(pending.anchor & Qt::LeftEdge) || !(pending.anchor & Qt::RightEdge)))) {
-        wl_resource_post_error(resource()->handle,
-                               error_invalid_size,
-                               "the layer surface has a width of 0 but its anchor "
-                               "doesn't include the left and the right screen edge");
-        return;
+    if (commit->desiredSize && commit->desiredSize->width() == 0) {
+        const Qt::Edges anchor = commit->anchor.value_or(state.anchor);
+        if (!(anchor & Qt::LeftEdge) || !(anchor & Qt::RightEdge)) {
+            wl_resource_post_error(resource()->handle,
+                                   error_invalid_size,
+                                   "the layer surface has a width of 0 but its anchor "
+                                   "doesn't include the left and the right screen edge");
+            return;
+        }
     }
 
-    if (Q_UNLIKELY(pending.desiredSize.height() == 0 && (!(pending.anchor & Qt::TopEdge) || !(pending.anchor & Qt::BottomEdge)))) {
-        wl_resource_post_error(resource()->handle,
-                               error_invalid_size,
-                               "the layer surface has a height of 0 but its anchor "
-                               "doesn't include the top and the bottom screen edge");
-        return;
+    if (commit->desiredSize && commit->desiredSize->height() == 0) {
+        const Qt::Edges anchor = commit->anchor.value_or(state.anchor);
+        if (!(anchor & Qt::TopEdge) || !(anchor & Qt::BottomEdge)) {
+            wl_resource_post_error(resource()->handle,
+                                   error_invalid_size,
+                                   "the layer surface has a height of 0 but its anchor "
+                                   "doesn't include the top and the bottom screen edge");
+            return;
+        }
     }
 
     // detect reset
-    if (!surface->isMapped() && firstBufferAttached) {
-        isCommitted = false;
-        firstBufferAttached = false;
-        isConfigured = false;
-
-        current = LayerSurfaceV1State();
-        pending = LayerSurfaceV1State();
+    if (!surface->isMapped() && state.firstBufferAttached) {
+        state = LayerSurfaceV1State();
+        pending = LayerSurfaceV1Commit();
+        stashed.clear();
 
         return;
     }
 
-    const LayerSurfaceV1State previous = std::exchange(current, pending);
+    const LayerSurfaceV1State previous = state;
 
-    isCommitted = true; // Must set the committed state before emitting any signals.
+    state.committed = true; // Must set the committed state before emitting any signals.
     if (surface->isMapped()) {
-        firstBufferAttached = true;
+        state.firstBufferAttached = true;
     }
 
-    if (previous.acceptsFocus != current.acceptsFocus) {
+    if (commit->layer.has_value()) {
+        state.layer = commit->layer.value();
+    }
+    if (commit->anchor.has_value()) {
+        state.anchor = commit->anchor.value();
+    }
+    if (commit->margins.has_value()) {
+        state.margins = commit->margins.value();
+    }
+    if (commit->desiredSize.has_value()) {
+        state.desiredSize = commit->desiredSize.value();
+    }
+    if (commit->exclusiveZone.has_value()) {
+        state.exclusiveZone = commit->exclusiveZone.value();
+    }
+    if (commit->acceptsFocus.has_value()) {
+        state.acceptsFocus = commit->acceptsFocus.value();
+    }
+
+    if (previous.acceptsFocus != state.acceptsFocus) {
         Q_EMIT q->acceptsFocusChanged();
     }
-    if (previous.layer != current.layer) {
+    if (previous.layer != state.layer) {
         Q_EMIT q->layerChanged();
     }
-    if (previous.anchor != current.anchor) {
+    if (previous.anchor != state.anchor) {
         Q_EMIT q->anchorChanged();
     }
-    if (previous.desiredSize != current.desiredSize) {
+    if (previous.desiredSize != state.desiredSize) {
         Q_EMIT q->desiredSizeChanged();
     }
-    if (previous.exclusiveZone != current.exclusiveZone) {
+    if (previous.exclusiveZone != state.exclusiveZone) {
         Q_EMIT q->exclusiveZoneChanged();
     }
-    if (previous.margins != current.margins) {
+    if (previous.margins != state.margins) {
         Q_EMIT q->marginsChanged();
     }
 }
@@ -336,8 +363,7 @@ LayerSurfaceV1Interface::LayerSurfaceV1Interface(LayerShellV1Interface *shell,
                                                  wl_resource *resource)
     : d(new LayerSurfaceV1InterfacePrivate(this, surface))
 {
-    d->current.layer = layer;
-    d->pending.layer = layer;
+    d->state.layer = layer;
 
     d->shell = shell;
     d->output = output;
@@ -352,7 +378,7 @@ LayerSurfaceV1Interface::~LayerSurfaceV1Interface()
 
 bool LayerSurfaceV1Interface::isCommitted() const
 {
-    return d->isCommitted;
+    return d->state.committed;
 }
 
 SurfaceInterface *LayerSurfaceV1Interface::surface() const
@@ -362,52 +388,52 @@ SurfaceInterface *LayerSurfaceV1Interface::surface() const
 
 Qt::Edges LayerSurfaceV1Interface::anchor() const
 {
-    return d->current.anchor;
+    return d->state.anchor;
 }
 
 QSize LayerSurfaceV1Interface::desiredSize() const
 {
-    return d->current.desiredSize;
+    return d->state.desiredSize;
 }
 
 bool LayerSurfaceV1Interface::acceptsFocus() const
 {
-    return d->current.acceptsFocus;
+    return d->state.acceptsFocus;
 }
 
 LayerSurfaceV1Interface::Layer LayerSurfaceV1Interface::layer() const
 {
-    return d->current.layer;
+    return d->state.layer;
 }
 
 QMargins LayerSurfaceV1Interface::margins() const
 {
-    return d->current.margins;
+    return d->state.margins;
 }
 
 int LayerSurfaceV1Interface::leftMargin() const
 {
-    return d->current.margins.left();
+    return d->state.margins.left();
 }
 
 int LayerSurfaceV1Interface::topMargin() const
 {
-    return d->current.margins.top();
+    return d->state.margins.top();
 }
 
 int LayerSurfaceV1Interface::rightMargin() const
 {
-    return d->current.margins.right();
+    return d->state.margins.right();
 }
 
 int LayerSurfaceV1Interface::bottomMargin() const
 {
-    return d->current.margins.bottom();
+    return d->state.margins.bottom();
 }
 
 int LayerSurfaceV1Interface::exclusiveZone() const
 {
-    return d->current.exclusiveZone;
+    return d->state.exclusiveZone;
 }
 
 Qt::Edge LayerSurfaceV1Interface::exclusiveEdge() const
@@ -442,25 +468,25 @@ QString LayerSurfaceV1Interface::scope() const
 
 quint32 LayerSurfaceV1Interface::sendConfigure(const QSize &size)
 {
-    if (d->isClosed) {
+    if (d->state.closed) {
         qCWarning(KWIN_CORE) << "Cannot configure a closed layer shell surface";
         return 0;
     }
 
     const uint32_t serial = d->shell->display()->nextSerial();
-    d->serials << serial;
+    d->state.serials << serial;
 
     d->send_configure(serial, size.width(), size.height());
-    d->isConfigured = true;
+    d->state.configured = true;
 
     return serial;
 }
 
 void LayerSurfaceV1Interface::sendClosed()
 {
-    if (!d->isClosed) {
+    if (!d->state.closed) {
         d->send_closed();
-        d->isClosed = true;
+        d->state.closed = true;
     }
 }
 

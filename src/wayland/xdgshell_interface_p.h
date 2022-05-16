@@ -9,7 +9,7 @@
 #include "qwayland-server-xdg-shell.h"
 #include "xdgshell_interface.h"
 
-#include "surface_interface.h"
+#include "surface_interface_p.h"
 #include "surfacerole_p.h"
 
 namespace KWaylandServer
@@ -83,37 +83,31 @@ protected:
     void xdg_positioner_set_parent_configure(Resource *resource, uint32_t serial) override;
 };
 
-struct XdgSurfaceState
+struct XdgSurfaceCommit
 {
-    QRect windowGeometry;
-    quint32 acknowledgedConfigure;
-    bool acknowledgedConfigureIsSet = false;
-    bool windowGeometryIsSet = false;
+    std::optional<QRect> windowGeometry;
+    std::optional<quint32> acknowledgedConfigure;
 };
 
-struct XdgToplevelState
+struct XdgToplevelCommit : XdgSurfaceCommit
 {
-    XdgSurfaceState base;
-    QSize minimumSize;
-    QSize maximumSize;
+    std::optional<QSize> minimumSize;
+    std::optional<QSize> maximumSize;
 };
 
-struct XdgPopupState
+struct XdgPopupCommit : XdgSurfaceCommit
 {
-    XdgSurfaceState base;
 };
 
-template<typename State>
-class XdgSurfaceRole : public SurfaceRole
+template<typename Commit>
+class XdgSurfaceRole : public SurfaceRole, public SurfaceExtension<Commit>
 {
 public:
     XdgSurfaceRole(SurfaceInterface *surface, const QByteArray &name)
         : SurfaceRole(surface, name)
+        , SurfaceExtension<Commit>(surface)
     {
     }
-
-    State pending;
-    State current;
 };
 
 class XdgSurfaceInterfacePrivate : public QtWaylandServer::xdg_surface
@@ -121,22 +115,22 @@ class XdgSurfaceInterfacePrivate : public QtWaylandServer::xdg_surface
 public:
     XdgSurfaceInterfacePrivate(XdgSurfaceInterface *xdgSurface);
 
-    void applyState(XdgSurfaceState *next);
-    void resetState();
+    void apply(XdgSurfaceCommit *commit);
+    void reset();
 
     void unassignRole();
     void assignRole(XdgToplevelInterface *toplevel);
     void assignRole(XdgPopupInterface *popup);
 
     // These two point into XdgSurfaceRole's state and are valid as long as a role is assigned.
-    XdgSurfaceState *current = nullptr;
-    XdgSurfaceState *pending = nullptr;
+    XdgSurfaceCommit *pending = nullptr;
 
     XdgSurfaceInterface *q;
     XdgShellInterface *shell = nullptr;
     QPointer<XdgToplevelInterface> toplevel;
     QPointer<XdgPopupInterface> popup;
     QPointer<SurfaceInterface> surface;
+    QRect windowGeometry;
     bool firstBufferAttached = false;
     bool isConfigured = false;
     bool isInitialized = false;
@@ -152,12 +146,12 @@ protected:
     void xdg_surface_ack_configure(Resource *resource, uint32_t serial) override;
 };
 
-class XdgToplevelInterfacePrivate : public XdgSurfaceRole<XdgToplevelState>, public QtWaylandServer::xdg_toplevel
+class XdgToplevelInterfacePrivate : public XdgSurfaceRole<XdgToplevelCommit>, public QtWaylandServer::xdg_toplevel
 {
 public:
     XdgToplevelInterfacePrivate(XdgToplevelInterface *toplevel, XdgSurfaceInterface *surface);
 
-    void commit() override;
+    void apply(XdgToplevelCommit *commit) override;
     void reset();
 
     static XdgToplevelInterfacePrivate *get(XdgToplevelInterface *toplevel);
@@ -169,6 +163,8 @@ public:
     XdgSurfaceInterface *xdgSurface;
     QString windowTitle;
     QString windowClass;
+    QSize minimumSize;
+    QSize maximumSize;
 
 protected:
     void xdg_toplevel_destroy_resource(Resource *resource) override;
@@ -188,14 +184,14 @@ protected:
     void xdg_toplevel_set_minimized(Resource *resource) override;
 };
 
-class XdgPopupInterfacePrivate : public XdgSurfaceRole<XdgPopupState>, public QtWaylandServer::xdg_popup
+class XdgPopupInterfacePrivate : public XdgSurfaceRole<XdgPopupCommit>, public QtWaylandServer::xdg_popup
 {
 public:
     static XdgPopupInterfacePrivate *get(XdgPopupInterface *popup);
 
     XdgPopupInterfacePrivate(XdgPopupInterface *popup, XdgSurfaceInterface *surface);
 
-    void commit() override;
+    void apply(XdgPopupCommit *commit) override;
     void reset();
 
     XdgPopupInterface *q;

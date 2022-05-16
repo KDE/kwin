@@ -74,8 +74,8 @@ TearingControlV1Interface::~TearingControlV1Interface()
 {
     if (m_surface) {
         SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(m_surface);
-        surfacePrivate->pending.presentationHint = PresentationHint::VSync;
-        surfacePrivate->pending.tearingIsSet = true;
+        surfacePrivate->pending->presentationHint = PresentationHint::VSync;
+        surfacePrivate->pending->tearingIsSet = true;
         surfacePrivate->tearing = nullptr;
     }
 }
@@ -85,11 +85,11 @@ void TearingControlV1Interface::wp_tearing_control_v1_set_presentation_hint(Reso
     if (m_surface) {
         SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(m_surface);
         if (hint == presentation_hint::presentation_hint_async) {
-            surfacePrivate->pending.presentationHint = PresentationHint::Async;
+            surfacePrivate->pending->presentationHint = PresentationHint::Async;
         } else {
-            surfacePrivate->pending.presentationHint = PresentationHint::VSync;
+            surfacePrivate->pending->presentationHint = PresentationHint::VSync;
         }
-        surfacePrivate->pending.tearingIsSet = true;
+        surfacePrivate->pending->tearingIsSet = true;
     }
 }
 

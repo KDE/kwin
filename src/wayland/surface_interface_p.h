@@ -15,6 +15,7 @@
 // Wayland
 #include "qwayland-server-wayland.h"
 // C++
+#include <deque>
 #include <optional>
 
 namespace KWaylandServer
@@ -28,7 +29,12 @@ class FractionalScaleV1Interface;
 
 struct SurfaceState
 {
+    SurfaceState();
+
     void mergeInto(SurfaceState *target);
+
+    quint32 serial = 0;
+    quint32 locks = 0;
 
     QRegion damage = QRegion();
     QRegion bufferDamage = QRegion();
@@ -103,13 +109,12 @@ public:
     void installPointerConstraint(ConfinedPointerV1Interface *confinement);
     void installIdleInhibitor(IdleInhibitorV1Interface *inhibitor);
 
-    void commitToCache();
-    void commitFromCache();
-
-    void commitSubSurface();
     QMatrix4x4 buildSurfaceToBufferMatrix();
     QRectF computeBufferSourceBox() const;
     void applyState(SurfaceState *next);
+
+    quint32 lockState(SurfaceState *state);
+    void unlockState(quint32 serial);
 
     bool computeEffectiveMapped() const;
     void updateEffectiveMapped();
@@ -124,9 +129,9 @@ public:
     CompositorInterface *compositor;
     SurfaceInterface *q;
     SurfaceRole *role = nullptr;
-    SurfaceState current;
-    SurfaceState pending;
-    SurfaceState cached;
+    std::unique_ptr<SurfaceState> current;
+    std::unique_ptr<SurfaceState> pending;
+    std::deque<std::unique_ptr<SurfaceState>> stashed;
     SubSurfaceInterface *subSurface = nullptr;
     QMatrix4x4 surfaceToBufferMatrix;
     QSize bufferSize = QSize(0, 0);
@@ -139,7 +144,6 @@ public:
     KWin::GraphicsBufferRef bufferRef;
     QRegion bufferDamage;
     bool mapped = false;
-    bool hasCacheState = false;
     qreal scaleOverride = 1.;
     qreal pendingScaleOverride = 1.;
 

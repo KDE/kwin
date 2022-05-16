@@ -55,6 +55,8 @@ Q_SIGNALS:
     void changed();
 
 private:
+    void commit();
+
     explicit DragAndDropIcon(SurfaceInterface *surface);
     friend class DataDeviceInterfacePrivate;
     std::unique_ptr<DragAndDropIconPrivate> d;

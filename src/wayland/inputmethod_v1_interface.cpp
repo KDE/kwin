@@ -327,10 +327,6 @@ public:
         Q_EMIT q->topLevel(OutputInterface::get(output), InputPanelSurfaceV1Interface::Position(position));
     }
 
-    void commit() override
-    {
-    }
-
     void zwp_input_panel_surface_v1_destroy_resource(Resource *) override
     {
         delete q;

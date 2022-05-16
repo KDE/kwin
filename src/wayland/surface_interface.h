@@ -430,11 +430,64 @@ Q_SIGNALS:
      */
     void committed();
 
+    /**
+     * This signal is emitted when a surface commit with the specified \a serial has been cached
+     * to be applied later.
+     */
+    void stateStashed(quint32 serial);
+
+    /**
+     * This signal is emitted when the state in a surface commit with the specified \a serial
+     * has been applied.
+     */
+    void stateApplied(quint32 serial);
+
 private:
     std::unique_ptr<SurfaceInterfacePrivate> d;
     friend class SurfaceInterfacePrivate;
 };
 
-}
+/**
+ * The SurfaceExtension class is the base class for wl_surface extensions. The SurfaceExtension
+ * helps with managing extension state and keeping it in sync with the surface state.
+ */
+template<typename Commit>
+class SurfaceExtension : public QObject
+{
+public:
+    explicit SurfaceExtension(SurfaceInterface *surface)
+    {
+        connect(surface, &SurfaceInterface::stateStashed, this, &SurfaceExtension::stashState);
+        connect(surface, &SurfaceInterface::stateApplied, this, &SurfaceExtension::applyState);
+    }
+
+    virtual void apply(Commit *commit) = 0;
+
+    Commit pending;
+    QMap<quint32, Commit> stashed;
+
+private:
+    void stashState(quint32 serial)
+    {
+        Commit stash = std::exchange(pending, Commit{});
+        stashed.insert(serial, stash);
+    }
+
+    void applyState(quint32 serial)
+    {
+        if (!stashed.isEmpty()) {
+            if (stashed.firstKey() == serial) {
+                Commit stash = stashed.take(serial);
+                apply(&stash);
+            }
+            return;
+        }
+
+        apply(&pending);
+        pending = Commit{};
+    }
+};
+
+} // namespace KWaylandServer
 
 Q_DECLARE_METATYPE(KWaylandServer::SurfaceInterface *)

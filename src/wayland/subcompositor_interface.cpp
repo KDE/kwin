@@ -109,8 +109,8 @@ void SubSurfaceInterfacePrivate::subsurface_set_position(Resource *resource, int
 
     SurfaceInterfacePrivate *parentPrivate = SurfaceInterfacePrivate::get(parent);
 
-    parentPrivate->pending.subsurface.position[q] = QPoint(x, y);
-    parentPrivate->pending.subsurfacePositionChanged = true;
+    parentPrivate->pending->subsurface.position[q] = QPoint(x, y);
+    parentPrivate->pending->subsurfacePositionChanged = true;
 }
 
 void SubSurfaceInterfacePrivate::subsurface_place_above(Resource *resource, struct ::wl_resource *sibling_resource)
@@ -166,20 +166,19 @@ void SubSurfaceInterfacePrivate::subsurface_set_desync(Resource *)
     mode = SubSurfaceInterface::Mode::Desynchronized;
     if (!q->isSynchronized()) {
         auto surfacePrivate = SurfaceInterfacePrivate::get(surface);
-        surfacePrivate->commitFromCache();
+        while (!locks.isEmpty()) {
+            SubSurfaceStateLock lock = locks.takeFirst();
+            surfacePrivate->unlockState(lock.serial);
+        }
     }
     Q_EMIT q->modeChanged(SubSurfaceInterface::Mode::Desynchronized);
 }
 
-void SubSurfaceInterfacePrivate::commit()
-{
-}
-
-void SubSurfaceInterfacePrivate::parentCommit()
+void SubSurfaceInterfacePrivate::parentApplyState(quint32 serial)
 {
     auto parentPrivate = SurfaceInterfacePrivate::get(parent);
-    if (parentPrivate->current.subsurfacePositionChanged) {
-        const QPoint &pos = parentPrivate->current.subsurface.position[q];
+    if (parentPrivate->current->subsurfacePositionChanged) {
+        const QPoint &pos = parentPrivate->current->subsurface.position[q];
         if (position != pos) {
             position = pos;
             Q_EMIT q->positionChanged(pos);
@@ -188,7 +187,10 @@ void SubSurfaceInterfacePrivate::parentCommit()
 
     if (mode == SubSurfaceInterface::Mode::Synchronized) {
         auto surfacePrivate = SurfaceInterfacePrivate::get(surface);
-        surfacePrivate->commitFromCache();
+        while (!locks.isEmpty() && locks[0].parentSerial == serial) {
+            SubSurfaceStateLock lock = locks.takeFirst();
+            surfacePrivate->unlockState(lock.serial);
+        }
     }
 }
 
@@ -264,6 +266,24 @@ SurfaceInterface *SubSurfaceInterface::mainSurface() const
         return parentPrivate->subSurface->mainSurface();
     }
     return d->parent;
+}
+
+void SubSurfaceInterface::commit()
+{
+    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(d->surface);
+    if (isSynchronized()) {
+        const quint32 serial = surfacePrivate->lockState(surfacePrivate->pending.get());
+        const quint32 parentSerial = SurfaceInterfacePrivate::get(d->parent)->pending->serial;
+        d->locks.append(SubSurfaceStateLock{
+            .serial = serial,
+            .parentSerial = parentSerial,
+        });
+    } else {
+        while (!d->locks.isEmpty()) {
+            SubSurfaceStateLock lock = d->locks.takeFirst();
+            surfacePrivate->unlockState(lock.serial);
+        }
+    }
 }
 
 } // namespace KWaylandServer

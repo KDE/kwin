@@ -7,8 +7,8 @@
 #include "xwaylandshell_v1_interface.h"
 
 #include "display.h"
+#include "surface_interface_p.h"
 #include "surfacerole_p.h"
-#include "surface_interface.h"
 
 #include "qwayland-server-xwayland-shell-v1.h"
 
@@ -30,23 +30,21 @@ protected:
     void xwayland_shell_v1_get_xwayland_surface(Resource *resource, uint32_t id, struct ::wl_resource *surface) override;
 };
 
-struct XwaylandSurfaceV1State
+struct XwaylandSurfaceV1Commit
 {
     std::optional<uint64_t> serial;
 };
 
-class XwaylandSurfaceV1InterfacePrivate : public SurfaceRole, public QtWaylandServer::xwayland_surface_v1
+class XwaylandSurfaceV1InterfacePrivate : public SurfaceRole, public SurfaceExtension<XwaylandSurfaceV1Commit>, public QtWaylandServer::xwayland_surface_v1
 {
 public:
     XwaylandSurfaceV1InterfacePrivate(XwaylandShellV1Interface *shell, SurfaceInterface *surface, wl_client *client, uint32_t id, int version, XwaylandSurfaceV1Interface *q);
 
-    void commit() override;
+    void apply(XwaylandSurfaceV1Commit *commit) override;
 
     XwaylandSurfaceV1Interface *q;
     XwaylandShellV1Interface *shell;
-
-    XwaylandSurfaceV1State current;
-    XwaylandSurfaceV1State pending;
+    std::optional<uint64_t> serial;
 
 protected:
     void xwayland_surface_v1_destroy_resource(Resource *resource) override;
@@ -82,16 +80,17 @@ void XwaylandShellV1InterfacePrivate::xwayland_shell_v1_get_xwayland_surface(Res
 
 XwaylandSurfaceV1InterfacePrivate::XwaylandSurfaceV1InterfacePrivate(XwaylandShellV1Interface *shell, SurfaceInterface *surface, wl_client *client, uint32_t id, int version, XwaylandSurfaceV1Interface *q)
     : SurfaceRole(surface, QByteArrayLiteral("xwayland_surface_v1"))
+    , SurfaceExtension(surface)
     , QtWaylandServer::xwayland_surface_v1(client, id, version)
     , q(q)
     , shell(shell)
 {
 }
 
-void XwaylandSurfaceV1InterfacePrivate::commit()
+void XwaylandSurfaceV1InterfacePrivate::apply(XwaylandSurfaceV1Commit *commit)
 {
-    if (pending.serial.has_value()) {
-        current.serial = std::exchange(pending.serial, std::nullopt);
+    if (commit->serial.has_value()) {
+        serial = commit->serial;
         Q_EMIT shell->surfaceAssociated(q);
     }
 }
@@ -109,9 +108,9 @@ void XwaylandSurfaceV1InterfacePrivate::xwayland_surface_v1_set_serial(Resource 
         return;
     }
 
-    if (current.serial.has_value()) {
+    if (this->serial.has_value()) {
         wl_resource_post_error(resource->handle, error_already_associated,
-                               "xwayland_surface_v1 already has a serial assigned to it: %" PRIu64, current.serial.value());
+                               "xwayland_surface_v1 already has a serial assigned to it: %" PRIu64, this->serial.value());
         return;
     }
 
@@ -159,7 +158,7 @@ SurfaceInterface *XwaylandSurfaceV1Interface::surface() const
 
 std::optional<uint64_t> XwaylandSurfaceV1Interface::serial() const
 {
-    return d->current.serial;
+    return d->serial;
 }
 
 } // namespace KWaylandServer

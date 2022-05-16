@@ -142,7 +142,6 @@ void XdgSurfaceInterfacePrivate::unassignRole()
 {
     toplevel = nullptr;
     popup = nullptr;
-    current = nullptr;
     pending = nullptr;
 }
 
@@ -150,46 +149,40 @@ void XdgSurfaceInterfacePrivate::assignRole(XdgToplevelInterface *toplevel)
 {
     this->toplevel = toplevel;
 
-    XdgSurfaceRole<XdgToplevelState> *role = XdgToplevelInterfacePrivate::get(toplevel);
-    current = &role->current.base;
-    pending = &role->pending.base;
+    XdgSurfaceRole<XdgToplevelCommit> *role = XdgToplevelInterfacePrivate::get(toplevel);
+    pending = &role->pending;
 }
 
 void XdgSurfaceInterfacePrivate::assignRole(XdgPopupInterface *popup)
 {
     this->popup = popup;
 
-    XdgSurfaceRole<XdgPopupState> *role = XdgPopupInterfacePrivate::get(popup);
-    current = &role->current.base;
-    pending = &role->pending.base;
+    XdgSurfaceRole<XdgPopupCommit> *role = XdgPopupInterfacePrivate::get(popup);
+    pending = &role->pending;
 }
 
-void XdgSurfaceInterfacePrivate::applyState(XdgSurfaceState *next)
+void XdgSurfaceInterfacePrivate::apply(XdgSurfaceCommit *commit)
 {
     if (surface->buffer()) {
         firstBufferAttached = true;
     }
 
-    if (next->acknowledgedConfigureIsSet) {
-        current->acknowledgedConfigure = next->acknowledgedConfigure;
-        next->acknowledgedConfigureIsSet = false;
-        Q_EMIT q->configureAcknowledged(current->acknowledgedConfigure);
+    if (commit->acknowledgedConfigure.has_value()) {
+        Q_EMIT q->configureAcknowledged(commit->acknowledgedConfigure.value());
     }
 
-    if (next->windowGeometryIsSet) {
-        current->windowGeometry = next->windowGeometry;
-        next->windowGeometryIsSet = false;
-        Q_EMIT q->windowGeometryChanged(current->windowGeometry);
+    if (commit->windowGeometry.has_value()) {
+        windowGeometry = commit->windowGeometry.value();
+        Q_EMIT q->windowGeometryChanged(windowGeometry);
     }
 }
 
-void XdgSurfaceInterfacePrivate::resetState()
+void XdgSurfaceInterfacePrivate::reset()
 {
     firstBufferAttached = false;
     isConfigured = false;
     isInitialized = false;
-    *current = XdgSurfaceState{};
-    *pending = XdgSurfaceState{};
+    windowGeometry = QRect();
     Q_EMIT q->resetOccurred();
 }
 
@@ -275,7 +268,6 @@ void XdgSurfaceInterfacePrivate::xdg_surface_set_window_geometry(Resource *resou
     }
 
     pending->windowGeometry = QRect(x, y, width, height);
-    pending->windowGeometryIsSet = true;
 }
 
 void XdgSurfaceInterfacePrivate::xdg_surface_ack_configure(Resource *resource, uint32_t serial)
@@ -286,7 +278,6 @@ void XdgSurfaceInterfacePrivate::xdg_surface_ack_configure(Resource *resource, u
     }
 
     pending->acknowledgedConfigure = serial;
-    pending->acknowledgedConfigureIsSet = true;
 }
 
 XdgSurfaceInterface::XdgSurfaceInterface(XdgShellInterface *shell, SurfaceInterface *surface, ::wl_resource *resource)
@@ -333,7 +324,7 @@ bool XdgSurfaceInterface::isConfigured() const
 
 QRect XdgSurfaceInterface::windowGeometry() const
 {
-    return d->current->windowGeometry;
+    return d->windowGeometry;
 }
 
 XdgSurfaceInterface *XdgSurfaceInterface::get(::wl_resource *resource)
@@ -351,7 +342,7 @@ XdgToplevelInterfacePrivate::XdgToplevelInterfacePrivate(XdgToplevelInterface *t
 {
 }
 
-void XdgToplevelInterfacePrivate::commit()
+void XdgToplevelInterfacePrivate::apply(XdgToplevelCommit *commit)
 {
     auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
     if (xdgSurfacePrivate->firstBufferAttached && !xdgSurfacePrivate->surface->buffer()) {
@@ -359,15 +350,15 @@ void XdgToplevelInterfacePrivate::commit()
         return;
     }
 
-    xdgSurfacePrivate->applyState(&pending.base);
+    xdgSurfacePrivate->apply(commit);
 
-    if (current.minimumSize != pending.minimumSize) {
-        current.minimumSize = pending.minimumSize;
-        Q_EMIT q->minimumSizeChanged(current.minimumSize);
+    if (commit->minimumSize && commit->minimumSize != minimumSize) {
+        minimumSize = commit->minimumSize.value();
+        Q_EMIT q->minimumSizeChanged(minimumSize);
     }
-    if (current.maximumSize != pending.maximumSize) {
-        current.maximumSize = pending.maximumSize;
-        Q_EMIT q->maximumSizeChanged(current.maximumSize);
+    if (commit->maximumSize && commit->maximumSize != maximumSize) {
+        maximumSize = commit->maximumSize.value();
+        Q_EMIT q->maximumSizeChanged(maximumSize);
     }
 
     if (!xdgSurfacePrivate->isInitialized) {
@@ -379,12 +370,14 @@ void XdgToplevelInterfacePrivate::commit()
 void XdgToplevelInterfacePrivate::reset()
 {
     auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
-    xdgSurfacePrivate->resetState();
+    xdgSurfacePrivate->reset();
 
     windowTitle = QString();
     windowClass = QString();
-    current = XdgToplevelState{};
-    pending = XdgToplevelState{};
+    minimumSize = QSize();
+    maximumSize = QSize();
+    pending = XdgToplevelCommit{};
+    stashed.clear();
 
     Q_EMIT q->resetOccurred();
 }
@@ -574,12 +567,12 @@ QString XdgToplevelInterface::windowClass() const
 
 QSize XdgToplevelInterface::minimumSize() const
 {
-    return d->current.minimumSize.isEmpty() ? QSize(0, 0) : d->current.minimumSize;
+    return d->minimumSize.isEmpty() ? QSize(0, 0) : d->minimumSize;
 }
 
 QSize XdgToplevelInterface::maximumSize() const
 {
-    return d->current.maximumSize.isEmpty() ? QSize(INT_MAX, INT_MAX) : d->current.maximumSize;
+    return d->maximumSize.isEmpty() ? QSize(INT_MAX, INT_MAX) : d->maximumSize;
 }
 
 quint32 XdgToplevelInterface::sendConfigure(const QSize &size, const States &states)
@@ -693,7 +686,7 @@ XdgPopupInterfacePrivate::XdgPopupInterfacePrivate(XdgPopupInterface *popup, Xdg
 {
 }
 
-void XdgPopupInterfacePrivate::commit()
+void XdgPopupInterfacePrivate::apply(XdgPopupCommit *commit)
 {
     if (!parentSurface) {
         auto shellPrivate = XdgShellInterfacePrivate::get(xdgSurface->shell());
@@ -709,7 +702,7 @@ void XdgPopupInterfacePrivate::commit()
         return;
     }
 
-    xdgSurfacePrivate->applyState(&pending.base);
+    xdgSurfacePrivate->apply(commit);
 
     if (!xdgSurfacePrivate->isInitialized) {
         Q_EMIT q->initializeRequested();
@@ -720,7 +713,9 @@ void XdgPopupInterfacePrivate::commit()
 void XdgPopupInterfacePrivate::reset()
 {
     auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
-    xdgSurfacePrivate->resetState();
+    pending = XdgPopupCommit{};
+    stashed.clear();
+    xdgSurfacePrivate->reset();
 }
 
 void XdgPopupInterfacePrivate::xdg_popup_destroy_resource(Resource *resource)

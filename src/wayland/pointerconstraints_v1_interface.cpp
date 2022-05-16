@@ -138,27 +138,28 @@ LockedPointerV1InterfacePrivate::LockedPointerV1InterfacePrivate(LockedPointerV1
                                                                  const QRegion &region,
                                                                  ::wl_resource *resource)
     : QtWaylandServer::zwp_locked_pointer_v1(resource)
+    , SurfaceExtension(surface)
     , q(q)
     , surface(surface)
     , lifeTime(lifeTime)
-    , pendingRegion(region)
-    , hasPendingRegion(true)
 {
-    commit();
+    pending.region = region;
+
+    apply(&pending);
+
+    pending = LockedPointerV1Commit{};
 }
 
-void LockedPointerV1InterfacePrivate::commit()
+void LockedPointerV1InterfacePrivate::apply(LockedPointerV1Commit *commit)
 {
     const QRegion oldRegion = effectiveRegion;
     const QPointF oldHint = hint;
 
-    if (hasPendingRegion) {
-        region = mapScaleOverride(pendingRegion, surface->scaleOverride());
-        hasPendingRegion = false;
+    if (commit->region.has_value()) {
+        region = mapScaleOverride(commit->region.value(), surface->scaleOverride());
     }
-    if (hasPendingHint) {
-        hint = pendingHint / surface->scaleOverride();
-        hasPendingHint = false;
+    if (commit->hint.has_value()) {
+        hint = commit->hint.value() / surface->scaleOverride();
     }
 
     effectiveRegion = surface->input();
@@ -187,17 +188,18 @@ void LockedPointerV1InterfacePrivate::zwp_locked_pointer_v1_destroy(Resource *re
 
 void LockedPointerV1InterfacePrivate::zwp_locked_pointer_v1_set_cursor_position_hint(Resource *resource, wl_fixed_t surface_x, wl_fixed_t surface_y)
 {
-    pendingHint = QPointF(wl_fixed_to_double(surface_x), wl_fixed_to_double(surface_y));
-    hasPendingHint = true;
+    pending.hint = QPointF(wl_fixed_to_double(surface_x), wl_fixed_to_double(surface_y));
 }
 
 void LockedPointerV1InterfacePrivate::zwp_locked_pointer_v1_set_region(Resource *resource, ::wl_resource *region_resource)
 {
-    pendingRegion = regionFromResource(region_resource);
-    hasPendingRegion = true;
+    pending.region = regionFromResource(region_resource);
 }
 
-LockedPointerV1Interface::LockedPointerV1Interface(SurfaceInterface *surface, LifeTime lifeTime, const QRegion &region, ::wl_resource *resource)
+LockedPointerV1Interface::LockedPointerV1Interface(SurfaceInterface *surface,
+                                                   LifeTime lifeTime,
+                                                   const QRegion &region,
+                                                   ::wl_resource *resource)
     : d(new LockedPointerV1InterfacePrivate(this, surface, lifeTime, region, resource))
 {
     SurfaceInterfacePrivate::get(surface)->installPointerConstraint(this);
@@ -255,22 +257,24 @@ ConfinedPointerV1InterfacePrivate::ConfinedPointerV1InterfacePrivate(ConfinedPoi
                                                                      const QRegion &region,
                                                                      ::wl_resource *resource)
     : QtWaylandServer::zwp_confined_pointer_v1(resource)
+    , SurfaceExtension(surface)
     , q(q)
     , surface(surface)
     , lifeTime(lifeTime)
-    , pendingRegion(region)
-    , hasPendingRegion(true)
 {
-    commit();
+    pending.region = region;
+
+    apply(&pending);
+
+    pending = ConfinedPointerV1Commit{};
 }
 
-void ConfinedPointerV1InterfacePrivate::commit()
+void ConfinedPointerV1InterfacePrivate::apply(ConfinedPointerV1Commit *commit)
 {
     const QRegion oldRegion = effectiveRegion;
 
-    if (hasPendingRegion) {
-        region = mapScaleOverride(pendingRegion, surface->scaleOverride());
-        hasPendingRegion = false;
+    if (commit->region.has_value()) {
+        region = mapScaleOverride(commit->region.value(), surface->scaleOverride());
     }
 
     effectiveRegion = surface->input();
@@ -295,11 +299,13 @@ void ConfinedPointerV1InterfacePrivate::zwp_confined_pointer_v1_destroy(Resource
 
 void ConfinedPointerV1InterfacePrivate::zwp_confined_pointer_v1_set_region(Resource *resource, ::wl_resource *region_resource)
 {
-    pendingRegion = regionFromResource(region_resource);
-    hasPendingRegion = true;
+    pending.region = regionFromResource(region_resource);
 }
 
-ConfinedPointerV1Interface::ConfinedPointerV1Interface(SurfaceInterface *surface, LifeTime lifeTime, const QRegion &region, ::wl_resource *resource)
+ConfinedPointerV1Interface::ConfinedPointerV1Interface(SurfaceInterface *surface,
+                                                       LifeTime lifeTime,
+                                                       const QRegion &region,
+                                                       ::wl_resource *resource)
     : d(new ConfinedPointerV1InterfacePrivate(this, surface, lifeTime, region, resource))
 {
     SurfaceInterfacePrivate::get(surface)->installPointerConstraint(this);

@@ -22,34 +22,31 @@ namespace KWaylandServer
 class DragAndDropIconPrivate : public SurfaceRole
 {
 public:
-    explicit DragAndDropIconPrivate(DragAndDropIcon *q, SurfaceInterface *surface);
+    explicit DragAndDropIconPrivate(SurfaceInterface *surface);
 
-    void commit() override;
-
-    DragAndDropIcon *q;
     QPoint position;
 };
 
-DragAndDropIconPrivate::DragAndDropIconPrivate(DragAndDropIcon *q, SurfaceInterface *surface)
+DragAndDropIconPrivate::DragAndDropIconPrivate(SurfaceInterface *surface)
     : SurfaceRole(surface, QByteArrayLiteral("dnd_icon"))
-    , q(q)
 {
-}
-
-void DragAndDropIconPrivate::commit()
-{
-    position += surface()->offset();
-    Q_EMIT q->changed();
 }
 
 DragAndDropIcon::DragAndDropIcon(SurfaceInterface *surface)
     : QObject(surface)
-    , d(new DragAndDropIconPrivate(this, surface))
+    , d(new DragAndDropIconPrivate(surface))
 {
+    connect(surface, &SurfaceInterface::committed, this, &DragAndDropIcon::commit);
 }
 
 DragAndDropIcon::~DragAndDropIcon()
 {
+}
+
+void DragAndDropIcon::commit()
+{
+    d->position += d->surface()->offset();
+    Q_EMIT changed();
 }
 
 QPoint DragAndDropIcon::position() const
