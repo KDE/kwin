@@ -796,7 +796,7 @@ void Workspace::addWaylandWindow(Window *window)
     m_allClients.append(window);
     addToStack(window);
 
-    updateStackingOrder();
+    updateStackingOrder(true);
     updateClientArea();
     if (window->wantsInput() && !window->isMinimized()) {
         activateWindow(window);
@@ -1912,7 +1912,7 @@ void Workspace::addInternalWindow(InternalWindow *window)
         Placement::self()->place(window, area);
     }
 
-    updateStackingOrder();
+    updateStackingOrder(true);
     updateClientArea();
 
     Q_EMIT internalWindowAdded(window);
