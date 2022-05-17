@@ -34,6 +34,12 @@ void XwlDropHandler::drop()
 
 bool XwlDropHandler::handleClientMessage(xcb_client_message_event_t *event)
 {
+    for (auto visit : m_previousVisits) {
+        if (visit->handleClientMessage(event)) {
+            return true;
+        }
+    }
+
     if (m_xvisit && m_xvisit->handleClientMessage(event)) {
         return true;
     }
@@ -52,7 +58,15 @@ void XwlDropHandler::updateDragTarget(KWaylandServer::SurfaceInterface *surface,
     // leave current target
     if (m_xvisit) {
         m_xvisit->leave();
-        delete m_xvisit;
+        if (!m_xvisit->finished()) {
+            connect(m_xvisit, &Xvisit::finish, this, [this](Xvisit *visit) {
+                m_previousVisits.removeOne(visit);
+                delete visit;
+            });
+            m_previousVisits.push_back(m_xvisit);
+        } else {
+            delete m_xvisit;
+        }
         m_xvisit = nullptr;
     }
     if (client) {

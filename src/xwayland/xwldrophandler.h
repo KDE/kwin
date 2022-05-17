@@ -34,6 +34,7 @@ public:
 private:
     void drop() override;
     Xvisit *m_xvisit = nullptr;
+    QVector<Xvisit *> m_previousVisits;
 };
 }
 }
