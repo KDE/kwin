@@ -12,6 +12,8 @@
 
 #include "datadevicemanager_interface.h"
 
+#include <optional>
+
 namespace KWaylandServer
 {
 class DataDeviceInterface;
@@ -35,12 +37,12 @@ public:
     /**
      * @returns The Drag and Drop actions supported by this DataOfferInterface.
      */
-    DataDeviceManagerInterface::DnDActions supportedDragAndDropActions() const;
+    std::optional<DataDeviceManagerInterface::DnDActions> supportedDragAndDropActions() const;
 
     /**
      * @returns The preferred Drag and Drop action of this DataOfferInterface.
      */
-    DataDeviceManagerInterface::DnDAction preferredDragAndDropAction() const;
+    std::optional<DataDeviceManagerInterface::DnDAction> preferredDragAndDropAction() const;
 
     /**
      * This event indicates the @p action selected by the compositor after matching the

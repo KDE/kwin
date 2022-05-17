@@ -212,6 +212,25 @@ void DataDeviceInterface::drop()
     d->drag.surface = nullptr;
 }
 
+static DataDeviceManagerInterface::DnDAction chooseDndAction(AbstractDataSource *source, DataOfferInterface *offer)
+{
+    if (offer->preferredDragAndDropAction().has_value()) {
+        if (source->supportedDragAndDropActions().testFlag(*offer->preferredDragAndDropAction())) {
+            return *offer->preferredDragAndDropAction();
+        }
+    }
+
+    if (offer->supportedDragAndDropActions().has_value()) {
+        for (const auto &action : {DataDeviceManagerInterface::DnDAction::Copy, DataDeviceManagerInterface::DnDAction::Move, DataDeviceManagerInterface::DnDAction::Ask}) {
+            if (source->supportedDragAndDropActions().testFlag(action) && offer->supportedDragAndDropActions()->testFlag(action)) {
+                return action;
+            }
+        }
+    }
+
+    return DataDeviceManagerInterface::DnDAction::None;
+}
+
 void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 serial)
 {
     if (d->drag.surface) {
@@ -291,21 +310,7 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
     if (offer) {
         offer->sendSourceActions();
         auto matchOffers = [dragSource, offer] {
-            DataDeviceManagerInterface::DnDAction action{DataDeviceManagerInterface::DnDAction::None};
-            if (dragSource->supportedDragAndDropActions().testFlag(offer->preferredDragAndDropAction())) {
-                action = offer->preferredDragAndDropAction();
-            } else {
-                if (dragSource->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Copy)
-                    && offer->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Copy)) {
-                    action = DataDeviceManagerInterface::DnDAction::Copy;
-                } else if (dragSource->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Move)
-                           && offer->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Move)) {
-                    action = DataDeviceManagerInterface::DnDAction::Move;
-                } else if (dragSource->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Ask)
-                           && offer->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Ask)) {
-                    action = DataDeviceManagerInterface::DnDAction::Ask;
-                }
-            }
+            const DataDeviceManagerInterface::DnDAction action = chooseDndAction(dragSource, offer);
             offer->dndAction(action);
             dragSource->dndAction(action);
         };
