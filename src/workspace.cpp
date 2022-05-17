@@ -657,6 +657,7 @@ X11Window *Workspace::createX11Window(xcb_window_t windowId, bool is_mapped)
         return nullptr;
     }
     addX11Window(window);
+    Q_EMIT windowAdded(window);
     return window;
 }
 
@@ -680,9 +681,6 @@ Unmanaged *Workspace::createUnmanaged(xcb_window_t windowId)
 void Workspace::addX11Window(X11Window *window)
 {
     Group *grp = findGroup(window->window());
-
-    Q_EMIT windowAdded(window);
-
     if (grp != nullptr) {
         grp->gotLeader(window);
     }
