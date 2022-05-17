@@ -79,7 +79,7 @@ void TestWaylandOutput::init()
     QCOMPARE(m_serverOutput->pixelSize(), QSize(1024, 768));
     QCOMPARE(m_serverOutput->refreshRate(), 60000);
     QCOMPARE(m_serverOutput->isDpmsSupported(), false);
-    QCOMPARE(m_serverOutput->dpmsMode(), OutputInterface::DpmsMode::Off);
+    QCOMPARE(m_serverOutput->dpmsMode(), KWin::Output::DpmsMode::Off);
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -278,22 +278,22 @@ void TestWaylandOutput::testSubPixel_data()
     using namespace KWayland::Client;
     using namespace KWaylandServer;
     QTest::addColumn<KWayland::Client::Output::SubPixel>("expected");
-    QTest::addColumn<KWaylandServer::OutputInterface::SubPixel>("actual");
+    QTest::addColumn<KWin::Output::SubPixel>("actual");
 
-    QTest::newRow("none") << Output::SubPixel::None << OutputInterface::SubPixel::None;
-    QTest::newRow("horizontal/rgb") << Output::SubPixel::HorizontalRGB << OutputInterface::SubPixel::HorizontalRGB;
-    QTest::newRow("horizontal/bgr") << Output::SubPixel::HorizontalBGR << OutputInterface::SubPixel::HorizontalBGR;
-    QTest::newRow("vertical/rgb") << Output::SubPixel::VerticalRGB << OutputInterface::SubPixel::VerticalRGB;
-    QTest::newRow("vertical/bgr") << Output::SubPixel::VerticalBGR << OutputInterface::SubPixel::VerticalBGR;
+    QTest::newRow("none") << Output::SubPixel::None << KWin::Output::SubPixel::None;
+    QTest::newRow("horizontal/rgb") << Output::SubPixel::HorizontalRGB << KWin::Output::SubPixel::Horizontal_RGB;
+    QTest::newRow("horizontal/bgr") << Output::SubPixel::HorizontalBGR << KWin::Output::SubPixel::Horizontal_BGR;
+    QTest::newRow("vertical/rgb") << Output::SubPixel::VerticalRGB << KWin::Output::SubPixel::Vertical_RGB;
+    QTest::newRow("vertical/bgr") << Output::SubPixel::VerticalBGR << KWin::Output::SubPixel::Vertical_BGR;
 }
 
 void TestWaylandOutput::testSubPixel()
 {
     using namespace KWayland::Client;
     using namespace KWaylandServer;
-    QFETCH(OutputInterface::SubPixel, actual);
-    QCOMPARE(m_serverOutput->subPixel(), OutputInterface::SubPixel::Unknown);
-    QSignalSpy serverSubPixelChangedSpy(m_serverOutput, &OutputInterface::subPixelChanged);
+    QFETCH(KWin::Output::SubPixel, actual);
+    QCOMPARE(m_serverOutput->subPixel(), KWin::Output::SubPixel::Unknown);
+    QSignalSpy serverSubPixelChangedSpy(m_serverOutput, &KWaylandServer::OutputInterface::subPixelChanged);
     QVERIFY(serverSubPixelChangedSpy.isValid());
     m_serverOutput->setSubPixel(actual);
     QCOMPARE(m_serverOutput->subPixel(), actual);
@@ -323,8 +323,8 @@ void TestWaylandOutput::testSubPixel()
 
     // change back to unknown
     outputChanged.clear();
-    m_serverOutput->setSubPixel(OutputInterface::SubPixel::Unknown);
-    QCOMPARE(m_serverOutput->subPixel(), OutputInterface::SubPixel::Unknown);
+    m_serverOutput->setSubPixel(KWin::Output::SubPixel::Unknown);
+    QCOMPARE(m_serverOutput->subPixel(), KWin::Output::SubPixel::Unknown);
     m_serverOutput->done();
     QCOMPARE(serverSubPixelChangedSpy.count(), 2);
     if (outputChanged.isEmpty()) {
@@ -338,24 +338,24 @@ void TestWaylandOutput::testTransform_data()
     using namespace KWayland::Client;
     using namespace KWaylandServer;
     QTest::addColumn<KWayland::Client::Output::Transform>("expected");
-    QTest::addColumn<KWaylandServer::OutputInterface::Transform>("actual");
+    QTest::addColumn<KWin::Output::Transform>("actual");
 
-    QTest::newRow("90") << Output::Transform::Rotated90 << OutputInterface::Transform::Rotated90;
-    QTest::newRow("180") << Output::Transform::Rotated180 << OutputInterface::Transform::Rotated180;
-    QTest::newRow("270") << Output::Transform::Rotated270 << OutputInterface::Transform::Rotated270;
-    QTest::newRow("Flipped") << Output::Transform::Flipped << OutputInterface::Transform::Flipped;
-    QTest::newRow("Flipped 90") << Output::Transform::Flipped90 << OutputInterface::Transform::Flipped90;
-    QTest::newRow("Flipped 180") << Output::Transform::Flipped180 << OutputInterface::Transform::Flipped180;
-    QTest::newRow("Flipped 280") << Output::Transform::Flipped270 << OutputInterface::Transform::Flipped270;
+    QTest::newRow("90") << Output::Transform::Rotated90 << KWin::Output::Transform::Rotated90;
+    QTest::newRow("180") << Output::Transform::Rotated180 << KWin::Output::Transform::Rotated180;
+    QTest::newRow("270") << Output::Transform::Rotated270 << KWin::Output::Transform::Rotated270;
+    QTest::newRow("Flipped") << Output::Transform::Flipped << KWin::Output::Transform::Flipped;
+    QTest::newRow("Flipped 90") << Output::Transform::Flipped90 << KWin::Output::Transform::Flipped90;
+    QTest::newRow("Flipped 180") << Output::Transform::Flipped180 << KWin::Output::Transform::Flipped180;
+    QTest::newRow("Flipped 280") << Output::Transform::Flipped270 << KWin::Output::Transform::Flipped270;
 }
 
 void TestWaylandOutput::testTransform()
 {
     using namespace KWayland::Client;
     using namespace KWaylandServer;
-    QFETCH(OutputInterface::Transform, actual);
-    QCOMPARE(m_serverOutput->transform(), OutputInterface::Transform::Normal);
-    QSignalSpy serverTransformChangedSpy(m_serverOutput, &OutputInterface::transformChanged);
+    QFETCH(KWin::Output::Transform, actual);
+    QCOMPARE(m_serverOutput->transform(), KWin::Output::Transform::Normal);
+    QSignalSpy serverTransformChangedSpy(m_serverOutput, &KWaylandServer::OutputInterface::transformChanged);
     QVERIFY(serverTransformChangedSpy.isValid());
     m_serverOutput->setTransform(actual);
     QCOMPARE(m_serverOutput->transform(), actual);
@@ -384,8 +384,8 @@ void TestWaylandOutput::testTransform()
 
     // change back to normal
     outputChanged.clear();
-    m_serverOutput->setTransform(OutputInterface::Transform::Normal);
-    QCOMPARE(m_serverOutput->transform(), OutputInterface::Transform::Normal);
+    m_serverOutput->setTransform(KWin::Output::Transform::Normal);
+    QCOMPARE(m_serverOutput->transform(), KWin::Output::Transform::Normal);
     m_serverOutput->done();
     QCOMPARE(serverTransformChangedSpy.count(), 2);
     if (outputChanged.isEmpty()) {
@@ -400,11 +400,11 @@ void TestWaylandOutput::testDpms_data()
     using namespace KWaylandServer;
 
     QTest::addColumn<KWayland::Client::Dpms::Mode>("client");
-    QTest::addColumn<KWaylandServer::OutputInterface::DpmsMode>("server");
+    QTest::addColumn<KWin::Output::DpmsMode>("server");
 
-    QTest::newRow("Standby") << Dpms::Mode::Standby << OutputInterface::DpmsMode::Standby;
-    QTest::newRow("Suspend") << Dpms::Mode::Suspend << OutputInterface::DpmsMode::Suspend;
-    QTest::newRow("On") << Dpms::Mode::On << OutputInterface::DpmsMode::On;
+    QTest::newRow("Standby") << Dpms::Mode::Standby << KWin::Output::DpmsMode::Standby;
+    QTest::newRow("Suspend") << Dpms::Mode::Suspend << KWin::Output::DpmsMode::Suspend;
+    QTest::newRow("On") << Dpms::Mode::On << KWin::Output::DpmsMode::On;
 }
 
 void TestWaylandOutput::testDpms()
@@ -454,13 +454,13 @@ void TestWaylandOutput::testDpms()
     QCOMPARE(dpms->isSupported(), true);
 
     // and let's change to suspend
-    QSignalSpy serverDpmsModeChangedSpy(m_serverOutput, &OutputInterface::dpmsModeChanged);
+    QSignalSpy serverDpmsModeChangedSpy(m_serverOutput, &KWaylandServer::OutputInterface::dpmsModeChanged);
     QVERIFY(serverDpmsModeChangedSpy.isValid());
     QSignalSpy clientDpmsModeChangedSpy(dpms, &Dpms::modeChanged);
     QVERIFY(clientDpmsModeChangedSpy.isValid());
 
-    QCOMPARE(m_serverOutput->dpmsMode(), OutputInterface::DpmsMode::Off);
-    QFETCH(OutputInterface::DpmsMode, server);
+    QCOMPARE(m_serverOutput->dpmsMode(), KWin::Output::DpmsMode::Off);
+    QFETCH(KWin::Output::DpmsMode, server);
     m_serverOutput->setDpmsMode(server);
     QCOMPARE(m_serverOutput->dpmsMode(), server);
     QCOMPARE(serverDpmsModeChangedSpy.count(), 1);
@@ -482,7 +482,7 @@ void TestWaylandOutput::testDpms()
     QVERIFY(dpms->isSupported());
 
     // and switch back to off
-    m_serverOutput->setDpmsMode(OutputInterface::DpmsMode::Off);
+    m_serverOutput->setDpmsMode(KWin::Output::DpmsMode::Off);
     QVERIFY(clientDpmsModeChangedSpy.wait());
     QCOMPARE(clientDpmsModeChangedSpy.count(), 2);
     QCOMPARE(dpms->mode(), Dpms::Mode::Off);
@@ -494,12 +494,12 @@ void TestWaylandOutput::testDpmsRequestMode_data()
     using namespace KWaylandServer;
 
     QTest::addColumn<KWayland::Client::Dpms::Mode>("client");
-    QTest::addColumn<KWaylandServer::OutputInterface::DpmsMode>("server");
+    QTest::addColumn<KWin::Output::DpmsMode>("server");
 
-    QTest::newRow("Standby") << Dpms::Mode::Standby << OutputInterface::DpmsMode::Standby;
-    QTest::newRow("Suspend") << Dpms::Mode::Suspend << OutputInterface::DpmsMode::Suspend;
-    QTest::newRow("Off") << Dpms::Mode::Off << OutputInterface::DpmsMode::Off;
-    QTest::newRow("On") << Dpms::Mode::On << OutputInterface::DpmsMode::On;
+    QTest::newRow("Standby") << Dpms::Mode::Standby << KWin::Output::DpmsMode::Standby;
+    QTest::newRow("Suspend") << Dpms::Mode::Suspend << KWin::Output::DpmsMode::Suspend;
+    QTest::newRow("Off") << Dpms::Mode::Off << KWin::Output::DpmsMode::Off;
+    QTest::newRow("On") << Dpms::Mode::On << KWin::Output::DpmsMode::On;
 }
 
 void TestWaylandOutput::testDpmsRequestMode()
@@ -541,13 +541,13 @@ void TestWaylandOutput::testDpmsRequestMode()
 
     Dpms *dpms = dpmsManager->getDpms(output, &registry);
     // and test request mode
-    QSignalSpy modeRequestedSpy(m_serverOutput, &OutputInterface::dpmsModeRequested);
+    QSignalSpy modeRequestedSpy(m_serverOutput, &KWaylandServer::OutputInterface::dpmsModeRequested);
     QVERIFY(modeRequestedSpy.isValid());
 
     QFETCH(Dpms::Mode, client);
     dpms->requestMode(client);
     QVERIFY(modeRequestedSpy.wait());
-    QTEST(modeRequestedSpy.last().first().value<OutputInterface::DpmsMode>(), "server");
+    QTEST(modeRequestedSpy.last().first().value<KWin::Output::DpmsMode>(), "server");
 }
 
 QTEST_GUILESS_MAIN(TestWaylandOutput)

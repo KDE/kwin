@@ -39,7 +39,7 @@ struct SurfaceState
     bool bufferScaleIsSet = false;
     bool bufferTransformIsSet = false;
     qint32 bufferScale = 1;
-    OutputInterface::Transform bufferTransform = OutputInterface::Transform::Normal;
+    KWin::Output::Transform bufferTransform = KWin::Output::Transform::Normal;
     wl_list frameCallbacks;
     QPoint offset = QPoint();
     QPointer<ClientBuffer> buffer;

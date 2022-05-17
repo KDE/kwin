@@ -27,7 +27,7 @@ public:
 
 private Q_SLOTS:
     void handleDpmsModeChanged();
-    void handleDpmsModeRequested(KWaylandServer::OutputInterface::DpmsMode dpmsMode);
+    void handleDpmsModeRequested(KWin::Output::DpmsMode dpmsMode);
 
     void update();
     void scheduleUpdate();

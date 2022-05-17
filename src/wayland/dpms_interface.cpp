@@ -50,7 +50,7 @@ DpmsInterface::DpmsInterface(OutputInterface *output, wl_resource *resource)
         sendSupported();
         sendDone();
     });
-    connect(output, &OutputInterface::dpmsModeChanged, this, [this] {
+    connect(output, &KWaylandServer::OutputInterface::dpmsModeChanged, this, [this] {
         sendMode();
         sendDone();
     });
@@ -72,19 +72,19 @@ void DpmsInterface::org_kde_kwin_dpms_destroy_resource(Resource *resource)
 void DpmsInterface::org_kde_kwin_dpms_set(Resource *resource, uint32_t mode)
 {
     Q_UNUSED(resource)
-    OutputInterface::DpmsMode dpmsMode;
+    KWin::Output::DpmsMode dpmsMode;
     switch (mode) {
     case ORG_KDE_KWIN_DPMS_MODE_ON:
-        dpmsMode = OutputInterface::DpmsMode::On;
+        dpmsMode = KWin::Output::DpmsMode::On;
         break;
     case ORG_KDE_KWIN_DPMS_MODE_STANDBY:
-        dpmsMode = OutputInterface::DpmsMode::Standby;
+        dpmsMode = KWin::Output::DpmsMode::Standby;
         break;
     case ORG_KDE_KWIN_DPMS_MODE_SUSPEND:
-        dpmsMode = OutputInterface::DpmsMode::Suspend;
+        dpmsMode = KWin::Output::DpmsMode::Suspend;
         break;
     case ORG_KDE_KWIN_DPMS_MODE_OFF:
-        dpmsMode = OutputInterface::DpmsMode::Off;
+        dpmsMode = KWin::Output::DpmsMode::Off;
         break;
     default:
         return;
@@ -102,16 +102,16 @@ void DpmsInterface::sendMode()
     const auto mode = output->dpmsMode();
     org_kde_kwin_dpms_mode wlMode;
     switch (mode) {
-    case OutputInterface::DpmsMode::On:
+    case KWin::Output::DpmsMode::On:
         wlMode = ORG_KDE_KWIN_DPMS_MODE_ON;
         break;
-    case OutputInterface::DpmsMode::Standby:
+    case KWin::Output::DpmsMode::Standby:
         wlMode = ORG_KDE_KWIN_DPMS_MODE_STANDBY;
         break;
-    case OutputInterface::DpmsMode::Suspend:
+    case KWin::Output::DpmsMode::Suspend:
         wlMode = ORG_KDE_KWIN_DPMS_MODE_SUSPEND;
         break;
-    case OutputInterface::DpmsMode::Off:
+    case KWin::Output::DpmsMode::Off:
         wlMode = ORG_KDE_KWIN_DPMS_MODE_OFF;
         break;
     default:

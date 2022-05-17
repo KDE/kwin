@@ -34,13 +34,13 @@ class DpmsManagerInterfacePrivate;
  * @code
  * // We have our OutputInterface called output.
  * output->setDpmsSupported(true);
- * output->setDpmsMode(OutputInterface::DpmsMode::On);
+ * output->setDpmsMode(KWin::Output::DpmsMode::On);
  * @endcode
  *
  * To connect to Dpms change requests use:
  * @code
- * connect(output, &OutputInterface::dpmsModeRequested,
- *         [] (KWaylandServer::OutputInterface::DpmsMode requestedMode) { qDebug() << "Mode change requested"; });
+ * connect(output, &KWin::Output::DpmsModeRequested,
+ *         [] (KWaylandServer::KWin::Output::DpmsMode requestedMode) { qDebug() << "Mode change requested"; });
  * @endcode
  *
  * @see Display

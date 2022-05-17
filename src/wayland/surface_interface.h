@@ -69,7 +69,7 @@ class KWIN_EXPORT SurfaceInterface : public QObject
      */
     Q_PROPERTY(QRegion input READ input NOTIFY inputChanged)
     Q_PROPERTY(qint32 bufferScale READ bufferScale NOTIFY bufferScaleChanged)
-    Q_PROPERTY(KWaylandServer::OutputInterface::Transform bufferTransform READ bufferTransform NOTIFY bufferTransformChanged)
+    Q_PROPERTY(KWin::Output::Transform bufferTransform READ bufferTransform NOTIFY bufferTransformChanged)
     Q_PROPERTY(QSize size READ size NOTIFY sizeChanged)
 public:
     explicit SurfaceInterface(CompositorInterface *compositor, wl_resource *resource);
@@ -169,7 +169,7 @@ public:
      * If the surface is on an output that is rotated 90 degrees clockwise, the buffer will
      * be rotated 90 degrees counter clockwise.
      */
-    OutputInterface::Transform bufferTransform() const;
+    KWin::Output::Transform bufferTransform() const;
     /**
      * @returns the current ClientBuffer, might be @c nullptr.
      */
@@ -352,7 +352,7 @@ Q_SIGNALS:
     /**
      * This signal is emitted when the buffer transform has changed.
      */
-    void bufferTransformChanged(KWaylandServer::OutputInterface::Transform);
+    void bufferTransformChanged(KWin::Output::Transform);
     /**
      * This signal is emitted when the size of the attached buffer has changed.
      */

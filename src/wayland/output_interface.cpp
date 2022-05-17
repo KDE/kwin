@@ -37,12 +37,12 @@ public:
     QString manufacturer = QStringLiteral("org.kde.kwin");
     QString model = QStringLiteral("none");
     int scale = 1;
-    OutputInterface::SubPixel subPixel = OutputInterface::SubPixel::Unknown;
-    OutputInterface::Transform transform = OutputInterface::Transform::Normal;
+    KWin::Output::SubPixel subPixel = KWin::Output::SubPixel::Unknown;
+    KWin::Output::Transform transform = KWin::Output::Transform::Normal;
     OutputInterface::Mode mode;
     struct
     {
-        OutputInterface::DpmsMode mode = OutputInterface::DpmsMode::Off;
+        KWin::Output::DpmsMode mode = KWin::Output::DpmsMode::Off;
         bool supported = false;
     } dpms;
 
@@ -71,44 +71,44 @@ void OutputInterfacePrivate::sendScale(Resource *resource)
     }
 }
 
-static quint32 kwaylandServerTransformToWaylandTransform(OutputInterface::Transform transform)
+static quint32 kwaylandServerTransformToWaylandTransform(KWin::Output::Transform transform)
 {
     switch (transform) {
-    case OutputInterface::Transform::Normal:
+    case KWin::Output::Transform::Normal:
         return OutputInterfacePrivate::transform_normal;
-    case OutputInterface::Transform::Rotated90:
+    case KWin::Output::Transform::Rotated90:
         return OutputInterfacePrivate::transform_90;
-    case OutputInterface::Transform::Rotated180:
+    case KWin::Output::Transform::Rotated180:
         return OutputInterfacePrivate::transform_180;
-    case OutputInterface::Transform::Rotated270:
+    case KWin::Output::Transform::Rotated270:
         return OutputInterfacePrivate::transform_270;
-    case OutputInterface::Transform::Flipped:
+    case KWin::Output::Transform::Flipped:
         return OutputInterfacePrivate::transform_flipped;
-    case OutputInterface::Transform::Flipped90:
+    case KWin::Output::Transform::Flipped90:
         return OutputInterfacePrivate::transform_flipped_90;
-    case OutputInterface::Transform::Flipped180:
+    case KWin::Output::Transform::Flipped180:
         return OutputInterfacePrivate::transform_flipped_180;
-    case OutputInterface::Transform::Flipped270:
+    case KWin::Output::Transform::Flipped270:
         return OutputInterfacePrivate::transform_flipped_270;
     default:
         Q_UNREACHABLE();
     }
 }
 
-static quint32 kwaylandServerSubPixelToWaylandSubPixel(OutputInterface::SubPixel subPixel)
+static quint32 kwaylandServerSubPixelToWaylandSubPixel(KWin::Output::SubPixel subPixel)
 {
     switch (subPixel) {
-    case OutputInterface::SubPixel::Unknown:
+    case KWin::Output::SubPixel::Unknown:
         return OutputInterfacePrivate::subpixel_unknown;
-    case OutputInterface::SubPixel::None:
+    case KWin::Output::SubPixel::None:
         return OutputInterfacePrivate::subpixel_none;
-    case OutputInterface::SubPixel::HorizontalRGB:
+    case KWin::Output::SubPixel::Horizontal_RGB:
         return OutputInterfacePrivate::subpixel_horizontal_rgb;
-    case OutputInterface::SubPixel::HorizontalBGR:
+    case KWin::Output::SubPixel::Horizontal_BGR:
         return OutputInterfacePrivate::subpixel_horizontal_bgr;
-    case OutputInterface::SubPixel::VerticalRGB:
+    case KWin::Output::SubPixel::Vertical_RGB:
         return OutputInterfacePrivate::subpixel_vertical_rgb;
-    case OutputInterface::SubPixel::VerticalBGR:
+    case KWin::Output::SubPixel::Vertical_BGR:
         return OutputInterfacePrivate::subpixel_vertical_bgr;
     default:
         Q_UNREACHABLE();
@@ -312,12 +312,12 @@ void OutputInterface::setScale(int scale)
     Q_EMIT scaleChanged(d->scale);
 }
 
-OutputInterface::SubPixel OutputInterface::subPixel() const
+KWin::Output::SubPixel OutputInterface::subPixel() const
 {
     return d->subPixel;
 }
 
-void OutputInterface::setSubPixel(SubPixel subPixel)
+void OutputInterface::setSubPixel(KWin::Output::SubPixel subPixel)
 {
     if (d->subPixel == subPixel) {
         return;
@@ -327,12 +327,12 @@ void OutputInterface::setSubPixel(SubPixel subPixel)
     Q_EMIT subPixelChanged(d->subPixel);
 }
 
-OutputInterface::Transform OutputInterface::transform() const
+KWin::Output::Transform OutputInterface::transform() const
 {
     return d->transform;
 }
 
-void OutputInterface::setTransform(Transform transform)
+void OutputInterface::setTransform(KWin::Output::Transform transform)
 {
     if (d->transform == transform) {
         return;
@@ -342,7 +342,7 @@ void OutputInterface::setTransform(Transform transform)
     Q_EMIT transformChanged(d->transform);
 }
 
-void OutputInterface::setDpmsMode(OutputInterface::DpmsMode mode)
+void OutputInterface::setDpmsMode(KWin::Output::DpmsMode mode)
 {
     if (d->dpms.mode == mode) {
         return;
@@ -360,7 +360,7 @@ void OutputInterface::setDpmsSupported(bool supported)
     Q_EMIT dpmsSupportedChanged();
 }
 
-OutputInterface::DpmsMode OutputInterface::dpmsMode() const
+KWin::Output::DpmsMode OutputInterface::dpmsMode() const
 {
     return d->dpms.mode;
 }
@@ -388,7 +388,7 @@ bool OutputInterface::isEnabled() const
     if (!d->dpms.supported) {
         return true;
     }
-    return d->dpms.mode == DpmsMode::On;
+    return d->dpms.mode == KWin::Output::DpmsMode::On;
 }
 
 void OutputInterface::done()

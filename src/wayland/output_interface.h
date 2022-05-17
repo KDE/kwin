@@ -7,6 +7,7 @@
 #pragma once
 
 #include "kwin_export.h"
+#include "output.h"
 
 #include <QObject>
 #include <QPoint>
@@ -36,34 +37,10 @@ class KWIN_EXPORT OutputInterface : public QObject
     Q_PROPERTY(int refreshRate READ refreshRate NOTIFY refreshRateChanged)
     Q_PROPERTY(int scale READ scale WRITE setScale NOTIFY scaleChanged)
 public:
-    enum class SubPixel {
-        Unknown,
-        None,
-        HorizontalRGB,
-        HorizontalBGR,
-        VerticalRGB,
-        VerticalBGR,
-    };
-    enum class Transform {
-        Normal,
-        Rotated90,
-        Rotated180,
-        Rotated270,
-        Flipped,
-        Flipped90,
-        Flipped180,
-        Flipped270,
-    };
     struct Mode
     {
         QSize size = QSize();
         int refreshRate = 60000;
-    };
-    enum class DpmsMode {
-        On,
-        Standby,
-        Suspend,
-        Off,
     };
 
     explicit OutputInterface(Display *display, QObject *parent = nullptr);
@@ -78,19 +55,19 @@ public:
     QSize pixelSize() const;
     int refreshRate() const;
     int scale() const;
-    SubPixel subPixel() const;
-    Transform transform() const;
+    KWin::Output::SubPixel subPixel() const;
+    KWin::Output::Transform transform() const;
     Mode mode() const;
     bool isDpmsSupported() const;
-    DpmsMode dpmsMode() const;
+    KWin::Output::DpmsMode dpmsMode() const;
 
     void setPhysicalSize(const QSize &size);
     void setGlobalPosition(const QPoint &pos);
     void setManufacturer(const QString &manufacturer);
     void setModel(const QString &model);
     void setScale(int scale);
-    void setSubPixel(SubPixel subPixel);
-    void setTransform(Transform transform);
+    void setSubPixel(KWin::Output::SubPixel subPixel);
+    void setTransform(KWin::Output::Transform transform);
     void setMode(const Mode &mode);
     void setMode(const QSize &size, int refreshRate = 60000);
 
@@ -103,7 +80,7 @@ public:
      * Sets the currently used dpms mode.
      * Default is @c DpmsMode::On.
      */
-    void setDpmsMode(DpmsMode mode);
+    void setDpmsMode(KWin::Output::DpmsMode mode);
 
     /**
      * @returns all wl_resources bound for the @p client
@@ -135,8 +112,8 @@ Q_SIGNALS:
     void pixelSizeChanged(const QSize &);
     void refreshRateChanged(int);
     void scaleChanged(int);
-    void subPixelChanged(SubPixel);
-    void transformChanged(Transform);
+    void subPixelChanged(KWin::Output::SubPixel);
+    void transformChanged(KWin::Output::Transform);
     void modeChanged();
     void dpmsModeChanged();
     void dpmsSupportedChanged();
@@ -146,7 +123,7 @@ Q_SIGNALS:
      * Change of dpms @p mode is requested.
      * A server is free to ignore this request.
      */
-    void dpmsModeRequested(KWaylandServer::OutputInterface::DpmsMode mode);
+    void dpmsModeRequested(KWin::Output::DpmsMode mode);
 
     /**
      * Emitted when a client binds to a given output
@@ -159,7 +136,3 @@ private:
 };
 
 } // namespace KWaylandServer
-
-Q_DECLARE_METATYPE(KWaylandServer::OutputInterface::SubPixel)
-Q_DECLARE_METATYPE(KWaylandServer::OutputInterface::Transform)
-Q_DECLARE_METATYPE(KWaylandServer::OutputInterface::DpmsMode)

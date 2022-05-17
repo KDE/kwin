@@ -201,7 +201,6 @@ WaylandServer::WaylandServer(QObject *parent)
     : QObject(parent)
     , m_display(new KWinDisplay(this))
 {
-    qRegisterMetaType<KWaylandServer::OutputInterface::DpmsMode>();
 }
 
 WaylandServer::~WaylandServer()
