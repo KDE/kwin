@@ -89,6 +89,7 @@ DrmBackend::DrmBackend(QObject *parent)
     setSupportsPointerWarping(true);
     setSupportsGammaControl(true);
     supportsOutputChanges();
+    connect(m_session, &Session::awoke, this, &DrmBackend::turnOutputsOn);
 }
 
 DrmBackend::~DrmBackend()
