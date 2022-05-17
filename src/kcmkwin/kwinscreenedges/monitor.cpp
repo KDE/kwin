@@ -25,26 +25,11 @@
 namespace KWin
 {
 
-static QWindow *windowFromWidget(const QWidget *widget)
-{
-    QWindow *windowHandle = widget->windowHandle();
-    if (windowHandle) {
-        return windowHandle;
-    }
-
-    const QWidget *nativeParent = widget->nativeParentWidget();
-    if (nativeParent) {
-        return nativeParent->windowHandle();
-    }
-
-    return nullptr;
-}
-
 static QScreen *screenFromWidget(const QWidget *widget)
 {
-    const QWindow *windowHandle = windowFromWidget(widget);
-    if (windowHandle && windowHandle->screen()) {
-        return windowHandle->screen();
+    QScreen *screen = widget->screen();
+    if (screen) {
+        return screen;
     }
 
     return QGuiApplication::primaryScreen();
@@ -73,6 +58,8 @@ Monitor::Monitor(QWidget *parent)
         hidden[i] = false;
         grp[i] = new QActionGroup(this);
     }
+    QRect avail = screenFromWidget(this)->geometry();
+    setRatio((qreal)avail.width() / (qreal)avail.height());
     checkSize();
 }
 
