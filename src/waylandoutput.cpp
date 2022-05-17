@@ -28,7 +28,7 @@ WaylandOutput::WaylandOutput(Output *output, QObject *parent)
     m_waylandOutput->setDpmsSupported(output->capabilities() & Output::Capability::Dpms);
     m_waylandOutput->setGlobalPosition(geometry.topLeft());
     m_waylandOutput->setScale(std::ceil(output->scale()));
-    m_waylandOutput->setMode(output->modeSize(), output->refreshRate());
+    m_waylandOutput->setMode(output->currentMode());
     m_waylandOutput->setSubPixel(output->subPixel());
 
     m_xdgOutputV1->setName(output->name());
@@ -72,7 +72,7 @@ void WaylandOutput::update()
     m_waylandOutput->setGlobalPosition(geometry.topLeft());
     m_waylandOutput->setScale(std::ceil(m_platformOutput->scale()));
     m_waylandOutput->setTransform(m_platformOutput->transform());
-    m_waylandOutput->setMode(m_platformOutput->modeSize(), m_platformOutput->refreshRate());
+    m_waylandOutput->setMode(m_platformOutput->currentMode());
 
     m_xdgOutputV1->setLogicalPosition(geometry.topLeft());
     m_xdgOutputV1->setLogicalSize(geometry.size());

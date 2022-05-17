@@ -59,7 +59,7 @@ void TestXdgOutput::init()
     QVERIFY(m_display->isRunning());
 
     m_serverOutput = new OutputInterface(m_display, this);
-    m_serverOutput->setMode(QSize(1920, 1080));
+    m_serverOutput->setMode(QSharedPointer<KWin::OutputMode>::create(QSize(1920, 1080), 60000));
 
     m_serverXdgOutputManager = new XdgOutputManagerV1Interface(m_display, this);
     m_serverXdgOutput = m_serverXdgOutputManager->createXdgOutput(m_serverOutput, this);
