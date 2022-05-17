@@ -104,15 +104,15 @@ void Window::bindContentFBO()
     m_contentFBO->bind();
 }
 
-const QSharedPointer<QOpenGLFramebufferObject> &Window::contentFBO() const
+const std::shared_ptr<QOpenGLFramebufferObject> &Window::contentFBO() const
 {
     return m_contentFBO;
 }
 
-QSharedPointer<QOpenGLFramebufferObject> Window::swapFBO()
+std::shared_ptr<QOpenGLFramebufferObject> Window::swapFBO()
 {
-    QSharedPointer<QOpenGLFramebufferObject> fbo = m_contentFBO;
-    m_contentFBO.clear();
+    std::shared_ptr<QOpenGLFramebufferObject> fbo;
+    m_contentFBO.swap(fbo);
     return fbo;
 }
 

@@ -70,7 +70,7 @@ public:
     }
 
     QVector<QByteArray> openGLPlatformInterfaceExtensions() const override;
-    QSharedPointer<GLTexture> textureForOutput(Output *output) const override;
+    std::shared_ptr<GLTexture> textureForOutput(Output *output) const override;
 
     QMatrix4x4 screenProjectionMatrix() const override
     {
@@ -117,14 +117,14 @@ public:
 
     GLTexture *shadowTexture()
     {
-        return m_texture.data();
+        return m_texture.get();
     }
 
 protected:
     bool prepareBackend() override;
 
 private:
-    QSharedPointer<GLTexture> m_texture;
+    std::shared_ptr<GLTexture> m_texture;
 };
 
 class SceneOpenGLDecorationRenderer : public DecorationRenderer

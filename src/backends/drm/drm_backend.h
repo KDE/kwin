@@ -44,7 +44,7 @@ public:
     InputBackend *createInputBackend() override;
     QPainterBackend *createQPainterBackend() override;
     OpenGLBackend *createOpenGLBackend() override;
-    QSharedPointer<DmaBufTexture> createDmaBufTexture(const QSize &size) override;
+    std::shared_ptr<DmaBufTexture> createDmaBufTexture(const QSize &size) override;
     Session *session() const override;
     bool initialize() override;
 
@@ -97,8 +97,8 @@ private:
     void handleUdevEvent();
     DrmGpu *addGpu(const QString &fileName);
 
-    QScopedPointer<Udev> m_udev;
-    QScopedPointer<UdevMonitor> m_udevMonitor;
+    std::unique_ptr<Udev> m_udev;
+    std::unique_ptr<UdevMonitor> m_udevMonitor;
     Session *m_session = nullptr;
     // all outputs, enabled and disabled
     QVector<DrmAbstractOutput *> m_outputs;
@@ -109,8 +109,8 @@ private:
     bool m_active = false;
     const QStringList m_explicitGpus;
     QVector<DrmGpu *> m_gpus;
-    QScopedPointer<DpmsInputEventFilter> m_dpmsFilter;
-    QScopedPointer<PlaceholderInputEventFilter> m_placeholderFilter;
+    std::unique_ptr<DpmsInputEventFilter> m_dpmsFilter;
+    std::unique_ptr<PlaceholderInputEventFilter> m_placeholderFilter;
     DrmRenderBackend *m_renderBackend = nullptr;
 };
 

@@ -61,7 +61,7 @@ public:
     void pointerEnterEvent(const QPoint &globalPos) override;
     void pointerLeaveEvent() override;
 
-    void present(const QSharedPointer<QOpenGLFramebufferObject> fbo);
+    void present(const std::shared_ptr<QOpenGLFramebufferObject> fbo);
     void present(const QImage &image, const QRegion &damage);
     qreal bufferScale() const;
     QWindow *handle() const;

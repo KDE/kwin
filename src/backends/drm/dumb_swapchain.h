@@ -12,9 +12,9 @@
 #include "utils/damagejournal.h"
 
 #include <QImage>
-#include <QSharedPointer>
 #include <QSize>
 #include <QVector>
+#include <memory>
 
 namespace KWin
 {

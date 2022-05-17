@@ -24,9 +24,9 @@ DrmVirtualOutput::DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize
     : DrmAbstractOutput(gpu)
     , m_vsyncMonitor(SoftwareVsyncMonitor::create(this))
 {
-    connect(m_vsyncMonitor, &VsyncMonitor::vblankOccurred, this, &DrmVirtualOutput::vblank);
+    connect(m_vsyncMonitor.get(), &VsyncMonitor::vblankOccurred, this, &DrmVirtualOutput::vblank);
 
-    auto mode = QSharedPointer<OutputMode>::create(size, 60000, OutputMode::Flag::Preferred);
+    auto mode = std::make_shared<OutputMode>(size, 60000, OutputMode::Flag::Preferred);
     setModesInternal({mode}, mode);
     m_renderLoop->setRefreshRate(mode->refreshRate());
 
@@ -71,7 +71,7 @@ void DrmVirtualOutput::updateEnablement(bool enable)
 
 DrmOutputLayer *DrmVirtualOutput::outputLayer() const
 {
-    return m_layer.data();
+    return m_layer.get();
 }
 
 void DrmVirtualOutput::recreateSurface()

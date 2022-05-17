@@ -36,15 +36,15 @@ QSize OutputScreenCastSource::textureSize() const
 
 void OutputScreenCastSource::render(QImage *image)
 {
-    const QSharedPointer<GLTexture> outputTexture = Compositor::self()->scene()->textureForOutput(m_output);
+    const std::shared_ptr<GLTexture> outputTexture = Compositor::self()->scene()->textureForOutput(m_output);
     if (outputTexture) {
-        grabTexture(outputTexture.data(), image);
+        grabTexture(outputTexture.get(), image);
     }
 }
 
 void OutputScreenCastSource::render(GLFramebuffer *target)
 {
-    const QSharedPointer<GLTexture> outputTexture = Compositor::self()->scene()->textureForOutput(m_output);
+    const std::shared_ptr<GLTexture> outputTexture = Compositor::self()->scene()->textureForOutput(m_output);
     if (!outputTexture) {
         return;
     }

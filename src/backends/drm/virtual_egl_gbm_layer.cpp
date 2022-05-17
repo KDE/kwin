@@ -133,7 +133,7 @@ bool VirtualEglGbmLayer::doesGbmSurfaceFit(GbmSurface *surf) const
     return surf && surf->size() == m_output->pixelSize();
 }
 
-QSharedPointer<GLTexture> VirtualEglGbmLayer::texture() const
+std::shared_ptr<GLTexture> VirtualEglGbmLayer::texture() const
 {
     if (!m_currentBuffer) {
         qCWarning(KWIN_DRM) << "Failed to record frame: No gbm buffer!";

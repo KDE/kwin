@@ -15,6 +15,7 @@
 #include <QMap>
 #include <QObject>
 #include <QVector>
+#include <memory>
 
 namespace KWin
 {
@@ -48,7 +49,7 @@ public:
 private:
     void createOutputs();
 
-    QMap<Output *, QSharedPointer<VirtualQPainterLayer>> m_outputs;
+    QMap<Output *, std::shared_ptr<VirtualQPainterLayer>> m_outputs;
     VirtualBackend *m_backend;
     int m_frameCounter = 0;
 };

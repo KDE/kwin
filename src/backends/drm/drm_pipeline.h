@@ -10,7 +10,6 @@
 #pragma once
 
 #include <QPoint>
-#include <QSharedPointer>
 #include <QSize>
 #include <QVector>
 
@@ -36,7 +35,7 @@ class DrmOverlayLayer;
 class DrmGammaRamp
 {
 public:
-    DrmGammaRamp(DrmCrtc *crtc, const QSharedPointer<ColorTransformation> &transformation);
+    DrmGammaRamp(DrmCrtc *crtc, const std::shared_ptr<ColorTransformation> &transformation);
     ~DrmGammaRamp();
 
     const ColorLUT &lut() const;
@@ -91,7 +90,7 @@ public:
     DrmOutput *output() const;
 
     DrmCrtc *crtc() const;
-    QSharedPointer<DrmConnectorMode> mode() const;
+    std::shared_ptr<DrmConnectorMode> mode() const;
     bool active() const;
     bool enabled() const;
     DrmPipelineLayer *primaryLayer() const;
@@ -103,16 +102,16 @@ public:
     Output::RgbRange rgbRange() const;
 
     void setCrtc(DrmCrtc *crtc);
-    void setMode(const QSharedPointer<DrmConnectorMode> &mode);
+    void setMode(const std::shared_ptr<DrmConnectorMode> &mode);
     void setActive(bool active);
     void setEnable(bool enable);
-    void setLayers(const QSharedPointer<DrmPipelineLayer> &primaryLayer, const QSharedPointer<DrmOverlayLayer> &cursorLayer);
+    void setLayers(const std::shared_ptr<DrmPipelineLayer> &primaryLayer, const std::shared_ptr<DrmOverlayLayer> &cursorLayer);
     void setRenderOrientation(DrmPlane::Transformations orientation);
     void setBufferOrientation(DrmPlane::Transformations orientation);
     void setSyncMode(RenderLoopPrivate::SyncMode mode);
     void setOverscan(uint32_t overscan);
     void setRgbRange(Output::RgbRange range);
-    void setColorTransformation(const QSharedPointer<ColorTransformation> &transformation);
+    void setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation);
 
     enum class CommitMode {
         Test,
@@ -162,15 +161,15 @@ private:
         QMap<uint32_t, QVector<uint64_t>> formats;
         bool active = true; // whether or not the pipeline should be currently used
         bool enabled = true; // whether or not the pipeline needs a crtc
-        QSharedPointer<DrmConnectorMode> mode;
+        std::shared_ptr<DrmConnectorMode> mode;
         uint32_t overscan = 0;
         Output::RgbRange rgbRange = Output::RgbRange::Automatic;
         RenderLoopPrivate::SyncMode syncMode = RenderLoopPrivate::SyncMode::Fixed;
-        QSharedPointer<ColorTransformation> colorTransformation;
-        QSharedPointer<DrmGammaRamp> gamma;
+        std::shared_ptr<ColorTransformation> colorTransformation;
+        std::shared_ptr<DrmGammaRamp> gamma;
 
-        QSharedPointer<DrmPipelineLayer> layer;
-        QSharedPointer<DrmOverlayLayer> cursorLayer;
+        std::shared_ptr<DrmPipelineLayer> layer;
+        std::shared_ptr<DrmOverlayLayer> cursorLayer;
         QPoint cursorHotspot;
 
         // the transformation that this pipeline will apply to submitted buffers

@@ -34,11 +34,11 @@ public:
 class KWIN_EXPORT OutputConfiguration
 {
 public:
-    QSharedPointer<OutputChangeSet> changeSet(Output *output);
-    QSharedPointer<OutputChangeSet> constChangeSet(Output *output) const;
+    std::shared_ptr<OutputChangeSet> changeSet(Output *output);
+    std::shared_ptr<OutputChangeSet> constChangeSet(Output *output) const;
 
 private:
-    QMap<Output *, QSharedPointer<OutputChangeSet>> m_properties;
+    QMap<Output *, std::shared_ptr<OutputChangeSet>> m_properties;
 };
 
 }

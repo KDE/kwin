@@ -222,8 +222,8 @@ public:
     QString description() const;
     Capabilities capabilities() const;
     QByteArray edid() const;
-    QList<QSharedPointer<OutputMode>> modes() const;
-    QSharedPointer<OutputMode> currentMode() const;
+    QList<std::shared_ptr<OutputMode>> modes() const;
+    std::shared_ptr<OutputMode> currentMode() const;
     DpmsMode dpmsMode() const;
     virtual void setDpmsMode(DpmsMode mode);
 
@@ -240,7 +240,7 @@ public:
 
     bool isPlaceholder() const;
 
-    virtual void setColorTransformation(const QSharedPointer<ColorTransformation> &transformation);
+    virtual void setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation);
 
 Q_SIGNALS:
     /**
@@ -319,8 +319,8 @@ protected:
         Q_UNUSED(enable);
     }
 
-    void setModesInternal(const QList<QSharedPointer<OutputMode>> &modes, const QSharedPointer<OutputMode> &currentMode);
-    void setCurrentModeInternal(const QSharedPointer<OutputMode> &currentMode);
+    void setModesInternal(const QList<std::shared_ptr<OutputMode>> &modes, const std::shared_ptr<OutputMode> &currentMode);
+    void setCurrentModeInternal(const std::shared_ptr<OutputMode> &currentMode);
     void setTransformInternal(Transform transform);
     void setDpmsModeInternal(DpmsMode dpmsMode);
     void setOverscanInternal(uint32_t overscan);
@@ -337,8 +337,8 @@ private:
     QPoint m_position;
     qreal m_scale = 1;
     Transform m_transform = Transform::Normal;
-    QList<QSharedPointer<OutputMode>> m_modes;
-    QSharedPointer<OutputMode> m_currentMode;
+    QList<std::shared_ptr<OutputMode>> m_modes;
+    std::shared_ptr<OutputMode> m_currentMode;
     DpmsMode m_dpmsMode = DpmsMode::On;
     SubPixel m_subPixel = SubPixel::Unknown;
     bool m_isEnabled = true;

@@ -52,7 +52,7 @@ SurfacePixmapInternal::SurfacePixmapInternal(SurfaceItemInternal *item, QObject 
 
 QOpenGLFramebufferObject *SurfacePixmapInternal::fbo() const
 {
-    return m_fbo.data();
+    return m_fbo.get();
 }
 
 QImage SurfacePixmapInternal::image() const
@@ -80,7 +80,7 @@ void SurfacePixmapInternal::update()
 
 bool SurfacePixmapInternal::isValid() const
 {
-    return !m_fbo.isNull() || !m_rasterBuffer.isNull();
+    return m_fbo != nullptr || !m_rasterBuffer.isNull();
 }
 
 } // namespace KWin

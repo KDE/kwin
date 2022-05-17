@@ -100,7 +100,7 @@ void WaylandOutputDevice::updateModes(Output *output)
 
     const auto modes = output->modes();
     deviceModes.reserve(modes.size());
-    for (const QSharedPointer<OutputMode> &mode : modes) {
+    for (const std::shared_ptr<OutputMode> &mode : modes) {
         OutputDeviceModeV2Interface::ModeFlags flags;
 
         if (output->currentMode() == mode) {

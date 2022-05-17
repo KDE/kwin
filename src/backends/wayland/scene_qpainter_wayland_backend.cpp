@@ -172,7 +172,7 @@ WaylandQPainterBackend::~WaylandQPainterBackend()
 
 void WaylandQPainterBackend::createOutput(Output *waylandOutput)
 {
-    const auto output = QSharedPointer<WaylandQPainterOutput>::create(static_cast<WaylandOutput *>(waylandOutput));
+    const auto output = std::make_shared<WaylandQPainterOutput>(static_cast<WaylandOutput *>(waylandOutput));
     output->init(m_backend->shmPool());
     m_outputs.insert(waylandOutput, output);
 }

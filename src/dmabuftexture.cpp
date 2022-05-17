@@ -13,9 +13,9 @@
 namespace KWin
 {
 
-DmaBufTexture::DmaBufTexture(QSharedPointer<GLTexture> texture, const DmaBufAttributes &attributes)
+DmaBufTexture::DmaBufTexture(std::shared_ptr<GLTexture> texture, const DmaBufAttributes &attributes)
     : m_texture(texture)
-    , m_framebuffer(new GLFramebuffer(texture.data()))
+    , m_framebuffer(std::make_unique<GLFramebuffer>(texture.get()))
     , m_attributes(attributes)
 {
 }
@@ -34,12 +34,12 @@ DmaBufAttributes DmaBufTexture::attributes() const
 
 KWin::GLTexture *DmaBufTexture::texture() const
 {
-    return m_texture.data();
+    return m_texture.get();
 }
 
 KWin::GLFramebuffer *DmaBufTexture::framebuffer() const
 {
-    return m_framebuffer.data();
+    return m_framebuffer.get();
 }
 
 } // namespace KWin

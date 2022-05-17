@@ -15,10 +15,10 @@
 
 #include <QHash>
 #include <QObject>
-#include <QSharedPointer>
 #include <QSize>
 #include <QSocketNotifier>
 #include <chrono>
+#include <memory>
 #include <optional>
 
 #include <pipewire/pipewire.h>
@@ -86,7 +86,7 @@ private:
                          struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
                          uint64_t *modifiers, int modifier_count);
 
-    QSharedPointer<PipeWireCore> pwCore;
+    std::shared_ptr<PipeWireCore> pwCore;
     QScopedPointer<ScreenCastSource> m_source;
     struct pw_stream *pwStream = nullptr;
     spa_hook streamListener;
@@ -113,7 +113,7 @@ private:
     } m_cursor;
     QRect cursorGeometry(Cursor *cursor) const;
 
-    QHash<struct pw_buffer *, QSharedPointer<DmaBufTexture>> m_dmabufDataForPwBuffer;
+    QHash<struct pw_buffer *, std::shared_ptr<DmaBufTexture>> m_dmabufDataForPwBuffer;
 
     pw_buffer *m_pendingBuffer = nullptr;
     QSocketNotifier *m_pendingNotifier = nullptr;

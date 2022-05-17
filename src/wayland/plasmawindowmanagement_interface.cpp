@@ -1070,9 +1070,9 @@ PlasmaWindowActivationFeedbackInterface::~PlasmaWindowActivationFeedbackInterfac
 {
 }
 
-PlasmaWindowActivationInterface *PlasmaWindowActivationFeedbackInterface::createActivation(const QString &appid)
+std::unique_ptr<PlasmaWindowActivationInterface> PlasmaWindowActivationFeedbackInterface::createActivation(const QString &appid)
 {
-    auto activation = new PlasmaWindowActivationInterface;
+    std::unique_ptr<PlasmaWindowActivationInterface> activation(new PlasmaWindowActivationInterface());
     const auto resources = d->resourceMap();
     for (auto resource : resources) {
         auto activationResource = activation->d->add(resource->client(), resource->version());

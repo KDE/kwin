@@ -84,7 +84,7 @@ public:
 
     bool hasDecorationShadow() const
     {
-        return !m_decorationShadow.isNull();
+        return m_decorationShadow != nullptr;
     }
     QImage decorationShadowImage() const;
 

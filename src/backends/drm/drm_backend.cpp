@@ -80,7 +80,7 @@ static QStringList splitPathList(const QString &input, const QChar delimiter)
 
 DrmBackend::DrmBackend(QObject *parent)
     : Platform(parent)
-    , m_udev(new Udev)
+    , m_udev(std::make_unique<Udev>())
     , m_udevMonitor(m_udev->monitor())
     , m_session(Session::create(this))
     , m_explicitGpus(splitPathList(qEnvironmentVariable("KWIN_DRM_DEVICES"), ':'))
@@ -118,12 +118,12 @@ Outputs DrmBackend::enabledOutputs() const
 
 void DrmBackend::createDpmsFilter()
 {
-    if (!m_dpmsFilter.isNull()) {
+    if (m_dpmsFilter) {
         // already another output is off
         return;
     }
-    m_dpmsFilter.reset(new DpmsInputEventFilter);
-    input()->prependInputEventFilter(m_dpmsFilter.data());
+    m_dpmsFilter = std::make_unique<DpmsInputEventFilter>();
+    input()->prependInputEventFilter(m_dpmsFilter.get());
 }
 
 void DrmBackend::turnOutputsOn()
@@ -136,7 +136,7 @@ void DrmBackend::turnOutputsOn()
 
 void DrmBackend::checkOutputsAreOn()
 {
-    if (m_dpmsFilter.isNull()) {
+    if (!m_dpmsFilter) {
         // already disabled, all outputs are on
         return;
     }
@@ -550,8 +550,8 @@ void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
             m_placeHolderOutput = primaryGpu()->createVirtualOutput({}, m_enabledOutputs.constFirst()->pixelSize(), 1, DrmVirtualOutput::Type::Placeholder);
             // placeholder doesn't actually need to render anything
             m_placeHolderOutput->renderLoop()->inhibit();
-            m_placeholderFilter.reset(new PlaceholderInputEventFilter());
-            input()->prependInputEventFilter(m_placeholderFilter.data());
+            m_placeholderFilter = std::make_unique<PlaceholderInputEventFilter>();
+            input()->prependInputEventFilter(m_placeholderFilter.get());
         }
         m_enabledOutputs.removeOne(output);
         Q_EMIT output->gpu()->outputDisabled(output);
@@ -624,7 +624,7 @@ void DrmBackend::removeVirtualOutput(Output *output)
     primaryGpu()->removeVirtualOutput(virtualOutput);
 }
 
-QSharedPointer<DmaBufTexture> DrmBackend::createDmaBufTexture(const QSize &size)
+std::shared_ptr<DmaBufTexture> DrmBackend::createDmaBufTexture(const QSize &size)
 {
     if (const auto eglBackend = dynamic_cast<EglGbmBackend *>(m_renderBackend); eglBackend && primaryGpu()->gbmDevice()) {
         eglBackend->makeCurrent();
@@ -654,7 +654,7 @@ QSharedPointer<DmaBufTexture> DrmBackend::createDmaBufTexture(const QSize &size)
         const DmaBufAttributes attributes = dmaBufAttributesForBo(bo);
         gbm_bo_destroy(bo);
 
-        return QSharedPointer<DmaBufTexture>::create(eglBackend->importDmaBufAsTexture(attributes), attributes);
+        return std::make_shared<DmaBufTexture>(eglBackend->importDmaBufAsTexture(attributes), attributes);
     } else {
         return nullptr;
     }

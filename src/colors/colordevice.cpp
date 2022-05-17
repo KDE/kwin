@@ -63,7 +63,7 @@ public:
     std::unique_ptr<ColorPipelineStage> brightnessStage;
     std::unique_ptr<ColorPipelineStage> calibrationStage;
 
-    QSharedPointer<ColorTransformation> transformation;
+    std::shared_ptr<ColorTransformation> transformation;
 };
 
 void ColorDevicePrivate::rebuildPipeline()
@@ -102,7 +102,7 @@ void ColorDevicePrivate::rebuildPipeline()
         }
     }
 
-    const auto tmp = QSharedPointer<ColorTransformation>::create(std::move(stages));
+    const auto tmp = std::make_shared<ColorTransformation>(std::move(stages));
     if (tmp->valid()) {
         transformation = tmp;
     }

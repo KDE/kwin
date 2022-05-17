@@ -20,7 +20,7 @@ X11PlaceholderOutput::X11PlaceholderOutput(RenderLoop *loop, QObject *parent)
         pixelSize = QSize(screen->width_in_pixels, screen->height_in_pixels);
     }
 
-    auto mode = QSharedPointer<OutputMode>::create(pixelSize, 60000);
+    auto mode = std::make_shared<OutputMode>(pixelSize, 60000);
     setModesInternal({mode}, mode);
 
     setInformation(Information{

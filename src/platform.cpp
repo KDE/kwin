@@ -80,7 +80,7 @@ QPainterBackend *Platform::createQPainterBackend()
     return nullptr;
 }
 
-QSharedPointer<DmaBufTexture> Platform::createDmaBufTexture(const QSize &size)
+std::shared_ptr<DmaBufTexture> Platform::createDmaBufTexture(const QSize &size)
 {
     Q_UNUSED(size)
     return {};

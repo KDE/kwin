@@ -16,6 +16,7 @@
 #include <QObject>
 
 #include <functional>
+#include <memory>
 
 class QAction;
 
@@ -66,7 +67,7 @@ public:
     virtual InputBackend *createInputBackend();
     virtual OpenGLBackend *createOpenGLBackend();
     virtual QPainterBackend *createQPainterBackend();
-    virtual QSharedPointer<DmaBufTexture> createDmaBufTexture(const QSize &size);
+    virtual std::shared_ptr<DmaBufTexture> createDmaBufTexture(const QSize &size);
 
     /**
      * Allows the platform to create a platform specific screen edge.

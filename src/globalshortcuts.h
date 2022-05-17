@@ -12,7 +12,8 @@
 #include <kwinglobals.h>
 // Qt
 #include <QKeySequence>
-#include <QSharedPointer>
+
+#include <memory>
 
 class QAction;
 class KGlobalAccelD;
@@ -217,8 +218,8 @@ public:
     PinchGesture *pinchGesture() const;
 
 private:
-    QSharedPointer<SwipeGesture> m_swipeGesture;
-    QSharedPointer<PinchGesture> m_pinchGesture;
+    std::shared_ptr<SwipeGesture> m_swipeGesture;
+    std::shared_ptr<PinchGesture> m_pinchGesture;
     Shortcut m_shortcut = {};
     QAction *m_action = nullptr;
 };

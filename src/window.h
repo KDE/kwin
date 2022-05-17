@@ -770,7 +770,7 @@ public:
     KWaylandServer::SurfaceInterface *surface() const;
     void setSurface(KWaylandServer::SurfaceInterface *surface);
 
-    const QSharedPointer<QOpenGLFramebufferObject> &internalFramebufferObject() const;
+    const std::shared_ptr<QOpenGLFramebufferObject> &internalFramebufferObject() const;
     QImage internalImageObject() const;
 
     /**
@@ -1240,11 +1240,11 @@ public:
     // decoration related
     KDecoration2::Decoration *decoration()
     {
-        return m_decoration.decoration.data();
+        return m_decoration.decoration.get();
     }
     const KDecoration2::Decoration *decoration() const
     {
-        return m_decoration.decoration.data();
+        return m_decoration.decoration.get();
     }
     bool isDecorated() const
     {
@@ -1569,7 +1569,7 @@ protected:
     /**
      * An FBO object KWin internal windows might render to.
      */
-    QSharedPointer<QOpenGLFramebufferObject> m_internalFBO;
+    std::shared_ptr<QOpenGLFramebufferObject> m_internalFBO;
     QImage m_internalImage;
 
 protected:
@@ -1832,7 +1832,7 @@ protected:
      */
     Gravity mouseGravity() const;
 
-    void setDecoration(QSharedPointer<KDecoration2::Decoration> decoration);
+    void setDecoration(std::shared_ptr<KDecoration2::Decoration> decoration);
     void startDecorationDoubleClickTimer();
     void invalidateDecorationDoubleClickTimer();
     void updateDecorationInputShape();
@@ -1972,7 +1972,7 @@ private:
 
     struct
     {
-        QSharedPointer<KDecoration2::Decoration> decoration;
+        std::shared_ptr<KDecoration2::Decoration> decoration;
         QPointer<Decoration::DecoratedClientImpl> client;
         QElapsedTimer doubleClickTimer;
         QRegion inputRegion;
@@ -2262,7 +2262,7 @@ inline quint32 Window::pendingSurfaceId() const
     return m_pendingSurfaceId;
 }
 
-inline const QSharedPointer<QOpenGLFramebufferObject> &Window::internalFramebufferObject() const
+inline const std::shared_ptr<QOpenGLFramebufferObject> &Window::internalFramebufferObject() const
 {
     return m_internalFBO;
 }

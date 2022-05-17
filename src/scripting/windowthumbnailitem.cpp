@@ -34,12 +34,12 @@ public:
     explicit ThumbnailTextureProvider(QQuickWindow *window);
 
     QSGTexture *texture() const override;
-    void setTexture(const QSharedPointer<GLTexture> &nativeTexture);
+    void setTexture(const std::shared_ptr<GLTexture> &nativeTexture);
     void setTexture(QSGTexture *texture);
 
 private:
     QQuickWindow *m_window;
-    QSharedPointer<GLTexture> m_nativeTexture;
+    std::shared_ptr<GLTexture> m_nativeTexture;
     QScopedPointer<QSGTexture> m_texture;
 };
 
@@ -53,7 +53,7 @@ QSGTexture *ThumbnailTextureProvider::texture() const
     return m_texture.data();
 }
 
-void ThumbnailTextureProvider::setTexture(const QSharedPointer<GLTexture> &nativeTexture)
+void ThumbnailTextureProvider::setTexture(const std::shared_ptr<GLTexture> &nativeTexture)
 {
     if (m_nativeTexture != nativeTexture) {
         const GLuint textureId = nativeTexture->texture();
@@ -421,7 +421,7 @@ void WindowThumbnailItem::updateOffscreenTexture()
         m_offscreenTexture.reset(new GLTexture(GL_RGBA8, textureSize));
         m_offscreenTexture->setFilter(GL_LINEAR);
         m_offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
-        m_offscreenTarget.reset(new GLFramebuffer(m_offscreenTexture.data()));
+        m_offscreenTarget.reset(new GLFramebuffer(m_offscreenTexture.get()));
     }
 
     GLFramebuffer::pushFramebuffer(m_offscreenTarget.data());

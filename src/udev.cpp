@@ -187,14 +187,14 @@ UdevDevice::Ptr Udev::deviceFromSyspath(const char *syspath)
     return UdevDevice::Ptr(new UdevDevice(dev));
 }
 
-UdevMonitor *Udev::monitor()
+std::unique_ptr<UdevMonitor> Udev::monitor()
 {
-    UdevMonitor *m = new UdevMonitor(this);
-    if (!m->isValid()) {
-        delete m;
-        m = nullptr;
+    auto m = std::make_unique<UdevMonitor>(this);
+    if (m->isValid()) {
+        return m;
+    } else {
+        return nullptr;
     }
-    return m;
 }
 
 UdevDevice::UdevDevice(udev_device *device)

@@ -67,7 +67,7 @@ protected:
 private:
     void presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry);
 
-    QMap<Output *, QSharedPointer<EglX11Output>> m_outputs;
+    QMap<Output *, std::shared_ptr<EglX11Output>> m_outputs;
     X11WindowedBackend *m_backend;
 };
 

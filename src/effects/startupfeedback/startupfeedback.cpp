@@ -267,7 +267,7 @@ void StartupFeedbackEffect::gotNewStartup(const QString &id, const QIcon &icon)
 
     startup.expiredTimer.reset(new QTimer());
     // Stop the animation if the startup doesn't finish within reasonable interval.
-    connect(startup.expiredTimer.data(), &QTimer::timeout, this, [this, id]() {
+    connect(startup.expiredTimer.get(), &QTimer::timeout, this, [this, id]() {
         gotRemoveStartup(id);
     });
     startup.expiredTimer->setSingleShot(true);

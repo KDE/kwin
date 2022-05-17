@@ -243,7 +243,7 @@ void EglWaylandBackend::cleanupSurfaces()
 
 bool EglWaylandBackend::createEglWaylandOutput(Output *waylandOutput)
 {
-    const auto output = QSharedPointer<EglWaylandOutput>::create(static_cast<WaylandOutput *>(waylandOutput), this);
+    const auto output = std::make_shared<EglWaylandOutput>(static_cast<WaylandOutput *>(waylandOutput), this);
     if (!output->init()) {
         return false;
     }
@@ -362,11 +362,11 @@ bool EglWaylandBackend::initBufferConfigs()
     return true;
 }
 
-QSharedPointer<KWin::GLTexture> EglWaylandBackend::textureForOutput(KWin::Output *output) const
+std::shared_ptr<KWin::GLTexture> EglWaylandBackend::textureForOutput(KWin::Output *output) const
 {
-    QSharedPointer<GLTexture> texture(new GLTexture(GL_RGBA8, output->pixelSize()));
+    std::shared_ptr<GLTexture> texture(new GLTexture(GL_RGBA8, output->pixelSize()));
     GLFramebuffer::pushFramebuffer(m_outputs[output]->fbo());
-    GLFramebuffer renderTarget(texture.data());
+    GLFramebuffer renderTarget(texture.get());
     renderTarget.blitFromFramebuffer(QRect(0, texture->height(), texture->width(), -texture->height()));
     GLFramebuffer::popFramebuffer();
     return texture;

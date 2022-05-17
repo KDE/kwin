@@ -38,9 +38,9 @@ public:
     int xineramaNumber() const;
     void setXineramaNumber(int number);
 
-    void setColorTransformation(const QSharedPointer<ColorTransformation> &transformation) override;
+    void setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation) override;
 
-    void setMode(const QSize &size, int refreshRate);
+    void setMode(const QSize &size, uint32_t refreshRate);
 
 private:
     void setCrtc(xcb_randr_crtc_t crtc);

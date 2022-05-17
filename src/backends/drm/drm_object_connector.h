@@ -93,8 +93,8 @@ public:
     QString modelName() const;
     QSize physicalSize() const;
 
-    QList<QSharedPointer<DrmConnectorMode>> modes() const;
-    QSharedPointer<DrmConnectorMode> findMode(const drmModeModeInfo &modeInfo) const;
+    QList<std::shared_ptr<DrmConnectorMode>> modes() const;
+    std::shared_ptr<DrmConnectorMode> findMode(const drmModeModeInfo &modeInfo) const;
 
     Output::SubPixel subpixel() const;
     bool hasOverscan() const;
@@ -105,15 +105,15 @@ public:
     LinkStatus linkStatus() const;
 
 private:
-    QList<QSharedPointer<DrmConnectorMode>> generateCommonModes();
-    QSharedPointer<DrmConnectorMode> generateMode(const QSize &size, uint32_t refreshRate);
+    QList<std::shared_ptr<DrmConnectorMode>> generateCommonModes();
+    std::shared_ptr<DrmConnectorMode> generateMode(const QSize &size, uint32_t refreshRate);
 
     QScopedPointer<DrmPipeline> m_pipeline;
     DrmScopedPointer<drmModeConnector> m_conn;
     Edid m_edid;
     QSize m_physicalSize = QSize(-1, -1);
-    QList<QSharedPointer<DrmConnectorMode>> m_driverModes;
-    QList<QSharedPointer<DrmConnectorMode>> m_modes;
+    QList<std::shared_ptr<DrmConnectorMode>> m_driverModes;
+    QList<std::shared_ptr<DrmConnectorMode>> m_modes;
     uint32_t m_possibleCrtcs = 0;
 
     friend QDebug &operator<<(QDebug &s, const KWin::DrmConnector *obj);

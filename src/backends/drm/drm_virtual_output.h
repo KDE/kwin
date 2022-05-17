@@ -43,10 +43,10 @@ private:
     void setDpmsMode(DpmsMode mode) override;
     void updateEnablement(bool enable) override;
 
-    QSharedPointer<DrmOutputLayer> m_layer;
+    std::shared_ptr<DrmOutputLayer> m_layer;
     bool m_pageFlipPending = true;
 
-    SoftwareVsyncMonitor *m_vsyncMonitor;
+    std::unique_ptr<SoftwareVsyncMonitor> m_vsyncMonitor;
 };
 
 }

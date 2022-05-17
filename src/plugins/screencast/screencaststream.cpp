@@ -134,7 +134,7 @@ void ScreenCastStream::onStreamParamChanged(void *data, uint32_t id, const struc
 
 void ScreenCastStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
 {
-    QSharedPointer<DmaBufTexture> dmabuf;
+    std::shared_ptr<DmaBufTexture> dmabuf;
     ScreenCastStream *stream = static_cast<ScreenCastStream *>(data);
     struct spa_data *spa_data = buffer->buffer->datas;
 
@@ -240,7 +240,7 @@ bool ScreenCastStream::init()
         return false;
     }
 
-    connect(pwCore.data(), &PipeWireCore::pipewireFailed, this, &ScreenCastStream::coreFailed);
+    connect(pwCore.get(), &PipeWireCore::pipewireFailed, this, &ScreenCastStream::coreFailed);
 
     if (!createStream()) {
         qCWarning(KWIN_SCREENCAST) << "Failed to create PipeWire stream";
@@ -284,12 +284,9 @@ bool ScreenCastStream::createStream()
     const spa_pod *params[2];
     int n_params;
 
-    auto canCreateDmaBuf = [this]() -> bool {
-        return !QSharedPointer<DmaBufTexture>(kwinApp()->platform()->createDmaBufTexture(m_resolution)).isNull();
-    };
     const auto format = m_source->hasAlphaChannel() ? SPA_VIDEO_FORMAT_BGRA : SPA_VIDEO_FORMAT_BGR;
 
-    if (canCreateDmaBuf()) {
+    if (kwinApp()->platform()->createDmaBufTexture(m_resolution) != nullptr) {
         params[0] = buildFormat(&podBuilder, SPA_VIDEO_FORMAT_BGRA, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, &modifier, 1);
         params[1] = buildFormat(&podBuilder, format, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, nullptr, 0);
         n_params = 2;

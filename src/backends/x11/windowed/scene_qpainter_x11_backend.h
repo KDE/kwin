@@ -16,6 +16,7 @@
 #include <QMap>
 #include <QObject>
 #include <QVector>
+#include <memory>
 
 #include <xcb/xcb.h>
 
@@ -53,7 +54,7 @@ private:
     void createOutputs();
     xcb_gcontext_t m_gc = XCB_NONE;
     X11WindowedBackend *m_backend;
-    QMap<Output *, QSharedPointer<X11WindowedQPainterOutput>> m_outputs;
+    QMap<Output *, std::shared_ptr<X11WindowedQPainterOutput>> m_outputs;
 };
 
 }

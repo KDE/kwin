@@ -7,8 +7,7 @@
 #pragma once
 #include "kwin_export.h"
 
-#include <QScopedPointer>
-#include <QSharedPointer>
+#include <memory>
 
 namespace KWin
 {
@@ -31,7 +30,7 @@ struct DmaBufAttributes
 class KWIN_EXPORT DmaBufTexture
 {
 public:
-    explicit DmaBufTexture(QSharedPointer<GLTexture> texture, const DmaBufAttributes &attributes);
+    explicit DmaBufTexture(std::shared_ptr<GLTexture> texture, const DmaBufAttributes &attributes);
     virtual ~DmaBufTexture();
 
     DmaBufAttributes attributes() const;
@@ -39,8 +38,8 @@ public:
     GLFramebuffer *framebuffer() const;
 
 protected:
-    QSharedPointer<GLTexture> m_texture;
-    QScopedPointer<GLFramebuffer> m_framebuffer;
+    std::shared_ptr<GLTexture> m_texture;
+    std::unique_ptr<GLFramebuffer> m_framebuffer;
     DmaBufAttributes m_attributes;
 };
 

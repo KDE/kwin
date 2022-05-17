@@ -15,6 +15,8 @@
 // wayland
 #include <wayland-egl.h>
 
+#include <memory>
+
 class QTemporaryFile;
 struct wl_buffer;
 struct wl_shm;
@@ -91,7 +93,7 @@ public:
         return m_havePlatformBase;
     }
 
-    QSharedPointer<KWin::GLTexture> textureForOutput(KWin::Output *output) const override;
+    std::shared_ptr<KWin::GLTexture> textureForOutput(KWin::Output *output) const override;
 
 private:
     bool initializeEgl();
@@ -105,7 +107,7 @@ private:
     void presentOnSurface(EglWaylandOutput *output, const QRegion &damagedRegion);
 
     WaylandBackend *m_backend;
-    QMap<Output *, QSharedPointer<EglWaylandOutput>> m_outputs;
+    QMap<Output *, std::shared_ptr<EglWaylandOutput>> m_outputs;
     bool m_havePlatformBase;
     friend class EglWaylandTexture;
 };

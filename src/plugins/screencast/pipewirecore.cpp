@@ -96,14 +96,12 @@ bool PipeWireCore::init()
     return true;
 }
 
-QSharedPointer<PipeWireCore> PipeWireCore::self()
+std::shared_ptr<PipeWireCore> PipeWireCore::self()
 {
-    static QWeakPointer<PipeWireCore> global;
-    QSharedPointer<PipeWireCore> ret;
-    if (global) {
-        ret = global.toStrongRef();
-    } else {
-        ret.reset(new PipeWireCore);
+    static std::weak_ptr<PipeWireCore> global;
+    auto ret = global.lock();
+    if (!ret) {
+        ret = std::make_shared<PipeWireCore>();
         ret->init();
         global = ret;
     }

@@ -16,7 +16,6 @@
 #include <QExplicitlySharedDataPointer>
 #include <QMatrix4x4>
 #include <QRegion>
-#include <QSharedPointer>
 #include <QSize>
 
 #include <epoxy/gl.h>

@@ -47,7 +47,7 @@ private:
         }
 
         TimeLine m_timeLine;
-        QSharedPointer<GLTexture> m_texture;
+        std::shared_ptr<GLTexture> m_texture;
         EffectScreen::Transform m_oldTransform;
         qreal m_angle = 0;
         bool m_captured = false;

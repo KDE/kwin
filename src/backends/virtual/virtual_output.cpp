@@ -55,7 +55,7 @@ void VirtualOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
 
 void VirtualOutput::setGeometry(const QRect &geo)
 {
-    auto mode = QSharedPointer<OutputMode>::create(geo.size(), m_vsyncMonitor->refreshRate());
+    auto mode = std::make_shared<OutputMode>(geo.size(), m_vsyncMonitor->refreshRate());
     setModesInternal({mode}, mode);
     moveTo(geo.topLeft());
 }

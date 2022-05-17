@@ -1147,10 +1147,10 @@ void X11Window::invalidateDecoration()
 
 void X11Window::createDecoration(const QRect &oldgeom)
 {
-    QSharedPointer<KDecoration2::Decoration> decoration(Decoration::DecorationBridge::self()->createDecoration(this));
+    std::shared_ptr<KDecoration2::Decoration> decoration(Decoration::DecorationBridge::self()->createDecoration(this));
     if (decoration) {
-        connect(decoration.data(), &KDecoration2::Decoration::resizeOnlyBordersChanged, this, &X11Window::updateInputWindow);
-        connect(decoration.data(), &KDecoration2::Decoration::bordersChanged, this, &X11Window::updateFrameExtents);
+        connect(decoration.get(), &KDecoration2::Decoration::resizeOnlyBordersChanged, this, &X11Window::updateInputWindow);
+        connect(decoration.get(), &KDecoration2::Decoration::bordersChanged, this, &X11Window::updateFrameExtents);
         connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged, this, &X11Window::updateInputWindow);
     }
     setDecoration(decoration);

@@ -157,7 +157,7 @@ void DecorationBridge::reconfigure()
             m_plugin = QString();
             delete m_factory;
             m_factory = nullptr;
-            m_settings.clear();
+            m_settings.reset();
         } else {
             // decorations enabled now
             init();

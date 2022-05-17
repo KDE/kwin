@@ -15,21 +15,20 @@
 namespace KWin
 {
 
-QWeakPointer<QQmlEngine> SharedQmlEngine::s_engine;
+std::weak_ptr<QQmlEngine> SharedQmlEngine::s_engine;
 
 SharedQmlEngine::Ptr SharedQmlEngine::engine()
 {
-    if (!s_engine) {
-        Ptr ptr(new QQmlEngine());
+    auto ret = s_engine.lock();
+    if (!ret) {
+        ret = std::make_shared<QQmlEngine>();
 
-        auto *i18nContext = new KLocalizedContext(ptr.data());
-        ptr->rootContext()->setContextObject(i18nContext);
+        auto *i18nContext = new KLocalizedContext(ret.get());
+        ret->rootContext()->setContextObject(i18nContext);
 
-        s_engine = ptr;
-        return ptr;
+        s_engine = ret;
     }
-
-    return s_engine.toStrongRef();
+    return ret;
 }
 
 } // namespace KWin

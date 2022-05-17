@@ -69,7 +69,7 @@ void X11WindowedQPainterBackend::createOutputs()
     m_outputs.clear();
     const auto &outputs = m_backend->outputs();
     for (const auto &x11Output : outputs) {
-        m_outputs[x11Output] = QSharedPointer<X11WindowedQPainterOutput>::create(x11Output, m_backend->windowForScreen(x11Output));
+        m_outputs[x11Output] = std::make_shared<X11WindowedQPainterOutput>(x11Output, m_backend->windowForScreen(x11Output));
     }
 }
 

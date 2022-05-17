@@ -50,7 +50,7 @@ public:
 
 private:
     SurfaceItemInternal *m_item;
-    QSharedPointer<QOpenGLFramebufferObject> m_fbo;
+    std::shared_ptr<QOpenGLFramebufferObject> m_fbo;
     QImage m_rasterBuffer;
 };
 

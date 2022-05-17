@@ -229,7 +229,7 @@ PreviewBridge *Settings::bridge() const
 void Settings::createSettings()
 {
     if (m_bridge.isNull()) {
-        m_settings.clear();
+        m_settings.reset();
     } else {
         m_settings = QSharedPointer<KDecoration2::DecorationSettings>::create(m_bridge.data());
         m_previewSettings = m_bridge->lastCreatedSettings();
@@ -246,7 +246,7 @@ QSharedPointer<DecorationSettings> Settings::settings() const
 
 DecorationSettings *Settings::settingsPointer() const
 {
-    return m_settings.data();
+    return m_settings.get();
 }
 
 void Settings::setBorderSizesIndex(int index)

@@ -107,7 +107,7 @@ private:
 class XdgToplevelConfigure final : public XdgSurfaceConfigure
 {
 public:
-    QSharedPointer<KDecoration2::Decoration> decoration;
+    std::shared_ptr<KDecoration2::Decoration> decoration;
     KWaylandServer::XdgToplevelInterface::States states;
 };
 
@@ -233,7 +233,7 @@ private:
     bool m_userNoBorder = false;
     bool m_isTransient = false;
     QPointer<Output> m_fullScreenRequestedOutput;
-    QSharedPointer<KDecoration2::Decoration> m_nextDecoration;
+    std::shared_ptr<KDecoration2::Decoration> m_nextDecoration;
 };
 
 class XdgPopupWindow final : public XdgSurfaceWindow

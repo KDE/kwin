@@ -63,7 +63,7 @@ void WaylandOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
 {
     m_renderLoop->setRefreshRate(s_refreshRate);
 
-    auto mode = QSharedPointer<OutputMode>::create(pixelSize, s_refreshRate);
+    auto mode = std::make_shared<OutputMode>(pixelSize, s_refreshRate);
     setModesInternal({mode}, mode);
 
     moveTo(logicalPosition);
@@ -72,7 +72,7 @@ void WaylandOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
 
 void WaylandOutput::setGeometry(const QPoint &logicalPosition, const QSize &pixelSize)
 {
-    auto mode = QSharedPointer<OutputMode>::create(pixelSize, s_refreshRate);
+    auto mode = std::make_shared<OutputMode>(pixelSize, s_refreshRate);
     setModesInternal({mode}, mode);
 
     moveTo(logicalPosition);

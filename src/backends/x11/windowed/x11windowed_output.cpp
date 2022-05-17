@@ -147,7 +147,7 @@ void X11WindowedOutput::initXInputForWindow()
 
 void X11WindowedOutput::setGeometry(const QPoint &logicalPosition, const QSize &pixelSize)
 {
-    auto mode = QSharedPointer<OutputMode>::create(pixelSize, m_renderLoop->refreshRate());
+    auto mode = std::make_shared<OutputMode>(pixelSize, m_renderLoop->refreshRate());
     setModesInternal({mode}, mode);
 
     moveTo(logicalPosition);

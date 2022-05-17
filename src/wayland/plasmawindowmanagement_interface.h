@@ -8,6 +8,7 @@
 #include "kwin_export.h"
 
 #include <QObject>
+#include <memory>
 
 class QSize;
 
@@ -51,7 +52,7 @@ public:
      * @returns an instance of @class PlasmaWindowActivationInterface to
      * be destroyed as the activation process ends.
      */
-    PlasmaWindowActivationInterface *createActivation(const QString &app_id);
+    std::unique_ptr<PlasmaWindowActivationInterface> createActivation(const QString &app_id);
 
 private:
     QScopedPointer<PlasmaWindowActivationFeedbackInterfacePrivate> d;

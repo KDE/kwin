@@ -15,7 +15,6 @@
 #include <QMap>
 #include <QPointer>
 #include <QRegion>
-#include <QSharedPointer>
 #include <epoxy/egl.h>
 #include <optional>
 

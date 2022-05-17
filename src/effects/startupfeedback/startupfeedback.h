@@ -65,7 +65,7 @@ private:
     struct Startup
     {
         QIcon icon;
-        QSharedPointer<QTimer> expiredTimer;
+        std::shared_ptr<QTimer> expiredTimer;
     };
 
     void start(const Startup &startup);

@@ -81,8 +81,8 @@ DrmOutput::DrmOutput(DrmPipeline *pipeline)
         .internal = conn->isInternal(),
     });
 
-    const QList<QSharedPointer<OutputMode>> modes = getModes();
-    QSharedPointer<OutputMode> currentMode = m_pipeline->mode();
+    const QList<std::shared_ptr<OutputMode>> modes = getModes();
+    std::shared_ptr<OutputMode> currentMode = m_pipeline->mode();
     if (!currentMode) {
         currentMode = modes.constFirst();
     }
@@ -184,13 +184,13 @@ void DrmOutput::moveCursor()
     }
 }
 
-QList<QSharedPointer<OutputMode>> DrmOutput::getModes() const
+QList<std::shared_ptr<OutputMode>> DrmOutput::getModes() const
 {
     const auto drmModes = m_pipeline->connector()->modes();
 
-    QList<QSharedPointer<OutputMode>> ret;
+    QList<std::shared_ptr<OutputMode>> ret;
     ret.reserve(drmModes.count());
-    for (const QSharedPointer<DrmConnectorMode> &drmMode : drmModes) {
+    for (const auto &drmMode : drmModes) {
         ret.append(drmMode);
     }
     return ret;
@@ -282,7 +282,7 @@ DrmPlane::Transformations outputToPlaneTransform(DrmOutput::Transform transform)
 
 void DrmOutput::updateModes()
 {
-    const QList<QSharedPointer<OutputMode>> modes = getModes();
+    const QList<std::shared_ptr<OutputMode>> modes = getModes();
 
     if (m_pipeline->crtc()) {
         const auto currentMode = m_pipeline->connector()->findMode(m_pipeline->crtc()->queryCurrentMode());
@@ -299,7 +299,7 @@ void DrmOutput::updateModes()
         }
     }
 
-    QSharedPointer<OutputMode> currentMode = m_pipeline->mode();
+    std::shared_ptr<OutputMode> currentMode = m_pipeline->mode();
     if (!currentMode) {
         currentMode = modes.constFirst();
     }
@@ -410,7 +410,7 @@ DrmOutputLayer *DrmOutput::outputLayer() const
     return m_pipeline->primaryLayer();
 }
 
-void DrmOutput::setColorTransformation(const QSharedPointer<ColorTransformation> &transformation)
+void DrmOutput::setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation)
 {
     m_pipeline->setColorTransformation(transformation);
     if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test)) {

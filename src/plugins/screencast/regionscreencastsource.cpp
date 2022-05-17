@@ -43,7 +43,7 @@ void RegionScreenCastSource::updateOutput(Output *output)
     m_last = output->renderLoop()->lastPresentationTimestamp();
 
     if (!m_renderedTexture.isNull()) {
-        const QSharedPointer<GLTexture> outputTexture = Compositor::self()->scene()->textureForOutput(output);
+        const std::shared_ptr<GLTexture> outputTexture = Compositor::self()->scene()->textureForOutput(output);
         const auto outputGeometry = output->geometry();
         if (!outputTexture || !m_region.intersects(output->geometry())) {
             return;

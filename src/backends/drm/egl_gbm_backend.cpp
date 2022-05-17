@@ -214,7 +214,7 @@ OutputLayer *EglGbmBackend::primaryLayer(Output *output)
     return static_cast<DrmAbstractOutput *>(output)->outputLayer();
 }
 
-QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(Output *output) const
+std::shared_ptr<GLTexture> EglGbmBackend::textureForOutput(Output *output) const
 {
     const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
     return static_cast<EglGbmLayer *>(drmOutput->outputLayer())->texture();
@@ -239,23 +239,23 @@ EGLConfig EglGbmBackend::config(uint32_t format) const
     return m_configs.value(format, EGL_NO_CONFIG_KHR);
 }
 
-QSharedPointer<DrmPipelineLayer> EglGbmBackend::createPrimaryLayer(DrmPipeline *pipeline)
+std::shared_ptr<DrmPipelineLayer> EglGbmBackend::createPrimaryLayer(DrmPipeline *pipeline)
 {
     if (pipeline->output()) {
-        return QSharedPointer<EglGbmLayer>::create(this, pipeline);
+        return std::make_shared<EglGbmLayer>(this, pipeline);
     } else {
-        return QSharedPointer<DrmLeaseEglGbmLayer>::create(pipeline);
+        return std::make_shared<DrmLeaseEglGbmLayer>(pipeline);
     }
 }
 
-QSharedPointer<DrmOverlayLayer> EglGbmBackend::createCursorLayer(DrmPipeline *pipeline)
+std::shared_ptr<DrmOverlayLayer> EglGbmBackend::createCursorLayer(DrmPipeline *pipeline)
 {
-    return QSharedPointer<EglGbmCursorLayer>::create(this, pipeline);
+    return std::make_shared<EglGbmCursorLayer>(this, pipeline);
 }
 
-QSharedPointer<DrmOutputLayer> EglGbmBackend::createLayer(DrmVirtualOutput *output)
+std::shared_ptr<DrmOutputLayer> EglGbmBackend::createLayer(DrmVirtualOutput *output)
 {
-    return QSharedPointer<VirtualEglGbmLayer>::create(this, output);
+    return std::make_shared<VirtualEglGbmLayer>(this, output);
 }
 
 DrmGpu *EglGbmBackend::gpu() const
@@ -341,22 +341,22 @@ EGLImageKHR EglGbmBackend::importDmaBufAsImage(gbm_bo *bo)
     return image;
 }
 
-QSharedPointer<GLTexture> EglGbmBackend::importDmaBufAsTexture(const DmaBufAttributes &attributes)
+std::shared_ptr<GLTexture> EglGbmBackend::importDmaBufAsTexture(const DmaBufAttributes &attributes)
 {
     EGLImageKHR image = importDmaBufAsImage(attributes);
     if (image != EGL_NO_IMAGE_KHR) {
-        return QSharedPointer<EGLImageTexture>::create(eglDisplay(), image, GL_RGBA8, QSize(attributes.width, attributes.height));
+        return std::make_shared<EGLImageTexture>(eglDisplay(), image, GL_RGBA8, QSize(attributes.width, attributes.height));
     } else {
         qCWarning(KWIN_DRM) << "Failed to record frame: Error creating EGLImageKHR - " << getEglErrorString();
         return nullptr;
     }
 }
 
-QSharedPointer<GLTexture> EglGbmBackend::importDmaBufAsTexture(gbm_bo *bo)
+std::shared_ptr<GLTexture> EglGbmBackend::importDmaBufAsTexture(gbm_bo *bo)
 {
     EGLImageKHR image = importDmaBufAsImage(bo);
     if (image != EGL_NO_IMAGE_KHR) {
-        return QSharedPointer<EGLImageTexture>::create(eglDisplay(), image, GL_RGBA8, QSize(gbm_bo_get_width(bo), gbm_bo_get_height(bo)));
+        return std::make_shared<EGLImageTexture>(eglDisplay(), image, GL_RGBA8, QSize(gbm_bo_get_width(bo), gbm_bo_get_height(bo)));
     } else {
         qCWarning(KWIN_DRM) << "Failed to record frame: Error creating EGLImageKHR - " << getEglErrorString();
         return nullptr;

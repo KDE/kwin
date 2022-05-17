@@ -47,7 +47,7 @@ ShadowBuffer::ShadowBuffer(const QSize &size, const GbmFormat &format)
     m_texture->setFilter(GL_NEAREST);
     m_texture->setYInverted(true);
 
-    m_fbo.reset(new GLFramebuffer(m_texture.data()));
+    m_fbo.reset(new GLFramebuffer(m_texture.get()));
     if (!m_fbo->valid()) {
         qCCritical(KWIN_DRM) << "Error: framebuffer not complete!";
         return;
@@ -91,7 +91,7 @@ GLFramebuffer *ShadowBuffer::fbo() const
     return m_fbo.data();
 }
 
-QSharedPointer<GLTexture> ShadowBuffer::texture() const
+std::shared_ptr<GLTexture> ShadowBuffer::texture() const
 {
     return m_texture;
 }

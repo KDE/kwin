@@ -267,7 +267,7 @@ void QuickSceneEffect::startInternal()
     }
 
     if (!d->qmlComponent) {
-        d->qmlComponent.reset(new QQmlComponent(d->qmlEngine.data()));
+        d->qmlComponent.reset(new QQmlComponent(d->qmlEngine.get()));
         d->qmlComponent->loadUrl(d->source);
         if (d->qmlComponent->isError()) {
             qWarning().nospace() << "Failed to load " << d->source << ": " << d->qmlComponent->errors();

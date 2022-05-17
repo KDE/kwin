@@ -215,7 +215,7 @@ QVector<QByteArray> SceneOpenGL::openGLPlatformInterfaceExtensions() const
     return m_backend->extensions().toVector();
 }
 
-QSharedPointer<GLTexture> SceneOpenGL::textureForOutput(Output *output) const
+std::shared_ptr<GLTexture> SceneOpenGL::textureForOutput(Output *output) const
 {
     return m_backend->textureForOutput(output);
 }
@@ -638,13 +638,13 @@ public:
     static DecorationShadowTextureCache &instance();
 
     void unregister(SceneOpenGLShadow *shadow);
-    QSharedPointer<GLTexture> getTexture(SceneOpenGLShadow *shadow);
+    std::shared_ptr<GLTexture> getTexture(SceneOpenGLShadow *shadow);
 
 private:
     DecorationShadowTextureCache() = default;
     struct Data
     {
-        QSharedPointer<GLTexture> texture;
+        std::shared_ptr<GLTexture> texture;
         QVector<SceneOpenGLShadow *> shadows;
     };
     QHash<KDecoration2::DecorationShadow *, Data> m_cache;
@@ -684,7 +684,7 @@ void DecorationShadowTextureCache::unregister(SceneOpenGLShadow *shadow)
     }
 }
 
-QSharedPointer<GLTexture> DecorationShadowTextureCache::getTexture(SceneOpenGLShadow *shadow)
+std::shared_ptr<GLTexture> DecorationShadowTextureCache::getTexture(SceneOpenGLShadow *shadow)
 {
     Q_ASSERT(shadow->hasDecorationShadow());
     unregister(shadow);
@@ -698,7 +698,7 @@ QSharedPointer<GLTexture> DecorationShadowTextureCache::getTexture(SceneOpenGLSh
     }
     Data d;
     d.shadows << shadow;
-    d.texture = QSharedPointer<GLTexture>::create(shadow->decorationShadowImage());
+    d.texture = std::make_shared<GLTexture>(shadow->decorationShadowImage());
     m_cache.insert(decoShadow.data(), d);
     return d.texture;
 }
@@ -791,7 +791,7 @@ bool SceneOpenGLShadow::prepareBackend()
 
     Scene *scene = Compositor::self()->scene();
     scene->makeOpenGLContextCurrent();
-    m_texture = QSharedPointer<GLTexture>::create(image);
+    m_texture = std::make_shared<GLTexture>(image);
 
     if (m_texture->internalFormat() == GL_R8) {
         // Swizzle red to alpha and all other channels to zero

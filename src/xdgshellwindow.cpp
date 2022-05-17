@@ -885,7 +885,7 @@ XdgSurfaceConfigure *XdgToplevelWindow::sendRoleConfigure() const
 void XdgToplevelWindow::handleRolePrecommit()
 {
     auto configureEvent = static_cast<XdgToplevelConfigure *>(lastAcknowledgedConfigure());
-    if (configureEvent && decoration() != configureEvent->decoration) {
+    if (configureEvent && decoration() != configureEvent->decoration.get()) {
         setDecoration(configureEvent->decoration);
         updateShadow();
     }

@@ -12,7 +12,6 @@
 #include "qpainterbackend.h"
 
 #include <QObject>
-#include <QSharedPointer>
 #include <QVector>
 
 namespace KWin
@@ -33,9 +32,9 @@ public:
     void present(Output *output) override;
     OutputLayer *primaryLayer(Output *output) override;
 
-    QSharedPointer<DrmPipelineLayer> createPrimaryLayer(DrmPipeline *pipeline) override;
-    QSharedPointer<DrmOverlayLayer> createCursorLayer(DrmPipeline *pipeline) override;
-    QSharedPointer<DrmOutputLayer> createLayer(DrmVirtualOutput *output) override;
+    std::shared_ptr<DrmPipelineLayer> createPrimaryLayer(DrmPipeline *pipeline) override;
+    std::shared_ptr<DrmOverlayLayer> createCursorLayer(DrmPipeline *pipeline) override;
+    std::shared_ptr<DrmOutputLayer> createLayer(DrmVirtualOutput *output) override;
 
 private:
     DrmBackend *m_backend;

@@ -10,7 +10,7 @@
 #include "outputlayer.h"
 
 #include <QRegion>
-#include <QSharedPointer>
+#include <memory>
 #include <optional>
 
 namespace KWin
@@ -26,7 +26,7 @@ class DrmOutputLayer : public OutputLayer
 public:
     virtual ~DrmOutputLayer();
 
-    virtual QSharedPointer<GLTexture> texture() const;
+    virtual std::shared_ptr<GLTexture> texture() const;
     virtual QRegion currentDamage() const;
     virtual void releaseBuffers() = 0;
 };

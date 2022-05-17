@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include <QSharedPointer>
+#include <memory>
 
 namespace KWin
 {
@@ -24,9 +24,9 @@ class DrmRenderBackend
 public:
     virtual ~DrmRenderBackend() = default;
 
-    virtual QSharedPointer<DrmPipelineLayer> createPrimaryLayer(DrmPipeline *pipeline) = 0;
-    virtual QSharedPointer<DrmOverlayLayer> createCursorLayer(DrmPipeline *pipeline) = 0;
-    virtual QSharedPointer<DrmOutputLayer> createLayer(DrmVirtualOutput *output) = 0;
+    virtual std::shared_ptr<DrmPipelineLayer> createPrimaryLayer(DrmPipeline *pipeline) = 0;
+    virtual std::shared_ptr<DrmOverlayLayer> createCursorLayer(DrmPipeline *pipeline) = 0;
+    virtual std::shared_ptr<DrmOutputLayer> createLayer(DrmVirtualOutput *output) = 0;
 };
 
 }

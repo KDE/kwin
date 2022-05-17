@@ -198,12 +198,12 @@ QSize DrmConnector::physicalSize() const
     return m_physicalSize;
 }
 
-QList<QSharedPointer<DrmConnectorMode>> DrmConnector::modes() const
+QList<std::shared_ptr<DrmConnectorMode>> DrmConnector::modes() const
 {
     return m_modes;
 }
 
-QSharedPointer<DrmConnectorMode> DrmConnector::findMode(const drmModeModeInfo &modeInfo) const
+std::shared_ptr<DrmConnectorMode> DrmConnector::findMode(const drmModeModeInfo &modeInfo) const
 {
     const auto it = std::find_if(m_modes.constBegin(), m_modes.constEnd(), [&modeInfo](const auto &mode) {
         return checkIfEqual(mode->nativeMode(), &modeInfo);
@@ -341,7 +341,7 @@ bool DrmConnector::updateProperties()
         // reload modes
         m_driverModes.clear();
         for (int i = 0; i < m_conn->count_modes; i++) {
-            m_driverModes.append(QSharedPointer<DrmConnectorMode>::create(this, m_conn->modes[i]));
+            m_driverModes.append(std::make_shared<DrmConnectorMode>(this, m_conn->modes[i]));
         }
         if (m_driverModes.isEmpty()) {
             return false;
@@ -417,9 +417,9 @@ static const QVector<QSize> s_commonModes = {
     QSize(1280, 720),
 };
 
-QList<QSharedPointer<DrmConnectorMode>> DrmConnector::generateCommonModes()
+QList<std::shared_ptr<DrmConnectorMode>> DrmConnector::generateCommonModes()
 {
-    QList<QSharedPointer<DrmConnectorMode>> ret;
+    QList<std::shared_ptr<DrmConnectorMode>> ret;
     uint32_t maxBandwidthEstimation = 0;
     QSize maxSize;
     for (const auto &mode : qAsConst(m_driverModes)) {
@@ -440,7 +440,7 @@ QList<QSharedPointer<DrmConnectorMode>> DrmConnector::generateCommonModes()
     return ret;
 }
 
-QSharedPointer<DrmConnectorMode> DrmConnector::generateMode(const QSize &size, uint32_t refreshRate)
+std::shared_ptr<DrmConnectorMode> DrmConnector::generateMode(const QSize &size, uint32_t refreshRate)
 {
     auto modeInfo = libxcvt_gen_mode_info(size.width(), size.height(), refreshRate, false, false);
 
@@ -461,7 +461,7 @@ QSharedPointer<DrmConnectorMode> DrmConnector::generateMode(const QSize &size, u
     sprintf(mode.name, "%dx%d@%d", size.width(), size.height(), mode.vrefresh);
 
     free(modeInfo);
-    return QSharedPointer<DrmConnectorMode>::create(this, mode);
+    return std::make_shared<DrmConnectorMode>(this, mode);
 }
 
 QDebug &operator<<(QDebug &s, const KWin::DrmConnector *obj)

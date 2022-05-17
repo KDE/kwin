@@ -468,7 +468,7 @@ DrmCrtc *DrmPipeline::currentCrtc() const
     return m_current.crtc;
 }
 
-DrmGammaRamp::DrmGammaRamp(DrmCrtc *crtc, const QSharedPointer<ColorTransformation> &transformation)
+DrmGammaRamp::DrmGammaRamp(DrmCrtc *crtc, const std::shared_ptr<ColorTransformation> &transformation)
     : m_gpu(crtc->gpu())
     , m_lut(transformation, crtc->gammaRampSize())
 {
@@ -565,7 +565,7 @@ DrmCrtc *DrmPipeline::crtc() const
     return m_pending.crtc;
 }
 
-QSharedPointer<DrmConnectorMode> DrmPipeline::mode() const
+std::shared_ptr<DrmConnectorMode> DrmPipeline::mode() const
 {
     return m_pending.mode;
 }
@@ -618,7 +618,7 @@ Output::RgbRange DrmPipeline::rgbRange() const
 void DrmPipeline::setCrtc(DrmCrtc *crtc)
 {
     if (crtc && m_pending.crtc && crtc->gammaRampSize() != m_pending.crtc->gammaRampSize() && m_pending.colorTransformation) {
-        m_pending.gamma = QSharedPointer<DrmGammaRamp>::create(crtc, m_pending.colorTransformation);
+        m_pending.gamma = std::make_shared<DrmGammaRamp>(crtc, m_pending.colorTransformation);
     }
     m_pending.crtc = crtc;
     if (crtc) {
@@ -628,7 +628,7 @@ void DrmPipeline::setCrtc(DrmCrtc *crtc)
     }
 }
 
-void DrmPipeline::setMode(const QSharedPointer<DrmConnectorMode> &mode)
+void DrmPipeline::setMode(const std::shared_ptr<DrmConnectorMode> &mode)
 {
     m_pending.mode = mode;
 }
@@ -643,7 +643,7 @@ void DrmPipeline::setEnable(bool enable)
     m_pending.enabled = enable;
 }
 
-void DrmPipeline::setLayers(const QSharedPointer<DrmPipelineLayer> &primaryLayer, const QSharedPointer<DrmOverlayLayer> &cursorLayer)
+void DrmPipeline::setLayers(const std::shared_ptr<DrmPipelineLayer> &primaryLayer, const std::shared_ptr<DrmOverlayLayer> &cursorLayer)
 {
     m_pending.layer = primaryLayer;
     m_pending.cursorLayer = cursorLayer;
@@ -674,9 +674,9 @@ void DrmPipeline::setRgbRange(Output::RgbRange range)
     m_pending.rgbRange = range;
 }
 
-void DrmPipeline::setColorTransformation(const QSharedPointer<ColorTransformation> &transformation)
+void DrmPipeline::setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation)
 {
     m_pending.colorTransformation = transformation;
-    m_pending.gamma = QSharedPointer<DrmGammaRamp>::create(m_pending.crtc, transformation);
+    m_pending.gamma = std::make_shared<DrmGammaRamp>(m_pending.crtc, transformation);
 }
 }

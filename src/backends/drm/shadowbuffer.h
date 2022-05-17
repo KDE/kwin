@@ -27,12 +27,12 @@ public:
     void render(DrmPlane::Transformations transform);
 
     GLFramebuffer *fbo() const;
-    QSharedPointer<GLTexture> texture() const;
+    std::shared_ptr<GLTexture> texture() const;
     uint32_t drmFormat() const;
 
 private:
     GLint internalFormat(const GbmFormat &format) const;
-    QSharedPointer<GLTexture> m_texture;
+    std::shared_ptr<GLTexture> m_texture;
     QScopedPointer<GLFramebuffer> m_fbo;
     QScopedPointer<GLVertexBuffer> m_vbo;
     const QSize m_size;

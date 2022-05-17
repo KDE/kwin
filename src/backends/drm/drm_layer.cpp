@@ -21,7 +21,7 @@ QRegion DrmOutputLayer::currentDamage() const
     return {};
 }
 
-QSharedPointer<GLTexture> DrmOutputLayer::texture() const
+std::shared_ptr<GLTexture> DrmOutputLayer::texture() const
 {
     return nullptr;
 }

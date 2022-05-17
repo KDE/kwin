@@ -13,7 +13,7 @@
 namespace KWin
 {
 
-ColorLUT::ColorLUT(const QSharedPointer<ColorTransformation> &transformation, size_t size)
+ColorLUT::ColorLUT(const std::shared_ptr<ColorTransformation> &transformation, size_t size)
     : m_transformation(transformation)
 {
     m_data.fill(0, 3 * size);
@@ -43,7 +43,7 @@ size_t ColorLUT::size() const
     return m_data.size() / 3;
 }
 
-QSharedPointer<ColorTransformation> ColorLUT::transformation() const
+std::shared_ptr<ColorTransformation> ColorLUT::transformation() const
 {
     return m_transformation;
 }

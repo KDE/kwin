@@ -647,7 +647,7 @@ void OffscreenQuickScene::setSource(const QUrl &source)
 void OffscreenQuickScene::setSource(const QUrl &source, const QVariantMap &initialProperties)
 {
     if (!d->qmlComponent) {
-        d->qmlComponent.reset(new QQmlComponent(d->qmlEngine.data()));
+        d->qmlComponent.reset(new QQmlComponent(d->qmlEngine.get()));
     }
 
     d->qmlComponent->loadUrl(source);

@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <QSharedPointer>
+#include <memory>
 
 class QQmlEngine;
 
@@ -17,11 +17,11 @@ namespace KWin
 class SharedQmlEngine
 {
 public:
-    using Ptr = QSharedPointer<QQmlEngine>;
+    using Ptr = std::shared_ptr<QQmlEngine>;
     static Ptr engine();
 
 private:
-    static QWeakPointer<QQmlEngine> s_engine;
+    static std::weak_ptr<QQmlEngine> s_engine;
 };
 
 } // namespace KWin

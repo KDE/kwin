@@ -15,7 +15,6 @@
 #include <QMap>
 #include <QPointer>
 #include <QRegion>
-#include <QSharedPointer>
 #include <epoxy/egl.h>
 #include <optional>
 
@@ -38,7 +37,7 @@ public:
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
     bool hasDirectScanoutBuffer() const override;
     QRegion currentDamage() const override;
-    QSharedPointer<GLTexture> texture() const override;
+    std::shared_ptr<GLTexture> texture() const override;
     void releaseBuffers() override;
 
 private:

@@ -8,7 +8,8 @@
 */
 #pragma once
 
-#include <QSharedPointer>
+#include <QVector>
+#include <memory>
 
 #include "kwin_export.h"
 
@@ -20,17 +21,17 @@ class ColorTransformation;
 class KWIN_EXPORT ColorLUT
 {
 public:
-    ColorLUT(const QSharedPointer<ColorTransformation> &transformation, size_t size);
+    ColorLUT(const std::shared_ptr<ColorTransformation> &transformation, size_t size);
 
     uint16_t *red() const;
     uint16_t *green() const;
     uint16_t *blue() const;
     size_t size() const;
-    QSharedPointer<ColorTransformation> transformation() const;
+    std::shared_ptr<ColorTransformation> transformation() const;
 
 private:
     QVector<uint16_t> m_data;
-    const QSharedPointer<ColorTransformation> m_transformation;
+    const std::shared_ptr<ColorTransformation> m_transformation;
 };
 
 }

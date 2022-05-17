@@ -327,7 +327,7 @@ bool EglGbmLayerSurface::doesSurfaceFit(const QSize &size, const QMap<uint32_t, 
     return doesGbmSurfaceFit(m_gbmSurface.get(), size, formats);
 }
 
-QSharedPointer<GLTexture> EglGbmLayerSurface::texture() const
+std::shared_ptr<GLTexture> EglGbmLayerSurface::texture() const
 {
     if (m_shadowBuffer) {
         return m_shadowBuffer->texture();

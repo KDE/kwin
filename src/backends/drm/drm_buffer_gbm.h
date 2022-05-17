@@ -12,7 +12,6 @@
 
 #include "drm_buffer.h"
 
-#include <QSharedPointer>
 #include <epoxy/egl.h>
 #include <gbm.h>
 
@@ -43,7 +42,6 @@ public:
     KWaylandServer::ClientBuffer *clientBuffer() const;
 
     bool map(uint32_t flags);
-    QSharedPointer<GLTexture> createTexture(EGLDisplay eglDisplay) const;
 
     static std::shared_ptr<GbmBuffer> importBuffer(DrmGpu *gpu, KWaylandServer::LinuxDmaBufV1ClientBuffer *clientBuffer);
     static std::shared_ptr<GbmBuffer> importBuffer(DrmGpu *gpu, GbmBuffer *buffer, uint32_t flags = GBM_BO_USE_SCANOUT);

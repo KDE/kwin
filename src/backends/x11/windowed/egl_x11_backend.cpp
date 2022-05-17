@@ -99,7 +99,7 @@ bool EglX11Backend::createSurfaces()
         if (s == EGL_NO_SURFACE) {
             return false;
         }
-        m_outputs[output] = QSharedPointer<EglX11Output>::create(this, output, s);
+        m_outputs[output] = std::make_shared<EglX11Output>(this, output, s);
     }
     if (m_outputs.isEmpty()) {
         return false;

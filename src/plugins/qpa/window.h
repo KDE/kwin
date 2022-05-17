@@ -39,8 +39,8 @@ public:
     void requestActivateWindow() override;
 
     void bindContentFBO();
-    const QSharedPointer<QOpenGLFramebufferObject> &contentFBO() const;
-    QSharedPointer<QOpenGLFramebufferObject> swapFBO();
+    const std::shared_ptr<QOpenGLFramebufferObject> &contentFBO() const;
+    std::shared_ptr<QOpenGLFramebufferObject> swapFBO();
 
     InternalWindow *internalWindow() const;
     EGLSurface eglSurface() const;
@@ -52,7 +52,7 @@ private:
 
     QSurfaceFormat m_format;
     QPointer<InternalWindow> m_handle;
-    QSharedPointer<QOpenGLFramebufferObject> m_contentFBO;
+    std::shared_ptr<QOpenGLFramebufferObject> m_contentFBO;
     EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
     quint32 m_windowId;
     bool m_resized = false;

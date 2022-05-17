@@ -10,9 +10,9 @@
 #pragma once
 
 #include <QImage>
-#include <QSharedPointer>
 #include <QSize>
 #include <array>
+#include <memory>
 #include <optional>
 
 namespace KWin

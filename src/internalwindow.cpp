@@ -317,7 +317,7 @@ void InternalWindow::setNoBorder(bool set)
 
 void InternalWindow::createDecoration(const QRect &oldGeometry)
 {
-    setDecoration(QSharedPointer<KDecoration2::Decoration>(Decoration::DecorationBridge::self()->createDecoration(this)));
+    setDecoration(std::shared_ptr<KDecoration2::Decoration>(Decoration::DecorationBridge::self()->createDecoration(this)));
     moveResize(oldGeometry);
 
     Q_EMIT geometryShapeChanged(this, oldGeometry);
@@ -392,7 +392,7 @@ void InternalWindow::popupDone()
     m_handle->hide();
 }
 
-void InternalWindow::present(const QSharedPointer<QOpenGLFramebufferObject> fbo)
+void InternalWindow::present(const std::shared_ptr<QOpenGLFramebufferObject> fbo)
 {
     Q_ASSERT(m_internalImage.isNull());
 
@@ -409,7 +409,7 @@ void InternalWindow::present(const QSharedPointer<QOpenGLFramebufferObject> fbo)
 
 void InternalWindow::present(const QImage &image, const QRegion &damage)
 {
-    Q_ASSERT(m_internalFBO.isNull());
+    Q_ASSERT(m_internalFBO == nullptr);
 
     const QSize bufferSize = image.size() / bufferScale();
 

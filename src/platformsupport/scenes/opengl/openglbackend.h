@@ -13,6 +13,7 @@
 #include "renderbackend.h"
 
 #include <QRegion>
+#include <memory>
 
 namespace KWin
 {
@@ -125,7 +126,7 @@ public:
      */
     void copyPixels(const QRegion &region);
 
-    virtual QSharedPointer<GLTexture> textureForOutput(Output *output) const;
+    virtual std::shared_ptr<GLTexture> textureForOutput(Output *output) const;
 
 protected:
     /**

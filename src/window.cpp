@@ -76,7 +76,7 @@ Window::Window()
     , m_wmClientLeader(XCB_WINDOW_NONE)
     , m_skipCloseAnimation(false)
 #if KWIN_BUILD_TABBOX
-    , m_tabBoxClient(QSharedPointer<TabBox::TabBoxClientImpl>(new TabBox::TabBoxClientImpl(this)))
+    , m_tabBoxClient(QSharedPointer<TabBox::TabBoxClientImpl>::create(this))
 #endif
     , m_colorScheme(QStringLiteral("kdeglobals"))
 {
@@ -2976,19 +2976,19 @@ void Window::endInteractiveMoveResize()
     updateCursor();
 }
 
-void Window::setDecoration(QSharedPointer<KDecoration2::Decoration> decoration)
+void Window::setDecoration(std::shared_ptr<KDecoration2::Decoration> decoration)
 {
-    if (m_decoration.decoration.data() == decoration) {
+    if (m_decoration.decoration == decoration) {
         return;
     }
     if (decoration) {
-        QMetaObject::invokeMethod(decoration.data(), QOverload<>::of(&KDecoration2::Decoration::update), Qt::QueuedConnection);
-        connect(decoration.data(), &KDecoration2::Decoration::shadowChanged, this, &Window::updateShadow);
-        connect(decoration.data(), &KDecoration2::Decoration::bordersChanged,
+        QMetaObject::invokeMethod(decoration.get(), QOverload<>::of(&KDecoration2::Decoration::update), Qt::QueuedConnection);
+        connect(decoration.get(), &KDecoration2::Decoration::shadowChanged, this, &Window::updateShadow);
+        connect(decoration.get(), &KDecoration2::Decoration::bordersChanged,
                 this, &Window::updateDecorationInputShape);
-        connect(decoration.data(), &KDecoration2::Decoration::resizeOnlyBordersChanged,
+        connect(decoration.get(), &KDecoration2::Decoration::resizeOnlyBordersChanged,
                 this, &Window::updateDecorationInputShape);
-        connect(decoration.data(), &KDecoration2::Decoration::bordersChanged, this, [this]() {
+        connect(decoration.get(), &KDecoration2::Decoration::bordersChanged, this, [this]() {
             GeometryUpdatesBlocker blocker(this);
             const QRect oldGeometry = moveResizeGeometry();
             if (!isShade()) {

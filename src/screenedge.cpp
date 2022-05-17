@@ -44,7 +44,6 @@
 #include <QFontDatabase>
 #include <QFontMetrics>
 #include <QMouseEvent>
-#include <QSharedPointer>
 #include <QTextStream>
 #include <QTimer>
 #include <QWidget>
@@ -492,10 +491,10 @@ void Edge::switchDesktop(const QPoint &cursorPos)
     if (vds->currentDesktop() != oldDesktop) {
         m_pushBackBlocked = true;
         Cursors::self()->mouse()->setPos(pos);
-        QSharedPointer<QMetaObject::Connection> me(new QMetaObject::Connection);
+        QMetaObject::Connection *me = new QMetaObject::Connection();
         *me = QObject::connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, this, [this, me]() {
             QObject::disconnect(*me);
-            const_cast<QSharedPointer<QMetaObject::Connection> *>(&me)->reset(nullptr);
+            delete me;
             m_pushBackBlocked = false;
         });
     }

@@ -15,7 +15,6 @@
 
 #include <QObject>
 #include <QPoint>
-#include <QSharedPointer>
 #include <QSize>
 #include <QTimer>
 #include <QVector>
@@ -54,14 +53,14 @@ public:
     void updateCursor();
     void moveCursor();
 
-    void setColorTransformation(const QSharedPointer<ColorTransformation> &transformation) override;
+    void setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation) override;
 
 private:
     void updateEnablement(bool enable) override;
     bool setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
 
-    QList<QSharedPointer<OutputMode>> getModes() const;
+    QList<std::shared_ptr<OutputMode>> getModes() const;
 
     void renderCursorOpengl(const RenderTarget &renderTarget, const QSize &cursorSize);
     void renderCursorQPainter(const RenderTarget &renderTarget);

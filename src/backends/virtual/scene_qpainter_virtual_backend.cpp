@@ -60,7 +60,7 @@ void VirtualQPainterBackend::createOutputs()
     m_outputs.clear();
     const auto outputs = m_backend->enabledOutputs();
     for (const auto &output : outputs) {
-        m_outputs.insert(output, QSharedPointer<VirtualQPainterLayer>::create(output));
+        m_outputs.insert(output, std::make_shared<VirtualQPainterLayer>(output));
     }
 }
 

@@ -8,8 +8,8 @@
 */
 #pragma once
 
-#include <QSharedPointer>
 #include <QVector>
+#include <memory>
 #include <stdint.h>
 #include <tuple>
 

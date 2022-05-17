@@ -44,23 +44,23 @@ OutputLayer *DrmQPainterBackend::primaryLayer(Output *output)
     return static_cast<DrmAbstractOutput *>(output)->outputLayer();
 }
 
-QSharedPointer<DrmPipelineLayer> DrmQPainterBackend::createPrimaryLayer(DrmPipeline *pipeline)
+std::shared_ptr<DrmPipelineLayer> DrmQPainterBackend::createPrimaryLayer(DrmPipeline *pipeline)
 {
     if (pipeline->output()) {
-        return QSharedPointer<DrmQPainterLayer>::create(pipeline);
+        return std::make_shared<DrmQPainterLayer>(pipeline);
     } else {
-        return QSharedPointer<DrmLeaseQPainterLayer>::create(pipeline);
+        return std::make_shared<DrmLeaseQPainterLayer>(pipeline);
     }
 }
 
-QSharedPointer<DrmOverlayLayer> DrmQPainterBackend::createCursorLayer(DrmPipeline *pipeline)
+std::shared_ptr<DrmOverlayLayer> DrmQPainterBackend::createCursorLayer(DrmPipeline *pipeline)
 {
-    return QSharedPointer<DrmCursorQPainterLayer>::create(pipeline);
+    return std::make_shared<DrmCursorQPainterLayer>(pipeline);
 }
 
-QSharedPointer<DrmOutputLayer> DrmQPainterBackend::createLayer(DrmVirtualOutput *output)
+std::shared_ptr<DrmOutputLayer> DrmQPainterBackend::createLayer(DrmVirtualOutput *output)
 {
-    return QSharedPointer<DrmVirtualQPainterLayer>::create(output);
+    return std::make_shared<DrmVirtualQPainterLayer>(output);
 }
 
 }

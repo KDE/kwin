@@ -93,7 +93,7 @@ private:
     void frameRendered();
 
     WaylandBackend *m_backend;
-    QMap<Output *, QSharedPointer<WaylandQPainterOutput>> m_outputs;
+    QMap<Output *, std::shared_ptr<WaylandQPainterOutput>> m_outputs;
 };
 
 }

@@ -38,7 +38,7 @@ void X11Output::setXineramaNumber(int number)
     m_xineramaNumber = number;
 }
 
-void X11Output::setColorTransformation(const QSharedPointer<ColorTransformation> &transformation)
+void X11Output::setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation)
 {
     if (m_crtc == XCB_NONE) {
         return;
@@ -62,11 +62,11 @@ bool X11Output::usesSoftwareCursor() const
     return false;
 }
 
-void X11Output::setMode(const QSize &size, int refreshRate)
+void X11Output::setMode(const QSize &size, uint32_t refreshRate)
 {
     const auto current = currentMode();
     if (!current || current->size() != size || current->refreshRate() != refreshRate) {
-        auto mode = QSharedPointer<OutputMode>::create(size, refreshRate);
+        auto mode = std::make_shared<OutputMode>(size, refreshRate);
         setModesInternal({mode}, mode);
     }
 }

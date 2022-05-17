@@ -14,7 +14,6 @@
 
 #include <QHash>
 #include <QPointer>
-#include <QSharedPointer>
 #include <optional>
 
 struct gbm_surface;
@@ -70,21 +69,21 @@ public:
 
     void init() override;
     bool prefer10bpc() const override;
-    QSharedPointer<DrmPipelineLayer> createPrimaryLayer(DrmPipeline *pipeline) override;
-    QSharedPointer<DrmOverlayLayer> createCursorLayer(DrmPipeline *pipeline) override;
-    QSharedPointer<DrmOutputLayer> createLayer(DrmVirtualOutput *output) override;
+    std::shared_ptr<DrmPipelineLayer> createPrimaryLayer(DrmPipeline *pipeline) override;
+    std::shared_ptr<DrmOverlayLayer> createCursorLayer(DrmPipeline *pipeline) override;
+    std::shared_ptr<DrmOutputLayer> createLayer(DrmVirtualOutput *output) override;
 
-    QSharedPointer<GLTexture> textureForOutput(Output *requestedOutput) const override;
+    std::shared_ptr<GLTexture> textureForOutput(Output *requestedOutput) const override;
 
-    QSharedPointer<DrmBuffer> testBuffer(DrmAbstractOutput *output);
+    std::shared_ptr<DrmBuffer> testBuffer(DrmAbstractOutput *output);
     EGLConfig config(uint32_t format) const;
     std::optional<GbmFormat> gbmFormatForDrmFormat(uint32_t format) const;
     DrmGpu *gpu() const;
 
     EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &attributes);
     EGLImageKHR importDmaBufAsImage(gbm_bo *bo);
-    QSharedPointer<GLTexture> importDmaBufAsTexture(const DmaBufAttributes &attributes);
-    QSharedPointer<GLTexture> importDmaBufAsTexture(gbm_bo *bo);
+    std::shared_ptr<GLTexture> importDmaBufAsTexture(const DmaBufAttributes &attributes);
+    std::shared_ptr<GLTexture> importDmaBufAsTexture(gbm_bo *bo);
 
 private:
     bool initializeEgl();

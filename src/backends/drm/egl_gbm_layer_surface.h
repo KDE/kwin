@@ -11,7 +11,6 @@
 #include <QMap>
 #include <QPointer>
 #include <QRegion>
-#include <QSharedPointer>
 #include <optional>
 
 #include "drm_object_plane.h"
@@ -47,7 +46,7 @@ public:
     std::optional<std::tuple<std::shared_ptr<DrmFramebuffer>, QRegion>> endRendering(DrmPlane::Transformations renderOrientation, const QRegion &damagedRegion);
 
     bool doesSurfaceFit(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
-    QSharedPointer<GLTexture> texture() const;
+    std::shared_ptr<GLTexture> texture() const;
     void destroyResources();
     EglGbmBackend *eglBackend() const;
     std::shared_ptr<DrmFramebuffer> renderTestBuffer(const QSize &bufferSize, const QMap<uint32_t, QVector<uint64_t>> &formats, uint32_t additionalFlags = 0);

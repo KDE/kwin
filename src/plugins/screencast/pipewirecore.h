@@ -29,7 +29,7 @@ public:
 
     bool init();
 
-    static QSharedPointer<PipeWireCore> self();
+    static std::shared_ptr<PipeWireCore> self();
 
     struct pw_core *pwCore = nullptr;
     struct pw_context *pwContext = nullptr;

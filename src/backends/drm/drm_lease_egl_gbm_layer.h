@@ -9,8 +9,6 @@
 #pragma once
 #include "drm_layer.h"
 
-#include <QSharedPointer>
-
 namespace KWin
 {
 
