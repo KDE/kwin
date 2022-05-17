@@ -56,7 +56,7 @@ DesktopGridEffect::DesktopGridEffect()
         Q_EMIT partialActivationFactorChanged();
     });
 
-    effects->registerRealtimeTouchpadPinchShortcut(PinchDirection::Contracting, 4, m_realtimeToggleAction, [this](qreal progress) {
+    effects->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Up, 4, m_realtimeToggleAction, [this](qreal progress) {
         if (m_status == Status::Active) {
             return;
         }

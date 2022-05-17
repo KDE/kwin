@@ -61,7 +61,7 @@ OverviewEffect::OverviewEffect()
         }
     };
 
-    effects->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Up, 4, m_realtimeToggleAction, progressCallback);
+    effects->registerRealtimeTouchpadPinchShortcut(PinchDirection::Contracting, 4, m_realtimeToggleAction, progressCallback);
     effects->registerTouchscreenSwipeShortcut(SwipeDirection::Up, 3, m_realtimeToggleAction, progressCallback);
 
     connect(effects, &EffectsHandler::screenAboutToLock, this, &OverviewEffect::realDeactivate);
