@@ -802,19 +802,6 @@ void Workspace::addWaylandWindow(Window *window)
         activateWindow(window);
     }
     updateTabbox();
-    connect(window, &Window::windowShown, this, [this, window] {
-        window->updateLayer();
-        updateStackingOrder();
-        updateClientArea();
-        if (window->wantsInput()) {
-            activateWindow(window);
-        }
-    });
-    connect(window, &Window::windowHidden, this, [this] {
-        // TODO: update tabbox if it's displayed
-        updateStackingOrder();
-        updateClientArea();
-    });
     Q_EMIT windowAdded(window);
 }
 

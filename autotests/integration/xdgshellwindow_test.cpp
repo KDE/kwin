@@ -356,11 +356,11 @@ void TestXdgShellWindow::testMinimizeActiveWindow()
     // unminimize again
     window->unminimize();
     QVERIFY(!window->isMinimized());
-    QVERIFY(window->isActive());
+    QVERIFY(!window->isActive());
     QVERIFY(window->wantsInput());
     QVERIFY(window->wantsTabFocus());
     QVERIFY(window->isShown());
-    QCOMPARE(workspace()->activeWindow(), window);
+    QCOMPARE(workspace()->activeWindow(), nullptr);
 }
 
 void TestXdgShellWindow::testFullscreen_data()
