@@ -576,7 +576,7 @@ void Edge::setGeometry(const QRect &geometry)
 void Edge::checkBlocking()
 {
     Window *client = Workspace::self()->activeWindow();
-    const bool newValue = !m_edges->remainActiveOnFullscreen() && client && client->isFullScreen() && client->frameGeometry().contains(m_geometry.center());
+    const bool newValue = !m_edges->remainActiveOnFullscreen() && client && client->isFullScreen() && client->frameGeometry().contains(m_geometry.center()) && !(effects && effects->hasActiveFullScreenEffect());
     if (newValue == m_blocked) {
         return;
     }
