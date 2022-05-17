@@ -1391,6 +1391,8 @@ public:
      */
     static QString iconFromDesktopFile(const QString &fileName);
 
+    static QString findDesktopFile(const QString &fileName);
+
     /**
      * Sets the last user usage serial of the surface as @p serial
      */
