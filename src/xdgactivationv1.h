@@ -37,11 +37,12 @@ public:
 
         const QString token;
         const bool isPrivileged;
-        QPointer<const KWaylandServer::SurfaceInterface> surface;
+        const QPointer<const KWaylandServer::SurfaceInterface> surface;
         const uint serial;
         const KWaylandServer::SeatInterface *seat;
-        QString applicationId;
-        QSharedPointer<KWaylandServer::PlasmaWindowActivationInterface> activation;
+        const QString applicationId;
+        const bool showNotify;
+        const QSharedPointer<KWaylandServer::PlasmaWindowActivationInterface> activation;
     };
 
     QString requestPrivilegedToken(KWaylandServer::SurfaceInterface *surface, uint serial, KWaylandServer::SeatInterface *seat, const QString &appId)

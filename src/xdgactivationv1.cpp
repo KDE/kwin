@@ -17,6 +17,7 @@
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
+#include <KDesktopFile>
 
 using namespace KWaylandServer;
 
@@ -73,8 +74,15 @@ QString XdgActivationV1Integration::requestToken(bool isPrivileged, SurfaceInter
         clear();
     }
     QSharedPointer<PlasmaWindowActivationInterface> pwActivation(waylandServer()->plasmaActivationFeedback()->createActivation(appId));
-    m_currentActivationToken.reset(new ActivationToken{newToken, isPrivileged, surface, serial, seat, appId, pwActivation});
-    if (!appId.isEmpty()) {
+    bool showNotify = false;
+    QIcon icon;
+    if (const QString desktopFilePath = Window::findDesktopFile(appId); !desktopFilePath.isEmpty()) {
+        KDesktopFile df(desktopFilePath);
+        showNotify |= df.desktopGroup().readEntry("StartupNotify", true) || df.desktopGroup().readEntry("X-KDE-StartupNotify", true);
+        icon = QIcon::fromTheme(df.readIcon(), QIcon::fromTheme(QStringLiteral("system-run")));
+    }
+    m_currentActivationToken.reset(new ActivationToken{newToken, isPrivileged, surface, serial, seat, appId, showNotify, pwActivation});
+    if (showNotify) {
         const auto icon = QIcon::fromTheme(Window::iconFromDesktopFile(appId), QIcon::fromTheme(QStringLiteral("system-run")));
         Q_EMIT effects->startupAdded(m_currentActivationToken->token, icon);
     }
@@ -111,7 +119,7 @@ void XdgActivationV1Integration::activateSurface(SurfaceInterface *surface, cons
 void XdgActivationV1Integration::clear()
 {
     Q_ASSERT(m_currentActivationToken);
-    if (!m_currentActivationToken->applicationId.isEmpty()) {
+    if (m_currentActivationToken->showNotify) {
         Q_EMIT effects->startupRemoved(m_currentActivationToken->token);
     }
     m_currentActivationToken.reset();

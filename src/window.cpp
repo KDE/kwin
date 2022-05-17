@@ -3298,12 +3298,23 @@ void Window::setDesktopFileName(QByteArray name)
     Q_EMIT desktopFileNameChanged();
 }
 
+QString Window::iconFromDesktopFile(const QString &desktopFileName)
+{
+    const QString absolutePath = findDesktopFile(desktopFileName);
+    if (absolutePath.isEmpty()) {
+        return {};
+    }
+
+    KDesktopFile df(absolutePath);
+    return df.readIcon();
+}
+
 QString Window::iconFromDesktopFile() const
 {
     return iconFromDesktopFile(QFile::decodeName(m_desktopFileName));
 }
 
-QString Window::iconFromDesktopFile(const QString &desktopFileName)
+QString Window::findDesktopFile(const QString &desktopFileName)
 {
     if (desktopFileName.isEmpty()) {
         return {};
@@ -3328,12 +3339,7 @@ QString Window::iconFromDesktopFile(const QString &desktopFileName)
         desktopFilePath = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
                                                  desktopFileName);
     }
-    if (desktopFilePath.isEmpty()) {
-        return {};
-    }
-
-    KDesktopFile df(desktopFilePath);
-    return df.readIcon();
+    return desktopFilePath;
 }
 
 bool Window::hasApplicationMenu() const
