@@ -12,6 +12,7 @@
 #include "deleted.h"
 #include "effects.h"
 #include "inputmethod.h"
+#include "keyboard_input.h"
 #include "output.h"
 #include "platform.h"
 #include "qwayland-input-method-unstable-v1.h"
@@ -24,6 +25,7 @@
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
+#include "xkb.h"
 
 #include <QDBusConnection>
 #include <QDBusMessage>
@@ -62,6 +64,7 @@ private Q_SLOTS:
     void testV3Styling();
     void testDisableShowInputPanel();
     void testModifierForwarding();
+    void testFakeEventFallback();
 
 private:
     void touchNow()
@@ -528,6 +531,77 @@ void InputMethodTest::testModifierForwarding()
     QVERIFY(modifierSpy.count() == 3 || modifierSpy.wait());
     disconnect(keyChangedConnection);
     disconnect(modifiersChangedConnection);
+}
+
+void InputMethodTest::testFakeEventFallback()
+{
+    // Create an xdg_toplevel surface and wait for the compositor to catch up.
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(1280, 1024), Qt::red);
+    QVERIFY(window);
+    QVERIFY(window->isActive());
+    QCOMPARE(window->frameGeometry().size(), QSize(1280, 1024));
+
+    // Since we don't have a way to communicate with the client, manually activate
+    // the input method.
+    QSignalSpy inputMethodActiveSpy(Test::inputMethod(), &Test::MockInputMethod::activate);
+    kwinApp()->inputMethod()->setActive(true);
+    QVERIFY(inputMethodActiveSpy.count() || inputMethodActiveSpy.wait());
+
+    // Without a way to communicate to the client, we send fake key events. This
+    // means the client needs to be able to receive them, so create a keyboard for
+    // the client and listen whether it gets the right events.
+    auto keyboard = Test::waylandSeat()->createKeyboard(window);
+    QSignalSpy keySpy(keyboard, &KWayland::Client::Keyboard::keyChanged);
+
+    auto context = Test::inputMethod()->context();
+    QVERIFY(context);
+
+    // First, send a simple one-character string and check to see if that
+    // generates a key press followed by a key release on the client side.
+    zwp_input_method_context_v1_commit_string(context, 0, "a");
+
+    keySpy.wait();
+    QVERIFY(keySpy.count() == 2);
+
+    auto compare = [](const QList<QVariant> &input, quint32 key, Keyboard::KeyState state) {
+        auto inputKey = input.at(0).toInt();
+        auto inputState = input.at(1).value<Keyboard::KeyState>();
+        QCOMPARE(inputKey, key);
+        QCOMPARE(inputState, state);
+    };
+
+    compare(keySpy.at(0), KEY_A, Keyboard::KeyState::Pressed);
+    compare(keySpy.at(1), KEY_A, Keyboard::KeyState::Released);
+
+    keySpy.clear();
+
+    // Capital letters are recognised and sent as a combination of Shift + the
+    // letter.
+
+    zwp_input_method_context_v1_commit_string(context, 0, "A");
+
+    keySpy.wait();
+    QVERIFY(keySpy.count() == 4);
+
+    compare(keySpy.at(0), KEY_LEFTSHIFT, Keyboard::KeyState::Pressed);
+    compare(keySpy.at(1), KEY_A, Keyboard::KeyState::Pressed);
+    compare(keySpy.at(2), KEY_A, Keyboard::KeyState::Released);
+    compare(keySpy.at(3), KEY_LEFTSHIFT, Keyboard::KeyState::Released);
+
+    keySpy.clear();
+
+    // Special keys are not sent through commit_string but instead use keysym.
+    auto enter = input()->keyboard()->xkb()->toKeysym(KEY_ENTER);
+    zwp_input_method_context_v1_keysym(context, 0, 0, enter, uint32_t(KWaylandServer::KeyboardKeyState::Pressed), 0);
+    zwp_input_method_context_v1_keysym(context, 0, 1, enter, uint32_t(KWaylandServer::KeyboardKeyState::Released), 0);
+
+    keySpy.wait();
+    QVERIFY(keySpy.count() == 2);
+
+    compare(keySpy.at(0), KEY_ENTER, Keyboard::KeyState::Pressed);
+    compare(keySpy.at(1), KEY_ENTER, Keyboard::KeyState::Released);
 }
 
 WAYLANDTEST_MAIN(InputMethodTest)
