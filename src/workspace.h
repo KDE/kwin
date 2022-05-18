@@ -585,7 +585,7 @@ private:
     void updateWindowVisibilityOnDesktopChange(VirtualDesktop *newDesktop);
     void activateWindowOnNewDesktop(VirtualDesktop *desktop);
     Window *findWindowToActivateOnDesktop(VirtualDesktop *desktop);
-    void removeAbstractClient(Window *client);
+    void removeWindow(Window *window);
 
     struct Constraint
     {

@@ -731,7 +731,7 @@ void Workspace::removeX11Window(X11Window *window)
     if (group != nullptr) {
         group->lostLeader();
     }
-    removeAbstractClient(window);
+    removeWindow(window);
 }
 
 void Workspace::removeUnmanaged(Unmanaged *window)
@@ -799,10 +799,10 @@ void Workspace::addWaylandWindow(Window *window)
 void Workspace::removeWaylandWindow(Window *window)
 {
     windowHidden(window);
-    removeAbstractClient(window);
+    removeWindow(window);
 }
 
-void Workspace::removeAbstractClient(Window *window)
+void Workspace::removeWindow(Window *window)
 {
     if (window == m_activePopupWindow) {
         closeActivePopup();
