@@ -970,8 +970,13 @@ Outputs WaylandBackend::outputs() const
 
 Outputs WaylandBackend::enabledOutputs() const
 {
-    // all outputs are enabled
-    return m_outputs;
+    Outputs ret;
+    for (auto o : m_outputs) {
+        if (o->isEnabled()) {
+            ret << o;
+        }
+    }
+    return ret;
 }
 
 void WaylandBackend::addConfiguredOutput(WaylandOutput *output)

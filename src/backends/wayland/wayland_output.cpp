@@ -82,6 +82,10 @@ void WaylandOutput::setGeometry(const QPoint &logicalPosition, const QSize &pixe
 void WaylandOutput::updateEnablement(bool enable)
 {
     setDpmsMode(enable ? DpmsMode::On : DpmsMode::Off);
+    if (enable)
+        Q_EMIT m_backend->outputEnabled(this);
+    else
+        Q_EMIT m_backend->outputDisabled(this);
 }
 
 void WaylandOutput::setDpmsMode(DpmsMode mode)
@@ -112,6 +116,8 @@ XdgShellOutput::XdgShellOutput(Surface *surface, XdgShell *xdgShell, WaylandBack
 
     connect(m_xdgShellSurface, &XdgShellSurface::configureRequested, this, &XdgShellOutput::handleConfigure);
     connect(m_xdgShellSurface, &XdgShellSurface::closeRequested, qApp, &QCoreApplication::quit);
+    connect(this, &WaylandOutput::enabledChanged, this, &XdgShellOutput::updateWindowTitle);
+    connect(this, &WaylandOutput::dpmsModeChanged, this, &XdgShellOutput::updateWindowTitle);
 
     connect(backend, &WaylandBackend::pointerLockSupportedChanged, this, &XdgShellOutput::updateWindowTitle);
     connect(backend, &WaylandBackend::pointerLockChanged, this, [this](bool locked) {
@@ -164,14 +170,18 @@ void XdgShellOutput::updateWindowTitle()
     } else if (backend()->pointerConstraints()) {
         grab = i18n("Press right control key to grab pointer");
     }
-    const QString title = i18nc("Title of nested KWin Wayland with Wayland socket identifier as argument",
-                                "KDE Wayland Compositor #%1 (%2)", m_number, waylandServer()->socketName());
 
-    if (grab.isEmpty()) {
-        m_xdgShellSurface->setTitle(title);
-    } else {
-        m_xdgShellSurface->setTitle(title + QStringLiteral(" — ") + grab);
+    QString title = i18nc("Title of nested KWin Wayland with Wayland socket identifier as argument",
+                          "KDE Wayland Compositor #%1 (%2) %3", m_number, waylandServer()->socketName());
+
+    if (!isEnabled()) {
+        title += i18n("- Output disabled");
+    } else if (dpmsMode() != DpmsMode::On) {
+        title += i18n("- Output dimmed");
+    } else if (!grab.isEmpty()) {
+        title += QStringLiteral(" — ") + grab;
     }
+    m_xdgShellSurface->setTitle(title);
 }
 
 void XdgShellOutput::lockPointer(Pointer *pointer, bool lock)
