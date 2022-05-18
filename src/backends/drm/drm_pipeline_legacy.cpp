@@ -127,14 +127,19 @@ bool DrmPipeline::setCursorLegacy()
 {
     const auto bo = cursorLayer()->currentBuffer();
     const uint32_t handle = bo && bo->buffer() && cursorLayer()->isVisible() ? bo->buffer()->handles()[0] : 0;
-    const QSize s = gpu()->cursorSize();
-    int ret = drmModeSetCursor2(gpu()->fd(), m_pending.crtc->id(), handle, s.width(), s.height(),
-                                m_pending.cursorHotspot.x(), m_pending.cursorHotspot.y());
-    if (ret == -ENOTSUP) {
-        // for NVIDIA case that does not support drmModeSetCursor2
-        ret = drmModeSetCursor(gpu()->fd(), m_pending.crtc->id(), handle, s.width(), s.height());
-    }
-    return ret == 0;
+
+    struct drm_mode_cursor2 arg = {
+        .flags = DRM_MODE_CURSOR_BO | DRM_MODE_CURSOR_MOVE,
+        .crtc_id = m_pending.crtc->id(),
+        .x = m_pending.cursorLayer->position().x(),
+        .y = m_pending.cursorLayer->position().y(),
+        .width = (uint32_t)gpu()->cursorSize().width(),
+        .height = (uint32_t)gpu()->cursorSize().height(),
+        .handle = handle,
+        .hot_x = m_pending.cursorHotspot.x(),
+        .hot_y = m_pending.cursorHotspot.y(),
+    };
+    return drmIoctl(gpu()->fd(), DRM_IOCTL_MODE_CURSOR2, &arg) == 0;
 }
 
 bool DrmPipeline::moveCursorLegacy()
