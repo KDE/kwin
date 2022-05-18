@@ -724,13 +724,6 @@ void Workspace::addUnmanaged(Unmanaged *window)
  */
 void Workspace::removeX11Window(X11Window *window)
 {
-    if (window == m_activePopupWindow) {
-        closeActivePopup();
-    }
-    if (m_userActionsMenu->isMenuWindow(window)) {
-        m_userActionsMenu->close();
-    }
-
     Q_ASSERT(m_x11Clients.contains(window));
     // TODO: if marked window is removed, notify the marked list
     m_x11Clients.removeAll(window);
@@ -811,6 +804,13 @@ void Workspace::removeWaylandWindow(Window *window)
 
 void Workspace::removeAbstractClient(Window *window)
 {
+    if (window == m_activePopupWindow) {
+        closeActivePopup();
+    }
+    if (m_userActionsMenu->isMenuWindow(window)) {
+        m_userActionsMenu->close();
+    }
+
     m_allClients.removeAll(window);
     if (window == m_delayFocusWindow) {
         cancelDelayFocus();
