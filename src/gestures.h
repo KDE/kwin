@@ -95,7 +95,7 @@ public:
     void setMinimumDelta(const QSizeF &delta);
     bool isMinimumDeltaRelevant() const;
 
-    qreal minimumDeltaReachedProgress(const QSizeF &delta) const;
+    qreal deltaToProgress(const QSizeF &delta) const;
     bool minimumDeltaReached(const QSizeF &delta) const;
 
 Q_SIGNALS:
@@ -160,7 +160,7 @@ public:
     void setMinimumScaleDelta(const qreal &scaleDelta);
     bool isMinimumScaleDeltaRelevant() const;
 
-    qreal minimumScaleDeltaReachedProgress(const qreal &scaleDelta) const;
+    qreal scaleDeltaToProgress(const qreal &scaleDelta) const;
     bool minimumScaleDeltaReached(const qreal &scaleDelta) const;
 
 Q_SIGNALS:
