@@ -811,6 +811,9 @@ void DrmGpu::recreateSurfaces()
             virtualOutput->recreateSurface();
         }
     }
+    for (const auto &output : qAsConst(m_drmOutputs)) {
+        output->updateCursor();
+    }
 }
 
 }

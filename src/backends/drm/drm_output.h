@@ -50,6 +50,8 @@ public:
     void updateModes();
 
     bool usesSoftwareCursor() const override;
+    void updateCursor();
+    void moveCursor();
 
     void setColorTransformation(const QSharedPointer<ColorTransformation> &transformation) override;
 
@@ -60,8 +62,6 @@ private:
 
     QList<QSharedPointer<OutputMode>> getModes() const;
 
-    void updateCursor();
-    void moveCursor();
     void renderCursorOpengl(const QSize &cursorSize);
     void renderCursorQPainter();
 
