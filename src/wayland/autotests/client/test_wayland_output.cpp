@@ -75,7 +75,7 @@ void TestWaylandOutput::init()
     m_serverOutput = new OutputInterface(m_display, this);
     QCOMPARE(m_serverOutput->pixelSize(), QSize());
     QCOMPARE(m_serverOutput->refreshRate(), 60000);
-    m_serverOutput->setMode(QSharedPointer<KWin::OutputMode>::create(QSize(1024, 768), 60000));
+    m_serverOutput->setMode(QSize(1024, 768));
     QCOMPARE(m_serverOutput->pixelSize(), QSize(1024, 768));
     QCOMPARE(m_serverOutput->refreshRate(), 60000);
     QCOMPARE(m_serverOutput->isDpmsSupported(), false);
@@ -218,7 +218,7 @@ void TestWaylandOutput::testModeChange()
     QCOMPARE(output.refreshRate(), 60000);
 
     // change once more
-    m_serverOutput->setMode(QSharedPointer<KWin::OutputMode>::create(QSize(1280, 1024), 90000));
+    m_serverOutput->setMode(QSize(1280, 1024), 90000);
     QCOMPARE(m_serverOutput->refreshRate(), 90000);
     m_serverOutput->done();
     QVERIFY(outputChanged.wait());

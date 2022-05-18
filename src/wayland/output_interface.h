@@ -37,6 +37,12 @@ class KWIN_EXPORT OutputInterface : public QObject
     Q_PROPERTY(int refreshRate READ refreshRate NOTIFY refreshRateChanged)
     Q_PROPERTY(int scale READ scale WRITE setScale NOTIFY scaleChanged)
 public:
+    struct Mode
+    {
+        QSize size = QSize();
+        int refreshRate = 60000;
+    };
+
     explicit OutputInterface(Display *display, QObject *parent = nullptr);
     ~OutputInterface() override;
 
@@ -51,7 +57,7 @@ public:
     int scale() const;
     KWin::Output::SubPixel subPixel() const;
     KWin::Output::Transform transform() const;
-    QSharedPointer<KWin::OutputMode> mode() const;
+    Mode mode() const;
     bool isDpmsSupported() const;
     KWin::Output::DpmsMode dpmsMode() const;
 
@@ -62,7 +68,8 @@ public:
     void setScale(int scale);
     void setSubPixel(KWin::Output::SubPixel subPixel);
     void setTransform(KWin::Output::Transform transform);
-    void setMode(const QSharedPointer<KWin::OutputMode> &mode);
+    void setMode(const Mode &mode);
+    void setMode(const QSize &size, int refreshRate = 60000);
 
     /**
      * Sets whether Dpms is supported for this output.

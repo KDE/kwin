@@ -77,7 +77,7 @@ int main(int argc, char **argv)
     new XdgShellInterface(&display, &display);
     OutputInterface *output = new OutputInterface(&display, &display);
     output->setPhysicalSize(QSize(10, 10));
-    output->setMode(QSharedPointer<KWin::OutputMode>::create(QSize(1024, 768), 60000));
+    output->setMode(QSize(1024, 768));
 
     // starts XWayland by forking and opening a pipe
     const int pipe = startXServer();

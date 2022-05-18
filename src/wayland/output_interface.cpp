@@ -39,7 +39,7 @@ public:
     int scale = 1;
     KWin::Output::SubPixel subPixel = KWin::Output::SubPixel::Unknown;
     KWin::Output::Transform transform = KWin::Output::Transform::Normal;
-    QSharedPointer<KWin::OutputMode> mode;
+    OutputInterface::Mode mode;
     struct
     {
         KWin::Output::DpmsMode mode = KWin::Output::DpmsMode::Off;
@@ -61,7 +61,7 @@ OutputInterfacePrivate::OutputInterfacePrivate(Display *display, OutputInterface
 
 void OutputInterfacePrivate::sendMode(Resource *resource)
 {
-    send_mode(resource->handle, mode_current, mode->size().width(), mode->size().height(), mode->refreshRate());
+    send_mode(resource->handle, mode_current, mode.size.width(), mode.size.height(), mode.refreshRate);
 }
 
 void OutputInterfacePrivate::sendScale(Resource *resource)
@@ -197,22 +197,22 @@ void OutputInterface::remove()
 
 QSize OutputInterface::pixelSize() const
 {
-    return d->mode->size();
+    return d->mode.size;
 }
 
 int OutputInterface::refreshRate() const
 {
-    return d->mode->refreshRate();
+    return d->mode.refreshRate;
 }
 
-QSharedPointer<KWin::OutputMode> OutputInterface::mode() const
+OutputInterface::Mode OutputInterface::mode() const
 {
     return d->mode;
 }
 
-void OutputInterface::setMode(const QSharedPointer<KWin::OutputMode> &mode)
+void OutputInterface::setMode(const Mode &mode)
 {
-    if (d->mode == mode) {
+    if (d->mode.size == mode.size && d->mode.refreshRate == mode.refreshRate) {
         return;
     }
 
@@ -224,8 +224,13 @@ void OutputInterface::setMode(const QSharedPointer<KWin::OutputMode> &mode)
     }
 
     Q_EMIT modeChanged();
-    Q_EMIT refreshRateChanged(mode->refreshRate());
-    Q_EMIT pixelSizeChanged(mode->size());
+    Q_EMIT refreshRateChanged(mode.refreshRate);
+    Q_EMIT pixelSizeChanged(mode.size);
+}
+
+void OutputInterface::setMode(const QSize &size, int refreshRate)
+{
+    setMode({size, refreshRate});
 }
 
 QSize OutputInterface::physicalSize() const
