@@ -666,8 +666,10 @@ void Device::setOutput(Output *output)
 #ifndef KWIN_BUILD_TESTING
     m_output = output;
     if (m_output) {
+        m_outputName = output->name();
         writeEntry(ConfigKey::OutputName, output->name());
     } else {
+        m_outputName = QString();
         writeEntry(ConfigKey::OutputName, QString());
     }
     Q_EMIT outputNameChanged();
