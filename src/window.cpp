@@ -1586,7 +1586,7 @@ void Window::setMaximize(bool vertically, bool horizontally)
     const MaximizeMode newMode = maximizeMode();
     if (oldMode != newMode) {
         Q_EMIT clientMaximizedStateChanged(this, newMode);
-        Q_EMIT clientMaximizedStateChanged(this, vertically, horizontally);
+        Q_EMIT clientMaximizedStateChanged(this, horizontally, vertically);
     }
 }
 
