@@ -212,7 +212,7 @@ QSharedPointer<KWin::OutputMode> OutputInterface::mode() const
 
 void OutputInterface::setMode(const QSharedPointer<KWin::OutputMode> &mode)
 {
-    if (d->mode->size() == mode->size() && d->mode->refreshRate() == mode->refreshRate()) {
+    if (d->mode == mode) {
         return;
     }
 
