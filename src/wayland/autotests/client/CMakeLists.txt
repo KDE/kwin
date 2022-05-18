@@ -3,6 +3,7 @@
 ########################################################
 set( testWaylandOutput_SRCS
         test_wayland_output.cpp
+        ../../testutils/fakeoutput.cpp
     )
 add_executable(testWaylandOutput ${testWaylandOutput_SRCS})
 target_link_libraries( testWaylandOutput Qt::Test Qt::Gui KF5::WaylandClient kwin Wayland::Client Wayland::Server)
@@ -14,6 +15,7 @@ ecm_mark_as_test(testWaylandOutput)
 ########################################################
 set( testWaylandSurface_SRCS
         test_wayland_surface.cpp
+        ../../testutils/fakeoutput.cpp
     )
 add_executable(testWaylandSurface ${testWaylandSurface_SRCS})
 target_link_libraries( testWaylandSurface Qt::Test Qt::Gui KF5::WaylandClient kwin Wayland::Client Wayland::Server)
@@ -242,7 +244,7 @@ ecm_mark_as_test(testXdgForeign)
 ########################################################
 # Test XdgShell
 ########################################################
-set(testXdgShell_SRCS test_xdg_shell.cpp)
+set(testXdgShell_SRCS test_xdg_shell.cpp ../../testutils/fakeoutput.cpp)
 add_executable(testXdgShell ${testXdgShell_SRCS})
 target_link_libraries( testXdgShell Qt::Test Qt::Gui kwin KF5::WaylandClient Wayland::Client)
 add_test(NAME kwayland-testXdgShell COMMAND testXdgShell)
@@ -317,6 +319,7 @@ ecm_mark_as_test(testPlasmaActivities)
 ########################################################
 set( testXdgOutput_SRCS
         test_xdg_output.cpp
+        ../../testutils/fakeoutput.cpp
     )
 add_executable(testXdgOutput ${testXdgOutput_SRCS})
 target_link_libraries( testXdgOutput Qt::Test Qt::Gui KF5::WaylandClient kwin Wayland::Client Wayland::Server)

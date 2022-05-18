@@ -3,6 +3,7 @@
 ########################################################
 set( testWaylandServerDisplay_SRCS
         test_display.cpp
+        ../../testutils/fakeoutput.cpp
     )
 add_executable(testWaylandServerDisplay ${testWaylandServerDisplay_SRCS})
 target_link_libraries( testWaylandServerDisplay Qt::Test Qt::Gui kwin Wayland::Server)
@@ -137,7 +138,7 @@ else()
         ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v1.xml
     )
 endif()
-target_sources(testInputMethodInterface PRIVATE test_inputmethod_interface.cpp ${INPUTMETHOD_SRCS})
+target_sources(testInputMethodInterface PRIVATE test_inputmethod_interface.cpp ../../testutils/fakeoutput.cpp ${INPUTMETHOD_SRCS})
 target_link_libraries(testInputMethodInterface Qt::Test kwin KF5::WaylandClient Wayland::Client)
 add_test(NAME kwayland-testInputMethodInterface COMMAND testInputMethodInterface)
 ecm_mark_as_test(testInputMethodInterface)

@@ -46,11 +46,11 @@ DpmsInterface::DpmsInterface(OutputInterface *output, wl_resource *resource)
     , QtWaylandServer::org_kde_kwin_dpms(resource)
     , output(output)
 {
-    connect(output, &OutputInterface::dpmsSupportedChanged, this, [this] {
+    connect(output->output(), &KWin::Output::capabilitiesChanged, this, [this] {
         sendSupported();
         sendDone();
     });
-    connect(output, &KWaylandServer::OutputInterface::dpmsModeChanged, this, [this] {
+    connect(output->output(), &KWin::Output::dpmsModeChanged, this, [this] {
         sendMode();
         sendDone();
     });
@@ -89,17 +89,17 @@ void DpmsInterface::org_kde_kwin_dpms_set(Resource *resource, uint32_t mode)
     default:
         return;
     }
-    Q_EMIT output->dpmsModeRequested(dpmsMode);
+    output->output()->setDpmsMode(dpmsMode);
 }
 
 void DpmsInterface::sendSupported()
 {
-    send_supported(output->isDpmsSupported() ? 1 : 0);
+    send_supported(output->output()->capabilities() & KWin::Output::Capability::Dpms ? 1 : 0);
 }
 
 void DpmsInterface::sendMode()
 {
-    const auto mode = output->dpmsMode();
+    const auto mode = output->output()->dpmsMode();
     org_kde_kwin_dpms_mode wlMode;
     switch (mode) {
     case KWin::Output::DpmsMode::On:

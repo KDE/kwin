@@ -25,6 +25,8 @@
 #include <iostream>
 #include <unistd.h>
 
+#include "../testutils/fakeoutput.h"
+
 static int startXServer()
 {
     const QByteArray process = QByteArrayLiteral("Xwayland");
@@ -242,10 +244,11 @@ int main(int argc, char **argv)
     new CompositorInterface(&display, &display);
     XdgShellInterface *shell = new XdgShellInterface(&display);
     display.createShm();
-    OutputInterface *output = new OutputInterface(&display, &display);
-    output->setPhysicalSize(QSize(269, 202));
     const QSize windowSize(1024, 768);
-    output->setMode(windowSize);
+    auto fakeOutput = std::make_unique<FakeOutput>();
+    fakeOutput->setPhysicalSize(QSize(269, 202));
+    fakeOutput->setMode(windowSize, 60000);
+    auto output = std::make_unique<OutputInterface>(&display, fakeOutput.get());
     SeatInterface *seat = new SeatInterface(&display);
     seat->setHasKeyboard(true);
     seat->setHasPointer(true);

@@ -15,21 +15,10 @@ namespace KWin
 WaylandOutput::WaylandOutput(Output *output, QObject *parent)
     : QObject(parent)
     , m_platformOutput(output)
-    , m_waylandOutput(new KWaylandServer::OutputInterface(waylandServer()->display()))
+    , m_waylandOutput(new KWaylandServer::OutputInterface(waylandServer()->display(), output))
     , m_xdgOutputV1(waylandServer()->xdgOutputManagerV1()->createXdgOutput(m_waylandOutput.data(), m_waylandOutput.data()))
 {
     const QRect geometry = m_platformOutput->geometry();
-
-    m_waylandOutput->setTransform(output->transform());
-    m_waylandOutput->setManufacturer(output->manufacturer());
-    m_waylandOutput->setModel(output->model());
-    m_waylandOutput->setPhysicalSize(output->physicalSize());
-    m_waylandOutput->setDpmsMode(output->dpmsMode());
-    m_waylandOutput->setDpmsSupported(output->capabilities() & Output::Capability::Dpms);
-    m_waylandOutput->setGlobalPosition(geometry.topLeft());
-    m_waylandOutput->setScale(std::ceil(output->scale()));
-    m_waylandOutput->setMode(output->modeSize(), output->refreshRate());
-    m_waylandOutput->setSubPixel(output->subPixel());
 
     m_xdgOutputV1->setName(output->name());
     m_xdgOutputV1->setDescription(output->description());
@@ -38,12 +27,6 @@ WaylandOutput::WaylandOutput(Output *output, QObject *parent)
 
     m_waylandOutput->done();
     m_xdgOutputV1->done();
-
-    // The dpms functionality is not part of the wl_output interface, but org_kde_kwin_dpms.
-    connect(output, &Output::dpmsModeChanged,
-            this, &WaylandOutput::handleDpmsModeChanged);
-    connect(m_waylandOutput.data(), &KWaylandServer::OutputInterface::dpmsModeRequested,
-            this, &WaylandOutput::handleDpmsModeRequested);
 
     // The timer is used to compress output updates so the wayland clients are not spammed.
     m_updateTimer.setSingleShot(true);
@@ -69,26 +52,13 @@ void WaylandOutput::update()
 {
     const QRect geometry = m_platformOutput->geometry();
 
-    m_waylandOutput->setGlobalPosition(geometry.topLeft());
-    m_waylandOutput->setScale(std::ceil(m_platformOutput->scale()));
-    m_waylandOutput->setTransform(m_platformOutput->transform());
-    m_waylandOutput->setMode(m_platformOutput->modeSize(), m_platformOutput->refreshRate());
+    m_waylandOutput->update();
 
     m_xdgOutputV1->setLogicalPosition(geometry.topLeft());
     m_xdgOutputV1->setLogicalSize(geometry.size());
 
     m_waylandOutput->done();
     m_xdgOutputV1->done();
-}
-
-void WaylandOutput::handleDpmsModeChanged()
-{
-    m_waylandOutput->setDpmsMode(m_platformOutput->dpmsMode());
-}
-
-void WaylandOutput::handleDpmsModeRequested(KWin::Output::DpmsMode dpmsMode)
-{
-    m_platformOutput->setDpmsMode(dpmsMode);
 }
 
 } // namespace KWin

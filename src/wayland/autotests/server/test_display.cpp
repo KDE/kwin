@@ -17,6 +17,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "../../testutils/fakeoutput.h"
+
 using namespace KWaylandServer;
 
 class TestWaylandServerDisplay : public QObject
@@ -77,7 +79,8 @@ void TestWaylandServerDisplay::testAddRemoveOutput()
     display.addSocketName(QStringLiteral("kwin-wayland-server-display-test-output-0"));
     display.start();
 
-    OutputInterface *output = new OutputInterface(&display);
+    auto fakeOutput = std::make_unique<FakeOutput>();
+    OutputInterface *output = new OutputInterface(&display, fakeOutput.get());
     QCOMPARE(display.outputs().size(), 1);
     QCOMPARE(display.outputs().first(), output);
 

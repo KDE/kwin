@@ -26,9 +26,6 @@ public:
     KWaylandServer::OutputInterface *waylandOutput() const;
 
 private Q_SLOTS:
-    void handleDpmsModeChanged();
-    void handleDpmsModeRequested(KWin::Output::DpmsMode dpmsMode);
-
     void update();
     void scheduleUpdate();
 

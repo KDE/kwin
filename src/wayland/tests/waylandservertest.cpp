@@ -16,6 +16,8 @@
 #include <iostream>
 #include <unistd.h>
 
+#include "../testutils/fakeoutput.h"
+
 static int startXServer()
 {
     const QByteArray process = QByteArrayLiteral("Xwayland");
@@ -75,9 +77,10 @@ int main(int argc, char **argv)
     display.createShm();
     new CompositorInterface(&display, &display);
     new XdgShellInterface(&display, &display);
-    OutputInterface *output = new OutputInterface(&display, &display);
-    output->setPhysicalSize(QSize(10, 10));
-    output->setMode(QSize(1024, 768));
+    auto platformOutput = std::make_unique<FakeOutput>();
+    platformOutput->setMode(QSize(1024, 768), 60000);
+    platformOutput->setPhysicalSize(QSize(10, 10));
+    new OutputInterface(&display, platformOutput.get());
 
     // starts XWayland by forking and opening a pipe
     const int pipe = startXServer();

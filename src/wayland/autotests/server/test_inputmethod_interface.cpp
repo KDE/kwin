@@ -28,6 +28,8 @@
 
 #include <linux/input-event-codes.h>
 
+#include "../../testutils/fakeoutput.h"
+
 using namespace KWaylandServer;
 
 class InputPanelSurface : public QObject, public QtWayland::zwp_input_panel_surface_v1
@@ -174,6 +176,8 @@ private:
     KWaylandServer::Display m_display;
     SeatInterface *m_seat;
     CompositorInterface *m_serverCompositor;
+    std::unique_ptr<OutputInterface> m_outputInterface;
+    std::unique_ptr<FakeOutput> m_fakeOutput;
 
     KWaylandServer::InputMethodV1Interface *m_inputMethodIface;
     KWaylandServer::InputPanelV1Interface *m_inputPanelIface;
@@ -193,7 +197,8 @@ void TestInputMethodInterface::initTestCase()
     m_serverCompositor = new CompositorInterface(&m_display, this);
     m_inputMethodIface = new InputMethodV1Interface(&m_display, this);
     m_inputPanelIface = new InputPanelV1Interface(&m_display, this);
-    new OutputInterface(&m_display, this);
+    m_fakeOutput = std::make_unique<FakeOutput>();
+    m_outputInterface = std::make_unique<OutputInterface>(&m_display, m_fakeOutput.get());
 
     connect(m_serverCompositor, &CompositorInterface::surfaceCreated, this, [this](SurfaceInterface *surface) {
         m_surfaces += surface;

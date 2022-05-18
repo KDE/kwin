@@ -25,6 +25,8 @@
 #include "wayland/surface_interface.h"
 #include "wayland/xdgshell_interface.h"
 
+#include "../../testutils/fakeoutput.h"
+
 using namespace KWayland::Client;
 using namespace KWaylandServer;
 
@@ -63,6 +65,8 @@ private:
     XdgShell *m_xdgShell = nullptr;
     KWaylandServer::Display *m_display = nullptr;
     CompositorInterface *m_compositorInterface = nullptr;
+    std::unique_ptr<FakeOutput> m_fakeOutput1;
+    std::unique_ptr<FakeOutput> m_fakeOutput2;
     OutputInterface *m_o1Interface = nullptr;
     OutputInterface *m_o2Interface = nullptr;
     SeatInterface *m_seatInterface = nullptr;
@@ -93,10 +97,12 @@ void XdgShellTest::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
     m_display->createShm();
-    m_o1Interface = new OutputInterface(m_display, m_display);
-    m_o1Interface->setMode(QSize(1024, 768));
-    m_o2Interface = new OutputInterface(m_display, m_display);
-    m_o2Interface->setMode(QSize(1024, 768));
+    m_fakeOutput1 = std::make_unique<FakeOutput>();
+    m_fakeOutput1->setMode(QSize(1024, 768), 60000);
+    m_o1Interface = new OutputInterface(m_display, m_fakeOutput1.get());
+    m_fakeOutput2 = std::make_unique<FakeOutput>();
+    m_fakeOutput2->setMode(QSize(1024, 768), 60000);
+    m_o2Interface = new OutputInterface(m_display, m_fakeOutput2.get());
     m_seatInterface = new SeatInterface(m_display, m_display);
     m_seatInterface->setHasKeyboard(true);
     m_seatInterface->setHasPointer(true);
