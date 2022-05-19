@@ -36,7 +36,7 @@ DragAndDropIconPrivate::DragAndDropIconPrivate(SurfaceInterface *surface)
 
 void DragAndDropIconPrivate::commit()
 {
-    position += surface()->offset();
+    position = surface()->offset();
 }
 
 DragAndDropIcon::DragAndDropIcon(SurfaceInterface *surface)
