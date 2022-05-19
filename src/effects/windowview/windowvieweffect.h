@@ -62,6 +62,7 @@ public:
     bool gestureInProgress() const;
 
     void setMode(PresentWindowsMode mode);
+    void toggleMode(PresentWindowsMode mode);
     PresentWindowsMode mode() const;
 
 public Q_SLOTS:

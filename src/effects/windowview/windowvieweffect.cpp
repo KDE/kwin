@@ -59,12 +59,7 @@ WindowViewEffect::WindowViewEffect()
     m_shortcut = KGlobalAccel::self()->shortcut(m_exposeAction);
     effects->registerGlobalShortcut(Qt::CTRL | Qt::Key_F9, m_exposeAction);
     connect(m_exposeAction, &QAction::triggered, this, [this]() {
-        if (!isRunning()) {
-            setMode(ModeCurrentDesktop);
-            activate();
-        } else {
-            deactivate(animationDuration());
-        }
+        toggleMode(ModeCurrentDesktop);
     });
 
     m_exposeAllAction->setObjectName(QStringLiteral("ExposeAll"));
@@ -74,12 +69,7 @@ WindowViewEffect::WindowViewEffect()
     m_shortcutAll = KGlobalAccel::self()->shortcut(m_exposeAllAction);
     effects->registerGlobalShortcut(Qt::CTRL + Qt::Key_F10, m_exposeAllAction);
     connect(m_exposeAllAction, &QAction::triggered, this, [this]() {
-        if (!isRunning()) {
-            setMode(ModeAllDesktops);
-            activate();
-        } else {
-            deactivate(animationDuration());
-        }
+        toggleMode(ModeAllDesktops);
     });
 
     m_exposeClassAction->setObjectName(QStringLiteral("ExposeClass"));
@@ -88,12 +78,7 @@ WindowViewEffect::WindowViewEffect()
     KGlobalAccel::self()->setShortcut(m_exposeClassAction, QList<QKeySequence>() << (Qt::CTRL | Qt::Key_F7));
     effects->registerGlobalShortcut(Qt::CTRL | Qt::Key_F7, m_exposeClassAction);
     connect(m_exposeClassAction, &QAction::triggered, this, [this]() {
-        if (!isRunning()) {
-            setMode(ModeWindowClass);
-            activate();
-        } else {
-            deactivate(animationDuration());
-        }
+        toggleMode(ModeWindowClass);
     });
     connect(KGlobalAccel::self(), &KGlobalAccel::globalShortcutChanged, this, [this](QAction *action, const QKeySequence &seq) {
         if (action->objectName() == QStringLiteral("Expose")) {
@@ -263,28 +248,13 @@ void WindowViewEffect::grabbedKeyboardEvent(QKeyEvent *e)
         // check for global shortcuts
         // HACK: keyboard grab disables the global shortcuts so we have to check for global shortcut (bug 156155)
         if (m_mode == ModeCurrentDesktop && m_shortcut.contains(e->key() | e->modifiers())) {
-            if (!isRunning()) {
-                setMode(ModeCurrentDesktop);
-                activate();
-            } else {
-                deactivate(animationDuration());
-            }
+            toggleMode(ModeCurrentDesktop);
             return;
         } else if (m_mode == ModeAllDesktops && m_shortcutAll.contains(e->key() | e->modifiers())) {
-            if (!isRunning()) {
-                setMode(ModeAllDesktops);
-                activate();
-            } else {
-                deactivate(animationDuration());
-            }
+            toggleMode(ModeAllDesktops);
             return;
         } else if (m_mode == ModeWindowClass && m_shortcutClass.contains(e->key() | e->modifiers())) {
-            if (!isRunning()) {
-                setMode(ModeWindowClass);
-                activate();
-            } else {
-                deactivate(animationDuration());
-            }
+            toggleMode(ModeWindowClass);
             return;
         } else if (e->key() == Qt::Key_Escape) {
             deactivate(animationDuration());
@@ -377,6 +347,20 @@ void WindowViewEffect::setMode(WindowViewEffect::PresentWindowsMode mode)
     Q_EMIT modeChanged();
 }
 
+void WindowViewEffect::toggleMode(PresentWindowsMode mode)
+{
+    if (!isRunning()) {
+        setMode(mode);
+        activate();
+    } else {
+        if (m_mode != mode) {
+            setMode(mode);
+        } else {
+            deactivate(animationDuration());
+        }
+    }
+}
+
 WindowViewEffect::PresentWindowsMode WindowViewEffect::mode() const
 {
     return m_mode;
@@ -389,16 +373,15 @@ bool WindowViewEffect::borderActivated(ElectricBorder border)
     }
 
     if (m_borderActivate.contains(border)) {
-        setMode(ModeCurrentDesktop);
+        toggleMode(ModeCurrentDesktop);
     } else if (m_borderActivateAll.contains(border)) {
-        setMode(ModeAllDesktops);
+        toggleMode(ModeAllDesktops);
     } else if (m_borderActivateClass.contains(border)) {
-        setMode(ModeWindowClass);
+        toggleMode(ModeWindowClass);
     } else {
         return false;
     }
 
-    activate();
     return true;
 }
 
