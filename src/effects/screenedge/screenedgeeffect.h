@@ -33,7 +33,7 @@ public:
 
     int requestedEffectChainPosition() const override
     {
-        return 90;
+        return 10;
     }
 
 private Q_SLOTS:
