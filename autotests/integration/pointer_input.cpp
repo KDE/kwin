@@ -149,6 +149,7 @@ void PointerInputTest::initTestCase()
     }
     qputenv("XCURSOR_SIZE", QByteArrayLiteral("24"));
     qputenv("XKB_DEFAULT_RULES", "evdev");
+    qputenv("KWIN_COMPOSE", QByteArrayLiteral("O2"));
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
