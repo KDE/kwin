@@ -1,6 +1,7 @@
 [Desktop Entry]
 Icon=preferences-desktop-theme-windowdecorations
 Type=Application
+NoDisplay=true
 Exec=systemsettings kcm_kwindecoration
 
 Name=Window Decorations
