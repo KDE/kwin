@@ -1,6 +1,7 @@
 [Desktop Entry]
 Icon=preferences-system-windows-actions
 Type=Application
+NoDisplay=true
 Exec=systemsettings kcm_kwinrules
 
 Name=Window Rules
