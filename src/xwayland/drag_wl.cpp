@@ -24,6 +24,8 @@
 #include "workspace.h"
 #include "x11window.h"
 
+#include <xcb/xcb_event.h>
+
 #include <QMouseEvent>
 #include <QTimer>
 
@@ -40,11 +42,6 @@ DragEventReply WlToXDrag::moveFilter(Window *target, const QPoint &pos)
     Q_UNUSED(target)
     Q_UNUSED(pos)
     return DragEventReply::Wayland;
-}
-
-bool WlToXDrag::handleClientMessage(xcb_client_message_event_t *event)
-{
-    return DataBridge::self()->dnd()->dropHandler()->handleClientMessage(event);
 }
 
 Xvisit::Xvisit(Window *target, KWaylandServer::AbstractDataSource *dataSource, QObject *parent)
@@ -80,15 +77,29 @@ Xvisit::Xvisit(Window *target, KWaylandServer::AbstractDataSource *dataSource, Q
     }
     free(reply);
 
+    kwinApp()->installNativeEventFilter(this);
+
     receiveOffer();
 }
 
-bool Xvisit::handleClientMessage(xcb_client_message_event_t *event)
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+bool Xvisit::nativeEventFilter(const QByteArray &eventType, void *message, long int *)
+#else
+bool Xvisit::nativeEventFilter(const QByteArray &eventType, void *message, qintptr *)
+#endif
 {
-    if (event->type == atoms->xdnd_status) {
-        return handleStatus(event);
-    } else if (event->type == atoms->xdnd_finished) {
-        return handleFinished(event);
+    if (Q_UNLIKELY(eventType != "xcb_generic_event_t")) {
+        return false;
+    }
+
+    auto *genericEvent = static_cast<xcb_generic_event_t *>(message);
+    if ((genericEvent->response_type & XCB_EVENT_RESPONSE_TYPE_MASK) == XCB_CLIENT_MESSAGE) {
+        auto event = reinterpret_cast<xcb_client_message_event_t *>(genericEvent);
+        if (event->type == atoms->xdnd_status) {
+            return handleStatus(event);
+        } else if (event->type == atoms->xdnd_finished) {
+            return handleFinished(event);
+        }
     }
     return false;
 }

@@ -119,19 +119,6 @@ void Dnd::x11OffersChanged(const QStringList &added, const QStringList &removed)
     Q_UNUSED(removed);
 }
 
-bool Dnd::handleClientMessage(xcb_client_message_event_t *event)
-{
-    for (Drag *drag : qAsConst(m_oldDrags)) {
-        if (drag->handleClientMessage(event)) {
-            return true;
-        }
-    }
-    if (m_currentDrag && m_currentDrag->handleClientMessage(event)) {
-        return true;
-    }
-    return false;
-}
-
 DragEventReply Dnd::dragMoveFilter(Window *target, const QPoint &pos)
 {
     Q_ASSERT(m_currentDrag);
@@ -165,16 +152,11 @@ void Dnd::endDrag()
 {
     Q_ASSERT(m_currentDrag);
 
-    connect(m_currentDrag, &Drag::finish, this, &Dnd::clearOldDrag);
-    m_oldDrags << m_currentDrag;
+    connect(m_currentDrag, &Drag::finish, this, [](Drag *drag) {
+        delete drag;
+    });
 
     m_currentDrag = nullptr;
-}
-
-void Dnd::clearOldDrag(Drag *drag)
-{
-    m_oldDrags.removeOne(drag);
-    delete drag;
 }
 
 using DnDAction = KWaylandServer::DataDeviceManagerInterface::DnDAction;

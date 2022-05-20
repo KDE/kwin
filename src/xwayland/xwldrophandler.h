@@ -29,12 +29,10 @@ public:
     XwlDropHandler();
 
     void updateDragTarget(KWaylandServer::SurfaceInterface *surface, quint32 serial) override;
-    bool handleClientMessage(xcb_client_message_event_t *event);
 
 private:
     void drop() override;
     Xvisit *m_xvisit = nullptr;
-    QVector<Xvisit *> m_previousVisits;
 };
 }
 }

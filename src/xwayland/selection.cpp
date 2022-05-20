@@ -133,8 +133,6 @@ bool Selection::nativeEventFilter(const QByteArray &eventType, void *message, qi
         return handlePropertyNotify(reinterpret_cast<xcb_property_notify_event_t *>(event));
     case XCB_SELECTION_REQUEST:
         return handleSelectionRequest(reinterpret_cast<xcb_selection_request_event_t *>(event));
-    case XCB_CLIENT_MESSAGE:
-        return handleClientMessage(reinterpret_cast<xcb_client_message_event_t *>(event));
     default:
         if (event->response_type == Xcb::Extensions::self()->fixesSelectionNotifyEvent()) {
             return handleXfixesNotify(reinterpret_cast<xcb_xfixes_selection_notify_event_t *>(event));

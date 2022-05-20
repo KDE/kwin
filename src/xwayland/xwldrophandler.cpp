@@ -32,20 +32,6 @@ void XwlDropHandler::drop()
     }
 }
 
-bool XwlDropHandler::handleClientMessage(xcb_client_message_event_t *event)
-{
-    for (auto visit : m_previousVisits) {
-        if (visit->handleClientMessage(event)) {
-            return true;
-        }
-    }
-
-    if (m_xvisit && m_xvisit->handleClientMessage(event)) {
-        return true;
-    }
-    return false;
-}
-
 void XwlDropHandler::updateDragTarget(KWaylandServer::SurfaceInterface *surface, quint32 serial)
 {
     Q_UNUSED(serial)
@@ -58,19 +44,15 @@ void XwlDropHandler::updateDragTarget(KWaylandServer::SurfaceInterface *surface,
     // leave current target
     if (m_xvisit) {
         m_xvisit->leave();
-        if (!m_xvisit->finished()) {
-            connect(m_xvisit, &Xvisit::finish, this, [this](Xvisit *visit) {
-                m_previousVisits.removeOne(visit);
-                delete visit;
-            });
-            m_previousVisits.push_back(m_xvisit);
-        } else {
-            delete m_xvisit;
-        }
-        m_xvisit = nullptr;
     }
     if (client) {
         m_xvisit = new Xvisit(client, waylandServer()->seat()->dragSource(), this);
+        connect(m_xvisit, &Xvisit::finish, this, [this](Xvisit *visit) {
+            if (visit == m_xvisit) {
+                m_xvisit = nullptr;
+            }
+            delete visit;
+        });
     }
 }
 }

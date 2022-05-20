@@ -14,6 +14,7 @@
 
 #include "wayland/datadevicemanager_interface.h"
 
+#include <QAbstractNativeEventFilter>
 #include <QPoint>
 #include <QPointer>
 #include <QVector>
@@ -39,7 +40,6 @@ public:
     ~XToWlDrag() override;
 
     DragEventReply moveFilter(Window *target, const QPoint &pos) override;
-    bool handleClientMessage(xcb_client_message_event_t *event) override;
 
     void setDragAndDropAction(KWaylandServer::DataDeviceManagerInterface::DnDAction action);
     KWaylandServer::DataDeviceManagerInterface::DnDAction selectedDragAndDropAction();
@@ -63,7 +63,6 @@ private:
     QVector<QPair<xcb_timestamp_t, bool>> m_dataRequests;
 
     WlVisit *m_visit = nullptr;
-    QVector<WlVisit *> m_oldVisits;
 
     bool m_performed = false;
     KWaylandServer::DataDeviceManagerInterface::DnDAction m_lastSelectedDragAndDropAction = KWaylandServer::DataDeviceManagerInterface::DnDAction::None;
@@ -71,7 +70,7 @@ private:
     Q_DISABLE_COPY(XToWlDrag)
 };
 
-class WlVisit : public QObject
+class WlVisit : public QObject, public QAbstractNativeEventFilter
 {
     Q_OBJECT
 
@@ -79,7 +78,6 @@ public:
     WlVisit(Window *target, XToWlDrag *drag);
     ~WlVisit() override;
 
-    bool handleClientMessage(xcb_client_message_event_t *event);
     bool leave();
 
     Window *target() const
@@ -103,6 +101,12 @@ public:
         return m_finished;
     }
     void sendFinished();
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    bool nativeEventFilter(const QByteArray &eventType, void *message, long int *result) override;
+#else
+    bool nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result) override;
+#endif
 
 Q_SIGNALS:
     void offersReceived(const Mimes &offers);

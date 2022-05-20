@@ -13,6 +13,7 @@
 
 #include "wayland/datadevicemanager_interface.h"
 
+#include <QAbstractNativeEventFilter>
 #include <QPoint>
 #include <QPointer>
 #include <QVector>
@@ -41,14 +42,13 @@ class WlToXDrag : public Drag
 
 public:
     DragEventReply moveFilter(Window *target, const QPoint &pos) override;
-    bool handleClientMessage(xcb_client_message_event_t *event) override;
 
 private:
     Q_DISABLE_COPY(WlToXDrag)
 };
 
 // visit to an X window
-class Xvisit : public QObject
+class Xvisit : public QObject, public QAbstractNativeEventFilter
 {
     Q_OBJECT
 
@@ -57,7 +57,11 @@ public:
 
     Xvisit(Window *target, KWaylandServer::AbstractDataSource *dataSource, QObject *parent);
 
-    bool handleClientMessage(xcb_client_message_event_t *event);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    bool nativeEventFilter(const QByteArray &eventType, void *message, long int *result) override;
+#else
+    bool nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result) override;
+#endif
     bool handleStatus(xcb_client_message_event_t *event);
     bool handleFinished(xcb_client_message_event_t *event);
 

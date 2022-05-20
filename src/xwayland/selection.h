@@ -82,11 +82,6 @@ protected:
     virtual void doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event) = 0;
     virtual void x11OffersChanged(const QStringList &added, const QStringList &removed) = 0;
 
-    virtual bool handleClientMessage(xcb_client_message_event_t *event)
-    {
-        Q_UNUSED(event);
-        return false;
-    }
     // sets the current provider of the selection
     void setWlSource(WlSource *source);
     WlSource *wlSource() const

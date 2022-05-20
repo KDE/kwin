@@ -47,7 +47,6 @@ public:
 
     void doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event) override;
     void x11OffersChanged(const QStringList &added, const QStringList &removed) override;
-    bool handleClientMessage(xcb_client_message_event_t *event) override;
 
     DragEventReply dragMoveFilter(Window *target, const QPoint &pos);
 
@@ -60,11 +59,9 @@ private:
     // start and end Wl native client drags (Wl -> Xwl)
     void startDrag();
     void endDrag();
-    void clearOldDrag(Drag *drag);
 
     // active drag or null when no drag active
     Drag *m_currentDrag = nullptr;
-    QVector<Drag *> m_oldDrags;
 
     XwlDropHandler *m_dropHandler;
 

@@ -25,6 +25,8 @@
 #include "window.h"
 #include "workspace.h"
 
+#include <xcb/xcb_event.h>
+
 #include <QMouseEvent>
 #include <QTimer>
 
@@ -128,15 +130,14 @@ DragEventReply XToWlDrag::moveFilter(Window *target, const QPoint &pos)
         // still same Wl target, wait for X events
         return DragEventReply::Ignore;
     }
+    // FIXME do it like XVisit
     if (m_visit) {
         if (m_visit->leave()) {
             delete m_visit;
         } else {
             connect(m_visit, &WlVisit::finish, this, [this](WlVisit *visit) {
-                m_oldVisits.removeOne(visit);
                 delete visit;
             });
-            m_oldVisits << m_visit;
         }
     }
     const bool hasCurrent = m_visit;
@@ -159,18 +160,6 @@ DragEventReply XToWlDrag::moveFilter(Window *target, const QPoint &pos)
     return DragEventReply::Ignore;
 }
 
-bool XToWlDrag::handleClientMessage(xcb_client_message_event_t *event)
-{
-    for (auto *visit : qAsConst(m_oldVisits)) {
-        if (visit->handleClientMessage(event)) {
-            return true;
-        }
-    }
-    if (m_visit && m_visit->handleClientMessage(event)) {
-        return true;
-    }
-    return false;
-}
 
 void XToWlDrag::setDragAndDropAction(DnDAction action)
 {
@@ -287,6 +276,8 @@ WlVisit::WlVisit(Window *target, XToWlDrag *drag)
     workspace()->addManualOverlay(m_window);
     workspace()->updateStackingOrder(true);
 
+    kwinApp()->installNativeEventFilter(this);
+
     xcb_flush(xcbConn);
     m_mapped = true;
 }
@@ -305,21 +296,33 @@ bool WlVisit::leave()
     return m_finished;
 }
 
-bool WlVisit::handleClientMessage(xcb_client_message_event_t *event)
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+bool WlVisit::nativeEventFilter(const QByteArray &eventType, void *message, long int *)
+#else
+bool WlVisit::nativeEventFilter(const QByteArray &eventType, void *message, qintptr *)
+#endif
 {
-    if (event->window != m_window) {
-        // different window
+    if (Q_UNLIKELY(eventType != "xcb_generic_event_t")) {
         return false;
     }
 
-    if (event->type == atoms->xdnd_enter) {
-        return handleEnter(event);
-    } else if (event->type == atoms->xdnd_position) {
-        return handlePosition(event);
-    } else if (event->type == atoms->xdnd_drop) {
-        return handleDrop(event);
-    } else if (event->type == atoms->xdnd_leave) {
-        return handleLeave(event);
+    auto *genericEvent = static_cast<xcb_generic_event_t *>(message);
+    if ((genericEvent->response_type & XCB_EVENT_RESPONSE_TYPE_MASK) == XCB_CLIENT_MESSAGE) {
+        auto event = reinterpret_cast<xcb_client_message_event_t *>(genericEvent);
+        if (event->window != m_window) {
+            // different window
+            return false;
+        }
+
+        if (event->type == atoms->xdnd_enter) {
+            return handleEnter(event);
+        } else if (event->type == atoms->xdnd_position) {
+            return handlePosition(event);
+        } else if (event->type == atoms->xdnd_drop) {
+            return handleDrop(event);
+        } else if (event->type == atoms->xdnd_leave) {
+            return handleLeave(event);
+        }
     }
     return false;
 }
