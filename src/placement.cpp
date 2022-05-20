@@ -21,6 +21,7 @@
 #include "x11window.h"
 #endif
 
+#include <QRandomGenerator>
 #include <QTextStream>
 #include <QTimer>
 
@@ -480,11 +481,16 @@ void Placement::placeCentered(Window *c, const QRect &area, Policy /*next*/)
         return;
     }
 
-    const int xp = area.left() + (area.width() - c->width()) / 2;
-    const int yp = area.top() + (area.height() - c->height()) / 2;
+    const int x = std::max(0, area.width() - c->width());
+    const int y = std::max(0, area.height() - c->height());
+
+    QRandomGenerator *rng = QRandomGenerator::global();
+    const int displacementX = rng->bounded(-x / 4, x / 4);
+    const int displacementY = rng->bounded(-y / 4, y / 4);
 
     // place the window
-    c->move(QPoint(xp, yp));
+    c->move(QPoint(area.x() + displacementX + (area.width() - c->width()) / 2,
+                   area.y() + displacementY + (area.height() - c->height()) / 2));
 }
 
 /**
