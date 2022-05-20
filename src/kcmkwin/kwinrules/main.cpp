@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
         kcm_args << QStringLiteral("whole-app");
     }
 
-    KPluginMetaData pluginData = KPluginMetaData(QStringLiteral("kcms/kcm_kwinrules"));
+    KPluginMetaData pluginData = KPluginMetaData(QStringLiteral(KCMRULES_PLUGIN));
 
     KCMultiDialog *dialog = new KCMultiDialog;
     dialog->addModule(pluginData, kcm_args);
