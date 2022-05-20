@@ -44,10 +44,14 @@ public:
         QSharedPointer<KWaylandServer::PlasmaWindowActivationInterface> activation;
     };
 
-    QString requestToken(bool isPrivileged, KWaylandServer::SurfaceInterface *surface, uint serial, KWaylandServer::SeatInterface *seat, const QString &appId);
+    QString requestPrivilegedToken(KWaylandServer::SurfaceInterface *surface, uint serial, KWaylandServer::SeatInterface *seat, const QString &appId)
+    {
+        return requestToken(true, surface, serial, seat, appId);
+    }
     void activateSurface(KWaylandServer::SurfaceInterface *surface, const QString &token);
 
 private:
+    QString requestToken(bool isPrivileged, KWaylandServer::SurfaceInterface *surface, uint serial, KWaylandServer::SeatInterface *seat, const QString &appId);
     void clear();
 
     QScopedPointer<ActivationToken> m_currentActivationToken;

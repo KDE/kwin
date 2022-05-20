@@ -324,7 +324,7 @@ void WindowSystem::requestToken(QWindow *win, uint32_t serial, const QString &ap
     Q_UNUSED(win); // it's coming from within kwin, it doesn't matter the window
 
     auto seat = KWin::waylandServer()->seat();
-    auto token = KWin::waylandServer()->xdgActivationIntegration()->requestToken(true, nullptr, seat->display()->serial(), seat, appId);
+    auto token = KWin::waylandServer()->xdgActivationIntegration()->requestPrivilegedToken(nullptr, seat->display()->serial(), seat, appId);
     // Ensure that xdgActivationTokenArrived is always emitted asynchronously
     QTimer::singleShot(0, [serial, token] {
         Q_EMIT KWindowSystem::self()->xdgActivationTokenArrived(serial, token);
