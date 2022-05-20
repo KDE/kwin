@@ -85,6 +85,7 @@ Selection::Selection(xcb_atom_t atom, QObject *parent)
     m_window = xcb_generate_id(kwinApp()->x11Connection());
     m_requestorWindow = m_window;
     xcb_flush(xcbConn);
+    kwinApp()->installNativeEventFilter(this);
 }
 
 bool Selection::handleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
@@ -114,8 +115,17 @@ bool Selection::handleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
     return true;
 }
 
-bool Selection::filterEvent(xcb_generic_event_t *event)
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+bool Selection::nativeEventFilter(const QByteArray &eventType, void *message, long int *)
+#else
+bool Selection::nativeEventFilter(const QByteArray &eventType, void *message, qintptr *)
+#endif
 {
+    if (Q_UNLIKELY(eventType != "xcb_generic_event_t")) {
+        return false;
+    }
+
+    xcb_generic_event_t *event = static_cast<xcb_generic_event_t *>(message);
     switch (event->response_type & XCB_EVENT_RESPONSE_TYPE_MASK) {
     case XCB_SELECTION_NOTIFY:
         return handleSelectionNotify(reinterpret_cast<xcb_selection_notify_event_t *>(event));

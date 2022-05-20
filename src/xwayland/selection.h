@@ -9,6 +9,7 @@
 #ifndef KWIN_XWL_SELECTION
 #define KWIN_XWL_SELECTION
 
+#include <QAbstractNativeEventFilter>
 #include <QObject>
 #include <QVector>
 
@@ -42,7 +43,7 @@ class X11Source;
  * source instance and active transfers relative to the represented
  * selection.
  */
-class Selection : public QObject
+class Selection : public QObject, public QAbstractNativeEventFilter
 {
     Q_OBJECT
 
@@ -55,7 +56,11 @@ public:
 
     // on selection owner changes by X clients (Xwl -> Wl)
     bool handleXfixesNotify(xcb_xfixes_selection_notify_event_t *event);
-    bool filterEvent(xcb_generic_event_t *event);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    bool nativeEventFilter(const QByteArray &eventType, void *message, long int *result) override;
+#else
+    bool nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result) override;
+#endif
 
     xcb_atom_t atom() const
     {

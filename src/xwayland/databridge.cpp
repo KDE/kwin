@@ -53,21 +53,8 @@ void DataBridge::init()
     m_clipboard = new Clipboard(atoms->clipboard, this);
     m_dnd = new Dnd(atoms->xdnd_selection, this);
     m_primary = new Primary(atoms->primary, this);
-    kwinApp()->installNativeEventFilter(this);
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-bool DataBridge::nativeEventFilter(const QByteArray &eventType, void *message, long int *)
-#else
-bool DataBridge::nativeEventFilter(const QByteArray &eventType, void *message, qintptr *)
-#endif
-{
-    if (eventType == "xcb_generic_event_t") {
-        xcb_generic_event_t *event = static_cast<xcb_generic_event_t *>(message);
-        return m_clipboard->filterEvent(event) || m_dnd->filterEvent(event) || m_primary->filterEvent(event);
-    }
-    return false;
-}
 
 DragEventReply DataBridge::dragMoveFilter(Window *target, const QPoint &pos)
 {
