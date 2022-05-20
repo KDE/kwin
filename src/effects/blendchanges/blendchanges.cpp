@@ -41,6 +41,10 @@ void KWin::BlendChanges::start(int delay)
     if (!supported() || m_state != Off) {
         return;
     }
+    if (effects->hasActiveFullScreenEffect()) {
+        return;
+    }
+
     const EffectWindowList allWindows = effects->stackingOrder();
     for (auto window : allWindows) {
         redirect(window);
