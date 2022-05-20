@@ -87,6 +87,7 @@ class ExpoCell : public QObject
     Q_PROPERTY(int height READ height NOTIFY heightChanged)
     Q_PROPERTY(QString persistentKey READ persistentKey WRITE setPersistentKey NOTIFY persistentKeyChanged)
     Q_PROPERTY(int bottomMargin READ bottomMargin WRITE setBottomMargin NOTIFY bottomMarginChanged)
+    Q_PROPERTY(bool ready READ isReady NOTIFY readyChanged)
 
 public:
     explicit ExpoCell(QObject *parent = nullptr);
@@ -94,6 +95,9 @@ public:
 
     bool isEnabled() const;
     void setEnabled(bool enabled);
+
+    bool isReady() const;
+    void setReady();
 
     ExpoLayout *layout() const;
     void setLayout(ExpoLayout *layout);
@@ -147,10 +151,12 @@ Q_SIGNALS:
     void heightChanged();
     void persistentKeyChanged();
     void bottomMarginChanged();
+    void readyChanged();
 
 private:
     QString m_persistentKey;
     bool m_enabled = true;
+    bool m_ready = false;
     int m_naturalX = 0;
     int m_naturalY = 0;
     int m_naturalWidth = 0;

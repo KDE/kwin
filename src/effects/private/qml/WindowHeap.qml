@@ -5,6 +5,7 @@
 */
 
 import QtQuick 2.12
+import QtQml.StateMachine 1.12 as DSM
 import org.kde.kirigami 2.12 as Kirigami
 import org.kde.kwin 3.0 as KWinComponents
 import org.kde.kwin.private.effects 1.0
@@ -42,9 +43,62 @@ FocusScope {
 
     signal activated()
 
+    signal __organized()
+    signal __unorganized()
+
+    // TODO: nicer way to kickoff the state machine
+    onOrganizedChanged: {
+        if (organized) {
+            __organized()
+        } else {
+            __unorganized()
+        }
+    }
+
     function activateIndex(index) {
         KWinComponents.Workspace.activeClient = windowsRepeater.itemAt(index).client;
         activated();
+    }
+
+    DSM.StateMachine {
+        initialState: heap.organized ? organizedState : unorganizedState
+        running: true
+
+        DSM.State {
+            id: unorganizedState
+
+            DSM.SignalTransition {
+                targetState: heap.animationEnabled ? organizingState : organizedState
+                signal: heap.__organized
+            }
+        }
+
+        DSM.State {
+            id: organizingState
+
+            DSM.TimeoutTransition {
+                targetState: organizedState
+                timeout: heap.animationDuration
+            }
+        }
+
+        DSM.State {
+            id: organizedState
+
+            DSM.SignalTransition {
+                targetState: heap.animationEnabled ? unorganizingState : unorganizedState
+                signal: heap.__unorganized
+            }
+        }
+
+        DSM.State {
+            id: unorganizingState
+
+            DSM.TimeoutTransition {
+                targetState: unorganizedState
+                timeout: heap.animationDuration
+            }
+        }
     }
 
     ExpoLayout {
@@ -101,7 +155,10 @@ FocusScope {
                 z: thumb.activeDragHandler.active ? 100 : client.stackingOrder
 
                 component TweenBehavior : Behavior {
-                    enabled: thumb.state !== "partial" && heap.animationEnabled && !thumb.activeDragHandler.active
+                    enabled: thumb.state !== "partial" && heap.animationEnabled && !thumb.activeDragHandler.active &&
+                            (organizingState.active ||
+                             organizedState.active && cell.ready ||
+                             unorganizingState.active)
                     NumberAnimation {
                         duration: heap.animationDuration
                         easing.type: Easing.OutCubic
@@ -291,15 +348,18 @@ FocusScope {
                     }
                 ]
 
-                transitions: Transition {
-                    to: "initial, active, active-hidden"
-                    enabled: heap.animationEnabled
-                    NumberAnimation {
-                        duration: heap.animationDuration
-                        properties: "x, y, width, height, opacity"
-                        easing.type: Easing.InOutCubic
-                    }
-                }
+                // what is it doing??????????????
+                // transitions: Transition {
+                //     to: "initial, active, active-hidden"
+                //     enabled: heap.animationEnabled && (organizingState.active ||
+                //                                        organizedState.active && cell.ready ||
+                //                                        unorganizingState.active)
+                //     NumberAnimation {
+                //         duration: heap.animationDuration
+                //         properties: "x, y, width, height, opacity"
+                //         easing.type: Easing.InOutCubic
+                //     }
+                // }
 
 
                 PlasmaCore.FrameSvgItem {

@@ -64,6 +64,19 @@ void ExpoCell::setEnabled(bool enabled)
     }
 }
 
+bool ExpoCell::isReady() const
+{
+    return m_ready;
+}
+
+void ExpoCell::setReady()
+{
+    if (!m_ready) {
+        m_ready = true;
+        Q_EMIT readyChanged();
+    }
+}
+
 void ExpoCell::update()
 {
     if (m_layout) {
@@ -448,6 +461,7 @@ void ExpoLayout::calculateWindowTransformationsClosest()
         cell->setY(target.y());
         cell->setWidth(target.width());
         cell->setHeight(target.height());
+        cell->setReady();
     }
 }
 
@@ -714,5 +728,6 @@ void ExpoLayout::calculateWindowTransformationsNatural()
         cell->setY(rect.y());
         cell->setWidth(rect.width());
         cell->setHeight(rect.height());
+        cell->setReady();
     }
 }
