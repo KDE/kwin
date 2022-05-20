@@ -25,6 +25,7 @@
 #include <xkbcommon/xkbcommon-keysyms.h>
 // system
 #include <bitset>
+#include <linux/input-event-codes.h>
 #include <sys/mman.h>
 #include <unistd.h>
 
@@ -516,7 +517,14 @@ xkb_keysym_t Xkb::toKeysym(uint32_t key)
     if (!m_state) {
         return XKB_KEY_NoSymbol;
     }
-    return xkb_state_key_get_one_sym(m_state, key + EVDEV_OFFSET);
+
+    // Workaround because there's some kind of overlap between KEY_ZENKAKUHANKAKU and TLDE
+    // This key is important because some hardware manufacturers use it to indicate touchpad toggling.
+    xkb_keysym_t ret = xkb_state_key_get_one_sym(m_state, key + EVDEV_OFFSET);
+    if (ret == 0 && key == KEY_ZENKAKUHANKAKU) {
+        ret = XKB_KEY_Zenkaku_Hankaku;
+    }
+    return ret;
 }
 
 QString Xkb::toString(xkb_keysym_t keysym)
