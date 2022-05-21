@@ -517,4 +517,9 @@ bool ZoomEffect::isActive() const
     return zoom != 1.0 || zoom != target_zoom;
 }
 
+int ZoomEffect::requestedEffectChainPosition() const
+{
+    return 10;
+}
+
 } // namespace
