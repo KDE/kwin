@@ -31,7 +31,6 @@ class DecoratedClientImpl;
 class Output;
 class DecorationRenderer;
 class Deleted;
-class EffectFrameImpl;
 class EffectWindowImpl;
 class GLTexture;
 class Item;
@@ -75,7 +74,6 @@ class KWIN_EXPORT Scene : public QObject
 public:
     explicit Scene(QObject *parent = nullptr);
     ~Scene() override;
-    class EffectFrame;
 
     void initialize();
 
