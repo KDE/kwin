@@ -117,6 +117,7 @@ ZoomEffect::ZoomEffect()
     connect(&timeline, &QTimeLine::frameChanged, this, &ZoomEffect::timelineFrameChanged);
     connect(effects, &EffectsHandler::mouseChanged, this, &ZoomEffect::slotMouseChanged);
     connect(effects, &EffectsHandler::windowDamaged, this, &ZoomEffect::slotWindowDamaged);
+    connect(effects, &EffectsHandler::screenRemoved, this, &ZoomEffect::slotScreenRemoved);
 
 #if HAVE_ACCESSIBILITY
     m_accessibilityIntegration = new ZoomAccessibilityIntegration(this);
@@ -131,6 +132,7 @@ ZoomEffect::~ZoomEffect()
 {
     // switch off and free resources
     showCursor();
+    qDeleteAll(m_offscreenData);
     // Save the zoom value.
     ZoomConfig::setInitialZoom(target_zoom);
     ZoomConfig::self()->save();
@@ -261,8 +263,59 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
     effects->prePaintScreen(data, presentTime);
 }
 
+ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(EffectScreen *screen)
+{
+    const QRect rect = effects->renderTargetRect();
+    const qreal devicePixelRatio = effects->renderTargetScale();
+    const QSize nativeSize = rect.size() * devicePixelRatio;
+
+    OffscreenData *&data = m_offscreenData[effects->waylandDisplay() ? screen : nullptr];
+    if (!data) {
+        data = new OffscreenData;
+    }
+    if (!data->texture || data->texture->size() != nativeSize) {
+        data->texture.reset(new GLTexture(GL_RGBA8, nativeSize));
+        data->texture->setFilter(GL_NEAREST);
+        data->texture->setWrapMode(GL_CLAMP_TO_EDGE);
+        data->framebuffer.reset(new GLFramebuffer(data->texture.data()));
+    }
+    if (!data->vbo || data->viewport != rect) {
+        data->vbo.reset(new GLVertexBuffer(GLVertexBuffer::Static));
+        data->viewport = rect;
+
+        QVector<float> verts;
+        QVector<float> texcoords;
+
+        // The v-coordinate is flipped because projection matrix is "flipped."
+        texcoords << 1.0 << 1.0;
+        verts << rect.x() + rect.width() << rect.y();
+        texcoords << 0.0 << 1.0;
+        verts << rect.x() << rect.y();
+        texcoords << 0.0 << 0.0;
+        verts << rect.x() << rect.y() + rect.height();
+
+        texcoords << 1.0 << 0.0;
+        verts << rect.x() + rect.width() << rect.y() + rect.height();
+        texcoords << 1.0 << 1.0;
+        verts << rect.x() + rect.width() << rect.y();
+        texcoords << 0.0 << 0.0;
+        verts << rect.x() << rect.y() + rect.height();
+
+        data->vbo->setData(6, 2, verts.constData(), texcoords.constData());
+    }
+
+    return data;
+}
+
 void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
+    OffscreenData *offscreenData = ensureOffscreenData(data.screen());
+
+    // Render the scene in an offscreen texture and then upscale it.
+    GLFramebuffer::pushFramebuffer(offscreenData->framebuffer.data());
+    effects->paintScreen(mask, region, data);
+    GLFramebuffer::popFramebuffer();
+
     if (zoom != 1.0) {
         data *= QVector2D(zoom, zoom);
         const QSize screenSize = effects->virtualScreenSize();
@@ -324,37 +377,52 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &d
                 prevPoint = focusPoint;
             }
         }
-    }
 
-    effects->paintScreen(mask, region, data);
+        // Render transformed offscreen texture.
+        glClearColor(0.0, 0.0, 0.0, 0.0);
+        glClear(GL_COLOR_BUFFER_BIT);
 
-    if (zoom != 1.0 && mousePointer != MousePointerHide) {
-        GLTexture *cursorTexture = ensureCursorTexture();
-        if (cursorTexture) {
-            const auto cursor = effects->cursorImage();
+        QMatrix4x4 matrix;
+        matrix.translate(data.translation());
+        matrix.scale(data.scale());
 
+        auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
+        shader->setUniform(GLShader::ModelViewProjectionMatrix, data.projectionMatrix() * matrix);
+        for (OffscreenData *data : std::as_const(m_offscreenData)) {
+            data->texture->bind();
+            data->vbo->render(GL_TRIANGLES);
+            data->texture->unbind();
+        }
+        ShaderManager::instance()->popShader();
+
+        if (mousePointer != MousePointerHide) {
             // Draw the mouse-texture at the position matching to zoomed-in image of the desktop. Hiding the
             // previous mouse-cursor and drawing our own fake mouse-cursor is needed to be able to scale the
             // mouse-cursor up and to re-position those mouse-cursor to match to the chosen zoom-level.
-            QSize cursorSize = cursor.image().size() / cursor.image().devicePixelRatio();
-            if (mousePointer == MousePointerScale) {
-                cursorSize *= zoom;
+
+            GLTexture *cursorTexture = ensureCursorTexture();
+            if (cursorTexture) {
+                const auto cursor = effects->cursorImage();
+                QSize cursorSize = cursor.image().size() / cursor.image().devicePixelRatio();
+                if (mousePointer == MousePointerScale) {
+                    cursorSize *= zoom;
+                }
+
+                const QPoint p = effects->cursorPos() - cursor.hotSpot();
+                QRect rect(p * zoom + QPoint(data.xTranslation(), data.yTranslation()), cursorSize);
+
+                cursorTexture->bind();
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
+                QMatrix4x4 mvp = data.projectionMatrix();
+                mvp.translate(rect.x(), rect.y());
+                s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
+                cursorTexture->render(rect);
+                ShaderManager::instance()->popShader();
+                cursorTexture->unbind();
+                glDisable(GL_BLEND);
             }
-
-            const QPoint p = effects->cursorPos() - cursor.hotSpot();
-            QRect rect(p * zoom + QPoint(data.xTranslation(), data.yTranslation()), cursorSize);
-
-            cursorTexture->bind();
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
-            QMatrix4x4 mvp = data.projectionMatrix();
-            mvp.translate(rect.x(), rect.y());
-            s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-            cursorTexture->render(rect);
-            ShaderManager::instance()->popShader();
-            cursorTexture->unbind();
-            glDisable(GL_BLEND);
         }
     }
 }
@@ -499,6 +567,14 @@ void ZoomEffect::slotWindowDamaged()
 {
     if (zoom != 1.0) {
         effects->addRepaintFull();
+    }
+}
+
+void ZoomEffect::slotScreenRemoved(EffectScreen *screen)
+{
+    if (OffscreenData *offscreenData = m_offscreenData.take(screen)) {
+        effects->makeOpenGLContextCurrent();
+        delete offscreenData;
     }
 }
 
