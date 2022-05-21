@@ -49,7 +49,6 @@ public:
         const bool hardwareClipping;
     };
 
-    class EffectFrame;
     explicit SceneOpenGL(OpenGLBackend *backend, QObject *parent = nullptr);
     ~SceneOpenGL() override;
     bool initFailed() const override;
