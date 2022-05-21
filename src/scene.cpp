@@ -53,29 +53,25 @@
 */
 
 #include "scene.h"
+#include "composite.h"
+#include "deleted.h"
+#include "effects.h"
 #include "internalwindow.h"
 #include "output.h"
 #include "platform.h"
 #include "renderlayer.h"
+#include "renderloop.h"
+#include "shadow.h"
 #include "shadowitem.h"
 #include "surfaceitem.h"
 #include "unmanaged.h"
 #include "wayland/surface_interface.h"
+#include "wayland_server.h"
 #include "waylandwindow.h"
 #include "windowitem.h"
 #include "workspace.h"
 #include "x11window.h"
 
-#include <QQuickWindow>
-#include <QVector2D>
-
-#include "composite.h"
-#include "deleted.h"
-#include "effects.h"
-#include "renderloop.h"
-#include "shadow.h"
-#include "wayland_server.h"
-#include "x11window.h"
 #include <QtMath>
 
 namespace KWin
