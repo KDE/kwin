@@ -34,7 +34,7 @@ target_link_libraries(kcm_kwintabbox
 )
 
 ########### install files ###############
-install(FILES kwintabbox.desktop DESTINATION ${KDE_INSTALL_KSERVICESDIR})
+install(FILES kcm_kwintabbox.desktop DESTINATION ${KDE_INSTALL_KSERVICESDIR})
 install(FILES thumbnails/konqueror.png
               thumbnails/kmail.png
               thumbnails/systemsettings.png

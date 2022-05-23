@@ -58,4 +58,4 @@ kconfig_add_kcfg_files(kcm_kwintouchscreenedges_PART_SRCS kwintouchscreensetting
 kcoreaddons_add_plugin(kcm_kwintouchscreen SOURCES ${kcm_kwintouchscreenedges_PART_SRCS} INSTALL_NAMESPACE "plasma/kcms/systemsettings_qwidgets")
 target_link_libraries(kcm_kwintouchscreen ${X11_LIBRARIES} ${kcm_screenedges_LIBS})
 
-install(FILES kwinscreenedges.desktop kwintouchscreen.desktop DESTINATION ${KDE_INSTALL_APPDIR})
+install(FILES kcm_kwinscreenedges.desktop kcm_kwintouchscreen.desktop DESTINATION ${KDE_INSTALL_APPDIR})

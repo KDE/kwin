@@ -21,5 +21,5 @@ target_link_libraries(kcm_kwin_scripts
 )
 
 kpackage_install_package(package kcm_kwin_scripts kcms)
-install(FILES kwinscripts.desktop DESTINATION ${KDE_INSTALL_APPDIR})
+install(FILES kcm_kwin_scripts.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 install(FILES kwinscripts.knsrc DESTINATION ${KDE_INSTALL_KNSRCDIR})
