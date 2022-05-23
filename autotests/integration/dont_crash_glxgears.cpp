@@ -16,6 +16,7 @@
 #include "x11window.h"
 
 #include <KDecoration2/Decoration>
+#include <QStandardPaths>
 
 namespace KWin
 {
@@ -49,8 +50,14 @@ void DontCrashGlxgearsTest::testGlxgears()
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowAddedSpy.isValid());
 
+    const QString glxGearsPath = QStandardPaths::findExecutable(QStringLiteral("glxgears"));
+    if (glxGearsPath.isEmpty()) {
+        QEXPECT_FAIL("", "Glx gears not found", Abort);
+        QVERIFY(false);
+    }
+
     QProcess glxgears;
-    glxgears.setProgram(QStringLiteral("glxgears"));
+    glxgears.setProgram(glxGearsPath);
     glxgears.start();
     QVERIFY(glxgears.waitForStarted());
 
