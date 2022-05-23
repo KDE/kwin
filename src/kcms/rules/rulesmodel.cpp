@@ -268,6 +268,10 @@ bool RulesModel::wmclassWarning() const
 
 bool RulesModel::geometryWarning() const
 {
+    if (!KWindowSystem::isPlatformX11()) {
+        return false;
+    }
+
     const bool ignoregeometry = m_rules["ignoregeometry"]->isEnabled()
         && m_rules["ignoregeometry"]->policy() == Rules::Force
         && m_rules["ignoregeometry"]->value() == true;
@@ -520,15 +524,20 @@ void RulesModel::populateRuleList()
     placement->setOptionsData(placementModelData());
     placement->setFlag(RuleItem::AffectsWarning);
 
-    auto ignoregeometry = addRule(new RuleItem(QLatin1String("ignoregeometry"),
-                                               RulePolicy::SetRule, RuleItem::Boolean,
-                                               i18n("Ignore requested geometry"), i18n("Size & Position"),
-                                               QIcon::fromTheme("view-time-schedule-baselined-remove"),
-                                               i18n("Windows can ask to appear in a certain position. "
-                                                    "By default this overrides the placement strategy "
-                                                    "what might be nasty if the client abuses the feature "
-                                                    "to unconditionally popup in the middle of your screen.")));
-    ignoregeometry->setFlag(RuleItem::AffectsWarning);
+    if (KWindowSystem::isPlatformX11()) {
+        // On Wayland windows cannot set their own geometry
+        auto ignoregeometry = addRule(new RuleItem(QLatin1String("ignoregeometry"),
+                                                   RulePolicy::SetRule, RuleItem::Boolean,
+                                                   i18n("Ignore requested geometry"), i18n("Size & Position"),
+                                                   QIcon::fromTheme("view-time-schedule-baselined-remove"),
+                                                   xi18nc("@info:tooltip",
+                                                          "Some applications can set their own geometry, overriding the window manager preferences. "
+                                                          "Setting this property overrides their placement requests.<nl/>"
+                                                          "This affects <interface>Size</interface> and <interface>Position</interface> "
+                                                          "but not <interface>Maximized</interface> or <interface>Fullscreen</interface> states.<nl/>"
+                                                          "Note that the position can also be used to map to a different <interface>Screen</interface>")));
+        ignoregeometry->setFlag(RuleItem::AffectsWarning);
+    }
 
     addRule(new RuleItem(QLatin1String("minsize"),
                          RulePolicy::ForceRule, RuleItem::Size,
