@@ -51,7 +51,7 @@ configure_file(window-decorations.knsrc.cmake ${CMAKE_CURRENT_BINARY_DIR}/window
 
 # This desktop file is installed only for retrocompatibility with sycoca
 install(FILES kwindecorationsettings.kcfg DESTINATION ${KDE_INSTALL_KCFGDIR})
-install(FILES kwindecoration.desktop DESTINATION ${KDE_INSTALL_APPDIR})
+install(FILES kcm_kwindecoration.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/window-decorations.knsrc DESTINATION ${KDE_INSTALL_KNSRCDIR})
 install(TARGETS kwin-applywindowdecoration DESTINATION ${KDE_INSTALL_LIBEXECDIR})
 
