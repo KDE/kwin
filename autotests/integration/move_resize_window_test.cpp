@@ -349,7 +349,7 @@ void MoveResizeWindowTest::testPackTo()
 
     QFETCH(QString, methodCall);
     QMetaObject::invokeMethod(workspace(), methodCall.toLocal8Bit().constData());
-    QTEST(window->frameGeometry(), "expectedGeometry");
+    QTEST(window->frameGeometry().toRect(), "expectedGeometry");
     surface.reset();
     QVERIFY(Test::waitForWindowDestroyed(window));
 }
@@ -418,7 +418,7 @@ void MoveResizeWindowTest::testPackAgainstClient()
 
     QFETCH(QString, methodCall);
     QMetaObject::invokeMethod(workspace(), methodCall.toLocal8Bit().constData());
-    QTEST(window->frameGeometry(), "expectedGeometry");
+    QTEST(window->frameGeometry().toRect(), "expectedGeometry");
 }
 
 void MoveResizeWindowTest::testGrowShrink_data()
@@ -475,7 +475,7 @@ void MoveResizeWindowTest::testGrowShrink()
     QVERIFY(frameGeometryChangedSpy.isValid());
     m_connection->flush();
     QVERIFY(frameGeometryChangedSpy.wait());
-    QTEST(window->frameGeometry(), "expectedGeometry");
+    QTEST(window->frameGeometry().toRect(), "expectedGeometry");
 }
 
 void MoveResizeWindowTest::testPointerMoveEnd_data()
@@ -762,7 +762,7 @@ void MoveResizeWindowTest::testAdjustClientGeometryOfAutohidingX11Panel()
     QVERIFY(testWindow->isMovable());
     // panel is not yet hidden, we should snap against it
     QFETCH(QPoint, targetPoint);
-    QTEST(Workspace::self()->adjustWindowPosition(testWindow, targetPoint, false), "expectedAdjustedPoint");
+    QTEST(Workspace::self()->adjustWindowPosition(testWindow, targetPoint, false).toPoint(), "expectedAdjustedPoint");
 
     // now let's hide the panel
     QSignalSpy panelHiddenSpy(panel, &Window::windowHidden);
@@ -843,7 +843,7 @@ void MoveResizeWindowTest::testAdjustClientGeometryOfAutohidingWaylandPanel()
     QVERIFY(testWindow->isMovable());
     // panel is not yet hidden, we should snap against it
     QFETCH(QPoint, targetPoint);
-    QTEST(Workspace::self()->adjustWindowPosition(testWindow, targetPoint, false), "expectedAdjustedPoint");
+    QTEST(Workspace::self()->adjustWindowPosition(testWindow, targetPoint, false).toPoint(), "expectedAdjustedPoint");
 
     // now let's hide the panel
     QSignalSpy panelHiddenSpy(panel, &Window::windowHidden);
