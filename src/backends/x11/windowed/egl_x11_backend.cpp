@@ -102,6 +102,8 @@ bool EglX11Backend::createSurfaces()
 
 void EglX11Backend::present(Output *output)
 {
+    static_cast<X11WindowedOutput *>(output)->vsyncMonitor()->arm();
+
     const auto &renderOutput = m_outputs[output];
     presentSurface(renderOutput->surface(), renderOutput->lastDamage(), output->geometry());
 }
