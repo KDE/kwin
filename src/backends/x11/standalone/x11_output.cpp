@@ -64,8 +64,11 @@ bool X11Output::usesSoftwareCursor() const
 
 void X11Output::setMode(const QSize &size, int refreshRate)
 {
-    auto mode = QSharedPointer<OutputMode>::create(size, refreshRate);
-    setModesInternal({mode}, mode);
+    const auto current = currentMode();
+    if (!current || current->size() != size || current->refreshRate() != refreshRate) {
+        auto mode = QSharedPointer<OutputMode>::create(size, refreshRate);
+        setModesInternal({mode}, mode);
+    }
 }
 
 }

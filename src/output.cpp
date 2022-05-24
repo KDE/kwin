@@ -220,6 +220,7 @@ void Output::setModesInternal(const QList<QSharedPointer<OutputMode>> &modes, co
     }
     if (m_currentMode != oldCurrentMode) {
         Q_EMIT currentModeChanged();
+        Q_EMIT geometryChanged();
     }
 }
 
