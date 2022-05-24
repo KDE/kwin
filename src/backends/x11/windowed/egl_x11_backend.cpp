@@ -23,7 +23,6 @@ namespace KWin
 
 EglX11Output::EglX11Output(EglX11Backend *backend, Output *output, EGLSurface surface)
     : m_eglSurface(surface)
-    , m_fbo(new GLFramebuffer(0, output->pixelSize()))
     , m_output(output)
     , m_backend(backend)
 {
@@ -34,9 +33,17 @@ EglX11Output::~EglX11Output()
     eglDestroySurface(m_backend->eglDisplay(), m_eglSurface);
 }
 
+void EglX11Output::ensureFbo()
+{
+    if (!m_fbo || m_fbo->size() != m_output->pixelSize()) {
+        m_fbo.reset(new GLFramebuffer(0, m_output->pixelSize()));
+    }
+}
+
 OutputLayerBeginFrameInfo EglX11Output::beginFrame()
 {
     eglMakeCurrent(m_backend->eglDisplay(), m_eglSurface, m_eglSurface, m_backend->context());
+    ensureFbo();
     GLFramebuffer::pushFramebuffer(m_fbo.data());
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_fbo.data()),

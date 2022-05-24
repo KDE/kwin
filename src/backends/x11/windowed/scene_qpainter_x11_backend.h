@@ -29,6 +29,8 @@ class X11WindowedQPainterOutput : public OutputLayer
 public:
     X11WindowedQPainterOutput(Output *output, xcb_window_t window);
 
+    void ensureBuffer();
+
     OutputLayerBeginFrameInfo beginFrame() override;
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 

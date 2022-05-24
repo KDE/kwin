@@ -18,14 +18,23 @@ namespace KWin
 
 X11WindowedQPainterOutput::X11WindowedQPainterOutput(Output *output, xcb_window_t window)
     : window(window)
-    , buffer(output->pixelSize() * output->scale(), QImage::Format_RGB32)
     , m_output(output)
 {
-    buffer.fill(Qt::black);
+}
+
+void X11WindowedQPainterOutput::ensureBuffer()
+{
+    const QSize nativeSize(m_output->pixelSize() * m_output->scale());
+
+    if (buffer.size() != nativeSize) {
+        buffer = QImage(nativeSize, QImage::Format_RGB32);
+        buffer.fill(Qt::black);
+    }
 }
 
 OutputLayerBeginFrameInfo X11WindowedQPainterOutput::beginFrame()
 {
+    ensureBuffer();
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(&buffer),
         .repaint = m_output->rect(),

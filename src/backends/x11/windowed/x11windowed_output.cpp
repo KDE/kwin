@@ -66,9 +66,6 @@ void X11WindowedOutput::init(const QPoint &logicalPosition, const QSize &pixelSi
     m_renderLoop->setRefreshRate(refreshRate);
     m_vsyncMonitor->setRefreshRate(refreshRate);
 
-    auto mode = QSharedPointer<OutputMode>::create(pixelSize, refreshRate);
-    setModesInternal({mode}, mode);
-
     setGeometry(logicalPosition, pixelSize);
     setScale(m_backend->initialOutputScale());
 
@@ -150,8 +147,9 @@ void X11WindowedOutput::initXInputForWindow()
 
 void X11WindowedOutput::setGeometry(const QPoint &logicalPosition, const QSize &pixelSize)
 {
-    // TODO: set mode to have updated pixelSize
-    Q_UNUSED(pixelSize);
+    auto mode = QSharedPointer<OutputMode>::create(pixelSize, m_renderLoop->refreshRate());
+    setModesInternal({mode}, mode);
+
     moveTo(logicalPosition);
 }
 
