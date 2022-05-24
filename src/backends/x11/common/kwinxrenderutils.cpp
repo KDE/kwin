@@ -11,7 +11,6 @@
 
 #include "kwinxrenderutils.h"
 #include "logging_p.h"
-#include "main.h"
 
 #include <QCoreApplication>
 #include <QImage>
@@ -19,12 +18,31 @@
 namespace KWin
 {
 
+namespace XRenderUtils
+{
+static xcb_connection_t *s_connection = nullptr;
+static xcb_window_t s_rootWindow = XCB_WINDOW_NONE;
+
+void init(xcb_connection_t *connection, xcb_window_t rootWindow)
+{
+    s_connection = connection;
+    s_rootWindow = rootWindow;
+}
+
+void cleanup()
+{
+    s_connection = nullptr;
+    s_rootWindow = XCB_WINDOW_NONE;
+}
+
+} // namespace
+
 static xcb_render_picture_t createPicture(xcb_pixmap_t pix, int depth)
 {
     if (pix == XCB_PIXMAP_NONE) {
         return XCB_RENDER_PICTURE_NONE;
     }
-    xcb_connection_t *c = kwinApp()->x11Connection();
+    xcb_connection_t *c = XRenderUtils::s_connection;
     static QHash<int, xcb_render_pictformat_t> s_renderFormats;
     if (!s_renderFormats.contains(depth)) {
         xcb_render_query_pict_formats_reply_t *formats = xcb_render_query_pict_formats_reply(c, xcb_render_query_pict_formats_unchecked(c), nullptr);
@@ -58,10 +76,10 @@ XRenderPicture::XRenderPicture(const QImage &img)
 
 void XRenderPicture::fromImage(const QImage &img)
 {
-    xcb_connection_t *c = kwinApp()->x11Connection();
+    xcb_connection_t *c = XRenderUtils::s_connection;
     const int depth = img.depth();
     xcb_pixmap_t xpix = xcb_generate_id(c);
-    xcb_create_pixmap(c, depth, xpix, kwinApp()->x11RootWindow(), img.width(), img.height());
+    xcb_create_pixmap(c, depth, xpix, XRenderUtils::s_rootWindow, img.width(), img.height());
 
     xcb_gcontext_t cid = xcb_generate_id(c);
     xcb_create_gc(c, cid, xpix, 0, nullptr);
@@ -82,7 +100,7 @@ XRenderPictureData::~XRenderPictureData()
 {
     if (picture != XCB_RENDER_PICTURE_NONE) {
         Q_ASSERT(qApp);
-        xcb_render_free_picture(kwinApp()->x11Connection(), picture);
+        xcb_render_free_picture(XRenderUtils::s_connection, picture);
     }
 }
 
@@ -94,8 +112,8 @@ struct PictFormatData
     PictFormatData()
     {
         // Fetch the render pict formats
-        reply = xcb_render_query_pict_formats_reply(kwinApp()->x11Connection(),
-                                                    xcb_render_query_pict_formats_unchecked(kwinApp()->x11Connection()), nullptr);
+        reply = xcb_render_query_pict_formats_reply(s_connection,
+                                                    xcb_render_query_pict_formats_unchecked(s_connection), nullptr);
 
         // Init the visual ID -> format ID hash table
         for (auto screens = xcb_render_query_pict_formats_screens_iterator(reply); screens.rem; xcb_render_pictscreen_next(&screens)) {

@@ -84,6 +84,11 @@ inline XRenderPicture::operator xcb_render_picture_t()
 namespace XRenderUtils
 {
 /**
+ * @internal
+ */
+KWIN_EXPORT void init(xcb_connection_t *connection, xcb_window_t rootWindow);
+
+/**
  * Returns the Xrender format that corresponds to the given visual ID.
  */
 KWIN_EXPORT xcb_render_pictformat_t findPictFormat(xcb_visualid_t visual);
@@ -92,6 +97,11 @@ KWIN_EXPORT xcb_render_pictformat_t findPictFormat(xcb_visualid_t visual);
  * Returns the xcb_render_directformat_t for the given Xrender format.
  */
 KWIN_EXPORT const xcb_render_directformat_t *findPictFormatInfo(xcb_render_pictformat_t format);
+
+/**
+ * @internal
+ */
+KWIN_EXPORT void cleanup();
 
 } // namespace XRenderUtils
 

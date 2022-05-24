@@ -36,6 +36,8 @@
 #include "workspace.h"
 #include "x11_output.h"
 
+#include "kwinxrenderutils.h"
+
 #include <KConfigGroup>
 #include <KCrash>
 #include <KGlobalAccel>
@@ -129,6 +131,9 @@ X11StandalonePlatform::~X11StandalonePlatform()
     if (sceneEglDisplay() != EGL_NO_DISPLAY) {
         eglTerminate(sceneEglDisplay());
     }
+    if (isReady()) {
+        XRenderUtils::cleanup();
+    }
 }
 
 bool X11StandalonePlatform::initialize()
@@ -136,6 +141,7 @@ bool X11StandalonePlatform::initialize()
     if (!QX11Info::isPlatformX11()) {
         return false;
     }
+    XRenderUtils::init(kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
     setReady(true);
     initOutputs();
 

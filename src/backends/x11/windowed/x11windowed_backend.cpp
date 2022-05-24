@@ -210,6 +210,7 @@ bool X11WindowedBackend::initialize()
             }
         }
         initXInput();
+        XRenderUtils::init(m_connection, m_screen->root);
         createOutputs();
         connect(kwinApp(), &Application::workspaceCreated, this, &X11WindowedBackend::startEventReading);
         connect(Cursors::self(), &Cursors::currentCursorChanged, this, [this]() {
