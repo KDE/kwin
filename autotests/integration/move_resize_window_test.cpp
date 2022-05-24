@@ -554,7 +554,7 @@ void MoveResizeWindowTest::testClientSideMove()
     const QRectF startGeometry = window->frameGeometry();
     Cursors::self()->mouse()->setPos(startGeometry.center());
     QVERIFY(pointerEnteredSpy.wait());
-    QCOMPARE(pointerEnteredSpy.first().last().toPoint(), QPoint(49, 24));
+    QCOMPARE(pointerEnteredSpy.first().last().toPoint(), QPoint(50, 25));
     // simulate press
     quint32 timestamp = 1;
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);
@@ -580,7 +580,7 @@ void MoveResizeWindowTest::testClientSideMove()
     QVERIFY(pointerEnteredSpy.wait());
     QCOMPARE(window->isInteractiveMove(), false);
     QCOMPARE(window->frameGeometry(), startGeometry.translated(QPoint(dragDistance, dragDistance) + QPoint(6, 6)));
-    QCOMPARE(pointerEnteredSpy.last().last().toPoint(), QPoint(49, 24));
+    QCOMPARE(pointerEnteredSpy.last().last().toPoint(), QPoint(50, 25));
 }
 
 void MoveResizeWindowTest::testPlasmaShellSurfaceMovable_data()

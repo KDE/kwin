@@ -203,7 +203,7 @@ void QuickTilingTest::testQuickTiling()
     QCOMPARE(window->output(), outputs[1]);
     // quick tile should not be changed
     QCOMPARE(window->quickTileMode(), mode);
-    QTEST(window->frameGeometry(), "secondScreen");
+    QTEST(window->frameGeometry().toRect(), "secondScreen");
 
     // now try to toggle again
     window->setQuickTileMode(mode, true);
@@ -606,7 +606,7 @@ void QuickTilingTest::testX11QuickTiling()
     QFETCH(QuickTileMode, mode);
     window->setQuickTileMode(mode, true);
     QCOMPARE(window->quickTileMode(), mode);
-    QTEST(window->frameGeometry(), "expectedGeometry");
+    QTEST(window->frameGeometry().toRect(), "expectedGeometry");
     QCOMPARE(window->geometryRestore(), origGeo);
     QEXPECT_FAIL("maximize", "For maximize we get two changed signals", Continue);
     QCOMPARE(quickTileChangedSpy.count(), 1);
@@ -695,7 +695,7 @@ void QuickTilingTest::testX11QuickTilingAfterVertMaximize()
     QFETCH(QuickTileMode, mode);
     window->setQuickTileMode(mode, true);
     QCOMPARE(window->quickTileMode(), mode);
-    QTEST(window->frameGeometry(), "expectedGeometry");
+    QTEST(window->frameGeometry().toRect(), "expectedGeometry");
     QEXPECT_FAIL("", "We get two changed events", Continue);
     QCOMPARE(quickTileChangedSpy.count(), 1);
 
