@@ -1350,7 +1350,7 @@ void ScreenEdges::createEdgeForClient(Window *client, ElectricBorder border)
     int x = 0;
     int width = 0;
     int height = 0;
-    const QRectF geo = client->frameGeometry();
+    const QRect geo = client->frameGeometry().toRect();
     const QRect fullArea = workspace()->geometry();
 
     const auto outputs = kwinApp()->platform()->enabledOutputs();
@@ -1358,7 +1358,7 @@ void ScreenEdges::createEdgeForClient(Window *client, ElectricBorder border)
     for (Output *output : outputs) {
         foundOutput = output;
         const QRect screen = output->geometry();
-        if (!screen.contains(geo.toRect())) { // DAVE
+        if (!screen.contains(geo)) {
             // ignoring Clients having a geometry overlapping with multiple screens
             // this would make the code more complex. If it's needed in future it can be added
             continue;

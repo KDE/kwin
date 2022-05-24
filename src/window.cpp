@@ -3258,7 +3258,7 @@ void Window::setVirtualKeyboardGeometry(const QRectF &geo)
         return;
     }
 
-    if (!geo.intersects(m_keyboardGeometryRestore.toAlignedRect())) {
+    if (!geo.intersects(m_keyboardGeometryRestore)) {
         return;
     }
 
