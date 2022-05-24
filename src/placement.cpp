@@ -919,7 +919,7 @@ int Workspace::packPositionRight(const Window *client, int oldX, bool rightEdge)
         if (isIrrelevant(*it, client, desktop)) {
             continue;
         }
-        const int x = rightEdge ? (*it)->frameGeometry().left() - 1 : (*it)->frameGeometry().right() + 1;
+        const int x = rightEdge ? (*it)->frameGeometry().left() - 1 : (*it)->frameGeometry().right();
         if (x < newX && x > oldX
             && !(client->frameGeometry().top() > (*it)->frameGeometry().bottom()
                  || client->frameGeometry().bottom() < (*it)->frameGeometry().top())) {
@@ -946,7 +946,7 @@ int Workspace::packPositionUp(const Window *client, int oldY, bool topEdge) cons
         if (isIrrelevant(*it, client, desktop)) {
             continue;
         }
-        const int y = topEdge ? (*it)->frameGeometry().bottom() + 1 : (*it)->frameGeometry().top() - 1;
+        const int y = topEdge ? (*it)->frameGeometry().bottom() : (*it)->frameGeometry().top() - 1;
         if (y > newY && y < oldY
             && !(client->frameGeometry().left() > (*it)->frameGeometry().right() // they overlap in X direction
                  || client->frameGeometry().right() < (*it)->frameGeometry().left())) {
@@ -962,7 +962,7 @@ int Workspace::packPositionDown(const Window *client, int oldY, bool bottomEdge)
     if (oldY >= newY) { // try another Xinerama screen
         newY = clientArea(MaximizeArea,
                           client,
-                          QPoint(client->frameGeometry().center().x(), client->frameGeometry().bottom() + 1))
+                          QPoint(client->frameGeometry().center().x(), client->frameGeometry().bottom()))
                    .bottom();
     }
     if (oldY >= newY) {
@@ -973,7 +973,7 @@ int Workspace::packPositionDown(const Window *client, int oldY, bool bottomEdge)
         if (isIrrelevant(*it, client, desktop)) {
             continue;
         }
-        const int y = bottomEdge ? (*it)->frameGeometry().top() - 1 : (*it)->frameGeometry().bottom() + 1;
+        const int y = bottomEdge ? (*it)->frameGeometry().top() - 1 : (*it)->frameGeometry().bottom();
         if (y < newY && y > oldY
             && !(client->frameGeometry().left() > (*it)->frameGeometry().right()
                  || client->frameGeometry().right() < (*it)->frameGeometry().left())) {
