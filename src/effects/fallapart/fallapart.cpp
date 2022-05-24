@@ -50,19 +50,14 @@ void FallApartEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, 
 {
     auto animationIt = windows.find(w);
     if (animationIt != windows.end() && isRealWindow(w)) {
-        if (animationIt->progress < 1) {
-            int time = 0;
-            if (animationIt->lastPresentTime.count()) {
-                time = (presentTime - animationIt->lastPresentTime).count();
-            }
-            animationIt->lastPresentTime = presentTime;
-
-            animationIt->progress += time / animationTime(1000.);
-            data.setTransformed();
-        } else {
-            unredirect(w);
-            windows.remove(w);
+        int time = 0;
+        if (animationIt->lastPresentTime.count()) {
+            time = (presentTime - animationIt->lastPresentTime).count();
         }
+        animationIt->lastPresentTime = presentTime;
+
+        animationIt->progress += time / animationTime(1000.);
+        data.setTransformed();
     }
     effects->prePaintWindow(w, data, presentTime);
 }
@@ -128,9 +123,16 @@ void FallApartEffect::deform(EffectWindow *w, int mask, WindowPaintData &data, W
 
 void FallApartEffect::postPaintScreen()
 {
-    if (!windows.isEmpty()) {
-        effects->addRepaintFull();
+    for (auto it = windows.begin(); it != windows.end();) {
+        if (it->progress < 1) {
+            ++it;
+        } else {
+            unredirect(it.key());
+            it = windows.erase(it);
+        }
     }
+
+    effects->addRepaintFull();
     effects->postPaintScreen();
 }
 
