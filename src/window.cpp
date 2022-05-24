@@ -3231,12 +3231,12 @@ QRectF Window::iconGeometry() const
     return candidateGeom.translated(candidatePanel->pos());
 }
 
-QRect Window::virtualKeyboardGeometry() const
+QRectF Window::virtualKeyboardGeometry() const
 {
     return m_virtualKeyboardGeometry;
 }
 
-void Window::setVirtualKeyboardGeometry(const QRect &geo)
+void Window::setVirtualKeyboardGeometry(const QRectF &geo)
 {
     // No keyboard anymore
     if (geo.isEmpty() && !m_keyboardGeometryRestore.isEmpty()) {

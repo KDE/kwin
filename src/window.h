@@ -1278,13 +1278,13 @@ public:
      * @returns the geometry of the virtual keyboard
      * This geometry is in global coordinates
      */
-    QRect virtualKeyboardGeometry() const;
+    QRectF virtualKeyboardGeometry() const;
 
     /**
      * Sets the geometry of the virtual keyboard, The window may resize itself in order to make space for the keybaord
      * This geometry is in global coordinates
      */
-    virtual void setVirtualKeyboardGeometry(const QRect &geo);
+    virtual void setVirtualKeyboardGeometry(const QRectF &geo);
 
     /**
      * Restores the Window after it had been hidden due to show on screen edge functionality.
@@ -1858,7 +1858,7 @@ protected:
     QRectF keyboardGeometryRestore() const;
     void setKeyboardGeometryRestore(const QRectF &geom);
 
-    QRect m_virtualKeyboardGeometry;
+    QRectF m_virtualKeyboardGeometry;
 
     void setFullscreenGeometryRestore(const QRectF &geom);
 

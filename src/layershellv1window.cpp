@@ -284,7 +284,7 @@ void LayerShellV1Window::handleOutputDestroyed()
     destroyWindow();
 }
 
-void LayerShellV1Window::setVirtualKeyboardGeometry(const QRect &geo)
+void LayerShellV1Window::setVirtualKeyboardGeometry(const QRectF &geo)
 {
     if (m_virtualKeyboardGeometry == geo) {
         return;
