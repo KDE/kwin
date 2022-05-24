@@ -360,7 +360,7 @@ void XdgSurfaceWindow::updateShowOnScreenEdge()
     const PlasmaShellSurfaceInterface::PanelBehavior panelBehavior = m_plasmaShellSurface->panelBehavior();
     if ((panelBehavior == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide && isHidden()) || panelBehavior == PlasmaShellSurfaceInterface::PanelBehavior::WindowsCanCover) {
         // Screen edge API requires an edge, thus we need to figure out which edge the window borders.
-        const QRectF clientGeometry = frameGeometry();
+        const QRect clientGeometry = frameGeometry().toRect(); // converted here to match output checks
         Qt::Edges edges;
 
         const auto outputs = kwinApp()->platform()->enabledOutputs();
