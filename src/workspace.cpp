@@ -2119,16 +2119,16 @@ QRectF Workspace::adjustClientArea(Window *window, const QRectF &area) const
     strutBottom.setBottom(qMin(strutBottom.bottom(), screenArea.bottom()));
 
     if (strutLeft.intersects(area)) {
-        adjustedArea.setLeft(strutLeft.right() + 1);
+        adjustedArea.setLeft(strutLeft.right());
     }
     if (strutRight.intersects(area)) {
-        adjustedArea.setRight(strutRight.left() - 1);
+        adjustedArea.setRight(strutRight.left());
     }
     if (strutTop.intersects(area)) {
-        adjustedArea.setTop(strutTop.bottom() + 1);
+        adjustedArea.setTop(strutTop.bottom());
     }
     if (strutBottom.intersects(area)) {
-        adjustedArea.setBottom(strutBottom.top() - 1);
+        adjustedArea.setBottom(strutBottom.top());
     }
 
     return adjustedArea;
@@ -2416,9 +2416,9 @@ QPointF Workspace::adjustWindowPosition(Window *window, QPointF pos, bool unrest
             maxRect = clientArea(MaximizeArea, window, output);
         }
         const int xmin = maxRect.left();
-        const int xmax = maxRect.right() + 1; // desk size
+        const int xmax = maxRect.right(); // desk size
         const int ymin = maxRect.top();
-        const int ymax = maxRect.bottom() + 1;
+        const int ymax = maxRect.bottom();
 
         const int cx(pos.x());
         const int cy(pos.y());
