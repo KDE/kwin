@@ -204,11 +204,11 @@ void StrutsTest::testWaylandStruts()
     QCOMPARE(workspace()->clientArea(FullArea, outputs[0], desktop), QRect(0, 0, 2560, 1024));
 
     // now verify the actual updated client areas
-    QTEST(workspace()->clientArea(PlacementArea, outputs[0], desktop), "screen0Maximized");
-    QTEST(workspace()->clientArea(MaximizeArea, outputs[0], desktop), "screen0Maximized");
-    QTEST(workspace()->clientArea(PlacementArea, outputs[1], desktop), "screen1Maximized");
-    QTEST(workspace()->clientArea(MaximizeArea, outputs[1], desktop), "screen1Maximized");
-    QTEST(workspace()->clientArea(WorkArea, outputs[0], desktop), "workArea");
+    QTEST(workspace()->clientArea(PlacementArea, outputs[0], desktop).toRect(), "screen0Maximized");
+    QTEST(workspace()->clientArea(MaximizeArea, outputs[0], desktop).toRect(), "screen0Maximized");
+    QTEST(workspace()->clientArea(PlacementArea, outputs[1], desktop).toRect(), "screen1Maximized");
+    QTEST(workspace()->clientArea(MaximizeArea, outputs[1], desktop).toRect(), "screen1Maximized");
+    QTEST(workspace()->clientArea(WorkArea, outputs[0], desktop).toRect(), "workArea");
     QTEST(workspace()->restrictedMoveArea(desktop), "restrictedMoveArea");
 
     // delete all surfaces
@@ -648,11 +648,11 @@ void StrutsTest::testX11Struts()
     QCOMPARE(workspace()->clientArea(FullArea, outputs[0], desktop), QRect(0, 0, 2560, 1024));
 
     // now verify the actual updated client areas
-    QTEST(workspace()->clientArea(PlacementArea, outputs[0], desktop), "screen0Maximized");
-    QTEST(workspace()->clientArea(MaximizeArea, outputs[0], desktop), "screen0Maximized");
-    QTEST(workspace()->clientArea(PlacementArea, outputs[1], desktop), "screen1Maximized");
-    QTEST(workspace()->clientArea(MaximizeArea, outputs[1], desktop), "screen1Maximized");
-    QTEST(workspace()->clientArea(WorkArea, outputs[0], desktop), "workArea");
+    QTEST(workspace()->clientArea(PlacementArea, outputs[0], desktop).toRect(), "screen0Maximized");
+    QTEST(workspace()->clientArea(MaximizeArea, outputs[0], desktop).toRect(), "screen0Maximized");
+    QTEST(workspace()->clientArea(PlacementArea, outputs[1], desktop).toRect(), "screen1Maximized");
+    QTEST(workspace()->clientArea(MaximizeArea, outputs[1], desktop).toRect(), "screen1Maximized");
+    QTEST(workspace()->clientArea(WorkArea, outputs[0], desktop).toRect(), "workArea");
     QTEST(workspace()->restrictedMoveArea(desktop), "restrictedMoveArea");
 
     // and destroy the window again
