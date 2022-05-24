@@ -4178,7 +4178,7 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
         return;
     }
 
-    m_output = kwinApp()->platform()->outputAt(frameGeometry.center().toPoint()); // DAVE
+    m_output = kwinApp()->platform()->outputAt(frameGeometry.center());
     if (areGeometryUpdatesBlocked()) {
         setPendingMoveResizeMode(mode);
         return;
