@@ -354,7 +354,7 @@ void QuickTilingTest::testQuickTilingKeyboardMove()
 
     workspace()->performWindowOperation(window, Options::UnrestrictedMoveOp);
     QCOMPARE(window, workspace()->moveResizeWindow());
-    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(49, 24));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(50, 25));
 
     QFETCH(QPoint, targetPos);
     quint32 timestamp = 1;
@@ -425,7 +425,7 @@ void QuickTilingTest::testQuickTilingPointerMove()
     QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
     workspace()->performWindowOperation(window, Options::UnrestrictedMoveOp);
     QCOMPARE(window, workspace()->moveResizeWindow());
-    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(49, 24));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(50, 25));
 
     QFETCH(QPoint, pointerPos);
     QFETCH(QSize, tileSize);
