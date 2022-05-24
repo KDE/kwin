@@ -907,7 +907,7 @@ void MoveResizeWindowTest::testResizeForVirtualKeyboard()
     Test::render(surface.data(), toplevelConfigureRequestedSpy.last().first().toSize(), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
 
-    QCOMPARE(window->frameGeometry(), QRect(100, 0, 500, 101));
+    QCOMPARE(window->frameGeometry(), QRect(100, 0, 500, 100));
     window->setVirtualKeyboardGeometry(QRect());
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
@@ -951,7 +951,7 @@ void MoveResizeWindowTest::testResizeForVirtualKeyboardWithMaximize()
     // render at the new size
     Test::render(surface.data(), toplevelConfigureRequestedSpy.last().first().toSize(), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->frameGeometry(), QRect(100, 0, 500, 101));
+    QCOMPARE(window->frameGeometry(), QRect(100, 0, 500, 100));
 
     window->setMaximize(true, true);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
@@ -1004,7 +1004,7 @@ void MoveResizeWindowTest::testResizeForVirtualKeyboardWithFullScreen()
     // render at the new size
     Test::render(surface.data(), toplevelConfigureRequestedSpy.last().first().toSize(), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->frameGeometry(), QRect(100, 0, 500, 101));
+    QCOMPARE(window->frameGeometry(), QRect(100, 0, 500, 100));
 
     window->setFullScreen(true, true);
     QVERIFY(surfaceConfigureRequestedSpy.wait());

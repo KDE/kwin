@@ -703,7 +703,7 @@ void Workspace::slotWindowMoveRight()
 {
     if (m_activeWindow && m_activeWindow->isMovable()) {
         const QRect geometry = m_activeWindow->moveResizeGeometry().toRect();
-        m_activeWindow->packTo(packPositionRight(m_activeWindow, geometry.right(), true) - geometry.width() + 1,
+        m_activeWindow->packTo(packPositionRight(m_activeWindow, geometry.right(), true) - geometry.width(),
                                geometry.y());
     }
 }
@@ -722,7 +722,7 @@ void Workspace::slotWindowMoveDown()
     if (m_activeWindow && m_activeWindow->isMovable()) {
         const QRect geometry = m_activeWindow->moveResizeGeometry().toRect();
         m_activeWindow->packTo(geometry.x(),
-                               packPositionDown(m_activeWindow, geometry.bottom(), true) - geometry.height() + 1);
+                               packPositionDown(m_activeWindow, geometry.bottom(), true) - geometry.height());
     }
 }
 
