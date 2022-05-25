@@ -23,6 +23,7 @@
 #include <QCoreApplication>
 #include <QtConcurrentRun>
 
+#include <qpa/qplatformnativeinterface.h>
 #include <qpa/qplatformwindow.h>
 #include <qpa/qwindowsysteminterface.h>
 
@@ -47,6 +48,7 @@ Integration::Integration()
     : QObject()
     , QPlatformIntegration()
     , m_fontDb(new QGenericUnixFontDatabase())
+    , m_nativeInterface(new QPlatformNativeInterface())
     , m_services(new QGenericUnixServices())
 {
 }
@@ -196,6 +198,11 @@ void Integration::handleOutputDisabled(Output *output)
     }
 
     QWindowSystemInterface::handleScreenRemoved(platformScreen);
+}
+
+QPlatformNativeInterface *Integration::nativeInterface() const
+{
+    return m_nativeInterface.data();
 }
 
 QPlatformServices *Integration::services() const
