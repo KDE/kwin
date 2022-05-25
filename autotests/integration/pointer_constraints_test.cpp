@@ -100,10 +100,18 @@ void TestPointerConstraints::testConfinedPointer_data()
     QTest::addColumn<PointerFunc>("positionFunction");
     QTest::addColumn<int>("xOffset");
     QTest::addColumn<int>("yOffset");
-    PointerFunc bottomLeft = &QRectF::bottomLeft;
-    PointerFunc bottomRight = &QRectF::bottomRight;
-    PointerFunc topRight = &QRectF::topRight;
-    PointerFunc topLeft = &QRectF::topLeft;
+    PointerFunc bottomLeft = [](const QRectF &rect) {
+        return rect.toRect().bottomLeft();
+    };
+    PointerFunc bottomRight = [](const QRectF &rect) {
+        return rect.toRect().bottomRight();
+    };
+    PointerFunc topRight = [](const QRectF &rect) {
+        return rect.toRect().topRight();
+    };
+    PointerFunc topLeft = [](const QRectF &rect) {
+        return rect.toRect().topLeft();
+    };
 
     QTest::newRow("XdgWmBase - bottomLeft") << bottomLeft << -1 << 1;
     QTest::newRow("XdgWmBase - bottomRight") << bottomRight << 1 << 1;
