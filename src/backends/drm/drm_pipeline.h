@@ -20,6 +20,7 @@
 #include "core/output.h"
 #include "core/renderloop_p.h"
 #include "drm_object_plane.h"
+#include "drm_object_connector.h"
 
 namespace KWin
 {
@@ -112,6 +113,7 @@ public:
     RenderLoopPrivate::SyncMode syncMode() const;
     uint32_t overscan() const;
     Output::RgbRange rgbRange() const;
+    DrmConnector::DrmContentType contentType() const;
 
     void setCrtc(DrmCrtc *crtc);
     void setMode(const std::shared_ptr<DrmConnectorMode> &mode);
@@ -124,6 +126,7 @@ public:
     void setOverscan(uint32_t overscan);
     void setRgbRange(Output::RgbRange range);
     void setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation);
+    void setContentType(DrmConnector::DrmContentType type);
 
     enum class CommitMode {
         Test,
@@ -184,6 +187,7 @@ private:
         RenderLoopPrivate::SyncMode syncMode = RenderLoopPrivate::SyncMode::Fixed;
         std::shared_ptr<ColorTransformation> colorTransformation;
         std::shared_ptr<DrmGammaRamp> gamma;
+        DrmConnector::DrmContentType contentType = DrmConnector::DrmContentType::Graphics;
 
         std::shared_ptr<DrmPipelineLayer> layer;
         std::shared_ptr<DrmOverlayLayer> cursorLayer;

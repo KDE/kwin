@@ -31,6 +31,7 @@ public:
 
     QRegion shape() const override;
     QRegion opaque() const override;
+    ContentType contentType() const override;
 
     KWaylandServer::SurfaceInterface *surface() const;
 

@@ -205,6 +205,10 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline 
 
 void DrmPipeline::prepareAtomicPresentation()
 {
+    if (const auto contentType = m_connector->getProp(DrmConnector::PropertyIndex::ContentType)) {
+        contentType->setEnum(m_pending.contentType);
+    }
+
     m_pending.crtc->setPending(DrmCrtc::PropertyIndex::VrrEnabled, m_pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive);
     m_pending.crtc->setPending(DrmCrtc::PropertyIndex::Gamma_LUT, m_pending.gamma ? m_pending.gamma->blobId() : 0);
     const auto modeSize = m_pending.mode->size();
@@ -644,6 +648,11 @@ Output::RgbRange DrmPipeline::rgbRange() const
     return m_pending.rgbRange;
 }
 
+DrmConnector::DrmContentType DrmPipeline::contentType() const
+{
+    return m_pending.contentType;
+}
+
 void DrmPipeline::setCrtc(DrmCrtc *crtc)
 {
     if (crtc && m_pending.crtc && crtc->gammaRampSize() != m_pending.crtc->gammaRampSize() && m_pending.colorTransformation) {
@@ -707,5 +716,10 @@ void DrmPipeline::setColorTransformation(const std::shared_ptr<ColorTransformati
 {
     m_pending.colorTransformation = transformation;
     m_pending.gamma = std::make_shared<DrmGammaRamp>(m_pending.crtc, transformation);
+}
+
+void DrmPipeline::setContentType(DrmConnector::DrmContentType type)
+{
+    m_pending.contentType = type;
 }
 }

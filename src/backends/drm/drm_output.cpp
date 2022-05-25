@@ -355,8 +355,10 @@ void DrmOutput::updateDpmsMode(DpmsMode dpmsMode)
 bool DrmOutput::present()
 {
     RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop.get());
-    if (m_pipeline->syncMode() != renderLoopPrivate->presentMode) {
+    const auto type = DrmConnector::kwinToDrmContentType(contentType());
+    if (m_pipeline->syncMode() != renderLoopPrivate->presentMode || type != m_pipeline->contentType()) {
         m_pipeline->setSyncMode(renderLoopPrivate->presentMode);
+        m_pipeline->setContentType(type);
         if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
             m_pipeline->applyPendingChanges();
         } else {

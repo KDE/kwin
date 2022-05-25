@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "core/output.h"
 #include "item.h"
 
 namespace KWin
@@ -40,6 +41,8 @@ public:
 
     void referencePreviousPixmap();
     void unreferencePreviousPixmap();
+
+    virtual ContentType contentType() const;
 
 protected:
     explicit SurfaceItem(Window *window, Item *parent = nullptr);

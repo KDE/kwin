@@ -628,6 +628,7 @@ void Compositor::composite(RenderLoop *renderLoop)
 
     SurfaceItem *scanoutCandidate = superLayer->delegate()->scanoutCandidate();
     renderLoop->setFullscreenSurface(scanoutCandidate);
+    output->setContentType(scanoutCandidate ? scanoutCandidate->contentType() : ContentType::None);
 
     renderLoop->beginFrame();
     bool directScanout = false;

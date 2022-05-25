@@ -118,6 +118,9 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
             qCWarning(KWIN_DRM) << "Setting gamma failed!" << strerror(errno);
             return errnoToError();
         }
+        if (const auto contentType = m_connector->getProp(DrmConnector::PropertyIndex::ContentType)) {
+            contentType->setEnumLegacy(m_pending.contentType);
+        }
         setCursorLegacy();
         moveCursorLegacy();
     }

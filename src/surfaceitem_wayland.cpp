@@ -137,6 +137,11 @@ std::unique_ptr<SurfacePixmap> SurfaceItemWayland::createPixmap()
     return std::make_unique<SurfacePixmapWayland>(this);
 }
 
+ContentType SurfaceItemWayland::contentType() const
+{
+    return m_surface->contentType();
+}
+
 SurfacePixmapWayland::SurfacePixmapWayland(SurfaceItemWayland *item, QObject *parent)
     : SurfacePixmap(Compositor::self()->scene()->createSurfaceTextureWayland(this), parent)
     , m_item(item)

@@ -393,4 +393,14 @@ void Output::setColorTransformation(const std::shared_ptr<ColorTransformation> &
     Q_UNUSED(transformation);
 }
 
+ContentType Output::contentType() const
+{
+    return m_contentType;
+}
+
+void Output::setContentType(ContentType contentType)
+{
+    m_contentType = contentType;
+}
+
 } // namespace KWin

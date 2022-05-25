@@ -64,6 +64,7 @@ public:
         Broadcast_RGB = 9,
         MaxBpc = 10,
         LinkStatus = 11,
+        ContentType = 12,
         Count
     };
 
@@ -75,6 +76,13 @@ public:
     enum class LinkStatus : uint32_t {
         Good = 0,
         Bad = 1
+    };
+    enum class DrmContentType : uint64_t {
+        None = 0,
+        Graphics = 1,
+        Photo = 2,
+        Cinema = 3,
+        Game = 4
     };
 
     bool init() override;
@@ -102,6 +110,8 @@ public:
     bool hasRgbRange() const;
     Output::RgbRange rgbRange() const;
     LinkStatus linkStatus() const;
+
+    static DrmContentType kwinToDrmContentType(ContentType type);
 
 private:
     QList<std::shared_ptr<DrmConnectorMode>> generateCommonModes();

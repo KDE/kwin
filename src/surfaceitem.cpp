@@ -152,6 +152,11 @@ WindowQuadList SurfaceItem::buildQuads() const
     return quads;
 }
 
+ContentType SurfaceItem::contentType() const
+{
+    return ContentType::None;
+}
+
 SurfaceTexture::~SurfaceTexture()
 {
 }

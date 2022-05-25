@@ -238,6 +238,9 @@ public:
     RenderLoop::VrrPolicy vrrPolicy() const;
     RgbRange rgbRange() const;
 
+    ContentType contentType() const;
+    void setContentType(ContentType contentType);
+
     bool isPlaceholder() const;
     bool isNonDesktop() const;
 
@@ -339,6 +342,7 @@ protected:
     QUuid m_uuid;
     int m_directScanoutCount = 0;
     int m_refCount = 1;
+    ContentType m_contentType = ContentType::None;
     friend class EffectScreenImpl; // to access m_effectScreen
 };
 
