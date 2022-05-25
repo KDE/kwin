@@ -2019,6 +2019,7 @@ Q_SIGNALS:
     void changed();
 };
 
+class EffectWindowVisibleRef;
 /**
  * @short Representation of a window used by/for Effect classes.
  *
@@ -2341,9 +2342,6 @@ public:
 
     virtual void refWindow() = 0;
     virtual void unrefWindow() = 0;
-
-    virtual void refVisible(int reason) = 0;
-    virtual void unrefVisible(int reason) = 0;
 
     virtual bool isDeleted() const = 0;
 
@@ -2698,6 +2696,11 @@ public:
      */
     virtual void unreferencePreviousWindowPixmap() = 0;
 
+protected:
+    friend EffectWindowVisibleRef;
+    virtual void refVisible(const EffectWindowVisibleRef *holder) = 0;
+    virtual void unrefVisible(const EffectWindowVisibleRef *holder) = 0;
+
 private:
     class Private;
     QScopedPointer<Private> d;
@@ -2773,7 +2776,7 @@ public:
         : m_window(window)
         , m_reason(reason)
     {
-        m_window->refVisible(reason);
+        m_window->refVisible(this);
     }
 
     EffectWindowVisibleRef(const EffectWindowVisibleRef &other)
@@ -2781,24 +2784,29 @@ public:
         , m_reason(other.m_reason)
     {
         if (m_window) {
-            m_window->refVisible(m_reason);
+            m_window->refVisible(this);
         }
     }
 
     ~EffectWindowVisibleRef()
     {
         if (m_window) {
-            m_window->unrefVisible(m_reason);
+            m_window->unrefVisible(this);
         }
+    }
+
+    int reason() const
+    {
+        return m_reason;
     }
 
     EffectWindowVisibleRef &operator=(const EffectWindowVisibleRef &other)
     {
         if (other.m_window) {
-            other.m_window->refVisible(other.m_reason);
+            other.m_window->refVisible(&other);
         }
         if (m_window) {
-            m_window->unrefVisible(m_reason);
+            m_window->unrefVisible(this);
         }
         m_window = other.m_window;
         m_reason = other.m_reason;

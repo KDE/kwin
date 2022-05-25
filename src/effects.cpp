@@ -1931,14 +1931,14 @@ EffectWindowImpl::~EffectWindowImpl()
 {
 }
 
-void EffectWindowImpl::refVisible(int reason)
+void EffectWindowImpl::refVisible(const EffectWindowVisibleRef *holder)
 {
-    m_windowItem->refVisible(reason);
+    m_windowItem->refVisible(holder->reason());
 }
 
-void EffectWindowImpl::unrefVisible(int reason)
+void EffectWindowImpl::unrefVisible(const EffectWindowVisibleRef *holder)
 {
-    m_windowItem->unrefVisible(reason);
+    m_windowItem->unrefVisible(holder->reason());
 }
 
 void EffectWindowImpl::addRepaint(const QRect &r)

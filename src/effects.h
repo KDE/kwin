@@ -380,9 +380,6 @@ public:
     explicit EffectWindowImpl(Window *window);
     ~EffectWindowImpl() override;
 
-    void refVisible(int reason) override;
-    void unrefVisible(int reason) override;
-
     void addRepaint(const QRect &r) override;
     void addRepaintFull() override;
     void addLayerRepaint(const QRect &r) override;
@@ -505,6 +502,9 @@ public:
     QVariant data(int role) const override;
 
 private:
+    void refVisible(const EffectWindowVisibleRef *holder) override;
+    void unrefVisible(const EffectWindowVisibleRef *holder) override;
+
     Window *m_window;
     WindowItem *m_windowItem; // This one is used only during paint pass.
     QHash<int, QVariant> dataMap;
