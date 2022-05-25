@@ -165,7 +165,7 @@ void KWinScreenEdgesConfig::monitorInit()
         if (!config.readEntry(script.pluginId() + QStringLiteral("Enabled"), script.isEnabledByDefault())) {
             continue;
         }
-        m_effects << script.pluginId();
+        m_scripts << script.pluginId();
         m_form->monitorAddItem(script.name());
         m_scriptSettings[script.pluginId()] = new KWinTouchScreenScriptSettings(script.pluginId(), this);
     }
