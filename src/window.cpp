@@ -3703,14 +3703,14 @@ QRectF Window::quickTileGeometry(QuickTileMode mode, const QPointF &pos) const
 
     QRectF ret = workspace()->clientArea(MaximizeArea, this, pos);
     if (mode & QuickTileFlag::Left) {
-        ret.setRight(ret.left() + ret.width() / 2 - 1);
+        ret.setRight(ret.left() + ret.width() / 2);
     } else if (mode & QuickTileFlag::Right) {
-        ret.setLeft(ret.right() - (ret.width() - ret.width() / 2) + 1);
+        ret.setLeft(ret.right() - (ret.width() - ret.width() / 2));
     }
     if (mode & QuickTileFlag::Top) {
-        ret.setBottom(ret.top() + ret.height() / 2 - 1);
+        ret.setBottom(ret.top() + ret.height() / 2);
     } else if (mode & QuickTileFlag::Bottom) {
-        ret.setTop(ret.bottom() - (ret.height() - ret.height() / 2) + 1);
+        ret.setTop(ret.bottom() - (ret.height() - ret.height() / 2));
     }
 
     return ret;
