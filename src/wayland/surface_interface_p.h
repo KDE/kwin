@@ -19,6 +19,7 @@ namespace KWaylandServer
 class IdleInhibitorV1Interface;
 class SurfaceRole;
 class ViewportInterface;
+class ContentTypeV1Interface;
 
 struct SurfaceState
 {
@@ -38,6 +39,7 @@ struct SurfaceState
     bool childrenChanged = false;
     bool bufferScaleIsSet = false;
     bool bufferTransformIsSet = false;
+    bool contentTypeIsSet = false;
     qint32 bufferScale = 1;
     KWin::Output::Transform bufferTransform = KWin::Output::Transform::Normal;
     wl_list frameCallbacks;
@@ -47,6 +49,7 @@ struct SurfaceState
     QPointer<BlurInterface> blur;
     QPointer<ContrastInterface> contrast;
     QPointer<SlideInterface> slide;
+    KWin::ContentType contentType = KWin::ContentType::None;
 
     // Subsurfaces are stored in two lists. The below list contains subsurfaces that
     // are below their parent surface; the above list contains subsurfaces that are
@@ -134,6 +137,7 @@ public:
     QVector<IdleInhibitorV1Interface *> idleInhibitors;
     ViewportInterface *viewportExtension = nullptr;
     std::unique_ptr<LinuxDmaBufV1Feedback> dmabufFeedbackV1;
+    QPointer<ContentTypeV1Interface> contentTypeInterface;
     ClientConnection *client = nullptr;
 
 protected:

@@ -49,6 +49,7 @@ class TabletManagerV2Interface;
 class KeyboardShortcutsInhibitManagerV1Interface;
 class XdgDecorationManagerV1Interface;
 class XWaylandKeyboardGrabManagerV1Interface;
+class ContentTypeManagerV1Interface;
 }
 
 namespace KWin
@@ -288,6 +289,7 @@ private:
     KWaylandServer::PrimaryOutputV1Interface *m_primary = nullptr;
     XdgActivationV1Integration *m_xdgActivationIntegration = nullptr;
     KWaylandServer::XWaylandKeyboardGrabManagerV1Interface *m_xWaylandKeyboardGrabManager = nullptr;
+    KWaylandServer::ContentTypeManagerV1Interface *m_contentTypeManager = nullptr;
     QList<Window *> m_windows;
     InitializationFlags m_initFlags;
     QHash<Output *, WaylandOutput *> m_waylandOutputs;

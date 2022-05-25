@@ -6,6 +6,7 @@
 */
 #pragma once
 
+#include "core/output.h"
 #include "output_interface.h"
 
 #include <QMatrix4x4>
@@ -305,6 +306,11 @@ public:
      * dmabuf feedback installed on this SurfaceInterface
      */
     LinuxDmaBufV1Feedback *dmabufFeedbackV1() const;
+
+    /**
+     * @returns the current content type of this surface
+     */
+    KWin::ContentType contentType() const;
 
     /**
      * @returns The SurfaceInterface for the @p native resource.

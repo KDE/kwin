@@ -29,6 +29,13 @@ class RenderLoop;
 class OutputConfiguration;
 class ColorTransformation;
 
+enum class ContentType {
+    None = 0,
+    Photo = 1,
+    Video = 2,
+    Game = 3,
+};
+
 class KWIN_EXPORT OutputMode
 {
 public:

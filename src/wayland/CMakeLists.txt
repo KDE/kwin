@@ -189,6 +189,10 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/xwayland-keyboard-grab/xwayland-keyboard-grab-unstable-v1.xml
     BASENAME xwayland-keyboard-grab-unstable-v1
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${WaylandProtocols_DATADIR}/staging/content-type/content-type-v1.xml
+    BASENAME content-type-v1
+)
 
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
@@ -199,6 +203,7 @@ target_sources(kwin PRIVATE
     clientbufferintegration.cpp
     clientconnection.cpp
     compositor_interface.cpp
+    contenttype_v1_interface.cpp
     contrast_interface.cpp
     datacontroldevice_v1_interface.cpp
     datacontroldevicemanager_v1_interface.cpp

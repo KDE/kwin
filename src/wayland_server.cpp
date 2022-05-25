@@ -25,6 +25,7 @@
 #include "wayland/appmenu_interface.h"
 #include "wayland/blur_interface.h"
 #include "wayland/compositor_interface.h"
+#include "wayland/contenttype_v1_interface.h"
 #include "wayland/datacontroldevicemanager_v1_interface.h"
 #include "wayland/datadevicemanager_interface.h"
 #include "wayland/datasource_interface.h"
@@ -480,6 +481,8 @@ bool WaylandServer::init(InitializationFlags flags)
         }
         w->setLockScreenOverlay(true);
     });
+
+    m_contentTypeManager = new KWaylandServer::ContentTypeManagerV1Interface(m_display, m_display);
 
     return true;
 }
