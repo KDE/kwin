@@ -599,28 +599,39 @@ void X11WindowedBackend::updateSize(xcb_configure_notify_event_t *event)
 
 void X11WindowedBackend::createCursor(const QImage &srcImage, const QPoint &hotspot)
 {
-    const xcb_pixmap_t pix = xcb_generate_id(m_connection);
-    const xcb_gcontext_t gc = xcb_generate_id(m_connection);
-    const xcb_cursor_t cid = xcb_generate_id(m_connection);
+    xcb_pixmap_t pix = XCB_PIXMAP_NONE;
+    xcb_gcontext_t gc = XCB_NONE;
+    xcb_cursor_t cid = XCB_CURSOR_NONE;
 
-    // right now on X we only have one scale between all screens, and we know we will have at least one screen
-    const qreal outputScale = 1;
-    const QSize targetSize = srcImage.size() * outputScale / srcImage.devicePixelRatio();
-    const QImage img = srcImage.scaled(targetSize, Qt::KeepAspectRatio);
+    if (!srcImage.isNull()) {
+        pix = xcb_generate_id(m_connection);
+        gc = xcb_generate_id(m_connection);
+        cid = xcb_generate_id(m_connection);
 
-    xcb_create_pixmap(m_connection, 32, pix, m_screen->root, img.width(), img.height());
-    xcb_create_gc(m_connection, gc, pix, 0, nullptr);
+        // right now on X we only have one scale between all screens, and we know we will have at least one screen
+        const qreal outputScale = 1;
+        const QSize targetSize = srcImage.size() * outputScale / srcImage.devicePixelRatio();
+        const QImage img = srcImage.scaled(targetSize, Qt::KeepAspectRatio);
 
-    xcb_put_image(m_connection, XCB_IMAGE_FORMAT_Z_PIXMAP, pix, gc, img.width(), img.height(), 0, 0, 0, 32, img.sizeInBytes(), img.constBits());
+        xcb_create_pixmap(m_connection, 32, pix, m_screen->root, img.width(), img.height());
+        xcb_create_gc(m_connection, gc, pix, 0, nullptr);
 
-    XRenderPicture pic(pix, 32);
-    xcb_render_create_cursor(m_connection, cid, pic, qRound(hotspot.x() * outputScale), qRound(hotspot.y() * outputScale));
+        xcb_put_image(m_connection, XCB_IMAGE_FORMAT_Z_PIXMAP, pix, gc, img.width(), img.height(), 0, 0, 0, 32, img.sizeInBytes(), img.constBits());
+
+        XRenderPicture pic(pix, 32);
+        xcb_render_create_cursor(m_connection, cid, pic, qRound(hotspot.x() * outputScale), qRound(hotspot.y() * outputScale));
+    }
+
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
         xcb_change_window_attributes(m_connection, (*it)->window(), XCB_CW_CURSOR, &cid);
     }
 
-    xcb_free_pixmap(m_connection, pix);
-    xcb_free_gc(m_connection, gc);
+    if (pix) {
+        xcb_free_pixmap(m_connection, pix);
+    }
+    if (gc) {
+        xcb_free_gc(m_connection, gc);
+    }
     if (m_cursor) {
         xcb_free_cursor(m_connection, m_cursor);
     }
