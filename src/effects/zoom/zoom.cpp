@@ -316,113 +316,111 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &d
     effects->paintScreen(mask, region, data);
     GLFramebuffer::popFramebuffer();
 
-    if (zoom != 1.0) {
-        data *= QVector2D(zoom, zoom);
-        const QSize screenSize = effects->virtualScreenSize();
+    data *= QVector2D(zoom, zoom);
+    const QSize screenSize = effects->virtualScreenSize();
 
-        // mouse-tracking allows navigation of the zoom-area using the mouse.
-        switch (mouseTracking) {
-        case MouseTrackingProportional:
-            data.setXTranslation(-int(cursorPoint.x() * (zoom - 1.0)));
-            data.setYTranslation(-int(cursorPoint.y() * (zoom - 1.0)));
-            prevPoint = cursorPoint;
-            break;
-        case MouseTrackingCentred:
-            prevPoint = cursorPoint;
-            // fall through
-        case MouseTrackingDisabled:
-            data.setXTranslation(qMin(0, qMax(int(screenSize.width() - screenSize.width() * zoom), int(screenSize.width() / 2 - prevPoint.x() * zoom))));
-            data.setYTranslation(qMin(0, qMax(int(screenSize.height() - screenSize.height() * zoom), int(screenSize.height() / 2 - prevPoint.y() * zoom))));
-            break;
-        case MouseTrackingPush: {
-            // touching an edge of the screen moves the zoom-area in that direction.
-            int x = cursorPoint.x() * zoom - prevPoint.x() * (zoom - 1.0);
-            int y = cursorPoint.y() * zoom - prevPoint.y() * (zoom - 1.0);
-            int threshold = 4;
-            xMove = yMove = 0;
-            if (x < threshold) {
-                xMove = (x - threshold) / zoom;
-            } else if (x + threshold > screenSize.width()) {
-                xMove = (x + threshold - screenSize.width()) / zoom;
-            }
-            if (y < threshold) {
-                yMove = (y - threshold) / zoom;
-            } else if (y + threshold > screenSize.height()) {
-                yMove = (y + threshold - screenSize.height()) / zoom;
-            }
-            if (xMove) {
-                prevPoint.setX(qMax(0, qMin(screenSize.width(), prevPoint.x() + xMove)));
-            }
-            if (yMove) {
-                prevPoint.setY(qMax(0, qMin(screenSize.height(), prevPoint.y() + yMove)));
-            }
-            data.setXTranslation(-int(prevPoint.x() * (zoom - 1.0)));
-            data.setYTranslation(-int(prevPoint.y() * (zoom - 1.0)));
-            break;
+    // mouse-tracking allows navigation of the zoom-area using the mouse.
+    switch (mouseTracking) {
+    case MouseTrackingProportional:
+        data.setXTranslation(-int(cursorPoint.x() * (zoom - 1.0)));
+        data.setYTranslation(-int(cursorPoint.y() * (zoom - 1.0)));
+        prevPoint = cursorPoint;
+        break;
+    case MouseTrackingCentred:
+        prevPoint = cursorPoint;
+        // fall through
+    case MouseTrackingDisabled:
+        data.setXTranslation(qMin(0, qMax(int(screenSize.width() - screenSize.width() * zoom), int(screenSize.width() / 2 - prevPoint.x() * zoom))));
+        data.setYTranslation(qMin(0, qMax(int(screenSize.height() - screenSize.height() * zoom), int(screenSize.height() / 2 - prevPoint.y() * zoom))));
+        break;
+    case MouseTrackingPush: {
+        // touching an edge of the screen moves the zoom-area in that direction.
+        int x = cursorPoint.x() * zoom - prevPoint.x() * (zoom - 1.0);
+        int y = cursorPoint.y() * zoom - prevPoint.y() * (zoom - 1.0);
+        int threshold = 4;
+        xMove = yMove = 0;
+        if (x < threshold) {
+            xMove = (x - threshold) / zoom;
+        } else if (x + threshold > screenSize.width()) {
+            xMove = (x + threshold - screenSize.width()) / zoom;
         }
+        if (y < threshold) {
+            yMove = (y - threshold) / zoom;
+        } else if (y + threshold > screenSize.height()) {
+            yMove = (y + threshold - screenSize.height()) / zoom;
         }
-
-        // use the focusPoint if focus tracking is enabled
-        if (isFocusTrackingEnabled() || isTextCaretTrackingEnabled()) {
-            bool acceptFocus = true;
-            if (mouseTracking != MouseTrackingDisabled && focusDelay > 0) {
-                // Wait some time for the mouse before doing the switch. This serves as threshold
-                // to prevent the focus from jumping around to much while working with the mouse.
-                const int msecs = lastMouseEvent.msecsTo(lastFocusEvent);
-                acceptFocus = msecs > focusDelay;
-            }
-            if (acceptFocus) {
-                data.setXTranslation(-int(focusPoint.x() * (zoom - 1.0)));
-                data.setYTranslation(-int(focusPoint.y() * (zoom - 1.0)));
-                prevPoint = focusPoint;
-            }
+        if (xMove) {
+            prevPoint.setX(qMax(0, qMin(screenSize.width(), prevPoint.x() + xMove)));
         }
-
-        // Render transformed offscreen texture.
-        glClearColor(0.0, 0.0, 0.0, 0.0);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        QMatrix4x4 matrix;
-        matrix.translate(data.translation());
-        matrix.scale(data.scale());
-
-        auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
-        shader->setUniform(GLShader::ModelViewProjectionMatrix, data.projectionMatrix() * matrix);
-        for (OffscreenData *data : std::as_const(m_offscreenData)) {
-            data->texture->bind();
-            data->vbo->render(GL_TRIANGLES);
-            data->texture->unbind();
+        if (yMove) {
+            prevPoint.setY(qMax(0, qMin(screenSize.height(), prevPoint.y() + yMove)));
         }
-        ShaderManager::instance()->popShader();
+        data.setXTranslation(-int(prevPoint.x() * (zoom - 1.0)));
+        data.setYTranslation(-int(prevPoint.y() * (zoom - 1.0)));
+        break;
+    }
+    }
 
-        if (mousePointer != MousePointerHide) {
-            // Draw the mouse-texture at the position matching to zoomed-in image of the desktop. Hiding the
-            // previous mouse-cursor and drawing our own fake mouse-cursor is needed to be able to scale the
-            // mouse-cursor up and to re-position those mouse-cursor to match to the chosen zoom-level.
+    // use the focusPoint if focus tracking is enabled
+    if (isFocusTrackingEnabled() || isTextCaretTrackingEnabled()) {
+        bool acceptFocus = true;
+        if (mouseTracking != MouseTrackingDisabled && focusDelay > 0) {
+            // Wait some time for the mouse before doing the switch. This serves as threshold
+            // to prevent the focus from jumping around to much while working with the mouse.
+            const int msecs = lastMouseEvent.msecsTo(lastFocusEvent);
+            acceptFocus = msecs > focusDelay;
+        }
+        if (acceptFocus) {
+            data.setXTranslation(-int(focusPoint.x() * (zoom - 1.0)));
+            data.setYTranslation(-int(focusPoint.y() * (zoom - 1.0)));
+            prevPoint = focusPoint;
+        }
+    }
 
-            GLTexture *cursorTexture = ensureCursorTexture();
-            if (cursorTexture) {
-                const auto cursor = effects->cursorImage();
-                QSize cursorSize = cursor.image().size() / cursor.image().devicePixelRatio();
-                if (mousePointer == MousePointerScale) {
-                    cursorSize *= zoom;
-                }
+    // Render transformed offscreen texture.
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT);
 
-                const QPoint p = effects->cursorPos() - cursor.hotSpot();
-                QRect rect(p * zoom + QPoint(data.xTranslation(), data.yTranslation()), cursorSize);
+    QMatrix4x4 matrix;
+    matrix.translate(data.translation());
+    matrix.scale(data.scale());
 
-                cursorTexture->bind();
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-                auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
-                QMatrix4x4 mvp = data.projectionMatrix();
-                mvp.translate(rect.x(), rect.y());
-                s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-                cursorTexture->render(rect);
-                ShaderManager::instance()->popShader();
-                cursorTexture->unbind();
-                glDisable(GL_BLEND);
+    auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
+    shader->setUniform(GLShader::ModelViewProjectionMatrix, data.projectionMatrix() * matrix);
+    for (OffscreenData *data : std::as_const(m_offscreenData)) {
+        data->texture->bind();
+        data->vbo->render(GL_TRIANGLES);
+        data->texture->unbind();
+    }
+    ShaderManager::instance()->popShader();
+
+    if (mousePointer != MousePointerHide) {
+        // Draw the mouse-texture at the position matching to zoomed-in image of the desktop. Hiding the
+        // previous mouse-cursor and drawing our own fake mouse-cursor is needed to be able to scale the
+        // mouse-cursor up and to re-position those mouse-cursor to match to the chosen zoom-level.
+
+        GLTexture *cursorTexture = ensureCursorTexture();
+        if (cursorTexture) {
+            const auto cursor = effects->cursorImage();
+            QSize cursorSize = cursor.image().size() / cursor.image().devicePixelRatio();
+            if (mousePointer == MousePointerScale) {
+                cursorSize *= zoom;
             }
+
+            const QPoint p = effects->cursorPos() - cursor.hotSpot();
+            QRect rect(p * zoom + QPoint(data.xTranslation(), data.yTranslation()), cursorSize);
+
+            cursorTexture->bind();
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
+            QMatrix4x4 mvp = data.projectionMatrix();
+            mvp.translate(rect.x(), rect.y());
+            s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
+            cursorTexture->render(rect);
+            ShaderManager::instance()->popShader();
+            cursorTexture->unbind();
+            glDisable(GL_BLEND);
         }
     }
 }
