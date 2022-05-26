@@ -275,7 +275,7 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(EffectScreen *screen)
     }
     if (!data->texture || data->texture->size() != nativeSize) {
         data->texture.reset(new GLTexture(GL_RGBA8, nativeSize));
-        data->texture->setFilter(GL_NEAREST);
+        data->texture->setFilter(GL_LINEAR);
         data->texture->setWrapMode(GL_CLAMP_TO_EDGE);
         data->framebuffer.reset(new GLFramebuffer(data->texture.data()));
     }
