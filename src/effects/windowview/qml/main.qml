@@ -110,6 +110,12 @@ Item {
             showOnly: container.effect.mode === WindowView.ModeWindowClass ? "activeClass" : selectedIds
             layout: effect.layout
             supportsCloseWindows: true
+            onWindowClicked: {
+                if (eventPoint.event.button !== Qt.MiddleButton) {
+                    return;
+                }
+                window.closeWindow();
+            }
             model: KWinComponents.ClientFilterModel {
                 activity: KWinComponents.Workspace.currentActivity
                 desktop: container.effect.mode == WindowView.ModeCurrentDesktop ? KWinComponents.Workspace.currentVirtualDesktop : undefined

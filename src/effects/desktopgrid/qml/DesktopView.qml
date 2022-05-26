@@ -105,6 +105,16 @@ DropArea {
                     ~KWinComponents.ClientFilterModel.Notification;
         }
         onActivated: effect.deactivate(effect.animationDuration);
+        onWindowClicked: {
+            if (eventPoint.event.button !== Qt.MiddleButton) {
+                return;
+            }
+            if (window.desktop > -1) {
+                window.desktop = -1;
+            } else {
+                window.desktop = desktopView.desktop.x11DesktopNumber;
+            }
+        }
         Behavior on x {
             enabled: !dragHandler.active
             XAnimator {

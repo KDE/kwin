@@ -190,6 +190,12 @@ FocusScope {
                 organized: container.organized
                 supportsCloseWindows: true
                 supportsDragUpGesture: true
+                onWindowClicked: {
+                    if (eventPoint.event.button !== Qt.MiddleButton) {
+                        return;
+                    }
+                    window.closeWindow();
+                }
                 model: KWinComponents.ClientFilterModel {
                     activity: KWinComponents.Workspace.currentActivity
                     desktop: KWinComponents.Workspace.currentVirtualDesktop
