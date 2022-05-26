@@ -41,6 +41,8 @@ FocusScope {
     property bool dragActive: false
 
     signal activated()
+    //TODO: for 5.26 the delegate will be a separate component instead
+    signal windowClicked(QtObject window, EventPoint eventPoint)
 
     function activateIndex(index) {
         KWinComponents.Workspace.activeClient = windowsRepeater.itemAt(index).client;
@@ -327,10 +329,11 @@ FocusScope {
                 }
 
                 TapHandler {
-                    enabled: heap.supportsCloseWindows
                     acceptedPointerTypes: PointerDevice.GenericPointer | PointerDevice.Pen
-                    acceptedButtons: Qt.MiddleButton
-                    onTapped: thumb.client.closeWindow()
+                    acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
+                    onTapped: {
+                        heap.windowClicked(thumb.client, eventPoint)
+                    }
                 }
 
                 component DragManager : DragHandler {
