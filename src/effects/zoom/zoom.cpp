@@ -429,11 +429,15 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &d
 
 void ZoomEffect::postPaintScreen()
 {
-    if (zoom != target_zoom) {
-        effects->addRepaintFull();
-    } else {
+    if (zoom == target_zoom) {
         lastPresentTime = std::chrono::milliseconds::zero();
     }
+
+    if (zoom == 1.0 || zoom != target_zoom) {
+        // Either animation is running or the zoom effect has stopped.
+        effects->addRepaintFull();
+    }
+
     effects->postPaintScreen();
 }
 
