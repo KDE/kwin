@@ -86,7 +86,6 @@ private:
         EffectWindowVisibleRef visibleRef;
         AnimationKind kind;
         TimeLine timeLine;
-        std::chrono::milliseconds lastPresentTime = std::chrono::milliseconds::zero();
     };
     QHash<EffectWindow *, Animation> m_animations;
 

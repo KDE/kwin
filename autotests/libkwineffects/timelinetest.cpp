@@ -48,26 +48,27 @@ void TimeLineTest::testUpdateForward()
     timeLine.setEasingCurve(QEasingCurve::Linear);
 
     // 0/1000
+    timeLine.advance(0ms);
     QCOMPARE(timeLine.value(), 0.0);
     QVERIFY(!timeLine.done());
 
     // 100/1000
-    timeLine.update(100ms);
+    timeLine.advance(100ms);
     QCOMPARE(timeLine.value(), 0.1);
     QVERIFY(!timeLine.done());
 
     // 400/1000
-    timeLine.update(300ms);
+    timeLine.advance(400ms);
     QCOMPARE(timeLine.value(), 0.4);
     QVERIFY(!timeLine.done());
 
     // 900/1000
-    timeLine.update(500ms);
+    timeLine.advance(900ms);
     QCOMPARE(timeLine.value(), 0.9);
     QVERIFY(!timeLine.done());
 
     // 1000/1000
-    timeLine.update(3000ms);
+    timeLine.advance(3000ms);
     QCOMPARE(timeLine.value(), 1.0);
     QVERIFY(timeLine.done());
 }
@@ -78,26 +79,27 @@ void TimeLineTest::testUpdateBackward()
     timeLine.setEasingCurve(QEasingCurve::Linear);
 
     // 0/1000
+    timeLine.advance(0ms);
     QCOMPARE(timeLine.value(), 1.0);
     QVERIFY(!timeLine.done());
 
     // 100/1000
-    timeLine.update(100ms);
+    timeLine.advance(100ms);
     QCOMPARE(timeLine.value(), 0.9);
     QVERIFY(!timeLine.done());
 
     // 400/1000
-    timeLine.update(300ms);
+    timeLine.advance(400ms);
     QCOMPARE(timeLine.value(), 0.6);
     QVERIFY(!timeLine.done());
 
     // 900/1000
-    timeLine.update(500ms);
+    timeLine.advance(900ms);
     QCOMPARE(timeLine.value(), 0.1);
     QVERIFY(!timeLine.done());
 
     // 1000/1000
-    timeLine.update(3000ms);
+    timeLine.advance(3000ms);
     QCOMPARE(timeLine.value(), 0.0);
     QVERIFY(timeLine.done());
 }
@@ -105,13 +107,14 @@ void TimeLineTest::testUpdateBackward()
 void TimeLineTest::testUpdateFinished()
 {
     KWin::TimeLine timeLine(1000ms, KWin::TimeLine::Forward);
+    timeLine.advance(0ms);
     timeLine.setEasingCurve(QEasingCurve::Linear);
 
-    timeLine.update(1000ms);
+    timeLine.advance(1000ms);
     QCOMPARE(timeLine.value(), 1.0);
     QVERIFY(timeLine.done());
 
-    timeLine.update(42ms);
+    timeLine.advance(1042ms);
     QCOMPARE(timeLine.value(), 1.0);
     QVERIFY(timeLine.done());
 }
@@ -121,10 +124,11 @@ void TimeLineTest::testToggleDirection()
     KWin::TimeLine timeLine(1000ms, KWin::TimeLine::Forward);
     timeLine.setEasingCurve(QEasingCurve::Linear);
 
+    timeLine.advance(0ms);
     QCOMPARE(timeLine.value(), 0.0);
     QVERIFY(!timeLine.done());
 
-    timeLine.update(600ms);
+    timeLine.advance(600ms);
     QCOMPARE(timeLine.value(), 0.6);
     QVERIFY(!timeLine.done());
 
@@ -132,11 +136,11 @@ void TimeLineTest::testToggleDirection()
     QCOMPARE(timeLine.value(), 0.6);
     QVERIFY(!timeLine.done());
 
-    timeLine.update(200ms);
+    timeLine.advance(800ms);
     QCOMPARE(timeLine.value(), 0.4);
     QVERIFY(!timeLine.done());
 
-    timeLine.update(3000ms);
+    timeLine.advance(3000ms);
     QCOMPARE(timeLine.value(), 0.0);
     QVERIFY(timeLine.done());
 }
@@ -145,8 +149,9 @@ void TimeLineTest::testReset()
 {
     KWin::TimeLine timeLine(1000ms, KWin::TimeLine::Forward);
     timeLine.setEasingCurve(QEasingCurve::Linear);
+    timeLine.advance(0ms);
 
-    timeLine.update(1000ms);
+    timeLine.advance(1000ms);
     QCOMPARE(timeLine.value(), 1.0);
     QVERIFY(timeLine.done());
 
@@ -181,9 +186,10 @@ void TimeLineTest::testSetElapsed()
 
     KWin::TimeLine timeLine(duration, KWin::TimeLine::Forward);
     timeLine.setEasingCurve(QEasingCurve::Linear);
+    timeLine.advance(0ms);
 
     if (initiallyDone) {
-        timeLine.update(duration);
+        timeLine.advance(duration);
         QVERIFY(timeLine.done());
     }
 
@@ -207,8 +213,9 @@ void TimeLineTest::testSetDurationRetargeting()
 {
     KWin::TimeLine timeLine(1000ms, KWin::TimeLine::Forward);
     timeLine.setEasingCurve(QEasingCurve::Linear);
+    timeLine.advance(0ms);
 
-    timeLine.update(500ms);
+    timeLine.advance(500ms);
     QCOMPARE(timeLine.value(), 0.5);
     QVERIFY(!timeLine.done());
 
@@ -221,8 +228,9 @@ void TimeLineTest::testSetDurationRetargetingSmallDuration()
 {
     KWin::TimeLine timeLine(1000ms, KWin::TimeLine::Forward);
     timeLine.setEasingCurve(QEasingCurve::Linear);
+    timeLine.advance(0ms);
 
-    timeLine.update(999ms);
+    timeLine.advance(999ms);
     QCOMPARE(timeLine.value(), 0.999);
     QVERIFY(!timeLine.done());
 
@@ -235,15 +243,16 @@ void TimeLineTest::testRunning()
 {
     KWin::TimeLine timeLine(1000ms, KWin::TimeLine::Forward);
     timeLine.setEasingCurve(QEasingCurve::Linear);
+    timeLine.advance(0ms);
 
     QVERIFY(!timeLine.running());
     QVERIFY(!timeLine.done());
 
-    timeLine.update(100ms);
+    timeLine.advance(100ms);
     QVERIFY(timeLine.running());
     QVERIFY(!timeLine.done());
 
-    timeLine.update(900ms);
+    timeLine.advance(1000ms);
     QVERIFY(!timeLine.running());
     QVERIFY(timeLine.done());
 }
@@ -333,6 +342,7 @@ void TimeLineTest::testStrictRedirectTargetMode()
     KWin::TimeLine timeLine(1000ms, initialDirection);
     timeLine.setEasingCurve(QEasingCurve::Linear);
     timeLine.setTargetRedirectMode(KWin::TimeLine::RedirectMode::Strict);
+    timeLine.advance(0ms);
 
     QTEST(timeLine.direction(), "initialDirection");
     QTEST(timeLine.value(), "initialValue");
@@ -340,7 +350,7 @@ void TimeLineTest::testStrictRedirectTargetMode()
     QVERIFY(!timeLine.running());
     QVERIFY(!timeLine.done());
 
-    timeLine.update(1000ms);
+    timeLine.advance(1000ms);
     QTEST(timeLine.value(), "finalValue");
     QVERIFY(!timeLine.running());
     QVERIFY(timeLine.done());
@@ -371,6 +381,7 @@ void TimeLineTest::testRelaxedRedirectTargetMode()
     KWin::TimeLine timeLine(1000ms, initialDirection);
     timeLine.setEasingCurve(QEasingCurve::Linear);
     timeLine.setTargetRedirectMode(KWin::TimeLine::RedirectMode::Relaxed);
+    timeLine.advance(0ms);
 
     QTEST(timeLine.direction(), "initialDirection");
     QTEST(timeLine.value(), "initialValue");
@@ -378,20 +389,21 @@ void TimeLineTest::testRelaxedRedirectTargetMode()
     QVERIFY(!timeLine.running());
     QVERIFY(!timeLine.done());
 
-    timeLine.update(1000ms);
+    timeLine.advance(1000ms);
     QTEST(timeLine.value(), "finalValue");
     QVERIFY(!timeLine.running());
     QVERIFY(timeLine.done());
 
     QFETCH(KWin::TimeLine::Direction, finalDirection);
     timeLine.setDirection(finalDirection);
+    timeLine.advance(1000ms);
 
     QTEST(timeLine.direction(), "finalDirection");
     QTEST(timeLine.value(), "finalValue");
     QVERIFY(!timeLine.running());
     QVERIFY(!timeLine.done());
 
-    timeLine.update(1000ms);
+    timeLine.advance(2000ms);
     QTEST(timeLine.direction(), "finalDirection");
     QTEST(timeLine.value(), "initialValue");
     QVERIFY(!timeLine.running());

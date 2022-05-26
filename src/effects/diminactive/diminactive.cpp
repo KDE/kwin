@@ -84,19 +84,13 @@ void DimInactiveEffect::reconfigure(ReconfigureFlags flags)
 
 void DimInactiveEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
-    std::chrono::milliseconds delta(0);
-    if (m_lastPresentTime.count()) {
-        delta = presentTime - m_lastPresentTime;
-    }
-    m_lastPresentTime = presentTime;
-
     if (m_fullScreenTransition.active) {
-        m_fullScreenTransition.timeLine.update(delta);
+        m_fullScreenTransition.timeLine.advance(presentTime);
     }
 
     auto transitionIt = m_transitions.begin();
     while (transitionIt != m_transitions.end()) {
-        (*transitionIt).update(delta);
+        (*transitionIt).advance(presentTime);
         ++transitionIt;
     }
 
@@ -146,10 +140,6 @@ void DimInactiveEffect::postPaintScreen()
             ++transitionIt;
         }
         w->addRepaintFull();
-    }
-
-    if (m_transitions.isEmpty() && !m_fullScreenTransition.active) {
-        m_lastPresentTime = std::chrono::milliseconds::zero();
     }
 
     effects->postPaintScreen();

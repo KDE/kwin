@@ -87,7 +87,6 @@ bool BlendChanges::isActive() const
 void BlendChanges::postPaintScreen()
 {
     if (m_timeline.done()) {
-        m_lastPresentTime = std::chrono::milliseconds::zero();
         m_timeline.reset();
         m_state = Off;
 
@@ -105,12 +104,7 @@ void BlendChanges::prePaintScreen(ScreenPrePaintData &data, std::chrono::millise
         return;
     }
     if (m_state == Blending) {
-        std::chrono::milliseconds delta(0);
-        if (m_lastPresentTime.count()) {
-            delta = presentTime - m_lastPresentTime;
-        }
-        m_lastPresentTime = presentTime;
-        m_timeline.update(delta);
+        m_timeline.advance(presentTime);
     }
 
     effects->prePaintScreen(data, presentTime);

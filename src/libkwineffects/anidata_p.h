@@ -79,7 +79,6 @@ public:
     EffectWindowVisibleRef visibleRef;
     PreviousWindowPixmapLockPtr previousWindowPixmapLock;
     AnimationEffect::TerminationFlags terminationFlags;
-    std::chrono::milliseconds lastPresentTime;
     GLShader *shader{nullptr};
 };
 

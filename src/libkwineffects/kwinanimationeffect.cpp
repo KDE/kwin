@@ -439,10 +439,9 @@ void AnimationEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
     for (auto entry = d->m_animations.begin(); entry != d->m_animations.end(); ++entry) {
         for (auto anim = entry->first.begin(); anim != entry->first.end(); ++anim) {
             if (anim->startTime <= clock()) {
-                if (anim->lastPresentTime.count() && anim->frozenTime < 0) {
-                    anim->timeLine.update(presentTime - anim->lastPresentTime);
+                if (anim->frozenTime < 0) {
+                    anim->timeLine.advance(presentTime);
                 }
-                anim->lastPresentTime = presentTime;
             }
         }
     }

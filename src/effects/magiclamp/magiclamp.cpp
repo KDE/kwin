@@ -46,13 +46,7 @@ void MagicLampEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
 {
     auto animationIt = m_animations.begin();
     while (animationIt != m_animations.end()) {
-        std::chrono::milliseconds delta = std::chrono::milliseconds::zero();
-        if (animationIt->lastPresentTime.count()) {
-            delta = presentTime - animationIt->lastPresentTime;
-        }
-        animationIt->lastPresentTime = presentTime;
-
-        (*animationIt).timeLine.update(delta);
+        (*animationIt).timeLine.advance(presentTime);
         ++animationIt;
     }
 

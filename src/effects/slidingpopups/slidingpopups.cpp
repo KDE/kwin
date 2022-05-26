@@ -123,13 +123,7 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &da
         return;
     }
 
-    std::chrono::milliseconds delta = std::chrono::milliseconds::zero();
-    if (animationIt->lastPresentTime.count()) {
-        delta = presentTime - animationIt->lastPresentTime;
-    }
-    animationIt->lastPresentTime = presentTime;
-
-    (*animationIt).timeLine.update(delta);
+    (*animationIt).timeLine.advance(presentTime);
     data.setTransformed();
 
     effects->prePaintWindow(w, data, presentTime);

@@ -54,7 +54,6 @@ AniData::AniData()
     , frozenTime(-1)
     , waitAtSource(false)
     , keepAlive(true)
-    , lastPresentTime(std::chrono::milliseconds::zero())
 {
 }
 
@@ -72,7 +71,6 @@ AniData::AniData(AnimationEffect::Attribute a, int meta_, const FPx2 &to_,
     , waitAtSource(waitAtSource_)
     , keepAlive(keepAlive)
     , previousWindowPixmapLock(std::move(previousWindowPixmapLock_))
-    , lastPresentTime(std::chrono::milliseconds::zero())
     , shader(shader)
 {
 }

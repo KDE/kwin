@@ -49,7 +49,6 @@ private:
     struct ScreenState
     {
         TimeLine m_timeLine;
-        std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
         FadeOutState m_state = StateNormal;
     };
 

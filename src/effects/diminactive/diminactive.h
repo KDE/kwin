@@ -77,7 +77,6 @@ private:
     const EffectWindowGroup *m_activeWindowGroup;
     QHash<EffectWindow *, TimeLine> m_transitions;
     QHash<EffectWindow *, qreal> m_forceDim;
-    std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
 
     struct
     {
