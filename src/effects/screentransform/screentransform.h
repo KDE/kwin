@@ -48,7 +48,6 @@ private:
 
         TimeLine m_timeLine;
         QSharedPointer<GLTexture> m_texture;
-        std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
         EffectScreen::Transform m_oldTransform;
         qreal m_angle = 0;
         bool m_captured = false;

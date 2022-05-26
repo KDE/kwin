@@ -41,7 +41,6 @@ public Q_SLOTS:
 
 private:
     TimeLine m_timeline;
-    std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
     enum State {
         Off,
         ShowingCache,

@@ -95,24 +95,15 @@ void KscreenEffect::reconfigure(ReconfigureFlags flags)
 void KscreenEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     if (isScreenActive(data.screen)) {
-        std::chrono::milliseconds delta = std::chrono::milliseconds::zero();
         auto &state = !effects->waylandDisplay() ? m_xcbState : m_waylandStates[data.screen];
         m_currentScreen = data.screen;
-        if (state.m_lastPresentTime.count()) {
-            delta = presentTime - state.m_lastPresentTime;
-        }
 
         if (state.m_state == StateFadingIn || state.m_state == StateFadingOut) {
-            state.m_timeLine.update(delta);
+            state.m_timeLine.advance(presentTime);
             if (state.m_timeLine.done()) {
                 switchState(state);
                 m_waylandStates.remove(data.screen);
             }
-        }
-        if (isActive()) {
-            state.m_lastPresentTime = presentTime;
-        } else {
-            state.m_lastPresentTime = std::chrono::milliseconds::zero();
         }
     }
 
@@ -177,7 +168,6 @@ void KscreenEffect::setState(ScreenState &state, FadeOutState newState)
 
     state.m_state = newState;
     state.m_timeLine.reset();
-    state.m_lastPresentTime = std::chrono::milliseconds::zero();
     effects->addRepaintFull();
 }
 

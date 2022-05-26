@@ -19,7 +19,6 @@ struct MagicLampAnimation
 {
     EffectWindowVisibleRef visibleRef;
     TimeLine timeLine;
-    std::chrono::milliseconds lastPresentTime = std::chrono::milliseconds::zero();
 };
 
 class MagicLampEffect : public DeformEffect
