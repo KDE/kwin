@@ -63,6 +63,7 @@ private Q_SLOTS:
     void testAdjustClientGeometryOfAutohidingX11Panel();
     void testAdjustClientGeometryOfAutohidingWaylandPanel_data();
     void testAdjustClientGeometryOfAutohidingWaylandPanel();
+    void testResizeForVirtualKeyboard_data();
     void testResizeForVirtualKeyboard();
     void testResizeForVirtualKeyboardWithMaximize();
     void testResizeForVirtualKeyboardWithFullScreen();
@@ -872,6 +873,19 @@ void MoveResizeWindowTest::testAdjustClientGeometryOfAutohidingWaylandPanel()
     QVERIFY(windowClosedSpy.wait());
 }
 
+void MoveResizeWindowTest::testResizeForVirtualKeyboard_data()
+{
+    QTest::addColumn<QRect>("windowRect");
+    QTest::addColumn<QRect>("keyboardRect");
+    QTest::addColumn<QRect>("resizedWindowRect");
+
+    QTest::newRow("standard") << QRect(100, 300, 500, 800) << QRect(0, 100, 1280, 500) << QRect(100, 0, 500, 100);
+    QTest::newRow("same size") << QRect(100, 300, 500, 500) << QRect(0, 600, 1280, 400) << QRect(100, 100, 500, 500);
+    QTest::newRow("smaller width") << QRect(100, 300, 500, 800) << QRect(300, 100, 100, 500) << QRect(100, 0, 500, 100);
+    QTest::newRow("no height change") << QRect(100, 300, 500, 500) << QRect(0, 900, 1280, 124) << QRect(100, 300, 500, 500);
+    QTest::newRow("no width change") << QRect(100, 300, 500, 500) << QRect(0, 400, 100, 500) << QRect(100, 300, 500, 500);
+}
+
 void MoveResizeWindowTest::testResizeForVirtualKeyboard()
 {
     using namespace KWayland::Client;
@@ -882,8 +896,22 @@ void MoveResizeWindowTest::testResizeForVirtualKeyboard()
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
 
+    QFETCH(QRect, windowRect);
+    QFETCH(QRect, keyboardRect);
+    QFETCH(QRect, resizedWindowRect);
+
+    // There are three things that may happen when the virtual keyboard geometry
+    // is set: We move the window to the top and resize it, we move the window
+    // but don't change its size (if the window is already small enough) or we
+    // do not change anything because the virtual keyboard does not overlap the
+    // window. We should verify that, for the first, we get both a position and
+    // a size change, for the second we only get a position change and for the
+    // last we get no changes.
+    bool sizeChange = windowRect.size() != resizedWindowRect.size();
+    bool positionChange = windowRect.topLeft() != resizedWindowRect.topLeft();
+
     // let's render
-    auto window = Test::renderAndWaitForShown(surface.data(), QSize(500, 800), Qt::blue);
+    auto window = Test::renderAndWaitForShown(surface.data(), windowRect.size(), Qt::blue);
     QVERIFY(window);
 
     // The client should receive a configure event upon becoming active.
@@ -892,29 +920,48 @@ void MoveResizeWindowTest::testResizeForVirtualKeyboard()
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.isValid());
     QVERIFY(surfaceConfigureRequestedSpy.wait());
+    surfaceConfigureRequestedSpy.clear();
 
-    window->move(QPoint(100, 300));
+    window->move(windowRect.topLeft());
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
 
-    QCOMPARE(window->frameGeometry(), QRect(100, 300, 500, 800));
-    window->setVirtualKeyboardGeometry(QRect(0, 100, 1280, 500));
-    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(window->frameGeometry(), windowRect);
+    window->setVirtualKeyboardGeometry(keyboardRect);
 
-    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last()[0].toInt());
+    if (sizeChange) {
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+        shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last()[0].toInt());
+    } else {
+        QVERIFY(surfaceConfigureRequestedSpy.count() == 0);
+    }
     // render at the new size
     Test::render(surface.data(), toplevelConfigureRequestedSpy.last().first().toSize(), Qt::blue);
-    QVERIFY(frameGeometryChangedSpy.wait());
 
-    QCOMPARE(window->frameGeometry(), QRect(100, 0, 500, 100));
+    if (positionChange || sizeChange) {
+        QVERIFY(frameGeometryChangedSpy.count() > 0 || frameGeometryChangedSpy.wait());
+        frameGeometryChangedSpy.clear();
+    } else {
+        QVERIFY(frameGeometryChangedSpy.count() == 0);
+    }
+
+    QCOMPARE(window->frameGeometry(), resizedWindowRect);
     window->setVirtualKeyboardGeometry(QRect());
-    QVERIFY(surfaceConfigureRequestedSpy.wait());
 
-    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last()[0].toInt());
+    if (sizeChange) {
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+        shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last()[0].toInt());
+    }
     // render at the new size
     Test::render(surface.data(), toplevelConfigureRequestedSpy.last().first().toSize(), Qt::blue);
-    QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->frameGeometry(), QRect(100, 300, 500, 800));
+
+    if (positionChange || sizeChange) {
+        QVERIFY(frameGeometryChangedSpy.count() > 0 || frameGeometryChangedSpy.wait());
+    } else {
+        QVERIFY(frameGeometryChangedSpy.count() == 0);
+    }
+
+    QCOMPARE(window->frameGeometry(), windowRect);
 }
 
 void MoveResizeWindowTest::testResizeForVirtualKeyboardWithMaximize()
