@@ -3256,6 +3256,11 @@ void InputRedirection::registerTouchscreenSwipeShortcut(SwipeDirection direction
     m_shortcuts->registerTouchscreenSwipe(action, progressCallback, direction, fingerCount);
 }
 
+void InputRedirection::forceRegisterTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
+{
+    m_shortcuts->forceRegisterTouchscreenSwipe(action, progressCallback, direction, fingerCount);
+}
+
 void InputRedirection::warpPointer(const QPointF &pos)
 {
     m_pointer->warp(pos);
