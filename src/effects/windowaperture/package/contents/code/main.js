@@ -43,8 +43,16 @@ var badBadWindowsEffect = {
                 }
 
                 // ignore invisible windows and such that do not have to be restored
-                if (!w.visible)
+                if (!w.visible) {
+                    if (w.offToCornerId) {
+                        // if it was visible when the effect was activated delete its animation data
+                        effects.setElevatedWindow(w, false);
+                        cancel(w.offToCornerId);
+                        delete w.offToCornerId;
+                        delete w.apertureCorner;
+                    }
                     continue;
+                }
 
                 // Don't touch docks
                 if (w.dock) {
@@ -159,28 +167,37 @@ var badBadWindowsEffect = {
                     });
                 }
             } else {
-                if (!w.offToCornerId || !redirect(w.offToCornerId, Effect.Backward) || !freezeInTime(w.offToCornerId, frozenTime)) {
+                // Reset if the window has become invisible in the meantime
+                if (!w.visible) {
                     cancel(w.offToCornerId);
                     delete w.offToCornerId;
                     delete w.apertureCorner;
-                    if (w.visible) { // could meanwhile have been hidden
-                        animate({
-                            window: w,
-                            duration: badBadWindowsEffect.duration,
-                            curve: QEasingCurve.InOutCubic,
-                            animations: [{
-                                type: Effect.Position,
-                                sourceAnchor: anchor,
-                                gesture: true,
-                                from: { value1: tx, value2: ty }
-                            },{
-                                type: Effect.Opacity,
-                                from: 0.0
-                            }]
-                        });
-                    }
+                // This if the window was invisible and has become visible in the meantime
+                } else if (!w.offToCornerId || !redirect(w.offToCornerId, Effect.Backward) || !freezeInTime(w.offToCornerId, frozenTime)) {
+                    animate({
+                        window: w,
+                        duration: badBadWindowsEffect.duration,
+                        curve: QEasingCurve.InOutCubic,
+                        animations: [{
+                            type: Effect.Position,
+                            sourceAnchor: anchor,
+                            gesture: true,
+                            from: { value1: tx, value2: ty }
+                        },{
+                            type: Effect.Opacity,
+                            from: 0.0
+                        }]
+                    });
                 }
             }
+        }
+    },
+    animationEnded: function (w, a, meta) {
+        // After the animation that closes the effect, reset all the parameters
+        if (!badBadWindowsEffect.showingDesktop) {
+            cancel(w.offToCornerId);
+            delete w.offToCornerId;
+            delete w.apertureCorner;
         }
     },
     realtimeScreenEdgeCallback: function (border, deltaProgress, effectScreen) {
@@ -212,6 +229,7 @@ var badBadWindowsEffect = {
         badBadWindowsEffect.loadConfig();
         effects.showingDesktopChanged.connect(badBadWindowsEffect.setShowingDesktop);
         effects.showingDesktopChanged.connect(badBadWindowsEffect.offToCorners);
+        effect.animationEnded.connect(badBadWindowsEffect.animationEnded);
 
         let edges = effect.touchEdgesForAction("show-desktop");
 
