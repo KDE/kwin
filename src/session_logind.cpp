@@ -174,13 +174,14 @@ int LogindSession::openRestricted(const QString &fileName)
 
     const QDBusMessage reply = QDBusConnection::systemBus().call(message);
     if (reply.type() == QDBusMessage::ErrorMessage) {
-        qCDebug(KWIN_CORE, "Failed to open %s device (%s)",
-                qPrintable(fileName), qPrintable(reply.errorMessage()));
+        qCWarning(KWIN_CORE, "Failed to open %s device (%s)",
+                  qPrintable(fileName), qPrintable(reply.errorMessage()));
         return -1;
     }
 
     const QDBusUnixFileDescriptor descriptor = reply.arguments().constFirst().value<QDBusUnixFileDescriptor>();
     if (!descriptor.isValid()) {
+        qCWarning(KWIN_CORE, "File descriptor for %s from logind is invalid", qPrintable(fileName));
         return -1;
     }
 
