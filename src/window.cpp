@@ -3264,8 +3264,9 @@ void Window::setVirtualKeyboardGeometry(const QRect &geo)
 
     const QRect availableArea = workspace()->clientArea(MaximizeArea, this);
     QRect newWindowGeometry = (maximizeMode() & MaximizeHorizontal) ? availableArea : m_keyboardGeometryRestore;
-    newWindowGeometry.moveBottom(geo.top());
-    newWindowGeometry.setTop(qMax(newWindowGeometry.top(), availableArea.top()));
+    newWindowGeometry.setHeight(std::min(newWindowGeometry.height(), geo.top() - availableArea.top()));
+    newWindowGeometry.moveTop(std::max(geo.top() - newWindowGeometry.height(), availableArea.top()));
+    newWindowGeometry = newWindowGeometry.intersected(availableArea);
 
     moveResize(newWindowGeometry);
 }
