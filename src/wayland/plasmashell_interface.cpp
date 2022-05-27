@@ -183,6 +183,9 @@ void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_role(Resourc
     case role_criticalnotification:
         r = PlasmaShellSurfaceInterface::Role::CriticalNotification;
         break;
+    case role_appletpopup:
+        r = PlasmaShellSurfaceInterface::Role::AppletPopup;
+        break;
     case role_normal:
     default:
         r = PlasmaShellSurfaceInterface::Role::Normal;

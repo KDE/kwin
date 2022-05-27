@@ -58,7 +58,8 @@ function isPopupWindow(window) {
     // was doing that.
     if (window.dock || window.splash || window.toolbar
             || window.notification || window.onScreenDisplay
-            || window.criticalNotification) {
+            || window.criticalNotification
+            || window.appletPopup) {
         return true;
     }
 

@@ -437,6 +437,7 @@ public:
     bool isTooltip() const override;
     bool isNotification() const override;
     bool isCriticalNotification() const override;
+    bool isAppletPopup() const override;
     bool isOnScreenDisplay() const override;
     bool isComboBox() const override;
     bool isDNDIcon() const override;

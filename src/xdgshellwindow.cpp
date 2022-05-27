@@ -470,6 +470,9 @@ void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
         case PlasmaShellSurfaceInterface::Role::CriticalNotification:
             type = NET::CriticalNotification;
             break;
+        case PlasmaShellSurfaceInterface::Role::AppletPopup:
+            type = NET::AppletPopup;
+            break;
         case PlasmaShellSurfaceInterface::Role::Normal:
         default:
             type = NET::Normal;
@@ -649,7 +652,7 @@ bool XdgToplevelWindow::isMovable() const
     if (isRequestedFullScreen()) {
         return false;
     }
-    if (isSpecialWindow() && !isSplash() && !isToolbar()) {
+    if (isSpecialWindow() && !isSplash() && !isToolbar() && !isAppletPopup()) {
         return false;
     }
     if (rules()->checkPosition(invalidPoint) != invalidPoint) {
@@ -1058,8 +1061,13 @@ bool XdgToplevelWindow::acceptsFocus() const
         if (m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::OnScreenDisplay || m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::ToolTip) {
             return false;
         }
-        if (m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::Notification || m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::CriticalNotification) {
+        switch (m_plasmaShellSurface->role()) {
+        case PlasmaShellSurfaceInterface::Role::Notification:
+        case PlasmaShellSurfaceInterface::Role::CriticalNotification:
+        case PlasmaShellSurfaceInterface::Role::AppletPopup:
             return m_plasmaShellSurface->panelTakesFocus();
+        default:
+            break;
         }
     }
     return !isZombie() && readyForPainting();

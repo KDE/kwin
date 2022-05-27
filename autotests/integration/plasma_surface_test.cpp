@@ -94,6 +94,7 @@ void PlasmaSurfaceTest::testRoleOnAllDesktops_data()
     QTest::newRow("Notification") << KWayland::Client::PlasmaShellSurface::Role::Notification << true;
     QTest::newRow("ToolTip") << KWayland::Client::PlasmaShellSurface::Role::ToolTip << true;
     QTest::newRow("CriticalNotification") << KWayland::Client::PlasmaShellSurface::Role::CriticalNotification << true;
+    QTest::newRow("AppletPopup") << KWayland::Client::PlasmaShellSurface::Role::AppletPopup << true;
 }
 
 void PlasmaSurfaceTest::testRoleOnAllDesktops()
@@ -152,6 +153,7 @@ void PlasmaSurfaceTest::testAcceptsFocus_data()
     QTest::newRow("Notification") << KWayland::Client::PlasmaShellSurface::Role::Notification << false << false;
     QTest::newRow("ToolTip") << KWayland::Client::PlasmaShellSurface::Role::ToolTip << false << false;
     QTest::newRow("CriticalNotification") << KWayland::Client::PlasmaShellSurface::Role::CriticalNotification << false << false;
+    QTest::newRow("AppletPopup") << KWayland::Client::PlasmaShellSurface::Role::AppletPopup << true << true;
 }
 
 void PlasmaSurfaceTest::testAcceptsFocus()

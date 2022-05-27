@@ -2542,6 +2542,10 @@ public:
      */
     virtual bool isCriticalNotification() const = 0;
     /**
+     * Returns whether the window is a window used for applet popups. 
+     */
+    virtual bool isAppletPopup() const = 0;
+    /**
      * Returns whether the window is an on screen display window
      * using the non-standard _KDE_NET_WM_WINDOW_TYPE_ON_SCREEN_DISPLAY
      */

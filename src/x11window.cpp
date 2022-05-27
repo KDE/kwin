@@ -86,7 +86,8 @@ const NET::WindowTypes SUPPORTED_MANAGED_WINDOW_TYPES_MASK = NET::NormalMask
     | NET::SplashMask
     | NET::NotificationMask
     | NET::OnScreenDisplayMask
-    | NET::CriticalNotificationMask;
+    | NET::CriticalNotificationMask
+    | NET::AppletPopupMask;
 
 X11DecorationRenderer::X11DecorationRenderer(Decoration::DecoratedClientImpl *client)
     : DecorationRenderer(client)
@@ -1205,6 +1206,7 @@ void X11Window::detectNoBorder()
     case NET::Notification:
     case NET::OnScreenDisplay:
     case NET::CriticalNotification:
+    case NET::AppletPopup:
         noborder = true;
         app_noborder = true;
         break;
@@ -1442,6 +1444,9 @@ void X11Window::finishCompositing(ReleaseReason releaseReason)
 bool X11Window::isMinimizable() const
 {
     if (isSpecialWindow() && !isTransient()) {
+        return false;
+    }
+    if (isAppletPopup()) {
         return false;
     }
     if (!rules()->checkMinimize(true)) {
@@ -4109,6 +4114,9 @@ bool X11Window::isMaximizable() const
     if (!isResizable() || isToolbar()) { // SELI isToolbar() ?
         return false;
     }
+    if (isAppletPopup()) {
+        return false;
+    }
     if (rules()->checkMaximize(MaximizeRestore) == MaximizeRestore && rules()->checkMaximize(MaximizeFull) != MaximizeRestore) {
         return true;
     }
@@ -4245,6 +4253,9 @@ void X11Window::changeMaximize(bool horizontal, bool vertical, bool adjust)
     }
 
     if (!isResizable() || isToolbar()) { // SELI isToolbar() ?
+        return;
+    }
+    if (!isMaximizable()) {
         return;
     }
 

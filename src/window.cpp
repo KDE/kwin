@@ -922,7 +922,7 @@ Layer Window::belongsToLayer() const
     if (isSplash()) { // no damn annoying splashscreens
         return NormalLayer; // getting in the way of everything else
     }
-    if (isDock()) {
+    if (isDock() || isAppletPopup()) {
         if (workspace()->showingDesktop()) {
             return NotificationLayer;
         }
@@ -1046,7 +1046,7 @@ bool Window::isMostRecentlyRaised() const
 
 bool Window::wantsTabFocus() const
 {
-    return (isNormalWindow() || isDialog()) && wantsInput();
+    return (isNormalWindow() || isDialog() || isAppletPopup()) && wantsInput();
 }
 
 bool Window::isSpecialWindow() const
@@ -3757,6 +3757,9 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
 {
     // Only allow quick tile on a regular window.
     if (!isResizable()) {
+        return;
+    }
+    if (isAppletPopup()) {
         return;
     }
 

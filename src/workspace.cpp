@@ -2479,7 +2479,7 @@ QPoint Workspace::adjustWindowPosition(Window *window, QPoint pos, bool unrestri
                 if (!(*l)->isOnCurrentActivity()) {
                     continue; // wrong activity
                 }
-                if ((*l)->isDesktop() || (*l)->isSplash() || (*l)->isNotification() || (*l)->isCriticalNotification() || (*l)->isOnScreenDisplay()) {
+                if ((*l)->isDesktop() || (*l)->isSplash() || (*l)->isNotification() || (*l)->isCriticalNotification() || (*l)->isOnScreenDisplay() || (*l)->isAppletPopup()) {
                     continue;
                 }
 

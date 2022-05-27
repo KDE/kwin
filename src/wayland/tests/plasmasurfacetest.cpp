@@ -155,6 +155,8 @@ int main(int argc, char **argv)
     parser.addOption(notificationOption);
     QCommandLineOption criticalNotificationOption(QStringLiteral("criticalNotification"));
     parser.addOption(criticalNotificationOption);
+    QCommandLineOption appletPopupOption(QStringLiteral("appletPopup"));
+    parser.addOption(appletPopupOption);
     QCommandLineOption panelOption(QStringLiteral("panel"));
     parser.addOption(panelOption);
     QCommandLineOption desktopOption(QStringLiteral("desktop"));
@@ -176,6 +178,8 @@ int main(int argc, char **argv)
         client.setRole(PlasmaShellSurface::Role::Notification);
     } else if (parser.isSet(criticalNotificationOption)) {
         client.setRole(PlasmaShellSurface::Role::CriticalNotification);
+    } else if (parser.isSet(appletPopupOption)) {
+        client.setRole(PlasmaShellSurface::Role::AppletPopup);
     } else if (parser.isSet(panelOption)) {
         client.setRole(PlasmaShellSurface::Role::Panel);
     } else if (parser.isSet(desktopOption)) {

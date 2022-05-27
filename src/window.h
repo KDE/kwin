@@ -212,6 +212,11 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(bool criticalNotification READ isCriticalNotification)
 
     /**
+     * Returns whether the window is an applet popup.
+     */
+    Q_PROPERTY(bool appletPopup READ isAppletPopup)
+
+    /**
      * Returns whether the window is an On Screen Display.
      */
     Q_PROPERTY(bool onScreenDisplay READ isOnScreenDisplay)
@@ -672,6 +677,7 @@ public:
     bool isTooltip() const;
     bool isNotification() const;
     bool isCriticalNotification() const;
+    bool isAppletPopup() const;
     bool isOnScreenDisplay() const;
     bool isComboBox() const;
     bool isDNDIcon() const;
@@ -2144,6 +2150,11 @@ inline bool Window::isNotification() const
 inline bool Window::isCriticalNotification() const
 {
     return windowType() == NET::CriticalNotification;
+}
+
+inline bool Window::isAppletPopup() const
+{
+    return windowType() == NET::AppletPopup;
 }
 
 inline bool Window::isOnScreenDisplay() const

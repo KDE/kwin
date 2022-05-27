@@ -1157,6 +1157,8 @@ QVariant DebugConsoleModel::propertyData(QObject *object, const QModelIndex &ind
                 return QStringLiteral("NET::OnScreenDisplay");
             case NET::CriticalNotification:
                 return QStringLiteral("NET::CriticalNotification");
+            case NET::AppletPopup:
+                return QStringLiteral("NET::AppletPopup");
             case NET::Unknown:
             default:
                 return QStringLiteral("NET::Unknown");
