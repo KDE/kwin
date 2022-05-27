@@ -140,6 +140,7 @@ public:
     void registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *action);
     void registerRealtimeTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback);
     void registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback);
+    void forceRegisterTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback);
     void registerGlobalAccel(KGlobalAccelInterface *interface);
 
     bool supportsPointerWarping() const;
