@@ -40,8 +40,9 @@ class EffectQuickRenderControl : public QQuickRenderControl
     Q_OBJECT
 
 public:
-    explicit EffectQuickRenderControl(QWindow *renderWindow, QObject *parent = nullptr)
-        : QQuickRenderControl(parent)
+    explicit EffectQuickRenderControl(OffscreenQuickView *view, QWindow *renderWindow)
+        : QQuickRenderControl(view)
+        , m_view(view)
         , m_renderWindow(renderWindow)
     {
     }
@@ -49,12 +50,17 @@ public:
     QWindow *renderWindow(QPoint *offset) override
     {
         if (offset) {
-            *offset = QPoint(0, 0);
+            if (m_renderWindow) {
+                *offset = m_renderWindow->mapFromGlobal(m_view->geometry().topLeft());
+            } else {
+                *offset = QPoint(0, 0);
+            }
         }
         return m_renderWindow;
     }
 
 private:
+    OffscreenQuickView *m_view;
     QPointer<QWindow> m_renderWindow;
 };
 
@@ -125,7 +131,7 @@ OffscreenQuickView::OffscreenQuickView(QObject *parent, QWindow *renderWindow, E
     : QObject(parent)
     , d(new OffscreenQuickView::Private)
 {
-    d->m_renderControl = new EffectQuickRenderControl(renderWindow, this);
+    d->m_renderControl = new EffectQuickRenderControl(this, renderWindow);
 
     d->m_view = new QQuickWindow(d->m_renderControl);
     d->m_view->setFlags(Qt::FramelessWindowHint);
