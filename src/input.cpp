@@ -1131,8 +1131,10 @@ public:
             m_gestureTaken &= m_touchPoints.count() > 0;
             m_gestureCancelled &= m_gestureTaken;
             return true;
+        } else {
+            m_gestureCancelled &= m_touchPoints.count() > 0;
+            return false;
         }
-        return false;
     }
 
     bool touchCancel() override
