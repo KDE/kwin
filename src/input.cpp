@@ -1075,8 +1075,12 @@ public:
                 }
                 m_lastTouchDownTime = time;
                 auto output = kwinApp()->platform()->outputAt(pos.toPoint());
-                float xfactor = output->physicalSize().width() / (float)output->geometry().width();
-                float yfactor = output->physicalSize().height() / (float)output->geometry().height();
+                auto physicalSize = output->physicalSize();
+                if (!physicalSize.isValid()) {
+                    physicalSize = QSize(190, 100);
+                }
+                float xfactor = physicalSize.width() / (float)output->geometry().width();
+                float yfactor = physicalSize.height() / (float)output->geometry().height();
                 bool distanceMatch = std::any_of(m_touchPoints.constBegin(), m_touchPoints.constEnd(), [pos, xfactor, yfactor](const auto &point) {
                     QPointF p = pos - point;
                     return std::abs(xfactor * p.x()) + std::abs(yfactor * p.y()) < 50;
