@@ -49,12 +49,15 @@ void EglGbmLayer::aboutToStartPainting(const QRegion &damagedRegion)
     m_surface.aboutToStartPainting(m_pipeline->output(), damagedRegion);
 }
 
-void EglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool EglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(renderedRegion)
     const auto ret = m_surface.endRendering(m_pipeline->renderOrientation(), damagedRegion);
     if (ret.has_value()) {
         std::tie(m_currentBuffer, m_currentDamage) = ret.value();
+        return m_currentBuffer != nullptr;
+    } else {
+        return false;
     }
 }
 

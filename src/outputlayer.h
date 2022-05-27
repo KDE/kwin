@@ -41,7 +41,7 @@ public:
     virtual void aboutToStartPainting(const QRegion &damage);
 
     virtual OutputLayerBeginFrameInfo beginFrame() = 0;
-    virtual void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) = 0;
+    virtual bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) = 0;
 
     /**
      * Tries to import the newest buffer of the surface for direct scanout

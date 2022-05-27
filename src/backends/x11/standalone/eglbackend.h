@@ -28,7 +28,7 @@ public:
     EglLayer(EglBackend *backend);
 
     OutputLayerBeginFrameInfo beginFrame() override;
-    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
 private:
     EglBackend *const m_backend;

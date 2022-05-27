@@ -27,7 +27,7 @@ public:
     VirtualQPainterLayer(Output *output);
 
     OutputLayerBeginFrameInfo beginFrame() override;
-    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     QImage *image();
 
 private:

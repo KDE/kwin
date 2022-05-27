@@ -24,7 +24,7 @@ public:
     VirtualOutputLayer(EglGbmBackend *backend);
 
     OutputLayerBeginFrameInfo beginFrame() override;
-    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
 private:
     EglGbmBackend *const m_backend;

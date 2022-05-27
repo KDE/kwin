@@ -22,7 +22,7 @@ public:
     DrmLeaseEglGbmLayer(DrmPipeline *pipeline);
 
     OutputLayerBeginFrameInfo beginFrame() override;
-    void endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion) override;
+    bool endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion) override;
 
     bool checkTestBuffer() override;
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
