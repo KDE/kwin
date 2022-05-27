@@ -30,6 +30,7 @@ class DrmGpu;
 class DrmPipeline;
 class DumbSwapchain;
 class GLTexture;
+class RenderTarget;
 
 class KWIN_EXPORT DrmOutput : public DrmAbstractOutput
 {
@@ -62,8 +63,8 @@ private:
 
     QList<QSharedPointer<OutputMode>> getModes() const;
 
-    void renderCursorOpengl(const QSize &cursorSize);
-    void renderCursorQPainter();
+    void renderCursorOpengl(const RenderTarget &renderTarget, const QSize &cursorSize);
+    void renderCursorQPainter(const RenderTarget &renderTarget);
 
     DrmPipeline *m_pipeline;
     DrmConnector *m_connector;

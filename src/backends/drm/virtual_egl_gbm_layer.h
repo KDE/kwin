@@ -37,7 +37,7 @@ public:
 
     void aboutToStartPainting(const QRegion &damagedRegion) override;
     OutputLayerBeginFrameInfo beginFrame() override;
-    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     bool scanout(SurfaceItem *surfaceItem) override;
 
     QRegion currentDamage() const override;

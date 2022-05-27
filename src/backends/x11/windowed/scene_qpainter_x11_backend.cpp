@@ -32,10 +32,11 @@ OutputLayerBeginFrameInfo X11WindowedQPainterOutput::beginFrame()
     };
 }
 
-void X11WindowedQPainterOutput::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool X11WindowedQPainterOutput::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(renderedRegion)
     Q_UNUSED(damagedRegion)
+    return true;
 }
 
 X11WindowedQPainterBackend::X11WindowedQPainterBackend(X11WindowedBackend *backend)

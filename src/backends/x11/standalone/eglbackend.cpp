@@ -36,9 +36,10 @@ OutputLayerBeginFrameInfo EglLayer::beginFrame()
     return m_backend->beginFrame();
 }
 
-void EglLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool EglLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     m_backend->endFrame(renderedRegion, damagedRegion);
+    return true;
 }
 
 EglBackend::EglBackend(Display *display, X11StandalonePlatform *backend)

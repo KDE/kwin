@@ -60,10 +60,11 @@ OutputLayerBeginFrameInfo DrmLeaseEglGbmLayer::beginFrame()
     return {};
 }
 
-void DrmLeaseEglGbmLayer::endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion)
+bool DrmLeaseEglGbmLayer::endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion)
 {
     Q_UNUSED(damagedRegion)
     Q_UNUSED(renderedRegion)
+    return false;
 }
 
 void DrmLeaseEglGbmLayer::releaseBuffers()

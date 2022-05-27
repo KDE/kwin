@@ -159,11 +159,12 @@ OutputLayerBeginFrameInfo EglWaylandOutput::beginFrame()
     };
 }
 
-void EglWaylandOutput::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool EglWaylandOutput::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(renderedRegion)
     m_damageJournal.add(damagedRegion);
     GLFramebuffer::popFramebuffer();
+    return true;
 }
 
 void EglWaylandOutput::aboutToStartPainting(const QRegion &damage)

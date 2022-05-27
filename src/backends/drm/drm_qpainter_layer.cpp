@@ -43,12 +43,13 @@ OutputLayerBeginFrameInfo DrmQPainterLayer::beginFrame()
     };
 }
 
-void DrmQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool DrmQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(renderedRegion)
     m_currentDamage = damagedRegion;
     m_swapchain->releaseBuffer(m_swapchain->currentBuffer(), damagedRegion);
     m_currentFramebuffer = DrmFramebuffer::createFramebuffer(m_swapchain->currentBuffer());
+    return m_currentFramebuffer != nullptr;
 }
 
 bool DrmQPainterLayer::checkTestBuffer()
@@ -104,11 +105,12 @@ OutputLayerBeginFrameInfo DrmCursorQPainterLayer::beginFrame()
     };
 }
 
-void DrmCursorQPainterLayer::endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion)
+bool DrmCursorQPainterLayer::endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion)
 {
     Q_UNUSED(renderedRegion)
     m_swapchain->releaseBuffer(m_swapchain->currentBuffer(), damagedRegion);
     m_currentFramebuffer = DrmFramebuffer::createFramebuffer(m_swapchain->currentBuffer());
+    return m_currentFramebuffer != nullptr;
 }
 
 bool DrmCursorQPainterLayer::checkTestBuffer()
@@ -147,10 +149,11 @@ OutputLayerBeginFrameInfo DrmVirtualQPainterLayer::beginFrame()
     };
 }
 
-void DrmVirtualQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool DrmVirtualQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(renderedRegion)
     m_currentDamage = damagedRegion;
+    return true;
 }
 
 QRegion DrmVirtualQPainterLayer::currentDamage() const
@@ -191,10 +194,11 @@ OutputLayerBeginFrameInfo DrmLeaseQPainterLayer::beginFrame()
     return {};
 }
 
-void DrmLeaseQPainterLayer::endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion)
+bool DrmLeaseQPainterLayer::endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion)
 {
     Q_UNUSED(damagedRegion)
     Q_UNUSED(renderedRegion)
+    return false;
 }
 
 void DrmLeaseQPainterLayer::releaseBuffers()

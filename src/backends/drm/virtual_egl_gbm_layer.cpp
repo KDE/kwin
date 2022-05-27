@@ -76,7 +76,7 @@ OutputLayerBeginFrameInfo VirtualEglGbmLayer::beginFrame()
     };
 }
 
-void VirtualEglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool VirtualEglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(renderedRegion);
     GLFramebuffer::popFramebuffer();
@@ -85,6 +85,7 @@ void VirtualEglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &
         m_currentBuffer = buffer;
         m_currentDamage = damagedRegion;
     }
+    return buffer != nullptr;
 }
 
 QRegion VirtualEglGbmLayer::currentDamage() const

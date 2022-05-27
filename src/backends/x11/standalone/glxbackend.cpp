@@ -113,9 +113,10 @@ OutputLayerBeginFrameInfo GlxLayer::beginFrame()
     return m_backend->beginFrame();
 }
 
-void GlxLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool GlxLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     m_backend->endFrame(renderedRegion, damagedRegion);
+    return true;
 }
 
 GlxBackend::GlxBackend(Display *display, X11StandalonePlatform *backend)

@@ -30,7 +30,7 @@ public:
     X11WindowedQPainterOutput(Output *output, xcb_window_t window);
 
     OutputLayerBeginFrameInfo beginFrame() override;
-    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
     xcb_window_t window;
     QImage buffer;

@@ -135,11 +135,19 @@ void DrmOutput::updateCursor()
         m_setCursorSuccessful = false;
         return;
     }
+    const auto [renderTarget, repaint] = layer->beginFrame();
     if (dynamic_cast<EglGbmBackend *>(m_gpu->platform()->renderBackend())) {
-        renderCursorOpengl(cursor->geometry().size() * scale());
+        renderCursorOpengl(renderTarget, cursor->geometry().size() * scale());
     } else {
-        renderCursorQPainter();
+        renderCursorQPainter(renderTarget);
     }
+    bool rendered = layer->endFrame(infiniteRegion(), infiniteRegion());
+    if (!rendered) {
+        m_setCursorSuccessful = false;
+        layer->setVisible(false);
+        return;
+    }
+
     const QSize surfaceSize = m_gpu->cursorSize() / scale();
     const QRect layerRect = monitorMatrix.mapRect(QRect(cursor->geometry().topLeft(), surfaceSize));
     layer->setPosition(layerRect.topLeft());
@@ -413,9 +421,8 @@ void DrmOutput::setColorTransformation(const QSharedPointer<ColorTransformation>
     }
 }
 
-void DrmOutput::renderCursorOpengl(const QSize &cursorSize)
+void DrmOutput::renderCursorOpengl(const RenderTarget &renderTarget, const QSize &cursorSize)
 {
-    const auto layer = m_pipeline->cursorLayer();
     auto allocateTexture = [this]() {
         const QImage img = Cursors::self()->currentCursor()->image();
         if (img.isNull()) {
@@ -426,8 +433,6 @@ void DrmOutput::renderCursorOpengl(const QSize &cursorSize)
         m_cursorTexture->setWrapMode(GL_CLAMP_TO_EDGE);
         m_cursorTextureDirty = false;
     };
-
-    const auto [renderTarget, repaint] = layer->beginFrame();
 
     if (!m_cursorTexture) {
         allocateTexture();
@@ -461,17 +466,13 @@ void DrmOutput::renderCursorOpengl(const QSize &cursorSize)
     m_cursorTexture->render(QRect(0, 0, cursorSize.width(), cursorSize.height()));
     m_cursorTexture->unbind();
     glDisable(GL_BLEND);
-
-    layer->endFrame(infiniteRegion(), infiniteRegion());
 }
 
-void DrmOutput::renderCursorQPainter()
+void DrmOutput::renderCursorQPainter(const RenderTarget &renderTarget)
 {
     const auto layer = m_pipeline->cursorLayer();
     const Cursor *cursor = Cursors::self()->currentCursor();
     const QImage cursorImage = cursor->image();
-
-    const auto [renderTarget, repaint] = layer->beginFrame();
 
     QImage *c = std::get<QImage *>(renderTarget.nativeHandle());
     c->setDevicePixelRatio(scale());
@@ -483,7 +484,5 @@ void DrmOutput::renderCursorQPainter()
     p.setRenderHint(QPainter::SmoothPixmapTransform);
     p.drawImage(QPoint(0, 0), cursorImage);
     p.end();
-
-    layer->endFrame(infiniteRegion(), infiniteRegion());
 }
 }

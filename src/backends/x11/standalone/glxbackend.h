@@ -66,7 +66,7 @@ public:
     GlxLayer(GlxBackend *backend);
 
     OutputLayerBeginFrameInfo beginFrame() override;
-    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
 private:
     GlxBackend *const m_backend;

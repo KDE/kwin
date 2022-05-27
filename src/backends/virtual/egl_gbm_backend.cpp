@@ -40,10 +40,11 @@ OutputLayerBeginFrameInfo VirtualOutputLayer::beginFrame()
     return m_backend->beginFrame();
 }
 
-void VirtualOutputLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool VirtualOutputLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(renderedRegion)
     Q_UNUSED(damagedRegion)
+    return true;
 }
 
 EglGbmBackend::EglGbmBackend(VirtualBackend *b)

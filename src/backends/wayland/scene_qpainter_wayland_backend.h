@@ -54,7 +54,7 @@ public:
     ~WaylandQPainterOutput() override;
 
     OutputLayerBeginFrameInfo beginFrame() override;
-    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
     bool init(KWayland::Client::ShmPool *pool);
     void updateSize(const QSize &size);
