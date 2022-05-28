@@ -489,6 +489,7 @@ void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
         case NET::Notification:
         case NET::CriticalNotification:
         case NET::Tooltip:
+        case NET::AppletPopup:
             setOnAllDesktops(true);
 #if KWIN_BUILD_ACTIVITIES
             setOnAllActivities(true);
