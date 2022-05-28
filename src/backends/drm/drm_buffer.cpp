@@ -128,6 +128,10 @@ void DrmFramebuffer::releaseBuffer()
 
 std::shared_ptr<DrmFramebuffer> DrmFramebuffer::createFramebuffer(const std::shared_ptr<DrmGpuBuffer> &buffer)
 {
+    if (!buffer->gpu()->atomicModeSetting() && buffer->size() == buffer->gpu()->cursorSize()) {
+        // HACK for old legacy drivers. drmModeAddFB can fail for cursor buffers, but we don't need the fb for the cursor
+        return std::make_shared<DrmFramebuffer>(buffer, 0);
+    }
     const auto size = buffer->size();
     const auto handles = buffer->handles();
     const auto strides = buffer->strides();
