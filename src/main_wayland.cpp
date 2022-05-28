@@ -201,17 +201,21 @@ void ApplicationWayland::refreshSettings(const KConfigGroup &group, const QByteA
     if (m_startXWayland && group.name() == "Xwayland" && names.contains("Scale")) {
         setXwaylandScale(group.readEntry("Scale", 1.0));
     }
+
+    if (group.name() == "Wayland" && names.contains("EnablePrimarySelection")) {
+        waylandServer()->setEnablePrimarySelection(group.readEntry("EnablePrimarySelection", true));
+    }
 }
 
 void ApplicationWayland::startSession()
 {
+    KSharedConfig::Ptr kwinSettings = kwinApp()->config();
+    m_settingsWatcher = KConfigWatcher::create(kwinSettings);
+    connect(m_settingsWatcher.data(), &KConfigWatcher::configChanged, this, &ApplicationWayland::refreshSettings);
+
     if (!m_inputMethodServerToStart.isEmpty()) {
         InputMethod::self()->setInputMethodCommand(m_inputMethodServerToStart);
     } else {
-        KSharedConfig::Ptr kwinSettings = kwinApp()->config();
-        m_settingsWatcher = KConfigWatcher::create(kwinSettings);
-        connect(m_settingsWatcher.data(), &KConfigWatcher::configChanged, this, &ApplicationWayland::refreshSettings);
-
         refreshSettings(kwinSettings->group("Wayland"), {"InputMethod"});
     }
 

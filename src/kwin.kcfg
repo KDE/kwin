@@ -318,6 +318,9 @@
         <entry name="DoubleTapWakeup" type="Bool">
             <default>true</default>
         </entry>
+        <entry name="EnablePrimarySelection" type="Bool">
+            <default>true</default>
+        </entry>
     </group>
     <group name="Xwayland">
         <entry name="XwaylandCrashPolicy" type="Enum">

@@ -93,7 +93,7 @@ Application::Application(Application::OperationMode mode, int &argc, char **argv
     : QApplication(argc, argv)
     , m_eventFilter(new XcbEventFilter())
     , m_configLock(false)
-    , m_config()
+    , m_config(KSharedConfig::openConfig(QStringLiteral("kwinrc")))
     , m_kxkbConfig()
     , m_operationMode(mode)
 {
@@ -134,9 +134,6 @@ void Application::start()
 
     setQuitOnLastWindowClosed(false);
 
-    if (!m_config) {
-        m_config = KSharedConfig::openConfig();
-    }
     if (!m_config->isImmutable() && m_configLock) {
         // TODO: This shouldn't be necessary
         // config->setReadOnly( true );
