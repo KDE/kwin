@@ -2,6 +2,7 @@
     "Categories": "Qt;KDE;X-KDE-settings-looknfeel;",
     "KPlugin": {
         "Description": "Configure window actions and behavior",
+        "Description[ar]": "اضبط سلوك النوافذ وإجراءاتها",
         "Description[ca@valencia]": "Configura les accions i comportament de les finestres",
         "Description[ca]": "Configura les accions i comportament de les finestres",
         "Description[es]": "Configurar las acciones y el comportamiento de las ventanas",
@@ -22,6 +23,7 @@
         "Description[zh_CN]": "配置窗口操作和行为",
         "Icon": "preferences-system-windows-actions",
         "Name": "Window Behavior",
+        "Name[ar]": "سلوك النوافذ",
         "Name[ca@valencia]": "Comportament de les finestres",
         "Name[ca]": "Comportament de les finestres",
         "Name[es]": "Comportamiento de las ventanas",
