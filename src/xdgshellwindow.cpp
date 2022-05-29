@@ -1065,7 +1065,6 @@ bool XdgToplevelWindow::acceptsFocus() const
         switch (m_plasmaShellSurface->role()) {
         case PlasmaShellSurfaceInterface::Role::Notification:
         case PlasmaShellSurfaceInterface::Role::CriticalNotification:
-        case PlasmaShellSurfaceInterface::Role::AppletPopup:
             return m_plasmaShellSurface->panelTakesFocus();
         default:
             break;
