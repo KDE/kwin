@@ -1,6 +1,7 @@
 {
     "KPlugin": {
         "Description": "Compositor Settings for Desktop Effects",
+        "Description[ar]": "إعدادات المركب لتأثيرات سطح المكتب",
         "Description[ca@valencia]": "Configuració del compositor per als efectes de l'escriptori",
         "Description[ca]": "Arranjament del compositor per als efectes d'escriptori",
         "Description[es]": "Preferencias del compositor para los efectos del escritorio",
@@ -22,6 +23,7 @@
         "Description[zh_CN]": "桌面特效显示混合器设置",
         "Icon": "preferences-desktop",
         "Name": "Compositor",
+        "Name[ar]": "المركب",
         "Name[ca@valencia]": "Compositor",
         "Name[ca]": "Compositor",
         "Name[es]": "Compositor",

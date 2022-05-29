@@ -1,6 +1,7 @@
 {
     "KPlugin": {
         "Description": "Navigation Through Windows",
+        "Description[ar]": "التنقل بين النوافذ",
         "Description[ca@valencia]": "Navegació per les finestres",
         "Description[ca]": "Navegació per les finestres",
         "Description[es]": "Navegación a través de las ventanas",
@@ -22,6 +23,7 @@
         "Description[zh_CN]": "配置窗口切换器选项",
         "Icon": "preferences-system-tabbox",
         "Name": "Task Switcher",
+        "Name[ar]": "مبدّل المهام",
         "Name[ca@valencia]": "Commutador de tasques",
         "Name[ca]": "Commutador de tasques",
         "Name[es]": "Selector de tareas",

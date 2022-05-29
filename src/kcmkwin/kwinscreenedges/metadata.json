@@ -1,6 +1,7 @@
 {
     "KPlugin": {
         "Description": "Configure active screen corners and edges",
+        "Description[ar]": "اضبط زوايا وحواف الشاشة",
         "Description[ca@valencia]": "Configura les cantonades i vores actives de la pantalla",
         "Description[ca]": "Configura les cantonades i vores actives de la pantalla",
         "Description[es]": "Configurar las esquinas y los bordes activos de la pantalla",
@@ -22,6 +23,7 @@
         "Description[zh_CN]": "配置活动屏幕的四角和边缘操作",
         "Icon": "preferences-desktop-gestures-screenedges",
         "Name": "Screen Edges",
+        "Name[ar]": "حواف الشاشة",
         "Name[ca@valencia]": "Vores de la pantalla",
         "Name[ca]": "Vores de la pantalla",
         "Name[es]": "Bordes de la pantalla",
