@@ -46,7 +46,7 @@ enum XwaylandCrashPolicy {
  * This enum type specifies the latency level configured by the user.
  */
 enum LatencyPolicy {
-    LatencyExteremelyLow,
+    LatencyExtremelyLow,
     LatencyLow,
     LatencyMedium,
     LatencyHigh,

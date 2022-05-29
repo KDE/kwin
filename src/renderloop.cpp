@@ -56,7 +56,7 @@ void RenderLoopPrivate::scheduleRepaint()
 
     std::chrono::nanoseconds renderTime;
     switch (options->latencyPolicy()) {
-    case LatencyExteremelyLow:
+    case LatencyExtremelyLow:
         renderTime = std::chrono::nanoseconds(long(vblankInterval.count() * 0.1));
         break;
     case LatencyLow:
