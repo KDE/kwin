@@ -438,7 +438,7 @@ void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
     auto updatePosition = [this, shellSurface] {
         move(shellSurface->position());
     };
-    auto moveUnderCursor = [this, shellSurface] {
+    auto moveUnderCursor = [this] {
         // Wait for the first commit
         auto connection = new QMetaObject::Connection;
         *connection = connect(this, &Window::windowShown,  [this, connection] () {
