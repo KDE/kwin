@@ -48,7 +48,6 @@ quint64 AnimationEffectPrivate::m_animCounter = 0;
 AnimationEffect::AnimationEffect()
     : d_ptr(new AnimationEffectPrivate())
 {
-    Q_D(AnimationEffect);
     if (!s_clock.isValid()) {
         s_clock.start();
     }
@@ -667,7 +666,7 @@ void AnimationEffect::postPaintScreen()
         bool invalidateLayerRect = false;
         int animCounter = 0;
         for (auto anim = entry->first.begin(); anim != entry->first.end();) {
-            if (anim->isActive() || anim->startTime > clock() && !anim->waitAtSource) {
+            if (anim->isActive() || (anim->startTime > clock() && !anim->waitAtSource)) {
                 ++anim;
                 ++animCounter;
                 continue;
