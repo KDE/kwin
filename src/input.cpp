@@ -1254,8 +1254,6 @@ class InternalWindowEventFilter : public InputEventFilter
         }
         QWindow *internal = static_cast<InternalWindow *>(input()->pointer()->focus())->handle();
         const QPointF localPos = event->globalPosition() - internal->position();
-        const Qt::Orientation orientation = (event->angleDelta().x() != 0) ? Qt::Horizontal : Qt::Vertical;
-        const int delta = event->angleDelta().x() != 0 ? event->angleDelta().x() : event->angleDelta().y();
         QWheelEvent wheelEvent(localPos, event->globalPosition(), QPoint(),
                                event->angleDelta() * -1,
                                event->buttons(),
