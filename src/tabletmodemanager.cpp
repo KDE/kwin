@@ -143,12 +143,12 @@ void KWin::TabletModeManager::refreshSettings()
         if (!m_detecting) {
             Q_EMIT tabletModeAvailableChanged(true);
         }
-        Q_EMIT tabletModeChanged(true);
     } else if (tabletModeConfig == QStringLiteral("off")) {
         m_configuredMode = ConfiguredMode::Off;
-        Q_EMIT tabletModeChanged(false);
     } else {
         m_configuredMode = ConfiguredMode::Auto;
+    }
+    if (effectiveTabletMode() != oldEffectiveTabletMode) {
         Q_EMIT tabletModeChanged(effectiveTabletMode());
     }
 }
