@@ -54,6 +54,7 @@ InvertEffect::InvertEffect()
     connect(b, &QAction::triggered, this, &InvertEffect::toggleWindow);
 
     connect(effects, &EffectsHandler::windowClosed, this, &InvertEffect::slotWindowClosed);
+    toggleScreenInversion();
 }
 
 InvertEffect::~InvertEffect()
