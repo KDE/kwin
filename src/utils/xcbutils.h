@@ -584,22 +584,22 @@ public:
     {
     }
 
-    inline QRect rect()
+    inline QRectF rect()
     {
         const xcb_get_geometry_reply_t *geometry = data();
         if (!geometry) {
             return QRect();
         }
-        return QRect(Xcb::fromXNative(geometry->x), Xcb::fromXNative(geometry->y), Xcb::fromXNative(geometry->width), Xcb::fromXNative(geometry->height));
+        return QRectF(Xcb::fromXNative(geometry->x), Xcb::fromXNative(geometry->y), Xcb::fromXNative(geometry->width), Xcb::fromXNative(geometry->height));
     }
 
-    inline QSize size()
+    inline QSizeF size()
     {
         const xcb_get_geometry_reply_t *geometry = data();
         if (!geometry) {
             return QSize();
         }
-        return QSize(Xcb::fromXNative(geometry->width), Xcb::fromXNative(geometry->height));
+        return QSizeF(Xcb::fromXNative(geometry->width), Xcb::fromXNative(geometry->height));
     }
 };
 
