@@ -761,6 +761,20 @@ void SurfaceInterfacePrivate::updateEffectiveMapped()
     }
 }
 
+bool SurfaceInterfacePrivate::contains(const QPointF &position) const
+{
+    // avoid QRectF::contains as that includes all edges
+    const qreal x = position.x();
+    const qreal y = position.y();
+
+    return mapped && x >= 0 && y >= 0 && x < surfaceSize.width() && y < surfaceSize.height();
+}
+
+bool SurfaceInterfacePrivate::inputContains(const QPointF &position) const
+{
+    return contains(position) && inputRegion.contains(position.toPoint());
+}
+
 QRegion SurfaceInterface::damage() const
 {
     return d->current.damage;
@@ -944,7 +958,7 @@ SurfaceInterface *SurfaceInterface::surfaceAt(const QPointF &position)
     }
 
     // check whether the geometry contains the pos
-    if (!size().isEmpty() && QRectF(QPoint(0, 0), size()).contains(position)) {
+    if (d->contains(position)) {
         return this;
     }
 
@@ -975,7 +989,7 @@ SurfaceInterface *SurfaceInterface::inputSurfaceAt(const QPointF &position)
     }
 
     // check whether the geometry and input region contain the pos
-    if (!size().isEmpty() && QRectF(QPoint(0, 0), size()).contains(position) && input().contains(position.toPoint())) {
+    if (d->inputContains(position)) {
         return this;
     }
 

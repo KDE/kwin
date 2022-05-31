@@ -96,6 +96,13 @@ public:
     bool computeEffectiveMapped() const;
     void updateEffectiveMapped();
 
+    /**
+     * Returns true if this surface (not including subsurfaces) contains a given point
+     * @param position in surface-local co-ordiantes
+     */
+    bool contains(const QPointF &position) const;
+    bool inputContains(const QPointF &position) const;
+
     CompositorInterface *compositor;
     SurfaceInterface *q;
     SurfaceRole *role = nullptr;

@@ -969,9 +969,9 @@ void TestSubSurface::testSurfaceAt()
     QCOMPARE(parentServerSurface->surfaceAt(QPointF(0, 0)), childFor1ServerSurface);
     QCOMPARE(parentServerSurface->surfaceAt(QPointF(49, 49)), childFor1ServerSurface);
     QCOMPARE(parentServerSurface->surfaceAt(QPointF(50, 50)), childFor2ServerSurface);
-    QCOMPARE(parentServerSurface->surfaceAt(QPointF(100, 100)), childFor2ServerSurface);
-    QCOMPARE(parentServerSurface->surfaceAt(QPointF(100, 50)), childFor2ServerSurface);
-    QCOMPARE(parentServerSurface->surfaceAt(QPointF(50, 100)), childFor2ServerSurface);
+    QCOMPARE(parentServerSurface->surfaceAt(QPointF(99, 99)), childFor2ServerSurface);
+    QCOMPARE(parentServerSurface->surfaceAt(QPointF(99, 50)), childFor2ServerSurface);
+    QCOMPARE(parentServerSurface->surfaceAt(QPointF(50, 99)), childFor2ServerSurface);
     QCOMPARE(parentServerSurface->surfaceAt(QPointF(25, 75)), parentServerSurface);
     QCOMPARE(parentServerSurface->surfaceAt(QPointF(75, 25)), parentServerSurface);
 
@@ -987,6 +987,12 @@ void TestSubSurface::testSurfaceAt()
     // outside the geometries should be no surface
     QVERIFY(!parentServerSurface->surfaceAt(QPointF(-1, -1)));
     QVERIFY(!parentServerSurface->surfaceAt(QPointF(101, 101)));
+
+    // on the surface edge right/bottom edges should not trigger as contained
+    QCOMPARE(parentServerSurface->surfaceAt(QPointF(50, 25)), parentServerSurface);
+    QCOMPARE(parentServerSurface->surfaceAt(QPointF(25, 50)), parentServerSurface);
+    QCOMPARE(parentServerSurface->inputSurfaceAt(QPointF(50, 25)), parentServerSurface);
+    QCOMPARE(parentServerSurface->inputSurfaceAt(QPointF(25, 50)), parentServerSurface);
 }
 
 void TestSubSurface::testDestroyAttachedBuffer()
