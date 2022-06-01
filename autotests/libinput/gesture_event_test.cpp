@@ -81,15 +81,15 @@ void TestLibinputGestureEvent::testType()
     gestureEvent->type = type;
     gestureEvent->device = m_nativeDevice;
 
-    QScopedPointer<Event> event(Event::create(gestureEvent));
+    std::unique_ptr<Event> event(Event::create(gestureEvent));
     // API of event
     QCOMPARE(event->type(), type);
     QCOMPARE(event->device(), m_device);
     QCOMPARE(event->nativeDevice(), m_nativeDevice);
-    QCOMPARE((libinput_event *)(*event.data()), gestureEvent);
+    QCOMPARE((libinput_event *)(*event.get()), gestureEvent);
     // verify it's a pointer event
-    QVERIFY(dynamic_cast<GestureEvent *>(event.data()));
-    QCOMPARE((libinput_event_gesture *)(*dynamic_cast<GestureEvent *>(event.data())), gestureEvent);
+    QVERIFY(dynamic_cast<GestureEvent *>(event.get()));
+    QCOMPARE((libinput_event_gesture *)(*dynamic_cast<GestureEvent *>(event.get())), gestureEvent);
 }
 
 void TestLibinputGestureEvent::testStart_data()
@@ -109,15 +109,15 @@ void TestLibinputGestureEvent::testStart()
     gestureEvent->fingerCount = 3;
     gestureEvent->time = 100u;
 
-    QScopedPointer<Event> event(Event::create(gestureEvent));
-    auto ge = dynamic_cast<GestureEvent *>(event.data());
+    std::unique_ptr<Event> event(Event::create(gestureEvent));
+    auto ge = dynamic_cast<GestureEvent *>(event.get());
     QVERIFY(ge);
     QCOMPARE(ge->fingerCount(), gestureEvent->fingerCount);
     QVERIFY(!ge->isCancelled());
     QCOMPARE(ge->time(), gestureEvent->time);
     QCOMPARE(ge->delta(), QSizeF(0, 0));
     if (ge->type() == LIBINPUT_EVENT_GESTURE_PINCH_BEGIN) {
-        auto pe = dynamic_cast<PinchGestureEvent *>(event.data());
+        auto pe = dynamic_cast<PinchGestureEvent *>(event.get());
         QCOMPARE(pe->scale(), 1.0);
         QCOMPARE(pe->angleDelta(), 0.0);
     }
@@ -132,8 +132,8 @@ void TestLibinputGestureEvent::testSwipeUpdate()
     gestureEvent->time = 200u;
     gestureEvent->delta = QSizeF(2, 3);
 
-    QScopedPointer<Event> event(Event::create(gestureEvent));
-    auto se = dynamic_cast<SwipeGestureEvent *>(event.data());
+    std::unique_ptr<Event> event(Event::create(gestureEvent));
+    auto se = dynamic_cast<SwipeGestureEvent *>(event.get());
     QVERIFY(se);
     QCOMPARE(se->fingerCount(), gestureEvent->fingerCount);
     QVERIFY(!se->isCancelled());
@@ -152,8 +152,8 @@ void TestLibinputGestureEvent::testPinchUpdate()
     gestureEvent->scale = 2;
     gestureEvent->angleDelta = -30;
 
-    QScopedPointer<Event> event(Event::create(gestureEvent));
-    auto pe = dynamic_cast<PinchGestureEvent *>(event.data());
+    std::unique_ptr<Event> event(Event::create(gestureEvent));
+    auto pe = dynamic_cast<PinchGestureEvent *>(event.get());
     QVERIFY(pe);
     QCOMPARE(pe->fingerCount(), gestureEvent->fingerCount);
     QVERIFY(!pe->isCancelled());
@@ -186,15 +186,15 @@ void TestLibinputGestureEvent::testEnd()
     gestureEvent->time = 300u;
     gestureEvent->scale = 3;
 
-    QScopedPointer<Event> event(Event::create(gestureEvent));
-    auto ge = dynamic_cast<GestureEvent *>(event.data());
+    std::unique_ptr<Event> event(Event::create(gestureEvent));
+    auto ge = dynamic_cast<GestureEvent *>(event.get());
     QVERIFY(ge);
     QCOMPARE(ge->fingerCount(), gestureEvent->fingerCount);
     QCOMPARE(ge->isCancelled(), cancelled);
     QCOMPARE(ge->time(), gestureEvent->time);
     QCOMPARE(ge->delta(), QSizeF(0, 0));
     if (ge->type() == LIBINPUT_EVENT_GESTURE_PINCH_END) {
-        auto pe = dynamic_cast<PinchGestureEvent *>(event.data());
+        auto pe = dynamic_cast<PinchGestureEvent *>(event.get());
         QCOMPARE(pe->scale(), gestureEvent->scale);
         QCOMPARE(pe->angleDelta(), 0.0);
     }

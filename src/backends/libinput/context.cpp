@@ -146,7 +146,7 @@ void Context::closeRestricted(int fd)
     kwinApp()->platform()->session()->closeRestricted(fd);
 }
 
-Event *Context::event()
+std::unique_ptr<Event> Context::event()
 {
     return Event::create(libinput_get_event(m_libinput));
 }

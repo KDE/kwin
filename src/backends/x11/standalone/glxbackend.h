@@ -22,8 +22,6 @@
 #include <kwingltexture_p.h>
 
 #include <QHash>
-
-#include <map>
 #include <memory>
 
 namespace KWin

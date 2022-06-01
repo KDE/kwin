@@ -570,8 +570,8 @@ static inline int bitCount(uint32_t mask)
 
 const FBConfigInfo &GlxBackend::infoForVisual(xcb_visualid_t visual)
 {
-    auto it = m_fbconfigHash.find(visual);
-    if (it != m_fbconfigHash.cend()) {
+    auto it = m_fbconfigHash.constFind(visual);
+    if (it != m_fbconfigHash.constEnd()) {
         return *it;
     }
     m_fbconfigHash[visual] = FBConfigInfo{
