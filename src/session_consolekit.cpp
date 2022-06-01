@@ -108,7 +108,7 @@ static bool activate(const QString &sessionPath)
     return reply.type() != QDBusMessage::ErrorMessage;
 }
 
-ConsoleKitSession *ConsoleKitSession::create(QObject *parent)
+std::unique_ptr<ConsoleKitSession> ConsoleKitSession::create()
 {
     if (!QDBusConnection::systemBus().interface()->isServiceRegistered(s_serviceName)) {
         return nullptr;
@@ -132,13 +132,12 @@ ConsoleKitSession *ConsoleKitSession::create(QObject *parent)
         return nullptr;
     }
 
-    ConsoleKitSession *session = new ConsoleKitSession(sessionPath, parent);
+    std::unique_ptr<ConsoleKitSession> session{new ConsoleKitSession(sessionPath)};
     if (session->initialize()) {
         return session;
+    } else {
+        return nullptr;
     }
-
-    delete session;
-    return nullptr;
 }
 
 bool ConsoleKitSession::isActive() const
@@ -218,9 +217,8 @@ void ConsoleKitSession::switchTo(uint terminal)
     QDBusConnection::systemBus().asyncCall(message);
 }
 
-ConsoleKitSession::ConsoleKitSession(const QString &sessionPath, QObject *parent)
-    : Session(parent)
-    , m_sessionPath(sessionPath)
+ConsoleKitSession::ConsoleKitSession(const QString &sessionPath)
+    : m_sessionPath(sessionPath)
 {
     qDBusRegisterMetaType<DBusConsoleKitSeat>();
 }

@@ -331,7 +331,7 @@ private:
 
     WaylandOutput *createOutput(const QString &name, const QPoint &position, const QSize &size);
 
-    Session *m_session;
+    std::unique_ptr<Session> m_session;
     wl_display *m_display;
     KWayland::Client::EventQueue *m_eventQueue;
     KWayland::Client::Registry *m_registry;

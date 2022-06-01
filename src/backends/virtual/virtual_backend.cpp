@@ -27,7 +27,7 @@ namespace KWin
 
 VirtualBackend::VirtualBackend(QObject *parent)
     : Platform(parent)
-    , m_session(Session::create(Session::Type::Noop, this))
+    , m_session(Session::create(Session::Type::Noop))
 {
     if (qEnvironmentVariableIsSet("KWIN_WAYLAND_VIRTUAL_SCREENSHOTS")) {
         m_screenshotDir.reset(new QTemporaryDir);
@@ -53,7 +53,7 @@ VirtualBackend::~VirtualBackend()
 
 Session *VirtualBackend::session() const
 {
-    return m_session;
+    return m_session.get();
 }
 
 bool VirtualBackend::initialize()

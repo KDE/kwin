@@ -16,7 +16,7 @@ class NoopSession : public Session
     Q_OBJECT
 
 public:
-    static NoopSession *create(QObject *parent = nullptr);
+    static std::unique_ptr<NoopSession> create();
     ~NoopSession() override;
 
     bool isActive() const override;
@@ -28,7 +28,7 @@ public:
     void switchTo(uint terminal) override;
 
 private:
-    explicit NoopSession(QObject *parent = nullptr);
+    explicit NoopSession() = default;
 };
 
 } // namespace KWin

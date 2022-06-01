@@ -98,7 +98,7 @@ bool XrandrEventFilter::event(xcb_generic_event_t *event)
 
 X11StandalonePlatform::X11StandalonePlatform(QObject *parent)
     : Platform(parent)
-    , m_session(Session::create(Session::Type::Noop, this))
+    , m_session(Session::create(Session::Type::Noop))
     , m_updateOutputsTimer(new QTimer(this))
     , m_x11Display(QX11Info::display())
     , m_renderLoop(new RenderLoop(this))
@@ -154,7 +154,7 @@ bool X11StandalonePlatform::initialize()
 
 Session *X11StandalonePlatform::session() const
 {
-    return m_session;
+    return m_session.get();
 }
 
 OpenGLBackend *X11StandalonePlatform::createOpenGLBackend()

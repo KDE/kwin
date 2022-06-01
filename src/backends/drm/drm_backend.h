@@ -103,7 +103,7 @@ private:
 
     std::unique_ptr<Udev> m_udev;
     std::unique_ptr<UdevMonitor> m_udevMonitor;
-    Session *m_session = nullptr;
+    std::unique_ptr<Session> m_session;
     // all outputs, enabled and disabled
     QVector<DrmAbstractOutput *> m_outputs;
     // only enabled outputs

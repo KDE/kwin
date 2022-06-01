@@ -87,7 +87,7 @@ private:
     void updateRefreshRate();
     void updateCursor();
 
-    Session *m_session;
+    std::unique_ptr<Session> m_session;
     std::unique_ptr<XInputIntegration> m_xinputIntegration;
     QThread *m_openGLFreezeProtectionThread = nullptr;
     QTimer *m_openGLFreezeProtection = nullptr;

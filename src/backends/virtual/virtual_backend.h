@@ -70,7 +70,7 @@ private:
     QVector<VirtualOutput *> m_outputs;
     QVector<VirtualOutput *> m_outputsEnabled;
     std::unique_ptr<QTemporaryDir> m_screenshotDir;
-    Session *m_session;
+    std::unique_ptr<Session> m_session;
 };
 
 }

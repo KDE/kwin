@@ -82,7 +82,7 @@ DrmBackend::DrmBackend(QObject *parent)
     : Platform(parent)
     , m_udev(std::make_unique<Udev>())
     , m_udevMonitor(m_udev->monitor())
-    , m_session(Session::create(this))
+    , m_session(Session::create())
     , m_explicitGpus(splitPathList(qEnvironmentVariable("KWIN_DRM_DEVICES"), ':'))
     , m_dpmsFilter()
 {
@@ -103,7 +103,7 @@ bool DrmBackend::isActive() const
 
 Session *DrmBackend::session() const
 {
-    return m_session;
+    return m_session.get();
 }
 
 Outputs DrmBackend::outputs() const

@@ -9,14 +9,9 @@
 namespace KWin
 {
 
-NoopSession *NoopSession::create(QObject *parent)
+std::unique_ptr<NoopSession> NoopSession::create()
 {
-    return new NoopSession(parent);
-}
-
-NoopSession::NoopSession(QObject *parent)
-    : Session(parent)
-{
+    return std::unique_ptr<NoopSession>{new NoopSession()};
 }
 
 NoopSession::~NoopSession()

@@ -106,7 +106,7 @@ static bool activate(const QString &sessionPath)
     return reply.type() != QDBusMessage::ErrorMessage;
 }
 
-LogindSession *LogindSession::create(QObject *parent)
+std::unique_ptr<LogindSession> LogindSession::create()
 {
     if (!QDBusConnection::systemBus().interface()->isServiceRegistered(s_serviceName)) {
         return nullptr;
@@ -130,13 +130,12 @@ LogindSession *LogindSession::create(QObject *parent)
         return nullptr;
     }
 
-    LogindSession *session = new LogindSession(sessionPath, parent);
+    std::unique_ptr<LogindSession> session{new LogindSession(sessionPath)};
     if (session->initialize()) {
         return session;
+    } else {
+        return nullptr;
     }
-
-    delete session;
-    return nullptr;
 }
 
 bool LogindSession::isActive() const
@@ -217,9 +216,8 @@ void LogindSession::switchTo(uint terminal)
     QDBusConnection::systemBus().asyncCall(message);
 }
 
-LogindSession::LogindSession(const QString &sessionPath, QObject *parent)
-    : Session(parent)
-    , m_sessionPath(sessionPath)
+LogindSession::LogindSession(const QString &sessionPath)
+    : m_sessionPath(sessionPath)
 {
     qDBusRegisterMetaType<DBusLogindSeat>();
 }
