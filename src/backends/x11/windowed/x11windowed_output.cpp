@@ -27,7 +27,7 @@ namespace KWin
 
 X11WindowedOutput::X11WindowedOutput(X11WindowedBackend *backend)
     : Output(backend)
-    , m_renderLoop(new RenderLoop(this))
+    , m_renderLoop(std::make_unique<RenderLoop>())
     , m_vsyncMonitor(SoftwareVsyncMonitor::create())
     , m_backend(backend)
 {
@@ -51,7 +51,7 @@ X11WindowedOutput::~X11WindowedOutput()
 
 RenderLoop *X11WindowedOutput::renderLoop() const
 {
-    return m_renderLoop;
+    return m_renderLoop.get();
 }
 
 SoftwareVsyncMonitor *X11WindowedOutput::vsyncMonitor() const
@@ -172,7 +172,7 @@ QPointF X11WindowedOutput::mapFromGlobal(const QPointF &pos) const
 
 void X11WindowedOutput::vblank(std::chrono::nanoseconds timestamp)
 {
-    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop);
+    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop.get());
     renderLoopPrivate->notifyFrameCompleted(timestamp);
 }
 

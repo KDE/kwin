@@ -96,7 +96,7 @@ private:
     std::unique_ptr<WindowSelector> m_windowSelector;
     std::unique_ptr<X11EventFilter> m_screenEdgesFilter;
     std::unique_ptr<X11EventFilter> m_randrEventFilter;
-    RenderLoop *m_renderLoop;
+    std::unique_ptr<RenderLoop> m_renderLoop;
     QVector<Output *> m_outputs;
 };
 

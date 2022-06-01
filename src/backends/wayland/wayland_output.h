@@ -93,7 +93,7 @@ protected:
     }
 
 private:
-    RenderLoop *m_renderLoop;
+    std::unique_ptr<RenderLoop> m_renderLoop;
     KWayland::Client::Surface *m_surface;
     WaylandBackend *m_backend;
     QTimer m_turnOffTimer;

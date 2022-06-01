@@ -26,7 +26,7 @@ static const int s_refreshRate = 60000; // TODO: can we get refresh rate data fr
 
 WaylandOutput::WaylandOutput(const QString &name, Surface *surface, WaylandBackend *backend)
     : Output(backend)
-    , m_renderLoop(new RenderLoop(this))
+    , m_renderLoop(std::make_unique<RenderLoop>())
     , m_surface(surface)
     , m_backend(backend)
 {
@@ -54,7 +54,7 @@ WaylandOutput::~WaylandOutput()
 
 RenderLoop *WaylandOutput::renderLoop() const
 {
-    return m_renderLoop;
+    return m_renderLoop.get();
 }
 
 void WaylandOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)

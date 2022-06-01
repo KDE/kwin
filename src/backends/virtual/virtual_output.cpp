@@ -18,7 +18,7 @@ namespace KWin
 VirtualOutput::VirtualOutput(VirtualBackend *parent)
     : Output(parent)
     , m_backend(parent)
-    , m_renderLoop(new RenderLoop(this))
+    , m_renderLoop(std::make_unique<RenderLoop>())
     , m_vsyncMonitor(SoftwareVsyncMonitor::create())
 {
     connect(m_vsyncMonitor.get(), &VsyncMonitor::vblankOccurred, this, &VirtualOutput::vblank);
@@ -36,7 +36,7 @@ VirtualOutput::~VirtualOutput()
 
 RenderLoop *VirtualOutput::renderLoop() const
 {
-    return m_renderLoop;
+    return m_renderLoop.get();
 }
 
 SoftwareVsyncMonitor *VirtualOutput::vsyncMonitor() const
@@ -62,7 +62,7 @@ void VirtualOutput::setGeometry(const QRect &geo)
 
 void VirtualOutput::vblank(std::chrono::nanoseconds timestamp)
 {
-    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop);
+    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop.get());
     renderLoopPrivate->notifyFrameCompleted(timestamp);
 }
 

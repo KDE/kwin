@@ -54,8 +54,7 @@ bool DrmVirtualOutput::present()
 void DrmVirtualOutput::vblank(std::chrono::nanoseconds timestamp)
 {
     if (m_pageFlipPending) {
-        RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop);
-        renderLoopPrivate->notifyFrameCompleted(timestamp);
+        DrmAbstractOutput::pageFlipped(timestamp);
     }
 }
 

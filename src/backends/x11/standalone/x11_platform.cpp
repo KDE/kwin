@@ -101,7 +101,7 @@ X11StandalonePlatform::X11StandalonePlatform(QObject *parent)
     , m_session(Session::create(Session::Type::Noop))
     , m_updateOutputsTimer(new QTimer(this))
     , m_x11Display(QX11Info::display())
-    , m_renderLoop(new RenderLoop(this))
+    , m_renderLoop(std::make_unique<RenderLoop>())
 {
 #if HAVE_X11_XINPUT
     if (!qEnvironmentVariableIsSet("KWIN_NO_XI2")) {
@@ -546,7 +546,7 @@ void X11StandalonePlatform::doUpdateOutputs()
                     // drm platform do this.
                     Xcb::RandR::CrtcGamma gamma(crtcs[i]);
 
-                    output->setRenderLoop(m_renderLoop);
+                    output->setRenderLoop(m_renderLoop.get());
                     output->setCrtc(crtcs[i]);
                     output->setGammaRampSize(gamma.isNull() ? 0 : gamma->size);
                     output->setMode(geometry.size(), refreshRate * 1000);
@@ -580,7 +580,7 @@ void X11StandalonePlatform::doUpdateOutputs()
     // The workspace handles having no outputs poorly. If the last output is about to be
     // removed, create a dummy output to avoid crashing.
     if (changed.isEmpty() && added.isEmpty()) {
-        auto dummyOutput = new X11PlaceholderOutput(m_renderLoop);
+        auto dummyOutput = new X11PlaceholderOutput(m_renderLoop.get());
         m_outputs << dummyOutput;
         Q_EMIT outputAdded(dummyOutput);
         Q_EMIT outputEnabled(dummyOutput);
@@ -640,7 +640,7 @@ Outputs X11StandalonePlatform::enabledOutputs() const
 
 RenderLoop *X11StandalonePlatform::renderLoop() const
 {
-    return m_renderLoop;
+    return m_renderLoop.get();
 }
 
 static bool refreshRate_compare(const Output *first, const Output *smallest)
