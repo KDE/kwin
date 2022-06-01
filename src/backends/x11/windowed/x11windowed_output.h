@@ -74,7 +74,7 @@ private:
     void vblank(std::chrono::nanoseconds timestamp);
 
     xcb_window_t m_window = XCB_WINDOW_NONE;
-    NETWinInfo *m_winInfo = nullptr;
+    std::unique_ptr<NETWinInfo> m_winInfo;
     RenderLoop *m_renderLoop;
     std::unique_ptr<SoftwareVsyncMonitor> m_vsyncMonitor;
     QPoint m_hostPosition;

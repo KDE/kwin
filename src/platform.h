@@ -262,7 +262,7 @@ public:
      * Creates the OverlayWindow required for X11 based compositors.
      * Default implementation returns @c nullptr.
      */
-    virtual OverlayWindow *createOverlayWindow();
+    virtual std::unique_ptr<OverlayWindow> createOverlayWindow();
 
     /**
      * Queries the current X11 time stamp of the X server.

@@ -53,7 +53,7 @@ public:
 
     void setupActionForGlobalAccel(QAction *action) override;
 
-    OverlayWindow *createOverlayWindow() override;
+    std::unique_ptr<OverlayWindow> createOverlayWindow() override;
     OutlineVisual *createOutline(Outline *outline) override;
 
     void invertScreen() override;
@@ -88,7 +88,7 @@ private:
     void updateCursor();
 
     Session *m_session;
-    XInputIntegration *m_xinputIntegration = nullptr;
+    std::unique_ptr<XInputIntegration> m_xinputIntegration;
     QThread *m_openGLFreezeProtectionThread = nullptr;
     QTimer *m_openGLFreezeProtection = nullptr;
     QTimer *m_updateOutputsTimer = nullptr;

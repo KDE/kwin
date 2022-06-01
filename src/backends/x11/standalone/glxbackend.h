@@ -23,6 +23,7 @@
 
 #include <QHash>
 
+#include <map>
 #include <memory>
 
 namespace KWin
@@ -110,17 +111,17 @@ private:
     void screenGeometryChanged();
 
     int visualDepth(xcb_visualid_t visual) const;
-    FBConfigInfo *infoForVisual(xcb_visualid_t visual);
+    const FBConfigInfo &infoForVisual(xcb_visualid_t visual);
 
     /**
      * @brief The OverlayWindow used by this Backend.
      */
-    OverlayWindow *m_overlayWindow;
+    std::unique_ptr<OverlayWindow> m_overlayWindow;
     ::Window window;
     GLXFBConfig fbconfig;
     GLXWindow glxWindow;
     GLXContext ctx;
-    QHash<xcb_visualid_t, FBConfigInfo *> m_fbconfigHash;
+    QHash<xcb_visualid_t, FBConfigInfo> m_fbconfigHash;
     QHash<xcb_visualid_t, int> m_visualDepthHash;
     std::unique_ptr<SwapEventFilter> m_swapEventFilter;
     std::unique_ptr<GLFramebuffer> m_fbo;

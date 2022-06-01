@@ -46,7 +46,6 @@ X11WindowedOutput::~X11WindowedOutput()
 {
     xcb_unmap_window(m_backend->connection(), m_window);
     xcb_destroy_window(m_backend->connection(), m_window);
-    delete m_winInfo;
     xcb_flush(m_backend->connection());
 }
 
@@ -98,10 +97,8 @@ void X11WindowedOutput::init(const QPoint &logicalPosition, const QSize &pixelSi
     // select xinput 2 events
     initXInputForWindow();
 
-    m_winInfo = new NETWinInfo(m_backend->connection(),
-                               m_window,
-                               m_backend->screen()->root,
-                               NET::WMWindowType, NET::Properties2());
+    m_winInfo = std::make_unique<NETWinInfo>(m_backend->connection(), m_window, m_backend->screen()->root,
+                                             NET::WMWindowType, NET::Properties2());
 
     m_winInfo->setWindowType(NET::Normal);
     m_winInfo->setPid(QCoreApplication::applicationPid());

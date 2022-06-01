@@ -105,13 +105,12 @@ X11StandalonePlatform::X11StandalonePlatform(QObject *parent)
 {
 #if HAVE_X11_XINPUT
     if (!qEnvironmentVariableIsSet("KWIN_NO_XI2")) {
-        m_xinputIntegration = new XInputIntegration(m_x11Display, this);
+        m_xinputIntegration = std::make_unique<XInputIntegration>(m_x11Display, this);
         m_xinputIntegration->init();
         if (!m_xinputIntegration->hasXinput()) {
-            delete m_xinputIntegration;
-            m_xinputIntegration = nullptr;
+            m_xinputIntegration.reset();
         } else {
-            connect(kwinApp(), &Application::workspaceCreated, m_xinputIntegration, &XInputIntegration::startListening);
+            connect(kwinApp(), &Application::workspaceCreated, m_xinputIntegration.get(), &XInputIntegration::startListening);
         }
     }
 #endif
@@ -385,9 +384,9 @@ void X11StandalonePlatform::setupActionForGlobalAccel(QAction *action)
     });
 }
 
-OverlayWindow *X11StandalonePlatform::createOverlayWindow()
+std::unique_ptr<OverlayWindow> X11StandalonePlatform::createOverlayWindow()
 {
-    return new OverlayWindowX11();
+    return std::make_unique<OverlayWindowX11>();
 }
 
 OutlineVisual *X11StandalonePlatform::createOutline(Outline *outline)

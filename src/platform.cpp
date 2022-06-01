@@ -342,7 +342,7 @@ void Platform::setupActionForGlobalAccel(QAction *action)
     Q_UNUSED(action)
 }
 
-OverlayWindow *Platform::createOverlayWindow()
+std::unique_ptr<OverlayWindow> Platform::createOverlayWindow()
 {
     return nullptr;
 }
