@@ -33,7 +33,15 @@ Rectangle {
         container.organized = false;
     }
 
-    Keys.onEscapePressed: effect.deactivate(effect.animationDuration);
+    Keys.onPressed: {
+        if (event.key == Qt.Key_Escape) {
+            effect.deactivate(effect.animationDuration);
+        } else if (event.key == Qt.Key_Plus || event.key == Qt.Key_Equal) {
+            addButton.clicked();
+        } else if (event.key == Qt.Key_Minus) {
+            removeButton.clicked();
+        }
+    }
     Keys.priority: Keys.AfterItem
 
     KWinComponents.VirtualDesktopModel {
@@ -167,10 +175,12 @@ Rectangle {
         }
         visible: container.effect.showAddRemove
         PC3.Button {
+            id: addButton
             icon.name: "list-add"
             onClicked: container.effect.addDesktop()
         }
         PC3.Button {
+            id: removeButton
             icon.name: "list-remove"
             onClicked: container.effect.removeDesktop()
         }
