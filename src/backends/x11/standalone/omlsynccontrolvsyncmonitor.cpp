@@ -17,7 +17,7 @@
 namespace KWin
 {
 
-OMLSyncControlVsyncMonitor *OMLSyncControlVsyncMonitor::create(QObject *parent)
+std::unique_ptr<OMLSyncControlVsyncMonitor> OMLSyncControlVsyncMonitor::create()
 {
     const char *extensions = glXQueryExtensionsString(QX11Info::display(),
                                                       QX11Info::appScreen());
@@ -25,16 +25,15 @@ OMLSyncControlVsyncMonitor *OMLSyncControlVsyncMonitor::create(QObject *parent)
         return nullptr; // GLX_OML_sync_control is unsupported.
     }
 
-    OMLSyncControlVsyncMonitor *monitor = new OMLSyncControlVsyncMonitor(parent);
+    std::unique_ptr<OMLSyncControlVsyncMonitor> monitor{new OMLSyncControlVsyncMonitor()};
     if (monitor->isValid()) {
         return monitor;
+    } else {
+        return nullptr;
     }
-    delete monitor;
-    return nullptr;
 }
 
-OMLSyncControlVsyncMonitorHelper::OMLSyncControlVsyncMonitorHelper(QObject *parent)
-    : QObject(parent)
+OMLSyncControlVsyncMonitorHelper::OMLSyncControlVsyncMonitorHelper()
 {
     // Establish a new X11 connection to avoid locking up the main X11 connection.
     m_display = XOpenDisplay(DisplayString(QX11Info::display()));
@@ -126,39 +125,33 @@ void OMLSyncControlVsyncMonitorHelper::poll()
     Q_EMIT vblankOccurred(std::chrono::microseconds(ust));
 }
 
-OMLSyncControlVsyncMonitor::OMLSyncControlVsyncMonitor(QObject *parent)
-    : VsyncMonitor(parent)
-    , m_thread(new QThread)
-    , m_helper(new OMLSyncControlVsyncMonitorHelper)
+OMLSyncControlVsyncMonitor::OMLSyncControlVsyncMonitor()
 {
-    m_helper->moveToThread(m_thread);
+    m_helper.moveToThread(&m_thread);
 
-    connect(m_helper, &OMLSyncControlVsyncMonitorHelper::errorOccurred,
+    connect(&m_helper, &OMLSyncControlVsyncMonitorHelper::errorOccurred,
             this, &OMLSyncControlVsyncMonitor::errorOccurred);
-    connect(m_helper, &OMLSyncControlVsyncMonitorHelper::vblankOccurred,
+    connect(&m_helper, &OMLSyncControlVsyncMonitorHelper::vblankOccurred,
             this, &OMLSyncControlVsyncMonitor::vblankOccurred);
 
-    m_thread->setObjectName(QStringLiteral("vsync event monitor"));
-    m_thread->start();
+    m_thread.setObjectName(QStringLiteral("vsync event monitor"));
+    m_thread.start();
 }
 
 OMLSyncControlVsyncMonitor::~OMLSyncControlVsyncMonitor()
 {
-    m_thread->quit();
-    m_thread->wait();
-
-    delete m_helper;
-    delete m_thread;
+    m_thread.quit();
+    m_thread.wait();
 }
 
 bool OMLSyncControlVsyncMonitor::isValid() const
 {
-    return m_helper->isValid();
+    return m_helper.isValid();
 }
 
 void OMLSyncControlVsyncMonitor::arm()
 {
-    QMetaObject::invokeMethod(m_helper, &OMLSyncControlVsyncMonitorHelper::poll);
+    QMetaObject::invokeMethod(&m_helper, &OMLSyncControlVsyncMonitorHelper::poll);
 }
 
 } // namespace KWin

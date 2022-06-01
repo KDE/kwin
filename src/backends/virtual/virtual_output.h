@@ -43,7 +43,7 @@ private:
 
     VirtualBackend *m_backend;
     RenderLoop *m_renderLoop;
-    SoftwareVsyncMonitor *m_vsyncMonitor;
+    std::unique_ptr<SoftwareVsyncMonitor> m_vsyncMonitor;
     int m_gammaSize = 200;
     bool m_gammaResult = true;
     int m_identifier;

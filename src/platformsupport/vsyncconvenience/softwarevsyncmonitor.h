@@ -9,6 +9,7 @@
 #include "vsyncmonitor.h"
 
 #include <QTimer>
+#include <memory>
 
 namespace KWin
 {
@@ -26,7 +27,7 @@ class KWIN_EXPORT SoftwareVsyncMonitor : public VsyncMonitor
     Q_OBJECT
 
 public:
-    static SoftwareVsyncMonitor *create(QObject *parent);
+    static std::unique_ptr<SoftwareVsyncMonitor> create();
 
     int refreshRate() const;
     void setRefreshRate(int refreshRate);
@@ -35,10 +36,10 @@ public Q_SLOTS:
     void arm() override;
 
 private:
-    explicit SoftwareVsyncMonitor(QObject *parent = nullptr);
+    explicit SoftwareVsyncMonitor();
     void handleSyntheticVsync();
 
-    QTimer *m_softwareClock = nullptr;
+    QTimer m_softwareClock;
     int m_refreshRate = 60000;
     std::chrono::nanoseconds m_vblankTimestamp = std::chrono::nanoseconds::zero();
 };

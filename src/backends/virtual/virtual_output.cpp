@@ -19,9 +19,9 @@ VirtualOutput::VirtualOutput(VirtualBackend *parent)
     : Output(parent)
     , m_backend(parent)
     , m_renderLoop(new RenderLoop(this))
-    , m_vsyncMonitor(SoftwareVsyncMonitor::create(this))
+    , m_vsyncMonitor(SoftwareVsyncMonitor::create())
 {
-    connect(m_vsyncMonitor, &VsyncMonitor::vblankOccurred, this, &VirtualOutput::vblank);
+    connect(m_vsyncMonitor.get(), &VsyncMonitor::vblankOccurred, this, &VirtualOutput::vblank);
 
     static int identifier = -1;
     m_identifier = ++identifier;
@@ -41,7 +41,7 @@ RenderLoop *VirtualOutput::renderLoop() const
 
 SoftwareVsyncMonitor *VirtualOutput::vsyncMonitor() const
 {
-    return m_vsyncMonitor;
+    return m_vsyncMonitor.get();
 }
 
 void VirtualOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)

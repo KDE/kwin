@@ -23,7 +23,7 @@ class KWIN_EXPORT VsyncMonitor : public QObject
     Q_OBJECT
 
 public:
-    explicit VsyncMonitor(QObject *parent = nullptr);
+    explicit VsyncMonitor();
 
 public Q_SLOTS:
     virtual void arm() = 0;

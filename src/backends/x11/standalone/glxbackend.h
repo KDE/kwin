@@ -133,7 +133,7 @@ private:
     bool m_haveSGISwapControl = false;
     Display *m_x11Display;
     X11StandalonePlatform *m_backend;
-    VsyncMonitor *m_vsyncMonitor = nullptr;
+    std::unique_ptr<VsyncMonitor> m_vsyncMonitor;
     std::unique_ptr<GlxLayer> m_layer;
     friend class GlxPixmapTexturePrivate;
 };

@@ -9,17 +9,15 @@
 namespace KWin
 {
 
-SoftwareVsyncMonitor *SoftwareVsyncMonitor::create(QObject *parent)
+std::unique_ptr<SoftwareVsyncMonitor> SoftwareVsyncMonitor::create()
 {
-    return new SoftwareVsyncMonitor(parent);
+    return std::unique_ptr<SoftwareVsyncMonitor>{new SoftwareVsyncMonitor()};
 }
 
-SoftwareVsyncMonitor::SoftwareVsyncMonitor(QObject *parent)
-    : VsyncMonitor(parent)
-    , m_softwareClock(new QTimer(this))
+SoftwareVsyncMonitor::SoftwareVsyncMonitor()
 {
-    connect(m_softwareClock, &QTimer::timeout, this, &SoftwareVsyncMonitor::handleSyntheticVsync);
-    m_softwareClock->setSingleShot(true);
+    connect(&m_softwareClock, &QTimer::timeout, this, &SoftwareVsyncMonitor::handleSyntheticVsync);
+    m_softwareClock.setSingleShot(true);
 }
 
 int SoftwareVsyncMonitor::refreshRate() const
@@ -45,7 +43,7 @@ T alignTimestamp(const T &timestamp, const T &alignment)
 
 void SoftwareVsyncMonitor::arm()
 {
-    if (m_softwareClock->isActive()) {
+    if (m_softwareClock.isActive()) {
         return;
     }
 
@@ -54,7 +52,7 @@ void SoftwareVsyncMonitor::arm()
 
     m_vblankTimestamp = alignTimestamp(currentTime, vblankInterval);
 
-    m_softwareClock->start(std::chrono::duration_cast<std::chrono::milliseconds>(m_vblankTimestamp - currentTime));
+    m_softwareClock.start(std::chrono::duration_cast<std::chrono::milliseconds>(m_vblankTimestamp - currentTime));
 }
 
 } // namespace KWin

@@ -50,13 +50,13 @@ EglBackend::EglBackend(Display *display, X11StandalonePlatform *backend)
     // There is no any way to determine when a buffer swap completes with EGL. Fallback
     // to software vblank events. Could we use the Present extension to get notified when
     // the overlay window is actually presented on the screen?
-    m_vsyncMonitor = SoftwareVsyncMonitor::create(this);
+    m_vsyncMonitor = SoftwareVsyncMonitor::create();
     connect(backend->renderLoop(), &RenderLoop::refreshRateChanged, this, [this, backend]() {
         m_vsyncMonitor->setRefreshRate(backend->renderLoop()->refreshRate());
     });
     m_vsyncMonitor->setRefreshRate(backend->renderLoop()->refreshRate());
 
-    connect(m_vsyncMonitor, &VsyncMonitor::vblankOccurred, this, &EglBackend::vblank);
+    connect(m_vsyncMonitor.get(), &VsyncMonitor::vblankOccurred, this, &EglBackend::vblank);
     connect(screens(), &Screens::sizeChanged, this, &EglBackend::screenGeometryChanged);
 }
 
@@ -106,7 +106,7 @@ void EglBackend::init()
         return;
     }
 
-    m_fbo.reset(new GLFramebuffer(0, screens()->size()));
+    m_fbo = std::make_unique<GLFramebuffer>(0, screens()->size());
 
     kwinApp()->platform()->setSceneEglDisplay(shareDisplay);
     kwinApp()->platform()->setSceneEglGlobalShareContext(shareContext);
@@ -119,7 +119,7 @@ void EglBackend::screenGeometryChanged()
 
     // The back buffer contents are now undefined
     m_bufferAge = 0;
-    m_fbo.reset(new GLFramebuffer(0, screens()->size()));
+    m_fbo = std::make_unique<GLFramebuffer>(0, screens()->size());
 }
 
 OutputLayerBeginFrameInfo EglBackend::beginFrame()

@@ -28,7 +28,7 @@ namespace KWin
 X11WindowedOutput::X11WindowedOutput(X11WindowedBackend *backend)
     : Output(backend)
     , m_renderLoop(new RenderLoop(this))
-    , m_vsyncMonitor(SoftwareVsyncMonitor::create(this))
+    , m_vsyncMonitor(SoftwareVsyncMonitor::create())
     , m_backend(backend)
 {
     m_window = xcb_generate_id(m_backend->connection());
@@ -39,7 +39,7 @@ X11WindowedOutput::X11WindowedOutput(X11WindowedBackend *backend)
         .name = QStringLiteral("X11-%1").arg(identifier),
     });
 
-    connect(m_vsyncMonitor, &VsyncMonitor::vblankOccurred, this, &X11WindowedOutput::vblank);
+    connect(m_vsyncMonitor.get(), &VsyncMonitor::vblankOccurred, this, &X11WindowedOutput::vblank);
 }
 
 X11WindowedOutput::~X11WindowedOutput()
@@ -57,7 +57,7 @@ RenderLoop *X11WindowedOutput::renderLoop() const
 
 SoftwareVsyncMonitor *X11WindowedOutput::vsyncMonitor() const
 {
-    return m_vsyncMonitor;
+    return m_vsyncMonitor.get();
 }
 
 void X11WindowedOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)

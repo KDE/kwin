@@ -12,6 +12,7 @@
 #include <fixx11h.h>
 
 #include <QThread>
+#include <memory>
 
 namespace KWin
 {
@@ -25,7 +26,7 @@ class OMLSyncControlVsyncMonitorHelper : public QObject
     Q_OBJECT
 
 public:
-    explicit OMLSyncControlVsyncMonitorHelper(QObject *parent = nullptr);
+    explicit OMLSyncControlVsyncMonitorHelper();
     ~OMLSyncControlVsyncMonitorHelper() override;
 
     bool isValid() const;
@@ -57,7 +58,7 @@ class OMLSyncControlVsyncMonitor : public VsyncMonitor
     Q_OBJECT
 
 public:
-    static OMLSyncControlVsyncMonitor *create(QObject *parent);
+    static std::unique_ptr<OMLSyncControlVsyncMonitor> create();
     ~OMLSyncControlVsyncMonitor() override;
 
     bool isValid() const;
@@ -66,10 +67,10 @@ public Q_SLOTS:
     void arm() override;
 
 private:
-    explicit OMLSyncControlVsyncMonitor(QObject *parent = nullptr);
+    explicit OMLSyncControlVsyncMonitor();
 
-    QThread *m_thread = nullptr;
-    OMLSyncControlVsyncMonitorHelper *m_helper = nullptr;
+    QThread m_thread;
+    OMLSyncControlVsyncMonitorHelper m_helper;
 };
 
 } // namespace KWin

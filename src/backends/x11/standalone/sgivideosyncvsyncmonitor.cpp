@@ -17,7 +17,7 @@
 namespace KWin
 {
 
-SGIVideoSyncVsyncMonitor *SGIVideoSyncVsyncMonitor::create(QObject *parent)
+std::unique_ptr<SGIVideoSyncVsyncMonitor> SGIVideoSyncVsyncMonitor::create()
 {
     const char *extensions = glXQueryExtensionsString(QX11Info::display(),
                                                       QX11Info::appScreen());
@@ -25,16 +25,15 @@ SGIVideoSyncVsyncMonitor *SGIVideoSyncVsyncMonitor::create(QObject *parent)
         return nullptr; // GLX_SGI_video_sync is unsupported.
     }
 
-    SGIVideoSyncVsyncMonitor *monitor = new SGIVideoSyncVsyncMonitor(parent);
+    std::unique_ptr<SGIVideoSyncVsyncMonitor> monitor{new SGIVideoSyncVsyncMonitor()};
     if (monitor->isValid()) {
         return monitor;
+    } else {
+        return nullptr;
     }
-    delete monitor;
-    return nullptr;
 }
 
-SGIVideoSyncVsyncMonitorHelper::SGIVideoSyncVsyncMonitorHelper(QObject *parent)
-    : QObject(parent)
+SGIVideoSyncVsyncMonitorHelper::SGIVideoSyncVsyncMonitorHelper()
 {
     // Establish a new X11 connection to avoid locking up the main X11 connection.
     m_display = XOpenDisplay(DisplayString(QX11Info::display()));
@@ -128,39 +127,33 @@ void SGIVideoSyncVsyncMonitorHelper::poll()
     Q_EMIT vblankOccurred(std::chrono::steady_clock::now().time_since_epoch());
 }
 
-SGIVideoSyncVsyncMonitor::SGIVideoSyncVsyncMonitor(QObject *parent)
-    : VsyncMonitor(parent)
-    , m_thread(new QThread)
-    , m_helper(new SGIVideoSyncVsyncMonitorHelper)
+SGIVideoSyncVsyncMonitor::SGIVideoSyncVsyncMonitor()
 {
-    m_helper->moveToThread(m_thread);
+    m_helper.moveToThread(&m_thread);
 
-    connect(m_helper, &SGIVideoSyncVsyncMonitorHelper::errorOccurred,
+    connect(&m_helper, &SGIVideoSyncVsyncMonitorHelper::errorOccurred,
             this, &SGIVideoSyncVsyncMonitor::errorOccurred);
-    connect(m_helper, &SGIVideoSyncVsyncMonitorHelper::vblankOccurred,
+    connect(&m_helper, &SGIVideoSyncVsyncMonitorHelper::vblankOccurred,
             this, &SGIVideoSyncVsyncMonitor::vblankOccurred);
 
-    m_thread->setObjectName(QStringLiteral("vsync event monitor"));
-    m_thread->start();
+    m_thread.setObjectName(QStringLiteral("vsync event monitor"));
+    m_thread.start();
 }
 
 SGIVideoSyncVsyncMonitor::~SGIVideoSyncVsyncMonitor()
 {
-    m_thread->quit();
-    m_thread->wait();
-
-    delete m_helper;
-    delete m_thread;
+    m_thread.quit();
+    m_thread.wait();
 }
 
 bool SGIVideoSyncVsyncMonitor::isValid() const
 {
-    return m_helper->isValid();
+    return m_helper.isValid();
 }
 
 void SGIVideoSyncVsyncMonitor::arm()
 {
-    QMetaObject::invokeMethod(m_helper, &SGIVideoSyncVsyncMonitorHelper::poll);
+    QMetaObject::invokeMethod(&m_helper, &SGIVideoSyncVsyncMonitorHelper::poll);
 }
 
 } // namespace KWin

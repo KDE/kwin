@@ -141,8 +141,7 @@ GlxBackend::GlxBackend(Display *display, X11StandalonePlatform *backend)
 
 GlxBackend::~GlxBackend()
 {
-    delete m_vsyncMonitor;
-
+    m_vsyncMonitor.reset();
     // No completion events will be received for in-flight frames, this may lock the
     // render loop. We need to ensure that the render loop is back to its initial state
     // if the render backend is about to be destroyed.
@@ -303,23 +302,23 @@ void GlxBackend::init()
         // option. NVIDIA doesn't provide any extension such as GLX_INTEL_swap_event.
         if (!forceSoftwareVsync) {
             if (!m_vsyncMonitor) {
-                m_vsyncMonitor = SGIVideoSyncVsyncMonitor::create(this);
+                m_vsyncMonitor = SGIVideoSyncVsyncMonitor::create();
             }
             if (!m_vsyncMonitor) {
-                m_vsyncMonitor = OMLSyncControlVsyncMonitor::create(this);
+                m_vsyncMonitor = OMLSyncControlVsyncMonitor::create();
             }
         }
         if (!m_vsyncMonitor) {
-            SoftwareVsyncMonitor *monitor = SoftwareVsyncMonitor::create(this);
+            std::unique_ptr<SoftwareVsyncMonitor> monitor = SoftwareVsyncMonitor::create();
             RenderLoop *renderLoop = m_backend->renderLoop();
             monitor->setRefreshRate(renderLoop->refreshRate());
-            connect(renderLoop, &RenderLoop::refreshRateChanged, this, [this, monitor]() {
-                monitor->setRefreshRate(m_backend->renderLoop()->refreshRate());
+            connect(renderLoop, &RenderLoop::refreshRateChanged, this, [this, m = monitor.get()]() {
+                m->setRefreshRate(m_backend->renderLoop()->refreshRate());
             });
-            m_vsyncMonitor = monitor;
+            m_vsyncMonitor = std::move(monitor);
         }
 
-        connect(m_vsyncMonitor, &VsyncMonitor::vblankOccurred, this, &GlxBackend::vblank);
+        connect(m_vsyncMonitor.get(), &VsyncMonitor::vblankOccurred, this, &GlxBackend::vblank);
     }
 
     setIsDirectRendering(bool(glXIsDirect(display(), ctx)));

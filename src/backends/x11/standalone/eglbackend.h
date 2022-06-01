@@ -56,7 +56,7 @@ private:
     void vblank(std::chrono::nanoseconds timestamp);
 
     X11StandalonePlatform *m_backend;
-    SoftwareVsyncMonitor *m_vsyncMonitor;
+    std::unique_ptr<SoftwareVsyncMonitor> m_vsyncMonitor;
     DamageJournal m_damageJournal;
     std::unique_ptr<GLFramebuffer> m_fbo;
     int m_bufferAge = 0;
