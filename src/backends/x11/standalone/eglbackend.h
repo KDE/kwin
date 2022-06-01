@@ -58,10 +58,10 @@ private:
     X11StandalonePlatform *m_backend;
     SoftwareVsyncMonitor *m_vsyncMonitor;
     DamageJournal m_damageJournal;
-    QScopedPointer<GLFramebuffer> m_fbo;
+    std::unique_ptr<GLFramebuffer> m_fbo;
     int m_bufferAge = 0;
     QRegion m_lastRenderedRegion;
-    QScopedPointer<EglLayer> m_layer;
+    std::unique_ptr<EglLayer> m_layer;
 };
 
 class EglPixmapTexture : public GLTexture

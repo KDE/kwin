@@ -11,7 +11,7 @@
 
 #include <QObject>
 #include <QPointer>
-#include <QScopedPointer>
+#include <memory>
 typedef struct _XDisplay Display;
 
 namespace KWin
@@ -50,9 +50,9 @@ private:
     QPointer<X11Cursor> m_x11Cursor;
     Display *m_x11Display;
 
-    QScopedPointer<XInputEventFilter> m_xiEventFilter;
-    QScopedPointer<XKeyPressReleaseEventFilter> m_keyPressFilter;
-    QScopedPointer<XKeyPressReleaseEventFilter> m_keyReleaseFilter;
+    std::unique_ptr<XInputEventFilter> m_xiEventFilter;
+    std::unique_ptr<XKeyPressReleaseEventFilter> m_keyPressFilter;
+    std::unique_ptr<XKeyPressReleaseEventFilter> m_keyReleaseFilter;
 };
 
 }

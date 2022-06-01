@@ -88,7 +88,7 @@ void ShadowBuffer::render(DrmPlane::Transformations transform)
 
 GLFramebuffer *ShadowBuffer::fbo() const
 {
-    return m_fbo.data();
+    return m_fbo.get();
 }
 
 std::shared_ptr<GLTexture> ShadowBuffer::texture() const

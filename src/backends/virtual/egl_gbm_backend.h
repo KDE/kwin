@@ -56,7 +56,7 @@ private:
     GLTexture *m_backBuffer = nullptr;
     GLFramebuffer *m_fbo = nullptr;
     int m_frameCounter = 0;
-    QScopedPointer<VirtualOutputLayer> m_layer;
+    std::unique_ptr<VirtualOutputLayer> m_layer;
 };
 
 } // namespace

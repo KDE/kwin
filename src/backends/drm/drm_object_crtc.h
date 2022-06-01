@@ -56,7 +56,7 @@ public:
     void releaseBuffers();
 
 private:
-    DrmScopedPointer<drmModeCrtc> m_crtc;
+    DrmUniquePtr<drmModeCrtc> m_crtc;
     std::shared_ptr<DrmFramebuffer> m_currentBuffer;
     std::shared_ptr<DrmFramebuffer> m_nextBuffer;
     int m_pipeIndex;

@@ -59,7 +59,7 @@ private:
     EGLSurface m_eglSurface = EGL_NO_SURFACE;
     int m_bufferAge = 0;
     DamageJournal m_damageJournal;
-    QScopedPointer<GLFramebuffer> m_fbo;
+    std::unique_ptr<GLFramebuffer> m_fbo;
     EglWaylandBackend *const m_backend;
 
     friend class EglWaylandBackend;

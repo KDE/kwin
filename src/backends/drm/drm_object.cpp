@@ -134,7 +134,7 @@ bool DrmObject::needsCommit() const
 
 bool DrmObject::updateProperties()
 {
-    DrmScopedPointer<drmModeObjectProperties> properties(drmModeObjectGetProperties(m_gpu->fd(), m_id, m_objectType));
+    DrmUniquePtr<drmModeObjectProperties> properties(drmModeObjectGetProperties(m_gpu->fd(), m_id, m_objectType));
     if (!properties) {
         qCWarning(KWIN_DRM) << "Failed to get properties for object" << m_id;
         return false;
@@ -143,7 +143,7 @@ bool DrmObject::updateProperties()
         const PropertyDefinition &def = m_propertyDefinitions[propIndex];
         bool found = false;
         for (uint32_t drmPropIndex = 0; drmPropIndex < properties->count_props; drmPropIndex++) {
-            DrmScopedPointer<drmModePropertyRes> prop(drmModeGetProperty(m_gpu->fd(), properties->props[drmPropIndex]));
+            DrmUniquePtr<drmModePropertyRes> prop(drmModeGetProperty(m_gpu->fd(), properties->props[drmPropIndex]));
             if (!prop) {
                 qCWarning(KWIN_DRM, "Getting property %d of object %d failed!", drmPropIndex, m_id);
                 continue;
@@ -152,7 +152,7 @@ bool DrmObject::updateProperties()
                 if (m_props[propIndex]) {
                     m_props[propIndex]->setCurrent(properties->prop_values[drmPropIndex]);
                 } else {
-                    m_props[propIndex] = new DrmProperty(this, prop.data(), properties->prop_values[drmPropIndex], def.enumNames);
+                    m_props[propIndex] = new DrmProperty(this, prop.get(), properties->prop_values[drmPropIndex], def.enumNames);
                 }
                 found = true;
                 break;

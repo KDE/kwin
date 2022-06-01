@@ -42,7 +42,7 @@ DrmPlane::DrmPlane(DrmGpu *gpu, uint32_t planeId)
 
 bool DrmPlane::init()
 {
-    DrmScopedPointer<drmModePlane> p(drmModeGetPlane(gpu()->fd(), id()));
+    DrmUniquePtr<drmModePlane> p(drmModeGetPlane(gpu()->fd(), id()));
 
     if (!p) {
         qCWarning(KWIN_DRM) << "Failed to get kernel plane" << id();

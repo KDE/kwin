@@ -129,7 +129,7 @@ GlxBackend::GlxBackend(Display *display, X11StandalonePlatform *backend)
     , m_bufferAge(0)
     , m_x11Display(display)
     , m_backend(backend)
-    , m_layer(new GlxLayer(this))
+    , m_layer(std::make_unique<GlxLayer>(this))
 {
     // Force initialization of GLX integration in the Qt's xcb backend
     // to make it call XESetWireToEvent callbacks, which is required
@@ -231,7 +231,7 @@ void GlxBackend::init()
     glPlatform->printResults();
     initGL(&getProcAddress);
 
-    m_fbo.reset(new GLFramebuffer(0, screens()->size()));
+    m_fbo = std::make_unique<GLFramebuffer>(0, screens()->size());
 
     bool supportsSwapEvent = false;
 
@@ -772,7 +772,7 @@ void GlxBackend::screenGeometryChanged()
 
     // The back buffer contents are now undefined
     m_bufferAge = 0;
-    m_fbo.reset(new GLFramebuffer(0, size));
+    m_fbo = std::make_unique<GLFramebuffer>(0, size);
 }
 
 SurfaceTexture *GlxBackend::createSurfaceTextureX11(SurfacePixmapX11 *pixmap)
@@ -785,7 +785,7 @@ OutputLayerBeginFrameInfo GlxBackend::beginFrame()
     QRegion repaint;
     makeCurrent();
 
-    GLFramebuffer::pushFramebuffer(m_fbo.data());
+    GLFramebuffer::pushFramebuffer(m_fbo.get());
     if (supportsBufferAge()) {
         repaint = m_damageJournal.accumulate(m_bufferAge, infiniteRegion());
     }
@@ -793,7 +793,7 @@ OutputLayerBeginFrameInfo GlxBackend::beginFrame()
     glXWaitX();
 
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_fbo.data()),
+        .renderTarget = RenderTarget(m_fbo.get()),
         .repaint = repaint,
     };
 }

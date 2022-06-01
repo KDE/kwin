@@ -31,6 +31,7 @@
 #include "overlaywindow_x11.h"
 #include "renderloop.h"
 #include "screenedges_filter.h"
+#include "utils/c_ptr.h"
 #include "utils/xcbutils.h"
 #include "window.h"
 #include "workspace.h"
@@ -180,8 +181,8 @@ OpenGLBackend *X11StandalonePlatform::createOpenGLBackend()
 
 Edge *X11StandalonePlatform::createScreenEdge(ScreenEdges *edges)
 {
-    if (m_screenEdgesFilter.isNull()) {
-        m_screenEdgesFilter.reset(new ScreenEdgesFilter);
+    if (!m_screenEdgesFilter) {
+        m_screenEdgesFilter = std::make_unique<ScreenEdgesFilter>();
     }
     return new WindowBasedEdge(edges);
 }
@@ -328,15 +329,15 @@ void X11StandalonePlatform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
 PlatformCursorImage X11StandalonePlatform::cursorImage() const
 {
     auto c = kwinApp()->x11Connection();
-    QScopedPointer<xcb_xfixes_get_cursor_image_reply_t, QScopedPointerPodDeleter> cursor(
+    UniqueCPtr<xcb_xfixes_get_cursor_image_reply_t> cursor(
         xcb_xfixes_get_cursor_image_reply(c,
                                           xcb_xfixes_get_cursor_image_unchecked(c),
                                           nullptr));
-    if (cursor.isNull()) {
+    if (!cursor) {
         return PlatformCursorImage();
     }
 
-    QImage qcursorimg((uchar *)xcb_xfixes_get_cursor_image_cursor_image(cursor.data()), cursor->width, cursor->height,
+    QImage qcursorimg((uchar *)xcb_xfixes_get_cursor_image_cursor_image(cursor.get()), cursor->width, cursor->height,
                       QImage::Format_ARGB32_Premultiplied);
     // deep copy of image as the data is going to be freed
     return PlatformCursorImage(qcursorimg.copy(), QPoint(cursor->xhot, cursor->yhot));
@@ -353,7 +354,7 @@ void X11StandalonePlatform::updateCursor()
 
 void X11StandalonePlatform::startInteractiveWindowSelection(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName)
 {
-    if (m_windowSelector.isNull()) {
+    if (!m_windowSelector) {
         m_windowSelector.reset(new WindowSelector);
     }
     m_windowSelector->start(callback, cursorName);
@@ -361,7 +362,7 @@ void X11StandalonePlatform::startInteractiveWindowSelection(std::function<void(K
 
 void X11StandalonePlatform::startInteractivePositionSelection(std::function<void(const QPoint &)> callback)
 {
-    if (m_windowSelector.isNull()) {
+    if (!m_windowSelector) {
         m_windowSelector.reset(new WindowSelector);
     }
     m_windowSelector->start(callback);

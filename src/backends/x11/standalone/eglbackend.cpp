@@ -45,7 +45,7 @@ bool EglLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedReg
 EglBackend::EglBackend(Display *display, X11StandalonePlatform *backend)
     : EglOnXBackend(display)
     , m_backend(backend)
-    , m_layer(new EglLayer(this))
+    , m_layer(std::make_unique<EglLayer>(this))
 {
     // There is no any way to determine when a buffer swap completes with EGL. Fallback
     // to software vblank events. Could we use the Present extension to get notified when
@@ -134,9 +134,9 @@ OutputLayerBeginFrameInfo EglBackend::beginFrame()
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
 
     // Push the default framebuffer to the render target stack.
-    GLFramebuffer::pushFramebuffer(m_fbo.data());
+    GLFramebuffer::pushFramebuffer(m_fbo.get());
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_fbo.data()),
+        .renderTarget = RenderTarget(m_fbo.get()),
         .repaint = repaint,
     };
 }

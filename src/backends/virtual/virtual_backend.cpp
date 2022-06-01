@@ -34,7 +34,7 @@ VirtualBackend::VirtualBackend(QObject *parent)
         if (!m_screenshotDir->isValid()) {
             m_screenshotDir.reset();
         }
-        if (!m_screenshotDir.isNull()) {
+        if (m_screenshotDir) {
             qDebug() << "Screenshots saved to: " << m_screenshotDir->path();
         }
     }
@@ -80,7 +80,7 @@ bool VirtualBackend::initialize()
 
 QString VirtualBackend::screenshotDirPath() const
 {
-    if (m_screenshotDir.isNull()) {
+    if (!m_screenshotDir) {
         return QString();
     }
     return m_screenshotDir->path();

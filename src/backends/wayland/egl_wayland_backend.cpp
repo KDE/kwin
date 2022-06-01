@@ -110,7 +110,7 @@ EglWaylandOutput::~EglWaylandOutput()
 
 GLFramebuffer *EglWaylandOutput::fbo() const
 {
-    return m_fbo.data();
+    return m_fbo.get();
 }
 
 void EglWaylandOutput::updateSize()
@@ -156,7 +156,7 @@ OutputLayerBeginFrameInfo EglWaylandOutput::beginFrame()
 
     GLFramebuffer::pushFramebuffer(m_fbo.get());
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_fbo.data()),
+        .renderTarget = RenderTarget(m_fbo.get()),
         .repaint = repair,
     };
 }

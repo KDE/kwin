@@ -83,7 +83,7 @@ void GbmSurface::releaseBuffer(GbmBuffer *buffer)
 
 GLFramebuffer *GbmSurface::fbo() const
 {
-    return m_fbo.data();
+    return m_fbo.get();
 }
 
 EGLSurface GbmSurface::eglSurface() const

@@ -10,8 +10,7 @@
 #ifndef KWIN_DRM_POINTER_H
 #define KWIN_DRM_POINTER_H
 
-#include <QScopedPointer>
-
+#include <memory>
 #include <xf86drm.h>
 #include <xf86drmMode.h>
 
@@ -24,7 +23,7 @@ struct DrmDeleter;
 template<>
 struct DrmDeleter<drmVersion>
 {
-    static void cleanup(drmVersion *version)
+    void operator()(drmVersion *version)
     {
         drmFreeVersion(version);
     }
@@ -33,7 +32,7 @@ struct DrmDeleter<drmVersion>
 template<>
 struct DrmDeleter<drmModeAtomicReq>
 {
-    static void cleanup(drmModeAtomicReq *req)
+    void operator()(drmModeAtomicReq *req)
     {
         drmModeAtomicFree(req);
     }
@@ -42,7 +41,7 @@ struct DrmDeleter<drmModeAtomicReq>
 template<>
 struct DrmDeleter<drmModeConnector>
 {
-    static void cleanup(drmModeConnector *connector)
+    void operator()(drmModeConnector *connector)
     {
         drmModeFreeConnector(connector);
     }
@@ -51,7 +50,7 @@ struct DrmDeleter<drmModeConnector>
 template<>
 struct DrmDeleter<drmModeCrtc>
 {
-    static void cleanup(drmModeCrtc *crtc)
+    void operator()(drmModeCrtc *crtc)
     {
         drmModeFreeCrtc(crtc);
     }
@@ -60,7 +59,7 @@ struct DrmDeleter<drmModeCrtc>
 template<>
 struct DrmDeleter<drmModeFB>
 {
-    static void cleanup(drmModeFB *fb)
+    void operator()(drmModeFB *fb)
     {
         drmModeFreeFB(fb);
     }
@@ -69,7 +68,7 @@ struct DrmDeleter<drmModeFB>
 template<>
 struct DrmDeleter<drmModeEncoder>
 {
-    static void cleanup(drmModeEncoder *encoder)
+    void operator()(drmModeEncoder *encoder)
     {
         drmModeFreeEncoder(encoder);
     }
@@ -78,7 +77,7 @@ struct DrmDeleter<drmModeEncoder>
 template<>
 struct DrmDeleter<drmModeModeInfo>
 {
-    static void cleanup(drmModeModeInfo *info)
+    void operator()(drmModeModeInfo *info)
     {
         drmModeFreeModeInfo(info);
     }
@@ -87,7 +86,7 @@ struct DrmDeleter<drmModeModeInfo>
 template<>
 struct DrmDeleter<drmModeObjectProperties>
 {
-    static void cleanup(drmModeObjectProperties *properties)
+    void operator()(drmModeObjectProperties *properties)
     {
         drmModeFreeObjectProperties(properties);
     }
@@ -96,7 +95,7 @@ struct DrmDeleter<drmModeObjectProperties>
 template<>
 struct DrmDeleter<drmModePlane>
 {
-    static void cleanup(drmModePlane *plane)
+    void operator()(drmModePlane *plane)
     {
         drmModeFreePlane(plane);
     }
@@ -105,7 +104,7 @@ struct DrmDeleter<drmModePlane>
 template<>
 struct DrmDeleter<drmModePlaneRes>
 {
-    static void cleanup(drmModePlaneRes *resources)
+    void operator()(drmModePlaneRes *resources)
     {
         drmModeFreePlaneResources(resources);
     }
@@ -114,7 +113,7 @@ struct DrmDeleter<drmModePlaneRes>
 template<>
 struct DrmDeleter<drmModePropertyRes>
 {
-    static void cleanup(drmModePropertyRes *property)
+    void operator()(drmModePropertyRes *property)
     {
         drmModeFreeProperty(property);
     }
@@ -123,7 +122,7 @@ struct DrmDeleter<drmModePropertyRes>
 template<>
 struct DrmDeleter<drmModePropertyBlobRes>
 {
-    static void cleanup(drmModePropertyBlobRes *blob)
+    void operator()(drmModePropertyBlobRes *blob)
     {
         drmModeFreePropertyBlob(blob);
     }
@@ -132,15 +131,14 @@ struct DrmDeleter<drmModePropertyBlobRes>
 template<>
 struct DrmDeleter<drmModeRes>
 {
-    static void cleanup(drmModeRes *resources)
+    void operator()(drmModeRes *resources)
     {
         drmModeFreeResources(resources);
     }
 };
 
 template<typename T>
-using DrmScopedPointer = QScopedPointer<T, DrmDeleter<T>>;
-
+using DrmUniquePtr = std::unique_ptr<T, DrmDeleter<T>>;
 }
 
 #endif

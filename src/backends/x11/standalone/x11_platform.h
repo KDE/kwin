@@ -93,9 +93,9 @@ private:
     QTimer *m_openGLFreezeProtection = nullptr;
     QTimer *m_updateOutputsTimer = nullptr;
     Display *m_x11Display;
-    QScopedPointer<WindowSelector> m_windowSelector;
-    QScopedPointer<X11EventFilter> m_screenEdgesFilter;
-    QScopedPointer<X11EventFilter> m_randrEventFilter;
+    std::unique_ptr<WindowSelector> m_windowSelector;
+    std::unique_ptr<X11EventFilter> m_screenEdgesFilter;
+    std::unique_ptr<X11EventFilter> m_randrEventFilter;
     RenderLoop *m_renderLoop;
     QVector<Output *> m_outputs;
 };
