@@ -13,6 +13,8 @@
 #include "outputlayer.h"
 #include "utils/damagejournal.h"
 // wayland
+#include <dmabuftexture.h>
+#include <optional>
 #include <wayland-egl.h>
 
 #include <memory>
@@ -20,6 +22,7 @@
 class QTemporaryFile;
 struct wl_buffer;
 struct wl_shm;
+struct gbm_bo;
 
 namespace KWin
 {
@@ -96,6 +99,7 @@ public:
     std::shared_ptr<KWin::GLTexture> textureForOutput(KWin::Output *output) const override;
 
 private:
+    gbm_bo *createBo(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers);
     bool initializeEgl();
     bool initBufferConfigs();
     bool initRenderingContext();

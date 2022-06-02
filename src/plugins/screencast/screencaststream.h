@@ -10,6 +10,7 @@
 
 #include "config-kwin.h"
 
+#include "dmabufattributes.h"
 #include "kwinglobals.h"
 #include "wayland/screencast_v1_interface.h"
 
@@ -120,6 +121,7 @@ private:
     EGLNativeFence *m_pendingFence = nullptr;
     std::optional<std::chrono::nanoseconds> m_start;
     quint64 m_sequential = 0;
+    std::optional<DmaBufAttributes> m_attribs;
 };
 
 } // namespace KWin

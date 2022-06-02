@@ -16,6 +16,7 @@
 #include "utils/egl_context_attribute_builder.h"
 #include "wayland/display.h"
 #include "wayland_server.h"
+#include "dmabuftexture.h"
 // kwin libs
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
@@ -23,6 +24,9 @@
 #include <QOpenGLContext>
 
 #include <memory>
+#include "drm_fourcc.h"
+#include <kwineglimagetexture.h>
+#include <kwineglutils_p.h>
 
 namespace KWin
 {
@@ -390,6 +394,78 @@ bool AbstractEglBackend::prefer10bpc() const
 EglDmabuf *AbstractEglBackend::dmabuf() const
 {
     return m_dmaBuf;
+}
+
+EGLImageKHR AbstractEglBackend::importDmaBufAsImage(const DmaBufAttributes &dmabuf) const
+{
+    QVector<EGLint> attribs;
+    attribs.reserve(6 + dmabuf.planeCount * 10 + 1);
+
+    attribs
+        << EGL_WIDTH << dmabuf.width
+        << EGL_HEIGHT << dmabuf.height
+        << EGL_LINUX_DRM_FOURCC_EXT << dmabuf.format;
+
+    attribs
+        << EGL_DMA_BUF_PLANE0_FD_EXT << dmabuf.fd[0]
+        << EGL_DMA_BUF_PLANE0_OFFSET_EXT << dmabuf.offset[0]
+        << EGL_DMA_BUF_PLANE0_PITCH_EXT << dmabuf.pitch[0];
+    if (dmabuf.modifier != DRM_FORMAT_MOD_INVALID) {
+        attribs
+            << EGL_DMA_BUF_PLANE0_MODIFIER_LO_EXT << EGLint(dmabuf.modifier & 0xffffffff)
+            << EGL_DMA_BUF_PLANE0_MODIFIER_HI_EXT << EGLint(dmabuf.modifier >> 32);
+    }
+
+    if (dmabuf.planeCount > 1) {
+        attribs
+            << EGL_DMA_BUF_PLANE1_FD_EXT << dmabuf.fd[1]
+            << EGL_DMA_BUF_PLANE1_OFFSET_EXT << dmabuf.offset[1]
+            << EGL_DMA_BUF_PLANE1_PITCH_EXT << dmabuf.pitch[1];
+        if (dmabuf.modifier != DRM_FORMAT_MOD_INVALID) {
+            attribs
+                << EGL_DMA_BUF_PLANE1_MODIFIER_LO_EXT << EGLint(dmabuf.modifier & 0xffffffff)
+                << EGL_DMA_BUF_PLANE1_MODIFIER_HI_EXT << EGLint(dmabuf.modifier >> 32);
+        }
+    }
+
+    if (dmabuf.planeCount > 2) {
+        attribs
+            << EGL_DMA_BUF_PLANE2_FD_EXT << dmabuf.fd[2]
+            << EGL_DMA_BUF_PLANE2_OFFSET_EXT << dmabuf.offset[2]
+            << EGL_DMA_BUF_PLANE2_PITCH_EXT << dmabuf.pitch[2];
+        if (dmabuf.modifier != DRM_FORMAT_MOD_INVALID) {
+            attribs
+                << EGL_DMA_BUF_PLANE2_MODIFIER_LO_EXT << EGLint(dmabuf.modifier & 0xffffffff)
+                << EGL_DMA_BUF_PLANE2_MODIFIER_HI_EXT << EGLint(dmabuf.modifier >> 32);
+        }
+    }
+
+    if (dmabuf.planeCount > 3) {
+        attribs
+            << EGL_DMA_BUF_PLANE3_FD_EXT << dmabuf.fd[3]
+            << EGL_DMA_BUF_PLANE3_OFFSET_EXT << dmabuf.offset[3]
+            << EGL_DMA_BUF_PLANE3_PITCH_EXT << dmabuf.pitch[3];
+        if (dmabuf.modifier != DRM_FORMAT_MOD_INVALID) {
+            attribs
+                << EGL_DMA_BUF_PLANE3_MODIFIER_LO_EXT << EGLint(dmabuf.modifier & 0xffffffff)
+                << EGL_DMA_BUF_PLANE3_MODIFIER_HI_EXT << EGLint(dmabuf.modifier >> 32);
+        }
+    }
+
+    attribs << EGL_NONE;
+
+    return eglCreateImageKHR(m_display, EGL_NO_CONTEXT, EGL_LINUX_DMA_BUF_EXT, nullptr, attribs.data());
+}
+
+std::shared_ptr<GLTexture> AbstractEglBackend::importDmaBufAsTexture(const DmaBufAttributes &attributes) const
+{
+    EGLImageKHR image = importDmaBufAsImage(attributes);
+    if (image != EGL_NO_IMAGE_KHR) {
+        return std::make_shared<EGLImageTexture>(eglDisplay(), image, GL_RGBA8, QSize(attributes.width, attributes.height));
+    } else {
+        qCWarning(KWIN_OPENGL) << "Failed to record frame: Error creating EGLImageKHR - " << getEglErrorString();
+        return nullptr;
+    }
 }
 
 }

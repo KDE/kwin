@@ -13,6 +13,7 @@
 
 #include "composite.h"
 #include "cursor.h"
+#include "dmabuftexture.h"
 #include "effects.h"
 #include "outline.h"
 #include "output.h"
@@ -80,10 +81,25 @@ QPainterBackend *Platform::createQPainterBackend()
     return nullptr;
 }
 
-std::shared_ptr<DmaBufTexture> Platform::createDmaBufTexture(const QSize &size)
+std::optional<DmaBufAttributes> Platform::testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers)
 {
     Q_UNUSED(size)
+    Q_UNUSED(format)
+    Q_UNUSED(modifiers)
     return {};
+}
+
+std::shared_ptr<DmaBufTexture> Platform::createDmaBufTexture(const QSize &size, quint32 format, uint64_t modifier)
+{
+    Q_UNUSED(size)
+    Q_UNUSED(format)
+    Q_UNUSED(modifier)
+    return {};
+}
+
+std::shared_ptr<DmaBufTexture> Platform::createDmaBufTexture(const DmaBufAttributes &attribs)
+{
+    return createDmaBufTexture({attribs.width, attribs.height}, attribs.format, attribs.modifier);
 }
 
 Edge *Platform::createScreenEdge(ScreenEdges *edges)

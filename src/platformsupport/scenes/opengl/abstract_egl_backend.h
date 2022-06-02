@@ -30,6 +30,7 @@ struct AbstractEglBackendFunctions
     eglQueryWaylandBufferWL_func eglQueryWaylandBufferWL = nullptr;
 };
 
+struct DmaBufAttributes;
 class EglDmabuf;
 class Output;
 
@@ -67,6 +68,9 @@ public:
     dev_t deviceId() const;
     virtual bool prefer10bpc() const;
     EglDmabuf *dmabuf() const;
+
+    std::shared_ptr<GLTexture> importDmaBufAsTexture(const DmaBufAttributes &attributes) const;
+    EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &attributes) const;
 
 protected:
     AbstractEglBackend(dev_t deviceId = 0);

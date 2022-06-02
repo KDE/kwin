@@ -19,6 +19,8 @@
 
 #include <memory>
 
+struct gbm_bo;
+
 namespace KWin
 {
 
@@ -44,7 +46,9 @@ public:
     InputBackend *createInputBackend() override;
     QPainterBackend *createQPainterBackend() override;
     OpenGLBackend *createOpenGLBackend() override;
-    std::shared_ptr<DmaBufTexture> createDmaBufTexture(const QSize &size) override;
+
+    std::optional<DmaBufAttributes> testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers) override;
+    std::shared_ptr<DmaBufTexture> createDmaBufTexture(const QSize &size, quint32 format, const uint64_t modifier) override;
     Session *session() const override;
     bool initialize() override;
 
@@ -112,6 +116,8 @@ private:
     std::unique_ptr<DpmsInputEventFilter> m_dpmsFilter;
     std::unique_ptr<PlaceholderInputEventFilter> m_placeholderFilter;
     DrmRenderBackend *m_renderBackend = nullptr;
+
+    gbm_bo *createBo(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers);
 };
 
 }

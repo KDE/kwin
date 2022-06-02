@@ -17,6 +17,7 @@
 
 #include <functional>
 #include <memory>
+#include <optional>
 
 class QAction;
 
@@ -43,6 +44,7 @@ class Scene;
 class ScreenEdges;
 class Session;
 class OutputConfiguration;
+struct DmaBufAttributes;
 
 class KWIN_EXPORT Outputs : public QVector<Output *>
 {
@@ -67,7 +69,9 @@ public:
     virtual InputBackend *createInputBackend();
     virtual OpenGLBackend *createOpenGLBackend();
     virtual QPainterBackend *createQPainterBackend();
-    virtual std::shared_ptr<DmaBufTexture> createDmaBufTexture(const QSize &size);
+    virtual std::optional<DmaBufAttributes> testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers);
+    virtual std::shared_ptr<DmaBufTexture> createDmaBufTexture(const QSize &size, quint32 format, const uint64_t modifier);
+    std::shared_ptr<DmaBufTexture> createDmaBufTexture(const DmaBufAttributes &attributes);
 
     /**
      * Allows the platform to create a platform specific screen edge.

@@ -39,6 +39,27 @@
 namespace KWin
 {
 
+uint32_t spaVideoFormatToDrmFormat(spa_video_format spa_format)
+{
+    switch (spa_format) {
+    case SPA_VIDEO_FORMAT_RGBA:
+        return DRM_FORMAT_ABGR8888;
+    case SPA_VIDEO_FORMAT_RGBx:
+        return DRM_FORMAT_XBGR8888;
+    case SPA_VIDEO_FORMAT_BGRA:
+        return DRM_FORMAT_ARGB8888;
+    case SPA_VIDEO_FORMAT_BGRx:
+        return DRM_FORMAT_XRGB8888;
+    case SPA_VIDEO_FORMAT_BGR:
+        return DRM_FORMAT_BGR888;
+    case SPA_VIDEO_FORMAT_RGB:
+        return DRM_FORMAT_RGB888;
+    default:
+        qCDebug(KWIN_SCREENCAST) << "unknown format" << spa_format;
+        return DRM_FORMAT_INVALID;
+    }
+}
+
 void ScreenCastStream::onStreamStateChanged(void *data, pw_stream_state old, pw_stream_state state, const char *error_message)
 {
     ScreenCastStream *pw = static_cast<ScreenCastStream *>(data);
@@ -134,26 +155,26 @@ void ScreenCastStream::onStreamParamChanged(void *data, uint32_t id, const struc
 
 void ScreenCastStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
 {
-    std::shared_ptr<DmaBufTexture> dmabuf;
     ScreenCastStream *stream = static_cast<ScreenCastStream *>(data);
     struct spa_data *spa_data = buffer->buffer->datas;
 
     spa_data->mapoffset = 0;
     spa_data->flags = SPA_DATA_FLAG_READWRITE;
 
+    std::shared_ptr<DmaBufTexture> dmabuff;
+
     if (spa_data[0].type != SPA_ID_INVALID && spa_data[0].type & (1 << SPA_DATA_DmaBuf)) {
-        dmabuf = kwinApp()->platform()->createDmaBufTexture(stream->m_resolution);
+        Q_ASSERT(stream->m_attribs);
+        dmabuff = kwinApp()->platform()->createDmaBufTexture(*stream->m_attribs);
     }
 
-    if (dmabuf) {
-        const DmaBufAttributes dmabufAttribs = dmabuf->attributes();
-
+    if (dmabuff) {
         spa_data->type = SPA_DATA_DmaBuf;
-        spa_data->fd = dmabufAttribs.fd[0];
+        spa_data->fd = dmabuff->attributes().fd[0];
         spa_data->data = nullptr;
-        spa_data->maxsize = dmabufAttribs.pitch[0] * stream->m_resolution.height();
+        spa_data->maxsize = dmabuff->attributes().pitch[0] * stream->m_resolution.height();
 
-        stream->m_dmabufDataForPwBuffer.insert(buffer, dmabuf);
+        stream->m_dmabufDataForPwBuffer.insert(buffer, dmabuff);
 #ifdef F_SEAL_SEAL // Disable memfd on systems that don't have it, like BSD < 12
     } else {
         if (!(spa_data[0].type & (1 << SPA_DATA_MemFd))) {
@@ -285,8 +306,9 @@ bool ScreenCastStream::createStream()
     int n_params;
 
     const auto format = m_source->hasAlphaChannel() ? SPA_VIDEO_FORMAT_BGRA : SPA_VIDEO_FORMAT_BGR;
+    m_attribs = kwinApp()->platform()->testCreateDmaBuf(m_resolution, spaVideoFormatToDrmFormat(format), {DRM_FORMAT_MOD_INVALID});
 
-    if (kwinApp()->platform()->createDmaBufTexture(m_resolution) != nullptr) {
+    if (m_attribs) {
         params[0] = buildFormat(&podBuilder, SPA_VIDEO_FORMAT_BGRA, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, &modifier, 1);
         params[1] = buildFormat(&podBuilder, format, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, nullptr, 0);
         n_params = 2;
@@ -397,6 +419,7 @@ void ScreenCastStream::recordFrame(const QRegion &damagedRegion)
         }
     } else {
         auto &buf = m_dmabufDataForPwBuffer[buffer];
+        Q_ASSERT(buf);
 
         spa_data->chunk->stride = buf->attributes().pitch[0];
         spa_data->chunk->size = spa_data->maxsize;

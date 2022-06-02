@@ -139,7 +139,7 @@ std::shared_ptr<GLTexture> VirtualEglGbmLayer::texture() const
         qCWarning(KWIN_DRM) << "Failed to record frame: No gbm buffer!";
         return nullptr;
     }
-    return m_eglBackend->importDmaBufAsTexture(m_currentBuffer->bo());
+    return m_eglBackend->importBufferObjectAsTexture(m_currentBuffer->bo());
 }
 
 bool VirtualEglGbmLayer::scanout(SurfaceItem *surfaceItem)

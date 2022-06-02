@@ -38,6 +38,8 @@
 #include <QOpenGLContext>
 
 #include <cmath>
+#include <drm_fourcc.h>
+#include <gbm.h>
 
 namespace KWin
 {
@@ -229,6 +231,8 @@ EglWaylandBackend::EglWaylandBackend(WaylandBackend *b)
         }
         m_outputs.erase(it);
     });
+
+    b->setEglBackend(this);
 }
 
 EglWaylandBackend::~EglWaylandBackend()
@@ -391,5 +395,6 @@ OutputLayer *EglWaylandBackend::primaryLayer(Output *output)
 {
     return m_outputs[output].get();
 }
+
 }
 }

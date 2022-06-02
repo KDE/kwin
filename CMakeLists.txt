@@ -245,6 +245,13 @@ else()
     set(HAVE_GBM_BO_GET_FD_FOR_PLANE 0)
 endif()
 
+if (gbm_VERSION_STRING VERSION_GREATER_EQUAL 21.3.0)
+    set(GBM_CREATE_WITH_MODIFIERS2 1)
+else()
+    set(GBM_CREATE_WITH_MODIFIERS2 0)
+endif()
+
+
 pkg_check_modules(Libxcvt IMPORTED_TARGET libxcvt>=0.1.1 REQUIRED)
 add_feature_info(Libxcvt Libxcvt_FOUND "Required for generating modes in the drm backend")
 

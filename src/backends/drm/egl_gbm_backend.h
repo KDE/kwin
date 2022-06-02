@@ -80,10 +80,8 @@ public:
     std::optional<GbmFormat> gbmFormatForDrmFormat(uint32_t format) const;
     DrmGpu *gpu() const;
 
-    EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &attributes);
-    EGLImageKHR importDmaBufAsImage(gbm_bo *bo);
-    std::shared_ptr<GLTexture> importDmaBufAsTexture(const DmaBufAttributes &attributes);
-    std::shared_ptr<GLTexture> importDmaBufAsTexture(gbm_bo *bo);
+    EGLImageKHR importBufferObjectAsImage(gbm_bo *bo);
+    std::shared_ptr<GLTexture> importBufferObjectAsTexture(gbm_bo *bo);
 
 private:
     bool initializeEgl();

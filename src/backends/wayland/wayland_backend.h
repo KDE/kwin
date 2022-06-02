@@ -28,6 +28,7 @@ struct wl_display;
 struct wl_event_queue;
 struct wl_seat;
 struct gbm_device;
+struct gbm_bo;
 
 namespace KWayland
 {
@@ -67,6 +68,7 @@ namespace Wayland
 class WaylandBackend;
 class WaylandSeat;
 class WaylandOutput;
+class EglWaylandBackend;
 
 class WaylandCursor : public QObject
 {
@@ -301,6 +303,19 @@ public:
     Output *createVirtualOutput(const QString &name, const QSize &size, double scale) override;
     void removeVirtualOutput(Output *output) override;
 
+    std::optional<DmaBufAttributes> testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers) override;
+    std::shared_ptr<DmaBufTexture> createDmaBufTexture(const QSize &size, quint32 format, uint64_t modifier) override;
+
+    gbm_device *gbmDevice() const
+    {
+        return m_gbmDevice;
+    }
+
+    void setEglBackend(EglWaylandBackend *eglBackend)
+    {
+        m_eglBackend = eglBackend;
+    }
+
 Q_SIGNALS:
     void systemCompositorDied();
     void connectionFailed();
@@ -316,6 +331,7 @@ private:
 
     void updateScreenSize(WaylandOutput *output);
     WaylandOutput *createOutput(const QPoint &position, const QSize &size);
+    gbm_bo *createBo(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers);
 
     Session *m_session;
     wl_display *m_display;
@@ -331,6 +347,7 @@ private:
     KWayland::Client::RelativePointerManager *m_relativePointerManager = nullptr;
     KWayland::Client::PointerConstraints *m_pointerConstraints = nullptr;
     KWayland::Client::PointerGestures *m_pointerGestures = nullptr;
+    EglWaylandBackend *m_eglBackend = nullptr;
 
     QThread *m_connectionThread;
     QVector<WaylandOutput *> m_outputs;

@@ -624,40 +624,78 @@ void DrmBackend::removeVirtualOutput(Output *output)
     primaryGpu()->removeVirtualOutput(virtualOutput);
 }
 
-std::shared_ptr<DmaBufTexture> DrmBackend::createDmaBufTexture(const QSize &size)
+#if !GBM_CREATE_WITH_MODIFIERS2
+struct gbm_bo *
+gbm_bo_create_with_modifiers2(struct gbm_device *gbm,
+                             uint32_t width, uint32_t height,
+                             uint32_t format,
+                             const uint64_t *modifiers,
+                             const unsigned int count, quint32 flags)
 {
-    if (const auto eglBackend = dynamic_cast<EglGbmBackend *>(m_renderBackend); eglBackend && primaryGpu()->gbmDevice()) {
-        eglBackend->makeCurrent();
+    return gbm_bo_create_with_modifiers(gbm, width, height, format, modifiers, count);
+}
+#endif
 
-        const int format = GBM_FORMAT_ARGB8888;
-        const uint64_t modifiers[] = {DRM_FORMAT_MOD_LINEAR};
-
-        gbm_bo *bo = gbm_bo_create_with_modifiers(primaryGpu()->gbmDevice(),
-                                                  size.width(),
-                                                  size.height(),
-                                                  format,
-                                                  modifiers, 1);
-
-        // If modifiers are not supported fallback to gbm_bo_create().
-        if (!bo && errno == ENOSYS) {
-            bo = gbm_bo_create(primaryGpu()->gbmDevice(),
-                               size.width(),
-                               size.height(),
-                               format,
-                               GBM_BO_USE_RENDERING | GBM_BO_USE_LINEAR);
-        }
-        if (!bo) {
-            return nullptr;
-        }
-
-        // The bo will be kept around until the last fd is closed.
-        const DmaBufAttributes attributes = dmaBufAttributesForBo(bo);
-        gbm_bo_destroy(bo);
-
-        return std::make_shared<DmaBufTexture>(eglBackend->importDmaBufAsTexture(attributes), attributes);
-    } else {
+gbm_bo *DrmBackend::createBo(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers)
+{
+    const auto eglBackend = dynamic_cast<EglGbmBackend *>(m_renderBackend);
+    if (!eglBackend || !primaryGpu()->gbmDevice()) {
         return nullptr;
     }
+
+    eglBackend->makeCurrent();
+
+    const uint32_t flags = GBM_BO_USE_RENDERING | GBM_BO_USE_LINEAR;
+    gbm_bo *bo = nullptr;
+    if (modifiers.count() > 0 && !(modifiers.count() == 1 && modifiers[0] == DRM_FORMAT_MOD_INVALID)) {
+        bo = gbm_bo_create_with_modifiers2(primaryGpu()->gbmDevice(),
+                                           size.width(),
+                                           size.height(),
+                                           format,
+                                           modifiers.constData(), modifiers.count(), 0);
+    }
+
+    if (!bo && (modifiers.isEmpty() || modifiers.contains(DRM_FORMAT_MOD_INVALID))) {
+        bo = gbm_bo_create(primaryGpu()->gbmDevice(),
+                           size.width(),
+                           size.height(),
+                           format,
+                           flags);
+        Q_ASSERT(!bo || gbm_bo_get_modifier(bo) == DRM_FORMAT_MOD_INVALID);
+    }
+    return bo;
+}
+
+std::optional<DmaBufAttributes> DrmBackend::testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers)
+{
+    gbm_bo *bo = createBo(size, format, modifiers);
+    if (!bo) {
+        return {};
+    }
+
+    auto ret = dmaBufAttributesForBo(bo);
+    gbm_bo_destroy(bo);
+
+    // We are just testing to know it works and check the modifier, no need to keep the fd
+    for (int i = 0, c = ret.planeCount; i < c; ++i) {
+        close(ret.fd[i]);
+    }
+    return ret;
+}
+
+std::shared_ptr<DmaBufTexture> DrmBackend::createDmaBufTexture(const QSize &size, quint32 format, uint64_t modifier)
+{
+    const auto eglBackend = dynamic_cast<EglGbmBackend *>(m_renderBackend);
+    QVector<uint64_t> mods = {modifier};
+    gbm_bo *bo = createBo(size, format, mods);
+    if (!bo) {
+        return {};
+    }
+
+    // The bo will be kept around until the last fd is closed.
+    const DmaBufAttributes attributes = dmaBufAttributesForBo(bo);
+    gbm_bo_destroy(bo);
+    return std::make_shared<DmaBufTexture>(eglBackend->importDmaBufAsTexture(attributes), attributes);
 }
 
 DrmGpu *DrmBackend::primaryGpu() const
