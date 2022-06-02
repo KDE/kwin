@@ -21,11 +21,11 @@ struct DmaBufAttributes
     int width;
     int height;
     int format;
+    uint64_t modifier;
 
     int fd[4];
     int offset[4];
     int pitch[4];
-    uint64_t modifier[4];
 };
 
 class KWIN_EXPORT DmaBufTexture
