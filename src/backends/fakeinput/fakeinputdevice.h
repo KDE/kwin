@@ -16,7 +16,7 @@ class FakeInputDevice;
 namespace KWin
 {
 
-class FakeInputDevice : public InputDevice
+class KWIN_EXPORT FakeInputDevice : public InputDevice
 {
     Q_OBJECT
 
