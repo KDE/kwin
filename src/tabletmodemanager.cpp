@@ -7,11 +7,12 @@
 
 #include "tabletmodemanager.h"
 
+#include "backends/fakeinput/fakeinputdevice.h"
 #include "backends/libinput/device.h"
 #include "input.h"
-#include "inputdevice.h"
 #include "input_event.h"
 #include "input_event_spy.h"
+#include "inputdevice.h"
 
 #include <QDBusConnection>
 
@@ -22,7 +23,11 @@ KWIN_SINGLETON_FACTORY_VARIABLE(TabletModeManager, s_manager)
 
 static bool shouldIgnoreDevice(InputDevice *device)
 {
-    auto libinput_device = qobject_cast<LibInput::Device*>(device);
+    if (qobject_cast<FakeInputDevice *>(device)) {
+        return true;
+    }
+
+    auto libinput_device = qobject_cast<LibInput::Device *>(device);
     if (!libinput_device) {
         return false;
     }
