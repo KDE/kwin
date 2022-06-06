@@ -51,6 +51,7 @@
 // system
 #include <unistd.h>
 // c++
+#include <cmath>
 #include <csignal>
 
 // Put all externs before the namespace statement to allow the linker
@@ -3570,17 +3571,17 @@ QSizeF X11Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
         return QSizeF(w, h);
     }
 
-    int width_inc = m_geometryHints.resizeIncrements().width();
-    int height_inc = m_geometryHints.resizeIncrements().height();
-    int basew_inc = m_geometryHints.baseSize().width();
-    int baseh_inc = m_geometryHints.baseSize().height();
+    qreal width_inc = m_geometryHints.resizeIncrements().width();
+    qreal height_inc = m_geometryHints.resizeIncrements().height();
+    qreal basew_inc = m_geometryHints.baseSize().width();
+    qreal baseh_inc = m_geometryHints.baseSize().height();
     if (!m_geometryHints.hasBaseSize()) {
         basew_inc = m_geometryHints.minSize().width();
         baseh_inc = m_geometryHints.minSize().height();
     }
 
-    w = int((w - basew_inc) / width_inc) * width_inc + basew_inc;
-    h = int((h - baseh_inc) / height_inc) * height_inc + baseh_inc;
+    w = std::floor((w - basew_inc) / width_inc) * width_inc + basew_inc;
+    h = std::floor((h - baseh_inc) / height_inc) * height_inc + baseh_inc;
     // code for aspect ratios based on code from FVWM
     /*
      * The math looks like this:
