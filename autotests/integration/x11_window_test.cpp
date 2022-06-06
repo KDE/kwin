@@ -65,13 +65,11 @@ void X11WindowTest::initTestCase_data()
 
 void X11WindowTest::initTestCase()
 {
-    QFETCH(qreal, scale);
     qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
-    kwinApp()->setXwaylandScale(scale);
-    kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024) / scale);
+    kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
     kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
 
@@ -102,7 +100,8 @@ struct XcbConnectionDeleter
 void X11WindowTest::testMinimumSize()
 {
     // This test verifies that the minimum size constraint is correctly applied.
-    QFETCH(qreal, scale);
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
@@ -208,7 +207,8 @@ void X11WindowTest::testMinimumSize()
 void X11WindowTest::testMaximumSize()
 {
     // This test verifies that the maximum size constraint is correctly applied.
-    QFETCH(qreal, scale);
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
@@ -314,7 +314,8 @@ void X11WindowTest::testMaximumSize()
 void X11WindowTest::testResizeIncrements()
 {
     // This test verifies that the resize increments constraint is correctly applied.
-    QFETCH(qreal, scale);
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
@@ -392,6 +393,9 @@ void X11WindowTest::testResizeIncrements()
 
 void X11WindowTest::testResizeIncrementsNoBaseSize()
 {
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
     // Create an xcb window.
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(c.data()));
@@ -468,6 +472,9 @@ void X11WindowTest::testResizeIncrementsNoBaseSize()
 
 void X11WindowTest::testTrimCaption_data()
 {
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
     QTest::addColumn<QByteArray>("originalTitle");
     QTest::addColumn<QByteArray>("expectedTitle");
 
@@ -482,6 +489,9 @@ void X11WindowTest::testTrimCaption_data()
 
 void X11WindowTest::testTrimCaption()
 {
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
     // this test verifies that caption is properly trimmed
 
     // create an xcb window
@@ -529,6 +539,9 @@ void X11WindowTest::testTrimCaption()
 
 void X11WindowTest::testFullscreenLayerWithActiveWaylandWindow()
 {
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
     // this test verifies that an X11 fullscreen window does not stay in the active layer
     // when a Wayland window is active, see BUG: 375759
     QCOMPARE(screens()->count(), 1);
@@ -650,6 +663,8 @@ void X11WindowTest::testFullscreenLayerWithActiveWaylandWindow()
 void X11WindowTest::testFocusInWithWaylandLastActiveWindow()
 {
     // this test verifies that Workspace::allowWindowActivation does not crash if last client was a Wayland client
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
 
     // create an X11 window
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
@@ -708,6 +723,9 @@ void X11WindowTest::testFocusInWithWaylandLastActiveWindow()
 
 void X11WindowTest::testX11WindowId()
 {
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
     // create an X11 window
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(c.data()));
@@ -781,6 +799,9 @@ void X11WindowTest::testX11WindowId()
 
 void X11WindowTest::testCaptionChanges()
 {
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
     // verifies that caption is updated correctly when the X11 window updates it
     // BUG: 383444
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
@@ -831,6 +852,9 @@ void X11WindowTest::testCaptionChanges()
 
 void X11WindowTest::testCaptionWmName()
 {
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
     // this test verifies that a caption set through WM_NAME is read correctly
 
     // open glxgears as that one only uses WM_NAME
@@ -854,6 +878,9 @@ void X11WindowTest::testCaptionWmName()
 
 void X11WindowTest::testCaptionMultipleWindows()
 {
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
     // BUG 384760
     // create first window
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
@@ -931,6 +958,9 @@ void X11WindowTest::testFullscreenWindowGroups()
     // then a second window is created which is in the same window group
     // BUG: 388310
 
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(c.data()));
     const QRect windowGeometry(0, 0, 100, 200);
@@ -1005,6 +1035,9 @@ void X11WindowTest::testActivateFocusedWindow()
     // case no FocusIn event will be generated and the window won't be marked as active. This test
     // verifies that we handle that subtle case properly.
 
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> connection(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(connection.data()));
 
@@ -1069,6 +1102,9 @@ void X11WindowTest::testReentrantMoveResize()
 {
     // This test verifies that calling moveResize() from a slot connected directly
     // to the frameGeometryChanged() signal won't cause an infinite recursion.
+
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
 
     // Create a test window.
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
