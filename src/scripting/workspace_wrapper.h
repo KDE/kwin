@@ -233,6 +233,8 @@ public:
     VirtualDesktop *currentVirtualDesktop() const;
     void setCurrentVirtualDesktop(VirtualDesktop *desktop);
 
+    Q_INVOKABLE int screenAt(const QPointF &pos) const;
+
     /**
      * Returns the geometry a Client can use with the specified option.
      * This method should be preferred over other methods providing screen sizes as the

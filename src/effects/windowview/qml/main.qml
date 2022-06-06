@@ -105,7 +105,6 @@ Item {
             padding: PlasmaCore.Units.largeSpacing
             animationDuration: container.animationDuration
             animationEnabled: container.animationEnabled
-            dragEnabled: false
             organized: container.organized
             showOnly: container.effect.mode === WindowView.ModeWindowClass ? "activeClass" : selectedIds
             layout: effect.layout

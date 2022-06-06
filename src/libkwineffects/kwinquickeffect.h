@@ -123,6 +123,13 @@ public:
 
     static bool supported();
 
+    Q_INVOKABLE void checkItemDraggedOutOfScreen(QQuickItem *item);
+    Q_INVOKABLE void checkItemDroppedOutOfScreen(const QPointF &globalPos, QQuickItem *item);
+
+Q_SIGNALS:
+    void itemDraggedOutOfScreen(QQuickItem *item, QList<EffectScreen *> screens);
+    void itemDroppedOutOfScreen(const QPointF &globalPos, QQuickItem *item, EffectScreen *screen);
+
 protected:
     /**
      * Reimplement this function to provide your initial properties for the scene view
