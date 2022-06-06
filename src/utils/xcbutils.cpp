@@ -616,7 +616,7 @@ uint32_t toXNative(qreal value)
 {
     //debug helper, check for things getting mangled
     if (!qFuzzyIsNull(std::fmod(kwinApp()->xwaylandScale() * value, 1))) {
-        qCritical(KWIN_CORE) << "precious lost! floating value sent to X";
+        qCritical(KWIN_CORE) << "precision lost! floating value sent to X";
     }
     return std::round(kwinApp()->xwaylandScale() * value);
 }
