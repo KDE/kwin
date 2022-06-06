@@ -641,5 +641,10 @@ QSizeF fromXNative(const QSize &s)
     return QSizeF(fromXNative(s.width()), fromXNative(s.height()));
 }
 
+qreal nativeFloor(qreal value)
+{
+    return std::floor(value / kwinApp()->xwaylandScale()) * kwinApp()->xwaylandScale();
+}
+
 } // namespace Xcb
 } // namespace KWin

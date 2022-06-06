@@ -1103,12 +1103,12 @@ void X11Window::updateInputWindow()
         const uint32_t mask = XCB_CW_OVERRIDE_REDIRECT | XCB_CW_EVENT_MASK;
         const uint32_t values[] = {true,
                                    XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW | XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION};
-        m_decoInputExtent.create(bounds.toRect(), XCB_WINDOW_CLASS_INPUT_ONLY, mask, values);
+        m_decoInputExtent.create(bounds, XCB_WINDOW_CLASS_INPUT_ONLY, mask, values);
         if (mapping_state == Mapped) {
             m_decoInputExtent.map();
         }
     } else {
-        m_decoInputExtent.setGeometry(bounds.toRect());
+        m_decoInputExtent.setGeometry(bounds);
     }
 
     const QVector<xcb_rectangle_t> rects = Xcb::regionToRects(region);
@@ -1127,7 +1127,7 @@ void X11Window::updateDecoration(bool check_workspace_pos, bool force)
         destroyDecoration();
     }
     if (!noBorder()) {
-        createDecoration(oldgeom.toRect());
+        createDecoration(oldgeom);
     } else {
         destroyDecoration();
     }
@@ -1145,7 +1145,7 @@ void X11Window::invalidateDecoration()
     updateDecoration(true, true);
 }
 
-void X11Window::createDecoration(const QRect &oldgeom)
+void X11Window::createDecoration(const QRectF &oldgeom)
 {
     QSharedPointer<KDecoration2::Decoration> decoration(Decoration::DecorationBridge::self()->createDecoration(this));
     if (decoration) {
@@ -1155,6 +1155,7 @@ void X11Window::createDecoration(const QRect &oldgeom)
     }
     setDecoration(decoration);
 
+    qDebug() << implicitSize();
     moveResize(QRectF(calculateGravitation(false), implicitSize()));
     maybeCreateX11DecorationRenderer();
     Q_EMIT geometryShapeChanged(this, oldgeom);
@@ -1513,7 +1514,7 @@ void X11Window::doMinimize()
 QRectF X11Window::iconGeometry() const
 {
     NETRect r = info->iconGeometry();
-    QRect geom(r.pos.x, r.pos.y, r.size.width, r.size.height);
+    QRect geom(r.pos.x, r.pos.y, r.size.width, r.size.height); // DAVE
     if (geom.isValid()) {
         return geom;
     } else {
@@ -3580,13 +3581,8 @@ QSizeF X11Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
         baseh_inc = m_geometryHints.minSize().height();
     }
 
-    qreal nativeWidthInc = width_inc * kwinApp()->xwaylandScale();
-    qreal nativeHeightInc = width_inc * kwinApp()->xwaylandScale();
-
-    qDebug() << w << h;
-
-    w = std::floor((w - basew_inc) / nativeWidthInc) * nativeWidthInc + basew_inc;
-    h = std::floor((h - baseh_inc) / nativeHeightInc) * nativeHeightInc + baseh_inc;
+    w = Xcb::nativeFloor((w - basew_inc) / width_inc) * width_inc + basew_inc;
+    h = Xcb::nativeFloor((h - baseh_inc) / width_inc) * width_inc + baseh_inc;
     // code for aspect ratios based on code from FVWM
     /*
      * The math looks like this:
@@ -3603,7 +3599,6 @@ QSizeF X11Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
      *
      */
     if (m_geometryHints.hasAspect()) {
-        qDebug() << "BOO!";
         double min_aspect_w = m_geometryHints.minAspect().width(); // use doubles, because the values can be MAX_INT
         double min_aspect_h = m_geometryHints.minAspect().height(); // and multiplying would go wrong otherwise
         double max_aspect_w = m_geometryHints.maxAspect().width();

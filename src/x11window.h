@@ -452,7 +452,7 @@ private:
     void maybeCreateX11DecorationRenderer();
     void maybeDestroyX11DecorationRenderer();
     void updateDecoration(bool check_workspace_pos, bool force = false);
-    void createDecoration(const QRect &oldgeom);
+    void createDecoration(const QRectF &oldgeom);
     void destroyDecoration();
 
     Xcb::Window m_client;

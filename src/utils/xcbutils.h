@@ -42,6 +42,12 @@ qreal KWIN_EXPORT fromXNative(uint32_t value);
 QRectF KWIN_EXPORT fromXNative(const QRect &value);
 QSizeF KWIN_EXPORT fromXNative(const QSize &value);
 
+/** Floors a given value to using the scale as a base
+ *  Use when flooring to ints from Xwayland
+ *  i.e floor(a/scale) * scale
+ */
+qreal KWIN_EXPORT nativeFloor(qreal value);
+
 // forward declaration of methods
 static void defineCursor(xcb_window_t window, xcb_cursor_t cursor);
 static void setInputFocus(xcb_window_t window, uint8_t revertTo = XCB_INPUT_FOCUS_POINTER_ROOT, xcb_timestamp_t time = xTime());
