@@ -1164,7 +1164,7 @@ void X11Window::destroyDecoration()
 {
     QRectF oldgeom = frameGeometry();
     if (isDecorated()) {
-        QPoint grav = calculateGravitation(true);
+        QPointF grav = calculateGravitation(true);
         setDecoration(nullptr);
         maybeDestroyX11DecorationRenderer();
         moveResize(QRectF(grav, implicitSize()));
@@ -3580,8 +3580,13 @@ QSizeF X11Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
         baseh_inc = m_geometryHints.minSize().height();
     }
 
-    w = std::floor((w - basew_inc) / width_inc) * width_inc + basew_inc;
-    h = std::floor((h - baseh_inc) / height_inc) * height_inc + baseh_inc;
+    qreal nativeWidthInc = width_inc * kwinApp()->xwaylandScale();
+    qreal nativeHeightInc = width_inc * kwinApp()->xwaylandScale();
+
+    qDebug() << w << h;
+
+    w = std::floor((w - basew_inc) / nativeWidthInc) * nativeWidthInc + basew_inc;
+    h = std::floor((h - baseh_inc) / nativeHeightInc) * nativeHeightInc + baseh_inc;
     // code for aspect ratios based on code from FVWM
     /*
      * The math looks like this:
@@ -3598,6 +3603,7 @@ QSizeF X11Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
      *
      */
     if (m_geometryHints.hasAspect()) {
+        qDebug() << "BOO!";
         double min_aspect_w = m_geometryHints.minAspect().width(); // use doubles, because the values can be MAX_INT
         double min_aspect_h = m_geometryHints.minAspect().height(); // and multiplying would go wrong otherwise
         double max_aspect_w = m_geometryHints.maxAspect().width();
@@ -3732,12 +3738,12 @@ void X11Window::getWmNormalHints()
 
 QSizeF X11Window::minSize() const
 {
-    return rules()->checkMinSize(m_geometryHints.minSize().toSize());
+    return rules()->checkMinSize(m_geometryHints.minSize());
 }
 
 QSizeF X11Window::maxSize() const
 {
-    return rules()->checkMaxSize(m_geometryHints.maxSize().toSize());
+    return rules()->checkMaxSize(m_geometryHints.maxSize());
 }
 
 QSizeF X11Window::basicUnit() const
@@ -3774,10 +3780,10 @@ void X11Window::sendSyntheticConfigureNotify()
     xcb_flush(kwinApp()->x11Connection());
 }
 
-QPoint X11Window::gravityAdjustment(xcb_gravity_t gravity) const
+QPointF X11Window::gravityAdjustment(xcb_gravity_t gravity) const
 {
-    int dx = 0;
-    int dy = 0;
+    qreal dx = 0;
+    qreal dy = 0;
 
     // dx, dy specify how the client window moves to make space for the frame.
     // In general we have to compute the reference point and from that figure
@@ -3832,18 +3838,18 @@ QPoint X11Window::gravityAdjustment(xcb_gravity_t gravity) const
     return QPoint(dx, dy);
 }
 
-const QPoint X11Window::calculateGravitation(bool invert) const
+const QPointF X11Window::calculateGravitation(bool invert) const
 {
-    const QPoint adjustment = gravityAdjustment(m_geometryHints.windowGravity());
+    const QPointF adjustment = gravityAdjustment(m_geometryHints.windowGravity());
 
     // translate from client movement to frame movement
-    const int dx = adjustment.x() - borderLeft();
-    const int dy = adjustment.y() - borderTop();
+    const qreal dx = adjustment.x() - borderLeft();
+    const qreal dy = adjustment.y() - borderTop();
 
     if (!invert) {
-        return QPoint(x() + dx, y() + dy);
+        return QPointF(x() + dx, y() + dy);
     } else {
-        return QPoint(x() - dx, y() - dy);
+        return QPointF(x() - dx, y() - dy);
     }
 }
 
@@ -3917,15 +3923,15 @@ void X11Window::configureRequest(int value_mask, int rx, int ry, int rw, int rh,
         new_pos += gravityAdjustment(xcb_gravity_t(gravity));
         new_pos = clientPosToFramePos(new_pos);
 
-        int nw = clientSize().width();
-        int nh = clientSize().height();
+        qreal nw = clientSize().width();
+        qreal nh = clientSize().height();
         if (value_mask & XCB_CONFIG_WINDOW_WIDTH) {
             nw = rw;
         }
         if (value_mask & XCB_CONFIG_WINDOW_HEIGHT) {
             nh = rh;
         }
-        const QSizeF requestedClientSize = constrainClientSize(QSize(nw, nh));
+        const QSizeF requestedClientSize = constrainClientSize(QSizeF(nw, nh));
         QSizeF requestedFrameSize = clientSizeToFrameSize(requestedClientSize);
         requestedFrameSize = rules()->checkSize(requestedFrameSize); // DAVE
         new_pos = rules()->checkPosition(new_pos);

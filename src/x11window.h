@@ -231,8 +231,8 @@ public:
     void updateMouseGrab() override;
     xcb_window_t moveResizeGrabWindow() const;
 
-    QPoint gravityAdjustment(xcb_gravity_t gravity) const;
-    const QPoint calculateGravitation(bool invert) const;
+    QPointF gravityAdjustment(xcb_gravity_t gravity) const;
+    const QPointF calculateGravitation(bool invert) const;
 
     void NETMoveResize(int x_root, int y_root, NET::Direction direction);
     void NETMoveResizeWindow(int flags, int x, int y, int width, int height);
