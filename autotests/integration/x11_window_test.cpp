@@ -59,8 +59,8 @@ void X11WindowTest::initTestCase_data()
 {
     QTest::addColumn<qreal>("scale");
     QTest::newRow("normal") << 1.0;
-    QTest::newRow("scaled 2x") << 2.0;
-    QTest::newRow("scaled float test") << M_PI;
+    QTest::newRow("scaled2x") << 2.0;
+    QTest::newRow("scaledfloat") << M_PI;
 }
 
 void X11WindowTest::initTestCase()

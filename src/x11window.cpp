@@ -693,7 +693,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     updateDecoration(false); // Also gravitates
     // TODO: Is CentralGravity right here, when resizing is done after gravitating?
     const QSizeF constrainedClientSize = constrainClientSize(geom.size());
-    resize(rules()->checkSize(clientSizeToFrameSize(constrainedClientSize).toSize(), !isMapped));
+    resize(rules()->checkSize(clientSizeToFrameSize(constrainedClientSize), !isMapped));
 
     QPointF forced_pos = rules()->checkPosition(invalidPoint, !isMapped);
     if (forced_pos != invalidPoint) {
@@ -759,7 +759,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
                 maximize((MaximizeMode)pseudo_max);
                 // from now on, care about maxmode, since the maximization call will override mode for fix aspects
                 dontKeepInArea |= (max_mode == MaximizeFull);
-                QRect savedGeometry; // Use placement when unmaximizing ...
+                QRectF savedGeometry; // Use placement when unmaximizing ...
                 if (!(max_mode & MaximizeVertical)) {
                     savedGeometry.setY(y()); // ...but only for horizontal direction
                     savedGeometry.setHeight(height());
@@ -1294,7 +1294,7 @@ bool X11Window::isFullScreenable() const
         // check geometry constraints (rule to obey is set)
         const QRectF fullScreenArea = workspace()->clientArea(FullScreenArea, this);
         const QSizeF constrainedClientSize = constrainClientSize(fullScreenArea.size());
-        if (rules()->checkSize(constrainedClientSize.toSize()) != fullScreenArea.size()) {
+        if (rules()->checkSize(constrainedClientSize) != fullScreenArea.size()) {
             return false; // the app wouldn't fit exactly fullscreen geometry due to its strict geometry requirements
         }
     }
@@ -3696,6 +3696,7 @@ QSizeF X11Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
         h += baseSize.height();
     }
 
+    qDebug() << w << h;
     return QSizeF(w, h);
 }
 
@@ -3972,7 +3973,7 @@ void X11Window::configureRequest(int value_mask, int rx, int ry, int rw, int rh,
 
         const QSizeF requestedClientSize = constrainClientSize(QSize(nw, nh));
         QSizeF requestedFrameSize = clientSizeToFrameSize(requestedClientSize);
-        requestedFrameSize = rules()->checkSize(requestedFrameSize.toSize());
+        requestedFrameSize = rules()->checkSize(requestedFrameSize);
 
         if (requestedFrameSize != size()) { // don't restore if some app sets its own size again
             QRectF origClientGeometry = m_clientGeometry;
@@ -4179,6 +4180,7 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
         m_clientGeometry = frameRectToClientRect(frameGeometry);
     }
     m_frameGeometry = frameGeometry;
+    qDebug() << m_bufferGeometry << frameGeometry << frameRectToBufferRect(frameGeometry);
     m_bufferGeometry = frameRectToBufferRect(frameGeometry);
 
     if (pendingMoveResizeMode() == MoveResizeMode::None && m_lastBufferGeometry == m_bufferGeometry && m_lastFrameGeometry == m_frameGeometry && m_lastClientGeometry == m_clientGeometry) {
@@ -4727,9 +4729,9 @@ void X11Window::doInteractiveResizeSync()
     // it is mapped or resized. Given that we redirect frame windows and not client windows, we have
     // to resize the frame window in order to forcefully reallocate offscreen storage. If we don't do
     // this, then we might render partially updated client window. I know, it sucks.
-    m_frame.setGeometry(moveResizeBufferGeometry.toRect()); // DAVE!!!!
-    m_wrapper.setGeometry(QRect(clientPos().toPoint(), moveResizeClientGeometry.size().toSize()));
-    m_client.setGeometry(QRect(QPoint(0, 0), moveResizeClientGeometry.size().toSize()));
+    m_frame.setGeometry(moveResizeBufferGeometry);
+    m_wrapper.setGeometry(QRectF(clientPos(), moveResizeClientGeometry.size()));
+    m_client.setGeometry(QRectF(QPoint(0, 0), moveResizeClientGeometry.size()));
 }
 
 void X11Window::handleSyncTimeout()
