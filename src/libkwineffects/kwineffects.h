@@ -1980,6 +1980,9 @@ public:
      */
     virtual QRect geometry() const = 0;
 
+    Q_INVOKABLE QPointF mapToGlobal(const QPointF &pos) const;
+    Q_INVOKABLE QPointF mapFromGlobal(const QPointF &pos) const;
+
     /**
      * Returns the screen's refresh rate in milli-hertz.
      */

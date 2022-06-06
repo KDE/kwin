@@ -404,6 +404,11 @@ int WorkspaceWrapper::numScreens() const
     return screens()->count();
 }
 
+int WorkspaceWrapper::screenAt(const QPointF &pos) const
+{
+    return kwinApp()->platform()->enabledOutputs().indexOf(kwinApp()->platform()->outputAt(pos.toPoint()));
+}
+
 int WorkspaceWrapper::activeScreen() const
 {
     return kwinApp()->platform()->enabledOutputs().indexOf(workspace()->activeOutput());

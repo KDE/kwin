@@ -22,6 +22,7 @@ public:
     {
         return effect->d.data();
     }
+    bool isItemOnScreen(QQuickItem *item, EffectScreen *screen);
 
     SharedQmlEngine::Ptr qmlEngine;
     QScopedPointer<QQmlComponent> qmlComponent;
@@ -32,6 +33,25 @@ public:
     QScopedPointer<QWindow> dummyWindow;
     EffectScreen *paintedScreen = nullptr;
 };
+
+bool QuickSceneEffectPrivate::isItemOnScreen(QQuickItem *item, EffectScreen *screen)
+{
+    if (!item || !screen || !views.contains(screen)) {
+        return false;
+    }
+
+    auto *view = views[screen];
+    auto *rootItem = view->rootItem();
+    auto candidate = item->parentItem();
+    // Is there a more efficient way?
+    while (candidate) {
+        if (candidate == rootItem) {
+            return true;
+        }
+        candidate = candidate->parentItem();
+    }
+    return false;
+}
 
 QuickSceneView::QuickSceneView(QuickSceneEffect *effect, EffectScreen *screen)
     : OffscreenQuickView(effect, QuickSceneEffectPrivate::get(effect)->dummyWindow.data())
@@ -111,6 +131,35 @@ QuickSceneEffect::~QuickSceneEffect()
 bool QuickSceneEffect::supported()
 {
     return effects->compositingType() == OpenGLCompositing;
+}
+
+void QuickSceneEffect::checkItemDraggedOutOfScreen(QQuickItem *item)
+{
+    const QRectF globalGeom = QRectF(item->mapToGlobal(QPointF(0, 0)), QSizeF(item->width(), item->height()));
+    QList<EffectScreen *> screens;
+
+    for (auto it = d->views.constBegin(); it != d->views.constEnd(); ++it) {
+        if (!d->isItemOnScreen(item, it.key()) && it.key()->geometry().intersects(globalGeom.toRect())) {
+            screens << it.key();
+        }
+    }
+
+    Q_EMIT itemDraggedOutOfScreen(item, screens);
+}
+
+void QuickSceneEffect::checkItemDroppedOutOfScreen(const QPointF &globalPos, QQuickItem *item)
+{
+    EffectScreen *screen = nullptr;
+    for (auto it = d->views.constBegin(); it != d->views.constEnd(); ++it) {
+        if (!d->isItemOnScreen(item, it.key()) && it.key()->geometry().contains(globalPos.toPoint())) {
+            screen = it.key();
+            break;
+        }
+    }
+
+    if (screen) {
+        Q_EMIT itemDroppedOutOfScreen(globalPos, item, screen);
+    }
 }
 
 bool QuickSceneEffect::eventFilter(QObject *watched, QEvent *event)
