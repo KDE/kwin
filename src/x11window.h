@@ -236,6 +236,7 @@ public:
 
     void NETMoveResize(int x_root, int y_root, NET::Direction direction);
     void NETMoveResizeWindow(int flags, int x, int y, int width, int height);
+    void GTKShowWindowMenu(int x_root, int y_root);
     void restackWindow(xcb_window_t above, int detail, NET::RequestSource source, xcb_timestamp_t timestamp,
                        bool send_event = false);
 

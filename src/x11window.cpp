@@ -4077,6 +4077,13 @@ void X11Window::NETMoveResizeWindow(int flags, int x, int y, int width, int heig
     configureRequest(value_mask, x, y, width, height, gravity, true);
 }
 
+// _GTK_SHOW_WINDOW_MENU
+void X11Window::GTKShowWindowMenu(int x_root, int y_root)
+{
+    QPoint globalPos(x_root, y_root);
+    workspace()->showWindowMenu(QRect(globalPos, globalPos), this);
+}
+
 bool X11Window::isMovable() const
 {
     if (!hasNETSupport() && !m_motif.move()) {

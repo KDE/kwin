@@ -100,7 +100,8 @@ RootInfo *RootInfo::create()
         | NET::WM2FullscreenMonitors
         | NET::WM2KDEShadow
         | NET::WM2OpaqueRegion
-        | NET::WM2GTKFrameExtents;
+        | NET::WM2GTKFrameExtents
+        | NET::WM2GTKShowWindowMenu;
 #if KWIN_BUILD_ACTIVITIES
     properties2 |= NET::WM2Activities;
 #endif
@@ -213,6 +214,14 @@ void RootInfo::moveResizeWindow(xcb_window_t w, int flags, int x, int y, int wid
     X11Window *c = Workspace::self()->findClient(Predicate::WindowMatch, w);
     if (c) {
         c->NETMoveResizeWindow(flags, Xcb::fromXNative(x), Xcb::fromXNative(y), Xcb::fromXNative(width), Xcb::fromXNative(height));
+    }
+}
+
+void RootInfo::showWindowMenu(xcb_window_t w, int device_id, int x_root, int y_root)
+{
+    Q_UNUSED(device_id);
+    if (X11Window *c = Workspace::self()->findClient(Predicate::WindowMatch, w)) {
+        c->GTKShowWindowMenu(x_root, y_root);
     }
 }
 
