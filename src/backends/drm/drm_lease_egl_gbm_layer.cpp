@@ -40,6 +40,10 @@ bool DrmLeaseEglGbmLayer::checkTestBuffer()
                 modifiers << mod;
             }
             newBo = gbm_bo_create_with_modifiers(m_pipeline->gpu()->gbmDevice(), size.width(), size.height(), DRM_FORMAT_XRGB8888, modifiers.constData(), mods.count());
+            if (!newBo && errno == ENOSYS) {
+                // gbm implementation doesn't support modifiers
+                newBo = gbm_bo_create(m_pipeline->gpu()->gbmDevice(), size.width(), size.height(), DRM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT);
+            }
         }
         if (newBo) {
             m_framebuffer = DrmFramebuffer::createFramebuffer(std::make_shared<GbmBuffer>(m_pipeline->gpu(), newBo));
