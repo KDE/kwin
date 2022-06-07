@@ -28,6 +28,7 @@ class EffectScreenImpl;
 class RenderLoop;
 class OutputConfiguration;
 class ColorTransformation;
+class TileManager;
 
 class KWIN_EXPORT OutputMode
 {
@@ -56,6 +57,7 @@ private:
 class KWIN_EXPORT Output : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(TileManager *customTiling READ customTiling CONSTANT)
 
 public:
     enum class DpmsMode {
@@ -234,6 +236,8 @@ public:
     bool isPlaceholder() const;
     bool isNonDesktop() const;
 
+    TileManager *customTiling() const;
+
     virtual void setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation);
 
 Q_SIGNALS:
@@ -289,6 +293,7 @@ Q_SIGNALS:
     void overscanChanged();
     void vrrPolicyChanged();
     void rgbRangeChanged();
+    void informationChanged();
 
 protected:
     struct Information
@@ -326,12 +331,17 @@ protected:
 
     QSize orientateSize(const QSize &size) const;
 
+
     EffectScreenImpl *m_effectScreen = nullptr;
     State m_state;
     Information m_information;
     QUuid m_uuid;
+
     int m_directScanoutCount = 0;
     int m_refCount = 1;
+
+    TileManager *m_customTiling = nullptr;
+
     friend class EffectScreenImpl; // to access m_effectScreen
 };
 

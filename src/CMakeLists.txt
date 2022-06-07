@@ -57,6 +57,10 @@ target_sources(kwin PRIVATE
     cursor.cpp
     cursordelegate_opengl.cpp
     cursordelegate_qpainter.cpp
+    tiles/customtile.cpp
+    tiles/tile.cpp
+    tiles/tilemanager.cpp
+    tiles/quicktile.cpp
     dbusinterface.cpp
     debug_console.cpp
     decorationitem.cpp

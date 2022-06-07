@@ -11,6 +11,8 @@
 #include "workspace_wrapper.h"
 #include "core/output.h"
 #include "outline.h"
+#include "platform.h"
+#include "tiles/tilemanager.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
 #include "x11window.h"
@@ -450,6 +452,15 @@ void WorkspaceWrapper::sendClientToScreen(Window *client, int screen)
     if (output) {
         workspace()->sendWindowToOutput(client, output);
     }
+}
+
+KWin::TileManager *WorkspaceWrapper::customTilingForScreen(const QString &screenName) const
+{
+    Output *output = kwinApp()->platform()->findOutput(screenName);
+    if (output) {
+        return output->customTiling();
+    }
+    return nullptr;
 }
 
 QtScriptWorkspaceWrapper::QtScriptWorkspaceWrapper(QObject *parent)

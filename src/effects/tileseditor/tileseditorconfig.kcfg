@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+
+    SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+-->
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+                          http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+    <kcfgfile arg="true"/>
+    <group name="Effect-overview">
+        <entry name="LayoutMode" type="Int">
+            <default>1</default>
+        </entry>
+        <entry name="IgnoreMinimized" type="bool">
+            <default>false</default>
+        </entry>
+
+        <entry name="BlurBackground" type="Bool">
+            <default>true</default>
+        </entry>
+
+        <entry name="BorderActivate" type="IntList" />
+        <entry name="TouchBorderActivate" type="IntList" />
+    </group>
+</kcfg>

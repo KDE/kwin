@@ -50,6 +50,7 @@ class Output;
 class ClientMachine;
 class Deleted;
 class EffectWindowImpl;
+class Tile;
 class Shadow;
 class SurfaceItem;
 class VirtualDesktop;
@@ -592,6 +593,11 @@ class KWIN_EXPORT Window : public QObject
      * Whether this window is hidden. It's usually the case with auto-hide panels.
      */
     Q_PROPERTY(bool hidden READ isHiddenInternal NOTIFY hiddenChanged)
+
+    /**
+     * The Tile this window is associated to, if any
+     */
+    Q_PROPERTY(KWin::Tile *tile READ tile NOTIFY tileChanged)
 
 public:
     ~Window() override;
@@ -1144,6 +1150,8 @@ public:
     virtual Layer layer() const;
     void updateLayer();
 
+    Tile *tile() const;
+
     void move(const QPointF &point);
     void resize(const QSizeF &size);
     void moveResize(const QRectF &rect);
@@ -1431,6 +1439,8 @@ public:
 
     uint32_t interactiveMoveResizeCount() const;
 
+    void setTile(Tile *tile);
+
 public Q_SLOTS:
     virtual void closeWindow() = 0;
 
@@ -1513,6 +1523,11 @@ Q_SIGNALS:
      * This signal is emitted when the visible geometry has changed.
      */
     void visibleGeometryChanged();
+
+    /**
+     * This signal is emitted when associated tile has changed, including from and to none
+     */
+    void tileChanged(Tile *tile);
 
     void fullScreenChanged();
     void skipTaskbarChanged();
@@ -1974,6 +1989,7 @@ private:
     QList<Window *> m_transients;
     bool m_modal = false;
     Layer m_layer = UnknownLayer;
+    Tile *m_tile = nullptr;
 
     // electric border/quick tiling
     QuickTileMode m_electricMode = QuickTileFlag::None;

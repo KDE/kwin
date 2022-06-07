@@ -9,6 +9,7 @@
 
 #include "output.h"
 #include "outputconfiguration.h"
+#include "tiles/tilemanager.h"
 
 #include <KConfigGroup>
 #include <KLocalizedString>
@@ -62,6 +63,7 @@ OutputMode::Flags OutputMode::flags() const
 
 Output::Output(QObject *parent)
     : QObject(parent)
+    , m_customTiling(new TileManager(this)) // TODO: instantiate it only when tiles are used to save memory?
 {
 }
 
@@ -251,6 +253,7 @@ void Output::setInformation(const Information &information)
 {
     m_information = information;
     m_uuid = generateOutputId(eisaId(), model(), serialNumber(), name());
+    Q_EMIT informationChanged();
 }
 
 void Output::setState(const State &state)
@@ -381,6 +384,11 @@ bool Output::isPlaceholder() const
 bool Output::isNonDesktop() const
 {
     return m_information.nonDesktop;
+}
+
+TileManager *Output::customTiling() const
+{
+    return m_customTiling;
 }
 
 Output::RgbRange Output::rgbRange() const
