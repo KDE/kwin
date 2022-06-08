@@ -193,12 +193,14 @@ void ApplicationWayland::finalizeStartup()
 
 void ApplicationWayland::refreshSettings(const KConfigGroup &group, const QByteArrayList &names)
 {
-    if (group.name() != "Wayland" || !names.contains("InputMethod")) {
-        return;
+    if (group.name() == "Wayland" && names.contains("InputMethod")) {
+        KDesktopFile file(group.readPathEntry("InputMethod", QString()));
+        InputMethod::self()->setInputMethodCommand(file.desktopGroup().readEntry("Exec", QString()));
     }
 
-    KDesktopFile file(group.readPathEntry("InputMethod", QString()));
-    InputMethod::self()->setInputMethodCommand(file.desktopGroup().readEntry("Exec", QString()));
+    if (m_startXWayland && group.name() == "Xwayland" && names.contains("Scale")) {
+        setXwaylandScale(group.readEntry("Scale", 1.0));
+    }
 }
 
 void ApplicationWayland::startSession()
