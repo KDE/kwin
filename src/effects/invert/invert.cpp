@@ -58,6 +58,7 @@ InvertEffect::InvertEffect()
     KGlobalAccel::self()->setShortcut(c, QList<QKeySequence>());
     connect(c, &QAction::triggered, this, &InvertEffect::toggleScreenInversion);
 
+    connect(effects, &EffectsHandler::windowAdded, this, &InvertEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::windowClosed, this, &InvertEffect::slotWindowClosed);
 }
 
@@ -66,6 +67,26 @@ InvertEffect::~InvertEffect() = default;
 bool InvertEffect::supported()
 {
     return effects->compositingType() == OpenGLCompositing;
+}
+
+bool InvertEffect::isInvertable(EffectWindow *window) const
+{
+    return m_allWindows != m_windows.contains(window);
+}
+
+void InvertEffect::invert(EffectWindow *window)
+{
+    if (m_valid && !m_inited) {
+        m_valid = loadData();
+    }
+
+    redirect(window);
+    setShader(window, m_shader.get());
+}
+
+void InvertEffect::uninvert(EffectWindow *window)
+{
+    unredirect(window);
 }
 
 bool InvertEffect::loadData()
@@ -82,25 +103,10 @@ bool InvertEffect::loadData()
     return true;
 }
 
-void InvertEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
+void InvertEffect::slotWindowAdded(KWin::EffectWindow *w)
 {
-    // Load if we haven't already
-    if (m_valid && !m_inited) {
-        m_valid = loadData();
-    }
-
-    bool useShader = m_valid && (m_allWindows != m_windows.contains(w));
-    if (useShader) {
-        ShaderManager *shaderManager = ShaderManager::instance();
-        shaderManager->pushShader(m_shader.get());
-
-        data.shader = m_shader.get();
-    }
-
-    effects->drawWindow(w, mask, region, data);
-
-    if (useShader) {
-        ShaderManager::instance()->popShader();
+    if (isInvertable(w)) {
+        invert(w);
     }
 }
 
@@ -112,6 +118,16 @@ void InvertEffect::slotWindowClosed(EffectWindow *w)
 void InvertEffect::toggleScreenInversion()
 {
     m_allWindows = !m_allWindows;
+
+    const auto windows = effects->stackingOrder();
+    for (EffectWindow *window : windows) {
+        if (isInvertable(window)) {
+            invert(window);
+        } else {
+            uninvert(window);
+        }
+    }
+
     effects->addRepaintFull();
 }
 
@@ -124,6 +140,11 @@ void InvertEffect::toggleWindow()
         m_windows.append(effects->activeWindow());
     } else {
         m_windows.removeOne(effects->activeWindow());
+    }
+    if (isInvertable(effects->activeWindow())) {
+        invert(effects->activeWindow());
+    } else {
+        uninvert(effects->activeWindow());
     }
     effects->activeWindow()->addRepaintFull();
 }
