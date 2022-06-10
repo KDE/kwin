@@ -94,6 +94,9 @@ public Q_SLOTS:
     void activate(int index);
 
 private:
+    void createFocusChainClientList(int desktop, const QSharedPointer<TabBoxClient> &start,
+        TabBoxClientList &stickyClients);
+
     TabBoxClientList m_clientList;
 };
 
