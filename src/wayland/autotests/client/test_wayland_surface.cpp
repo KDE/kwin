@@ -874,9 +874,9 @@ void TestWaylandSurface::testSurfaceAt()
     // now the surface is mapped and surfaceAt should give the surface
     QVERIFY(serverSurface->isMapped());
     QCOMPARE(serverSurface->surfaceAt(QPointF(0, 0)), serverSurface);
-    QCOMPARE(serverSurface->surfaceAt(QPointF(100, 100)), serverSurface);
+    QCOMPARE(serverSurface->surfaceAt(QPointF(99, 99)), serverSurface);
     // outside the geometry it should not give a surface
-    QVERIFY(!serverSurface->surfaceAt(QPointF(101, 101)));
+    QVERIFY(!serverSurface->surfaceAt(QPointF(100, 100)));
     QVERIFY(!serverSurface->surfaceAt(QPointF(-1, -1)));
 }
 
