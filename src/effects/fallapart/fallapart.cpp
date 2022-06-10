@@ -20,7 +20,7 @@ namespace KWin
 
 bool FallApartEffect::supported()
 {
-    return DeformEffect::supported() && effects->animationsSupported();
+    return OffscreenEffect::supported() && effects->animationsSupported();
 }
 
 FallApartEffect::FallApartEffect()
@@ -62,7 +62,7 @@ void FallApartEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, 
     effects->prePaintWindow(w, data, presentTime);
 }
 
-void FallApartEffect::deform(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads)
+void FallApartEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads)
 {
     Q_UNUSED(w)
     Q_UNUSED(mask)

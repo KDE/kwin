@@ -8,13 +8,13 @@
 */
 #pragma once
 #include <chrono>
-#include <kwindeformeffect.h>
+#include <kwinoffscreeneffect.h>
 #include <kwineffects.h>
 
 namespace KWin
 {
 
-class BlendChanges : public DeformEffect
+class BlendChanges : public OffscreenEffect
 {
     Q_OBJECT
 
@@ -28,7 +28,7 @@ public:
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void postPaintScreen() override;
     void drawWindow(EffectWindow *window, int mask, const QRegion &region, WindowPaintData &data) override;
-    void deform(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads) override;
+    void apply(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads) override;
     bool isActive() const override;
 
 public Q_SLOTS:

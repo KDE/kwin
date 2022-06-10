@@ -12,8 +12,8 @@ ecm_setup_version(${PROJECT_VERSION}
 set(kwin_EFFECTSLIB_SRCS
     anidata.cpp
     kwinanimationeffect.cpp
-    kwindeformeffect.cpp
     kwineffects.cpp
+    kwinoffscreeneffect.cpp
     kwinoffscreenquickview.cpp
     kwinquickeffect.cpp
     logging.cpp
@@ -70,13 +70,13 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kwineffects_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/kwinglutils_export.h
     kwinanimationeffect.h
-    kwindeformeffect.h
     kwineffects.h
     kwinglobals.h
     kwinglplatform.h
     kwingltexture.h
     kwinglutils.h
     kwinglutils_funcs.h
+    kwinoffscreeneffect.h
     kwinoffscreenquickview.h
     kwinquickeffect.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR} COMPONENT Devel)

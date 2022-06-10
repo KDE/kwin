@@ -282,7 +282,7 @@ quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, int 
         triggerRepaint();
     }
     if (shader) {
-        DeformEffect::redirect(w);
+        OffscreenEffect::redirect(w);
     }
     return ret_id;
 }

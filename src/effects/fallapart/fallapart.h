@@ -10,7 +10,7 @@
 #ifndef KWIN_FALLAPART_H
 #define KWIN_FALLAPART_H
 
-#include <kwindeformeffect.h>
+#include <kwinoffscreeneffect.h>
 
 namespace KWin
 {
@@ -23,7 +23,7 @@ struct FallApartAnimation
     qreal progress = 0;
 };
 
-class FallApartEffect : public DeformEffect
+class FallApartEffect : public OffscreenEffect
 {
     Q_OBJECT
     Q_PROPERTY(int blockSize READ configuredBlockSize)
@@ -49,7 +49,7 @@ public:
     static bool supported();
 
 protected:
-    void deform(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads) override;
+    void apply(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads) override;
 
 public Q_SLOTS:
     void slotWindowClosed(KWin::EffectWindow *c);

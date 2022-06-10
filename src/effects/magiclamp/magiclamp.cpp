@@ -27,7 +27,7 @@ MagicLampEffect::MagicLampEffect()
 
 bool MagicLampEffect::supported()
 {
-    return DeformEffect::supported() && effects->animationsSupported();
+    return OffscreenEffect::supported() && effects->animationsSupported();
 }
 
 void MagicLampEffect::reconfigure(ReconfigureFlags)
@@ -69,7 +69,7 @@ void MagicLampEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, 
     effects->prePaintWindow(w, data, presentTime);
 }
 
-void MagicLampEffect::deform(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads)
+void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads)
 {
     Q_UNUSED(mask)
     Q_UNUSED(data)

@@ -14,7 +14,7 @@
 #include <QEasingCurve>
 #include <QElapsedTimer>
 #include <QtMath>
-#include <kwindeformeffect.h>
+#include <kwinoffscreeneffect.h>
 #include <kwineffects_export.h>
 
 namespace KWin
@@ -191,7 +191,7 @@ class AnimationEffectPrivate;
  *
  * @since 4.8
  */
-class KWINEFFECTS_EXPORT AnimationEffect : public DeformEffect
+class KWINEFFECTS_EXPORT AnimationEffect : public OffscreenEffect
 {
     Q_OBJECT
 

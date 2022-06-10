@@ -11,7 +11,7 @@
 #define KWIN_WOBBLYWINDOWS_H
 
 // Include with base class for effects.
-#include <kwindeformeffect.h>
+#include <kwinoffscreeneffect.h>
 
 namespace KWin
 {
@@ -21,7 +21,7 @@ struct ParameterSet;
 /**
  * Effect which wobble windows
  */
-class WobblyWindowsEffect : public DeformEffect
+class WobblyWindowsEffect : public OffscreenEffect
 {
     Q_OBJECT
     Q_PROPERTY(qreal stiffness READ stiffness)
@@ -129,7 +129,7 @@ public:
     }
 
 protected:
-    void deform(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads) override;
+    void apply(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads) override;
 
 public Q_SLOTS:
     void slotWindowStartUserMovedResized(KWin::EffectWindow *w);

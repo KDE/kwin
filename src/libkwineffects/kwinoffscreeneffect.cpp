@@ -4,14 +4,14 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "kwindeformeffect.h"
+#include "kwinoffscreeneffect.h"
 #include "kwingltexture.h"
 #include "kwinglutils.h"
 
 namespace KWin
 {
 
-struct DeformOffscreenData
+struct OffscreenData
 {
     QScopedPointer<GLTexture> texture;
     QScopedPointer<GLFramebuffer> fbo;
@@ -19,49 +19,49 @@ struct DeformOffscreenData
     GLShader *shader = nullptr;
 };
 
-class DeformEffectPrivate
+class OffscreenEffectPrivate
 {
 public:
-    QHash<EffectWindow *, DeformOffscreenData *> windows;
+    QHash<EffectWindow *, OffscreenData *> windows;
     QMetaObject::Connection windowDamagedConnection;
     QMetaObject::Connection windowDeletedConnection;
 
     void paint(EffectWindow *window, GLTexture *texture, const QRegion &region,
                const WindowPaintData &data, const WindowQuadList &quads, GLShader *offscreenShader);
 
-    GLTexture *maybeRender(EffectWindow *window, DeformOffscreenData *offscreenData);
+    GLTexture *maybeRender(EffectWindow *window, OffscreenData *offscreenData);
     bool live = true;
 };
 
-DeformEffect::DeformEffect(QObject *parent)
+OffscreenEffect::OffscreenEffect(QObject *parent)
     : Effect(parent)
-    , d(new DeformEffectPrivate)
+    , d(new OffscreenEffectPrivate)
 {
 }
 
-DeformEffect::~DeformEffect()
+OffscreenEffect::~OffscreenEffect()
 {
     qDeleteAll(d->windows);
 }
 
-bool DeformEffect::supported()
+bool OffscreenEffect::supported()
 {
     return effects->isOpenGLCompositing();
 }
 
-void DeformEffect::setLive(bool live)
+void OffscreenEffect::setLive(bool live)
 {
     Q_ASSERT(d->windows.isEmpty());
     d->live = live;
 }
 
-void DeformEffect::redirect(EffectWindow *window)
+void OffscreenEffect::redirect(EffectWindow *window)
 {
-    DeformOffscreenData *&offscreenData = d->windows[window];
+    OffscreenData *&offscreenData = d->windows[window];
     if (offscreenData) {
         return;
     }
-    offscreenData = new DeformOffscreenData;
+    offscreenData = new OffscreenData;
 
     if (d->windows.count() == 1) {
         setupConnections();
@@ -73,7 +73,7 @@ void DeformEffect::redirect(EffectWindow *window)
     }
 }
 
-void DeformEffect::unredirect(EffectWindow *window)
+void OffscreenEffect::unredirect(EffectWindow *window)
 {
     delete d->windows.take(window);
     if (d->windows.isEmpty()) {
@@ -81,7 +81,7 @@ void DeformEffect::unredirect(EffectWindow *window)
     }
 }
 
-void DeformEffect::deform(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads)
+void OffscreenEffect::apply(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads)
 {
     Q_UNUSED(window)
     Q_UNUSED(mask)
@@ -89,7 +89,7 @@ void DeformEffect::deform(EffectWindow *window, int mask, WindowPaintData &data,
     Q_UNUSED(quads)
 }
 
-GLTexture *DeformEffectPrivate::maybeRender(EffectWindow *window, DeformOffscreenData *offscreenData)
+GLTexture *OffscreenEffectPrivate::maybeRender(EffectWindow *window, OffscreenData *offscreenData)
 {
     const QRect geometry = window->expandedGeometry();
     QSize textureSize = geometry.size();
@@ -130,7 +130,7 @@ GLTexture *DeformEffectPrivate::maybeRender(EffectWindow *window, DeformOffscree
     return offscreenData->texture.data();
 }
 
-void DeformEffectPrivate::paint(EffectWindow *window, GLTexture *texture, const QRegion &region,
+void OffscreenEffectPrivate::paint(EffectWindow *window, GLTexture *texture, const QRegion &region,
                                 const WindowPaintData &data, const WindowQuadList &quads, GLShader *offscreenShader)
 {
     GLShader *shader = offscreenShader ? offscreenShader : ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::AdjustSaturation);
@@ -187,9 +187,9 @@ void DeformEffectPrivate::paint(EffectWindow *window, GLTexture *texture, const 
     vbo->unbindArrays();
 }
 
-void DeformEffect::drawWindow(EffectWindow *window, int mask, const QRegion &region, WindowPaintData &data)
+void OffscreenEffect::drawWindow(EffectWindow *window, int mask, const QRegion &region, WindowPaintData &data)
 {
-    DeformOffscreenData *offscreenData = d->windows.value(window);
+    OffscreenData *offscreenData = d->windows.value(window);
     if (!offscreenData) {
         effects->drawWindow(window, mask, region, data);
         return;
@@ -208,36 +208,36 @@ void DeformEffect::drawWindow(EffectWindow *window, int mask, const QRegion &reg
 
     WindowQuadList quads;
     quads.append(quad);
-    deform(window, mask, data, quads);
+    apply(window, mask, data, quads);
 
     GLTexture *texture = d->maybeRender(window, offscreenData);
     d->paint(window, texture, region, data, quads, offscreenData->shader);
 }
 
-void DeformEffect::handleWindowDamaged(EffectWindow *window)
+void OffscreenEffect::handleWindowDamaged(EffectWindow *window)
 {
-    DeformOffscreenData *offscreenData = d->windows.value(window);
+    OffscreenData *offscreenData = d->windows.value(window);
     if (offscreenData) {
         offscreenData->isDirty = true;
     }
 }
 
-void DeformEffect::handleWindowDeleted(EffectWindow *window)
+void OffscreenEffect::handleWindowDeleted(EffectWindow *window)
 {
     unredirect(window);
 }
 
-void DeformEffect::setupConnections()
+void OffscreenEffect::setupConnections()
 {
     if (d->live) {
         d->windowDamagedConnection =
-            connect(effects, &EffectsHandler::windowDamaged, this, &DeformEffect::handleWindowDamaged);
+            connect(effects, &EffectsHandler::windowDamaged, this, &OffscreenEffect::handleWindowDamaged);
     }
     d->windowDeletedConnection =
-        connect(effects, &EffectsHandler::windowDeleted, this, &DeformEffect::handleWindowDeleted);
+        connect(effects, &EffectsHandler::windowDeleted, this, &OffscreenEffect::handleWindowDeleted);
 }
 
-void DeformEffect::destroyConnections()
+void OffscreenEffect::destroyConnections()
 {
     disconnect(d->windowDamagedConnection);
     disconnect(d->windowDeletedConnection);
@@ -246,9 +246,9 @@ void DeformEffect::destroyConnections()
     d->windowDeletedConnection = {};
 }
 
-void DeformEffect::setShader(EffectWindow *window, GLShader *shader)
+void OffscreenEffect::setShader(EffectWindow *window, GLShader *shader)
 {
-    DeformOffscreenData *offscreenData = d->windows.value(window);
+    OffscreenData *offscreenData = d->windows.value(window);
     if (offscreenData) {
         offscreenData->shader = shader;
     }
