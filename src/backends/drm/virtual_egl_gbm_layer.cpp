@@ -155,7 +155,7 @@ bool VirtualEglGbmLayer::scanout(SurfaceItem *surfaceItem)
         return false;
     }
     const auto buffer = qobject_cast<KWaylandServer::LinuxDmaBufV1ClientBuffer *>(item->surface()->buffer());
-    if (!buffer || buffer->planes().isEmpty() || buffer->size() != m_output->pixelSize()) {
+    if (!buffer || buffer->size() != m_output->pixelSize()) {
         return false;
     }
     const auto scanoutBuffer = GbmBuffer::importBuffer(m_output->gpu(), buffer);

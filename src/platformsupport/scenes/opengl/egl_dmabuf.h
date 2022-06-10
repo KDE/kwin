@@ -28,15 +28,11 @@ public:
     };
 
     EglDmabufBuffer(EGLImage image,
-                    const QVector<KWaylandServer::LinuxDmaBufV1Plane> &planes,
-                    quint32 format,
-                    const QSize &size,
+                    const KWaylandServer::LinuxDmaBufAttributes &attrs,
                     quint32 flags,
                     EglDmabuf *interfaceImpl);
 
-    EglDmabufBuffer(const QVector<KWaylandServer::LinuxDmaBufV1Plane> &planes,
-                    quint32 format,
-                    const QSize &size,
+    EglDmabufBuffer(const KWaylandServer::LinuxDmaBufAttributes &attrs,
                     quint32 flags,
                     EglDmabuf *interfaceImpl);
 
@@ -65,9 +61,7 @@ public:
     explicit EglDmabuf(AbstractEglBackend *backend);
     ~EglDmabuf() override;
 
-    KWaylandServer::LinuxDmaBufV1ClientBuffer *importBuffer(const QVector<KWaylandServer::LinuxDmaBufV1Plane> &planes,
-                                                            quint32 format,
-                                                            const QSize &size,
+    KWaylandServer::LinuxDmaBufV1ClientBuffer *importBuffer(const KWaylandServer::LinuxDmaBufAttributes &attrs,
                                                             quint32 flags) override;
 
     QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> tranches() const
@@ -76,13 +70,9 @@ public:
     }
 
 private:
-    EGLImage createImage(const QVector<KWaylandServer::LinuxDmaBufV1Plane> &planes,
-                         uint32_t format,
-                         const QSize &size);
+    EGLImage createImage(const KWaylandServer::LinuxDmaBufAttributes &attrs);
 
-    KWaylandServer::LinuxDmaBufV1ClientBuffer *yuvImport(const QVector<KWaylandServer::LinuxDmaBufV1Plane> &planes,
-                                                         quint32 format,
-                                                         const QSize &size,
+    KWaylandServer::LinuxDmaBufV1ClientBuffer *yuvImport(const KWaylandServer::LinuxDmaBufAttributes &attrs,
                                                          quint32 flags);
 
     void setSupportedFormatsAndModifiers();

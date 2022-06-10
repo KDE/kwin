@@ -50,10 +50,8 @@ protected:
 class LinuxDmaBufV1ClientBufferPrivate : public ClientBufferPrivate, public QtWaylandServer::wl_buffer
 {
 public:
-    QSize size;
-    quint32 format;
+    LinuxDmaBufAttributes attrs;
     quint32 flags;
-    QVector<LinuxDmaBufV1Plane> planes;
     bool hasAlphaChannel = false;
 
 protected:
@@ -84,8 +82,7 @@ private:
     bool test(Resource *resource, uint32_t width, uint32_t height);
 
     LinuxDmaBufV1ClientBufferIntegration *m_integration;
-    QVector<LinuxDmaBufV1Plane> m_planes;
-    int m_planeCount = 0;
+    LinuxDmaBufAttributes m_attrs;
     bool m_isUsed = false;
 };
 

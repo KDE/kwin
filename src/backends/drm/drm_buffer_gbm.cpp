@@ -152,29 +152,28 @@ void GbmBuffer::createFds()
 
 std::shared_ptr<GbmBuffer> GbmBuffer::importBuffer(DrmGpu *gpu, KWaylandServer::LinuxDmaBufV1ClientBuffer *clientBuffer)
 {
-    const auto planes = clientBuffer->planes();
+    const auto attrs = clientBuffer->attributes();
     gbm_bo *bo;
-    if (planes.first().modifier != DRM_FORMAT_MOD_INVALID || planes.first().offset > 0 || planes.count() > 1) {
+    if (attrs.modifier != DRM_FORMAT_MOD_INVALID || attrs.offset[0] > 0 || attrs.planeCount > 1) {
         gbm_import_fd_modifier_data data = {};
-        data.format = clientBuffer->format();
-        data.width = (uint32_t)clientBuffer->size().width();
-        data.height = (uint32_t)clientBuffer->size().height();
-        data.num_fds = planes.count();
-        data.modifier = planes.first().modifier;
-        for (int i = 0; i < planes.count(); i++) {
-            data.fds[i] = planes[i].fd;
-            data.offsets[i] = planes[i].offset;
-            data.strides[i] = planes[i].stride;
+        data.format = attrs.format;
+        data.width = static_cast<uint32_t>(attrs.width);
+        data.height = static_cast<uint32_t>(attrs.height);
+        data.num_fds = attrs.planeCount;
+        data.modifier = attrs.modifier;
+        for (int i = 0; i < attrs.planeCount; i++) {
+            data.fds[i] = attrs.fd[i];
+            data.offsets[i] = attrs.offset[i];
+            data.strides[i] = attrs.pitch[i];
         }
         bo = gbm_bo_import(gpu->gbmDevice(), GBM_BO_IMPORT_FD_MODIFIER, &data, GBM_BO_USE_SCANOUT);
     } else {
-        const auto &plane = planes.first();
         gbm_import_fd_data data = {};
-        data.fd = plane.fd;
-        data.width = (uint32_t)clientBuffer->size().width();
-        data.height = (uint32_t)clientBuffer->size().height();
-        data.stride = plane.stride;
-        data.format = clientBuffer->format();
+        data.fd = attrs.fd[0];
+        data.width = static_cast<uint32_t>(attrs.width);
+        data.height = static_cast<uint32_t>(attrs.height);
+        data.stride = attrs.pitch[0];
+        data.format = attrs.format;
         bo = gbm_bo_import(gpu->gbmDevice(), GBM_BO_IMPORT_FD, &data, GBM_BO_USE_SCANOUT);
     }
     if (bo) {

@@ -87,15 +87,14 @@ void LinuxDmaBufV1ClientBufferIntegrationPrivate::zwp_linux_dmabuf_v1_create_par
 LinuxDmaBufParamsV1::LinuxDmaBufParamsV1(LinuxDmaBufV1ClientBufferIntegration *integration, ::wl_resource *resource)
     : QtWaylandServer::zwp_linux_buffer_params_v1(resource)
     , m_integration(integration)
-    , m_planes(4)
 {
 }
 
 LinuxDmaBufParamsV1::~LinuxDmaBufParamsV1()
 {
-    for (const LinuxDmaBufV1Plane &plane : m_planes) {
-        if (plane.fd != -1) {
-            close(plane.fd);
+    for (int i = 0; i < m_attrs.planeCount; ++i) {
+        if (m_attrs.fd[i] != -1) {
+            close(m_attrs.fd[i]);
         }
     }
 }
@@ -125,26 +124,23 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_add(Resource *resource,
         return;
     }
 
-    if (Q_UNLIKELY(plane_idx >= uint(m_planes.size()))) {
+    if (Q_UNLIKELY(plane_idx >= 4)) {
         wl_resource_post_error(resource->handle, error_plane_idx, "plane index %d is out of bounds", plane_idx);
         close(fd);
         return;
     }
 
-    LinuxDmaBufV1Plane &plane = m_planes[plane_idx];
-
-    if (Q_UNLIKELY(plane.fd != -1)) {
+    if (Q_UNLIKELY(m_attrs.fd[plane_idx] != -1)) {
         wl_resource_post_error(resource->handle, error_plane_set, "the plane index %d was already set", plane_idx);
         close(fd);
         return;
     }
 
-    plane.fd = fd;
-    plane.modifier = (quint64(modifier_hi) << 32) | modifier_lo;
-    plane.offset = offset;
-    plane.stride = stride;
-
-    m_planeCount++;
+    m_attrs.fd[plane_idx] = fd;
+    m_attrs.offset[plane_idx] = offset;
+    m_attrs.pitch[plane_idx] = stride;
+    m_attrs.modifier = (quint64(modifier_hi) << 32) | modifier_lo;
+    m_attrs.planeCount++;
 }
 
 void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create(Resource *resource, int32_t width, int32_t height, uint32_t format, uint32_t flags)
@@ -159,15 +155,18 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create(Resource *resource, 
     }
 
     m_isUsed = true;
-    m_planes.resize(m_planeCount);
 
-    LinuxDmaBufV1ClientBuffer *clientBuffer = m_integration->rendererInterface()->importBuffer(m_planes, format, QSize(width, height), flags);
+    m_attrs.width = width;
+    m_attrs.height = height;
+    m_attrs.format = format;
+
+    LinuxDmaBufV1ClientBuffer *clientBuffer = m_integration->rendererInterface()->importBuffer(m_attrs, flags);
     if (!clientBuffer) {
         send_failed(resource->handle);
         return;
     }
 
-    m_planes.clear(); // the ownership of file descriptors has been moved to the buffer
+    m_attrs = LinuxDmaBufAttributes{}; // the ownership of file descriptors has been moved to the buffer
 
     wl_resource *bufferResource = wl_resource_create(resource->client(), &wl_buffer_interface, 1, 0);
     if (!bufferResource) {
@@ -200,15 +199,18 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create_immed(Resource *reso
     }
 
     m_isUsed = true;
-    m_planes.resize(m_planeCount);
 
-    LinuxDmaBufV1ClientBuffer *clientBuffer = m_integration->rendererInterface()->importBuffer(m_planes, format, QSize(width, height), flags);
+    m_attrs.width = width;
+    m_attrs.height = height;
+    m_attrs.format = format;
+
+    LinuxDmaBufV1ClientBuffer *clientBuffer = m_integration->rendererInterface()->importBuffer(m_attrs, flags);
     if (!clientBuffer) {
         wl_resource_post_error(resource->handle, error_invalid_wl_buffer, "importing the supplied dmabufs failed");
         return;
     }
 
-    m_planes.clear(); // the ownership of file descriptors has been moved to the buffer
+    m_attrs = LinuxDmaBufAttributes{}; // the ownership of file descriptors has been moved to the buffer
 
     wl_resource *bufferResource = wl_resource_create(resource->client(), &wl_buffer_interface, 1, buffer_id);
     if (!bufferResource) {
@@ -225,14 +227,14 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create_immed(Resource *reso
 
 bool LinuxDmaBufParamsV1::test(Resource *resource, uint32_t width, uint32_t height)
 {
-    if (Q_UNLIKELY(!m_planeCount)) {
+    if (Q_UNLIKELY(!m_attrs.planeCount)) {
         wl_resource_post_error(resource->handle, error_incomplete, "no planes have been specified");
         return false;
     }
 
     // Check for holes in the dmabuf set (e.g. [0, 1, 3]).
-    for (int i = 0; i < m_planeCount; ++i) {
-        if (m_planes[i].fd == -1) {
+    for (int i = 0; i < m_attrs.planeCount; ++i) {
+        if (m_attrs.fd[i] == -1) {
             wl_resource_post_error(resource->handle, error_incomplete, "no dmabuf has been added for plane %d", i);
             return false;
         }
@@ -243,40 +245,38 @@ bool LinuxDmaBufParamsV1::test(Resource *resource, uint32_t width, uint32_t heig
         return false;
     }
 
-    for (int i = 0; i < m_planeCount; ++i) {
-        const LinuxDmaBufV1Plane &plane = m_planes.at(i);
-
+    for (int i = 0; i < m_attrs.planeCount; ++i) {
         // Check for overflows.
-        if (Q_UNLIKELY(uint64_t(plane.offset) + plane.stride > UINT32_MAX)) {
+        if (Q_UNLIKELY(uint64_t(m_attrs.offset[i]) + m_attrs.pitch[i] > UINT32_MAX)) {
             wl_resource_post_error(resource->handle, error_out_of_bounds, "size overflow for plane %d", i);
             return false;
         }
 
-        if (Q_UNLIKELY(i == 0 && uint64_t(plane.offset) + uint64_t(plane.stride) * height > UINT32_MAX)) {
+        if (Q_UNLIKELY(i == 0 && uint64_t(m_attrs.offset[i]) + uint64_t(m_attrs.pitch[i]) * height > UINT32_MAX)) {
             wl_resource_post_error(resource->handle, error_out_of_bounds, "size overflow for plane %d", i);
             return false;
         }
 
         // Don't report an error as it might be caused by the kernel not supporting
         // seeking on dmabuf.
-        const off_t size = lseek(plane.fd, 0, SEEK_END);
+        const off_t size = lseek(m_attrs.fd[i], 0, SEEK_END);
         if (size == -1) {
             continue;
         }
 
-        if (Q_UNLIKELY(plane.offset >= size)) {
-            wl_resource_post_error(resource->handle, error_out_of_bounds, "invalid offset %i for plane %d", plane.offset, i);
+        if (Q_UNLIKELY(m_attrs.offset[i] >= size)) {
+            wl_resource_post_error(resource->handle, error_out_of_bounds, "invalid offset %i for plane %d", m_attrs.offset[i], i);
             return false;
         }
 
-        if (Q_UNLIKELY(plane.offset + plane.stride > size)) {
-            wl_resource_post_error(resource->handle, error_out_of_bounds, "invalid stride %i for plane %d", plane.stride, i);
+        if (Q_UNLIKELY(m_attrs.offset[i] + m_attrs.pitch[i] > size)) {
+            wl_resource_post_error(resource->handle, error_out_of_bounds, "invalid stride %i for plane %d", m_attrs.pitch[i], i);
             return false;
         }
 
         // Only valid for first plane as other planes might be sub-sampled according to
         // fourcc format.
-        if (Q_UNLIKELY(i == 0 && plane.offset + plane.stride * height > size)) {
+        if (Q_UNLIKELY(i == 0 && m_attrs.offset[i] + m_attrs.pitch[i] * height > size)) {
             wl_resource_post_error(resource->handle, error_out_of_bounds, "invalid buffer stride of height for plane %d", i);
             return false;
         }
@@ -366,24 +366,22 @@ void LinuxDmaBufV1ClientBufferPrivate::buffer_destroy(Resource *resource)
     wl_resource_destroy(resource->handle);
 }
 
-LinuxDmaBufV1ClientBuffer::LinuxDmaBufV1ClientBuffer(const QSize &size, quint32 format, quint32 flags, const QVector<LinuxDmaBufV1Plane> &planes)
+LinuxDmaBufV1ClientBuffer::LinuxDmaBufV1ClientBuffer(const LinuxDmaBufAttributes &attrs, quint32 flags)
     : ClientBuffer(*new LinuxDmaBufV1ClientBufferPrivate)
 {
     Q_D(LinuxDmaBufV1ClientBuffer);
-    d->size = size;
-    d->format = format;
+    d->attrs = attrs;
     d->flags = flags;
-    d->planes = planes;
-    d->hasAlphaChannel = testAlphaChannel(format);
+    d->hasAlphaChannel = testAlphaChannel(attrs.format);
 }
 
 LinuxDmaBufV1ClientBuffer::~LinuxDmaBufV1ClientBuffer()
 {
     Q_D(LinuxDmaBufV1ClientBuffer);
-    for (int i = 0; i < d->planes.count(); ++i) {
-        if (d->planes[i].fd != -1) {
-            close(d->planes[i].fd);
-            d->planes[i].fd = -1;
+    for (int i = 0; i < d->attrs.planeCount; ++i) {
+        if (d->attrs.fd[i] != -1) {
+            close(d->attrs.fd[i]);
+            d->attrs.fd[i] = -1;
         }
     }
 }
@@ -398,7 +396,7 @@ void LinuxDmaBufV1ClientBuffer::initialize(wl_resource *resource)
 quint32 LinuxDmaBufV1ClientBuffer::format() const
 {
     Q_D(const LinuxDmaBufV1ClientBuffer);
-    return d->format;
+    return d->attrs.format;
 }
 
 quint32 LinuxDmaBufV1ClientBuffer::flags() const
@@ -407,16 +405,16 @@ quint32 LinuxDmaBufV1ClientBuffer::flags() const
     return d->flags;
 }
 
-QVector<LinuxDmaBufV1Plane> LinuxDmaBufV1ClientBuffer::planes() const
+LinuxDmaBufAttributes LinuxDmaBufV1ClientBuffer::attributes() const
 {
     Q_D(const LinuxDmaBufV1ClientBuffer);
-    return d->planes;
+    return d->attrs;
 }
 
 QSize LinuxDmaBufV1ClientBuffer::size() const
 {
     Q_D(const LinuxDmaBufV1ClientBuffer);
-    return d->size;
+    return QSize(d->attrs.width, d->attrs.height);
 }
 
 bool LinuxDmaBufV1ClientBuffer::hasAlphaChannel() const
