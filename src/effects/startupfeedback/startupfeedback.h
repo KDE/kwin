@@ -19,6 +19,8 @@
 class KSelectionOwner;
 namespace KWin
 {
+
+class GLShader;
 class GLTexture;
 
 class StartupFeedbackEffect

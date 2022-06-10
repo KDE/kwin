@@ -240,7 +240,6 @@ WindowPaintData::WindowPaintData()
 
 WindowPaintData::WindowPaintData(const QMatrix4x4 &screenProjectionMatrix)
     : PaintData()
-    , shader(nullptr)
     , d(std::make_unique<WindowPaintDataPrivate>())
 {
     d->screenProjectionMatrix = screenProjectionMatrix;
@@ -253,7 +252,6 @@ WindowPaintData::WindowPaintData(const QMatrix4x4 &screenProjectionMatrix)
 
 WindowPaintData::WindowPaintData(const WindowPaintData &other)
     : PaintData()
-    , shader(other.shader)
     , d(std::make_unique<WindowPaintDataPrivate>())
 {
     setXScale(other.xScale());
