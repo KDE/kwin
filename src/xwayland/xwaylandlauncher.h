@@ -86,7 +86,6 @@ Q_SIGNALS:
 private Q_SLOTS:
     void resetCrashCount();
     void handleXwaylandFinished(int exitCode, QProcess::ExitStatus exitStatus);
-    void handleXwaylandCrashed();
     void handleXwaylandError(QProcess::ProcessError error);
 
 private:

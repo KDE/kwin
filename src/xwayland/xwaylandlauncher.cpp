@@ -256,20 +256,8 @@ void XwaylandLauncher::maybeDestroyReadyNotifier()
 
 void XwaylandLauncher::handleXwaylandFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
-    qCDebug(KWIN_XWL) << "Xwayland process has quit with exit code" << exitCode;
+    qCDebug(KWIN_XWL) << "Xwayland process has quit with exit status:" << exitStatus << "exit code:" << exitCode;
 
-    switch (exitStatus) {
-    case QProcess::NormalExit:
-        stop();
-        break;
-    case QProcess::CrashExit:
-        handleXwaylandCrashed();
-        break;
-    }
-}
-
-void XwaylandLauncher::handleXwaylandCrashed()
-{
 #if KWIN_BUILD_NOTIFICATIONS
     KNotification::event(QStringLiteral("xwaylandcrash"), i18n("Xwayland has crashed"));
 #endif
