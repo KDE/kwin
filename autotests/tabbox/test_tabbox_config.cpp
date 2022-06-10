@@ -28,6 +28,7 @@ void TestTabBoxConfig::testDefaultCtor()
     QCOMPARE(config.clientDesktopMode(), TabBoxConfig::defaultDesktopMode());
     QCOMPARE(config.clientActivitiesMode(), TabBoxConfig::defaultActivitiesMode());
     QCOMPARE(config.clientApplicationsMode(), TabBoxConfig::defaultApplicationsMode());
+    QCOMPARE(config.orderMinimizedMode(), TabBoxConfig::defaultOrderMinimizedMode());
     QCOMPARE(config.clientMinimizedMode(), TabBoxConfig::defaultMinimizedMode());
     QCOMPARE(config.showDesktopMode(), TabBoxConfig::defaultShowDesktopMode());
     QCOMPARE(config.clientMultiScreenMode(), TabBoxConfig::defaultMultiScreenMode());
@@ -46,6 +47,7 @@ void TestTabBoxConfig::testAssignmentOperator()
     config.setClientDesktopMode(TabBoxConfig::AllDesktopsClients);
     config.setClientActivitiesMode(TabBoxConfig::AllActivitiesClients);
     config.setClientApplicationsMode(TabBoxConfig::OneWindowPerApplication);
+    config.setOrderMinimizedMode(TabBoxConfig::GroupByMinimized);
     config.setClientMinimizedMode(TabBoxConfig::ExcludeMinimizedClients);
     config.setShowDesktopMode(TabBoxConfig::ShowDesktopClient);
     config.setClientMultiScreenMode(TabBoxConfig::ExcludeCurrentScreenClients);
@@ -61,6 +63,7 @@ void TestTabBoxConfig::testAssignmentOperator()
     QCOMPARE(config2.clientDesktopMode(), TabBoxConfig::AllDesktopsClients);
     QCOMPARE(config2.clientActivitiesMode(), TabBoxConfig::AllActivitiesClients);
     QCOMPARE(config2.clientApplicationsMode(), TabBoxConfig::OneWindowPerApplication);
+    QCOMPARE(config2.orderMinimizedMode(), TabBoxConfig::GroupByMinimized);
     QCOMPARE(config2.clientMinimizedMode(), TabBoxConfig::ExcludeMinimizedClients);
     QCOMPARE(config2.showDesktopMode(), TabBoxConfig::ShowDesktopClient);
     QCOMPARE(config2.clientMultiScreenMode(), TabBoxConfig::ExcludeCurrentScreenClients);

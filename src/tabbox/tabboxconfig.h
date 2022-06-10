@@ -85,6 +85,14 @@ public:
         ShowDesktopClient ///< A TabBoxClient representing the desktop is included
     };
     /**
+     * OrderMinimizedMode defines whether the TabBoxClients considered part of the
+     * TabBoxClient List should be grouped by the minimisation status
+     */
+    enum OrderMinimizedMode {
+        NoGroupByMinimized, ///< TabBoxClients are not grouped by whether they are minimized
+        GroupByMinimized ///< TabBoxClients are grouped by whether they are minimized or not
+    };
+    /**
      * ClientActivitiesMode defines whether windows from the current activity or from all
      * activities are included in the TabBoxClient List in the TabBoxClientModel
      */
@@ -163,6 +171,13 @@ public:
      */
     ClientApplicationsMode clientApplicationsMode() const;
     /**
+     * @return The current OrderMinimizedMode
+     * This option only applies for TabBoxMode ClientTabBox.
+     * @see setOrderMinimizedMode
+     * @see defaultOrderMinimizedMode
+     */
+    OrderMinimizedMode orderMinimizedMode() const;
+    /**
      * @return The current ClientMinimizedMode
      * This option only applies for TabBoxMode ClientTabBox.
      * @see setClientMinimizedMode
@@ -239,6 +254,12 @@ public:
      */
     void setClientApplicationsMode(ClientApplicationsMode applicationsMode);
     /**
+     * @param orderMinimizedMode The new OrderMinimizedMode to be used.
+     * This option only applies for TabBoxMode ClientTabBox.
+     * @see orderMinimizedMode
+     */
+    void setOrderMinimizedMode(OrderMinimizedMode orderMinimizedMode);
+    /**
      * @param minimizedMode The new ClientMinimizedMode to be used.
      * This option only applies for TabBoxMode ClientTabBox.
      * @see clientMinimizedMode
@@ -286,6 +307,10 @@ public:
     static ClientApplicationsMode defaultApplicationsMode()
     {
         return AllWindowsAllApplications;
+    }
+    static OrderMinimizedMode defaultOrderMinimizedMode()
+    {
+        return NoGroupByMinimized;
     }
     static ClientMinimizedMode defaultMinimizedMode()
     {

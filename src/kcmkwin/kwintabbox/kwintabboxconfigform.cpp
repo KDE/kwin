@@ -57,6 +57,7 @@ KWinTabBoxConfigForm::KWinTabBoxConfigForm(TabboxType type, QWidget *parent)
     connect(ui->hiddenWindows, &QAbstractButton::clicked, this, &KWinTabBoxConfigForm::onFilterMinimization);
 
     connect(ui->oneAppWindow, &QAbstractButton::clicked, this, &KWinTabBoxConfigForm::onApplicationMode);
+    connect(ui->orderMinimized, &QAbstractButton::clicked, this, &KWinTabBoxConfigForm::onOrderMinimizedMode);
     connect(ui->showDesktop, &QAbstractButton::clicked, this, &KWinTabBoxConfigForm::onShowDesktopMode);
 
     connect(ui->switchingModeCombo, qOverload<int>(&QComboBox::currentIndexChanged), this, &KWinTabBoxConfigForm::onSwitchingMode);
@@ -146,6 +147,11 @@ int KWinTabBoxConfigForm::applicationMode() const
     return ui->oneAppWindow->isChecked() ? TabBoxConfig::OneWindowPerApplication : TabBoxConfig::AllWindowsAllApplications;
 }
 
+int KWinTabBoxConfigForm::orderMinimizedMode() const
+{
+    return ui->orderMinimized->isChecked() ? TabBoxConfig::GroupByMinimized : TabBoxConfig::NoGroupByMinimized;
+}
+
 int KWinTabBoxConfigForm::showDesktopMode() const
 {
     return ui->showDesktop->isChecked() ? TabBoxConfig::ShowDesktopClient : TabBoxConfig::DoNotShowDesktopClient;
@@ -192,6 +198,11 @@ void KWinTabBoxConfigForm::setFilterMinimization(TabBox::TabBoxConfig::ClientMin
 void KWinTabBoxConfigForm::setApplicationMode(TabBox::TabBoxConfig::ClientApplicationsMode mode)
 {
     ui->oneAppWindow->setChecked(mode == TabBoxConfig::OneWindowPerApplication);
+}
+
+void KWinTabBoxConfigForm::setOrderMinimizedMode(TabBox::TabBoxConfig::OrderMinimizedMode mode)
+{
+    ui->orderMinimized->setChecked(mode == TabBoxConfig::GroupByMinimized);
 }
 
 void KWinTabBoxConfigForm::setShowDesktopMode(TabBox::TabBoxConfig::ShowDesktopMode mode)
@@ -307,6 +318,11 @@ void KWinTabBoxConfigForm::setApplicationModeEnabled(bool enabled)
     ui->oneAppWindow->setEnabled(enabled);
 }
 
+void KWinTabBoxConfigForm::setOrderMinimizedModeEnabled(bool enabled)
+{
+    ui->orderMinimized->setEnabled(enabled);
+}
+
 void KWinTabBoxConfigForm::setShowDesktopModeEnabled(bool enabled)
 {
     ui->showDesktop->setEnabled(enabled);
@@ -355,6 +371,11 @@ void KWinTabBoxConfigForm::setApplicationModeDefaultIndicatorVisible(bool visibl
     setDefaultIndicatorVisible(ui->oneAppWindow, visible);
 }
 
+void KWinTabBoxConfigForm::setOrderMinimizedDefaultIndicatorVisible(bool visible)
+{
+    setDefaultIndicatorVisible(ui->orderMinimized, visible);
+}
+
 void KWinTabBoxConfigForm::setShowDesktopModeDefaultIndicatorVisible(bool visible)
 {
     setDefaultIndicatorVisible(ui->showDesktop, visible);
@@ -401,6 +422,11 @@ void KWinTabBoxConfigForm::onFilterMinimization()
 void KWin::KWinTabBoxConfigForm::onApplicationMode()
 {
     Q_EMIT applicationModeChanged(applicationMode());
+}
+
+void KWinTabBoxConfigForm::onOrderMinimizedMode()
+{
+    Q_EMIT orderMinimizedModeChanged(orderMinimizedMode());
 }
 
 void KWinTabBoxConfigForm::onShowDesktopMode()

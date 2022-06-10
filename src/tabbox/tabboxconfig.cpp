@@ -23,6 +23,7 @@ public:
         , clientDesktopMode(TabBoxConfig::defaultDesktopMode())
         , clientActivitiesMode(TabBoxConfig::defaultActivitiesMode())
         , clientApplicationsMode(TabBoxConfig::defaultApplicationsMode())
+        , orderMinimizedMode(TabBoxConfig::defaultOrderMinimizedMode())
         , clientMinimizedMode(TabBoxConfig::defaultMinimizedMode())
         , showDesktopMode(TabBoxConfig::defaultShowDesktopMode())
         , clientMultiScreenMode(TabBoxConfig::defaultMultiScreenMode())
@@ -41,6 +42,7 @@ public:
     TabBoxConfig::ClientDesktopMode clientDesktopMode;
     TabBoxConfig::ClientActivitiesMode clientActivitiesMode;
     TabBoxConfig::ClientApplicationsMode clientApplicationsMode;
+    TabBoxConfig::OrderMinimizedMode orderMinimizedMode;
     TabBoxConfig::ClientMinimizedMode clientMinimizedMode;
     TabBoxConfig::ShowDesktopMode showDesktopMode;
     TabBoxConfig::ClientMultiScreenMode clientMultiScreenMode;
@@ -67,6 +69,7 @@ TabBoxConfig &TabBoxConfig::operator=(const KWin::TabBox::TabBoxConfig &object)
     d->clientDesktopMode = object.clientDesktopMode();
     d->clientActivitiesMode = object.clientActivitiesMode();
     d->clientApplicationsMode = object.clientApplicationsMode();
+    d->orderMinimizedMode = object.orderMinimizedMode();
     d->clientMinimizedMode = object.clientMinimizedMode();
     d->showDesktopMode = object.showDesktopMode();
     d->clientMultiScreenMode = object.clientMultiScreenMode();
@@ -134,6 +137,16 @@ TabBoxConfig::ClientApplicationsMode TabBoxConfig::clientApplicationsMode() cons
 void TabBoxConfig::setClientApplicationsMode(ClientApplicationsMode applicationsMode)
 {
     d->clientApplicationsMode = applicationsMode;
+}
+
+TabBoxConfig::OrderMinimizedMode TabBoxConfig::orderMinimizedMode() const
+{
+    return d->orderMinimizedMode;
+}
+
+void TabBoxConfig::setOrderMinimizedMode(OrderMinimizedMode orderMinimizedMode)
+{
+    d->orderMinimizedMode = orderMinimizedMode;
 }
 
 TabBoxConfig::ClientMinimizedMode TabBoxConfig::clientMinimizedMode() const

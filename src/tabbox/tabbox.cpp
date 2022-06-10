@@ -465,6 +465,7 @@ TabBox::TabBox(QObject *parent)
     m_defaultConfig.setClientDesktopMode(TabBoxConfig::OnlyCurrentDesktopClients);
     m_defaultConfig.setClientActivitiesMode(TabBoxConfig::OnlyCurrentActivityClients);
     m_defaultConfig.setClientApplicationsMode(TabBoxConfig::AllWindowsAllApplications);
+    m_defaultConfig.setOrderMinimizedMode(TabBoxConfig::NoGroupByMinimized);
     m_defaultConfig.setClientMinimizedMode(TabBoxConfig::IgnoreMinimizedStatus);
     m_defaultConfig.setShowDesktopMode(TabBoxConfig::DoNotShowDesktopClient);
     m_defaultConfig.setClientMultiScreenMode(TabBoxConfig::IgnoreMultiScreen);
@@ -475,6 +476,7 @@ TabBox::TabBox(QObject *parent)
     m_alternativeConfig.setClientDesktopMode(TabBoxConfig::AllDesktopsClients);
     m_alternativeConfig.setClientActivitiesMode(TabBoxConfig::OnlyCurrentActivityClients);
     m_alternativeConfig.setClientApplicationsMode(TabBoxConfig::AllWindowsAllApplications);
+    m_alternativeConfig.setOrderMinimizedMode(TabBoxConfig::NoGroupByMinimized);
     m_alternativeConfig.setClientMinimizedMode(TabBoxConfig::IgnoreMinimizedStatus);
     m_alternativeConfig.setShowDesktopMode(TabBoxConfig::DoNotShowDesktopClient);
     m_alternativeConfig.setClientMultiScreenMode(TabBoxConfig::IgnoreMultiScreen);
@@ -817,6 +819,8 @@ void TabBox::loadConfig(const KConfigGroup &config, TabBoxConfig &tabBoxConfig)
         config.readEntry<int>("ActivitiesMode", TabBoxConfig::defaultActivitiesMode())));
     tabBoxConfig.setClientApplicationsMode(TabBoxConfig::ClientApplicationsMode(
         config.readEntry<int>("ApplicationsMode", TabBoxConfig::defaultApplicationsMode())));
+    tabBoxConfig.setOrderMinimizedMode(TabBoxConfig::OrderMinimizedMode(
+        config.readEntry<int>("OrderMinimizedMode", TabBoxConfig::defaultOrderMinimizedMode())));
     tabBoxConfig.setClientMinimizedMode(TabBoxConfig::ClientMinimizedMode(
         config.readEntry<int>("MinimizedMode", TabBoxConfig::defaultMinimizedMode())));
     tabBoxConfig.setShowDesktopMode(TabBoxConfig::ShowDesktopMode(

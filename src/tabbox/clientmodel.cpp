@@ -235,6 +235,14 @@ void ClientModel::createClientList(int desktop, bool partialReset)
         break;
     }
     }
+
+    if (tabBox->config().orderMinimizedMode() == TabBoxConfig::GroupByMinimized) {
+        // Put all non-minimized included clients first.
+        std::stable_partition(m_clientList.begin(), m_clientList.end(), [](const auto &client) {
+            return !client.toStrongRef()->isMinimized();
+        });
+    }
+
     for (const QWeakPointer<TabBoxClient> &c : qAsConst(stickyClients)) {
         m_clientList.removeAll(c);
         m_clientList.prepend(c);

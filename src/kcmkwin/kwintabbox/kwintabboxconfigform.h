@@ -52,6 +52,7 @@ public:
     int filterActivities() const;
     int filterMinimization() const;
     int applicationMode() const;
+    int orderMinimizedMode() const;
     int showDesktopMode() const;
     int switchingMode() const;
     QString layoutName() const;
@@ -61,6 +62,7 @@ public:
     void setFilterActivities(TabBox::TabBoxConfig::ClientActivitiesMode mode);
     void setFilterMinimization(TabBox::TabBoxConfig::ClientMinimizedMode mode);
     void setApplicationMode(TabBox::TabBoxConfig::ClientApplicationsMode mode);
+    void setOrderMinimizedMode(TabBox::TabBoxConfig::OrderMinimizedMode mode);
     void setShowDesktopMode(TabBox::TabBoxConfig::ShowDesktopMode mode);
     void setSwitchingModeChanged(TabBox::TabBoxConfig::ClientSwitchingMode mode);
     void setLayoutName(const QString &layoutName);
@@ -78,6 +80,7 @@ public:
     void setFilterActivitiesEnabled(bool enabled);
     void setFilterMinimizationEnabled(bool enabled);
     void setApplicationModeEnabled(bool enabled);
+    void setOrderMinimizedModeEnabled(bool enabled);
     void setShowDesktopModeEnabled(bool enabled);
     void setSwitchingModeEnabled(bool enabled);
     void setLayoutNameEnabled(bool enabled);
@@ -87,6 +90,7 @@ public:
     void setFilterActivitiesDefaultIndicatorVisible(bool visible);
     void setFilterMinimizationDefaultIndicatorVisible(bool visible);
     void setApplicationModeDefaultIndicatorVisible(bool visible);
+    void setOrderMinimizedDefaultIndicatorVisible(bool visible);
     void setShowDesktopModeDefaultIndicatorVisible(bool visible);
     void setSwitchingModeDefaultIndicatorVisible(bool visible);
     void setLayoutNameDefaultIndicatorVisible(bool visible);
@@ -97,6 +101,7 @@ Q_SIGNALS:
     void filterActivitiesChanged(int value);
     void filterMinimizationChanged(int value);
     void applicationModeChanged(int value);
+    void orderMinimizedModeChanged(int value);
     void showDesktopModeChanged(int value);
     void switchingModeChanged(int value);
     void layoutNameChanged(const QString &layoutName);
@@ -109,6 +114,7 @@ private Q_SLOTS:
     void onFilterActivites();
     void onFilterMinimization();
     void onApplicationMode();
+    void onOrderMinimizedMode();
     void onShowDesktopMode();
     void onSwitchingMode();
     void onEffectCombo();

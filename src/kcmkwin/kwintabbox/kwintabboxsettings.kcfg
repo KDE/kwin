@@ -16,6 +16,9 @@
        <entry key="ApplicationsMode" type="Int">
            <default code="true">TabBoxConfig::defaultApplicationsMode()</default>
        </entry>
+       <entry key="OrderMinimizedMode" type="Int">
+           <default code="true">TabBoxConfig::defaultOrderMinimizedMode()</default>
+       </entry>
        <entry key="MinimizedMode" type="Int">
            <default code="true">TabBoxConfig::defaultMinimizedMode()</default>
        </entry>

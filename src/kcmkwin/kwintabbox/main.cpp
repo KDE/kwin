@@ -195,6 +195,7 @@ void KWinTabBoxConfig::setEnabledUi(KWinTabBoxConfigForm *form, const TabBoxSett
     form->setFilterActivitiesEnabled(!config->isActivitiesModeImmutable());
     form->setFilterMinimizationEnabled(!config->isMinimizedModeImmutable());
     form->setApplicationModeEnabled(!config->isApplicationsModeImmutable());
+    form->setOrderMinimizedModeEnabled(!config->isOrderMinimizedModeImmutable());
     form->setShowDesktopModeEnabled(!config->isShowDesktopModeImmutable());
     form->setSwitchingModeEnabled(!config->isSwitchingModeImmutable());
     form->setLayoutNameEnabled(!config->isLayoutNameImmutable());
@@ -209,6 +210,7 @@ void KWinTabBoxConfig::createConnections(KWinTabBoxConfigForm *form)
     connect(form, &KWinTabBoxConfigForm::filterActivitiesChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
     connect(form, &KWinTabBoxConfigForm::filterMinimizationChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
     connect(form, &KWinTabBoxConfigForm::applicationModeChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
+    connect(form, &KWinTabBoxConfigForm::orderMinimizedModeChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
     connect(form, &KWinTabBoxConfigForm::showDesktopModeChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
     connect(form, &KWinTabBoxConfigForm::switchingModeChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
     connect(form, &KWinTabBoxConfigForm::layoutNameChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
@@ -246,6 +248,7 @@ bool KWinTabBoxConfig::updateUnmanagedIsNeedSave(const KWinTabBoxConfigForm *for
     isNeedSave |= form->filterActivities() != config->activitiesMode();
     isNeedSave |= form->filterMinimization() != config->minimizedMode();
     isNeedSave |= form->applicationMode() != config->applicationsMode();
+    isNeedSave |= form->orderMinimizedMode() != config->orderMinimizedMode();
     isNeedSave |= form->showDesktopMode() != config->showDesktopMode();
     isNeedSave |= form->switchingMode() != config->switchingMode();
     isNeedSave |= form->layoutName() != config->layoutName();
@@ -261,6 +264,7 @@ bool KWinTabBoxConfig::updateUnmanagedIsDefault(KWinTabBoxConfigForm *form, cons
     isDefault &= form->filterActivities() == config->defaultActivitiesModeValue();
     isDefault &= form->filterMinimization() == config->defaultMinimizedModeValue();
     isDefault &= form->applicationMode() == config->defaultApplicationsModeValue();
+    isDefault &= form->orderMinimizedMode() == config->defaultOrderMinimizedModeValue();
     isDefault &= form->showDesktopMode() == config->defaultShowDesktopModeValue();
     isDefault &= form->switchingMode() == config->defaultSwitchingModeValue();
     isDefault &= form->layoutName() == config->defaultLayoutNameValue();
@@ -275,6 +279,7 @@ void KWinTabBoxConfig::updateUiDefaultIndicator(bool visible, KWinTabBoxConfigFo
     form->setFilterActivitiesDefaultIndicatorVisible(visible && form->filterActivities() != config->defaultActivitiesModeValue());
     form->setFilterMinimizationDefaultIndicatorVisible(visible && form->filterMinimization() != config->defaultMinimizedModeValue());
     form->setApplicationModeDefaultIndicatorVisible(visible && form->applicationMode() != config->defaultApplicationsModeValue());
+    form->setOrderMinimizedDefaultIndicatorVisible(visible && form->orderMinimizedMode() != config->defaultOrderMinimizedModeValue());
     form->setShowDesktopModeDefaultIndicatorVisible(visible && form->showDesktopMode() != config->defaultShowDesktopModeValue());
     form->setSwitchingModeDefaultIndicatorVisible(visible && form->switchingMode() != config->defaultSwitchingModeValue());
     form->setLayoutNameDefaultIndicatorVisible(visible && form->layoutName() != config->defaultLayoutNameValue());
@@ -340,6 +345,7 @@ void KWinTabBoxConfig::updateUiFromConfig(KWinTabBoxConfigForm *form, const KWin
     form->setFilterActivities(static_cast<TabBoxConfig::ClientActivitiesMode>(config->activitiesMode()));
     form->setFilterMinimization(static_cast<TabBoxConfig::ClientMinimizedMode>(config->minimizedMode()));
     form->setApplicationMode(static_cast<TabBoxConfig::ClientApplicationsMode>(config->applicationsMode()));
+    form->setOrderMinimizedMode(static_cast<TabBoxConfig::OrderMinimizedMode>(config->orderMinimizedMode()));
     form->setShowDesktopMode(static_cast<TabBoxConfig::ShowDesktopMode>(config->showDesktopMode()));
     form->setSwitchingModeChanged(static_cast<TabBoxConfig::ClientSwitchingMode>(config->switchingMode()));
     form->setLayoutName(config->layoutName());
@@ -352,6 +358,7 @@ void KWinTabBoxConfig::updateConfigFromUi(const KWinTabBoxConfigForm *form, TabB
     config->setActivitiesMode(form->filterActivities());
     config->setMinimizedMode(form->filterMinimization());
     config->setApplicationsMode(form->applicationMode());
+    config->setOrderMinimizedMode(form->orderMinimizedMode());
     config->setShowDesktopMode(form->showDesktopMode());
     config->setSwitchingMode(form->switchingMode());
     config->setLayoutName(form->layoutName());
@@ -364,6 +371,7 @@ void KWinTabBoxConfig::updateUiFromDefaultConfig(KWinTabBoxConfigForm *form, con
     form->setFilterActivities(static_cast<TabBoxConfig::ClientActivitiesMode>(config->defaultActivitiesModeValue()));
     form->setFilterMinimization(static_cast<TabBoxConfig::ClientMinimizedMode>(config->defaultMinimizedModeValue()));
     form->setApplicationMode(static_cast<TabBoxConfig::ClientApplicationsMode>(config->defaultApplicationsModeValue()));
+    form->setOrderMinimizedMode(static_cast<TabBoxConfig::OrderMinimizedMode>(config->defaultOrderMinimizedModeValue()));
     form->setShowDesktopMode(static_cast<TabBoxConfig::ShowDesktopMode>(config->defaultShowDesktopModeValue()));
     form->setSwitchingModeChanged(static_cast<TabBoxConfig::ClientSwitchingMode>(config->defaultSwitchingModeValue()));
     form->setLayoutName(config->defaultLayoutNameValue());
