@@ -23,6 +23,7 @@
 #include <KPackage/PackageLoader>
 #include <KPackage/PackageStructure>
 #include <KPluginFactory>
+#include <KSharedConfig>
 
 #include <KCMultiDialog>
 
@@ -31,7 +32,6 @@
 
 Module::Module(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
     : KQuickAddons::ConfigModule(parent, data, args)
-    , m_kwinConfig(KSharedConfig::openConfig("kwinrc"))
     , m_kwinScriptsData(new KWinScriptsData(this))
     , m_model(new KPluginModel(this))
 {
@@ -43,7 +43,7 @@ Module::Module(QObject *parent, const KPluginMetaData &data, const QVariantList 
     connect(m_model, &KPluginModel::defaulted, this, [this](bool defaulted) {
         setRepresentsDefaults(defaulted);
     });
-    m_model->setConfig(m_kwinConfig->group("Plugins"));
+    m_model->setConfig(KSharedConfig::openConfig("kwinrc")->group("Plugins"));
 }
 
 void Module::onGHNSEntriesChanged()
@@ -155,7 +155,7 @@ void Module::save()
     m_pendingDeletions.clear();
     Q_EMIT pendingDeletionsChanged();
 
-    m_kwinConfig->sync();
+    m_model->save();
     QDBusMessage message = QDBusMessage::createMethodCall("org.kde.KWin", "/Scripting", "org.kde.kwin.Scripting", "start");
     QDBusConnection::sessionBus().asyncCall(message);
 
