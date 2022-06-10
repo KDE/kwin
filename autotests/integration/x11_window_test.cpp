@@ -39,8 +39,8 @@ private Q_SLOTS:
 
     void testMinimumSize();
     void testMaximumSize();
+    void testResizeIncrements_data();
     void testResizeIncrements();
-    void testResizeIncrementsNoBaseSize();
     void testTrimCaption_data();
     void testTrimCaption();
     void testFullscreenLayerWithActiveWaylandWindow();
@@ -298,6 +298,13 @@ void X11WindowTest::testMaximumSize()
     c.reset();
 }
 
+void X11WindowTest::testResizeIncrements_data()
+{
+    QTest::addColumn<bool>("setBaseSize");
+    QTest::newRow("base size set") << true;
+    QTest::newRow("base size unset") << false;
+}
+
 void X11WindowTest::testResizeIncrements()
 {
     // This test verifies that the resize increments constraint is correctly applied.
@@ -317,83 +324,12 @@ void X11WindowTest::testResizeIncrements()
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_size_hints_set_base_size(&hints, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_size_hints_set_resize_inc(&hints, 3, 5);
-    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
-    xcb_map_window(c.data(), windowId);
-    xcb_flush(c.data());
-
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
-    QVERIFY(windowCreatedSpy.wait());
-    X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
-    QVERIFY(window);
-    QVERIFY(window->isDecorated());
-
-    QSignalSpy clientStartMoveResizedSpy(window, &Window::clientStartUserMovedResized);
-    QSignalSpy clientStepUserMovedResizedSpy(window, &Window::clientStepUserMovedResized);
-    QSignalSpy clientFinishUserMovedResizedSpy(window, &Window::clientFinishUserMovedResized);
-    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
-
-    // Begin resize.
-    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
-    QVERIFY(!window->isInteractiveResize());
-    workspace()->slotWindowResize();
-    QCOMPARE(workspace()->moveResizeWindow(), window);
-    QCOMPARE(clientStartMoveResizedSpy.count(), 1);
-    QVERIFY(window->isInteractiveResize());
-
-    const QPoint cursorPos = KWin::Cursors::self()->mouse()->pos();
-
-    window->keyPressEvent(Qt::Key_Right);
-    window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
-    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
-    QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->clientSize(), QSize(106, 200));
-
-    window->keyPressEvent(Qt::Key_Down);
-    window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
-    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 8));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 2);
-    QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->clientSize(), QSize(106, 205));
-
-    // Finish the resize operation.
-    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 0);
-    window->keyPressEvent(Qt::Key_Enter);
-    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
-    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
-    QVERIFY(!window->isInteractiveResize());
-
-    // Destroy the window.
-    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
-    xcb_unmap_window(c.data(), windowId);
-    xcb_destroy_window(c.data(), windowId);
-    xcb_flush(c.data());
-    QVERIFY(windowClosedSpy.wait());
-    c.reset();
-}
-
-void X11WindowTest::testResizeIncrementsNoBaseSize()
-{
-    // Create an xcb window.
-    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
-    QVERIFY(!xcb_connection_has_error(c.data()));
-    const QRect windowGeometry(0, 0, 100, 200);
-    xcb_window_t windowId = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
-                      windowGeometry.x(),
-                      windowGeometry.y(),
-                      windowGeometry.width(),
-                      windowGeometry.height(),
-                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
-    xcb_size_hints_t hints;
-    memset(&hints, 0, sizeof(hints));
-    xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
-    xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_size_hints_set_min_size(&hints, windowGeometry.width(), windowGeometry.height());
+    QFETCH(bool, setBaseSize);
+    if (setBaseSize) {
+        xcb_icccm_size_hints_set_base_size(&hints, windowGeometry.width(), windowGeometry.height());
+    } else {
+        xcb_icccm_size_hints_set_min_size(&hints, windowGeometry.width(), windowGeometry.height());
+    }
     xcb_icccm_size_hints_set_resize_inc(&hints, 3, 5);
     xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
     xcb_map_window(c.data(), windowId);
