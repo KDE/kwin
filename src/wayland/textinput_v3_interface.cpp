@@ -209,6 +209,11 @@ void TextInputV3InterfacePrivate::sendPreEdit(const QString &text, const quint32
     if (!surface) {
         return;
     }
+
+    pending.preeditText = text;
+    pending.preeditCursorBegin = cursorBegin;
+    pending.preeditCursorEnd = cursorEnd;
+
     const QList<Resource *> textInputs = enabledTextInputsForClient(surface->client());
     for (auto resource : textInputs) {
         send_preedit_string(resource->handle, text, cursorBegin, cursorEnd);
@@ -243,6 +248,11 @@ void TextInputV3InterfacePrivate::done()
         return;
     }
     const QList<Resource *> textInputs = enabledTextInputsForClient(surface->client());
+
+    preeditText = pending.preeditText;
+    preeditCursorBegin = pending.preeditCursorBegin;
+    preeditCursorEnd = pending.preeditCursorEnd;
+    defaultPendingPreedit();
 
     for (auto resource : textInputs) {
         // zwp_text_input_v3.done takes the serial argument which is equal to number of commit requests issued
@@ -291,6 +301,9 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_disable(Resource *resource)
     // reset pending state to default
     Q_UNUSED(resource)
     defaultPending();
+    preeditText = QString();
+    preeditCursorBegin = 0;
+    preeditCursorEnd = 0;
 }
 
 void TextInputV3InterfacePrivate::zwp_text_input_v3_set_surrounding_text(Resource *resource, const QString &text, int32_t cursor, int32_t anchor)
@@ -377,6 +390,14 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_commit(Resource *resource)
     }
 
     Q_EMIT q->stateCommitted(serialHash[resource]);
+
+    // Gtk text input implementation expect done to be sent after every commit to synchronize the serial value between commit() and done().
+    // So we need to send the current preedit text with done().
+    // If current preedit is empty, there is no need to send it.
+    if (!preeditText.isEmpty() || preeditCursorBegin != 0 || preeditCursorEnd != 0) {
+        send_preedit_string(resource->handle, preeditText, preeditCursorBegin, preeditCursorEnd);
+    }
+    send_done(resource->handle, serialHash[resource]);
 }
 
 void TextInputV3InterfacePrivate::defaultPending()
@@ -389,6 +410,14 @@ void TextInputV3InterfacePrivate::defaultPending()
     pending.surroundingText = QString();
     pending.surroundingTextCursorPosition = 0;
     pending.surroundingTextSelectionAnchor = 0;
+    defaultPendingPreedit();
+}
+
+void TextInputV3InterfacePrivate::defaultPendingPreedit()
+{
+    pending.preeditText = QString();
+    pending.preeditCursorBegin = 0;
+    pending.preeditCursorEnd = 0;
 }
 
 TextInputV3Interface::TextInputV3Interface(SeatInterface *seat)

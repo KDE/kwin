@@ -292,6 +292,7 @@ void TestTextInputV3Interface::testEvents()
 
     QSignalSpy focusedSurfaceChangedSpy(m_seat, &SeatInterface::focusedTextInputSurfaceChanged);
     QSignalSpy textInputEnabledSpy(m_serverTextInputV3, &TextInputV3Interface::enabledChanged);
+    QSignalSpy doneSpy(m_clientTextInputV3, &TextInputV3::done);
 
     // Enter the textinput
     QVERIFY(focusedSurfaceChangedSpy.isValid());
@@ -308,11 +309,12 @@ void TestTextInputV3Interface::testEvents()
     m_clientTextInputV3->commit();
     m_totalCommits++;
     QVERIFY(textInputEnabledSpy.wait());
+    QVERIFY(doneSpy.wait());
+    QCOMPARE(doneSpy.count(), 1);
 
     QSignalSpy preEditSpy(m_clientTextInputV3, &TextInputV3::preedit_string);
     QSignalSpy commitStringSpy(m_clientTextInputV3, &TextInputV3::commit_string);
     QSignalSpy deleteSurroundingSpy(m_clientTextInputV3, &TextInputV3::delete_surrounding_text);
-    QSignalSpy doneSpy(m_clientTextInputV3, &TextInputV3::done);
 
     m_serverTextInputV3->sendPreEditString("Hello KDE community!", 1, 2);
     m_serverTextInputV3->deleteSurroundingText(6, 10);
@@ -320,7 +322,7 @@ void TestTextInputV3Interface::testEvents()
     m_serverTextInputV3->done();
 
     QVERIFY(doneSpy.wait());
-    QCOMPARE(doneSpy.count(), 1);
+    QCOMPARE(doneSpy.count(), 2);
     QCOMPARE(preEditSpy.count(), 1);
     QCOMPARE(commitStringSpy.count(), 1);
     QCOMPARE(deleteSurroundingSpy.count(), 1);
