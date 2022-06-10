@@ -34,12 +34,7 @@ bool DrmLeaseEglGbmLayer::checkTestBuffer()
         if (mods.isEmpty()) {
             newBo = gbm_bo_create(m_pipeline->gpu()->gbmDevice(), size.width(), size.height(), DRM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT);
         } else {
-            QVector<uint64_t> modifiers;
-            modifiers.reserve(mods.count());
-            for (const auto &mod : mods) {
-                modifiers << mod;
-            }
-            newBo = gbm_bo_create_with_modifiers(m_pipeline->gpu()->gbmDevice(), size.width(), size.height(), DRM_FORMAT_XRGB8888, modifiers.constData(), mods.count());
+            newBo = gbm_bo_create_with_modifiers(m_pipeline->gpu()->gbmDevice(), size.width(), size.height(), DRM_FORMAT_XRGB8888, mods.constData(), mods.count());
             if (!newBo && errno == ENOSYS) {
                 // gbm implementation doesn't support modifiers
                 newBo = gbm_bo_create(m_pipeline->gpu()->gbmDevice(), size.width(), size.height(), DRM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT);
