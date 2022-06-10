@@ -223,7 +223,7 @@ void ClientModel::createClientList(int desktop, bool partialReset)
 
     beginResetModel();
     m_clientList.clear();
-    QList<QWeakPointer<TabBoxClient>> stickyClients;
+    TabBoxClientList stickyClients;
 
     switch (tabBox->config().clientSwitchingMode()) {
     case TabBoxConfig::FocusChainSwitching: {
