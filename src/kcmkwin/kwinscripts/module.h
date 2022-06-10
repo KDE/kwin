@@ -11,7 +11,6 @@
 #include <KPluginMetaData>
 #include <KPluginModel>
 #include <KQuickAddons/ConfigModule>
-#include <KSharedConfig>
 #include <kpluginmetadata.h>
 
 class KJob;
@@ -78,7 +77,6 @@ Q_SIGNALS:
 private:
     void importScriptInstallFinished(KJob *job);
 
-    KSharedConfigPtr m_kwinConfig;
     KWinScriptsData *m_kwinScriptsData;
     QList<KPluginMetaData> m_pendingDeletions;
     KPluginModel *m_model;
