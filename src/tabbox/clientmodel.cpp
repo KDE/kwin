@@ -177,6 +177,39 @@ void ClientModel::createFocusChainClientList(int desktop,
     } while (c && c != stop);
 }
 
+void ClientModel::createStackingOrderClientList(int desktop,
+    const QSharedPointer<TabBoxClient> &start, TabBoxClientList &stickyClients)
+{
+    // TODO: needs improvement
+    const TabBoxClientList stacking = tabBox->stackingOrder();
+    auto c = stacking.first().toStrongRef();
+    auto stop = c;
+    int index = 0;
+    while (c) {
+        QSharedPointer<TabBoxClient> add = tabBox->clientToAddToList(c.data(), desktop);
+        if (!add.isNull()) {
+            if (start == add.data()) {
+                m_clientList.removeAll(add);
+                m_clientList.prepend(add);
+            } else {
+                m_clientList += add;
+            }
+            if (add.data()->isFirstInTabBox()) {
+                stickyClients << add;
+            }
+        }
+        if (index >= stacking.size() - 1) {
+            c = nullptr;
+        } else {
+            c = stacking[++index];
+        }
+
+        if (c == stop) {
+            break;
+        }
+    }
+}
+
 void ClientModel::createClientList(int desktop, bool partialReset)
 {
     auto start = tabBox->activeClient().toStrongRef();
@@ -198,34 +231,7 @@ void ClientModel::createClientList(int desktop, bool partialReset)
         break;
     }
     case TabBoxConfig::StackingOrderSwitching: {
-        // TODO: needs improvement
-        const TabBoxClientList stacking = tabBox->stackingOrder();
-        auto c = stacking.first().toStrongRef();
-        auto stop = c;
-        int index = 0;
-        while (c) {
-            QSharedPointer<TabBoxClient> add = tabBox->clientToAddToList(c.data(), desktop);
-            if (!add.isNull()) {
-                if (start == add.data()) {
-                    m_clientList.removeAll(add);
-                    m_clientList.prepend(add);
-                } else {
-                    m_clientList += add;
-                }
-                if (add.data()->isFirstInTabBox()) {
-                    stickyClients << add;
-                }
-            }
-            if (index >= stacking.size() - 1) {
-                c = nullptr;
-            } else {
-                c = stacking[++index];
-            }
-
-            if (c == stop) {
-                break;
-            }
-        }
+        createStackingOrderClientList(desktop, start, stickyClients);
         break;
     }
     }

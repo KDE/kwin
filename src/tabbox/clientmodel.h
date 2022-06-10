@@ -96,6 +96,8 @@ public Q_SLOTS:
 private:
     void createFocusChainClientList(int desktop, const QSharedPointer<TabBoxClient> &start,
         TabBoxClientList &stickyClients);
+    void createStackingOrderClientList(int desktop, const QSharedPointer<TabBoxClient> &start,
+        TabBoxClientList &stickyClients);
 
     TabBoxClientList m_clientList;
 };
