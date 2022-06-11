@@ -166,7 +166,7 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create(Resource *resource, 
         return;
     }
 
-    m_attrs = LinuxDmaBufAttributes{}; // the ownership of file descriptors has been moved to the buffer
+    m_attrs = KWin::DmaBufAttributes{}; // the ownership of file descriptors has been moved to the buffer
 
     wl_resource *bufferResource = wl_resource_create(resource->client(), &wl_buffer_interface, 1, 0);
     if (!bufferResource) {
@@ -210,7 +210,7 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create_immed(Resource *reso
         return;
     }
 
-    m_attrs = LinuxDmaBufAttributes{}; // the ownership of file descriptors has been moved to the buffer
+    m_attrs = KWin::DmaBufAttributes{}; // the ownership of file descriptors has been moved to the buffer
 
     wl_resource *bufferResource = wl_resource_create(resource->client(), &wl_buffer_interface, 1, buffer_id);
     if (!bufferResource) {
@@ -366,7 +366,7 @@ void LinuxDmaBufV1ClientBufferPrivate::buffer_destroy(Resource *resource)
     wl_resource_destroy(resource->handle);
 }
 
-LinuxDmaBufV1ClientBuffer::LinuxDmaBufV1ClientBuffer(const LinuxDmaBufAttributes &attrs, quint32 flags)
+LinuxDmaBufV1ClientBuffer::LinuxDmaBufV1ClientBuffer(const KWin::DmaBufAttributes &attrs, quint32 flags)
     : ClientBuffer(*new LinuxDmaBufV1ClientBufferPrivate)
 {
     Q_D(LinuxDmaBufV1ClientBuffer);
@@ -405,7 +405,7 @@ quint32 LinuxDmaBufV1ClientBuffer::flags() const
     return d->flags;
 }
 
-LinuxDmaBufAttributes LinuxDmaBufV1ClientBuffer::attributes() const
+KWin::DmaBufAttributes LinuxDmaBufV1ClientBuffer::attributes() const
 {
     Q_D(const LinuxDmaBufV1ClientBuffer);
     return d->attrs;

@@ -91,7 +91,7 @@ YuvFormat yuvFormats[] = {
        2}}}};
 
 EglDmabufBuffer::EglDmabufBuffer(EGLImage image,
-                                 const KWaylandServer::LinuxDmaBufAttributes &attrs,
+                                 const DmaBufAttributes &attrs,
                                  quint32 flags,
                                  EglDmabuf *interfaceImpl)
     : EglDmabufBuffer(attrs, flags, interfaceImpl)
@@ -100,7 +100,7 @@ EglDmabufBuffer::EglDmabufBuffer(EGLImage image,
     addImage(image);
 }
 
-EglDmabufBuffer::EglDmabufBuffer(const KWaylandServer::LinuxDmaBufAttributes &attrs,
+EglDmabufBuffer::EglDmabufBuffer(const DmaBufAttributes &attrs,
                                  quint32 flags,
                                  EglDmabuf *interfaceImpl)
     : LinuxDmaBufV1ClientBuffer(attrs, flags)
@@ -132,7 +132,7 @@ void EglDmabufBuffer::removeImages()
     m_images.clear();
 }
 
-EGLImage EglDmabuf::createImage(const KWaylandServer::LinuxDmaBufAttributes &attrs)
+EGLImage EglDmabuf::createImage(const DmaBufAttributes &attrs)
 {
     const bool hasModifiers = eglQueryDmaBufModifiersEXT != nullptr && attrs.modifier != DRM_FORMAT_MOD_INVALID;
 
@@ -206,8 +206,7 @@ EGLImage EglDmabuf::createImage(const KWaylandServer::LinuxDmaBufAttributes &att
     return image;
 }
 
-KWaylandServer::LinuxDmaBufV1ClientBuffer *EglDmabuf::importBuffer(const KWaylandServer::LinuxDmaBufAttributes &attrs,
-                                                                   quint32 flags)
+KWaylandServer::LinuxDmaBufV1ClientBuffer *EglDmabuf::importBuffer(const DmaBufAttributes &attrs, quint32 flags)
 {
     Q_ASSERT(attrs.planeCount > 0);
 
@@ -224,8 +223,7 @@ KWaylandServer::LinuxDmaBufV1ClientBuffer *EglDmabuf::importBuffer(const KWaylan
     return nullptr;
 }
 
-KWaylandServer::LinuxDmaBufV1ClientBuffer *EglDmabuf::yuvImport(const KWaylandServer::LinuxDmaBufAttributes &attrs,
-                                                                quint32 flags)
+KWaylandServer::LinuxDmaBufV1ClientBuffer *EglDmabuf::yuvImport(const DmaBufAttributes &attrs, quint32 flags)
 {
     YuvFormat yuvFormat;
     for (YuvFormat f : yuvFormats) {
@@ -245,7 +243,7 @@ KWaylandServer::LinuxDmaBufV1ClientBuffer *EglDmabuf::yuvImport(const KWaylandSe
 
     for (int i = 0; i < yuvFormat.outputPlanes; i++) {
         const int planeIndex = yuvFormat.planes[i].planeIndex;
-        const KWaylandServer::LinuxDmaBufAttributes planeAttrs {
+        const DmaBufAttributes planeAttrs {
             .planeCount = 1,
             .width = attrs.width / yuvFormat.planes[i].widthDivisor,
             .height = attrs.height / yuvFormat.planes[i].heightDivisor,

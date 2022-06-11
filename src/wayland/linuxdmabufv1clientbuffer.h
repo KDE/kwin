@@ -11,6 +11,8 @@
 #include "clientbuffer.h"
 #include "clientbufferintegration.h"
 
+#include "dmabufattributes.h"
+
 #include <QHash>
 #include <QSet>
 #include <sys/types.h>
@@ -20,19 +22,6 @@ namespace KWaylandServer
 class LinuxDmaBufV1ClientBufferPrivate;
 class LinuxDmaBufV1ClientBufferIntegrationPrivate;
 class LinuxDmaBufV1FeedbackPrivate;
-
-struct LinuxDmaBufAttributes
-{
-    int planeCount = 0;
-    int width = 0;
-    int height = 0;
-    uint32_t format = 0;
-    uint64_t modifier = 0;
-
-    int fd[4] = {-1, -1, -1, -1};
-    int offset[4] = {0, 0, 0, 0};
-    int pitch[4] = {0, 0, 0, 0};
-};
 
 /**
  * The LinuxDmaBufV1ClientBuffer class represents a linux dma-buf client buffer.
@@ -46,12 +35,12 @@ class KWIN_EXPORT LinuxDmaBufV1ClientBuffer : public ClientBuffer
     Q_DECLARE_PRIVATE(LinuxDmaBufV1ClientBuffer)
 
 public:
-    LinuxDmaBufV1ClientBuffer(const LinuxDmaBufAttributes &attrs, quint32 flags);
+    LinuxDmaBufV1ClientBuffer(const KWin::DmaBufAttributes &attrs, quint32 flags);
     ~LinuxDmaBufV1ClientBuffer() override;
 
     quint32 format() const;
     quint32 flags() const;
-    LinuxDmaBufAttributes attributes() const;
+    KWin::DmaBufAttributes attributes() const;
 
     QSize size() const override;
     bool hasAlphaChannel() const override;
@@ -126,7 +115,7 @@ public:
          *
          * @return The imported buffer on success, and nullptr otherwise.
          */
-        virtual LinuxDmaBufV1ClientBuffer *importBuffer(const LinuxDmaBufAttributes &attrs, quint32 flags) = 0;
+        virtual LinuxDmaBufV1ClientBuffer *importBuffer(const KWin::DmaBufAttributes &attrs, quint32 flags) = 0;
     };
 
     RendererInterface *rendererInterface() const;

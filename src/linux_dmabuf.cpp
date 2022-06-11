@@ -13,8 +13,7 @@
 namespace KWin
 {
 
-LinuxDmaBufV1ClientBuffer::LinuxDmaBufV1ClientBuffer(const KWaylandServer::LinuxDmaBufAttributes &attrs,
-                                                     quint32 flags)
+LinuxDmaBufV1ClientBuffer::LinuxDmaBufV1ClientBuffer(const DmaBufAttributes &attrs, quint32 flags)
     : KWaylandServer::LinuxDmaBufV1ClientBuffer(attrs, flags)
 {
     waylandServer()->addLinuxDmabufBuffer(this);
@@ -38,8 +37,7 @@ LinuxDmaBufV1RendererInterface::~LinuxDmaBufV1RendererInterface()
     waylandServer()->linuxDmabuf()->setRendererInterface(nullptr);
 }
 
-KWaylandServer::LinuxDmaBufV1ClientBuffer *LinuxDmaBufV1RendererInterface::importBuffer(const KWaylandServer::LinuxDmaBufAttributes &attrs,
-                                                                                        quint32 flags)
+KWaylandServer::LinuxDmaBufV1ClientBuffer *LinuxDmaBufV1RendererInterface::importBuffer(const DmaBufAttributes &attrs, quint32 flags)
 {
     Q_UNUSED(attrs)
     Q_UNUSED(flags)

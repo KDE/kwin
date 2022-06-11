@@ -50,7 +50,7 @@ protected:
 class LinuxDmaBufV1ClientBufferPrivate : public ClientBufferPrivate, public QtWaylandServer::wl_buffer
 {
 public:
-    LinuxDmaBufAttributes attrs;
+    KWin::DmaBufAttributes attrs;
     quint32 flags;
     bool hasAlphaChannel = false;
 
@@ -82,7 +82,7 @@ private:
     bool test(Resource *resource, uint32_t width, uint32_t height);
 
     LinuxDmaBufV1ClientBufferIntegration *m_integration;
-    LinuxDmaBufAttributes m_attrs;
+    KWin::DmaBufAttributes m_attrs;
     bool m_isUsed = false;
 };
 
