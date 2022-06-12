@@ -45,7 +45,7 @@ WindowViewEffect::WindowViewEffect()
         if (isRunning() && m_partialActivationFactor > 0.5) {
             activate();
         } else {
-            deactivate(0);
+            deactivate(animationDuration());
         }
         m_partialActivationFactor = 0;
         Q_EMIT gestureInProgressChanged();
