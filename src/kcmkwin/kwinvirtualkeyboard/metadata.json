@@ -3,7 +3,7 @@
     "KPlugin": {
         "Description": "Select which virtual keyboard to use",
         "Description[ar]": "اختر أيا من لوحات المفاتيح الافتراضية لإستعمالها",
-        "Description[ca@valencia]": "Seleccioneu el teclat virtual que s'utilisarà",
+        "Description[ca@valencia]": "Seleccioneu el teclat virtual que s'utilitzarà",
         "Description[ca]": "Seleccioneu el teclat virtual a usar",
         "Description[es]": "Seleccionar el teclado virtual que se debe usar",
         "Description[fr]": "Sélectionner quel clavier virtuel à utiliser",
