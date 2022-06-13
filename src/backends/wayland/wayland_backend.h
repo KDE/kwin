@@ -331,7 +331,6 @@ private:
 
     void updateScreenSize(WaylandOutput *output);
     WaylandOutput *createOutput(const QPoint &position, const QSize &size);
-    gbm_bo *createBo(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers);
 
     Session *m_session;
     wl_display *m_display;

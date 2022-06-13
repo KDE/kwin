@@ -1030,7 +1030,7 @@ void WaylandBackend::removeVirtualOutput(Output *output)
 
 std::optional<DmaBufAttributes> WaylandBackend::testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers)
 {
-    gbm_bo *bo = createBo(size, format, modifiers);
+    gbm_bo *bo = createGbmBo(m_gbmDevice, size, format, modifiers);
     if (!bo) {
         return {};
     }
@@ -1047,7 +1047,7 @@ std::optional<DmaBufAttributes> WaylandBackend::testCreateDmaBuf(const QSize &si
 
 std::shared_ptr<DmaBufTexture> WaylandBackend::createDmaBufTexture(const QSize &size, quint32 format, uint64_t modifier)
 {
-    gbm_bo *bo = createBo(size, format, {modifier});
+    gbm_bo *bo = createGbmBo(m_gbmDevice, size, format, {modifier});
     if (!bo) {
         return {};
     }
@@ -1056,42 +1056,6 @@ std::shared_ptr<DmaBufTexture> WaylandBackend::createDmaBufTexture(const QSize &
     const DmaBufAttributes attributes = dmaBufAttributesForBo(bo);
     gbm_bo_destroy(bo);
     return std::make_shared<DmaBufTexture>(m_eglBackend->importDmaBufAsTexture(attributes), attributes);
-}
-
-#if !GBM_CREATE_WITH_MODIFIERS2
-struct gbm_bo *
-gbm_bo_create_with_modifiers2(struct gbm_device *gbm,
-                             uint32_t width, uint32_t height,
-                             uint32_t format,
-                             const uint64_t *modifiers,
-                             const unsigned int count, quint32 flags)
-{
-    return gbm_bo_create_with_modifiers(gbm, width, height, format, modifiers, count);
-}
-#endif
-
-gbm_bo *WaylandBackend::createBo(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers)
-{
-    Q_ASSERT(!modifiers.isEmpty());
-    const uint32_t flags = GBM_BO_USE_RENDERING;
-    gbm_bo *bo = nullptr;
-    if (!modifiers.isEmpty() && !(modifiers.count() == 1 && modifiers[0] == DRM_FORMAT_MOD_INVALID)) {
-        bo = gbm_bo_create_with_modifiers2(m_gbmDevice,
-                                           size.width(),
-                                           size.height(),
-                                           format,
-                                           modifiers.constData(), modifiers.count(), 0);
-    }
-
-    if (!bo && modifiers.contains(DRM_FORMAT_MOD_INVALID)) {
-        bo = gbm_bo_create(m_gbmDevice,
-                           size.width(),
-                           size.height(),
-                           format,
-                           flags | GBM_BO_USE_LINEAR);
-        Q_ASSERT(!bo || gbm_bo_get_modifier(bo) == DRM_FORMAT_MOD_INVALID);
-    }
-    return bo;
 }
 
 }

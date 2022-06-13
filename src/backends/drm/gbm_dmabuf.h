@@ -8,8 +8,21 @@
 
 #include "config-kwin.h"
 #include "dmabuftexture.h"
+#include <libdrm/drm_fourcc.h>
 
 #include <gbm.h>
+
+#if !GBM_CREATE_WITH_MODIFIERS2
+struct gbm_bo *
+gbm_bo_create_with_modifiers2(struct gbm_device *gbm,
+                              uint32_t width, uint32_t height,
+                              uint32_t format,
+                              const uint64_t *modifiers,
+                              const unsigned int count, quint32 flags)
+{
+    return gbm_bo_create_with_modifiers(gbm, width, height, format, modifiers, count);
+}
+#endif
 
 namespace KWin
 {
@@ -40,6 +53,29 @@ inline DmaBufAttributes dmaBufAttributesForBo(gbm_bo *bo)
 #endif
 
     return attributes;
+}
+
+inline gbm_bo *createGbmBo(gbm_device *device, const QSize &size, quint32 format, const QVector<uint64_t> &modifiers)
+{
+    const uint32_t flags = GBM_BO_USE_RENDERING | GBM_BO_USE_LINEAR;
+    gbm_bo *bo = nullptr;
+    if (modifiers.count() > 0 && !(modifiers.count() == 1 && modifiers[0] == DRM_FORMAT_MOD_INVALID)) {
+        bo = gbm_bo_create_with_modifiers2(device,
+                                           size.width(),
+                                           size.height(),
+                                           format,
+                                           modifiers.constData(), modifiers.count(), 0);
+    }
+
+    if (!bo && (modifiers.isEmpty() || modifiers.contains(DRM_FORMAT_MOD_INVALID))) {
+        bo = gbm_bo_create(device,
+                           size.width(),
+                           size.height(),
+                           format,
+                           flags);
+        Q_ASSERT(!bo || gbm_bo_get_modifier(bo) == DRM_FORMAT_MOD_INVALID);
+    }
+    return bo;
 }
 
 } // namespace KWin
