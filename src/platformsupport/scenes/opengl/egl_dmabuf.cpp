@@ -132,86 +132,12 @@ void EglDmabufBuffer::removeImages()
     m_images.clear();
 }
 
-EGLImage EglDmabuf::createImage(const DmaBufAttributes &attrs)
-{
-    const bool hasModifiers = eglQueryDmaBufModifiersEXT != nullptr && attrs.modifier != DRM_FORMAT_MOD_INVALID;
-
-    QVector<EGLint> attribs;
-    attribs << EGL_WIDTH << attrs.width
-            << EGL_HEIGHT << attrs.height
-            << EGL_LINUX_DRM_FOURCC_EXT << EGLint(attrs.format)
-
-            << EGL_DMA_BUF_PLANE0_FD_EXT << attrs.fd[0]
-            << EGL_DMA_BUF_PLANE0_OFFSET_EXT << EGLint(attrs.offset[0])
-            << EGL_DMA_BUF_PLANE0_PITCH_EXT << EGLint(attrs.pitch[0]);
-
-    if (hasModifiers) {
-        attribs
-            << EGL_DMA_BUF_PLANE0_MODIFIER_LO_EXT << EGLint(attrs.modifier & 0xffffffff)
-            << EGL_DMA_BUF_PLANE0_MODIFIER_HI_EXT << EGLint(attrs.modifier >> 32);
-    }
-
-    if (attrs.planeCount > 1) {
-        attribs
-            << EGL_DMA_BUF_PLANE1_FD_EXT << attrs.fd[1]
-            << EGL_DMA_BUF_PLANE1_OFFSET_EXT << EGLint(attrs.offset[1])
-            << EGL_DMA_BUF_PLANE1_PITCH_EXT << EGLint(attrs.pitch[1]);
-
-        if (hasModifiers) {
-            attribs
-                << EGL_DMA_BUF_PLANE1_MODIFIER_LO_EXT << EGLint(attrs.modifier & 0xffffffff)
-                << EGL_DMA_BUF_PLANE1_MODIFIER_HI_EXT << EGLint(attrs.modifier >> 32);
-        }
-    }
-
-    if (attrs.planeCount > 2) {
-        attribs
-            << EGL_DMA_BUF_PLANE2_FD_EXT << attrs.fd[2]
-            << EGL_DMA_BUF_PLANE2_OFFSET_EXT << EGLint(attrs.offset[2])
-            << EGL_DMA_BUF_PLANE2_PITCH_EXT << EGLint(attrs.pitch[2]);
-
-        if (hasModifiers) {
-            attribs
-                << EGL_DMA_BUF_PLANE2_MODIFIER_LO_EXT << EGLint(attrs.modifier & 0xffffffff)
-                << EGL_DMA_BUF_PLANE2_MODIFIER_HI_EXT << EGLint(attrs.modifier >> 32);
-        }
-    }
-
-    if (attrs.planeCount > 3) {
-        attribs
-            << EGL_DMA_BUF_PLANE3_FD_EXT << attrs.fd[3]
-            << EGL_DMA_BUF_PLANE3_OFFSET_EXT << EGLint(attrs.offset[3])
-            << EGL_DMA_BUF_PLANE3_PITCH_EXT << EGLint(attrs.pitch[3]);
-
-        if (hasModifiers) {
-            attribs
-                << EGL_DMA_BUF_PLANE3_MODIFIER_LO_EXT << EGLint(attrs.modifier & 0xffffffff)
-                << EGL_DMA_BUF_PLANE3_MODIFIER_HI_EXT << EGLint(attrs.modifier >> 32);
-        }
-    }
-
-    attribs << EGL_IMAGE_PRESERVED_KHR << EGL_TRUE;
-
-    attribs << EGL_NONE;
-
-    EGLImage image = eglCreateImageKHR(m_backend->eglDisplay(),
-                                       EGL_NO_CONTEXT,
-                                       EGL_LINUX_DMA_BUF_EXT,
-                                       (EGLClientBuffer) nullptr,
-                                       attribs.data());
-    if (image == EGL_NO_IMAGE_KHR) {
-        return nullptr;
-    }
-
-    return image;
-}
-
 KWaylandServer::LinuxDmaBufV1ClientBuffer *EglDmabuf::importBuffer(const DmaBufAttributes &attrs, quint32 flags)
 {
     Q_ASSERT(attrs.planeCount > 0);
 
     // Try first to import as a single image
-    if (auto *img = createImage(attrs)) {
+    if (auto *img = m_backend->importDmaBufAsImage(attrs)) {
         return new EglDmabufBuffer(img, attrs, flags, this);
     }
 
@@ -253,7 +179,7 @@ KWaylandServer::LinuxDmaBufV1ClientBuffer *EglDmabuf::yuvImport(const DmaBufAttr
             .offset = {attrs.offset[planeIndex], 0, 0, 0},
             .pitch = {attrs.pitch[planeIndex], 0, 0, 0},
         };
-        auto *image = createImage(planeAttrs);
+        auto *image = m_backend->importDmaBufAsImage(planeAttrs);
         if (!image) {
             delete buf;
             return nullptr;
@@ -289,7 +215,7 @@ EglDmabuf::EglDmabuf(AbstractEglBackend *backend)
     for (auto *buffer : prevBuffersSet) {
         auto *buf = static_cast<EglDmabufBuffer *>(buffer);
         buf->setInterfaceImplementation(this);
-        buf->addImage(createImage(buf->attributes()));
+        buf->addImage(m_backend->importDmaBufAsImage(buf->attributes()));
     }
     setSupportedFormatsAndModifiers();
 }

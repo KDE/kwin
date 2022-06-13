@@ -69,8 +69,6 @@ public:
     }
 
 private:
-    EGLImage createImage(const DmaBufAttributes &attrs);
-
     KWaylandServer::LinuxDmaBufV1ClientBuffer *yuvImport(const DmaBufAttributes &attrs, quint32 flags);
 
     void setSupportedFormatsAndModifiers();
