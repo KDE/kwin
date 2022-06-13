@@ -583,6 +583,9 @@ void Edge::checkBlocking()
     }
     const bool wasTouch = activatesForTouchGesture();
     m_blocked = newValue;
+    if (m_blocked && m_approaching) {
+        stopApproaching();
+    }
     if (wasTouch != activatesForTouchGesture()) {
         Q_EMIT activatesForTouchGestureChanged();
     }
@@ -1430,7 +1433,7 @@ void ScreenEdges::check(const QPoint &pos, const QDateTime &now, bool forceNoPus
 {
     bool activatedForClient = false;
     for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
-        if (!(*it)->isReserved()) {
+        if (!(*it)->isReserved() || (*it)->isBlocked()) {
             continue;
         }
         if (!(*it)->activatesForPointer()) {
@@ -1460,7 +1463,7 @@ bool ScreenEdges::isEntered(QMouseEvent *event)
     bool activatedForClient = false;
     for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
         Edge *edge = *it;
-        if (!edge->isReserved()) {
+        if (!edge->isReserved() || edge->isBlocked()) {
             continue;
         }
         if (!edge->activatesForPointer()) {
@@ -1504,7 +1507,7 @@ bool ScreenEdges::handleEnterNotifiy(xcb_window_t window, const QPoint &point, c
         if (!edge || edge->window() == XCB_WINDOW_NONE) {
             continue;
         }
-        if (!edge->isReserved()) {
+        if (!edge->isReserved() || edge->isBlocked()) {
             continue;
         }
         if (!edge->activatesForPointer()) {
