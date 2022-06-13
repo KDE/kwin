@@ -67,7 +67,7 @@ Rectangle {
                         Layout.margins: Kirigami.Units.smallSpacing
                         color: "transparent"
                         border.color: Kirigami.Theme.neutralTextColor
-                        border.width: Kirigami.Units.devicePixelRatio
+                        border.width: 1
                         radius: Kirigami.Units.smallSpacing
                     }
 
@@ -96,7 +96,7 @@ Rectangle {
                         Layout.margins: Kirigami.Units.smallSpacing
                         color: "transparent"
                         border.color: Kirigami.Theme.neutralTextColor
-                        border.width: Kirigami.Units.devicePixelRatio
+                        border.width: 1
                         radius: Kirigami.Units.smallSpacing
                     }
 
