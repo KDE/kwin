@@ -172,7 +172,7 @@ void XdgShellOutput::updateWindowTitle()
     }
 
     QString title = i18nc("Title of nested KWin Wayland with Wayland socket identifier as argument",
-                          "KDE Wayland Compositor #%1 (%2) %3", m_number, waylandServer()->socketName());
+                          "KDE Wayland Compositor #%1 (%2)", m_number, waylandServer()->socketName());
 
     if (!isEnabled()) {
         title += i18n("- Output disabled");
