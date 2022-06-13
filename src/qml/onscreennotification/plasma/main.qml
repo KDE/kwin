@@ -5,14 +5,14 @@
 
 */
 
-import QtQuick 2.0;
-import QtQuick.Window 2.0;
-import org.kde.plasma.core 2.0 as PlasmaCore;
-import org.kde.plasma.components 3.0 as Plasma;
-import QtQuick.Layouts 1.3;
+import QtQuick 2.15
+import QtQuick.Layouts 1.15
+import QtQuick.Window 2.15
+
+import org.kde.plasma.core 2.1 as PlasmaCore
+import org.kde.plasma.components 3.0 as PlasmaComponents3
 
 PlasmaCore.Dialog {
-    id: dialog
     location: PlasmaCore.Types.Floating
     visible: osd.visible
     flags: Qt.FramelessWindowHint
@@ -20,13 +20,14 @@ PlasmaCore.Dialog {
     outputOnly: true
 
     mainItem: RowLayout {
+        spacing: PlasmaCore.Units.smallSpacing
         PlasmaCore.IconItem {
-            implicitWidth: PlasmaCore.Units.iconSizes["medium"]
+            implicitWidth: PlasmaCore.Units.iconSizes.medium
             implicitHeight: implicitWidth
             source: osd.iconName
-            visible: osd.iconName != ""
+            visible: osd.iconName !== ""
         }
-        Plasma.Label {
+        PlasmaComponents3.Label {
             text: osd.message
         }
     }
