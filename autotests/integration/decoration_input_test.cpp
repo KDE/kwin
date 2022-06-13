@@ -344,13 +344,13 @@ void DecorationInputTest::testHover()
     QCOMPARE(window->cursor(), CursorShape(KWin::ExtendedCursor::SizeNorth));
     MOTION(QPoint(window->frameGeometry().x() + window->frameGeometry().width() - 1, 0));
     QCOMPARE(window->cursor(), CursorShape(KWin::ExtendedCursor::SizeNorthEast));
-    MOTION(QPoint(window->frameGeometry().x() + window->frameGeometry().width() + deviation(), window->height() / 2));
+    MOTION(QPoint(window->frameGeometry().x() + window->frameGeometry().width() + 2 + deviation(), window->height() / 2));
     QCOMPARE(window->cursor(), CursorShape(KWin::ExtendedCursor::SizeEast));
-    MOTION(QPoint(window->frameGeometry().x() + window->frameGeometry().width() + deviation(), window->height() - 1));
+    MOTION(QPoint(window->frameGeometry().x() + window->frameGeometry().width() + 2 + deviation(), window->height() - 1));
     QCOMPARE(window->cursor(), CursorShape(KWin::ExtendedCursor::SizeSouthEast));
-    MOTION(QPoint(window->frameGeometry().x() + window->frameGeometry().width() / 2, window->height() + deviation()));
+    MOTION(QPoint(window->frameGeometry().x() + window->frameGeometry().width() / 2, window->height() + 2 + deviation()));
     QCOMPARE(window->cursor(), CursorShape(KWin::ExtendedCursor::SizeSouth));
-    MOTION(QPoint(window->frameGeometry().x(), window->height() + deviation()));
+    MOTION(QPoint(window->frameGeometry().x(), window->height() + 2 + deviation()));
     QCOMPARE(window->cursor(), CursorShape(KWin::ExtendedCursor::SizeSouthWest));
     MOTION(QPoint(window->frameGeometry().x() - 1, window->height() / 2));
     QCOMPARE(window->cursor(), CursorShape(KWin::ExtendedCursor::SizeWest));
