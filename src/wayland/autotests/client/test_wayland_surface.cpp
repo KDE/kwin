@@ -763,7 +763,7 @@ void TestWaylandSurface::testScale()
     // even though we've changed the scale, if we don't have a buffer we
     // don't have a size. If we don't have a size it can't have changed
     QCOMPARE(sizeChangedSpy.count(), 0);
-    QVERIFY(!serverSurface->size().isValid());
+    QCOMPARE(serverSurface->size(), QSize(0, 0));
 
     // let's try changing to same factor, should not emit changed on server
     s->setScale(2);

@@ -628,9 +628,10 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         surfaceSize = surfaceSize / scaleOverride;
         implicitSurfaceSize = implicitSurfaceSize / scaleOverride;
     } else {
-        surfaceSize = QSize();
-        implicitSurfaceSize = QSize();
-        bufferSize = QSize();
+        // not QSize() because that will initialize width and height to -1
+        surfaceSize = QSize(0, 0);
+        implicitSurfaceSize = QSize(0, 0);
+        bufferSize = QSize(0, 0);
         inputRegion = QRegion();
         opaqueRegion = QRegion();
     }
