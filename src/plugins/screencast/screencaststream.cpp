@@ -94,32 +94,34 @@ static const int videoDamageRegionCount = 16;
 
 void ScreenCastStream::newStreamParams()
 {
-    const int bpp = videoFormat.format == SPA_VIDEO_FORMAT_RGB || videoFormat.format == SPA_VIDEO_FORMAT_BGR ? 3 : 4;
-    auto stride = SPA_ROUND_UP_N(m_resolution.width() * bpp, 4);
-
+    qCDebug(KWIN_SCREENCAST) << "announcing stream params. with dmabuf:" << m_dmabufParams.has_value();
     uint8_t paramsBuffer[1024];
     spa_pod_builder pod_builder = SPA_POD_BUILDER_INIT(paramsBuffer, sizeof(paramsBuffer));
-    int buffertypes;
-
-    if (m_hasModifier) {
-        buffertypes = (1 << SPA_DATA_DmaBuf);
-    } else {
-        buffertypes = (1 << SPA_DATA_MemFd);
-    }
+    const int buffertypes = m_dmabufParams ? (1 << SPA_DATA_DmaBuf) : (1 << SPA_DATA_MemFd);
+    const int bpp = videoFormat.format == SPA_VIDEO_FORMAT_RGB || videoFormat.format == SPA_VIDEO_FORMAT_BGR ? 3 : 4;
+    const int stride = SPA_ROUND_UP_N(m_resolution.width() * bpp, 4);
 
     spa_rectangle resolution = SPA_RECTANGLE(uint32_t(m_resolution.width()), uint32_t(m_resolution.height()));
-    const spa_pod *params[] = {
-        (spa_pod *)spa_pod_builder_add_object(&pod_builder,
-                                              SPA_TYPE_OBJECT_ParamBuffers, SPA_PARAM_Buffers,
-                                              SPA_FORMAT_VIDEO_size, SPA_POD_Rectangle(&resolution),
-                                              SPA_PARAM_BUFFERS_buffers, SPA_POD_CHOICE_RANGE_Int(16, 2, 16),
-                                              SPA_PARAM_BUFFERS_blocks, SPA_POD_Int(1),
-                                              // TODO[no_use_linear]: stride, size and align should be dropped for dmabufs,
-                                              // or queried via test allocation
-                                              SPA_PARAM_BUFFERS_stride, SPA_POD_Int(stride),
-                                              SPA_PARAM_BUFFERS_size, SPA_POD_Int(stride * m_resolution.height()),
-                                              SPA_PARAM_BUFFERS_align, SPA_POD_Int(16),
-                                              SPA_PARAM_BUFFERS_dataType, SPA_POD_CHOICE_FLAGS_Int(buffertypes)),
+    struct spa_pod_frame f;
+    spa_pod_builder_push_object(&pod_builder, &f, SPA_TYPE_OBJECT_ParamBuffers, SPA_PARAM_Buffers);
+    spa_pod_builder_add(&pod_builder,
+                        SPA_FORMAT_VIDEO_size, SPA_POD_Rectangle(&resolution),
+                        SPA_PARAM_BUFFERS_buffers, SPA_POD_CHOICE_RANGE_Int(16, 2, 16),
+                        SPA_PARAM_BUFFERS_stride, SPA_POD_Int(stride),
+                        SPA_PARAM_BUFFERS_dataType, SPA_POD_CHOICE_FLAGS_Int(buffertypes), 0);
+    if (!m_dmabufParams) {
+        spa_pod_builder_add(&pod_builder,
+                            SPA_PARAM_BUFFERS_size, SPA_POD_Int(stride * m_resolution.height()),
+                            SPA_PARAM_BUFFERS_blocks, SPA_POD_Int(1),
+                            SPA_PARAM_BUFFERS_align, SPA_POD_Int(16), 0);
+    } else {
+        spa_pod_builder_add(&pod_builder,
+                            SPA_PARAM_BUFFERS_blocks, SPA_POD_Int(m_dmabufParams->planeCount), 0);
+    }
+    spa_pod *bufferPod = (spa_pod *)spa_pod_builder_pop(&pod_builder, &f);
+
+    QVarLengthArray<const spa_pod *> params = {
+        bufferPod,
         (spa_pod *)spa_pod_builder_add_object(&pod_builder,
                                               SPA_TYPE_OBJECT_ParamMeta, SPA_PARAM_Meta,
                                               SPA_PARAM_META_type, SPA_POD_Id(SPA_META_Cursor),
@@ -134,7 +136,7 @@ void ScreenCastStream::newStreamParams()
                                               SPA_PARAM_META_size, SPA_POD_Int(sizeof(struct spa_meta_header))),
     };
 
-    pw_stream_update_params(pwStream, params, 4);
+    pw_stream_update_params(pwStream, params.data(), params.count());
 }
 
 void ScreenCastStream::onStreamParamChanged(void *data, uint32_t id, const struct spa_pod *format)
@@ -145,11 +147,34 @@ void ScreenCastStream::onStreamParamChanged(void *data, uint32_t id, const struc
 
     ScreenCastStream *pw = static_cast<ScreenCastStream *>(data);
     spa_format_video_raw_parse(format, &pw->videoFormat);
-    // TODO[explicit_modifiers]: check if modifier list or single modifier,
-    // make test allocation, fixate format, ...
-    // depends on how flexible kwin will become in that regard.
-    pw->m_hasModifier = spa_pod_find_prop(format, nullptr, SPA_FORMAT_VIDEO_modifier) != nullptr;
-    qCDebug(KWIN_SCREENCAST) << "Stream format changed" << pw << pw->videoFormat.format;
+    auto modifierProperty = spa_pod_find_prop(format, nullptr, SPA_FORMAT_VIDEO_modifier);
+    QVector<uint64_t> receivedModifiers;
+    if (!pw->m_dmabufParams
+        || spaVideoFormatToDrmFormat(pw->videoFormat.format) != pw->m_dmabufParams->format
+        || pw->videoFormat.size.width != uint(pw->m_dmabufParams->width)
+        || pw->videoFormat.size.height != uint(pw->m_dmabufParams->height)) {
+        if (modifierProperty && modifierProperty->flags & SPA_POD_PROP_FLAG_DONT_FIXATE) {
+            pw->m_dmabufParams.reset();
+
+            const struct spa_pod *modifierPod = &modifierProperty->value;
+
+            uint32_t modifiersCount = SPA_POD_CHOICE_N_VALUES(modifierPod) - 1;
+            uint64_t *modifiers = (uint64_t *)SPA_POD_CHOICE_VALUES(modifierPod);
+            receivedModifiers = QVector<uint64_t>(modifiers, modifiers + modifiersCount);
+            pw->m_dmabufParams = kwinApp()->platform()->testCreateDmaBuf(pw->m_resolution, spaVideoFormatToDrmFormat(pw->videoFormat.format), receivedModifiers);
+        } else if (modifierProperty) {
+            pw->m_dmabufParams = kwinApp()->platform()->testCreateDmaBuf(pw->m_resolution, spaVideoFormatToDrmFormat(pw->videoFormat.format), {DRM_FORMAT_MOD_INVALID});
+        }
+        if (modifierProperty) {
+            qCDebug(KWIN_SCREENCAST) << "Stream dmabuf modifiers received, offering our best suited modifier" << pw->m_dmabufParams.has_value() << pw->m_dmabufParams->modifier;
+            char buffer[2048];
+            auto params = pw->buildFormats(pw->m_dmabufParams.has_value(), buffer);
+            pw_stream_update_params(pw->pwStream, params.data(), params.count());
+            return;
+        }
+    }
+
+    qCDebug(KWIN_SCREENCAST) << "Stream format found, defining buffers";
     pw->newStreamParams();
 }
 
@@ -164,16 +189,20 @@ void ScreenCastStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
     std::shared_ptr<DmaBufTexture> dmabuff;
 
     if (spa_data[0].type != SPA_ID_INVALID && spa_data[0].type & (1 << SPA_DATA_DmaBuf)) {
-        Q_ASSERT(stream->m_params);
-        dmabuff = kwinApp()->platform()->createDmaBufTexture(*stream->m_params);
+        Q_ASSERT(stream->m_dmabufParams);
+        dmabuff = kwinApp()->platform()->createDmaBufTexture(*stream->m_dmabufParams);
     }
 
     if (dmabuff) {
-        spa_data->type = SPA_DATA_DmaBuf;
-        spa_data->fd = dmabuff->attributes().fd[0];
-        spa_data->data = nullptr;
         spa_data->maxsize = dmabuff->attributes().pitch[0] * stream->m_resolution.height();
 
+        const DmaBufAttributes dmabufAttribs = dmabuff->attributes();
+        Q_ASSERT(buffer->buffer->n_datas >= uint(dmabufAttribs.planeCount));
+        for (int i = 0; i < dmabufAttribs.planeCount; ++i) {
+            buffer->buffer->datas[i].type = SPA_DATA_DmaBuf;
+            buffer->buffer->datas[i].fd = dmabufAttribs.fd[i];
+            buffer->buffer->datas[i].data = nullptr;
+        }
         stream->m_dmabufDataForPwBuffer.insert(buffer, dmabuff);
 #ifdef F_SEAL_SEAL // Disable memfd on systems that don't have it, like BSD < 12
     } else {
@@ -228,6 +257,10 @@ void ScreenCastStream::onStreamRemoveBuffer(void *data, pw_buffer *buffer)
     if (spa_data && spa_data->type == SPA_DATA_MemFd) {
         munmap(spa_data->data, spa_data->maxsize);
         close(spa_data->fd);
+    } else if (spa_data && spa_data->type == SPA_DATA_DmaBuf) {
+        for (int i = 0, c = buffer->buffer->n_datas; i < c; ++i) {
+            close(buffer->buffer->datas[i].fd);
+        }
     }
 }
 
@@ -286,41 +319,41 @@ uint ScreenCastStream::nodeId()
     return pwNodeId;
 }
 
+static QVector<uint64_t> querySupportedModifiers(EGLDisplay eglDisplay, quint32 format)
+{
+    QVector<uint64_t> modifiers;
+    if (eglQueryDmaBufModifiersEXT != nullptr) {
+        EGLint count = 0;
+        const EGLBoolean success = eglQueryDmaBufModifiersEXT(eglDisplay, format, 0, nullptr, nullptr, &count);
+        if (success && count > 0) {
+            modifiers.resize(count);
+            eglQueryDmaBufModifiersEXT(eglDisplay, format, count, modifiers.data(), nullptr, &count);
+        }
+    }
+    if (!modifiers.contains(DRM_FORMAT_MOD_INVALID)) {
+        modifiers.append(DRM_FORMAT_MOD_INVALID);
+    }
+    return modifiers;
+}
+
 bool ScreenCastStream::createStream()
 {
     const QByteArray objname = "kwin-screencast-" + objectName().toUtf8();
     pwStream = pw_stream_new(pwCore->pwCore, objname, nullptr);
 
-    uint8_t buffer[2048];
-    spa_pod_builder podBuilder = SPA_POD_BUILDER_INIT(buffer, sizeof(buffer));
-    spa_fraction minFramerate = SPA_FRACTION(1, 1);
-    spa_fraction maxFramerate = SPA_FRACTION(25, 1);
-    spa_fraction defaultFramerate = SPA_FRACTION(0, 1);
-
-    spa_rectangle resolution = SPA_RECTANGLE(uint32_t(m_resolution.width()), uint32_t(m_resolution.height()));
-
-    // TODO[explicit_modifiers]: query modifiers supported/used by kwin
-    uint64_t modifier = DRM_FORMAT_MOD_INVALID;
-
-    const spa_pod *params[2];
-    int n_params;
-
+    // it could make sense to offer the same format as the source
     const auto format = m_source->hasAlphaChannel() ? SPA_VIDEO_FORMAT_BGRA : SPA_VIDEO_FORMAT_BGR;
-    m_params = kwinApp()->platform()->testCreateDmaBuf(m_resolution, spaVideoFormatToDrmFormat(format), {DRM_FORMAT_MOD_INVALID});
+    const int drmFormat = spaVideoFormatToDrmFormat(format);
+    m_hasDmaBuf = kwinApp()->platform()->testCreateDmaBuf(m_resolution, drmFormat, {DRM_FORMAT_MOD_INVALID}).has_value();
+    m_modifiers = querySupportedModifiers(kwinApp()->platform()->sceneEglDisplay(), drmFormat);
 
-    if (m_params) {
-        params[0] = buildFormat(&podBuilder, SPA_VIDEO_FORMAT_BGRA, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, &modifier, 1);
-        params[1] = buildFormat(&podBuilder, format, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, nullptr, 0);
-        n_params = 2;
-    } else {
-        params[0] = buildFormat(&podBuilder, format, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, nullptr, 0);
-        n_params = 1;
-    }
+    char buffer[2048];
+    QVector<const spa_pod *> params = buildFormats(false, buffer);
 
     pw_stream_add_listener(pwStream, &streamListener, &pwStreamEvents, this);
     auto flags = pw_stream_flags(PW_STREAM_FLAG_DRIVER | PW_STREAM_FLAG_ALLOC_BUFFERS);
 
-    if (pw_stream_connect(pwStream, PW_DIRECTION_OUTPUT, SPA_ID_INVALID, flags, params, n_params) != 0) {
+    if (pw_stream_connect(pwStream, PW_DIRECTION_OUTPUT, SPA_ID_INVALID, flags, params.data(), params.count()) != 0) {
         qCWarning(KWIN_SCREENCAST) << "Could not connect to stream";
         pw_stream_destroy(pwStream);
         pwStream = nullptr;
@@ -421,7 +454,12 @@ void ScreenCastStream::recordFrame(const QRegion &damagedRegion)
         auto &buf = m_dmabufDataForPwBuffer[buffer];
         Q_ASSERT(buf);
 
-        spa_data->chunk->stride = buf->attributes().pitch[0];
+        const DmaBufAttributes dmabufAttribs = buf->attributes();
+        Q_ASSERT(buffer->buffer->n_datas >= uint(dmabufAttribs.planeCount));
+        for (int i = 0; i < dmabufAttribs.planeCount; ++i) {
+            buffer->buffer->datas[i].chunk->stride = dmabufAttribs.pitch[i];
+            buffer->buffer->datas[i].chunk->offset = dmabufAttribs.offset[i];
+        }
         spa_data->chunk->size = spa_data->maxsize;
 
         m_source->render(buf->framebuffer());
@@ -591,54 +629,64 @@ void ScreenCastStream::enqueue()
     m_pendingNotifier = nullptr;
 }
 
+QVector<const spa_pod *> ScreenCastStream::buildFormats(bool fixate, char buffer[2048])
+{
+    const auto format = m_source->hasAlphaChannel() ? SPA_VIDEO_FORMAT_BGRA : SPA_VIDEO_FORMAT_BGR;
+    spa_pod_builder podBuilder = SPA_POD_BUILDER_INIT(buffer, 2048);
+    spa_fraction minFramerate = SPA_FRACTION(1, 1);
+    spa_fraction maxFramerate = SPA_FRACTION(25, 1);
+    spa_fraction defaultFramerate = SPA_FRACTION(0, 1);
+
+    spa_rectangle resolution = SPA_RECTANGLE(uint32_t(m_resolution.width()), uint32_t(m_resolution.height()));
+
+    QVector<const spa_pod *> params;
+    params.reserve(fixate + m_hasDmaBuf + 1);
+    if (fixate) {
+        params.append(buildFormat(&podBuilder, SPA_VIDEO_FORMAT_BGRA, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, {m_dmabufParams->modifier}, SPA_POD_PROP_FLAG_MANDATORY));
+    }
+    if (m_hasDmaBuf) {
+        params.append(buildFormat(&podBuilder, SPA_VIDEO_FORMAT_BGRA, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, m_modifiers, SPA_POD_PROP_FLAG_MANDATORY | SPA_POD_PROP_FLAG_DONT_FIXATE));
+    }
+    params.append(buildFormat(&podBuilder, format, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, {}, SPA_POD_PROP_FLAG_MANDATORY | SPA_POD_PROP_FLAG_DONT_FIXATE));
+    return params;
+}
+
 spa_pod *ScreenCastStream::buildFormat(struct spa_pod_builder *b, enum spa_video_format format, struct spa_rectangle *resolution,
                                        struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
-                                       uint64_t *modifiers, int modifierCount)
+                                       const QVector<uint64_t> &modifiers, quint32 modifiersFlags)
 {
     struct spa_pod_frame f[2];
-    int i, c;
-
     spa_pod_builder_push_object(b, &f[0], SPA_TYPE_OBJECT_Format, SPA_PARAM_EnumFormat);
     spa_pod_builder_add(b, SPA_FORMAT_mediaType, SPA_POD_Id(SPA_MEDIA_TYPE_video), 0);
     spa_pod_builder_add(b, SPA_FORMAT_mediaSubtype, SPA_POD_Id(SPA_MEDIA_SUBTYPE_raw), 0);
-
-    /* format */
-    if (format == SPA_VIDEO_FORMAT_BGRA) {
-        /* announce equivalent format without alpha */
-        spa_pod_builder_add(b, SPA_FORMAT_VIDEO_format, SPA_POD_CHOICE_ENUM_Id(3, format, format, SPA_VIDEO_FORMAT_BGRx), 0);
-    } else {
-        spa_pod_builder_add(b, SPA_FORMAT_VIDEO_format, SPA_POD_Id(format), 0);
-    }
-    /* modifiers */
-    if (modifierCount > 0) {
-        // build an enumeration of modifiers
-        // TODO[explicit_modifiers]: Use SPA_POD_PROP_FLAG_DONT_FIXATE
-        // needs seperate fixateFormat method.
-        spa_pod_builder_prop(b, SPA_FORMAT_VIDEO_modifier, SPA_POD_PROP_FLAG_MANDATORY);
-        spa_pod_builder_push_choice(b, &f[1], SPA_CHOICE_Enum, 0);
-        // modifiers from the array
-        for (i = 0, c = 0; i < modifierCount; i++) {
-            spa_pod_builder_long(b, modifiers[i]);
-            if (c++ == 0) {
-                spa_pod_builder_long(b, modifiers[i]);
-            }
-        }
-        spa_pod_builder_pop(b, &f[1]);
-    }
-
-    /* frame size */
     spa_pod_builder_add(b, SPA_FORMAT_VIDEO_size, SPA_POD_Rectangle(resolution), 0);
-
-    /* variable framerate */
     spa_pod_builder_add(b, SPA_FORMAT_VIDEO_framerate, SPA_POD_Fraction(defaultFramerate), 0);
-
-    /* maximal framerate */
     spa_pod_builder_add(b, SPA_FORMAT_VIDEO_maxFramerate,
                         SPA_POD_CHOICE_RANGE_Fraction(
                             SPA_POD_Fraction(maxFramerate),
                             SPA_POD_Fraction(minFramerate),
                             SPA_POD_Fraction(maxFramerate)),
                         0);
+    if (format == SPA_VIDEO_FORMAT_BGRA) {
+        /* announce equivalent format without alpha */
+        spa_pod_builder_add(b, SPA_FORMAT_VIDEO_format, SPA_POD_CHOICE_ENUM_Id(3, format, format, SPA_VIDEO_FORMAT_BGRx), 0);
+    } else {
+        spa_pod_builder_add(b, SPA_FORMAT_VIDEO_format, SPA_POD_Id(format), 0);
+    }
+
+    if (!modifiers.isEmpty()) {
+        spa_pod_builder_prop(b, SPA_FORMAT_VIDEO_modifier, modifiersFlags);
+        spa_pod_builder_push_choice(b, &f[1], SPA_CHOICE_Enum, 0);
+
+        int c = 0;
+        for (auto modifier : modifiers) {
+            spa_pod_builder_long(b, modifier);
+            if (c++ == 0) {
+                spa_pod_builder_long(b, modifier);
+            }
+        }
+        spa_pod_builder_pop(b, &f[1]);
+    }
     return (spa_pod *)spa_pod_builder_pop(b, &f[0]);
 }
 

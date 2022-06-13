@@ -10,7 +10,7 @@
 
 #include "config-kwin.h"
 
-#include "dmabufattributes.h"
+#include "dmabuftexture.h"
 #include "kwinglobals.h"
 #include "wayland/screencast_v1_interface.h"
 
@@ -31,7 +31,6 @@ namespace KWin
 {
 
 class Cursor;
-class DmaBufTexture;
 class EGLNativeFence;
 class GLTexture;
 class PipeWireCore;
@@ -77,6 +76,7 @@ private:
     static void onStreamRemoveBuffer(void *data, pw_buffer *buffer);
 
     bool createStream();
+    QVector<const spa_pod *> buildFormats(bool fixate, char buffer[2048]);
     void updateParams();
     void coreFailed(const QString &errorMessage);
     void sendCursorData(Cursor *cursor, spa_meta_cursor *spa_cursor);
@@ -87,7 +87,7 @@ private:
     void enqueue();
     spa_pod *buildFormat(struct spa_pod_builder *b, enum spa_video_format format, struct spa_rectangle *resolution,
                          struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
-                         uint64_t *modifiers, int modifier_count);
+                         const QVector<uint64_t> &modifiers, quint32 modifiersFlags);
 
     std::shared_ptr<PipeWireCore> pwCore;
     QScopedPointer<ScreenCastSource> m_source;
@@ -101,8 +101,9 @@ private:
     bool m_stopped = false;
 
     spa_video_info_raw videoFormat;
-    bool m_hasModifier = false;
     QString m_error;
+    QVector<uint64_t> m_modifiers;
+    std::optional<DmaBufParams> m_dmabufParams; // when fixated
 
     struct
     {
@@ -124,7 +125,7 @@ private:
     EGLNativeFence *m_pendingFence = nullptr;
     std::optional<std::chrono::nanoseconds> m_start;
     quint64 m_sequential = 0;
-    std::optional<DmaBufParams> m_params;
+    bool m_hasDmaBuf = false;
 };
 
 } // namespace KWin
