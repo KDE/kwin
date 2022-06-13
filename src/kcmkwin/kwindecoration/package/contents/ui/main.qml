@@ -116,9 +116,9 @@ Kirigami.Page {
                             visible: KAuthorized.authorize("ghns")
                             configFile: "window-decorations.knsrc"
                             onEntryEvent: function (entry, event) {
-                                if (event == 1) { // StatusChangedEvent
+                                if (event === NewStuff.Engine.StatusChangedEvent) {
                                     kcm.reloadKWinSettings()
-                                } else if (event == 2) { // EntryAdoptedEvent
+                                } else if (event === NewStuff.Engine.EntryAdoptedEvent) {
                                     kcm.load()
                                 }
                             }

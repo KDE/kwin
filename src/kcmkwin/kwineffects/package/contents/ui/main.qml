@@ -126,7 +126,7 @@ ScrollViewKCM {
                 visible: KAuthorized.authorize(KAuthorized.GHNS)
                 configFile: "kwineffect.knsrc"
                 onEntryEvent: function (entry, event) {
-                    if (event == 1) { // StatusChangedEvent
+                    if (event === NewStuff.Engine.StatusChangedEvent) {
                         kcm.onGHNSEntriesChanged()
                     }
                 }
