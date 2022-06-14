@@ -285,26 +285,36 @@ QRect WorkspaceWrapper::clientArea(ClientAreaOption option, KWin::Window *c) con
     return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), c);
 }
 
-QRect WorkspaceWrapper::clientArea(ClientAreaOption option, int screen, int desktop) const
+static VirtualDesktop *resolveDesktop(int desktopId)
 {
-    VirtualDesktop *virtualDesktop;
-    Output *output;
+    auto vdm = VirtualDesktopManager::self();
+    if (desktopId == NETWinInfo::OnAllDesktops || desktopId == 0) {
+        return vdm->currentDesktop();
+    }
+    return vdm->desktopForX11Id(desktopId);
+}
 
-    if (desktop == NETWinInfo::OnAllDesktops || desktop == 0) {
-        virtualDesktop = VirtualDesktopManager::self()->currentDesktop();
-    } else {
-        virtualDesktop = VirtualDesktopManager::self()->desktopForX11Id(desktop);
-        Q_ASSERT(virtualDesktop);
+static Output *resolveOutput(int outputId)
+{
+    if (outputId == -1) {
+        return workspace()->activeOutput();
+    }
+    return kwinApp()->platform()->findOutput(outputId);
+}
+
+QRect WorkspaceWrapper::clientArea(ClientAreaOption option, int outputId, int desktopId) const
+{
+    VirtualDesktop *desktop = resolveDesktop(desktopId);
+    if (Q_UNLIKELY(!desktop)) {
+        return QRect();
     }
 
-    if (screen == -1) {
-        output = workspace()->activeOutput();
-    } else {
-        output = kwinApp()->platform()->findOutput(screen);
-        Q_ASSERT(output);
+    Output *output = resolveOutput(outputId);
+    if (Q_UNLIKELY(!output)) {
+        return QRect();
     }
 
-    return workspace()->clientArea(static_cast<clientAreaOption>(option), output, virtualDesktop);
+    return workspace()->clientArea(static_cast<clientAreaOption>(option), output, desktop);
 }
 
 QRect WorkspaceWrapper::clientArea(ClientAreaOption option, Output *output, VirtualDesktop *desktop) const
