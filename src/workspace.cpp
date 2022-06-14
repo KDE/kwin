@@ -2247,24 +2247,30 @@ void Workspace::updateClientArea()
 QRect Workspace::clientArea(clientAreaOption opt, const Output *output, const VirtualDesktop *desktop) const
 {
     QRect workArea;
+    QRect screenArea;
 
     const Output *effectiveOutput = output;
     if (is_multihead) {
         effectiveOutput = kwinApp()->platform()->findOutput(screen_number);
     }
 
-    QRect screenArea = m_screenAreas[desktop][effectiveOutput];
+    if (auto desktopIt = m_screenAreas.constFind(desktop); desktopIt != m_screenAreas.constEnd()) {
+        if (auto outputIt = desktopIt->constFind(output); outputIt != desktopIt->constEnd()) {
+            screenArea = *outputIt;
+        }
+    }
+
     if (screenArea.isNull()) { // screens may be missing during KWin initialization or screen config changes
         screenArea = effectiveOutput->geometry();
     }
 
     if (is_multihead) {
-        workArea = m_workAreas[desktop];
+        workArea = m_workAreas.value(desktop);
         if (workArea.isNull()) {
             workArea = effectiveOutput->geometry();
         }
     } else {
-        workArea = m_workAreas[desktop];
+        workArea = m_workAreas.value(desktop);
         if (workArea.isNull()) {
             workArea = QRect(QPoint(0, 0), m_geometry.size());
         }
