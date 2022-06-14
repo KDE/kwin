@@ -1523,13 +1523,11 @@ void Window::keepInArea(QRect area, bool partial)
         geometry.moveBottom(area.bottom());
     }
 
-    if (!area.contains(geometry.topLeft())) {
-        if (geometry.left() < area.left()) {
-            geometry.moveLeft(area.left());
-        }
-        if (geometry.top() < area.top()) {
-            geometry.moveTop(area.top());
-        }
+    if (geometry.left() < area.left()) {
+        geometry.moveLeft(area.left());
+    }
+    if (geometry.top() < area.top()) {
+        geometry.moveTop(area.top());
     }
 
     if (moveResizeGeometry().topLeft() != geometry.topLeft()) {
