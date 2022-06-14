@@ -635,20 +635,19 @@ gbm_bo *DrmBackend::createBo(const QSize &size, quint32 format, const QVector<ui
     return createGbmBo(primaryGpu()->gbmDevice(), size, format, modifiers);
 }
 
-std::optional<DmaBufAttributes> DrmBackend::testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers)
+std::optional<DmaBufParams> DrmBackend::testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers)
 {
     gbm_bo *bo = createBo(size, format, modifiers);
     if (!bo) {
         return {};
     }
 
-    auto ret = dmaBufAttributesForBo(bo);
-    gbm_bo_destroy(bo);
-
+    auto ret = dmaBufParamsForBo(bo);
     // We are just testing to know it works and check the modifier, no need to keep the fd
-    for (int i = 0, c = ret.planeCount; i < c; ++i) {
-        close(ret.fd[i]);
+    for (int i = 0, c = gbm_bo_get_plane_count(bo); i < c; ++i) {
+        close(gbm_bo_get_fd_for_plane(bo, i));
     }
+    gbm_bo_destroy(bo);
     return ret;
 }
 

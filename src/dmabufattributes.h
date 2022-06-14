@@ -11,6 +11,15 @@
 namespace KWin
 {
 
+struct DmaBufParams
+{
+    int planeCount = 0;
+    int width = 0;
+    int height = 0;
+    uint32_t format = 0;
+    uint64_t modifier = 0;
+};
+
 struct DmaBufAttributes
 {
     int planeCount = 0;

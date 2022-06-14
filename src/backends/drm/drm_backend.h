@@ -47,7 +47,7 @@ public:
     QPainterBackend *createQPainterBackend() override;
     OpenGLBackend *createOpenGLBackend() override;
 
-    std::optional<DmaBufAttributes> testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers) override;
+    std::optional<DmaBufParams> testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers) override;
     std::shared_ptr<DmaBufTexture> createDmaBufTexture(const QSize &size, quint32 format, const uint64_t modifier) override;
     Session *session() const override;
     bool initialize() override;

@@ -164,8 +164,8 @@ void ScreenCastStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
     std::shared_ptr<DmaBufTexture> dmabuff;
 
     if (spa_data[0].type != SPA_ID_INVALID && spa_data[0].type & (1 << SPA_DATA_DmaBuf)) {
-        Q_ASSERT(stream->m_attribs);
-        dmabuff = kwinApp()->platform()->createDmaBufTexture(*stream->m_attribs);
+        Q_ASSERT(stream->m_params);
+        dmabuff = kwinApp()->platform()->createDmaBufTexture(*stream->m_params);
     }
 
     if (dmabuff) {
@@ -306,9 +306,9 @@ bool ScreenCastStream::createStream()
     int n_params;
 
     const auto format = m_source->hasAlphaChannel() ? SPA_VIDEO_FORMAT_BGRA : SPA_VIDEO_FORMAT_BGR;
-    m_attribs = kwinApp()->platform()->testCreateDmaBuf(m_resolution, spaVideoFormatToDrmFormat(format), {DRM_FORMAT_MOD_INVALID});
+    m_params = kwinApp()->platform()->testCreateDmaBuf(m_resolution, spaVideoFormatToDrmFormat(format), {DRM_FORMAT_MOD_INVALID});
 
-    if (m_attribs) {
+    if (m_params) {
         params[0] = buildFormat(&podBuilder, SPA_VIDEO_FORMAT_BGRA, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, &modifier, 1);
         params[1] = buildFormat(&podBuilder, format, &resolution, &defaultFramerate, &minFramerate, &maxFramerate, nullptr, 0);
         n_params = 2;

@@ -121,7 +121,7 @@ private:
     EGLNativeFence *m_pendingFence = nullptr;
     std::optional<std::chrono::nanoseconds> m_start;
     quint64 m_sequential = 0;
-    std::optional<DmaBufAttributes> m_attribs;
+    std::optional<DmaBufParams> m_params;
 };
 
 } // namespace KWin

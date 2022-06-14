@@ -55,6 +55,17 @@ inline DmaBufAttributes dmaBufAttributesForBo(gbm_bo *bo)
     return attributes;
 }
 
+inline DmaBufParams dmaBufParamsForBo(gbm_bo *bo)
+{
+    DmaBufParams attributes;
+    attributes.planeCount = gbm_bo_get_plane_count(bo);
+    attributes.width = gbm_bo_get_width(bo);
+    attributes.height = gbm_bo_get_height(bo);
+    attributes.format = gbm_bo_get_format(bo);
+    attributes.modifier = gbm_bo_get_modifier(bo);
+    return attributes;
+}
+
 inline gbm_bo *createGbmBo(gbm_device *device, const QSize &size, quint32 format, const QVector<uint64_t> &modifiers)
 {
     const uint32_t flags = GBM_BO_USE_RENDERING | GBM_BO_USE_LINEAR;

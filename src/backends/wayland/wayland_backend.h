@@ -303,7 +303,7 @@ public:
     Output *createVirtualOutput(const QString &name, const QSize &size, double scale) override;
     void removeVirtualOutput(Output *output) override;
 
-    std::optional<DmaBufAttributes> testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers) override;
+    std::optional<DmaBufParams> testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers) override;
     std::shared_ptr<DmaBufTexture> createDmaBufTexture(const QSize &size, quint32 format, uint64_t modifier) override;
 
     gbm_device *gbmDevice() const

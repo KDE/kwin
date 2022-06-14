@@ -81,7 +81,7 @@ QPainterBackend *Platform::createQPainterBackend()
     return nullptr;
 }
 
-std::optional<DmaBufAttributes> Platform::testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers)
+std::optional<DmaBufParams> Platform::testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers)
 {
     Q_UNUSED(size)
     Q_UNUSED(format)
@@ -97,7 +97,7 @@ std::shared_ptr<DmaBufTexture> Platform::createDmaBufTexture(const QSize &size, 
     return {};
 }
 
-std::shared_ptr<DmaBufTexture> Platform::createDmaBufTexture(const DmaBufAttributes &attribs)
+std::shared_ptr<DmaBufTexture> Platform::createDmaBufTexture(const DmaBufParams &attribs)
 {
     return createDmaBufTexture({attribs.width, attribs.height}, attribs.format, attribs.modifier);
 }
