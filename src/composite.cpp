@@ -159,6 +159,9 @@ Compositor::Compositor(QObject *workspace)
         },
         Qt::QueuedConnection);
 
+    connect(kwinApp(), &Application::x11ConnectionChanged, this, &Compositor::initializeX11);
+    connect(kwinApp(), &Application::x11ConnectionAboutToBeDestroyed, this, &Compositor::cleanupX11);
+
     // register DBus
     new CompositorDBusInterface(this);
     FTraceLogger::create();
@@ -358,12 +361,6 @@ void Compositor::cleanupX11()
 
 void Compositor::startupWithWorkspace()
 {
-    connect(kwinApp(), &Application::x11ConnectionChanged,
-            this, &Compositor::initializeX11, Qt::UniqueConnection);
-    connect(kwinApp(), &Application::x11ConnectionAboutToBeDestroyed,
-            this, &Compositor::cleanupX11, Qt::UniqueConnection);
-    initializeX11();
-
     Q_ASSERT(m_scene);
     m_scene->initialize();
 
