@@ -1036,10 +1036,6 @@ std::optional<DmaBufParams> WaylandBackend::testCreateDmaBuf(const QSize &size, 
     }
 
     auto ret = dmaBufParamsForBo(bo);
-    // We are just testing to know it works and check the modifier, no need to keep the fd
-    for (int i = 0, c = gbm_bo_get_plane_count(bo); i < c; ++i) {
-        close(gbm_bo_get_fd_for_plane(bo, i));
-    }
     gbm_bo_destroy(bo);
     return ret;
 }
