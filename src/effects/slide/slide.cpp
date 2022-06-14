@@ -368,12 +368,17 @@ void SlideEffect::startAnimation(int old, int current, EffectWindow *movingWindo
 void SlideEffect::prepareSwitching()
 {
     const auto windows = effects->stackingOrder();
+    m_windowData.reserve(windows.count());
+
     for (EffectWindow *w : windows) {
+        m_windowData[w] = WindowData{
+            .visibilityRef = EffectWindowVisibleRef(w, EffectWindow::PAINT_DISABLED_BY_DESKTOP),
+        };
+
         if (shouldElevate(w)) {
             effects->setElevatedWindow(w, true);
             m_elevatedWindows << w;
         }
-        w->refVisible(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
         w->setData(WindowForceBackgroundContrastRole, QVariant(true));
         w->setData(WindowForceBlurRole, QVariant(true));
     }
@@ -386,7 +391,6 @@ void SlideEffect::finishedSwitching()
     }
     const EffectWindowList windows = effects->stackingOrder();
     for (EffectWindow *w : windows) {
-        w->unrefVisible(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
         w->setData(WindowForceBackgroundContrastRole, QVariant());
         w->setData(WindowForceBlurRole, QVariant());
     }
@@ -396,6 +400,7 @@ void SlideEffect::finishedSwitching()
     }
     m_elevatedWindows.clear();
 
+    m_windowData.clear();
     m_paintCtx.fullscreenWindows.clear();
     m_movingWindow = nullptr;
     m_state = State::Inactive;
@@ -477,9 +482,12 @@ void SlideEffect::windowAdded(EffectWindow *w)
         effects->setElevatedWindow(w, true);
         m_elevatedWindows << w;
     }
-    w->refVisible(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
     w->setData(WindowForceBackgroundContrastRole, QVariant(true));
     w->setData(WindowForceBlurRole, QVariant(true));
+
+    m_windowData[w] = WindowData{
+        .visibilityRef = EffectWindowVisibleRef(w, EffectWindow::PAINT_DISABLED_BY_DESKTOP),
+    };
 }
 
 void SlideEffect::windowDeleted(EffectWindow *w)
@@ -491,6 +499,7 @@ void SlideEffect::windowDeleted(EffectWindow *w)
         m_movingWindow = nullptr;
     }
     m_elevatedWindows.removeAll(w);
+    m_windowData.remove(w);
     m_paintCtx.fullscreenWindows.removeAll(w);
 }
 
