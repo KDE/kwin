@@ -631,7 +631,6 @@ gbm_bo *DrmBackend::createBo(const QSize &size, quint32 format, const QVector<ui
         return nullptr;
     }
 
-    eglBackend->makeCurrent();
     return createGbmBo(primaryGpu()->gbmDevice(), size, format, modifiers);
 }
 
@@ -663,6 +662,7 @@ std::shared_ptr<DmaBufTexture> DrmBackend::createDmaBufTexture(const QSize &size
     // The bo will be kept around until the last fd is closed.
     const DmaBufAttributes attributes = dmaBufAttributesForBo(bo);
     gbm_bo_destroy(bo);
+    eglBackend->makeCurrent();
     return std::make_shared<DmaBufTexture>(eglBackend->importDmaBufAsTexture(attributes), attributes);
 }
 
