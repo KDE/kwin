@@ -133,7 +133,13 @@ private:
         EffectWindowList fullscreenWindows;
     } m_paintCtx;
 
+    struct WindowData
+    {
+        EffectWindowVisibleRef visibilityRef;
+    };
+
     EffectWindowList m_elevatedWindows;
+    QHash<EffectWindow *, WindowData> m_windowData;
 };
 
 inline int SlideEffect::horizontalGap() const
