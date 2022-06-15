@@ -36,3 +36,4 @@ Dependencies:
 
 Options:
   use-ccache: True
+  require-passing-tests-on: [ 'Linux']
