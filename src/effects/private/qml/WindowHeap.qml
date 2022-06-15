@@ -396,8 +396,8 @@ FocusScope {
 
                 component DragManager : DragHandler {
                     id: dragHandler
-                    enabled: heap.supportsCloseWindows
                     target: null
+                    grabPermissions: PointerHandler.CanTakeOverFromHandlersOfSameType
 
                     readonly property double targetScale: {
                         if (!heap.supportsDragUpGesture) {
@@ -432,6 +432,7 @@ FocusScope {
                 DragManager {
                     id: touchDragHandler
                     acceptedDevices: PointerDevice.TouchScreen
+                    enabled: heap.supportsCloseWindows
                     readonly property double targetOpacity: {
                         if (!heap.supportsCloseWindows) {
                             return 1;
