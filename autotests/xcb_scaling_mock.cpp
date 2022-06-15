@@ -17,7 +17,7 @@ uint32_t Xcb::toXNative(qreal value)
     return value;
 }
 
-qreal Xcb::fromXNative(uint value)
+qreal Xcb::fromXNative(int value)
 {
     return value;
 }
