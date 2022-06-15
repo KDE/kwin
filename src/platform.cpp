@@ -223,7 +223,7 @@ Output *Platform::findOutput(const QString &name) const
 Output *Platform::outputAt(const QPointF &pos) const
 {
     Output *bestOutput = nullptr;
-    int minDistance = INT_MAX;
+    int minDistance = 0;
     const auto candidates = enabledOutputs();
     for (Output *output : candidates) {
         const QRect &geo = output->geometry();
@@ -234,7 +234,7 @@ Output *Platform::outputAt(const QPointF &pos) const
         distance = std::min(distance, QPointF(geo.topRight() - pos).manhattanLength());
         distance = std::min(distance, QPointF(geo.bottomRight() - pos).manhattanLength());
         distance = std::min(distance, QPointF(geo.bottomLeft() - pos).manhattanLength());
-        if (distance < minDistance) {
+        if (!bestOutput || distance < minDistance) {
             minDistance = distance;
             bestOutput = output;
         }
