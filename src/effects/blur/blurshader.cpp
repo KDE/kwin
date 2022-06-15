@@ -8,10 +8,12 @@
 #include "blurshader.h"
 
 #include <kwineffects.h>
-#include <kwinglplatform.h>
 
-#include <QByteArray>
-#include <QTextStream>
+static void ensureResources()
+{
+    // Must initialize resources manually because the effect is a static lib.
+    Q_INIT_RESOURCE(blur);
+}
 
 namespace KWin
 {
@@ -19,141 +21,27 @@ namespace KWin
 BlurShader::BlurShader(QObject *parent)
     : QObject(parent)
 {
-    const bool gles = GLPlatform::instance()->isGLES();
-    const bool glsl_140 = !gles && GLPlatform::instance()->glslVersion() >= kVersionNumber(1, 40);
-    const bool core = glsl_140 || (gles && GLPlatform::instance()->glslVersion() >= kVersionNumber(3, 0));
+    ensureResources();
 
-    QByteArray vertexSource;
-    QByteArray fragmentDownSource;
-    QByteArray fragmentUpSource;
-    QByteArray fragmentCopySource;
-    QByteArray fragmentNoiseSource;
+    m_shaderDownsample.reset(ShaderManager::instance()->generateShaderFromFile(
+        ShaderTrait::MapTexture,
+        QStringLiteral(":/effects/blur/shaders/vertex.vert"),
+        QStringLiteral(":/effects/blur/shaders/downsample.frag")));
 
-    const QByteArray attribute = core ? "in" : "attribute";
-    const QByteArray texture2D = core ? "texture" : "texture2D";
-    const QByteArray fragColor = core ? "fragColor" : "gl_FragColor";
+    m_shaderUpsample.reset(ShaderManager::instance()->generateShaderFromFile(
+        ShaderTrait::MapTexture,
+        QStringLiteral(":/effects/blur/shaders/vertex.vert"),
+        QStringLiteral(":/effects/blur/shaders/upsample.frag")));
 
-    QString glHeaderString;
+    m_shaderCopysample.reset(ShaderManager::instance()->generateShaderFromFile(
+        ShaderTrait::MapTexture,
+        QStringLiteral(":/effects/blur/shaders/vertex.vert"),
+        QStringLiteral(":/effects/blur/shaders/copy.frag")));
 
-    if (gles) {
-        if (core) {
-            glHeaderString += "#version 300 es\n\n";
-        }
-
-        glHeaderString += "precision highp float;\n";
-    } else if (glsl_140) {
-        glHeaderString += "#version 140\n\n";
-    }
-
-    QString glUniformString = "uniform sampler2D texUnit;\n"
-                              "uniform float offset;\n"
-                              "uniform vec2 renderTextureSize;\n"
-                              "uniform vec2 halfpixel;\n";
-
-    if (core) {
-        glUniformString += "out vec4 fragColor;\n\n";
-    }
-
-    // Vertex shader
-    QTextStream streamVert(&vertexSource);
-
-    streamVert << glHeaderString;
-
-    streamVert << "uniform mat4 modelViewProjectionMatrix;\n";
-    streamVert << attribute << " vec4 vertex;\n\n";
-    streamVert << "\n";
-    streamVert << "void main(void)\n";
-    streamVert << "{\n";
-    streamVert << "    gl_Position = modelViewProjectionMatrix * vertex;\n";
-    streamVert << "}\n";
-
-    streamVert.flush();
-
-    // Fragment shader (Dual Kawase Blur) - Downsample
-    QTextStream streamFragDown(&fragmentDownSource);
-
-    streamFragDown << glHeaderString << glUniformString;
-
-    streamFragDown << "void main(void)\n";
-    streamFragDown << "{\n";
-    streamFragDown << "    vec2 uv = vec2(gl_FragCoord.xy / renderTextureSize);\n";
-    streamFragDown << "    \n";
-    streamFragDown << "    vec4 sum = " << texture2D << "(texUnit, uv) * 4.0;\n";
-    streamFragDown << "    sum += " << texture2D << "(texUnit, uv - halfpixel.xy * offset);\n";
-    streamFragDown << "    sum += " << texture2D << "(texUnit, uv + halfpixel.xy * offset);\n";
-    streamFragDown << "    sum += " << texture2D << "(texUnit, uv + vec2(halfpixel.x, -halfpixel.y) * offset);\n";
-    streamFragDown << "    sum += " << texture2D << "(texUnit, uv - vec2(halfpixel.x, -halfpixel.y) * offset);\n";
-    streamFragDown << "    \n";
-    streamFragDown << "    " << fragColor << " = sum / 8.0;\n";
-    streamFragDown << "}\n";
-
-    streamFragDown.flush();
-
-    // Fragment shader (Dual Kawase Blur) - Upsample
-    QTextStream streamFragUp(&fragmentUpSource);
-
-    streamFragUp << glHeaderString << glUniformString;
-
-    streamFragUp << "void main(void)\n";
-    streamFragUp << "{\n";
-    streamFragUp << "    vec2 uv = vec2(gl_FragCoord.xy / renderTextureSize);\n";
-    streamFragUp << "    \n";
-    streamFragUp << "    vec4 sum = " << texture2D << "(texUnit, uv + vec2(-halfpixel.x * 2.0, 0.0) * offset);\n";
-    streamFragUp << "    sum += " << texture2D << "(texUnit, uv + vec2(-halfpixel.x, halfpixel.y) * offset) * 2.0;\n";
-    streamFragUp << "    sum += " << texture2D << "(texUnit, uv + vec2(0.0, halfpixel.y * 2.0) * offset);\n";
-    streamFragUp << "    sum += " << texture2D << "(texUnit, uv + vec2(halfpixel.x, halfpixel.y) * offset) * 2.0;\n";
-    streamFragUp << "    sum += " << texture2D << "(texUnit, uv + vec2(halfpixel.x * 2.0, 0.0) * offset);\n";
-    streamFragUp << "    sum += " << texture2D << "(texUnit, uv + vec2(halfpixel.x, -halfpixel.y) * offset) * 2.0;\n";
-    streamFragUp << "    sum += " << texture2D << "(texUnit, uv + vec2(0.0, -halfpixel.y * 2.0) * offset);\n";
-    streamFragUp << "    sum += " << texture2D << "(texUnit, uv + vec2(-halfpixel.x, -halfpixel.y) * offset) * 2.0;\n";
-    streamFragUp << "    \n";
-    streamFragUp << "    " << fragColor << " = sum / 12.0;\n";
-    streamFragUp << "}\n";
-
-    streamFragUp.flush();
-
-    // Fragment shader - Copy texture
-    QTextStream streamFragCopy(&fragmentCopySource);
-
-    streamFragCopy << glHeaderString;
-
-    streamFragCopy << "uniform sampler2D texUnit;\n";
-    streamFragCopy << "uniform vec2 renderTextureSize;\n";
-    streamFragCopy << "uniform vec4 blurRect;\n";
-
-    if (core) {
-        streamFragCopy << "out vec4 fragColor;\n\n";
-    }
-
-    streamFragCopy << "void main(void)\n";
-    streamFragCopy << "{\n";
-    streamFragCopy << "     vec2 uv = vec2(gl_FragCoord.xy / renderTextureSize);\n";
-    streamFragCopy << "    " << fragColor << " = " << texture2D << "(texUnit, clamp(uv, blurRect.xy, blurRect.zw));\n";
-    streamFragCopy << "}\n";
-
-    streamFragCopy.flush();
-
-    // Fragment shader - Noise tiling
-    QTextStream streamFragNoise(&fragmentNoiseSource);
-
-    streamFragNoise << glHeaderString << glUniformString;
-
-    streamFragNoise << "uniform vec2 noiseTextureSize;\n";
-    streamFragNoise << "uniform vec2 texStartPos;\n";
-
-    streamFragNoise << "void main(void)\n";
-    streamFragNoise << "{\n";
-    streamFragNoise << "    vec2 uvNoise = vec2((texStartPos.xy + gl_FragCoord.xy) / noiseTextureSize);\n";
-    streamFragNoise << "    \n";
-    streamFragNoise << "    " << fragColor << " = vec4(" << texture2D << "(texUnit, uvNoise).rrr, 0);\n";
-    streamFragNoise << "}\n";
-
-    streamFragNoise.flush();
-
-    m_shaderDownsample.reset(ShaderManager::instance()->loadShaderFromCode(vertexSource, fragmentDownSource));
-    m_shaderUpsample.reset(ShaderManager::instance()->loadShaderFromCode(vertexSource, fragmentUpSource));
-    m_shaderCopysample.reset(ShaderManager::instance()->loadShaderFromCode(vertexSource, fragmentCopySource));
-    m_shaderNoisesample.reset(ShaderManager::instance()->loadShaderFromCode(vertexSource, fragmentNoiseSource));
+    m_shaderNoisesample.reset(ShaderManager::instance()->generateShaderFromFile(
+        ShaderTrait::MapTexture,
+        QStringLiteral(":/effects/blur/shaders/vertex.vert"),
+        QStringLiteral(":/effects/blur/shaders/noise.frag")));
 
     m_valid = m_shaderDownsample->isValid() && m_shaderUpsample->isValid() && m_shaderCopysample->isValid() && m_shaderNoisesample->isValid();
 

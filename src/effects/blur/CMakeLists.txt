@@ -3,6 +3,7 @@
 
 set(blur_SOURCES
     blur.cpp
+    blur.qrc
     blurshader.cpp
     main.cpp
 )
