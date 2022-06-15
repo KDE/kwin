@@ -217,7 +217,6 @@ public:
     int screen;
     qreal crossFadeProgress;
     QMatrix4x4 pMatrix;
-    QMatrix4x4 mvMatrix;
     QMatrix4x4 screenProjectionMatrix;
 };
 
@@ -257,7 +256,6 @@ WindowPaintData::WindowPaintData(const WindowPaintData &other)
     setScreen(other.screen());
     setCrossFadeProgress(other.crossFadeProgress());
     setProjectionMatrix(other.projectionMatrix());
-    setModelViewMatrix(other.modelViewMatrix());
     d->screenProjectionMatrix = other.d->screenProjectionMatrix;
 }
 
@@ -347,21 +345,6 @@ QMatrix4x4 WindowPaintData::projectionMatrix() const
 QMatrix4x4 &WindowPaintData::rprojectionMatrix()
 {
     return d->pMatrix;
-}
-
-void WindowPaintData::setModelViewMatrix(const QMatrix4x4 &matrix)
-{
-    d->mvMatrix = matrix;
-}
-
-QMatrix4x4 WindowPaintData::modelViewMatrix() const
-{
-    return d->mvMatrix;
-}
-
-QMatrix4x4 &WindowPaintData::rmodelViewMatrix()
-{
-    return d->mvMatrix;
 }
 
 WindowPaintData &WindowPaintData::operator*=(qreal scale)

@@ -2545,7 +2545,7 @@ public:
      */
     virtual bool isCriticalNotification() const = 0;
     /**
-     * Returns whether the window is a window used for applet popups. 
+     * Returns whether the window is a window used for applet popups.
      */
     virtual bool isAppletPopup() const = 0;
     /**
@@ -3273,26 +3273,6 @@ public:
      * Returns a reference to the projection matrix.
      */
     QMatrix4x4 &rprojectionMatrix();
-
-    /**
-     * Sets the model-view matrix that will be used when painting the window.
-     *
-     * The default model-view matrix can be overridden by setting this matrix
-     * to a non-identity matrix.
-     */
-    void setModelViewMatrix(const QMatrix4x4 &matrix);
-
-    /**
-     * Returns the current model-view matrix.
-     *
-     * The default value for this matrix is the identity matrix.
-     */
-    QMatrix4x4 modelViewMatrix() const;
-
-    /**
-     * Returns a reference to the model-view matrix.
-     */
-    QMatrix4x4 &rmodelViewMatrix();
 
     /**
      * Returns The projection matrix as used by the current screen painting pass

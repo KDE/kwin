@@ -90,7 +90,7 @@ protected:
 
 private:
     void doPaintBackground(const QVector<float> &vertices);
-    QMatrix4x4 modelViewProjectionMatrix(int mask, const WindowPaintData &data) const;
+    QMatrix4x4 modelViewProjectionMatrix(const WindowPaintData &data) const;
     QVector4D modulate(float opacity, float brightness) const;
     void setBlendEnabled(bool enabled);
     void createRenderNode(Item *item, RenderContext *context);

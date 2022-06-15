@@ -444,10 +444,9 @@ void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
     context->opacityStack.pop();
 }
 
-QMatrix4x4 SceneOpenGL::modelViewProjectionMatrix(int mask, const WindowPaintData &data) const
+QMatrix4x4 SceneOpenGL::modelViewProjectionMatrix(const WindowPaintData &data) const
 {
     const QMatrix4x4 pMatrix = data.projectionMatrix();
-    const QMatrix4x4 mvMatrix = data.modelViewMatrix();
 
     // An effect may want to override the default projection matrix in some cases,
     // such as when it is rendering a window on a render target that doesn't have
@@ -455,17 +454,9 @@ QMatrix4x4 SceneOpenGL::modelViewProjectionMatrix(int mask, const WindowPaintDat
     //
     // Note that the screen transformation is not applied here.
     if (!pMatrix.isIdentity()) {
-        return pMatrix * mvMatrix;
+        return pMatrix;
     }
-
-    // If an effect has specified a model-view matrix, we multiply that matrix
-    // with the default projection matrix.  If the effect hasn't specified a
-    // model-view matrix, mvMatrix will be the identity matrix.
-    if (mask & Scene::PAINT_SCREEN_TRANSFORMED) {
-        return screenProjectionMatrix() * mvMatrix;
-    }
-
-    return renderTargetProjectionMatrix() * mvMatrix;
+    return m_screenProjectionMatrix;
 }
 
 static QMatrix4x4 transformForPaintData(int mask, const WindowPaintData &data)
@@ -589,7 +580,7 @@ void SceneOpenGL::render(Item *item, int mask, const QRegion &region, const Wind
         scissorRegion = mapToRenderTarget(region);
     }
 
-    const QMatrix4x4 modelViewProjection = modelViewProjectionMatrix(mask, data);
+    const QMatrix4x4 projectionMatrix = modelViewProjectionMatrix(data);
     for (int i = 0; i < renderContext.renderNodes.count(); i++) {
         const RenderNode &renderNode = renderContext.renderNodes[i];
         if (renderNode.vertexCount == 0) {
@@ -598,8 +589,7 @@ void SceneOpenGL::render(Item *item, int mask, const QRegion &region, const Wind
 
         setBlendEnabled(renderNode.hasAlpha || renderNode.opacity < 1.0);
 
-        shader->setUniform(GLShader::ModelViewProjectionMatrix,
-                           modelViewProjection * renderNode.transformMatrix);
+        shader->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix * renderNode.transformMatrix);
         if (opacity != renderNode.opacity) {
             shader->setUniform(GLShader::ModulationConstant,
                                modulate(renderNode.opacity, data.brightness()));
