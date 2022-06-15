@@ -44,6 +44,9 @@ private Q_SLOTS:
 
 void WobblyWindowsShadeTest::initTestCase()
 {
+#if defined(Q_OS_FREEBSD)
+    QSKIP("Disabled due to Xwayland shm fallback being broken on FreeBSD");
+#endif
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::Effect *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);

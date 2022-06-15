@@ -57,6 +57,9 @@ void SceneQPainterTest::cleanup()
 
 void SceneQPainterTest::initTestCase()
 {
+#if defined(Q_OS_FREEBSD)
+    QSKIP("Disabled due to Xwayland shm fallback being broken on FreeBSD");
+#endif
     qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());

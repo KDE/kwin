@@ -39,6 +39,9 @@ private Q_SLOTS:
 
 void XWaylandInputTest::initTestCase()
 {
+#if defined(Q_OS_FREEBSD)
+    QSKIP("Disabled due to Xwayland shm fallback being broken on FreeBSD");
+#endif
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);

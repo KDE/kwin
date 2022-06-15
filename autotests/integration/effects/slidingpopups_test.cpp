@@ -47,6 +47,9 @@ private Q_SLOTS:
 
 void SlidingPopupsTest::initTestCase()
 {
+#if defined(Q_OS_FREEBSD)
+    QSKIP("Disabled due to Xwayland shm fallback being broken on FreeBSD");
+#endif
     qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::Deleted *>();
