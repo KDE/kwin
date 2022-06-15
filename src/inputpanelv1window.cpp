@@ -95,8 +95,7 @@ void KWin::InputPanelV1Window::reposition()
         }
 
         panelSize = panelSize.boundedTo(availableArea.size());
-
-        QRect geo(availableArea.bottomLeft() - QPoint{0, panelSize.height()}, panelSize);
+        QRect geo(QPoint{availableArea.left(), availableArea.top() + availableArea.height() - panelSize.height()}, panelSize);
         geo.translate((availableArea.width() - panelSize.width()) / 2, availableArea.height() - outputArea.height());
         moveResize(geo);
     } break;
