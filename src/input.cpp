@@ -3235,9 +3235,19 @@ void InputRedirection::registerRealtimeTouchpadSwipeShortcut(SwipeDirection dire
     m_shortcuts->registerRealtimeTouchpadSwipe(action, cb, direction, fingerCount);
 }
 
+void InputRedirection::registerRealtimeTouchpadSwipeShortcut(const QString &context, SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> cb)
+{
+    m_shortcuts->registerRealtimeTouchpadSwipe(context, action, cb, direction, fingerCount);
+}
+
 void InputRedirection::registerTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action)
 {
     m_shortcuts->registerTouchpadSwipe(action, direction, fingerCount);
+}
+
+void InputRedirection::registerTouchpadSwipeShortcut(const QString &context, SwipeDirection direction, uint fingerCount, QAction *action)
+{
+    m_shortcuts->registerTouchpadSwipe(context, action, direction, fingerCount);
 }
 
 void InputRedirection::registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *action)
@@ -3245,9 +3255,29 @@ void InputRedirection::registerTouchpadPinchShortcut(PinchDirection direction, u
     m_shortcuts->registerTouchpadPinch(action, direction, fingerCount);
 }
 
+void InputRedirection::registerTouchpadPinchShortcut(const QString &context, PinchDirection direction, uint fingerCount, QAction *action)
+{
+    m_shortcuts->registerTouchpadPinch(context, action, direction, fingerCount);
+}
+
 void InputRedirection::registerRealtimeTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
 {
     m_shortcuts->registerRealtimeTouchpadPinch(onUp, progressCallback, direction, fingerCount);
+}
+
+void InputRedirection::registerRealtimeTouchpadPinchShortcut(const QString &context, PinchDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
+{
+    m_shortcuts->registerRealtimeTouchpadPinch(context, onUp, progressCallback, direction, fingerCount);
+}
+
+void InputRedirection::setGestureContext(const QString &contextName)
+{
+    m_shortcuts->setGestureContext(contextName);
+}
+
+void InputRedirection::resetGestureContext()
+{
+    m_shortcuts->resetGestureContext();
 }
 
 void InputRedirection::registerGlobalAccel(KGlobalAccelInterface *interface)

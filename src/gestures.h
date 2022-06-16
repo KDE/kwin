@@ -11,6 +11,7 @@
 
 #include <kwin_export.h>
 
+#include <QHash>
 #include <QMap>
 #include <QObject>
 #include <QPointF>
@@ -31,8 +32,10 @@ class Gesture : public QObject
 public:
     ~Gesture() override;
 
+    QString contextName() const;
+
 protected:
-    explicit Gesture(QObject *parent);
+    explicit Gesture(const QString &contextName, QObject *parent);
 
 Q_SIGNALS:
     /**
@@ -49,6 +52,9 @@ Q_SIGNALS:
      * This Gesture no longer matches.
      */
     void cancelled();
+
+private:
+    QString m_contextName;
 };
 
 class SwipeGesture : public Gesture
@@ -62,7 +68,7 @@ public:
         Right,
     };
 
-    explicit SwipeGesture(QObject *parent = nullptr);
+    explicit SwipeGesture(const QString &contextName, QObject *parent = nullptr);
     ~SwipeGesture() override;
 
     bool minimumFingerCountIsRelevant() const;
@@ -137,7 +143,7 @@ public:
         Contracting,
     };
 
-    explicit PinchGesture(QObject *parent = nullptr);
+    explicit PinchGesture(const QString &contextName, QObject *parent = nullptr);
     ~PinchGesture() override;
 
     bool minimumFingerCountIsRelevant() const;
@@ -180,12 +186,32 @@ private:
     qreal m_minimumScaleDelta = DEFAULT_UNIT_SCALE_DELTA;
 };
 
+class KWIN_EXPORT GestureContext : public QObject
+{
+    Q_OBJECT
+
+public:
+    void registerSwipeGesture(SwipeGesture *gesture);
+    void unregisterSwipeGesture(SwipeGesture *gesture);
+    void registerPinchGesture(PinchGesture *gesture);
+    void unregisterPinchGesture(PinchGesture *gesture);
+
+    QVector<SwipeGesture *> m_swipeGestures;
+    QVector<PinchGesture *> m_pinchGestures;
+    QVector<SwipeGesture *> m_activeSwipeGestures;
+    QVector<PinchGesture *> m_activePinchGestures;
+    QMap<Gesture *, QMetaObject::Connection> m_destroyConnections;
+};
+
 class KWIN_EXPORT GestureRecognizer : public QObject
 {
     Q_OBJECT
 public:
     GestureRecognizer(QObject *parent = nullptr);
     ~GestureRecognizer() override;
+
+    void setContext(const QString &contextName);
+    void resetContext();
 
     void registerSwipeGesture(SwipeGesture *gesture);
     void unregisterSwipeGesture(SwipeGesture *gesture);
@@ -205,6 +231,7 @@ public:
     void endPinchGesture();
 
 private:
+    GestureContext *getOrCreateContext(const QString &contextName);
     void cancelActiveGestures();
     enum class StartPositionBehavior {
         Relevant,
@@ -216,11 +243,10 @@ private:
         None,
     };
     int startSwipeGesture(uint fingerCount, const QPointF &startPos, StartPositionBehavior startPosBehavior);
-    QVector<SwipeGesture *> m_swipeGestures;
-    QVector<PinchGesture *> m_pinchGestures;
-    QVector<SwipeGesture *> m_activeSwipeGestures;
-    QVector<PinchGesture *> m_activePinchGestures;
-    QMap<Gesture *, QMetaObject::Connection> m_destroyConnections;
+
+    QHash<QString, GestureContext *> m_contexts;
+    GestureContext *m_currentContext;
+    GestureContext *m_defaultContext;
 
     QSizeF m_currentDelta = QSizeF(0, 0);
     qreal m_currentScale = 1; // For Pinch Gesture recognition

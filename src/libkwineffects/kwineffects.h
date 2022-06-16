@@ -926,13 +926,20 @@ public:
      * @param action The action which gets triggered when the gesture triggers
      * @since 5.10
      */
-    virtual void registerTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action) = 0;
+    void registerTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action);
+    virtual void registerTouchpadSwipeShortcut(const QString &context, SwipeDirection direction, uint fingerCount, QAction *action) = 0;
 
-    virtual void registerRealtimeTouchpadSwipeShortcut(SwipeDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback) = 0;
+    void registerRealtimeTouchpadSwipeShortcut(SwipeDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback);
+    virtual void registerRealtimeTouchpadSwipeShortcut(const QString &context, SwipeDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback) = 0;
 
-    virtual void registerRealtimeTouchpadPinchShortcut(PinchDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback) = 0;
+    void registerRealtimeTouchpadPinchShortcut(PinchDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback);
+    virtual void registerRealtimeTouchpadPinchShortcut(const QString &context, PinchDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback) = 0;
 
-    virtual void registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *action) = 0;
+    void registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *action);
+    virtual void registerTouchpadPinchShortcut(const QString &context, PinchDirection direction, uint fingerCount, QAction *action) = 0;
+
+    virtual void setGestureContext(const QString &contextName) = 0;
+    virtual void resetGestureContext() = 0;
 
     /**
      * @brief Registers a global touchscreen swipe gesture shortcut with the provided @p action.
@@ -2545,7 +2552,7 @@ public:
      */
     virtual bool isCriticalNotification() const = 0;
     /**
-     * Returns whether the window is a window used for applet popups. 
+     * Returns whether the window is a window used for applet popups.
      */
     virtual bool isAppletPopup() const = 0;
     /**

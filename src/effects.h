@@ -103,11 +103,13 @@ public:
     void registerGlobalShortcut(const QKeySequence &shortcut, QAction *action) override;
     void registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action) override;
     void registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action) override;
-    void registerRealtimeTouchpadSwipeShortcut(SwipeDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback) override;
-    void registerTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action) override;
-    void registerRealtimeTouchpadPinchShortcut(PinchDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback) override;
-    void registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *action) override;
+    void registerRealtimeTouchpadSwipeShortcut(const QString &context, SwipeDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback) override;
+    void registerTouchpadSwipeShortcut(const QString &context, SwipeDirection direction, uint fingerCount, QAction *action) override;
+    void registerRealtimeTouchpadPinchShortcut(const QString &context, PinchDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback) override;
+    void registerTouchpadPinchShortcut(const QString &context, PinchDirection direction, uint fingerCount, QAction *action) override;
     void registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback) override;
+    void setGestureContext(const QString &contextName) override;
+    void resetGestureContext() override;
     void *getProxy(QString name) override;
     void startMousePolling() override;
     void stopMousePolling() override;

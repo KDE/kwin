@@ -16,15 +16,21 @@
 namespace KWin
 {
 
-Gesture::Gesture(QObject *parent)
+Gesture::Gesture(const QString &contextName, QObject *parent)
     : QObject(parent)
+    , m_contextName(contextName)
 {
+}
+
+QString Gesture::contextName() const
+{
+    return m_contextName;
 }
 
 Gesture::~Gesture() = default;
 
-SwipeGesture::SwipeGesture(QObject *parent)
-    : Gesture(parent)
+SwipeGesture::SwipeGesture(const QString &contextName, QObject *parent)
+    : Gesture(contextName, parent)
 {
 }
 
@@ -64,8 +70,8 @@ bool SwipeGesture::minimumDeltaReached(const QSizeF &delta) const
     return deltaToProgress(delta) >= 1.0;
 }
 
-PinchGesture::PinchGesture(QObject *parent)
-    : Gesture(parent)
+PinchGesture::PinchGesture(const QString &contextName, QObject *parent)
+    : Gesture(contextName, parent)
 {
 }
 
@@ -81,22 +87,15 @@ bool PinchGesture::minimumScaleDeltaReached(const qreal &scaleDelta) const
     return scaleDeltaToProgress(scaleDelta) >= 1.0;
 }
 
-GestureRecognizer::GestureRecognizer(QObject *parent)
-    : QObject(parent)
-{
-}
-
-GestureRecognizer::~GestureRecognizer() = default;
-
-void GestureRecognizer::registerSwipeGesture(KWin::SwipeGesture *gesture)
+void GestureContext::registerSwipeGesture(KWin::SwipeGesture *gesture)
 {
     Q_ASSERT(!m_swipeGestures.contains(gesture));
-    auto connection = connect(gesture, &QObject::destroyed, this, std::bind(&GestureRecognizer::unregisterSwipeGesture, this, gesture));
+    auto connection = connect(gesture, &QObject::destroyed, this, std::bind(&GestureContext::unregisterSwipeGesture, this, gesture));
     m_destroyConnections.insert(gesture, connection);
     m_swipeGestures << gesture;
 }
 
-void GestureRecognizer::unregisterSwipeGesture(KWin::SwipeGesture *gesture)
+void GestureContext::unregisterSwipeGesture(KWin::SwipeGesture *gesture)
 {
     auto it = m_destroyConnections.find(gesture);
     if (it != m_destroyConnections.end()) {
@@ -109,15 +108,15 @@ void GestureRecognizer::unregisterSwipeGesture(KWin::SwipeGesture *gesture)
     }
 }
 
-void GestureRecognizer::registerPinchGesture(KWin::PinchGesture *gesture)
+void GestureContext::registerPinchGesture(KWin::PinchGesture *gesture)
 {
     Q_ASSERT(!m_pinchGestures.contains(gesture));
-    auto connection = connect(gesture, &QObject::destroyed, this, std::bind(&GestureRecognizer::unregisterPinchGesture, this, gesture));
+    auto connection = connect(gesture, &QObject::destroyed, this, std::bind(&GestureContext::unregisterPinchGesture, this, gesture));
     m_destroyConnections.insert(gesture, connection);
     m_pinchGestures << gesture;
 }
 
-void GestureRecognizer::unregisterPinchGesture(KWin::PinchGesture *gesture)
+void GestureContext::unregisterPinchGesture(KWin::PinchGesture *gesture)
 {
     auto it = m_destroyConnections.find(gesture);
     if (it != m_destroyConnections.end()) {
@@ -130,14 +129,70 @@ void GestureRecognizer::unregisterPinchGesture(KWin::PinchGesture *gesture)
     }
 }
 
+GestureRecognizer::GestureRecognizer(QObject *parent)
+    : QObject(parent)
+{
+    m_defaultContext = new GestureContext();
+
+    m_contexts.insert(QStringLiteral("default"), m_defaultContext);
+    m_currentContext = m_defaultContext;
+}
+
+GestureRecognizer::~GestureRecognizer() = default;
+
+void GestureRecognizer::setContext(const QString &contextName)
+{
+    if (GestureContext *context = m_contexts.value(contextName)) {
+        m_currentContext = context;
+    }
+}
+
+void GestureRecognizer::resetContext()
+{
+    m_currentContext = m_defaultContext;
+}
+
+GestureContext *GestureRecognizer::getOrCreateContext(const QString &contextName)
+{
+    GestureContext *&context = m_contexts[contextName];
+    if (!context) {
+        context = new GestureContext;
+    }
+    return context;
+}
+
+void GestureRecognizer::registerSwipeGesture(SwipeGesture *gesture)
+{
+    GestureContext *ctx = getOrCreateContext(gesture->contextName());
+    ctx->registerSwipeGesture(gesture);
+}
+
+void GestureRecognizer::unregisterSwipeGesture(SwipeGesture *gesture)
+{
+    GestureContext *ctx = getOrCreateContext(gesture->contextName());
+    ctx->unregisterSwipeGesture(gesture);
+}
+
+void GestureRecognizer::registerPinchGesture(PinchGesture *gesture)
+{
+    GestureContext *ctx = getOrCreateContext(gesture->contextName());
+    ctx->registerPinchGesture(gesture);
+}
+
+void GestureRecognizer::unregisterPinchGesture(PinchGesture *gesture)
+{
+    GestureContext *ctx = getOrCreateContext(gesture->contextName());
+    ctx->unregisterPinchGesture(gesture);
+}
+
 int GestureRecognizer::startSwipeGesture(uint fingerCount, const QPointF &startPos, StartPositionBehavior startPosBehavior)
 {
     m_currentFingerCount = fingerCount;
-    if (!m_activeSwipeGestures.isEmpty() || !m_activePinchGestures.isEmpty()) {
+    if (!m_currentContext->m_activeSwipeGestures.isEmpty() || !m_currentContext->m_activePinchGestures.isEmpty()) {
         return 0;
     }
     int count = 0;
-    for (SwipeGesture *gesture : qAsConst(m_swipeGestures)) {
+    for (SwipeGesture *gesture : qAsConst(m_currentContext->m_swipeGestures)) {
         if (gesture->minimumFingerCountIsRelevant()) {
             if (gesture->minimumFingerCount() > fingerCount) {
                 continue;
@@ -187,7 +242,7 @@ int GestureRecognizer::startSwipeGesture(uint fingerCount, const QPointF &startP
             break;
         }
 
-        m_activeSwipeGestures << gesture;
+        m_currentContext->m_activeSwipeGestures << gesture;
         count++;
         Q_EMIT gesture->started();
     }
@@ -234,18 +289,18 @@ void GestureRecognizer::updateSwipeGesture(const QSizeF &delta)
     // Eliminate wrong gestures (takes two iterations)
     for (int i = 0; i < 2; i++) {
 
-        if (m_activeSwipeGestures.isEmpty()) {
+        if (m_currentContext->m_activeSwipeGestures.isEmpty()) {
             startSwipeGesture(m_currentFingerCount);
         }
 
-        for (auto it = m_activeSwipeGestures.begin(); it != m_activeSwipeGestures.end();) {
+        for (auto it = m_currentContext->m_activeSwipeGestures.begin(); it != m_currentContext->m_activeSwipeGestures.end();) {
             auto g = static_cast<SwipeGesture *>(*it);
 
             if (g->direction() != direction) {
                 // If a gesture was started from a touchscreen border never cancel it
                 if (!g->minimumXIsRelevant() || !g->maximumXIsRelevant() || !g->minimumYIsRelevant() || !g->maximumYIsRelevant()) {
                     Q_EMIT g->cancelled();
-                    it = m_activeSwipeGestures.erase(it);
+                    it = m_currentContext->m_activeSwipeGestures.erase(it);
                     continue;
                 }
             }
@@ -255,7 +310,7 @@ void GestureRecognizer::updateSwipeGesture(const QSizeF &delta)
     }
 
     // Send progress update
-    for (SwipeGesture *g : std::as_const(m_activeSwipeGestures)) {
+    for (SwipeGesture *g : std::as_const(m_currentContext->m_activeSwipeGestures)) {
         Q_EMIT g->progress(g->deltaToProgress(m_currentDelta));
         Q_EMIT g->deltaProgress(m_currentDelta);
     }
@@ -263,14 +318,14 @@ void GestureRecognizer::updateSwipeGesture(const QSizeF &delta)
 
 void GestureRecognizer::cancelActiveGestures()
 {
-    for (auto g : qAsConst(m_activeSwipeGestures)) {
+    for (auto g : qAsConst(m_currentContext->m_activeSwipeGestures)) {
         Q_EMIT g->cancelled();
     }
-    for (auto g : qAsConst(m_activePinchGestures)) {
+    for (auto g : qAsConst(m_currentContext->m_activePinchGestures)) {
         Q_EMIT g->cancelled();
     }
-    m_activeSwipeGestures.clear();
-    m_activePinchGestures.clear();
+    m_currentContext->m_activeSwipeGestures.clear();
+    m_currentContext->m_activePinchGestures.clear();
     m_currentScale = 0;
     m_currentDelta = QSizeF(0, 0);
     m_currentSwipeAxis = Axis::None;
@@ -287,14 +342,14 @@ void GestureRecognizer::cancelSwipeGesture()
 void GestureRecognizer::endSwipeGesture()
 {
     const QSizeF delta = m_currentDelta;
-    for (auto g : qAsConst(m_activeSwipeGestures)) {
+    for (auto g : qAsConst(m_currentContext->m_activeSwipeGestures)) {
         if (static_cast<SwipeGesture *>(g)->minimumDeltaReached(delta)) {
             Q_EMIT g->triggered();
         } else {
             Q_EMIT g->cancelled();
         }
     }
-    m_activeSwipeGestures.clear();
+    m_currentContext->m_activeSwipeGestures.clear();
     m_currentFingerCount = 0;
     m_currentDelta = QSizeF(0, 0);
     m_currentSwipeAxis = Axis::None;
@@ -304,10 +359,10 @@ int GestureRecognizer::startPinchGesture(uint fingerCount)
 {
     m_currentFingerCount = fingerCount;
     int count = 0;
-    if (!m_activeSwipeGestures.isEmpty() || !m_activePinchGestures.isEmpty()) {
+    if (!m_currentContext->m_activeSwipeGestures.isEmpty() || !m_currentContext->m_activePinchGestures.isEmpty()) {
         return 0;
     }
-    for (PinchGesture *gesture : qAsConst(m_pinchGestures)) {
+    for (PinchGesture *gesture : qAsConst(m_currentContext->m_pinchGestures)) {
         if (gesture->minimumFingerCountIsRelevant()) {
             if (gesture->minimumFingerCount() > fingerCount) {
                 continue;
@@ -320,7 +375,7 @@ int GestureRecognizer::startPinchGesture(uint fingerCount)
         }
 
         // direction doesn't matter yet
-        m_activePinchGestures << gesture;
+        m_currentContext->m_activePinchGestures << gesture;
         count++;
         Q_EMIT gesture->started();
     }
@@ -343,23 +398,23 @@ void GestureRecognizer::updatePinchGesture(qreal scale, qreal angleDelta, const 
 
     // Eliminate wrong gestures (takes two iterations)
     for (int i = 0; i < 2; i++) {
-        if (m_activePinchGestures.isEmpty()) {
+        if (m_currentContext->m_activePinchGestures.isEmpty()) {
             startPinchGesture(m_currentFingerCount);
         }
 
-        for (auto it = m_activePinchGestures.begin(); it != m_activePinchGestures.end();) {
+        for (auto it = m_currentContext->m_activePinchGestures.begin(); it != m_currentContext->m_activePinchGestures.end();) {
             auto g = static_cast<PinchGesture *>(*it);
 
             if (g->direction() != direction) {
                 Q_EMIT g->cancelled();
-                it = m_activePinchGestures.erase(it);
+                it = m_currentContext->m_activePinchGestures.erase(it);
                 continue;
             }
             it++;
         }
     }
 
-    for (PinchGesture *g : std::as_const(m_activePinchGestures)) {
+    for (PinchGesture *g : std::as_const(m_currentContext->m_activePinchGestures)) {
         Q_EMIT g->progress(g->scaleDeltaToProgress(scale));
     }
 }
@@ -374,15 +429,15 @@ void GestureRecognizer::cancelPinchGesture()
 
 void GestureRecognizer::endPinchGesture() // because fingers up
 {
-    for (auto g : qAsConst(m_activePinchGestures)) {
+    for (auto g : qAsConst(m_currentContext->m_activePinchGestures)) {
         if (g->minimumScaleDeltaReached(m_currentScale)) {
             Q_EMIT g->triggered();
         } else {
             Q_EMIT g->cancelled();
         }
     }
-    m_activeSwipeGestures.clear();
-    m_activePinchGestures.clear();
+    m_currentContext->m_activeSwipeGestures.clear();
+    m_currentContext->m_activePinchGestures.clear();
     m_currentScale = 1;
     m_currentFingerCount = 0;
     m_currentSwipeAxis = Axis::None;

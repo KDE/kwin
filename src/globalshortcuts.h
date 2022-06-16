@@ -66,15 +66,25 @@ public:
     void registerAxisShortcut(QAction *action, Qt::KeyboardModifiers modifiers, PointerAxisDirection axis);
 
     void registerTouchpadSwipe(QAction *action, SwipeDirection direction, uint fingerCount = 4);
+    void registerTouchpadSwipe(const QString &contextName, QAction *action, SwipeDirection direction, uint fingerCount = 4);
 
     void registerRealtimeTouchpadSwipe(QAction *onUp, std::function<void(qreal)> progressCallback, SwipeDirection direction, uint fingerCount = 4);
+    void registerRealtimeTouchpadSwipe(const QString &contextName, QAction *onUp, std::function<void(qreal)> progressCallback, SwipeDirection direction, uint fingerCount = 4);
 
     void registerTouchpadPinch(QAction *action, PinchDirection direction, uint fingerCount = 4);
+    void registerTouchpadPinch(const QString &contextName, QAction *action, PinchDirection direction, uint fingerCount = 4);
 
     void registerRealtimeTouchpadPinch(QAction *onUp, std::function<void(qreal)> progressCallback, PinchDirection direction, uint fingerCount = 4);
+    void registerRealtimeTouchpadPinch(const QString &contextName, QAction *onUp, std::function<void(qreal)> progressCallback, PinchDirection direction, uint fingerCount = 4);
 
     void registerTouchscreenSwipe(QAction *action, std::function<void(qreal)> progressCallback, SwipeDirection direction, uint fingerCount);
+    void registerTouchscreenSwipe(const QString &contextName, QAction *action, std::function<void(qreal)> progressCallback, SwipeDirection direction, uint fingerCount);
+
     void forceRegisterTouchscreenSwipe(QAction *action, std::function<void(qreal)> progressCallback, SwipeDirection direction, uint fingerCount);
+    void forceRegisterTouchscreenSwipe(const QString &contextName, QAction *action, std::function<void(qreal)> progressCallback, SwipeDirection direction, uint fingerCount);
+
+    void setGestureContext(const QString &contextName);
+    void resetGestureContext();
 
     /**
      * @brief Processes a key event to decide whether a shortcut needs to be triggered.
@@ -158,16 +168,18 @@ struct PointerAxisShortcut
 };
 struct SwipeShortcut
 {
+    QString contextName;
     DeviceType device;
     SwipeDirection direction;
     uint fingerCount;
     bool operator==(const SwipeShortcut &rhs) const
     {
-        return direction == rhs.direction && fingerCount == rhs.fingerCount && device == rhs.device;
+        return contextName == rhs.contextName && direction == rhs.direction && fingerCount == rhs.fingerCount && device == rhs.device;
     }
 };
 struct RealtimeFeedbackSwipeShortcut
 {
+    QString contextName;
     DeviceType device;
     SwipeDirection direction;
     std::function<void(qreal)> progressCallback;
@@ -176,22 +188,24 @@ struct RealtimeFeedbackSwipeShortcut
     template<typename T>
     bool operator==(const T &rhs) const
     {
-        return direction == rhs.direction && fingerCount == rhs.fingerCount && device == rhs.device;
+        return contextName == rhs.contextName && direction == rhs.direction && fingerCount == rhs.fingerCount && device == rhs.device;
     }
 };
 
 struct PinchShortcut
 {
+    QString contextName;
     PinchDirection direction;
     uint fingerCount;
     bool operator==(const PinchShortcut &rhs) const
     {
-        return direction == rhs.direction && fingerCount == rhs.fingerCount;
+        return contextName == rhs.contextName && direction == rhs.direction && fingerCount == rhs.fingerCount;
     }
 };
 
 struct RealtimeFeedbackPinchShortcut
 {
+    QString contextName;
     PinchDirection direction;
     std::function<void(qreal)> scaleCallback;
     uint fingerCount;
@@ -199,7 +213,7 @@ struct RealtimeFeedbackPinchShortcut
     template<typename T>
     bool operator==(const T &rhs) const
     {
-        return direction == rhs.direction && fingerCount == rhs.fingerCount;
+        return contextName == rhs.contextName && direction == rhs.direction && fingerCount == rhs.fingerCount;
     }
 };
 

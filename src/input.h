@@ -136,12 +136,19 @@ public:
     void registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action);
     void registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action);
     void registerTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action);
+    void registerTouchpadSwipeShortcut(const QString &context, SwipeDirection direction, uint fingerCount, QAction *action);
     void registerRealtimeTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback);
+    void registerRealtimeTouchpadSwipeShortcut(const QString &context, SwipeDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback);
     void registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *action);
+    void registerTouchpadPinchShortcut(const QString &context, PinchDirection direction, uint fingerCount, QAction *action);
     void registerRealtimeTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback);
+    void registerRealtimeTouchpadPinchShortcut(const QString &context, PinchDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback);
     void registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback);
     void forceRegisterTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback);
     void registerGlobalAccel(KGlobalAccelInterface *interface);
+
+    void setGestureContext(const QString &contextName);
+    void resetGestureContext();
 
     bool supportsPointerWarping() const;
     void warpPointer(const QPointF &pos);

@@ -99,7 +99,7 @@ Edge::Edge(ScreenEdges *parent)
     , m_pushBackBlocked(false)
     , m_client(nullptr)
     , m_output(nullptr)
-    , m_gesture(new SwipeGesture(this))
+    , m_gesture(new SwipeGesture(QStringLiteral("default"), this))
 {
     m_gesture->setMinimumFingerCount(1);
     m_gesture->setMaximumFingerCount(1);

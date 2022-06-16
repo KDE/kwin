@@ -801,6 +801,26 @@ QRegion EffectsHandler::mapToRenderTarget(const QRegion &region) const
     return result;
 }
 
+void EffectsHandler::registerTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action)
+{
+    registerTouchpadSwipeShortcut(QStringLiteral("default"), direction, fingerCount, action);
+}
+
+void EffectsHandler::registerRealtimeTouchpadSwipeShortcut(SwipeDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
+{
+    registerRealtimeTouchpadSwipeShortcut(QStringLiteral("default"), dir, fingerCount, onUp, progressCallback);
+}
+
+void EffectsHandler::registerRealtimeTouchpadPinchShortcut(PinchDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
+{
+    registerRealtimeTouchpadPinchShortcut(QStringLiteral("default"), dir, fingerCount, onUp, progressCallback);
+}
+
+void EffectsHandler::registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *action)
+{
+    registerTouchpadPinchShortcut(QStringLiteral("default"), direction, fingerCount, action);
+}
+
 EffectsHandler *effects = nullptr;
 
 EffectScreen::EffectScreen(QObject *parent)
