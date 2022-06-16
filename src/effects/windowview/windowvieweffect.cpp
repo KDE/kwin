@@ -40,18 +40,6 @@ WindowViewEffect::WindowViewEffect()
 
     setSource(QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/effects/windowview/qml/main.qml"))));
 
-    m_realtimeToggleAction = new QAction(this);
-    connect(m_realtimeToggleAction, &QAction::triggered, this, [this]() {
-        if (isRunning() && m_partialActivationFactor > 0.5) {
-            activate();
-        } else {
-            deactivate(animationDuration());
-        }
-        m_partialActivationFactor = 0;
-        Q_EMIT gestureInProgressChanged();
-        Q_EMIT partialActivationFactorChanged();
-    });
-
     m_exposeAction->setObjectName(QStringLiteral("Expose"));
     m_exposeAction->setText(i18n("Toggle Present Windows (Current desktop)"));
     KGlobalAccel::self()->setDefaultShortcut(m_exposeAction, QList<QKeySequence>() << (Qt::CTRL | Qt::Key_F9));
@@ -93,18 +81,35 @@ WindowViewEffect::WindowViewEffect()
         }
     });
 
+    m_realtimeToggleAction = new QAction(this);
+    connect(m_realtimeToggleAction, &QAction::triggered, this, [this]() {
+        if (m_status == Status::Deactivating) {
+            if (m_partialActivationFactor < 0.5) {
+                deactivate(animationDuration());
+            } else {
+                cancelPartialDeactivate();
+            }
+        } else if (m_status == Status::Activating) {
+            if (m_partialActivationFactor > 0.5) {
+                activate();
+            } else {
+                cancelPartialActivate();
+            }
+        }
+    });
+
     const auto gestureCallback = [this](qreal progress) {
-        if (m_status == Status::Active) {
-            return;
-        }
-        const bool wasInProgress = m_partialActivationFactor > 0;
-        m_partialActivationFactor = progress;
-        Q_EMIT partialActivationFactorChanged();
-        if (!wasInProgress) {
-            Q_EMIT gestureInProgressChanged();
-        }
-        if (!isRunning()) {
-            partialActivate();
+        if (!effects->hasActiveFullScreenEffect() || effects->activeFullScreenEffect() == this) {
+            switch (m_status) {
+            case Status::Inactive:
+            case Status::Activating:
+                partialActivate(progress);
+                break;
+            case Status::Active:
+            case Status::Deactivating:
+                partialDeactivate(progress);
+                break;
+            }
         }
     };
     effects->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Down, 4, m_realtimeToggleAction, gestureCallback);
@@ -209,19 +214,11 @@ void WindowViewEffect::reconfigure(ReconfigureFlags)
         } else if (m_touchBorderActivateClass.contains(border)) {
             setMode(ModeWindowClass);
         }
-        const bool wasInProgress = m_partialActivationFactor > 0;
         const int maxDelta = 500; // Arbitrary logical pixels value seems to behave better than scaledScreenSize
         if (border == ElectricTop || border == ElectricBottom) {
-            m_partialActivationFactor = std::min(1.0, qAbs(deltaProgress.height()) / maxDelta);
+            partialActivate(std::min(1.0, qAbs(deltaProgress.height()) / maxDelta));
         } else {
-            m_partialActivationFactor = std::min(1.0, qAbs(deltaProgress.width()) / maxDelta);
-        }
-        Q_EMIT partialActivationFactorChanged();
-        if (!wasInProgress) {
-            Q_EMIT gestureInProgressChanged();
-        }
-        if (!isRunning()) {
-            partialActivate();
+            partialActivate(std::min(1.0, qAbs(deltaProgress.width()) / maxDelta));
         }
     };
 
@@ -268,9 +265,25 @@ qreal WindowViewEffect::partialActivationFactor() const
     return m_partialActivationFactor;
 }
 
+void WindowViewEffect::setPartialActivationFactor(qreal factor)
+{
+    if (m_partialActivationFactor != factor) {
+        m_partialActivationFactor = factor;
+        Q_EMIT partialActivationFactorChanged();
+    }
+}
+
 bool WindowViewEffect::gestureInProgress() const
 {
-    return m_partialActivationFactor > 0;
+    return m_gestureInProgress;
+}
+
+void WindowViewEffect::setGestureInProgress(bool gesture)
+{
+    if (m_gestureInProgress != gesture) {
+        m_gestureInProgress = gesture;
+        Q_EMIT gestureInProgressChanged();
+    }
 }
 
 void WindowViewEffect::activate(const QStringList &windowIds)
@@ -303,18 +316,35 @@ void WindowViewEffect::activate()
     if (effects->isScreenLocked()) {
         return;
     }
-    m_windowIds.clear();
+
     m_status = Status::Active;
+    m_windowIds.clear();
+
+    setGestureInProgress(false);
+    setPartialActivationFactor(0);
+
+    // This one should be the last.
     setRunning(true);
 }
 
-void WindowViewEffect::partialActivate()
+void WindowViewEffect::partialActivate(qreal factor)
 {
     if (effects->isScreenLocked()) {
         return;
     }
+
     m_status = Status::Activating;
+
+    setPartialActivationFactor(factor);
+    setGestureInProgress(true);
+
+    // This one should be the last.
     setRunning(true);
+}
+
+void WindowViewEffect::cancelPartialActivate()
+{
+    deactivate(animationDuration());
 }
 
 void WindowViewEffect::deactivate(int timeout)
@@ -324,7 +354,22 @@ void WindowViewEffect::deactivate(int timeout)
         QMetaObject::invokeMethod(view->rootItem(), "stop");
     }
     m_shutdownTimer->start(timeout);
-    m_status = Status::Inactive;
+
+    setGestureInProgress(false);
+    setPartialActivationFactor(0.0);
+}
+
+void WindowViewEffect::partialDeactivate(qreal factor)
+{
+    m_status = Status::Deactivating;
+
+    setPartialActivationFactor(1.0 - factor);
+    setGestureInProgress(true);
+}
+
+void WindowViewEffect::cancelPartialDeactivate()
+{
+    activate();
 }
 
 void WindowViewEffect::realDeactivate()
