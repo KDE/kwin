@@ -235,6 +235,7 @@ FocusScope {
 
                 PlasmaCore.IconItem {
                     id: icon
+                    usesPlasmaTheme: false
                     width: PlasmaCore.Units.iconSizes.large
                     height: width
                     source: thumb.client.icon
