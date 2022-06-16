@@ -37,6 +37,7 @@ public:
     enum class Status {
         Inactive,
         Activating,
+        Deactivating,
         Active
     };
 
@@ -53,13 +54,14 @@ public:
 
     void reconfigure(ReconfigureFlags) override;
     int requestedEffectChainPosition() const override;
-
     void grabbedKeyboardEvent(QKeyEvent *e) override;
-
     bool borderActivated(ElectricBorder border) override;
-    void partialActivate();
+
     qreal partialActivationFactor() const;
+    void setPartialActivationFactor(qreal factor);
+
     bool gestureInProgress() const;
+    void setGestureInProgress(bool gesture);
 
     void setMode(PresentWindowsMode mode);
     void toggleMode(PresentWindowsMode mode);
@@ -69,6 +71,11 @@ public Q_SLOTS:
     void activate(const QStringList &windowIds);
     void activate();
     void deactivate(int timeout);
+
+    void partialActivate(qreal factor);
+    void cancelPartialActivate();
+    void partialDeactivate(qreal factor);
+    void cancelPartialDeactivate();
 
 Q_SIGNALS:
     void animationDurationChanged();
@@ -107,6 +114,7 @@ private:
     PresentWindowsMode m_mode;
     int m_animationDuration = 200;
     int m_layout = 1;
+    bool m_gestureInProgress = false;
 };
 
 } // namespace KWin
