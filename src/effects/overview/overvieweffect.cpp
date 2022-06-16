@@ -24,18 +24,6 @@ OverviewEffect::OverviewEffect()
     m_shutdownTimer->setSingleShot(true);
     connect(m_shutdownTimer, &QTimer::timeout, this, &OverviewEffect::realDeactivate);
 
-    m_realtimeToggleAction = new QAction(this);
-    connect(m_realtimeToggleAction, &QAction::triggered, this, [this]() {
-        if (isRunning() && m_partialActivationFactor > 0.5) {
-            activate();
-        } else {
-            deactivate();
-        }
-        m_partialActivationFactor = 0;
-        Q_EMIT gestureInProgressChanged();
-        Q_EMIT partialActivationFactorChanged();
-    });
-
     const QKeySequence defaultToggleShortcut = Qt::META | Qt::Key_W;
     m_toggleAction = new QAction(this);
     connect(m_toggleAction, &QAction::triggered, this, &OverviewEffect::toggle);
@@ -46,18 +34,35 @@ OverviewEffect::OverviewEffect()
     m_toggleShortcut = KGlobalAccel::self()->shortcut(m_toggleAction);
     effects->registerGlobalShortcut({defaultToggleShortcut}, m_toggleAction);
 
+    m_realtimeToggleAction = new QAction(this);
+    connect(m_realtimeToggleAction, &QAction::triggered, this, [this]() {
+        if (m_status == Status::Deactivating) {
+            if (m_partialActivationFactor < 0.5) {
+                deactivate();
+            } else {
+                cancelPartialDeactivate();
+            }
+        } else if (m_status == Status::Activating) {
+            if (m_partialActivationFactor > 0.5) {
+                activate();
+            } else {
+                cancelPartialActivate();
+            }
+        }
+    });
+
     auto progressCallback = [this](qreal progress) {
-        if (m_status == Status::Active) {
-            return;
-        }
-        const bool wasInProgress = m_partialActivationFactor > 0;
-        m_partialActivationFactor = progress;
-        Q_EMIT partialActivationFactorChanged();
-        if (!wasInProgress) {
-            Q_EMIT gestureInProgressChanged();
-        }
-        if (!isRunning()) {
-            partialActivate();
+        if (!effects->hasActiveFullScreenEffect() || effects->activeFullScreenEffect() == this) {
+            switch (m_status) {
+            case Status::Inactive:
+            case Status::Activating:
+                partialActivate(progress);
+                break;
+            case Status::Active:
+            case Status::Deactivating:
+                partialDeactivate(progress);
+                break;
+            }
         }
     };
 
@@ -116,19 +121,11 @@ void OverviewEffect::reconfigure(ReconfigureFlags)
             if (m_status == Status::Active) {
                 return;
             }
-            const bool wasInProgress = m_partialActivationFactor > 0;
             const int maxDelta = 500; // Arbitrary logical pixels value seems to behave better than scaledScreenSize
             if (border == ElectricTop || border == ElectricBottom) {
-                m_partialActivationFactor = std::min(1.0, qAbs(deltaProgress.height()) / maxDelta);
+                partialActivate(std::min(1.0, qAbs(deltaProgress.height()) / maxDelta));
             } else {
-                m_partialActivationFactor = std::min(1.0, qAbs(deltaProgress.width()) / maxDelta);
-            }
-            Q_EMIT partialActivationFactorChanged();
-            if (!wasInProgress) {
-                Q_EMIT gestureInProgressChanged();
-            }
-            if (!isRunning()) {
-                partialActivate();
+                partialActivate(std::min(1.0, qAbs(deltaProgress.width()) / maxDelta));
             }
         });
     }
@@ -183,9 +180,25 @@ qreal OverviewEffect::partialActivationFactor() const
     return m_partialActivationFactor;
 }
 
+void OverviewEffect::setPartialActivationFactor(qreal factor)
+{
+    if (m_partialActivationFactor != factor) {
+        m_partialActivationFactor = factor;
+        Q_EMIT partialActivationFactorChanged();
+    }
+}
+
 bool OverviewEffect::gestureInProgress() const
 {
-    return m_partialActivationFactor > 0;
+    return m_gestureInProgress;
+}
+
+void OverviewEffect::setGestureInProgress(bool gesture)
+{
+    if (m_gestureInProgress != gesture) {
+        m_gestureInProgress = gesture;
+        Q_EMIT gestureInProgressChanged();
+    }
 }
 
 int OverviewEffect::requestedEffectChainPosition() const
@@ -209,9 +222,6 @@ void OverviewEffect::toggle()
     } else {
         deactivate();
     }
-    m_partialActivationFactor = 0;
-    Q_EMIT gestureInProgressChanged();
-    Q_EMIT partialActivationFactorChanged();
 }
 
 void OverviewEffect::activate()
@@ -219,17 +229,34 @@ void OverviewEffect::activate()
     if (effects->isScreenLocked()) {
         return;
     }
+
     m_status = Status::Active;
+
+    setGestureInProgress(false);
+    setPartialActivationFactor(0.0);
+
+    // This one should be the last.
     setRunning(true);
 }
 
-void OverviewEffect::partialActivate()
+void OverviewEffect::partialActivate(qreal factor)
 {
     if (effects->isScreenLocked()) {
         return;
     }
+
     m_status = Status::Activating;
+
+    setPartialActivationFactor(factor);
+    setGestureInProgress(true);
+
+    // This one should be the last.
     setRunning(true);
+}
+
+void OverviewEffect::cancelPartialActivate()
+{
+    deactivate();
 }
 
 void OverviewEffect::deactivate()
@@ -239,7 +266,22 @@ void OverviewEffect::deactivate()
         QMetaObject::invokeMethod(view->rootItem(), "stop");
     }
     m_shutdownTimer->start(animationDuration());
-    m_status = Status::Inactive;
+
+    setGestureInProgress(false);
+    setPartialActivationFactor(0.0);
+}
+
+void OverviewEffect::partialDeactivate(qreal factor)
+{
+    m_status = Status::Deactivating;
+
+    setPartialActivationFactor(1.0 - factor);
+    setGestureInProgress(true);
+}
+
+void OverviewEffect::cancelPartialDeactivate()
+{
+    activate();
 }
 
 void OverviewEffect::realDeactivate()

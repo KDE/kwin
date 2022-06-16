@@ -36,6 +36,7 @@ public:
     enum class Status {
         Inactive,
         Activating,
+        Deactivating,
         Active
     };
 
@@ -51,7 +52,10 @@ public:
     bool showAddRemove() const;
 
     qreal partialActivationFactor() const;
+    void setPartialActivationFactor(qreal factor);
+
     bool gestureInProgress() const;
+    void setGestureInProgress(bool gesture);
 
     int gridRows() const;
     int gridColumns() const;
@@ -71,7 +75,10 @@ public:
 
 public Q_SLOTS:
     void activate();
-    void partialActivate();
+    void partialActivate(qreal factor);
+    void cancelPartialActivate();
+    void partialDeactivate(qreal factor);
+    void cancelPartialDeactivate();
     void deactivate(int timeout);
     void toggle();
 
@@ -103,6 +110,7 @@ private:
     Status m_status = Status::Inactive;
     int m_animationDuration = 200;
     int m_layout = 1;
+    bool m_gestureInProgress = false;
 };
 
 } // namespace KWin
