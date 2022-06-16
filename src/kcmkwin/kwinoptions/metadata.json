@@ -3,6 +3,7 @@
     "KPlugin": {
         "Description": "Configure window actions and behavior",
         "Description[ar]": "اضبط سلوك النوافذ وإجراءاتها",
+        "Description[az]": "Pəncərə fəaliyyətləri və davranışlarını tənzimləyin",
         "Description[ca@valencia]": "Configura les accions i comportament de les finestres",
         "Description[ca]": "Configura les accions i comportament de les finestres",
         "Description[es]": "Configurar las acciones y el comportamiento de las ventanas",
@@ -27,6 +28,7 @@
         "Icon": "preferences-system-windows-actions",
         "Name": "Window Behavior",
         "Name[ar]": "سلوك النوافذ",
+        "Name[az]": "Pəncərə davranışı",
         "Name[ca@valencia]": "Comportament de les finestres",
         "Name[ca]": "Comportament de les finestres",
         "Name[es]": "Comportamiento de las ventanas",

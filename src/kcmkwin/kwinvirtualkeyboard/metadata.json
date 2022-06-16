@@ -3,6 +3,7 @@
     "KPlugin": {
         "Description": "Select which virtual keyboard to use",
         "Description[ar]": "اختر أيا من لوحات المفاتيح الافتراضية لإستعمالها",
+        "Description[az]": "İstifadə edəcəyiniz virtual klaviaturanı seçin",
         "Description[ca@valencia]": "Seleccioneu el teclat virtual que s'utilitzarà",
         "Description[ca]": "Seleccioneu el teclat virtual a usar",
         "Description[es]": "Seleccionar el teclado virtual que se debe usar",
@@ -27,6 +28,7 @@
         "Icon": "input-keyboard-virtual",
         "Name": "Virtual Keyboard",
         "Name[ar]": "لوحة المفاتيح الوهميّة",
+        "Name[az]": "Virtual klaviatura",
         "Name[ca@valencia]": "Teclat virtual",
         "Name[ca]": "Teclat virtual",
         "Name[es]": "Teclado virtual",
