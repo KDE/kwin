@@ -21,7 +21,8 @@ namespace KWin
 DesktopGridEffect::DesktopGridEffect()
     : m_shutdownTimer(new QTimer(this))
     , m_toggleAction(new QAction(this))
-    , m_realtimeToggleAction(new QAction(this))
+    , m_realtimeActivateAction(new QAction(this))
+    , m_realtimeDeactivateAction(new QAction(this))
 {
     qmlRegisterUncreatableType<DesktopGridEffect>("org.kde.kwin.private.desktopgrid", 1, 0, "DesktopGridEffect", QStringLiteral("Cannot create elements of type DesktopGridEffect"));
 
@@ -45,14 +46,8 @@ DesktopGridEffect::DesktopGridEffect()
         }
     });
 
-    connect(m_realtimeToggleAction, &QAction::triggered, this, [this]() {
-        if (m_status == Status::Deactivating) {
-            if (m_partialActivationFactor < 0.5) {
-                deactivate(animationDuration());
-            } else {
-                cancelPartialDeactivate();
-            }
-        } else if (m_status == Status::Activating) {
+    connect(m_realtimeActivateAction, &QAction::triggered, this, [this]() {
+        if (m_status == Status::Activating) {
             if (m_partialActivationFactor > 0.5) {
                 activate();
             } else {
@@ -60,13 +55,32 @@ DesktopGridEffect::DesktopGridEffect()
             }
         }
     });
+    connect(m_realtimeDeactivateAction, &QAction::triggered, this, [this]() {
+        if (m_status == Status::Deactivating) {
+            if (m_partialActivationFactor < 0.5) {
+                deactivate(animationDuration());
+            } else {
+                cancelPartialDeactivate();
+            }
+        }
+    });
 
-    effects->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Up, 4, m_realtimeToggleAction, [this](qreal progress) {
+    effects->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Up, 4, m_realtimeActivateAction, [this](qreal progress) {
         if (!effects->hasActiveFullScreenEffect() || effects->activeFullScreenEffect() == this) {
             switch (m_status) {
             case Status::Inactive:
             case Status::Activating:
                 partialActivate(progress);
+                break;
+            default:
+                break;
+            }
+        }
+    });
+    effects->registerRealtimeTouchpadSwipeShortcut(QStringLiteral("desktop-grid"), SwipeDirection::Down, 4, m_realtimeDeactivateAction, [this](qreal progress) {
+        if (!effects->hasActiveFullScreenEffect() || effects->activeFullScreenEffect() == this) {
+            switch (m_status) {
+            default:
                 break;
             case Status::Active:
             case Status::Deactivating:
@@ -120,7 +134,7 @@ void DesktopGridEffect::reconfigure(ReconfigureFlags)
     const QList<int> touchActivateBorders = DesktopGridConfig::touchBorderActivate();
     for (const int &border : touchActivateBorders) {
         m_touchBorderActivate.append(ElectricBorder(border));
-        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_realtimeToggleAction, [this](ElectricBorder border, const QSizeF &deltaProgress, const EffectScreen *screen) {
+        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_realtimeActivateAction, [this](ElectricBorder border, const QSizeF &deltaProgress, const EffectScreen *screen) {
             Q_UNUSED(screen)
 
             if (m_status == Status::Active) {
@@ -321,6 +335,7 @@ void DesktopGridEffect::activate()
 
     // This one should be the last.
     setRunning(true);
+    effects->setGestureContext(QStringLiteral("desktop-grid"));
 }
 
 void DesktopGridEffect::partialActivate(qreal factor)
@@ -372,6 +387,7 @@ void DesktopGridEffect::realDeactivate()
 {
     setRunning(false);
     m_status = Status::Inactive;
+    effects->resetGestureContext();
 }
 
 } // namespace KWin

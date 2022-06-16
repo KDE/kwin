@@ -81,15 +81,9 @@ WindowViewEffect::WindowViewEffect()
         }
     });
 
-    m_realtimeToggleAction = new QAction(this);
-    connect(m_realtimeToggleAction, &QAction::triggered, this, [this]() {
-        if (m_status == Status::Deactivating) {
-            if (m_partialActivationFactor < 0.5) {
-                deactivate(animationDuration());
-            } else {
-                cancelPartialDeactivate();
-            }
-        } else if (m_status == Status::Activating) {
+    m_realtimeActivateAction = new QAction(this);
+    connect(m_realtimeActivateAction, &QAction::triggered, this, [this]() {
+        if (m_status == Status::Activating) {
             if (m_partialActivationFactor > 0.5) {
                 activate();
             } else {
@@ -98,12 +92,34 @@ WindowViewEffect::WindowViewEffect()
         }
     });
 
-    const auto gestureCallback = [this](qreal progress) {
+    m_realtimeDeactivateAction = new QAction(this);
+    connect(m_realtimeDeactivateAction, &QAction::triggered, this, [this]() {
+        if (m_status == Status::Deactivating) {
+            if (m_partialActivationFactor < 0.5) {
+                deactivate(animationDuration());
+            } else {
+                cancelPartialDeactivate();
+            }
+        }
+    });
+
+    const auto activateCallback = [this](qreal progress) {
         if (!effects->hasActiveFullScreenEffect() || effects->activeFullScreenEffect() == this) {
             switch (m_status) {
             case Status::Inactive:
             case Status::Activating:
                 partialActivate(progress);
+                break;
+            default:
+                break;
+            }
+        }
+    };
+
+    const auto deactivateCallback = [this](qreal progress) {
+        if (!effects->hasActiveFullScreenEffect() || effects->activeFullScreenEffect() == this) {
+            switch (m_status) {
+            default:
                 break;
             case Status::Active:
             case Status::Deactivating:
@@ -112,8 +128,11 @@ WindowViewEffect::WindowViewEffect()
             }
         }
     };
-    effects->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Down, 4, m_realtimeToggleAction, gestureCallback);
-    effects->registerTouchscreenSwipeShortcut(SwipeDirection::Down, 3, m_realtimeToggleAction, gestureCallback);
+
+    effects->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Down, 4, m_realtimeActivateAction, activateCallback);
+    effects->registerTouchscreenSwipeShortcut(SwipeDirection::Down, 3, m_realtimeActivateAction, activateCallback);
+    effects->registerRealtimeTouchpadSwipeShortcut(QStringLiteral("windowview"), SwipeDirection::Up, 4, m_realtimeDeactivateAction, deactivateCallback);
+    // effects->registerTouchscreenSwipeShortcut(QStringLiteral("windowview"), SwipeDirection::Up, 3, m_realtimeDeactivateAction, deactivateCallback);
 
     reconfigure(ReconfigureAll);
 }
@@ -225,17 +244,17 @@ void WindowViewEffect::reconfigure(ReconfigureFlags)
     QList<int> touchActivateBorders = WindowViewConfig::touchBorderActivate();
     for (const int &border : touchActivateBorders) {
         m_touchBorderActivate.append(ElectricBorder(border));
-        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_realtimeToggleAction, touchCallback);
+        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_realtimeActivateAction, touchCallback);
     }
     touchActivateBorders = WindowViewConfig::touchBorderActivateAll();
     for (const int &border : touchActivateBorders) {
         m_touchBorderActivateAll.append(ElectricBorder(border));
-        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_realtimeToggleAction, touchCallback);
+        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_realtimeActivateAction, touchCallback);
     }
     touchActivateBorders = WindowViewConfig::touchBorderActivateClass();
     for (const int &border : touchActivateBorders) {
         m_touchBorderActivateAll.append(ElectricBorder(border));
-        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_realtimeToggleAction, touchCallback);
+        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_realtimeActivateAction, touchCallback);
     }
 }
 
@@ -325,6 +344,7 @@ void WindowViewEffect::activate()
 
     // This one should be the last.
     setRunning(true);
+    effects->setGestureContext(QStringLiteral("windowview"));
 }
 
 void WindowViewEffect::partialActivate(qreal factor)
@@ -376,6 +396,7 @@ void WindowViewEffect::realDeactivate()
 {
     setRunning(false);
     m_status = Status::Inactive;
+    effects->resetGestureContext();
 }
 
 void WindowViewEffect::setMode(WindowViewEffect::PresentWindowsMode mode)

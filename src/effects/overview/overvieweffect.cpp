@@ -34,15 +34,9 @@ OverviewEffect::OverviewEffect()
     m_toggleShortcut = KGlobalAccel::self()->shortcut(m_toggleAction);
     effects->registerGlobalShortcut({defaultToggleShortcut}, m_toggleAction);
 
-    m_realtimeToggleAction = new QAction(this);
-    connect(m_realtimeToggleAction, &QAction::triggered, this, [this]() {
-        if (m_status == Status::Deactivating) {
-            if (m_partialActivationFactor < 0.5) {
-                deactivate();
-            } else {
-                cancelPartialDeactivate();
-            }
-        } else if (m_status == Status::Activating) {
+    m_realtimeActivateAction = new QAction(this);
+    connect(m_realtimeActivateAction, &QAction::triggered, this, [this]() {
+        if (m_status == Status::Activating) {
             if (m_partialActivationFactor > 0.5) {
                 activate();
             } else {
@@ -51,12 +45,34 @@ OverviewEffect::OverviewEffect()
         }
     });
 
-    auto progressCallback = [this](qreal progress) {
+    m_realtimeDeactivateAction = new QAction(this);
+    connect(m_realtimeDeactivateAction, &QAction::triggered, this, [this]() {
+        if (m_status == Status::Deactivating) {
+            if (m_partialActivationFactor < 0.5) {
+                deactivate();
+            } else {
+                cancelPartialDeactivate();
+            }
+        }
+    });
+
+    auto activateCallback = [this](qreal progress) {
         if (!effects->hasActiveFullScreenEffect() || effects->activeFullScreenEffect() == this) {
             switch (m_status) {
             case Status::Inactive:
             case Status::Activating:
                 partialActivate(progress);
+                break;
+            default:
+                break;
+            }
+        }
+    };
+
+    auto deactivateCallback = [this](qreal progress) {
+        if (!effects->hasActiveFullScreenEffect() || effects->activeFullScreenEffect() == this) {
+            switch (m_status) {
+            default:
                 break;
             case Status::Active:
             case Status::Deactivating:
@@ -66,8 +82,10 @@ OverviewEffect::OverviewEffect()
         }
     };
 
-    effects->registerRealtimeTouchpadPinchShortcut(PinchDirection::Contracting, 4, m_realtimeToggleAction, progressCallback);
-    effects->registerTouchscreenSwipeShortcut(SwipeDirection::Up, 3, m_realtimeToggleAction, progressCallback);
+    effects->registerRealtimeTouchpadPinchShortcut(PinchDirection::Contracting, 4, m_realtimeActivateAction, activateCallback);
+    effects->registerTouchscreenSwipeShortcut(SwipeDirection::Up, 3, m_realtimeActivateAction, activateCallback);
+    effects->registerRealtimeTouchpadPinchShortcut(QStringLiteral("overview"), PinchDirection::Expanding, 4, m_realtimeDeactivateAction, deactivateCallback);
+    // effects->registerTouchscreenSwipeShortcut(QStringLiteral("overview"), SwipeDirection::Expanding, 3, m_realtimeActivateAction, deactivateCallback);
 
     connect(effects, &EffectsHandler::screenAboutToLock, this, &OverviewEffect::realDeactivate);
 
@@ -116,7 +134,7 @@ void OverviewEffect::reconfigure(ReconfigureFlags)
     const QList<int> touchActivateBorders = OverviewConfig::touchBorderActivate();
     for (const int &border : touchActivateBorders) {
         m_touchBorderActivate.append(ElectricBorder(border));
-        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_realtimeToggleAction, [this](ElectricBorder border, const QSizeF &deltaProgress, const EffectScreen *screen) {
+        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_realtimeActivateAction, [this](ElectricBorder border, const QSizeF &deltaProgress, const EffectScreen *screen) {
             Q_UNUSED(screen)
             if (m_status == Status::Active) {
                 return;
@@ -237,6 +255,7 @@ void OverviewEffect::activate()
 
     // This one should be the last.
     setRunning(true);
+    effects->setGestureContext(QStringLiteral("overview"));
 }
 
 void OverviewEffect::partialActivate(qreal factor)
@@ -288,6 +307,7 @@ void OverviewEffect::realDeactivate()
 {
     setRunning(false);
     m_status = Status::Inactive;
+    effects->resetGestureContext();
 }
 
 void OverviewEffect::quickDeactivate()

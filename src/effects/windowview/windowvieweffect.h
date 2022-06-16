@@ -98,7 +98,8 @@ private:
     QAction *m_exposeAction = nullptr;
     QAction *m_exposeAllAction = nullptr;
     QAction *m_exposeClassAction = nullptr;
-    QAction *m_realtimeToggleAction = nullptr;
+    QAction *m_realtimeActivateAction = nullptr;
+    QAction *m_realtimeDeactivateAction = nullptr;
     // Shortcut - needed to toggle the effect
     QList<QKeySequence> m_shortcut;
     QList<QKeySequence> m_shortcutAll;
