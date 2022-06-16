@@ -36,6 +36,9 @@ Item {
 
     Keys.onEscapePressed: effect.deactivate(animationDuration);
 
+    Keys.priority: Keys.AfterItem
+    Keys.forwardTo: searchField
+
     KWinComponents.DesktopBackgroundItem {
         activity: KWinComponents.Workspace.currentActivity
         desktop: KWinComponents.Workspace.currentVirtualDesktop
@@ -74,6 +77,7 @@ Item {
             Layout.preferredWidth: Math.min(parent.width, 20 * PlasmaCore.Units.gridUnit)
             focus: true
             Keys.priority: Keys.AfterItem
+            Keys.forwardTo: heap
             Keys.onPressed: {
                 switch (event.key) {
                 case Qt.Key_Down:
