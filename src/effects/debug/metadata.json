@@ -1,0 +1,13 @@
+{
+    "KPlugin": {
+        "Category": "Tools",
+        "Description": "Various debugging tools",
+        "EnabledByDefault": false,
+        "Id": "debug",
+        "License": "GPL",
+        "Name": "Debug"
+    },
+    "X-KDE-ConfigModule": "kwin_debug_config",
+    "org.kde.kwin.effect": {
+    }
+}
