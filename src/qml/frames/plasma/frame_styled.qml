@@ -31,7 +31,7 @@ Item {
         anchors {
             fill: parent
             leftMargin: frameSvg.fixedMargins.left
-            rightMargin: frameSvg.fixedMargins.top
+            rightMargin: frameSvg.fixedMargins.right
             topMargin: frameSvg.fixedMargins.top
             bottomMargin: frameSvg.fixedMargins.bottom
         }
