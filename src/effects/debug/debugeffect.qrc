@@ -1,0 +1,8 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/effects/debug/">
+  <file>shaders/debug_fractional.frag</file>
+  <file>shaders/debug_fractional_core.frag</file>
+  <file>shaders/debug_fractional.vert</file>
+  <file>shaders/debug_fractional_core.vert</file>
+</qresource>
+</RCC>
