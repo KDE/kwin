@@ -13,7 +13,7 @@
 #include <gbm.h>
 
 #if !GBM_CREATE_WITH_MODIFIERS2
-struct gbm_bo *
+inline struct gbm_bo *
 gbm_bo_create_with_modifiers2(struct gbm_device *gbm,
                               uint32_t width, uint32_t height,
                               uint32_t format,
