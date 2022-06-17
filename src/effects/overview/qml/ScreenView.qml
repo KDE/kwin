@@ -246,7 +246,7 @@ FocusScope {
 
             Behavior on opacity {
                 enabled: !container.effect.gestureInProgress
-                NumberAnimation { duration: animationDuration; easing.type: Easing.OutCubic }
+                NumberAnimation { duration: effect.animationDuration; easing.type: Easing.OutCubic }
             }
         }
     }

@@ -78,6 +78,7 @@ private:
     QList<ElectricBorder> m_borderActivate;
     QList<ElectricBorder> m_touchBorderActivate;
     qreal m_partialActivationFactor = 0;
+    bool m_gestureInProgress = false;
     bool m_blurBackground = false;
     Status m_status = Status::Inactive;
     int m_animationDuration = 200;

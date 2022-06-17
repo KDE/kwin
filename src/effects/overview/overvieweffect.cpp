@@ -31,6 +31,7 @@ OverviewEffect::OverviewEffect()
         } else {
             deactivate();
         }
+        m_gestureInProgress = false;
         m_partialActivationFactor = 0;
         Q_EMIT gestureInProgressChanged();
         Q_EMIT partialActivationFactorChanged();
@@ -50,7 +51,8 @@ OverviewEffect::OverviewEffect()
         if (m_status == Status::Active) {
             return;
         }
-        const bool wasInProgress = m_partialActivationFactor > 0;
+        const bool wasInProgress = m_gestureInProgress;
+        m_gestureInProgress = true;
         m_partialActivationFactor = progress;
         Q_EMIT partialActivationFactorChanged();
         if (!wasInProgress) {
@@ -116,7 +118,8 @@ void OverviewEffect::reconfigure(ReconfigureFlags)
             if (m_status == Status::Active) {
                 return;
             }
-            const bool wasInProgress = m_partialActivationFactor > 0;
+            const bool wasInProgress = m_gestureInProgress;
+            m_gestureInProgress = true;
             const int maxDelta = 500; // Arbitrary logical pixels value seems to behave better than scaledScreenSize
             if (border == ElectricTop || border == ElectricBottom) {
                 m_partialActivationFactor = std::min(1.0, qAbs(deltaProgress.height()) / maxDelta);
@@ -185,7 +188,7 @@ qreal OverviewEffect::partialActivationFactor() const
 
 bool OverviewEffect::gestureInProgress() const
 {
-    return m_partialActivationFactor > 0;
+    return m_gestureInProgress;
 }
 
 int OverviewEffect::requestedEffectChainPosition() const
@@ -210,6 +213,7 @@ void OverviewEffect::toggle()
         deactivate();
     }
     m_partialActivationFactor = 0;
+    m_gestureInProgress = false;
     Q_EMIT gestureInProgressChanged();
     Q_EMIT partialActivationFactorChanged();
 }
