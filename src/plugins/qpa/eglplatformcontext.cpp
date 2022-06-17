@@ -120,8 +120,9 @@ void EGLPlatformContext::swapBuffers(QPlatformSurface *surface)
         }
         context()->makeCurrent(surface->surface());
         glFlush();
-        internalWindow->present(window->swapFBO());
+        auto fbo = window->swapFBO();
         window->bindContentFBO();
+        internalWindow->present(fbo);
     }
 }
 
