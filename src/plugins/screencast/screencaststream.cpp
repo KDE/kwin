@@ -149,29 +149,25 @@ void ScreenCastStream::onStreamParamChanged(void *data, uint32_t id, const struc
     spa_format_video_raw_parse(format, &pw->videoFormat);
     auto modifierProperty = spa_pod_find_prop(format, nullptr, SPA_FORMAT_VIDEO_modifier);
     QVector<uint64_t> receivedModifiers;
-    if (!pw->m_dmabufParams
-        || spaVideoFormatToDrmFormat(pw->videoFormat.format) != pw->m_dmabufParams->format
-        || pw->videoFormat.size.width != uint(pw->m_dmabufParams->width)
-        || pw->videoFormat.size.height != uint(pw->m_dmabufParams->height)) {
-        if (modifierProperty && modifierProperty->flags & SPA_POD_PROP_FLAG_DONT_FIXATE) {
-            pw->m_dmabufParams.reset();
+    if (modifierProperty) {
+        const struct spa_pod *modifierPod = &modifierProperty->value;
 
-            const struct spa_pod *modifierPod = &modifierProperty->value;
-
-            uint32_t modifiersCount = SPA_POD_CHOICE_N_VALUES(modifierPod) - 1;
-            uint64_t *modifiers = (uint64_t *)SPA_POD_CHOICE_VALUES(modifierPod);
-            receivedModifiers = QVector<uint64_t>(modifiers, modifiers + modifiersCount);
+        uint32_t modifiersCount = SPA_POD_CHOICE_N_VALUES(modifierPod) - 1;
+        uint64_t *modifiers = (uint64_t *)SPA_POD_CHOICE_VALUES(modifierPod);
+        receivedModifiers = QVector<uint64_t>(modifiers, modifiers + modifiersCount);
+    }
+    if (modifierProperty && (!pw->m_dmabufParams || !receivedModifiers.contains(pw->m_dmabufParams->modifier))) {
+        if (modifierProperty->flags & SPA_POD_PROP_FLAG_DONT_FIXATE) {
             pw->m_dmabufParams = kwinApp()->platform()->testCreateDmaBuf(pw->m_resolution, spaVideoFormatToDrmFormat(pw->videoFormat.format), receivedModifiers);
-        } else if (modifierProperty) {
+        } else {
             pw->m_dmabufParams = kwinApp()->platform()->testCreateDmaBuf(pw->m_resolution, spaVideoFormatToDrmFormat(pw->videoFormat.format), {DRM_FORMAT_MOD_INVALID});
         }
-        if (modifierProperty) {
-            qCDebug(KWIN_SCREENCAST) << "Stream dmabuf modifiers received, offering our best suited modifier" << pw->m_dmabufParams.has_value() << pw->m_dmabufParams->modifier;
-            char buffer[2048];
-            auto params = pw->buildFormats(pw->m_dmabufParams.has_value(), buffer);
-            pw_stream_update_params(pw->pwStream, params.data(), params.count());
-            return;
-        }
+
+        qCDebug(KWIN_SCREENCAST) << "Stream dmabuf modifiers received, offering our best suited modifier" << pw->m_dmabufParams.has_value();
+        char buffer[2048];
+        auto params = pw->buildFormats(pw->m_dmabufParams.has_value(), buffer);
+        pw_stream_update_params(pw->pwStream, params.data(), params.count());
+        return;
     }
 
     qCDebug(KWIN_SCREENCAST) << "Stream format found, defining buffers";
