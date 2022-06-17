@@ -76,6 +76,14 @@ Item {
             Layout.topMargin: PlasmaCore.Units.gridUnit
             Layout.preferredWidth: Math.min(parent.width, 20 * PlasmaCore.Units.gridUnit)
             focus: true
+            // Binding loops will be avoided from the fact that setting the text to the same won't emit textChanged
+            // We can't use activeFocus because is not reliable on qml effects
+            onTextChanged: effect.searchText = text
+            Binding {
+                target: searchField
+                property: "text"
+                value: effect.searchText
+            }
             Keys.priority: Keys.AfterItem
             Keys.forwardTo: heap
             Keys.onPressed: {
@@ -124,7 +132,7 @@ Item {
                 desktop: container.effect.mode == WindowView.ModeCurrentDesktop ? KWinComponents.Workspace.currentVirtualDesktop : undefined
                 screenName: targetScreen.name
                 clientModel: stackModel
-                filter: searchField.text
+                filter: effect.searchText
                 minimizedWindows: !effect.ignoreMinimized
                 windowType: ~KWinComponents.ClientFilterModel.Dock &
                         ~KWinComponents.ClientFilterModel.Desktop &
@@ -138,7 +146,7 @@ Item {
         width: parent.width - (PlasmaCore.Units.gridUnit * 8)
         visible: heap.count === 0
         iconName: "edit-none"
-        text: searchField.text.length > 0 ? i18nd("kwin_effects", "No Matches") : i18nd("kwin_effects", "No Windows")
+        text: effect.searchText.length > 0 ? i18nd("kwin_effects", "No Matches") : i18nd("kwin_effects", "No Windows")
     }
 
     Repeater {
