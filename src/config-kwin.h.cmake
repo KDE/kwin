@@ -33,4 +33,3 @@
 #cmakedefine01 PipeWire_FOUND
 
 #cmakedefine01 HAVE_XWAYLAND_LISTENFD
-#cmakedefine01 GBM_CREATE_WITH_MODIFIERS2
