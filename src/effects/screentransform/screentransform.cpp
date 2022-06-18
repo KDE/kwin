@@ -9,13 +9,34 @@
 // own
 #include "screentransform.h"
 #include "kwinglutils.h"
+
 #include <QDebug>
+
+static void ensureResources()
+{
+    // Must initialize resources manually because the effect is a static lib.
+    Q_INIT_RESOURCE(screentransform);
+}
 
 namespace KWin
 {
+
 ScreenTransformEffect::ScreenTransformEffect()
     : Effect()
 {
+    // Make sure that shaders in /effects/screentransform/shaders/* are loaded.
+    ensureResources();
+
+    m_shader.reset(ShaderManager::instance()->generateShaderFromFile(
+        ShaderTrait::MapTexture,
+        QStringLiteral(":/effects/screentransform/shaders/crossfade.vert"),
+        QStringLiteral(":/effects/screentransform/shaders/crossfade.frag")));
+
+    m_modelViewProjectioMatrixLocation = m_shader->uniformLocation("modelViewProjectionMatrix");
+    m_blendFactorLocation = m_shader->uniformLocation("blendFactor");
+    m_previousTextureLocation = m_shader->uniformLocation("previousTexture");
+    m_currentTextureLocation = m_shader->uniformLocation("currentTexture");
+
     const QList<EffectScreen *> screens = effects->screens();
     for (auto screen : screens) {
         addScreen(screen);
@@ -51,7 +72,7 @@ void ScreenTransformEffect::addScreen(EffectScreen *screen)
             return;
         }
         state.m_timeLine.setDuration(std::chrono::milliseconds(long(animationTime(250))));
-        state.m_timeLine.setEasingCurve(QEasingCurve::OutCirc);
+        state.m_timeLine.setEasingCurve(QEasingCurve::InOutCubic);
         state.m_angle = transformAngle(screen->transform(), state.m_oldTransform);
         Q_ASSERT(state.m_angle != 0);
         effects->addRepaintFull();
@@ -60,17 +81,17 @@ void ScreenTransformEffect::addScreen(EffectScreen *screen)
         effects->makeOpenGLContextCurrent();
         auto &state = m_states[screen];
         state.m_oldTransform = screen->transform();
-        state.m_texture.reset(new GLTexture(GL_RGBA8, screen->geometry().size() * screen->devicePixelRatio()));
+        state.m_oldGeometry = screen->geometry();
+        state.m_prev.texture.reset(new GLTexture(GL_RGBA8, screen->geometry().size() * screen->devicePixelRatio()));
+        state.m_prev.framebuffer.reset(new GLFramebuffer(state.m_prev.texture.get()));
 
         // Rendering the current scene into a texture
-        const bool c = state.m_texture->create();
-        Q_ASSERT(c);
-        GLFramebuffer fbo(state.m_texture.get());
-        GLFramebuffer::pushFramebuffer(&fbo);
-
+        GLFramebuffer::pushFramebuffer(state.m_prev.framebuffer.get());
         effects->renderScreen(screen);
-        state.m_captured = true;
         GLFramebuffer::popFramebuffer();
+
+        // Now, the effect can cross-fade between current and previous state.
+        state.m_captured = true;
     });
 }
 
@@ -83,14 +104,10 @@ void ScreenTransformEffect::removeScreen(EffectScreen *screen)
 
 void ScreenTransformEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
-    if (isScreenTransforming(data.screen)) {
-        auto &state = m_states[data.screen];
-        if (state.isSecondHalf()) {
-            data.mask |= PAINT_SCREEN_TRANSFORMED;
-        }
-
-        state.m_timeLine.advance(presentTime);
-        if (state.m_timeLine.done()) {
+    auto it = m_states.find(data.screen);
+    if (it != m_states.end() && it->m_captured) {
+        it->m_timeLine.advance(presentTime);
+        if (it->m_timeLine.done()) {
             m_states.remove(data.screen);
         }
     }
@@ -98,88 +115,130 @@ void ScreenTransformEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono
     effects->prePaintScreen(data, presentTime);
 }
 
+static GLVertexBuffer *texturedRectVbo(const QRectF &geometry)
+{
+    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+    vbo->reset();
+
+    const GLVertexAttrib attribs[] = {
+        {VA_Position, 2, GL_FLOAT, offsetof(GLVertex2D, position)},
+        {VA_TexCoord, 2, GL_FLOAT, offsetof(GLVertex2D, texcoord)},
+    };
+    vbo->setAttribLayout(attribs, 2, sizeof(GLVertex2D));
+
+    auto map = static_cast<GLVertex2D *>(vbo->map(6 * sizeof(GLVertex2D)));
+
+    // first triangle
+    map[0] = GLVertex2D{
+        .position = QVector2D(geometry.left(), geometry.top()),
+        .texcoord = QVector2D(0.0, 1.0),
+    };
+    map[1] = GLVertex2D{
+        .position = QVector2D(geometry.right(), geometry.bottom()),
+        .texcoord = QVector2D(1.0, 0.0),
+    };
+    map[2] = GLVertex2D{
+        .position = QVector2D(geometry.left(), geometry.bottom()),
+        .texcoord = QVector2D(0.0, 0.0),
+    };
+
+    // second triangle
+    map[3] = GLVertex2D{
+        .position = QVector2D(geometry.left(), geometry.top()),
+        .texcoord = QVector2D(0.0, 1.0),
+    };
+    map[4] = GLVertex2D{
+        .position = QVector2D(geometry.right(), geometry.top()),
+        .texcoord = QVector2D(1.0, 1.0),
+    };
+    map[5] = GLVertex2D{
+        .position = QVector2D(geometry.right(), geometry.bottom()),
+        .texcoord = QVector2D(1.0, 0.0),
+    };
+
+    vbo->unmap();
+    return vbo;
+}
+
+static qreal lerp(qreal a, qreal b, qreal t)
+{
+    return (1 - t) * a + t * b;
+}
+
+static QRectF lerp(const QRectF &a, const QRectF &b, qreal t)
+{
+    QRectF ret;
+    ret.setWidth(lerp(a.width(), b.width(), t));
+    ret.setHeight(lerp(a.height(), b.height(), t));
+    ret.moveCenter(b.center());
+    return ret;
+}
+
 void ScreenTransformEffect::paintScreen(int mask, const QRegion &region, KWin::ScreenPaintData &data)
 {
-    auto screen = data.screen();
-    if (isScreenTransforming(screen)) {
-        auto &state = m_states[screen];
-        if (state.isSecondHalf()) {
-            data.setRotationAngle(state.m_angle / 2 * (1 - state.m_timeLine.value()));
-            auto center = screen->geometry().center();
-            data.setRotationOrigin(QVector3D(center.x(), center.y(), 0));
-            effects->addRepaintFull();
-        }
+    EffectScreen *screen = data.screen();
+
+    auto it = m_states.find(screen);
+    if (it == m_states.end() || !it->m_captured) {
+        effects->paintScreen(mask, region, data);
+        return;
     }
 
+    // Render the screen in an offscreen texture.
+    const QSize nativeSize = screen->geometry().size() * screen->devicePixelRatio();
+    if (!it->m_current.texture || it->m_current.texture->size() != nativeSize) {
+        it->m_current.texture.reset(new GLTexture(GL_RGBA8, nativeSize));
+        it->m_current.framebuffer.reset(new GLFramebuffer(it->m_current.texture.get()));
+    }
+
+    GLFramebuffer::pushFramebuffer(it->m_current.framebuffer.get());
     effects->paintScreen(mask, region, data);
-    if (isScreenTransforming(screen)) {
-        auto &state = m_states[screen];
+    GLFramebuffer::popFramebuffer();
 
-        if (!state.isSecondHalf()) {
-            Q_ASSERT(state.m_texture);
+    const qreal blendFactor = it->m_timeLine.value();
+    const QRectF screenRect = screen->geometry();
+    const qreal angle = it->m_angle * (1 - blendFactor);
 
-            ShaderBinder binder(ShaderTrait::MapTexture);
-            GLShader *shader(binder.shader());
-            if (!shader) {
-                return;
-            }
-            const QRect screenGeometry = screen->geometry();
-            const QRect textureRect = {0, 0, state.m_texture->width(), state.m_texture->height()};
+    // Projection matrix + rotate transform.
+    const QVector3D transformOrigin(screenRect.center());
+    QMatrix4x4 modelViewProjectionMatrix(data.projectionMatrix());
+    modelViewProjectionMatrix.translate(transformOrigin);
+    modelViewProjectionMatrix.rotate(angle, 0, 0, 1);
+    modelViewProjectionMatrix.translate(-transformOrigin);
 
-            QMatrix4x4 matrix(data.projectionMatrix());
-            // Go to the former texture centre
-            matrix.translate(screenGeometry.width() / 2, screenGeometry.height() / 2);
-            // Invert the transformation
-            matrix.rotate(state.m_angle / 2 * (1 + 1 - state.m_timeLine.value()), 0, 0, 1);
-            // Go to the screen centre
-            matrix.translate(-textureRect.width() / 2, -textureRect.height() / 2);
-            shader->setUniform(GLShader::ModelViewProjectionMatrix, matrix);
+    glActiveTexture(GL_TEXTURE1);
+    it->m_prev.texture->bind();
+    glActiveTexture(GL_TEXTURE0);
+    it->m_current.texture->bind();
 
-            state.m_texture->bind();
-            state.m_texture->render(textureRect);
-            state.m_texture->unbind();
-        }
-        effects->addRepaintFull();
-    }
-}
+    // Clear the background.
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
 
-void ScreenTransformEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
-{
-    auto screen = w->screen();
-    if (isScreenTransforming(screen)) {
-        auto &state = m_states[screen];
-        if (!state.isSecondHalf()) {
-            data.setTranslucent();
-        }
-    }
-    effects->prePaintWindow(w, data, presentTime);
-}
+    ShaderManager *sm = ShaderManager::instance();
+    sm->pushShader(m_shader.get());
+    m_shader->setUniform(m_modelViewProjectioMatrixLocation, modelViewProjectionMatrix);
+    m_shader->setUniform(m_blendFactorLocation, float(blendFactor));
+    m_shader->setUniform(m_currentTextureLocation, 0);
+    m_shader->setUniform(m_previousTextureLocation, 1);
 
-void ScreenTransformEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
-{
-    auto screen = w->screen();
-    if (isScreenTransforming(screen)) {
-        auto &state = m_states[screen];
-        if (!state.isSecondHalf()) {
-            // During the first half we want all on 0 because we'll be rendering our texture
-            data.multiplyOpacity(0.0);
-            data.multiplyBrightness(0.0);
-        }
-    }
-    effects->paintWindow(w, mask, region, data);
+    GLVertexBuffer *vbo = texturedRectVbo(lerp(it->m_oldGeometry, screenRect, blendFactor));
+    vbo->bindArrays();
+    vbo->draw(GL_TRIANGLES, 0, 6);
+    vbo->unbindArrays();
+    sm->popShader();
+
+    glActiveTexture(GL_TEXTURE1);
+    it->m_prev.texture->unbind();
+    glActiveTexture(GL_TEXTURE0);
+    it->m_current.texture->unbind();
+
+    effects->addRepaintFull();
 }
 
 bool ScreenTransformEffect::isActive() const
 {
     return !m_states.isEmpty();
 }
-
-bool ScreenTransformEffect::isScreenTransforming(EffectScreen *screen) const
-{
-    auto it = m_states.constFind(screen);
-    return it != m_states.constEnd() && it->m_captured;
-}
-
-ScreenTransformEffect::ScreenState::~ScreenState() = default;
 
 } // namespace KWin
