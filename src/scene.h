@@ -202,7 +202,7 @@ protected:
     // called after all effects had their paintWindow() called
     void finalPaintWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data);
     // shared implementation, starts painting the window
-    virtual void paintWindow(WindowItem *w, int mask, const QRegion &region);
+    void paintWindow(WindowItem *w, int mask, const QRegion &region);
     // called after all effects had their drawWindow() called
     void finalDrawWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data);
 
