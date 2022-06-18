@@ -312,22 +312,23 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &d
     effects->paintScreen(mask, region, data);
     GLFramebuffer::popFramebuffer();
 
-    data *= QVector2D(zoom, zoom);
     const QSize screenSize = effects->virtualScreenSize();
 
     // mouse-tracking allows navigation of the zoom-area using the mouse.
+    qreal xTranslation = 0;
+    qreal yTranslation = 0;
     switch (mouseTracking) {
     case MouseTrackingProportional:
-        data.setXTranslation(-int(cursorPoint.x() * (zoom - 1.0)));
-        data.setYTranslation(-int(cursorPoint.y() * (zoom - 1.0)));
+        xTranslation = -int(cursorPoint.x() * (zoom - 1.0));
+        yTranslation = -int(cursorPoint.y() * (zoom - 1.0));
         prevPoint = cursorPoint;
         break;
     case MouseTrackingCentred:
         prevPoint = cursorPoint;
         // fall through
     case MouseTrackingDisabled:
-        data.setXTranslation(qMin(0, qMax(int(screenSize.width() - screenSize.width() * zoom), int(screenSize.width() / 2 - prevPoint.x() * zoom))));
-        data.setYTranslation(qMin(0, qMax(int(screenSize.height() - screenSize.height() * zoom), int(screenSize.height() / 2 - prevPoint.y() * zoom))));
+        xTranslation = qMin(0, qMax(int(screenSize.width() - screenSize.width() * zoom), int(screenSize.width() / 2 - prevPoint.x() * zoom)));
+        yTranslation = qMin(0, qMax(int(screenSize.height() - screenSize.height() * zoom), int(screenSize.height() / 2 - prevPoint.y() * zoom)));
         break;
     case MouseTrackingPush: {
         // touching an edge of the screen moves the zoom-area in that direction.
@@ -351,8 +352,8 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &d
         if (yMove) {
             prevPoint.setY(qMax(0, qMin(screenSize.height(), prevPoint.y() + yMove)));
         }
-        data.setXTranslation(-int(prevPoint.x() * (zoom - 1.0)));
-        data.setYTranslation(-int(prevPoint.y() * (zoom - 1.0)));
+        xTranslation = -int(prevPoint.x() * (zoom - 1.0));
+        yTranslation = -int(prevPoint.y() * (zoom - 1.0));
         break;
     }
     }
@@ -367,8 +368,8 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &d
             acceptFocus = msecs > focusDelay;
         }
         if (acceptFocus) {
-            data.setXTranslation(-int(focusPoint.x() * (zoom - 1.0)));
-            data.setYTranslation(-int(focusPoint.y() * (zoom - 1.0)));
+            xTranslation = -int(focusPoint.x() * (zoom - 1.0));
+            yTranslation = -int(focusPoint.y() * (zoom - 1.0));
             prevPoint = focusPoint;
         }
     }
@@ -378,8 +379,8 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &d
     glClear(GL_COLOR_BUFFER_BIT);
 
     QMatrix4x4 matrix;
-    matrix.translate(data.translation());
-    matrix.scale(data.scale());
+    matrix.translate(xTranslation, yTranslation);
+    matrix.scale(zoom, zoom);
 
     auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
     shader->setUniform(GLShader::ModelViewProjectionMatrix, data.projectionMatrix() * matrix);
@@ -404,7 +405,7 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &d
             }
 
             const QPoint p = effects->cursorPos() - cursor.hotSpot();
-            QRect rect(p * zoom + QPoint(data.xTranslation(), data.yTranslation()), cursorSize);
+            QRect rect(p * zoom + QPoint(xTranslation, yTranslation), cursorSize);
 
             cursorTexture->bind();
             glEnable(GL_BLEND);

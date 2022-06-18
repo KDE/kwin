@@ -72,21 +72,12 @@ public:
     QVector<QByteArray> openGLPlatformInterfaceExtensions() const override;
     std::shared_ptr<GLTexture> textureForOutput(Output *output) const override;
 
-    QMatrix4x4 screenProjectionMatrix() const override
-    {
-        return m_screenProjectionMatrix;
-    }
-
     static SceneOpenGL *createScene(OpenGLBackend *backend, QObject *parent);
     static bool supported(OpenGLBackend *backend);
 
 protected:
     void paintBackground(const QRegion &region) override;
-    QMatrix4x4 transformation(int mask, const ScreenPaintData &data) const;
     void paintOffscreenQuickView(OffscreenQuickView *w) override;
-
-    void paintSimpleScreen(int mask, const QRegion &region) override;
-    void paintGenericScreen(int mask, const ScreenPaintData &data) override;
 
 private:
     void doPaintBackground(const QVector<float> &vertices);
@@ -97,7 +88,6 @@ private:
 
     bool init_ok = true;
     OpenGLBackend *m_backend;
-    QMatrix4x4 m_screenProjectionMatrix;
     GLuint vao = 0;
     bool m_blendingEnabled = false;
 };

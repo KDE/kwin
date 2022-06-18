@@ -6,15 +6,6 @@ add_subdirectory(libinput)
 add_subdirectory(tabbox)
 
 ########################################################
-# Test ScreenPaintData
-########################################################
-set(testScreenPaintData_SRCS test_screen_paint_data.cpp)
-add_executable(testScreenPaintData ${testScreenPaintData_SRCS})
-target_link_libraries(testScreenPaintData kwineffects Qt::Test Qt::Widgets KF5::WindowSystem)
-add_test(NAME kwin-testScreenPaintData COMMAND testScreenPaintData)
-ecm_mark_as_test(testScreenPaintData)
-
-########################################################
 # Test WindowPaintData
 ########################################################
 set(testWindowPaintData_SRCS test_window_paint_data.cpp)

@@ -99,32 +99,6 @@ void SceneOpenGL::paint(RenderTarget *renderTarget, const QRegion &region)
     GLVertexBuffer::streamingBuffer()->endOfFrame();
 }
 
-QMatrix4x4 SceneOpenGL::transformation(int mask, const ScreenPaintData &data) const
-{
-    QMatrix4x4 matrix;
-
-    if (!(mask & PAINT_SCREEN_TRANSFORMED)) {
-        return matrix;
-    }
-
-    matrix.translate(data.translation());
-    const QVector3D scale = data.scale();
-    matrix.scale(scale.x(), scale.y(), scale.z());
-
-    if (data.rotationAngle() == 0.0) {
-        return matrix;
-    }
-
-    // Apply the rotation
-    // cannot use data.rotation->applyTo(&matrix) as QGraphicsRotation uses projectedRotate to map back to 2D
-    matrix.translate(data.rotationOrigin());
-    const QVector3D axis = data.rotationAxis();
-    matrix.rotate(data.rotationAngle(), axis.x(), axis.y(), axis.z());
-    matrix.translate(-data.rotationOrigin());
-
-    return matrix;
-}
-
 void SceneOpenGL::paintBackground(const QRegion &region)
 {
     if (region == infiniteRegion()) {
@@ -255,22 +229,6 @@ bool SceneOpenGL::supported(OpenGLBackend *backend)
         return false;
     }
     return true;
-}
-
-void SceneOpenGL::paintSimpleScreen(int mask, const QRegion &region)
-{
-    m_screenProjectionMatrix = renderTargetProjectionMatrix();
-
-    Scene::paintSimpleScreen(mask, region);
-}
-
-void SceneOpenGL::paintGenericScreen(int mask, const ScreenPaintData &data)
-{
-    const QMatrix4x4 screenMatrix = transformation(mask, data);
-
-    m_screenProjectionMatrix = renderTargetProjectionMatrix() * screenMatrix;
-
-    Scene::paintGenericScreen(mask, data);
 }
 
 void SceneOpenGL::doPaintBackground(const QVector<float> &vertices)
@@ -446,17 +404,17 @@ void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
 
 QMatrix4x4 SceneOpenGL::modelViewProjectionMatrix(const WindowPaintData &data) const
 {
-    const QMatrix4x4 pMatrix = data.projectionMatrix();
-
     // An effect may want to override the default projection matrix in some cases,
     // such as when it is rendering a window on a render target that doesn't have
     // the same dimensions as the default framebuffer.
     //
     // Note that the screen transformation is not applied here.
+    const QMatrix4x4 pMatrix = data.projectionMatrix();
     if (!pMatrix.isIdentity()) {
         return pMatrix;
+    } else {
+        return renderTargetProjectionMatrix();
     }
-    return m_screenProjectionMatrix;
 }
 
 static QMatrix4x4 transformForPaintData(int mask, const WindowPaintData &data)

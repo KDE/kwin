@@ -404,14 +404,12 @@ public:
 };
 
 ScreenPaintData::ScreenPaintData()
-    : PaintData()
-    , d(new Private())
+    : d(new Private())
 {
 }
 
 ScreenPaintData::ScreenPaintData(const QMatrix4x4 &projectionMatrix, EffectScreen *screen)
-    : PaintData()
-    , d(new Private())
+    : d(new Private())
 {
     d->projectionMatrix = projectionMatrix;
     d->screen = screen;
@@ -420,77 +418,16 @@ ScreenPaintData::ScreenPaintData(const QMatrix4x4 &projectionMatrix, EffectScree
 ScreenPaintData::~ScreenPaintData() = default;
 
 ScreenPaintData::ScreenPaintData(const ScreenPaintData &other)
-    : PaintData()
-    , d(new Private())
+    : d(new Private())
 {
-    translate(other.translation());
-    setXScale(other.xScale());
-    setYScale(other.yScale());
-    setZScale(other.zScale());
-    setRotationOrigin(other.rotationOrigin());
-    setRotationAxis(other.rotationAxis());
-    setRotationAngle(other.rotationAngle());
     d->projectionMatrix = other.d->projectionMatrix;
     d->screen = other.d->screen;
 }
 
 ScreenPaintData &ScreenPaintData::operator=(const ScreenPaintData &rhs)
 {
-    setXScale(rhs.xScale());
-    setYScale(rhs.yScale());
-    setZScale(rhs.zScale());
-    setXTranslation(rhs.xTranslation());
-    setYTranslation(rhs.yTranslation());
-    setZTranslation(rhs.zTranslation());
-    setRotationOrigin(rhs.rotationOrigin());
-    setRotationAxis(rhs.rotationAxis());
-    setRotationAngle(rhs.rotationAngle());
     d->projectionMatrix = rhs.d->projectionMatrix;
     d->screen = rhs.d->screen;
-    return *this;
-}
-
-ScreenPaintData &ScreenPaintData::operator*=(qreal scale)
-{
-    setXScale(this->xScale() * scale);
-    setYScale(this->yScale() * scale);
-    setZScale(this->zScale() * scale);
-    return *this;
-}
-
-ScreenPaintData &ScreenPaintData::operator*=(const QVector2D &scale)
-{
-    setXScale(this->xScale() * scale.x());
-    setYScale(this->yScale() * scale.y());
-    return *this;
-}
-
-ScreenPaintData &ScreenPaintData::operator*=(const QVector3D &scale)
-{
-    setXScale(this->xScale() * scale.x());
-    setYScale(this->yScale() * scale.y());
-    setZScale(this->zScale() * scale.z());
-    return *this;
-}
-
-ScreenPaintData &ScreenPaintData::operator+=(const QPointF &translation)
-{
-    return this->operator+=(QVector3D(translation));
-}
-
-ScreenPaintData &ScreenPaintData::operator+=(const QPoint &translation)
-{
-    return this->operator+=(QVector3D(translation));
-}
-
-ScreenPaintData &ScreenPaintData::operator+=(const QVector2D &translation)
-{
-    return this->operator+=(QVector3D(translation));
-}
-
-ScreenPaintData &ScreenPaintData::operator+=(const QVector3D &translation)
-{
-    translate(translation);
     return *this;
 }
 

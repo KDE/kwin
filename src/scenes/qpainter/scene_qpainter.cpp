@@ -58,15 +58,6 @@ bool SceneQPainter::initFailed() const
     return false;
 }
 
-void SceneQPainter::paintGenericScreen(int mask, const ScreenPaintData &data)
-{
-    m_painter->save();
-    m_painter->translate(data.xTranslation(), data.yTranslation());
-    m_painter->scale(data.xScale(), data.yScale());
-    Scene::paintGenericScreen(mask, data);
-    m_painter->restore();
-}
-
 void SceneQPainter::paint(RenderTarget *target, const QRegion &region)
 {
     QImage *buffer = std::get<QImage *>(target->nativeHandle());

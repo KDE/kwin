@@ -25,7 +25,6 @@ class KWIN_EXPORT SceneQPainter : public Scene
 public:
     ~SceneQPainter() override;
     void paint(RenderTarget *renderTarget, const QRegion &region) override;
-    void paintGenericScreen(int mask, const ScreenPaintData &data) override;
     bool initFailed() const override;
     Shadow *createShadow(Window *window) override;
     DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;

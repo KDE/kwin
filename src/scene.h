@@ -132,8 +132,6 @@ public:
     virtual void doneOpenGLContextCurrent();
     virtual bool supportsNativeFence() const;
 
-    virtual QMatrix4x4 screenProjectionMatrix() const;
-
     virtual DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *) = 0;
 
     /**
@@ -193,10 +191,10 @@ protected:
     // shared implementation of painting the screen in the generic
     // (unoptimized) way
     void preparePaintGenericScreen();
-    virtual void paintGenericScreen(int mask, const ScreenPaintData &data);
+    void paintGenericScreen(int mask, const ScreenPaintData &data);
     // shared implementation of painting the screen in an optimized way
     void preparePaintSimpleScreen();
-    virtual void paintSimpleScreen(int mask, const QRegion &region);
+    void paintSimpleScreen(int mask, const QRegion &region);
     // paint the background (not the desktop background - the whole background)
     virtual void paintBackground(const QRegion &region) = 0;
     // called after all effects had their paintWindow() called

@@ -580,7 +580,7 @@ void Scene::paintWindow(WindowItem *item, int mask, const QRegion &region)
         return;
     }
 
-    WindowPaintData data(screenProjectionMatrix());
+    WindowPaintData data(renderTargetProjectionMatrix());
     effects->paintWindow(item->window()->effectWindow(), mask, region, data);
 }
 
@@ -608,11 +608,6 @@ void Scene::doneOpenGLContextCurrent()
 bool Scene::supportsNativeFence() const
 {
     return false;
-}
-
-QMatrix4x4 Scene::screenProjectionMatrix() const
-{
-    return QMatrix4x4();
 }
 
 QPainter *Scene::scenePainter() const

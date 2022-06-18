@@ -3292,54 +3292,14 @@ private:
     WindowPaintDataPrivate *const d;
 };
 
-class KWINEFFECTS_EXPORT ScreenPaintData : public PaintData
+class KWINEFFECTS_EXPORT ScreenPaintData
 {
 public:
     ScreenPaintData();
     ScreenPaintData(const QMatrix4x4 &projectionMatrix, EffectScreen *screen = nullptr);
     ScreenPaintData(const ScreenPaintData &other);
-    ~ScreenPaintData() override;
-    /**
-     * Scales the screen by @p scale factor.
-     * Multiplies all three components by the given factor.
-     * @since 4.10
-     */
-    ScreenPaintData &operator*=(qreal scale);
-    /**
-     * Scales the screen by @p scale factor.
-     * Performs a component wise multiplication on x and y components.
-     * @since 4.10
-     */
-    ScreenPaintData &operator*=(const QVector2D &scale);
-    /**
-     * Scales the screen by @p scale factor.
-     * Performs a component wise multiplication.
-     * @since 4.10
-     */
-    ScreenPaintData &operator*=(const QVector3D &scale);
-    /**
-     * Translates the screen by the given @p translation and returns a reference to the ScreenPaintData.
-     * @since 4.10
-     */
-    ScreenPaintData &operator+=(const QPointF &translation);
-    /**
-     * Translates the screen by the given @p translation and returns a reference to the ScreenPaintData.
-     * Overloaded method for convenience.
-     * @since 4.10
-     */
-    ScreenPaintData &operator+=(const QPoint &translation);
-    /**
-     * Translates the screen by the given @p translation and returns a reference to the ScreenPaintData.
-     * Overloaded method for convenience.
-     * @since 4.10
-     */
-    ScreenPaintData &operator+=(const QVector2D &translation);
-    /**
-     * Translates the screen by the given @p translation and returns a reference to the ScreenPaintData.
-     * Overloaded method for convenience.
-     * @since 4.10
-     */
-    ScreenPaintData &operator+=(const QVector3D &translation);
+    ~ScreenPaintData();
+
     ScreenPaintData &operator=(const ScreenPaintData &rhs);
 
     /**
