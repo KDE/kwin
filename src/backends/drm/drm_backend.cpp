@@ -648,7 +648,6 @@ std::optional<DmaBufParams> DrmBackend::testCreateDmaBuf(const QSize &size, quin
 
 std::shared_ptr<DmaBufTexture> DrmBackend::createDmaBufTexture(const QSize &size, quint32 format, uint64_t modifier)
 {
-    const auto eglBackend = dynamic_cast<EglGbmBackend *>(m_renderBackend);
     QVector<uint64_t> mods = {modifier};
     gbm_bo *bo = createBo(size, format, mods);
     if (!bo) {
@@ -658,6 +657,7 @@ std::shared_ptr<DmaBufTexture> DrmBackend::createDmaBufTexture(const QSize &size
     // The bo will be kept around until the last fd is closed.
     const DmaBufAttributes attributes = dmaBufAttributesForBo(bo);
     gbm_bo_destroy(bo);
+    const auto eglBackend = static_cast<EglGbmBackend *>(m_renderBackend);
     eglBackend->makeCurrent();
     return std::make_shared<DmaBufTexture>(eglBackend->importDmaBufAsTexture(attributes), attributes);
 }
