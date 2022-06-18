@@ -14,6 +14,7 @@
 namespace KWin
 {
 class GLFramebuffer;
+class GLShader;
 class GLTexture;
 
 class ScreenTransformEffect : public Effect
@@ -26,8 +27,6 @@ public:
 
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void paintScreen(int mask, const QRegion &region, KWin::ScreenPaintData &data) override;
-    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
 
     bool isActive() const override;
 
@@ -38,16 +37,18 @@ public:
     static bool supported();
 
 private:
+    struct Snapshot
+    {
+        QSharedPointer<GLTexture> texture;
+        QSharedPointer<GLFramebuffer> framebuffer;
+    };
+
     struct ScreenState
     {
-        ~ScreenState();
-        bool isSecondHalf() const
-        {
-            return m_timeLine.progress() > 0.5;
-        }
-
         TimeLine m_timeLine;
-        QSharedPointer<GLTexture> m_texture;
+        Snapshot m_prev;
+        Snapshot m_current;
+        QRect m_oldGeometry;
         EffectScreen::Transform m_oldTransform;
         qreal m_angle = 0;
         bool m_captured = false;
@@ -55,9 +56,14 @@ private:
 
     void addScreen(EffectScreen *screen);
     void removeScreen(EffectScreen *screen);
-    bool isScreenTransforming(EffectScreen *screen) const;
 
     QHash<EffectScreen *, ScreenState> m_states;
+
+    QScopedPointer<GLShader> m_shader;
+    int m_previousTextureLocation = -1;
+    int m_currentTextureLocation = -1;
+    int m_modelViewProjectioMatrixLocation = -1;
+    int m_blendFactorLocation = -1;
 };
 
 } // namespace KWin
