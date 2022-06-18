@@ -356,7 +356,6 @@ public:
         }
 
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(event->timestamp());
         if (event->type() == QEvent::MouseMove) {
             if (pointerSurfaceAllowed()) {
                 // TODO: should the pointer position always stay in sync, i.e. not do the check?
@@ -384,7 +383,6 @@ public:
         auto seat = waylandServer()->seat();
         if (pointerSurfaceAllowed()) {
             const WheelEvent *wheelEvent = static_cast<WheelEvent *>(event);
-            seat->setTimestamp(wheelEvent->timestamp());
             seat->notifyPointerAxis(wheelEvent->orientation(), wheelEvent->delta(),
                                     wheelEvent->discreteDelta(),
                                     kwinAxisSourceToKWaylandAxisSource(wheelEvent->axisSource()));
@@ -415,7 +413,6 @@ public:
         // continue normal processing
         input()->keyboard()->update();
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(event->timestamp());
         if (!keyboardSurfaceAllowed()) {
             // don't pass event to seat
             return true;
@@ -434,11 +431,11 @@ public:
     }
     bool touchDown(qint32 id, const QPointF &pos, quint32 time) override
     {
+        Q_UNUSED(time);
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
         if (touchSurfaceAllowed()) {
             seat->notifyTouchDown(id, pos);
         }
@@ -446,11 +443,11 @@ public:
     }
     bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override
     {
+        Q_UNUSED(time);
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
         if (touchSurfaceAllowed()) {
             seat->notifyTouchMotion(id, pos);
         }
@@ -458,11 +455,11 @@ public:
     }
     bool touchUp(qint32 id, quint32 time) override
     {
+        Q_UNUSED(time);
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
         if (touchSurfaceAllowed()) {
             seat->notifyTouchUp(id);
         }
@@ -1313,6 +1310,7 @@ class InternalWindowEventFilter : public InputEventFilter
 
     bool touchDown(qint32 id, const QPointF &pos, quint32 time) override
     {
+        Q_UNUSED(time);
         auto seat = waylandServer()->seat();
         if (seat->isTouchSequence()) {
             // something else is getting the events
@@ -1325,7 +1323,6 @@ class InternalWindowEventFilter : public InputEventFilter
             return true;
         }
         // a new touch point
-        seat->setTimestamp(time);
         if (!input()->touch()->focus() || !input()->touch()->focus()->isInternal()) {
             return false;
         }
@@ -1345,6 +1342,7 @@ class InternalWindowEventFilter : public InputEventFilter
     }
     bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override
     {
+        Q_UNUSED(time);
         auto touch = input()->touch();
         if (!input()->touch()->focus() || !input()->touch()->focus()->isInternal()) {
             return false;
@@ -1352,7 +1350,6 @@ class InternalWindowEventFilter : public InputEventFilter
         if (touch->internalPressId() == -1) {
             return false;
         }
-        waylandServer()->seat()->setTimestamp(time);
         if (touch->internalPressId() != qint32(id) || m_pressedIds.contains(id)) {
             // ignore, but filter out
             return true;
@@ -1367,12 +1364,12 @@ class InternalWindowEventFilter : public InputEventFilter
     }
     bool touchUp(qint32 id, quint32 time) override
     {
+        Q_UNUSED(time);
         auto touch = input()->touch();
         const bool removed = m_pressedIds.remove(id);
         if (touch->internalPressId() == -1) {
             return removed;
         }
-        waylandServer()->seat()->setTimestamp(time);
         if (touch->internalPressId() != qint32(id)) {
             // ignore, but filter out
             return true;
@@ -1477,6 +1474,7 @@ public:
     }
     bool touchDown(qint32 id, const QPointF &pos, quint32 time) override
     {
+        Q_UNUSED(time);
         auto seat = waylandServer()->seat();
         if (seat->isTouchSequence()) {
             return false;
@@ -1485,7 +1483,6 @@ public:
             // already on a decoration, ignore further touch points, but filter out
             return true;
         }
-        seat->setTimestamp(time);
         auto decoration = input()->touch()->decoration();
         if (!decoration) {
             return false;
@@ -1806,7 +1803,6 @@ public:
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(event->timestamp());
         switch (event->type()) {
         case QEvent::MouseMove: {
             seat->notifyPointerMotion(event->globalPos());
@@ -1833,7 +1829,6 @@ public:
     bool wheelEvent(QWheelEvent *event) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(event->timestamp());
         auto _event = static_cast<WheelEvent *>(event);
         seat->notifyPointerAxis(_event->orientation(), _event->delta(), _event->discreteDelta(),
                                 kwinAxisSourceToKWaylandAxisSource(_event->axisSource()));
@@ -1846,30 +1841,28 @@ public:
             // handled by Wayland client
             return false;
         }
-        auto seat = waylandServer()->seat();
         input()->keyboard()->update();
-        seat->setTimestamp(event->timestamp());
         passToWaylandServer(event);
         return true;
     }
     bool touchDown(qint32 id, const QPointF &pos, quint32 time) override
     {
+        Q_UNUSED(time);
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
         seat->notifyTouchDown(id, pos);
         return true;
     }
     bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override
     {
+        Q_UNUSED(time);
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
         seat->notifyTouchMotion(id, pos);
         return true;
     }
     bool touchUp(qint32 id, quint32 time) override
     {
+        Q_UNUSED(time);
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
         seat->notifyTouchUp(id);
         return true;
     }
@@ -1885,79 +1878,79 @@ public:
     }
     bool pinchGestureBegin(int fingerCount, quint32 time) override
     {
+        Q_UNUSED(time);
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
         seat->startPointerPinchGesture(fingerCount);
         return true;
     }
     bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time) override
     {
+        Q_UNUSED(time);
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
         seat->updatePointerPinchGesture(delta, scale, angleDelta);
         return true;
     }
     bool pinchGestureEnd(quint32 time) override
     {
+        Q_UNUSED(time);
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
         seat->endPointerPinchGesture();
         return true;
     }
     bool pinchGestureCancelled(quint32 time) override
     {
+        Q_UNUSED(time);
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
         seat->cancelPointerPinchGesture();
         return true;
     }
 
     bool swipeGestureBegin(int fingerCount, quint32 time) override
     {
+        Q_UNUSED(time);
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
         seat->startPointerSwipeGesture(fingerCount);
         return true;
     }
     bool swipeGestureUpdate(const QSizeF &delta, quint32 time) override
     {
+        Q_UNUSED(time);
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
         seat->updatePointerSwipeGesture(delta);
         return true;
     }
     bool swipeGestureEnd(quint32 time) override
     {
+        Q_UNUSED(time);
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
         seat->endPointerSwipeGesture();
         return true;
     }
     bool swipeGestureCancelled(quint32 time) override
     {
+        Q_UNUSED(time);
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
         seat->cancelPointerSwipeGesture();
         return true;
     }
     bool holdGestureBegin(int fingerCount, quint32 time) override
     {
+        Q_UNUSED(time);
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
         seat->startPointerHoldGesture(fingerCount);
         return true;
     }
     bool holdGestureEnd(quint32 time) override
     {
+        Q_UNUSED(time);
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
         seat->endPointerHoldGesture();
         return true;
     }
     bool holdGestureCancelled(quint32 time) override
     {
+        Q_UNUSED(time);
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
         seat->cancelPointerHoldGesture();
         return true;
     }
@@ -2385,7 +2378,6 @@ public:
         if (seat->isDragTouch()) {
             return true;
         }
-        seat->setTimestamp(event->timestamp());
         switch (event->type()) {
         case QEvent::MouseMove: {
             const auto pos = input()->globalPointer();
@@ -2449,6 +2441,7 @@ public:
 
     bool touchDown(qint32 id, const QPointF &pos, quint32 time) override
     {
+        Q_UNUSED(time);
         auto seat = waylandServer()->seat();
         if (seat->isDragPointer()) {
             return true;
@@ -2459,13 +2452,13 @@ public:
         if (m_touchId != id) {
             return true;
         }
-        seat->setTimestamp(time);
         seat->notifyTouchDown(id, pos);
         m_lastPos = pos;
         return true;
     }
     bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override
     {
+        Q_UNUSED(time);
         auto seat = waylandServer()->seat();
         if (seat->isDragPointer()) {
             return true;
@@ -2482,7 +2475,6 @@ public:
         if (m_touchId != id) {
             return true;
         }
-        seat->setTimestamp(time);
         seat->notifyTouchMotion(id, pos);
 
         if (Window *t = input()->findToplevel(pos.toPoint())) {
@@ -2508,11 +2500,11 @@ public:
     }
     bool touchUp(qint32 id, quint32 time) override
     {
+        Q_UNUSED(time);
         auto seat = waylandServer()->seat();
         if (!seat->isDragTouch()) {
             return false;
         }
-        seat->setTimestamp(time);
         seat->notifyTouchUp(id);
         if (m_touchId == id) {
             m_touchId = -1;
@@ -2530,8 +2522,6 @@ public:
         if (!seat->isDrag()) {
             return false;
         }
-        seat->setTimestamp(event->timestamp());
-
         seat->cancelDrag();
 
         return true;
@@ -2707,110 +2697,98 @@ public:
     void pointerEvent(MouseEvent *event) override
     {
         Q_UNUSED(event)
-        notifyActivity();
+        notifyActivity(event->timestamp());
     }
     void wheelEvent(WheelEvent *event) override
     {
         Q_UNUSED(event)
-        notifyActivity();
+        notifyActivity(event->timestamp());
     }
 
     void keyEvent(KeyEvent *event) override
     {
         Q_UNUSED(event)
-        notifyActivity();
+        notifyActivity(event->timestamp());
     }
 
     void touchDown(qint32 id, const QPointF &pos, quint32 time) override
     {
         Q_UNUSED(id)
         Q_UNUSED(pos)
-        Q_UNUSED(time)
-        notifyActivity();
+        notifyActivity(time);
     }
     void touchMotion(qint32 id, const QPointF &pos, quint32 time) override
     {
         Q_UNUSED(id)
         Q_UNUSED(pos)
-        Q_UNUSED(time)
-        notifyActivity();
+        notifyActivity(time);
     }
     void touchUp(qint32 id, quint32 time) override
     {
         Q_UNUSED(id)
-        Q_UNUSED(time)
-        notifyActivity();
+        notifyActivity(time);
     }
 
     void pinchGestureBegin(int fingerCount, quint32 time) override
     {
         Q_UNUSED(fingerCount)
-        Q_UNUSED(time)
-        notifyActivity();
+        notifyActivity(time);
     }
     void pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time) override
     {
         Q_UNUSED(scale)
         Q_UNUSED(angleDelta)
         Q_UNUSED(delta)
-        Q_UNUSED(time)
-        notifyActivity();
+        notifyActivity(time);
     }
     void pinchGestureEnd(quint32 time) override
     {
         Q_UNUSED(time)
-        notifyActivity();
+        notifyActivity(time);
     }
     void pinchGestureCancelled(quint32 time) override
     {
         Q_UNUSED(time)
-        notifyActivity();
+        notifyActivity(time);
     }
 
     void swipeGestureBegin(int fingerCount, quint32 time) override
     {
         Q_UNUSED(fingerCount)
-        Q_UNUSED(time)
-        notifyActivity();
+        notifyActivity(time);
     }
     void swipeGestureUpdate(const QSizeF &delta, quint32 time) override
     {
         Q_UNUSED(delta)
-        Q_UNUSED(time)
-        notifyActivity();
+        notifyActivity(time);
     }
     void swipeGestureEnd(quint32 time) override
     {
-        Q_UNUSED(time)
-        notifyActivity();
+        notifyActivity(time);
     }
     void swipeGestureCancelled(quint32 time) override
     {
-        Q_UNUSED(time)
-        notifyActivity();
+        notifyActivity(time);
     }
 
     void holdGestureBegin(int fingerCount, quint32 time) override
     {
         Q_UNUSED(fingerCount)
-        Q_UNUSED(time)
-        notifyActivity();
+        notifyActivity(time);
     }
     void holdGestureEnd(quint32 time) override
     {
-        Q_UNUSED(time)
-        notifyActivity();
+        notifyActivity(time);
     }
     void holdGestureCancelled(quint32 time) override
     {
-        Q_UNUSED(time)
-        notifyActivity();
+        notifyActivity(time);
     }
 
     void tabletToolEvent(TabletEvent *event) override
     {
         Q_UNUSED(event)
-        notifyActivity();
+        notifyActivity(event->timestamp());
     }
     void tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId) override
     {
@@ -2844,9 +2822,12 @@ public:
     }
 
 private:
-    void notifyActivity()
+    void notifyActivity(quint32 time = 0)
     {
         waylandServer()->simulateUserActivity();
+        if (time) {
+            waylandServer()->seat()->setTimestamp(time);
+        }
     }
 };
 

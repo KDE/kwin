@@ -84,7 +84,6 @@ bool DpmsInputEventFilter::touchUp(qint32 id, quint32 time)
         m_touchPoints.removeAll(id);
         if (m_touchPoints.isEmpty() && m_doubleTapTimer.isValid() && m_secondTap) {
             if (m_doubleTapTimer.elapsed() < qApp->doubleClickInterval()) {
-                waylandServer()->seat()->setTimestamp(time);
                 notify();
             }
             m_doubleTapTimer.invalidate();
