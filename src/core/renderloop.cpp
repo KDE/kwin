@@ -36,7 +36,7 @@ RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q)
 
 void RenderLoopPrivate::scheduleRepaint()
 {
-    if (kwinApp()->isTerminating() || (compositeTimer.isActive() && !allowTearing)) {
+    if (kwinApp()->isTerminating()) {
         return;
     }
     if (vrrPolicy == RenderLoop::VrrPolicy::Always || (vrrPolicy == RenderLoop::VrrPolicy::Automatic && fullscreenItem != nullptr)) {
@@ -48,7 +48,7 @@ void RenderLoopPrivate::scheduleRepaint()
     const std::chrono::nanoseconds currentTime(std::chrono::steady_clock::now().time_since_epoch());
 
     // Estimate when the next presentation will occur. Note that this is a prediction.
-    nextPresentationTimestamp = lastPresentationTimestamp + vblankInterval;
+    auto nextPresentationTimestamp = lastPresentationTimestamp + vblankInterval;
     if (nextPresentationTimestamp < currentTime && presentMode == SyncMode::Fixed) {
         nextPresentationTimestamp = lastPresentationTimestamp
             + alignTimestamp(currentTime - lastPresentationTimestamp, vblankInterval);
@@ -98,8 +98,11 @@ void RenderLoopPrivate::scheduleRepaint()
     if (presentMode == SyncMode::Async || presentMode == SyncMode::AdaptiveAsync) {
         compositeTimer.start(0);
     } else {
-        const std::chrono::nanoseconds waitInterval = nextRenderTimestamp - currentTime;
-        compositeTimer.start(std::chrono::duration_cast<std::chrono::milliseconds>(waitInterval));
+        const std::chrono::milliseconds waitInterval = std::chrono::duration_cast<std::chrono::milliseconds>(nextRenderTimestamp - currentTime);
+        if (!compositeTimer.isActive() || waitInterval < compositeTimer.remainingTimeAsDuration()) {
+            compositeTimer.start(waitInterval);
+            this->nextPresentationTimestamp = nextPresentationTimestamp;
+        }
     }
 }
 
@@ -277,6 +280,28 @@ RenderLoop::VrrPolicy RenderLoop::vrrPolicy() const
 void RenderLoop::setVrrPolicy(VrrPolicy policy)
 {
     d->vrrPolicy = policy;
+}
+
+void RenderLoop::scheduleCursorRepaint()
+{
+    if (d->pendingRepaint || d->pendingFrameCount || d->inhibitCount) {
+        return;
+    }
+    if (d->presentMode == RenderLoopPrivate::SyncMode::Fixed) {
+        scheduleRepaint();
+    } else {
+        const std::chrono::nanoseconds vblankInterval(1'000'000'000'000ull / 40000ul);
+        const std::chrono::nanoseconds now = std::chrono::steady_clock::now().time_since_epoch();
+        std::chrono::nanoseconds plannedPresentationTimestamp = d->lastPresentationTimestamp + vblankInterval;
+        if (plannedPresentationTimestamp < now) {
+            plannedPresentationTimestamp = now;
+        }
+        std::chrono::milliseconds waitTime = std::chrono::duration_cast<std::chrono::milliseconds>(plannedPresentationTimestamp - now);
+        if (!d->compositeTimer.isActive() || d->compositeTimer.remainingTimeAsDuration() > waitTime) {
+            d->compositeTimer.start(waitTime);
+            d->nextPresentationTimestamp = plannedPresentationTimestamp;
+        }
+    }
 }
 
 } // namespace KWin
