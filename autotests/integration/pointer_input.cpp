@@ -1660,7 +1660,7 @@ void PointerInputTest::testResizeCursor()
     if (edges & Qt::LeftEdge) {
         cursorPos.setX(window->frameGeometry().left());
     } else if (edges & Qt::RightEdge) {
-        cursorPos.setX(window->frameGeometry().right());
+        cursorPos.setX(window->frameGeometry().right() - 1);
     } else {
         cursorPos.setX(window->frameGeometry().center().x());
     }
@@ -1668,7 +1668,7 @@ void PointerInputTest::testResizeCursor()
     if (edges & Qt::TopEdge) {
         cursorPos.setY(window->frameGeometry().top());
     } else if (edges & Qt::BottomEdge) {
-        cursorPos.setY(window->frameGeometry().bottom());
+        cursorPos.setY(window->frameGeometry().bottom() - 1);
     } else {
         cursorPos.setY(window->frameGeometry().center().y());
     }

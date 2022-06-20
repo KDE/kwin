@@ -100,8 +100,8 @@ static bool screenContainsPos(const QPointF &pos)
 static QPointF confineToBoundingBox(const QPointF &pos, const QRectF &boundingBox)
 {
     return QPointF(
-        qBound(boundingBox.left(), pos.x(), boundingBox.right()),
-        qBound(boundingBox.top(), pos.y(), boundingBox.bottom()));
+        qBound(boundingBox.left(), pos.x(), boundingBox.right() - 1),
+        qBound(boundingBox.top(), pos.y(), boundingBox.bottom() - 1));
 }
 
 PointerInputRedirection::PointerInputRedirection(InputRedirection *parent)
