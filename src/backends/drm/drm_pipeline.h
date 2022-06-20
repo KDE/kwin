@@ -53,11 +53,22 @@ public:
     DrmPipeline(DrmConnector *conn);
     ~DrmPipeline();
 
+    enum class Error {
+        None,
+        OutofMemory,
+        InvalidArguments,
+        NoPermission,
+        FramePending,
+        TestBufferFailed,
+        Unknown,
+    };
+    Q_ENUM(Error);
+
     /**
      * tests the pending commit first and commits it if the test passes
      * if the test fails, there is a guarantee for no lasting changes
      */
-    bool present();
+    Error present();
     bool testScanout();
     bool maybeModeset();
 
@@ -118,28 +129,29 @@ public:
         Commit,
         CommitModeset
     };
-    Q_ENUM(CommitMode)
-    static bool commitPipelines(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects = {});
+    Q_ENUM(CommitMode);
+    static Error commitPipelines(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects = {});
 
 private:
     bool activePending() const;
     bool isBufferForDirectScanout() const;
     uint32_t calculateUnderscan();
+    static Error errnoToError();
 
     // legacy only
-    bool presentLegacy();
-    bool legacyModeset();
-    bool applyPendingChangesLegacy();
+    Error presentLegacy();
+    Error legacyModeset();
+    Error applyPendingChangesLegacy();
     bool setCursorLegacy();
     bool moveCursorLegacy();
-    static bool commitPipelinesLegacy(const QVector<DrmPipeline *> &pipelines, CommitMode mode);
+    static Error commitPipelinesLegacy(const QVector<DrmPipeline *> &pipelines, CommitMode mode);
 
     // atomic modesetting only
-    bool populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags);
+    Error populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags);
     void atomicCommitFailed();
     void atomicCommitSuccessful(CommitMode mode);
     void prepareAtomicModeset();
-    static bool commitPipelinesAtomic(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects);
+    static Error commitPipelinesAtomic(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects);
 
     // logging helpers
     enum class PrintMode {

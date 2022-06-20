@@ -231,7 +231,7 @@ bool DrmOutput::setDrmDpmsMode(DpmsMode mode)
         return true;
     }
     m_pipeline->setActive(active);
-    if (DrmPipeline::commitPipelines({m_pipeline}, active ? DrmPipeline::CommitMode::Test : DrmPipeline::CommitMode::CommitModeset)) {
+    if (DrmPipeline::commitPipelines({m_pipeline}, active ? DrmPipeline::CommitMode::Test : DrmPipeline::CommitMode::CommitModeset) == DrmPipeline::Error::None) {
         m_pipeline->applyPendingChanges();
         setDpmsModeInternal(mode);
         if (active) {
@@ -289,7 +289,7 @@ void DrmOutput::updateModes()
         if (currentMode != m_pipeline->mode()) {
             // DrmConnector::findCurrentMode might fail
             m_pipeline->setMode(currentMode ? currentMode : m_pipeline->connector()->modes().constFirst());
-            if (m_gpu->testPendingConfiguration()) {
+            if (m_gpu->testPendingConfiguration() == DrmPipeline::Error::None) {
                 m_pipeline->applyPendingChanges();
                 m_renderLoop->setRefreshRate(m_pipeline->mode()->refreshRate());
             } else {
@@ -312,17 +312,27 @@ bool DrmOutput::present()
     RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop.get());
     if (m_pipeline->syncMode() != renderLoopPrivate->presentMode) {
         m_pipeline->setSyncMode(renderLoopPrivate->presentMode);
-        if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test)) {
+        if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
             m_pipeline->applyPendingChanges();
         } else {
             m_pipeline->revertPendingChanges();
         }
     }
-    bool modeset = gpu()->needsModeset();
-    if (modeset ? m_pipeline->maybeModeset() : m_pipeline->present()) {
+    const bool needsModeset = gpu()->needsModeset();
+    bool success;
+    if (needsModeset) {
+        success = m_pipeline->maybeModeset();
+    } else {
+        DrmPipeline::Error err = m_pipeline->present();
+        success = err == DrmPipeline::Error::None;
+        if (err == DrmPipeline::Error::InvalidArguments) {
+            QTimer::singleShot(0, m_gpu->platform(), &DrmBackend::updateOutputs);
+        }
+    }
+    if (success) {
         Q_EMIT outputChange(m_pipeline->primaryLayer()->currentDamage());
         return true;
-    } else if (!modeset) {
+    } else if (!needsModeset) {
         qCWarning(KWIN_DRM) << "Presentation failed!" << strerror(errno);
         frameFailed();
     }
@@ -413,7 +423,7 @@ DrmOutputLayer *DrmOutput::outputLayer() const
 void DrmOutput::setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation)
 {
     m_pipeline->setColorTransformation(transformation);
-    if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test)) {
+    if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
         m_pipeline->applyPendingChanges();
         m_renderLoop->scheduleRepaint();
     } else {

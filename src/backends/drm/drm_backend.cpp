@@ -706,7 +706,7 @@ bool DrmBackend::applyOutputChanges(const OutputConfiguration &config)
                 toBeDisabled << output;
             }
         }
-        if (!gpu->testPendingConfiguration()) {
+        if (gpu->testPendingConfiguration() != DrmPipeline::Error::None) {
             for (const auto &output : qAsConst(toBeEnabled)) {
                 output->revertQueuedChanges();
             }

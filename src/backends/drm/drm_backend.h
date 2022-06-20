@@ -76,6 +76,7 @@ public:
     DrmRenderBackend *renderBackend() const;
 
     void releaseBuffers();
+    void updateOutputs();
 
 public Q_SLOTS:
     void turnOutputsOn();
@@ -96,7 +97,6 @@ private:
     void activate(bool active);
     void reactivate();
     void deactivate();
-    void updateOutputs();
     bool readOutputsConfiguration(const QVector<DrmAbstractOutput *> &outputs);
     void handleUdevEvent();
     DrmGpu *addGpu(const QString &fileName);

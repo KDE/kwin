@@ -10,6 +10,7 @@
 #ifndef DRM_GPU_H
 #define DRM_GPU_H
 
+#include "drm_pipeline.h"
 #include "drm_virtual_output.h"
 
 #include <QPointer>
@@ -39,7 +40,6 @@ class DrmConnector;
 class DrmPlane;
 class DrmBackend;
 class EglGbmBackend;
-class DrmPipeline;
 class DrmAbstractOutput;
 class DrmLeaseOutput;
 class DrmRenderBackend;
@@ -78,7 +78,7 @@ public:
     DrmVirtualOutput *createVirtualOutput(const QString &name, const QSize &size, double scale, DrmVirtualOutput::Type type);
     void removeVirtualOutput(DrmVirtualOutput *output);
 
-    bool testPendingConfiguration();
+    DrmPipeline::Error testPendingConfiguration();
     bool needsModeset() const;
     bool maybeModeset();
 
@@ -100,8 +100,8 @@ private:
     void initDrmResources();
     void waitIdle();
 
-    bool checkCrtcAssignment(QVector<DrmConnector *> connectors, const QVector<DrmCrtc *> &crtcs);
-    bool testPipelines();
+    DrmPipeline::Error checkCrtcAssignment(QVector<DrmConnector *> connectors, const QVector<DrmCrtc *> &crtcs);
+    DrmPipeline::Error testPipelines();
     QVector<DrmObject *> unusedObjects() const;
 
     void handleLeaseRequest(KWaylandServer::DrmLeaseV1Interface *leaseRequest);

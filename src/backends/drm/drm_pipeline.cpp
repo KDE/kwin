@@ -53,15 +53,15 @@ bool DrmPipeline::testScanout()
         return false;
     }
     if (gpu()->atomicModeSetting()) {
-        return commitPipelines({this}, CommitMode::Test);
+        return commitPipelines({this}, CommitMode::Test) == Error::None;
     } else {
         // no other way to test than to do it.
         // As we only have a maximum of one test per scanout cycle, this is fine
-        return presentLegacy();
+        return presentLegacy() == Error::None;
     }
 }
 
-bool DrmPipeline::present()
+DrmPipeline::Error DrmPipeline::present()
 {
     Q_ASSERT(m_pending.crtc);
     if (gpu()->atomicModeSetting()) {
@@ -69,13 +69,10 @@ bool DrmPipeline::present()
     } else {
         if (m_pending.layer->hasDirectScanoutBuffer()) {
             // already presented
-            return true;
+            return Error::None;
         }
-        if (!presentLegacy()) {
-            return false;
-        }
+        return presentLegacy();
     }
-    return true;
 }
 
 bool DrmPipeline::maybeModeset()
@@ -84,7 +81,7 @@ bool DrmPipeline::maybeModeset()
     return gpu()->maybeModeset();
 }
 
-bool DrmPipeline::commitPipelines(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects)
+DrmPipeline::Error DrmPipeline::commitPipelines(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects)
 {
     Q_ASSERT(!pipelines.isEmpty());
     if (pipelines[0]->gpu()->atomicModeSetting()) {
@@ -94,12 +91,12 @@ bool DrmPipeline::commitPipelines(const QVector<DrmPipeline *> &pipelines, Commi
     }
 }
 
-bool DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects)
+DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects)
 {
     drmModeAtomicReq *req = drmModeAtomicAlloc();
     if (!req) {
         qCCritical(KWIN_DRM) << "Failed to allocate drmModeAtomicReq!" << strerror(errno);
-        return false;
+        return Error::OutofMemory;
     }
     uint32_t flags = 0;
     const auto &failed = [pipelines, req, &flags, unusedObjects]() {
@@ -113,16 +110,17 @@ bool DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline *> &pipelines,
             printProps(obj, PrintMode::OnlyChanged);
             obj->rollbackPending();
         }
-        return false;
     };
     for (const auto &pipeline : pipelines) {
         if (pipeline->activePending() && !pipeline->m_pending.layer->checkTestBuffer()) {
             qCWarning(KWIN_DRM) << "Checking test buffer failed for" << mode;
-            return failed();
+            failed();
+            return Error::TestBufferFailed;
         }
-        if (!pipeline->populateAtomicValues(req, flags)) {
+        if (Error err = pipeline->populateAtomicValues(req, flags); err != Error::None) {
             qCWarning(KWIN_DRM) << "Populating atomic values failed for" << mode;
-            return failed();
+            failed();
+            return err;
         }
     }
     for (const auto &unused : unusedObjects) {
@@ -132,7 +130,8 @@ bool DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline *> &pipelines,
         }
         if (!unused->atomicPopulate(req)) {
             qCWarning(KWIN_DRM) << "Populating atomic values failed for unused resource" << unused;
-            return failed();
+            failed();
+            return errnoToError();
         }
     }
     bool modeset = flags & DRM_MODE_ATOMIC_ALLOW_MODESET;
@@ -148,11 +147,13 @@ bool DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline *> &pipelines,
     }
     if (drmModeAtomicCommit(pipelines[0]->gpu()->fd(), req, (flags & (~DRM_MODE_PAGE_FLIP_EVENT)) | DRM_MODE_ATOMIC_TEST_ONLY, nullptr) != 0) {
         qCDebug(KWIN_DRM) << "Atomic test for" << mode << "failed!" << strerror(errno);
-        return failed();
+        failed();
+        return errnoToError();
     }
     if (mode != CommitMode::Test && drmModeAtomicCommit(pipelines[0]->gpu()->fd(), req, flags, nullptr) != 0) {
         qCCritical(KWIN_DRM) << "Atomic commit failed! This should never happen!" << strerror(errno);
-        return failed();
+        failed();
+        return errnoToError();
     }
     for (const auto &pipeline : pipelines) {
         pipeline->atomicCommitSuccessful(mode);
@@ -164,10 +165,10 @@ bool DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline *> &pipelines,
         }
     }
     drmModeAtomicFree(req);
-    return true;
+    return Error::None;
 }
 
-bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
+DrmPipeline::Error DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
 {
     if (needsModeset()) {
         prepareAtomicModeset();
@@ -193,20 +194,20 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
         }
     }
     if (!m_connector->atomicPopulate(req)) {
-        return false;
+        return errnoToError();
     }
     if (m_pending.crtc) {
         if (!m_pending.crtc->atomicPopulate(req)) {
-            return false;
+            return errnoToError();
         }
         if (!m_pending.crtc->primaryPlane()->atomicPopulate(req)) {
-            return false;
+            return errnoToError();
         }
         if (m_pending.crtc->cursorPlane() && !m_pending.crtc->cursorPlane()->atomicPopulate(req)) {
-            return false;
+            return errnoToError();
         }
     }
-    return true;
+    return Error::None;
 }
 
 void DrmPipeline::prepareAtomicModeset()
@@ -262,6 +263,22 @@ uint32_t DrmPipeline::calculateUnderscan()
     return hborder;
 }
 
+DrmPipeline::Error DrmPipeline::errnoToError()
+{
+    switch (errno) {
+    case EINVAL:
+        return Error::InvalidArguments;
+    case EBUSY:
+        return Error::FramePending;
+    case ENOMEM:
+        return Error::OutofMemory;
+    case EACCES:
+        return Error::NoPermission;
+    default:
+        return Error::Unknown;
+    }
+}
+
 void DrmPipeline::atomicCommitFailed()
 {
     m_connector->rollbackPending();
@@ -311,7 +328,7 @@ bool DrmPipeline::setCursor(const QPoint &hotspot)
     m_pending.cursorHotspot = hotspot;
     // explicitly check for the cursor plane and not for AMS, as we might not always have one
     if (m_pending.crtc->cursorPlane()) {
-        result = commitPipelines({this}, CommitMode::Test);
+        result = commitPipelines({this}, CommitMode::Test) == Error::None;
         if (result && m_output) {
             m_output->renderLoop()->scheduleRepaint();
         }
@@ -331,7 +348,7 @@ bool DrmPipeline::moveCursor()
     bool result;
     // explicitly check for the cursor plane and not for AMS, as we might not always have one
     if (m_pending.crtc->cursorPlane()) {
-        result = commitPipelines({this}, CommitMode::Test);
+        result = commitPipelines({this}, CommitMode::Test) == Error::None;
     } else {
         result = moveCursorLegacy();
     }

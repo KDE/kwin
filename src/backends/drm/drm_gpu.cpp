@@ -316,8 +316,8 @@ bool DrmGpu::updateOutputs()
     for (const auto &plane : qAsConst(m_planes)) {
         plane->updateProperties();
     }
-
-    if (testPendingConfiguration()) {
+    DrmPipeline::Error err = testPendingConfiguration();
+    if (err == DrmPipeline::Error::None) {
         for (const auto &pipeline : qAsConst(m_pipelines)) {
             pipeline->applyPendingChanges();
             if (pipeline->output() && !pipeline->crtc()) {
@@ -325,6 +325,15 @@ bool DrmGpu::updateOutputs()
                 pipeline->output()->setEnabled(false);
             }
         }
+    } else if (err == DrmPipeline::Error::NoPermission) {
+        for (const auto &pipeline : qAsConst(m_pipelines)) {
+            pipeline->revertPendingChanges();
+        }
+        for (const auto &output : qAsConst(addedOutputs)) {
+            m_connectors.removeOne(output->connector());
+            removeOutput(output);
+        }
+        QTimer::singleShot(50, m_platform, &DrmBackend::updateOutputs);
     } else {
         qCWarning(KWIN_DRM, "Failed to find a working setup for new outputs!");
         for (const auto &pipeline : qAsConst(m_pipelines)) {
@@ -340,12 +349,12 @@ bool DrmGpu::updateOutputs()
     return true;
 }
 
-bool DrmGpu::checkCrtcAssignment(QVector<DrmConnector *> connectors, const QVector<DrmCrtc *> &crtcs)
+DrmPipeline::Error DrmGpu::checkCrtcAssignment(QVector<DrmConnector *> connectors, const QVector<DrmCrtc *> &crtcs)
 {
     if (connectors.isEmpty() || crtcs.isEmpty()) {
         if (m_pipelines.isEmpty()) {
             // nothing to do
-            return true;
+            return DrmPipeline::Error::None;
         }
         // remaining connectors can't be powered
         for (const auto &conn : qAsConst(connectors)) {
@@ -374,8 +383,9 @@ bool DrmGpu::checkCrtcAssignment(QVector<DrmConnector *> connectors, const QVect
             crtcsLeft.removeOne(currentCrtc);
             pipeline->setCrtc(currentCrtc);
             do {
-                if (checkCrtcAssignment(connectors, crtcsLeft)) {
-                    return true;
+                DrmPipeline::Error err = checkCrtcAssignment(connectors, crtcsLeft);
+                if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending) {
+                    return err;
                 }
             } while (pipeline->pruneModifier());
         }
@@ -386,16 +396,17 @@ bool DrmGpu::checkCrtcAssignment(QVector<DrmConnector *> connectors, const QVect
             crtcsLeft.removeOne(crtc);
             pipeline->setCrtc(crtc);
             do {
-                if (checkCrtcAssignment(connectors, crtcsLeft)) {
-                    return true;
+                DrmPipeline::Error err = checkCrtcAssignment(connectors, crtcsLeft);
+                if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending) {
+                    return err;
                 }
             } while (pipeline->pruneModifier());
         }
     }
-    return false;
+    return DrmPipeline::Error::InvalidArguments;
 }
 
-bool DrmGpu::testPendingConfiguration()
+DrmPipeline::Error DrmGpu::testPendingConfiguration()
 {
     QVector<DrmConnector *> connectors;
     for (const auto &conn : qAsConst(m_connectors)) {
@@ -417,8 +428,9 @@ bool DrmGpu::testPendingConfiguration()
             return c1->getProp(DrmConnector::PropertyIndex::CrtcId)->current() > c2->getProp(DrmConnector::PropertyIndex::CrtcId)->current();
         });
     }
-    if (checkCrtcAssignment(connectors, crtcs)) {
-        return true;
+    DrmPipeline::Error err = checkCrtcAssignment(connectors, crtcs);
+    if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending) {
+        return err;
     } else {
         // try again without hw rotation
         bool hwRotationUsed = false;
@@ -426,25 +438,27 @@ bool DrmGpu::testPendingConfiguration()
             hwRotationUsed |= (pipeline->bufferOrientation() != DrmPlane::Transformations(DrmPlane::Transformation::Rotate0));
             pipeline->setBufferOrientation(DrmPlane::Transformation::Rotate0);
         }
-        return hwRotationUsed ? checkCrtcAssignment(connectors, crtcs) : false;
+        if (hwRotationUsed) {
+            err = checkCrtcAssignment(connectors, crtcs);
+        }
+        return err;
     }
 }
 
-bool DrmGpu::testPipelines()
+DrmPipeline::Error DrmGpu::testPipelines()
 {
     QVector<DrmPipeline *> inactivePipelines;
     std::copy_if(m_pipelines.constBegin(), m_pipelines.constEnd(), std::back_inserter(inactivePipelines), [](const auto pipeline) {
         return pipeline->enabled() && !pipeline->active();
     });
-    const auto unused = unusedObjects();
-    bool test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test, unused);
-    if (!inactivePipelines.isEmpty() && test) {
+    DrmPipeline::Error test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test, unusedObjects());
+    if (!inactivePipelines.isEmpty() && test == DrmPipeline::Error::None) {
         // ensure that pipelines that are set as enabled but currently inactive
         // still work when they need to be set active again
         for (const auto pipeline : qAsConst(inactivePipelines)) {
             pipeline->setActive(true);
         }
-        test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test, unused);
+        test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test, unusedObjects());
         for (const auto pipeline : qAsConst(inactivePipelines)) {
             pipeline->setActive(false);
         }
@@ -750,16 +764,23 @@ bool DrmGpu::maybeModeset()
     }
     // make sure there's no pending pageflips
     waitIdle();
-    const bool ok = DrmPipeline::commitPipelines(pipelines, DrmPipeline::CommitMode::CommitModeset, unusedObjects());
+    const DrmPipeline::Error err = DrmPipeline::commitPipelines(pipelines, DrmPipeline::CommitMode::CommitModeset, unusedObjects());
     for (DrmPipeline *pipeline : qAsConst(pipelines)) {
         if (pipeline->modesetPresentPending()) {
             pipeline->resetModesetPresentPending();
-            if (!ok) {
+            if (err != DrmPipeline::Error::None) {
                 pipeline->output()->frameFailed();
             }
         }
     }
-    return ok;
+    if (err == DrmPipeline::Error::None) {
+        return true;
+    } else {
+        if (err != DrmPipeline::Error::FramePending) {
+            QTimer::singleShot(0, m_platform, &DrmBackend::updateOutputs);
+        }
+        return false;
+    }
 }
 
 QVector<DrmObject *> DrmGpu::unusedObjects() const
