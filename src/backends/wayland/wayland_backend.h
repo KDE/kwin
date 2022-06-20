@@ -329,7 +329,6 @@ private:
     void createOutputs();
     void destroyOutputs();
 
-    void updateScreenSize(WaylandOutput *output);
     WaylandOutput *createOutput(const QString &name, const QPoint &position, const QSize &size);
 
     Session *m_session;

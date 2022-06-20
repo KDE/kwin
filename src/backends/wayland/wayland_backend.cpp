@@ -760,18 +760,6 @@ void WaylandBackend::initConnection()
     m_connectionThreadObject->initConnection();
 }
 
-void WaylandBackend::updateScreenSize(WaylandOutput *output)
-{
-    auto it = std::find(m_outputs.constBegin(), m_outputs.constEnd(), output);
-
-    int nextLogicalPosition = output->geometry().topRight().x();
-    while (++it != m_outputs.constEnd()) {
-        const QRect geo = (*it)->geometry();
-        (*it)->setGeometry(QPoint(nextLogicalPosition, 0), geo.size());
-        nextLogicalPosition = geo.topRight().x();
-    }
-}
-
 KWayland::Client::ServerSideDecorationManager *WaylandBackend::ssdManager()
 {
     if (!m_ssdManager) {
@@ -835,12 +823,6 @@ WaylandOutput *WaylandBackend::createOutput(const QString &name, const QPoint &p
     }
 
     waylandOutput->init(position, size);
-
-    connect(waylandOutput, &WaylandOutput::sizeChanged, this, [this, waylandOutput](const QSize &size) {
-        Q_UNUSED(size)
-        updateScreenSize(waylandOutput);
-        Compositor::self()->scene()->addRepaintFull();
-    });
     connect(waylandOutput, &WaylandOutput::frameRendered, this, [waylandOutput]() {
         waylandOutput->resetRendered();
 
