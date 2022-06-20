@@ -398,7 +398,7 @@ FocusScope {
                 component DragManager : DragHandler {
                     id: dragHandler
                     target: null
-                    grabPermissions: PointerHandler.CanTakeOverFromHandlersOfSameType
+                    grabPermissions: PointerHandler.CanTakeOverFromAnything
 
                     readonly property double targetScale: {
                         if (!heap.supportsDragUpGesture) {
@@ -433,7 +433,6 @@ FocusScope {
                 DragManager {
                     id: touchDragHandler
                     acceptedDevices: PointerDevice.TouchScreen
-                    enabled: heap.supportsCloseWindows
                     readonly property double targetOpacity: {
                         if (!heap.supportsCloseWindows) {
                             return 1;
@@ -444,11 +443,8 @@ FocusScope {
                     }
 
                     onActiveChanged: {
-                        if (!heap.supportsCloseWindows) {
-                            return;
-                        }
                         if (!active) {
-                            if (targetOpacity < 0.4) {
+                            if (heap.supportsCloseWindows && targetOpacity < 0.4) {
                                 thumb.client.closeWindow();
                             }
                         }
