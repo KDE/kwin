@@ -799,13 +799,14 @@ void WaylandBackend::createOutputs()
 
     int logicalWidthSum = 0;
     for (int i = 0; i < initialOutputCount(); i++) {
-        createOutput(QPoint(logicalWidthSum, 0), QSize(pixelWidth, pixelHeight));
+        const QString name = QStringLiteral("WL-%1").arg(i);
+        createOutput(name, QPoint(logicalWidthSum, 0), QSize(pixelWidth, pixelHeight));
 
         logicalWidthSum += logicalWidth;
     }
 }
 
-WaylandOutput *WaylandBackend::createOutput(const QPoint &position, const QSize &size)
+WaylandOutput *WaylandBackend::createOutput(const QString &name, const QPoint &position, const QSize &size)
 {
     auto surface = m_compositor->createSurface(this);
     if (!surface || !surface->isValid()) {
@@ -825,7 +826,7 @@ WaylandOutput *WaylandBackend::createOutput(const QPoint &position, const QSize 
     WaylandOutput *waylandOutput = nullptr;
 
     if (m_xdgShell && m_xdgShell->isValid()) {
-        waylandOutput = new XdgShellOutput(surface, m_xdgShell, this, m_nextId++);
+        waylandOutput = new XdgShellOutput(name, surface, m_xdgShell, this, m_nextId++);
     }
 
     if (!waylandOutput) {
@@ -1014,8 +1015,7 @@ void WaylandBackend::clearDpmsFilter()
 
 Output *WaylandBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
-    Q_UNUSED(name);
-    return createOutput(m_outputs.constLast()->geometry().topRight(), size * scale);
+    return createOutput(name, m_outputs.constLast()->geometry().topRight(), size * scale);
 }
 
 void WaylandBackend::removeVirtualOutput(Output *output)
