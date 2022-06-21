@@ -32,6 +32,7 @@ WaylandOutput::WaylandOutput(const QString &name, Surface *surface, WaylandBacke
 {
     setInformation(Information{
         .name = name,
+        .model = name,
         .capabilities = Capability::Dpms,
     });
 
