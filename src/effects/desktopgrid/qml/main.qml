@@ -33,6 +33,11 @@ Rectangle {
         container.organized = false;
     }
 
+    function switchTo(desktopId) {
+        KWinComponents.Workspace.currentDesktop = desktopId;
+        container.effect.deactivate(container.effect.animationDuration);
+    }
+
     Keys.onPressed: {
         if (event.key == Qt.Key_Escape) {
             effect.deactivate(effect.animationDuration);
@@ -40,6 +45,12 @@ Rectangle {
             addButton.clicked();
         } else if (event.key == Qt.Key_Minus) {
             removeButton.clicked();
+        } else if (event.key >= Qt.Key_F1 && event.key <= Qt.Key_F12) {
+            const desktopId = (event.key - Qt.Key_F1) + 1;
+            switchTo(desktopId);
+        } else if (event.key >= Qt.Key_0 && event.key <= Qt.Key_9) {
+            const desktopId = event.key == Qt.Key_0 ? 10 : (event.key - Qt.Key_0);
+            switchTo(desktopId);
         }
     }
     Keys.priority: Keys.AfterItem
