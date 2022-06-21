@@ -226,6 +226,10 @@ Output *Platform::outputAt(const QPoint &pos) const
     int minDistance = INT_MAX;
     const auto candidates = enabledOutputs();
     for (Output *output : candidates) {
+        if (output->skip()) {
+            continue;
+        }
+
         const QRect &geo = output->geometry();
         if (geo.contains(pos)) {
             return output;

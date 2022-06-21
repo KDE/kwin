@@ -241,6 +241,19 @@ public:
     bool isPlaceholder() const;
 
     virtual void setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation);
+    QPoint position() const
+    {
+        return m_position;
+    }
+
+    bool skip() const
+    {
+        return m_skip;
+    }
+    void setSkip(bool skip)
+    {
+        m_skip = skip;
+    }
 
 Q_SIGNALS:
     /**
@@ -344,6 +357,7 @@ private:
     bool m_isEnabled = true;
     uint32_t m_overscan = 0;
     RgbRange m_rgbRange = RgbRange::Automatic;
+    bool m_skip = false;
     friend class EffectScreenImpl; // to access m_effectScreen
 };
 
