@@ -29,14 +29,14 @@ QTimer *ContrastEffect::s_contrastManagerRemoveTimer = nullptr;
 
 ContrastEffect::ContrastEffect()
 {
-    shader = ContrastShader::create();
-    shader->init();
+    m_shader = std::make_unique<ContrastShader>();
+    m_shader->init();
 
     // ### Hackish way to announce support.
     //     Should be included in _NET_SUPPORTED instead.
-    if (shader && shader->isValid()) {
+    if (m_shader && m_shader->isValid()) {
         if (effects->xcbConnection()) {
-            net_wm_contrast_region = effects->announceSupportProperty(s_contrastAtomName, this);
+            m_net_wm_contrast_region = effects->announceSupportProperty(s_contrastAtomName, this);
         }
         if (effects->waylandDisplay()) {
             if (!s_contrastManagerRemoveTimer) {
@@ -59,8 +59,8 @@ ContrastEffect::ContrastEffect()
     connect(effects, &EffectsHandler::propertyNotify, this, &ContrastEffect::slotPropertyNotify);
     connect(effects, &EffectsHandler::virtualScreenGeometryChanged, this, &ContrastEffect::slotScreenGeometryChanged);
     connect(effects, &EffectsHandler::xcbConnectionChanged, this, [this]() {
-        if (shader && shader->isValid()) {
-            net_wm_contrast_region = effects->announceSupportProperty(s_contrastAtomName, this);
+        if (m_shader && m_shader->isValid()) {
+            m_net_wm_contrast_region = effects->announceSupportProperty(s_contrastAtomName, this);
         }
     });
 
@@ -77,7 +77,6 @@ ContrastEffect::~ContrastEffect()
     if (s_contrastManager) {
         s_contrastManagerRemoveTimer->start(1000);
     }
-    delete shader;
 }
 
 void ContrastEffect::slotScreenGeometryChanged()
@@ -100,8 +99,8 @@ void ContrastEffect::updateContrastRegion(EffectWindow *w)
     float colorTransform[16];
     bool valid = false;
 
-    if (net_wm_contrast_region != XCB_ATOM_NONE) {
-        const QByteArray value = w->readProperty(net_wm_contrast_region, net_wm_contrast_region, 32);
+    if (m_net_wm_contrast_region != XCB_ATOM_NONE) {
+        const QByteArray value = w->readProperty(m_net_wm_contrast_region, m_net_wm_contrast_region, 32);
 
         if (value.size() > 0 && !((value.size() - (16 * sizeof(uint32_t))) % ((4 * sizeof(uint32_t))))) {
             const uint32_t *cardinals = reinterpret_cast<const uint32_t *>(value.constData());
@@ -211,7 +210,7 @@ void ContrastEffect::slotWindowDeleted(EffectWindow *w)
 
 void ContrastEffect::slotPropertyNotify(EffectWindow *w, long atom)
 {
-    if (w && atom == net_wm_contrast_region && net_wm_contrast_region != XCB_ATOM_NONE) {
+    if (w && atom == m_net_wm_contrast_region && m_net_wm_contrast_region != XCB_ATOM_NONE) {
         updateContrastRegion(w);
     }
 }
@@ -347,7 +346,7 @@ void ContrastEffect::uploadGeometry(GLVertexBuffer *vbo, const QRegion &region)
 
 bool ContrastEffect::shouldContrast(const EffectWindow *w, int mask, const WindowPaintData &data) const
 {
-    if (!shader || !shader->isValid()) {
+    if (!m_shader || !m_shader->isValid()) {
         return false;
     }
 
@@ -435,17 +434,17 @@ void ContrastEffect::doContrast(EffectWindow *w, const QRegion &shape, const QRe
 
     // Draw the texture on the offscreen framebuffer object, while blurring it horizontally
 
-    shader->setColorMatrix(m_colorMatrices.value(w));
-    shader->bind();
+    m_shader->setColorMatrix(m_colorMatrices.value(w));
+    m_shader->bind();
 
-    shader->setOpacity(opacity);
+    m_shader->setOpacity(opacity);
     // Set up the texture matrix to transform from screen coordinates
     // to texture coordinates.
     QMatrix4x4 textureMatrix;
     textureMatrix.scale(1.0 / r.width(), -1.0 / r.height(), 1);
     textureMatrix.translate(-r.x(), -r.height() - r.y(), 0);
-    shader->setTextureMatrix(textureMatrix);
-    shader->setModelViewProjectionMatrix(screenProjection);
+    m_shader->setTextureMatrix(textureMatrix);
+    m_shader->setModelViewProjectionMatrix(screenProjection);
 
     vbo->draw(GL_TRIANGLES, 0, actualShape.rectCount() * 6);
 
@@ -458,7 +457,7 @@ void ContrastEffect::doContrast(EffectWindow *w, const QRegion &shape, const QRe
         glDisable(GL_BLEND);
     }
 
-    shader->unbind();
+    m_shader->unbind();
 }
 
 bool ContrastEffect::isActive() const

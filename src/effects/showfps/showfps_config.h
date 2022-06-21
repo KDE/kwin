@@ -22,13 +22,12 @@ class ShowFpsEffectConfig : public KCModule
     Q_OBJECT
 public:
     explicit ShowFpsEffectConfig(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
-    ~ShowFpsEffectConfig() override;
 
 public Q_SLOTS:
     void save() override;
 
 private:
-    Ui::ShowFpsEffectConfigForm *m_ui;
+    Ui::ShowFpsEffectConfigForm m_ui;
 };
 
 } // namespace

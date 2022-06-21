@@ -65,8 +65,8 @@ private:
     void uploadGeometry(GLVertexBuffer *vbo, const QRegion &region);
 
 private:
-    ContrastShader *shader;
-    long net_wm_contrast_region = 0;
+    std::unique_ptr<ContrastShader> m_shader;
+    long m_net_wm_contrast_region = 0;
     QHash<const EffectWindow *, QMatrix4x4> m_colorMatrices;
     QHash<const EffectWindow *, QMetaObject::Connection> m_contrastChangedConnections; // used only in Wayland to keep track of effect changed
     static KWaylandServer::ContrastManagerInterface *s_contrastManager;

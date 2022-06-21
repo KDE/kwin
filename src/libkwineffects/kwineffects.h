@@ -1246,8 +1246,9 @@ public:
      * EffectFrame.
      * @since 4.6
      */
-    virtual EffectFrame *effectFrame(EffectFrameStyle style, bool staticSize = true,
-                                     const QPoint &position = QPoint(-1, -1), Qt::Alignment alignment = Qt::AlignCenter) const = 0;
+    virtual std::unique_ptr<EffectFrame> effectFrame(EffectFrameStyle style, bool staticSize = true,
+                                                     const QPoint &position = QPoint(-1, -1),
+                                                     Qt::Alignment alignment = Qt::AlignCenter) const = 0;
 
     /**
      * Allows an effect to trigger a reload of itself.

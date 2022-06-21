@@ -36,13 +36,12 @@ MouseClickEffectConfigForm::MouseClickEffectConfigForm(QWidget *parent)
 
 MouseClickEffectConfig::MouseClickEffectConfig(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)
+    , m_ui(this)
 {
-    m_ui = new MouseClickEffectConfigForm(this);
-
     QVBoxLayout *layout = new QVBoxLayout(this);
-    layout->addWidget(m_ui);
+    layout->addWidget(&m_ui);
 
-    connect(m_ui->editor, &KShortcutsEditor::keyChange, this, &MouseClickEffectConfig::markAsChanged);
+    connect(m_ui.editor, &KShortcutsEditor::keyChange, this, &MouseClickEffectConfig::markAsChanged);
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
@@ -54,22 +53,22 @@ MouseClickEffectConfig::MouseClickEffectConfig(QWidget *parent, const QVariantLi
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Asterisk));
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Asterisk));
 
-    m_ui->editor->addCollection(m_actionCollection);
+    m_ui.editor->addCollection(m_actionCollection);
 
     MouseClickConfig::instance(KWIN_CONFIG);
-    addConfig(MouseClickConfig::self(), m_ui);
+    addConfig(MouseClickConfig::self(), &m_ui);
 }
 
 MouseClickEffectConfig::~MouseClickEffectConfig()
 {
     // Undo (only) unsaved changes to global key shortcuts
-    m_ui->editor->undo();
+    m_ui.editor->undo();
 }
 
 void MouseClickEffectConfig::save()
 {
     KCModule::save();
-    m_ui->editor->save(); // undo() will restore to this state from now on
+    m_ui.editor->save(); // undo() will restore to this state from now on
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());

@@ -75,58 +75,19 @@ public:
     static bool supported();
 
     // for properties
-    qreal stiffness() const
-    {
-        return m_stiffness;
-    }
-    qreal drag() const
-    {
-        return m_drag;
-    }
-    qreal moveFactor() const
-    {
-        return m_move_factor;
-    }
-    qreal xTesselation() const
-    {
-        return m_xTesselation;
-    }
-    qreal yTesselation() const
-    {
-        return m_yTesselation;
-    }
-    qreal minVelocity() const
-    {
-        return m_minVelocity;
-    }
-    qreal maxVelocity() const
-    {
-        return m_maxVelocity;
-    }
-    qreal stopVelocity() const
-    {
-        return m_stopVelocity;
-    }
-    qreal minAcceleration() const
-    {
-        return m_minAcceleration;
-    }
-    qreal maxAcceleration() const
-    {
-        return m_maxAcceleration;
-    }
-    qreal stopAcceleration() const
-    {
-        return m_stopAcceleration;
-    }
-    bool isMoveWobble() const
-    {
-        return m_moveWobble;
-    }
-    bool isResizeWobble() const
-    {
-        return m_resizeWobble;
-    }
+    qreal stiffness() const;
+    qreal drag() const;
+    qreal moveFactor() const;
+    qreal xTesselation() const;
+    qreal yTesselation() const;
+    qreal minVelocity() const;
+    qreal maxVelocity() const;
+    qreal stopVelocity() const;
+    qreal minAcceleration() const;
+    qreal maxAcceleration() const;
+    qreal stopAcceleration() const;
+    bool isMoveWobble() const;
+    bool isResizeWobble() const;
 
 protected:
     void apply(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads) override;
@@ -144,21 +105,21 @@ private:
 
     struct WindowWobblyInfos
     {
-        Pair *origin;
-        Pair *position;
-        Pair *velocity;
-        Pair *acceleration;
-        Pair *buffer;
+        QVector<Pair> origin;
+        QVector<Pair> position;
+        QVector<Pair> velocity;
+        QVector<Pair> acceleration;
+        QVector<Pair> buffer;
 
         // if true, the physics system moves this point based only on it "normal" destination
         // given by the window position, ignoring neighbour points.
-        bool *constraint;
+        QVector<bool> constraint;
 
         unsigned int width;
         unsigned int height;
         unsigned int count;
 
-        Pair *bezierSurface;
+        QVector<Pair> bezierSurface;
         unsigned int bezierWidth;
         unsigned int bezierHeight;
         unsigned int bezierCount;
@@ -197,11 +158,10 @@ private:
     bool m_resizeWobble;
 
     void initWobblyInfo(WindowWobblyInfos &wwi, QRect geometry) const;
-    void freeWobblyInfo(WindowWobblyInfos &wwi) const;
 
     WobblyWindowsEffect::Pair computeBezierPoint(const WindowWobblyInfos &wwi, Pair point) const;
 
-    static void heightRingLinearMean(Pair **data_pointer, WindowWobblyInfos &wwi);
+    static void heightRingLinearMean(QVector<Pair> &data, WindowWobblyInfos &wwi);
 
     void setParameterSet(const ParameterSet &pset);
 };

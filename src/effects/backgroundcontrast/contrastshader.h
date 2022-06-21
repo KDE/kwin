@@ -19,42 +19,30 @@ class ContrastShader
 {
 public:
     ContrastShader();
-    virtual ~ContrastShader();
 
     void init();
-
-    static ContrastShader *create();
-
-    bool isValid() const
-    {
-        return mValid;
-    }
-
     void setColorMatrix(const QMatrix4x4 &matrix);
-
     void setTextureMatrix(const QMatrix4x4 &matrix);
     void setModelViewProjectionMatrix(const QMatrix4x4 &matrix);
+    void setOpacity(float opacity);
+
+    float opacity() const;
+    bool isValid() const;
 
     void bind();
     void unbind();
 
-    void setOpacity(float opacity);
-    float opacity() const;
-
 protected:
-    void setIsValid(bool value)
-    {
-        mValid = value;
-    }
+    void setIsValid(bool value);
     void reset();
 
 private:
-    bool mValid;
-    GLShader *shader;
-    int mvpMatrixLocation;
-    int textureMatrixLocation;
-    int colorMatrixLocation;
-    int opacityLocation;
+    bool m_valid;
+    std::unique_ptr<GLShader> m_shader;
+    int m_mvpMatrixLocation;
+    int m_textureMatrixLocation;
+    int m_colorMatrixLocation;
+    int m_opacityLocation;
     float m_opacity;
 };
 

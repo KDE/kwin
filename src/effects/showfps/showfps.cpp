@@ -36,15 +36,11 @@ ShowFpsEffect::ShowFpsEffect()
     , m_noBenchmark(effects->effectFrame(EffectFrameUnstyled, false))
 {
     initConfig<ShowFpsConfig>();
-    for (int i = 0;
-         i < NUM_PAINTS;
-         ++i) {
+    for (int i = 0; i < NUM_PAINTS; i++) {
         paints[i] = 0;
         paint_size[i] = 0;
     }
-    for (int i = 0;
-         i < MAX_FPS;
-         ++i) {
+    for (int i = 0; i < MAX_FPS; i++) {
         frames[i] = 0;
     }
     if (m_showNoBenchmark) {
@@ -54,9 +50,7 @@ ShowFpsEffect::ShowFpsEffect()
     reconfigure(ReconfigureAll);
 }
 
-ShowFpsEffect::~ShowFpsEffect()
-{
-}
+ShowFpsEffect::~ShowFpsEffect() = default;
 
 void ShowFpsEffect::reconfigure(ReconfigureFlags)
 {
@@ -164,9 +158,7 @@ void ShowFpsEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData
     }
     const qint64 lastTimestamp = frames[lastFrame];
     int fps = 0;
-    for (int i = 0;
-         i < MAX_FPS;
-         ++i) {
+    for (int i = 0; i < MAX_FPS; i++) {
         if (abs(lastTimestamp - frames[i]) < 1000) {
             ++fps; // count all frames in the last second
         }

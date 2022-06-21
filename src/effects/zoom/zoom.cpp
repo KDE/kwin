@@ -132,7 +132,6 @@ ZoomEffect::~ZoomEffect()
 {
     // switch off and free resources
     showCursor();
-    qDeleteAll(m_offscreenData);
     // Save the zoom value.
     ZoomConfig::setInitialZoom(target_zoom);
     ZoomConfig::self()->save();
@@ -163,11 +162,11 @@ GLTexture *ZoomEffect::ensureCursorTexture()
         m_cursorTextureDirty = false;
         const auto cursor = effects->cursorImage();
         if (!cursor.image().isNull()) {
-            m_cursorTexture.reset(new GLTexture(cursor.image()));
+            m_cursorTexture = std::make_unique<GLTexture>(cursor.image());
             m_cursorTexture->setWrapMode(GL_CLAMP_TO_EDGE);
         }
     }
-    return m_cursorTexture.data();
+    return m_cursorTexture.get();
 }
 
 void ZoomEffect::markCursorTextureDirty()
@@ -269,19 +268,16 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(EffectScreen *screen)
     const qreal devicePixelRatio = effects->renderTargetScale();
     const QSize nativeSize = rect.size() * devicePixelRatio;
 
-    OffscreenData *&data = m_offscreenData[effects->waylandDisplay() ? screen : nullptr];
-    if (!data) {
-        data = new OffscreenData;
+    OffscreenData &data = m_offscreenData[effects->waylandDisplay() ? screen : nullptr];
+    if (!data.texture || data.texture->size() != nativeSize) {
+        data.texture.reset(new GLTexture(GL_RGBA8, nativeSize));
+        data.texture->setFilter(GL_LINEAR);
+        data.texture->setWrapMode(GL_CLAMP_TO_EDGE);
+        data.framebuffer = std::make_unique<GLFramebuffer>(data.texture.get());
     }
-    if (!data->texture || data->texture->size() != nativeSize) {
-        data->texture.reset(new GLTexture(GL_RGBA8, nativeSize));
-        data->texture->setFilter(GL_LINEAR);
-        data->texture->setWrapMode(GL_CLAMP_TO_EDGE);
-        data->framebuffer.reset(new GLFramebuffer(data->texture.data()));
-    }
-    if (!data->vbo || data->viewport != rect) {
-        data->vbo.reset(new GLVertexBuffer(GLVertexBuffer::Static));
-        data->viewport = rect;
+    if (!data.vbo || data.viewport != rect) {
+        data.vbo.reset(new GLVertexBuffer(GLVertexBuffer::Static));
+        data.viewport = rect;
 
         QVector<float> verts;
         QVector<float> texcoords;
@@ -301,10 +297,10 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(EffectScreen *screen)
         texcoords << 0.0 << 0.0;
         verts << rect.x() << rect.y() + rect.height();
 
-        data->vbo->setData(6, 2, verts.constData(), texcoords.constData());
+        data.vbo->setData(6, 2, verts.constData(), texcoords.constData());
     }
 
-    return data;
+    return &data;
 }
 
 void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
@@ -312,7 +308,7 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &d
     OffscreenData *offscreenData = ensureOffscreenData(data.screen());
 
     // Render the scene in an offscreen texture and then upscale it.
-    GLFramebuffer::pushFramebuffer(offscreenData->framebuffer.data());
+    GLFramebuffer::pushFramebuffer(offscreenData->framebuffer.get());
     effects->paintScreen(mask, region, data);
     GLFramebuffer::popFramebuffer();
 
@@ -387,10 +383,10 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &d
 
     auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
     shader->setUniform(GLShader::ModelViewProjectionMatrix, data.projectionMatrix() * matrix);
-    for (OffscreenData *data : std::as_const(m_offscreenData)) {
-        data->texture->bind();
-        data->vbo->render(GL_TRIANGLES);
-        data->texture->unbind();
+    for (auto &[screen, data] : m_offscreenData) {
+        data.texture->bind();
+        data.vbo->render(GL_TRIANGLES);
+        data.texture->unbind();
     }
     ShaderManager::instance()->popShader();
 
@@ -574,9 +570,9 @@ void ZoomEffect::slotWindowDamaged()
 
 void ZoomEffect::slotScreenRemoved(EffectScreen *screen)
 {
-    if (OffscreenData *offscreenData = m_offscreenData.take(screen)) {
+    if (auto it = m_offscreenData.find(screen); it != m_offscreenData.end()) {
         effects->makeOpenGLContextCurrent();
-        delete offscreenData;
+        m_offscreenData.erase(it);
     }
 }
 
@@ -598,6 +594,36 @@ bool ZoomEffect::isActive() const
 int ZoomEffect::requestedEffectChainPosition() const
 {
     return 10;
+}
+
+qreal ZoomEffect::configuredZoomFactor() const
+{
+    return zoomFactor;
+}
+
+int ZoomEffect::configuredMousePointer() const
+{
+    return mousePointer;
+}
+
+int ZoomEffect::configuredMouseTracking() const
+{
+    return mouseTracking;
+}
+
+int ZoomEffect::configuredFocusDelay() const
+{
+    return focusDelay;
+}
+
+qreal ZoomEffect::configuredMoveFactor() const
+{
+    return moveFactor;
+}
+
+qreal ZoomEffect::targetZoom() const
+{
+    return target_zoom;
 }
 
 } // namespace

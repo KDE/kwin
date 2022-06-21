@@ -36,7 +36,7 @@ public:
     void save() override;
 
 private:
-    MouseClickEffectConfigForm *m_ui;
+    MouseClickEffectConfigForm m_ui;
     KActionCollection *m_actionCollection;
 };
 

@@ -19,8 +19,7 @@ namespace KWin
 class GLFramebuffer;
 class GLTexture;
 
-class MagnifierEffect
-    : public Effect
+class MagnifierEffect : public Effect
 {
     Q_OBJECT
     Q_PROPERTY(QSize magnifierSize READ magnifierSize)
@@ -36,14 +35,8 @@ public:
     static bool supported();
 
     // for properties
-    QSize magnifierSize() const
-    {
-        return magnifier_size;
-    }
-    qreal targetZoom() const
-    {
-        return target_zoom;
-    }
+    QSize magnifierSize() const;
+    qreal targetZoom() const;
 private Q_SLOTS:
     void zoomIn();
     void zoomOut();
@@ -55,13 +48,13 @@ private Q_SLOTS:
 
 private:
     QRect magnifierArea(QPoint pos = cursorPos()) const;
-    double zoom;
-    double target_zoom;
-    bool polling; // Mouse polling
+    double m_zoom;
+    double m_targetZoom;
+    bool m_polling; // Mouse polling
     std::chrono::milliseconds m_lastPresentTime;
-    QSize magnifier_size;
-    GLTexture *m_texture;
-    GLFramebuffer *m_fbo;
+    QSize m_magnifierSize;
+    std::unique_ptr<GLTexture> m_texture;
+    std::unique_ptr<GLFramebuffer> m_fbo;
 };
 
 } // namespace

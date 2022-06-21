@@ -39,7 +39,7 @@ public:
 private:
     void updateSpinBoxSuffix();
 
-    MouseMarkEffectConfigForm *m_ui;
+    MouseMarkEffectConfigForm m_ui;
     KActionCollection *m_actionCollection;
 };
 

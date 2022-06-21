@@ -25,16 +25,10 @@ namespace KWin
 ShowFpsEffectConfig::ShowFpsEffectConfig(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)
 {
-    m_ui = new Ui::ShowFpsEffectConfigForm;
-    m_ui->setupUi(this);
+    m_ui.setupUi(this);
 
     ShowFpsConfig::instance(KWIN_CONFIG);
     addConfig(ShowFpsConfig::self(), this);
-}
-
-ShowFpsEffectConfig::~ShowFpsEffectConfig()
-{
-    delete m_ui;
 }
 
 void ShowFpsEffectConfig::save()

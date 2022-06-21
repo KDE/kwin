@@ -33,15 +33,13 @@ MagicLampEffectConfigForm::MagicLampEffectConfigForm(QWidget *parent)
 
 MagicLampEffectConfig::MagicLampEffectConfig(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)
+    , m_ui(this)
 {
-    m_ui = new MagicLampEffectConfigForm(this);
-
     QVBoxLayout *layout = new QVBoxLayout(this);
-
-    layout->addWidget(m_ui);
+    layout->addWidget(&m_ui);
 
     MagicLampConfig::instance(KWIN_CONFIG);
-    addConfig(MagicLampConfig::self(), m_ui);
+    addConfig(MagicLampConfig::self(), &m_ui);
 }
 
 void MagicLampEffectConfig::save()

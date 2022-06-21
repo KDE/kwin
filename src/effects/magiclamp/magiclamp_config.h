@@ -34,7 +34,7 @@ public Q_SLOTS:
     void save() override;
 
 private:
-    MagicLampEffectConfigForm *m_ui;
+    MagicLampEffectConfigForm m_ui;
 };
 
 } // namespace

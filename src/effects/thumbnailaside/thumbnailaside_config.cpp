@@ -38,14 +38,12 @@ ThumbnailAsideEffectConfigForm::ThumbnailAsideEffectConfigForm(QWidget *parent)
 
 ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)
+    , m_ui(this)
 {
-    m_ui = new ThumbnailAsideEffectConfigForm(this);
-
     QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->addWidget(&m_ui);
 
-    layout->addWidget(m_ui);
-
-    connect(m_ui->editor, &KShortcutsEditor::keyChange, this, &ThumbnailAsideEffectConfig::markAsChanged);
+    connect(m_ui.editor, &KShortcutsEditor::keyChange, this, &ThumbnailAsideEffectConfig::markAsChanged);
 
     ThumbnailAsideConfig::instance(KWIN_CONFIG);
     addConfig(ThumbnailAsideConfig::self(), this);
@@ -63,19 +61,19 @@ ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QWidget *parent, const QV
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::CTRL | Qt::Key_T));
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::CTRL | Qt::Key_T));
 
-    m_ui->editor->addCollection(m_actionCollection);
+    m_ui.editor->addCollection(m_actionCollection);
 }
 
 ThumbnailAsideEffectConfig::~ThumbnailAsideEffectConfig()
 {
     // Undo (only) unsaved changes to global key shortcuts
-    m_ui->editor->undo();
+    m_ui.editor->undo();
 }
 
 void ThumbnailAsideEffectConfig::save()
 {
     KCModule::save();
-    m_ui->editor->save();
+    m_ui.editor->save();
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());

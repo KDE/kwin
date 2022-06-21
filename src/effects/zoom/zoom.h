@@ -50,32 +50,14 @@ public:
     bool isActive() const override;
     int requestedEffectChainPosition() const override;
     // for properties
-    qreal configuredZoomFactor() const
-    {
-        return zoomFactor;
-    }
-    int configuredMousePointer() const
-    {
-        return mousePointer;
-    }
-    int configuredMouseTracking() const
-    {
-        return mouseTracking;
-    }
+    qreal configuredZoomFactor() const;
+    int configuredMousePointer() const;
+    int configuredMouseTracking() const;
     bool isFocusTrackingEnabled() const;
     bool isTextCaretTrackingEnabled() const;
-    int configuredFocusDelay() const
-    {
-        return focusDelay;
-    }
-    qreal configuredMoveFactor() const
-    {
-        return moveFactor;
-    }
-    qreal targetZoom() const
-    {
-        return target_zoom;
-    }
+    int configuredFocusDelay() const;
+    qreal configuredMoveFactor() const;
+    qreal targetZoom() const;
 private Q_SLOTS:
     inline void zoomIn()
     {
@@ -106,9 +88,9 @@ private:
 private:
     struct OffscreenData
     {
-        QScopedPointer<GLTexture> texture;
-        QScopedPointer<GLFramebuffer> framebuffer;
-        QScopedPointer<GLVertexBuffer> vbo;
+        std::unique_ptr<GLTexture> texture;
+        std::unique_ptr<GLFramebuffer> framebuffer;
+        std::unique_ptr<GLVertexBuffer> vbo;
         QRect viewport;
     };
 
@@ -143,14 +125,14 @@ private:
     QPoint prevPoint;
     QTime lastMouseEvent;
     QTime lastFocusEvent;
-    QScopedPointer<GLTexture> m_cursorTexture;
+    std::unique_ptr<GLTexture> m_cursorTexture;
     bool m_cursorTextureDirty = false;
     bool isMouseHidden;
     QTimeLine timeline;
     int xMove, yMove;
     double moveFactor;
     std::chrono::milliseconds lastPresentTime;
-    QHash<EffectScreen *, OffscreenData *> m_offscreenData;
+    std::map<EffectScreen *, OffscreenData> m_offscreenData;
 };
 
 } // namespace

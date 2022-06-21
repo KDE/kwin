@@ -13,6 +13,7 @@
 #include <KLocalizedString>
 #include <QFont>
 #include <QHash>
+#include <deque>
 #include <kwineffects.h>
 #include <kwinglutils.h>
 
@@ -24,24 +25,18 @@ namespace KWin
 class MouseEvent
 {
 public:
-    int m_button;
-    QPoint m_pos;
-    int m_time;
-    EffectFrame *m_frame;
-    bool m_press;
-
-public:
-    MouseEvent(int button, QPoint point, int time, EffectFrame *frame, bool press)
+    MouseEvent(int button, QPoint point, int time, std::unique_ptr<EffectFrame> &&frame, bool press)
         : m_button(button)
         , m_pos(point)
         , m_time(time)
-        , m_frame(frame)
+        , m_frame(std::move(frame))
         , m_press(press){};
 
-    ~MouseEvent()
-    {
-        delete m_frame;
-    }
+    int m_button;
+    QPoint m_pos;
+    int m_time;
+    std::unique_ptr<EffectFrame> m_frame;
+    bool m_press;
 };
 
 class TabletToolEvent
@@ -55,13 +50,6 @@ public:
 
 class MouseButton
 {
-public:
-    QString m_labelUp;
-    QString m_labelDown;
-    Qt::MouseButtons m_button;
-    bool m_isPressed;
-    int m_time;
-
 public:
     MouseButton(QString label, Qt::MouseButtons button)
         : m_labelUp(label)
@@ -83,6 +71,12 @@ public:
             }
         }
     }
+
+    QString m_labelUp;
+    QString m_labelDown;
+    Qt::MouseButtons m_button;
+    bool m_isPressed;
+    int m_time;
 };
 
 class MouseClickEffect
@@ -109,46 +103,16 @@ public:
     bool isActive() const override;
 
     // for properties
-    QColor color1() const
-    {
-        return m_colors[0];
-    }
-    QColor color2() const
-    {
-        return m_colors[1];
-    }
-    QColor color3() const
-    {
-        return m_colors[2];
-    }
-    qreal lineWidth() const
-    {
-        return m_lineWidth;
-    }
-    int ringLife() const
-    {
-        return m_ringLife;
-    }
-    int ringSize() const
-    {
-        return m_ringMaxSize;
-    }
-    int ringCount() const
-    {
-        return m_ringCount;
-    }
-    bool isShowText() const
-    {
-        return m_showText;
-    }
-    QFont font() const
-    {
-        return m_font;
-    }
-    bool isEnabled() const
-    {
-        return m_enabled;
-    }
+    QColor color1() const;
+    QColor color2() const;
+    QColor color3() const;
+    qreal lineWidth() const;
+    int ringLife() const;
+    int ringSize() const;
+    int ringCount() const;
+    bool isShowText() const;
+    QFont font() const;
+    bool isEnabled() const;
 
     bool tabletToolEvent(QTabletEvent *event) override;
 
@@ -159,7 +123,7 @@ private Q_SLOTS:
                           Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
 
 private:
-    EffectFrame *createEffectFrame(const QPoint &pos, const QString &text);
+    std::unique_ptr<EffectFrame> createEffectFrame(const QPoint &pos, const QString &text);
     inline void drawCircle(const QColor &color, float cx, float cy, float r);
     inline void paintScreenSetup(int mask, QRegion region, ScreenPaintData &data);
     inline void paintScreenFinish(int mask, QRegion region, ScreenPaintData &data);
@@ -186,8 +150,8 @@ private:
     QFont m_font;
     std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
 
-    QList<MouseEvent *> m_clicks;
-    MouseButton *m_buttons[BUTTON_COUNT];
+    std::deque<std::unique_ptr<MouseEvent>> m_clicks;
+    std::unique_ptr<MouseButton> m_buttons[BUTTON_COUNT];
     QHash<quint64, TabletToolEvent> m_tabletTools;
 
     bool m_enabled;

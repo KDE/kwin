@@ -47,10 +47,10 @@ public:
     void setBlurRect(const QRect &blurRect, const QSize &screenSize);
 
 private:
-    QScopedPointer<GLShader> m_shaderDownsample;
-    QScopedPointer<GLShader> m_shaderUpsample;
-    QScopedPointer<GLShader> m_shaderCopysample;
-    QScopedPointer<GLShader> m_shaderNoisesample;
+    std::unique_ptr<GLShader> m_shaderDownsample;
+    std::unique_ptr<GLShader> m_shaderUpsample;
+    std::unique_ptr<GLShader> m_shaderCopysample;
+    std::unique_ptr<GLShader> m_shaderNoisesample;
 
     int m_mvpMatrixLocationDownsample;
     int m_offsetLocationDownsample;

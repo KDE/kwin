@@ -208,10 +208,7 @@ ScriptedEffect::ScriptedEffect()
     });
 }
 
-ScriptedEffect::~ScriptedEffect()
-{
-    qDeleteAll(m_shaders);
-}
+ScriptedEffect::~ScriptedEffect() = default;
 
 bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript)
 {
@@ -813,21 +810,20 @@ uint ScriptedEffect::addFragmentShader(ShaderTrait traits, const QString &fragme
     auto shader = ShaderManager::instance()->generateShaderFromFile(static_cast<KWin::ShaderTraits>(int(traits)), {}, fragment);
     if (!shader->isValid()) {
         m_engine->throwError(QStringLiteral("Shader failed to load"));
-        delete shader;
         // 0 is never a valid shader identifier, it's ensured the first shader gets id 1
         return 0;
     }
 
     const uint shaderId{m_nextShaderId};
     m_nextShaderId++;
-    m_shaders.insert(shaderId, shader);
+    m_shaders[shaderId] = std::move(shader);
     return shaderId;
 }
 
 GLShader *ScriptedEffect::findShader(uint shaderId) const
 {
     if (auto it = m_shaders.find(shaderId); it != m_shaders.end()) {
-        return it.value();
+        return it->second.get();
     }
     return nullptr;
 }

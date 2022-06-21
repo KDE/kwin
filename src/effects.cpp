@@ -1576,9 +1576,9 @@ KWaylandServer::Display *EffectsHandlerImpl::waylandDisplay() const
     return nullptr;
 }
 
-EffectFrame *EffectsHandlerImpl::effectFrame(EffectFrameStyle style, bool staticSize, const QPoint &position, Qt::Alignment alignment) const
+std::unique_ptr<EffectFrame> EffectsHandlerImpl::effectFrame(EffectFrameStyle style, bool staticSize, const QPoint &position, Qt::Alignment alignment) const
 {
-    return new EffectFrameImpl(style, staticSize, position, alignment);
+    return std::make_unique<EffectFrameImpl>(style, staticSize, position, alignment);
 }
 
 QVariant EffectsHandlerImpl::kwinOption(KWinOption kwopt)

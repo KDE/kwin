@@ -37,15 +37,13 @@ MouseMarkEffectConfigForm::MouseMarkEffectConfigForm(QWidget *parent)
 
 MouseMarkEffectConfig::MouseMarkEffectConfig(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)
+    , m_ui(this)
 {
-    m_ui = new MouseMarkEffectConfigForm(this);
-
     QVBoxLayout *layout = new QVBoxLayout(this);
-
-    layout->addWidget(m_ui);
+    layout->addWidget(&m_ui);
 
     MouseMarkConfig::instance(KWIN_CONFIG);
-    addConfig(MouseMarkConfig::self(), m_ui);
+    addConfig(MouseMarkConfig::self(), &m_ui);
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
@@ -63,9 +61,9 @@ MouseMarkEffectConfig::MouseMarkEffectConfig(QWidget *parent, const QVariantList
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::SHIFT | Qt::META | Qt::Key_F12));
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::SHIFT | Qt::META | Qt::Key_F12));
 
-    m_ui->editor->addCollection(m_actionCollection);
+    m_ui.editor->addCollection(m_actionCollection);
 
-    connect(m_ui->kcfg_LineWidth, qOverload<int>(&QSpinBox::valueChanged), this, [this]() {
+    connect(m_ui.kcfg_LineWidth, qOverload<int>(&QSpinBox::valueChanged), this, [this]() {
         updateSpinBoxSuffix();
     });
 }
@@ -73,7 +71,7 @@ MouseMarkEffectConfig::MouseMarkEffectConfig(QWidget *parent, const QVariantList
 MouseMarkEffectConfig::~MouseMarkEffectConfig()
 {
     // Undo (only) unsaved changes to global key shortcuts
-    m_ui->editor->undo();
+    m_ui.editor->undo();
 }
 
 void MouseMarkEffectConfig::load()
@@ -89,7 +87,7 @@ void MouseMarkEffectConfig::save()
     KCModule::save();
 
     m_actionCollection->writeSettings();
-    m_ui->editor->save(); // undo() will restore to this state from now on
+    m_ui.editor->save(); // undo() will restore to this state from now on
 
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
                                          QStringLiteral("/Effects"),
@@ -99,7 +97,7 @@ void MouseMarkEffectConfig::save()
 
 void MouseMarkEffectConfig::updateSpinBoxSuffix()
 {
-    m_ui->kcfg_LineWidth->setSuffix(i18ncp("Suffix", " pixel", " pixels", m_ui->kcfg_LineWidth->value()));
+    m_ui.kcfg_LineWidth->setSuffix(i18ncp("Suffix", " pixel", " pixels", m_ui.kcfg_LineWidth->value()));
 }
 
 } // namespace

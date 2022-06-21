@@ -56,10 +56,7 @@ InvertEffect::InvertEffect()
     connect(effects, &EffectsHandler::windowClosed, this, &InvertEffect::slotWindowClosed);
 }
 
-InvertEffect::~InvertEffect()
-{
-    delete m_shader;
-}
+InvertEffect::~InvertEffect() = default;
 
 bool InvertEffect::supported()
 {
@@ -90,9 +87,9 @@ void InvertEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region, 
     bool useShader = m_valid && (m_allWindows != m_windows.contains(w));
     if (useShader) {
         ShaderManager *shaderManager = ShaderManager::instance();
-        shaderManager->pushShader(m_shader);
+        shaderManager->pushShader(m_shader.get());
 
-        data.shader = m_shader;
+        data.shader = m_shader.get();
     }
 
     effects->drawWindow(w, mask, region, data);

@@ -50,40 +50,33 @@ void ScreenEdgeEffect::ensureGlowSvg()
 
 void ScreenEdgeEffect::cleanup()
 {
-    for (QHash<ElectricBorder, Glow *>::iterator it = m_borders.begin();
-         it != m_borders.end();
-         ++it) {
-        effects->addRepaint((*it)->geometry);
+    for (auto &[border, glow] : m_borders) {
+        effects->addRepaint(glow->geometry);
     }
-    qDeleteAll(m_borders);
     m_borders.clear();
 }
 
 void ScreenEdgeEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     effects->prePaintScreen(data, presentTime);
-    for (QHash<ElectricBorder, Glow *>::iterator it = m_borders.begin();
-         it != m_borders.end();
-         ++it) {
-        if ((*it)->strength == 0.0) {
+    for (auto &[border, glow] : m_borders) {
+        if (glow->strength == 0.0) {
             continue;
         }
-        data.paint += (*it)->geometry;
+        data.paint += glow->geometry;
     }
 }
 
 void ScreenEdgeEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
     effects->paintScreen(mask, region, data);
-    for (QHash<ElectricBorder, Glow *>::iterator it = m_borders.begin();
-         it != m_borders.end();
-         ++it) {
-        const qreal opacity = (*it)->strength;
+    for (auto &[border, glow] : m_borders) {
+        const qreal opacity = glow->strength;
         if (opacity == 0.0) {
             continue;
         }
         if (effects->isOpenGLCompositing()) {
-            GLTexture *texture = (*it)->texture.data();
+            GLTexture *texture = glow->texture.data();
             glEnable(GL_BLEND);
             glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
             texture->bind();
@@ -91,16 +84,16 @@ void ScreenEdgeEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
             const QVector4D constant(opacity, opacity, opacity, opacity);
             binder.shader()->setUniform(GLShader::ModulationConstant, constant);
             QMatrix4x4 mvp = data.projectionMatrix();
-            mvp.translate((*it)->geometry.x(), (*it)->geometry.y());
+            mvp.translate(glow->geometry.x(), glow->geometry.y());
             binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-            texture->render((*it)->geometry);
+            texture->render(glow->geometry);
             texture->unbind();
             glDisable(GL_BLEND);
         } else if (effects->compositingType() == QPainterCompositing) {
-            QImage tmp((*it)->image->size(), QImage::Format_ARGB32_Premultiplied);
+            QImage tmp(glow->image->size(), QImage::Format_ARGB32_Premultiplied);
             tmp.fill(Qt::transparent);
             QPainter p(&tmp);
-            p.drawImage(0, 0, *(*it)->image.data());
+            p.drawImage(0, 0, *glow->image.data());
             QColor color(Qt::transparent);
             color.setAlphaF(opacity);
             p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
@@ -108,11 +101,11 @@ void ScreenEdgeEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
             p.end();
 
             QPainter *painter = effects->scenePainter();
-            const QRect &rect = (*it)->geometry;
-            const QSize &size = (*it)->pictureSize;
+            const QRect &rect = glow->geometry;
+            const QSize &size = glow->pictureSize;
             int x = rect.x();
             int y = rect.y();
-            switch ((*it)->border) {
+            switch (glow->border) {
             case ElectricTopRight:
                 x = rect.x() + rect.width() - size.width();
                 break;
@@ -134,19 +127,20 @@ void ScreenEdgeEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
 
 void ScreenEdgeEffect::edgeApproaching(ElectricBorder border, qreal factor, const QRect &geometry)
 {
-    QHash<ElectricBorder, Glow *>::iterator it = m_borders.find(border);
+    auto it = m_borders.find(border);
     if (it != m_borders.end()) {
+        Glow *glow = it->second.get();
         // need to update
-        effects->addRepaint((*it)->geometry);
-        (*it)->strength = factor;
-        if ((*it)->geometry != geometry) {
-            (*it)->geometry = geometry;
-            effects->addRepaint((*it)->geometry);
+        effects->addRepaint(glow->geometry);
+        glow->strength = factor;
+        if (glow->geometry != geometry) {
+            glow->geometry = geometry;
+            effects->addRepaint(glow->geometry);
             if (border == ElectricLeft || border == ElectricRight || border == ElectricTop || border == ElectricBottom) {
                 if (effects->isOpenGLCompositing()) {
-                    (*it)->texture.reset(createEdgeGlow<GLTexture>(border, geometry.size()));
+                    glow->texture.reset(createEdgeGlow<GLTexture>(border, geometry.size()));
                 } else if (effects->compositingType() == QPainterCompositing) {
-                    (*it)->image.reset(createEdgeGlow<QImage>(border, geometry.size()));
+                    glow->image.reset(createEdgeGlow<QImage>(border, geometry.size()));
                 }
             }
         }
@@ -157,17 +151,17 @@ void ScreenEdgeEffect::edgeApproaching(ElectricBorder border, qreal factor, cons
         }
     } else if (factor != 0.0) {
         // need to generate new Glow
-        Glow *glow = createGlow(border, factor, geometry);
+        std::unique_ptr<Glow> glow = createGlow(border, factor, geometry);
         if (glow) {
-            m_borders.insert(border, glow);
             effects->addRepaint(glow->geometry);
+            m_borders[border] = std::move(glow);
         }
     }
 }
 
-Glow *ScreenEdgeEffect::createGlow(ElectricBorder border, qreal factor, const QRect &geometry)
+std::unique_ptr<Glow> ScreenEdgeEffect::createGlow(ElectricBorder border, qreal factor, const QRect &geometry)
 {
-    Glow *glow = new Glow();
+    auto glow = std::make_unique<Glow>();
     glow->border = border;
     glow->strength = factor;
     glow->geometry = geometry;
@@ -184,7 +178,6 @@ Glow *ScreenEdgeEffect::createGlow(ElectricBorder border, qreal factor, const QR
             glow->texture->setWrapMode(GL_CLAMP_TO_EDGE);
         }
         if (glow->texture.isNull()) {
-            delete glow;
             return nullptr;
         }
     } else if (effects->compositingType() == QPainterCompositing) {
@@ -196,7 +189,6 @@ Glow *ScreenEdgeEffect::createGlow(ElectricBorder border, qreal factor, const QR
             glow->pictureSize = geometry.size();
         }
         if (glow->image.isNull()) {
-            delete glow;
             return nullptr;
         }
     }
@@ -305,7 +297,7 @@ T *ScreenEdgeEffect::createEdgeGlow(ElectricBorder border, const QSize &size)
 
 bool ScreenEdgeEffect::isActive() const
 {
-    return !m_borders.isEmpty() && !effects->isScreenLocked();
+    return !m_borders.empty() && !effects->isScreenLocked();
 }
 
 } // namespace

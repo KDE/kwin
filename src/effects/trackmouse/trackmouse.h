@@ -57,7 +57,7 @@ private:
     bool m_mousePolling;
     float m_angle;
     float m_angleBase;
-    GLTexture *m_texture[2];
+    std::unique_ptr<GLTexture> m_texture[2];
     QAction *m_action;
     QImage m_image[2];
     Qt::KeyboardModifiers m_modifiers;

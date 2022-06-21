@@ -23,25 +23,25 @@ BlurShader::BlurShader(QObject *parent)
 {
     ensureResources();
 
-    m_shaderDownsample.reset(ShaderManager::instance()->generateShaderFromFile(
+    m_shaderDownsample = ShaderManager::instance()->generateShaderFromFile(
         ShaderTrait::MapTexture,
         QStringLiteral(":/effects/blur/shaders/vertex.vert"),
-        QStringLiteral(":/effects/blur/shaders/downsample.frag")));
+        QStringLiteral(":/effects/blur/shaders/downsample.frag"));
 
-    m_shaderUpsample.reset(ShaderManager::instance()->generateShaderFromFile(
+    m_shaderUpsample = ShaderManager::instance()->generateShaderFromFile(
         ShaderTrait::MapTexture,
         QStringLiteral(":/effects/blur/shaders/vertex.vert"),
-        QStringLiteral(":/effects/blur/shaders/upsample.frag")));
+        QStringLiteral(":/effects/blur/shaders/upsample.frag"));
 
-    m_shaderCopysample.reset(ShaderManager::instance()->generateShaderFromFile(
+    m_shaderCopysample = ShaderManager::instance()->generateShaderFromFile(
         ShaderTrait::MapTexture,
         QStringLiteral(":/effects/blur/shaders/vertex.vert"),
-        QStringLiteral(":/effects/blur/shaders/copy.frag")));
+        QStringLiteral(":/effects/blur/shaders/copy.frag"));
 
-    m_shaderNoisesample.reset(ShaderManager::instance()->generateShaderFromFile(
+    m_shaderNoisesample = ShaderManager::instance()->generateShaderFromFile(
         ShaderTrait::MapTexture,
         QStringLiteral(":/effects/blur/shaders/vertex.vert"),
-        QStringLiteral(":/effects/blur/shaders/noise.frag")));
+        QStringLiteral(":/effects/blur/shaders/noise.frag"));
 
     m_valid = m_shaderDownsample->isValid() && m_shaderUpsample->isValid() && m_shaderCopysample->isValid() && m_shaderNoisesample->isValid();
 
@@ -72,27 +72,27 @@ BlurShader::BlurShader(QObject *parent)
         modelViewProjection.ortho(0, screenSize.width(), screenSize.height(), 0, 0, 65535);
 
         // Add default values to the uniforms of the shaders
-        ShaderManager::instance()->pushShader(m_shaderDownsample.data());
+        ShaderManager::instance()->pushShader(m_shaderDownsample.get());
         m_shaderDownsample->setUniform(m_mvpMatrixLocationDownsample, modelViewProjection);
         m_shaderDownsample->setUniform(m_offsetLocationDownsample, float(1.0));
         m_shaderDownsample->setUniform(m_renderTextureSizeLocationDownsample, QVector2D(1.0, 1.0));
         m_shaderDownsample->setUniform(m_halfpixelLocationDownsample, QVector2D(1.0, 1.0));
         ShaderManager::instance()->popShader();
 
-        ShaderManager::instance()->pushShader(m_shaderUpsample.data());
+        ShaderManager::instance()->pushShader(m_shaderUpsample.get());
         m_shaderUpsample->setUniform(m_mvpMatrixLocationUpsample, modelViewProjection);
         m_shaderUpsample->setUniform(m_offsetLocationUpsample, float(1.0));
         m_shaderUpsample->setUniform(m_renderTextureSizeLocationUpsample, QVector2D(1.0, 1.0));
         m_shaderUpsample->setUniform(m_halfpixelLocationUpsample, QVector2D(1.0, 1.0));
         ShaderManager::instance()->popShader();
 
-        ShaderManager::instance()->pushShader(m_shaderCopysample.data());
+        ShaderManager::instance()->pushShader(m_shaderCopysample.get());
         m_shaderCopysample->setUniform(m_mvpMatrixLocationCopysample, modelViewProjection);
         m_shaderCopysample->setUniform(m_renderTextureSizeLocationCopysample, QVector2D(1.0, 1.0));
         m_shaderCopysample->setUniform(m_blurRectLocationCopysample, QVector4D(1.0, 1.0, 1.0, 1.0));
         ShaderManager::instance()->popShader();
 
-        ShaderManager::instance()->pushShader(m_shaderNoisesample.data());
+        ShaderManager::instance()->pushShader(m_shaderNoisesample.get());
         m_shaderNoisesample->setUniform(m_mvpMatrixLocationNoisesample, modelViewProjection);
         m_shaderNoisesample->setUniform(m_offsetLocationNoisesample, float(1.0));
         m_shaderNoisesample->setUniform(m_renderTextureSizeLocationNoisesample, QVector2D(1.0, 1.0));
@@ -269,19 +269,19 @@ void BlurShader::bind(SampleType sampleType)
 
     switch (sampleType) {
     case CopySampleType:
-        ShaderManager::instance()->pushShader(m_shaderCopysample.data());
+        ShaderManager::instance()->pushShader(m_shaderCopysample.get());
         break;
 
     case UpSampleType:
-        ShaderManager::instance()->pushShader(m_shaderUpsample.data());
+        ShaderManager::instance()->pushShader(m_shaderUpsample.get());
         break;
 
     case DownSampleType:
-        ShaderManager::instance()->pushShader(m_shaderDownsample.data());
+        ShaderManager::instance()->pushShader(m_shaderDownsample.get());
         break;
 
     case NoiseSampleType:
-        ShaderManager::instance()->pushShader(m_shaderNoisesample.data());
+        ShaderManager::instance()->pushShader(m_shaderNoisesample.get());
         break;
 
     default:

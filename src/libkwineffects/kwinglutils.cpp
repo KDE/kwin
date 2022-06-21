@@ -649,9 +649,6 @@ ShaderManager::~ShaderManager()
     while (!m_boundShaders.isEmpty()) {
         popShader();
     }
-
-    qDeleteAll(m_shaderHash);
-    m_shaderHash.clear();
 }
 
 QByteArray ShaderManager::generateVertexSource(ShaderTraits traits) const
@@ -786,12 +783,12 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
     return source;
 }
 
-GLShader *ShaderManager::generateShader(ShaderTraits traits)
+std::unique_ptr<GLShader> ShaderManager::generateShader(ShaderTraits traits)
 {
     return generateCustomShader(traits);
 }
 
-GLShader *ShaderManager::generateCustomShader(ShaderTraits traits, const QByteArray &vertexSource, const QByteArray &fragmentSource)
+std::unique_ptr<GLShader> ShaderManager::generateCustomShader(ShaderTraits traits, const QByteArray &vertexSource, const QByteArray &fragmentSource)
 {
     const QByteArray vertex = vertexSource.isEmpty() ? generateVertexSource(traits) : vertexSource;
     const QByteArray fragment = fragmentSource.isEmpty() ? generateFragmentSource(traits) : fragmentSource;
@@ -804,7 +801,7 @@ GLShader *ShaderManager::generateCustomShader(ShaderTraits traits, const QByteAr
     qCDebug(LIBKWINGLUTILS) << "**************";
 #endif
 
-    GLShader *shader = new GLShader(GLShader::ExplicitLinking);
+    std::unique_ptr<GLShader> shader{new GLShader(GLShader::ExplicitLinking)};
     shader->load(vertex, fragment);
 
     shader->bindAttributeLocation("position", VA_Position);
@@ -838,7 +835,7 @@ static QString resolveShaderFilePath(const QString &filePath)
     return prefix + suffix + extension;
 }
 
-GLShader *ShaderManager::generateShaderFromFile(ShaderTraits traits, const QString &vertexFile, const QString &fragmentFile)
+std::unique_ptr<GLShader> ShaderManager::generateShaderFromFile(ShaderTraits traits, const QString &vertexFile, const QString &fragmentFile)
 {
     auto loadShaderFile = [](const QString &filePath) {
         QFile file(filePath);
@@ -853,13 +850,13 @@ GLShader *ShaderManager::generateShaderFromFile(ShaderTraits traits, const QStri
     if (!vertexFile.isEmpty()) {
         vertexSource = loadShaderFile(resolveShaderFilePath(vertexFile));
         if (vertexSource.isEmpty()) {
-            return new GLShader();
+            return std::unique_ptr<GLShader>(new GLShader());
         }
     }
     if (!fragmentFile.isEmpty()) {
         fragmentSource = loadShaderFile(resolveShaderFilePath(fragmentFile));
         if (fragmentSource.isEmpty()) {
-            return new GLShader();
+            return std::unique_ptr<GLShader>(new GLShader());
         }
     }
     return generateCustomShader(traits, vertexSource, fragmentSource);
@@ -867,14 +864,11 @@ GLShader *ShaderManager::generateShaderFromFile(ShaderTraits traits, const QStri
 
 GLShader *ShaderManager::shader(ShaderTraits traits)
 {
-    GLShader *shader = m_shaderHash.value(traits);
-
+    std::unique_ptr<GLShader> &shader = m_shaderHash[traits];
     if (!shader) {
         shader = generateShader(traits);
-        m_shaderHash.insert(traits, shader);
     }
-
-    return shader;
+    return shader.get();
 }
 
 GLShader *ShaderManager::getBoundShader() const
@@ -933,12 +927,12 @@ void ShaderManager::bindAttributeLocations(GLShader *shader) const
     shader->bindAttributeLocation("texCoord", VA_TexCoord);
 }
 
-GLShader *ShaderManager::loadShaderFromCode(const QByteArray &vertexSource, const QByteArray &fragmentSource)
+std::unique_ptr<GLShader> ShaderManager::loadShaderFromCode(const QByteArray &vertexSource, const QByteArray &fragmentSource)
 {
-    GLShader *shader = new GLShader(GLShader::ExplicitLinking);
+    std::unique_ptr<GLShader> shader{new GLShader(GLShader::ExplicitLinking)};
     shader->load(vertexSource, fragmentSource);
-    bindAttributeLocations(shader);
-    bindFragDataLocations(shader);
+    bindAttributeLocations(shader.get());
+    bindFragDataLocations(shader.get());
     shader->link();
     return shader;
 }

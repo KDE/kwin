@@ -83,11 +83,11 @@ private:
     int m_frame;
     int m_progress;
     std::chrono::milliseconds m_lastPresentTime;
-    QScopedPointer<GLTexture> m_bouncingTextures[5];
-    QScopedPointer<GLTexture> m_texture; // for passive and blinking
+    std::unique_ptr<GLTexture> m_bouncingTextures[5];
+    std::unique_ptr<GLTexture> m_texture; // for passive and blinking
     FeedbackType m_type;
     QRect m_currentGeometry, m_dirtyRect;
-    QScopedPointer<GLShader> m_blinkingShader;
+    std::unique_ptr<GLShader> m_blinkingShader;
     int m_cursorSize;
     KConfigWatcher::Ptr m_configWatcher;
     bool m_splashVisible;

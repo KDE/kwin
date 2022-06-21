@@ -37,7 +37,7 @@ public:
     void defaults() override;
 
 private:
-    MagnifierEffectConfigForm *m_ui;
+    MagnifierEffectConfigForm m_ui;
     KActionCollection *m_actionCollection;
 };
 

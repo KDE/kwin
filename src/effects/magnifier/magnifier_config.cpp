@@ -39,17 +39,15 @@ MagnifierEffectConfigForm::MagnifierEffectConfigForm(QWidget *parent)
 
 MagnifierEffectConfig::MagnifierEffectConfig(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)
+    , m_ui(this)
 {
-    m_ui = new MagnifierEffectConfigForm(this);
-
     QVBoxLayout *layout = new QVBoxLayout(this);
-
-    layout->addWidget(m_ui);
+    layout->addWidget(&m_ui);
 
     MagnifierConfig::instance(KWIN_CONFIG);
-    addConfig(MagnifierConfig::self(), m_ui);
+    addConfig(MagnifierConfig::self(), &m_ui);
 
-    connect(m_ui->editor, &KShortcutsEditor::keyChange, this, &MagnifierEffectConfig::markAsChanged);
+    connect(m_ui.editor, &KShortcutsEditor::keyChange, this, &MagnifierEffectConfig::markAsChanged);
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
@@ -74,20 +72,20 @@ MagnifierEffectConfig::MagnifierEffectConfig(QWidget *parent, const QVariantList
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_0));
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_0));
 
-    m_ui->editor->addCollection(m_actionCollection);
+    m_ui.editor->addCollection(m_actionCollection);
 }
 
 MagnifierEffectConfig::~MagnifierEffectConfig()
 {
     // Undo (only) unsaved changes to global key shortcuts
-    m_ui->editor->undo();
+    m_ui.editor->undo();
 }
 
 void MagnifierEffectConfig::save()
 {
     qDebug() << "Saving config of Magnifier";
 
-    m_ui->editor->save(); // undo() will restore to this state from now on
+    m_ui.editor->save(); // undo() will restore to this state from now on
     KCModule::save();
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
                                          QStringLiteral("/Effects"),
@@ -97,7 +95,7 @@ void MagnifierEffectConfig::save()
 
 void MagnifierEffectConfig::defaults()
 {
-    m_ui->editor->allDefault();
+    m_ui.editor->allDefault();
     KCModule::defaults();
 }
 

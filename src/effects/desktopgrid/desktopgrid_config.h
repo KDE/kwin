@@ -42,7 +42,7 @@ private Q_SLOTS:
     void desktopLayoutSelectionChanged();
 
 private:
-    DesktopGridEffectConfigForm *m_ui;
+    DesktopGridEffectConfigForm m_ui;
     KActionCollection *m_actionCollection;
 };
 

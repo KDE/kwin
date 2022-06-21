@@ -218,7 +218,7 @@ private:
     int m_chainPosition;
     QHash<int, QAction *> m_touchScreenEdgeCallbacks;
     Effect *m_activeFullScreenEffect = nullptr;
-    QHash<uint, GLShader*> m_shaders;
+    std::map<uint, std::unique_ptr<GLShader>> m_shaders;
     uint m_nextShaderId{1u};
 };
 }

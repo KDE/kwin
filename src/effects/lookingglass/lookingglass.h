@@ -63,10 +63,10 @@ private:
     bool polling; // Mouse polling
     int radius;
     int initialradius;
-    GLTexture *m_texture;
-    GLFramebuffer *m_fbo;
-    GLVertexBuffer *m_vbo;
-    GLShader *m_shader;
+    std::unique_ptr<GLTexture> m_texture;
+    std::unique_ptr<GLFramebuffer> m_fbo;
+    std::unique_ptr<GLVertexBuffer> m_vbo;
+    std::unique_ptr<GLShader> m_shader;
     std::chrono::milliseconds m_lastPresentTime;
     bool m_enabled;
     bool m_valid;

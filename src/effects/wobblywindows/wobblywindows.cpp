@@ -133,12 +133,7 @@ WobblyWindowsEffect::~WobblyWindowsEffect()
 {
     if (!windows.empty()) {
         // we should be empty at this point...
-        // emit a warning and clean the list.
         qCDebug(KWIN_WOBBLYWINDOWS) << "Windows list not empty. Left items : " << windows.count();
-        QHash<const EffectWindow *, WindowWobblyInfos>::iterator i;
-        for (i = windows.begin(); i != windows.end(); ++i) {
-            freeWobblyInfo(i.value());
-        }
     }
 }
 
@@ -479,14 +474,14 @@ void WobblyWindowsEffect::initWobblyInfo(WindowWobblyInfos &wwi, QRect geometry)
     wwi.bezierHeight = m_yTesselation;
     wwi.bezierCount = m_xTesselation * m_yTesselation;
 
-    wwi.origin = new Pair[wwi.count];
-    wwi.position = new Pair[wwi.count];
-    wwi.velocity = new Pair[wwi.count];
-    wwi.acceleration = new Pair[wwi.count];
-    wwi.buffer = new Pair[wwi.count];
-    wwi.constraint = new bool[wwi.count];
+    wwi.origin.resize(wwi.count);
+    wwi.position.resize(wwi.count);
+    wwi.velocity.resize(wwi.count);
+    wwi.acceleration.resize(wwi.count);
+    wwi.buffer.resize(wwi.count);
+    wwi.constraint.resize(wwi.count);
 
-    wwi.bezierSurface = new Pair[wwi.bezierCount];
+    wwi.bezierSurface.resize(wwi.bezierCount);
 
     wwi.status = Moving;
     wwi.clock = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -524,18 +519,6 @@ void WobblyWindowsEffect::initWobblyInfo(WindowWobblyInfos &wwi, QRect geometry)
         }
         initValue.y = initValue.y;
     }
-}
-
-void WobblyWindowsEffect::freeWobblyInfo(WindowWobblyInfos &wwi) const
-{
-    delete[] wwi.origin;
-    delete[] wwi.position;
-    delete[] wwi.velocity;
-    delete[] wwi.acceleration;
-    delete[] wwi.buffer;
-    delete[] wwi.constraint;
-
-    delete[] wwi.bezierSurface;
 }
 
 WobblyWindowsEffect::Pair WobblyWindowsEffect::computeBezierPoint(const WindowWobblyInfos &wwi, Pair point) const
@@ -871,7 +854,7 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow *w, qreal time)
         }
     }
 
-    heightRingLinearMean(&wwi.acceleration, wwi);
+    heightRingLinearMean(wwi.acceleration, wwi);
 
 #if defined COMPUTE_STATS
     Pair accBound = {m_maxAcceleration, m_minAcceleration};
@@ -894,7 +877,7 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow *w, qreal time)
         acc_sum += fabs(acc.x) + fabs(acc.y);
     }
 
-    heightRingLinearMean(&wwi.velocity, wwi);
+    heightRingLinearMean(wwi.velocity, wwi);
 
     // compute the new pos of each vertex.
     for (unsigned int i = 0; i < wwi.count; ++i) {
@@ -956,7 +939,6 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow *w, qreal time)
 #endif
 
     if (wwi.status != Moving && acc_sum < m_stopAcceleration && vel_sum < m_stopVelocity) {
-        freeWobblyInfo(wwi);
         windows.remove(w);
         unredirect(w);
         if (windows.isEmpty()) {
@@ -968,9 +950,8 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow *w, qreal time)
     return true;
 }
 
-void WobblyWindowsEffect::heightRingLinearMean(Pair **data_pointer, WindowWobblyInfos &wwi)
+void WobblyWindowsEffect::heightRingLinearMean(QVector<Pair> &data, WindowWobblyInfos &wwi)
 {
-    Pair *data = *data_pointer;
     Pair neibourgs[8];
 
     // for corners
@@ -1102,14 +1083,79 @@ void WobblyWindowsEffect::heightRingLinearMean(Pair **data_pointer, WindowWobbly
         }
     }
 
-    Pair *tmp = data;
-    *data_pointer = wwi.buffer;
+    auto tmp = data;
+    data = wwi.buffer;
     wwi.buffer = tmp;
 }
 
 bool WobblyWindowsEffect::isActive() const
 {
     return !windows.isEmpty();
+}
+
+qreal WobblyWindowsEffect::stiffness() const
+{
+    return m_stiffness;
+}
+
+qreal WobblyWindowsEffect::drag() const
+{
+    return m_drag;
+}
+
+qreal WobblyWindowsEffect::moveFactor() const
+{
+    return m_move_factor;
+}
+
+qreal WobblyWindowsEffect::xTesselation() const
+{
+    return m_xTesselation;
+}
+
+qreal WobblyWindowsEffect::yTesselation() const
+{
+    return m_yTesselation;
+}
+
+qreal WobblyWindowsEffect::minVelocity() const
+{
+    return m_minVelocity;
+}
+
+qreal WobblyWindowsEffect::maxVelocity() const
+{
+    return m_maxVelocity;
+}
+
+qreal WobblyWindowsEffect::stopVelocity() const
+{
+    return m_stopVelocity;
+}
+
+qreal WobblyWindowsEffect::minAcceleration() const
+{
+    return m_minAcceleration;
+}
+
+qreal WobblyWindowsEffect::maxAcceleration() const
+{
+    return m_maxAcceleration;
+}
+
+qreal WobblyWindowsEffect::stopAcceleration() const
+{
+    return m_stopAcceleration;
+}
+
+bool WobblyWindowsEffect::isMoveWobble() const
+{
+    return m_moveWobble;
+}
+
+bool WobblyWindowsEffect::isResizeWobble() const
+{
+    return m_resizeWobble;
 }
 
 } // namespace KWin

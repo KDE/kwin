@@ -26,9 +26,9 @@ namespace KWin
 const int FRAME_WIDTH = 5;
 
 MagnifierEffect::MagnifierEffect()
-    : zoom(1)
-    , target_zoom(1)
-    , polling(false)
+    : m_zoom(1)
+    , m_targetZoom(1)
+    , m_polling(false)
     , m_lastPresentTime(std::chrono::milliseconds::zero())
     , m_texture(nullptr)
     , m_fbo(nullptr)
@@ -58,10 +58,8 @@ MagnifierEffect::MagnifierEffect()
 
 MagnifierEffect::~MagnifierEffect()
 {
-    delete m_fbo;
-    delete m_texture;
     // Save the zoom value.
-    MagnifierConfig::setInitialZoom(target_zoom);
+    MagnifierConfig::setInitialZoom(m_targetZoom);
     MagnifierConfig::self()->save();
 }
 
@@ -76,10 +74,10 @@ void MagnifierEffect::reconfigure(ReconfigureFlags)
     int width, height;
     width = MagnifierConfig::width();
     height = MagnifierConfig::height();
-    magnifier_size = QSize(width, height);
+    m_magnifierSize = QSize(width, height);
     // Load the saved zoom value.
-    target_zoom = MagnifierConfig::initialZoom();
-    if (target_zoom != zoom) {
+    m_targetZoom = MagnifierConfig::initialZoom();
+    if (m_targetZoom != m_zoom) {
         toggle();
     }
 }
@@ -88,30 +86,28 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
 {
     const int time = m_lastPresentTime.count() ? (presentTime - m_lastPresentTime).count() : 0;
 
-    if (zoom != target_zoom) {
+    if (m_zoom != m_targetZoom) {
         double diff = time / animationTime(500.0);
-        if (target_zoom > zoom) {
-            zoom = qMin(zoom * qMax(1 + diff, 1.2), target_zoom);
+        if (m_targetZoom > m_zoom) {
+            m_zoom = qMin(m_zoom * qMax(1 + diff, 1.2), m_targetZoom);
         } else {
-            zoom = qMax(zoom * qMin(1 - diff, 0.8), target_zoom);
-            if (zoom == 1.0) {
+            m_zoom = qMax(m_zoom * qMin(1 - diff, 0.8), m_targetZoom);
+            if (m_zoom == 1.0) {
                 // zoom ended - delete FBO and texture
-                delete m_fbo;
-                delete m_texture;
-                m_fbo = nullptr;
-                m_texture = nullptr;
+                m_fbo.reset();
+                m_texture.reset();
             }
         }
     }
 
-    if (zoom != target_zoom) {
+    if (m_zoom != m_targetZoom) {
         m_lastPresentTime = presentTime;
     } else {
         m_lastPresentTime = std::chrono::milliseconds::zero();
     }
 
     effects->prePaintScreen(data, presentTime);
-    if (zoom != 1.0) {
+    if (m_zoom != 1.0) {
         data.paint |= magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH);
     }
 }
@@ -119,14 +115,14 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
 void MagnifierEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
     effects->paintScreen(mask, region, data); // paint normal screen
-    if (zoom != 1.0) {
+    if (m_zoom != 1.0) {
         // get the right area from the current rendered screen
         const QRect area = magnifierArea();
         const QPoint cursor = cursorPos();
 
-        QRect srcArea(cursor.x() - (double)area.width() / (zoom * 2),
-                      cursor.y() - (double)area.height() / (zoom * 2),
-                      (double)area.width() / zoom, (double)area.height() / zoom);
+        QRect srcArea(cursor.x() - (double)area.width() / (m_zoom * 2),
+                      cursor.y() - (double)area.height() / (m_zoom * 2),
+                      (double)area.width() / m_zoom, (double)area.height() / m_zoom);
         if (effects->isOpenGLCompositing()) {
             m_fbo->blitFromFramebuffer(effects->mapToRenderTarget(srcArea));
             // paint magnifier
@@ -184,7 +180,7 @@ void MagnifierEffect::paintScreen(int mask, const QRegion &region, ScreenPaintDa
 
 void MagnifierEffect::postPaintScreen()
 {
-    if (zoom != target_zoom) {
+    if (m_zoom != m_targetZoom) {
         QRect framedarea = magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH);
         effects->addRepaint(framedarea);
     }
@@ -193,41 +189,39 @@ void MagnifierEffect::postPaintScreen()
 
 QRect MagnifierEffect::magnifierArea(QPoint pos) const
 {
-    return QRect(pos.x() - magnifier_size.width() / 2, pos.y() - magnifier_size.height() / 2,
-                 magnifier_size.width(), magnifier_size.height());
+    return QRect(pos.x() - m_magnifierSize.width() / 2, pos.y() - m_magnifierSize.height() / 2,
+                 m_magnifierSize.width(), m_magnifierSize.height());
 }
 
 void MagnifierEffect::zoomIn()
 {
-    target_zoom *= 1.2;
-    if (!polling) {
-        polling = true;
+    m_targetZoom *= 1.2;
+    if (!m_polling) {
+        m_polling = true;
         effects->startMousePolling();
     }
     if (effects->isOpenGLCompositing() && !m_texture) {
         effects->makeOpenGLContextCurrent();
-        m_texture = new GLTexture(GL_RGBA8, magnifier_size.width(), magnifier_size.height());
+        m_texture = std::make_unique<GLTexture>(GL_RGBA8, m_magnifierSize.width(), m_magnifierSize.height());
         m_texture->setYInverted(false);
-        m_fbo = new GLFramebuffer(m_texture);
+        m_fbo = std::make_unique<GLFramebuffer>(m_texture.get());
     }
     effects->addRepaint(magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH));
 }
 
 void MagnifierEffect::zoomOut()
 {
-    target_zoom /= 1.2;
-    if (target_zoom <= 1) {
-        target_zoom = 1;
-        if (polling) {
-            polling = false;
+    m_targetZoom /= 1.2;
+    if (m_targetZoom <= 1) {
+        m_targetZoom = 1;
+        if (m_polling) {
+            m_polling = false;
             effects->stopMousePolling();
         }
-        if (zoom == target_zoom) {
+        if (m_zoom == m_targetZoom) {
             effects->makeOpenGLContextCurrent();
-            delete m_fbo;
-            delete m_texture;
-            m_fbo = nullptr;
-            m_texture = nullptr;
+            m_fbo.reset();
+            m_texture.reset();
         }
     }
     effects->addRepaint(magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH));
@@ -235,24 +229,24 @@ void MagnifierEffect::zoomOut()
 
 void MagnifierEffect::toggle()
 {
-    if (zoom == 1.0) {
-        if (target_zoom == 1.0) {
-            target_zoom = 2;
+    if (m_zoom == 1.0) {
+        if (m_targetZoom == 1.0) {
+            m_targetZoom = 2;
         }
-        if (!polling) {
-            polling = true;
+        if (!m_polling) {
+            m_polling = true;
             effects->startMousePolling();
         }
         if (effects->isOpenGLCompositing() && !m_texture) {
             effects->makeOpenGLContextCurrent();
-            m_texture = new GLTexture(GL_RGBA8, magnifier_size.width(), magnifier_size.height());
+            m_texture = std::make_unique<GLTexture>(GL_RGBA8, m_magnifierSize.width(), m_magnifierSize.height());
             m_texture->setYInverted(false);
-            m_fbo = new GLFramebuffer(m_texture);
+            m_fbo = std::make_unique<GLFramebuffer>(m_texture.get());
         }
     } else {
-        target_zoom = 1;
-        if (polling) {
-            polling = false;
+        m_targetZoom = 1;
+        if (m_polling) {
+            m_polling = false;
             effects->stopMousePolling();
         }
     }
@@ -262,7 +256,7 @@ void MagnifierEffect::toggle()
 void MagnifierEffect::slotMouseChanged(const QPoint &pos, const QPoint &old,
                                        Qt::MouseButtons, Qt::MouseButtons, Qt::KeyboardModifiers, Qt::KeyboardModifiers)
 {
-    if (pos != old && zoom != 1) {
+    if (pos != old && m_zoom != 1) {
         // need full repaint as we might lose some change events on fast mouse movements
         // see Bug 187658
         effects->addRepaintFull();
@@ -278,7 +272,17 @@ void MagnifierEffect::slotWindowDamaged()
 
 bool MagnifierEffect::isActive() const
 {
-    return zoom != 1.0 || zoom != target_zoom;
+    return m_zoom != 1.0 || m_zoom != m_targetZoom;
+}
+
+QSize MagnifierEffect::magnifierSize() const
+{
+    return m_magnifierSize;
+}
+
+qreal MagnifierEffect::targetZoom() const
+{
+    return m_targetZoom;
 }
 
 } // namespace

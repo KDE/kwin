@@ -120,13 +120,13 @@ private:
     int x;
     int y;
     QRect fps_rect;
-    QScopedPointer<GLTexture> fpsText;
+    std::unique_ptr<GLTexture> fpsText;
     int textPosition;
     QFont textFont;
     QColor textColor;
     QRect fpsTextRect;
     int textAlign;
-    QScopedPointer<EffectFrame> m_noBenchmark;
+    std::unique_ptr<EffectFrame> m_noBenchmark;
 };
 
 } // namespace

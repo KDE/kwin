@@ -29,7 +29,7 @@ public Q_SLOTS:
     void defaults() override;
 
 private:
-    Ui::ShowPaintEffectConfig *m_ui;
+    std::unique_ptr<Ui::ShowPaintEffectConfig> m_ui;
 };
 
 } // namespace KWin

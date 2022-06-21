@@ -27,10 +27,10 @@ ScreenTransformEffect::ScreenTransformEffect()
     // Make sure that shaders in /effects/screentransform/shaders/* are loaded.
     ensureResources();
 
-    m_shader.reset(ShaderManager::instance()->generateShaderFromFile(
+    m_shader = ShaderManager::instance()->generateShaderFromFile(
         ShaderTrait::MapTexture,
         QStringLiteral(":/effects/screentransform/shaders/crossfade.vert"),
-        QStringLiteral(":/effects/screentransform/shaders/crossfade.frag")));
+        QStringLiteral(":/effects/screentransform/shaders/crossfade.frag"));
 
     m_modelViewProjectioMatrixLocation = m_shader->uniformLocation("modelViewProjectionMatrix");
     m_blendFactorLocation = m_shader->uniformLocation("blendFactor");

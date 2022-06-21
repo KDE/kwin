@@ -21,8 +21,7 @@ class GLShader;
 /**
  * Inverts desktop's colors
  */
-class InvertEffect
-    : public Effect
+class InvertEffect : public Effect
 {
     Q_OBJECT
 public:
@@ -48,7 +47,7 @@ protected:
 private:
     bool m_inited;
     bool m_valid;
-    GLShader *m_shader;
+    std::unique_ptr<GLShader> m_shader;
     bool m_allWindows;
     QList<EffectWindow *> m_windows;
 };
