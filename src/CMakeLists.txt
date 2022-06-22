@@ -95,6 +95,7 @@ target_sources(kwin PRIVATE
     overlaywindow.cpp
     placeholderinputeventfilter.cpp
     placement.cpp
+    placementtracker.cpp
     platform.cpp
     plugin.cpp
     pluginmanager.cpp

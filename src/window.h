@@ -1413,6 +1413,8 @@ public:
     void setLastUsageSerial(quint32 serial);
     quint32 lastUsageSerial() const;
 
+    uint32_t interactiveMoveResizeCount() const;
+
 public Q_SLOTS:
     virtual void closeWindow() = 0;
 
@@ -1979,6 +1981,7 @@ private:
         CursorShape cursor = Qt::ArrowCursor;
         Output *startOutput = nullptr;
         QTimer *delayedTimer = nullptr;
+        uint32_t counter = 0;
     } m_interactiveMoveResize;
 
     struct

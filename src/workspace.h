@@ -66,6 +66,7 @@ class X11Window;
 class X11EventFilter;
 class FocusChain;
 class ApplicationMenu;
+class PlacementTracker;
 enum class Predicate;
 class Outline;
 class RuleBook;
@@ -633,6 +634,7 @@ private:
     void activateWindowOnNewDesktop(VirtualDesktop *desktop);
     Window *findWindowToActivateOnDesktop(VirtualDesktop *desktop);
     void removeWindow(Window *window);
+    QString getPlacementTrackerHash();
 
     void updateOutputConfiguration();
 
@@ -751,6 +753,7 @@ private:
 #if KWIN_BUILD_ACTIVITIES
     std::unique_ptr<Activities> m_activities;
 #endif
+    std::unique_ptr<PlacementTracker> m_placementTracker;
 
     Output *m_placeholderOutput = nullptr;
     std::unique_ptr<PlaceholderInputEventFilter> m_placeholderFilter;
