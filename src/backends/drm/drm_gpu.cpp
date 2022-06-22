@@ -432,22 +432,22 @@ bool DrmGpu::testPendingConfiguration()
 
 bool DrmGpu::testPipelines()
 {
-    // pipelines that are enabled but not active need to be activated for the test
     QVector<DrmPipeline *> inactivePipelines;
-    for (const auto &pipeline : qAsConst(m_pipelines)) {
-        if (!pipeline->active()) {
-            pipeline->setActive(true);
-            inactivePipelines << pipeline;
-        }
-    }
+    std::copy_if(m_pipelines.constBegin(), m_pipelines.constEnd(), std::back_inserter(inactivePipelines), [](const auto pipeline) {
+        return pipeline->enabled() && !pipeline->active();
+    });
     const auto unused = unusedObjects();
     bool test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test, unused);
-    // disable inactive pipelines again
-    for (const auto &pipeline : qAsConst(inactivePipelines)) {
-        pipeline->setActive(false);
-    }
     if (!inactivePipelines.isEmpty() && test) {
+        // ensure that pipelines that are set as enabled but currently inactive
+        // still work when they need to be set active again
+        for (const auto pipeline : qAsConst(inactivePipelines)) {
+            pipeline->setActive(true);
+        }
         test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test, unused);
+        for (const auto pipeline : qAsConst(inactivePipelines)) {
+            pipeline->setActive(false);
+        }
     }
     return test;
 }
