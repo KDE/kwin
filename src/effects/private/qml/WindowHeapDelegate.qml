@@ -344,7 +344,7 @@ Item {
 
             const startDistance = thumb.windowHeap.Kirigami.ScenePosition.y + thumb.windowHeap.height - centroid.scenePressPosition.y;
             const localPosition = thumb.windowHeap.Kirigami.ScenePosition.y + thumb.windowHeap.height - centroid.scenePosition.y;
-            return Math.min(startDistance / localPosition, 1);
+            return 1 - Math.min(localPosition/startDistance, 1);
         }
 
         onActiveChanged: {
