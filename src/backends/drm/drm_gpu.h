@@ -121,9 +121,9 @@ private:
     EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
     DrmBackend *const m_platform;
 
-    QVector<DrmPlane *> m_planes;
-    QVector<DrmCrtc *> m_crtcs;
-    QVector<DrmConnector *> m_connectors;
+    std::vector<std::unique_ptr<DrmPlane>> m_planes;
+    std::vector<std::unique_ptr<DrmCrtc>> m_crtcs;
+    std::vector<std::unique_ptr<DrmConnector>> m_connectors;
     QVector<DrmObject *> m_allObjects;
     QVector<DrmPipeline *> m_pipelines;
 
