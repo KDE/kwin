@@ -619,10 +619,19 @@ QRect ScreenCastStream::cursorGeometry(Cursor *cursor) const
 
 void ScreenCastStream::sendCursorData(Cursor *cursor, spa_meta_cursor *spa_meta_cursor)
 {
-    if (!cursor || !spa_meta_cursor || !m_cursor.viewport.contains(cursor->pos())) {
+    if (!cursor || !spa_meta_cursor) {
         return;
     }
 
+    if (!m_cursor.viewport.contains(cursor->pos())) {
+        spa_meta_cursor->id = 0;
+        spa_meta_cursor->position.x = -1;
+        spa_meta_cursor->position.y = -1;
+        spa_meta_cursor->hotspot.x = -1;
+        spa_meta_cursor->hotspot.y = -1;
+        spa_meta_cursor->bitmap_offset = 0;
+        return;
+    }
     const auto position = (cursor->pos() - m_cursor.viewport.topLeft()) * m_cursor.scale;
 
     spa_meta_cursor->id = 1;
