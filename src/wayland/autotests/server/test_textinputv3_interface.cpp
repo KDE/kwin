@@ -557,6 +557,7 @@ void TestTextInputV3Interface::testMultipleTextinputs()
     QVERIFY(m_serverTextInputV3);
     QVERIFY(!m_serverTextInputV3->isEnabled());
 
+    QSignalSpy doneSpy1(ti1, &TextInputV3::done);
     QSignalSpy committedSpy(m_serverTextInputV3, &TextInputV3Interface::stateCommitted);
     // Enable ti1
     ti1->enable();
@@ -564,6 +565,7 @@ void TestTextInputV3Interface::testMultipleTextinputs()
     QVERIFY(committedSpy.wait());
     QCOMPARE(committedSpy.last().at(0).value<quint32>(), 1);
     QVERIFY(m_serverTextInputV3->isEnabled());
+    QVERIFY(doneSpy1.wait());
 
     // Send another three commits on ti1
     ti1->enable();
@@ -572,6 +574,7 @@ void TestTextInputV3Interface::testMultipleTextinputs()
     QVERIFY(committedSpy.wait());
     QCOMPARE(committedSpy.last().at(0).value<quint32>(), 2);
     QVERIFY(m_serverTextInputV3->isEnabled());
+    QVERIFY(doneSpy1.wait());
 
     ti1->enable();
     ti1->set_content_type(QtWayland::zwp_text_input_v3::content_hint_none, QtWayland::zwp_text_input_v3::content_purpose_normal);
@@ -579,9 +582,9 @@ void TestTextInputV3Interface::testMultipleTextinputs()
     QVERIFY(committedSpy.wait());
     QCOMPARE(committedSpy.last().at(0).value<quint32>(), 3);
     QVERIFY(m_serverTextInputV3->isEnabled());
+    QVERIFY(doneSpy1.wait());
 
     // at this point total commit count to ti1 is 3
-    QSignalSpy doneSpy1(ti1, &TextInputV3::done);
     QSignalSpy doneSpy2(ti2, &TextInputV3::done);
 
     m_serverTextInputV3->commitString("Hello");
