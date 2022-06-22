@@ -8,3 +8,4 @@ plugin effectsplugin
 classname EffectKitExtensionPlugin
 
 WindowHeap 1.0 WindowHeap.qml
+WindowHeapDelegate 1.0 WindowHeapDelegate.qml
