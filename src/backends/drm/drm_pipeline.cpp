@@ -107,7 +107,7 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline 
             pipeline->atomicCommitFailed();
         }
         for (const auto &obj : unusedObjects) {
-            printProps(obj, PrintMode::OnlyChanged);
+            obj->printProps(DrmObject::PrintMode::OnlyChanged);
             obj->rollbackPending();
         }
     };
@@ -556,42 +556,17 @@ void DrmPipeline::printFlags(uint32_t flags)
     }
 }
 
-void DrmPipeline::printProps(DrmObject *object, PrintMode mode)
-{
-    auto list = object->properties();
-    bool any = mode == PrintMode::All || std::any_of(list.constBegin(), list.constEnd(), [](const auto &prop) {
-                   return prop && !prop->isImmutable() && prop->needsCommit();
-               });
-    if (!any) {
-        return;
-    }
-    qCDebug(KWIN_DRM) << object->typeName() << object->id();
-    for (const auto &prop : list) {
-        if (prop) {
-            uint64_t current = prop->name().startsWith("SRC_") ? prop->current() >> 16 : prop->current();
-            if (prop->isImmutable() || !prop->needsCommit()) {
-                if (mode == PrintMode::All) {
-                    qCDebug(KWIN_DRM).nospace() << "\t" << prop->name() << ": " << current;
-                }
-            } else {
-                uint64_t pending = prop->name().startsWith("SRC_") ? prop->pending() >> 16 : prop->pending();
-                qCDebug(KWIN_DRM).nospace() << "\t" << prop->name() << ": " << current << "->" << pending;
-            }
-        }
-    }
-}
-
 void DrmPipeline::printDebugInfo() const
 {
     qCDebug(KWIN_DRM) << "Drm objects:";
-    printProps(m_connector, PrintMode::All);
+    m_connector->printProps(DrmObject::PrintMode::All);
     if (m_pending.crtc) {
-        printProps(m_pending.crtc, PrintMode::All);
+        m_pending.crtc->printProps(DrmObject::PrintMode::All);
         if (m_pending.crtc->primaryPlane()) {
-            printProps(m_pending.crtc->primaryPlane(), PrintMode::All);
+            m_pending.crtc->primaryPlane()->printProps(DrmObject::PrintMode::All);
         }
         if (m_pending.crtc->cursorPlane()) {
-            printProps(m_pending.crtc->cursorPlane(), PrintMode::All);
+            m_pending.crtc->cursorPlane()->printProps(DrmObject::PrintMode::All);
         }
     }
 }

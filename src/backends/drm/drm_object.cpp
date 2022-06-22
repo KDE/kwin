@@ -26,11 +26,6 @@ DrmObject::DrmObject(DrmGpu *gpu, uint32_t objectId, const QVector<PropertyDefin
     m_props.resize(m_propertyDefinitions.count());
 }
 
-DrmObject::~DrmObject()
-{
-    qDeleteAll(m_props);
-}
-
 bool DrmObject::initProps()
 {
     if (!updateProperties()) {
@@ -52,7 +47,7 @@ bool DrmObject::initProps()
             Q_UNREACHABLE();
         }
         debug << m_id << " has properties ";
-        for (int i = 0; i < m_props.count(); i++) {
+        for (size_t i = 0; i < m_props.size(); i++) {
             if (i > 0) {
                 debug << ", ";
             }
@@ -88,11 +83,6 @@ bool DrmObject::atomicPopulate(drmModeAtomicReq *req) const
         }
     }
     return true;
-}
-
-QVector<DrmProperty *> DrmObject::properties()
-{
-    return m_props;
 }
 
 void DrmObject::commit()
@@ -152,14 +142,14 @@ bool DrmObject::updateProperties()
                 if (m_props[propIndex]) {
                     m_props[propIndex]->setCurrent(properties->prop_values[drmPropIndex]);
                 } else {
-                    m_props[propIndex] = new DrmProperty(this, prop.get(), properties->prop_values[drmPropIndex], def.enumNames);
+                    m_props[propIndex] = std::make_unique<DrmProperty>(this, prop.get(), properties->prop_values[drmPropIndex], def.enumNames);
                 }
                 found = true;
                 break;
             }
         }
         if (!found) {
-            deleteProp(propIndex);
+            m_props[propIndex].reset();
         }
     }
     for (int i = 0; i < m_propertyDefinitions.count(); i++) {
@@ -202,6 +192,29 @@ QString DrmObject::typeName() const
     }
 }
 
+void DrmObject::printProps(PrintMode mode)
+{
+    bool any = mode == PrintMode::All || std::any_of(m_props.begin(), m_props.end(), [](const auto &prop) {
+                   return prop && !prop->isImmutable() && prop->needsCommit();
+               });
+    if (!any) {
+        return;
+    }
+    qCDebug(KWIN_DRM) << typeName() << id();
+    for (const auto &prop : m_props) {
+        if (prop) {
+            uint64_t current = prop->name().startsWith("SRC_") ? prop->current() >> 16 : prop->current();
+            if (prop->isImmutable() || !prop->needsCommit()) {
+                if (mode == PrintMode::All) {
+                    qCDebug(KWIN_DRM).nospace() << "\t" << prop->name() << ": " << current;
+                }
+            } else {
+                uint64_t pending = prop->name().startsWith("SRC_") ? prop->pending() >> 16 : prop->pending();
+                qCDebug(KWIN_DRM).nospace() << "\t" << prop->name() << ": " << current << "->" << pending;
+            }
+        }
+    }
+}
 }
 
 QDebug operator<<(QDebug s, const KWin::DrmObject *obj)

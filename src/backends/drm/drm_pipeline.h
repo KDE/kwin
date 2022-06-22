@@ -159,7 +159,6 @@ private:
         All,
     };
     static void printFlags(uint32_t flags);
-    static void printProps(DrmObject *object, PrintMode mode);
 
     DrmOutput *m_output = nullptr;
     DrmConnector *m_connector = nullptr;

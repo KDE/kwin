@@ -295,15 +295,15 @@ bool DrmConnector::updateProperties()
         dpms->setLegacy();
     }
 
-    auto underscan = m_props[static_cast<uint32_t>(PropertyIndex::Underscan)];
-    auto vborder = m_props[static_cast<uint32_t>(PropertyIndex::Underscan_vborder)];
-    auto hborder = m_props[static_cast<uint32_t>(PropertyIndex::Underscan_hborder)];
+    auto &underscan = m_props[static_cast<uint32_t>(PropertyIndex::Underscan)];
+    auto &vborder = m_props[static_cast<uint32_t>(PropertyIndex::Underscan_vborder)];
+    auto &hborder = m_props[static_cast<uint32_t>(PropertyIndex::Underscan_hborder)];
     if (underscan && vborder && hborder) {
         underscan->setEnum(vborder->current() > 0 ? UnderscanOptions::On : UnderscanOptions::Off);
     } else {
-        deleteProp(PropertyIndex::Underscan);
-        deleteProp(PropertyIndex::Underscan_vborder);
-        deleteProp(PropertyIndex::Underscan_hborder);
+        underscan.reset();
+        vborder.reset();
+        hborder.reset();
     }
 
     // parse edid
