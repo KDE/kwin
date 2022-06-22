@@ -80,14 +80,14 @@ QString VirtualBackend::screenshotDirPath() const
     return m_screenshotDir->path();
 }
 
-QPainterBackend *VirtualBackend::createQPainterBackend()
+std::unique_ptr<QPainterBackend> VirtualBackend::createQPainterBackend()
 {
-    return new VirtualQPainterBackend(this);
+    return std::make_unique<VirtualQPainterBackend>(this);
 }
 
-OpenGLBackend *VirtualBackend::createOpenGLBackend()
+std::unique_ptr<OpenGLBackend> VirtualBackend::createOpenGLBackend()
 {
-    return new VirtualEglBackend(this);
+    return std::make_unique<VirtualEglBackend>(this);
 }
 
 Outputs VirtualBackend::outputs() const

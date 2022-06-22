@@ -662,19 +662,19 @@ X11WindowedInputDevice *X11WindowedBackend::touchDevice() const
     return m_touchDevice;
 }
 
-OpenGLBackend *X11WindowedBackend::createOpenGLBackend()
+std::unique_ptr<OpenGLBackend> X11WindowedBackend::createOpenGLBackend()
 {
-    return new X11WindowedEglBackend(this);
+    return std::make_unique<X11WindowedEglBackend>(this);
 }
 
-QPainterBackend *X11WindowedBackend::createQPainterBackend()
+std::unique_ptr<QPainterBackend> X11WindowedBackend::createQPainterBackend()
 {
-    return new X11WindowedQPainterBackend(this);
+    return std::make_unique<X11WindowedQPainterBackend>(this);
 }
 
-InputBackend *X11WindowedBackend::createInputBackend()
+std::unique_ptr<InputBackend> X11WindowedBackend::createInputBackend()
 {
-    return new X11WindowedInputBackend(this);
+    return std::make_unique<X11WindowedInputBackend>(this);
 }
 
 void X11WindowedBackend::warpPointer(const QPointF &globalPos)

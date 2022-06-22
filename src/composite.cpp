@@ -186,7 +186,7 @@ bool Compositor::attemptOpenGLCompositing()
         kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostInit);
     });
 
-    QScopedPointer<OpenGLBackend> backend(kwinApp()->platform()->createOpenGLBackend());
+    std::unique_ptr<OpenGLBackend> backend = kwinApp()->platform()->createOpenGLBackend();
     if (!backend) {
         return false;
     }
@@ -197,13 +197,13 @@ bool Compositor::attemptOpenGLCompositing()
         return false;
     }
 
-    QScopedPointer<Scene> scene(SceneOpenGL::createScene(backend.data(), this));
+    std::unique_ptr<Scene> scene = SceneOpenGL::createScene(backend.get());
     if (!scene || scene->initFailed()) {
         return false;
     }
 
-    m_backend = backend.take();
-    m_scene = scene.take();
+    m_backend = std::move(backend);
+    m_scene = std::move(scene);
 
     // set strict binding
     if (options->isGlStrictBindingFollowsDriver()) {
@@ -216,18 +216,18 @@ bool Compositor::attemptOpenGLCompositing()
 
 bool Compositor::attemptQPainterCompositing()
 {
-    QScopedPointer<QPainterBackend> backend(kwinApp()->platform()->createQPainterBackend());
+    std::unique_ptr<QPainterBackend> backend(kwinApp()->platform()->createQPainterBackend());
     if (!backend || backend->isFailed()) {
         return false;
     }
 
-    QScopedPointer<Scene> scene(SceneQPainter::createScene(backend.data(), this));
+    std::unique_ptr<Scene> scene = SceneQPainter::createScene(backend.get());
     if (!scene || scene->initFailed()) {
         return false;
     }
 
-    m_backend = backend.take();
-    m_scene = scene.take();
+    m_backend = std::move(backend);
+    m_scene = std::move(scene);
 
     qCDebug(KWIN_CORE) << "QPainter compositing has been successfully initialized";
     return true;
@@ -366,7 +366,7 @@ void Compositor::startupWithWorkspace()
     const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         auto workspaceLayer = new RenderLayer(outputs.constFirst()->renderLoop());
-        workspaceLayer->setDelegate(new SceneDelegate(m_scene));
+        workspaceLayer->setDelegate(new SceneDelegate(m_scene.get()));
         workspaceLayer->setGeometry(workspace()->geometry());
         connect(workspace(), &Workspace::geometryChanged, workspaceLayer, [workspaceLayer]() {
             workspaceLayer->setGeometry(workspace()->geometry());
@@ -400,7 +400,7 @@ void Compositor::startupWithWorkspace()
     }
 
     // Sets also the 'effects' pointer.
-    kwinApp()->platform()->createEffectsHandler(this, m_scene);
+    kwinApp()->platform()->createEffectsHandler(this, m_scene.get());
 
     Q_EMIT compositingToggled(true);
 
@@ -425,7 +425,7 @@ void Compositor::addOutput(Output *output)
     Q_ASSERT(kwinApp()->operationMode() != Application::OperationModeX11);
 
     auto workspaceLayer = new RenderLayer(output->renderLoop());
-    workspaceLayer->setDelegate(new SceneDelegate(m_scene, output));
+    workspaceLayer->setDelegate(new SceneDelegate(m_scene.get(), output));
     workspaceLayer->setGeometry(output->rect());
     connect(output, &Output::geometryChanged, workspaceLayer, [output, workspaceLayer]() {
         workspaceLayer->setGeometry(output->rect());
@@ -531,11 +531,8 @@ void Compositor::stop()
     disconnect(kwinApp()->platform(), &Platform::outputEnabled, this, &Compositor::addOutput);
     disconnect(kwinApp()->platform(), &Platform::outputDisabled, this, &Compositor::removeOutput);
 
-    delete m_scene;
-    m_scene = nullptr;
-
-    delete m_backend;
-    m_backend = nullptr;
+    m_scene.reset();
+    m_backend.reset();
 
     m_state = State::Off;
     Q_EMIT compositingToggled(false);

@@ -157,13 +157,13 @@ Session *X11StandalonePlatform::session() const
     return m_session.get();
 }
 
-OpenGLBackend *X11StandalonePlatform::createOpenGLBackend()
+std::unique_ptr<OpenGLBackend> X11StandalonePlatform::createOpenGLBackend()
 {
     switch (options->glPlatformInterface()) {
 #if HAVE_EPOXY_GLX
     case GlxPlatformInterface:
         if (hasGlx()) {
-            return new GlxBackend(m_x11Display, this);
+            return std::make_unique<GlxBackend>(m_x11Display, this);
         } else {
             qCWarning(KWIN_X11STANDALONE) << "Glx not available, trying EGL instead.";
             // no break, needs fall-through
@@ -171,7 +171,7 @@ OpenGLBackend *X11StandalonePlatform::createOpenGLBackend()
         }
 #endif
     case EglPlatformInterface:
-        return new EglBackend(m_x11Display, this);
+        return std::make_unique<EglBackend>(m_x11Display, this);
     default:
         // no backend available
         return nullptr;

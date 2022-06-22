@@ -41,8 +41,8 @@ public:
     }
     QString screenshotDirPath() const;
 
-    QPainterBackend *createQPainterBackend() override;
-    OpenGLBackend *createOpenGLBackend() override;
+    std::unique_ptr<QPainterBackend> createQPainterBackend() override;
+    std::unique_ptr<OpenGLBackend> createOpenGLBackend() override;
 
     Q_INVOKABLE void setVirtualOutputs(int count, QVector<QRect> geometries = QVector<QRect>(), QVector<int> scales = QVector<int>());
 

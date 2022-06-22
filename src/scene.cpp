@@ -131,10 +131,7 @@ QRect SceneDelegate::viewport() const
 // Scene
 //****************************************
 
-Scene::Scene(QObject *parent)
-    : QObject(parent)
-{
-}
+Scene::Scene() = default;
 
 Scene::~Scene()
 {

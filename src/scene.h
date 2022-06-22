@@ -72,7 +72,7 @@ class KWIN_EXPORT Scene : public QObject
     Q_OBJECT
 
 public:
-    explicit Scene(QObject *parent = nullptr);
+    explicit Scene();
     ~Scene() override;
 
     void initialize();

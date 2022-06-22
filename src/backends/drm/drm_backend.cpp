@@ -549,19 +549,19 @@ void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
     }
 }
 
-InputBackend *DrmBackend::createInputBackend()
+std::unique_ptr<InputBackend> DrmBackend::createInputBackend()
 {
-    return new LibinputBackend();
+    return std::make_unique<LibinputBackend>();
 }
 
-QPainterBackend *DrmBackend::createQPainterBackend()
+std::unique_ptr<QPainterBackend> DrmBackend::createQPainterBackend()
 {
-    return new DrmQPainterBackend(this);
+    return std::make_unique<DrmQPainterBackend>(this);
 }
 
-OpenGLBackend *DrmBackend::createOpenGLBackend()
+std::unique_ptr<OpenGLBackend> DrmBackend::createOpenGLBackend()
 {
-    return new EglGbmBackend(this);
+    return std::make_unique<EglGbmBackend>(this);
 }
 
 void DrmBackend::sceneInitialized()

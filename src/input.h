@@ -322,7 +322,7 @@ private:
     void installInputEventFilter(InputEventFilter *filter);
     void updateLeds(LEDs leds);
     void updateAvailableInputDevices();
-    void addInputBackend(InputBackend *inputBackend);
+    void addInputBackend(std::unique_ptr<InputBackend> &&inputBackend);
     KeyboardInputRedirection *m_keyboard;
     PointerInputRedirection *m_pointer;
     TabletInputRedirection *m_tablet;
@@ -331,7 +331,7 @@ private:
 
     GlobalShortcutsManager *m_shortcuts;
 
-    QList<InputBackend *> m_inputBackends;
+    std::vector<std::unique_ptr<InputBackend>> m_inputBackends;
     QList<InputDevice *> m_inputDevices;
 
     QList<IdleDetector *> m_idleDetectors;

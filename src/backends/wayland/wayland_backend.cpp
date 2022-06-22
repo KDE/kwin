@@ -846,23 +846,23 @@ void WaylandBackend::destroyOutputs()
     }
 }
 
-InputBackend *WaylandBackend::createInputBackend()
+std::unique_ptr<InputBackend> WaylandBackend::createInputBackend()
 {
-    return new WaylandInputBackend(this);
+    return std::make_unique<WaylandInputBackend>(this);
 }
 
-OpenGLBackend *WaylandBackend::createOpenGLBackend()
+std::unique_ptr<OpenGLBackend> WaylandBackend::createOpenGLBackend()
 {
 #if HAVE_WAYLAND_EGL
-    return new WaylandEglBackend(this);
+    return std::make_unique<WaylandEglBackend>(this);
 #else
     return nullptr;
 #endif
 }
 
-QPainterBackend *WaylandBackend::createQPainterBackend()
+std::unique_ptr<QPainterBackend> WaylandBackend::createQPainterBackend()
 {
-    return new WaylandQPainterBackend(this);
+    return std::make_unique<WaylandQPainterBackend>(this);
 }
 
 void WaylandBackend::flush()

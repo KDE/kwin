@@ -66,9 +66,9 @@ public:
 
     virtual Session *session() const = 0;
     virtual bool initialize() = 0;
-    virtual InputBackend *createInputBackend();
-    virtual OpenGLBackend *createOpenGLBackend();
-    virtual QPainterBackend *createQPainterBackend();
+    virtual std::unique_ptr<InputBackend> createInputBackend();
+    virtual std::unique_ptr<OpenGLBackend> createOpenGLBackend();
+    virtual std::unique_ptr<QPainterBackend> createQPainterBackend();
     virtual std::optional<DmaBufParams> testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers);
     virtual std::shared_ptr<DmaBufTexture> createDmaBufTexture(const QSize &size, quint32 format, const uint64_t modifier);
     std::shared_ptr<DmaBufTexture> createDmaBufTexture(const DmaBufParams &attributes);

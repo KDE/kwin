@@ -49,7 +49,7 @@ public:
         const bool hardwareClipping;
     };
 
-    explicit SceneOpenGL(OpenGLBackend *backend, QObject *parent = nullptr);
+    explicit SceneOpenGL(OpenGLBackend *backend);
     ~SceneOpenGL() override;
     bool initFailed() const override;
     void paint(RenderTarget *renderTarget, const QRegion &region) override;
@@ -72,7 +72,7 @@ public:
     QVector<QByteArray> openGLPlatformInterfaceExtensions() const override;
     std::shared_ptr<GLTexture> textureForOutput(Output *output) const override;
 
-    static SceneOpenGL *createScene(OpenGLBackend *backend, QObject *parent);
+    static std::unique_ptr<SceneOpenGL> createScene(OpenGLBackend *backend);
     static bool supported(OpenGLBackend *backend);
 
 protected:

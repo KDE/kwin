@@ -43,9 +43,9 @@ public:
     explicit DrmBackend(QObject *parent = nullptr);
     ~DrmBackend() override;
 
-    InputBackend *createInputBackend() override;
-    QPainterBackend *createQPainterBackend() override;
-    OpenGLBackend *createOpenGLBackend() override;
+    std::unique_ptr<InputBackend> createInputBackend() override;
+    std::unique_ptr<QPainterBackend> createQPainterBackend() override;
+    std::unique_ptr<OpenGLBackend> createOpenGLBackend() override;
 
     std::optional<DmaBufParams> testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers) override;
     std::shared_ptr<DmaBufTexture> createDmaBufTexture(const QSize &size, quint32 format, const uint64_t modifier) override;

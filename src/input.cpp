@@ -2573,7 +2573,6 @@ InputRedirection::InputRedirection(QObject *parent)
 
 InputRedirection::~InputRedirection()
 {
-    qDeleteAll(m_inputBackends);
     m_inputBackends.clear();
     m_inputDevices.clear();
 
@@ -3066,26 +3065,25 @@ void InputRedirection::disableTouchpads()
     }
 }
 
-void InputRedirection::addInputBackend(InputBackend *inputBackend)
+void InputRedirection::addInputBackend(std::unique_ptr<InputBackend> &&inputBackend)
 {
-    Q_ASSERT(!m_inputBackends.contains(inputBackend));
-    m_inputBackends.append(inputBackend);
-
-    connect(inputBackend, &InputBackend::deviceAdded, this, &InputRedirection::addInputDevice);
-    connect(inputBackend, &InputBackend::deviceRemoved, this, &InputRedirection::removeInputDevice);
+    connect(inputBackend.get(), &InputBackend::deviceAdded, this, &InputRedirection::addInputDevice);
+    connect(inputBackend.get(), &InputBackend::deviceRemoved, this, &InputRedirection::removeInputDevice);
 
     inputBackend->setConfig(InputConfig::self()->inputConfig());
     inputBackend->initialize();
+
+    m_inputBackends.push_back(std::move(inputBackend));
 }
 
 void InputRedirection::setupInputBackends()
 {
-    InputBackend *inputBackend = kwinApp()->platform()->createInputBackend();
+    std::unique_ptr<InputBackend> inputBackend = kwinApp()->platform()->createInputBackend();
     if (inputBackend) {
-        addInputBackend(inputBackend);
+        addInputBackend(std::move(inputBackend));
     }
     if (waylandServer()) {
-        addInputBackend(new FakeInputBackend());
+        addInputBackend(std::make_unique<FakeInputBackend>());
     }
 }
 

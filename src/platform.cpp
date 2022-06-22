@@ -15,11 +15,14 @@
 #include "cursor.h"
 #include "dmabuftexture.h"
 #include "effects.h"
+#include "inputbackend.h"
+#include "openglbackend.h"
 #include "outline.h"
 #include "output.h"
 #include "outputconfiguration.h"
 #include "overlaywindow.h"
 #include "pointer_input.h"
+#include "qpainterbackend.h"
 #include "scene.h"
 #include "screenedge.h"
 #include "screens.h"
@@ -66,17 +69,17 @@ PlatformCursorImage Platform::cursorImage() const
     return PlatformCursorImage(cursor->image(), cursor->hotspot());
 }
 
-InputBackend *Platform::createInputBackend()
+std::unique_ptr<InputBackend> Platform::createInputBackend()
 {
     return nullptr;
 }
 
-OpenGLBackend *Platform::createOpenGLBackend()
+std::unique_ptr<OpenGLBackend> Platform::createOpenGLBackend()
 {
     return nullptr;
 }
 
-QPainterBackend *Platform::createQPainterBackend()
+std::unique_ptr<QPainterBackend> Platform::createQPainterBackend()
 {
     return nullptr;
 }

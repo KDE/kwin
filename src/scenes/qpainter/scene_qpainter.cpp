@@ -30,14 +30,13 @@ namespace KWin
 //****************************************
 // SceneQPainter
 //****************************************
-SceneQPainter *SceneQPainter::createScene(QPainterBackend *backend, QObject *parent)
+std::unique_ptr<SceneQPainter> SceneQPainter::createScene(QPainterBackend *backend)
 {
-    return new SceneQPainter(backend, parent);
+    return std::unique_ptr<SceneQPainter>(new SceneQPainter(backend));
 }
 
-SceneQPainter::SceneQPainter(QPainterBackend *backend, QObject *parent)
-    : Scene(parent)
-    , m_backend(backend)
+SceneQPainter::SceneQPainter(QPainterBackend *backend)
+    : m_backend(backend)
     , m_painter(new QPainter())
 {
 }

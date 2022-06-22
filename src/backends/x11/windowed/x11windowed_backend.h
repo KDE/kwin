@@ -115,9 +115,9 @@ public:
         return m_hasXInput;
     }
 
-    OpenGLBackend *createOpenGLBackend() override;
-    QPainterBackend *createQPainterBackend() override;
-    InputBackend *createInputBackend() override;
+    std::unique_ptr<OpenGLBackend> createOpenGLBackend() override;
+    std::unique_ptr<QPainterBackend> createQPainterBackend() override;
+    std::unique_ptr<InputBackend> createInputBackend() override;
     void warpPointer(const QPointF &globalPos) override;
 
     QVector<CompositingType> supportedCompositors() const override

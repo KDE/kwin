@@ -44,14 +44,14 @@ public:
         return m_backend;
     }
 
-    static SceneQPainter *createScene(QPainterBackend *backend, QObject *parent);
+    static std::unique_ptr<SceneQPainter> createScene(QPainterBackend *backend);
 
 protected:
     void paintBackground(const QRegion &region) override;
     void paintOffscreenQuickView(OffscreenQuickView *w) override;
 
 private:
-    explicit SceneQPainter(QPainterBackend *backend, QObject *parent = nullptr);
+    explicit SceneQPainter(QPainterBackend *backend);
 
     void renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceItem) const;
     void renderDecorationItem(QPainter *painter, DecorationItem *decorationItem) const;

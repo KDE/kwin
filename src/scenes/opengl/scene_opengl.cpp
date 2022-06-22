@@ -45,9 +45,8 @@ namespace KWin
  * SceneOpenGL
  ***********************************************/
 
-SceneOpenGL::SceneOpenGL(OpenGLBackend *backend, QObject *parent)
-    : Scene(parent)
-    , m_backend(backend)
+SceneOpenGL::SceneOpenGL(OpenGLBackend *backend)
+    : m_backend(backend)
 {
     // We only support the OpenGL 2+ shader API, not GL_ARB_shader_objects
     if (!hasGLVersion(2, 0)) {
@@ -70,13 +69,13 @@ SceneOpenGL::~SceneOpenGL()
     }
 }
 
-SceneOpenGL *SceneOpenGL::createScene(OpenGLBackend *backend, QObject *parent)
+std::unique_ptr<SceneOpenGL> SceneOpenGL::createScene(OpenGLBackend *backend)
 {
     if (SceneOpenGL::supported(backend)) {
-        return new SceneOpenGL(backend, parent);
+        return std::make_unique<SceneOpenGL>(backend);
+    } else {
+        return nullptr;
     }
-
-    return nullptr;
 }
 
 bool SceneOpenGL::initFailed() const

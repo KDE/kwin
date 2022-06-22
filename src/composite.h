@@ -14,6 +14,7 @@
 #include <QObject>
 #include <QRegion>
 #include <QTimer>
+#include <memory>
 
 namespace KWin
 {
@@ -70,11 +71,11 @@ public:
 
     Scene *scene() const
     {
-        return m_scene;
+        return m_scene.get();
     }
     RenderBackend *backend() const
     {
-        return m_backend;
+        return m_backend.get();
     }
 
     /**
@@ -152,8 +153,8 @@ private:
     QTimer m_releaseSelectionTimer;
     QList<xcb_atom_t> m_unusedSupportProperties;
     QTimer m_unusedSupportPropertyTimer;
-    Scene *m_scene = nullptr;
-    RenderBackend *m_backend = nullptr;
+    std::unique_ptr<Scene> m_scene;
+    std::unique_ptr<RenderBackend> m_backend;
     QHash<RenderLoop *, RenderLayer *> m_superlayers;
 };
 
