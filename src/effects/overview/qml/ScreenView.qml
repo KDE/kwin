@@ -184,7 +184,7 @@ FocusScope {
                 id: heap
                 visible: !(container.organized && searchField.text)
                 anchors.fill: parent
-                layoutMode: effect.layout
+                layout: effect.layout
                 padding: PlasmaCore.Units.largeSpacing
                 animationDuration: effect.animationDuration
                 animationEnabled: container.animationEnabled
