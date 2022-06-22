@@ -444,7 +444,7 @@ void ScreenCastStream::recordFrame(const QRegion &damagedRegion)
             m_cursor.texture->setYInverted(false);
             m_cursor.texture->bind();
             const auto cursorRect = cursorGeometry(cursor);
-            mvp.translate(cursorRect.left(), r.height() - cursorRect.top() - cursor->image().height() * m_cursor.scale);
+            mvp.translate(cursorRect.left(), r.height() - cursorRect.top() - cursor->image().height());
             shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
 
             glEnable(GL_BLEND);
