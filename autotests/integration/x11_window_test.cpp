@@ -367,7 +367,7 @@ void X11WindowTest::testResizeIncrements()
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
     QVERIFY(frameGeometryChangedSpy.wait());
 
-    //  100 + 8 pixels, rounded to resize increments. This will differ on scale
+    //  100 + 8 logical pixels, rounded to resize increments. This will differ on scale
     const qreal horizontalResizeInc = 3 / scale;
     const qreal verticalResizeInc = 5 / scale;
     const qreal expectedHorizontalResizeInc = std::floor(8. / horizontalResizeInc) * horizontalResizeInc;

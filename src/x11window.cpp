@@ -3585,8 +3585,9 @@ QSizeF X11Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
         baseh_inc = m_geometryHints.minSize().height();
     }
 
-    w = Xcb::nativeFloor((w - basew_inc) / width_inc) * width_inc + basew_inc;
-    h = Xcb::nativeFloor((h - baseh_inc) / width_inc) * width_inc + baseh_inc;
+    w = std::floor((w - basew_inc) / width_inc) * width_inc + basew_inc;
+    h = std::floor((h - baseh_inc) / height_inc) * height_inc + baseh_inc;
+
     // code for aspect ratios based on code from FVWM
     /*
      * The math looks like this:
