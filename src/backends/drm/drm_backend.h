@@ -84,8 +84,6 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void activeChanged();
-    void gpuRemoved(DrmGpu *gpu);
-    void gpuAdded(DrmGpu *gpu);
 
 protected:
     bool applyOutputChanges(const OutputConfiguration &config) override;
@@ -99,6 +97,7 @@ private:
     void deactivate();
     bool readOutputsConfiguration(const QVector<DrmAbstractOutput *> &outputs);
     void handleUdevEvent();
+    void removeGpu(DrmGpu *gpu);
     DrmGpu *addGpu(const QString &fileName);
 
     std::unique_ptr<Udev> m_udev;
@@ -112,7 +111,7 @@ private:
 
     bool m_active = false;
     const QStringList m_explicitGpus;
-    QVector<DrmGpu *> m_gpus;
+    std::vector<std::unique_ptr<DrmGpu>> m_gpus;
     std::unique_ptr<DpmsInputEventFilter> m_dpmsFilter;
     std::unique_ptr<PlaceholderInputEventFilter> m_placeholderFilter;
     DrmRenderBackend *m_renderBackend = nullptr;

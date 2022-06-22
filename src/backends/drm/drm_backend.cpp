@@ -91,10 +91,7 @@ DrmBackend::DrmBackend(QObject *parent)
     supportsOutputChanges();
 }
 
-DrmBackend::~DrmBackend()
-{
-    qDeleteAll(m_gpus);
-}
+DrmBackend::~DrmBackend() = default;
 
 bool DrmBackend::isActive() const
 {
@@ -222,7 +219,7 @@ bool DrmBackend::initialize()
         }
     }
 
-    if (m_gpus.isEmpty()) {
+    if (m_gpus.empty()) {
         qCWarning(KWIN_DRM) << "No suitable DRM devices have been found";
         return false;
     }
@@ -264,10 +261,7 @@ void DrmBackend::handleUdevEvent()
                     kwinApp()->quit();
                     return;
                 } else {
-                    qCDebug(KWIN_DRM) << "Removing gpu" << gpu->devNode();
-                    Q_EMIT gpuRemoved(gpu);
-                    m_gpus.removeOne(gpu);
-                    delete gpu;
+                    removeGpu(gpu);
                     updateOutputs();
                 }
             }
@@ -308,13 +302,23 @@ DrmGpu *DrmBackend::addGpu(const QString &fileName)
         return nullptr;
     }
 
-    DrmGpu *gpu = new DrmGpu(this, fileName, fd, buf.st_rdev);
-    m_gpus.append(gpu);
+    m_gpus.push_back(std::make_unique<DrmGpu>(this, fileName, fd, buf.st_rdev));
+    auto gpu = m_gpus.back().get();
     m_active = true;
     connect(gpu, &DrmGpu::outputAdded, this, &DrmBackend::addOutput);
     connect(gpu, &DrmGpu::outputRemoved, this, &DrmBackend::removeOutput);
-    Q_EMIT gpuAdded(gpu);
     return gpu;
+}
+
+void DrmBackend::removeGpu(DrmGpu *gpu)
+{
+    auto it = std::find_if(m_gpus.begin(), m_gpus.end(), [gpu](const auto &g) {
+        return g.get() == gpu;
+    });
+    if (it != m_gpus.end()) {
+        qCDebug(KWIN_DRM) << "Removing gpu" << gpu->devNode();
+        m_gpus.erase(it);
+    }
 }
 
 void DrmBackend::addOutput(DrmAbstractOutput *o)
@@ -335,13 +339,11 @@ void DrmBackend::updateOutputs()
 {
     const auto oldOutputs = m_outputs;
     for (auto it = m_gpus.begin(); it < m_gpus.end();) {
-        auto gpu = *it;
+        auto gpu = it->get();
         gpu->updateOutputs();
         if (gpu->outputs().isEmpty() && gpu != primaryGpu()) {
             qCDebug(KWIN_DRM) << "removing unused GPU" << gpu->devNode();
             it = m_gpus.erase(it);
-            Q_EMIT gpuRemoved(gpu);
-            delete gpu;
         } else {
             it++;
         }
@@ -589,7 +591,7 @@ QString DrmBackend::supportInformation() const
     s << "Name: "
       << "DRM" << Qt::endl;
     s << "Active: " << m_active << Qt::endl;
-    for (int g = 0; g < m_gpus.size(); g++) {
+    for (size_t g = 0; g < m_gpus.size(); g++) {
         s << "Atomic Mode Setting on GPU " << g << ": " << m_gpus.at(g)->atomicModeSetting() << Qt::endl;
     }
     return supportInfo;
@@ -659,27 +661,23 @@ std::shared_ptr<DmaBufTexture> DrmBackend::createDmaBufTexture(const QSize &size
 
 DrmGpu *DrmBackend::primaryGpu() const
 {
-    return m_gpus.isEmpty() ? nullptr : m_gpus[0];
+    return m_gpus.empty() ? nullptr : m_gpus.front().get();
 }
 
 DrmGpu *DrmBackend::findGpu(dev_t deviceId) const
 {
-    for (DrmGpu *gpu : qAsConst(m_gpus)) {
-        if (gpu->deviceId() == deviceId) {
-            return gpu;
-        }
-    }
-    return nullptr;
+    auto it = std::find_if(m_gpus.begin(), m_gpus.end(), [deviceId](const auto &gpu) {
+        return gpu->deviceId() == deviceId;
+    });
+    return it == m_gpus.end() ? nullptr : it->get();
 }
 
 DrmGpu *DrmBackend::findGpuByFd(int fd) const
 {
-    for (DrmGpu *gpu : qAsConst(m_gpus)) {
-        if (gpu->fd() == fd) {
-            return gpu;
-        }
-    }
-    return nullptr;
+    auto it = std::find_if(m_gpus.begin(), m_gpus.end(), [fd](const auto &gpu) {
+        return gpu->fd() == fd;
+    });
+    return it == m_gpus.end() ? nullptr : it->get();
 }
 
 bool DrmBackend::applyOutputChanges(const OutputConfiguration &config)
