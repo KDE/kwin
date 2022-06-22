@@ -105,9 +105,6 @@ DropArea {
         animationEnabled: container.animationEnabled
         organized: container.organized
         layout: effect.layout
-        supportsCloseWindows: false
-        supportsDragUpGesture: false
-        showCaptions: false
         model: KWinComponents.ClientFilterModel {
             activity: KWinComponents.Workspace.currentActivity
             desktop: desktopView.desktop
@@ -116,6 +113,11 @@ DropArea {
             windowType: ~KWinComponents.ClientFilterModel.Dock &
                     ~KWinComponents.ClientFilterModel.Desktop &
                     ~KWinComponents.ClientFilterModel.Notification;
+        }
+        delegate: WindowHeapDelegate {
+            windowHeap: heap
+            closeButtonVisible: false
+            windowTitleVisible: false
         }
         onActivated: effect.deactivate(effect.animationDuration);
         onWindowClicked: {
