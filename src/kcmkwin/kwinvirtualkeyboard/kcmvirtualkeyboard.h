@@ -21,7 +21,7 @@ public:
     enum Roles {
         DesktopFileNameRole = Qt::UserRole + 1,
     };
-    Q_ENUM(Roles);
+    Q_ENUM(Roles)
 
     VirtualKeyboardsModel(QObject *parent = nullptr);
     QVariant data(const QModelIndex &index, int role) const override;

@@ -98,7 +98,7 @@ public:
         Always = 1,
         Automatic = 2,
     };
-    Q_ENUM(VrrPolicy);
+    Q_ENUM(VrrPolicy)
 
     /**
      * the current policy regarding the use of variable refresh rate

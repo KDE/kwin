@@ -53,7 +53,7 @@ public:
         Embedded = 2,
         Metadata = 4,
     };
-    Q_ENUM(CursorMode);
+    Q_ENUM(CursorMode)
 
 Q_SIGNALS:
     void outputScreencastRequested(ScreencastStreamV1Interface *stream, OutputInterface *output, CursorMode mode);
