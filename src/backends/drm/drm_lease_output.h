@@ -24,12 +24,11 @@ class DrmPipeline;
  * that is not used directly by the compositor but is instead leased out to
  * applications (usually VR compositors) that drive the output themselves
  */
-class DrmLeaseOutput : public KWaylandServer::DrmLeaseConnectorV1Interface
+class DrmLeaseOutput
 {
-    Q_OBJECT
 public:
     DrmLeaseOutput(DrmPipeline *pipeline, KWaylandServer::DrmLeaseDeviceV1Interface *leaseDevice);
-    ~DrmLeaseOutput() override;
+    ~DrmLeaseOutput();
 
     bool addLeaseObjects(QVector<uint32_t> &objectList);
     void leased(KWaylandServer::DrmLeaseV1Interface *lease);
@@ -40,6 +39,7 @@ public:
 
 private:
     DrmPipeline *m_pipeline;
+    std::unique_ptr<KWaylandServer::DrmLeaseConnectorV1Interface> m_offer;
     KWaylandServer::DrmLeaseV1Interface *m_lease = nullptr;
 };
 

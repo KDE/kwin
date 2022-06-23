@@ -182,6 +182,11 @@ DrmLeaseConnectorV1Interface::~DrmLeaseConnectorV1Interface()
     }
 }
 
+uint32_t DrmLeaseConnectorV1Interface::id() const
+{
+    return d->connectorId;
+}
+
 DrmLeaseConnectorV1Interface *DrmLeaseConnectorV1Interface::get(wl_resource *resource)
 {
     if (auto connectorPrivate = resource_cast<DrmLeaseConnectorV1InterfacePrivate *>(resource)) {

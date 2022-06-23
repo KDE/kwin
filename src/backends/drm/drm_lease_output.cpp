@@ -24,14 +24,16 @@ namespace KWin
 {
 
 DrmLeaseOutput::DrmLeaseOutput(DrmPipeline *pipeline, KWaylandServer::DrmLeaseDeviceV1Interface *leaseDevice)
-    : KWaylandServer::DrmLeaseConnectorV1Interface(
-        leaseDevice,
-        pipeline->connector()->id(),
-        pipeline->connector()->modelName(),
-        QStringLiteral("%1 %2").arg(pipeline->connector()->edid()->manufacturerString(), pipeline->connector()->modelName()))
-    , m_pipeline(pipeline)
+    : m_pipeline(pipeline)
 {
-    qCDebug(KWIN_DRM) << "offering connector" << m_pipeline->connector()->id() << "for lease";
+    const DrmConnector *connector = pipeline->connector();
+    qCDebug(KWIN_DRM) << "offering connector" << connector->id() << "for lease";
+
+    m_offer = std::make_unique<KWaylandServer::DrmLeaseConnectorV1Interface>(
+        leaseDevice,
+        connector->id(),
+        connector->modelName(),
+        QStringLiteral("%1 %2").arg(connector->edid()->manufacturerString(), connector->modelName()));
 }
 
 DrmLeaseOutput::~DrmLeaseOutput()

@@ -72,6 +72,8 @@ public:
     explicit DrmLeaseConnectorV1Interface(DrmLeaseDeviceV1Interface *leaseDevice, uint32_t id, const QString &name, const QString &description);
     ~DrmLeaseConnectorV1Interface() override;
 
+    uint32_t id() const;
+
     static DrmLeaseConnectorV1Interface *get(wl_resource *resource);
 
 private:

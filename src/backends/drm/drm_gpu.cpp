@@ -616,10 +616,13 @@ void DrmGpu::handleLeaseRequest(KWaylandServer::DrmLeaseV1Interface *leaseReques
 {
     QVector<uint32_t> objects;
     QVector<DrmLeaseOutput *> outputs;
-    const auto conns = leaseRequest->connectors();
-    for (const auto &connector : conns) {
-        auto output = qobject_cast<DrmLeaseOutput *>(connector);
-        if (m_leaseOutputs.contains(output) && !output->lease()) {
+
+    const auto connectors = leaseRequest->connectors();
+    for (KWaylandServer::DrmLeaseConnectorV1Interface *connector : connectors) {
+        if (DrmLeaseOutput *output = findLeaseOutput(connector->id())) {
+            if (output->lease()) {
+                continue; // already leased
+            }
             if (!output->addLeaseObjects(objects)) {
                 leaseRequest->deny();
                 return;
@@ -627,6 +630,7 @@ void DrmGpu::handleLeaseRequest(KWaylandServer::DrmLeaseV1Interface *leaseReques
             outputs << output;
         }
     }
+
     uint32_t lesseeId;
     int fd = drmModeCreateLease(m_fd, objects.constData(), objects.count(), 0, &lesseeId);
     if (fd < 0) {
@@ -650,10 +654,9 @@ void DrmGpu::handleLeaseRequest(KWaylandServer::DrmLeaseV1Interface *leaseReques
 
 void DrmGpu::handleLeaseRevoked(KWaylandServer::DrmLeaseV1Interface *lease)
 {
-    const auto conns = lease->connectors();
-    for (const auto &connector : conns) {
-        auto output = qobject_cast<DrmLeaseOutput *>(connector);
-        if (m_leaseOutputs.contains(output)) {
+    const auto connectors = lease->connectors();
+    for (KWaylandServer::DrmLeaseConnectorV1Interface *connector : connectors) {
+        if (DrmLeaseOutput *output = findLeaseOutput(connector->id())) {
             output->leaseEnded();
         }
     }
