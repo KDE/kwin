@@ -178,10 +178,10 @@ Item {
 
     ExpoCell {
         id: cell
-        layout: windowHeap.expoLayout
+        layout: windowHeap.layout
         enabled: !thumb.hidden
-        naturalX: thumb.client.x - targetScreen.geometry.x - windowHeap.expoLayout.Kirigami.ScenePosition.x
-        naturalY: thumb.client.y - targetScreen.geometry.y - windowHeap.expoLayout.Kirigami.ScenePosition.y
+        naturalX: thumb.client.x - targetScreen.geometry.x - windowHeap.layout.Kirigami.ScenePosition.x
+        naturalY: thumb.client.y - targetScreen.geometry.y - windowHeap.layout.Kirigami.ScenePosition.y
         naturalWidth: thumb.client.width
         naturalHeight: thumb.client.height
         persistentKey: thumb.client.internalId
@@ -193,8 +193,8 @@ Item {
             name: "initial"
             PropertyChanges {
                 target: thumb
-                x: thumb.client.x - targetScreen.geometry.x - (thumb.windowHeap.absolutePositioning ?  windowHeap.expoLayout.Kirigami.ScenePosition.x : 0)
-                y: thumb.client.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ?  windowHeap.expoLayout.Kirigami.ScenePosition.y : 0)
+                x: thumb.client.x - targetScreen.geometry.x - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.x : 0)
+                y: thumb.client.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.y : 0)
                 width: thumb.client.width
                 height: thumb.client.height
             }
@@ -211,8 +211,8 @@ Item {
             name: "partial"
             PropertyChanges {
                 target: thumb
-                x: (thumb.client.x - targetScreen.geometry.x - (thumb.windowHeap.absolutePositioning ?  windowHeap.expoLayout.Kirigami.ScenePosition.x : 0)) * (1 - effect.partialActivationFactor) + cell.x * effect.partialActivationFactor
-                y: (thumb.client.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ?  windowHeap.expoLayout.Kirigami.ScenePosition.y : 0)) * (1 - effect.partialActivationFactor) + cell.y * effect.partialActivationFactor
+                x: (thumb.client.x - targetScreen.geometry.x - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.x : 0)) * (1 - effect.partialActivationFactor) + cell.x * effect.partialActivationFactor
+                y: (thumb.client.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.y : 0)) * (1 - effect.partialActivationFactor) + cell.y * effect.partialActivationFactor
                 width: thumb.client.width * (1 - effect.partialActivationFactor) + cell.width * effect.partialActivationFactor
                 height: thumb.client.height * (1 - effect.partialActivationFactor) + cell.height * effect.partialActivationFactor
                 opacity: thumb.client.minimized ? effect.partialActivationFactor : 1

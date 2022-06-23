@@ -104,7 +104,7 @@ DropArea {
         absolutePositioning: false
         animationEnabled: container.animationEnabled
         organized: container.organized
-        layout: effect.layout
+        layout.mode: effect.layout
         model: KWinComponents.ClientFilterModel {
             activity: KWinComponents.Workspace.currentActivity
             desktop: desktopView.desktop

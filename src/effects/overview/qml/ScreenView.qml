@@ -184,7 +184,7 @@ FocusScope {
                 id: heap
                 visible: !(container.organized && searchField.text)
                 anchors.fill: parent
-                layout: effect.layout
+                layout.mode: effect.layout
                 padding: PlasmaCore.Units.largeSpacing
                 animationDuration: effect.animationDuration
                 animationEnabled: container.animationEnabled
@@ -210,11 +210,11 @@ FocusScope {
                     windowHeap: heap
 
                     targetScale: {
-                        var localPressPosition = dragHandler.centroid.scenePressPosition.y - heap.expoLayout.Kirigami.ScenePosition.y;
+                        var localPressPosition = dragHandler.centroid.scenePressPosition.y - heap.layout.Kirigami.ScenePosition.y;
                         if (localPressPosition == 0) {
                             return 0.1
                         } else {
-                            var localPosition = dragHandler.centroid.scenePosition.y - heap.expoLayout.Kirigami.ScenePosition.y;
+                            var localPosition = dragHandler.centroid.scenePosition.y - heap.layout.Kirigami.ScenePosition.y;
                             return Math.max(0.1, Math.min(localPosition / localPressPosition, 1))
                         }
                     }

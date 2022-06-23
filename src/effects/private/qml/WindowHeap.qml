@@ -24,8 +24,7 @@ FocusScope {
 
     property alias model: windowsRepeater.model
     property alias delegate: windowsRepeater.delegate
-    property alias layout: expoLayout.mode
-    property alias expoLayout: expoLayout
+    property alias layout: expoLayout
     property int selectedIndex: -1
     property int animationDuration: PlasmaCore.Units.longDuration
     property bool animationEnabled: false

@@ -123,7 +123,7 @@ Item {
             animationEnabled: container.animationEnabled
             organized: container.organized
             showOnly: container.effect.mode === WindowView.ModeWindowClass ? "activeClass" : selectedIds
-            layout: effect.layout
+            layout.mode: effect.layout
             onWindowClicked: {
                 if (eventPoint.event.button !== Qt.MiddleButton) {
                     return;
