@@ -53,7 +53,7 @@ FocusScope {
         z: 2
         property KWinComponents.WindowThumbnailItem cloneOf
         visible: false
-        wId: cloneOf ? cloneOf.wId : null
+        client: cloneOf ? cloneOf.client : null
         width: cloneOf ? cloneOf.width : 0
         height: cloneOf ? cloneOf.height : 0
         onCloneOfChanged: {
