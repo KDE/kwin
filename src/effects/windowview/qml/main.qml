@@ -120,6 +120,7 @@ Item {
             organized: container.organized
             showOnly: container.effect.mode === WindowView.ModeWindowClass ? "activeClass" : selectedIds
             layout: effect.layout
+            supportsCloseWindows: true
             onWindowClicked: {
                 if (eventPoint.event.button !== Qt.MiddleButton) {
                     return;
@@ -136,11 +137,6 @@ Item {
                 windowType: ~KWinComponents.ClientFilterModel.Dock &
                         ~KWinComponents.ClientFilterModel.Desktop &
                         ~KWinComponents.ClientFilterModel.Notification;
-            }
-            delegate: WindowHeapDelegate {
-                windowHeap: heap
-                opacity: 1 - downGestureProgress
-                onDownGestureTriggered: client.closeWindow()
             }
             onActivated: effect.deactivate(animationDuration);
         }
