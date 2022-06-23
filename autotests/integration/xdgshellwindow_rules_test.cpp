@@ -40,7 +40,7 @@ class TestXdgShellWindowRules : public QObject
         ServerSideDecoration = 1 << 1, // Create window with server side decoration. Used on noBorder tests
         ReturnAfterSurfaceConfiguration = 1 << 2, // Do not create the window now, but return after surface configuration.
     };
-    Q_DECLARE_FLAGS(ClientFlags, ClientFlag);
+    Q_DECLARE_FLAGS(ClientFlags, ClientFlag)
 
 private Q_SLOTS:
     void initTestCase();
