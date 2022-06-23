@@ -75,10 +75,14 @@ Item {
             Layout.alignment: Qt.AlignCenter
             Layout.topMargin: PlasmaCore.Units.gridUnit
             Layout.preferredWidth: Math.min(parent.width, 20 * PlasmaCore.Units.gridUnit)
-            focus: true
+            focus: false
             // Binding loops will be avoided from the fact that setting the text to the same won't emit textChanged
             // We can't use activeFocus because is not reliable on qml effects
-            onTextChanged: effect.searchText = text
+            onTextChanged: {
+                effect.searchText = text;
+                heap.resetSelected();
+                heap.selectNextItem(WindowHeap.Direction.Down);
+            }
             Binding {
                 target: searchField
                 property: "text"
