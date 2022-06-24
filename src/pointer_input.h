@@ -86,6 +86,7 @@ public:
      * @internal
      */
     void processMotionAbsolute(const QPointF &pos, uint32_t time, InputDevice *device = nullptr);
+    void processMotionAbsolute2(const QPointF &pos, uint32_t time, InputDevice *device = nullptr);
     /**
      * @internal
      */

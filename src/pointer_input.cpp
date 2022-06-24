@@ -256,6 +256,13 @@ QVector<PositionUpdateBlocker::ScheduledPosition> PositionUpdateBlocker::s_sched
 
 void PointerInputRedirection::processMotionAbsolute(const QPointF &pos, uint32_t time, InputDevice *device)
 {
+    const QRect bounds = workspace()->geometry();
+    const QPointF workspacePos(pos.x() * bounds.width(), pos.y() * bounds.height());
+    processMotionInternal(workspacePos, QSizeF(), QSizeF(), time, 0, device);
+}
+
+void PointerInputRedirection::processMotionAbsolute2(const QPointF &pos, uint32_t time, InputDevice *device)
+{
     processMotionInternal(pos, QSizeF(), QSizeF(), time, 0, device);
 }
 
@@ -721,7 +728,7 @@ void PointerInputRedirection::updatePointerConstraints()
                 m_locked = false;
                 disconnectLockedPointerAboutToBeUnboundConnection();
                 if (!(hint.x() < 0 || hint.y() < 0) && focus()) {
-                    processMotionAbsolute(focus()->mapFromLocal(hint), waylandServer()->seat()->timestamp());
+                    processMotionAbsolute2(focus()->mapFromLocal(hint), waylandServer()->seat()->timestamp());
                 }
             }
             return;
@@ -742,7 +749,7 @@ void PointerInputRedirection::updatePointerConstraints()
 
                 // When the resource finally goes away, reposition the cursor according to the hint
                 connect(lock, &KWaylandServer::LockedPointerV1Interface::destroyed, this, [this, globalHint]() {
-                    processMotionAbsolute(globalHint, waylandServer()->seat()->timestamp());
+                    processMotionAbsolute2(globalHint, waylandServer()->seat()->timestamp());
                 });
             });
             // TODO: connect to region change - is it needed at all? If the pointer is locked it's always in the region
@@ -862,7 +869,7 @@ void PointerInputRedirection::warp(const QPointF &pos)
 {
     if (supportsWarping()) {
         kwinApp()->platform()->warpPointer(pos);
-        processMotionAbsolute(pos, waylandServer()->seat()->timestamp());
+        processMotionAbsolute2(pos, waylandServer()->seat()->timestamp());
     }
 }
 
@@ -886,7 +893,7 @@ void PointerInputRedirection::updateAfterScreenChange()
     // pointer no longer on a screen, reposition to closes screen
     const Output *output = kwinApp()->platform()->outputAt(m_pos.toPoint());
     // TODO: better way to get timestamps
-    processMotionAbsolute(output->geometry().center(), waylandServer()->seat()->timestamp());
+    processMotionAbsolute2(output->geometry().center(), waylandServer()->seat()->timestamp());
 }
 
 QPointF PointerInputRedirection::position() const

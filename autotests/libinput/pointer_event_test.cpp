@@ -214,8 +214,8 @@ void TestLibinputPointerEvent::testAbsoluteMotion()
     QVERIFY(pe);
     QCOMPARE(pe->type(), LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE);
     QCOMPARE(pe->time(), 500u);
-    QCOMPARE(pe->absolutePos(), QPointF(6.25, 6.9));
-    QCOMPARE(pe->absolutePos(QSize(1280, 1024)), QPointF(640, 512));
+    QCOMPARE(pe->absolutePosMM(), QPointF(6.25, 6.9));
+    QCOMPARE(pe->absolutePos(), QPointF(0.5, 0.5));
 }
 
 QTEST_GUILESS_MAIN(TestLibinputPointerEvent)

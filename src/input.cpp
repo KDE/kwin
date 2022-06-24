@@ -2250,7 +2250,7 @@ public:
         switch (event->type()) {
         case QEvent::TabletMove:
         case QEvent::TabletEnterProximity:
-            input()->pointer()->processMotionAbsolute(event->globalPosF(), event->timestamp());
+            input()->pointer()->processMotionAbsolute2(event->globalPosF(), event->timestamp());
             break;
         case QEvent::TabletPress:
             input()->pointer()->processButton(KWin::qtMouseButtonToButton(Qt::LeftButton),

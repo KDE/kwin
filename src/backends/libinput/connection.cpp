@@ -16,8 +16,6 @@
 #include "main.h"
 #include "output.h"
 #include "platform.h"
-#include "window.h"
-#include "workspace.h"
 #endif
 
 #include "input_event.h"
@@ -357,7 +355,7 @@ void Connection::processEvents()
         }
         case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE: {
             PointerEvent *pe = static_cast<PointerEvent *>(event.get());
-            Q_EMIT pe->device()->pointerMotionAbsolute(pe->absolutePos(workspace()->geometry().size()), pe->time(), pe->device());
+            Q_EMIT pe->device()->pointerMotionAbsolute(pe->absolutePos(), pe->time(), pe->device());
             break;
         }
         case LIBINPUT_EVENT_TOUCH_DOWN: {

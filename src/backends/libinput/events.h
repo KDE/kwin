@@ -78,8 +78,8 @@ public:
     PointerEvent(libinput_event *event, libinput_event_type type);
     ~PointerEvent() override;
 
+    QPointF absolutePosMM() const;
     QPointF absolutePos() const;
-    QPointF absolutePos(const QSize &size) const;
     QSizeF delta() const;
     QSizeF deltaUnaccelerated() const;
     uint32_t button() const;

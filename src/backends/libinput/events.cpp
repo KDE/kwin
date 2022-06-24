@@ -134,18 +134,18 @@ PointerEvent::PointerEvent(libinput_event *event, libinput_event_type type)
 
 PointerEvent::~PointerEvent() = default;
 
-QPointF PointerEvent::absolutePos() const
+QPointF PointerEvent::absolutePosMM() const
 {
     Q_ASSERT(type() == LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE);
     return QPointF(libinput_event_pointer_get_absolute_x(m_pointerEvent),
                    libinput_event_pointer_get_absolute_y(m_pointerEvent));
 }
 
-QPointF PointerEvent::absolutePos(const QSize &size) const
+QPointF PointerEvent::absolutePos() const
 {
     Q_ASSERT(type() == LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE);
-    return QPointF(libinput_event_pointer_get_absolute_x_transformed(m_pointerEvent, size.width()),
-                   libinput_event_pointer_get_absolute_y_transformed(m_pointerEvent, size.height()));
+    return QPointF(libinput_event_pointer_get_absolute_x_transformed(m_pointerEvent, 1),
+                   libinput_event_pointer_get_absolute_y_transformed(m_pointerEvent, 1));
 }
 
 QSizeF PointerEvent::delta() const
