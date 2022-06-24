@@ -363,8 +363,6 @@ void OffscreenQuickView::forwardKeyEvent(QKeyEvent *keyEvent)
 
 bool OffscreenQuickView::forwardTouchDown(qint32 id, const QPointF &pos, quint32 time)
 {
-    Q_UNUSED(time)
-
     d->updateTouchState(Qt::TouchPointPressed, id, pos);
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -372,6 +370,7 @@ bool OffscreenQuickView::forwardTouchDown(qint32 id, const QPointF &pos, quint32
 #else
     QTouchEvent event(QEvent::TouchBegin, d->touchDevice, Qt::NoModifier, d->touchPoints);
 #endif
+    event.setTimestamp(time);
     QCoreApplication::sendEvent(d->m_view, &event);
 
     return event.isAccepted();

@@ -63,6 +63,7 @@ bool EffectsMouseInterceptionX11Filter::event(xcb_generic_event_t *event)
                 }
 
                 QWheelEvent ev(QPoint(me->event_x, me->event_y), QCursor::pos(), QPoint(), angleDelta, buttons, modifiers, Qt::NoScrollPhase, false);
+                ev.setTimestamp(me->time);
                 return m_effects->checkInputWindowEvent(&ev);
             }
             const Qt::MouseButton button = x11ToQtMouseButton(me->detail);
@@ -75,6 +76,7 @@ bool EffectsMouseInterceptionX11Filter::event(xcb_generic_event_t *event)
             }
             QMouseEvent ev(type, QPoint(me->event_x, me->event_y), QPoint(me->root_x, me->root_y),
                            button, buttons, x11ToQtKeyboardModifiers(me->state));
+            ev.setTimestamp(me->time);
             return m_effects->checkInputWindowEvent(&ev);
         }
     } else if (eventType == XCB_MOTION_NOTIFY) {
@@ -82,6 +84,7 @@ bool EffectsMouseInterceptionX11Filter::event(xcb_generic_event_t *event)
         if (m_window == me->event) {
             QMouseEvent ev(QEvent::MouseMove, QPoint(me->event_x, me->event_y), QPoint(me->root_x, me->root_y),
                            Qt::NoButton, x11ToQtMouseButtons(me->state), x11ToQtKeyboardModifiers(me->state));
+            ev.setTimestamp(me->time);
             return m_effects->checkInputWindowEvent(&ev);
         }
     }
