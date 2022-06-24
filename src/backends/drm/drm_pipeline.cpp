@@ -170,12 +170,16 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline 
 
 DrmPipeline::Error DrmPipeline::populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags)
 {
-    if (needsModeset()) {
-        prepareAtomicModeset();
+    bool modeset = needsModeset();
+    if (modeset) {
         flags |= DRM_MODE_ATOMIC_ALLOW_MODESET;
+        m_pending.needsModeset = true;
     }
     if (activePending()) {
         flags |= DRM_MODE_PAGE_FLIP_EVENT;
+    }
+    if (m_pending.needsModeset) {
+        prepareAtomicModeset();
     }
     if (m_pending.crtc) {
         m_pending.crtc->setPending(DrmCrtc::PropertyIndex::VrrEnabled, m_pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive);
@@ -302,6 +306,7 @@ void DrmPipeline::atomicCommitSuccessful(CommitMode mode)
         }
     }
     if (mode != CommitMode::Test) {
+        m_pending.needsModeset = false;
         if (activePending()) {
             m_pageflipPending = true;
         }
