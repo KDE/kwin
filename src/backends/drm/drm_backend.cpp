@@ -687,6 +687,11 @@ bool DrmBackend::applyOutputChanges(const OutputConfiguration &config)
                 // virtual outputs don't need testing
                 continue;
             }
+            if (output->lease()) {
+                if (config.hasChangeSet(output)) {
+                    return false;
+                }
+            }
             output->queueChanges(config);
             if (config.constChangeSet(output)->enabled) {
                 toBeEnabled << output;

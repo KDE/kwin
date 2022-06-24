@@ -13,6 +13,8 @@
 #include "drm_object.h"
 #include "drm_object_plane.h"
 
+#include "wayland/drmleasedevice_v1_interface.h"
+
 #include <QObject>
 #include <QPoint>
 #include <QSize>
@@ -35,8 +37,13 @@ class KWIN_EXPORT DrmOutput : public DrmAbstractOutput
 {
     Q_OBJECT
 public:
-    DrmOutput(DrmPipeline *pipeline);
+    DrmOutput(DrmPipeline *pipeline, KWaylandServer::DrmLeaseDeviceV1Interface *leaseDevice);
     ~DrmOutput() override;
+
+    bool addLeaseObjects(QVector<uint32_t> &objectList);
+    void leased(KWaylandServer::DrmLeaseV1Interface *lease);
+    void leaseEnded();
+    KWaylandServer::DrmLeaseV1Interface *lease() const;
 
     DrmConnector *connector() const;
     DrmPipeline *pipeline() const;
@@ -73,6 +80,8 @@ private:
     bool m_cursorTextureDirty = true;
     std::unique_ptr<GLTexture> m_cursorTexture;
     QTimer m_turnOffTimer;
+    std::unique_ptr<KWaylandServer::DrmLeaseConnectorV1Interface> m_offer;
+    KWaylandServer::DrmLeaseV1Interface *m_lease = nullptr;
 };
 
 }

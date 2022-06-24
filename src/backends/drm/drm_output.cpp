@@ -43,7 +43,7 @@
 namespace KWin
 {
 
-DrmOutput::DrmOutput(DrmPipeline *pipeline)
+DrmOutput::DrmOutput(DrmPipeline *pipeline, KWaylandServer::DrmLeaseDeviceV1Interface *leaseDevice)
     : DrmAbstractOutput(pipeline->connector()->gpu())
     , m_pipeline(pipeline)
     , m_connector(pipeline->connector())
@@ -97,6 +97,12 @@ DrmOutput::DrmOutput(DrmPipeline *pipeline)
     connect(Cursors::self(), &Cursors::currentCursorChanged, this, &DrmOutput::updateCursor);
     connect(Cursors::self(), &Cursors::hiddenChanged, this, &DrmOutput::updateCursor);
     connect(Cursors::self(), &Cursors::positionChanged, this, &DrmOutput::moveCursor);
+
+    m_offer = std::make_unique<KWaylandServer::DrmLeaseConnectorV1Interface>(
+        leaseDevice,
+        m_connector->id(),
+        m_connector->modelName(),
+        QStringLiteral("%1 %2").arg(m_connector->edid()->manufacturerString(), m_connector->modelName()));
 }
 
 DrmOutput::~DrmOutput()
@@ -104,8 +110,42 @@ DrmOutput::~DrmOutput()
     m_pipeline->setOutput(nullptr);
 }
 
+bool DrmOutput::addLeaseObjects(QVector<uint32_t> &objectList)
+{
+    if (!m_pipeline->crtc()) {
+        qCWarning(KWIN_DRM) << "Can't lease connector: No suitable crtc available";
+        return false;
+    }
+    qCDebug(KWIN_DRM) << "adding connector" << m_pipeline->connector()->id() << "to lease";
+    objectList << m_pipeline->connector()->id();
+    objectList << m_pipeline->crtc()->id();
+    if (m_pipeline->crtc()->primaryPlane()) {
+        objectList << m_pipeline->crtc()->primaryPlane()->id();
+    }
+    return true;
+}
+
+void DrmOutput::leased(KWaylandServer::DrmLeaseV1Interface *lease)
+{
+    m_lease = lease;
+}
+
+void DrmOutput::leaseEnded()
+{
+    qCDebug(KWIN_DRM) << "ended lease for connector" << m_pipeline->connector()->id();
+    m_lease = nullptr;
+}
+
+KWaylandServer::DrmLeaseV1Interface *DrmOutput::lease() const
+{
+    return m_lease;
+}
+
 void DrmOutput::updateCursor()
 {
+    if (m_lease) {
+        return;
+    }
     static bool valid;
     static const bool forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR", &valid) == 1 && valid;
     // hardware cursors are broken with the NVidia proprietary driver
@@ -160,6 +200,9 @@ void DrmOutput::updateCursor()
 
 void DrmOutput::moveCursor()
 {
+    if (m_lease) {
+        return;
+    }
     if (!m_setCursorSuccessful || !m_pipeline->crtc()) {
         return;
     }

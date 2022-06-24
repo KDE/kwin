@@ -36,6 +36,7 @@ class KWIN_EXPORT OutputConfiguration
 public:
     std::shared_ptr<OutputChangeSet> changeSet(Output *output);
     std::shared_ptr<OutputChangeSet> constChangeSet(Output *output) const;
+    bool hasChangeSet(Output *output) const;
 
 private:
     QMap<Output *, std::shared_ptr<OutputChangeSet>> m_properties;

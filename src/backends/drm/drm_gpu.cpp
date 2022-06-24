@@ -120,7 +120,6 @@ DrmGpu::~DrmGpu()
     for (const auto &output : leaseOutputs) {
         removeLeaseOutput(output);
     }
-    delete m_leaseDevice;
     waitIdle();
     const auto outputs = m_outputs;
     for (const auto &output : outputs) {
@@ -136,6 +135,7 @@ DrmGpu::~DrmGpu()
     qDeleteAll(m_crtcs);
     qDeleteAll(m_connectors);
     qDeleteAll(m_planes);
+    delete m_leaseDevice;
     delete m_socketNotifier;
     if (m_gbmDevice) {
         gbm_device_destroy(m_gbmDevice);
@@ -248,6 +248,20 @@ bool DrmGpu::updateOutputs()
             }
         }
     }
+    for (const auto &output : qAsConst(m_drmOutputs)) {
+        if (output->lease()) {
+            bool leaseActive = false;
+            for (uint i = 0; i < lessees->count; i++) {
+                if (lessees->lessees[i] == output->lease()->lesseeId()) {
+                    leaseActive = true;
+                    break;
+                }
+            }
+            if (!leaseActive) {
+                output->lease()->deny();
+            }
+        }
+    }
 
     // check for added and removed connectors
     QVector<DrmOutput *> addedOutputs;
@@ -273,7 +287,7 @@ bool DrmGpu::updateOutputs()
                 auto leaseOutput = new DrmLeaseOutput(pipeline, m_leaseDevice);
                 m_leaseOutputs << leaseOutput;
             } else {
-                auto output = new DrmOutput(pipeline);
+                auto output = new DrmOutput(pipeline, m_leaseDevice);
                 m_drmOutputs << output;
                 m_outputs << output;
                 addedOutputs << output;
@@ -409,6 +423,12 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
     auto crtcs = m_crtcs;
     // don't touch resources that are leased
     for (const auto &output : qAsConst(m_leaseOutputs)) {
+        if (output->lease()) {
+            connectors.removeOne(output->pipeline()->connector());
+            crtcs.removeOne(output->pipeline()->crtc());
+        }
+    }
+    for (const auto &output : qAsConst(m_drmOutputs)) {
         if (output->lease()) {
             connectors.removeOne(output->pipeline()->connector());
             crtcs.removeOne(output->pipeline()->crtc());
@@ -621,11 +641,21 @@ DrmLeaseOutput *DrmGpu::findLeaseOutput(quint32 connector)
 void DrmGpu::handleLeaseRequest(KWaylandServer::DrmLeaseV1Interface *leaseRequest)
 {
     QVector<uint32_t> objects;
-    QVector<DrmLeaseOutput *> outputs;
+    QVector<DrmLeaseOutput *> nonDesktopOutputs;
+    QVector<DrmOutput *> outputs;
 
     const auto connectors = leaseRequest->connectors();
     for (KWaylandServer::DrmLeaseConnectorV1Interface *connector : connectors) {
         if (DrmLeaseOutput *output = findLeaseOutput(connector->id())) {
+            if (output->lease()) {
+                continue; // already leased
+            }
+            if (!output->addLeaseObjects(objects)) {
+                leaseRequest->deny();
+                return;
+            }
+            nonDesktopOutputs << output;
+        } else if (DrmOutput *output = findOutput(connector->id())) {
             if (output->lease()) {
                 continue; // already leased
             }
@@ -654,6 +684,10 @@ void DrmGpu::handleLeaseRequest(KWaylandServer::DrmLeaseV1Interface *leaseReques
         leaseRequest->grant(fd, lesseeId);
         for (const auto &output : qAsConst(outputs)) {
             output->leased(leaseRequest);
+            m_platform->removeOutput(output);
+        }
+        for (const auto &output : qAsConst(nonDesktopOutputs)) {
+            output->leased(leaseRequest);
         }
     }
 }
@@ -664,6 +698,9 @@ void DrmGpu::handleLeaseRevoked(KWaylandServer::DrmLeaseV1Interface *lease)
     for (KWaylandServer::DrmLeaseConnectorV1Interface *connector : connectors) {
         if (DrmLeaseOutput *output = findLeaseOutput(connector->id())) {
             output->leaseEnded();
+        } else if (DrmOutput *output = findOutput(connector->id())) {
+            output->leaseEnded();
+            m_platform->addOutput(output);
         }
     }
     qCDebug(KWIN_DRM, "Revoking lease with leaseID %d", lease->lesseeId());
@@ -743,6 +780,11 @@ bool DrmGpu::maybeModeset()
 {
     auto pipelines = m_pipelines;
     for (const auto &output : qAsConst(m_leaseOutputs)) {
+        if (output->lease()) {
+            pipelines.removeOne(output->pipeline());
+        }
+    }
+    for (const auto &output : qAsConst(m_drmOutputs)) {
         if (output->lease()) {
             pipelines.removeOne(output->pipeline());
         }

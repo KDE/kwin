@@ -36,4 +36,9 @@ std::shared_ptr<OutputChangeSet> OutputConfiguration::constChangeSet(Output *out
     return m_properties[output];
 }
 
+bool OutputConfiguration::hasChangeSet(Output *output) const
+{
+    return m_properties.contains(output);
 }
+
+} // namespace KWin
