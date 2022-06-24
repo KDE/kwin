@@ -27,6 +27,7 @@ class QKeyEvent;
 
 class QQmlContext;
 class QQuickItem;
+class QQuickWindow;
 
 namespace KWin
 {
@@ -109,6 +110,7 @@ public:
 
     /** The invisble root item of the window*/
     QQuickItem *contentItem() const;
+    QQuickWindow *window() const;
 
     /**
      * @brief Marks the window as visible/invisible
