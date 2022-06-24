@@ -220,6 +220,29 @@ QuickSceneView *QuickSceneEffect::viewAt(const QPoint &pos) const
     return nullptr;
 }
 
+void QuickSceneEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
+{
+    // Screen views are repainted after kwin performs its compositing cycle. Another alternative
+    // is to update the views after receiving a vblank.
+    if (effects->waylandDisplay()) {
+        QuickSceneView *screenView = d->views.value(d->paintedScreen);
+        if (screenView && screenView->isDirty()) {
+            screenView->update();
+            screenView->resetDirty();
+        }
+    } else {
+        for (QuickSceneView *screenView : qAsConst(d->views)) {
+            if (screenView->isDirty()) {
+                screenView->update();
+                screenView->resetDirty();
+            }
+        }
+    }
+
+    effects->makeOpenGLContextCurrent();
+    Effect::prePaintScreen(data, presentTime);
+}
+
 void QuickSceneEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
     Q_UNUSED(mask)
@@ -237,27 +260,6 @@ void QuickSceneEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
             effects->renderOffscreenQuickView(screenView);
         }
     }
-}
-
-void QuickSceneEffect::postPaintScreen()
-{
-    // Screen views are repainted after kwin performs its compositing cycle. Another alternative
-    // is to update the views after receiving a vblank.
-    if (effects->waylandDisplay()) {
-        QuickSceneView *screenView = d->views.value(d->paintedScreen);
-        if (screenView && screenView->isDirty()) {
-            QMetaObject::invokeMethod(screenView, &QuickSceneView::update, Qt::QueuedConnection);
-            screenView->resetDirty();
-        }
-    } else {
-        for (QuickSceneView *screenView : qAsConst(d->views)) {
-            if (screenView->isDirty()) {
-                QMetaObject::invokeMethod(screenView, &QuickSceneView::update, Qt::QueuedConnection);
-                screenView->resetDirty();
-            }
-        }
-    }
-    effects->postPaintScreen();
 }
 
 bool QuickSceneEffect::isActive() const
