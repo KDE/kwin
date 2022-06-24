@@ -185,6 +185,11 @@ void SubSurfaceInterfacePrivate::parentCommit()
         auto surfacePrivate = SurfaceInterfacePrivate::get(surface);
         surfacePrivate->commitFromCache();
     }
+
+    if (!added) {
+        added = true;
+        Q_EMIT parent->childSubSurfaceAdded(q);
+    }
 }
 
 SubSurfaceInterface::SubSurfaceInterface(SurfaceInterface *surface, SurfaceInterface *parent, wl_resource *resource)

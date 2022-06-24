@@ -65,13 +65,9 @@ SurfaceInterfacePrivate::~SurfaceInterfacePrivate()
 
 void SurfaceInterfacePrivate::addChild(SubSurfaceInterface *child)
 {
-    // protocol is not precise on how to handle the addition of new sub surfaces
     pending.above.append(child);
-    cached.above.append(child);
-    current.above.append(child);
+    pending.childrenChanged = true;
     child->surface()->setOutputs(outputs);
-    Q_EMIT q->childSubSurfaceAdded(child);
-    Q_EMIT q->childSubSurfacesChanged();
 }
 
 void SurfaceInterfacePrivate::removeChild(SubSurfaceInterface *child)

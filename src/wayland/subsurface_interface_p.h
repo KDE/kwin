@@ -45,6 +45,7 @@ public:
     SubSurfaceInterface::Mode mode = SubSurfaceInterface::Mode::Synchronized;
     QPointer<SurfaceInterface> surface;
     QPointer<SurfaceInterface> parent;
+    bool added = false;
     bool hasPendingPosition = false;
 
 protected:
