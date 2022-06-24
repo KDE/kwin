@@ -307,10 +307,10 @@ public:
         return state == LIBINPUT_TABLET_TOOL_PROXIMITY_STATE_IN;
     }
 
-    QPointF transformedPosition(const QSize &size) const
+    QPointF absolutePos() const
     {
-        return {libinput_event_tablet_tool_get_x_transformed(m_tabletToolEvent, size.width()),
-                libinput_event_tablet_tool_get_y_transformed(m_tabletToolEvent, size.height())};
+        return {libinput_event_tablet_tool_get_x_transformed(m_tabletToolEvent, 1),
+                libinput_event_tablet_tool_get_y_transformed(m_tabletToolEvent, 1)};
     }
 
     struct libinput_tablet_tool *tool()

@@ -468,26 +468,12 @@ void Connection::processEvents()
                 break;
             }
 
-            if (workspace()) {
-#ifndef KWIN_BUILD_TESTING
-                Output *output = tte->device()->output();
-                if (!output && workspace()->activeWindow()) {
-                    output = workspace()->activeWindow()->output();
-                }
-                if (!output) {
-                    output = workspace()->activeOutput();
-                }
-                const QPointF globalPos =
-                    devicePointToGlobalPosition(tte->transformedPosition(output->modeSize()),
-                                                output);
-#else
-                const QPointF globalPos;
-#endif
-                Q_EMIT event->device()->tabletToolEvent(tabletEventType,
-                                                        globalPos, tte->pressure(),
-                                                        tte->xTilt(), tte->yTilt(), tte->rotation(),
-                                                        tte->isTipDown(), tte->isNearby(), createTabletId(tte->tool(), event->device()->groupUserData()), tte->time());
-            }
+            Q_EMIT event->device()->tabletToolEvent(tabletEventType,
+                                                    tte->absolutePos(), tte->pressure(),
+                                                    tte->xTilt(), tte->yTilt(), tte->rotation(),
+                                                    tte->isTipDown(), tte->isNearby(),
+                                                    createTabletId(tte->tool(), event->device()->groupUserData()),
+                                                    tte->time(), tte->device());
             break;
         }
         case LIBINPUT_EVENT_TABLET_TOOL_BUTTON: {

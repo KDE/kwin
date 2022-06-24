@@ -44,7 +44,7 @@ public:
     void tabletToolEvent(KWin::InputRedirection::TabletEventType type, const QPointF &pos,
                          qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
                          bool tipNear, const TabletToolId &tabletToolId,
-                         quint32 time);
+                         quint32 time, InputDevice *device);
     void tabletToolButtonEvent(uint button, bool isPressed, const TabletToolId &tabletToolId);
 
     void tabletPadButtonEvent(uint button, bool isPressed, const TabletPadId &tabletPadId);

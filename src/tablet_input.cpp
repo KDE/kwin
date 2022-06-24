@@ -10,6 +10,7 @@
 #include "decorations/decoratedclient.h"
 #include "input_event.h"
 #include "input_event_spy.h"
+#include "inputdevice.h"
 #include "pointer_input.h"
 #include "wayland/seat_interface.h"
 #include "wayland/surface_interface.h"
@@ -45,16 +46,55 @@ void TabletInputRedirection::init()
     });
 }
 
+static QPointF mapAbsoluteToWorkspace(const QPointF &pos, const InputDevice *device)
+{
+    Output *output = device->output();
+    if (!output && workspace()->activeWindow()) {
+        output = workspace()->activeWindow()->output();
+    }
+    if (!output) {
+        output = workspace()->activeOutput();
+    }
+
+    QPointF ret;
+    // TODO: Do we need to handle the flipped cases differently?
+    switch (output->transform()) {
+    case Output::Transform::Normal:
+    case Output::Transform::Flipped:
+        ret = pos;
+        break;
+    case Output::Transform::Rotated90:
+    case Output::Transform::Flipped90:
+        ret = QPointF(1.0 - pos.y(), pos.x());
+        break;
+    case Output::Transform::Rotated180:
+    case Output::Transform::Flipped180:
+        ret = QPointF(1.0 - pos.x(), 1.0 - pos.y());
+        break;
+    case Output::Transform::Rotated270:
+    case Output::Transform::Flipped270:
+        ret = QPointF(pos.y(), 1.0 - pos.x());
+        break;
+    default:
+        Q_UNREACHABLE();
+    }
+
+    const QRectF bounds = output->geometry();
+    return bounds.topLeft() + QPointF(ret.x() * bounds.width(), ret.y() * bounds.height());
+}
+
 void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEventType type, const QPointF &pos,
                                              qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
                                              bool tipNear, const TabletToolId &tabletToolId,
-                                             quint32 time)
+                                             quint32 time, InputDevice *device)
 {
     if (!inited()) {
         return;
     }
     input()->setLastInputHandler(this);
-    m_lastPosition = pos;
+
+    const QPointF workspacePos = mapAbsoluteToWorkspace(pos, device);
+    m_lastPosition = workspacePos;
 
     QEvent::Type t;
     switch (type) {
@@ -72,7 +112,7 @@ void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEvent
     update();
 
     const auto button = m_tipDown ? Qt::LeftButton : Qt::NoButton;
-    TabletEvent ev(t, pos, pos, QTabletEvent::Stylus, QTabletEvent::Pen, pressure,
+    TabletEvent ev(t, workspacePos, workspacePos, QTabletEvent::Stylus, QTabletEvent::Pen, pressure,
                    xTilt, yTilt,
                    0, // tangentialPressure
                    rotation,
