@@ -11,6 +11,7 @@ import org.kde.kwin.private.effects 1.0
 import org.kde.milou 0.3 as Milou
 import org.kde.plasma.components 3.0 as PC3
 import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.kirigami 2.12 as Kirigami
 
 FocusScope {
     id: container
@@ -188,8 +189,6 @@ FocusScope {
                 animationDuration: effect.animationDuration
                 animationEnabled: container.animationEnabled
                 organized: container.organized
-                supportsCloseWindows: true
-                supportsDragUpGesture: true
                 onWindowClicked: {
                     if (eventPoint.event.button !== Qt.MiddleButton) {
                         return;
@@ -207,6 +206,22 @@ FocusScope {
                             ~KWinComponents.ClientFilterModel.Notification;
                 }
                 onActivated: effect.deactivate();
+                delegate: WindowHeapDelegate {
+                    windowHeap: heap
+
+                    targetScale: {
+                        var localPressPosition = dragHandler.centroid.scenePressPosition.y - heap.expoLayout.Kirigami.ScenePosition.y;
+                        if (localPressPosition == 0) {
+                            return 0.1
+                        } else {
+                            var localPosition = dragHandler.centroid.scenePosition.y - heap.expoLayout.Kirigami.ScenePosition.y;
+                            return Math.max(0.1, Math.min(localPosition / localPressPosition, 1))
+                        }
+                    }
+
+                    opacity: 1 - downGestureProgress
+                    onDownGestureTriggered: client.closeWindow()
+                }
             }
 
             Milou.ResultsView {
@@ -246,7 +261,7 @@ FocusScope {
 
             Behavior on opacity {
                 enabled: !container.effect.gestureInProgress
-                NumberAnimation { duration: animationDuration; easing.type: Easing.OutCubic }
+                NumberAnimation { duration: effect.animationDuration; easing.type: Easing.OutCubic }
             }
         }
     }
