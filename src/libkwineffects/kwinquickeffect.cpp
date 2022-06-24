@@ -10,6 +10,7 @@
 
 #include <QQmlEngine>
 #include <QQuickItem>
+#include <QQuickWindow>
 #include <QWindow>
 
 namespace KWin
@@ -220,6 +221,19 @@ QuickSceneView *QuickSceneEffect::viewAt(const QPoint &pos) const
     return nullptr;
 }
 
+void QuickSceneEffect::activateView(QuickSceneView *view)
+{
+    for (auto *otherView : d->views) {
+        if (otherView == view && !view->window()->activeFocusItem()) {
+            QFocusEvent focusEvent(QEvent::FocusIn, Qt::ActiveWindowFocusReason);
+            qApp->sendEvent(view->window(), &focusEvent);
+        } else if (otherView->window()->activeFocusItem()) {
+            QFocusEvent focusEvent(QEvent::FocusOut, Qt::ActiveWindowFocusReason);
+            qApp->sendEvent(otherView->window(), &focusEvent);
+        }
+    }
+}
+
 void QuickSceneEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
     Q_UNUSED(mask)
@@ -288,6 +302,10 @@ void QuickSceneEffect::addScreen(EffectScreen *screen)
     properties["width"] = view->geometry().width();
     properties["height"] = view->geometry().height();
     view->setRootItem(qobject_cast<QQuickItem *>(d->qmlComponent->createWithInitialProperties(properties)));
+    // we need the focus always set to the view of activescreen at first, and changed only upon user interaction
+    if (view->contentItem()) {
+        view->contentItem()->setFocus(false);
+    }
     view->setAutomaticRepaint(false);
 
     connect(view, &QuickSceneView::repaintNeeded, this, [view]() {
@@ -400,16 +418,28 @@ void QuickSceneEffect::windowInputMouseEvent(QEvent *event)
     }
 
     if (target) {
+        if (buttons) {
+            activateView(target);
+        }
         target->forwardMouseEvent(event);
     }
 }
 
 void QuickSceneEffect::grabbedKeyboardEvent(QKeyEvent *keyEvent)
 {
-    QuickSceneView *screenView = d->views.value(effects->activeScreen());
-    if (screenView) {
-        screenView->contentItem()->setFocus(true);
-        screenView->forwardKeyEvent(keyEvent);
+    auto it = std::find_if(d->views.constBegin(), d->views.constEnd(), [](QuickSceneView *v) {
+        return v->window()->activeFocusItem();
+    });
+
+    if (it == d->views.constEnd()) {
+        QuickSceneView *screenView = d->views.value(effects->activeScreen());
+        if (screenView) {
+            activateView(screenView);
+            screenView->forwardKeyEvent(keyEvent);
+        }
+    } else {
+        (*it)->forwardKeyEvent(keyEvent);
+        return;
     }
 }
 
@@ -417,6 +447,7 @@ bool QuickSceneEffect::touchDown(qint32 id, const QPointF &pos, quint32 time)
 {
     for (QuickSceneView *screenView : qAsConst(d->views)) {
         if (screenView->geometry().contains(pos.toPoint())) {
+            activateView(screenView);
             return screenView->forwardTouchDown(id, pos, time);
         }
     }

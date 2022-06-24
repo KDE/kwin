@@ -93,6 +93,11 @@ public:
     QuickSceneView *viewAt(const QPoint &pos) const;
 
     /**
+     * Sets the given @a view as active. It will get a focusin event and all the other views will be set as inactive
+     */
+    void activateView(QuickSceneView *view);
+
+    /**
      * Returns the source URL.
      */
     QUrl source() const;
