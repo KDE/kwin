@@ -33,6 +33,7 @@
         "Description[vi]": "Tạo một hiệu ứng động khi một nút chuột được bấm. Có ích khi quay phim màn hình / thuyết trình",
         "Description[x-test]": "xxCreates an animation whenever a mouse button is clicked. This is useful for screenrecordings/presentationsxx",
         "Description[zh_CN]": "鼠标按键按下时显示动效，在进行录屏演示时非常有用",
+        "Description[zh_TW]": "點擊滑鼠按鍵時顯示一個動畫。這在螢幕錄影或投影片播放時很有用",
         "EnabledByDefault": false,
         "Id": "mouseclick",
         "License": "GPL",
@@ -67,7 +68,8 @@
         "Name[uk]": "Анімація за клацанням миші",
         "Name[vi]": "Hiệu ứng động khi bấm chuột",
         "Name[x-test]": "xxMouse Click Animationxx",
-        "Name[zh_CN]": "鼠标点击动效"
+        "Name[zh_CN]": "鼠标点击动效",
+        "Name[zh_TW]": "滑鼠點擊動畫"
     },
     "X-KDE-ConfigModule": "kwin_mouseclick_config",
     "org.kde.kwin.effect": {

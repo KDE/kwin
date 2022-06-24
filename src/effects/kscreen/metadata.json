@@ -32,6 +32,7 @@
         "Description[vi]": "Hiệu ứng trợ giúp cho KScreen",
         "Description[x-test]": "xxHelper Effect for KScreenxx",
         "Description[zh_CN]": "KScreen 的辅助特效",
+        "Description[zh_TW]": "KScreen 輔助效果",
         "EnabledByDefault": true,
         "Id": "kscreen",
         "License": "GPL",
@@ -65,7 +66,8 @@
         "Name[uk]": "Kscreen",
         "Name[vi]": "Kscreen",
         "Name[x-test]": "xxKscreenxx",
-        "Name[zh_CN]": "Kscreen 辅助特效"
+        "Name[zh_CN]": "Kscreen 辅助特效",
+        "Name[zh_TW]": "KScreen"
     },
     "org.kde.kwin.effect": {
         "internal": true

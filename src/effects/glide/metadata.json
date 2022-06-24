@@ -31,6 +31,7 @@
         "Description[vi]": "Lướt các cửa sổ khi chúng xuất hiện hoặc biến mất",
         "Description[x-test]": "xxGlide windows as they appear or disappearxx",
         "Description[zh_CN]": "窗口显示/隐藏时呈现滑翔过渡动效",
+        "Description[zh_TW]": "讓視窗出現與消失時使用滑行效果",
         "EnabledByDefault": false,
         "Id": "glide",
         "License": "GPL",
@@ -64,7 +65,8 @@
         "Name[uk]": "Плин",
         "Name[vi]": "Lướt",
         "Name[x-test]": "xxGlidexx",
-        "Name[zh_CN]": "滑翔动效"
+        "Name[zh_CN]": "滑翔动效",
+        "Name[zh_TW]": "滑行"
     },
     "X-KDE-ConfigModule": "kwin_glide_config",
     "org.kde.kwin.effect": {

@@ -25,6 +25,7 @@
         "Description[vi]": "Cấu hình các góc và cạnh của màn hình hoạt động",
         "Description[x-test]": "xxConfigure active screen corners and edgesxx",
         "Description[zh_CN]": "配置活动屏幕的四角和边缘操作",
+        "Description[zh_TW]": "設定作用中螢幕角落與邊緣",
         "Icon": "preferences-desktop-gestures-screenedges",
         "Name": "Screen Edges",
         "Name[ar]": "حواف الشاشة",
@@ -51,6 +52,7 @@
         "Name[vi]": "Cạnh màn hình",
         "Name[x-test]": "xxScreen Edgesxx",
         "Name[zh_CN]": "屏幕边缘",
+        "Name[zh_TW]": "螢幕邊緣",
         "ServiceTypes": [
             "KCModule"
         ]

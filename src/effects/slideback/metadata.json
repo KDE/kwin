@@ -32,6 +32,7 @@
         "Description[vi]": "Trượt lùi cửa sổ khi một cửa sổ khác được nâng lên",
         "Description[x-test]": "xxSlide back windows when another window is raisedxx",
         "Description[zh_CN]": "激活一个窗口时呈现其他窗口的后滑动效",
+        "Description[zh_TW]": "在另一個視窗被移到上層時把視窗滑到後面去",
         "EnabledByDefault": false,
         "Id": "slideback",
         "License": "GPL",
@@ -65,6 +66,7 @@
         "Name[uk]": "Зниження",
         "Name[vi]": "Trượt lùi",
         "Name[x-test]": "xxSlide Backxx",
-        "Name[zh_CN]": "窗口后滑动效"
+        "Name[zh_CN]": "窗口后滑动效",
+        "Name[zh_TW]": "滑動到後面"
     }
 }

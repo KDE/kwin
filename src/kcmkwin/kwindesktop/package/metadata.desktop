@@ -101,7 +101,7 @@ Comment[uk]=Налаштовування навігації, кількості 
 Comment[vi]=Cấu hình điều hướng, số lượng và bố cục của các bàn làm việc ảo
 Comment[x-test]=xxConfigure navigation, number and layout of virtual desktopsxx
 Comment[zh_CN]=配置虚拟桌面的数量、排列方式和切换方式
-Comment[zh_TW]=設定虛擬桌面的導覽、數字與佈局
+Comment[zh_TW]=設定虛擬桌面的導覽、數量與佈局
 
 Icon=preferences-desktop
 Type=Service

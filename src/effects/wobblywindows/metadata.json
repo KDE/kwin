@@ -33,6 +33,7 @@
         "Description[vi]": "Làm méo các cửa sổ khi chúng di chuyển",
         "Description[x-test]": "xxDeform windows while they are movingxx",
         "Description[zh_CN]": "窗口被移动时会呈现惯性晃动特效",
+        "Description[zh_TW]": "移動視窗時讓它們變形",
         "EnabledByDefault": false,
         "Id": "wobblywindows",
         "License": "GPL",
@@ -67,7 +68,8 @@
         "Name[uk]": "Желейні вікна",
         "Name[vi]": "Cửa sổ lắc lư",
         "Name[x-test]": "xxWobbly Windowsxx",
-        "Name[zh_CN]": "窗口惯性晃动"
+        "Name[zh_CN]": "窗口惯性晃动",
+        "Name[zh_TW]": "擺動視窗"
     },
     "X-KDE-ConfigModule": "kwin_wobblywindows_config",
     "org.kde.kwin.effect": {

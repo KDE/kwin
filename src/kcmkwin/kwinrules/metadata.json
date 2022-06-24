@@ -26,6 +26,7 @@
         "Description[vi]": "Ứng xử của riêng từng cửa sổ",
         "Description[x-test]": "xxIndividual Window Behaviorxx",
         "Description[zh_CN]": "个别窗口行为",
+        "Description[zh_TW]": "個別視窗行為",
         "FormFactors": [
             "desktop",
             "tablet"
@@ -56,6 +57,7 @@
         "Name[vi]": "Luật cửa sổ",
         "Name[x-test]": "xxWindow Rulesxx",
         "Name[zh_CN]": "窗口规则",
+        "Name[zh_TW]": "視窗規則",
         "ServiceTypes": [
             "KCModule"
         ]

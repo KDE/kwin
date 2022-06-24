@@ -37,7 +37,8 @@
                 "Name[uk]": "Marco Martin",
                 "Name[vi]": "Marco Martin",
                 "Name[x-test]": "xxMarco Martinxx",
-                "Name[zh_CN]": "Marco Martin"
+                "Name[zh_CN]": "Marco Martin",
+                "Name[zh_TW]": "Marco Martin"
             }
         ],
         "Name": "KWin Window Switcher",
@@ -74,6 +75,7 @@
         "Name[vi]": "Trình chuyển cửa sổ KWin",
         "Name[x-test]": "xxKWin Window Switcherxx",
         "Name[zh_CN]": "KWin 窗口切换器",
+        "Name[zh_TW]": "KWin 視窗切換器",
         "Version": "1"
     }
 }

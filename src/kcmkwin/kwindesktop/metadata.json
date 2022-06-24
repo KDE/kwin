@@ -26,6 +26,7 @@
         "Description[vi]": "Cấu hình điều hướng, số lượng và bố cục của các bàn làm việc ảo",
         "Description[x-test]": "xxConfigure navigation, number and layout of virtual desktopsxx",
         "Description[zh_CN]": "配置虚拟桌面的数量、排列方式和切换方式",
+        "Description[zh_TW]": "設定虛擬桌面的導覽、數量與佈局",
         "FormFactors": [
             "desktop"
         ],
@@ -55,6 +56,7 @@
         "Name[vi]": "Bàn làm việc ảo",
         "Name[x-test]": "xxVirtual Desktopsxx",
         "Name[zh_CN]": "虚拟桌面",
+        "Name[zh_TW]": "虛擬桌面",
         "ServiceTypes": [
             "KCModule"
         ]

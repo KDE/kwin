@@ -33,6 +33,7 @@
         "Description[vi]": "Giúp bạn định vị tâm của màn hình khi di chuyển cửa sổ",
         "Description[x-test]": "xxHelp you locate the center of the screen when moving a windowxx",
         "Description[zh_CN]": "在移动窗口时显示窗口和桌面的中心位置辅助线，以便对齐两者",
+        "Description[zh_TW]": "幫助您移動視窗時找到確切的螢幕中心",
         "EnabledByDefault": false,
         "Id": "snaphelper",
         "License": "GPL",
@@ -66,7 +67,8 @@
         "Name[uk]": "Помічник розташування",
         "Name[vi]": "Trợ giúp nhanh",
         "Name[x-test]": "xxSnap Helperxx",
-        "Name[zh_CN]": "窗口居中辅助线"
+        "Name[zh_CN]": "窗口居中辅助线",
+        "Name[zh_TW]": "貼齊輔助"
     },
     "org.kde.kwin.effect": {
         "video": "https://files.kde.org/plasma/kwin/effect-videos/snap_helper.mp4"

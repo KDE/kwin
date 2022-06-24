@@ -25,6 +25,7 @@
         "Description[vi]": "Cấu hình các động tác hất của màn hình cảm ứng",
         "Description[x-test]": "xxConfigure touch screen swipe gesturesxx",
         "Description[zh_CN]": "配置触摸屏滑动手势",
+        "Description[zh_TW]": "設定觸控螢幕滑動手勢",
         "Icon": "preferences-desktop-gestures-touch",
         "Name": "Touch Screen",
         "Name[ar]": "شاشة اللمس",
@@ -51,6 +52,7 @@
         "Name[vi]": "Màn hình cảm ứng",
         "Name[x-test]": "xxTouch Screenxx",
         "Name[zh_CN]": "触摸屏",
+        "Name[zh_TW]": "觸控螢幕",
         "ServiceTypes": [
             "KCModule"
         ]

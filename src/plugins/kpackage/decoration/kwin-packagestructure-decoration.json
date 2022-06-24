@@ -37,7 +37,8 @@
                 "Name[uk]": "Demitrius Belai",
                 "Name[vi]": "Demitrius Belai",
                 "Name[x-test]": "xxDemitrius Belaixx",
-                "Name[zh_CN]": "Demitrius Belai"
+                "Name[zh_CN]": "Demitrius Belai",
+                "Name[zh_TW]": "Demitrius Belai"
             }
         ],
         "Name": "KWin Decoration",
@@ -74,6 +75,7 @@
         "Name[vi]": "Trang trí KWin",
         "Name[x-test]": "xxKWin Decorationxx",
         "Name[zh_CN]": "KWin 装饰元素",
+        "Name[zh_TW]": "KWin 裝飾",
         "Version": "1"
     }
 }

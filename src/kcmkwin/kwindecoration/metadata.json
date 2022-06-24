@@ -26,6 +26,7 @@
         "Description[vi]": "Cấu hình thanh tiêu đề và viền của cửa sổ",
         "Description[x-test]": "xxConfigure window titlebars and bordersxx",
         "Description[zh_CN]": "配置窗口标题栏和边框",
+        "Description[zh_TW]": "設定視窗標題列和邊框",
         "FormFactors": [
             "desktop",
             "tablet"
@@ -56,6 +57,7 @@
         "Name[vi]": "Trang trí cửa sổ",
         "Name[x-test]": "xxWindow Decorationsxx",
         "Name[zh_CN]": "窗口装饰元素",
+        "Name[zh_TW]": "視窗裝飾",
         "ServiceTypes": [
             "KCModule"
         ]

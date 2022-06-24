@@ -32,6 +32,7 @@
         "Description[vi]": "Tạo hiệu ứng động cho các biến đổi hiển thị",
         "Description[x-test]": "xxAnimates display transformationsxx",
         "Description[zh_CN]": "动态显示变形",
+        "Description[zh_TW]": "為顯示設定變更使用動畫效果",
         "EnabledByDefault": true,
         "Id": "screentransform",
         "License": "GPL",
@@ -66,7 +67,8 @@
         "Name[uk]": "Перетворення",
         "Name[vi]": "Biến đổi",
         "Name[x-test]": "xxTransformxx",
-        "Name[zh_CN]": "变形"
+        "Name[zh_CN]": "变形",
+        "Name[zh_TW]": "顯示設定變更"
     },
     "org.kde.kwin.effect": {
         "internal": true

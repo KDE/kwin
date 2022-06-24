@@ -26,6 +26,7 @@
         "Description[vi]": "Cấu hình các hành động và ứng xử của cửa sổ",
         "Description[x-test]": "xxConfigure window actions and behaviorxx",
         "Description[zh_CN]": "配置窗口操作和行为",
+        "Description[zh_TW]": "設定視窗動作與行為",
         "Icon": "preferences-system-windows-actions",
         "Name": "Window Behavior",
         "Name[ar]": "سلوك النوافذ",
@@ -52,6 +53,7 @@
         "Name[vi]": "Ứng xử của cửa sổ",
         "Name[x-test]": "xxWindow Behaviorxx",
         "Name[zh_CN]": "窗口行为",
+        "Name[zh_TW]": "視窗行為",
         "ServiceTypes": [
             "KCModule"
         ]
