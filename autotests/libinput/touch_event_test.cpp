@@ -112,8 +112,8 @@ void TestLibinputTouchEvent::testAbsoluteMotion()
     QVERIFY(te);
     QCOMPARE(te->type(), type);
     QCOMPARE(te->time(), 500u);
-    QCOMPARE(te->absolutePos(), QPointF(6.25, 6.9));
-    QCOMPARE(te->absolutePos(QSize(1280, 1024)), QPointF(640, 512));
+    QCOMPARE(te->absolutePosMM(), QPointF(6.25, 6.9));
+    QCOMPARE(te->absolutePos(), QPointF(0.5, 0.5));
 }
 
 QTEST_GUILESS_MAIN(TestLibinputTouchEvent)

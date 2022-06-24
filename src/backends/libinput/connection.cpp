@@ -361,13 +361,9 @@ void Connection::processEvents()
             break;
         }
         case LIBINPUT_EVENT_TOUCH_DOWN: {
-#ifndef KWIN_BUILD_TESTING
             TouchEvent *te = static_cast<TouchEvent *>(event.get());
-            const auto *output = te->device()->output();
-            const QPointF globalPos = devicePointToGlobalPosition(te->absolutePos(output->modeSize()), output);
-            Q_EMIT te->device()->touchDown(te->id(), globalPos, te->time(), te->device());
+            Q_EMIT te->device()->touchDown(te->id(), te->absolutePos(), te->time(), te->device());
             break;
-#endif
         }
         case LIBINPUT_EVENT_TOUCH_UP: {
             TouchEvent *te = static_cast<TouchEvent *>(event.get());
@@ -375,13 +371,9 @@ void Connection::processEvents()
             break;
         }
         case LIBINPUT_EVENT_TOUCH_MOTION: {
-#ifndef KWIN_BUILD_TESTING
             TouchEvent *te = static_cast<TouchEvent *>(event.get());
-            const auto *output = te->device()->output();
-            const QPointF globalPos = devicePointToGlobalPosition(te->absolutePos(output->modeSize()), output);
-            Q_EMIT te->device()->touchMotion(te->id(), globalPos, te->time(), te->device());
+            Q_EMIT te->device()->touchMotion(te->id(), te->absolutePos(), te->time(), te->device());
             break;
-#endif
         }
         case LIBINPUT_EVENT_TOUCH_CANCEL: {
             Q_EMIT event->device()->touchCanceled(event->device());

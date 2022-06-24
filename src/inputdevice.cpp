@@ -14,4 +14,9 @@ InputDevice::InputDevice(QObject *parent)
 {
 }
 
+Output *InputDevice::output() const
+{
+    return nullptr;
+}
+
 } // namespace KWin

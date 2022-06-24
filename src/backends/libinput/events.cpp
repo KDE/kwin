@@ -250,18 +250,18 @@ quint32 TouchEvent::time() const
     return libinput_event_touch_get_time(m_touchEvent);
 }
 
-QPointF TouchEvent::absolutePos() const
+QPointF TouchEvent::absolutePosMM() const
 {
     Q_ASSERT(type() == LIBINPUT_EVENT_TOUCH_DOWN || type() == LIBINPUT_EVENT_TOUCH_MOTION);
     return QPointF(libinput_event_touch_get_x(m_touchEvent),
                    libinput_event_touch_get_y(m_touchEvent));
 }
 
-QPointF TouchEvent::absolutePos(const QSize &size) const
+QPointF TouchEvent::absolutePos() const
 {
     Q_ASSERT(type() == LIBINPUT_EVENT_TOUCH_DOWN || type() == LIBINPUT_EVENT_TOUCH_MOTION);
-    return QPointF(libinput_event_touch_get_x_transformed(m_touchEvent, size.width()),
-                   libinput_event_touch_get_y_transformed(m_touchEvent, size.height()));
+    return QPointF(libinput_event_touch_get_x_transformed(m_touchEvent, 1),
+                   libinput_event_touch_get_y_transformed(m_touchEvent, 1));
 }
 
 qint32 TouchEvent::id() const

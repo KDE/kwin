@@ -111,8 +111,8 @@ public:
     ~TouchEvent() override;
 
     quint32 time() const;
+    QPointF absolutePosMM() const;
     QPointF absolutePos() const;
-    QPointF absolutePos(const QSize &size) const;
     qint32 id() const;
 
     operator libinput_event_touch *()

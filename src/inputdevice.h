@@ -15,6 +15,8 @@
 namespace KWin
 {
 
+class Output;
+
 /**
  * The InputDevice class represents an input device, e.g. a mouse, or a keyboard, etc.
  */
@@ -43,6 +45,8 @@ public:
     virtual bool isTabletPad() const = 0;
     virtual bool isTabletModeSwitch() const = 0;
     virtual bool isLidSwitch() const = 0;
+
+    virtual Output *output() const;
 
 Q_SIGNALS:
     void keyChanged(quint32 key, InputRedirection::KeyboardKeyState, quint32 time, InputDevice *device);

@@ -613,7 +613,7 @@ public:
 
     void *groupUserData() const;
 
-    Output *output() const;
+    Output *output() const override;
     void setOutput(Output *output);
 
     LEDs leds() const override;

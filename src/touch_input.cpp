@@ -13,6 +13,8 @@
 
 #include "decorations/decoratedclient.h"
 #include "input_event_spy.h"
+#include "inputdevice.h"
+#include "output.h"
 #include "pointer_input.h"
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
@@ -131,21 +133,57 @@ void TouchInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *o
     // nothing to do
 }
 
+static QPointF mapAbsoluteToWorkspace(const QPointF &pos, const InputDevice *device)
+{
+    Output *output = device->output();
+    if (Q_UNLIKELY(!output)) {
+        output = workspace()->activeOutput();
+    }
+
+    QPointF ret;
+    // TODO: Do we need to handle the flipped cases differently?
+    switch (output->transform()) {
+    case Output::Transform::Normal:
+    case Output::Transform::Flipped:
+        ret = pos;
+        break;
+    case Output::Transform::Rotated90:
+    case Output::Transform::Flipped90:
+        ret = QPointF(1.0 - pos.y(), pos.x());
+        break;
+    case Output::Transform::Rotated180:
+    case Output::Transform::Flipped180:
+        ret = QPointF(1.0 - pos.x(), 1.0 - pos.y());
+        break;
+    case Output::Transform::Rotated270:
+    case Output::Transform::Flipped270:
+        ret = QPointF(pos.y(), 1.0 - pos.x());
+        break;
+    default:
+        Q_UNREACHABLE();
+    }
+
+    const QRectF bounds = output->geometry();
+    return bounds.topLeft() + QPointF(ret.x() * bounds.width(), ret.y() * bounds.height());
+}
+
 void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, quint32 time, InputDevice *device)
 {
-    Q_UNUSED(device)
     if (!inited()) {
         return;
     }
-    m_lastPosition = pos;
+
+    const QPointF workspacePos = mapAbsoluteToWorkspace(pos, device);
+
+    m_lastPosition = workspacePos;
     m_windowUpdatedInCycle = false;
     m_activeTouchPoints.insert(id);
     if (m_activeTouchPoints.count() == 1) {
         update();
     }
     input()->setLastInputHandler(this);
-    input()->processSpies(std::bind(&InputEventSpy::touchDown, std::placeholders::_1, id, pos, time));
-    input()->processFilters(std::bind(&InputEventFilter::touchDown, std::placeholders::_1, id, pos, time));
+    input()->processSpies(std::bind(&InputEventSpy::touchDown, std::placeholders::_1, id, workspacePos, time));
+    input()->processFilters(std::bind(&InputEventFilter::touchDown, std::placeholders::_1, id, workspacePos, time));
     m_windowUpdatedInCycle = false;
 }
 
@@ -170,18 +208,20 @@ void TouchInputRedirection::processUp(qint32 id, quint32 time, InputDevice *devi
 
 void TouchInputRedirection::processMotion(qint32 id, const QPointF &pos, quint32 time, InputDevice *device)
 {
-    Q_UNUSED(device)
     if (!inited()) {
         return;
     }
     if (!m_activeTouchPoints.contains(id)) {
         return;
     }
+
+    const QPointF workspacePos = mapAbsoluteToWorkspace(pos, device);
+
     input()->setLastInputHandler(this);
-    m_lastPosition = pos;
+    m_lastPosition = workspacePos;
     m_windowUpdatedInCycle = false;
-    input()->processSpies(std::bind(&InputEventSpy::touchMotion, std::placeholders::_1, id, pos, time));
-    input()->processFilters(std::bind(&InputEventFilter::touchMotion, std::placeholders::_1, id, pos, time));
+    input()->processSpies(std::bind(&InputEventSpy::touchMotion, std::placeholders::_1, id, workspacePos, time));
+    input()->processFilters(std::bind(&InputEventFilter::touchMotion, std::placeholders::_1, id, workspacePos, time));
     m_windowUpdatedInCycle = false;
 }
 
