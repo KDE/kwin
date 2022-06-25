@@ -80,6 +80,8 @@ void TestDontCrashUseractionsMenu::cleanup()
 
 void TestDontCrashUseractionsMenu::testShowHideShowUseractionsMenu()
 {
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+
     // this test creates the condition of BUG 382063
     QScopedPointer<KWayland::Client::Surface> surface1(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface1(Test::createXdgToplevelSurface(surface1.data()));
@@ -91,8 +93,8 @@ void TestDontCrashUseractionsMenu::testShowHideShowUseractionsMenu()
     QTRY_VERIFY(userActionsMenu->isShown());
     QVERIFY(userActionsMenu->hasWindow());
 
-    Test::keyboardKeyPressed(KEY_ESC, 0);
-    Test::keyboardKeyReleased(KEY_ESC, 1);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_ESC, 0);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_ESC, 1);
     QTRY_VERIFY(!userActionsMenu->isShown());
     QVERIFY(!userActionsMenu->hasWindow());
 

@@ -187,7 +187,6 @@ void TestXdgShellWindow::initTestCase()
 void TestXdgShellWindow::init()
 {
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::XdgDecorationV1 | Test::AdditionalWaylandInterface::AppMenu));
-    QVERIFY(Test::waitForWaylandPointer());
 
     workspace()->setActiveOutput(QPoint(640, 512));
     // put mouse in the middle of screen one
@@ -1417,6 +1416,9 @@ void TestXdgShellWindow::testPointerInputTransform()
     // The input transform matrix is used by seat to map pointer events from the global
     // screen coordinates to the surface-local coordinates.
 
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     // Get a wl_pointer object on the client side.
     QScopedPointer<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
     QVERIFY(pointer);
@@ -1437,12 +1439,12 @@ void TestXdgShellWindow::testPointerInputTransform()
 
     // Enter the surface.
     quint32 timestamp = 0;
-    Test::pointerMotion(window->pos(), timestamp++);
+    pointerDevice->sendPointerMotion(window->pos(), timestamp++);
     QVERIFY(pointerEnteredSpy.wait());
 
     // Move the pointer to (10, 5) relative to the upper left frame corner, which is located
     // at (0, 0) in the surface-local coordinates.
-    Test::pointerMotion(window->pos() + QPoint(10, 5), timestamp++);
+    pointerDevice->sendPointerMotion(window->pos() + QPoint(10, 5), timestamp++);
     QVERIFY(pointerMotionSpy.wait());
     QCOMPARE(pointerMotionSpy.last().first(), QPoint(10, 5));
 
@@ -1461,7 +1463,7 @@ void TestXdgShellWindow::testPointerInputTransform()
 
     // Move the pointer to (20, 50) relative to the upper left frame corner, which is located
     // at (10, 20) in the surface-local coordinates.
-    Test::pointerMotion(window->pos() + QPoint(20, 50), timestamp++);
+    pointerDevice->sendPointerMotion(window->pos() + QPoint(20, 50), timestamp++);
     QVERIFY(pointerMotionSpy.wait());
     QCOMPARE(pointerMotionSpy.last().first(), QPoint(10, 20) + QPoint(20, 50));
 

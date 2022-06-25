@@ -45,7 +45,6 @@ private Q_SLOTS:
 
 private:
     Window *showWindow(bool decorated = false);
-    KWayland::Client::Touch *m_touch = nullptr;
 };
 
 void TouchInputTest::initTestCase()
@@ -70,10 +69,6 @@ void TouchInputTest::init()
 {
     using namespace KWayland::Client;
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::XdgDecorationV1));
-    QVERIFY(Test::waitForWaylandTouch());
-    m_touch = Test::waylandSeat()->createTouch(Test::waylandSeat());
-    QVERIFY(m_touch);
-    QVERIFY(m_touch->isValid());
 
     workspace()->setActiveOutput(QPoint(640, 512));
     Cursors::self()->mouse()->setPos(QPoint(640, 512));
@@ -81,8 +76,6 @@ void TouchInputTest::init()
 
 void TouchInputTest::cleanup()
 {
-    delete m_touch;
-    m_touch = nullptr;
     Test::destroyWaylandConnection();
 }
 
@@ -122,25 +115,30 @@ Window *TouchInputTest::showWindow(bool decorated)
 
 void TouchInputTest::testTouchHidesCursor()
 {
+    std::unique_ptr<Test::VirtualInputDevice> touchDevice = Test::createTouchDevice();
+    QVERIFY(Test::waitForWaylandTouch());
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     QCOMPARE(Cursors::self()->isCursorHidden(), false);
     quint32 timestamp = 1;
-    Test::touchDown(1, QPointF(125, 125), timestamp++);
+    touchDevice->sendTouchDown(1, QPointF(125, 125), timestamp++);
     QCOMPARE(Cursors::self()->isCursorHidden(), true);
-    Test::touchDown(2, QPointF(130, 125), timestamp++);
-    Test::touchUp(2, timestamp++);
-    Test::touchUp(1, timestamp++);
+    touchDevice->sendTouchDown(2, QPointF(130, 125), timestamp++);
+    touchDevice->sendTouchUp(2, timestamp++);
+    touchDevice->sendTouchUp(1, timestamp++);
 
     // now a mouse event should show the cursor again
-    Test::pointerMotion(QPointF(0, 0), timestamp++);
+    pointerDevice->sendPointerMotion(QPointF(0, 0), timestamp++);
     QCOMPARE(Cursors::self()->isCursorHidden(), false);
 
     // touch should hide again
-    Test::touchDown(1, QPointF(125, 125), timestamp++);
-    Test::touchUp(1, timestamp++);
+    touchDevice->sendTouchDown(1, QPointF(125, 125), timestamp++);
+    touchDevice->sendTouchUp(1, timestamp++);
     QCOMPARE(Cursors::self()->isCursorHidden(), true);
 
     // wheel should also show
-    Test::pointerAxisVertical(1.0, timestamp++);
+    pointerDevice->sendPointerAxisVertical(1.0, timestamp++);
     QCOMPARE(Cursors::self()->isCursorHidden(), false);
 }
 
@@ -154,92 +152,98 @@ void TouchInputTest::testMultipleTouchPoints_data()
 
 void TouchInputTest::testMultipleTouchPoints()
 {
+    std::unique_ptr<Test::VirtualInputDevice> touchDevice = Test::createTouchDevice();
+    QVERIFY(Test::waitForWaylandTouch());
+
     using namespace KWayland::Client;
     QFETCH(bool, decorated);
     Window *window = showWindow(decorated);
     QCOMPARE(window->isDecorated(), decorated);
     window->move(QPoint(100, 100));
     QVERIFY(window);
-    QSignalSpy sequenceStartedSpy(m_touch, &Touch::sequenceStarted);
-    QVERIFY(sequenceStartedSpy.isValid());
-    QSignalSpy pointAddedSpy(m_touch, &Touch::pointAdded);
-    QVERIFY(pointAddedSpy.isValid());
-    QSignalSpy pointMovedSpy(m_touch, &Touch::pointMoved);
-    QVERIFY(pointMovedSpy.isValid());
-    QSignalSpy pointRemovedSpy(m_touch, &Touch::pointRemoved);
-    QVERIFY(pointRemovedSpy.isValid());
-    QSignalSpy endedSpy(m_touch, &Touch::sequenceEnded);
-    QVERIFY(endedSpy.isValid());
+
+    std::unique_ptr<KWayland::Client::Touch> touch(Test::waylandSeat()->createTouch());
+    QSignalSpy sequenceStartedSpy(touch.get(), &Touch::sequenceStarted);
+    QSignalSpy pointAddedSpy(touch.get(), &Touch::pointAdded);
+    QSignalSpy pointMovedSpy(touch.get(), &Touch::pointMoved);
+    QSignalSpy pointRemovedSpy(touch.get(), &Touch::pointRemoved);
+    QSignalSpy endedSpy(touch.get(), &Touch::sequenceEnded);
 
     quint32 timestamp = 1;
-    Test::touchDown(1, QPointF(125, 125) + window->clientPos(), timestamp++);
+    touchDevice->sendTouchDown(1, QPointF(125, 125) + window->clientPos(), timestamp++);
     QVERIFY(sequenceStartedSpy.wait());
     QCOMPARE(sequenceStartedSpy.count(), 1);
-    QCOMPARE(m_touch->sequence().count(), 1);
-    QCOMPARE(m_touch->sequence().first()->isDown(), true);
-    QCOMPARE(m_touch->sequence().first()->position(), QPointF(25, 25));
+    QCOMPARE(touch->sequence().count(), 1);
+    QCOMPARE(touch->sequence().first()->isDown(), true);
+    QCOMPARE(touch->sequence().first()->position(), QPointF(25, 25));
     QCOMPARE(pointAddedSpy.count(), 0);
     QCOMPARE(pointMovedSpy.count(), 0);
 
     // a point outside the window
-    Test::touchDown(2, QPointF(0, 0) + window->clientPos(), timestamp++);
+    touchDevice->sendTouchDown(2, QPointF(0, 0) + window->clientPos(), timestamp++);
     QVERIFY(pointAddedSpy.wait());
     QCOMPARE(pointAddedSpy.count(), 1);
-    QCOMPARE(m_touch->sequence().count(), 2);
-    QCOMPARE(m_touch->sequence().at(1)->isDown(), true);
-    QCOMPARE(m_touch->sequence().at(1)->position(), QPointF(-100, -100));
+    QCOMPARE(touch->sequence().count(), 2);
+    QCOMPARE(touch->sequence().at(1)->isDown(), true);
+    QCOMPARE(touch->sequence().at(1)->position(), QPointF(-100, -100));
     QCOMPARE(pointMovedSpy.count(), 0);
 
     // let's move that one
-    Test::touchMotion(2, QPointF(100, 100) + window->clientPos(), timestamp++);
+    touchDevice->sendTouchMotion(2, QPointF(100, 100) + window->clientPos(), timestamp++);
     QVERIFY(pointMovedSpy.wait());
     QCOMPARE(pointMovedSpy.count(), 1);
-    QCOMPARE(m_touch->sequence().count(), 2);
-    QCOMPARE(m_touch->sequence().at(1)->isDown(), true);
-    QCOMPARE(m_touch->sequence().at(1)->position(), QPointF(0, 0));
+    QCOMPARE(touch->sequence().count(), 2);
+    QCOMPARE(touch->sequence().at(1)->isDown(), true);
+    QCOMPARE(touch->sequence().at(1)->position(), QPointF(0, 0));
 
-    Test::touchUp(1, timestamp++);
+    touchDevice->sendTouchUp(1, timestamp++);
     QVERIFY(pointRemovedSpy.wait());
     QCOMPARE(pointRemovedSpy.count(), 1);
-    QCOMPARE(m_touch->sequence().count(), 2);
-    QCOMPARE(m_touch->sequence().first()->isDown(), false);
+    QCOMPARE(touch->sequence().count(), 2);
+    QCOMPARE(touch->sequence().first()->isDown(), false);
     QCOMPARE(endedSpy.count(), 0);
 
-    Test::touchUp(2, timestamp++);
+    touchDevice->sendTouchUp(2, timestamp++);
     QVERIFY(pointRemovedSpy.wait());
     QCOMPARE(pointRemovedSpy.count(), 2);
-    QCOMPARE(m_touch->sequence().count(), 2);
-    QCOMPARE(m_touch->sequence().first()->isDown(), false);
-    QCOMPARE(m_touch->sequence().at(1)->isDown(), false);
+    QCOMPARE(touch->sequence().count(), 2);
+    QCOMPARE(touch->sequence().first()->isDown(), false);
+    QCOMPARE(touch->sequence().at(1)->isDown(), false);
     QCOMPARE(endedSpy.count(), 1);
 }
 
 void TouchInputTest::testCancel()
 {
+    std::unique_ptr<Test::VirtualInputDevice> touchDevice = Test::createTouchDevice();
+
     using namespace KWayland::Client;
     Window *window = showWindow();
     window->move(QPoint(100, 100));
     QVERIFY(window);
-    QSignalSpy sequenceStartedSpy(m_touch, &Touch::sequenceStarted);
+
+    std::unique_ptr<KWayland::Client::Touch> touch(Test::waylandSeat()->createTouch());
+    QSignalSpy sequenceStartedSpy(touch.get(), &Touch::sequenceStarted);
     QVERIFY(sequenceStartedSpy.isValid());
-    QSignalSpy cancelSpy(m_touch, &Touch::sequenceCanceled);
+    QSignalSpy cancelSpy(touch.get(), &Touch::sequenceCanceled);
     QVERIFY(cancelSpy.isValid());
-    QSignalSpy pointRemovedSpy(m_touch, &Touch::pointRemoved);
+    QSignalSpy pointRemovedSpy(touch.get(), &Touch::pointRemoved);
     QVERIFY(pointRemovedSpy.isValid());
 
     quint32 timestamp = 1;
-    Test::touchDown(1, QPointF(125, 125), timestamp++);
+    touchDevice->sendTouchDown(1, QPointF(125, 125), timestamp++);
     QVERIFY(sequenceStartedSpy.wait());
     QCOMPARE(sequenceStartedSpy.count(), 1);
 
     // cancel
-    Test::touchCancel();
+    touchDevice->sendTouchCancel();
     QVERIFY(cancelSpy.wait());
     QCOMPARE(cancelSpy.count(), 1);
 }
 
 void TouchInputTest::testTouchMouseAction()
 {
+    std::unique_ptr<Test::VirtualInputDevice> touchDevice = Test::createTouchDevice();
+
     // this test verifies that a touch down on an inactive window will activate it
     using namespace KWayland::Client;
     // create two windows
@@ -252,11 +256,11 @@ void TouchInputTest::testTouchMouseAction()
     QVERIFY(c2->isActive());
 
     // also create a sequence started spy as the touch event should be passed through
-    QSignalSpy sequenceStartedSpy(m_touch, &Touch::sequenceStarted);
-    QVERIFY(sequenceStartedSpy.isValid());
+    std::unique_ptr<KWayland::Client::Touch> touch(Test::waylandSeat()->createTouch());
+    QSignalSpy sequenceStartedSpy(touch.get(), &Touch::sequenceStarted);
 
     quint32 timestamp = 1;
-    Test::touchDown(1, c1->frameGeometry().center(), timestamp++);
+    touchDevice->sendTouchDown(1, c1->frameGeometry().center(), timestamp++);
     QVERIFY(c1->isActive());
 
     QVERIFY(sequenceStartedSpy.wait());
@@ -268,14 +272,17 @@ void TouchInputTest::testTouchMouseAction()
 
 void TouchInputTest::testTouchPointCount()
 {
+    std::unique_ptr<Test::VirtualInputDevice> touchDevice = Test::createTouchDevice();
+    QVERIFY(Test::waitForWaylandTouch());
+
     QCOMPARE(input()->touch()->touchPointCount(), 0);
     quint32 timestamp = 1;
-    Test::touchDown(0, QPointF(125, 125), timestamp++);
-    Test::touchDown(1, QPointF(125, 125), timestamp++);
-    Test::touchDown(2, QPointF(125, 125), timestamp++);
+    touchDevice->sendTouchDown(0, QPointF(125, 125), timestamp++);
+    touchDevice->sendTouchDown(1, QPointF(125, 125), timestamp++);
+    touchDevice->sendTouchDown(2, QPointF(125, 125), timestamp++);
     QCOMPARE(input()->touch()->touchPointCount(), 3);
 
-    Test::touchUp(1, timestamp++);
+    touchDevice->sendTouchUp(1, timestamp++);
     QCOMPARE(input()->touch()->touchPointCount(), 2);
 
     input()->touch()->cancel();
@@ -287,8 +294,11 @@ void TouchInputTest::testUpdateFocusOnDecorationDestroy()
     // This test verifies that a maximized window gets it's touch focus
     // if decoration was focused and then destroyed on maximize with BorderlessMaximizedWindows option.
 
-    QSignalSpy sequenceEndedSpy(m_touch, &KWayland::Client::Touch::sequenceEnded);
-    QVERIFY(sequenceEndedSpy.isValid());
+    std::unique_ptr<Test::VirtualInputDevice> touchDevice = Test::createTouchDevice();
+    QVERIFY(Test::waitForWaylandTouch());
+
+    std::unique_ptr<KWayland::Client::Touch> touch(Test::waylandSeat()->createTouch());
+    QSignalSpy sequenceEndedSpy(touch.get(), &KWayland::Client::Touch::sequenceEnded);
 
     // Enable the borderless maximized windows option.
     auto group = kwinApp()->config()->group("Windows");
@@ -335,7 +345,7 @@ void TouchInputTest::testUpdateFocusOnDecorationDestroy()
 
     // Simulate decoration hover
     quint32 timestamp = 0;
-    Test::touchDown(1, window->frameGeometry().topLeft(), timestamp++);
+    touchDevice->sendTouchDown(1, window->frameGeometry().topLeft(), timestamp++);
     QVERIFY(input()->touch()->decoration());
 
     // Maximize when on decoration
@@ -359,10 +369,10 @@ void TouchInputTest::testUpdateFocusOnDecorationDestroy()
 
     // Window should have focus
     QVERIFY(!input()->touch()->decoration());
-    Test::touchUp(1, timestamp++);
+    touchDevice->sendTouchUp(1, timestamp++);
     QVERIFY(!sequenceEndedSpy.wait(100));
-    Test::touchDown(2, window->frameGeometry().center(), timestamp++);
-    Test::touchUp(2, timestamp++);
+    touchDevice->sendTouchDown(2, window->frameGeometry().center(), timestamp++);
+    touchDevice->sendTouchUp(2, timestamp++);
     QVERIFY(sequenceEndedSpy.wait());
 
     // Destroy the window.
@@ -372,6 +382,8 @@ void TouchInputTest::testUpdateFocusOnDecorationDestroy()
 
 void TouchInputTest::testGestureDetection()
 {
+    std::unique_ptr<Test::VirtualInputDevice> touchDevice = Test::createTouchDevice();
+
     bool callbackTriggered = false;
     const auto callback = [&callbackTriggered](float progress) {
         Q_UNUSED(progress);
@@ -384,58 +396,58 @@ void TouchInputTest::testGestureDetection()
     // verify that gestures are detected
 
     quint32 timestamp = 1;
-    Test::touchDown(0, QPointF(500, 125), timestamp++);
-    Test::touchDown(1, QPointF(500, 125), timestamp++);
-    Test::touchDown(2, QPointF(500, 125), timestamp++);
+    touchDevice->sendTouchDown(0, QPointF(500, 125), timestamp++);
+    touchDevice->sendTouchDown(1, QPointF(500, 125), timestamp++);
+    touchDevice->sendTouchDown(2, QPointF(500, 125), timestamp++);
 
-    Test::touchMotion(0, QPointF(100, 125), timestamp++);
+    touchDevice->sendTouchMotion(0, QPointF(100, 125), timestamp++);
     QVERIFY(callbackTriggered);
 
     // verify that gestures are canceled properly
     QSignalSpy gestureCancelled(&action, &QAction::triggered);
     QVERIFY(gestureCancelled.isValid());
-    Test::touchUp(0, timestamp++);
+    touchDevice->sendTouchUp(0, timestamp++);
     QVERIFY(gestureCancelled.wait());
 
-    Test::touchUp(1, timestamp++);
-    Test::touchUp(2, timestamp++);
+    touchDevice->sendTouchUp(1, timestamp++);
+    touchDevice->sendTouchUp(2, timestamp++);
 
     callbackTriggered = false;
 
     // verify that touch points too far apart don't trigger a gesture
-    Test::touchDown(0, QPointF(125, 125), timestamp++);
-    Test::touchDown(1, QPointF(10000, 125), timestamp++);
-    Test::touchDown(2, QPointF(125, 125), timestamp++);
+    touchDevice->sendTouchDown(0, QPointF(125, 125), timestamp++);
+    touchDevice->sendTouchDown(1, QPointF(10000, 125), timestamp++);
+    touchDevice->sendTouchDown(2, QPointF(125, 125), timestamp++);
     QVERIFY(!callbackTriggered);
 
-    Test::touchUp(0, timestamp++);
-    Test::touchUp(1, timestamp++);
-    Test::touchUp(2, timestamp++);
+    touchDevice->sendTouchUp(0, timestamp++);
+    touchDevice->sendTouchUp(1, timestamp++);
+    touchDevice->sendTouchUp(2, timestamp++);
 
     // verify that touch points triggered too slow don't trigger a gesture
-    Test::touchDown(0, QPointF(125, 125), timestamp++);
+    touchDevice->sendTouchDown(0, QPointF(125, 125), timestamp++);
     timestamp += 1000;
-    Test::touchDown(1, QPointF(125, 125), timestamp++);
-    Test::touchDown(2, QPointF(125, 125), timestamp++);
+    touchDevice->sendTouchDown(1, QPointF(125, 125), timestamp++);
+    touchDevice->sendTouchDown(2, QPointF(125, 125), timestamp++);
     QVERIFY(!callbackTriggered);
 
-    Test::touchUp(0, timestamp++);
-    Test::touchUp(1, timestamp++);
-    Test::touchUp(2, timestamp++);
+    touchDevice->sendTouchUp(0, timestamp++);
+    touchDevice->sendTouchUp(1, timestamp++);
+    touchDevice->sendTouchUp(2, timestamp++);
 
     // verify that after a gesture has been canceled but never initiated, gestures still work
-    Test::touchDown(0, QPointF(500, 125), timestamp++);
-    Test::touchDown(1, QPointF(500, 125), timestamp++);
-    Test::touchDown(2, QPointF(500, 125), timestamp++);
+    touchDevice->sendTouchDown(0, QPointF(500, 125), timestamp++);
+    touchDevice->sendTouchDown(1, QPointF(500, 125), timestamp++);
+    touchDevice->sendTouchDown(2, QPointF(500, 125), timestamp++);
 
-    Test::touchMotion(0, QPointF(100, 125), timestamp++);
-    Test::touchMotion(1, QPointF(100, 125), timestamp++);
-    Test::touchMotion(2, QPointF(100, 125), timestamp++);
+    touchDevice->sendTouchMotion(0, QPointF(100, 125), timestamp++);
+    touchDevice->sendTouchMotion(1, QPointF(100, 125), timestamp++);
+    touchDevice->sendTouchMotion(2, QPointF(100, 125), timestamp++);
     QVERIFY(callbackTriggered);
 
-    Test::touchUp(0, timestamp++);
-    Test::touchUp(1, timestamp++);
-    Test::touchUp(2, timestamp++);
+    touchDevice->sendTouchUp(0, timestamp++);
+    touchDevice->sendTouchUp(1, timestamp++);
+    touchDevice->sendTouchUp(2, timestamp++);
 }
 }
 

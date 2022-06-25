@@ -164,7 +164,6 @@ void PointerInputTest::initTestCase()
 void PointerInputTest::init()
 {
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::Decoration | Test::AdditionalWaylandInterface::XdgDecorationV1));
-    QVERIFY(Test::waitForWaylandPointer());
     m_compositor = Test::waylandCompositor();
     m_seat = Test::waylandSeat();
 
@@ -187,6 +186,10 @@ void PointerInputTest::testWarpingUpdatesFocus()
 {
     // this test verifies that warping the pointer creates pointer enter and leave events
     using namespace KWayland::Client;
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     // create pointer and signal spy for enter and leave signals
     auto pointer = m_seat->createPointer(m_seat);
     QVERIFY(pointer);
@@ -235,6 +238,10 @@ void PointerInputTest::testWarpingGeneratesPointerMotion()
 {
     // this test verifies that warping the pointer creates pointer motion events
     using namespace KWayland::Client;
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     // create pointer and signal spy for enter and motion
     auto pointer = m_seat->createPointer(m_seat);
     QVERIFY(pointer);
@@ -257,7 +264,7 @@ void PointerInputTest::testWarpingGeneratesPointerMotion()
     QVERIFY(window);
 
     // enter
-    Test::pointerMotion(QPointF(25, 25), 1);
+    pointerDevice->sendPointerMotion(QPointF(25, 25), 1);
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.first().at(1).toPointF(), QPointF(25, 25));
 
@@ -273,6 +280,9 @@ void PointerInputTest::testWarpingDuringFilter()
     // this test verifies that pointer motion is handled correctly if
     // the pointer gets warped during processing of input events
     using namespace KWayland::Client;
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
 
     // create pointer
     auto pointer = m_seat->createPointer(m_seat);
@@ -303,7 +313,7 @@ void PointerInputTest::testWarpingDuringFilter()
     QVERIFY(static_cast<EffectsHandlerImpl *>(effects)->isEffectLoaded("windowview"));
     QVERIFY(movedSpy.isEmpty());
     quint32 timestamp = 0;
-    Test::pointerMotion(QPoint(0, 0), timestamp++);
+    pointerDevice->sendPointerMotion(QPoint(0, 0), timestamp++);
     // screen edges push back
     QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(1, 1));
     QVERIFY(movedSpy.wait());
@@ -316,6 +326,9 @@ void PointerInputTest::testWarpingBetweenWindows()
 {
     // This test verifies that the compositor will send correct events when the pointer
     // leaves one window and enters another window.
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
 
     QScopedPointer<KWayland::Client::Pointer> pointer(m_seat->createPointer(m_seat));
     QSignalSpy enteredSpy(pointer.data(), &KWayland::Client::Pointer::entered);
@@ -337,7 +350,7 @@ void PointerInputTest::testWarpingBetweenWindows()
     quint32 timestamp = 0;
 
     // put the pointer at the center of the first window
-    Test::pointerMotion(window1->frameGeometry().center(), timestamp++);
+    pointerDevice->sendPointerMotion(window1->frameGeometry().center(), timestamp++);
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 1);
     QCOMPARE(enteredSpy.last().at(1).toPointF(), QPointF(49, 24));
@@ -346,7 +359,7 @@ void PointerInputTest::testWarpingBetweenWindows()
     QCOMPARE(pointer->enteredSurface(), surface1.data());
 
     // put the pointer at the center of the second window
-    Test::pointerMotion(window2->frameGeometry().center(), timestamp++);
+    pointerDevice->sendPointerMotion(window2->frameGeometry().center(), timestamp++);
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 2);
     QCOMPARE(enteredSpy.last().at(1).toPointF(), QPointF(99, 49));
@@ -360,6 +373,9 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     // this test verifies that a pointer enter event is generated when the cursor changes to another
     // screen due to removal of screen
     using namespace KWayland::Client;
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
 
     // create pointer and signal spy for enter and motion
     auto pointer = m_seat->createPointer(m_seat);
@@ -414,6 +430,9 @@ void PointerInputTest::testUpdateFocusOnDecorationDestroy()
     // This test verifies that a maximized window gets it's pointer focus
     // if decoration was focused and then destroyed on maximize with BorderlessMaximizedWindows option.
 
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     // create pointer for focus tracking
     auto pointer = m_seat->createPointer(m_seat);
     QVERIFY(pointer);
@@ -466,7 +485,7 @@ void PointerInputTest::testUpdateFocusOnDecorationDestroy()
 
     // Simulate decoration hover
     quint32 timestamp = 0;
-    Test::pointerMotion(window->frameGeometry().topLeft(), timestamp++);
+    pointerDevice->sendPointerMotion(window->frameGeometry().topLeft(), timestamp++);
     QVERIFY(input()->pointer()->decoration());
 
     // Maximize when on decoration
@@ -490,8 +509,8 @@ void PointerInputTest::testUpdateFocusOnDecorationDestroy()
 
     // Window should have focus, BUG 411884
     QVERIFY(!input()->pointer()->decoration());
-    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
-    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerButtonPressed(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerButtonReleased(BTN_LEFT, timestamp++);
     QVERIFY(buttonStateChangedSpy.wait());
     QCOMPARE(pointer->enteredSurface(), surface.data());
 
@@ -544,6 +563,12 @@ void PointerInputTest::testModifierClickUnrestrictedMove()
 {
     // this test ensures that Alt+mouse button press triggers unrestricted move
     using namespace KWayland::Client;
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+    QVERIFY(Test::waitForWaylandKeyboard());
+
     // create pointer and signal spy for button events
     auto pointer = m_seat->createPointer(m_seat);
     QVERIFY(pointer);
@@ -584,22 +609,22 @@ void PointerInputTest::testModifierClickUnrestrictedMove()
     quint32 timestamp = 1;
     QFETCH(bool, capsLock);
     if (capsLock) {
-        Test::keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
+        keyboardDevice->sendKeyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
     }
     QFETCH(int, modifierKey);
     QFETCH(int, mouseButton);
-    Test::keyboardKeyPressed(modifierKey, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(modifierKey, timestamp++);
     QVERIFY(!window->isInteractiveMove());
-    Test::pointerButtonPressed(mouseButton, timestamp++);
+    pointerDevice->sendPointerButtonPressed(mouseButton, timestamp++);
     QVERIFY(window->isInteractiveMove());
     // release modifier should not change it
-    Test::keyboardKeyReleased(modifierKey, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(modifierKey, timestamp++);
     QVERIFY(window->isInteractiveMove());
     // but releasing the key should end move/resize
-    Test::pointerButtonReleased(mouseButton, timestamp++);
+    pointerDevice->sendPointerButtonReleased(mouseButton, timestamp++);
     QVERIFY(!window->isInteractiveMove());
     if (capsLock) {
-        Test::keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
+        keyboardDevice->sendKeyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
     }
 
     // all of that should not have triggered button events on the surface
@@ -612,6 +637,12 @@ void PointerInputTest::testModifierClickUnrestrictedMoveGlobalShortcutsDisabled(
 {
     // this test ensures that Alt+mouse button press triggers unrestricted move
     using namespace KWayland::Client;
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+    QVERIFY(Test::waitForWaylandKeyboard());
+
     // create pointer and signal spy for button events
     auto pointer = m_seat->createPointer(m_seat);
     QVERIFY(pointer);
@@ -654,14 +685,14 @@ void PointerInputTest::testModifierClickUnrestrictedMoveGlobalShortcutsDisabled(
 
     // simulate modifier+click
     quint32 timestamp = 1;
-    Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTMETA, timestamp++);
     QVERIFY(!window->isInteractiveMove());
-    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(!window->isInteractiveMove());
     // release modifier should not change it
-    Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTMETA, timestamp++);
     QVERIFY(!window->isInteractiveMove());
-    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerButtonReleased(BTN_LEFT, timestamp++);
 
     workspace()->disableGlobalShortcutsForClient(false);
 }
@@ -690,6 +721,12 @@ void PointerInputTest::testModifierScrollOpacity()
     // this test verifies that mod+wheel performs a window operation and does not
     // pass the wheel to the window
     using namespace KWayland::Client;
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+    QVERIFY(Test::waitForWaylandKeyboard());
+
     // create pointer and signal spy for button events
     auto pointer = m_seat->createPointer(m_seat);
     QVERIFY(pointer);
@@ -727,17 +764,17 @@ void PointerInputTest::testModifierScrollOpacity()
     quint32 timestamp = 1;
     QFETCH(bool, capsLock);
     if (capsLock) {
-        Test::keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
+        keyboardDevice->sendKeyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
     }
     QFETCH(int, modifierKey);
-    Test::keyboardKeyPressed(modifierKey, timestamp++);
-    Test::pointerAxisVertical(-5, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(modifierKey, timestamp++);
+    pointerDevice->sendPointerAxisVertical(-5, timestamp++);
     QCOMPARE(window->opacity(), 0.6);
-    Test::pointerAxisVertical(5, timestamp++);
+    pointerDevice->sendPointerAxisVertical(5, timestamp++);
     QCOMPARE(window->opacity(), 0.5);
-    Test::keyboardKeyReleased(modifierKey, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(modifierKey, timestamp++);
     if (capsLock) {
-        Test::keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
+        keyboardDevice->sendKeyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
     }
 
     // axis should have been filtered out
@@ -750,6 +787,12 @@ void PointerInputTest::testModifierScrollOpacityGlobalShortcutsDisabled()
     // this test verifies that mod+wheel performs a window operation and does not
     // pass the wheel to the window
     using namespace KWayland::Client;
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+    QVERIFY(Test::waitForWaylandKeyboard());
+
     // create pointer and signal spy for button events
     auto pointer = m_seat->createPointer(m_seat);
     QVERIFY(pointer);
@@ -789,12 +832,12 @@ void PointerInputTest::testModifierScrollOpacityGlobalShortcutsDisabled()
 
     // simulate modifier+wheel
     quint32 timestamp = 1;
-    Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
-    Test::pointerAxisVertical(-5, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTMETA, timestamp++);
+    pointerDevice->sendPointerAxisVertical(-5, timestamp++);
     QCOMPARE(window->opacity(), 0.5);
-    Test::pointerAxisVertical(5, timestamp++);
+    pointerDevice->sendPointerAxisVertical(5, timestamp++);
     QCOMPARE(window->opacity(), 0.5);
-    Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTMETA, timestamp++);
 
     workspace()->disableGlobalShortcutsForClient(false);
 }
@@ -803,6 +846,10 @@ void PointerInputTest::testScrollAction()
 {
     // this test verifies that scroll on inactive window performs a mouse action
     using namespace KWayland::Client;
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     auto pointer = m_seat->createPointer(m_seat);
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
@@ -840,7 +887,7 @@ void PointerInputTest::testScrollAction()
 
     quint32 timestamp = 1;
     QVERIFY(!window1->isActive());
-    Test::pointerAxisVertical(5, timestamp++);
+    pointerDevice->sendPointerAxisVertical(5, timestamp++);
     QVERIFY(window1->isActive());
 
     // but also the wheel event should be passed to the window
@@ -949,6 +996,9 @@ void PointerInputTest::testMouseActionInactiveWindow()
     // it should activate the window and raise it
     using namespace KWayland::Client;
 
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     // first modify the config for this run - disable FocusFollowsMouse
     KConfigGroup group = kwinApp()->config()->group("Windows");
     group.writeEntry("FocusPolicy", "ClickToFocus");
@@ -1005,7 +1055,7 @@ void PointerInputTest::testMouseActionInactiveWindow()
     // and click
     quint32 timestamp = 1;
     QFETCH(quint32, button);
-    Test::pointerButtonPressed(button, timestamp++);
+    pointerDevice->sendPointerButtonPressed(button, timestamp++);
     // should raise window1 and activate it
     QCOMPARE(stackingOrderChangedSpy.count(), 1);
     QVERIFY(!activeWindowChangedSpy.isEmpty());
@@ -1014,7 +1064,7 @@ void PointerInputTest::testMouseActionInactiveWindow()
     QVERIFY(!window2->isActive());
 
     // release again
-    Test::pointerButtonReleased(button, timestamp++);
+    pointerDevice->sendPointerButtonReleased(button, timestamp++);
 }
 
 void PointerInputTest::testMouseActionActiveWindow_data()
@@ -1035,6 +1085,10 @@ void PointerInputTest::testMouseActionActiveWindow()
     // for all buttons it should trigger a window raise depending on the
     // click raise option
     using namespace KWayland::Client;
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     // create a button spy - all clicks should be passed through
     auto pointer = m_seat->createPointer(m_seat);
     QVERIFY(pointer);
@@ -1093,7 +1147,7 @@ void PointerInputTest::testMouseActionActiveWindow()
     // and click
     quint32 timestamp = 1;
     QFETCH(quint32, button);
-    Test::pointerButtonPressed(button, timestamp++);
+    pointerDevice->sendPointerButtonPressed(button, timestamp++);
     QVERIFY(buttonSpy.wait());
     if (clickRaise) {
         QCOMPARE(stackingOrderChangedSpy.count(), 1);
@@ -1105,7 +1159,7 @@ void PointerInputTest::testMouseActionActiveWindow()
     }
 
     // release again
-    Test::pointerButtonReleased(button, timestamp++);
+    pointerDevice->sendPointerButtonReleased(button, timestamp++);
 
     delete surface1;
     QVERIFY(window1DestroyedSpy.wait());
@@ -1117,6 +1171,10 @@ void PointerInputTest::testCursorImage()
 {
     // this test verifies that the pointer image gets updated correctly from the client provided data
     using namespace KWayland::Client;
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     // we need a pointer to get the enter event
     auto pointer = m_seat->createPointer(m_seat);
     QVERIFY(pointer);
@@ -1222,6 +1280,10 @@ void PointerInputTest::testEffectOverrideCursorImage()
 {
     // this test verifies the effect cursor override handling
     using namespace KWayland::Client;
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     // we need a pointer to get the enter event and set a cursor
     auto pointer = m_seat->createPointer(m_seat);
     auto cursor = Cursors::self()->mouse();
@@ -1300,6 +1362,10 @@ void PointerInputTest::testPopup()
 
     // first create a parent surface
     using namespace KWayland::Client;
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     auto pointer = m_seat->createPointer(m_seat);
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
@@ -1331,8 +1397,8 @@ void PointerInputTest::testPopup()
     QVERIFY(enteredSpy.wait());
     // click inside window to create serial
     quint32 timestamp = 0;
-    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
-    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerButtonPressed(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerButtonReleased(BTN_LEFT, timestamp++);
     QVERIFY(buttonStateChangedSpy.wait());
 
     // now create the popup surface
@@ -1372,9 +1438,9 @@ void PointerInputTest::testPopup()
     QCOMPARE(leftSpy.count(), 2);
     QVERIFY(doneReceivedSpy.isEmpty());
     // now click, should trigger popupDone
-    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(doneReceivedSpy.wait());
-    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerButtonReleased(BTN_LEFT, timestamp++);
 }
 
 void PointerInputTest::testDecoCancelsPopup()
@@ -1384,6 +1450,10 @@ void PointerInputTest::testDecoCancelsPopup()
 
     // first create a parent surface
     using namespace KWayland::Client;
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     auto pointer = m_seat->createPointer(m_seat);
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
@@ -1418,8 +1488,8 @@ void PointerInputTest::testDecoCancelsPopup()
     QVERIFY(enteredSpy.wait());
     // click inside window to create serial
     quint32 timestamp = 0;
-    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
-    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerButtonPressed(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerButtonReleased(BTN_LEFT, timestamp++);
     QVERIFY(buttonStateChangedSpy.wait());
 
     // now create the popup surface
@@ -1446,9 +1516,9 @@ void PointerInputTest::testDecoCancelsPopup()
     // let's move the pointer into the center of the deco
     Cursors::self()->mouse()->setPos(window->frameGeometry().center().x(), window->y() + (window->height() - window->clientSize().height()) / 2);
 
-    Test::pointerButtonPressed(BTN_RIGHT, timestamp++);
+    pointerDevice->sendPointerButtonPressed(BTN_RIGHT, timestamp++);
     QVERIFY(doneReceivedSpy.wait());
-    Test::pointerButtonReleased(BTN_RIGHT, timestamp++);
+    pointerDevice->sendPointerButtonReleased(BTN_RIGHT, timestamp++);
 }
 
 void PointerInputTest::testWindowUnderCursorWhileButtonPressed()
@@ -1459,6 +1529,10 @@ void PointerInputTest::testWindowUnderCursorWhileButtonPressed()
 
     // first create a parent surface
     using namespace KWayland::Client;
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     auto pointer = m_seat->createPointer(m_seat);
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
@@ -1485,7 +1559,7 @@ void PointerInputTest::testWindowUnderCursorWhileButtonPressed()
     QVERIFY(enteredSpy.wait());
     // click inside window
     quint32 timestamp = 0;
-    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerButtonPressed(BTN_LEFT, timestamp++);
 
     // now create a second window as transient
     QScopedPointer<Test::XdgPositioner> positioner(Test::createXdgPositioner());
@@ -1506,7 +1580,7 @@ void PointerInputTest::testWindowUnderCursorWhileButtonPressed()
     QVERIFY(popupWindow->frameGeometry().contains(Cursors::self()->mouse()->pos()));
     QVERIFY(!leftSpy.wait());
 
-    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerButtonReleased(BTN_LEFT, timestamp++);
     // now that the button is no longer pressed we should get the leave event
     QVERIFY(leftSpy.wait());
     QCOMPARE(leftSpy.count(), 1);
@@ -1570,6 +1644,9 @@ void PointerInputTest::testConfineToScreenGeometry()
     // this test verifies that pointer belongs to at least one screen
     // after moving it to off-screen area
 
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     // unload the Window View effect because it pushes back
     // pointer if it's at (0, 0)
     static_cast<EffectsHandlerImpl *>(effects)->unloadEffect(QStringLiteral("windowview"));
@@ -1597,7 +1674,7 @@ void PointerInputTest::testConfineToScreenGeometry()
 
     // perform movement
     QFETCH(QPoint, targetPos);
-    Test::pointerMotion(targetPos, 1);
+    pointerDevice->sendPointerMotion(targetPos, 1);
 
     QFETCH(QPoint, expectedPos);
     QCOMPARE(Cursors::self()->mouse()->pos(), expectedPos);
@@ -1621,6 +1698,11 @@ void PointerInputTest::testResizeCursor_data()
 void PointerInputTest::testResizeCursor()
 {
     // this test verifies that the cursor has correct shape during resize operation
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+    QVERIFY(Test::waitForWaylandKeyboard());
 
     // first modify the config for this run
     KConfigGroup group = kwinApp()->config()->group("MouseBindings");
@@ -1689,8 +1771,8 @@ void PointerInputTest::testResizeCursor()
 
     // start resizing the window
     int timestamp = 1;
-    Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
-    Test::pointerButtonPressed(BTN_RIGHT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTMETA, timestamp++);
+    pointerDevice->sendPointerButtonPressed(BTN_RIGHT, timestamp++);
     QVERIFY(window->isInteractiveResize());
 
     QFETCH(KWin::CursorShape, cursorShape);
@@ -1700,8 +1782,8 @@ void PointerInputTest::testResizeCursor()
     QCOMPARE(kwinApp()->platform()->cursorImage().hotSpot(), resizeCursor.hotSpot());
 
     // finish resizing the window
-    Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
-    Test::pointerButtonReleased(BTN_RIGHT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+    pointerDevice->sendPointerButtonReleased(BTN_RIGHT, timestamp++);
     QVERIFY(!window->isInteractiveResize());
 
     QCOMPARE(kwinApp()->platform()->cursorImage().image(), arrowCursor.image());
@@ -1711,6 +1793,11 @@ void PointerInputTest::testResizeCursor()
 void PointerInputTest::testMoveCursor()
 {
     // this test verifies that the cursor has correct shape during move operation
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+    QVERIFY(Test::waitForWaylandKeyboard());
 
     // first modify the config for this run
     KConfigGroup group = kwinApp()->config()->group("MouseBindings");
@@ -1760,8 +1847,8 @@ void PointerInputTest::testMoveCursor()
 
     // start moving the window
     int timestamp = 1;
-    Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
-    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTMETA, timestamp++);
+    pointerDevice->sendPointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(window->isInteractiveMove());
 
     const PlatformCursorImage sizeAllCursor = loadReferenceThemeCursor(Qt::SizeAllCursor);
@@ -1770,8 +1857,8 @@ void PointerInputTest::testMoveCursor()
     QCOMPARE(kwinApp()->platform()->cursorImage().hotSpot(), sizeAllCursor.hotSpot());
 
     // finish moving the window
-    Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
-    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+    pointerDevice->sendPointerButtonReleased(BTN_LEFT, timestamp++);
     QVERIFY(!window->isInteractiveMove());
 
     QCOMPARE(kwinApp()->platform()->cursorImage().image(), arrowCursor.image());

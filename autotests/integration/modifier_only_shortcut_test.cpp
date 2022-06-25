@@ -134,6 +134,9 @@ void ModifierOnlyShortcutTest::testTrigger()
     QSignalSpy triggeredSpy(&target, &Target::shortcutTriggered);
     QVERIFY(triggeredSpy.isValid());
 
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+
     KConfigGroup group = kwinApp()->config()->group("ModifierOnlyShortcuts");
     QFETCH(QStringList, metaConfig);
     QFETCH(QStringList, altConfig);
@@ -149,93 +152,93 @@ void ModifierOnlyShortcutTest::testTrigger()
     // configured shortcut should trigger
     quint32 timestamp = 1;
     QFETCH(int, modifier);
-    Test::keyboardKeyPressed(modifier, timestamp++);
-    Test::keyboardKeyReleased(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(modifier, timestamp++);
     QCOMPARE(triggeredSpy.count(), 1);
 
     // the other shortcuts should not trigger
     QFETCH(QList<int>, nonTriggeringMods);
     for (auto it = nonTriggeringMods.constBegin(), end = nonTriggeringMods.constEnd(); it != end; it++) {
-        Test::keyboardKeyPressed(*it, timestamp++);
-        Test::keyboardKeyReleased(*it, timestamp++);
+        keyboardDevice->sendKeyboardKeyPressed(*it, timestamp++);
+        keyboardDevice->sendKeyboardKeyReleased(*it, timestamp++);
         QCOMPARE(triggeredSpy.count(), 1);
     }
 
     // try configured again
-    Test::keyboardKeyPressed(modifier, timestamp++);
-    Test::keyboardKeyReleased(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(modifier, timestamp++);
     QCOMPARE(triggeredSpy.count(), 2);
 
     // click another key while modifier is held
-    Test::keyboardKeyPressed(modifier, timestamp++);
-    Test::keyboardKeyPressed(KEY_A, timestamp++);
-    Test::keyboardKeyReleased(KEY_A, timestamp++);
-    Test::keyboardKeyReleased(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_A, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_A, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(modifier, timestamp++);
     QCOMPARE(triggeredSpy.count(), 2);
 
     // release other key after modifier release
-    Test::keyboardKeyPressed(modifier, timestamp++);
-    Test::keyboardKeyPressed(KEY_A, timestamp++);
-    Test::keyboardKeyReleased(modifier, timestamp++);
-    Test::keyboardKeyReleased(KEY_A, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_A, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_A, timestamp++);
     QCOMPARE(triggeredSpy.count(), 2);
 
     // press key before pressing modifier
-    Test::keyboardKeyPressed(KEY_A, timestamp++);
-    Test::keyboardKeyPressed(modifier, timestamp++);
-    Test::keyboardKeyReleased(modifier, timestamp++);
-    Test::keyboardKeyReleased(KEY_A, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_A, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_A, timestamp++);
     QCOMPARE(triggeredSpy.count(), 2);
 
     // mouse button pressed before clicking modifier
-    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerButtonPressed(BTN_LEFT, timestamp++);
     QCOMPARE(input()->qtButtonStates(), Qt::LeftButton);
-    Test::keyboardKeyPressed(modifier, timestamp++);
-    Test::keyboardKeyReleased(modifier, timestamp++);
-    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(modifier, timestamp++);
+    pointerDevice->sendPointerButtonReleased(BTN_LEFT, timestamp++);
     QCOMPARE(input()->qtButtonStates(), Qt::NoButton);
     QCOMPARE(triggeredSpy.count(), 2);
 
     // mouse button press before mod press, release before mod release
-    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerButtonPressed(BTN_LEFT, timestamp++);
     QCOMPARE(input()->qtButtonStates(), Qt::LeftButton);
-    Test::keyboardKeyPressed(modifier, timestamp++);
-    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
-    Test::keyboardKeyReleased(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(modifier, timestamp++);
+    pointerDevice->sendPointerButtonReleased(BTN_LEFT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(modifier, timestamp++);
     QCOMPARE(input()->qtButtonStates(), Qt::NoButton);
     QCOMPARE(triggeredSpy.count(), 2);
 
     // mouse button click while mod is pressed
-    Test::keyboardKeyPressed(modifier, timestamp++);
-    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(modifier, timestamp++);
+    pointerDevice->sendPointerButtonPressed(BTN_LEFT, timestamp++);
     QCOMPARE(input()->qtButtonStates(), Qt::LeftButton);
-    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
-    Test::keyboardKeyReleased(modifier, timestamp++);
+    pointerDevice->sendPointerButtonReleased(BTN_LEFT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(modifier, timestamp++);
     QCOMPARE(input()->qtButtonStates(), Qt::NoButton);
     QCOMPARE(triggeredSpy.count(), 2);
 
     // scroll while mod is pressed
-    Test::keyboardKeyPressed(modifier, timestamp++);
-    Test::pointerAxisVertical(5.0, timestamp++);
-    Test::keyboardKeyReleased(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(modifier, timestamp++);
+    pointerDevice->sendPointerAxisVertical(5.0, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(modifier, timestamp++);
     QCOMPARE(triggeredSpy.count(), 2);
 
     // same for horizontal
-    Test::keyboardKeyPressed(modifier, timestamp++);
-    Test::pointerAxisHorizontal(5.0, timestamp++);
-    Test::keyboardKeyReleased(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(modifier, timestamp++);
+    pointerDevice->sendPointerAxisHorizontal(5.0, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(modifier, timestamp++);
     QCOMPARE(triggeredSpy.count(), 2);
 
 #if KWIN_BUILD_SCREENLOCKER
     // now try to lock the screen while modifier key is pressed
-    Test::keyboardKeyPressed(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(modifier, timestamp++);
     QVERIFY(Test::lockScreen());
-    Test::keyboardKeyReleased(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(modifier, timestamp++);
     QCOMPARE(triggeredSpy.count(), 2);
 
     // now trigger while screen is locked, should also not work
-    Test::keyboardKeyPressed(modifier, timestamp++);
-    Test::keyboardKeyReleased(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(modifier, timestamp++);
     QCOMPARE(triggeredSpy.count(), 2);
 
     QVERIFY(Test::unlockScreen());
@@ -250,6 +253,9 @@ void ModifierOnlyShortcutTest::testCapsLock()
     QSignalSpy triggeredSpy(&target, &Target::shortcutTriggered);
     QVERIFY(triggeredSpy.isValid());
 
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+
     KConfigGroup group = kwinApp()->config()->group("ModifierOnlyShortcuts");
     group.writeEntry("Meta", QStringList());
     group.writeEntry("Alt", QStringList());
@@ -261,20 +267,20 @@ void ModifierOnlyShortcutTest::testCapsLock()
     // first test that the normal shortcut triggers
     quint32 timestamp = 1;
     const int modifier = KEY_LEFTSHIFT;
-    Test::keyboardKeyPressed(modifier, timestamp++);
-    Test::keyboardKeyReleased(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(modifier, timestamp++);
     QCOMPARE(triggeredSpy.count(), 1);
 
     // now capslock
-    Test::keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
-    Test::keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier);
     QCOMPARE(triggeredSpy.count(), 1);
 
     // currently caps lock is on
     // shift still triggers
-    Test::keyboardKeyPressed(modifier, timestamp++);
-    Test::keyboardKeyReleased(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(modifier, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier);
     QCOMPARE(triggeredSpy.count(), 2);
 
@@ -285,10 +291,10 @@ void ModifierOnlyShortcutTest::testCapsLock()
     group.writeEntry("Control", QStringList());
     group.sync();
     workspace()->slotReconfigure();
-    Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTMETA, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier | Qt::MetaModifier);
     QCOMPARE(input()->keyboard()->xkb()->modifiersRelevantForGlobalShortcuts(), Qt::MetaModifier);
-    Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTMETA, timestamp++);
     QCOMPARE(triggeredSpy.count(), 3);
 
     // set back to shift to ensure we don't trigger with capslock
@@ -300,8 +306,8 @@ void ModifierOnlyShortcutTest::testCapsLock()
     workspace()->slotReconfigure();
 
     // release caps lock
-    Test::keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
-    Test::keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::NoModifier);
     QCOMPARE(triggeredSpy.count(), 3);
 }
@@ -336,6 +342,9 @@ void ModifierOnlyShortcutTest::testGlobalShortcutsDisabled()
     QSignalSpy triggeredSpy(&target, &Target::shortcutTriggered);
     QVERIFY(triggeredSpy.isValid());
 
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+
     KConfigGroup group = kwinApp()->config()->group("ModifierOnlyShortcuts");
     QFETCH(QStringList, metaConfig);
     QFETCH(QStringList, altConfig);
@@ -352,8 +361,8 @@ void ModifierOnlyShortcutTest::testGlobalShortcutsDisabled()
     quint32 timestamp = 1;
     QFETCH(int, modifier);
     QVERIFY(!workspace()->globalShortcutsDisabled());
-    Test::keyboardKeyPressed(modifier, timestamp++);
-    Test::keyboardKeyReleased(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(modifier, timestamp++);
     QCOMPARE(triggeredSpy.count(), 1);
     triggeredSpy.clear();
 
@@ -361,8 +370,8 @@ void ModifierOnlyShortcutTest::testGlobalShortcutsDisabled()
     workspace()->disableGlobalShortcutsForClient(true);
     QVERIFY(workspace()->globalShortcutsDisabled());
     // Should not get triggered
-    Test::keyboardKeyPressed(modifier, timestamp++);
-    Test::keyboardKeyReleased(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(modifier, timestamp++);
     QCOMPARE(triggeredSpy.count(), 0);
     triggeredSpy.clear();
 
@@ -370,8 +379,8 @@ void ModifierOnlyShortcutTest::testGlobalShortcutsDisabled()
     workspace()->disableGlobalShortcutsForClient(false);
     QVERIFY(!workspace()->globalShortcutsDisabled());
     // should get triggered again
-    Test::keyboardKeyPressed(modifier, timestamp++);
-    Test::keyboardKeyReleased(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(modifier, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(modifier, timestamp++);
     QCOMPARE(triggeredSpy.count(), 1);
 }
 

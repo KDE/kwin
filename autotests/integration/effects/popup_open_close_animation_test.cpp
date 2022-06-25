@@ -152,6 +152,7 @@ void PopupOpenCloseAnimationTest::testAnimateUserActionsPopup()
 {
     // This test verifies that popup open/close animation effects try
     // to animate the user actions popup.
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
 
     // Make sure that we have the right effects ptr.
     auto effectsImpl = qobject_cast<EffectsHandlerImpl *>(effects);
@@ -186,8 +187,8 @@ void PopupOpenCloseAnimationTest::testAnimateUserActionsPopup()
     QTRY_VERIFY(!effect->isActive());
 
     // Close the user actions popup.
-    Test::keyboardKeyPressed(KEY_ESC, 0);
-    Test::keyboardKeyReleased(KEY_ESC, 1);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_ESC, 0);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_ESC, 1);
     QTRY_VERIFY(!userActionsMenu->isShown());
     QVERIFY(!userActionsMenu->hasWindow());
     QVERIFY(effect->isActive());

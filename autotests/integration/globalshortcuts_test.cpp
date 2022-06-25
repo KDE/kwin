@@ -129,6 +129,8 @@ void GlobalShortcutsTest::testNonLatinLayout_data()
 void GlobalShortcutsTest::testNonLatinLayout()
 {
     // Shortcuts on non-Latin layouts should still work, see BUG 375518
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+
     auto xkb = input()->keyboard()->xkb();
     xkb->switchToLayout(1);
     QCOMPARE(xkb->layoutName(), QStringLiteral("Russian"));
@@ -152,12 +154,12 @@ void GlobalShortcutsTest::testNonLatinLayout()
     input()->registerShortcut(seq, action.data());
 
     quint32 timestamp = 0;
-    Test::keyboardKeyPressed(modifierKey, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(modifierKey, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), qtModifier);
-    Test::keyboardKeyPressed(key, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(key, timestamp++);
 
-    Test::keyboardKeyReleased(key, timestamp++);
-    Test::keyboardKeyReleased(modifierKey, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(key, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(modifierKey, timestamp++);
 
     QTRY_COMPARE_WITH_TIMEOUT(triggeredSpy.count(), 1, 100);
 }
@@ -166,6 +168,8 @@ void GlobalShortcutsTest::testConsumedShift()
 {
     // this test verifies that a shortcut with a consumed shift modifier triggers
     // create the action
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+
     QScopedPointer<QAction> action(new QAction(nullptr));
     action->setProperty("componentName", QStringLiteral(KWIN_NAME));
     action->setObjectName(QStringLiteral("globalshortcuts-test-consumed-shift"));
@@ -176,20 +180,21 @@ void GlobalShortcutsTest::testConsumedShift()
 
     // press shift+5
     quint32 timestamp = 0;
-    Test::keyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier);
-    Test::keyboardKeyPressed(KEY_5, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_5, timestamp++);
     QTRY_COMPARE(triggeredSpy.count(), 1);
-    Test::keyboardKeyReleased(KEY_5, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_5, timestamp++);
 
     // release shift
-    Test::keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
 }
 
 void GlobalShortcutsTest::testRepeatedTrigger()
 {
     // this test verifies that holding a key, triggers repeated global shortcut
     // in addition pressing another key should stop triggering the shortcut
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
 
     QScopedPointer<QAction> action(new QAction(nullptr));
     action->setProperty("componentName", QStringLiteral(KWIN_NAME));
@@ -204,23 +209,23 @@ void GlobalShortcutsTest::testRepeatedTrigger()
 
     // press shift+5
     quint32 timestamp = 0;
-    Test::keyboardKeyPressed(KEY_WAKEUP, timestamp++);
-    Test::keyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_WAKEUP, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier);
-    Test::keyboardKeyPressed(KEY_5, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_5, timestamp++);
     QTRY_COMPARE(triggeredSpy.count(), 1);
     // and should repeat
     QVERIFY(triggeredSpy.wait());
     QVERIFY(triggeredSpy.wait());
     // now release the key
-    Test::keyboardKeyReleased(KEY_5, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_5, timestamp++);
     QVERIFY(!triggeredSpy.wait(50));
 
-    Test::keyboardKeyReleased(KEY_WAKEUP, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_WAKEUP, timestamp++);
     QVERIFY(!triggeredSpy.wait(50));
 
     // release shift
-    Test::keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
 }
 
 void GlobalShortcutsTest::testUserActionsMenu()
@@ -232,6 +237,7 @@ void GlobalShortcutsTest::testUserActionsMenu()
     // for more information see:
     // https://bugs.freedesktop.org/show_bug.cgi?id=92818
     // https://github.com/xkbcommon/libxkbcommon/issues/17
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
 
     // first create a window
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
@@ -242,16 +248,18 @@ void GlobalShortcutsTest::testUserActionsMenu()
 
     quint32 timestamp = 0;
     QVERIFY(!workspace()->userActionsMenu()->isShown());
-    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyPressed(KEY_F3, timestamp++);
-    Test::keyboardKeyReleased(KEY_F3, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_F3, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_F3, timestamp++);
     QTRY_VERIFY(workspace()->userActionsMenu()->isShown());
-    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTALT, timestamp++);
 }
 
 void GlobalShortcutsTest::testMetaShiftW()
 {
     // BUG 370341
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+
     QScopedPointer<QAction> action(new QAction(nullptr));
     action->setProperty("componentName", QStringLiteral(KWIN_NAME));
     action->setObjectName(QStringLiteral("globalshortcuts-test-meta-shift-w"));
@@ -262,22 +270,24 @@ void GlobalShortcutsTest::testMetaShiftW()
 
     // press meta+shift+w
     quint32 timestamp = 0;
-    Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTMETA, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::MetaModifier);
-    Test::keyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier | Qt::MetaModifier);
-    Test::keyboardKeyPressed(KEY_W, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_W, timestamp++);
     QTRY_COMPARE(triggeredSpy.count(), 1);
-    Test::keyboardKeyReleased(KEY_W, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_W, timestamp++);
 
     // release meta+shift
-    Test::keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTMETA, timestamp++);
 }
 
 void GlobalShortcutsTest::testComponseKey()
 {
     // BUG 390110
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+
     QScopedPointer<QAction> action(new QAction(nullptr));
     action->setProperty("componentName", QStringLiteral(KWIN_NAME));
     action->setObjectName(QStringLiteral("globalshortcuts-accent"));
@@ -288,8 +298,8 @@ void GlobalShortcutsTest::testComponseKey()
 
     // press & release `
     quint32 timestamp = 0;
-    Test::keyboardKeyPressed(KEY_RESERVED, timestamp++);
-    Test::keyboardKeyReleased(KEY_RESERVED, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_RESERVED, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_RESERVED, timestamp++);
 
     QTRY_COMPARE(triggeredSpy.count(), 0);
 }
@@ -307,6 +317,8 @@ void GlobalShortcutsTest::testX11WindowShortcut()
 #ifdef NO_XWAYLAND
     QSKIP("x11 test, unnecessary without xwayland");
 #endif
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+
     // create an X11 window
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(c.data()));
@@ -355,13 +367,13 @@ void GlobalShortcutsTest::testX11WindowShortcut()
 
     // now let's trigger the shortcut
     quint32 timestamp = 0;
-    Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
-    Test::keyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
-    Test::keyboardKeyPressed(KEY_Y, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTMETA, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_Y, timestamp++);
     QTRY_COMPARE(workspace()->activeWindow(), window);
-    Test::keyboardKeyReleased(KEY_Y, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_Y, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTMETA, timestamp++);
 
     // destroy window again
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
@@ -374,6 +386,8 @@ void GlobalShortcutsTest::testX11WindowShortcut()
 
 void GlobalShortcutsTest::testWaylandWindowShortcut()
 {
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
@@ -394,13 +408,13 @@ void GlobalShortcutsTest::testWaylandWindowShortcut()
 
     // now let's trigger the shortcut
     quint32 timestamp = 0;
-    Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
-    Test::keyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
-    Test::keyboardKeyPressed(KEY_Y, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTMETA, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_Y, timestamp++);
     QTRY_COMPARE(workspace()->activeWindow(), window);
-    Test::keyboardKeyReleased(KEY_Y, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_Y, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTMETA, timestamp++);
 
     shellSurface.reset();
     surface.reset();
@@ -411,6 +425,7 @@ void GlobalShortcutsTest::testWaylandWindowShortcut()
 void GlobalShortcutsTest::testSetupWindowShortcut()
 {
     // QTBUG-62102
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
 
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
@@ -437,18 +452,18 @@ void GlobalShortcutsTest::testSetupWindowShortcut()
     QTRY_VERIFY(sequenceEdit->hasFocus());
 
     quint32 timestamp = 0;
-    Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
-    Test::keyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
-    Test::keyboardKeyPressed(KEY_Y, timestamp++);
-    Test::keyboardKeyReleased(KEY_Y, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTMETA, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_Y, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_Y, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTMETA, timestamp++);
 
     // the sequence gets accepted after one second, so wait a bit longer
     QTest::qWait(2000);
     // now send in enter
-    Test::keyboardKeyPressed(KEY_ENTER, timestamp++);
-    Test::keyboardKeyReleased(KEY_ENTER, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_ENTER, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_ENTER, timestamp++);
     QTRY_COMPARE(window->shortcut(), QKeySequence(Qt::META | Qt::SHIFT | Qt::Key_Y));
 }
 

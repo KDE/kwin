@@ -1374,70 +1374,98 @@ bool VirtualInputDevice::isLidSwitch() const
     return false;
 }
 
-void keyboardKeyPressed(quint32 key, quint32 time)
+void VirtualInputDevice::sendKeyboardKeyPressed(quint32 key, quint32 time)
 {
-    auto virtualKeyboard = static_cast<WaylandTestApplication *>(kwinApp())->virtualKeyboard();
-    Q_EMIT virtualKeyboard->keyChanged(key, InputRedirection::KeyboardKeyState::KeyboardKeyPressed, time, virtualKeyboard);
+    Q_EMIT keyChanged(key, InputRedirection::KeyboardKeyState::KeyboardKeyPressed, time, this);
 }
 
-void keyboardKeyReleased(quint32 key, quint32 time)
+void VirtualInputDevice::sendKeyboardKeyReleased(quint32 key, quint32 time)
 {
-    auto virtualKeyboard = static_cast<WaylandTestApplication *>(kwinApp())->virtualKeyboard();
-    Q_EMIT virtualKeyboard->keyChanged(key, InputRedirection::KeyboardKeyState::KeyboardKeyReleased, time, virtualKeyboard);
+    Q_EMIT keyChanged(key, InputRedirection::KeyboardKeyState::KeyboardKeyReleased, time, this);
 }
 
-void pointerAxisHorizontal(qreal delta, quint32 time, qint32 discreteDelta, InputRedirection::PointerAxisSource source)
+void VirtualInputDevice::sendPointerAxisHorizontal(qreal delta, quint32 time, qint32 discreteDelta, InputRedirection::PointerAxisSource source)
 {
-    auto virtualPointer = static_cast<WaylandTestApplication *>(kwinApp())->virtualPointer();
-    Q_EMIT virtualPointer->pointerAxisChanged(InputRedirection::PointerAxis::PointerAxisHorizontal, delta, discreteDelta, source, time, virtualPointer);
+    Q_EMIT pointerAxisChanged(InputRedirection::PointerAxis::PointerAxisHorizontal, delta, discreteDelta, source, time, this);
 }
 
-void pointerAxisVertical(qreal delta, quint32 time, qint32 discreteDelta, InputRedirection::PointerAxisSource source)
+void VirtualInputDevice::sendPointerAxisVertical(qreal delta, quint32 time, qint32 discreteDelta, InputRedirection::PointerAxisSource source)
 {
-    auto virtualPointer = static_cast<WaylandTestApplication *>(kwinApp())->virtualPointer();
-    Q_EMIT virtualPointer->pointerAxisChanged(InputRedirection::PointerAxis::PointerAxisVertical, delta, discreteDelta, source, time, virtualPointer);
+    Q_EMIT pointerAxisChanged(InputRedirection::PointerAxis::PointerAxisVertical, delta, discreteDelta, source, time, this);
 }
 
-void pointerButtonPressed(quint32 button, quint32 time)
+void VirtualInputDevice::sendPointerButtonPressed(quint32 button, quint32 time)
 {
-    auto virtualPointer = static_cast<WaylandTestApplication *>(kwinApp())->virtualPointer();
-    Q_EMIT virtualPointer->pointerButtonChanged(button, InputRedirection::PointerButtonState::PointerButtonPressed, time, virtualPointer);
+    Q_EMIT pointerButtonChanged(button, InputRedirection::PointerButtonState::PointerButtonPressed, time, this);
 }
 
-void pointerButtonReleased(quint32 button, quint32 time)
+void VirtualInputDevice::sendPointerButtonReleased(quint32 button, quint32 time)
 {
-    auto virtualPointer = static_cast<WaylandTestApplication *>(kwinApp())->virtualPointer();
-    Q_EMIT virtualPointer->pointerButtonChanged(button, InputRedirection::PointerButtonState::PointerButtonReleased, time, virtualPointer);
+    Q_EMIT pointerButtonChanged(button, InputRedirection::PointerButtonState::PointerButtonReleased, time, this);
 }
 
-void pointerMotion(const QPointF &position, quint32 time)
+void VirtualInputDevice::sendPointerMotion(const QPointF &position, quint32 time)
 {
-    auto virtualPointer = static_cast<WaylandTestApplication *>(kwinApp())->virtualPointer();
-    Q_EMIT virtualPointer->pointerMotionAbsolute(position, time, virtualPointer);
+    Q_EMIT pointerMotionAbsolute(position, time, this);
 }
 
-void touchCancel()
+void VirtualInputDevice::sendTouchCancel()
 {
-    auto virtualTouch = static_cast<WaylandTestApplication *>(kwinApp())->virtualTouch();
-    Q_EMIT virtualTouch->touchCanceled(virtualTouch);
+    Q_EMIT touchCanceled(this);
 }
 
-void touchDown(qint32 id, const QPointF &pos, quint32 time)
+void VirtualInputDevice::sendTouchDown(qint32 id, const QPointF &pos, quint32 time)
 {
-    auto virtualTouch = static_cast<WaylandTestApplication *>(kwinApp())->virtualTouch();
-    Q_EMIT virtualTouch->touchDown(id, pos, time, virtualTouch);
+    Q_EMIT touchDown(id, pos, time, this);
 }
 
-void touchMotion(qint32 id, const QPointF &pos, quint32 time)
+void VirtualInputDevice::sendTouchMotion(qint32 id, const QPointF &pos, quint32 time)
 {
-    auto virtualTouch = static_cast<WaylandTestApplication *>(kwinApp())->virtualTouch();
-    Q_EMIT virtualTouch->touchMotion(id, pos, time, virtualTouch);
+    Q_EMIT touchMotion(id, pos, time, this);
 }
 
-void touchUp(qint32 id, quint32 time)
+void VirtualInputDevice::sendTouchUp(qint32 id, quint32 time)
 {
-    auto virtualTouch = static_cast<WaylandTestApplication *>(kwinApp())->virtualTouch();
-    Q_EMIT virtualTouch->touchUp(id, time, virtualTouch);
+    Q_EMIT touchUp(id, time, this);
+}
+
+std::unique_ptr<VirtualInputDevice> createKeyboardDevice()
+{
+    auto device = new VirtualInputDevice();
+    device->setKeyboard(true);
+
+    input()->addInputDevice(device);
+    QObject::connect(device, &VirtualInputDevice::destroyed, input(), [device]() {
+        input()->removeInputDevice(device);
+    });
+
+    return std::unique_ptr<VirtualInputDevice>(device);
+}
+
+std::unique_ptr<VirtualInputDevice> createTouchDevice()
+{
+    auto device = new VirtualInputDevice();
+    device->setTouch(true);
+
+    input()->addInputDevice(device);
+    QObject::connect(device, &VirtualInputDevice::destroyed, input(), [device]() {
+        input()->removeInputDevice(device);
+    });
+
+    return std::unique_ptr<VirtualInputDevice>(device);
+}
+
+std::unique_ptr<VirtualInputDevice> createPointerDevice()
+{
+    auto device = new VirtualInputDevice();
+    device->setPointer(true);
+
+    input()->addInputDevice(device);
+    QObject::connect(device, &VirtualInputDevice::destroyed, input(), [device]() {
+        input()->removeInputDevice(device);
+    });
+
+    return std::unique_ptr<VirtualInputDevice>(device);
 }
 }
 }

@@ -84,7 +84,6 @@ void TestPointerConstraints::initTestCase()
 void TestPointerConstraints::init()
 {
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::PointerConstraints));
-    QVERIFY(Test::waitForWaylandPointer());
 
     workspace()->setActiveOutput(QPoint(640, 512));
     KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
@@ -115,6 +114,12 @@ void TestPointerConstraints::testConfinedPointer()
 {
     // this test sets up a Surface with a confined pointer
     // simple interaction test to verify that the pointer gets confined
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+    QVERIFY(Test::waitForWaylandKeyboard());
+
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QScopedPointer<Pointer> pointer(Test::waylandSeat()->createPointer());
@@ -178,22 +183,22 @@ void TestPointerConstraints::testConfinedPointer()
     QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedMove);
 
     quint32 timestamp = 1;
-    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    pointerDevice->sendPointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(!window->isInteractiveMove());
-    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerButtonReleased(BTN_LEFT, timestamp++);
 
     // set the opacity to 0.5
     window->setOpacity(0.5);
     QCOMPARE(window->opacity(), 0.5);
 
     // pointer is confined so shortcut should not work
-    Test::pointerAxisVertical(-5, timestamp++);
+    pointerDevice->sendPointerAxisVertical(-5, timestamp++);
     QCOMPARE(window->opacity(), 0.5);
-    Test::pointerAxisVertical(5, timestamp++);
+    pointerDevice->sendPointerAxisVertical(5, timestamp++);
     QCOMPARE(window->opacity(), 0.5);
 
-    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTALT, timestamp++);
 
     // deactivate the window, this should unconfine
     workspace()->activateWindow(nullptr);
@@ -274,6 +279,10 @@ void TestPointerConstraints::testLockedPointer()
     // this test sets up a Surface with a locked pointer
     // simple interaction test to verify that the pointer gets locked
     // the various ways to unlock are not tested as that's already verified by testConfinedPointer
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QScopedPointer<Pointer> pointer(Test::waylandSeat()->createPointer());
@@ -340,6 +349,10 @@ void TestPointerConstraints::testLockedPointer()
 void TestPointerConstraints::testCloseWindowWithLockedPointer()
 {
     // test case which verifies that the pointer gets unlocked when the window for it gets closed
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QScopedPointer<Pointer> pointer(Test::waylandSeat()->createPointer());

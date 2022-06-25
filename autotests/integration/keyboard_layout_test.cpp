@@ -259,6 +259,8 @@ void KeyboardLayoutTest::testPerLayoutShortcut()
 {
     // this test verifies that per-layout global shortcuts are working correctly.
     // first configure layouts
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+
     layoutGroup.writeEntry("LayoutList", QStringLiteral("us,de,de(neo)"));
     layoutGroup.sync();
 
@@ -285,22 +287,22 @@ void KeyboardLayoutTest::testPerLayoutShortcut()
 
     // now switch to English through the global shortcut
     quint32 timestamp = 1;
-    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyPressed(KEY_2, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_2, timestamp++);
     QVERIFY(layoutChangedSpy.wait());
     // now layout should be German
     QCOMPARE(xkb->layoutName(), QStringLiteral("German"));
     // release keys again
-    Test::keyboardKeyReleased(KEY_2, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_2, timestamp++);
     // switch back to English
-    Test::keyboardKeyPressed(KEY_1, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_1, timestamp++);
     QVERIFY(layoutChangedSpy.wait());
     QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
     // release keys again
-    Test::keyboardKeyReleased(KEY_1, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_1, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
 }
 
 void KeyboardLayoutTest::testDBusServiceExport()
@@ -514,6 +516,8 @@ void KeyboardLayoutTest::testApplicationPolicy()
 
 void KeyboardLayoutTest::testNumLock()
 {
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+
     qputenv("KWIN_FORCE_NUM_LOCK_EVALUATION", "1");
     layoutGroup.writeEntry("LayoutList", QStringLiteral("us"));
     layoutGroup.sync();
@@ -526,13 +530,13 @@ void KeyboardLayoutTest::testNumLock()
     // by default not set
     QVERIFY(!xkb->leds().testFlag(LED::NumLock));
     quint32 timestamp = 0;
-    Test::keyboardKeyPressed(KEY_NUMLOCK, timestamp++);
-    Test::keyboardKeyReleased(KEY_NUMLOCK, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_NUMLOCK, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_NUMLOCK, timestamp++);
     // now it should be on
     QVERIFY(xkb->leds().testFlag(LED::NumLock));
     // and back to off
-    Test::keyboardKeyPressed(KEY_NUMLOCK, timestamp++);
-    Test::keyboardKeyReleased(KEY_NUMLOCK, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_NUMLOCK, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_NUMLOCK, timestamp++);
     QVERIFY(!xkb->leds().testFlag(LED::NumLock));
 
     // let's reconfigure to enable through config
@@ -543,13 +547,13 @@ void KeyboardLayoutTest::testNumLock()
     // now it should be on
     QVERIFY(xkb->leds().testFlag(LED::NumLock));
     // pressing should result in it being off
-    Test::keyboardKeyPressed(KEY_NUMLOCK, timestamp++);
-    Test::keyboardKeyReleased(KEY_NUMLOCK, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_NUMLOCK, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_NUMLOCK, timestamp++);
     QVERIFY(!xkb->leds().testFlag(LED::NumLock));
 
     // pressing again should enable it
-    Test::keyboardKeyPressed(KEY_NUMLOCK, timestamp++);
-    Test::keyboardKeyReleased(KEY_NUMLOCK, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_NUMLOCK, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_NUMLOCK, timestamp++);
     QVERIFY(xkb->leds().testFlag(LED::NumLock));
 
     // now reconfigure to disable on load

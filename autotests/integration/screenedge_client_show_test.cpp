@@ -205,6 +205,8 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowX11Touch()
     // this test creates a window which borders the screen and sets the screenedge show hint
     // that should trigger a show of the window whenever the touch screen swipe gesture is triggered
 
+    std::unique_ptr<Test::VirtualInputDevice> touchDevice = Test::createTouchDevice();
+
     // create the test window
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(c.data()));
@@ -262,9 +264,9 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowX11Touch()
     quint32 timestamp = 0;
     QFETCH(QPoint, touchDownPos);
     QFETCH(QPoint, targetPos);
-    Test::touchDown(0, touchDownPos, timestamp++);
-    Test::touchMotion(0, targetPos, timestamp++);
-    Test::touchUp(0, timestamp++);
+    touchDevice->sendTouchDown(0, touchDownPos, timestamp++);
+    touchDevice->sendTouchMotion(0, targetPos, timestamp++);
+    touchDevice->sendTouchUp(0, timestamp++);
     QVERIFY(effectsWindowShownSpy.wait());
     QVERIFY(!window->isHiddenInternal());
     QCOMPARE(effectsWindowShownSpy.count(), 1);

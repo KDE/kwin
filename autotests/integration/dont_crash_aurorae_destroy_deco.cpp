@@ -79,6 +79,8 @@ void DontCrashAuroraeDestroyDecoTest::testBorderlessMaximizedWindows()
     // with kwin config option BorderlessMaximizedWindows
     // see BUG 362772
 
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+
     // first adjust the config
     KConfigGroup group = kwinApp()->config()->group("Windows");
     group.writeEntry("BorderlessMaximizedWindows", true);
@@ -120,9 +122,9 @@ void DontCrashAuroraeDestroyDecoTest::testBorderlessMaximizedWindows()
     QSignalSpy maximizedStateChangedSpy(window, static_cast<void (Window::*)(KWin::Window *, MaximizeMode)>(&Window::clientMaximizedStateChanged));
     QVERIFY(maximizedStateChangedSpy.isValid());
     quint32 timestamp = 1;
-    Test::pointerMotion(window->frameGeometry().topLeft() + scenePoint.toPoint(), timestamp++);
-    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
-    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerMotion(window->frameGeometry().topLeft() + scenePoint.toPoint(), timestamp++);
+    pointerDevice->sendPointerButtonPressed(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerButtonReleased(BTN_LEFT, timestamp++);
     QVERIFY(maximizedStateChangedSpy.wait());
     QCOMPARE(window->maximizeMode(), MaximizeFull);
     QCOMPARE(window->noBorder(), true);

@@ -335,6 +335,8 @@ void QuickTilingTest::testQuickTilingKeyboardMove()
 {
     using namespace KWayland::Client;
 
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
@@ -358,26 +360,26 @@ void QuickTilingTest::testQuickTilingKeyboardMove()
 
     QFETCH(QPoint, targetPos);
     quint32 timestamp = 1;
-    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     while (Cursors::self()->mouse()->pos().x() > targetPos.x()) {
-        Test::keyboardKeyPressed(KEY_LEFT, timestamp++);
-        Test::keyboardKeyReleased(KEY_LEFT, timestamp++);
+        keyboardDevice->sendKeyboardKeyPressed(KEY_LEFT, timestamp++);
+        keyboardDevice->sendKeyboardKeyReleased(KEY_LEFT, timestamp++);
     }
     while (Cursors::self()->mouse()->pos().x() < targetPos.x()) {
-        Test::keyboardKeyPressed(KEY_RIGHT, timestamp++);
-        Test::keyboardKeyReleased(KEY_RIGHT, timestamp++);
+        keyboardDevice->sendKeyboardKeyPressed(KEY_RIGHT, timestamp++);
+        keyboardDevice->sendKeyboardKeyReleased(KEY_RIGHT, timestamp++);
     }
     while (Cursors::self()->mouse()->pos().y() < targetPos.y()) {
-        Test::keyboardKeyPressed(KEY_DOWN, timestamp++);
-        Test::keyboardKeyReleased(KEY_DOWN, timestamp++);
+        keyboardDevice->sendKeyboardKeyPressed(KEY_DOWN, timestamp++);
+        keyboardDevice->sendKeyboardKeyReleased(KEY_DOWN, timestamp++);
     }
     while (Cursors::self()->mouse()->pos().y() > targetPos.y()) {
-        Test::keyboardKeyPressed(KEY_UP, timestamp++);
-        Test::keyboardKeyReleased(KEY_UP, timestamp++);
+        keyboardDevice->sendKeyboardKeyPressed(KEY_UP, timestamp++);
+        keyboardDevice->sendKeyboardKeyReleased(KEY_UP, timestamp++);
     }
-    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
-    Test::keyboardKeyPressed(KEY_ENTER, timestamp++);
-    Test::keyboardKeyReleased(KEY_ENTER, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_ENTER, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_ENTER, timestamp++);
     QCOMPARE(Cursors::self()->mouse()->pos(), targetPos);
     QVERIFY(!workspace()->moveResizeWindow());
 
@@ -406,6 +408,9 @@ void QuickTilingTest::testQuickTilingPointerMove()
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
 
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     // let's render
     auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
@@ -430,9 +435,9 @@ void QuickTilingTest::testQuickTilingPointerMove()
     QFETCH(QPoint, pointerPos);
     QFETCH(QSize, tileSize);
     quint32 timestamp = 1;
-    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
-    Test::pointerMotion(pointerPos, timestamp++);
-    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerButtonPressed(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerMotion(pointerPos, timestamp++);
+    pointerDevice->sendPointerButtonReleased(BTN_LEFT, timestamp++);
     QCOMPARE(quickTileChangedSpy.count(), 1);
     QTEST(window->quickTileMode(), "expectedMode");
     QCOMPARE(window->geometryRestore(), QRect(0, 0, 100, 50));
@@ -445,16 +450,16 @@ void QuickTilingTest::testQuickTilingPointerMove()
     workspace()->performWindowOperation(window, Options::UnrestrictedMoveOp);
     QCOMPARE(window, workspace()->moveResizeWindow());
 
-    Test::pointerButtonPressed(BTN_LEFT, timestamp++); // untile the window
-    Test::pointerMotion(QPoint(1280, 1024) / 2, timestamp++);
+    pointerDevice->sendPointerButtonPressed(BTN_LEFT, timestamp++); // untile the window
+    pointerDevice->sendPointerMotion(QPoint(1280, 1024) / 2, timestamp++);
     QCOMPARE(quickTileChangedSpy.count(), 2);
     QCOMPARE(window->quickTileMode(), QuickTileMode(QuickTileFlag::None));
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), QSize(100, 50));
 
-    Test::pointerMotion(pointerPos, timestamp++); // tile the window again
-    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerMotion(pointerPos, timestamp++); // tile the window again
+    pointerDevice->sendPointerButtonReleased(BTN_LEFT, timestamp++);
     QCOMPARE(quickTileChangedSpy.count(), 3);
     QTEST(window->quickTileMode(), "expectedMode");
     QCOMPARE(window->geometryRestore(), QRect(0, 0, 100, 50));
@@ -481,6 +486,8 @@ void QuickTilingTest::testQuickTilingTouchMove()
     // test verifies that touch on decoration also allows quick tiling
     // see BUG: 390113
     using namespace KWayland::Client;
+
+    std::unique_ptr<Test::VirtualInputDevice> touchDevice = Test::createTouchDevice();
 
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
@@ -520,13 +527,13 @@ void QuickTilingTest::testQuickTilingTouchMove()
     // Note that interactive move will be started with a delay.
     quint32 timestamp = 1;
     QSignalSpy clientStartUserMovedResizedSpy(window, &Window::clientStartUserMovedResized);
-    Test::touchDown(0, QPointF(window->frameGeometry().center().x(), window->frameGeometry().y() + decoration->borderTop() / 2), timestamp++);
+    touchDevice->sendTouchDown(0, QPointF(window->frameGeometry().center().x(), window->frameGeometry().y() + decoration->borderTop() / 2), timestamp++);
     QVERIFY(clientStartUserMovedResizedSpy.wait());
     QCOMPARE(window, workspace()->moveResizeWindow());
 
     QFETCH(QPoint, targetPos);
-    Test::touchMotion(0, targetPos, timestamp++);
-    Test::touchUp(0, timestamp++);
+    touchDevice->sendTouchMotion(0, targetPos, timestamp++);
+    touchDevice->sendTouchUp(0, timestamp++);
     QVERIFY(!workspace()->moveResizeWindow());
 
     // When there are no borders, there is no change to them when quick-tiling.

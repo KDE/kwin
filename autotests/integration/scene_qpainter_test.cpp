@@ -201,6 +201,9 @@ void SceneQPainterTest::testWindow()
 
 void SceneQPainterTest::testWindowScaled()
 {
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     KWin::Cursors::self()->mouse()->setPos(10, 10);
     // this test verifies that a window is rendered correctly
     using namespace KWayland::Client;

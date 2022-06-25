@@ -67,9 +67,11 @@ private:
     void touchNow()
     {
         static int time = 0;
-        Test::touchDown(0, {100, 100}, ++time);
-        Test::touchUp(0, ++time);
+        m_touchDevice->sendTouchDown(0, {100, 100}, ++time);
+        m_touchDevice->sendTouchUp(0, ++time);
     }
+
+    std::unique_ptr<Test::VirtualInputDevice> m_touchDevice;
 };
 
 void InputMethodTest::initTestCase()
@@ -98,6 +100,8 @@ void InputMethodTest::initTestCase()
 
 void InputMethodTest::init()
 {
+    m_touchDevice = Test::createTouchDevice();
+
     touchNow();
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::TextInputManagerV2 | Test::AdditionalWaylandInterface::InputMethodV1 | Test::AdditionalWaylandInterface::TextInputManagerV3));
 
@@ -110,6 +114,7 @@ void InputMethodTest::init()
 void InputMethodTest::cleanup()
 {
     Test::destroyWaylandConnection();
+    m_touchDevice.reset();
 }
 
 void InputMethodTest::testOpenClose()
@@ -463,6 +468,8 @@ void InputMethodTest::testDisableShowInputPanel()
 
 void InputMethodTest::testModifierForwarding()
 {
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+
     // Create an xdg_toplevel surface and wait for the compositor to catch up.
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
@@ -504,13 +511,13 @@ void InputMethodTest::testModifierForwarding()
         QVERIFY(keyChanged);
         modifiersChanged = true;
     });
-    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     QVERIFY(keySpy.count() == 1 || keySpy.wait());
     QVERIFY(modifierSpy.count() == 2 || modifierSpy.wait());
     disconnect(keyChangedConnection);
     disconnect(modifiersChangedConnection);
 
-    Test::keyboardKeyPressed(KEY_A, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_A, timestamp++);
     QVERIFY(keySpy.count() == 2 || keySpy.wait());
     QVERIFY(modifierSpy.count() == 2 || modifierSpy.wait());
 
@@ -525,7 +532,7 @@ void InputMethodTest::testModifierForwarding()
         QVERIFY(keyChanged);
         modifiersChanged = true;
     });
-    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(keySpy.count() == 3 || keySpy.wait());
     QVERIFY(modifierSpy.count() == 3 || modifierSpy.wait());
     disconnect(keyChangedConnection);

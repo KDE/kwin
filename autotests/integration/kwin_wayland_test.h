@@ -80,10 +80,6 @@ public:
         m_inputMethodServerToStart = inputMethodServer;
     }
 
-    Test::VirtualInputDevice *virtualPointer() const;
-    Test::VirtualInputDevice *virtualKeyboard() const;
-    Test::VirtualInputDevice *virtualTouch() const;
-
 protected:
     void performStartup() override;
 
@@ -92,15 +88,8 @@ private:
     void continueStartupWithScene();
     void finalizeStartup();
 
-    void createVirtualInputDevices();
-    void destroyVirtualInputDevices();
-
     Xwl::Xwayland *m_xwayland = nullptr;
     QString m_inputMethodServerToStart;
-
-    QScopedPointer<Test::VirtualInputDevice> m_virtualPointer;
-    QScopedPointer<Test::VirtualInputDevice> m_virtualKeyboard;
-    QScopedPointer<Test::VirtualInputDevice> m_virtualTouch;
 };
 
 namespace Test
@@ -515,30 +504,30 @@ public:
     bool isTabletModeSwitch() const override;
     bool isLidSwitch() const override;
 
+    void sendKeyboardKeyPressed(quint32 key, quint32 time);
+    void sendKeyboardKeyReleased(quint32 key, quint32 time);
+    void sendPointerAxisHorizontal(qreal delta,
+                                   quint32 time,
+                                   qint32 discreteDelta = 0,
+                                   InputRedirection::PointerAxisSource source = InputRedirection::PointerAxisSourceUnknown);
+    void sendPointerAxisVertical(qreal delta,
+                                 quint32 time,
+                                 qint32 discreteDelta = 0,
+                                 InputRedirection::PointerAxisSource source = InputRedirection::PointerAxisSourceUnknown);
+    void sendPointerButtonPressed(quint32 button, quint32 time);
+    void sendPointerButtonReleased(quint32 button, quint32 time);
+    void sendPointerMotion(const QPointF &position, quint32 time);
+    void sendTouchCancel();
+    void sendTouchDown(qint32 id, const QPointF &pos, quint32 time);
+    void sendTouchMotion(qint32 id, const QPointF &pos, quint32 time);
+    void sendTouchUp(qint32 id, quint32 time);
+
 private:
     QString m_name;
     bool m_pointer = false;
     bool m_keyboard = false;
     bool m_touch = false;
 };
-
-void keyboardKeyPressed(quint32 key, quint32 time);
-void keyboardKeyReleased(quint32 key, quint32 time);
-void pointerAxisHorizontal(qreal delta,
-                           quint32 time,
-                           qint32 discreteDelta = 0,
-                           InputRedirection::PointerAxisSource source = InputRedirection::PointerAxisSourceUnknown);
-void pointerAxisVertical(qreal delta,
-                         quint32 time,
-                         qint32 discreteDelta = 0,
-                         InputRedirection::PointerAxisSource source = InputRedirection::PointerAxisSourceUnknown);
-void pointerButtonPressed(quint32 button, quint32 time);
-void pointerButtonReleased(quint32 button, quint32 time);
-void pointerMotion(const QPointF &position, quint32 time);
-void touchCancel();
-void touchDown(qint32 id, const QPointF &pos, quint32 time);
-void touchMotion(qint32 id, const QPointF &pos, quint32 time);
-void touchUp(qint32 id, quint32 time);
 
 /**
  * Creates a Wayland Connection in a dedicated thread and creates various
@@ -579,6 +568,10 @@ bool waitForWaylandTouch();
 bool waitForWaylandKeyboard();
 
 void flushWaylandConnection();
+
+std::unique_ptr<VirtualInputDevice> createKeyboardDevice();
+std::unique_ptr<VirtualInputDevice> createTouchDevice();
+std::unique_ptr<VirtualInputDevice> createPointerDevice();
 
 KWayland::Client::Surface *createSurface(QObject *parent = nullptr);
 KWayland::Client::SubSurface *createSubSurface(KWayland::Client::Surface *surface,

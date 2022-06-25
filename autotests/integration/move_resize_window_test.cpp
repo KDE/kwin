@@ -94,7 +94,6 @@ void MoveResizeWindowTest::initTestCase()
 void MoveResizeWindowTest::init()
 {
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::PlasmaShell | Test::AdditionalWaylandInterface::Seat));
-    QVERIFY(Test::waitForWaylandPointer());
     m_connection = Test::waylandConnection();
     m_compositor = Test::waylandCompositor();
 
@@ -499,6 +498,9 @@ void MoveResizeWindowTest::testPointerMoveEnd()
     // this test verifies that moving a window through pointer only ends if all buttons are released
     using namespace KWayland::Client;
 
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
@@ -513,22 +515,22 @@ void MoveResizeWindowTest::testPointerMoveEnd()
 
     // let's trigger the left button
     quint32 timestamp = 1;
-    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(!window->isInteractiveMove());
     workspace()->slotWindowMove();
     QVERIFY(window->isInteractiveMove());
 
     // let's press another button
     QFETCH(int, additionalButton);
-    Test::pointerButtonPressed(additionalButton, timestamp++);
+    pointerDevice->sendPointerButtonPressed(additionalButton, timestamp++);
     QVERIFY(window->isInteractiveMove());
 
     // release the left button, should still have the window moving
-    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerButtonReleased(BTN_LEFT, timestamp++);
     QVERIFY(window->isInteractiveMove());
 
     // but releasing the other button should now end moving
-    Test::pointerButtonReleased(additionalButton, timestamp++);
+    pointerDevice->sendPointerButtonReleased(additionalButton, timestamp++);
     QVERIFY(!window->isInteractiveMove());
     surface.reset();
     QVERIFY(Test::waitForWindowDestroyed(window));
@@ -536,6 +538,10 @@ void MoveResizeWindowTest::testPointerMoveEnd()
 void MoveResizeWindowTest::testClientSideMove()
 {
     using namespace KWayland::Client;
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     Cursors::self()->mouse()->setPos(640, 512);
     QScopedPointer<Pointer> pointer(Test::waylandSeat()->createPointer());
     QSignalSpy pointerEnteredSpy(pointer.data(), &Pointer::entered);
@@ -557,7 +563,7 @@ void MoveResizeWindowTest::testClientSideMove()
     QCOMPARE(pointerEnteredSpy.first().last().toPoint(), QPoint(49, 24));
     // simulate press
     quint32 timestamp = 1;
-    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(buttonSpy.wait());
     QSignalSpy moveStartSpy(window, &Window::clientStartUserMovedResized);
     QVERIFY(moveStartSpy.isValid());
@@ -572,11 +578,11 @@ void MoveResizeWindowTest::testClientSideMove()
     const QPoint startPoint = startGeometry.center();
     const int dragDistance = QApplication::startDragDistance();
     // Why?
-    Test::pointerMotion(startPoint + QPoint(dragDistance, dragDistance) + QPoint(6, 6), timestamp++);
+    pointerDevice->sendPointerMotion(startPoint + QPoint(dragDistance, dragDistance) + QPoint(6, 6), timestamp++);
     QCOMPARE(clientMoveStepSpy.count(), 1);
 
     // and release again
-    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerButtonReleased(BTN_LEFT, timestamp++);
     QVERIFY(pointerEnteredSpy.wait());
     QCOMPARE(window->isInteractiveMove(), false);
     QCOMPARE(window->frameGeometry(), startGeometry.translated(QPoint(dragDistance, dragDistance) + QPoint(6, 6)));

@@ -74,6 +74,7 @@ void TabBoxTest::testCapsLock()
 {
     // this test verifies that Alt+tab works correctly also when Capslock is on
     // bug 368590
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
 
     // first create three windows
     QScopedPointer<KWayland::Client::Surface> surface1(Test::createSurface());
@@ -100,27 +101,27 @@ void TabBoxTest::testCapsLock()
 
     // enable capslock
     quint32 timestamp = 0;
-    Test::keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
-    Test::keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier);
 
     // press alt+tab
-    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTALT, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier | Qt::AltModifier);
-    Test::keyboardKeyPressed(KEY_TAB, timestamp++);
-    Test::keyboardKeyReleased(KEY_TAB, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_TAB, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_TAB, timestamp++);
 
     QVERIFY(tabboxAddedSpy.wait());
     QVERIFY(TabBox::TabBox::self()->isGrabbed());
 
     // release alt
-    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTALT, timestamp++);
     QCOMPARE(tabboxClosedSpy.count(), 1);
     QCOMPARE(TabBox::TabBox::self()->isGrabbed(), false);
 
     // release caps lock
-    Test::keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
-    Test::keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::NoModifier);
     QCOMPARE(tabboxClosedSpy.count(), 1);
     QCOMPARE(TabBox::TabBox::self()->isGrabbed(), false);
@@ -137,6 +138,7 @@ void TabBoxTest::testCapsLock()
 void TabBoxTest::testMoveForward()
 {
     // this test verifies that Alt+tab works correctly moving forward
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
 
     // first create three windows
     QScopedPointer<KWayland::Client::Surface> surface1(Test::createSurface());
@@ -163,16 +165,16 @@ void TabBoxTest::testMoveForward()
 
     // press alt+tab
     quint32 timestamp = 0;
-    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTALT, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::AltModifier);
-    Test::keyboardKeyPressed(KEY_TAB, timestamp++);
-    Test::keyboardKeyReleased(KEY_TAB, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_TAB, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_TAB, timestamp++);
 
     QVERIFY(tabboxAddedSpy.wait());
     QVERIFY(TabBox::TabBox::self()->isGrabbed());
 
     // release alt
-    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTALT, timestamp++);
     QCOMPARE(tabboxClosedSpy.count(), 1);
     QCOMPARE(TabBox::TabBox::self()->isGrabbed(), false);
     QCOMPARE(workspace()->activeWindow(), c2);
@@ -188,6 +190,7 @@ void TabBoxTest::testMoveForward()
 void TabBoxTest::testMoveBackward()
 {
     // this test verifies that Alt+Shift+tab works correctly moving backward
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
 
     // first create three windows
     QScopedPointer<KWayland::Client::Surface> surface1(Test::createSurface());
@@ -214,20 +217,20 @@ void TabBoxTest::testMoveBackward()
 
     // press alt+shift+tab
     quint32 timestamp = 0;
-    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTALT, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::AltModifier);
-    Test::keyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
     QCOMPARE(input()->keyboardModifiers(), Qt::AltModifier | Qt::ShiftModifier);
-    Test::keyboardKeyPressed(KEY_TAB, timestamp++);
-    Test::keyboardKeyReleased(KEY_TAB, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_TAB, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_TAB, timestamp++);
 
     QVERIFY(tabboxAddedSpy.wait());
     QVERIFY(TabBox::TabBox::self()->isGrabbed());
 
     // release alt
-    Test::keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
     QCOMPARE(tabboxClosedSpy.count(), 0);
-    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTALT, timestamp++);
     QCOMPARE(tabboxClosedSpy.count(), 1);
     QCOMPARE(TabBox::TabBox::self()->isGrabbed(), false);
     QCOMPARE(workspace()->activeWindow(), c1);

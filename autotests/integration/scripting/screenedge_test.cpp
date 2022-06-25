@@ -173,6 +173,8 @@ void ScreenEdgeTest::testTouchEdge()
     const QString scriptToLoad = QFINDTESTDATA("./scripts/touchScreenedge.js");
     QVERIFY(!scriptToLoad.isEmpty());
 
+    std::unique_ptr<Test::VirtualInputDevice> touchDevice = Test::createTouchDevice();
+
     // mock the config
     auto config = kwinApp()->config();
     QFETCH(KWin::ElectricBorder, edge);
@@ -198,10 +200,10 @@ void ScreenEdgeTest::testTouchEdge()
     // trigger the edge
     QFETCH(QPoint, triggerPos);
     quint32 timestamp = 0;
-    Test::touchDown(0, triggerPos, timestamp++);
+    touchDevice->sendTouchDown(0, triggerPos, timestamp++);
     QFETCH(QPoint, motionPos);
-    Test::touchMotion(0, motionPos, timestamp++);
-    Test::touchUp(0, timestamp++);
+    touchDevice->sendTouchMotion(0, motionPos, timestamp++);
+    touchDevice->sendTouchUp(0, timestamp++);
     QVERIFY(showDesktopSpy.wait());
     QCOMPARE(showDesktopSpy.count(), 1);
     QVERIFY(workspace()->showingDesktop());
@@ -261,6 +263,8 @@ void ScreenEdgeTest::testEdgeUnregister()
 
 void ScreenEdgeTest::testDeclarativeTouchEdge()
 {
+    std::unique_ptr<Test::VirtualInputDevice> touchDevice = Test::createTouchDevice();
+
     const QString scriptToLoad = QFINDTESTDATA("./scripts/screenedgetouch.qml");
     QVERIFY(!scriptToLoad.isEmpty());
     QVERIFY(Scripting::self()->loadDeclarativeScript(scriptToLoad) != -1);
@@ -276,9 +280,9 @@ void ScreenEdgeTest::testDeclarativeTouchEdge()
 
     // Trigger the edge through touch
     quint32 timestamp = 0;
-    Test::touchDown(0, QPointF(0, 50), timestamp++);
-    Test::touchMotion(0, QPointF(500, 50), timestamp++);
-    Test::touchUp(0, timestamp++);
+    touchDevice->sendTouchDown(0, QPointF(0, 50), timestamp++);
+    touchDevice->sendTouchMotion(0, QPointF(500, 50), timestamp++);
+    touchDevice->sendTouchUp(0, timestamp++);
 
     QVERIFY(showDesktopSpy.wait());
 }

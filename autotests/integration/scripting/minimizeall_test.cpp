@@ -104,6 +104,7 @@ void MinimizeAllScriptTest::testMinimizeUnminimize()
 {
     // This test verifies that all windows are minimized when Meta+Shift+D
     // is pressed, and unminimized when the shortcut is pressed once again.
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
 
     using namespace KWayland::Client;
 
@@ -124,23 +125,23 @@ void MinimizeAllScriptTest::testMinimizeUnminimize()
 
     // Minimize the windows.
     quint32 timestamp = 1;
-    Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
-    Test::keyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
-    Test::keyboardKeyPressed(KEY_D, timestamp++);
-    Test::keyboardKeyReleased(KEY_D, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTMETA, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_D, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_D, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTMETA, timestamp++);
 
     QTRY_VERIFY(window1->isMinimized());
     QTRY_VERIFY(window2->isMinimized());
 
     // Unminimize the windows.
-    Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
-    Test::keyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
-    Test::keyboardKeyPressed(KEY_D, timestamp++);
-    Test::keyboardKeyReleased(KEY_D, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTMETA, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTSHIFT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_D, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_D, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTMETA, timestamp++);
 
     QTRY_VERIFY(!window1->isMinimized());
     QTRY_VERIFY(!window2->isMinimized());

@@ -81,10 +81,12 @@ void KeymapCreationFailureTest::testPointerButton()
     // test case for BUG 381210
     // pressing a pointer button results in crash
 
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+
     // now create the crashing condition
     // which is sending in a pointer event
-    Test::pointerButtonPressed(BTN_LEFT, 0);
-    Test::pointerButtonReleased(BTN_LEFT, 1);
+    pointerDevice->sendPointerButtonPressed(BTN_LEFT, 0);
+    pointerDevice->sendPointerButtonReleased(BTN_LEFT, 1);
 }
 
 WAYLANDTEST_MAIN(KeymapCreationFailureTest)

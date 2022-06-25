@@ -118,6 +118,8 @@ void ScreenEdgesTest::testTouchCallback()
 {
     // This test verifies that touch screen edges trigger associated callbacks.
 
+    std::unique_ptr<Test::VirtualInputDevice> touchDevice = Test::createTouchDevice();
+
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     auto group = config->group("TouchEdges");
     group.writeEntry("Top", "none");
@@ -156,16 +158,16 @@ void ScreenEdgesTest::testTouchCallback()
 
     // press the finger
     QFETCH(QPointF, startPos);
-    Test::touchDown(1, startPos, timestamp++);
+    touchDevice->sendTouchDown(1, startPos, timestamp++);
     QVERIFY(actionTriggeredSpy.isEmpty());
 
     // move the finger
     QFETCH(QPointF, delta);
-    Test::touchMotion(1, startPos + delta, timestamp++);
+    touchDevice->sendTouchMotion(1, startPos + delta, timestamp++);
     QVERIFY(actionTriggeredSpy.isEmpty());
 
     // release the finger
-    Test::touchUp(1, timestamp++);
+    touchDevice->sendTouchUp(1, timestamp++);
     QVERIFY(actionTriggeredSpy.wait());
     QCOMPARE(actionTriggeredSpy.count(), 1);
 
@@ -217,6 +219,9 @@ void ScreenEdgesTest::testPushBack()
 {
     // This test verifies that the pointer will be pushed back if it approached a screen edge.
 
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     QFETCH(int, pushback);
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     config->group("Windows").writeEntry("ElectricBorderPushbackPixels", pushback);
@@ -233,7 +238,7 @@ void ScreenEdgesTest::testPushBack()
     s->reserve(border, &callback, "callback");
 
     QFETCH(QPoint, trigger);
-    Test::pointerMotion(trigger, 0);
+    pointerDevice->sendPointerMotion(trigger, 0);
     QVERIFY(spy.isEmpty());
     QTEST(Cursors::self()->mouse()->pos(), "expected");
 }
@@ -255,6 +260,9 @@ void ScreenEdgesTest::testClientEdge()
     // This test verifies that a window will be shown when its screen edge is activated.
     QFETCH(QRect, geometry);
 
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     Window *window = Test::renderAndWaitForShown(surface.data(), geometry.size(), Qt::red);
@@ -273,11 +281,11 @@ void ScreenEdgesTest::testClientEdge()
     // Trigger the screen edge.
     QFETCH(QPointF, triggerPoint);
     quint32 timestamp = 0;
-    Test::pointerMotion(triggerPoint, timestamp);
+    pointerDevice->sendPointerMotion(triggerPoint, timestamp);
     QVERIFY(window->isHiddenInternal());
 
     timestamp += 150 + 1;
-    Test::pointerMotion(triggerPoint, timestamp);
+    pointerDevice->sendPointerMotion(triggerPoint, timestamp);
     QTRY_VERIFY(!window->isHiddenInternal());
 }
 
@@ -297,6 +305,9 @@ void ScreenEdgesTest::testObjectEdge()
 {
     // This test verifies that a screen edge reserved by a script or any QObject is activated.
 
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     TestObject callback;
     QSignalSpy spy(&callback, &TestObject::gotCallback);
 
@@ -309,37 +320,37 @@ void ScreenEdgesTest::testObjectEdge()
 
     // doesn't trigger as the edge was not triggered yet
     qint64 timestamp = 0;
-    Test::pointerMotion(triggerPoint + delta, timestamp);
+    pointerDevice->sendPointerMotion(triggerPoint + delta, timestamp);
     QVERIFY(spy.isEmpty());
 
     // test doesn't trigger due to too much offset
     timestamp += 160;
-    Test::pointerMotion(triggerPoint, timestamp);
+    pointerDevice->sendPointerMotion(triggerPoint, timestamp);
     QVERIFY(spy.isEmpty());
 
     // doesn't activate as we are waiting too short
     timestamp += 50;
-    Test::pointerMotion(triggerPoint, timestamp);
+    pointerDevice->sendPointerMotion(triggerPoint, timestamp);
     QVERIFY(spy.isEmpty());
 
     // and this one triggers
     timestamp += 110;
-    Test::pointerMotion(triggerPoint, timestamp);
+    pointerDevice->sendPointerMotion(triggerPoint, timestamp);
     QVERIFY(!spy.isEmpty());
 
     // now let's try to trigger again
     timestamp += 351;
-    Test::pointerMotion(triggerPoint, timestamp);
+    pointerDevice->sendPointerMotion(triggerPoint, timestamp);
     QCOMPARE(spy.count(), 1);
 
     // it's still under the reactivation
     timestamp += 50;
-    Test::pointerMotion(triggerPoint, timestamp);
+    pointerDevice->sendPointerMotion(triggerPoint, timestamp);
     QCOMPARE(spy.count(), 1);
 
     // now it should trigger again
     timestamp += 250;
-    Test::pointerMotion(triggerPoint, timestamp);
+    pointerDevice->sendPointerMotion(triggerPoint, timestamp);
     QCOMPARE(spy.count(), 2);
 }
 

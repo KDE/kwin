@@ -73,7 +73,6 @@ void TestWindowSelection::initTestCase()
 void TestWindowSelection::init()
 {
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat));
-    QVERIFY(Test::waitForWaylandPointer());
 
     workspace()->setActiveOutput(QPoint(640, 512));
     KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
@@ -87,6 +86,12 @@ void TestWindowSelection::cleanup()
 void TestWindowSelection::testSelectOnWindowPointer()
 {
     // this test verifies window selection through pointer works
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+    QVERIFY(Test::waitForWaylandKeyboard());
+
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QScopedPointer<Pointer> pointer(Test::waylandSeat()->createPointer());
@@ -127,7 +132,7 @@ void TestWindowSelection::testSelectOnWindowPointer()
 
     // simulate left button press
     quint32 timestamp = 0;
-    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerButtonPressed(BTN_LEFT, timestamp++);
     // should not have ended the mode
     QCOMPARE(input()->isSelectingWindow(), true);
     QVERIFY(!selectedWindow);
@@ -140,13 +145,13 @@ void TestWindowSelection::testSelectOnWindowPointer()
     input()->keyboard()->update();
 
     // perform a right button click
-    Test::pointerButtonPressed(BTN_RIGHT, timestamp++);
-    Test::pointerButtonReleased(BTN_RIGHT, timestamp++);
+    pointerDevice->sendPointerButtonPressed(BTN_RIGHT, timestamp++);
+    pointerDevice->sendPointerButtonReleased(BTN_RIGHT, timestamp++);
     // should not have ended the mode
     QCOMPARE(input()->isSelectingWindow(), true);
     QVERIFY(!selectedWindow);
     // now release
-    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerButtonReleased(BTN_LEFT, timestamp++);
     QCOMPARE(input()->isSelectingWindow(), false);
     QCOMPARE(selectedWindow, window);
     QCOMPARE(input()->pointer()->focus(), window);
@@ -173,6 +178,12 @@ void TestWindowSelection::testSelectOnWindowKeyboard_data()
 void TestWindowSelection::testSelectOnWindowKeyboard()
 {
     // this test verifies window selection through keyboard key
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+    QVERIFY(Test::waitForWaylandKeyboard());
+
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QScopedPointer<Pointer> pointer(Test::waylandSeat()->createPointer());
@@ -209,9 +220,9 @@ void TestWindowSelection::testSelectOnWindowKeyboard()
     // simulate key press
     quint32 timestamp = 0;
     // move cursor through keys
-    auto keyPress = [&timestamp](qint32 key) {
-        Test::keyboardKeyPressed(key, timestamp++);
-        Test::keyboardKeyReleased(key, timestamp++);
+    auto keyPress = [&keyboardDevice, &timestamp](qint32 key) {
+        keyboardDevice->sendKeyboardKeyPressed(key, timestamp++);
+        keyboardDevice->sendKeyboardKeyReleased(key, timestamp++);
     };
     while (KWin::Cursors::self()->mouse()->pos().x() >= window->frameGeometry().x() + window->frameGeometry().width()) {
         keyPress(KEY_LEFT);
@@ -226,7 +237,7 @@ void TestWindowSelection::testSelectOnWindowKeyboard()
         keyPress(KEY_UP);
     }
     QFETCH(qint32, key);
-    Test::keyboardKeyPressed(key, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(key, timestamp++);
     QCOMPARE(input()->isSelectingWindow(), false);
     QCOMPARE(selectedWindow, window);
     QCOMPARE(input()->pointer()->focus(), window);
@@ -239,12 +250,15 @@ void TestWindowSelection::testSelectOnWindowKeyboard()
     QCOMPARE(keyboardLeftSpy.count(), 1);
     QCOMPARE(pointerEnteredSpy.count(), 1);
     QCOMPARE(keyboardEnteredSpy.count(), 2);
-    Test::keyboardKeyReleased(key, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(key, timestamp++);
 }
 
 void TestWindowSelection::testSelectOnWindowTouch()
 {
     // this test verifies window selection through touch
+
+    std::unique_ptr<Test::VirtualInputDevice> touchDevice = Test::createTouchDevice();
+
     QScopedPointer<Touch> touch(Test::waylandSeat()->createTouch());
     QSignalSpy touchStartedSpy(touch.data(), &Touch::sequenceStarted);
     QVERIFY(touchStartedSpy.isValid());
@@ -268,25 +282,25 @@ void TestWindowSelection::testSelectOnWindowTouch()
 
     // simulate touch down
     quint32 timestamp = 0;
-    Test::touchDown(0, window->frameGeometry().center(), timestamp++);
+    touchDevice->sendTouchDown(0, window->frameGeometry().center(), timestamp++);
     QVERIFY(!selectedWindow);
-    Test::touchUp(0, timestamp++);
+    touchDevice->sendTouchUp(0, timestamp++);
     QCOMPARE(input()->isSelectingWindow(), false);
     QCOMPARE(selectedWindow, window);
 
     // with movement
     selectedWindow = nullptr;
     kwinApp()->platform()->startInteractiveWindowSelection(callback);
-    Test::touchDown(0, window->frameGeometry().bottomRight() + QPoint(20, 20), timestamp++);
+    touchDevice->sendTouchDown(0, window->frameGeometry().bottomRight() + QPoint(20, 20), timestamp++);
     QVERIFY(!selectedWindow);
-    Test::touchMotion(0, window->frameGeometry().bottomRight() - QPoint(1, 1), timestamp++);
+    touchDevice->sendTouchMotion(0, window->frameGeometry().bottomRight() - QPoint(1, 1), timestamp++);
     QVERIFY(!selectedWindow);
-    Test::touchUp(0, timestamp++);
+    touchDevice->sendTouchUp(0, timestamp++);
     QCOMPARE(selectedWindow, window);
     QCOMPARE(input()->isSelectingWindow(), false);
 
     // it cancels active touch sequence on the window
-    Test::touchDown(0, window->frameGeometry().center(), timestamp++);
+    touchDevice->sendTouchDown(0, window->frameGeometry().center(), timestamp++);
     QVERIFY(touchStartedSpy.wait());
     selectedWindow = nullptr;
     kwinApp()->platform()->startInteractiveWindowSelection(callback);
@@ -294,10 +308,10 @@ void TestWindowSelection::testSelectOnWindowTouch()
     QVERIFY(touchCanceledSpy.wait());
     QVERIFY(!selectedWindow);
     // this touch up does not yet select the window, it was started prior to the selection
-    Test::touchUp(0, timestamp++);
+    touchDevice->sendTouchUp(0, timestamp++);
     QVERIFY(!selectedWindow);
-    Test::touchDown(0, window->frameGeometry().center(), timestamp++);
-    Test::touchUp(0, timestamp++);
+    touchDevice->sendTouchDown(0, window->frameGeometry().center(), timestamp++);
+    touchDevice->sendTouchUp(0, timestamp++);
     QCOMPARE(selectedWindow, window);
     QCOMPARE(input()->isSelectingWindow(), false);
 
@@ -308,6 +322,12 @@ void TestWindowSelection::testSelectOnWindowTouch()
 void TestWindowSelection::testCancelOnWindowPointer()
 {
     // this test verifies that window selection cancels through right button click
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+    QVERIFY(Test::waitForWaylandKeyboard());
+
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QScopedPointer<Pointer> pointer(Test::waylandSeat()->createPointer());
@@ -348,8 +368,8 @@ void TestWindowSelection::testCancelOnWindowPointer()
 
     // simulate left button press
     quint32 timestamp = 0;
-    Test::pointerButtonPressed(BTN_RIGHT, timestamp++);
-    Test::pointerButtonReleased(BTN_RIGHT, timestamp++);
+    pointerDevice->sendPointerButtonPressed(BTN_RIGHT, timestamp++);
+    pointerDevice->sendPointerButtonReleased(BTN_RIGHT, timestamp++);
     QCOMPARE(input()->isSelectingWindow(), false);
     QVERIFY(!selectedWindow);
     QCOMPARE(input()->pointer()->focus(), window);
@@ -367,6 +387,12 @@ void TestWindowSelection::testCancelOnWindowPointer()
 void TestWindowSelection::testCancelOnWindowKeyboard()
 {
     // this test verifies that cancel window selection through escape key works
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+    QVERIFY(Test::waitForWaylandKeyboard());
+
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QScopedPointer<Pointer> pointer(Test::waylandSeat()->createPointer());
@@ -407,7 +433,7 @@ void TestWindowSelection::testCancelOnWindowKeyboard()
 
     // simulate left button press
     quint32 timestamp = 0;
-    Test::keyboardKeyPressed(KEY_ESC, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_ESC, timestamp++);
     QCOMPARE(input()->isSelectingWindow(), false);
     QVERIFY(!selectedWindow);
     QCOMPARE(input()->pointer()->focus(), window);
@@ -420,12 +446,18 @@ void TestWindowSelection::testCancelOnWindowKeyboard()
     QCOMPARE(keyboardLeftSpy.count(), 1);
     QCOMPARE(pointerEnteredSpy.count(), 2);
     QCOMPARE(keyboardEnteredSpy.count(), 2);
-    Test::keyboardKeyReleased(KEY_ESC, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_ESC, timestamp++);
 }
 
 void TestWindowSelection::testSelectPointPointer()
 {
     // this test verifies point selection through pointer works
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+    QVERIFY(Test::waitForWaylandKeyboard());
+
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QScopedPointer<Pointer> pointer(Test::waylandSeat()->createPointer());
@@ -473,7 +505,7 @@ void TestWindowSelection::testSelectPointPointer()
 
     // simulate left button press
     quint32 timestamp = 0;
-    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerButtonPressed(BTN_LEFT, timestamp++);
     // should not have ended the mode
     QCOMPARE(input()->isSelectingWindow(), true);
     QCOMPARE(point, QPoint());
@@ -486,13 +518,13 @@ void TestWindowSelection::testSelectPointPointer()
     input()->keyboard()->update();
 
     // perform a right button click
-    Test::pointerButtonPressed(BTN_RIGHT, timestamp++);
-    Test::pointerButtonReleased(BTN_RIGHT, timestamp++);
+    pointerDevice->sendPointerButtonPressed(BTN_RIGHT, timestamp++);
+    pointerDevice->sendPointerButtonReleased(BTN_RIGHT, timestamp++);
     // should not have ended the mode
     QCOMPARE(input()->isSelectingWindow(), true);
     QCOMPARE(point, QPoint());
     // now release
-    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+    pointerDevice->sendPointerButtonReleased(BTN_LEFT, timestamp++);
     QCOMPARE(input()->isSelectingWindow(), false);
     QCOMPARE(point, input()->globalPointer().toPoint());
     QCOMPARE(input()->pointer()->focus(), window);
@@ -510,6 +542,9 @@ void TestWindowSelection::testSelectPointPointer()
 void TestWindowSelection::testSelectPointTouch()
 {
     // this test verifies point selection through touch works
+
+    std::unique_ptr<Test::VirtualInputDevice> touchDevice = Test::createTouchDevice();
+
     QPoint point;
     auto callback = [&point](const QPoint &p) {
         point = p;
@@ -523,23 +558,23 @@ void TestWindowSelection::testSelectPointTouch()
 
     // let's create multiple touch points
     quint32 timestamp = 0;
-    Test::touchDown(0, QPointF(0, 1), timestamp++);
+    touchDevice->sendTouchDown(0, QPointF(0, 1), timestamp++);
     QCOMPARE(input()->isSelectingWindow(), true);
-    Test::touchDown(1, QPointF(10, 20), timestamp++);
+    touchDevice->sendTouchDown(1, QPointF(10, 20), timestamp++);
     QCOMPARE(input()->isSelectingWindow(), true);
-    Test::touchDown(2, QPointF(30, 40), timestamp++);
+    touchDevice->sendTouchDown(2, QPointF(30, 40), timestamp++);
     QCOMPARE(input()->isSelectingWindow(), true);
 
     // let's move our points
-    Test::touchMotion(0, QPointF(5, 10), timestamp++);
-    Test::touchMotion(2, QPointF(20, 25), timestamp++);
-    Test::touchMotion(1, QPointF(25, 35), timestamp++);
+    touchDevice->sendTouchMotion(0, QPointF(5, 10), timestamp++);
+    touchDevice->sendTouchMotion(2, QPointF(20, 25), timestamp++);
+    touchDevice->sendTouchMotion(1, QPointF(25, 35), timestamp++);
     QCOMPARE(input()->isSelectingWindow(), true);
-    Test::touchUp(0, timestamp++);
+    touchDevice->sendTouchUp(0, timestamp++);
     QCOMPARE(input()->isSelectingWindow(), true);
-    Test::touchUp(2, timestamp++);
+    touchDevice->sendTouchUp(2, timestamp++);
     QCOMPARE(input()->isSelectingWindow(), true);
-    Test::touchUp(1, timestamp++);
+    touchDevice->sendTouchUp(1, timestamp++);
     QCOMPARE(input()->isSelectingWindow(), false);
     QCOMPARE(point, QPoint(25, 35));
 }

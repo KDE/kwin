@@ -69,7 +69,6 @@ void InputStackingOrderTest::init()
 {
     using namespace KWayland::Client;
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat));
-    QVERIFY(Test::waitForWaylandPointer());
 
     workspace()->setActiveOutput(QPoint(640, 512));
     Cursors::self()->mouse()->setPos(QPoint(640, 512));
@@ -93,6 +92,10 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
     // as soon as the top most window gets lowered the window should lose focus and the
     // other window should gain focus without a mouse event in between
     using namespace KWayland::Client;
+
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     // create pointer and signal spy for enter and leave signals
     auto pointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
     QVERIFY(pointer);
@@ -130,7 +133,7 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
     QCOMPARE(window1->frameGeometry(), window2->frameGeometry());
 
     // enter
-    Test::pointerMotion(QPointF(25, 25), 1);
+    pointerDevice->sendPointerMotion(QPointF(25, 25), 1);
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 1);
     // window 2 should have focus

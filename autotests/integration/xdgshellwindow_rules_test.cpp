@@ -2294,12 +2294,13 @@ void TestXdgShellWindowRules::testShortcutDontAffect()
     QSignalSpy clientUnminimizedSpy(m_window, &Window::clientUnminimized);
     QVERIFY(clientUnminimizedSpy.isValid());
     quint32 timestamp = 1;
-    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyPressed(KEY_1, timestamp++);
-    Test::keyboardKeyReleased(KEY_1, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_1, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_1, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(!clientUnminimizedSpy.wait(100));
     QVERIFY(m_window->isMinimized());
 
@@ -2319,12 +2320,13 @@ void TestXdgShellWindowRules::testShortcutApply()
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
     m_window->minimize();
     QVERIFY(m_window->isMinimized());
-    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyPressed(KEY_1, timestamp++);
-    Test::keyboardKeyReleased(KEY_1, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_1, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_1, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(clientUnminimizedSpy.wait());
     QVERIFY(!m_window->isMinimized());
 
@@ -2333,24 +2335,24 @@ void TestXdgShellWindowRules::testShortcutApply()
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_2}));
     m_window->minimize();
     QVERIFY(m_window->isMinimized());
-    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyPressed(KEY_2, timestamp++);
-    Test::keyboardKeyReleased(KEY_2, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_2, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_2, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(clientUnminimizedSpy.wait());
     QVERIFY(!m_window->isMinimized());
 
     // The old shortcut should do nothing.
     m_window->minimize();
     QVERIFY(m_window->isMinimized());
-    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyPressed(KEY_1, timestamp++);
-    Test::keyboardKeyReleased(KEY_1, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_1, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_1, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(!clientUnminimizedSpy.wait(100));
     QVERIFY(m_window->isMinimized());
 
@@ -2379,12 +2381,13 @@ void TestXdgShellWindowRules::testShortcutRemember()
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
     m_window->minimize();
     QVERIFY(m_window->isMinimized());
-    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyPressed(KEY_1, timestamp++);
-    Test::keyboardKeyReleased(KEY_1, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_1, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_1, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(clientUnminimizedSpy.wait());
     QVERIFY(!m_window->isMinimized());
 
@@ -2393,12 +2396,12 @@ void TestXdgShellWindowRules::testShortcutRemember()
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_2}));
     m_window->minimize();
     QVERIFY(m_window->isMinimized());
-    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyPressed(KEY_2, timestamp++);
-    Test::keyboardKeyReleased(KEY_2, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_2, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_2, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(clientUnminimizedSpy.wait());
     QVERIFY(!m_window->isMinimized());
 
@@ -2427,12 +2430,13 @@ void TestXdgShellWindowRules::testShortcutForce()
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
     m_window->minimize();
     QVERIFY(m_window->isMinimized());
-    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyPressed(KEY_1, timestamp++);
-    Test::keyboardKeyReleased(KEY_1, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_1, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_1, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(clientUnminimizedSpy.wait());
     QVERIFY(!m_window->isMinimized());
 
@@ -2441,12 +2445,12 @@ void TestXdgShellWindowRules::testShortcutForce()
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
     m_window->minimize();
     QVERIFY(m_window->isMinimized());
-    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyPressed(KEY_2, timestamp++);
-    Test::keyboardKeyReleased(KEY_2, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_2, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_2, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(!clientUnminimizedSpy.wait(100));
     QVERIFY(m_window->isMinimized());
 
@@ -2474,12 +2478,13 @@ void TestXdgShellWindowRules::testShortcutApplyNow()
     quint32 timestamp = 1;
     m_window->minimize();
     QVERIFY(m_window->isMinimized());
-    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyPressed(KEY_1, timestamp++);
-    Test::keyboardKeyReleased(KEY_1, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_1, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_1, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(clientUnminimizedSpy.wait());
     QVERIFY(!m_window->isMinimized());
 
@@ -2488,12 +2493,12 @@ void TestXdgShellWindowRules::testShortcutApplyNow()
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_2}));
     m_window->minimize();
     QVERIFY(m_window->isMinimized());
-    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyPressed(KEY_2, timestamp++);
-    Test::keyboardKeyReleased(KEY_2, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_2, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_2, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(clientUnminimizedSpy.wait());
     QVERIFY(!m_window->isMinimized());
 
@@ -2519,12 +2524,13 @@ void TestXdgShellWindowRules::testShortcutForceTemporarily()
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
     m_window->minimize();
     QVERIFY(m_window->isMinimized());
-    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyPressed(KEY_1, timestamp++);
-    Test::keyboardKeyReleased(KEY_1, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_1, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_1, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(clientUnminimizedSpy.wait());
     QVERIFY(!m_window->isMinimized());
 
@@ -2533,12 +2539,12 @@ void TestXdgShellWindowRules::testShortcutForceTemporarily()
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
     m_window->minimize();
     QVERIFY(m_window->isMinimized());
-    Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyPressed(KEY_2, timestamp++);
-    Test::keyboardKeyReleased(KEY_2, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
-    Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_2, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_2, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     QVERIFY(!clientUnminimizedSpy.wait(100));
     QVERIFY(m_window->isMinimized());
 

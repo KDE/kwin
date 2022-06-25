@@ -75,11 +75,11 @@ private:
     Window *showWindow();
 };
 
-#define MOTION(target) Test::pointerMotion(target, timestamp++)
+#define MOTION(target) pointerDevice->sendPointerMotion(target, timestamp++)
 
-#define PRESS Test::pointerButtonPressed(BTN_LEFT, timestamp++)
+#define PRESS pointerDevice->sendPointerButtonPressed(BTN_LEFT, timestamp++)
 
-#define RELEASE Test::pointerButtonReleased(BTN_LEFT, timestamp++)
+#define RELEASE pointerDevice->sendPointerButtonReleased(BTN_LEFT, timestamp++)
 
 Window *DecorationInputTest::showWindow()
 {
@@ -151,7 +151,6 @@ void DecorationInputTest::init()
 {
     using namespace KWayland::Client;
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::XdgDecorationV1));
-    QVERIFY(Test::waitForWaylandPointer());
 
     workspace()->setActiveOutput(QPoint(640, 512));
     Cursors::self()->mouse()->setPos(QPoint(640, 512));
@@ -174,6 +173,9 @@ void DecorationInputTest::testAxis_data()
 
 void DecorationInputTest::testAxis()
 {
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     Window *window = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
@@ -189,13 +191,13 @@ void DecorationInputTest::testAxis()
 
     // TODO: mouse wheel direction looks wrong to me
     // simulate wheel
-    Test::pointerAxisVertical(5.0, timestamp++);
+    pointerDevice->sendPointerAxisVertical(5.0, timestamp++);
     QVERIFY(window->keepBelow());
     QVERIFY(!window->keepAbove());
-    Test::pointerAxisVertical(-5.0, timestamp++);
+    pointerDevice->sendPointerAxisVertical(-5.0, timestamp++);
     QVERIFY(!window->keepBelow());
     QVERIFY(!window->keepAbove());
-    Test::pointerAxisVertical(-5.0, timestamp++);
+    pointerDevice->sendPointerAxisVertical(-5.0, timestamp++);
     QVERIFY(!window->keepBelow());
     QVERIFY(window->keepAbove());
 
@@ -206,7 +208,7 @@ void DecorationInputTest::testAxis()
     QVERIFY(input()->pointer()->decoration());
     QCOMPARE(input()->pointer()->decoration()->window(), window);
     QTEST(input()->pointer()->decoration()->decoration()->sectionUnderMouse(), "expectedSection");
-    Test::pointerAxisVertical(5.0, timestamp++);
+    pointerDevice->sendPointerAxisVertical(5.0, timestamp++);
     QVERIFY(!window->keepBelow());
     QVERIFY(!window->keepAbove());
 }
@@ -223,6 +225,9 @@ void DecorationInputTest::testDoubleClick_data()
 
 void KWin::DecorationInputTest::testDoubleClick()
 {
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     Window *window = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
@@ -273,6 +278,9 @@ void DecorationInputTest::testDoubleTap_data()
 
 void KWin::DecorationInputTest::testDoubleTap()
 {
+    std::unique_ptr<Test::VirtualInputDevice> touchDevice = Test::createTouchDevice();
+    QVERIFY(Test::waitForWaylandTouch());
+
     Window *window = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
@@ -282,17 +290,17 @@ void KWin::DecorationInputTest::testDoubleTap()
     const QPoint tapPoint(window->frameGeometry().center().x(), window->clientPos().y() / 2);
 
     // double tap
-    Test::touchDown(0, tapPoint, timestamp++);
-    Test::touchUp(0, timestamp++);
-    Test::touchDown(0, tapPoint, timestamp++);
-    Test::touchUp(0, timestamp++);
+    touchDevice->sendTouchDown(0, tapPoint, timestamp++);
+    touchDevice->sendTouchUp(0, timestamp++);
+    touchDevice->sendTouchDown(0, tapPoint, timestamp++);
+    touchDevice->sendTouchUp(0, timestamp++);
     QVERIFY(window->isOnAllDesktops());
     // double tap again
-    Test::touchDown(0, tapPoint, timestamp++);
-    Test::touchUp(0, timestamp++);
+    touchDevice->sendTouchDown(0, tapPoint, timestamp++);
+    touchDevice->sendTouchUp(0, timestamp++);
     QVERIFY(window->isOnAllDesktops());
-    Test::touchDown(0, tapPoint, timestamp++);
-    Test::touchUp(0, timestamp++);
+    touchDevice->sendTouchDown(0, tapPoint, timestamp++);
+    touchDevice->sendTouchUp(0, timestamp++);
     QVERIFY(!window->isOnAllDesktops());
 
     // test top most deco pixel, BUG: 362860
@@ -302,19 +310,22 @@ void KWin::DecorationInputTest::testDoubleTap()
     window->move(QPoint(10, 10));
     QFETCH(QPoint, decoPoint);
     // double click
-    Test::touchDown(0, decoPoint, timestamp++);
+    touchDevice->sendTouchDown(0, decoPoint, timestamp++);
     QVERIFY(input()->touch()->decoration());
     QCOMPARE(input()->touch()->decoration()->window(), window);
     QTEST(input()->touch()->decoration()->decoration()->sectionUnderMouse(), "expectedSection");
-    Test::touchUp(0, timestamp++);
+    touchDevice->sendTouchUp(0, timestamp++);
     QVERIFY(!window->isOnAllDesktops());
-    Test::touchDown(0, decoPoint, timestamp++);
-    Test::touchUp(0, timestamp++);
+    touchDevice->sendTouchDown(0, decoPoint, timestamp++);
+    touchDevice->sendTouchUp(0, timestamp++);
     QVERIFY(window->isOnAllDesktops());
 }
 
 void DecorationInputTest::testHover()
 {
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     Window *window = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
@@ -374,6 +385,9 @@ void DecorationInputTest::testPressToMove_data()
 
 void DecorationInputTest::testPressToMove()
 {
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+
     Window *window = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
@@ -433,6 +447,9 @@ void DecorationInputTest::testTapToMove_data()
 
 void DecorationInputTest::testTapToMove()
 {
+    std::unique_ptr<Test::VirtualInputDevice> touchDevice = Test::createTouchDevice();
+    QVERIFY(Test::waitForWaylandTouch());
+
     Window *window = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
@@ -446,33 +463,33 @@ void DecorationInputTest::testTapToMove()
     quint32 timestamp = 1;
     QPoint p = QPoint(window->frameGeometry().center().x(), window->y() + window->clientPos().y() / 2);
 
-    Test::touchDown(0, p, timestamp++);
+    touchDevice->sendTouchDown(0, p, timestamp++);
     QVERIFY(!window->isInteractiveMove());
     QFETCH(QPoint, offset);
     QCOMPARE(input()->touch()->decorationPressId(), 0);
-    Test::touchMotion(0, p + offset, timestamp++);
+    touchDevice->sendTouchMotion(0, p + offset, timestamp++);
     const QPoint oldPos = window->pos();
     QVERIFY(window->isInteractiveMove());
     QCOMPARE(startMoveResizedSpy.count(), 1);
 
-    Test::touchUp(0, timestamp++);
+    touchDevice->sendTouchUp(0, timestamp++);
     QTRY_VERIFY(!window->isInteractiveMove());
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
     QEXPECT_FAIL("", "Just trigger move doesn't move the window", Continue);
     QCOMPARE(window->pos(), oldPos + offset);
 
     // again
-    Test::touchDown(1, p + offset, timestamp++);
+    touchDevice->sendTouchDown(1, p + offset, timestamp++);
     QCOMPARE(input()->touch()->decorationPressId(), 1);
     QVERIFY(!window->isInteractiveMove());
     QFETCH(QPoint, offset2);
-    Test::touchMotion(1, QPoint(window->frameGeometry().center().x(), window->y() + window->clientPos().y() / 2) + offset2, timestamp++);
+    touchDevice->sendTouchMotion(1, QPoint(window->frameGeometry().center().x(), window->y() + window->clientPos().y() / 2) + offset2, timestamp++);
     QVERIFY(window->isInteractiveMove());
     QCOMPARE(startMoveResizedSpy.count(), 2);
     QFETCH(QPoint, offset3);
-    Test::touchMotion(1, QPoint(window->frameGeometry().center().x(), window->y() + window->clientPos().y() / 2) + offset3, timestamp++);
+    touchDevice->sendTouchMotion(1, QPoint(window->frameGeometry().center().x(), window->y() + window->clientPos().y() / 2) + offset3, timestamp++);
 
-    Test::touchUp(1, timestamp++);
+    touchDevice->sendTouchUp(1, timestamp++);
     QTRY_VERIFY(!window->isInteractiveMove());
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 2);
     // TODO: the offset should also be included
@@ -492,6 +509,8 @@ void DecorationInputTest::testResizeOutsideWindow_data()
 void DecorationInputTest::testResizeOutsideWindow()
 {
     // this test verifies that one can resize the window outside the decoration with NoSideBorder
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
 
     // first adjust config
     kwinApp()->config()->group("org.kde.kdecoration2").writeEntry("BorderSize", QStringLiteral("None"));
@@ -580,6 +599,10 @@ void DecorationInputTest::testModifierClickUnrestrictedMove_data()
 void DecorationInputTest::testModifierClickUnrestrictedMove()
 {
     // this test ensures that Alt+mouse button press triggers unrestricted move
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+    QVERIFY(Test::waitForWaylandKeyboard());
 
     // first modify the config for this run
     QFETCH(QString, modKey);
@@ -608,22 +631,22 @@ void DecorationInputTest::testModifierClickUnrestrictedMove()
     quint32 timestamp = 1;
     QFETCH(bool, capsLock);
     if (capsLock) {
-        Test::keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
+        keyboardDevice->sendKeyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
     }
     QFETCH(int, modifierKey);
     QFETCH(int, mouseButton);
-    Test::keyboardKeyPressed(modifierKey, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(modifierKey, timestamp++);
     QVERIFY(!window->isInteractiveMove());
-    Test::pointerButtonPressed(mouseButton, timestamp++);
+    pointerDevice->sendPointerButtonPressed(mouseButton, timestamp++);
     QVERIFY(window->isInteractiveMove());
     // release modifier should not change it
-    Test::keyboardKeyReleased(modifierKey, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(modifierKey, timestamp++);
     QVERIFY(window->isInteractiveMove());
     // but releasing the key should end move/resize
-    Test::pointerButtonReleased(mouseButton, timestamp++);
+    pointerDevice->sendPointerButtonReleased(mouseButton, timestamp++);
     QVERIFY(!window->isInteractiveMove());
     if (capsLock) {
-        Test::keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
+        keyboardDevice->sendKeyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
     }
 }
 
@@ -649,6 +672,10 @@ void DecorationInputTest::testModifierScrollOpacity_data()
 void DecorationInputTest::testModifierScrollOpacity()
 {
     // this test verifies that mod+wheel performs a window operation
+    std::unique_ptr<Test::VirtualInputDevice> pointerDevice = Test::createPointerDevice();
+    QVERIFY(Test::waitForWaylandPointer());
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+    QVERIFY(Test::waitForWaylandKeyboard());
 
     // first modify the config for this run
     QFETCH(QString, modKey);
@@ -673,17 +700,17 @@ void DecorationInputTest::testModifierScrollOpacity()
     quint32 timestamp = 1;
     QFETCH(bool, capsLock);
     if (capsLock) {
-        Test::keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
+        keyboardDevice->sendKeyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
     }
     QFETCH(int, modifierKey);
-    Test::keyboardKeyPressed(modifierKey, timestamp++);
-    Test::pointerAxisVertical(-5, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(modifierKey, timestamp++);
+    pointerDevice->sendPointerAxisVertical(-5, timestamp++);
     QCOMPARE(window->opacity(), 0.6);
-    Test::pointerAxisVertical(5, timestamp++);
+    pointerDevice->sendPointerAxisVertical(5, timestamp++);
     QCOMPARE(window->opacity(), 0.5);
-    Test::keyboardKeyReleased(modifierKey, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(modifierKey, timestamp++);
     if (capsLock) {
-        Test::keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
+        keyboardDevice->sendKeyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
     }
 }
 
@@ -715,6 +742,9 @@ Q_SIGNALS:
 
 void DecorationInputTest::testTouchEvents()
 {
+    std::unique_ptr<Test::VirtualInputDevice> touchDevice = Test::createTouchDevice();
+    QVERIFY(Test::waitForWaylandTouch());
+
     // this test verifies that the decoration gets a hover leave event on touch release
     // see BUG 386231
     Window *window = showWindow();
@@ -733,12 +763,12 @@ void DecorationInputTest::testTouchEvents()
     const QPoint tapPoint(window->frameGeometry().center().x(), window->clientPos().y() / 2);
 
     QVERIFY(!input()->touch()->decoration());
-    Test::touchDown(0, tapPoint, timestamp++);
+    touchDevice->sendTouchDown(0, tapPoint, timestamp++);
     QVERIFY(input()->touch()->decoration());
     QCOMPARE(input()->touch()->decoration()->decoration(), window->decoration());
     QCOMPARE(hoverMoveSpy.count(), 1);
     QCOMPARE(hoverLeaveSpy.count(), 0);
-    Test::touchUp(0, timestamp++);
+    touchDevice->sendTouchUp(0, timestamp++);
     QCOMPARE(hoverMoveSpy.count(), 1);
     QCOMPARE(hoverLeaveSpy.count(), 1);
 
@@ -747,10 +777,10 @@ void DecorationInputTest::testTouchEvents()
     // let's check that a hover motion is sent if the pointer is on deco, when touch release
     Cursors::self()->mouse()->setPos(tapPoint);
     QCOMPARE(hoverMoveSpy.count(), 2);
-    Test::touchDown(0, tapPoint, timestamp++);
+    touchDevice->sendTouchDown(0, tapPoint, timestamp++);
     QCOMPARE(hoverMoveSpy.count(), 3);
     QCOMPARE(hoverLeaveSpy.count(), 1);
-    Test::touchUp(0, timestamp++);
+    touchDevice->sendTouchUp(0, timestamp++);
     QCOMPARE(hoverMoveSpy.count(), 3);
     QCOMPARE(hoverLeaveSpy.count(), 2);
 }
@@ -759,6 +789,9 @@ void DecorationInputTest::testTooltipDoesntEatKeyEvents()
 {
     // this test verifies that a tooltip on the decoration does not steal key events
     // BUG: 393253
+
+    std::unique_ptr<Test::VirtualInputDevice> keyboardDevice = Test::createKeyboardDevice();
+    QVERIFY(Test::waitForWaylandKeyboard());
 
     // first create a keyboard
     auto keyboard = Test::waylandSeat()->createKeyboard(Test::waylandSeat());
@@ -786,9 +819,9 @@ void DecorationInputTest::testTooltipDoesntEatKeyEvents()
 
     // now send a key
     quint32 timestamp = 0;
-    Test::keyboardKeyPressed(KEY_A, timestamp++);
+    keyboardDevice->sendKeyboardKeyPressed(KEY_A, timestamp++);
     QVERIFY(keyEvent.wait());
-    Test::keyboardKeyReleased(KEY_A, timestamp++);
+    keyboardDevice->sendKeyboardKeyReleased(KEY_A, timestamp++);
     QVERIFY(keyEvent.wait());
 
     window->decoratedClient()->requestHideToolTip();
