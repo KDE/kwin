@@ -127,6 +127,7 @@ public:
 
     enum class CommitMode {
         Test,
+        TestAllowModeset,
         Commit,
         CommitModeset
     };
@@ -147,10 +148,14 @@ private:
     static Error commitPipelinesLegacy(const QVector<DrmPipeline *> &pipelines, CommitMode mode);
 
     // atomic modesetting only
-    Error populateAtomicValues(drmModeAtomicReq *req, uint32_t &flags);
+    bool populateAtomicValues(drmModeAtomicReq *req);
     void atomicCommitFailed();
-    void atomicCommitSuccessful(CommitMode mode);
+    void atomicTestSuccessful();
+    void atomicCommitSuccessful();
+    void atomicModesetSuccessful();
     void prepareAtomicModeset();
+    void prepareAtomicPresentation();
+    void prepareAtomicDisable();
     static Error commitPipelinesAtomic(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects);
 
     // logging helpers

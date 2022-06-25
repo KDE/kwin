@@ -78,7 +78,7 @@ DrmPipeline::Error DrmPipeline::commitPipelinesLegacy(const QVector<DrmPipeline 
         for (const auto &pipeline : pipelines) {
             pipeline->applyPendingChanges();
             pipeline->m_current = pipeline->m_pending;
-            if (mode == CommitMode::CommitModeset && mode != CommitMode::Test && pipeline->activePending()) {
+            if (mode == CommitMode::CommitModeset && pipeline->activePending()) {
                 pipeline->pageFlipped(std::chrono::steady_clock::now().time_since_epoch());
             }
         }
@@ -108,7 +108,7 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
             m_connector->getProp(DrmConnector::PropertyIndex::Underscan_vborder)->setPropertyLegacy(m_pending.overscan);
             m_connector->getProp(DrmConnector::PropertyIndex::Underscan_hborder)->setPropertyLegacy(hborder);
         }
-        if (needsModeset()) {
+        if (m_pending.crtc != m_current.crtc || m_pending.mode != m_current.mode) {
             Error err = legacyModeset();
             if (err != Error::None) {
                 return err;

@@ -448,14 +448,14 @@ DrmPipeline::Error DrmGpu::testPipelines()
     std::copy_if(m_pipelines.constBegin(), m_pipelines.constEnd(), std::back_inserter(inactivePipelines), [](const auto pipeline) {
         return pipeline->enabled() && !pipeline->active();
     });
-    DrmPipeline::Error test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test, unusedObjects());
+    DrmPipeline::Error test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::TestAllowModeset, unusedObjects());
     if (!inactivePipelines.isEmpty() && test == DrmPipeline::Error::None) {
         // ensure that pipelines that are set as enabled but currently inactive
         // still work when they need to be set active again
         for (const auto pipeline : qAsConst(inactivePipelines)) {
             pipeline->setActive(true);
         }
-        test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test, unusedObjects());
+        test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::TestAllowModeset, unusedObjects());
         for (const auto pipeline : qAsConst(inactivePipelines)) {
             pipeline->setActive(false);
         }
@@ -710,11 +710,8 @@ bool DrmGpu::isNVidia() const
 bool DrmGpu::needsModeset() const
 {
     return std::any_of(m_pipelines.constBegin(), m_pipelines.constEnd(), [](const auto &pipeline) {
-               return pipeline->needsModeset();
-           })
-        || std::any_of(m_allObjects.constBegin(), m_allObjects.constEnd(), [](const auto &object) {
-               return object->needsModeset();
-           });
+        return pipeline->needsModeset();
+    });
 }
 
 bool DrmGpu::maybeModeset()

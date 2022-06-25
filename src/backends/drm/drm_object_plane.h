@@ -66,7 +66,6 @@ public:
     Q_DECLARE_FLAGS(Transformations, Transformation)
 
     bool init() override;
-    bool needsModeset() const override;
     void disable() override;
     TypeIndex type() const;
 

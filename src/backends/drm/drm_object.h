@@ -51,7 +51,6 @@ public:
     void rollbackPending();
     bool atomicPopulate(drmModeAtomicReq *req) const;
     bool needsCommit() const;
-    virtual bool needsModeset() const = 0;
     virtual bool updateProperties();
 
     template<typename T>

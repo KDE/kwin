@@ -39,7 +39,6 @@ public:
     };
 
     bool init() override;
-    bool needsModeset() const override;
     void disable() override;
 
     int pipeIndex() const;

@@ -250,21 +250,6 @@ bool DrmConnector::vrrCapable() const
     return false;
 }
 
-bool DrmConnector::needsModeset() const
-{
-    if (!gpu()->atomicModeSetting()) {
-        return false;
-    }
-    if (getProp(PropertyIndex::CrtcId)->needsCommit()) {
-        return true;
-    }
-    if (const auto &prop = getProp(PropertyIndex::MaxBpc); prop && prop->needsCommit()) {
-        return true;
-    }
-    const auto &rgb = getProp(PropertyIndex::Broadcast_RGB);
-    return rgb && rgb->needsCommit();
-}
-
 bool DrmConnector::hasRgbRange() const
 {
     const auto &rgb = getProp(PropertyIndex::Broadcast_RGB);

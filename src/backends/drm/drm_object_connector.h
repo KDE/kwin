@@ -78,7 +78,6 @@ public:
     };
 
     bool init() override;
-    bool needsModeset() const override;
     bool updateProperties() override;
     void disable() override;
 

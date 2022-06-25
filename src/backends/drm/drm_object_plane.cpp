@@ -153,18 +153,6 @@ void DrmPlane::setBuffer(DrmFramebuffer *buffer)
     setPending(PropertyIndex::FbId, buffer ? buffer->framebufferId() : 0);
 }
 
-bool DrmPlane::needsModeset() const
-{
-    if (!gpu()->atomicModeSetting() || type() == TypeIndex::Cursor) {
-        return false;
-    }
-    auto rotation = getProp(PropertyIndex::Rotation);
-    if (rotation && rotation->needsCommit()) {
-        return true;
-    }
-    return getProp(PropertyIndex::CrtcId)->needsCommit();
-}
-
 bool DrmPlane::isCrtcSupported(int pipeIndex) const
 {
     return (m_possibleCrtcs & (1 << pipeIndex));

@@ -47,15 +47,6 @@ drmModeModeInfo DrmCrtc::queryCurrentMode()
     return m_crtc->mode;
 }
 
-bool DrmCrtc::needsModeset() const
-{
-    if (!gpu()->atomicModeSetting()) {
-        return false;
-    }
-    return getProp(PropertyIndex::Active)->needsCommit()
-        || getProp(PropertyIndex::ModeId)->needsCommit();
-}
-
 int DrmCrtc::pipeIndex() const
 {
     return m_pipeIndex;
