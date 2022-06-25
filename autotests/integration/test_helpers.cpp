@@ -660,6 +660,9 @@ bool waitForWaylandPointer()
     if (!s_waylandConnection.seat) {
         return false;
     }
+    if (s_waylandConnection.seat->hasPointer()) {
+        return true;
+    }
     QSignalSpy hasPointerSpy(s_waylandConnection.seat, &Seat::hasPointerChanged);
     if (!hasPointerSpy.isValid()) {
         return false;
@@ -672,6 +675,9 @@ bool waitForWaylandTouch()
     if (!s_waylandConnection.seat) {
         return false;
     }
+    if (s_waylandConnection.seat->hasTouch()) {
+        return true;
+    }
     QSignalSpy hasTouchSpy(s_waylandConnection.seat, &Seat::hasTouchChanged);
     if (!hasTouchSpy.isValid()) {
         return false;
@@ -683,6 +689,9 @@ bool waitForWaylandKeyboard()
 {
     if (!s_waylandConnection.seat) {
         return false;
+    }
+    if (s_waylandConnection.seat->hasKeyboard()) {
+        return true;
     }
     QSignalSpy hasKeyboardSpy(s_waylandConnection.seat, &Seat::hasKeyboardChanged);
     if (!hasKeyboardSpy.isValid()) {
