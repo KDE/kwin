@@ -1614,16 +1614,16 @@ void XdgToplevelWindow::setFullScreen(bool set, bool user)
     configureDecoration();
 
     if (set) {
-        const Output *output = m_fullScreenRequestedOutput ? m_fullScreenRequestedOutput.data() : workspace()->outputAt(moveResizeGeometry().center());
+        const Output *output = m_fullScreenRequestedOutput ? m_fullScreenRequestedOutput.data() : moveResizeOutput();
         setFullscreenGeometryRestore(moveResizeGeometry());
         moveResize(workspace()->clientArea(FullScreenArea, this, output));
     } else {
         m_fullScreenRequestedOutput.clear();
         if (fullscreenGeometryRestore().isValid()) {
-            Output *currentOutput = output();
+            Output *currentOutput = moveResizeOutput();
             moveResize(QRectF(fullscreenGeometryRestore().topLeft(),
                               constrainFrameSize(fullscreenGeometryRestore().size())));
-            if (currentOutput != output()) {
+            if (currentOutput != moveResizeOutput()) {
                 workspace()->sendWindowToOutput(this, currentOutput);
             }
         } else {
@@ -1650,7 +1650,7 @@ void XdgToplevelWindow::changeMaximize(bool horizontal, bool vertical, bool adju
         return;
     }
 
-    const QRectF clientArea = isElectricBorderMaximizing() ? workspace()->clientArea(MaximizeArea, this, Cursors::self()->mouse()->pos()) : workspace()->clientArea(MaximizeArea, this, moveResizeGeometry().center());
+    const QRectF clientArea = isElectricBorderMaximizing() ? workspace()->clientArea(MaximizeArea, this, Cursors::self()->mouse()->pos()) : workspace()->clientArea(MaximizeArea, this, moveResizeOutput());
 
     const MaximizeMode oldMode = m_requestedMaximizeMode;
     const QRectF oldGeometry = moveResizeGeometry();

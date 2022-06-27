@@ -4610,9 +4610,9 @@ void X11Window::setFullScreen(bool set, bool user)
         }
     } else {
         Q_ASSERT(!fullscreenGeometryRestore().isNull());
-        Output *currentOutput = output();
+        Output *currentOutput = moveResizeOutput();
         moveResize(QRectF(fullscreenGeometryRestore().topLeft(), constrainFrameSize(fullscreenGeometryRestore().size())));
-        if (currentOutput != output()) {
+        if (currentOutput != moveResizeOutput()) {
             workspace()->sendWindowToOutput(this, currentOutput);
         }
     }

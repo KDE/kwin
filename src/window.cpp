@@ -78,6 +78,7 @@ Window::Window()
     , m_tabBoxClient(QSharedPointer<TabBox::TabBoxClientImpl>::create(this))
 #endif
     , m_colorScheme(QStringLiteral("kdeglobals"))
+    , m_moveResizeOutput(workspace()->activeOutput())
 {
     connect(this, &Window::bufferGeometryChanged, this, &Window::inputTransformationChanged);
 
@@ -1684,8 +1685,8 @@ void Window::finishInteractiveMoveResize(bool cancel)
     if (cancel) {
         moveResize(initialInteractiveMoveResizeGeometry());
     }
-    if (output() != interactiveMoveResizeStartOutput()) {
-        workspace()->sendWindowToOutput(this, output()); // checks rule validity
+    if (moveResizeOutput() != interactiveMoveResizeStartOutput()) {
+        workspace()->sendWindowToOutput(this, moveResizeOutput()); // checks rule validity
         if (isFullScreen() || maximizeMode() != MaximizeRestore) {
             checkWorkspacePosition();
         }
@@ -3648,24 +3649,39 @@ QRectF Window::moveResizeGeometry() const
 void Window::setMoveResizeGeometry(const QRectF &geo)
 {
     m_moveResizeGeometry = geo;
+    m_moveResizeOutput = workspace()->outputAt(geo.center());
+}
+
+Output *Window::moveResizeOutput() const
+{
+    return m_moveResizeOutput;
+}
+
+void Window::setMoveResizeOutput(Output *output)
+{
+    m_moveResizeOutput = output;
 }
 
 void Window::move(const QPointF &point)
 {
-    m_moveResizeGeometry.moveTopLeft(point);
-    moveResizeInternal(m_moveResizeGeometry, MoveResizeMode::Move);
+    const QRectF rect = QRectF(point, m_moveResizeGeometry.size());
+
+    setMoveResizeGeometry(rect);
+    moveResizeInternal(rect, MoveResizeMode::Move);
 }
 
 void Window::resize(const QSizeF &size)
 {
-    m_moveResizeGeometry.setSize(size);
-    moveResizeInternal(m_moveResizeGeometry, MoveResizeMode::Resize);
+    const QRectF rect = QRectF(m_moveResizeGeometry.topLeft(), size);
+
+    setMoveResizeGeometry(rect);
+    moveResizeInternal(rect, MoveResizeMode::Resize);
 }
 
 void Window::moveResize(const QRectF &rect)
 {
-    m_moveResizeGeometry = rect;
-    moveResizeInternal(m_moveResizeGeometry, MoveResizeMode::MoveResize);
+    setMoveResizeGeometry(rect);
+    moveResizeInternal(rect, MoveResizeMode::MoveResize);
 }
 
 void Window::setElectricBorderMode(QuickTileMode mode)
@@ -3813,7 +3829,7 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
         // screen if it exists, otherwise toggle the mode (set QuickTileFlag::None)
         if (quickTileMode() == mode) {
             const QList<Output *> outputs = workspace()->outputs();
-            const Output *currentOutput = output();
+            const Output *currentOutput = moveResizeOutput();
             const Output *nextOutput = currentOutput;
 
             for (const Output *output : outputs) {
@@ -3936,12 +3952,11 @@ void Window::sendToOutput(Output *newOutput)
             }
         }
     }
-    const QRectF oldGeom = moveResizeGeometry();
-    // output() may be outdated here
-    if (workspace()->outputAt(oldGeom.center()) == newOutput) {
+    if (moveResizeOutput() == newOutput) {
         return;
     }
 
+    const QRectF oldGeom = moveResizeGeometry();
     const QRectF oldScreenArea = workspace()->clientArea(MaximizeArea, this);
     const QRectF screenArea = workspace()->clientArea(MaximizeArea, this, newOutput);
 
@@ -3992,12 +4007,12 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
     QRect screenArea;
     if (workspace()->inUpdateClientArea()) {
         // check if the window is on an about to be destroyed output
-        Output *newOutput = output();
+        Output *newOutput = moveResizeOutput();
         if (!workspace()->outputs().contains(newOutput)) {
             newOutput = workspace()->outputAt(newGeom.center());
         }
         // we need to find the screen area as it was before the change
-        oldScreenArea = workspace()->previousScreenSizes().value(output());
+        oldScreenArea = workspace()->previousScreenSizes().value(moveResizeOutput());
         if (oldScreenArea.isNull()) {
             oldScreenArea = newOutput->geometry();
         }
@@ -4425,7 +4440,7 @@ void Window::applyWindowRules()
     // MinSize, MaxSize handled by Geometry
     // IgnoreGeometry
     setDesktops(desktops());
-    workspace()->sendWindowToOutput(this, output());
+    workspace()->sendWindowToOutput(this, moveResizeOutput());
     setOnActivities(activities());
     // Type
     maximize(maximizeMode());

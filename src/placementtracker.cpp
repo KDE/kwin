@@ -23,7 +23,7 @@ PlacementTracker::PlacementTracker(Workspace *workspace)
 PlacementTracker::WindowData PlacementTracker::dataForWindow(Window *window) const
 {
     return WindowData{
-        .outputUuid = workspace()->outputAt(window->moveResizeGeometry().center())->uuid(),
+        .outputUuid = window->moveResizeOutput()->uuid(),
         .geometry = window->moveResizeGeometry(),
         .maximize = window->requestedMaximizeMode(),
         .quickTile = window->quickTileMode(),
@@ -142,7 +142,7 @@ void PlacementTracker::saveGeometry(Window *window)
     if (m_inhibitCount == 0) {
         auto &data = m_data[m_currentKey][window];
         data.geometry = window->moveResizeGeometry();
-        data.outputUuid = workspace()->outputAt(window->moveResizeGeometry().center())->uuid();
+        data.outputUuid = window->moveResizeOutput()->uuid();
     }
 }
 

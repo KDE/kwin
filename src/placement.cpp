@@ -667,10 +667,10 @@ void Window::packTo(qreal left, qreal top)
 {
     workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
 
-    const Output *oldOutput = output();
+    const Output *oldOutput = moveResizeOutput();
     move(QPointF(left, top));
-    if (output() != oldOutput) {
-        workspace()->sendWindowToOutput(this, output()); // checks rule validity
+    if (moveResizeOutput() != oldOutput) {
+        workspace()->sendWindowToOutput(this, moveResizeOutput()); // checks rule validity
         if (maximizeMode() != MaximizeRestore) {
             checkWorkspacePosition();
         }

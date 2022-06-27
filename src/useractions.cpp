@@ -1383,14 +1383,14 @@ void Workspace::slotWindowToScreen()
 void Workspace::slotWindowToNextScreen()
 {
     if (USABLE_ACTIVE_WINDOW) {
-        sendWindowToOutput(m_activeWindow, nextOutput(m_activeWindow->output()));
+        sendWindowToOutput(m_activeWindow, nextOutput(m_activeWindow->moveResizeOutput()));
     }
 }
 
 void Workspace::slotWindowToPrevScreen()
 {
     if (USABLE_ACTIVE_WINDOW) {
-        sendWindowToOutput(m_activeWindow, previousOutput(m_activeWindow->output()));
+        sendWindowToOutput(m_activeWindow, previousOutput(m_activeWindow->moveResizeOutput()));
     }
 }
 

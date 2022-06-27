@@ -1487,6 +1487,9 @@ void Workspace::removeOutput(Output *output)
         if (window->output() == output) {
             window->setOutput(outputAt(window->frameGeometry().center()));
         }
+        if (window->moveResizeOutput() == output) {
+            window->setMoveResizeOutput(kwinApp()->platform()->outputAt(window->moveResizeGeometry().center()));
+        }
     }
 
     Q_EMIT outputRemoved(output);
