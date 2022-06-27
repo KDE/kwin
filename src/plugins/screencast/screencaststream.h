@@ -80,6 +80,7 @@ private:
     void coreFailed(const QString &errorMessage);
     void sendCursorData(Cursor *cursor, spa_meta_cursor *spa_cursor);
     void addHeader(spa_buffer *spaBuffer);
+    void addDamage(spa_buffer *spaBuffer, const QRegion &damagedRegion);
     void newStreamParams();
     void tryEnqueue(pw_buffer *buffer);
     void enqueue();
