@@ -464,7 +464,30 @@ void ScreenCastStream::recordFrame(const QRegion &damagedRegion)
                        (spa_meta_cursor *)spa_buffer_find_meta_data(spa_buffer, SPA_META_Cursor, sizeof(spa_meta_cursor)));
     }
 
-    if (spa_meta *vdMeta = spa_buffer_find_meta(spa_buffer, SPA_META_VideoDamage)) {
+    addDamage(spa_buffer, damagedRegion | QRect({0, 0}, size));
+    addHeader(spa_buffer);
+    tryEnqueue(buffer);
+}
+
+void ScreenCastStream::addHeader(spa_buffer *spaBuffer)
+{
+    spa_meta_header *spaHeader = (spa_meta_header *)spa_buffer_find_meta_data(spaBuffer, SPA_META_Header, sizeof(spaHeader));
+    if (spaHeader) {
+        spaHeader->flags = 0;
+        spaHeader->dts_offset = 0;
+        spaHeader->seq = m_sequential++;
+
+        const auto timestamp = m_source->clock();
+        if (!m_start) {
+            m_start = timestamp;
+        }
+        spaHeader->pts = (timestamp - m_start.value()).count();
+    }
+}
+
+void ScreenCastStream::addDamage(spa_buffer *spaBuffer, const QRegion &damagedRegion)
+{
+    if (spa_meta *vdMeta = spa_buffer_find_meta(spaBuffer, SPA_META_VideoDamage)) {
         struct spa_meta_region *r = (spa_meta_region *)spa_meta_first(vdMeta);
 
         // If there's too many rectangles, we just send the bounding rect
@@ -486,25 +509,6 @@ void ScreenCastStream::recordFrame(const QRegion &damagedRegion)
         if (spa_meta_check(r, vdMeta)) {
             r->region = SPA_REGION(0, 0, 0, 0);
         }
-    }
-
-    addHeader(spa_buffer);
-    tryEnqueue(buffer);
-}
-
-void ScreenCastStream::addHeader(spa_buffer *spaBuffer)
-{
-    spa_meta_header *spaHeader = (spa_meta_header *)spa_buffer_find_meta_data(spaBuffer, SPA_META_Header, sizeof(spaHeader));
-    if (spaHeader) {
-        spaHeader->flags = 0;
-        spaHeader->dts_offset = 0;
-        spaHeader->seq = m_sequential++;
-
-        const auto timestamp = m_source->clock();
-        if (!m_start) {
-            m_start = timestamp;
-        }
-        spaHeader->pts = (timestamp - m_start.value()).count();
     }
 }
 
@@ -536,6 +540,7 @@ void ScreenCastStream::recordCursor()
     sendCursorData(Cursors::self()->currentCursor(),
                    (spa_meta_cursor *)spa_buffer_find_meta_data(spa_buffer, SPA_META_Cursor, sizeof(spa_meta_cursor)));
     addHeader(spa_buffer);
+    addDamage(spa_buffer, {});
     enqueue();
 }
 
