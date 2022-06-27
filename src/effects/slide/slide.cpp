@@ -42,7 +42,7 @@ SlideEffect::SlideEffect()
     connect(effects, &EffectsHandler::screenRemoved,
             this, &SlideEffect::finishedSwitching);
 
-    m_currentPosition = effects->desktopCoords(effects->currentDesktop());
+    m_currentPosition = effects->desktopGridCoords(effects->currentDesktop());
 }
 
 SlideEffect::~SlideEffect()
