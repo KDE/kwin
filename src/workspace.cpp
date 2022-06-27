@@ -1482,16 +1482,6 @@ void Workspace::removeOutput(Output *output)
     disconnect(output, &Output::geometryChanged, this, &Workspace::desktopResized);
     desktopResized();
 
-    const auto stack = stackingOrder();
-    for (Window *window : stack) {
-        if (window->output() == output) {
-            window->setOutput(outputAt(window->frameGeometry().center()));
-        }
-        if (window->moveResizeOutput() == output) {
-            window->setMoveResizeOutput(kwinApp()->platform()->outputAt(window->moveResizeGeometry().center()));
-        }
-    }
-
     Q_EMIT outputRemoved(output);
 }
 
@@ -2280,6 +2270,12 @@ void Workspace::desktopResized()
     }
 
     updateClientArea();
+
+    const auto stack = stackingOrder();
+    for (Window *window : stack) {
+        window->setMoveResizeOutput(outputAt(window->moveResizeGeometry().center()));
+        window->setOutput(outputAt(window->frameGeometry().center()));
+    }
 
     // restore cursor position
     const auto oldCursorOutput = std::find_if(m_oldScreenGeometries.cbegin(), m_oldScreenGeometries.cend(), [](const auto &geometry) {
