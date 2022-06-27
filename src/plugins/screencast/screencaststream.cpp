@@ -468,7 +468,13 @@ void ScreenCastStream::recordFrame(const QRegion &damagedRegion)
         }
     }
 
-    spa_meta_header *spaHeader = (spa_meta_header *)spa_buffer_find_meta_data(spa_buffer, SPA_META_Header, sizeof(spaHeader));
+    addHeader(spa_buffer);
+    tryEnqueue(buffer);
+}
+
+void ScreenCastStream::addHeader(spa_buffer *spaBuffer)
+{
+    spa_meta_header *spaHeader = (spa_meta_header *)spa_buffer_find_meta_data(spaBuffer, SPA_META_Header, sizeof(spaHeader));
     if (spaHeader) {
         spaHeader->flags = 0;
         spaHeader->dts_offset = 0;
@@ -480,8 +486,6 @@ void ScreenCastStream::recordFrame(const QRegion &damagedRegion)
         }
         spaHeader->pts = (timestamp - m_start.value()).count();
     }
-
-    tryEnqueue(buffer);
 }
 
 void ScreenCastStream::recordCursor()
@@ -511,6 +515,7 @@ void ScreenCastStream::recordCursor()
     spa_buffer->datas[0].chunk->size = 0;
     sendCursorData(Cursors::self()->currentCursor(),
                    (spa_meta_cursor *)spa_buffer_find_meta_data(spa_buffer, SPA_META_Cursor, sizeof(spa_meta_cursor)));
+    addHeader(spa_buffer);
     enqueue();
 }
 
