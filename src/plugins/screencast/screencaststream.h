@@ -113,6 +113,7 @@ private:
         qint64 lastKey = 0;
         QRect lastRect;
         QScopedPointer<GLTexture> texture;
+        bool visible = false;
     } m_cursor;
     QRect cursorGeometry(Cursor *cursor) const;
 

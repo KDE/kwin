@@ -530,6 +530,10 @@ void ScreenCastStream::recordCursor()
         return;
     }
 
+    if (!m_cursor.viewport.contains(Cursors::self()->currentCursor()->pos()) && !m_cursor.visible) {
+        return;
+    }
+
     m_pendingBuffer = pw_stream_dequeue_buffer(pwStream);
     if (!m_pendingBuffer) {
         return;
@@ -537,6 +541,7 @@ void ScreenCastStream::recordCursor()
 
     struct spa_buffer *spa_buffer = m_pendingBuffer->buffer;
     spa_buffer->datas[0].chunk->size = 0;
+
     sendCursorData(Cursors::self()->currentCursor(),
                    (spa_meta_cursor *)spa_buffer_find_meta_data(spa_buffer, SPA_META_Cursor, sizeof(spa_meta_cursor)));
     addHeader(spa_buffer);
@@ -660,8 +665,10 @@ void ScreenCastStream::sendCursorData(Cursor *cursor, spa_meta_cursor *spa_meta_
         spa_meta_cursor->hotspot.x = -1;
         spa_meta_cursor->hotspot.y = -1;
         spa_meta_cursor->bitmap_offset = 0;
+        m_cursor.visible = false;
         return;
     }
+    m_cursor.visible = true;
     const auto position = (cursor->pos() - m_cursor.viewport.topLeft()) * m_cursor.scale;
 
     spa_meta_cursor->id = 1;
