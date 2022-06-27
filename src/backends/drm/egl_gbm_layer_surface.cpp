@@ -105,6 +105,10 @@ OutputLayerBeginFrameInfo EglGbmLayerSurface::startRendering(const QSize &buffer
 
 void EglGbmLayerSurface::aboutToStartPainting(DrmOutput *output, const QRegion &damagedRegion)
 {
+    if (m_shadowBuffer) {
+        // with a shadow buffer, we always fully damage the surface
+        return;
+    }
     if (m_gbmSurface && m_gbmSurface->bufferAge() > 0 && !damagedRegion.isEmpty() && m_eglBackend->supportsPartialUpdate()) {
         QVector<EGLint> rects = output->regionToRects(damagedRegion);
         const bool correct = eglSetDamageRegionKHR(m_eglBackend->eglDisplay(), m_gbmSurface->eglSurface(), rects.data(), rects.count() / 4);
