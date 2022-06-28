@@ -49,6 +49,7 @@ public:
     void installKeymap(int fd, uint32_t size);
     void updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group);
     void updateKey(uint32_t key, InputRedirection::KeyboardKeyState state);
+    void updateKeySym(uint32_t keysym, InputRedirection::KeyboardKeyState state);
     xkb_keysym_t toKeysym(uint32_t key);
     xkb_keysym_t currentKeysym() const
     {

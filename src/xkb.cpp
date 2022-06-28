@@ -358,8 +358,13 @@ void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
         return;
     }
     xkb_state_update_key(m_state, key + EVDEV_OFFSET, static_cast<xkb_key_direction>(state));
+    updateKeySym(toKeysym(key), state);
+    updateConsumedModifiers(key);
+}
+
+void Xkb::updateKeySym(uint32_t sym, InputRedirection::KeyboardKeyState state)
+{
     if (state == InputRedirection::KeyboardKeyPressed) {
-        const auto sym = toKeysym(key);
         if (m_compose.state && xkb_compose_state_feed(m_compose.state, sym) == XKB_COMPOSE_FEED_ACCEPTED) {
             switch (xkb_compose_state_get_status(m_compose.state)) {
             case XKB_COMPOSE_NOTHING:
@@ -377,7 +382,6 @@ void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
         }
     }
     updateModifiers();
-    updateConsumedModifiers(key);
 }
 
 void Xkb::updateModifiers()

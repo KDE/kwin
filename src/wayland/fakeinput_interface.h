@@ -135,13 +135,13 @@ Q_SIGNALS:
      */
     void touchFrameRequested();
     /**
-     * Requests a keyboard key pressed for @p key.
+     * Requests a keyboard key code (i.e. KEY_, see linux/input.h) pressed for @p keycode.
      */
-    void keyboardKeyPressRequested(quint32 key);
+    void keyboardKeyCodeRequested(quint32 keycode, bool pressed);
     /**
-     * Requests a keyboard key release for @p key.
+     * Requests a keyboard keysym (i.e. XKB) pressed for @p keysym.
      */
-    void keyboardKeyReleaseRequested(quint32 key);
+    void keyboardKeySymRequested(quint32 keysym, bool pressed);
 
 private:
     friend class FakeInputInterfacePrivate;

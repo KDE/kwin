@@ -31,11 +31,17 @@
 #include <KGlobalAccel>
 // Qt
 #include <QKeyEvent>
+#include <linux/input.h>
 
 #include <cmath>
+#include <optional>
 
 namespace KWin
 {
+
+/* The offset between KEY_* numbering, and keycodes in the XKB evdev
+ * dataset. */
+static const int EVDEV_OFFSET = 8;
 
 KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *parent)
     : QObject(parent)
@@ -261,6 +267,47 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
     if (event.modifiersRelevantForGlobalShortcuts() == Qt::KeyboardModifier::NoModifier && type != QEvent::KeyRelease) {
         m_keyboardLayout->checkLayoutChange(previousLayout);
     }
+}
+
+struct KeyCodeState
+{
+    xkb_keycode_t keycode = KEY_RESERVED;
+    xkb_level_index_t level = 0;
+};
+
+std::optional<KeyCodeState> keycodeFromKeysym(xkb_keysym_t keysym, Xkb *xkb)
+{
+    auto layout = xkb_state_serialize_layout(xkb->state(), XKB_STATE_LAYOUT_EFFECTIVE);
+    const xkb_keycode_t max = xkb_keymap_max_keycode(xkb->keymap());
+    for (xkb_keycode_t keycode = xkb_keymap_min_keycode(xkb->keymap()); keycode < max; keycode++) {
+        uint levelCount = xkb_keymap_num_levels_for_key(xkb->keymap(), keycode, layout);
+        for (uint currentLevel = 0; currentLevel < levelCount; currentLevel++) {
+            const xkb_keysym_t *syms;
+            uint num_syms = xkb_keymap_key_get_syms_by_level(xkb->keymap(), keycode, layout, currentLevel, &syms);
+            for (uint sym = 0; sym < num_syms; sym++) {
+                if (syms[sym] == keysym) {
+                    return std::optional<KeyCodeState>({keycode - EVDEV_OFFSET, currentLevel});
+                }
+            }
+        }
+    }
+    return {};
+}
+
+void KeyboardInputRedirection::processKeySym(uint32_t keysym, InputRedirection::KeyboardKeyState state, uint32_t time, InputDevice *device)
+{
+    auto keyCodeState = keycodeFromKeysym(keysym, m_xkb.get());
+    if (!keyCodeState) {
+        qCWarning(KWIN_CORE) << "Could not process keysym" << keysym;
+        return;
+    }
+    if (keyCodeState->level == 1) {
+        processKey(KEY_LEFTSHIFT, state, time, device);
+    }
+    if (keyCodeState->level == 2) {
+        processKey(KEY_RIGHTALT, state, time, device);
+    }
+    processKey(keyCodeState->keycode, state, time, device);
 }
 
 void KeyboardInputRedirection::processModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)

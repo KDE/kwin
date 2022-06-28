@@ -14,7 +14,7 @@
 
 namespace KWaylandServer
 {
-static const quint32 s_version = 4;
+static const quint32 s_version = 5;
 
 class FakeInputInterfacePrivate : public QtWaylandServer::org_kde_kwin_fake_input
 {
@@ -42,6 +42,7 @@ protected:
     void org_kde_kwin_fake_input_touch_frame(Resource *resource) override;
     void org_kde_kwin_fake_input_pointer_motion_absolute(Resource *resource, wl_fixed_t x, wl_fixed_t y) override;
     void org_kde_kwin_fake_input_keyboard_key(Resource *resource, uint32_t button, uint32_t state) override;
+    void org_kde_kwin_fake_input_keyboard_keysym(Resource *resource, uint32_t button, uint32_t state) override;
 };
 
 QList<quint32> FakeInputInterfacePrivate::touchIds = QList<quint32>();
@@ -217,17 +218,16 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_keyboard_key(Resource *r
     if (!d || !d->isAuthenticated()) {
         return;
     }
-    switch (state) {
-    case WL_KEYBOARD_KEY_STATE_PRESSED:
-        Q_EMIT d->keyboardKeyPressRequested(button);
-        break;
-    case WL_KEYBOARD_KEY_STATE_RELEASED:
-        Q_EMIT d->keyboardKeyReleaseRequested(button);
-        break;
-    default:
-        // nothing
-        break;
+    Q_EMIT d->keyboardKeyCodeRequested(button, state == WL_KEYBOARD_KEY_STATE_PRESSED);
+}
+
+void FakeInputInterfacePrivate::org_kde_kwin_fake_input_keyboard_keysym(Resource *resource, uint32_t button, uint32_t state)
+{
+    FakeInputDevice *d = device(resource->handle);
+    if (!d || !d->isAuthenticated()) {
+        return;
     }
+    Q_EMIT d->keyboardKeySymRequested(button, state == WL_KEYBOARD_KEY_STATE_PRESSED);
 }
 
 class FakeInputDevicePrivate

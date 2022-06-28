@@ -72,13 +72,13 @@ FakeInputDevice::FakeInputDevice(KWaylandServer::FakeInputDevice *device, QObjec
     connect(device, &KWaylandServer::FakeInputDevice::touchFrameRequested, this, [this]() {
         Q_EMIT touchFrame(this);
     });
-    connect(device, &KWaylandServer::FakeInputDevice::keyboardKeyPressRequested, this, [this](quint32 button) {
+    connect(device, &KWaylandServer::FakeInputDevice::keyboardKeyCodeRequested, this, [this](quint32 button, bool pressed) {
         // TODO: Fix time
-        Q_EMIT keyChanged(button, InputRedirection::KeyboardKeyPressed, 0, this);
+        Q_EMIT keyChanged(button, pressed ? InputRedirection::KeyboardKeyPressed : InputRedirection::KeyboardKeyReleased, 0, this);
     });
-    connect(device, &KWaylandServer::FakeInputDevice::keyboardKeyReleaseRequested, this, [this](quint32 button) {
+    connect(device, &KWaylandServer::FakeInputDevice::keyboardKeySymRequested, this, [this](quint32 keysym, bool pressed) {
         // TODO: Fix time
-        Q_EMIT keyChanged(button, InputRedirection::KeyboardKeyReleased, 0, this);
+        Q_EMIT keySymChanged(keysym, pressed ? InputRedirection::KeyboardKeyPressed : InputRedirection::KeyboardKeyReleased, 0, this);
     });
 }
 
