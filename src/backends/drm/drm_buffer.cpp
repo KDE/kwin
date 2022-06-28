@@ -150,7 +150,6 @@ std::shared_ptr<DrmFramebuffer> DrmFramebuffer::createFramebuffer(const std::sha
     if (ret == 0) {
         return std::make_shared<DrmFramebuffer>(buffer, framebufferId);
     } else {
-        qCWarning(KWIN_DRM) << "Could not create drm framebuffer!" << strerror(errno);
         return nullptr;
     }
 }
