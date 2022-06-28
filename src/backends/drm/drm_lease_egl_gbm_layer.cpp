@@ -42,6 +42,9 @@ bool DrmLeaseEglGbmLayer::checkTestBuffer()
         }
         if (newBo) {
             m_framebuffer = DrmFramebuffer::createFramebuffer(std::make_shared<GbmBuffer>(m_pipeline->gpu(), newBo));
+            if (!m_framebuffer) {
+                qCWarning(KWIN_DRM, "Failed to create gbm framebuffer for lease output: %s", strerror(errno));
+            }
         } else {
             qCWarning(KWIN_DRM) << "Failed to create gbm_bo for lease output";
         }

@@ -16,6 +16,7 @@
 #include "drm_pipeline.h"
 #include "drm_virtual_output.h"
 #include "dumb_swapchain.h"
+#include "logging.h"
 #include "scene_qpainter_drm_backend.h"
 
 #include <drm_fourcc.h>
@@ -49,6 +50,9 @@ bool DrmQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &da
     m_currentDamage = damagedRegion;
     m_swapchain->releaseBuffer(m_swapchain->currentBuffer(), damagedRegion);
     m_currentFramebuffer = DrmFramebuffer::createFramebuffer(m_swapchain->currentBuffer());
+    if (!m_currentFramebuffer) {
+        qCWarning(KWIN_DRM, "Failed to create dumb framebuffer: %s", strerror(errno));
+    }
     return m_currentFramebuffer != nullptr;
 }
 
@@ -58,6 +62,9 @@ bool DrmQPainterLayer::checkTestBuffer()
         m_swapchain = std::make_shared<DumbSwapchain>(m_pipeline->gpu(), m_pipeline->bufferSize(), DRM_FORMAT_XRGB8888);
         if (!m_swapchain->isEmpty()) {
             m_currentFramebuffer = DrmFramebuffer::createFramebuffer(m_swapchain->currentBuffer());
+            if (!m_currentFramebuffer) {
+                qCWarning(KWIN_DRM, "Failed to create dumb framebuffer: %s", strerror(errno));
+            }
         } else {
             m_currentFramebuffer.reset();
         }
@@ -110,6 +117,9 @@ bool DrmCursorQPainterLayer::endFrame(const QRegion &damagedRegion, const QRegio
     Q_UNUSED(renderedRegion)
     m_swapchain->releaseBuffer(m_swapchain->currentBuffer(), damagedRegion);
     m_currentFramebuffer = DrmFramebuffer::createFramebuffer(m_swapchain->currentBuffer());
+    if (!m_currentFramebuffer) {
+        qCWarning(KWIN_DRM, "Failed to create dumb framebuffer for the cursor: %s", strerror(errno));
+    }
     return m_currentFramebuffer != nullptr;
 }
 
@@ -177,6 +187,9 @@ bool DrmLeaseQPainterLayer::checkTestBuffer()
         m_buffer = DrmDumbBuffer::createDumbBuffer(m_pipeline->gpu(), size, DRM_FORMAT_XRGB8888);
         if (m_buffer) {
             m_framebuffer = DrmFramebuffer::createFramebuffer(m_buffer);
+            if (!m_framebuffer) {
+                qCWarning(KWIN_DRM, "Failed to create dumb framebuffer for lease output: %s", strerror(errno));
+            }
         } else {
             m_framebuffer.reset();
         }
