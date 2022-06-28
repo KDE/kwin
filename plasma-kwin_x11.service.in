@@ -2,6 +2,7 @@
 Description=KDE Window Manager
 After=plasma-kcminit.service
 PartOf=graphical-session.target
+Conflicts=plasma-kwin_wayland.service
 
 [Service]
 ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/kwin_x11 --replace

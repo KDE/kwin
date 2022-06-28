@@ -1,6 +1,7 @@
 [Unit]
 Description=KDE Window Manager
 PartOf=graphical-session.target
+Conflicts=plasma-kwin_x11.service
 
 [Service]
 ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/kwin_wayland_wrapper --xwayland
