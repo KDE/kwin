@@ -2260,16 +2260,9 @@ QRect Workspace::clientArea(clientAreaOption opt, const Output *output, const Vi
         screenArea = effectiveOutput->geometry();
     }
 
-    if (is_multihead) {
-        workArea = m_workAreas.value(desktop);
-        if (workArea.isNull()) {
-            workArea = effectiveOutput->geometry();
-        }
-    } else {
-        workArea = m_workAreas.value(desktop);
-        if (workArea.isNull()) {
-            workArea = QRect(QPoint(0, 0), m_geometry.size());
-        }
+    workArea = m_workAreas.value(desktop);
+    if (workArea.isNull()) {
+        workArea = is_multihead ? effectiveOutput->geometry() : QRect(QPoint(0, 0), m_geometry.size());
     }
 
     switch (opt) {
@@ -2282,11 +2275,7 @@ QRect Workspace::clientArea(clientAreaOption opt, const Output *output, const Vi
     case ScreenArea:
         return effectiveOutput->geometry();
     case WorkArea:
-        if (is_multihead) {
-            return screenArea;
-        } else {
-            return workArea;
-        }
+        return is_multihead ? screenArea : workArea;
     case FullArea:
         return QRect(QPoint(0, 0), m_geometry.size());
 
