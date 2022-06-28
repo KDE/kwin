@@ -590,7 +590,7 @@ void TabletPadV2Interface::setCurrentSurface(SurfaceInterface *surface, TabletV2
     }
 
     if (d->m_currentSurface) {
-        d->send_leave(d->m_display->nextSerial(), surface->resource());
+        d->send_leave(d->resourceForSurface(d->m_currentSurface), d->m_display->nextSerial(), d->m_currentSurface->resource());
     }
 
     d->m_currentSurface = surface;
