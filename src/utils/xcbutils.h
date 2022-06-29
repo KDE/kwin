@@ -1355,6 +1355,102 @@ public:
 };
 
 XCB_WRAPPER(SetCrtcConfig, xcb_randr_set_crtc_config, xcb_randr_crtc_t, xcb_timestamp_t, xcb_timestamp_t, int16_t, int16_t, xcb_randr_mode_t, uint16_t, uint32_t, const xcb_randr_output_t *)
+
+XCB_WRAPPER_DATA(OutputPropertyData, xcb_randr_get_output_property, xcb_randr_output_t, xcb_atom_t, xcb_atom_t, uint32_t, uint32_t, uint8_t, uint8_t)
+/**
+ * Get an output property.
+ * @see Property for documentation of member functions
+ */
+class OutputProperty : public Wrapper<OutputPropertyData, xcb_randr_output_t, xcb_atom_t, xcb_atom_t, uint32_t, uint32_t, uint8_t, uint8_t>
+{
+public:
+    OutputProperty() = default;
+    explicit OutputProperty(xcb_randr_output_t output, xcb_atom_t property, xcb_atom_t type, uint32_t offset, uint32_t length, uint8_t _delete, uint8_t pending)
+        : Wrapper(output, property, type, offset, length, _delete, pending)
+        , m_type(type)
+    {
+    }
+    template<typename T>
+    inline typename std::enable_if<!std::is_pointer<T>::value, T>::type value(T defaultValue = T(), bool *ok = nullptr)
+    {
+        T *reply = value<T *>(sizeof(T) * 8, m_type, nullptr, ok);
+        if (!reply) {
+            return defaultValue;
+        }
+        return reply[0];
+    }
+    template<typename T>
+    inline typename std::enable_if<std::is_pointer<T>::value, T>::type value(T defaultValue = nullptr, bool *ok = nullptr)
+    {
+        return value<T>(sizeof(typename std::remove_pointer<T>::type) * 8, m_type, defaultValue, ok);
+    }
+    template<typename T>
+    inline typename std::enable_if<std::is_pointer<T>::value, T>::type value(uint8_t format, xcb_atom_t type, T defaultValue = nullptr, bool *ok = nullptr)
+    {
+        if (ok) {
+            *ok = false;
+        }
+        const OutputPropertyData::reply_type *reply = data();
+        if (!reply) {
+            return defaultValue;
+        }
+        if (reply->type != type) {
+            return defaultValue;
+        }
+        if (reply->format != format) {
+            return defaultValue;
+        }
+
+        if (ok) {
+            *ok = true;
+        }
+        if (xcb_randr_get_output_property_data_length(reply) == 0) {
+            return defaultValue;
+        }
+
+        return reinterpret_cast<T>(xcb_randr_get_output_property_data(reply));
+    }
+    inline QByteArray toByteArray(uint8_t format = 8, xcb_atom_t type = XCB_ATOM_STRING, bool *ok = nullptr)
+    {
+        bool valueOk = false;
+        const char *reply = value<const char *>(format, type, nullptr, &valueOk);
+        if (ok) {
+            *ok = valueOk;
+        }
+
+        if (valueOk && !reply) {
+            return QByteArray("", 0); // valid, not null, but empty data
+        } else if (!valueOk) {
+            return QByteArray(); // Property not found, data empty and null
+        }
+        return QByteArray(reply, xcb_randr_get_output_property_data_length(data()));
+    }
+    inline QByteArray toByteArray(bool *ok)
+    {
+        return toByteArray(8, m_type, ok);
+    }
+    inline bool toBool(uint8_t format = 32, xcb_atom_t type = XCB_ATOM_CARDINAL, bool *ok = nullptr)
+    {
+        bool *reply = value<bool *>(format, type, nullptr, ok);
+        if (!reply) {
+            return false;
+        }
+        if (data()->length != 1) {
+            if (ok) {
+                *ok = false;
+            }
+            return false;
+        }
+        return reply[0] != 0;
+    }
+    inline bool toBool(bool *ok)
+    {
+        return toBool(32, m_type, ok);
+    }
+
+private:
+    xcb_atom_t m_type;
+};
 }
 
 class ExtensionData

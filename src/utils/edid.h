@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include "kwin_export.h"
+
 #include <QByteArray>
 #include <QSize>
 
@@ -20,7 +22,7 @@ namespace KWin
  *
  * http://read.pudn.com/downloads110/ebook/456020/E-EDID%20Standard.pdf
  */
-class Edid
+class KWIN_EXPORT Edid
 {
 public:
     Edid();

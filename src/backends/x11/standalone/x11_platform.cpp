@@ -10,6 +10,7 @@
 
 #include <config-kwin.h>
 
+#include "atoms.h"
 #include "edge.h"
 #include "session.h"
 #include "windowselector.h"
@@ -32,6 +33,7 @@
 #include "renderloop.h"
 #include "screenedges_filter.h"
 #include "utils/c_ptr.h"
+#include "utils/edid.h"
 #include "utils/xcbutils.h"
 #include "window.h"
 #include "workspace.h"
@@ -496,9 +498,11 @@ void X11StandalonePlatform::doUpdateOutputs()
 
                 xcb_randr_output_t *outputs = info.outputs();
                 QVector<Xcb::RandR::OutputInfo> outputInfos(outputs ? resources->num_outputs : 0);
+                QVector<Xcb::RandR::OutputProperty> edids(outputs ? resources->num_outputs : 0);
                 if (outputs) {
                     for (int i = 0; i < resources->num_outputs; ++i) {
                         outputInfos[i] = Xcb::RandR::OutputInfo(outputs[i], resources->config_timestamp);
+                        edids[i] = Xcb::RandR::OutputProperty(outputs[i], atoms->edid, XCB_ATOM_INTEGER, 0, 100, false, false);
                     }
                 }
 
@@ -562,10 +566,22 @@ void X11StandalonePlatform::doUpdateOutputs()
                         break;
                     }
 
-                    output->setInformation(X11Output::Information{
+                    X11Output::Information information{
                         .name = outputInfo.name(),
                         .physicalSize = physicalSize,
-                    });
+                    };
+
+                    bool ok;
+                    if (auto data = edids[i].toByteArray(&ok); ok && !data.isEmpty()) {
+                        if (auto edid = Edid(data, edids[i].data()->num_items); edid.isValid()) {
+                            information.manufacturer = edid.manufacturerString();
+                            information.model = edid.monitorName();
+                            information.serialNumber = edid.serialNumber();
+                            information.edid = data;
+                        }
+                    }
+
+                    output->setInformation(information);
                     break;
                 }
             }

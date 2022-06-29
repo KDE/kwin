@@ -16,8 +16,8 @@
 
 #include "drm_object.h"
 #include "drm_pointer.h"
-#include "edid.h"
 #include "output.h"
+#include "utils/edid.h"
 
 namespace KWin
 {

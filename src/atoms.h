@@ -76,6 +76,7 @@ public:
     Xcb::Atom incr;
     Xcb::Atom wl_selection;
     Xcb::Atom primary;
+    Xcb::Atom edid;
 
     /**
      * @internal
