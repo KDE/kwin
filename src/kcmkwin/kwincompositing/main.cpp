@@ -110,8 +110,8 @@ void KWinCompositingKCM::init()
     // animation speed
     m_form.animationDurationFactor->setMaximum(s_animationMultipliers.size() - 1);
     connect(m_form.animationDurationFactor, &QSlider::valueChanged, this, [this]() {
-        m_settings->setAnimationDurationFactor(s_animationMultipliers[m_form.animationDurationFactor->value()]);
         updateUnmanagedItemStatus();
+        m_settings->setAnimationDurationFactor(s_animationMultipliers[m_form.animationDurationFactor->value()]);
     });
 
     if (isRunningPlasma()) {
