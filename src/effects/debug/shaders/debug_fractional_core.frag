@@ -22,10 +22,20 @@ void main()
 {
     const float strength = 0.4;
 
+    // Calculate an error correction value based on the minimum precision we
+    // want to measure.
+    float errorCorrection = 1.0 / fractionalPrecision;
+
     vec4 tex = texture(sampler, texcoord0);
     ivec2 texSize = textureSize(sampler, 0);
 
+    // Determine which exact pixel we are reading from the source texture.
+    // Texture sampling happens in the middle of a pixel so we need to add 0.5.
     vec2 sourcePixel = texcoord0 * texSize + 0.5;
+    // Cancel out any precision artifacts below what we actually want to measure.
+    sourcePixel = round(sourcePixel * errorCorrection) / errorCorrection;
+
+    // The total error is the sum of the fractional parts of the source pixel.
     float error = dot(fract(sourcePixel), vec2(1.0));
 
     fragColor = tex;
@@ -38,3 +48,4 @@ void main()
         fragColor = mix(fragColor, vec4(1.0, 0.0, 0.0, 1.0), strength);
     }
 }
+

@@ -81,8 +81,15 @@ void DebugEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region, W
 
         m_debugFractionalShader->setUniform("fractionalPrecision", 0.01f);
 
-        auto screenSize = w->screen()->geometry().size();
-        m_debugFractionalShader->setUniform("screenSize", QVector2D{screenSize.width(), screenSize.height()});
+        auto dpr = w->screen()->devicePixelRatio();
+
+        auto screenSize = w->screen()->geometry().size() * dpr;
+        m_debugFractionalShader->setUniform("screenSize", QVector2D{float(screenSize.width()), float(screenSize.height())});
+
+        auto fg = QVector2D{
+            float(w->frameGeometry().width() * dpr),
+            float(w->frameGeometry().height() * dpr)};
+        m_debugFractionalShader->setUniform("geometrySize", fg);
     }
 
     effects->drawWindow(w, mask, region, data);
