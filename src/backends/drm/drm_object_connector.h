@@ -106,7 +106,7 @@ public:
 
 private:
     QList<QSharedPointer<DrmConnectorMode>> generateCommonModes();
-    QSharedPointer<DrmConnectorMode> generateMode(const QSize &size, uint32_t refreshRate);
+    QSharedPointer<DrmConnectorMode> generateMode(const QSize &size, float refreshRate);
 
     QScopedPointer<DrmPipeline> m_pipeline;
     DrmScopedPointer<drmModeConnector> m_conn;

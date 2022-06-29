@@ -434,13 +434,13 @@ QList<QSharedPointer<DrmConnectorMode>> DrmConnector::generateCommonModes()
             return mode->size() == size;
         });
         if (it == m_driverModes.constEnd() && size.width() <= maxSize.width() && size.height() <= maxSize.height() && bandwidthEstimation < maxBandwidthEstimation) {
-            ret << generateMode(size, 60000);
+            ret << generateMode(size, 60);
         }
     }
     return ret;
 }
 
-QSharedPointer<DrmConnectorMode> DrmConnector::generateMode(const QSize &size, uint32_t refreshRate)
+QSharedPointer<DrmConnectorMode> DrmConnector::generateMode(const QSize &size, float refreshRate)
 {
     auto modeInfo = libxcvt_gen_mode_info(size.width(), size.height(), refreshRate, false, false);
 
