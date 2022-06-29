@@ -132,9 +132,9 @@ void SurfaceItemWayland::handleSubSurfaceMappedChanged()
     setVisible(m_surface->isMapped());
 }
 
-SurfacePixmap *SurfaceItemWayland::createPixmap()
+std::unique_ptr<SurfacePixmap> SurfaceItemWayland::createPixmap()
 {
-    return new SurfacePixmapWayland(this);
+    return std::make_unique<SurfacePixmapWayland>(this);
 }
 
 SurfacePixmapWayland::SurfacePixmapWayland(SurfaceItemWayland *item, QObject *parent)

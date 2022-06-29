@@ -215,11 +215,13 @@ EglSurfaceTextureX11::EglSurfaceTextureX11(EglBackend *backend, SurfacePixmapX11
 
 bool EglSurfaceTextureX11::create()
 {
-    auto texture = new EglPixmapTexture(static_cast<EglBackend *>(m_backend));
+    auto texture = std::make_unique<EglPixmapTexture>(static_cast<EglBackend *>(m_backend));
     if (texture->create(m_pixmap)) {
-        m_texture.reset(texture);
+        m_texture = std::move(texture);
+        return true;
+    } else {
+        return false;
     }
-    return !m_texture.isNull();
 }
 
 void EglSurfaceTextureX11::update(const QRegion &region)

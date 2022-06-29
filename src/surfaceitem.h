@@ -44,7 +44,7 @@ public:
 protected:
     explicit SurfaceItem(Window *window, Item *parent = nullptr);
 
-    virtual SurfacePixmap *createPixmap() = 0;
+    virtual std::unique_ptr<SurfacePixmap> createPixmap() = 0;
     void preprocess() override;
     WindowQuadList buildQuads() const override;
 
@@ -52,8 +52,8 @@ protected:
 
     Window *m_window;
     QRegion m_damage;
-    QScopedPointer<SurfacePixmap> m_pixmap;
-    QScopedPointer<SurfacePixmap> m_previousPixmap;
+    std::unique_ptr<SurfacePixmap> m_pixmap;
+    std::unique_ptr<SurfacePixmap> m_previousPixmap;
     QMatrix4x4 m_surfaceToBufferMatrix;
     int m_referencePixmapCounter = 0;
 };

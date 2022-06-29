@@ -45,7 +45,7 @@ private Q_SLOTS:
     void handleSubSurfaceMappedChanged();
 
 protected:
-    SurfacePixmap *createPixmap() override;
+    std::unique_ptr<SurfacePixmap> createPixmap() override;
 
 private:
     SurfaceItemWayland *getOrCreateSubSurfaceItem(KWaylandServer::SubSurfaceInterface *s);

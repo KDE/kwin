@@ -30,7 +30,7 @@ public:
 
 protected:
     OpenGLBackend *m_backend;
-    QScopedPointer<GLTexture> m_texture;
+    std::unique_ptr<GLTexture> m_texture;
 };
 
 } // namespace KWin

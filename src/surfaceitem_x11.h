@@ -40,7 +40,7 @@ private Q_SLOTS:
     void handleGeometryShapeChanged();
 
 protected:
-    SurfacePixmap *createPixmap() override;
+    std::unique_ptr<SurfacePixmap> createPixmap() override;
 
 private:
     xcb_damage_damage_t m_damageHandle = XCB_NONE;

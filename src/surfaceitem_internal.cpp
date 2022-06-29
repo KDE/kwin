@@ -31,9 +31,9 @@ QRegion SurfaceItemInternal::shape() const
     return QRegion(rect());
 }
 
-SurfacePixmap *SurfaceItemInternal::createPixmap()
+std::unique_ptr<SurfacePixmap> SurfaceItemInternal::createPixmap()
 {
-    return new SurfacePixmapInternal(this);
+    return std::make_unique<SurfacePixmapInternal>(this);
 }
 
 void SurfaceItemInternal::handleBufferGeometryChanged(Window *window, const QRect &old)

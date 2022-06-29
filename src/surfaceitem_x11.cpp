@@ -146,9 +146,9 @@ QRegion SurfaceItemX11::opaque() const
     }
 }
 
-SurfacePixmap *SurfaceItemX11::createPixmap()
+std::unique_ptr<SurfacePixmap> SurfaceItemX11::createPixmap()
 {
-    return new SurfacePixmapX11(this);
+    return std::make_unique<SurfacePixmapX11>(this);
 }
 
 SurfacePixmapX11::SurfacePixmapX11(SurfaceItemX11 *item, QObject *parent)

@@ -31,7 +31,7 @@ private Q_SLOTS:
     void handleBufferGeometryChanged(Window *window, const QRect &old);
 
 protected:
-    SurfacePixmap *createPixmap() override;
+    std::unique_ptr<SurfacePixmap> createPixmap() override;
 };
 
 class KWIN_EXPORT SurfacePixmapInternal final : public SurfacePixmap

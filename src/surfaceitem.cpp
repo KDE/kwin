@@ -59,17 +59,17 @@ QRegion SurfaceItem::damage() const
 SurfacePixmap *SurfaceItem::pixmap() const
 {
     if (m_pixmap && m_pixmap->isValid()) {
-        return m_pixmap.data();
+        return m_pixmap.get();
     }
     if (m_previousPixmap && m_previousPixmap->isValid()) {
-        return m_previousPixmap.data();
+        return m_previousPixmap.get();
     }
     return nullptr;
 }
 
 SurfacePixmap *SurfaceItem::previousPixmap() const
 {
-    return m_previousPixmap.data();
+    return m_previousPixmap.get();
 }
 
 void SurfaceItem::referencePreviousPixmap()
@@ -92,8 +92,8 @@ void SurfaceItem::unreferencePreviousPixmap()
 
 void SurfaceItem::updatePixmap()
 {
-    if (m_pixmap.isNull()) {
-        m_pixmap.reset(createPixmap());
+    if (!m_pixmap) {
+        m_pixmap = createPixmap();
     }
     if (m_pixmap->isValid()) {
         m_pixmap->update();
@@ -108,9 +108,9 @@ void SurfaceItem::updatePixmap()
 
 void SurfaceItem::discardPixmap()
 {
-    if (!m_pixmap.isNull()) {
+    if (m_pixmap) {
         if (m_pixmap->isValid()) {
-            m_previousPixmap.reset(m_pixmap.take());
+            m_previousPixmap = std::move(m_pixmap);
             m_previousPixmap->markAsDiscarded();
             referencePreviousPixmap();
         } else {
