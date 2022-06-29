@@ -40,8 +40,8 @@ class EglGbmBackend : public AbstractEglBackend
 public:
     EglGbmBackend(VirtualBackend *b);
     ~EglGbmBackend() override;
-    SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
-    SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
+    std::unique_ptr<SurfaceTexture> createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
+    std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
     OutputLayer *primaryLayer(Output *output) override;
     void present(Output *output) override;
     void init() override;

@@ -11,6 +11,8 @@
 
 #include "renderbackend.h"
 
+#include <memory>
+
 class QImage;
 class QRegion;
 class QSize;
@@ -33,8 +35,8 @@ public:
 
     CompositingType compositingType() const override final;
 
-    SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap);
-    SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
+    std::unique_ptr<SurfaceTexture> createSurfaceTextureInternal(SurfacePixmapInternal *pixmap);
+    std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
 
     /**
      * @brief Whether the creation of the Backend failed.

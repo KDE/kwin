@@ -71,7 +71,7 @@ class KWIN_EXPORT SurfacePixmap : public QObject
     Q_OBJECT
 
 public:
-    explicit SurfacePixmap(SurfaceTexture *texture, QObject *parent = nullptr);
+    explicit SurfacePixmap(std::unique_ptr<SurfaceTexture> &&texture, QObject *parent = nullptr);
 
     SurfaceTexture *texture() const;
 
@@ -93,7 +93,7 @@ protected:
     bool m_hasAlphaChannel = false;
 
 private:
-    QScopedPointer<SurfaceTexture> m_texture;
+    std::unique_ptr<SurfaceTexture> m_texture;
     bool m_isDiscarded = false;
 };
 

@@ -166,14 +166,14 @@ bool EglGbmBackend::initBufferConfigs()
     return true;
 }
 
-SurfaceTexture *EglGbmBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
+std::unique_ptr<SurfaceTexture> EglGbmBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
-    return new BasicEGLSurfaceTextureInternal(this, pixmap);
+    return std::make_unique<BasicEGLSurfaceTextureInternal>(this, pixmap);
 }
 
-SurfaceTexture *EglGbmBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+std::unique_ptr<SurfaceTexture> EglGbmBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
-    return new BasicEGLSurfaceTextureWayland(this, pixmap);
+    return std::make_unique<BasicEGLSurfaceTextureWayland>(this, pixmap);
 }
 
 OutputLayerBeginFrameInfo EglGbmBackend::beginFrame()

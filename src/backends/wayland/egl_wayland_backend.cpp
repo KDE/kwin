@@ -376,14 +376,14 @@ std::shared_ptr<KWin::GLTexture> EglWaylandBackend::textureForOutput(KWin::Outpu
     return texture;
 }
 
-SurfaceTexture *EglWaylandBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
+std::unique_ptr<SurfaceTexture> EglWaylandBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
-    return new BasicEGLSurfaceTextureInternal(this, pixmap);
+    return std::make_unique<BasicEGLSurfaceTextureInternal>(this, pixmap);
 }
 
-SurfaceTexture *EglWaylandBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+std::unique_ptr<SurfaceTexture> EglWaylandBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
-    return new BasicEGLSurfaceTextureWayland(this, pixmap);
+    return std::make_unique<BasicEGLSurfaceTextureWayland>(this, pixmap);
 }
 
 void EglWaylandBackend::present(Output *output)

@@ -81,7 +81,7 @@ class GlxBackend : public OpenGLBackend
 public:
     GlxBackend(Display *display, X11StandalonePlatform *backend);
     ~GlxBackend() override;
-    SurfaceTexture *createSurfaceTextureX11(SurfacePixmapX11 *pixmap) override;
+    std::unique_ptr<SurfaceTexture> createSurfaceTextureX11(SurfacePixmapX11 *pixmap) override;
     OutputLayerBeginFrameInfo beginFrame();
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
     void present(Output *output) override;

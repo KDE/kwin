@@ -68,9 +68,9 @@ EglBackend::~EglBackend()
     RenderLoopPrivate::get(m_backend->renderLoop())->invalidate();
 }
 
-SurfaceTexture *EglBackend::createSurfaceTextureX11(SurfacePixmapX11 *texture)
+std::unique_ptr<SurfaceTexture> EglBackend::createSurfaceTextureX11(SurfacePixmapX11 *texture)
 {
-    return new EglSurfaceTextureX11(this, texture);
+    return std::make_unique<EglSurfaceTextureX11>(this, texture);
 }
 
 void EglBackend::init()

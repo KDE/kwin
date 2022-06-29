@@ -165,9 +165,9 @@ public:
         return {};
     }
 
-    virtual SurfaceTexture *createSurfaceTextureInternal(SurfacePixmapInternal *pixmap);
-    virtual SurfaceTexture *createSurfaceTextureX11(SurfacePixmapX11 *pixmap);
-    virtual SurfaceTexture *createSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
+    virtual std::unique_ptr<SurfaceTexture> createSurfaceTextureInternal(SurfacePixmapInternal *pixmap);
+    virtual std::unique_ptr<SurfaceTexture> createSurfaceTextureX11(SurfacePixmapX11 *pixmap);
+    virtual std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
 
     QMatrix4x4 renderTargetProjectionMatrix() const;
     QRect renderTargetRect() const;

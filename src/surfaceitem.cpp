@@ -155,9 +155,9 @@ SurfaceTexture::~SurfaceTexture()
 {
 }
 
-SurfacePixmap::SurfacePixmap(SurfaceTexture *texture, QObject *parent)
+SurfacePixmap::SurfacePixmap(std::unique_ptr<SurfaceTexture> &&texture, QObject *parent)
     : QObject(parent)
-    , m_texture(texture)
+    , m_texture(std::move(texture))
 {
 }
 
@@ -167,7 +167,7 @@ void SurfacePixmap::update()
 
 SurfaceTexture *SurfacePixmap::texture() const
 {
-    return m_texture.data();
+    return m_texture.get();
 }
 
 bool SurfacePixmap::hasAlphaChannel() const

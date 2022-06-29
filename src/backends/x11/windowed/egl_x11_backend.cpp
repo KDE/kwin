@@ -139,14 +139,14 @@ OutputLayer *EglX11Backend::primaryLayer(Output *output)
     return m_outputs[output].get();
 }
 
-SurfaceTexture *EglX11Backend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+std::unique_ptr<SurfaceTexture> EglX11Backend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
-    return new BasicEGLSurfaceTextureWayland(this, pixmap);
+    return std::make_unique<BasicEGLSurfaceTextureWayland>(this, pixmap);
 }
 
-SurfaceTexture *EglX11Backend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
+std::unique_ptr<SurfaceTexture> EglX11Backend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
-    return new BasicEGLSurfaceTextureInternal(this, pixmap);
+    return std::make_unique<BasicEGLSurfaceTextureInternal>(this, pixmap);
 }
 
 } // namespace

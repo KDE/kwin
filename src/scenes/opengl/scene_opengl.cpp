@@ -220,17 +220,17 @@ std::shared_ptr<GLTexture> SceneOpenGL::textureForOutput(Output *output) const
     return m_backend->textureForOutput(output);
 }
 
-SurfaceTexture *SceneOpenGL::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
+std::unique_ptr<SurfaceTexture> SceneOpenGL::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
     return m_backend->createSurfaceTextureInternal(pixmap);
 }
 
-SurfaceTexture *SceneOpenGL::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+std::unique_ptr<SurfaceTexture> SceneOpenGL::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
     return m_backend->createSurfaceTextureWayland(pixmap);
 }
 
-SurfaceTexture *SceneOpenGL::createSurfaceTextureX11(SurfacePixmapX11 *pixmap)
+std::unique_ptr<SurfaceTexture> SceneOpenGL::createSurfaceTextureX11(SurfacePixmapX11 *pixmap)
 {
     return m_backend->createSurfaceTextureX11(pixmap);
 }

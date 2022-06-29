@@ -12,6 +12,7 @@
 #include <kwinglutils_funcs.h>
 
 #include "screens.h"
+#include "surfaceitem.h"
 #include "utils/common.h"
 
 #include <QElapsedTimer>
@@ -62,19 +63,19 @@ std::shared_ptr<KWin::GLTexture> OpenGLBackend::textureForOutput(Output *output)
     return {};
 }
 
-SurfaceTexture *OpenGLBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
+std::unique_ptr<SurfaceTexture> OpenGLBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
     Q_UNUSED(pixmap)
     return nullptr;
 }
 
-SurfaceTexture *OpenGLBackend::createSurfaceTextureX11(SurfacePixmapX11 *pixmap)
+std::unique_ptr<SurfaceTexture> OpenGLBackend::createSurfaceTextureX11(SurfacePixmapX11 *pixmap)
 {
     Q_UNUSED(pixmap)
     return nullptr;
 }
 
-SurfaceTexture *OpenGLBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+std::unique_ptr<SurfaceTexture> OpenGLBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
     Q_UNUSED(pixmap)
     return nullptr;

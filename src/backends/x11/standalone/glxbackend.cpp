@@ -772,9 +772,9 @@ void GlxBackend::screenGeometryChanged()
     m_fbo = std::make_unique<GLFramebuffer>(0, size);
 }
 
-SurfaceTexture *GlxBackend::createSurfaceTextureX11(SurfacePixmapX11 *pixmap)
+std::unique_ptr<SurfaceTexture> GlxBackend::createSurfaceTextureX11(SurfacePixmapX11 *pixmap)
 {
-    return new GlxSurfaceTextureX11(this, pixmap);
+    return std::make_unique<GlxSurfaceTextureX11>(this, pixmap);
 }
 
 OutputLayerBeginFrameInfo GlxBackend::beginFrame()

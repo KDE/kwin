@@ -212,12 +212,12 @@ DecorationRenderer *SceneQPainter::createDecorationRenderer(Decoration::Decorate
     return new SceneQPainterDecorationRenderer(impl);
 }
 
-SurfaceTexture *SceneQPainter::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
+std::unique_ptr<SurfaceTexture> SceneQPainter::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
     return m_backend->createSurfaceTextureInternal(pixmap);
 }
 
-SurfaceTexture *SceneQPainter::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+std::unique_ptr<SurfaceTexture> SceneQPainter::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
     return m_backend->createSurfaceTextureWayland(pixmap);
 }

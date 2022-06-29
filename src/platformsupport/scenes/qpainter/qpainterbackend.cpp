@@ -30,14 +30,14 @@ CompositingType QPainterBackend::compositingType() const
     return QPainterCompositing;
 }
 
-SurfaceTexture *QPainterBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
+std::unique_ptr<SurfaceTexture> QPainterBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
-    return new QPainterSurfaceTextureInternal(this, pixmap);
+    return std::make_unique<QPainterSurfaceTextureInternal>(this, pixmap);
 }
 
-SurfaceTexture *QPainterBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+std::unique_ptr<SurfaceTexture> QPainterBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
-    return new QPainterSurfaceTextureWayland(this, pixmap);
+    return std::make_unique<QPainterSurfaceTextureWayland>(this, pixmap);
 }
 
 void QPainterBackend::setFailed(const QString &reason)
