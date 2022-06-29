@@ -80,7 +80,7 @@ bool WaylandEglOutput::init()
         return false;
     }
     m_overlay = overlay;
-    m_fbo.reset(new GLFramebuffer(0, nativeSize));
+    m_fbo = std::make_unique<GLFramebuffer>(0, nativeSize);
 
     EGLSurface eglSurface = EGL_NO_SURFACE;
     if (m_backend->havePlatformBase()) {
@@ -114,7 +114,7 @@ GLFramebuffer *WaylandEglOutput::fbo() const
 void WaylandEglOutput::updateSize()
 {
     const QSize nativeSize = m_waylandOutput->geometry().size() * m_waylandOutput->scale();
-    m_fbo.reset(new GLFramebuffer(0, nativeSize));
+    m_fbo = std::make_unique<GLFramebuffer>(0, nativeSize);
 
     wl_egl_window_resize(m_overlay, nativeSize.width(), nativeSize.height(), 0, 0);
     resetBufferAge();
@@ -364,7 +364,7 @@ bool WaylandEglBackend::initBufferConfigs()
 
 std::shared_ptr<KWin::GLTexture> WaylandEglBackend::textureForOutput(KWin::Output *output) const
 {
-    std::shared_ptr<GLTexture> texture(new GLTexture(GL_RGBA8, output->pixelSize()));
+    auto texture = std::make_unique<GLTexture>(GL_RGBA8, output->pixelSize());
     GLFramebuffer::pushFramebuffer(m_outputs[output]->fbo());
     GLFramebuffer renderTarget(texture.get());
     renderTarget.blitFromFramebuffer(QRect(0, texture->height(), texture->width(), -texture->height()));

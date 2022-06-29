@@ -39,7 +39,7 @@ class WaylandOutput : public Output
 {
     Q_OBJECT
 public:
-    WaylandOutput(const QString &name, KWayland::Client::Surface *surface, WaylandBackend *backend);
+    WaylandOutput(const QString &name, std::unique_ptr<KWayland::Client::Surface> &&surface, WaylandBackend *backend);
     ~WaylandOutput() override;
 
     RenderLoop *renderLoop() const override;
@@ -61,7 +61,7 @@ public:
 
     KWayland::Client::Surface *surface() const
     {
-        return m_surface;
+        return m_surface.get();
     }
 
     void setDpmsMode(DpmsMode mode) override;
@@ -81,7 +81,7 @@ protected:
 
 private:
     std::unique_ptr<RenderLoop> m_renderLoop;
-    KWayland::Client::Surface *m_surface;
+    std::unique_ptr<KWayland::Client::Surface> m_surface;
     WaylandBackend *m_backend;
     QTimer m_turnOffTimer;
 };
@@ -90,7 +90,7 @@ class XdgShellOutput : public WaylandOutput
 {
 public:
     XdgShellOutput(const QString &name,
-                   KWayland::Client::Surface *surface,
+                   std::unique_ptr<KWayland::Client::Surface> &&surface,
                    KWayland::Client::XdgShell *xdgShell,
                    WaylandBackend *backend, int number);
     ~XdgShellOutput() override;
@@ -101,9 +101,9 @@ private:
     void handleConfigure(const QSize &size, KWayland::Client::XdgShellSurface::States states, quint32 serial);
     void updateWindowTitle();
 
-    KWayland::Client::XdgShellSurface *m_xdgShellSurface = nullptr;
+    std::unique_ptr<KWayland::Client::XdgShellSurface> m_xdgShellSurface;
     int m_number;
-    KWayland::Client::LockedPointer *m_pointerLock = nullptr;
+    std::unique_ptr<KWayland::Client::LockedPointer> m_pointerLock;
     bool m_hasPointerLock = false;
     bool m_hasBeenConfigured = false;
 };

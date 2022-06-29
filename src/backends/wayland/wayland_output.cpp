@@ -24,10 +24,10 @@ namespace Wayland
 using namespace KWayland::Client;
 static const int s_refreshRate = 60000; // TODO: can we get refresh rate data from Wayland host?
 
-WaylandOutput::WaylandOutput(const QString &name, Surface *surface, WaylandBackend *backend)
+WaylandOutput::WaylandOutput(const QString &name, std::unique_ptr<Surface> &&surface, WaylandBackend *backend)
     : Output(backend)
     , m_renderLoop(std::make_unique<RenderLoop>())
-    , m_surface(surface)
+    , m_surface(std::move(surface))
     , m_backend(backend)
 {
     setInformation(Information{
@@ -36,7 +36,7 @@ WaylandOutput::WaylandOutput(const QString &name, Surface *surface, WaylandBacke
         .capabilities = Capability::Dpms,
     });
 
-    connect(surface, &Surface::frameRendered, this, &WaylandOutput::frameRendered);
+    connect(m_surface.get(), &Surface::frameRendered, this, &WaylandOutput::frameRendered);
     m_turnOffTimer.setSingleShot(true);
     m_turnOffTimer.setInterval(dimAnimationTime());
     connect(&m_turnOffTimer, &QTimer::timeout, this, [this] {
@@ -47,7 +47,6 @@ WaylandOutput::WaylandOutput(const QString &name, Surface *surface, WaylandBacke
 WaylandOutput::~WaylandOutput()
 {
     m_surface->destroy();
-    delete m_surface;
 }
 
 RenderLoop *WaylandOutput::renderLoop() const
@@ -113,15 +112,15 @@ void WaylandOutput::updateEnabled(bool enabled)
     setState(next);
 }
 
-XdgShellOutput::XdgShellOutput(const QString &name, Surface *surface, XdgShell *xdgShell, WaylandBackend *backend, int number)
-    : WaylandOutput(name, surface, backend)
+XdgShellOutput::XdgShellOutput(const QString &name, std::unique_ptr<Surface> &&waylandSurface, XdgShell *xdgShell, WaylandBackend *backend, int number)
+    : WaylandOutput(name, std::move(waylandSurface), backend)
+    , m_xdgShellSurface(xdgShell->createSurface(surface()))
     , m_number(number)
 {
-    m_xdgShellSurface = xdgShell->createSurface(surface, this);
     updateWindowTitle();
 
-    connect(m_xdgShellSurface, &XdgShellSurface::configureRequested, this, &XdgShellOutput::handleConfigure);
-    connect(m_xdgShellSurface, &XdgShellSurface::closeRequested, qApp, &QCoreApplication::quit);
+    connect(m_xdgShellSurface.get(), &XdgShellSurface::configureRequested, this, &XdgShellOutput::handleConfigure);
+    connect(m_xdgShellSurface.get(), &XdgShellSurface::closeRequested, qApp, &QCoreApplication::quit);
     connect(this, &WaylandOutput::enabledChanged, this, &XdgShellOutput::updateWindowTitle);
     connect(this, &WaylandOutput::dpmsModeChanged, this, &XdgShellOutput::updateWindowTitle);
 
@@ -142,13 +141,12 @@ XdgShellOutput::XdgShellOutput(const QString &name, Surface *surface, XdgShell *
         updateWindowTitle();
     });
 
-    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    surface()->commit(KWayland::Client::Surface::CommitFlag::None);
 }
 
 XdgShellOutput::~XdgShellOutput()
 {
     m_xdgShellSurface->destroy();
-    delete m_xdgShellSurface;
 }
 
 void XdgShellOutput::handleConfigure(const QSize &size, XdgShellSurface::States states, quint32 serial)
@@ -194,8 +192,7 @@ void XdgShellOutput::lockPointer(Pointer *pointer, bool lock)
 {
     if (!lock) {
         const bool surfaceWasLocked = m_pointerLock && m_hasPointerLock;
-        delete m_pointerLock;
-        m_pointerLock = nullptr;
+        m_pointerLock.reset();
         m_hasPointerLock = false;
         if (surfaceWasLocked) {
             Q_EMIT backend()->pointerLockChanged(false);
@@ -204,21 +201,17 @@ void XdgShellOutput::lockPointer(Pointer *pointer, bool lock)
     }
 
     Q_ASSERT(!m_pointerLock);
-    m_pointerLock = backend()->pointerConstraints()->lockPointer(surface(), pointer, nullptr,
-                                                                 PointerConstraints::LifeTime::OneShot,
-                                                                 this);
+    m_pointerLock.reset(backend()->pointerConstraints()->lockPointer(surface(), pointer, nullptr, PointerConstraints::LifeTime::OneShot));
     if (!m_pointerLock->isValid()) {
-        delete m_pointerLock;
-        m_pointerLock = nullptr;
+        m_pointerLock.reset();
         return;
     }
-    connect(m_pointerLock, &LockedPointer::locked, this, [this]() {
+    connect(m_pointerLock.get(), &LockedPointer::locked, this, [this]() {
         m_hasPointerLock = true;
         Q_EMIT backend()->pointerLockChanged(true);
     });
-    connect(m_pointerLock, &LockedPointer::unlocked, this, [this]() {
-        delete m_pointerLock;
-        m_pointerLock = nullptr;
+    connect(m_pointerLock.get(), &LockedPointer::unlocked, this, [this]() {
+        m_pointerLock.reset();
         m_hasPointerLock = false;
         Q_EMIT backend()->pointerLockChanged(false);
     });

@@ -44,7 +44,6 @@ WaylandQPainterOutput::WaylandQPainterOutput(WaylandOutput *output)
 
 WaylandQPainterOutput::~WaylandQPainterOutput()
 {
-    qDeleteAll(m_slots);
     m_slots.clear();
 }
 
@@ -63,7 +62,7 @@ void WaylandQPainterOutput::remapBuffer()
     qCDebug(KWIN_WAYLAND_BACKEND) << "Remapped back buffer of surface" << m_waylandOutput->surface();
 
     const QSize nativeSize(m_waylandOutput->geometry().size() * m_waylandOutput->scale());
-    for (WaylandQPainterBufferSlot *slot : qAsConst(m_slots)) {
+    for (const auto &slot : m_slots) {
         slot->image = QImage(slot->buffer->address(), nativeSize.width(), nativeSize.height(), QImage::Format_ARGB32);
     }
 }
@@ -72,14 +71,13 @@ void WaylandQPainterOutput::updateSize(const QSize &size)
 {
     Q_UNUSED(size)
     m_back = nullptr;
-    qDeleteAll(m_slots);
     m_slots.clear();
 }
 
 void WaylandQPainterOutput::present()
 {
-    for (WaylandQPainterBufferSlot *slot : qAsConst(m_slots)) {
-        if (slot == m_back) {
+    for (const auto &slot : m_slots) {
+        if (slot.get() == m_back) {
             slot->age = 1;
         } else if (slot->age > 0) {
             slot->age++;
@@ -100,9 +98,9 @@ WaylandQPainterBufferSlot *WaylandQPainterOutput::back() const
 
 WaylandQPainterBufferSlot *WaylandQPainterOutput::acquire()
 {
-    for (WaylandQPainterBufferSlot *slot : qAsConst(m_slots)) {
+    for (const auto &slot : m_slots) {
         if (slot->buffer->isReleased()) {
-            m_back = slot;
+            m_back = slot.get();
             slot->buffer->setReleased(false);
             return m_back;
         }
@@ -115,8 +113,8 @@ WaylandQPainterBufferSlot *WaylandQPainterOutput::acquire()
         return nullptr;
     }
 
-    m_back = new WaylandQPainterBufferSlot(buffer);
-    m_slots.append(m_back);
+    m_slots.push_back(std::make_unique<WaylandQPainterBufferSlot>(buffer));
+    m_back = m_slots.back().get();
 
     //    qCDebug(KWIN_WAYLAND_BACKEND) << "Created a new back buffer for output surface" << m_waylandOutput->surface();
     return m_back;

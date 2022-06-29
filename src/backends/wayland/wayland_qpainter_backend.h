@@ -71,7 +71,7 @@ private:
     KWayland::Client::ShmPool *m_pool;
     DamageJournal m_damageJournal;
 
-    QVector<WaylandQPainterBufferSlot *> m_slots;
+    std::vector<std::unique_ptr<WaylandQPainterBufferSlot>> m_slots;
     WaylandQPainterBufferSlot *m_back = nullptr;
 
     friend class WaylandQPainterBackend;
