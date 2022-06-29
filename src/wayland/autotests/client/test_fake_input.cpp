@@ -119,7 +119,6 @@ void FakeInputTest::cleanup()
         m_thread = nullptr;
     }
 
-    CLEANUP(m_device)
     CLEANUP(m_display)
 #undef CLEANUP
 

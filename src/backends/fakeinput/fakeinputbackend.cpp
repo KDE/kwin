@@ -12,21 +12,23 @@
 namespace KWin
 {
 
-FakeInputBackend::FakeInputBackend(QObject *parent)
-    : InputBackend(parent)
-{
-}
+FakeInputBackend::FakeInputBackend() = default;
+FakeInputBackend::~FakeInputBackend() = default;
 
 void FakeInputBackend::initialize()
 {
-    auto fakeInput = new KWaylandServer::FakeInputInterface(waylandServer()->display(), this);
-    connect(fakeInput, &KWaylandServer::FakeInputInterface::deviceCreated, this, [this](KWaylandServer::FakeInputDevice *fakeDevice) {
-        auto device = new FakeInputDevice(fakeDevice, this);
-        Q_EMIT deviceAdded(device);
-
-        connect(fakeDevice, &QObject::destroyed, this, [this, device]() {
-            Q_EMIT deviceRemoved(device);
-        });
+    m_interface = std::make_unique<KWaylandServer::FakeInputInterface>(waylandServer()->display());
+    connect(m_interface.get(), &KWaylandServer::FakeInputInterface::deviceCreated, this, [this](KWaylandServer::FakeInputDevice *fakeDevice) {
+        m_devices[fakeDevice] = std::make_unique<FakeInputDevice>(fakeDevice);
+        Q_EMIT deviceAdded(m_devices[fakeDevice].get());
+    });
+    connect(m_interface.get(), &KWaylandServer::FakeInputInterface::deviceDestroyed, this, [this](KWaylandServer::FakeInputDevice *fakeDevice) {
+        auto it = m_devices.find(fakeDevice);
+        if (it != m_devices.end()) {
+            const std::unique_ptr<FakeInputDevice> device = std::move(it->second);
+            m_devices.erase(it);
+            Q_EMIT deviceRemoved(device.get());
+        }
     });
 }
 

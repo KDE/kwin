@@ -8,6 +8,8 @@
 
 #include <QPointF>
 #include <QSizeF>
+#include <memory>
+#include <vector>
 
 #include <qwayland-server-fake-input.h>
 #include <wayland-server.h>
@@ -20,7 +22,7 @@ class FakeInputInterfacePrivate : public QtWaylandServer::org_kde_kwin_fake_inpu
 {
 public:
     FakeInputInterfacePrivate(FakeInputInterface *_q, Display *display);
-    QList<FakeInputDevice *> devices;
+    std::map<wl_resource *, std::unique_ptr<FakeInputDevice>> devices;
 
 private:
     FakeInputDevice *device(wl_resource *r);
@@ -52,9 +54,8 @@ FakeInputInterfacePrivate::FakeInputInterfacePrivate(FakeInputInterface *_q, Dis
 {
 }
 
-FakeInputInterface::FakeInputInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new FakeInputInterfacePrivate(this, display))
+FakeInputInterface::FakeInputInterface(Display *display)
+    : d(std::make_unique<FakeInputInterfacePrivate>(this, display))
 {
 }
 
@@ -62,30 +63,24 @@ FakeInputInterface::~FakeInputInterface() = default;
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_bind_resource(Resource *resource)
 {
-    FakeInputDevice *device = new FakeInputDevice(q, resource->handle);
-    devices << device;
-    QObject::connect(device, &FakeInputDevice::destroyed, q, [device, this] {
-        devices.removeAll(device);
-    });
+    auto device = new FakeInputDevice(q, resource->handle);
+    devices[resource->handle] = std::unique_ptr<FakeInputDevice>(device);
     Q_EMIT q->deviceCreated(device);
 }
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_destroy_resource(Resource *resource)
 {
-    if (FakeInputDevice *d = device(resource->handle)) {
-        d->deleteLater();
+    auto it = devices.find(resource->handle);
+    if (it != devices.end()) {
+        const auto [resource, device] = std::move(*it);
+        devices.erase(it);
+        Q_EMIT q->deviceDestroyed(device.get());
     }
 }
 
 FakeInputDevice *FakeInputInterfacePrivate::device(wl_resource *r)
 {
-    auto it = std::find_if(devices.constBegin(), devices.constEnd(), [r](FakeInputDevice *device) {
-        return device->resource() == r;
-    });
-    if (it != devices.constEnd()) {
-        return *it;
-    }
-    return nullptr;
+    return devices[r].get();
 }
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_authenticate(Resource *resource, const QString &application, const QString &reason)
@@ -246,8 +241,7 @@ FakeInputDevicePrivate::FakeInputDevicePrivate(FakeInputInterface *interface, wl
 }
 
 FakeInputDevice::FakeInputDevice(FakeInputInterface *parent, wl_resource *resource)
-    : QObject(parent)
-    , d(new FakeInputDevicePrivate(parent, resource))
+    : d(std::make_unique<FakeInputDevicePrivate>(parent, resource))
 {
 }
 

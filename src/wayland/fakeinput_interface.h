@@ -42,7 +42,7 @@ class KWIN_EXPORT FakeInputInterface : public QObject
     Q_OBJECT
 
 public:
-    explicit FakeInputInterface(Display *display, QObject *parent = nullptr);
+    explicit FakeInputInterface(Display *display);
     ~FakeInputInterface() override;
 
 Q_SIGNALS:
@@ -51,6 +51,8 @@ Q_SIGNALS:
      * @param device The created FakeInputDevice
      */
     void deviceCreated(KWaylandServer::FakeInputDevice *device);
+
+    void deviceDestroyed(KWaylandServer::FakeInputDevice *device);
 
 private:
     std::unique_ptr<FakeInputInterfacePrivate> d;
