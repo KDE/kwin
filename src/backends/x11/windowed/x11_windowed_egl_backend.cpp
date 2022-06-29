@@ -34,7 +34,7 @@ X11WindowedEglOutput::~X11WindowedEglOutput()
 void X11WindowedEglOutput::ensureFbo()
 {
     if (!m_fbo || m_fbo->size() != m_output->pixelSize()) {
-        m_fbo.reset(new GLFramebuffer(0, m_output->pixelSize()));
+        m_fbo = std::make_unique<GLFramebuffer>(0, m_output->pixelSize());
     }
 }
 

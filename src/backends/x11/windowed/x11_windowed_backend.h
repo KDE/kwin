@@ -23,6 +23,7 @@ struct _XDisplay;
 typedef struct _XDisplay Display;
 typedef struct _XCBKeySymbols xcb_key_symbols_t;
 class NETWinInfo;
+class QSocketNotifier;
 
 namespace KWin
 {
@@ -34,7 +35,7 @@ class X11WindowedInputDevice : public InputDevice
     Q_OBJECT
 
 public:
-    explicit X11WindowedInputDevice(QObject *parent = nullptr);
+    explicit X11WindowedInputDevice() = default;
 
     void setPointer(bool set);
     void setKeyboard(bool set);
@@ -72,7 +73,7 @@ class X11WindowedInputBackend : public InputBackend
     Q_OBJECT
 
 public:
-    explicit X11WindowedInputBackend(X11WindowedBackend *backend, QObject *parent = nullptr);
+    explicit X11WindowedInputBackend(X11WindowedBackend *backend);
 
     void initialize() override;
 
@@ -85,7 +86,7 @@ class KWIN_EXPORT X11WindowedBackend : public Platform
     Q_OBJECT
 
 public:
-    X11WindowedBackend(QObject *parent = nullptr);
+    explicit X11WindowedBackend();
     ~X11WindowedBackend() override;
     bool initialize() override;
 
@@ -154,15 +155,16 @@ private:
     xcb_key_symbols_t *m_keySymbols = nullptr;
     int m_screenNumber = 0;
 
-    X11WindowedInputDevice *m_pointerDevice = nullptr;
-    X11WindowedInputDevice *m_keyboardDevice = nullptr;
-    X11WindowedInputDevice *m_touchDevice = nullptr;
+    std::unique_ptr<X11WindowedInputDevice> m_pointerDevice;
+    std::unique_ptr<X11WindowedInputDevice> m_keyboardDevice;
+    std::unique_ptr<X11WindowedInputDevice> m_touchDevice;
 
     xcb_atom_t m_protocols = XCB_ATOM_NONE;
     xcb_atom_t m_deleteWindowProtocol = XCB_ATOM_NONE;
     xcb_cursor_t m_cursor = XCB_CURSOR_NONE;
     Display *m_display = nullptr;
     bool m_keyboardGrabbed = false;
+    std::unique_ptr<QSocketNotifier> m_eventNotifier;
 
     bool m_hasXInput = false;
     int m_xiOpcode = 0;

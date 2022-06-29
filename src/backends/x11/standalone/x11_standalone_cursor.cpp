@@ -23,17 +23,15 @@ X11Cursor::X11Cursor(QObject *parent, bool xInputSupport)
     : Cursor(parent)
     , m_timeStamp(XCB_TIME_CURRENT_TIME)
     , m_buttonMask(0)
-    , m_resetTimeStampTimer(new QTimer(this))
-    , m_mousePollingTimer(new QTimer(this))
     , m_hasXInput(xInputSupport)
     , m_needsPoll(false)
 {
     Cursors::self()->setMouse(this);
-    m_resetTimeStampTimer->setSingleShot(true);
-    connect(m_resetTimeStampTimer, &QTimer::timeout, this, &X11Cursor::resetTimeStamp);
+    m_resetTimeStampTimer.setSingleShot(true);
+    connect(&m_resetTimeStampTimer, &QTimer::timeout, this, &X11Cursor::resetTimeStamp);
     // TODO: How often do we really need to poll?
-    m_mousePollingTimer->setInterval(50);
-    connect(m_mousePollingTimer, &QTimer::timeout, this, &X11Cursor::mousePolled);
+    m_mousePollingTimer.setInterval(50);
+    connect(&m_mousePollingTimer, &QTimer::timeout, this, &X11Cursor::mousePolled);
 
     if (m_hasXInput) {
         connect(qApp->eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, this, &X11Cursor::aboutToBlock);
@@ -73,7 +71,7 @@ void X11Cursor::doGetPos()
     }
     m_buttonMask = pointer->mask;
     updatePos(pointer->root_x, pointer->root_y);
-    m_resetTimeStampTimer->start(0);
+    m_resetTimeStampTimer.start(0);
 }
 
 void X11Cursor::resetTimeStamp()
@@ -92,14 +90,14 @@ void X11Cursor::aboutToBlock()
 void X11Cursor::doStartMousePolling()
 {
     if (!m_hasXInput) {
-        m_mousePollingTimer->start();
+        m_mousePollingTimer.start();
     }
 }
 
 void X11Cursor::doStopMousePolling()
 {
     if (!m_hasXInput) {
-        m_mousePollingTimer->stop();
+        m_mousePollingTimer.stop();
     }
 }
 

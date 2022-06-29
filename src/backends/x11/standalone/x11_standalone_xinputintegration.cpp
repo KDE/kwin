@@ -274,11 +274,11 @@ void XInputIntegration::startListening()
     evmasks[0].mask = mask1;
     XISelectEvents(display(), rootWindow(), evmasks, 1);
 
-    m_xiEventFilter.reset(new XInputEventFilter(m_xiOpcode));
+    m_xiEventFilter = std::make_unique<XInputEventFilter>(m_xiOpcode);
     m_xiEventFilter->setCursor(m_x11Cursor);
     m_xiEventFilter->setDisplay(display());
-    m_keyPressFilter.reset(new XKeyPressReleaseEventFilter(XCB_KEY_PRESS));
-    m_keyReleaseFilter.reset(new XKeyPressReleaseEventFilter(XCB_KEY_RELEASE));
+    m_keyPressFilter = std::make_unique<XKeyPressReleaseEventFilter>(XCB_KEY_PRESS);
+    m_keyReleaseFilter = std::make_unique<XKeyPressReleaseEventFilter>(XCB_KEY_RELEASE);
 
     // install the input event spies also relevant for X11 platform
     input()->installInputEventSpy(new ModifierOnlyShortcuts);

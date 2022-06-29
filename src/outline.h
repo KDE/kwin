@@ -15,6 +15,7 @@
 #include <memory>
 
 #include <kwin_export.h>
+#include <memory>
 
 class QQmlContext;
 class QQmlComponent;

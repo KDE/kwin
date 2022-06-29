@@ -102,7 +102,7 @@ bool XrandrEventFilter::event(xcb_generic_event_t *event)
 
 X11StandalonePlatform::X11StandalonePlatform(QObject *parent)
     : Platform(parent)
-    , m_updateOutputsTimer(new QTimer(this))
+    , m_updateOutputsTimer(std::make_unique<QTimer>())
     , m_x11Display(QX11Info::display())
     , m_renderLoop(std::make_unique<RenderLoop>())
 {
@@ -119,7 +119,7 @@ X11StandalonePlatform::X11StandalonePlatform(QObject *parent)
 #endif
 
     m_updateOutputsTimer->setSingleShot(true);
-    connect(m_updateOutputsTimer, &QTimer::timeout, this, &X11StandalonePlatform::updateOutputs);
+    connect(m_updateOutputsTimer.get(), &QTimer::timeout, this, &X11StandalonePlatform::updateOutputs);
 
     setSupportsGammaControl(true);
 }
@@ -129,7 +129,6 @@ X11StandalonePlatform::~X11StandalonePlatform()
     if (m_openGLFreezeProtectionThread) {
         m_openGLFreezeProtectionThread->quit();
         m_openGLFreezeProtectionThread->wait();
-        delete m_openGLFreezeProtectionThread;
     }
     if (sceneEglDisplay() != EGL_NO_DISPLAY) {
         eglTerminate(sceneEglDisplay());
@@ -149,7 +148,7 @@ bool X11StandalonePlatform::initialize()
     initOutputs();
 
     if (Xcb::Extensions::self()->isRandrAvailable()) {
-        m_randrEventFilter.reset(new XrandrEventFilter(this));
+        m_randrEventFilter = std::make_unique<XrandrEventFilter>(this);
     }
     connect(Cursors::self(), &Cursors::hiddenChanged, this, &X11StandalonePlatform::updateCursor);
     return true;
@@ -275,17 +274,17 @@ void X11StandalonePlatform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
     case OpenGLSafePoint::PreFrame:
         if (m_openGLFreezeProtectionThread == nullptr) {
             Q_ASSERT(m_openGLFreezeProtection == nullptr);
-            m_openGLFreezeProtectionThread = new QThread(this);
+            m_openGLFreezeProtectionThread = std::make_unique<QThread>();
             m_openGLFreezeProtectionThread->setObjectName("FreezeDetector");
             m_openGLFreezeProtectionThread->start();
-            m_openGLFreezeProtection = new QTimer;
+            m_openGLFreezeProtection = std::make_unique<QTimer>();
             m_openGLFreezeProtection->setInterval(15000);
             m_openGLFreezeProtection->setSingleShot(true);
             m_openGLFreezeProtection->start();
             const QString configName = kwinApp()->config()->name();
-            m_openGLFreezeProtection->moveToThread(m_openGLFreezeProtectionThread);
+            m_openGLFreezeProtection->moveToThread(m_openGLFreezeProtectionThread.get());
             connect(
-                m_openGLFreezeProtection, &QTimer::timeout, m_openGLFreezeProtection,
+                m_openGLFreezeProtection.get(), &QTimer::timeout, m_openGLFreezeProtection.get(),
                 [configName] {
                     auto group = KConfigGroup(KSharedConfig::openConfig(configName), "Compositing");
                     group.writeEntry(QLatin1String("OpenGLIsUnsafe"), true);
@@ -296,7 +295,7 @@ void X11StandalonePlatform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
                 Qt::DirectConnection);
         } else {
             Q_ASSERT(m_openGLFreezeProtection);
-            QMetaObject::invokeMethod(m_openGLFreezeProtection, QOverload<>::of(&QTimer::start), Qt::QueuedConnection);
+            QMetaObject::invokeMethod(m_openGLFreezeProtection.get(), QOverload<>::of(&QTimer::start), Qt::QueuedConnection);
         }
         break;
     case OpenGLSafePoint::PostInit:
@@ -305,15 +304,13 @@ void X11StandalonePlatform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
         // Deliberately continue with PostFrame
         Q_FALLTHROUGH();
     case OpenGLSafePoint::PostFrame:
-        QMetaObject::invokeMethod(m_openGLFreezeProtection, &QTimer::stop, Qt::QueuedConnection);
+        QMetaObject::invokeMethod(m_openGLFreezeProtection.get(), &QTimer::stop, Qt::QueuedConnection);
         break;
     case OpenGLSafePoint::PostLastGuardedFrame:
-        m_openGLFreezeProtection->deleteLater();
-        m_openGLFreezeProtection = nullptr;
         m_openGLFreezeProtectionThread->quit();
         m_openGLFreezeProtectionThread->wait();
-        delete m_openGLFreezeProtectionThread;
-        m_openGLFreezeProtectionThread = nullptr;
+        m_openGLFreezeProtectionThread.reset();
+        m_openGLFreezeProtection.reset();
         break;
     }
 }
@@ -347,7 +344,7 @@ void X11StandalonePlatform::updateCursor()
 void X11StandalonePlatform::startInteractiveWindowSelection(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName)
 {
     if (!m_windowSelector) {
-        m_windowSelector.reset(new WindowSelector);
+        m_windowSelector = std::make_unique<WindowSelector>();
     }
     m_windowSelector->start(callback, cursorName);
 }
@@ -355,7 +352,7 @@ void X11StandalonePlatform::startInteractiveWindowSelection(std::function<void(K
 void X11StandalonePlatform::startInteractivePositionSelection(std::function<void(const QPoint &)> callback)
 {
     if (!m_windowSelector) {
-        m_windowSelector.reset(new WindowSelector);
+        m_windowSelector = std::make_unique<WindowSelector>();
     }
     m_windowSelector->start(callback);
 }
@@ -382,12 +379,12 @@ std::unique_ptr<OverlayWindow> X11StandalonePlatform::createOverlayWindow()
     return std::make_unique<OverlayWindowX11>();
 }
 
-OutlineVisual *X11StandalonePlatform::createOutline(Outline *outline)
+std::unique_ptr<OutlineVisual> X11StandalonePlatform::createOutline(Outline *outline)
 {
     // first try composited Outline
     auto ret = Platform::createOutline(outline);
     if (!ret) {
-        ret = new NonCompositedOutlineVisual(outline);
+        ret = std::make_unique<NonCompositedOutlineVisual>(outline);
     }
     return ret;
 }

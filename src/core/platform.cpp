@@ -260,10 +260,10 @@ void Platform::updateXTime()
     }
 }
 
-OutlineVisual *Platform::createOutline(Outline *outline)
+std::unique_ptr<OutlineVisual> Platform::createOutline(Outline *outline)
 {
     if (Compositor::compositing()) {
-        return new CompositedOutlineVisual(outline);
+        return std::make_unique<CompositedOutlineVisual>(outline);
     }
     return nullptr;
 }

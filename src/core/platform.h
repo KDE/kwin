@@ -257,7 +257,7 @@ public:
      * Creates the OutlineVisual for the given @p outline.
      * Default implementation creates an OutlineVisual suited for composited usage.
      */
-    virtual OutlineVisual *createOutline(Outline *outline);
+    virtual std::unique_ptr<OutlineVisual> createOutline(Outline *outline);
 
     /**
      * Platform specific way to invert the screen.

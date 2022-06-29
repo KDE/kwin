@@ -10,6 +10,7 @@
 #define KWIN_X11CURSOR_H
 #include "cursor.h"
 
+#include <QTimer>
 #include <memory>
 
 namespace KWin
@@ -56,8 +57,8 @@ private Q_SLOTS:
 private:
     xcb_timestamp_t m_timeStamp;
     uint16_t m_buttonMask;
-    QTimer *m_resetTimeStampTimer;
-    QTimer *m_mousePollingTimer;
+    QTimer m_resetTimeStampTimer;
+    QTimer m_mousePollingTimer;
     bool m_hasXInput;
     bool m_needsPoll;
 

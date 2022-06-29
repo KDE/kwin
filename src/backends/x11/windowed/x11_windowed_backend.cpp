@@ -42,11 +42,6 @@
 namespace KWin
 {
 
-X11WindowedInputDevice::X11WindowedInputDevice(QObject *parent)
-    : InputDevice(parent)
-{
-}
-
 void X11WindowedInputDevice::setPointer(bool set)
 {
     m_pointer = set;
@@ -142,9 +137,8 @@ bool X11WindowedInputDevice::isLidSwitch() const
     return false;
 }
 
-X11WindowedInputBackend::X11WindowedInputBackend(X11WindowedBackend *backend, QObject *parent)
-    : InputBackend(parent)
-    , m_backend(backend)
+X11WindowedInputBackend::X11WindowedInputBackend(X11WindowedBackend *backend)
+    : m_backend(backend)
 {
 }
 
@@ -161,17 +155,16 @@ void X11WindowedInputBackend::initialize()
     }
 }
 
-X11WindowedBackend::X11WindowedBackend(QObject *parent)
-    : Platform(parent)
+X11WindowedBackend::X11WindowedBackend()
 {
     setSupportsPointerWarping(true);
 }
 
 X11WindowedBackend::~X11WindowedBackend()
 {
-    delete m_pointerDevice;
-    delete m_keyboardDevice;
-    delete m_touchDevice;
+    m_pointerDevice.reset();
+    m_keyboardDevice.reset();
+    m_touchDevice.reset();
 
     if (sceneEglDisplay() != EGL_NO_DISPLAY) {
         eglTerminate(sceneEglDisplay());
@@ -217,12 +210,12 @@ bool X11WindowedBackend::initialize()
             createCursor(c->image(), c->hotspot());
         });
         setReady(true);
-        m_pointerDevice = new X11WindowedInputDevice(this);
+        m_pointerDevice = std::make_unique<X11WindowedInputDevice>();
         m_pointerDevice->setPointer(true);
-        m_keyboardDevice = new X11WindowedInputDevice(this);
+        m_keyboardDevice = std::make_unique<X11WindowedInputDevice>();
         m_keyboardDevice->setKeyboard(true);
         if (m_hasXInput) {
-            m_touchDevice = new X11WindowedInputDevice(this);
+            m_touchDevice = std::make_unique<X11WindowedInputDevice>();
             m_touchDevice->setTouch(true);
         }
         Q_EMIT outputsQueried();
@@ -309,7 +302,7 @@ void X11WindowedBackend::createOutputs()
 
 void X11WindowedBackend::startEventReading()
 {
-    QSocketNotifier *notifier = new QSocketNotifier(xcb_get_file_descriptor(m_connection), QSocketNotifier::Read, this);
+    m_eventNotifier = std::make_unique<QSocketNotifier>(xcb_get_file_descriptor(m_connection), QSocketNotifier::Read);
     auto processXcbEvents = [this] {
         while (auto event = xcb_poll_for_event(m_connection)) {
             handleEvent(event);
@@ -317,7 +310,7 @@ void X11WindowedBackend::startEventReading()
         }
         xcb_flush(m_connection);
     };
-    connect(notifier, &QSocketNotifier::activated, this, processXcbEvents);
+    connect(m_eventNotifier.get(), &QSocketNotifier::activated, this, processXcbEvents);
     connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, this, processXcbEvents);
     connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::awake, this, processXcbEvents);
 }
@@ -345,7 +338,7 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
             break;
         }
         const QPointF position = output->mapFromGlobal(QPointF(event->root_x, event->root_y));
-        Q_EMIT m_pointerDevice->pointerMotionAbsolute(position, event->time, m_pointerDevice);
+        Q_EMIT m_pointerDevice->pointerMotionAbsolute(position, event->time, m_pointerDevice.get());
     } break;
     case XCB_KEY_PRESS:
     case XCB_KEY_RELEASE: {
@@ -361,12 +354,12 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
             Q_EMIT m_keyboardDevice->keyChanged(event->detail - 8,
                                                 InputRedirection::KeyboardKeyPressed,
                                                 event->time,
-                                                m_keyboardDevice);
+                                                m_keyboardDevice.get());
         } else {
             Q_EMIT m_keyboardDevice->keyChanged(event->detail - 8,
                                                 InputRedirection::KeyboardKeyReleased,
                                                 event->time,
-                                                m_keyboardDevice);
+                                                m_keyboardDevice.get());
         }
     } break;
     case XCB_CONFIGURE_NOTIFY:
@@ -379,7 +372,7 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
             break;
         }
         const QPointF position = output->mapFromGlobal(QPointF(event->root_x, event->root_y));
-        Q_EMIT m_pointerDevice->pointerMotionAbsolute(position, event->time, m_pointerDevice);
+        Q_EMIT m_pointerDevice->pointerMotionAbsolute(position, event->time, m_pointerDevice.get());
     } break;
     case XCB_CLIENT_MESSAGE:
         handleClientMessage(reinterpret_cast<xcb_client_message_event_t *>(e));
@@ -406,18 +399,18 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
         switch (ge->event_type) {
 
         case XI_TouchBegin: {
-            Q_EMIT m_touchDevice->touchDown(te->detail, position, te->time, m_touchDevice);
-            Q_EMIT m_touchDevice->touchFrame(m_touchDevice);
+            Q_EMIT m_touchDevice->touchDown(te->detail, position, te->time, m_touchDevice.get());
+            Q_EMIT m_touchDevice->touchFrame(m_touchDevice.get());
             break;
         }
         case XI_TouchUpdate: {
-            Q_EMIT m_touchDevice->touchMotion(te->detail, position, te->time, m_touchDevice);
-            Q_EMIT m_touchDevice->touchFrame(m_touchDevice);
+            Q_EMIT m_touchDevice->touchMotion(te->detail, position, te->time, m_touchDevice.get());
+            Q_EMIT m_touchDevice->touchFrame(m_touchDevice.get());
             break;
         }
         case XI_TouchEnd: {
-            Q_EMIT m_touchDevice->touchUp(te->detail, te->time, m_touchDevice);
-            Q_EMIT m_touchDevice->touchFrame(m_touchDevice);
+            Q_EMIT m_touchDevice->touchUp(te->detail, te->time, m_touchDevice.get());
+            Q_EMIT m_touchDevice->touchFrame(m_touchDevice.get());
             break;
         }
         case XI_TouchOwnership: {
@@ -531,7 +524,7 @@ void X11WindowedBackend::handleButtonPress(xcb_button_press_event_t *event)
                                                    delta,
                                                    InputRedirection::PointerAxisSourceUnknown,
                                                    event->time,
-                                                   m_pointerDevice);
+                                                   m_pointerDevice.get());
         return;
     }
     uint32_t button = 0;
@@ -551,12 +544,12 @@ void X11WindowedBackend::handleButtonPress(xcb_button_press_event_t *event)
     }
 
     const QPointF position = output->mapFromGlobal(QPointF(event->root_x, event->root_y));
-    Q_EMIT m_pointerDevice->pointerMotionAbsolute(position, event->time, m_pointerDevice);
+    Q_EMIT m_pointerDevice->pointerMotionAbsolute(position, event->time, m_pointerDevice.get());
 
     if (pressed) {
-        Q_EMIT m_pointerDevice->pointerButtonChanged(button, InputRedirection::PointerButtonPressed, event->time, m_pointerDevice);
+        Q_EMIT m_pointerDevice->pointerButtonChanged(button, InputRedirection::PointerButtonPressed, event->time, m_pointerDevice.get());
     } else {
-        Q_EMIT m_pointerDevice->pointerButtonChanged(button, InputRedirection::PointerButtonReleased, event->time, m_pointerDevice);
+        Q_EMIT m_pointerDevice->pointerButtonChanged(button, InputRedirection::PointerButtonReleased, event->time, m_pointerDevice.get());
     }
 }
 
@@ -637,17 +630,17 @@ xcb_window_t X11WindowedBackend::rootWindow() const
 
 X11WindowedInputDevice *X11WindowedBackend::pointerDevice() const
 {
-    return m_pointerDevice;
+    return m_pointerDevice.get();
 }
 
 X11WindowedInputDevice *X11WindowedBackend::keyboardDevice() const
 {
-    return m_keyboardDevice;
+    return m_keyboardDevice.get();
 }
 
 X11WindowedInputDevice *X11WindowedBackend::touchDevice() const
 {
-    return m_touchDevice;
+    return m_touchDevice.get();
 }
 
 std::unique_ptr<OpenGLBackend> X11WindowedBackend::createOpenGLBackend()

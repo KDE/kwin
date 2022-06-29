@@ -105,7 +105,7 @@ void Outline::createHelper()
     if (m_visual) {
         return;
     }
-    m_visual.reset(kwinApp()->platform()->createOutline(this));
+    m_visual = kwinApp()->platform()->createOutline(this);
 }
 
 void Outline::compositingChanged()
