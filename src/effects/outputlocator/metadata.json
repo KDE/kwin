@@ -1,0 +1,17 @@
+{
+    "KPlugin": {
+        "Id": "outputlocator",
+        "License": "GPL",
+        "Category": "Appearance",
+        "EnabledByDefault": true,
+        "Authors": [
+            {
+                "Email": "kde@david-redondo.de",
+                "Name": "David Redondo"
+            }
+        ]
+    },
+    "org.kde.kwin.effect": {
+        "internal": true
+    }
+}
