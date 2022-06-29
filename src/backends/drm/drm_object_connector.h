@@ -106,7 +106,7 @@ public:
 
 private:
     QList<std::shared_ptr<DrmConnectorMode>> generateCommonModes();
-    std::shared_ptr<DrmConnectorMode> generateMode(const QSize &size, uint32_t refreshRate);
+    std::shared_ptr<DrmConnectorMode> generateMode(const QSize &size, float refreshRate);
 
     std::unique_ptr<DrmPipeline> m_pipeline;
     DrmUniquePtr<drmModeConnector> m_conn;
