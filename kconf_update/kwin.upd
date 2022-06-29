@@ -91,3 +91,9 @@ Id=overview-group-plugin-id
 File=kwinrc
 Options=AllGroups
 Script=kwin-5.25-effect-pluginid-config-group.py,python3
+
+# Tidy up after a bug from the animation speed movement
+Id=animation-speed-cleanup
+File=kwinrc
+Group=KDE
+RemoveKey=AnimationDurationFactor
