@@ -1885,6 +1885,21 @@ QString EffectScreenImpl::name() const
     return m_platformOutput->name();
 }
 
+QString EffectScreenImpl::manufacturer() const
+{
+    return m_platformOutput->manufacturer();
+}
+
+QString EffectScreenImpl::model() const
+{
+    return m_platformOutput->model();
+}
+
+QString EffectScreenImpl::serialNumber() const
+{
+    return m_platformOutput->serialNumber();
+}
+
 qreal EffectScreenImpl::devicePixelRatio() const
 {
     return m_platformOutput->scale();

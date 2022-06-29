@@ -362,6 +362,9 @@ public:
     Output *platformOutput() const;
 
     QString name() const override;
+    QString manufacturer() const override;
+    QString model() const override;
+    QString serialNumber() const override;
     qreal devicePixelRatio() const override;
     QRect geometry() const override;
     int refreshRate() const override;

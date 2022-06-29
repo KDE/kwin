@@ -1941,6 +1941,9 @@ class KWINEFFECTS_EXPORT EffectScreen : public QObject
     Q_PROPERTY(QRect geometry READ geometry NOTIFY geometryChanged)
     Q_PROPERTY(qreal devicePixelRatio READ devicePixelRatio NOTIFY devicePixelRatioChanged)
     Q_PROPERTY(QString name READ name CONSTANT)
+    Q_PROPERTY(QString manufacturer READ manufacturer CONSTANT)
+    Q_PROPERTY(QString model READ model CONSTANT)
+    Q_PROPERTY(QString serialNumber READ serialNumber CONSTANT)
     Q_PROPERTY(qreal refreshRate READ refreshRate CONSTANT)
 
 public:
@@ -1981,6 +1984,10 @@ public:
     };
     Q_ENUM(Transform)
     virtual Transform transform() const = 0;
+
+    virtual QString manufacturer() const = 0;
+    virtual QString model() const = 0;
+    virtual QString serialNumber() const = 0;
 
 Q_SIGNALS:
     /**
