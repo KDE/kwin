@@ -18,6 +18,7 @@
 
 #include <KWayland/Client/surface.h>
 
+#include "qwayland-fractional-scale-v1.h"
 #include "qwayland-idle-inhibit-unstable-v1.h"
 #include "qwayland-input-method-unstable-v1.h"
 #include "qwayland-kde-output-device-v2.h"
@@ -460,6 +461,27 @@ private:
     struct ::zwp_input_method_context_v1 *m_context = nullptr;
 };
 
+class FractionalScaleManagerV1 : public QObject, public QtWayland::wp_fractional_scale_manager_v1
+{
+    Q_OBJECT
+public:
+    ~FractionalScaleManagerV1() override;
+};
+
+class FractionalScaleV1 : public QObject, public QtWayland::wp_fractional_scale_v1
+{
+    Q_OBJECT
+public:
+    ~FractionalScaleV1() override;
+    int preferredScale();
+
+protected:
+    void wp_fractional_scale_v1_preferred_scale(uint32_t scale) override;
+
+private:
+    int m_preferredScale = 120;
+};
+
 enum class AdditionalWaylandInterface {
     Seat = 1 << 0,
     Decoration = 1 << 1,
@@ -476,6 +498,7 @@ enum class AdditionalWaylandInterface {
     LayerShellV1 = 1 << 12,
     TextInputManagerV3 = 1 << 13,
     OutputDeviceV2 = 1 << 14,
+    FractionalScaleManagerV1 = 1 << 15,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 
@@ -594,6 +617,8 @@ enum class CreationSetup {
 
 QtWayland::zwp_input_panel_surface_v1 *createInputPanelSurfaceV1(KWayland::Client::Surface *surface,
                                                                  KWayland::Client::Output *output);
+
+FractionalScaleV1 *createFractionalScaleV1(KWayland::Client::Surface *surface);
 
 XdgToplevel *createXdgToplevelSurface(KWayland::Client::Surface *surface, QObject *parent = nullptr);
 XdgToplevel *createXdgToplevelSurface(KWayland::Client::Surface *surface,

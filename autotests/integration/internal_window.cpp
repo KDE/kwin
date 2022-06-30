@@ -638,7 +638,7 @@ void InternalWindowTest::testScale()
 {
     QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection,
                               Q_ARG(QVector<QRect>, QVector<QRect>({QRect(0, 0, 1280, 1024), QRect(1280 / 2, 0, 1280, 1024)})),
-                              Q_ARG(QVector<int>, QVector<int>({2, 2})));
+                              Q_ARG(QVector<qreal>, QVector<qreal>({2, 2})));
 
     QSignalSpy windowAddedSpy(workspace(), &Workspace::internalWindowAdded);
     HelperWindow win;

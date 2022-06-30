@@ -83,7 +83,7 @@ Output *VirtualBackend::addOutput(const QSize &size, qreal scale)
     return output;
 }
 
-void VirtualBackend::setVirtualOutputs(const QVector<QRect> &geometries, QVector<int> scales)
+void VirtualBackend::setVirtualOutputs(const QVector<QRect> &geometries, QVector<qreal> scales)
 {
     Q_ASSERT(scales.size() == 0 || scales.size() == geometries.size());
 

@@ -34,6 +34,10 @@ if (QT_MAJOR_VERSION EQUAL "5")
         PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-management-v2.xml
         BASENAME kde-output-management-v2
     )
+    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework
+        PROTOCOL ${WaylandProtocols_DATADIR}/staging/fractional-scale/fractional-scale-v1.xml
+        BASENAME fractional-scale-v1
+    )
 else()
     qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
         NO_INCLUDE_CORE_ONLY
@@ -47,6 +51,7 @@ else()
             ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
             ${WaylandProtocols_DATADIR}/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml
             ${WaylandProtocols_DATADIR}/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml
+            ${WaylandProtocols_DATADIR}/staging/fractional-scale/fractional-scale-v1.xml
             ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-device-v2.xml
             ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-management-v2.xml
     )
@@ -142,6 +147,7 @@ integrationTest(WAYLAND_ONLY NAME testScreens SRCS screens_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testScreenEdges SRCS screenedges_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testOutputChanges SRCS outputchanges_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testTiles SRCS tiles_test.cpp)
+integrationTest(WAYLAND_ONLY NAME testFractionalScaling SRCS fractional_scaling_test.cpp)
 
 qt_add_dbus_interfaces(DBUS_SRCS ${CMAKE_BINARY_DIR}/src/org.kde.kwin.VirtualKeyboard.xml)
 integrationTest(WAYLAND_ONLY NAME testVirtualKeyboardDBus SRCS test_virtualkeyboard_dbus.cpp ${DBUS_SRCS})

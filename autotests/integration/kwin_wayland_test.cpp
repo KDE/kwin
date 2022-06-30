@@ -196,4 +196,24 @@ XwaylandInterface *WaylandTestApplication::xwayland() const
 {
     return m_xwayland.get();
 }
+
+Test::FractionalScaleManagerV1::~FractionalScaleManagerV1()
+{
+    destroy();
+}
+
+Test::FractionalScaleV1::~FractionalScaleV1()
+{
+    destroy();
+}
+
+int Test::FractionalScaleV1::preferredScale()
+{
+    return m_preferredScale;
+}
+
+void Test::FractionalScaleV1::wp_fractional_scale_v1_preferred_scale(uint32_t scale)
+{
+    m_preferredScale = scale;
+}
 }

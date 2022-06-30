@@ -42,7 +42,8 @@ public:
     std::unique_ptr<OpenGLBackend> createOpenGLBackend() override;
 
     Output *addOutput(const QSize &size, qreal scale);
-    Q_INVOKABLE void setVirtualOutputs(const QVector<QRect> &geometries, QVector<int> scales = QVector<int>());
+
+    Q_INVOKABLE void setVirtualOutputs(const QVector<QRect> &geometries, QVector<qreal> scales = QVector<qreal>());
 
     Outputs outputs() const override;
 

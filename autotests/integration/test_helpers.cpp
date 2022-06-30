@@ -251,6 +251,7 @@ static struct
     QtWayland::zwp_input_method_context_v1 *inputMethodContextV1 = nullptr;
     LayerShellV1 *layerShellV1 = nullptr;
     TextInputManagerV3 *textInputManagerV3 = nullptr;
+    FractionalScaleManagerV1 *fractionalScaleManagerV1 = nullptr;
 } s_waylandConnection;
 
 MockInputMethod *inputMethod()
@@ -415,6 +416,13 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
                 return;
             }
         }
+        if (flags & AdditionalWaylandInterface::FractionalScaleManagerV1) {
+            if (interface == wp_fractional_scale_manager_v1_interface.name) {
+                s_waylandConnection.fractionalScaleManagerV1 = new FractionalScaleManagerV1();
+                s_waylandConnection.fractionalScaleManagerV1->init(*registry, name, version);
+                return;
+            }
+        }
     });
 
     QSignalSpy allAnnounced(registry, &KWayland::Client::Registry::interfacesAnnounced);
@@ -539,6 +547,8 @@ void destroyWaylandConnection()
     s_waylandConnection.layerShellV1 = nullptr;
     delete s_waylandConnection.outputManagementV2;
     s_waylandConnection.outputManagementV2 = nullptr;
+    delete s_waylandConnection.fractionalScaleManagerV1;
+    s_waylandConnection.fractionalScaleManagerV1 = nullptr;
 
     delete s_waylandConnection.queue; // Must be destroyed last
     s_waylandConnection.queue = nullptr;
@@ -794,6 +804,18 @@ QtWayland::zwp_input_panel_surface_v1 *createInputPanelSurfaceV1(KWayland::Clien
     s->set_toplevel(output->output(), QtWayland::zwp_input_panel_surface_v1::position_center_bottom);
 
     return s;
+}
+
+FractionalScaleV1 *createFractionalScaleV1(KWayland::Client::Surface *surface)
+{
+    if (!s_waylandConnection.fractionalScaleManagerV1) {
+        qWarning() << "Unable to create fractional scale surface. The global is not bound";
+        return nullptr;
+    }
+    auto scale = new FractionalScaleV1();
+    scale->init(s_waylandConnection.fractionalScaleManagerV1->get_fractional_scale(*surface));
+
+    return scale;
 }
 
 static void waitForConfigured(XdgSurface *shellSurface)
