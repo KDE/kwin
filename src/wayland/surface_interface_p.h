@@ -19,6 +19,7 @@ namespace KWaylandServer
 class IdleInhibitorV1Interface;
 class SurfaceRole;
 class ViewportInterface;
+class FractionalScaleV1Interface;
 
 struct SurfaceState
 {
@@ -132,6 +133,7 @@ public:
 
     QVector<IdleInhibitorV1Interface *> idleInhibitors;
     ViewportInterface *viewportExtension = nullptr;
+    FractionalScaleV1Interface *fractionalScaleExtension = nullptr;
     QScopedPointer<LinuxDmaBufV1Feedback> dmabufFeedbackV1;
     ClientConnection *client = nullptr;
 

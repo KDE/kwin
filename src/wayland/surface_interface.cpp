@@ -9,6 +9,7 @@
 #include "clientconnection.h"
 #include "compositor_interface.h"
 #include "display.h"
+#include "fractionalscale_v1_interface_p.h"
 #include "idleinhibit_v1_interface_p.h"
 #include "linuxdmabufv1clientbuffer.h"
 #include "pointerconstraints_v1_interface_p.h"
@@ -1090,6 +1091,13 @@ QPoint SurfaceInterface::toSurfaceLocal(const QPoint &point) const
 QPointF SurfaceInterface::toSurfaceLocal(const QPointF &point) const
 {
     return QPointF(point.x() * d->scaleOverride, point.y() * d->scaleOverride);
+}
+
+void SurfaceInterface::setPreferredScale(qreal scale)
+{
+    if (d->fractionalScaleExtension) {
+        d->fractionalScaleExtension->send_preferred_scale(wl_fixed_from_double(scale));
+    }
 }
 
 } // namespace KWaylandServer

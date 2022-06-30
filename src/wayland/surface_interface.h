@@ -330,6 +330,12 @@ public:
      */
     QPointF toSurfaceLocal(const QPointF &point) const;
 
+    /**
+     * Sets a preferred scale that clients should provide buffers in
+     * @param scale
+     */
+    void setPreferredScale(qreal scale);
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the underlying wl_surface resource is about to be freed.
