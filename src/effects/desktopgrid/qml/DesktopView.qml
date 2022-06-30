@@ -121,13 +121,14 @@ DropArea {
         }
         onActivated: effect.deactivate(effect.animationDuration);
         onWindowClicked: {
-            if (eventPoint.event.button !== Qt.MiddleButton) {
-                return;
-            }
-            if (window.desktop > -1) {
-                window.desktop = -1;
-            } else {
-                window.desktop = desktopView.desktop.x11DesktopNumber;
+            if (eventPoint.event.button === Qt.MiddleButton) {
+                window.closeWindow();
+            } else if (eventPoint.event.button === Qt.RightButton) {
+                if (window.desktop > -1) {
+                    window.desktop = -1;
+                } else {
+                    window.desktop = desktopView.desktop.x11DesktopNumber;
+                }
             }
         }
         Behavior on x {
