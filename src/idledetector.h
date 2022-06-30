@@ -31,7 +31,11 @@ Q_SIGNALS:
     void resumed();
 
 private:
+    void markAsIdle();
+    void markAsResumed();
+
     QTimer *m_timer;
+    bool m_isIdle = false;
     bool m_isInhibited = false;
 };
 

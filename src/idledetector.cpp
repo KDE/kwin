@@ -16,7 +16,7 @@ IdleDetector::IdleDetector(std::chrono::milliseconds timeout, QObject *parent)
 {
     m_timer->setSingleShot(true);
     m_timer->setInterval(timeout);
-    connect(m_timer, &QTimer::timeout, this, &IdleDetector::idle);
+    connect(m_timer, &QTimer::timeout, this, &IdleDetector::markAsIdle);
     m_timer->start();
 
     input()->addIdleDetector(this);
@@ -40,11 +40,7 @@ void IdleDetector::setInhibited(bool inhibited)
         return;
     }
     m_isInhibited = inhibited;
-
     if (inhibited) {
-        if (!m_timer->isActive()) {
-            Q_EMIT resumed();
-        }
         m_timer->stop();
     } else {
         m_timer->start();
@@ -54,10 +50,24 @@ void IdleDetector::setInhibited(bool inhibited)
 void IdleDetector::activity()
 {
     if (!m_isInhibited) {
-        if (!m_timer->isActive()) {
-            Q_EMIT resumed();
-        }
         m_timer->start();
+        markAsResumed();
+    }
+}
+
+void IdleDetector::markAsIdle()
+{
+    if (!m_isIdle) {
+        m_isIdle = true;
+        Q_EMIT idle();
+    }
+}
+
+void IdleDetector::markAsResumed()
+{
+    if (m_isIdle) {
+        m_isIdle = false;
+        Q_EMIT resumed();
     }
 }
 
