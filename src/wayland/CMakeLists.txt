@@ -194,6 +194,11 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     BASENAME content-type-v1
 )
 
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/fractional-scale-v1.xml
+    BASENAME fractional-scale-v1
+)
+
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
     abstract_drop_handler.cpp
@@ -218,6 +223,7 @@ target_sources(kwin PRIVATE
     drmclientbuffer.cpp
     drmlease_v1_interface.cpp
     fakeinput_interface.cpp
+    fractionalscale_v1_interface.cpp
     filtered_display.cpp
     idle_interface.cpp
     idleinhibit_v1_interface.cpp

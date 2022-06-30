@@ -34,6 +34,7 @@
 #include "wayland/dpms_interface.h"
 #include "wayland/drmlease_v1_interface.h"
 #include "wayland/filtered_display.h"
+#include "wayland/fractionalscale_v1_interface.h"
 #include "wayland/idle_interface.h"
 #include "wayland/idleinhibit_v1_interface.h"
 #include "wayland/idlenotify_v1_interface.h"
@@ -383,6 +384,7 @@ bool WaylandServer::init(InitializationFlags flags)
     });
 
     new ViewporterInterface(m_display, m_display);
+    new FractionalScaleManagerV1Interface(m_display, m_display);
     m_display->createShm();
     m_seat = new SeatInterface(m_display, m_display);
     new PointerGesturesV1Interface(m_display, m_display);
