@@ -77,7 +77,9 @@ QString XdgActivationV1Integration::requestToken(bool isPrivileged, SurfaceInter
     QIcon icon;
     if (const QString desktopFilePath = Window::findDesktopFile(appId); !desktopFilePath.isEmpty()) {
         KDesktopFile df(desktopFilePath);
-        showNotify |= df.desktopGroup().readEntry("StartupNotify", true) || df.desktopGroup().readEntry("X-KDE-StartupNotify", true);
+        Window *window = Workspace::self()->activeWindow();
+        showNotify = (!window || appId != window->desktopFileName())
+            && (df.desktopGroup().readEntry("StartupNotify", true) || df.desktopGroup().readEntry("X-KDE-StartupNotify", true));
         icon = QIcon::fromTheme(df.readIcon(), QIcon::fromTheme(QStringLiteral("system-run")));
     }
     m_currentActivationToken.reset(new ActivationToken{newToken, isPrivileged, surface, serial, seat, appId, showNotify, waylandServer()->plasmaActivationFeedback()->createActivation(appId)});
