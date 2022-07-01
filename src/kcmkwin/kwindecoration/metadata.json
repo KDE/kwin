@@ -3,6 +3,7 @@
     "KPlugin": {
         "Description": "Configure window titlebars and borders",
         "Description[ar]": "اضبط حدود وشريط عنوان النوافذ",
+        "Description[bg]": "Конфигуриране на заглавни ленти и рамки на прозорци",
         "Description[ca@valencia]": "Configura les barres de títols i les vores de les finestres",
         "Description[ca]": "Configura les barres de títols i les vores de les finestres",
         "Description[es]": "Configurar las barras de título y los bordes de las ventanas",
@@ -33,6 +34,7 @@
         "Icon": "preferences-desktop-theme-windowdecorations",
         "Name": "Window Decorations",
         "Name[ar]": "زخارف النوافذ",
+        "Name[bg]": "Декорации на прозорци",
         "Name[ca@valencia]": "Decoració de les finestres",
         "Name[ca]": "Decoració de les finestres",
         "Name[es]": "Decoraciones de las ventanas",

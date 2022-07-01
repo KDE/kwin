@@ -3,6 +3,7 @@
     "KPlugin": {
         "Description": "Configure navigation, number and layout of virtual desktops",
         "Description[ar]": "اضبط عدد وتخطيط أسطح المكتب الافتراضية وكيفية التنقل بينها",
+        "Description[bg]": "Конфигуриране на навигация, брой и подредба на виртуални работни плотове",
         "Description[ca@valencia]": "Configura la navegació, el nombre i la disposició dels escriptoris virtuals",
         "Description[ca]": "Configura la navegació, el nombre i la disposició dels escriptoris virtuals",
         "Description[es]": "Configurar la navegación, el número y la disposición de los escritorios virtuales",
@@ -32,6 +33,7 @@
         "Icon": "preferences-desktop-virtual",
         "Name": "Virtual Desktops",
         "Name[ar]": "أسطح المكتب الافتراضية",
+        "Name[bg]": "Виртуални работни плотове",
         "Name[ca@valencia]": "Escriptoris virtuals",
         "Name[ca]": "Escriptoris virtuals",
         "Name[es]": "Escritorios virtuales",

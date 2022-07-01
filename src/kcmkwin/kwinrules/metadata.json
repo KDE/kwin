@@ -3,6 +3,7 @@
     "KPlugin": {
         "Description": "Individual Window Behavior",
         "Description[ar]": "سلوك النافذ المفردة",
+        "Description[bg]": "Индивидуално поведение на прозорците",
         "Description[ca@valencia]": "Comportament individual de les finestres",
         "Description[ca]": "Comportament individual de les finestres",
         "Description[es]": "Comportamiento de ventanas individuales",
@@ -33,6 +34,7 @@
         "Icon": "preferences-system-windows-actions",
         "Name": "Window Rules",
         "Name[ar]": "قواعد النوافذ",
+        "Name[bg]": "Правила за прозорци",
         "Name[ca@valencia]": "Regles de les finestres",
         "Name[ca]": "Regles de les finestres",
         "Name[es]": "Reglas de las ventanas",
