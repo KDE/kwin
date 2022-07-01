@@ -124,6 +124,14 @@ Window::~Window()
 {
     Q_ASSERT(m_blockGeometryUpdates == 0);
     Q_ASSERT(m_decoration.decoration == nullptr);
+
+    if (workspace()) {
+        workspace()->removeDeleted(this);
+    }
+    deleteEffectWindow();
+    deleteItem();
+    deleteShadow();
+
     delete info;
 }
 
