@@ -14,7 +14,6 @@
 #include "activities.h"
 #endif
 #include "decorations/decorationbridge.h"
-#include "deleted.h"
 #include "platform.h"
 #include "screenedge.h"
 #include "touch_input.h"
@@ -330,15 +329,13 @@ void XdgSurfaceWindow::destroyWindow()
     }
     m_configureTimer->stop();
     cleanTabBox();
-    Deleted *deleted = Deleted::create(this);
     Q_EMIT windowClosed(this);
     StackingUpdatesBlocker blocker(workspace());
     RuleBook::self()->discardUsed(this, true);
     setDecoration(nullptr);
     cleanGrouping();
     waylandServer()->removeWindow(this);
-    deleted->unref();
-    delete this;
+    unref();
 }
 
 void XdgSurfaceWindow::updateClientArea()

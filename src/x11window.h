@@ -246,9 +246,6 @@ public:
     xcb_timestamp_t userTime() const override;
     bool hasUserTimeSupport() const;
 
-    /// Does 'delete c;'
-    static void deleteClient(X11Window *c);
-
     static bool belongToSameApplication(const X11Window *c1, const X11Window *c2, SameApplicationChecks checks = SameApplicationChecks());
     static bool sameAppWindowRoleMatch(const X11Window *c1, const X11Window *c2, bool active_hack);
 

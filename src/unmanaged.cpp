@@ -9,7 +9,6 @@
 
 #include "unmanaged.h"
 
-#include "deleted.h"
 #include "effects.h"
 #include "platform.h"
 #include "surfaceitem_x11.h"
@@ -149,10 +148,6 @@ bool Unmanaged::track(xcb_window_t w)
 
 void Unmanaged::release(ReleaseReason releaseReason)
 {
-    Deleted *del = nullptr;
-    if (releaseReason != ReleaseReason::KWinShutsDown) {
-        del = Deleted::create(this);
-    }
     Q_EMIT windowClosed(this);
     finishCompositing(releaseReason);
     if (!QWidget::find(window()) && releaseReason != ReleaseReason::Destroyed) { // don't affect our own windows
@@ -162,11 +157,8 @@ void Unmanaged::release(ReleaseReason releaseReason)
         Xcb::selectInput(window(), XCB_EVENT_MASK_NO_EVENT);
     }
     workspace()->removeUnmanaged(this);
-    if (releaseReason != ReleaseReason::KWinShutsDown) {
-        disownDataPassedToDeleted();
-        del->unref();
-    }
-    deleteUnmanaged(this);
+
+    unref();
 }
 
 void Unmanaged::deleteUnmanaged(Unmanaged *c)

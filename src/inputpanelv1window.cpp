@@ -8,7 +8,6 @@
 */
 
 #include "inputpanelv1window.h"
-#include "deleted.h"
 #include "inputmethod.h"
 #include "output.h"
 #include "platform.h"
@@ -144,13 +143,11 @@ void InputPanelV1Window::destroyWindow()
 {
     markAsZombie();
 
-    Deleted *deleted = Deleted::create(this);
     Q_EMIT windowClosed(this);
     StackingUpdatesBlocker blocker(workspace());
     waylandServer()->removeWindow(this);
-    deleted->unref();
 
-    delete this;
+    unref();
 }
 
 NET::WindowType InputPanelV1Window::windowType(bool, int) const

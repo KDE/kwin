@@ -5,7 +5,6 @@
 */
 
 #include "layershellv1window.h"
-#include "deleted.h"
 #include "layershellv1integration.h"
 #include "output.h"
 #include "wayland/layershell_v1_interface.h"
@@ -176,14 +175,12 @@ void LayerShellV1Window::destroyWindow()
 {
     markAsZombie();
     cleanTabBox();
-    Deleted *deleted = Deleted::create(this);
     Q_EMIT windowClosed(this);
     StackingUpdatesBlocker blocker(workspace());
     cleanGrouping();
     waylandServer()->removeWindow(this);
-    deleted->unref();
     scheduleRearrange();
-    delete this;
+    unref();
 }
 
 void LayerShellV1Window::closeWindow()

@@ -586,33 +586,6 @@ void Workspace::addToStack(Window *window)
     }
 }
 
-void Workspace::replaceInStack(Window *original, Window *deleted)
-{
-    const int unconstraintedIndex = unconstrained_stacking_order.indexOf(original);
-    if (unconstraintedIndex != -1) {
-        unconstrained_stacking_order.replace(unconstraintedIndex, deleted);
-    } else {
-        // This can be the case only if an override-redirect window is unmapped.
-        unconstrained_stacking_order.append(deleted);
-    }
-
-    const int index = stacking_order.indexOf(original);
-    if (index != -1) {
-        stacking_order.replace(index, deleted);
-    } else {
-        // This can be the case only if an override-redirect window is unmapped.
-        stacking_order.append(deleted);
-    }
-
-    for (Constraint *constraint : qAsConst(m_constraints)) {
-        if (constraint->below == original) {
-            constraint->below = deleted;
-        } else if (constraint->above == original) {
-            constraint->above = deleted;
-        }
-    }
-}
-
 void Workspace::removeFromStack(Window *window)
 {
     unconstrained_stacking_order.removeAll(window);
@@ -652,7 +625,7 @@ X11Window *Workspace::createX11Window(xcb_window_t windowId, bool is_mapped)
         connect(window, &X11Window::blockingCompositingChanged, compositor, &X11Compositor::updateClientCompositeBlocking);
     }
     if (!window->manage(windowId, is_mapped)) {
-        X11Window::deleteClient(window);
+        delete window;
         return nullptr;
     }
     addX11Window(window);
@@ -737,7 +710,6 @@ void Workspace::removeUnmanaged(Unmanaged *window)
 {
     Q_ASSERT(m_unmanaged.contains(window));
     m_unmanaged.removeAll(window);
-    removeFromStack(window);
     Q_EMIT unmanagedRemoved(window);
 }
 
@@ -745,7 +717,6 @@ void Workspace::addDeleted(Window *c, Window *orig)
 {
     Q_ASSERT(!deleted.contains(c));
     deleted.append(c);
-    replaceInStack(orig, c);
 }
 
 void Workspace::removeDeleted(Window *c)

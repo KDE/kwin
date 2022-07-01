@@ -20,7 +20,6 @@
 #include "cursor.h"
 #include "decorations/decoratedclient.h"
 #include "decorations/decorationbridge.h"
-#include "deleted.h"
 #include "effects.h"
 #include "focuschain.h"
 #include "group.h"
@@ -268,12 +267,6 @@ WindowItem *X11Window::createItem()
     return new WindowItemX11(this);
 }
 
-// Use destroyWindow() or releaseWindow(), Client instances cannot be deleted directly
-void X11Window::deleteClient(X11Window *c)
-{
-    delete c;
-}
-
 /**
  * Releases the window. The client has done its job and the window is still existing.
  */
@@ -281,10 +274,6 @@ void X11Window::releaseWindow(bool on_shutdown)
 {
     markAsZombie();
     cleanTabBox();
-    Deleted *del = nullptr;
-    if (!on_shutdown) {
-        del = Deleted::create(this);
-    }
     if (isInteractiveMoveResize()) {
         Q_EMIT clientFinishUserMovedResized(this);
     }
@@ -334,12 +323,9 @@ void X11Window::releaseWindow(bool on_shutdown)
     m_wrapper.reset();
     m_frame.reset();
     unblockGeometryUpdates(); // Don't use GeometryUpdatesBlocker, it would now set the geometry
-    if (!on_shutdown) {
-        disownDataPassedToDeleted();
-        del->unref();
-    }
-    deleteClient(this);
     ungrabXServer();
+
+    unref();
 }
 
 /**
@@ -350,7 +336,6 @@ void X11Window::destroyWindow()
 {
     markAsZombie();
     cleanTabBox();
-    Deleted *del = Deleted::create(this);
     if (isInteractiveMoveResize()) {
         Q_EMIT clientFinishUserMovedResized(this);
     }
@@ -374,8 +359,8 @@ void X11Window::destroyWindow()
     m_frame.reset();
     unblockGeometryUpdates(); // Don't use GeometryUpdatesBlocker, it would now set the geometry
     disownDataPassedToDeleted();
-    del->unref();
-    deleteClient(this);
+
+    unref();
 }
 
 /**

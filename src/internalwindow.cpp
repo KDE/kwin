@@ -9,7 +9,6 @@
 */
 #include "internalwindow.h"
 #include "decorations/decorationbridge.h"
-#include "deleted.h"
 #include "platform.h"
 #include "surfaceitem.h"
 #include "windowitem.h"
@@ -376,17 +375,12 @@ void InternalWindow::destroyWindow()
         Q_EMIT clientFinishUserMovedResized(this);
     }
 
-    Deleted *deleted = Deleted::create(this);
     Q_EMIT windowClosed(this);
-
     destroyDecoration();
-
     workspace()->removeInternalWindow(this);
 
-    deleted->unref();
     m_handle = nullptr;
-
-    delete this;
+    unref();
 }
 
 bool InternalWindow::hasPopupGrab() const
