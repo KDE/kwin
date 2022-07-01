@@ -258,44 +258,38 @@ bool DrmGpu::updateOutputs()
             return c->id() == currentConnector;
         });
         DrmConnector *conn = it == m_connectors.constEnd() ? nullptr : *it;
-        bool updateSuccess = true;
         if (!conn) {
             conn = new DrmConnector(this, currentConnector);
-            if (!conn->init()) {
+            if (!conn->init() || !conn->isConnected()) {
                 delete conn;
                 continue;
             }
             m_connectors << conn;
             m_allObjects << conn;
-        } else if (conn->updateProperties()) {
-            removedConnectors.removeOne(conn);
         } else {
-            updateSuccess = false;
-        }
-        if (conn->isConnected() && updateSuccess) {
-            if (conn->isNonDesktop() ? !findLeaseOutput(conn->id()) : !findOutput(conn->id())) {
-                qCDebug(KWIN_DRM, "New %soutput on GPU %s: %s", conn->isNonDesktop() ? "non-desktop " : "", qPrintable(m_devNode), qPrintable(conn->modelName()));
-                const auto pipeline = conn->pipeline();
-                m_pipelines << pipeline;
-                if (conn->isNonDesktop()) {
-                    auto leaseOutput = new DrmLeaseOutput(pipeline, m_leaseDevice);
-                    m_leaseOutputs << leaseOutput;
-                } else {
-                    auto output = new DrmOutput(pipeline);
-                    m_drmOutputs << output;
-                    m_outputs << output;
-                    addedOutputs << output;
-                    Q_EMIT outputAdded(output);
-                }
-                pipeline->setLayers(m_platform->renderBackend()->createPrimaryLayer(pipeline), m_platform->renderBackend()->createCursorLayer(pipeline));
-                pipeline->setActive(!conn->isNonDesktop());
-                pipeline->applyPendingChanges();
+            conn->updateProperties();
+            if (conn->isConnected()) {
+                removedConnectors.removeOne(conn);
+            } else {
+                continue;
             }
-        } else if (auto output = findOutput(conn->id())) {
-            removeOutput(output);
-        } else if (auto leaseOutput = findLeaseOutput(conn->id())) {
-            removeLeaseOutput(leaseOutput);
         }
+        qCDebug(KWIN_DRM, "New %soutput on GPU %s: %s", conn->isNonDesktop() ? "non-desktop " : "", qPrintable(m_devNode), qPrintable(conn->modelName()));
+        const auto pipeline = conn->pipeline();
+        m_pipelines << pipeline;
+        if (conn->isNonDesktop()) {
+            auto leaseOutput = new DrmLeaseOutput(pipeline, m_leaseDevice);
+            m_leaseOutputs << leaseOutput;
+        } else {
+            auto output = new DrmOutput(pipeline);
+            m_drmOutputs << output;
+            m_outputs << output;
+            addedOutputs << output;
+            Q_EMIT outputAdded(output);
+        }
+        pipeline->setLayers(m_platform->renderBackend()->createPrimaryLayer(pipeline), m_platform->renderBackend()->createCursorLayer(pipeline));
+        pipeline->setActive(!conn->isNonDesktop());
+        pipeline->applyPendingChanges();
     }
     for (const auto &connector : qAsConst(removedConnectors)) {
         if (auto output = findOutput(connector->id())) {
