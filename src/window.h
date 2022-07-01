@@ -1555,7 +1555,6 @@ protected:
     Xcb::Property fetchSkipCloseAnimation() const;
     void readSkipCloseAnimation(Xcb::Property &prop);
     void getSkipCloseAnimation();
-    void copyToDeleted(Window *c);
     void disownDataPassedToDeleted();
     void deleteShadow();
     void deleteEffectWindow();
@@ -1883,7 +1882,6 @@ private Q_SLOTS:
     void shadeUnhover();
 
 private:
-    // when adding new data members, check also copyToDeleted()
     QUuid m_internalId;
     Xcb::Window m_client;
     bool is_shape;
@@ -1900,7 +1898,6 @@ private:
     bool m_skipCloseAnimation;
     quint32 m_pendingSurfaceId = 0;
     QPointer<KWaylandServer::SurfaceInterface> m_surface;
-    // when adding new data members, check also copyToDeleted()
     qreal m_opacity = 1.0;
     int m_stackingOrder = 0;
 

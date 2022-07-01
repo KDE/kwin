@@ -713,10 +713,10 @@ void Workspace::removeUnmanaged(Unmanaged *window)
     Q_EMIT unmanagedRemoved(window);
 }
 
-void Workspace::addDeleted(Window *c, Window *orig)
+void Workspace::addDeleted(Window *window)
 {
-    Q_ASSERT(!deleted.contains(c));
-    deleted.append(c);
+    Q_ASSERT(!deleted.contains(window));
+    deleted.append(window);
 }
 
 void Workspace::removeDeleted(Window *c)

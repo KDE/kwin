@@ -196,44 +196,6 @@ void Window::detectShape(xcb_window_t id)
     }
 }
 
-// used only by Deleted::copy()
-void Window::copyToDeleted(Window *c)
-{
-    m_internalId = c->internalId();
-    m_bufferGeometry = c->m_bufferGeometry;
-    m_frameGeometry = c->m_frameGeometry;
-    m_clientGeometry = c->m_clientGeometry;
-    m_visual = c->m_visual;
-    bit_depth = c->bit_depth;
-    info = c->info;
-    m_client.reset(c->m_client, false);
-    ready_for_painting = c->ready_for_painting;
-    is_shape = c->is_shape;
-    m_effectWindow = std::exchange(c->m_effectWindow, nullptr);
-    if (m_effectWindow != nullptr) {
-        m_effectWindow->setWindow(this);
-    }
-    m_windowItem = std::exchange(c->m_windowItem, nullptr);
-    m_shadow = std::exchange(c->m_shadow, nullptr);
-    if (m_shadow) {
-        m_shadow->setWindow(this);
-    }
-    resource_name = c->resourceName();
-    resource_class = c->resourceClass();
-    m_clientMachine = c->m_clientMachine;
-    m_clientMachine->setParent(this);
-    m_wmClientLeader = c->wmClientLeader();
-    opaque_region = c->opaqueRegion();
-    m_output = c->m_output;
-    m_skipCloseAnimation = c->m_skipCloseAnimation;
-    m_internalFBO = c->m_internalFBO;
-    m_internalImage = c->m_internalImage;
-    m_opacity = c->m_opacity;
-    m_shapeRegionIsValid = c->m_shapeRegionIsValid;
-    m_shapeRegion = c->m_shapeRegion;
-    m_stackingOrder = c->m_stackingOrder;
-}
-
 // before being deleted, remove references to everything that's now
 // owner by Deleted
 void Window::disownDataPassedToDeleted()

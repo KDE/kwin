@@ -344,7 +344,7 @@ public:
 
     void removeUnmanaged(Unmanaged *); // Only called from Unmanaged::release()
     void removeDeleted(Window *);
-    void addDeleted(Window *, Window *);
+    void addDeleted(Window *);
 
     bool checkStartupNotification(xcb_window_t w, KStartupInfoId &id, KStartupInfoData &data);
 
