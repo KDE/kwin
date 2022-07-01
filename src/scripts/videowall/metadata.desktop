@@ -2,6 +2,7 @@
 Name=Video Wall
 Name[ar]=حائط الفيديو
 Name[az]=Videolu Divar Kağızı
+Name[bg]=Видео стена
 Name[bs]=Video zid
 Name[ca]=Mur de vídeo
 Name[ca@valencia]=Mur de vídeo
@@ -54,6 +55,7 @@ Name[zh_TW]=影像牆
 Comment=Spans fullscreen video player over all attached screens to create a Video Wall
 Comment[ar]=يمتد مشغل الفيديو بملء الشاشة على جميع الشاشات المرفقة لإنشاء حائط فيديو
 Comment[az]=Ekranda fon şəkili əvəzinə seçilmiş videonu tam ekran göstərir.
+Comment[bg]=Разпределяне на видео предаването на всички прикачени екрани, за да се създаде видео стена
 Comment[bs]=Proteže punog zaslona gledanje videa nad svim priloženim ekranima stvoriti video zidu
 Comment[ca]=Expandeix el reproductor de vídeo a pantalla completa per a totes les pantalles adjuntades per a crear un mur de vídeo
 Comment[ca@valencia]=Expandix el reproductor de vídeo a pantalla completa per a totes les pantalles adjuntades per a crear un mur de vídeo

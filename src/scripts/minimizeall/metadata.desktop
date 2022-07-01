@@ -2,6 +2,7 @@
 Name=MinimizeAll
 Name[ar]=صغّر الكل
 Name[az]=Hamısını_yığmaq
+Name[bg]=Минимизиране всички
 Name[ca]=MinimitzaTot
 Name[ca@valencia]=MinimitzaTot
 Name[cs]=MinimalizovatVše
@@ -48,6 +49,7 @@ Name[zh_TW]=全部最小化
 Comment=Adds a shortcut to minimize and restore all windows
 Comment[ar]=يضيف اختصارًا لتصغير جميع النوافذ واستعادتها
 Comment[az]=Bütün pəncərələri yığmaq və bərpa etmək üçün qısayolu əlavə edir
+Comment[bg]=Добавя клавишна комбинация за минимизиране и възстановяване на всички прозорци
 Comment[ca]=Afegeix una drecera per a minimitzar i restaurar totes les finestres
 Comment[ca@valencia]=Afig una drecera per a minimitzar i restaurar totes les finestres
 Comment[cs]=Přidá zkratku k minimalizaci a obnovení všech oken.
