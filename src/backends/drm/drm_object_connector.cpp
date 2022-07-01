@@ -283,11 +283,12 @@ Output::RgbRange DrmConnector::rgbRange() const
 
 bool DrmConnector::updateProperties()
 {
-    if (!DrmObject::updateProperties()) {
+    if (auto connector = drmModeGetConnector(gpu()->fd(), id())) {
+        m_conn.reset(connector);
+    } else if (!m_conn) {
         return false;
     }
-    m_conn.reset(drmModeGetConnector(gpu()->fd(), id()));
-    if (!m_conn) {
+    if (!DrmObject::updateProperties()) {
         return false;
     }
     if (const auto &dpms = getProp(PropertyIndex::Dpms)) {
@@ -337,7 +338,7 @@ bool DrmConnector::updateProperties()
     for (int i = 0; equal && i < m_conn->count_modes; i++) {
         equal &= checkIfEqual(m_driverModes[i]->nativeMode(), &m_conn->modes[i]);
     }
-    if (!equal) {
+    if (!equal && (m_driverModes.empty() || m_conn->count_modes > 0)) {
         // reload modes
         m_driverModes.clear();
         for (int i = 0; i < m_conn->count_modes; i++) {
