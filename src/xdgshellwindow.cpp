@@ -335,7 +335,6 @@ void XdgSurfaceWindow::destroyWindow()
     Q_EMIT windowClosed(this);
     StackingUpdatesBlocker blocker(workspace());
     RuleBook::self()->discardUsed(this, true);
-    setDecoration(nullptr);
     cleanGrouping();
     waylandServer()->removeWindow(this);
     unref();
