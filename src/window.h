@@ -647,7 +647,7 @@ public:
      */
     QRect visibleGeometry() const;
     virtual bool isClient() const;
-    virtual bool isDeleted() const;
+    bool isDeleted() const;
     virtual bool isUnmanaged() const;
 
     /**
@@ -884,7 +884,6 @@ public:
         return m_icon;
     }
 
-    bool isZombie() const;
     bool isActive() const
     {
         return m_active;
@@ -1584,7 +1583,7 @@ protected:
     void startAutoRaise();
     void autoRaise();
     bool isMostRecentlyRaised() const;
-    void markAsZombie();
+    void markAsDeleted();
     /**
      * Whether the window accepts focus.
      * The difference to wantsInput is that the implementation should not check rules and return
@@ -1915,7 +1914,7 @@ private:
     bool m_skipSwitcher = false;
     QIcon m_icon;
     bool m_active = false;
-    bool m_zombie = false;
+    bool m_deleted = false;
     bool m_keepAbove = false;
     bool m_keepBelow = false;
     bool m_demandsAttention = false;

@@ -208,7 +208,7 @@ void WindowItem::updateShadowItem()
 
 void WindowItem::updateDecorationItem()
 {
-    if (m_window->isDeleted() || m_window->isZombie()) {
+    if (m_window->isDeleted()) {
         return;
     }
     if (m_window->decoration()) {

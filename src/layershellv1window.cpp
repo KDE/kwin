@@ -173,7 +173,7 @@ bool LayerShellV1Window::hasStrut() const
 
 void LayerShellV1Window::destroyWindow()
 {
-    markAsZombie();
+    markAsDeleted();
     cleanTabBox();
     Q_EMIT windowClosed(this);
     StackingUpdatesBlocker blocker(workspace());

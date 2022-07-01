@@ -369,7 +369,7 @@ void InternalWindow::invalidateDecoration()
 
 void InternalWindow::destroyWindow()
 {
-    markAsZombie();
+    markAsDeleted();
     if (isInteractiveMoveResize()) {
         leaveInteractiveMoveResize();
         Q_EMIT clientFinishUserMovedResized(this);

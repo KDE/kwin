@@ -141,7 +141,7 @@ void KWin::InputPanelV1Window::reposition()
 
 void InputPanelV1Window::destroyWindow()
 {
-    markAsZombie();
+    markAsDeleted();
 
     Q_EMIT windowClosed(this);
     StackingUpdatesBlocker blocker(workspace());

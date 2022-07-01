@@ -528,11 +528,6 @@ bool Window::isUnmanaged() const
     return false;
 }
 
-bool Window::isDeleted() const
-{
-    return false;
-}
-
 bool Window::isOnCurrentActivity() const
 {
 #if KWIN_BUILD_ACTIVITIES
@@ -815,7 +810,7 @@ void Window::setIcon(const QIcon &icon)
 
 void Window::setActive(bool act)
 {
-    if (isZombie()) {
+    if (isDeleted()) {
         return;
     }
     if (m_active == act) {
@@ -854,15 +849,15 @@ void Window::doSetActive()
 {
 }
 
-bool Window::isZombie() const
+bool Window::isDeleted() const
 {
-    return m_zombie;
+    return m_deleted;
 }
 
-void Window::markAsZombie()
+void Window::markAsDeleted()
 {
-    Q_ASSERT(!m_zombie);
-    m_zombie = true;
+    Q_ASSERT(!m_deleted);
+    m_deleted = true;
 }
 
 Layer Window::layer() const

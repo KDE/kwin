@@ -121,7 +121,7 @@ XdgSurfaceConfigure *XdgSurfaceWindow::lastAcknowledgedConfigure() const
 
 void XdgSurfaceWindow::scheduleConfigure()
 {
-    if (!isZombie()) {
+    if (!isDeleted()) {
         m_configureTimer->start();
     }
 }
@@ -322,7 +322,10 @@ QRect XdgSurfaceWindow::frameRectToBufferRect(const QRect &rect) const
 
 void XdgSurfaceWindow::destroyWindow()
 {
-    markAsZombie();
+    if (isDeleted()) {
+        return;
+    }
+    markAsDeleted();
     if (isInteractiveMoveResize()) {
         leaveInteractiveMoveResize();
         Q_EMIT clientFinishUserMovedResized(this);
@@ -1067,7 +1070,7 @@ bool XdgToplevelWindow::acceptsFocus() const
             break;
         }
     }
-    return !isZombie() && readyForPainting();
+    return !isDeleted() && readyForPainting();
 }
 
 Layer XdgToplevelWindow::layerForDock() const
