@@ -326,6 +326,7 @@ void XdgSurfaceWindow::destroyWindow()
         return;
     }
     markAsDeleted();
+    workspace()->addDeleted(this);
     if (isInteractiveMoveResize()) {
         leaveInteractiveMoveResize();
         Q_EMIT clientFinishUserMovedResized(this);
