@@ -263,11 +263,13 @@ void StackingOrderTest::testDeletedTransient()
     QTRY_VERIFY(!transient1->isActive());
     QTRY_VERIFY(!transient2->isActive());
 
+#if 0
     // Close the top-most transient.
     connect(transient2, &Window::windowClosed, this, [](Window *original, Deleted *deleted) {
         Q_UNUSED(original)
         deleted->refWindow();
     });
+#endif
 
     QSignalSpy windowClosedSpy(transient2, &Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
@@ -684,11 +686,13 @@ void StackingOrderTest::testDeletedGroupTransient()
 
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{leader, member1, member2, transient}));
 
+#if 0
     // Unmap the transient.
     connect(transient, &X11Window::windowClosed, this, [](Window *original, Deleted *deleted) {
         Q_UNUSED(original)
         deleted->refWindow();
     });
+#endif
 
     QSignalSpy windowClosedSpy(transient, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());

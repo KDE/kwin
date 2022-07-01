@@ -48,7 +48,6 @@ namespace KWin
 class Group;
 class Output;
 class ClientMachine;
-class Deleted;
 class EffectWindowImpl;
 class Shadow;
 class SurfaceItem;
@@ -1423,7 +1422,7 @@ Q_SIGNALS:
      */
     void geometryChanged();
     void geometryShapeChanged(KWin::Window *window, const QRect &old);
-    void windowClosed(KWin::Window *window, KWin::Deleted *deleted);
+    void windowClosed(KWin::Window *window);
     void windowShown(KWin::Window *window);
     void windowHidden(KWin::Window *window);
     /**

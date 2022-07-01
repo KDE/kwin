@@ -36,7 +36,6 @@ namespace KWin
 {
 class Window;
 class Compositor;
-class Deleted;
 class EffectLoader;
 class Group;
 class Unmanaged;
@@ -280,7 +279,7 @@ public Q_SLOTS:
 protected Q_SLOTS:
     void slotWindowShown(KWin::Window *);
     void slotUnmanagedShown(KWin::Window *);
-    void slotWindowClosed(KWin::Window *original, KWin::Deleted *d);
+    void slotWindowClosed(KWin::Window *);
     void slotClientMaximized(KWin::Window *window, MaximizeMode maxMode);
     void slotOpacityChanged(KWin::Window *window, qreal oldOpacity);
     void slotClientModalityChanged();

@@ -5,7 +5,7 @@
 */
 
 #include "surfaceitem.h"
-#include "deleted.h"
+#include "window.h"
 
 namespace KWin
 {
@@ -14,18 +14,11 @@ SurfaceItem::SurfaceItem(Window *window, Item *parent)
     : Item(parent)
     , m_window(window)
 {
-    connect(window, &Window::windowClosed, this, &SurfaceItem::handleWindowClosed);
 }
 
 Window *SurfaceItem::window() const
 {
     return m_window;
-}
-
-void SurfaceItem::handleWindowClosed(Window *original, Deleted *deleted)
-{
-    Q_UNUSED(original)
-    m_window = deleted;
 }
 
 QMatrix4x4 SurfaceItem::surfaceToBufferMatrix() const

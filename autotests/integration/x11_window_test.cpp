@@ -723,13 +723,6 @@ void X11WindowTest::testX11WindowId()
     QVERIFY(window->isActive());
     QCOMPARE(window->window(), windowId);
     QCOMPARE(window->internalId().isNull(), false);
-    const auto uuid = window->internalId();
-    QUuid deletedUuid;
-    QCOMPARE(deletedUuid.isNull(), true);
-
-    connect(window, &X11Window::windowClosed, this, [&deletedUuid](Window *, Deleted *d) {
-        deletedUuid = d->internalId();
-    });
 
     NETRootInfo rootInfo(c.data(), NET::WMAllProperties);
     QCOMPARE(rootInfo.activeWindow(), window->window());
@@ -757,12 +750,7 @@ void X11WindowTest::testX11WindowId()
     // and destroy the window again
     xcb_unmap_window(c.data(), windowId);
     xcb_flush(c.data());
-    QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
-    QVERIFY(windowClosedSpy.wait());
-
-    QCOMPARE(deletedUuid.isNull(), false);
-    QCOMPARE(deletedUuid, uuid);
+    QVERIFY(Test::waitForWindowDestroyed(window));
 }
 
 void X11WindowTest::testCaptionChanges()

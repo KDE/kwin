@@ -11,7 +11,6 @@
 namespace KWin
 {
 
-class Deleted;
 class SurfacePixmap;
 class Window;
 
@@ -47,8 +46,6 @@ protected:
     virtual std::unique_ptr<SurfacePixmap> createPixmap() = 0;
     void preprocess() override;
     WindowQuadList buildQuads() const override;
-
-    void handleWindowClosed(Window *original, Deleted *deleted);
 
     Window *m_window;
     QRegion m_damage;

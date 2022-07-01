@@ -513,12 +513,10 @@ void EffectsHandlerImpl::slotUnmanagedShown(Window *window)
     Q_EMIT windowAdded(u->effectWindow());
 }
 
-void EffectsHandlerImpl::slotWindowClosed(Window *original, Deleted *d)
+void EffectsHandlerImpl::slotWindowClosed(Window *window)
 {
-    original->disconnect(this);
-    if (d) {
-        Q_EMIT windowClosed(d->effectWindow());
-    }
+    window->disconnect(this);
+    Q_EMIT windowClosed(window->effectWindow());
 }
 
 void EffectsHandlerImpl::slotClientModalityChanged()

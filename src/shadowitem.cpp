@@ -5,8 +5,8 @@
 */
 
 #include "shadowitem.h"
-#include "deleted.h"
 #include "shadow.h"
+#include "window.h"
 
 namespace KWin
 {
@@ -16,8 +16,6 @@ ShadowItem::ShadowItem(Shadow *shadow, Window *window, Item *parent)
     , m_window(window)
     , m_shadow(shadow)
 {
-    connect(window, &Window::windowClosed, this, &ShadowItem::handleWindowClosed);
-
     connect(shadow, &Shadow::offsetChanged, this, &ShadowItem::updateGeometry);
     connect(shadow, &Shadow::rectChanged, this, &ShadowItem::updateGeometry);
     connect(shadow, &Shadow::textureChanged, this, &ShadowItem::handleTextureChanged);
@@ -48,12 +46,6 @@ void ShadowItem::handleTextureChanged()
 {
     scheduleRepaint(rect());
     discardQuads();
-}
-
-void ShadowItem::handleWindowClosed(Window *original, Deleted *deleted)
-{
-    Q_UNUSED(original)
-    m_window = deleted;
 }
 
 static inline void distributeHorizontally(QRectF &leftRect, QRectF &rightRect)

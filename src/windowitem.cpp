@@ -6,7 +6,6 @@
 
 #include "windowitem.h"
 #include "decorationitem.h"
-#include "deleted.h"
 #include "internalwindow.h"
 #include "shadowitem.h"
 #include "surfaceitem_internal.h"
@@ -45,8 +44,6 @@ WindowItem::WindowItem(Window *window, Item *parent)
 
     connect(window, &Window::opacityChanged, this, &WindowItem::updateOpacity);
     updateOpacity();
-
-    connect(window, &Window::windowClosed, this, &WindowItem::handleWindowClosed);
 }
 
 WindowItem::~WindowItem()
@@ -116,12 +113,6 @@ void WindowItem::unrefVisible(int reason)
         m_forceVisibleByActivityCount--;
     }
     updateVisibility();
-}
-
-void WindowItem::handleWindowClosed(Window *original, Deleted *deleted)
-{
-    Q_UNUSED(original)
-    m_window = deleted;
 }
 
 bool WindowItem::computeVisibility() const

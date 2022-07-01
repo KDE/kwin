@@ -331,7 +331,7 @@ void XdgSurfaceWindow::destroyWindow()
     m_configureTimer->stop();
     cleanTabBox();
     Deleted *deleted = Deleted::create(this);
-    Q_EMIT windowClosed(this, deleted);
+    Q_EMIT windowClosed(this);
     StackingUpdatesBlocker blocker(workspace());
     RuleBook::self()->discardUsed(this, true);
     setDecoration(nullptr);

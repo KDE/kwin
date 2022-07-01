@@ -132,8 +132,6 @@ DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Window *win
 
     connect(window, &Window::frameGeometryChanged,
             this, &DecorationItem::handleFrameGeometryChanged);
-    connect(window, &Window::windowClosed,
-            this, &DecorationItem::handleWindowClosed);
     connect(window, &Window::screenChanged,
             this, &DecorationItem::handleOutputChanged);
 
@@ -194,15 +192,6 @@ void DecorationItem::handleOutputScaleChanged()
 void DecorationItem::handleFrameGeometryChanged()
 {
     setSize(m_window->size());
-}
-
-void DecorationItem::handleWindowClosed(Window *original, Deleted *deleted)
-{
-    Q_UNUSED(original)
-    m_window = deleted;
-
-    // If the decoration is about to be destroyed, render the decoration for the last time.
-    preprocess();
 }
 
 DecorationRenderer *DecorationItem::renderer() const

@@ -17,7 +17,6 @@ namespace KWin
 {
 
 class Window;
-class Deleted;
 
 namespace Decoration
 {
@@ -88,7 +87,6 @@ public:
 
 private Q_SLOTS:
     void handleFrameGeometryChanged();
-    void handleWindowClosed(Window *original, Deleted *deleted);
     void handleOutputChanged();
     void handleOutputScaleChanged();
 

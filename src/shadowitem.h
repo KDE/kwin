@@ -11,7 +11,6 @@
 namespace KWin
 {
 
-class Deleted;
 class Shadow;
 class Window;
 
@@ -34,7 +33,6 @@ protected:
 private Q_SLOTS:
     void handleTextureChanged();
     void updateGeometry();
-    void handleWindowClosed(Window *original, Deleted *deleted);
 
 private:
     Window *m_window;
