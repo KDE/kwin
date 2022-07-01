@@ -30,7 +30,6 @@ class DecoratedClientImpl;
 
 class Output;
 class DecorationRenderer;
-class Deleted;
 class EffectWindowImpl;
 class GLTexture;
 class Item;

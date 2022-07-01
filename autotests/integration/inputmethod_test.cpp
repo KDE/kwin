@@ -9,7 +9,6 @@
 #include "kwin_wayland_test.h"
 
 #include "cursor.h"
-#include "deleted.h"
 #include "effects.h"
 #include "inputmethod.h"
 #include "output.h"
@@ -76,7 +75,6 @@ void InputMethodTest::initTestCase()
 {
     QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.kwin.testvirtualkeyboard"));
 
-    qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWayland::Client::Output *>();
 

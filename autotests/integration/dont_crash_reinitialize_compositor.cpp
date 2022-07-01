@@ -10,7 +10,6 @@
 #include "kwin_wayland_test.h"
 
 #include "composite.h"
-#include "deleted.h"
 #include "effectloader.h"
 #include "effects.h"
 #include "output.h"
@@ -45,7 +44,6 @@ void DontCrashReinitializeCompositorTest::initTestCase()
     qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
 
     qRegisterMetaType<KWin::Window *>();
-    qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));

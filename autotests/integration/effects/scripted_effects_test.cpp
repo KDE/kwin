@@ -11,7 +11,6 @@
 
 #include "composite.h"
 #include "cursor.h"
-#include "deleted.h"
 #include "effectloader.h"
 #include "effects.h"
 #include "libkwineffects/anidata_p.h"
@@ -127,7 +126,6 @@ bool ScriptedEffectWithDebugSpy::load(const QString &name)
 void ScriptedEffectsTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
-    qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::Effect *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());

@@ -21,10 +21,8 @@ class KWIN_EXPORT Deleted : public Window
 
 public:
     static Deleted *create(Window *c);
-    // used by effects to keep the window around for e.g. fadeout effects when it's destroyed
-    void refWindow();
-    void unrefWindow();
-    void discard();
+    ~Deleted() override;
+
     QMargins frameMargins() const override;
     int desktop() const override;
     QStringList activities() const override;
@@ -54,10 +52,6 @@ public:
         return m_mainWindows;
     }
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
-    bool wasClient() const
-    {
-        return m_wasClient;
-    }
     QByteArray windowRole() const override;
 
     bool isFullScreen() const override
@@ -132,11 +126,8 @@ private Q_SLOTS:
 private:
     Deleted(); // use create()
     void copyToDeleted(Window *c);
-    ~Deleted() override; // deleted only using unrefWindow()
 
     QMargins m_frameMargins;
-
-    int delete_refcount;
     int desk;
     QStringList activityList;
     QRect contentsRect; // for clientPos()/clientSize()
@@ -152,7 +143,6 @@ private:
     bool m_minimized;
     bool m_modal;
     QList<Window *> m_mainWindows;
-    bool m_wasClient;
     NET::WindowType m_type = NET::Unknown;
     QByteArray m_windowRole;
     bool m_fullscreen;
@@ -163,11 +153,6 @@ private:
     bool m_wasOutline;
     bool m_wasLockScreen;
 };
-
-inline void Deleted::refWindow()
-{
-    ++delete_refcount;
-}
 
 } // namespace
 

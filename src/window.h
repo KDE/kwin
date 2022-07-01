@@ -585,6 +585,10 @@ class KWIN_EXPORT Window : public QObject
 public:
     ~Window() override;
 
+    void ref();
+    void unref();
+    void discard();
+
     virtual xcb_window_t frameId() const;
     xcb_window_t window() const;
     /**
@@ -1903,6 +1907,7 @@ private:
 private:
     void handlePaletteChange();
     QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
+    int m_refCount = 1;
     bool m_firstInTabBox = false;
     bool m_skipTaskbar = false;
     /**

@@ -44,7 +44,6 @@ class Window;
 class Output;
 class ColorMapper;
 class Compositor;
-class Deleted;
 class Group;
 class InternalWindow;
 class KillWindow;
@@ -231,7 +230,7 @@ public:
     /**
      * @return List of deleted "windows" currently managed by Workspace
      */
-    const QList<Deleted *> &deletedList() const
+    const QList<Window *> &deletedList() const
     {
         return deleted;
     }
@@ -344,8 +343,8 @@ public:
     int unconstainedStackingOrderIndex(const X11Window *c) const;
 
     void removeUnmanaged(Unmanaged *); // Only called from Unmanaged::release()
-    void removeDeleted(Deleted *);
-    void addDeleted(Deleted *, Window *);
+    void removeDeleted(Window *);
+    void addDeleted(Window *, Window *);
 
     bool checkStartupNotification(xcb_window_t w, KStartupInfoId &id, KStartupInfoData &data);
 
@@ -524,7 +523,7 @@ Q_SIGNALS:
     void groupAdded(KWin::Group *);
     void unmanagedAdded(KWin::Unmanaged *);
     void unmanagedRemoved(KWin::Unmanaged *);
-    void deletedRemoved(KWin::Deleted *);
+    void deletedRemoved(KWin::Window *);
     void configChanged();
     void showingDesktopChanged(bool showing, bool animated);
     /**
@@ -566,7 +565,7 @@ private:
     void fixPositionAfterCrash(xcb_window_t w, const xcb_get_geometry_reply_t *geom);
     void saveOldScreenSizes();
     void addToStack(Window *window);
-    void replaceInStack(Window *original, Deleted *deleted);
+    void replaceInStack(Window *original, Window *deleted);
     void removeFromStack(Window *window);
 
     /// This is the right way to create a new X11 window
@@ -620,7 +619,7 @@ private:
     QList<X11Window *> m_x11Clients;
     QList<Window *> m_allClients;
     QList<Unmanaged *> m_unmanaged;
-    QList<Deleted *> deleted;
+    QList<Window *> deleted;
     QList<InternalWindow *> m_internalWindows;
 
     QList<Window *> unconstrained_stacking_order; // Topmost last

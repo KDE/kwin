@@ -10,7 +10,6 @@
 #include "kwin_wayland_test.h"
 
 #include "atoms.h"
-#include "deleted.h"
 #include "main.h"
 #include "platform.h"
 #include "wayland_server.h"
@@ -53,7 +52,6 @@ private Q_SLOTS:
 void StackingOrderTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
-    qRegisterMetaType<KWin::Deleted *>();
 
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
@@ -196,10 +194,10 @@ void StackingOrderTest::testRaiseTransient()
 
 struct WindowUnrefDeleter
 {
-    static inline void cleanup(Deleted *d)
+    static inline void cleanup(Window *d)
     {
         if (d != nullptr) {
-            d->unrefWindow();
+            d->unref();
         }
     }
 };
@@ -277,8 +275,8 @@ void StackingOrderTest::testDeletedTransient()
     delete transient2Surface;
     QVERIFY(windowClosedSpy.wait());
 
-    QScopedPointer<Deleted, WindowUnrefDeleter> deletedTransient(
-        windowClosedSpy.first().at(1).value<Deleted *>());
+    QScopedPointer<Window, WindowUnrefDeleter> deletedTransient(
+        windowClosedSpy.first().at(1).value<Window *>());
     QVERIFY(deletedTransient.data());
 
     // The deleted transient still has to be above its old parent (transient1).
@@ -700,8 +698,8 @@ void StackingOrderTest::testDeletedGroupTransient()
     xcb_flush(conn.data());
     QVERIFY(windowClosedSpy.wait());
 
-    QScopedPointer<Deleted, WindowUnrefDeleter> deletedTransient(
-        windowClosedSpy.first().at(1).value<Deleted *>());
+    QScopedPointer<Window, WindowUnrefDeleter> deletedTransient(
+        windowClosedSpy.first().at(1).value<Window *>());
     QVERIFY(deletedTransient.data());
 
     // The transient has to be above each member of the window group.

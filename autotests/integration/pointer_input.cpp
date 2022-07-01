@@ -9,7 +9,6 @@
 #include "kwin_wayland_test.h"
 
 #include "cursor.h"
-#include "deleted.h"
 #include "effects.h"
 #include "options.h"
 #include "output.h"
@@ -132,7 +131,6 @@ private:
 void PointerInputTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
-    qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));

@@ -8,7 +8,6 @@
 #include "screencastutils.h"
 
 #include "composite.h"
-#include "deleted.h"
 #include "effects.h"
 #include "kwineffects.h"
 #include "kwingltexture.h"

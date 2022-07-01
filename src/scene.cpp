@@ -54,7 +54,6 @@
 
 #include "scene.h"
 #include "composite.h"
-#include "deleted.h"
 #include "effects.h"
 #include "internalwindow.h"
 #include "output.h"

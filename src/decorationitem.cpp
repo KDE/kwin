@@ -8,7 +8,6 @@
 #include "decorationitem.h"
 #include "composite.h"
 #include "decorations/decoratedclient.h"
-#include "deleted.h"
 #include "output.h"
 #include "scene.h"
 #include "utils/common.h"

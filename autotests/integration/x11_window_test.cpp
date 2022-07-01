@@ -11,7 +11,6 @@
 #include "atoms.h"
 #include "composite.h"
 #include "cursor.h"
-#include "deleted.h"
 #include "effectloader.h"
 #include "effects.h"
 #include "platform.h"
@@ -56,7 +55,6 @@ private Q_SLOTS:
 
 void X11WindowTest::initTestCase()
 {
-    qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());

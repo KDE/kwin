@@ -164,7 +164,7 @@ void Unmanaged::release(ReleaseReason releaseReason)
     workspace()->removeUnmanaged(this);
     if (releaseReason != ReleaseReason::KWinShutsDown) {
         disownDataPassedToDeleted();
-        del->unrefWindow();
+        del->unref();
     }
     deleteUnmanaged(this);
 }

@@ -183,7 +183,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     connect(ws, &Workspace::windowActivated, this, [this](Window *window) {
         Q_EMIT windowActivated(window ? window->effectWindow() : nullptr);
     });
-    connect(ws, &Workspace::deletedRemoved, this, [this](KWin::Deleted *d) {
+    connect(ws, &Workspace::deletedRemoved, this, [this](KWin::Window *d) {
         Q_EMIT windowDeleted(d->effectWindow());
         elevated_windows.removeAll(d->effectWindow());
     });
@@ -1961,7 +1961,7 @@ const EffectWindowGroup *EffectWindowImpl::group() const
 void EffectWindowImpl::refWindow()
 {
     if (auto d = static_cast<Deleted *>(m_window->isDeleted() ? m_window : nullptr)) {
-        return d->refWindow();
+        return d->ref();
     }
     Q_UNREACHABLE(); // TODO
 }
@@ -1969,7 +1969,7 @@ void EffectWindowImpl::refWindow()
 void EffectWindowImpl::unrefWindow()
 {
     if (auto d = static_cast<Deleted *>(m_window->isDeleted() ? m_window : nullptr)) {
-        return d->unrefWindow(); // delays deletion in case
+        return d->unref(); // delays deletion in case
     }
     Q_UNREACHABLE(); // TODO
 }

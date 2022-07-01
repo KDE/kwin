@@ -9,7 +9,6 @@
 #include "kwin_wayland_test.h"
 
 #include "cursor.h"
-#include "deleted.h"
 #include "output.h"
 #include "platform.h"
 #include "wayland/seat_interface.h"
@@ -40,7 +39,6 @@ private Q_SLOTS:
 void XWaylandInputTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
-    qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));

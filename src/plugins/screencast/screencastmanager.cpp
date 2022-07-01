@@ -8,7 +8,6 @@
 
 #include "screencastmanager.h"
 #include "composite.h"
-#include "deleted.h"
 #include "effects.h"
 #include "kwingltexture.h"
 #include "output.h"

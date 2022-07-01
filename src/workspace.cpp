@@ -22,7 +22,6 @@
 #include "composite.h"
 #include "cursor.h"
 #include "dbusinterface.h"
-#include "deleted.h"
 #include "effects.h"
 #include "focuschain.h"
 #include "group.h"
@@ -587,7 +586,7 @@ void Workspace::addToStack(Window *window)
     }
 }
 
-void Workspace::replaceInStack(Window *original, Deleted *deleted)
+void Workspace::replaceInStack(Window *original, Window *deleted)
 {
     const int unconstraintedIndex = unconstrained_stacking_order.indexOf(original);
     if (unconstraintedIndex != -1) {
@@ -742,22 +741,19 @@ void Workspace::removeUnmanaged(Unmanaged *window)
     Q_EMIT unmanagedRemoved(window);
 }
 
-void Workspace::addDeleted(Deleted *c, Window *orig)
+void Workspace::addDeleted(Window *c, Window *orig)
 {
     Q_ASSERT(!deleted.contains(c));
     deleted.append(c);
     replaceInStack(orig, c);
 }
 
-void Workspace::removeDeleted(Deleted *c)
+void Workspace::removeDeleted(Window *c)
 {
     Q_ASSERT(deleted.contains(c));
     Q_EMIT deletedRemoved(c);
     deleted.removeAll(c);
     removeFromStack(c);
-    if (!c->wasClient()) {
-        return;
-    }
     if (X11Compositor *compositor = X11Compositor::self()) {
         compositor->updateClientCompositeBlocking();
     }

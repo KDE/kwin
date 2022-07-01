@@ -181,7 +181,7 @@ void LayerShellV1Window::destroyWindow()
     StackingUpdatesBlocker blocker(workspace());
     cleanGrouping();
     waylandServer()->removeWindow(this);
-    deleted->unrefWindow();
+    deleted->unref();
     scheduleRearrange();
     delete this;
 }

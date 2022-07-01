@@ -11,7 +11,6 @@
 #include "kwin_wayland_test.h"
 
 #include "atoms.h"
-#include "deleted.h"
 #include "platform.h"
 #include "rules.h"
 #include "virtualdesktops.h"
@@ -55,7 +54,6 @@ private Q_SLOTS:
 
 void TestDbusInterface::initTestCase()
 {
-    qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::Window *>();
 
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);

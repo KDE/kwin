@@ -12,7 +12,6 @@
 #include "composite.h"
 #include "cursor.h"
 #include "decorations/decoratedclient.h"
-#include "deleted.h"
 #include "effects.h"
 #include "main.h"
 #include "output.h"

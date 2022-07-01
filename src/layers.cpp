@@ -65,7 +65,6 @@
 */
 
 #include "composite.h"
-#include "deleted.h"
 #include "effects.h"
 #include "focuschain.h"
 #include "group.h"

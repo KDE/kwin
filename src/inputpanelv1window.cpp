@@ -148,7 +148,7 @@ void InputPanelV1Window::destroyWindow()
     Q_EMIT windowClosed(this);
     StackingUpdatesBlocker blocker(workspace());
     waylandServer()->removeWindow(this);
-    deleted->unrefWindow();
+    deleted->unref();
 
     delete this;
 }

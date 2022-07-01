@@ -9,7 +9,6 @@
 #include "kwin_wayland_test.h"
 
 #include "cursor.h"
-#include "deleted.h"
 #include "effects.h"
 #include "internalwindow.h"
 #include "output.h"
@@ -177,7 +176,6 @@ void HelperWindow::keyReleaseEvent(QKeyEvent *event)
 void InternalWindowTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
-    qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::InternalWindow *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());

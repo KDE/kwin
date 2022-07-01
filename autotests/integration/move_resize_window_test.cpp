@@ -11,7 +11,6 @@
 
 #include "atoms.h"
 #include "cursor.h"
-#include "deleted.h"
 #include "effects.h"
 #include "output.h"
 #include "platform.h"
@@ -78,7 +77,6 @@ private:
 void MoveResizeWindowTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
-    qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::MaximizeMode>("MaximizeMode");
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());

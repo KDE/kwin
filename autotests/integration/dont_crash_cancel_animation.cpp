@@ -9,7 +9,6 @@
 #include "kwin_wayland_test.h"
 
 #include "composite.h"
-#include "deleted.h"
 #include "effectloader.h"
 #include "effects.h"
 #include "platform.h"
@@ -43,7 +42,6 @@ private Q_SLOTS:
 
 void DontCrashCancelAnimationFromAnimationEndedTest::initTestCase()
 {
-    qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::Window *>();
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));

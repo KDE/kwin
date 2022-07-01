@@ -383,7 +383,7 @@ void InternalWindow::destroyWindow()
 
     workspace()->removeInternalWindow(this);
 
-    deleted->unrefWindow();
+    deleted->unref();
     m_handle = nullptr;
 
     delete this;

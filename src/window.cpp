@@ -159,6 +159,26 @@ QDebug operator<<(QDebug debug, const Window *window)
     return debug;
 }
 
+void Window::ref()
+{
+    ++m_refCount;
+}
+
+void Window::unref()
+{
+    Q_ASSERT(m_refCount > 0);
+    --m_refCount;
+    if (m_refCount == 0) {
+        deleteLater();
+    }
+}
+
+void Window::discard()
+{
+    m_refCount = 0;
+    delete this;
+}
+
 void Window::detectShape(xcb_window_t id)
 {
     const bool wasShape = is_shape;
