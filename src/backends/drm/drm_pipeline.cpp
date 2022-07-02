@@ -434,6 +434,20 @@ bool DrmPipeline::pruneModifier()
 
 bool DrmPipeline::needsModeset() const
 {
+    if (m_connector->needsModeset()) {
+        return true;
+    }
+    if (m_pending.crtc) {
+        if (m_pending.crtc->needsModeset()) {
+            return true;
+        }
+        if (auto primary = m_pending.crtc->primaryPlane(); primary && primary->needsModeset()) {
+            return true;
+        }
+        if (auto cursor = m_pending.crtc->cursorPlane(); cursor && cursor->needsModeset()) {
+            return true;
+        }
+    }
     return m_pending.crtc != m_current.crtc
         || m_pending.active != m_current.active
         || m_pending.mode != m_current.mode
