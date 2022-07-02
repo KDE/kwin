@@ -2,6 +2,7 @@
 Name=Eye on Screen
 Name[ar]=عين على الشاشة
 Name[az]=Pəncərənin ekranın mərkəzinə çəkilməsi
+Name[bg]=Поглед върху екрана
 Name[ca]=Ull a la pantalla
 Name[ca@valencia]=Ull a la pantalla
 Name[cs]=Oko na obrazovce
@@ -42,6 +43,7 @@ Icon=preferences-system-windows-effect-eyeonscreen
 Comment=Suck windows into the desktop
 Comment[ar]=تمتص النوافذ في سطح المكتب
 Comment[az]=Pəncərənin İş Masasının mərkəzinə çəkilməsi
+Comment[bg]=Поглъщане на прозорците в работния плот
 Comment[ca]=Enganxa les finestres a l'escriptori
 Comment[ca@valencia]=Apega les finestres a l'escriptori
 Comment[da]=Sug vinduer ind i skrivebordet

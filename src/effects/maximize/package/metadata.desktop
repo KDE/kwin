@@ -2,6 +2,7 @@
 Comment=Animation for a window going to maximize/restore from maximize
 Comment[ar]=تحريك النوافذ عند تكبيرها/استعادة من التكبير
 Comment[az]=Tam açıldıqdan sonra ölçüsü genişlnəcək/bərpa olunacaq pəncərənin animasiyası
+Comment[bg]=Анимация за прозорец при максимизиране/възстановяване
 Comment[bs]=Animacija za prozor koji ide u maksimiziranje/vraćanje iz maksimiziranja
 Comment[ca]=Animació per a una finestra que es maximitza/restaura des de maximització
 Comment[ca@valencia]=Animació per a una finestra que es maximitza/restaura des de maximització
@@ -53,6 +54,7 @@ Name=Maximize
 Name[ar]=كبّر
 Name[ast]=Maximización
 Name[az]=Genişləndirmək
+Name[bg]=Максимизиране
 Name[bs]=Maksimiziraj
 Name[ca]=Maximitza
 Name[ca@valencia]=Maximitza

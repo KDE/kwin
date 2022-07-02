@@ -3,6 +3,7 @@
 Name=Windows
 Name[ar]=النوافذ
 Name[az]=Pəncərələr
+Name[bg]=Прозорци
 Name[ca]=Finestres
 Name[ca@valencia]=Finestres
 Name[cs]=Okna
@@ -38,6 +39,7 @@ Name[zh_CN]=窗口
 Comment=List windows and desktops and switch them
 Comment[ar]=يسرد كل النوافذ وأسطح المكتب ويبدلهن
 Comment[az]=Pəncərələrin, İş Masalarının siyahısı və onlar arası keçid
+Comment[bg]=Показва списък на прозорци и работни плотове и превключва между тях
 Comment[ca]=Llista finestres i escriptoris, i canvia entre ells
 Comment[ca@valencia]=Llista finestres i escriptoris, i canvia entre ells
 Comment[cs]=Seznam oken a ploch k přepínání

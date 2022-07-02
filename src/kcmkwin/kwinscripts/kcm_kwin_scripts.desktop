@@ -7,6 +7,7 @@ Exec=systemsettings kcm_kwin_scripts
 Name=KWin Scripts
 Name[ar]=سكرِبتات نوافذك
 Name[az]=KWin Skriptləri
+Name[bg]=KWin скриптове
 Name[bs]=KWin skripte
 Name[ca]=Scripts del KWin
 Name[ca@valencia]=Scripts de KWin
