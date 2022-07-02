@@ -62,6 +62,8 @@ public:
     ClientModel *clientModel() const;
     DesktopModel *desktopModel() const;
 
+    bool isHighlightWindows() const;
+
     TabBoxHandler *q; // public pointer
     // members
     TabBoxConfig config;
@@ -144,6 +146,15 @@ DesktopModel *TabBoxHandlerPrivate::desktopModel() const
     return m_desktopModel;
 }
 
+bool TabBoxHandlerPrivate::isHighlightWindows() const
+{
+    const QQuickWindow *w = window();
+    if (w && w->visibility() == QWindow::FullScreen) {
+        return false;
+    }
+    return config.isHighlightWindows();
+}
+
 void TabBoxHandlerPrivate::updateHighlightWindows()
 {
     if (!isShown || config.tabBoxMode() != TabBoxConfig::ClientTabBox) {
@@ -198,7 +209,7 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
 void TabBoxHandlerPrivate::endHighlightWindows(bool abort)
 {
     TabBoxClient *currentClient = q->client(index);
-    if (config.isHighlightWindows() && q->isKWinCompositing()) {
+    if (isHighlightWindows() && q->isKWinCompositing()) {
         const auto stackingOrder = q->stackingOrder();
         for (const QWeakPointer<TabBoxClient> &clientPointer : stackingOrder) {
             if (QSharedPointer<TabBoxClient> client = clientPointer.toStrongRef()) {
@@ -381,7 +392,7 @@ void TabBoxHandler::show()
     if (d->config.isShowTabBox()) {
         d->show();
     }
-    if (d->config.isHighlightWindows()) {
+    if (d->isHighlightWindows()) {
         if (kwinApp()->x11Connection()) {
             Xcb::sync();
         }
@@ -409,7 +420,7 @@ void TabBoxHandler::initHighlightWindows()
 void TabBoxHandler::hide(bool abort)
 {
     d->isShown = false;
-    if (d->config.isHighlightWindows()) {
+    if (d->isHighlightWindows()) {
         d->endHighlightWindows(abort);
     }
 #ifndef KWIN_UNIT_TEST
@@ -519,7 +530,7 @@ void TabBoxHandler::setCurrentIndex(const QModelIndex &index)
     }
     d->index = index;
     if (d->config.tabBoxMode() == TabBoxConfig::ClientTabBox) {
-        if (d->config.isHighlightWindows()) {
+        if (d->isHighlightWindows()) {
             d->updateHighlightWindows();
         }
     }
