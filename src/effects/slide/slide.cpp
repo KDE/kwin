@@ -282,16 +282,20 @@ void SlideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowP
     }
 
     for (EffectScreen *screen : effects->screens()) {
-        QPoint translation = getDrawCoords(m_paintCtx.translation, screen);
+        QPoint translation;
         if (isTranslated(w)) {
+            translation = getDrawCoords(m_paintCtx.translation, screen);
             data += translation;
         }
+
+        const QRect screenArea = screen->geometry();
+        const QRect croppedScreenArea = screenArea.translated(translation).intersected(screenArea);
 
         effects->paintWindow(
             w,
             mask,
             // Only paint the region that intersects the current screen and desktop.
-            region.intersected(effects->clientArea(ScreenArea, w)).intersected(effects->clientArea(ScreenArea, screen, effects->currentDesktop())),
+            region.intersected(croppedScreenArea),
             data);
 
         if (isTranslated(w)) {
