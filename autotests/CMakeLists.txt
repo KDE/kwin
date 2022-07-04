@@ -24,6 +24,7 @@ set(testVirtualDesktops_SRCS
 add_executable(testVirtualDesktops ${testVirtualDesktops_SRCS})
 
 target_link_libraries(testVirtualDesktops
+    kwineffects
     kwin
 
     Qt::Test
@@ -169,6 +170,7 @@ set(testGestures_SRCS
 add_executable(testGestures ${testGestures_SRCS})
 
 target_link_libraries(testGestures
+    kwineffects
     Qt::Test
 )
 

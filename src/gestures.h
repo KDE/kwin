@@ -9,16 +9,20 @@
 #ifndef KWIN_GESTURES_H
 #define KWIN_GESTURES_H
 
+#include "kwinglobals.h"
 #include <kwin_export.h>
 
 #include <QMap>
 #include <QObject>
 #include <QPointF>
+#include <QSet>
 #include <QSizeF>
 #include <QVector>
 
 namespace KWin
 {
+static const QSet<uint> DEFAULT_VALID_FINGER_COUNTS = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
 /*
  * Everytime the scale of the gesture changes by this much, the callback changes by 1.
  * This is the amount of change for 1 unit of change, like switch by 1 desktop.
@@ -30,6 +34,21 @@ class Gesture : public QObject
     Q_OBJECT
 public:
     ~Gesture() override;
+
+    /**
+     * This gesture framework allows for one gesture to
+     * capture a range of fingers.
+     *
+     * This function adds an acceptable number of fingers
+     * to the set of finger counts this gesture can
+     * be identified by.
+     *
+     * By default, any number of fingers are accepted.
+     * (see DEFAULT_VALID_FINGER_COUNTS)
+     */
+    void addFingerCount(uint numFingers);
+    bool isFingerCountAcceptable(uint fingers) const;
+    QSet<uint> acceptableFingerCounts() const;
 
 protected:
     explicit Gesture(QObject *parent);
@@ -49,32 +68,20 @@ Q_SIGNALS:
      * This Gesture no longer matches.
      */
     void cancelled();
+
+private:
+    QSet<uint> m_validFingerCounts = DEFAULT_VALID_FINGER_COUNTS;
 };
 
 class SwipeGesture : public Gesture
 {
     Q_OBJECT
 public:
-    enum class Direction {
-        Down,
-        Left,
-        Up,
-        Right,
-    };
-
     explicit SwipeGesture(QObject *parent = nullptr);
     ~SwipeGesture() override;
 
-    bool minimumFingerCountIsRelevant() const;
-    void setMinimumFingerCount(uint count);
-    uint minimumFingerCount() const;
-
-    bool maximumFingerCountIsRelevant() const;
-    void setMaximumFingerCount(uint count);
-    uint maximumFingerCount() const;
-
-    Direction direction() const;
-    void setDirection(Direction direction);
+    GestureDirections direction() const;
+    void setDirection(GestureDirections direction);
 
     void setMinimumX(int x);
     int minimumX() const;
@@ -111,11 +118,7 @@ Q_SIGNALS:
     void deltaProgress(const QSizeF &delta);
 
 private:
-    bool m_minimumFingerCountRelevant = false;
-    uint m_minimumFingerCount = 0;
-    bool m_maximumFingerCountRelevant = false;
-    uint m_maximumFingerCount = 0;
-    Direction m_direction = Direction::Down;
+    GestureDirections m_direction = GestureDirection::Down;
     bool m_minimumXRelevant = false;
     int m_minimumX = 0;
     bool m_minimumYRelevant = false;
@@ -132,24 +135,11 @@ class PinchGesture : public Gesture
 {
     Q_OBJECT
 public:
-    enum class Direction {
-        Expanding,
-        Contracting,
-    };
-
     explicit PinchGesture(QObject *parent = nullptr);
     ~PinchGesture() override;
 
-    bool minimumFingerCountIsRelevant() const;
-    void setMinimumFingerCount(uint count);
-    uint minimumFingerCount() const;
-
-    bool maximumFingerCountIsRelevant() const;
-    void setMaximumFingerCount(uint count);
-    uint maximumFingerCount() const;
-
-    Direction direction() const;
-    void setDirection(Direction direction);
+    GestureDirections direction() const;
+    void setDirection(GestureDirections direction);
 
     qreal minimumScaleDelta() const;
 
@@ -171,11 +161,7 @@ Q_SIGNALS:
     void progress(qreal);
 
 private:
-    bool m_minimumFingerCountRelevant = false;
-    uint m_minimumFingerCount = 0;
-    bool m_maximumFingerCountRelevant = false;
-    uint m_maximumFingerCount = 0;
-    Direction m_direction = Direction::Expanding;
+    GestureDirections m_direction = GestureDirection::Expanding;
     bool m_minimumScaleDeltaRelevant = false;
     qreal m_minimumScaleDelta = DEFAULT_UNIT_SCALE_DELTA;
 };
@@ -229,8 +215,5 @@ private:
 };
 
 }
-
-Q_DECLARE_METATYPE(KWin::SwipeGesture::Direction)
-Q_DECLARE_METATYPE(KWin::PinchGesture::Direction)
 
 #endif
