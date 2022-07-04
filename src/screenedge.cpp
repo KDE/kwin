@@ -101,8 +101,7 @@ Edge::Edge(ScreenEdges *parent)
     , m_output(nullptr)
     , m_gesture(new SwipeGesture(this))
 {
-    m_gesture->setMinimumFingerCount(1);
-    m_gesture->setMaximumFingerCount(1);
+    m_gesture->addFingerCount(1);
     connect(
         m_gesture, &Gesture::triggered, this, [this]() {
             stopApproaching();
@@ -713,16 +712,16 @@ void Edge::setBorder(ElectricBorder border)
     m_border = border;
     switch (m_border) {
     case ElectricTop:
-        m_gesture->setDirection(SwipeGesture::Direction::Down);
+        m_gesture->setDirection(GestureDirection::Down);
         break;
     case ElectricRight:
-        m_gesture->setDirection(SwipeGesture::Direction::Left);
+        m_gesture->setDirection(GestureDirection::Left);
         break;
     case ElectricBottom:
-        m_gesture->setDirection(SwipeGesture::Direction::Up);
+        m_gesture->setDirection(GestureDirection::Up);
         break;
     case ElectricLeft:
-        m_gesture->setDirection(SwipeGesture::Direction::Right);
+        m_gesture->setDirection(GestureDirection::Right);
         break;
     default:
         break;
