@@ -176,6 +176,11 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     BASENAME drm-lease-v1
 )
 
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/wp-fractional-scale-v1.xml
+    BASENAME wp-fractional-scale-v1
+)
+
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
     abstract_drop_handler.cpp
@@ -199,6 +204,7 @@ target_sources(kwin PRIVATE
     drmclientbuffer.cpp
     drmleasedevice_v1_interface.cpp
     fakeinput_interface.cpp
+    fractionalscale_v1_interface.cpp
     filtered_display.cpp
     idle_interface.cpp
     idleinhibit_v1_interface.cpp

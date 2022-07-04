@@ -16,7 +16,7 @@ namespace KWin
 namespace LibInput
 {
 
-Event *Event::create(libinput_event *event)
+std::unique_ptr<Event> Event::create(libinput_event *event)
 {
     if (!event) {
         return nullptr;
@@ -26,45 +26,45 @@ Event *Event::create(libinput_event *event)
     // TODO: add device notify events
     switch (t) {
     case LIBINPUT_EVENT_KEYBOARD_KEY:
-        return new KeyEvent(event);
+        return std::make_unique<KeyEvent>(event);
     case LIBINPUT_EVENT_POINTER_AXIS:
     case LIBINPUT_EVENT_POINTER_BUTTON:
     case LIBINPUT_EVENT_POINTER_MOTION:
     case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE:
-        return new PointerEvent(event, t);
+        return std::make_unique<PointerEvent>(event, t);
     case LIBINPUT_EVENT_TOUCH_DOWN:
     case LIBINPUT_EVENT_TOUCH_UP:
     case LIBINPUT_EVENT_TOUCH_MOTION:
     case LIBINPUT_EVENT_TOUCH_CANCEL:
     case LIBINPUT_EVENT_TOUCH_FRAME:
-        return new TouchEvent(event, t);
+        return std::make_unique<TouchEvent>(event, t);
     case LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN:
     case LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE:
     case LIBINPUT_EVENT_GESTURE_SWIPE_END:
-        return new SwipeGestureEvent(event, t);
+        return std::make_unique<SwipeGestureEvent>(event, t);
     case LIBINPUT_EVENT_GESTURE_PINCH_BEGIN:
     case LIBINPUT_EVENT_GESTURE_PINCH_UPDATE:
     case LIBINPUT_EVENT_GESTURE_PINCH_END:
-        return new PinchGestureEvent(event, t);
+        return std::make_unique<PinchGestureEvent>(event, t);
     case LIBINPUT_EVENT_GESTURE_HOLD_BEGIN:
     case LIBINPUT_EVENT_GESTURE_HOLD_END:
-        return new HoldGestureEvent(event, t);
+        return std::make_unique<HoldGestureEvent>(event, t);
     case LIBINPUT_EVENT_TABLET_TOOL_AXIS:
     case LIBINPUT_EVENT_TABLET_TOOL_PROXIMITY:
     case LIBINPUT_EVENT_TABLET_TOOL_TIP:
-        return new TabletToolEvent(event, t);
+        return std::make_unique<TabletToolEvent>(event, t);
     case LIBINPUT_EVENT_TABLET_TOOL_BUTTON:
-        return new TabletToolButtonEvent(event, t);
+        return std::make_unique<TabletToolButtonEvent>(event, t);
     case LIBINPUT_EVENT_TABLET_PAD_RING:
-        return new TabletPadRingEvent(event, t);
+        return std::make_unique<TabletPadRingEvent>(event, t);
     case LIBINPUT_EVENT_TABLET_PAD_STRIP:
-        return new TabletPadStripEvent(event, t);
+        return std::make_unique<TabletPadStripEvent>(event, t);
     case LIBINPUT_EVENT_TABLET_PAD_BUTTON:
-        return new TabletPadButtonEvent(event, t);
+        return std::make_unique<TabletPadButtonEvent>(event, t);
     case LIBINPUT_EVENT_SWITCH_TOGGLE:
-        return new SwitchEvent(event, t);
+        return std::make_unique<SwitchEvent>(event, t);
     default:
-        return new Event(event, t);
+        return std::unique_ptr<Event>{new Event(event, t)};
     }
 }
 

@@ -40,7 +40,7 @@ class WaylandOutput : public Output
 {
     Q_OBJECT
 public:
-    WaylandOutput(KWayland::Client::Surface *surface, WaylandBackend *backend);
+    WaylandOutput(const QString &name, KWayland::Client::Surface *surface, WaylandBackend *backend);
     ~WaylandOutput() override;
 
     RenderLoop *renderLoop() const override;
@@ -93,7 +93,7 @@ protected:
     }
 
 private:
-    RenderLoop *m_renderLoop;
+    std::unique_ptr<RenderLoop> m_renderLoop;
     KWayland::Client::Surface *m_surface;
     WaylandBackend *m_backend;
     QTimer m_turnOffTimer;
@@ -104,7 +104,8 @@ private:
 class XdgShellOutput : public WaylandOutput
 {
 public:
-    XdgShellOutput(KWayland::Client::Surface *surface,
+    XdgShellOutput(const QString &name,
+                   KWayland::Client::Surface *surface,
                    KWayland::Client::XdgShell *xdgShell,
                    WaylandBackend *backend, int number);
     ~XdgShellOutput() override;

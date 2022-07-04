@@ -309,7 +309,7 @@ void DrmOutput::updateModes()
 
 bool DrmOutput::present()
 {
-    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop);
+    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop.get());
     if (m_pipeline->syncMode() != renderLoopPrivate->presentMode) {
         m_pipeline->setSyncMode(renderLoopPrivate->presentMode);
         if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test)) {

@@ -160,12 +160,12 @@ public:
 private:
     WaylandSeat *m_seat;
 
-    QScopedPointer<KWayland::Client::Keyboard> m_keyboard;
-    QScopedPointer<KWayland::Client::Touch> m_touch;
-    QScopedPointer<KWayland::Client::RelativePointer> m_relativePointer;
-    QScopedPointer<KWayland::Client::Pointer> m_pointer;
-    QScopedPointer<KWayland::Client::PointerPinchGesture> m_pinchGesture;
-    QScopedPointer<KWayland::Client::PointerSwipeGesture> m_swipeGesture;
+    std::unique_ptr<KWayland::Client::Keyboard> m_keyboard;
+    std::unique_ptr<KWayland::Client::Touch> m_touch;
+    std::unique_ptr<KWayland::Client::RelativePointer> m_relativePointer;
+    std::unique_ptr<KWayland::Client::Pointer> m_pointer;
+    std::unique_ptr<KWayland::Client::PointerPinchGesture> m_pinchGesture;
+    std::unique_ptr<KWayland::Client::PointerSwipeGesture> m_swipeGesture;
 
     uint32_t m_enteredSerial = 0;
 };
@@ -329,10 +329,9 @@ private:
     void createOutputs();
     void destroyOutputs();
 
-    void updateScreenSize(WaylandOutput *output);
-    WaylandOutput *createOutput(const QPoint &position, const QSize &size);
+    WaylandOutput *createOutput(const QString &name, const QPoint &position, const QSize &size);
 
-    Session *m_session;
+    std::unique_ptr<Session> m_session;
     wl_display *m_display;
     KWayland::Client::EventQueue *m_eventQueue;
     KWayland::Client::Registry *m_registry;
@@ -354,7 +353,7 @@ private:
 
     WaylandCursor *m_waylandCursor = nullptr;
 
-    QScopedPointer<DpmsInputEventFilter> m_dpmsFilter;
+    std::unique_ptr<DpmsInputEventFilter> m_dpmsFilter;
 
     bool m_pointerLockRequested = false;
     KWayland::Client::ServerSideDecorationManager *m_ssdManager = nullptr;

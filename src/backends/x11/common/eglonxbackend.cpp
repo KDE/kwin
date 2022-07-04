@@ -58,11 +58,8 @@ EglOnXBackend::~EglOnXBackend()
     }
     cleanup();
 
-    if (m_overlayWindow) {
-        if (overlayWindow()->window()) {
-            overlayWindow()->destroy();
-        }
-        delete m_overlayWindow;
+    if (m_overlayWindow && m_overlayWindow->window()) {
+        m_overlayWindow->destroy();
     }
 }
 
@@ -280,7 +277,7 @@ bool EglOnXBackend::initBufferConfigs()
 
 OverlayWindow *EglOnXBackend::overlayWindow() const
 {
-    return m_overlayWindow;
+    return m_overlayWindow.get();
 }
 
 bool EglOnXBackend::makeContextCurrent(const EGLSurface &surface)

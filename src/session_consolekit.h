@@ -18,7 +18,7 @@ class ConsoleKitSession : public Session
     Q_OBJECT
 
 public:
-    static ConsoleKitSession *create(QObject *parent = nullptr);
+    static std::unique_ptr<ConsoleKitSession> create();
     ~ConsoleKitSession() override;
 
     bool isActive() const override;
@@ -36,7 +36,7 @@ private Q_SLOTS:
     void handlePrepareForSleep(bool sleep);
 
 private:
-    explicit ConsoleKitSession(const QString &sessionPath, QObject *parent = nullptr);
+    explicit ConsoleKitSession(const QString &sessionPath);
 
     bool initialize();
     void updateActive(bool active);

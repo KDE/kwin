@@ -42,8 +42,8 @@ private:
     friend class VirtualBackend;
 
     VirtualBackend *m_backend;
-    RenderLoop *m_renderLoop;
-    SoftwareVsyncMonitor *m_vsyncMonitor;
+    std::unique_ptr<RenderLoop> m_renderLoop;
+    std::unique_ptr<SoftwareVsyncMonitor> m_vsyncMonitor;
     int m_gammaSize = 200;
     bool m_gammaResult = true;
     int m_identifier;

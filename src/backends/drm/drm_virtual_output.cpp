@@ -22,7 +22,7 @@ namespace KWin
 
 DrmVirtualOutput::DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size, Type type)
     : DrmAbstractOutput(gpu)
-    , m_vsyncMonitor(SoftwareVsyncMonitor::create(this))
+    , m_vsyncMonitor(SoftwareVsyncMonitor::create())
 {
     connect(m_vsyncMonitor.get(), &VsyncMonitor::vblankOccurred, this, &DrmVirtualOutput::vblank);
 
@@ -54,8 +54,7 @@ bool DrmVirtualOutput::present()
 void DrmVirtualOutput::vblank(std::chrono::nanoseconds timestamp)
 {
     if (m_pageFlipPending) {
-        RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop);
-        renderLoopPrivate->notifyFrameCompleted(timestamp);
+        DrmAbstractOutput::pageFlipped(timestamp);
     }
 }
 

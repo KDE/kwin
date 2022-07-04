@@ -84,7 +84,6 @@ inline gbm_bo *createGbmBo(gbm_device *device, const QSize &size, quint32 format
                            size.height(),
                            format,
                            flags);
-        Q_ASSERT(!bo || gbm_bo_get_modifier(bo) == DRM_FORMAT_MOD_INVALID);
     }
     return bo;
 }

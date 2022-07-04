@@ -87,12 +87,12 @@ void XRenderPicture::fromImage(const QImage &img)
                   0, 0, 0, depth, img.sizeInBytes(), img.constBits());
     xcb_free_gc(c, cid);
 
-    d = new XRenderPictureData(createPicture(xpix, depth));
+    d = std::make_unique<XRenderPictureData>(createPicture(xpix, depth));
     xcb_free_pixmap(c, xpix);
 }
 
 XRenderPicture::XRenderPicture(xcb_pixmap_t pix, int depth)
-    : d(new XRenderPictureData(createPicture(pix, depth)))
+    : d(std::make_unique<XRenderPictureData>(createPicture(pix, depth)))
 {
 }
 

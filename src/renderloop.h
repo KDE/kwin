@@ -30,7 +30,7 @@ class KWIN_EXPORT RenderLoop : public QObject
     Q_OBJECT
 
 public:
-    explicit RenderLoop(QObject *parent = nullptr);
+    explicit RenderLoop();
     ~RenderLoop() override;
 
     /**
@@ -145,7 +145,7 @@ Q_SIGNALS:
     void frameRequested(RenderLoop *loop);
 
 private:
-    QScopedPointer<RenderLoopPrivate> d;
+    std::unique_ptr<RenderLoopPrivate> d;
     friend class RenderLoopPrivate;
 };
 

@@ -38,7 +38,7 @@ public:
 
     bool saveFrames() const
     {
-        return !m_screenshotDir.isNull();
+        return m_screenshotDir != nullptr;
     }
     QString screenshotDirPath() const;
 
@@ -69,8 +69,8 @@ Q_SIGNALS:
 private:
     QVector<VirtualOutput *> m_outputs;
     QVector<VirtualOutput *> m_outputsEnabled;
-    QScopedPointer<QTemporaryDir> m_screenshotDir;
-    Session *m_session;
+    std::unique_ptr<QTemporaryDir> m_screenshotDir;
+    std::unique_ptr<Session> m_session;
 };
 
 }

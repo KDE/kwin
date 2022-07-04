@@ -139,7 +139,11 @@ QRegion SurfaceItemX11::shape() const
 
 QRegion SurfaceItemX11::opaque() const
 {
-    return window()->opaqueRegion();
+    if (!window()->hasAlpha()) {
+        return shape();
+    } else {
+        return window()->opaqueRegion() & shape();
+    }
 }
 
 SurfacePixmap *SurfaceItemX11::createPixmap()

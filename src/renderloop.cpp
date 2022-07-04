@@ -20,7 +20,7 @@ T alignTimestamp(const T &timestamp, const T &alignment)
 
 RenderLoopPrivate *RenderLoopPrivate::get(RenderLoop *loop)
 {
-    return loop->d.data();
+    return loop->d.get();
 }
 
 RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q)
@@ -162,9 +162,8 @@ void RenderLoopPrivate::invalidate()
     compositeTimer.stop();
 }
 
-RenderLoop::RenderLoop(QObject *parent)
-    : QObject(parent)
-    , d(new RenderLoopPrivate(this))
+RenderLoop::RenderLoop()
+    : d(std::make_unique<RenderLoopPrivate>(this))
 {
 }
 

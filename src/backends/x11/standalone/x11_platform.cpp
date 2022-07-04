@@ -31,6 +31,7 @@
 #include "overlaywindow_x11.h"
 #include "renderloop.h"
 #include "screenedges_filter.h"
+#include "utils/c_ptr.h"
 #include "utils/xcbutils.h"
 #include "window.h"
 #include "workspace.h"
@@ -97,20 +98,19 @@ bool XrandrEventFilter::event(xcb_generic_event_t *event)
 
 X11StandalonePlatform::X11StandalonePlatform(QObject *parent)
     : Platform(parent)
-    , m_session(Session::create(Session::Type::Noop, this))
+    , m_session(Session::create(Session::Type::Noop))
     , m_updateOutputsTimer(new QTimer(this))
     , m_x11Display(QX11Info::display())
-    , m_renderLoop(new RenderLoop(this))
+    , m_renderLoop(std::make_unique<RenderLoop>())
 {
 #if HAVE_X11_XINPUT
     if (!qEnvironmentVariableIsSet("KWIN_NO_XI2")) {
-        m_xinputIntegration = new XInputIntegration(m_x11Display, this);
+        m_xinputIntegration = std::make_unique<XInputIntegration>(m_x11Display, this);
         m_xinputIntegration->init();
         if (!m_xinputIntegration->hasXinput()) {
-            delete m_xinputIntegration;
-            m_xinputIntegration = nullptr;
+            m_xinputIntegration.reset();
         } else {
-            connect(kwinApp(), &Application::workspaceCreated, m_xinputIntegration, &XInputIntegration::startListening);
+            connect(kwinApp(), &Application::workspaceCreated, m_xinputIntegration.get(), &XInputIntegration::startListening);
         }
     }
 #endif
@@ -154,7 +154,7 @@ bool X11StandalonePlatform::initialize()
 
 Session *X11StandalonePlatform::session() const
 {
-    return m_session;
+    return m_session.get();
 }
 
 OpenGLBackend *X11StandalonePlatform::createOpenGLBackend()
@@ -180,8 +180,8 @@ OpenGLBackend *X11StandalonePlatform::createOpenGLBackend()
 
 Edge *X11StandalonePlatform::createScreenEdge(ScreenEdges *edges)
 {
-    if (m_screenEdgesFilter.isNull()) {
-        m_screenEdgesFilter.reset(new ScreenEdgesFilter);
+    if (!m_screenEdgesFilter) {
+        m_screenEdgesFilter = std::make_unique<ScreenEdgesFilter>();
     }
     return new WindowBasedEdge(edges);
 }
@@ -328,15 +328,15 @@ void X11StandalonePlatform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
 PlatformCursorImage X11StandalonePlatform::cursorImage() const
 {
     auto c = kwinApp()->x11Connection();
-    QScopedPointer<xcb_xfixes_get_cursor_image_reply_t, QScopedPointerPodDeleter> cursor(
+    UniqueCPtr<xcb_xfixes_get_cursor_image_reply_t> cursor(
         xcb_xfixes_get_cursor_image_reply(c,
                                           xcb_xfixes_get_cursor_image_unchecked(c),
                                           nullptr));
-    if (cursor.isNull()) {
+    if (!cursor) {
         return PlatformCursorImage();
     }
 
-    QImage qcursorimg((uchar *)xcb_xfixes_get_cursor_image_cursor_image(cursor.data()), cursor->width, cursor->height,
+    QImage qcursorimg((uchar *)xcb_xfixes_get_cursor_image_cursor_image(cursor.get()), cursor->width, cursor->height,
                       QImage::Format_ARGB32_Premultiplied);
     // deep copy of image as the data is going to be freed
     return PlatformCursorImage(qcursorimg.copy(), QPoint(cursor->xhot, cursor->yhot));
@@ -353,7 +353,7 @@ void X11StandalonePlatform::updateCursor()
 
 void X11StandalonePlatform::startInteractiveWindowSelection(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName)
 {
-    if (m_windowSelector.isNull()) {
+    if (!m_windowSelector) {
         m_windowSelector.reset(new WindowSelector);
     }
     m_windowSelector->start(callback, cursorName);
@@ -361,7 +361,7 @@ void X11StandalonePlatform::startInteractiveWindowSelection(std::function<void(K
 
 void X11StandalonePlatform::startInteractivePositionSelection(std::function<void(const QPoint &)> callback)
 {
-    if (m_windowSelector.isNull()) {
+    if (!m_windowSelector) {
         m_windowSelector.reset(new WindowSelector);
     }
     m_windowSelector->start(callback);
@@ -384,9 +384,9 @@ void X11StandalonePlatform::setupActionForGlobalAccel(QAction *action)
     });
 }
 
-OverlayWindow *X11StandalonePlatform::createOverlayWindow()
+std::unique_ptr<OverlayWindow> X11StandalonePlatform::createOverlayWindow()
 {
-    return new OverlayWindowX11();
+    return std::make_unique<OverlayWindowX11>();
 }
 
 OutlineVisual *X11StandalonePlatform::createOutline(Outline *outline)
@@ -546,7 +546,7 @@ void X11StandalonePlatform::doUpdateOutputs()
                     // drm platform do this.
                     Xcb::RandR::CrtcGamma gamma(crtcs[i]);
 
-                    output->setRenderLoop(m_renderLoop);
+                    output->setRenderLoop(m_renderLoop.get());
                     output->setCrtc(crtcs[i]);
                     output->setGammaRampSize(gamma.isNull() ? 0 : gamma->size);
                     output->setMode(geometry.size(), refreshRate * 1000);
@@ -580,7 +580,7 @@ void X11StandalonePlatform::doUpdateOutputs()
     // The workspace handles having no outputs poorly. If the last output is about to be
     // removed, create a dummy output to avoid crashing.
     if (changed.isEmpty() && added.isEmpty()) {
-        auto dummyOutput = new X11PlaceholderOutput(m_renderLoop);
+        auto dummyOutput = new X11PlaceholderOutput(m_renderLoop.get());
         m_outputs << dummyOutput;
         Q_EMIT outputAdded(dummyOutput);
         Q_EMIT outputEnabled(dummyOutput);
@@ -640,7 +640,7 @@ Outputs X11StandalonePlatform::enabledOutputs() const
 
 RenderLoop *X11StandalonePlatform::renderLoop() const
 {
-    return m_renderLoop;
+    return m_renderLoop.get();
 }
 
 static bool refreshRate_compare(const Output *first, const Output *smallest)

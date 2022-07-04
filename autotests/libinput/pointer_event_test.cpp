@@ -77,15 +77,15 @@ void TestLibinputPointerEvent::testType()
     pointerEvent->type = type;
     pointerEvent->device = m_nativeDevice;
 
-    QScopedPointer<Event> event(Event::create(pointerEvent));
+    std::unique_ptr<Event> event(Event::create(pointerEvent));
     // API of event
     QCOMPARE(event->type(), type);
     QCOMPARE(event->device(), m_device);
     QCOMPARE(event->nativeDevice(), m_nativeDevice);
-    QCOMPARE((libinput_event *)(*event.data()), pointerEvent);
+    QCOMPARE((libinput_event *)(*event.get()), pointerEvent);
     // verify it's a pointer event
-    QVERIFY(dynamic_cast<PointerEvent *>(event.data()));
-    QCOMPARE((libinput_event_pointer *)(*dynamic_cast<PointerEvent *>(event.data())), pointerEvent);
+    QVERIFY(dynamic_cast<PointerEvent *>(event.get()));
+    QCOMPARE((libinput_event_pointer *)(*dynamic_cast<PointerEvent *>(event.get())), pointerEvent);
 }
 
 void TestLibinputPointerEvent::testButton_data()
@@ -112,8 +112,8 @@ void TestLibinputPointerEvent::testButton()
     QFETCH(quint32, time);
     pointerEvent->time = time;
 
-    QScopedPointer<Event> event(Event::create(pointerEvent));
-    auto pe = dynamic_cast<PointerEvent *>(event.data());
+    std::unique_ptr<Event> event(Event::create(pointerEvent));
+    auto pe = dynamic_cast<PointerEvent *>(event.get());
     QVERIFY(pe);
     QCOMPARE(pe->type(), LIBINPUT_EVENT_POINTER_BUTTON);
     QTEST(pe->buttonState(), "expectedButtonState");
@@ -169,8 +169,8 @@ void TestLibinputPointerEvent::testAxis()
     pointerEvent->axisSource = axisSource;
     pointerEvent->time = time;
 
-    QScopedPointer<Event> event(Event::create(pointerEvent));
-    auto pe = dynamic_cast<PointerEvent *>(event.data());
+    std::unique_ptr<Event> event(Event::create(pointerEvent));
+    auto pe = dynamic_cast<PointerEvent *>(event.get());
     QVERIFY(pe);
     QCOMPARE(pe->type(), LIBINPUT_EVENT_POINTER_AXIS);
     QCOMPARE(pe->axis().contains(KWin::InputRedirection::PointerAxisHorizontal), horizontal);
@@ -192,8 +192,8 @@ void TestLibinputPointerEvent::testMotion()
     pointerEvent->delta = QSizeF(2.1, 4.5);
     pointerEvent->time = 500u;
 
-    QScopedPointer<Event> event(Event::create(pointerEvent));
-    auto pe = dynamic_cast<PointerEvent *>(event.data());
+    std::unique_ptr<Event> event(Event::create(pointerEvent));
+    auto pe = dynamic_cast<PointerEvent *>(event.get());
     QVERIFY(pe);
     QCOMPARE(pe->type(), LIBINPUT_EVENT_POINTER_MOTION);
     QCOMPARE(pe->time(), 500u);
@@ -209,8 +209,8 @@ void TestLibinputPointerEvent::testAbsoluteMotion()
     pointerEvent->absolutePos = QPointF(6.25, 6.9);
     pointerEvent->time = 500u;
 
-    QScopedPointer<Event> event(Event::create(pointerEvent));
-    auto pe = dynamic_cast<PointerEvent *>(event.data());
+    std::unique_ptr<Event> event(Event::create(pointerEvent));
+    auto pe = dynamic_cast<PointerEvent *>(event.get());
     QVERIFY(pe);
     QCOMPARE(pe->type(), LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE);
     QCOMPARE(pe->time(), 500u);

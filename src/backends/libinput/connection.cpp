@@ -183,16 +183,16 @@ void Connection::deactivate()
 void Connection::handleEvent()
 {
     QMutexLocker locker(&m_mutex);
-    const bool wasEmpty = m_eventQueue.isEmpty();
+    const bool wasEmpty = m_eventQueue.empty();
     do {
         m_input->dispatch();
-        Event *event = m_input->event();
+        std::unique_ptr<Event> event = m_input->event();
         if (!event) {
             break;
         }
-        m_eventQueue << event;
+        m_eventQueue.push_back(std::move(event));
     } while (true);
-    if (wasEmpty && !m_eventQueue.isEmpty()) {
+    if (wasEmpty && !m_eventQueue.empty()) {
         Q_EMIT eventsRead();
     }
 }
@@ -285,8 +285,9 @@ KWin::TabletToolId createTabletId(libinput_tablet_tool *tool, void *userData)
 void Connection::processEvents()
 {
     QMutexLocker locker(&m_mutex);
-    while (!m_eventQueue.isEmpty()) {
-        QScopedPointer<Event> event(m_eventQueue.takeFirst());
+    while (m_eventQueue.size() != 0) {
+        std::unique_ptr<Event> event = std::move(m_eventQueue.front());
+        m_eventQueue.pop_front();
         switch (event->type()) {
         case LIBINPUT_EVENT_DEVICE_ADDED: {
             auto device = new Device(event->nativeDevice());
@@ -314,12 +315,12 @@ void Connection::processEvents()
             break;
         }
         case LIBINPUT_EVENT_KEYBOARD_KEY: {
-            KeyEvent *ke = static_cast<KeyEvent *>(event.data());
+            KeyEvent *ke = static_cast<KeyEvent *>(event.get());
             Q_EMIT ke->device()->keyChanged(ke->key(), ke->state(), ke->time(), ke->device());
             break;
         }
         case LIBINPUT_EVENT_POINTER_AXIS: {
-            PointerEvent *pe = static_cast<PointerEvent *>(event.data());
+            PointerEvent *pe = static_cast<PointerEvent *>(event.get());
             const auto axes = pe->axis();
             for (const InputRedirection::PointerAxis &axis : axes) {
                 Q_EMIT pe->device()->pointerAxisChanged(axis, pe->axisValue(axis), pe->discreteAxisValue(axis),
@@ -328,12 +329,12 @@ void Connection::processEvents()
             break;
         }
         case LIBINPUT_EVENT_POINTER_BUTTON: {
-            PointerEvent *pe = static_cast<PointerEvent *>(event.data());
+            PointerEvent *pe = static_cast<PointerEvent *>(event.get());
             Q_EMIT pe->device()->pointerButtonChanged(pe->button(), pe->buttonState(), pe->time(), pe->device());
             break;
         }
         case LIBINPUT_EVENT_POINTER_MOTION: {
-            PointerEvent *pe = static_cast<PointerEvent *>(event.data());
+            PointerEvent *pe = static_cast<PointerEvent *>(event.get());
             auto delta = pe->delta();
             auto deltaNonAccel = pe->deltaUnaccelerated();
             quint32 latestTime = pe->time();
@@ -341,7 +342,7 @@ void Connection::processEvents()
             auto it = m_eventQueue.begin();
             while (it != m_eventQueue.end()) {
                 if ((*it)->type() == LIBINPUT_EVENT_POINTER_MOTION) {
-                    QScopedPointer<PointerEvent> p(static_cast<PointerEvent *>(*it));
+                    std::unique_ptr<PointerEvent> p{static_cast<PointerEvent *>(it->release())};
                     delta += p->delta();
                     deltaNonAccel += p->deltaUnaccelerated();
                     latestTime = p->time();
@@ -355,13 +356,13 @@ void Connection::processEvents()
             break;
         }
         case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE: {
-            PointerEvent *pe = static_cast<PointerEvent *>(event.data());
+            PointerEvent *pe = static_cast<PointerEvent *>(event.get());
             Q_EMIT pe->device()->pointerMotionAbsolute(pe->absolutePos(workspace()->geometry().size()), pe->time(), pe->device());
             break;
         }
         case LIBINPUT_EVENT_TOUCH_DOWN: {
 #ifndef KWIN_BUILD_TESTING
-            TouchEvent *te = static_cast<TouchEvent *>(event.data());
+            TouchEvent *te = static_cast<TouchEvent *>(event.get());
             const auto *output = te->device()->output();
             const QPointF globalPos = devicePointToGlobalPosition(te->absolutePos(output->modeSize()), output);
             Q_EMIT te->device()->touchDown(te->id(), globalPos, te->time(), te->device());
@@ -369,13 +370,13 @@ void Connection::processEvents()
 #endif
         }
         case LIBINPUT_EVENT_TOUCH_UP: {
-            TouchEvent *te = static_cast<TouchEvent *>(event.data());
+            TouchEvent *te = static_cast<TouchEvent *>(event.get());
             Q_EMIT te->device()->touchUp(te->id(), te->time(), te->device());
             break;
         }
         case LIBINPUT_EVENT_TOUCH_MOTION: {
 #ifndef KWIN_BUILD_TESTING
-            TouchEvent *te = static_cast<TouchEvent *>(event.data());
+            TouchEvent *te = static_cast<TouchEvent *>(event.get());
             const auto *output = te->device()->output();
             const QPointF globalPos = devicePointToGlobalPosition(te->absolutePos(output->modeSize()), output);
             Q_EMIT te->device()->touchMotion(te->id(), globalPos, te->time(), te->device());
@@ -391,17 +392,17 @@ void Connection::processEvents()
             break;
         }
         case LIBINPUT_EVENT_GESTURE_PINCH_BEGIN: {
-            PinchGestureEvent *pe = static_cast<PinchGestureEvent *>(event.data());
+            PinchGestureEvent *pe = static_cast<PinchGestureEvent *>(event.get());
             Q_EMIT pe->device()->pinchGestureBegin(pe->fingerCount(), pe->time(), pe->device());
             break;
         }
         case LIBINPUT_EVENT_GESTURE_PINCH_UPDATE: {
-            PinchGestureEvent *pe = static_cast<PinchGestureEvent *>(event.data());
+            PinchGestureEvent *pe = static_cast<PinchGestureEvent *>(event.get());
             Q_EMIT pe->device()->pinchGestureUpdate(pe->scale(), pe->angleDelta(), pe->delta(), pe->time(), pe->device());
             break;
         }
         case LIBINPUT_EVENT_GESTURE_PINCH_END: {
-            PinchGestureEvent *pe = static_cast<PinchGestureEvent *>(event.data());
+            PinchGestureEvent *pe = static_cast<PinchGestureEvent *>(event.get());
             if (pe->isCancelled()) {
                 Q_EMIT pe->device()->pinchGestureCancelled(pe->time(), pe->device());
             } else {
@@ -410,17 +411,17 @@ void Connection::processEvents()
             break;
         }
         case LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN: {
-            SwipeGestureEvent *se = static_cast<SwipeGestureEvent *>(event.data());
+            SwipeGestureEvent *se = static_cast<SwipeGestureEvent *>(event.get());
             Q_EMIT se->device()->swipeGestureBegin(se->fingerCount(), se->time(), se->device());
             break;
         }
         case LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE: {
-            SwipeGestureEvent *se = static_cast<SwipeGestureEvent *>(event.data());
+            SwipeGestureEvent *se = static_cast<SwipeGestureEvent *>(event.get());
             Q_EMIT se->device()->swipeGestureUpdate(se->delta(), se->time(), se->device());
             break;
         }
         case LIBINPUT_EVENT_GESTURE_SWIPE_END: {
-            SwipeGestureEvent *se = static_cast<SwipeGestureEvent *>(event.data());
+            SwipeGestureEvent *se = static_cast<SwipeGestureEvent *>(event.get());
             if (se->isCancelled()) {
                 Q_EMIT se->device()->swipeGestureCancelled(se->time(), se->device());
             } else {
@@ -429,12 +430,12 @@ void Connection::processEvents()
             break;
         }
         case LIBINPUT_EVENT_GESTURE_HOLD_BEGIN: {
-            HoldGestureEvent *he = static_cast<HoldGestureEvent *>(event.data());
+            HoldGestureEvent *he = static_cast<HoldGestureEvent *>(event.get());
             Q_EMIT he->device()->holdGestureBegin(he->fingerCount(), he->time(), he->device());
             break;
         }
         case LIBINPUT_EVENT_GESTURE_HOLD_END: {
-            HoldGestureEvent *he = static_cast<HoldGestureEvent *>(event.data());
+            HoldGestureEvent *he = static_cast<HoldGestureEvent *>(event.get());
             if (he->isCancelled()) {
                 Q_EMIT he->device()->holdGestureCancelled(he->time(), he->device());
             } else {
@@ -443,7 +444,7 @@ void Connection::processEvents()
             break;
         }
         case LIBINPUT_EVENT_SWITCH_TOGGLE: {
-            SwitchEvent *se = static_cast<SwitchEvent *>(event.data());
+            SwitchEvent *se = static_cast<SwitchEvent *>(event.get());
             switch (se->state()) {
             case SwitchEvent::State::Off:
                 Q_EMIT se->device()->switchToggledOff(se->time(), se->timeMicroseconds(), se->device());
@@ -459,7 +460,7 @@ void Connection::processEvents()
         case LIBINPUT_EVENT_TABLET_TOOL_AXIS:
         case LIBINPUT_EVENT_TABLET_TOOL_PROXIMITY:
         case LIBINPUT_EVENT_TABLET_TOOL_TIP: {
-            auto *tte = static_cast<TabletToolEvent *>(event.data());
+            auto *tte = static_cast<TabletToolEvent *>(event.get());
 
             KWin::InputRedirection::TabletEventType tabletEventType;
             switch (event->type()) {
@@ -498,21 +499,21 @@ void Connection::processEvents()
             break;
         }
         case LIBINPUT_EVENT_TABLET_TOOL_BUTTON: {
-            auto *tabletEvent = static_cast<TabletToolButtonEvent *>(event.data());
+            auto *tabletEvent = static_cast<TabletToolButtonEvent *>(event.get());
             Q_EMIT event->device()->tabletToolButtonEvent(tabletEvent->buttonId(),
                                                           tabletEvent->isButtonPressed(),
                                                           createTabletId(tabletEvent->tool(), event->device()->groupUserData()));
             break;
         }
         case LIBINPUT_EVENT_TABLET_PAD_BUTTON: {
-            auto *tabletEvent = static_cast<TabletPadButtonEvent *>(event.data());
+            auto *tabletEvent = static_cast<TabletPadButtonEvent *>(event.get());
             Q_EMIT event->device()->tabletPadButtonEvent(tabletEvent->buttonId(),
                                                          tabletEvent->isButtonPressed(),
                                                          {event->device()->groupUserData()});
             break;
         }
         case LIBINPUT_EVENT_TABLET_PAD_RING: {
-            auto *tabletEvent = static_cast<TabletPadRingEvent *>(event.data());
+            auto *tabletEvent = static_cast<TabletPadRingEvent *>(event.get());
             tabletEvent->position();
             Q_EMIT event->device()->tabletPadRingEvent(tabletEvent->number(),
                                                        tabletEvent->position(),
@@ -521,7 +522,7 @@ void Connection::processEvents()
             break;
         }
         case LIBINPUT_EVENT_TABLET_PAD_STRIP: {
-            auto *tabletEvent = static_cast<TabletPadStripEvent *>(event.data());
+            auto *tabletEvent = static_cast<TabletPadStripEvent *>(event.get());
             Q_EMIT event->device()->tabletPadStripEvent(tabletEvent->number(),
                                                         tabletEvent->position(),
                                                         tabletEvent->source() == LIBINPUT_TABLET_PAD_STRIP_SOURCE_FINGER,

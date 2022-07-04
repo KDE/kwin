@@ -77,7 +77,7 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
     qCDebug(KWIN_DRM) << "drmModeAddFB2WithModifiers is" << (m_addFB2ModifiersSupported ? "supported" : "not supported") << "on GPU" << m_devNode;
 
     // find out what driver this kms device is using
-    DrmScopedPointer<drmVersion> version(drmGetVersion(fd));
+    DrmUniquePtr<drmVersion> version(drmGetVersion(fd));
     m_isNVidia = strstr(version->name, "nvidia-drm");
     m_isVirtualMachine = strstr(version->name, "virtio") || strstr(version->name, "qxl")
         || strstr(version->name, "vmwgfx") || strstr(version->name, "vboxvideo");
@@ -160,13 +160,13 @@ void DrmGpu::initDrmResources()
     } else if (drmSetClientCap(m_fd, DRM_CLIENT_CAP_ATOMIC, 1) != 0) {
         qCWarning(KWIN_DRM) << "drmSetClientCap for Atomic Mode Setting failed. Using legacy mode on GPU" << m_devNode;
     } else {
-        DrmScopedPointer<drmModePlaneRes> planeResources(drmModeGetPlaneResources(m_fd));
+        DrmUniquePtr<drmModePlaneRes> planeResources(drmModeGetPlaneResources(m_fd));
         if (planeResources) {
             qCDebug(KWIN_DRM) << "Using Atomic Mode Setting on gpu" << m_devNode;
             qCDebug(KWIN_DRM) << "Number of planes on GPU" << m_devNode << ":" << planeResources->count_planes;
             // create the plane objects
             for (unsigned int i = 0; i < planeResources->count_planes; ++i) {
-                DrmScopedPointer<drmModePlane> kplane(drmModeGetPlane(m_fd, planeResources->planes[i]));
+                DrmUniquePtr<drmModePlane> kplane(drmModeGetPlane(m_fd, planeResources->planes[i]));
                 DrmPlane *p = new DrmPlane(this, kplane->plane_id);
                 if (p->init()) {
                     m_planes << p;
@@ -184,7 +184,7 @@ void DrmGpu::initDrmResources()
     }
     m_atomicModeSetting = !m_planes.isEmpty();
 
-    DrmScopedPointer<drmModeRes> resources(drmModeGetResources(m_fd));
+    DrmUniquePtr<drmModeRes> resources(drmModeGetResources(m_fd));
     if (!resources) {
         qCCritical(KWIN_DRM) << "drmModeGetResources for getting CRTCs failed on GPU" << m_devNode;
         return;
@@ -225,7 +225,7 @@ void DrmGpu::initDrmResources()
 bool DrmGpu::updateOutputs()
 {
     waitIdle();
-    DrmScopedPointer<drmModeRes> resources(drmModeGetResources(m_fd));
+    DrmUniquePtr<drmModeRes> resources(drmModeGetResources(m_fd));
     if (!resources) {
         qCWarning(KWIN_DRM) << "drmModeGetResources failed";
         return false;
@@ -432,22 +432,22 @@ bool DrmGpu::testPendingConfiguration()
 
 bool DrmGpu::testPipelines()
 {
-    // pipelines that are enabled but not active need to be activated for the test
     QVector<DrmPipeline *> inactivePipelines;
-    for (const auto &pipeline : qAsConst(m_pipelines)) {
-        if (!pipeline->active()) {
-            pipeline->setActive(true);
-            inactivePipelines << pipeline;
-        }
-    }
+    std::copy_if(m_pipelines.constBegin(), m_pipelines.constEnd(), std::back_inserter(inactivePipelines), [](const auto pipeline) {
+        return pipeline->enabled() && !pipeline->active();
+    });
     const auto unused = unusedObjects();
     bool test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test, unused);
-    // disable inactive pipelines again
-    for (const auto &pipeline : qAsConst(inactivePipelines)) {
-        pipeline->setActive(false);
-    }
     if (!inactivePipelines.isEmpty() && test) {
+        // ensure that pipelines that are set as enabled but currently inactive
+        // still work when they need to be set active again
+        for (const auto pipeline : qAsConst(inactivePipelines)) {
+            pipeline->setActive(true);
+        }
         test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::Test, unused);
+        for (const auto pipeline : qAsConst(inactivePipelines)) {
+            pipeline->setActive(false);
+        }
     }
     return test;
 }

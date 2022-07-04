@@ -118,7 +118,7 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
 {
     if (m_conn) {
         for (int i = 0; i < m_conn->count_encoders; ++i) {
-            DrmScopedPointer<drmModeEncoder> enc(drmModeGetEncoder(gpu->fd(), m_conn->encoders[i]));
+            DrmUniquePtr<drmModeEncoder> enc(drmModeGetEncoder(gpu->fd(), m_conn->encoders[i]));
             if (!enc) {
                 qCWarning(KWIN_DRM) << "failed to get encoder" << m_conn->encoders[i];
                 continue;
@@ -380,7 +380,7 @@ const Edid *DrmConnector::edid() const
 
 DrmPipeline *DrmConnector::pipeline() const
 {
-    return m_pipeline.data();
+    return m_pipeline.get();
 }
 
 void DrmConnector::disable()

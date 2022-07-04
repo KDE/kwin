@@ -27,14 +27,14 @@ namespace KWin
 
 VirtualBackend::VirtualBackend(QObject *parent)
     : Platform(parent)
-    , m_session(Session::create(Session::Type::Noop, this))
+    , m_session(Session::create(Session::Type::Noop))
 {
     if (qEnvironmentVariableIsSet("KWIN_WAYLAND_VIRTUAL_SCREENSHOTS")) {
         m_screenshotDir.reset(new QTemporaryDir);
         if (!m_screenshotDir->isValid()) {
             m_screenshotDir.reset();
         }
-        if (!m_screenshotDir.isNull()) {
+        if (m_screenshotDir) {
             qDebug() << "Screenshots saved to: " << m_screenshotDir->path();
         }
     }
@@ -53,7 +53,7 @@ VirtualBackend::~VirtualBackend()
 
 Session *VirtualBackend::session() const
 {
-    return m_session;
+    return m_session.get();
 }
 
 bool VirtualBackend::initialize()
@@ -80,7 +80,7 @@ bool VirtualBackend::initialize()
 
 QString VirtualBackend::screenshotDirPath() const
 {
-    if (m_screenshotDir.isNull()) {
+    if (!m_screenshotDir) {
         return QString();
     }
     return m_screenshotDir->path();

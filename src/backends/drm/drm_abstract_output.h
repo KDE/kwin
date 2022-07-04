@@ -35,7 +35,7 @@ public:
 protected:
     friend class DrmGpu;
 
-    RenderLoop *m_renderLoop;
+    std::unique_ptr<RenderLoop> m_renderLoop;
     DrmGpu *const m_gpu;
 };
 

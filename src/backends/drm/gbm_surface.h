@@ -67,7 +67,7 @@ private:
     int m_bufferAge = 0;
     DamageJournal m_damageJournal;
 
-    QScopedPointer<GLFramebuffer> m_fbo;
+    std::unique_ptr<GLFramebuffer> m_fbo;
 };
 
 }

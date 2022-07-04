@@ -33,8 +33,8 @@ public:
 private:
     GLint internalFormat(const GbmFormat &format) const;
     std::shared_ptr<GLTexture> m_texture;
-    QScopedPointer<GLFramebuffer> m_fbo;
-    QScopedPointer<GLVertexBuffer> m_vbo;
+    std::unique_ptr<GLFramebuffer> m_fbo;
+    std::unique_ptr<GLVertexBuffer> m_vbo;
     const QSize m_size;
     const uint32_t m_drmFormat;
 };

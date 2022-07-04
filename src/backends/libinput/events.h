@@ -38,7 +38,7 @@ public:
         return m_event;
     }
 
-    static Event *create(libinput_event *event);
+    static std::unique_ptr<Event> create(libinput_event *event);
 
 protected:
     Event(libinput_event *event, libinput_event_type type);

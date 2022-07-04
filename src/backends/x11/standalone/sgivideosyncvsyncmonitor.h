@@ -25,7 +25,7 @@ class SGIVideoSyncVsyncMonitorHelper : public QObject
     Q_OBJECT
 
 public:
-    explicit SGIVideoSyncVsyncMonitorHelper(QObject *parent = nullptr);
+    explicit SGIVideoSyncVsyncMonitorHelper();
     ~SGIVideoSyncVsyncMonitorHelper() override;
 
     bool isValid() const;
@@ -57,7 +57,7 @@ class SGIVideoSyncVsyncMonitor : public VsyncMonitor
     Q_OBJECT
 
 public:
-    static SGIVideoSyncVsyncMonitor *create(QObject *parent);
+    static std::unique_ptr<SGIVideoSyncVsyncMonitor> create();
     ~SGIVideoSyncVsyncMonitor() override;
 
     bool isValid() const;
@@ -66,10 +66,10 @@ public Q_SLOTS:
     void arm() override;
 
 private:
-    explicit SGIVideoSyncVsyncMonitor(QObject *parent = nullptr);
+    explicit SGIVideoSyncVsyncMonitor();
 
-    QThread *m_thread = nullptr;
-    SGIVideoSyncVsyncMonitorHelper *m_helper = nullptr;
+    QThread m_thread;
+    SGIVideoSyncVsyncMonitorHelper m_helper;
 };
 
 } // namespace KWin

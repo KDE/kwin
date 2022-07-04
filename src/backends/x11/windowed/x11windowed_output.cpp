@@ -27,8 +27,8 @@ namespace KWin
 
 X11WindowedOutput::X11WindowedOutput(X11WindowedBackend *backend)
     : Output(backend)
-    , m_renderLoop(new RenderLoop(this))
-    , m_vsyncMonitor(SoftwareVsyncMonitor::create(this))
+    , m_renderLoop(std::make_unique<RenderLoop>())
+    , m_vsyncMonitor(SoftwareVsyncMonitor::create())
     , m_backend(backend)
 {
     m_window = xcb_generate_id(m_backend->connection());
@@ -39,25 +39,24 @@ X11WindowedOutput::X11WindowedOutput(X11WindowedBackend *backend)
         .name = QStringLiteral("X11-%1").arg(identifier),
     });
 
-    connect(m_vsyncMonitor, &VsyncMonitor::vblankOccurred, this, &X11WindowedOutput::vblank);
+    connect(m_vsyncMonitor.get(), &VsyncMonitor::vblankOccurred, this, &X11WindowedOutput::vblank);
 }
 
 X11WindowedOutput::~X11WindowedOutput()
 {
     xcb_unmap_window(m_backend->connection(), m_window);
     xcb_destroy_window(m_backend->connection(), m_window);
-    delete m_winInfo;
     xcb_flush(m_backend->connection());
 }
 
 RenderLoop *X11WindowedOutput::renderLoop() const
 {
-    return m_renderLoop;
+    return m_renderLoop.get();
 }
 
 SoftwareVsyncMonitor *X11WindowedOutput::vsyncMonitor() const
 {
-    return m_vsyncMonitor;
+    return m_vsyncMonitor.get();
 }
 
 void X11WindowedOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
@@ -98,10 +97,8 @@ void X11WindowedOutput::init(const QPoint &logicalPosition, const QSize &pixelSi
     // select xinput 2 events
     initXInputForWindow();
 
-    m_winInfo = new NETWinInfo(m_backend->connection(),
-                               m_window,
-                               m_backend->screen()->root,
-                               NET::WMWindowType, NET::Properties2());
+    m_winInfo = std::make_unique<NETWinInfo>(m_backend->connection(), m_window, m_backend->screen()->root,
+                                             NET::WMWindowType, NET::Properties2());
 
     m_winInfo->setWindowType(NET::Normal);
     m_winInfo->setPid(QCoreApplication::applicationPid());
@@ -175,7 +172,7 @@ QPointF X11WindowedOutput::mapFromGlobal(const QPointF &pos) const
 
 void X11WindowedOutput::vblank(std::chrono::nanoseconds timestamp)
 {
-    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop);
+    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop.get());
     renderLoopPrivate->notifyFrameCompleted(timestamp);
 }
 

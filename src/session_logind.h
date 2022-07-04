@@ -18,7 +18,7 @@ class LogindSession : public Session
     Q_OBJECT
 
 public:
-    static LogindSession *create(QObject *parent = nullptr);
+    static std::unique_ptr<LogindSession> create();
     ~LogindSession() override;
 
     bool isActive() const override;
@@ -36,7 +36,7 @@ private Q_SLOTS:
     void handlePrepareForSleep(bool sleep);
 
 private:
-    explicit LogindSession(const QString &sessionPath, QObject *parent = nullptr);
+    explicit LogindSession(const QString &sessionPath);
 
     bool initialize();
     void updateActive(bool active);

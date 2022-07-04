@@ -22,7 +22,6 @@
 #include <kwingltexture_p.h>
 
 #include <QHash>
-
 #include <memory>
 
 namespace KWin
@@ -110,20 +109,20 @@ private:
     void screenGeometryChanged();
 
     int visualDepth(xcb_visualid_t visual) const;
-    FBConfigInfo *infoForVisual(xcb_visualid_t visual);
+    const FBConfigInfo &infoForVisual(xcb_visualid_t visual);
 
     /**
      * @brief The OverlayWindow used by this Backend.
      */
-    OverlayWindow *m_overlayWindow;
+    std::unique_ptr<OverlayWindow> m_overlayWindow;
     ::Window window;
     GLXFBConfig fbconfig;
     GLXWindow glxWindow;
     GLXContext ctx;
-    QHash<xcb_visualid_t, FBConfigInfo *> m_fbconfigHash;
+    QHash<xcb_visualid_t, FBConfigInfo> m_fbconfigHash;
     QHash<xcb_visualid_t, int> m_visualDepthHash;
     std::unique_ptr<SwapEventFilter> m_swapEventFilter;
-    QScopedPointer<GLFramebuffer> m_fbo;
+    std::unique_ptr<GLFramebuffer> m_fbo;
     DamageJournal m_damageJournal;
     QRegion m_lastRenderedRegion;
     int m_bufferAge;
@@ -133,8 +132,8 @@ private:
     bool m_haveSGISwapControl = false;
     Display *m_x11Display;
     X11StandalonePlatform *m_backend;
-    VsyncMonitor *m_vsyncMonitor = nullptr;
-    QScopedPointer<GlxLayer> m_layer;
+    std::unique_ptr<VsyncMonitor> m_vsyncMonitor;
+    std::unique_ptr<GlxLayer> m_layer;
     friend class GlxPixmapTexturePrivate;
 };
 

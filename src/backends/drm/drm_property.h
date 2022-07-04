@@ -96,7 +96,7 @@ private:
     uint64_t m_next = 0;
     // the value currently set for or by the kernel
     uint64_t m_current = 0;
-    DrmScopedPointer<drmModePropertyBlobRes> m_immutableBlob;
+    DrmUniquePtr<drmModePropertyBlobRes> m_immutableBlob;
 
     uint64_t m_minValue = -1;
     uint64_t m_maxValue = -1;

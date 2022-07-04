@@ -15,22 +15,17 @@ namespace KWin
 static const struct
 {
     Session::Type type;
-    std::function<Session *(QObject *)> createFunc;
+    std::function<std::unique_ptr<Session>()> createFunc;
 } s_availableSessions[] = {
     {Session::Type::Logind, &LogindSession::create},
     {Session::Type::ConsoleKit, &ConsoleKitSession::create},
     {Session::Type::Noop, &NoopSession::create},
 };
 
-Session::Session(QObject *parent)
-    : QObject(parent)
-{
-}
-
-Session *Session::create(QObject *parent)
+std::unique_ptr<Session> Session::create()
 {
     for (const auto &sessionInfo : s_availableSessions) {
-        Session *session = sessionInfo.createFunc(parent);
+        std::unique_ptr<Session> session = sessionInfo.createFunc();
         if (session) {
             return session;
         }
@@ -38,11 +33,11 @@ Session *Session::create(QObject *parent)
     return nullptr;
 }
 
-Session *Session::create(Type type, QObject *parent)
+std::unique_ptr<Session> Session::create(Type type)
 {
     for (const auto &sessionInfo : s_availableSessions) {
         if (sessionInfo.type == type) {
-            return sessionInfo.createFunc(parent);
+            return sessionInfo.createFunc();
         }
     }
     return nullptr;

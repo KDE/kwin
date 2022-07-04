@@ -35,7 +35,7 @@ private:
     void ensureFbo();
 
     EGLSurface m_eglSurface;
-    QScopedPointer<GLFramebuffer> m_fbo;
+    std::unique_ptr<GLFramebuffer> m_fbo;
     QRegion m_lastDamage;
 
     Output *const m_output;

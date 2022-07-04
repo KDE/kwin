@@ -74,8 +74,8 @@ void TestLibinputSwitchEvent::testToggled()
     nativeEvent->time = 23;
     nativeEvent->timeMicroseconds = 23456789;
 
-    QScopedPointer<Event> event(Event::create(nativeEvent));
-    auto se = dynamic_cast<SwitchEvent *>(event.data());
+    std::unique_ptr<Event> event(Event::create(nativeEvent));
+    auto se = dynamic_cast<SwitchEvent *>(event.get());
     QVERIFY(se);
     QCOMPARE(se->device(), m_device.get());
     QCOMPARE(se->nativeDevice(), m_nativeDevice.get());

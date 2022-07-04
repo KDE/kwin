@@ -281,36 +281,36 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
 
     KWayland::Client::PointerGestures *pointerGestures = m_seat->backend()->pointerGestures();
     if (pointerGestures) {
-        m_pinchGesture.reset(pointerGestures->createPinchGesture(m_pointer.data(), this));
-        connect(m_pinchGesture.data(), &PointerPinchGesture::started, this, [this](quint32 serial, quint32 time) {
+        m_pinchGesture.reset(pointerGestures->createPinchGesture(m_pointer.get(), this));
+        connect(m_pinchGesture.get(), &PointerPinchGesture::started, this, [this](quint32 serial, quint32 time) {
             Q_UNUSED(serial);
             Q_EMIT pinchGestureBegin(m_pinchGesture->fingerCount(), time, this);
         });
-        connect(m_pinchGesture.data(), &PointerPinchGesture::updated, this, [this](const QSizeF &delta, qreal scale, qreal rotation, quint32 time) {
+        connect(m_pinchGesture.get(), &PointerPinchGesture::updated, this, [this](const QSizeF &delta, qreal scale, qreal rotation, quint32 time) {
             Q_EMIT pinchGestureUpdate(scale, rotation, delta, time, this);
         });
-        connect(m_pinchGesture.data(), &PointerPinchGesture::ended, this, [this](quint32 serial, quint32 time) {
+        connect(m_pinchGesture.get(), &PointerPinchGesture::ended, this, [this](quint32 serial, quint32 time) {
             Q_UNUSED(serial)
             Q_EMIT pinchGestureEnd(time, this);
         });
-        connect(m_pinchGesture.data(), &PointerPinchGesture::cancelled, this, [this](quint32 serial, quint32 time) {
+        connect(m_pinchGesture.get(), &PointerPinchGesture::cancelled, this, [this](quint32 serial, quint32 time) {
             Q_UNUSED(serial)
             Q_EMIT pinchGestureCancelled(time, this);
         });
 
-        m_swipeGesture.reset(pointerGestures->createSwipeGesture(m_pointer.data(), this));
-        connect(m_swipeGesture.data(), &PointerSwipeGesture::started, this, [this](quint32 serial, quint32 time) {
+        m_swipeGesture.reset(pointerGestures->createSwipeGesture(m_pointer.get(), this));
+        connect(m_swipeGesture.get(), &PointerSwipeGesture::started, this, [this](quint32 serial, quint32 time) {
             Q_UNUSED(serial)
             Q_EMIT swipeGestureBegin(m_swipeGesture->fingerCount(), time, this);
         });
-        connect(m_swipeGesture.data(), &PointerSwipeGesture::updated, this, [this](const QSizeF &delta, quint32 time) {
+        connect(m_swipeGesture.get(), &PointerSwipeGesture::updated, this, [this](const QSizeF &delta, quint32 time) {
             Q_EMIT swipeGestureUpdate(delta, time, this);
         });
-        connect(m_swipeGesture.data(), &PointerSwipeGesture::ended, this, [this](quint32 serial, quint32 time) {
+        connect(m_swipeGesture.get(), &PointerSwipeGesture::ended, this, [this](quint32 serial, quint32 time) {
             Q_UNUSED(serial)
             Q_EMIT swipeGestureEnd(time, this);
         });
-        connect(m_swipeGesture.data(), &PointerSwipeGesture::cancelled, this, [this](quint32 serial, quint32 time) {
+        connect(m_swipeGesture.get(), &PointerSwipeGesture::cancelled, this, [this](quint32 serial, quint32 time) {
             Q_UNUSED(serial)
             Q_EMIT swipeGestureCancelled(time, this);
         });
@@ -388,12 +388,12 @@ void WaylandInputDevice::setLeds(LEDs leds)
 
 bool WaylandInputDevice::isKeyboard() const
 {
-    return !m_keyboard.isNull();
+    return m_keyboard != nullptr;
 }
 
 bool WaylandInputDevice::isAlphaNumericKeyboard() const
 {
-    return !m_keyboard.isNull();
+    return m_keyboard != nullptr;
 }
 
 bool WaylandInputDevice::isPointer() const
@@ -408,7 +408,7 @@ bool WaylandInputDevice::isTouchpad() const
 
 bool WaylandInputDevice::isTouch() const
 {
-    return !m_touch.isNull();
+    return m_touch != nullptr;
 }
 
 bool WaylandInputDevice::isTabletTool() const
@@ -433,7 +433,7 @@ bool WaylandInputDevice::isLidSwitch() const
 
 KWayland::Client::Pointer *WaylandInputDevice::nativePointer() const
 {
-    return m_pointer.data();
+    return m_pointer.get();
 }
 
 WaylandInputBackend::WaylandInputBackend(WaylandBackend *backend, QObject *parent)
@@ -570,7 +570,7 @@ void WaylandSeat::destroyTouchDevice()
 
 WaylandBackend::WaylandBackend(QObject *parent)
     : Platform(parent)
-    , m_session(Session::create(Session::Type::Noop, this))
+    , m_session(Session::create(Session::Type::Noop))
     , m_display(nullptr)
     , m_eventQueue(new EventQueue(this))
     , m_registry(new Registry(this))
@@ -714,7 +714,7 @@ bool WaylandBackend::initialize()
 
 Session *WaylandBackend::session() const
 {
-    return m_session;
+    return m_session.get();
 }
 
 void WaylandBackend::initConnection()
@@ -760,18 +760,6 @@ void WaylandBackend::initConnection()
     m_connectionThreadObject->initConnection();
 }
 
-void WaylandBackend::updateScreenSize(WaylandOutput *output)
-{
-    auto it = std::find(m_outputs.constBegin(), m_outputs.constEnd(), output);
-
-    int nextLogicalPosition = output->geometry().topRight().x();
-    while (++it != m_outputs.constEnd()) {
-        const QRect geo = (*it)->geometry();
-        (*it)->setGeometry(QPoint(nextLogicalPosition, 0), geo.size());
-        nextLogicalPosition = geo.topRight().x();
-    }
-}
-
 KWayland::Client::ServerSideDecorationManager *WaylandBackend::ssdManager()
 {
     if (!m_ssdManager) {
@@ -799,13 +787,14 @@ void WaylandBackend::createOutputs()
 
     int logicalWidthSum = 0;
     for (int i = 0; i < initialOutputCount(); i++) {
-        createOutput(QPoint(logicalWidthSum, 0), QSize(pixelWidth, pixelHeight));
+        const QString name = QStringLiteral("WL-%1").arg(i);
+        createOutput(name, QPoint(logicalWidthSum, 0), QSize(pixelWidth, pixelHeight));
 
         logicalWidthSum += logicalWidth;
     }
 }
 
-WaylandOutput *WaylandBackend::createOutput(const QPoint &position, const QSize &size)
+WaylandOutput *WaylandBackend::createOutput(const QString &name, const QPoint &position, const QSize &size)
 {
     auto surface = m_compositor->createSurface(this);
     if (!surface || !surface->isValid()) {
@@ -825,7 +814,7 @@ WaylandOutput *WaylandBackend::createOutput(const QPoint &position, const QSize 
     WaylandOutput *waylandOutput = nullptr;
 
     if (m_xdgShell && m_xdgShell->isValid()) {
-        waylandOutput = new XdgShellOutput(surface, m_xdgShell, this, m_nextId++);
+        waylandOutput = new XdgShellOutput(name, surface, m_xdgShell, this, m_nextId++);
     }
 
     if (!waylandOutput) {
@@ -834,12 +823,6 @@ WaylandOutput *WaylandBackend::createOutput(const QPoint &position, const QSize 
     }
 
     waylandOutput->init(position, size);
-
-    connect(waylandOutput, &WaylandOutput::sizeChanged, this, [this, waylandOutput](const QSize &size) {
-        Q_UNUSED(size)
-        updateScreenSize(waylandOutput);
-        Compositor::self()->scene()->addRepaintFull();
-    });
     connect(waylandOutput, &WaylandOutput::frameRendered, this, [waylandOutput]() {
         waylandOutput->resetRendered();
 
@@ -1004,7 +987,7 @@ void WaylandBackend::createDpmsFilter()
         return;
     }
     m_dpmsFilter.reset(new DpmsInputEventFilter);
-    input()->prependInputEventFilter(m_dpmsFilter.data());
+    input()->prependInputEventFilter(m_dpmsFilter.get());
 }
 
 void WaylandBackend::clearDpmsFilter()
@@ -1014,8 +997,7 @@ void WaylandBackend::clearDpmsFilter()
 
 Output *WaylandBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
-    Q_UNUSED(name);
-    return createOutput(m_outputs.constLast()->geometry().topRight(), size * scale);
+    return createOutput(name, m_outputs.constLast()->geometry().topRight(), size * scale);
 }
 
 void WaylandBackend::removeVirtualOutput(Output *output)

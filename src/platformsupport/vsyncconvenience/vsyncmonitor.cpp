@@ -9,9 +9,6 @@
 namespace KWin
 {
 
-VsyncMonitor::VsyncMonitor(QObject *parent)
-    : QObject(parent)
-{
-}
+VsyncMonitor::VsyncMonitor() = default;
 
 } // namespace KWin

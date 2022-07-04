@@ -55,7 +55,7 @@ private:
     /**
      * @brief The OverlayWindow used by this Backend.
      */
-    OverlayWindow *m_overlayWindow;
+    std::unique_ptr<OverlayWindow> m_overlayWindow;
     int surfaceHasSubPost;
     xcb_connection_t *m_connection;
     Display *m_x11Display;

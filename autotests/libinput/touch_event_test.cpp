@@ -74,18 +74,18 @@ void TestLibinputTouchEvent::testType()
     touchEvent->device = m_nativeDevice;
     touchEvent->slot = 0;
 
-    QScopedPointer<Event> event(Event::create(touchEvent));
+    std::unique_ptr<Event> event(Event::create(touchEvent));
     // API of event
     QCOMPARE(event->type(), type);
     QCOMPARE(event->device(), m_device);
     QCOMPARE(event->nativeDevice(), m_nativeDevice);
-    QCOMPARE((libinput_event *)(*event.data()), touchEvent);
+    QCOMPARE((libinput_event *)(*event.get()), touchEvent);
     // verify it's a pointer event
-    QVERIFY(dynamic_cast<TouchEvent *>(event.data()));
-    QCOMPARE((libinput_event_touch *)(*dynamic_cast<TouchEvent *>(event.data())), touchEvent);
+    QVERIFY(dynamic_cast<TouchEvent *>(event.get()));
+    QCOMPARE((libinput_event_touch *)(*dynamic_cast<TouchEvent *>(event.get())), touchEvent);
     QFETCH(bool, hasId);
     if (hasId) {
-        QCOMPARE(dynamic_cast<TouchEvent *>(event.data())->id(), 0);
+        QCOMPARE(dynamic_cast<TouchEvent *>(event.get())->id(), 0);
     }
 }
 
@@ -107,8 +107,8 @@ void TestLibinputTouchEvent::testAbsoluteMotion()
     touchEvent->time = 500u;
     touchEvent->slot = 1;
 
-    QScopedPointer<Event> event(Event::create(touchEvent));
-    auto te = dynamic_cast<TouchEvent *>(event.data());
+    std::unique_ptr<Event> event(Event::create(touchEvent));
+    auto te = dynamic_cast<TouchEvent *>(event.get());
     QVERIFY(te);
     QCOMPARE(te->type(), type);
     QCOMPARE(te->time(), 500u);

@@ -11,6 +11,7 @@
 #include <QObject>
 #include <QString>
 
+#include <memory>
 #include <sys/types.h>
 
 namespace KWin
@@ -45,8 +46,8 @@ public:
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
-    static Session *create(QObject *parent = nullptr);
-    static Session *create(Type type, QObject *parent = nullptr);
+    static std::unique_ptr<Session> create();
+    static std::unique_ptr<Session> create(Type type);
 
     /**
      * Returns @c true if the session is active; otherwise returns @c false.
@@ -110,7 +111,7 @@ Q_SIGNALS:
     void devicePaused(dev_t deviceId);
 
 protected:
-    explicit Session(QObject *parent = nullptr);
+    explicit Session() = default;
 };
 
 } // namespace KWin

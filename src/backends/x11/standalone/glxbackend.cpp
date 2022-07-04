@@ -129,7 +129,7 @@ GlxBackend::GlxBackend(Display *display, X11StandalonePlatform *backend)
     , m_bufferAge(0)
     , m_x11Display(display)
     , m_backend(backend)
-    , m_layer(new GlxLayer(this))
+    , m_layer(std::make_unique<GlxLayer>(this))
 {
     // Force initialization of GLX integration in the Qt's xcb backend
     // to make it call XESetWireToEvent callbacks, which is required
@@ -141,8 +141,7 @@ GlxBackend::GlxBackend(Display *display, X11StandalonePlatform *backend)
 
 GlxBackend::~GlxBackend()
 {
-    delete m_vsyncMonitor;
-
+    m_vsyncMonitor.reset();
     // No completion events will be received for in-flight frames, this may lock the
     // render loop. We need to ensure that the render loop is back to its initial state
     // if the render backend is about to be destroyed.
@@ -168,11 +167,7 @@ GlxBackend::~GlxBackend()
         XDestroyWindow(display(), window);
     }
 
-    qDeleteAll(m_fbconfigHash);
-    m_fbconfigHash.clear();
-
-    overlayWindow()->destroy();
-    delete m_overlayWindow;
+    m_overlayWindow->destroy();
 }
 
 typedef void (*glXFuncPtr)();
@@ -231,7 +226,7 @@ void GlxBackend::init()
     glPlatform->printResults();
     initGL(&getProcAddress);
 
-    m_fbo.reset(new GLFramebuffer(0, screens()->size()));
+    m_fbo = std::make_unique<GLFramebuffer>(0, screens()->size());
 
     bool supportsSwapEvent = false;
 
@@ -303,23 +298,23 @@ void GlxBackend::init()
         // option. NVIDIA doesn't provide any extension such as GLX_INTEL_swap_event.
         if (!forceSoftwareVsync) {
             if (!m_vsyncMonitor) {
-                m_vsyncMonitor = SGIVideoSyncVsyncMonitor::create(this);
+                m_vsyncMonitor = SGIVideoSyncVsyncMonitor::create();
             }
             if (!m_vsyncMonitor) {
-                m_vsyncMonitor = OMLSyncControlVsyncMonitor::create(this);
+                m_vsyncMonitor = OMLSyncControlVsyncMonitor::create();
             }
         }
         if (!m_vsyncMonitor) {
-            SoftwareVsyncMonitor *monitor = SoftwareVsyncMonitor::create(this);
+            std::unique_ptr<SoftwareVsyncMonitor> monitor = SoftwareVsyncMonitor::create();
             RenderLoop *renderLoop = m_backend->renderLoop();
             monitor->setRefreshRate(renderLoop->refreshRate());
-            connect(renderLoop, &RenderLoop::refreshRateChanged, this, [this, monitor]() {
-                monitor->setRefreshRate(m_backend->renderLoop()->refreshRate());
+            connect(renderLoop, &RenderLoop::refreshRateChanged, this, [this, m = monitor.get()]() {
+                m->setRefreshRate(m_backend->renderLoop()->refreshRate());
             });
-            m_vsyncMonitor = monitor;
+            m_vsyncMonitor = std::move(monitor);
         }
 
-        connect(m_vsyncMonitor, &VsyncMonitor::vblankOccurred, this, &GlxBackend::vblank);
+        connect(m_vsyncMonitor.get(), &VsyncMonitor::vblankOccurred, this, &GlxBackend::vblank);
     }
 
     setIsDirectRendering(bool(glXIsDirect(display(), ctx)));
@@ -573,20 +568,20 @@ static inline int bitCount(uint32_t mask)
 #endif
 }
 
-FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
+const FBConfigInfo &GlxBackend::infoForVisual(xcb_visualid_t visual)
 {
     auto it = m_fbconfigHash.constFind(visual);
     if (it != m_fbconfigHash.constEnd()) {
-        return it.value();
+        return *it;
     }
-
-    FBConfigInfo *info = new FBConfigInfo;
-    m_fbconfigHash.insert(visual, info);
-    info->fbconfig = nullptr;
-    info->bind_texture_format = 0;
-    info->texture_targets = 0;
-    info->y_inverted = 0;
-    info->mipmap = 0;
+    m_fbconfigHash[visual] = FBConfigInfo{
+        .fbconfig = nullptr,
+        .bind_texture_format = 0,
+        .texture_targets = 0,
+        .y_inverted = 0,
+        .mipmap = 0,
+    };
+    FBConfigInfo &info = m_fbconfigHash[visual];
 
     const xcb_render_pictformat_t format = XRenderUtils::findPictFormat(visual);
     const xcb_render_directformat_t *direct = XRenderUtils::findPictFormatInfo(format);
@@ -701,19 +696,21 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
         glXGetFBConfigAttrib(display(), candidate.config, GLX_BIND_TO_TEXTURE_TARGETS_EXT, &texture_targets);
         glXGetFBConfigAttrib(display(), candidate.config, GLX_Y_INVERTED_EXT, &y_inverted);
 
-        info->fbconfig = candidate.config;
-        info->bind_texture_format = candidate.format;
-        info->texture_targets = texture_targets;
-        info->y_inverted = y_inverted;
-        info->mipmap = 0;
+        info = FBConfigInfo{
+            .fbconfig = candidate.config,
+            .bind_texture_format = candidate.format,
+            .texture_targets = texture_targets,
+            .y_inverted = y_inverted,
+            .mipmap = 0,
+        };
     }
 
-    if (info->fbconfig) {
+    if (info.fbconfig) {
         int fbc_id = 0;
         int visual_id = 0;
 
-        glXGetFBConfigAttrib(display(), info->fbconfig, GLX_FBCONFIG_ID, &fbc_id);
-        glXGetFBConfigAttrib(display(), info->fbconfig, GLX_VISUAL_ID, &visual_id);
+        glXGetFBConfigAttrib(display(), info.fbconfig, GLX_FBCONFIG_ID, &fbc_id);
+        glXGetFBConfigAttrib(display(), info.fbconfig, GLX_VISUAL_ID, &visual_id);
 
         qCDebug(KWIN_X11STANDALONE).nospace() << "Using FBConfig 0x" << Qt::hex << fbc_id << " for visual 0x" << Qt::hex << visual_id;
     }
@@ -772,7 +769,7 @@ void GlxBackend::screenGeometryChanged()
 
     // The back buffer contents are now undefined
     m_bufferAge = 0;
-    m_fbo.reset(new GLFramebuffer(0, size));
+    m_fbo = std::make_unique<GLFramebuffer>(0, size);
 }
 
 SurfaceTexture *GlxBackend::createSurfaceTextureX11(SurfacePixmapX11 *pixmap)
@@ -785,7 +782,7 @@ OutputLayerBeginFrameInfo GlxBackend::beginFrame()
     QRegion repaint;
     makeCurrent();
 
-    GLFramebuffer::pushFramebuffer(m_fbo.data());
+    GLFramebuffer::pushFramebuffer(m_fbo.get());
     if (supportsBufferAge()) {
         repaint = m_damageJournal.accumulate(m_bufferAge, infiniteRegion());
     }
@@ -793,7 +790,7 @@ OutputLayerBeginFrameInfo GlxBackend::beginFrame()
     glXWaitX();
 
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_fbo.data()),
+        .renderTarget = RenderTarget(m_fbo.get()),
         .repaint = repaint,
     };
 }
@@ -859,7 +856,7 @@ void GlxBackend::doneCurrent()
 
 OverlayWindow *GlxBackend::overlayWindow() const
 {
-    return m_overlayWindow;
+    return m_overlayWindow.get();
 }
 
 OutputLayer *GlxBackend::primaryLayer(Output *output)
@@ -933,17 +930,17 @@ bool GlxPixmapTexturePrivate::create(SurfacePixmapX11 *texture)
         return false;
     }
 
-    const FBConfigInfo *info = m_backend->infoForVisual(texture->visual());
-    if (!info || info->fbconfig == nullptr) {
+    const FBConfigInfo &info = m_backend->infoForVisual(texture->visual());
+    if (info.fbconfig == nullptr) {
         return false;
     }
 
-    if (info->texture_targets & GLX_TEXTURE_2D_BIT_EXT) {
+    if (info.texture_targets & GLX_TEXTURE_2D_BIT_EXT) {
         m_target = GL_TEXTURE_2D;
         m_scale.setWidth(1.0f / m_size.width());
         m_scale.setHeight(1.0f / m_size.height());
     } else {
-        Q_ASSERT(info->texture_targets & GLX_TEXTURE_RECTANGLE_BIT_EXT);
+        Q_ASSERT(info.texture_targets & GLX_TEXTURE_RECTANGLE_BIT_EXT);
 
         m_target = GL_TEXTURE_RECTANGLE;
         m_scale.setWidth(1.0f);
@@ -951,14 +948,14 @@ bool GlxPixmapTexturePrivate::create(SurfacePixmapX11 *texture)
     }
 
     const int attrs[] = {
-        GLX_TEXTURE_FORMAT_EXT, info->bind_texture_format,
+        GLX_TEXTURE_FORMAT_EXT, info.bind_texture_format,
         GLX_MIPMAP_TEXTURE_EXT, false,
         GLX_TEXTURE_TARGET_EXT, m_target == GL_TEXTURE_2D ? GLX_TEXTURE_2D_EXT : GLX_TEXTURE_RECTANGLE_EXT,
         0};
 
-    m_glxPixmap = glXCreatePixmap(m_backend->display(), info->fbconfig, texture->pixmap(), attrs);
+    m_glxPixmap = glXCreatePixmap(m_backend->display(), info.fbconfig, texture->pixmap(), attrs);
     m_size = texture->size().toSize();
-    m_yInverted = info->y_inverted ? true : false;
+    m_yInverted = info.y_inverted ? true : false;
     m_canUseMipmaps = false;
 
     glGenTextures(1, &m_texture);

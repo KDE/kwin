@@ -163,7 +163,7 @@ void X11WindowedInputBackend::initialize()
 
 X11WindowedBackend::X11WindowedBackend(QObject *parent)
     : Platform(parent)
-    , m_session(Session::create(Session::Type::Noop, this))
+    , m_session(Session::create(Session::Type::Noop))
 {
     setSupportsPointerWarping(true);
 }
@@ -235,7 +235,7 @@ bool X11WindowedBackend::initialize()
 
 Session *X11WindowedBackend::session() const
 {
-    return m_session;
+    return m_session.get();
 }
 
 void X11WindowedBackend::initXInput()

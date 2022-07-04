@@ -19,6 +19,7 @@
 #include <QSize>
 #include <QStringList>
 #include <QVector>
+#include <deque>
 
 class QSocketNotifier;
 class QThread;
@@ -69,7 +70,7 @@ private:
     Context *m_input;
     QSocketNotifier *m_notifier;
     QRecursiveMutex m_mutex;
-    QVector<Event *> m_eventQueue;
+    std::deque<std::unique_ptr<Event>> m_eventQueue;
     QVector<Device *> m_devices;
     KSharedConfigPtr m_config;
 

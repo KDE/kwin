@@ -19,6 +19,8 @@
 // XCB
 #include <xcb/render.h>
 
+#include <memory>
+
 class QImage;
 
 /** @addtogroup kwineffects */
@@ -58,7 +60,7 @@ public:
 
 private:
     void fromImage(const QImage &img);
-    QExplicitlySharedDataPointer<XRenderPictureData> d;
+    std::unique_ptr<XRenderPictureData> d;
 };
 
 inline XRenderPictureData::XRenderPictureData(xcb_render_picture_t pic)
@@ -72,7 +74,7 @@ inline xcb_render_picture_t XRenderPictureData::value()
 }
 
 inline XRenderPicture::XRenderPicture(xcb_render_picture_t pic)
-    : d(new XRenderPictureData(pic))
+    : d(std::make_unique<XRenderPictureData>(pic))
 {
 }
 

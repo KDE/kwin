@@ -44,9 +44,9 @@ OutputLayerBeginFrameInfo EglX11Output::beginFrame()
 {
     eglMakeCurrent(m_backend->eglDisplay(), m_eglSurface, m_eglSurface, m_backend->context());
     ensureFbo();
-    GLFramebuffer::pushFramebuffer(m_fbo.data());
+    GLFramebuffer::pushFramebuffer(m_fbo.get());
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_fbo.data()),
+        .renderTarget = RenderTarget(m_fbo.get()),
         .repaint = m_output->rect(),
     };
 }
