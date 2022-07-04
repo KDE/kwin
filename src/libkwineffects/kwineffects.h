@@ -887,28 +887,14 @@ public:
     virtual void registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action) = 0;
 
     /**
-     * @brief Registers a global touchpad swipe gesture shortcut with the provided @p action.
+     * @brief Registers a global gesture shortcut with the provided @p action.
      *
-     * @param direction The direction for the swipe
-     * @param action The action which gets triggered when the gesture triggers
-     * @since 5.10
+     * @param device The device for the gesture
+     * @param direction The direction of the gesture
+     * @param action The action which gets triggered when the gesture is released
+     * @since 5.26
      */
-    virtual void registerTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action) = 0;
-
-    virtual void registerRealtimeTouchpadSwipeShortcut(SwipeDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback) = 0;
-
-    virtual void registerRealtimeTouchpadPinchShortcut(PinchDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback) = 0;
-
-    virtual void registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *action) = 0;
-
-    /**
-     * @brief Registers a global touchscreen swipe gesture shortcut with the provided @p action.
-     *
-     * @param direction The direction for the swipe
-     * @param action The action which gets triggered when the gesture triggers
-     * @since 5.25
-     */
-    virtual void registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback) = 0;
+    virtual void registerGesture(GestureDeviceType device, GestureTypeFlag direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback = nullptr) = 0;
 
     /**
      * Retrieve the proxy class for an effect if it has one. Will return NULL if

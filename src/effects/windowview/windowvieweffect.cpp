@@ -111,6 +111,7 @@ WindowViewEffect::WindowViewEffect()
     });
 
     const auto gestureCallback = [this](qreal progress) {
+        progress = std::clamp(progress, 0.0, 1.1);
         if (!effects->hasActiveFullScreenEffect() || effects->activeFullScreenEffect() == this) {
             switch (m_status) {
             case Status::Inactive:
@@ -125,8 +126,8 @@ WindowViewEffect::WindowViewEffect()
             }
         }
     };
-    effects->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Down, 4, m_realtimeToggleAction, gestureCallback);
-    effects->registerTouchscreenSwipeShortcut(SwipeDirection::Down, 3, m_realtimeToggleAction, gestureCallback);
+    effects->registerGesture(GestureDeviceType::Touchpad, GestureTypeFlag::Down, 4, m_realtimeToggleAction, gestureCallback);
+    effects->registerGesture(GestureDeviceType::Touchscreen, GestureTypeFlag::Down, 3, m_realtimeToggleAction, gestureCallback);
 
     reconfigure(ReconfigureAll);
 }

@@ -101,8 +101,7 @@ Edge::Edge(ScreenEdges *parent)
     , m_output(nullptr)
     , m_gesture(new SwipeGesture(this))
 {
-    m_gesture->setMinimumFingerCount(1);
-    m_gesture->setMaximumFingerCount(1);
+    m_gesture->addFingerCount(1);
     connect(
         m_gesture, &Gesture::triggered, this, [this]() {
             stopApproaching();
@@ -122,14 +121,14 @@ Edge::Edge(ScreenEdges *parent)
             handleTouchCallback();
         }
     });
-    connect(m_gesture, &SwipeGesture::progress, this, [this](qreal progress) {
+    connect(m_gesture, &SwipeGesture::triggerProgress, this, [this](qreal progress) {
         int factor = progress * 256.0f;
         if (m_lastApproachingFactor != factor) {
             m_lastApproachingFactor = factor;
             Q_EMIT approaching(border(), m_lastApproachingFactor / 256.0f, m_approachGeometry);
         }
     });
-    connect(m_gesture, &SwipeGesture::deltaProgress, this, [this](const QSizeF &progressDelta) {
+    connect(m_gesture, &SwipeGesture::pixelDelta, this, [this](const QSizeF &progressDelta) {
         if (!m_touchCallbacks.isEmpty()) {
             m_touchCallbacks.constFirst().progressCallback(border(), progressDelta, m_output);
         }
@@ -572,7 +571,7 @@ void Edge::setGeometry(const QRect &geometry)
     if (isScreenEdge()) {
         const Output *output = workspace()->outputAt(m_geometry.center());
         m_gesture->setStartGeometry(m_geometry);
-        m_gesture->setMinimumDelta(QSizeF(MINIMUM_DELTA, MINIMUM_DELTA) / output->scale());
+        m_gesture->setTriggerDelta(QSizeF(MINIMUM_DELTA, MINIMUM_DELTA) / output->scale());
     }
 }
 
@@ -715,16 +714,16 @@ void Edge::setBorder(ElectricBorder border)
     m_border = border;
     switch (m_border) {
     case ElectricTop:
-        m_gesture->setDirection(SwipeGesture::Direction::Down);
+        m_gesture->setDirection(GestureTypeFlag::Down);
         break;
     case ElectricRight:
-        m_gesture->setDirection(SwipeGesture::Direction::Left);
+        m_gesture->setDirection(GestureTypeFlag::Left);
         break;
     case ElectricBottom:
-        m_gesture->setDirection(SwipeGesture::Direction::Up);
+        m_gesture->setDirection(GestureTypeFlag::Up);
         break;
     case ElectricLeft:
-        m_gesture->setDirection(SwipeGesture::Direction::Right);
+        m_gesture->setDirection(GestureTypeFlag::Right);
         break;
     default:
         break;

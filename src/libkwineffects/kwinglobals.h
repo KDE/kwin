@@ -13,6 +13,7 @@
 #include <QCoreApplication>
 #include <QImage>
 #include <QPoint>
+#include <QSet>
 #include <QVariant>
 
 #include <kwin_export.h>
@@ -116,20 +117,11 @@ enum PointerAxisDirection {
 };
 
 /**
- * @brief Directions for swipe gestures
- * @since 5.10
+ * @brief What device is this gesture using?
  */
-enum class SwipeDirection {
-    Invalid,
-    Down,
-    Left,
-    Up,
-    Right,
-};
-
-enum class PinchDirection {
-    Expanding,
-    Contracting
+enum class GestureDeviceType {
+    Touchpad,
+    Touchscreen
 };
 
 /**
@@ -228,6 +220,33 @@ inline KWIN_EXPORT QRect infiniteRegion()
 }
 
 } // namespace
+
+/**
+ * @brief Directions for gestures
+ * @since 5.25
+ */
+enum class GestureTypeFlag {
+    Up = 1 << 1,
+    Down = 1 << 2,
+    Left = 1 << 3,
+    Right = 1 << 4,
+    Expanding = 1 << 5,
+    Contracting = 1 << 6,
+};
+
+Q_DECLARE_FLAGS(GestureType, GestureTypeFlag)
+Q_DECLARE_OPERATORS_FOR_FLAGS(GestureType)
+Q_DECLARE_METATYPE(GestureTypeFlag)
+
+inline bool isSwipeDirection(GestureType d)
+{
+    return d & (GestureTypeFlag::Up | GestureTypeFlag::Down | GestureTypeFlag::Left | GestureTypeFlag::Right);
+}
+
+inline bool isPinchDirection(GestureType d)
+{
+    return d & (GestureTypeFlag::Contracting | GestureTypeFlag::Expanding);
+}
 
 Q_DECLARE_METATYPE(std::chrono::nanoseconds)
 

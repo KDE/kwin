@@ -52,6 +52,7 @@ OverviewEffect::OverviewEffect()
     });
 
     auto progressCallback = [this](qreal progress) {
+        progress = std::clamp(progress, 0.0, 1.1);
         if (!effects->hasActiveFullScreenEffect() || effects->activeFullScreenEffect() == this) {
             switch (m_status) {
             case Status::Inactive:
@@ -66,8 +67,8 @@ OverviewEffect::OverviewEffect()
         }
     };
 
-    effects->registerRealtimeTouchpadPinchShortcut(PinchDirection::Contracting, 4, m_realtimeToggleAction, progressCallback);
-    effects->registerTouchscreenSwipeShortcut(SwipeDirection::Up, 3, m_realtimeToggleAction, progressCallback);
+    effects->registerGesture(GestureDeviceType::Touchpad, GestureTypeFlag::Contracting, 4, m_realtimeToggleAction, progressCallback);
+    effects->registerGesture(GestureDeviceType::Touchscreen, GestureTypeFlag::Up, 3, m_realtimeToggleAction, progressCallback);
 
     connect(effects, &EffectsHandler::screenAboutToLock, this, &OverviewEffect::realDeactivate);
 

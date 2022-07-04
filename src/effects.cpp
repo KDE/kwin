@@ -816,29 +816,9 @@ void EffectsHandlerImpl::registerAxisShortcut(Qt::KeyboardModifiers modifiers, P
     input()->registerAxisShortcut(modifiers, axis, action);
 }
 
-void EffectsHandlerImpl::registerRealtimeTouchpadSwipeShortcut(SwipeDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
+void EffectsHandlerImpl::registerGesture(GestureDeviceType device, GestureTypeFlag direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
 {
-    input()->registerRealtimeTouchpadSwipeShortcut(dir, fingerCount, onUp, progressCallback);
-}
-
-void EffectsHandlerImpl::registerTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action)
-{
-    input()->registerTouchpadSwipeShortcut(direction, fingerCount, action);
-}
-
-void EffectsHandlerImpl::registerRealtimeTouchpadPinchShortcut(PinchDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
-{
-    input()->registerRealtimeTouchpadPinchShortcut(dir, fingerCount, onUp, progressCallback);
-}
-
-void EffectsHandlerImpl::registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *action)
-{
-    input()->registerTouchpadPinchShortcut(direction, fingerCount, action);
-}
-
-void EffectsHandlerImpl::registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
-{
-    input()->registerTouchscreenSwipeShortcut(direction, fingerCount, action, progressCallback);
+    input()->registerGesture(device, direction, fingerCount, onUp, progressCallback);
 }
 
 void *EffectsHandlerImpl::getProxy(QString name)
