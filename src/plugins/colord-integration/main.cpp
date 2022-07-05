@@ -18,24 +18,19 @@ class KWIN_EXPORT ColordIntegrationFactory : public PluginFactory
     Q_INTERFACES(KWin::PluginFactory)
 
 public:
-    explicit ColordIntegrationFactory(QObject *parent = nullptr);
+    explicit ColordIntegrationFactory() = default;
 
-    Plugin *create() const override;
+    std::unique_ptr<Plugin> create() const override;
 };
 
-ColordIntegrationFactory::ColordIntegrationFactory(QObject *parent)
-    : PluginFactory(parent)
-{
-}
-
-Plugin *ColordIntegrationFactory::create() const
+std::unique_ptr<Plugin> ColordIntegrationFactory::create() const
 {
     switch (kwinApp()->operationMode()) {
     case Application::OperationModeX11:
         return nullptr;
     case Application::OperationModeXwayland:
     case Application::OperationModeWaylandOnly:
-        return new ColordIntegration();
+        return std::make_unique<ColordIntegration>();
     default:
         return nullptr;
     }

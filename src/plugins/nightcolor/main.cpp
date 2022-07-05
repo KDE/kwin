@@ -17,19 +17,14 @@ class KWIN_EXPORT NightColorManagerFactory : public PluginFactory
     Q_INTERFACES(KWin::PluginFactory)
 
 public:
-    explicit NightColorManagerFactory(QObject *parent = nullptr);
+    explicit NightColorManagerFactory() = default;
 
-    Plugin *create() const override;
+    std::unique_ptr<Plugin> create() const override;
 };
 
-NightColorManagerFactory::NightColorManagerFactory(QObject *parent)
-    : PluginFactory(parent)
+std::unique_ptr<Plugin> NightColorManagerFactory::create() const
 {
-}
-
-Plugin *NightColorManagerFactory::create() const
-{
-    return new NightColorManager();
+    return std::make_unique<NightColorManager>();
 }
 
 #include "main.moc"

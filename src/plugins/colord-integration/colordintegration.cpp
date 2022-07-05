@@ -17,8 +17,7 @@
 namespace KWin
 {
 
-ColordIntegration::ColordIntegration(QObject *parent)
-    : Plugin(parent)
+ColordIntegration::ColordIntegration()
 {
     qDBusRegisterMetaType<CdStringMap>();
 

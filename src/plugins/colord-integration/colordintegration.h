@@ -23,7 +23,7 @@ class KWIN_EXPORT ColordIntegration : public Plugin
     Q_OBJECT
 
 public:
-    explicit ColordIntegration(QObject *parent = nullptr);
+    explicit ColordIntegration();
 
 private Q_SLOTS:
     void handleOutputAdded(Output *output);

@@ -18,19 +18,14 @@ class KWIN_EXPORT KRunnerIntegrationFactory : public PluginFactory
     Q_INTERFACES(KWin::PluginFactory)
 
 public:
-    explicit KRunnerIntegrationFactory(QObject *parent = nullptr);
+    explicit KRunnerIntegrationFactory() = default;
 
-    Plugin *create() const override;
+    std::unique_ptr<Plugin> create() const override;
 };
 
-KRunnerIntegrationFactory::KRunnerIntegrationFactory(QObject *parent)
-    : PluginFactory(parent)
+std::unique_ptr<Plugin> KRunnerIntegrationFactory::create() const
 {
-}
-
-Plugin *KRunnerIntegrationFactory::create() const
-{
-    return new WindowsRunner();
+    return std::make_unique<WindowsRunner>();
 }
 
 #include "main.moc"

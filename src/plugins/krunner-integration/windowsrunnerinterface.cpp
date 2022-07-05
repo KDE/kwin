@@ -19,8 +19,7 @@
 
 namespace KWin
 {
-WindowsRunner::WindowsRunner(QObject *parent)
-    : Plugin(parent)
+WindowsRunner::WindowsRunner()
 {
     if (workspace()) {
         initialize();
@@ -29,9 +28,7 @@ WindowsRunner::WindowsRunner(QObject *parent)
     }
 }
 
-WindowsRunner::~WindowsRunner()
-{
-}
+WindowsRunner::~WindowsRunner() = default;
 
 void WindowsRunner::initialize()
 {

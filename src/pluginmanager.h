@@ -43,7 +43,7 @@ private:
     bool loadDynamicPlugin(const QString &pluginId);
     bool instantiatePlugin(const QString &pluginId, PluginFactory *factory);
 
-    QHash<QString, Plugin *> m_plugins;
+    std::map<QString, std::unique_ptr<Plugin>> m_plugins;
     QHash<QString, QStaticPlugin> m_staticPlugins;
     KWIN_SINGLETON(PluginManager)
 };

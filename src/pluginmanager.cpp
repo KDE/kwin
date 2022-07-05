@@ -65,7 +65,7 @@ PluginManager::PluginManager(QObject *parent)
 
     const QVector<KPluginMetaData> plugins = KPluginMetaData::findPlugins(s_pluginDirectory);
     for (const KPluginMetaData &metadata : plugins) {
-        if (m_plugins.contains(metadata.pluginId())) {
+        if (m_plugins.find(metadata.pluginId()) != m_plugins.end()) {
             qCWarning(KWIN_CORE) << "Conflicting plugin id" << metadata.pluginId();
             continue;
         }
@@ -84,7 +84,12 @@ PluginManager::~PluginManager()
 
 QStringList PluginManager::loadedPlugins() const
 {
-    return m_plugins.keys();
+    QStringList ret;
+    ret.reserve(m_plugins.size());
+    for (const auto &[key, _] : m_plugins) {
+        ret.push_back(key);
+    }
+    return ret;
 }
 
 QStringList PluginManager::availablePlugins() const
@@ -101,7 +106,7 @@ QStringList PluginManager::availablePlugins() const
 
 bool PluginManager::loadPlugin(const QString &pluginId)
 {
-    if (m_plugins.contains(pluginId)) {
+    if (m_plugins.find(pluginId) != m_plugins.end()) {
         qCDebug(KWIN_CORE) << "Plugin with id" << pluginId << "is already loaded";
         return false;
     }
@@ -160,28 +165,22 @@ bool PluginManager::loadDynamicPlugin(const KPluginMetaData &metadata)
 
 bool PluginManager::instantiatePlugin(const QString &pluginId, PluginFactory *factory)
 {
-    Plugin *plugin = factory->create();
-    if (!plugin) {
+    if (std::unique_ptr<Plugin> plugin = factory->create()) {
+        m_plugins[pluginId] = std::move(plugin);
+        return true;
+    } else {
         return false;
     }
-
-    m_plugins.insert(pluginId, plugin);
-    plugin->setParent(this);
-
-    connect(plugin, &QObject::destroyed, this, [this, pluginId]() {
-        m_plugins.remove(pluginId);
-    });
-
-    return true;
 }
 
 void PluginManager::unloadPlugin(const QString &pluginId)
 {
-    Plugin *plugin = m_plugins.take(pluginId);
-    if (!plugin) {
+    auto it = m_plugins.find(pluginId);
+    if (it != m_plugins.end()) {
+        m_plugins.erase(it);
+    } else {
         qCWarning(KWIN_CORE) << "No plugin with the specified id:" << pluginId;
     }
-    delete plugin;
 }
 
 } // namespace KWin

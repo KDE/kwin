@@ -18,24 +18,19 @@ class KWIN_EXPORT ScreencastManagerFactory : public PluginFactory
     Q_INTERFACES(KWin::PluginFactory)
 
 public:
-    explicit ScreencastManagerFactory(QObject *parent = nullptr);
+    explicit ScreencastManagerFactory() = default;
 
-    Plugin *create() const override;
+    std::unique_ptr<Plugin> create() const override;
 };
 
-ScreencastManagerFactory::ScreencastManagerFactory(QObject *parent)
-    : PluginFactory(parent)
-{
-}
-
-Plugin *ScreencastManagerFactory::create() const
+std::unique_ptr<Plugin> ScreencastManagerFactory::create() const
 {
     switch (kwinApp()->operationMode()) {
     case Application::OperationModeX11:
         return nullptr;
     case Application::OperationModeXwayland:
     case Application::OperationModeWaylandOnly:
-        return new ScreencastManager();
+        return std::make_unique<ScreencastManager>();
     default:
         return nullptr;
     }

@@ -45,8 +45,7 @@ NightColorManager *NightColorManager::self()
     return s_instance;
 }
 
-NightColorManager::NightColorManager(QObject *parent)
-    : Plugin(parent)
+NightColorManager::NightColorManager()
 {
     s_instance = this;
 

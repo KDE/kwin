@@ -22,7 +22,7 @@ class ScreencastManager : public Plugin
     Q_OBJECT
 
 public:
-    explicit ScreencastManager(QObject *parent = nullptr);
+    explicit ScreencastManager();
 
 private:
     void streamWindow(KWaylandServer::ScreencastStreamV1Interface *stream, const QString &winid);

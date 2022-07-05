@@ -11,6 +11,7 @@
 #include "kwinglobals.h"
 
 #include <QObject>
+#include <memory>
 
 namespace KWin
 {
@@ -27,7 +28,7 @@ class KWIN_EXPORT Plugin : public QObject
     Q_OBJECT
 
 public:
-    explicit Plugin(QObject *parent = nullptr);
+    explicit Plugin();
 };
 
 /**
@@ -38,9 +39,9 @@ class KWIN_EXPORT PluginFactory : public QObject
     Q_OBJECT
 
 public:
-    explicit PluginFactory(QObject *parent = nullptr);
+    explicit PluginFactory();
 
-    virtual Plugin *create() const = 0;
+    virtual std::unique_ptr<Plugin> create() const = 0;
 };
 
 } // namespace KWin

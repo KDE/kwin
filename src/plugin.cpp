@@ -9,14 +9,8 @@
 namespace KWin
 {
 
-Plugin::Plugin(QObject *parent)
-    : QObject(parent)
-{
-}
+Plugin::Plugin() = default;
 
-PluginFactory::PluginFactory(QObject *parent)
-    : QObject(parent)
-{
-}
+PluginFactory::PluginFactory() = default;
 
 } // namespace KWin

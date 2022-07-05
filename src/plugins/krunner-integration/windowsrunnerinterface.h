@@ -34,7 +34,7 @@ class WindowsRunner : public Plugin, protected QDBusContext
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.KWin.WindowsRunner")
 public:
-    explicit WindowsRunner(QObject *parent = nullptr);
+    explicit WindowsRunner();
     ~WindowsRunner() override;
 
     RemoteActions Actions();
