@@ -12,6 +12,7 @@
 #include "kwineffects.h"
 
 #include "config-kwin.h"
+#include "kwingltexture.h"
 
 #include <QFontMetrics>
 #include <QMatrix4x4>
@@ -1119,13 +1120,8 @@ WindowQuadList WindowQuadList::makeRegularGrid(int xSubdivisions, int ySubdivisi
 #define GL_QUADS 0x0007
 #endif
 
-void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertices, const QMatrix4x4 &textureMatrix) const
+void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertices, const GLTexture *texture) const
 {
-    // Since we know that the texture matrix just scales and translates
-    // we can use this information to optimize the transformation
-    const QVector2D coeff(textureMatrix(0, 0), textureMatrix(1, 1));
-    const QVector2D offset(textureMatrix(0, 3), textureMatrix(1, 3));
-
     GLVertex2D *vertex = vertices;
 
     Q_ASSERT(type == GL_QUADS || type == GL_TRIANGLES);
@@ -1133,6 +1129,12 @@ void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertic
     switch (type) {
     case GL_QUADS: {
         for (const WindowQuad &quad : *this) {
+            // Since we know that the texture matrix just scales and translates
+            // we can use this information to optimize the transformation
+            const auto textureMatrix = texture->matrix(quad.uvCoordinateType());
+            const auto coeff = QVector2D{textureMatrix(0, 0), textureMatrix(1, 1)};
+            const auto offset = QVector2D{textureMatrix(0, 3), textureMatrix(1, 3)};
+
 #pragma GCC unroll 4
             for (int j = 0; j < 4; j++) {
                 const WindowVertex &wv = quad[j];
@@ -1148,6 +1150,10 @@ void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertic
     case GL_TRIANGLES: {
         for (const WindowQuad &quad : *this) {
             GLVertex2D v[4]; // Four unique vertices / quad
+
+            const auto textureMatrix = texture->matrix(quad.uvCoordinateType());
+            const auto coeff = QVector2D{textureMatrix(0, 0), textureMatrix(1, 1)};
+            const auto offset = QVector2D{textureMatrix(0, 3), textureMatrix(1, 3)};
 
 #pragma GCC unroll 4
             for (int j = 0; j < 4; j++) {

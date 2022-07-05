@@ -717,6 +717,15 @@ QMatrix4x4 GLTexture::matrix(TextureCoordinateType type) const
     return d->m_matrix[type];
 }
 
+QMatrix4x4 GLTexture::matrix(WindowQuad::UvCoordinateType type) const
+{
+    if (type == WindowQuad::UvCoordinateType::Normalized) {
+        return matrix(NormalizedCoordinates);
+    } else {
+        return matrix(UnnormalizedCoordinates);
+    }
+}
+
 bool GLTexture::framebufferObjectSupported()
 {
     return GLTexturePrivate::s_supportsFramebufferObjects;

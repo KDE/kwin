@@ -396,7 +396,6 @@ void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .transformMatrix = context->transformStack.top(),
                 .opacity = context->opacityStack.top(),
                 .hasAlpha = true,
-                .coordinateType = UnnormalizedCoordinates,
             });
         }
     } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {
@@ -409,7 +408,6 @@ void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .transformMatrix = context->transformStack.top(),
                 .opacity = context->opacityStack.top(),
                 .hasAlpha = true,
-                .coordinateType = UnnormalizedCoordinates,
             });
         }
     } else if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
@@ -425,7 +423,6 @@ void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
                     .transformMatrix = context->transformStack.top(),
                     .opacity = context->opacityStack.top(),
                     .hasAlpha = hasAlpha,
-                    .coordinateType = UnnormalizedCoordinates,
                 });
             }
         }
@@ -559,9 +556,7 @@ void SceneOpenGL::render(Item *item, int mask, const QRegion &region, const Wind
         renderNode.firstVertex = v;
         renderNode.vertexCount = renderNode.quads.count() * verticesPerQuad;
 
-        const QMatrix4x4 matrix = renderNode.texture->matrix(renderNode.coordinateType);
-
-        renderNode.quads.makeInterleavedArrays(primitiveType, &map[v], matrix);
+        renderNode.quads.makeInterleavedArrays(primitiveType, &map[v], renderNode.texture);
         v += renderNode.quads.count() * verticesPerQuad;
     }
 

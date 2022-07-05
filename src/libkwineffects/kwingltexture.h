@@ -13,6 +13,8 @@
 
 #include <kwinglutils_export.h>
 
+#include "kwineffects.h"
+
 #include <QExplicitlySharedDataPointer>
 #include <QMatrix4x4>
 #include <QRegion>
@@ -97,6 +99,8 @@ public:
      * @since 4.11
      */
     QMatrix4x4 matrix(TextureCoordinateType type) const;
+
+    QMatrix4x4 matrix(WindowQuad::UvCoordinateType type) const;
 
     void update(const QImage &image, const QPoint &offset = QPoint(0, 0), const QRect &src = QRect());
     virtual void discard();

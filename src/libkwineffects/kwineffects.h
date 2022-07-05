@@ -80,6 +80,7 @@ class EffectScreen;
 class Effect;
 class WindowQuad;
 class GLShader;
+class GLTexture;
 class WindowQuadList;
 class WindowPrePaintData;
 class WindowPaintData;
@@ -2903,6 +2904,11 @@ private:
 class KWINEFFECTS_EXPORT WindowQuad
 {
 public:
+    enum class UvCoordinateType {
+        Normalized,
+        Unnormalized
+    };
+
     WindowQuad();
     WindowQuad makeSubQuad(double x1, double y1, double x2, double y2) const;
     WindowVertex &operator[](int index);
@@ -2912,9 +2918,13 @@ public:
     double top() const;
     double bottom() const;
 
+    UvCoordinateType uvCoordinateType() const;
+    void setUvCoordinateType(UvCoordinateType type);
+
 private:
     friend class WindowQuadList;
     WindowVertex verts[4];
+    UvCoordinateType m_uvCoordinateType = UvCoordinateType::Unnormalized;
 };
 
 class KWINEFFECTS_EXPORT WindowQuadList
@@ -2925,7 +2935,7 @@ public:
     WindowQuadList splitAtY(double y) const;
     WindowQuadList makeGrid(int maxquadsize) const;
     WindowQuadList makeRegularGrid(int xSubdivisions, int ySubdivisions) const;
-    void makeInterleavedArrays(unsigned int type, GLVertex2D *vertices, const QMatrix4x4 &matrix) const;
+    void makeInterleavedArrays(unsigned int type, GLVertex2D *vertices, const GLTexture *texture) const;
     void makeArrays(float **vertices, float **texcoords, const QSizeF &size, bool yInverted) const;
 };
 
@@ -4113,6 +4123,16 @@ inline double WindowQuad::top() const
 inline double WindowQuad::bottom() const
 {
     return qMax(verts[0].py, qMax(verts[1].py, qMax(verts[2].py, verts[3].py)));
+}
+
+inline WindowQuad::UvCoordinateType WindowQuad::uvCoordinateType() const
+{
+    return m_uvCoordinateType;
+}
+
+inline void WindowQuad::setUvCoordinateType(WindowQuad::UvCoordinateType type)
+{
+    m_uvCoordinateType = type;
 }
 
 /***************************************************************
