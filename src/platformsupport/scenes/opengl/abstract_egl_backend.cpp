@@ -77,9 +77,6 @@ void AbstractEglBackend::destroyGlobalShareContext()
 
 void AbstractEglBackend::teardown()
 {
-    if (m_functions.eglUnbindWaylandDisplayWL && m_display != EGL_NO_DISPLAY) {
-        m_functions.eglUnbindWaylandDisplayWL(m_display, *(WaylandServer::self()->display()));
-    }
     destroyGlobalShareContext();
 }
 
@@ -183,20 +180,6 @@ void AbstractEglBackend::initWayland()
 {
     if (!WaylandServer::self()) {
         return;
-    }
-    if (hasExtension(QByteArrayLiteral("EGL_WL_bind_wayland_display"))) {
-        m_functions.eglBindWaylandDisplayWL = (eglBindWaylandDisplayWL_func)eglGetProcAddress("eglBindWaylandDisplayWL");
-        m_functions.eglUnbindWaylandDisplayWL = (eglUnbindWaylandDisplayWL_func)eglGetProcAddress("eglUnbindWaylandDisplayWL");
-        m_functions.eglQueryWaylandBufferWL = (eglQueryWaylandBufferWL_func)eglGetProcAddress("eglQueryWaylandBufferWL");
-        // only bind if not already done
-        if (waylandServer()->display()->eglDisplay() != eglDisplay()) {
-            if (!m_functions.eglBindWaylandDisplayWL(eglDisplay(), *(WaylandServer::self()->display()))) {
-                m_functions.eglUnbindWaylandDisplayWL = nullptr;
-                m_functions.eglQueryWaylandBufferWL = nullptr;
-            } else {
-                waylandServer()->display()->setEglDisplay(eglDisplay());
-            }
-        }
     }
 
     Q_ASSERT(!m_dmaBuf);

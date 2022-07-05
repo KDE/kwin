@@ -227,7 +227,6 @@ target_sources(kwin PRIVATE
     datasource_interface.cpp
     display.cpp
     dpms_interface.cpp
-    drmclientbuffer.cpp
     drmlease_v1_interface.cpp
     fakeinput_interface.cpp
     fractionalscale_v1_interface.cpp

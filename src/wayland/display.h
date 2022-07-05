@@ -126,21 +126,6 @@ public:
     QVector<ClientConnection *> connections() const;
 
     /**
-     * Set the EGL @p display for this Wayland display.
-     * The EGLDisplay can only be set once and must be alive as long as the Wayland display
-     * is alive. The user should have set up the binding between the EGLDisplay and the
-     * Wayland display prior to calling this method.
-     *
-     * @see eglDisplay
-     */
-    void setEglDisplay(void *display);
-    /**
-     * @returns the EGLDisplay used for this Wayland display or EGL_NO_DISPLAY if not set.
-     * @see setEglDisplay
-     */
-    void *eglDisplay() const;
-
-    /**
      * Returns the client buffer with the specified @a resource. Returns @c null if there's
      * no such a buffer.
      */

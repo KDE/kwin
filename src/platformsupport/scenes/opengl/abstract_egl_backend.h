@@ -18,17 +18,6 @@ struct wl_resource;
 namespace KWin
 {
 
-typedef GLboolean (*eglBindWaylandDisplayWL_func)(EGLDisplay dpy, wl_display *display);
-typedef GLboolean (*eglUnbindWaylandDisplayWL_func)(EGLDisplay dpy, wl_display *display);
-typedef GLboolean (*eglQueryWaylandBufferWL_func)(EGLDisplay dpy, struct wl_resource *buffer, EGLint attribute, EGLint *value);
-
-struct AbstractEglBackendFunctions
-{
-    eglBindWaylandDisplayWL_func eglBindWaylandDisplayWL = nullptr;
-    eglUnbindWaylandDisplayWL_func eglUnbindWaylandDisplayWL = nullptr;
-    eglQueryWaylandBufferWL_func eglQueryWaylandBufferWL = nullptr;
-};
-
 struct DmaBufAttributes;
 class EglDmabuf;
 class Output;
@@ -41,10 +30,6 @@ public:
     bool makeCurrent() override;
     void doneCurrent() override;
 
-    const AbstractEglBackendFunctions *functions() const
-    {
-        return &m_functions;
-    }
     EGLDisplay eglDisplay() const
     {
         return m_display;
@@ -95,7 +80,6 @@ private:
 
     void teardown();
 
-    AbstractEglBackendFunctions m_functions;
     EGLDisplay m_display = EGL_NO_DISPLAY;
     EGLSurface m_surface = EGL_NO_SURFACE;
     EGLContext m_context = EGL_NO_CONTEXT;

@@ -15,8 +15,6 @@
 #include <QString>
 #include <QVector>
 
-#include <EGL/egl.h>
-
 struct wl_resource;
 
 namespace KWaylandServer
@@ -51,7 +49,6 @@ public:
     QVector<SeatInterface *> seats;
     QVector<ClientConnection *> clients;
     QStringList socketNames;
-    EGLDisplay eglDisplay = EGL_NO_DISPLAY;
     QHash<::wl_resource *, ClientBuffer *> resourceToBuffer;
     QHash<ClientBuffer *, ClientBufferDestroyListener *> bufferToListener;
     QList<ClientBufferIntegration *> bufferIntegrations;
