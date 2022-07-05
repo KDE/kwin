@@ -39,6 +39,8 @@ public:
     QSizeF size() const;
     void setSize(const QSizeF &size);
 
+    virtual qreal scale() const;
+
     int z() const;
     void setZ(int z);
 

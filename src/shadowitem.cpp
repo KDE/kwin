@@ -6,6 +6,7 @@
 
 #include "shadowitem.h"
 #include "deleted.h"
+#include "output.h"
 #include "shadow.h"
 
 namespace KWin
@@ -28,6 +29,15 @@ ShadowItem::ShadowItem(Shadow *shadow, Window *window, Item *parent)
 
 ShadowItem::~ShadowItem()
 {
+}
+
+qreal ShadowItem::scale() const
+{
+    if (!m_window || !m_window->output()) {
+        return 1.0;
+    }
+
+    return m_window->output()->scale();
 }
 
 Shadow *ShadowItem::shadow() const

@@ -49,6 +49,8 @@ public:
     ShadowItem *shadowItem() const;
     Window *window() const;
 
+    qreal scale() const override;
+
     void refVisible(int reason);
     void unrefVisible(int reason);
 

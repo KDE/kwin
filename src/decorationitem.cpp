@@ -218,6 +218,15 @@ Window *DecorationItem::window() const
     return m_window;
 }
 
+qreal DecorationItem::scale() const
+{
+    if (!m_window || !m_window->output()) {
+        return 1.0;
+    }
+
+    return m_window->output()->scale();
+}
+
 WindowQuad buildQuad(const QRectF &partRect, const QPoint &textureOffset,
                      const qreal devicePixelRatio, bool rotated)
 {

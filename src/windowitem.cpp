@@ -8,6 +8,7 @@
 #include "decorationitem.h"
 #include "deleted.h"
 #include "internalwindow.h"
+#include "output.h"
 #include "shadowitem.h"
 #include "surfaceitem_internal.h"
 #include "surfaceitem_wayland.h"
@@ -71,6 +72,15 @@ ShadowItem *WindowItem::shadowItem() const
 Window *WindowItem::window() const
 {
     return m_window;
+}
+
+qreal WindowItem::scale() const
+{
+    if (!m_window || !m_window->output()) {
+        return 1.0;
+    }
+
+    return m_window->output()->scale();
 }
 
 void WindowItem::refVisible(int reason)

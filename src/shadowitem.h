@@ -26,6 +26,8 @@ public:
     explicit ShadowItem(Shadow *shadow, Window *window, Item *parent = nullptr);
     ~ShadowItem() override;
 
+    qreal scale() const override;
+
     Shadow *shadow() const;
 
 protected:

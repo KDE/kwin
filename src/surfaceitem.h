@@ -26,6 +26,8 @@ public:
     QMatrix4x4 surfaceToBufferMatrix() const;
     void setSurfaceToBufferMatrix(const QMatrix4x4 &matrix);
 
+    qreal scale() const override;
+
     Window *window() const;
 
     void addDamage(const QRegion &region);

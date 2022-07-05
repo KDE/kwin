@@ -145,6 +145,11 @@ void Item::setSize(const QSizeF &size)
     }
 }
 
+qreal Item::scale() const
+{
+    return 1.0;
+}
+
 QRectF Item::rect() const
 {
     return QRectF(QPoint(0, 0), size());
