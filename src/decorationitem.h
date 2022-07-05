@@ -83,6 +83,8 @@ public:
     DecorationRenderer *renderer() const;
     Window *window() const;
 
+    qreal scale() const override;
+
     QRegion shape() const override final;
     QRegion opaque() const override final;
 

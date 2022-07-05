@@ -7,6 +7,8 @@
 #include "surfaceitem.h"
 #include "deleted.h"
 
+#include "output.h"
+
 namespace KWin
 {
 
@@ -36,6 +38,15 @@ QMatrix4x4 SurfaceItem::surfaceToBufferMatrix() const
 void SurfaceItem::setSurfaceToBufferMatrix(const QMatrix4x4 &matrix)
 {
     m_surfaceToBufferMatrix = matrix;
+}
+
+qreal SurfaceItem::scale() const
+{
+    if (!m_window || !m_window->output()) {
+        return 1.0;
+    }
+
+    return m_window->output()->scale();
 }
 
 void SurfaceItem::addDamage(const QRegion &region)
