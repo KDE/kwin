@@ -358,26 +358,26 @@ Item {
 
     PC3.Button {
         id: closeButton
-        visible: thumb.closeButtonVisible && (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && thumb.client.closeable && !dragHandler.active
+
         anchors {
             right: thumbSource.right
-            rightMargin: PlasmaCore.Units.smallSpacing
             top: thumbSource.top
-            topMargin: PlasmaCore.Units.smallSpacing
+            margins: PlasmaCore.Units.smallSpacing
         }
+
+        visible: thumb.closeButtonVisible && (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && thumb.client.closeable && !dragHandler.active
         LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
+
         text: i18ndc("kwin_effects", "@info:tooltip as in: 'close this window'", "Close window")
         icon.name: "window-close"
-        implicitWidth: PlasmaCore.Units.iconSizes.medium
-        implicitHeight: implicitWidth
-        onClicked: thumb.client.closeWindow();
-
         display: PC3.AbstractButton.IconOnly
 
         PC3.ToolTip.text: text
         PC3.ToolTip.visible: hovered && display === PC3.AbstractButton.IconOnly
         PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
         Accessible.name: text
+
+        onClicked: thumb.client.closeWindow();
     }
 
     Component.onDestruction: {
