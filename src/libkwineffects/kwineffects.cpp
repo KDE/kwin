@@ -1120,7 +1120,7 @@ WindowQuadList WindowQuadList::makeRegularGrid(int xSubdivisions, int ySubdivisi
 #define GL_QUADS 0x0007
 #endif
 
-void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertices, const GLTexture *texture) const
+void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertices, const GLTexture *texture, qreal scale) const
 {
     GLVertex2D *vertex = vertices;
 
@@ -1140,7 +1140,7 @@ void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertic
                 const WindowVertex &wv = quad[j];
 
                 GLVertex2D v;
-                v.position = QVector2D(wv.x(), wv.y());
+                v.position = QVector2D(std::round(wv.x() * scale) / scale, std::round(wv.y() * scale) / scale);
                 v.texcoord = QVector2D(wv.u(), wv.v()) * coeff + offset;
 
                 *(vertex++) = v;
@@ -1159,7 +1159,7 @@ void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertic
             for (int j = 0; j < 4; j++) {
                 const WindowVertex &wv = quad[j];
 
-                v[j].position = QVector2D(wv.x(), wv.y());
+                v[j].position = QVector2D(std::round(wv.x() * scale) / scale, std::round(wv.y() * scale) / scale);
                 v[j].texcoord = QVector2D(wv.u(), wv.v()) * coeff + offset;
             }
 

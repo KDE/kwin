@@ -37,6 +37,7 @@ public:
         int vertexCount = 0;
         qreal opacity = 1;
         bool hasAlpha = false;
+        qreal scale = 1.0;
     };
 
     struct RenderContext
