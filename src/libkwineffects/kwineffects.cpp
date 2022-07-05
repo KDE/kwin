@@ -1133,6 +1133,7 @@ void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertic
     switch (type) {
     case GL_QUADS: {
         for (const WindowQuad &quad : *this) {
+#pragma GCC unroll 4
             for (int j = 0; j < 4; j++) {
                 const WindowVertex &wv = quad[j];
 
@@ -1148,6 +1149,7 @@ void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertic
         for (const WindowQuad &quad : *this) {
             GLVertex2D v[4]; // Four unique vertices / quad
 
+#pragma GCC unroll 4
             for (int j = 0; j < 4; j++) {
                 const WindowVertex &wv = quad[j];
 
