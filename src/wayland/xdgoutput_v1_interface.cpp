@@ -34,8 +34,9 @@ protected:
 class XdgOutputV1InterfacePrivate : public QtWaylandServer::zxdg_output_v1
 {
 public:
-    XdgOutputV1InterfacePrivate(OutputInterface *wlOutput)
+    XdgOutputV1InterfacePrivate(XdgOutputV1Interface *q, OutputInterface *wlOutput)
         : output(wlOutput)
+        , q(q)
     {
     }
 
@@ -46,9 +47,12 @@ public:
     bool dirty = false;
     bool doneOnce = false;
     QPointer<OutputInterface> output;
+    XdgOutputV1Interface *const q;
 
     void sendLogicalPosition(Resource *resource, const QPoint &position);
     void sendLogicalSize(Resource *resource, const QSize &size);
+
+    void sendDone(Resource *resource);
 
 protected:
     void zxdg_output_v1_bind_resource(Resource *resource) override;
@@ -110,7 +114,7 @@ void XdgOutputManagerV1InterfacePrivate::zxdg_output_manager_v1_destroy(Resource
 
 XdgOutputV1Interface::XdgOutputV1Interface(OutputInterface *output, QObject *parent)
     : QObject(parent)
-    , d(new XdgOutputV1InterfacePrivate(output))
+    , d(new XdgOutputV1InterfacePrivate(this, output))
 {
 }
 
@@ -200,15 +204,10 @@ void XdgOutputV1InterfacePrivate::zxdg_output_v1_bind_resource(Resource *resourc
         send_description(resource->handle, description);
     }
 
-    if (doneOnce) {
-        if (wl_resource_get_version(resource->handle) >= 3) {
-            if (output) {
-                output->done(resource->client());
-            }
-        } else {
-            send_done(resource->handle);
-        }
-    }
+    sendDone(resource);
+
+    ClientConnection *connection = output->display()->getConnection(resource->client());
+    QObject::connect(connection, &ClientConnection::scaleOverrideChanged, q, &XdgOutputV1Interface::sendRefresh, Qt::UniqueConnection);
 }
 
 void XdgOutputV1InterfacePrivate::sendLogicalSize(Resource *resource, const QSize &size)
@@ -229,6 +228,37 @@ void XdgOutputV1InterfacePrivate::sendLogicalPosition(Resource *resource, const 
     }
     ClientConnection *connection = output->display()->getConnection(resource->client());
     qreal scaleOverride = connection->scaleOverride();
+
     send_logical_position(resource->handle, pos.x() * scaleOverride, pos.y() * scaleOverride);
+}
+
+void XdgOutputV1InterfacePrivate::sendDone(Resource *resource)
+{
+    if (!doneOnce) {
+        return;
+    }
+
+    if (wl_resource_get_version(resource->handle) >= 3) {
+        if (output) {
+            output->done(resource->client());
+        }
+    } else {
+        send_done(resource->handle);
+    }
+}
+
+void XdgOutputV1Interface::sendRefresh()
+{
+    auto changedConnection = qobject_cast<ClientConnection *>(sender());
+
+    const auto outputResources = d->resourceMap();
+    for (auto resource : outputResources) {
+        ClientConnection *connection = d->output->display()->getConnection(resource->client());
+        if (connection == changedConnection) {
+            d->sendLogicalPosition(resource, d->pos);
+            d->sendLogicalSize(resource, d->size);
+            d->sendDone(resource);
+        }
+    }
 }
 }
