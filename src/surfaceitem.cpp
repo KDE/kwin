@@ -145,16 +145,19 @@ WindowQuadList SurfaceItem::buildQuads() const
 
     for (const QRectF rect : region) {
         WindowQuad quad;
+        quad.setUvCoordinateType(WindowQuad::UvCoordinateType::Normalized);
 
         const QPointF bufferTopLeft = m_surfaceToBufferMatrix.map(rect.topLeft());
         const QPointF bufferTopRight = m_surfaceToBufferMatrix.map(rect.topRight());
         const QPointF bufferBottomRight = m_surfaceToBufferMatrix.map(rect.bottomRight());
         const QPointF bufferBottomLeft = m_surfaceToBufferMatrix.map(rect.bottomLeft());
 
-        quad[0] = WindowVertex(rect.topLeft(), bufferTopLeft);
-        quad[1] = WindowVertex(rect.topRight(), bufferTopRight);
-        quad[2] = WindowVertex(rect.bottomRight(), bufferBottomRight);
-        quad[3] = WindowVertex(rect.bottomLeft(), bufferBottomLeft);
+        const auto size = m_surfaceToBufferMatrix.map(QPointF{rect.width(), rect.height()});
+
+        quad[0] = WindowVertex(rect.topLeft(), QPointF{bufferTopLeft.x() / size.x(), bufferTopLeft.y() / size.y()});
+        quad[1] = WindowVertex(rect.topRight(), QPointF{bufferTopRight.x() / size.x(), bufferTopRight.y() / size.y()});
+        quad[2] = WindowVertex(rect.bottomRight(), QPointF{bufferBottomRight.x() / size.x(), bufferBottomRight.y() / size.y()});
+        quad[3] = WindowVertex(rect.bottomLeft(), QPointF{bufferBottomLeft.x() / size.x(), bufferBottomRight.y() / size.y()});
 
         quads << quad;
     }
