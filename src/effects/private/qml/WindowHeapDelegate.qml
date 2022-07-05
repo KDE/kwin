@@ -366,10 +366,18 @@ Item {
             topMargin: PlasmaCore.Units.smallSpacing
         }
         LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
+        text: i18ndc("kwin_effects", "@info:tooltip as in: 'close this window'", "Close window")
         icon.name: "window-close"
         implicitWidth: PlasmaCore.Units.iconSizes.medium
         implicitHeight: implicitWidth
         onClicked: thumb.client.closeWindow();
+
+        display: PC3.AbstractButton.IconOnly
+
+        PC3.ToolTip.text: text
+        PC3.ToolTip.visible: hovered && display === PC3.AbstractButton.IconOnly
+        PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
+        Accessible.name: text
     }
 
     Component.onDestruction: {
