@@ -69,7 +69,7 @@ private:
     QString m_inputMethodServerToStart;
     QString m_sessionArgument;
 
-    Xwl::Xwayland *m_xwayland = nullptr;
+    std::unique_ptr<Xwl::Xwayland> m_xwayland;
     QVector<int> m_xwaylandListenFds;
     QString m_xwaylandDisplay;
     QString m_xwaylandXauthority;

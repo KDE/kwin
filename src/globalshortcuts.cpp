@@ -119,11 +119,10 @@ void GlobalShortcutsManager::init()
 {
     if (kwinApp()->shouldUseWaylandForCompositing()) {
         qputenv("KGLOBALACCELD_PLATFORM", QByteArrayLiteral("org.kde.kwin"));
-        m_kglobalAccel = new KGlobalAccelD(this);
+        m_kglobalAccel = std::make_unique<KGlobalAccelD>();
         if (!m_kglobalAccel->init()) {
             qCDebug(KWIN_CORE) << "Init of kglobalaccel failed";
-            delete m_kglobalAccel;
-            m_kglobalAccel = nullptr;
+            m_kglobalAccel.reset();
         } else {
             qCDebug(KWIN_CORE) << "KGlobalAcceld inited";
         }

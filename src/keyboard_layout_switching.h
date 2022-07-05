@@ -12,6 +12,7 @@
 #include <KConfigGroup>
 #include <QHash>
 #include <QObject>
+#include <memory>
 
 namespace KWin
 {
@@ -32,7 +33,7 @@ public:
 
     virtual QString name() const = 0;
 
-    static Policy *create(Xkb *xkb, KeyboardLayout *layout, const KConfigGroup &config, const QString &policy);
+    static std::unique_ptr<Policy> create(Xkb *xkb, KeyboardLayout *layout, const KConfigGroup &config, const QString &policy);
 
 protected:
     explicit Policy(Xkb *xkb, KeyboardLayout *layout, const KConfigGroup &config = KConfigGroup());

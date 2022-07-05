@@ -12,6 +12,7 @@
 #include "input_event_spy.h"
 #include <QObject>
 #include <QVector>
+#include <memory>
 
 #include <KConfigGroup>
 #include <KSharedConfig>
@@ -62,7 +63,7 @@ private:
     KConfigGroup m_configGroup;
     QVector<QAction *> m_layoutShortcuts;
     KeyboardLayoutDBusInterface *m_dbusInterface = nullptr;
-    KeyboardLayoutSwitching::Policy *m_policy = nullptr;
+    std::unique_ptr<KeyboardLayoutSwitching::Policy> m_policy;
 };
 
 class KeyboardLayoutDBusInterface : public QObject

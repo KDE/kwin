@@ -119,8 +119,7 @@ ApplicationWayland::~ApplicationWayland()
     if (effects) {
         static_cast<EffectsHandlerImpl *>(effects)->unloadAllEffects();
     }
-    delete m_xwayland;
-    m_xwayland = nullptr;
+    m_xwayland.reset();
     destroyWorkspace();
 
     destroyInputMethod();
@@ -171,20 +170,20 @@ void ApplicationWayland::continueStartupWithScene()
         return;
     }
 
-    m_xwayland = new Xwl::Xwayland(this);
+    m_xwayland = std::make_unique<Xwl::Xwayland>(this);
     m_xwayland->xwaylandLauncher()->setListenFDs(m_xwaylandListenFds);
     m_xwayland->xwaylandLauncher()->setDisplayName(m_xwaylandDisplay);
     m_xwayland->xwaylandLauncher()->setXauthority(m_xwaylandXauthority);
-    connect(m_xwayland, &Xwl::Xwayland::errorOccurred, this, &ApplicationWayland::finalizeStartup);
-    connect(m_xwayland, &Xwl::Xwayland::started, this, &ApplicationWayland::finalizeStartup);
+    connect(m_xwayland.get(), &Xwl::Xwayland::errorOccurred, this, &ApplicationWayland::finalizeStartup);
+    connect(m_xwayland.get(), &Xwl::Xwayland::started, this, &ApplicationWayland::finalizeStartup);
     m_xwayland->start();
 }
 
 void ApplicationWayland::finalizeStartup()
 {
     if (m_xwayland) {
-        disconnect(m_xwayland, &Xwl::Xwayland::errorOccurred, this, &ApplicationWayland::finalizeStartup);
-        disconnect(m_xwayland, &Xwl::Xwayland::started, this, &ApplicationWayland::finalizeStartup);
+        disconnect(m_xwayland.get(), &Xwl::Xwayland::errorOccurred, this, &ApplicationWayland::finalizeStartup);
+        disconnect(m_xwayland.get(), &Xwl::Xwayland::started, this, &ApplicationWayland::finalizeStartup);
     }
     startSession();
     notifyStarted();

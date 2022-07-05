@@ -108,7 +108,6 @@ void KeyboardLayout::reconfigure()
         const QString policyKey = m_configGroup.readEntry("SwitchMode", QStringLiteral("Global"));
         m_xkb->reconfigure();
         if (!m_policy || m_policy->name() != policyKey) {
-            delete m_policy;
             m_policy = KeyboardLayoutSwitching::Policy::create(m_xkb, this, m_configGroup, policyKey);
         }
     } else {

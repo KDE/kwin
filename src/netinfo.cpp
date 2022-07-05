@@ -22,7 +22,7 @@ namespace KWin
 {
 extern int screen_number;
 
-RootInfo *RootInfo::s_self = nullptr;
+std::unique_ptr<RootInfo> RootInfo::s_self;
 
 RootInfo *RootInfo::create()
 {
@@ -116,8 +116,8 @@ RootInfo *RootInfo::create()
         | NET::ActionChangeDesktop
         | NET::ActionClose;
 
-    s_self = new RootInfo(supportWindow, "KWin", properties, types, states, properties2, actions, screen_number);
-    return s_self;
+    s_self.reset(new RootInfo(supportWindow, "KWin", properties, types, states, properties2, actions, screen_number));
+    return s_self.get();
 }
 
 void RootInfo::destroy()
@@ -126,8 +126,7 @@ void RootInfo::destroy()
         return;
     }
     xcb_window_t supportWindow = s_self->supportWindow();
-    delete s_self;
-    s_self = nullptr;
+    s_self.reset();
     xcb_destroy_window(kwinApp()->x11Connection(), supportWindow);
 }
 

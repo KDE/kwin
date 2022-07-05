@@ -50,7 +50,7 @@ protected:
 private:
     RootInfo(xcb_window_t w, const char *name, NET::Properties properties, NET::WindowTypes types,
              NET::States states, NET::Properties2 properties2, NET::Actions actions, int scr = -1);
-    static RootInfo *s_self;
+    static std::unique_ptr<RootInfo> s_self;
     friend RootInfo *rootInfo();
 
     xcb_window_t m_activeWindow;
@@ -59,7 +59,7 @@ private:
 
 inline RootInfo *rootInfo()
 {
-    return RootInfo::s_self;
+    return RootInfo::s_self.get();
 }
 
 /**

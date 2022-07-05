@@ -42,18 +42,18 @@ void Policy::setLayout(uint index)
     }
 }
 
-Policy *Policy::create(Xkb *xkb, KeyboardLayout *layout, const KConfigGroup &config, const QString &policy)
+std::unique_ptr<Policy> Policy::create(Xkb *xkb, KeyboardLayout *layout, const KConfigGroup &config, const QString &policy)
 {
     if (policy.toLower() == QStringLiteral("desktop")) {
-        return new VirtualDesktopPolicy(xkb, layout, config);
+        return std::make_unique<VirtualDesktopPolicy>(xkb, layout, config);
     }
     if (policy.toLower() == QStringLiteral("window")) {
-        return new WindowPolicy(xkb, layout);
+        return std::make_unique<WindowPolicy>(xkb, layout);
     }
     if (policy.toLower() == QStringLiteral("winclass")) {
-        return new ApplicationPolicy(xkb, layout, config);
+        return std::make_unique<ApplicationPolicy>(xkb, layout, config);
     }
-    return new GlobalPolicy(xkb, layout, config);
+    return std::make_unique<GlobalPolicy>(xkb, layout, config);
 }
 
 const char Policy::defaultLayoutEntryKeyPrefix[] = "LayoutDefault";

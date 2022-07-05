@@ -10,6 +10,7 @@
 #define KWIN_CLIENT_MACHINE_H
 
 #include <QObject>
+#include <memory>
 #include <xcb/xcb.h>
 
 // forward declaration
@@ -43,11 +44,11 @@ private:
     bool m_resolved;
     bool m_ownResolved;
     QByteArray m_hostName;
-    addrinfo *m_addressHints;
+    std::unique_ptr<addrinfo> m_addressHints;
     addrinfo *m_address;
     addrinfo *m_ownAddress;
-    QFutureWatcher<int> *m_watcher;
-    QFutureWatcher<int> *m_ownAddressWatcher;
+    std::unique_ptr<QFutureWatcher<int>> m_watcher;
+    std::unique_ptr<QFutureWatcher<int>> m_ownAddressWatcher;
 };
 
 class ClientMachine : public QObject

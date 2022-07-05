@@ -149,7 +149,7 @@ private:
     void paintPass(RenderLayer *layer, RenderTarget *target, const QRegion &region);
 
     State m_state = State::Off;
-    CompositorSelectionOwner *m_selectionOwner = nullptr;
+    std::unique_ptr<CompositorSelectionOwner> m_selectionOwner;
     QTimer m_releaseSelectionTimer;
     QList<xcb_atom_t> m_unusedSupportProperties;
     QTimer m_unusedSupportPropertyTimer;

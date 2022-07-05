@@ -190,33 +190,29 @@ void Workspace::propagateWindows(bool propagate_new_windows)
     Q_ASSERT(newWindowStack.at(0) == rootInfo()->supportWindow());
     Xcb::restackWindows(newWindowStack);
 
-    int pos = 0;
-    xcb_window_t *cl(nullptr);
+    QVector<xcb_window_t> cl;
     if (propagate_new_windows) {
-        cl = new xcb_window_t[manual_overlays.count() + m_x11Clients.count()];
+        cl.reserve(manual_overlays.size() + m_x11Clients.size());
         for (const auto win : qAsConst(manual_overlays)) {
-            cl[pos++] = win;
+            cl.push_back(win);
         }
         for (auto it = m_x11Clients.constBegin(); it != m_x11Clients.constEnd(); ++it) {
-            cl[pos++] = (*it)->window();
+            cl.push_back((*it)->window());
         }
-        rootInfo()->setClientList(cl, pos);
-        delete[] cl;
+        rootInfo()->setClientList(cl.constData(), cl.size());
     }
 
-    cl = new xcb_window_t[manual_overlays.count() + stacking_order.count()];
-    pos = 0;
+    cl.clear();
     for (auto it = stacking_order.constBegin(); it != stacking_order.constEnd(); ++it) {
         X11Window *window = qobject_cast<X11Window *>(*it);
         if (window) {
-            cl[pos++] = window->window();
+            cl.push_back(window->window());
         }
     }
     for (const auto win : qAsConst(manual_overlays)) {
-        cl[pos++] = win;
+        cl.push_back(win);
     }
-    rootInfo()->setClientListStacking(cl, pos);
-    delete[] cl;
+    rootInfo()->setClientListStacking(cl.constData(), cl.size());
 }
 
 /**

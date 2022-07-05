@@ -34,18 +34,14 @@ Group::Group(xcb_window_t leader_P)
 {
     if (leader_P != XCB_WINDOW_NONE) {
         leader_client = workspace()->findClient(Predicate::WindowMatch, leader_P);
-        leader_info = new NETWinInfo(kwinApp()->x11Connection(), leader_P, kwinApp()->x11RootWindow(),
-                                     NET::Properties(), NET::WM2StartupId);
+        leader_info = std::make_unique<NETWinInfo>(kwinApp()->x11Connection(), leader_P, kwinApp()->x11RootWindow(),
+                                                   NET::Properties(), NET::WM2StartupId);
     }
-    effect_group = new EffectWindowGroupImpl(this);
+    effect_group = std::make_unique<EffectWindowGroupImpl>(this);
     workspace()->addGroup(this);
 }
 
-Group::~Group()
-{
-    delete leader_info;
-    delete effect_group;
-}
+Group::~Group() = default;
 
 QIcon Group::icon() const
 {

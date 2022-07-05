@@ -338,9 +338,8 @@ void Compositor::initializeX11()
     if (!m_selectionOwner) {
         char selection_name[100];
         sprintf(selection_name, "_NET_WM_CM_S%d", Application::x11ScreenNumber());
-        m_selectionOwner = new CompositorSelectionOwner(selection_name);
-        connect(m_selectionOwner, &CompositorSelectionOwner::lostOwnership,
-                this, &Compositor::stop);
+        m_selectionOwner = std::make_unique<CompositorSelectionOwner>(selection_name);
+        connect(m_selectionOwner.get(), &CompositorSelectionOwner::lostOwnership, this, &Compositor::stop);
     }
     if (!m_selectionOwner->owning()) {
         // Force claim ownership.
@@ -354,8 +353,7 @@ void Compositor::initializeX11()
 
 void Compositor::cleanupX11()
 {
-    delete m_selectionOwner;
-    m_selectionOwner = nullptr;
+    m_selectionOwner.reset();
 }
 
 void Compositor::startupWithWorkspace()
@@ -540,8 +538,7 @@ void Compositor::stop()
 
 void Compositor::destroyCompositorSelection()
 {
-    delete m_selectionOwner;
-    m_selectionOwner = nullptr;
+    m_selectionOwner.reset();
 }
 
 void Compositor::releaseCompositorSelection()

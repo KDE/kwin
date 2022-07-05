@@ -45,10 +45,10 @@ private:
     QList<X11Window *> _members;
     X11Window *leader_client;
     xcb_window_t leader_wid;
-    NETWinInfo *leader_info;
+    std::unique_ptr<NETWinInfo> leader_info;
     xcb_timestamp_t user_time;
     int refcount;
-    EffectWindowGroupImpl *effect_group;
+    std::unique_ptr<EffectWindowGroupImpl> effect_group;
 };
 
 inline xcb_window_t Group::leader() const
@@ -78,7 +78,7 @@ inline xcb_timestamp_t Group::userTime() const
 
 inline EffectWindowGroupImpl *Group::effectGroup()
 {
-    return effect_group;
+    return effect_group.get();
 }
 
 } // namespace

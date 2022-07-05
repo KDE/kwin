@@ -73,9 +73,8 @@ bool XrandrEventFilter::event(xcb_generic_event_t *event)
     return false;
 }
 
-Xwayland::Xwayland(Application *app, QObject *parent)
-    : XwaylandInterface(parent)
-    , m_app(app)
+Xwayland::Xwayland(Application *app)
+    : m_app(app)
     , m_launcher(new XwaylandLauncher(this))
 {
     connect(m_launcher, &XwaylandLauncher::started, this, &Xwayland::handleXwaylandReady);
