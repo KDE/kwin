@@ -140,10 +140,12 @@ WindowQuadList SurfaceItem::buildQuads() const
         const QPointF bufferBottomRight = m_surfaceToBufferMatrix.map(rect.bottomRight());
         const QPointF bufferBottomLeft = m_surfaceToBufferMatrix.map(rect.bottomLeft());
 
-        quad[0] = WindowVertex(rect.topLeft(), bufferTopLeft);
-        quad[1] = WindowVertex(rect.topRight(), bufferTopRight);
-        quad[2] = WindowVertex(rect.bottomRight(), bufferBottomRight);
-        quad[3] = WindowVertex(rect.bottomLeft(), bufferBottomLeft);
+        const auto size = m_pixmap->size();
+
+        quad[0] = WindowVertex(rect.topLeft(), QPointF{bufferTopLeft.x() / size.width(), bufferTopLeft.y() / size.height()});
+        quad[1] = WindowVertex(rect.topRight(), QPointF{bufferTopRight.x() / size.width(), bufferTopRight.y() / size.height()});
+        quad[2] = WindowVertex(rect.bottomRight(), QPointF{bufferBottomRight.x() / size.width(), bufferBottomRight.y() / size.height()});
+        quad[3] = WindowVertex(rect.bottomLeft(), QPointF{bufferBottomLeft.x() / size.width(), bufferBottomLeft.y() / size.height()});
 
         quads << quad;
     }

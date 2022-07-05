@@ -376,7 +376,7 @@ void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
                     .transformMatrix = context->transformStack.top(),
                     .opacity = context->opacityStack.top(),
                     .hasAlpha = hasAlpha,
-                    .coordinateType = UnnormalizedCoordinates,
+                    .coordinateType = NormalizedCoordinates,
                 });
             }
         }
