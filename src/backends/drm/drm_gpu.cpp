@@ -266,30 +266,28 @@ bool DrmGpu::updateOutputs()
             }
             m_connectors << conn;
             m_allObjects << conn;
+            qCDebug(KWIN_DRM, "New %soutput on GPU %s: %s", conn->isNonDesktop() ? "non-desktop " : "", qPrintable(m_devNode), qPrintable(conn->modelName()));
+            const auto pipeline = conn->pipeline();
+            m_pipelines << pipeline;
+            if (conn->isNonDesktop()) {
+                auto leaseOutput = new DrmLeaseOutput(pipeline, m_leaseDevice);
+                m_leaseOutputs << leaseOutput;
+            } else {
+                auto output = new DrmOutput(pipeline);
+                m_drmOutputs << output;
+                m_outputs << output;
+                addedOutputs << output;
+                Q_EMIT outputAdded(output);
+            }
+            pipeline->setLayers(m_platform->renderBackend()->createPrimaryLayer(pipeline), m_platform->renderBackend()->createCursorLayer(pipeline));
+            pipeline->setActive(!conn->isNonDesktop());
+            pipeline->applyPendingChanges();
         } else {
             conn->updateProperties();
             if (conn->isConnected()) {
                 removedConnectors.removeOne(conn);
-            } else {
-                continue;
             }
         }
-        qCDebug(KWIN_DRM, "New %soutput on GPU %s: %s", conn->isNonDesktop() ? "non-desktop " : "", qPrintable(m_devNode), qPrintable(conn->modelName()));
-        const auto pipeline = conn->pipeline();
-        m_pipelines << pipeline;
-        if (conn->isNonDesktop()) {
-            auto leaseOutput = new DrmLeaseOutput(pipeline, m_leaseDevice);
-            m_leaseOutputs << leaseOutput;
-        } else {
-            auto output = new DrmOutput(pipeline);
-            m_drmOutputs << output;
-            m_outputs << output;
-            addedOutputs << output;
-            Q_EMIT outputAdded(output);
-        }
-        pipeline->setLayers(m_platform->renderBackend()->createPrimaryLayer(pipeline), m_platform->renderBackend()->createCursorLayer(pipeline));
-        pipeline->setActive(!conn->isNonDesktop());
-        pipeline->applyPendingChanges();
     }
     for (const auto &connector : qAsConst(removedConnectors)) {
         if (auto output = findOutput(connector->id())) {
