@@ -70,7 +70,7 @@ Item {
     }
 
     visible: opacity > 0
-    z: thumb.activeDragHandler.active ? 100 : client.stackingOrder
+    z: thumb.activeDragHandler.active ? 100 : client.stackingOrder + (thumb.client.desktop == KWinComponents.Workspace.currentDesktop ? 100 : 0)
 
     component TweenBehavior : Behavior {
         enabled: thumb.state !== "partial" && thumb.windowHeap.animationEnabled && !thumb.activeDragHandler.active
@@ -215,7 +215,7 @@ Item {
                 y: (thumb.client.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.y : 0)) * (1 - effect.partialActivationFactor) + cell.y * effect.partialActivationFactor
                 width: thumb.client.width * (1 - effect.partialActivationFactor) + cell.width * effect.partialActivationFactor
                 height: thumb.client.height * (1 - effect.partialActivationFactor) + cell.height * effect.partialActivationFactor
-                opacity: thumb.client.minimized ? effect.partialActivationFactor : 1
+                opacity: thumb.client.minimized || thumb.client.desktop != KWinComponents.Workspace.currentDesktop ? effect.partialActivationFactor : 1
             }
             PropertyChanges {
                 target: icon
