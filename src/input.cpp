@@ -1075,7 +1075,7 @@ public:
                     return false;
                 }
                 m_lastTouchDownTime = time;
-                auto output = kwinApp()->platform()->outputAt(pos.toPoint());
+                auto output = workspace()->outputAt(pos.toPoint());
                 auto physicalSize = output->physicalSize();
                 if (!physicalSize.isValid()) {
                     physicalSize = QSize(190, 100);
@@ -1110,7 +1110,7 @@ public:
             if (m_gestureCancelled) {
                 return true;
             }
-            auto output = kwinApp()->platform()->outputAt(pos.toPoint());
+            auto output = workspace()->outputAt(pos.toPoint());
             const float xfactor = output->physicalSize().width() / (float)output->geometry().width();
             const float yfactor = output->physicalSize().height() / (float)output->geometry().height();
 

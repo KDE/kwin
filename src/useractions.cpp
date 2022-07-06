@@ -673,7 +673,7 @@ void UserActionsMenu::screenPopupAboutToShow()
     m_screenMenu->setPalette(m_window->palette());
     QActionGroup *group = new QActionGroup(m_screenMenu);
 
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    const auto outputs = workspace()->outputs();
     for (int i = 0; i < outputs.count(); ++i) {
         Output *output = outputs[i];
         // assumption: there are not more than 9 screens attached.
@@ -1328,20 +1328,87 @@ static bool screenSwitchImpossible()
     return true;
 }
 
+void Workspace::addOutput(Output *output)
+{
+    Q_ASSERT(!m_outputs.contains(output));
+    m_outputs.append(output);
+
+    if (!m_activeOutput) {
+        m_activeOutput = output;
+    }
+
+    connect(output, &Output::geometryChanged, this, &Workspace::desktopResized);
+    desktopResized();
+
+    // Trigger a re-check of output-related rules on all windows
+    for (Window *window : qAsConst(m_allClients)) {
+        sendWindowToOutput(window, window->output());
+    }
+
+    Q_EMIT outputAdded(output);
+}
+
+void Workspace::removeOutput(Output *output)
+{
+    if (!m_outputs.removeOne(output)) {
+        return;
+    }
+
+    if (m_activeOutput == output) {
+        m_activeOutput = outputAt(output->geometry().center());
+    }
+
+    disconnect(output, &Output::geometryChanged, this, &Workspace::desktopResized);
+    desktopResized();
+
+    const auto stack = stackingOrder();
+    for (Window *window : stack) {
+        if (window->output() == output) {
+            window->setOutput(outputAt(window->frameGeometry().center()));
+        }
+    }
+
+    Q_EMIT outputRemoved(output);
+}
+
+QList<Output *> Workspace::outputs() const
+{
+    return m_outputs;
+}
+
+Output *Workspace::outputAt(const QPoint &pos) const
+{
+    Output *bestOutput = nullptr;
+    int minDistance = INT_MAX;
+    for (Output *output : std::as_const(m_outputs)) {
+        const QRect &geo = output->geometry();
+        if (geo.contains(pos)) {
+            return output;
+        }
+        int distance = QPoint(geo.topLeft() - pos).manhattanLength();
+        distance = std::min(distance, QPoint(geo.topRight() - pos).manhattanLength());
+        distance = std::min(distance, QPoint(geo.bottomRight() - pos).manhattanLength());
+        distance = std::min(distance, QPoint(geo.bottomLeft() - pos).manhattanLength());
+        if (distance < minDistance) {
+            minDistance = distance;
+            bestOutput = output;
+        }
+    }
+    return bestOutput;
+}
+
 Output *Workspace::nextOutput(Output *reference) const
 {
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
-    const int index = outputs.indexOf(reference);
+    const int index = m_outputs.indexOf(reference);
     Q_ASSERT(index != -1);
-    return outputs[(index + 1) % outputs.count()];
+    return m_outputs[(index + 1) % m_outputs.count()];
 }
 
 Output *Workspace::previousOutput(Output *reference) const
 {
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
-    const int index = outputs.indexOf(reference);
+    const int index = m_outputs.indexOf(reference);
     Q_ASSERT(index != -1);
-    return outputs[(index + outputs.count() - 1) % outputs.count()];
+    return m_outputs[(index + m_outputs.count() - 1) % m_outputs.count()];
 }
 
 void Workspace::slotSwitchToScreen()

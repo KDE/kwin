@@ -10,7 +10,6 @@
 #include "internalwindow.h"
 #include "decorations/decorationbridge.h"
 #include "deleted.h"
-#include "platform.h"
 #include "surfaceitem.h"
 #include "windowitem.h"
 #include "workspace.h"
@@ -496,7 +495,7 @@ void InternalWindow::commitGeometry(const QRect &rect)
         return;
     }
 
-    m_output = kwinApp()->platform()->outputAt(rect.center());
+    m_output = workspace()->outputAt(rect.center());
     syncGeometryToInternalWindow();
 
     if (oldClientGeometry != m_clientGeometry) {

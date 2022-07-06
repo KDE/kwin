@@ -2027,7 +2027,7 @@ void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
         Q_ASSERT(gravity == Gravity::None);
         if (!isMovable()) { // isMovableAcrossScreens() must have been true to get here
             // Special moving of maximized windows on Xinerama screens
-            Output *output = kwinApp()->platform()->outputAt(globalPos);
+            Output *output = workspace()->outputAt(globalPos);
             if (isFullScreen()) {
                 setMoveResizeGeometry(workspace()->clientArea(FullScreenArea, this, output));
             } else {
@@ -2819,7 +2819,7 @@ void Window::checkQuickTilingMaximizationZones(int xroot, int yroot)
     QuickTileMode mode = QuickTileFlag::None;
     bool innerBorder = false;
 
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    const auto outputs = workspace()->outputs();
     for (const Output *output : outputs) {
         if (!output->geometry().contains(QPoint(xroot, yroot))) {
             continue;
@@ -3816,7 +3816,7 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
         // If trying to tile to the side that the window is already tiled to move the window to the next
         // screen if it exists, otherwise toggle the mode (set QuickTileFlag::None)
         if (quickTileMode() == mode) {
-            const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
+            const QList<Output *> outputs = workspace()->outputs();
             const Output *currentOutput = output();
             const Output *nextOutput = currentOutput;
 
@@ -4014,7 +4014,7 @@ void Window::checkWorkspacePosition(QRect oldGeometry, const VirtualDesktop *old
     }
     if (isRequestedFullScreen()) {
         moveResize(workspace()->clientArea(FullScreenArea, this, newGeom.center()));
-        updateGeometryRestoresForFullscreen(kwinApp()->platform()->outputAt(newGeom.center()));
+        updateGeometryRestoresForFullscreen(workspace()->outputAt(newGeom.center()));
         return;
     }
 
@@ -4054,8 +4054,8 @@ void Window::checkWorkspacePosition(QRect oldGeometry, const VirtualDesktop *old
     if (workspace()->inUpdateClientArea()) {
         // check if the window is on an about to be destroyed output
         Output *newOutput = output();
-        if (!kwinApp()->platform()->enabledOutputs().contains(newOutput)) {
-            newOutput = kwinApp()->platform()->outputAt(newGeom.center());
+        if (!workspace()->outputs().contains(newOutput)) {
+            newOutput = workspace()->outputAt(newGeom.center());
         }
         // we need to find the screen area as it was before the change
         oldScreenArea = workspace()->previousScreenSizes().value(output());
@@ -4065,7 +4065,7 @@ void Window::checkWorkspacePosition(QRect oldGeometry, const VirtualDesktop *old
         screenArea = newOutput->geometry();
         newGeom.translate(screenArea.topLeft() - oldScreenArea.topLeft());
     } else {
-        oldScreenArea = workspace()->clientArea(ScreenArea, kwinApp()->platform()->outputAt(oldGeometry.center()), oldDesktop);
+        oldScreenArea = workspace()->clientArea(ScreenArea, workspace()->outputAt(oldGeometry.center()), oldDesktop);
         screenArea = workspace()->clientArea(ScreenArea, this, newGeom.center());
     }
     const QRect oldGeomTall = QRect(oldGeometry.x(), oldScreenArea.y(), oldGeometry.width(), oldScreenArea.height()); // Full screen height

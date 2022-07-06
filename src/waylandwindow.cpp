@@ -7,7 +7,6 @@
 */
 
 #include "waylandwindow.h"
-#include "platform.h"
 #include "screens.h"
 #include "wayland/clientbuffer.h"
 #include "wayland/clientconnection.h"
@@ -313,7 +312,7 @@ void WaylandWindow::updateGeometry(const QRect &rect)
         return;
     }
 
-    m_output = kwinApp()->platform()->outputAt(rect.center());
+    m_output = workspace()->outputAt(rect.center());
     updateWindowRules(Rules::Position | Rules::Size);
 
     if (changedGeometries & WaylandGeometryBuffer) {

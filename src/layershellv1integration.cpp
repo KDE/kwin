@@ -7,7 +7,6 @@
 #include "layershellv1integration.h"
 #include "layershellv1window.h"
 #include "output.h"
-#include "platform.h"
 #include "screens.h"
 #include "wayland/display.h"
 #include "wayland/layershell_v1_interface.h"
@@ -204,14 +203,12 @@ void LayerShellV1Integration::rearrange()
 {
     m_rearrangeTimer->stop();
 
-    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
+    const QList<Output *> outputs = workspace()->outputs();
     for (Output *output : outputs) {
         rearrangeOutput(output);
     }
 
-    if (workspace()) {
-        workspace()->updateClientArea();
-    }
+    workspace()->updateClientArea();
 }
 
 void LayerShellV1Integration::scheduleRearrange()

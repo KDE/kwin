@@ -259,7 +259,7 @@ void Scene::prePaint(Output *output)
     createStackingOrder();
 
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        painted_screen = kwinApp()->platform()->enabledOutputs().constFirst();
+        painted_screen = workspace()->outputs().constFirst();
         setRenderTargetRect(geometry());
         setRenderTargetScale(1);
     } else {

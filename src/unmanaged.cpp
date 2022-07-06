@@ -11,7 +11,6 @@
 
 #include "deleted.h"
 #include "effects.h"
-#include "platform.h"
 #include "surfaceitem_x11.h"
 #include "utils/common.h"
 #include "wayland/surface_interface.h"
@@ -233,7 +232,7 @@ QWindow *Unmanaged::findInternalWindow() const
 
 void Unmanaged::checkOutput()
 {
-    setOutput(kwinApp()->platform()->outputAt(frameGeometry().center()));
+    setOutput(workspace()->outputAt(frameGeometry().center()));
 }
 
 void Unmanaged::damageNotifyEvent()

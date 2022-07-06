@@ -256,12 +256,12 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
         setupWindowConnections(window);
     }
 
-    connect(kwinApp()->platform(), &Platform::outputEnabled, this, &EffectsHandlerImpl::slotOutputEnabled);
-    connect(kwinApp()->platform(), &Platform::outputDisabled, this, &EffectsHandlerImpl::slotOutputDisabled);
+    connect(ws, &Workspace::outputAdded, this, &EffectsHandlerImpl::slotOutputAdded);
+    connect(ws, &Workspace::outputRemoved, this, &EffectsHandlerImpl::slotOutputRemoved);
 
-    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
+    const QList<Output *> outputs = ws->outputs();
     for (Output *output : outputs) {
-        slotOutputEnabled(output);
+        slotOutputAdded(output);
     }
 
     connect(InputMethod::self(), &InputMethod::panelChanged, this, &EffectsHandlerImpl::inputPanelChanged);
@@ -1285,7 +1285,7 @@ QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectWindow *e
 
 QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const QPoint &p, int desktop) const
 {
-    const Output *output = kwinApp()->platform()->outputAt(p);
+    const Output *output = workspace()->outputAt(p);
     const VirtualDesktop *virtualDesktop = resolveVirtualDesktop(desktop);
     return Workspace::self()->clientArea(opt, output, virtualDesktop);
 }
@@ -1756,7 +1756,7 @@ QList<EffectScreen *> EffectsHandlerImpl::screens() const
 
 EffectScreen *EffectsHandlerImpl::screenAt(const QPoint &point) const
 {
-    return EffectScreenImpl::get(kwinApp()->platform()->outputAt(point));
+    return EffectScreenImpl::get(workspace()->outputAt(point));
 }
 
 EffectScreen *EffectsHandlerImpl::findScreen(const QString &name) const
@@ -1774,14 +1774,14 @@ EffectScreen *EffectsHandlerImpl::findScreen(int screenId) const
     return m_effectScreens.value(screenId);
 }
 
-void EffectsHandlerImpl::slotOutputEnabled(Output *output)
+void EffectsHandlerImpl::slotOutputAdded(Output *output)
 {
     EffectScreen *screen = new EffectScreenImpl(output, this);
     m_effectScreens.append(screen);
     Q_EMIT screenAdded(screen);
 }
 
-void EffectsHandlerImpl::slotOutputDisabled(Output *output)
+void EffectsHandlerImpl::slotOutputRemoved(Output *output)
 {
     EffectScreen *screen = EffectScreenImpl::get(output);
     m_effectScreens.removeOne(screen);

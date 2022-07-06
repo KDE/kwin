@@ -265,14 +265,14 @@ static VirtualDesktop *resolveVirtualDesktop(int desktopId)
 
 QRect WorkspaceWrapper::clientArea(ClientAreaOption option, const QPoint &p, int desktop) const
 {
-    const Output *output = kwinApp()->platform()->outputAt(p);
+    const Output *output = workspace()->outputAt(p);
     const VirtualDesktop *virtualDesktop = resolveVirtualDesktop(desktop);
     return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), output, virtualDesktop);
 }
 
 QRect WorkspaceWrapper::clientArea(ClientAreaOption option, const QPoint &p, VirtualDesktop *desktop) const
 {
-    return workspace()->clientArea(static_cast<clientAreaOption>(option), kwinApp()->platform()->outputAt(p), desktop);
+    return workspace()->clientArea(static_cast<clientAreaOption>(option), workspace()->outputAt(p), desktop);
 }
 
 QRect WorkspaceWrapper::clientArea(ClientAreaOption option, const KWin::Window *c) const
@@ -416,7 +416,7 @@ int WorkspaceWrapper::numScreens() const
 
 int WorkspaceWrapper::screenAt(const QPointF &pos) const
 {
-    return kwinApp()->platform()->enabledOutputs().indexOf(kwinApp()->platform()->outputAt(pos.toPoint()));
+    return kwinApp()->platform()->enabledOutputs().indexOf(workspace()->outputAt(pos.toPoint()));
 }
 
 int WorkspaceWrapper::activeScreen() const

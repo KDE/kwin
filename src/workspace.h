@@ -322,6 +322,9 @@ public:
     // D-Bus interface
     QString supportInformation() const;
 
+    QList<Output *> outputs() const;
+    Output *outputAt(const QPoint &pos) const;
+
     Output *nextOutput(Output *reference) const;
     Output *previousOutput(Output *reference) const;
     void switchToOutput(Output *output);
@@ -499,8 +502,8 @@ private Q_SLOTS:
     void slotCurrentDesktopChangingCancelled();
     void slotDesktopAdded(VirtualDesktop *desktop);
     void slotDesktopRemoved(VirtualDesktop *desktop);
-    void slotOutputEnabled(Output *output);
-    void slotOutputDisabled(Output *output);
+    void addOutput(Output *output);
+    void removeOutput(Output *output);
 
 Q_SIGNALS:
     /**
@@ -525,6 +528,8 @@ Q_SIGNALS:
     void unmanagedAdded(KWin::Unmanaged *);
     void unmanagedRemoved(KWin::Unmanaged *);
     void deletedRemoved(KWin::Deleted *);
+    void outputAdded(KWin::Output *);
+    void outputRemoved(KWin::Output *);
     void configChanged();
     void showingDesktopChanged(bool showing, bool animated);
     /**
@@ -600,6 +605,7 @@ private:
     };
 
     QList<Constraint *> m_constraints;
+    QList<Output *> m_outputs;
     QWidget *active_popup;
     Window *m_activePopupWindow;
 
