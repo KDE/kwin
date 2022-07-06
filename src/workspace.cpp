@@ -2262,7 +2262,7 @@ QRect Workspace::clientArea(clientAreaOption opt, const Output *output, const Vi
 
     workArea = m_workAreas.value(desktop);
     if (workArea.isNull()) {
-        workArea = is_multihead ? effectiveOutput->geometry() : QRect(QPoint(0, 0), m_geometry.size());
+        workArea = is_multihead ? effectiveOutput->geometry() : m_geometry;
     }
 
     switch (opt) {
@@ -2277,7 +2277,7 @@ QRect Workspace::clientArea(clientAreaOption opt, const Output *output, const Vi
     case WorkArea:
         return is_multihead ? screenArea : workArea;
     case FullArea:
-        return QRect(QPoint(0, 0), m_geometry.size());
+        return m_geometry;
 
     default:
         Q_UNREACHABLE();
