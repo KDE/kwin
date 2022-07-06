@@ -222,7 +222,12 @@ void DrmLeaseConnectorV1InterfacePrivate::withdraw()
         withdrawn = true;
         for (const auto &resource : resourceMap()) {
             send_withdrawn(resource->handle);
-            DrmLeaseDeviceV1InterfacePrivate::get(device)->send_done(resource->handle);
+        }
+
+        auto devicePrivate = DrmLeaseDeviceV1InterfacePrivate::get(device);
+        const auto deviceMap = devicePrivate->resourceMap();
+        for (DrmLeaseDeviceV1InterfacePrivate::Resource *resource : deviceMap) {
+            devicePrivate->send_done(resource->handle);
         }
     }
 }
