@@ -131,7 +131,8 @@ void InputMethod::hide()
 
 bool InputMethod::shouldShowOnActive() const
 {
-    return input()->touch() == input()->lastInputHandler()
+    static bool alwaysShowIm = qEnvironmentVariableIntValue("KWIN_IM_SHOW_ALWAYS") != 0;
+    return alwaysShowIm || input()->touch() == input()->lastInputHandler()
         || input()->tablet() == input()->lastInputHandler();
 }
 
