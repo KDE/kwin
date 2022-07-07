@@ -533,18 +533,6 @@ void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
             m_placeholderFilter.reset();
         }
     } else {
-        if (m_enabledOutputs.count() == 1 && m_outputs.count() > 1 && !kwinApp()->isTerminating()) {
-            auto outputs = m_outputs;
-            outputs.removeOne(output);
-            if (!readOutputsConfiguration(outputs)) {
-                // config is invalid or failed to apply -> Try to enable an output anyways
-                OutputConfiguration cfg;
-                cfg.changeSet(outputs.constFirst())->enabled = true;
-                if (!applyOutputChanges(cfg)) {
-                    qCCritical(KWIN_DRM) << "Could not enable any outputs!";
-                }
-            }
-        }
         if (m_enabledOutputs.count() == 1 && !kwinApp()->isTerminating()) {
             qCDebug(KWIN_DRM) << "adding placeholder output";
             m_placeHolderOutput = primaryGpu()->createVirtualOutput({}, m_enabledOutputs.constFirst()->pixelSize(), 1, DrmVirtualOutput::Type::Placeholder);
