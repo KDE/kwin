@@ -23,24 +23,14 @@ XdgShellInterfacePrivate::XdgShellInterfacePrivate(XdgShellInterface *shell)
 {
 }
 
-static wl_client *clientFromXdgSurface(XdgSurfaceInterface *surface)
-{
-    return XdgSurfaceInterfacePrivate::get(surface)->resource()->client();
-}
-
 XdgShellInterfacePrivate::Resource *XdgShellInterfacePrivate::resourceForXdgSurface(XdgSurfaceInterface *surface) const
 {
-    return resourceMap().value(clientFromXdgSurface(surface));
-}
-
-void XdgShellInterfacePrivate::registerXdgSurface(XdgSurfaceInterface *surface)
-{
-    xdgSurfaces.insert(clientFromXdgSurface(surface), surface);
+    return xdgSurfaces.value(surface);
 }
 
 void XdgShellInterfacePrivate::unregisterXdgSurface(XdgSurfaceInterface *surface)
 {
-    xdgSurfaces.remove(clientFromXdgSurface(surface), surface);
+    xdgSurfaces.remove(surface);
 }
 
 /**
@@ -71,7 +61,7 @@ XdgShellInterfacePrivate *XdgShellInterfacePrivate::get(XdgShellInterface *shell
 
 void XdgShellInterfacePrivate::xdg_wm_base_destroy(Resource *resource)
 {
-    if (xdgSurfaces.contains(resource->client())) {
+    if (xdgSurfaces.key(resource)) {
         wl_resource_post_error(resource->handle, error_defunct_surfaces, "xdg_wm_base was destroyed before children");
         return;
     }
@@ -96,7 +86,7 @@ void XdgShellInterfacePrivate::xdg_wm_base_get_xdg_surface(Resource *resource, u
     wl_resource *xdgSurfaceResource = wl_resource_create(resource->client(), &xdg_surface_interface, resource->version(), id);
 
     XdgSurfaceInterface *xdgSurface = new XdgSurfaceInterface(q, surface, xdgSurfaceResource);
-    registerXdgSurface(xdgSurface);
+    xdgSurfaces.insert(xdgSurface, resource);
 }
 
 void XdgShellInterfacePrivate::xdg_wm_base_pong(Resource *resource, uint32_t serial)
