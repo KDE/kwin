@@ -23,7 +23,6 @@ public:
 
     Resource *resourceForXdgSurface(XdgSurfaceInterface *surface) const;
 
-    void registerXdgSurface(XdgSurfaceInterface *surface);
     void unregisterXdgSurface(XdgSurfaceInterface *surface);
 
     void registerPing(quint32 serial);
@@ -41,7 +40,7 @@ protected:
     void xdg_wm_base_pong(Resource *resource, uint32_t serial) override;
 
 private:
-    QMultiMap<wl_client *, XdgSurfaceInterface *> xdgSurfaces;
+    QHash<XdgSurfaceInterface *, Resource *> xdgSurfaces;
 };
 
 class XdgPositionerData : public QSharedData
