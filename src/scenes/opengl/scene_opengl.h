@@ -146,6 +146,7 @@ private:
     void renderPart(const QRect &rect, const QRect &partRect, const QPoint &textureOffset, qreal devicePixelRatio, bool rotated = false);
     static const QMargins texturePadForPart(const QRect &rect, const QRect &partRect);
     void resizeTexture();
+    int toNativeSize(int size) const;
     QScopedPointer<GLTexture> m_texture;
 };
 

@@ -861,7 +861,7 @@ void SceneOpenGLDecorationRenderer::renderPart(const QRect &rect, const QRect &p
     int verticalPadding = padding.top() + padding.bottom();
     int horizontalPadding = padding.left() + padding.right();
 
-    QSize imageSize = rect.size() * devicePixelRatio;
+    QSize imageSize(toNativeSize(rect.width()), toNativeSize(rect.height()));
     if (rotated) {
         imageSize = QSize(imageSize.height(), imageSize.width());
     }
@@ -931,10 +931,9 @@ void SceneOpenGLDecorationRenderer::resizeTexture()
     client()->window()->layoutDecorationRects(left, top, right, bottom);
     QSize size;
 
-    size.rwidth() = qMax(qMax(top.width(), bottom.width()),
-                         qMax(left.height(), right.height()));
-    size.rheight() = top.height() + bottom.height() + left.width() + right.width();
-    size *= effectiveDevicePixelRatio();
+    size.rwidth() = toNativeSize(qMax(qMax(top.width(), bottom.width()),
+                                      qMax(left.height(), right.height())));
+    size.rheight() = toNativeSize(top.height()) + toNativeSize(bottom.height()) + toNativeSize(left.width()) + toNativeSize(right.width());
 
     size.rheight() += 4 * (2 * TexturePad);
     size.rwidth() += 2 * TexturePad;
@@ -952,6 +951,11 @@ void SceneOpenGLDecorationRenderer::resizeTexture()
     } else {
         m_texture.reset();
     }
+}
+
+int SceneOpenGLDecorationRenderer::toNativeSize(int size) const
+{
+    return std::ceil(size * effectiveDevicePixelRatio());
 }
 
 } // namespace
