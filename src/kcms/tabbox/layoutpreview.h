@@ -114,6 +114,9 @@ Q_SIGNALS:
     void screenGeometryChanged();
     void itemChanged();
 
+    void aboutToShow();
+    void aboutToHide();
+
 private:
     QAbstractItemModel *m_model;
     QObject *m_item;

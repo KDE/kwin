@@ -27,6 +27,7 @@ SwitcherItem::SwitcherItem(QObject *parent)
     , m_visible(false)
     , m_allDesktops(false)
     , m_currentIndex(0)
+    , m_automaticallyHide(false)
 {
     m_selectedIndexConnection = connect(tabBox, &TabBoxHandler::selectedIndexChanged, this, [this] {
         if (isVisible()) {
@@ -102,6 +103,20 @@ void SwitcherItem::setNoModifierGrab(bool set)
     }
     m_noModifierGrab = set;
     Q_EMIT noModifierGrabChanged();
+}
+
+bool SwitcherItem::automaticallyHide() const
+{
+    return m_automaticallyHide;
+}
+
+void SwitcherItem::setAutomaticallyHide(bool value)
+{
+    if (m_automaticallyHide == value) {
+        return;
+    }
+    m_automaticallyHide = value;
+    Q_EMIT automaticallyHideChanged();
 }
 
 bool SwitcherItem::compositing()

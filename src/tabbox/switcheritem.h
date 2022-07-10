@@ -23,11 +23,12 @@ class SwitcherItem : public QObject
     Q_OBJECT
     Q_PROPERTY(QAbstractItemModel *model READ model NOTIFY modelChanged)
     Q_PROPERTY(QRect screenGeometry READ screenGeometry NOTIFY screenGeometryChanged)
-    Q_PROPERTY(bool visible READ isVisible NOTIFY visibleChanged)
+    Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
     Q_PROPERTY(bool allDesktops READ isAllDesktops NOTIFY allDesktopsChanged)
     Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
     Q_PROPERTY(bool noModifierGrab READ noModifierGrab NOTIFY noModifierGrabChanged)
     Q_PROPERTY(bool compositing READ compositing NOTIFY compositingChanged)
+    Q_PROPERTY(bool automaticallyHide READ automaticallyHide WRITE setAutomaticallyHide NOTIFY automaticallyHideChanged)
 
     /**
      * The main QML item that will be displayed in the Dialog
@@ -52,12 +53,14 @@ public:
         return m_noModifierGrab;
     }
     bool compositing();
+    bool automaticallyHide() const;
 
     // for usage from outside
     void setModel(QAbstractItemModel *model);
     void setAllDesktops(bool all);
     void setVisible(bool visible);
     void setNoModifierGrab(bool set);
+    void setAutomaticallyHide(bool value);
 
 Q_SIGNALS:
     void visibleChanged();
@@ -68,6 +71,10 @@ Q_SIGNALS:
     void itemChanged();
     void noModifierGrabChanged();
     void compositingChanged();
+    void automaticallyHideChanged();
+
+    void aboutToShow();
+    void aboutToHide();
 
 private:
     QAbstractItemModel *m_model;
@@ -77,6 +84,7 @@ private:
     int m_currentIndex;
     QMetaObject::Connection m_selectedIndexConnection;
     bool m_noModifierGrab = false;
+    bool m_automaticallyHide = true;
 };
 
 inline QAbstractItemModel *SwitcherItem::model() const

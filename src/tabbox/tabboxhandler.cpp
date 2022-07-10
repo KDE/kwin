@@ -316,6 +316,19 @@ void TabBoxHandlerPrivate::show()
         item->setAllDesktops(config.clientDesktopMode() == TabBoxConfig::AllDesktopsClients);
         item->setCurrentIndex(indexRow);
         item->setNoModifierGrab(q->noModifierGrab());
+        Q_EMIT item->aboutToShow();
+
+        // When SwitcherItem gets hidden, destroy also the window and main item
+        QObject::connect(item, &SwitcherItem::visibleChanged, q, [this, item]() {
+            if (!item->isVisible()) {
+                if (QQuickWindow *w = window()) {
+                    w->hide();
+                    w->destroy();
+                }
+                m_mainItem = nullptr;
+            }
+        });
+
         // everything is prepared, so let's make the whole thing visible
         item->setVisible(true);
     }
@@ -391,14 +404,12 @@ void TabBoxHandler::hide(bool abort)
     }
 #ifndef KWIN_UNIT_TEST
     if (SwitcherItem *item = d->switcherItem()) {
-        item->setVisible(false);
+        Q_EMIT item->aboutToHide();
+        if (item->automaticallyHide()) {
+            item->setVisible(false);
+        }
     }
 #endif
-    if (QQuickWindow *w = d->window()) {
-        w->hide();
-        w->destroy();
-    }
-    d->m_mainItem = nullptr;
 }
 
 QModelIndex TabBoxHandler::nextPrev(bool forward) const
