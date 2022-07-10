@@ -457,6 +457,8 @@ void DesktopsModel::getAllAndConnect(const QDBusMessage &msg)
         m_names = m_serverSideNames;
         m_rows = m_serverSideRows;
         endResetModel();
+
+        Q_EMIT rowsChanged();
     }
 
     Q_EMIT readyChanged();
