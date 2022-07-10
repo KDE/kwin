@@ -4,12 +4,12 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-import QtQuick 2.5
-import QtQuick.Controls 2.5 as QQC2
-import QtQuick.Layouts 1.1
+import QtQuick 2.15
+import QtQuick.Controls 2.15 as QQC2
+import QtQuick.Layouts 1.15
 
-import org.kde.kcm 1.5 as KCM
-import org.kde.kirigami 2.10 as Kirigami
+import org.kde.kcm 1.6 as KCM
+import org.kde.kirigami 2.20 as Kirigami
 
 KCM.ScrollViewKCM {
     id: root
@@ -82,34 +82,35 @@ KCM.ScrollViewKCM {
                 }
             }
 
-        actions: [
-            Kirigami.Action {
-                id: renameAction
-                enabled: model && !model.IsMissing
-                visible: !applyAction.visible
-                iconName: "edit-rename"
-                tooltip: i18nc("@info:tooltip", "Rename")
-                onTriggered: {
-                    nameField.readOnly = false;
-                    nameField.selectAll();
-                    nameField.forceActiveFocus();
+            actions: [
+                Kirigami.Action {
+                    id: renameAction
+                    enabled: model && !model.IsMissing
+                    visible: !applyAction.visible
+                    iconName: "edit-rename"
+                    tooltip: i18nc("@info:tooltip", "Rename")
+                    onTriggered: {
+                        nameField.readOnly = false;
+                        nameField.selectAll();
+                        nameField.forceActiveFocus();
+                    }
+                },
+                Kirigami.Action {
+                    id: applyAction
+                    visible: !nameField.readOnly
+                    iconName: "dialog-ok-apply"
+                    tooltip: i18nc("@info:tooltip", "Confirm new name")
+                    onTriggered: {
+                        nameField.readOnly = true;
+                    }
+                },
+                Kirigami.Action {
+                    enabled: model && !model.IsMissing && desktopsList.count !== 1
+                    iconName: "edit-delete"
+                    tooltip: i18nc("@info:tooltip", "Remove")
+                    onTriggered: kcm.desktopsModel.removeDesktop(model.Id)
                 }
-            },
-            Kirigami.Action {
-                id: applyAction
-                visible: !nameField.readOnly
-                iconName: "dialog-ok-apply"
-                tooltip: i18nc("@info:tooltip", "Confirm new name")
-                onTriggered: {
-                    nameField.readOnly = true;
-                }
-            },
-            Kirigami.Action {
-                enabled: model && !model.IsMissing && desktopsList.count !== 1
-                iconName: "edit-delete"
-                tooltip: i18nc("@info:tooltip", "Remove")
-                onTriggered: kcm.desktopsModel.removeDesktop(model.Id)
-            }]
+            ]
         }
     }
 
@@ -180,8 +181,8 @@ KCM.ScrollViewKCM {
                 editable: true
                 value: kcm.desktopsModel.rows
 
-                textFromValue: function(value, locale) { return i18np("1 Row", "%1 Rows", value)}
-                valueFromText: function(text, locale) { return parseInt(text, 10); }
+                textFromValue: (value, locale) => i18np("1 Row", "%1 Rows", value)
+                valueFromText: (text, locale) => parseInt(text, 10)
 
                 onValueModified: kcm.desktopsModel.rows = value
 
@@ -286,8 +287,8 @@ KCM.ScrollViewKCM {
                     to: 10000
                     stepSize: 100
 
-                    textFromValue: function(value, locale) { return i18n("%1 ms", value)}
-                    valueFromText: function(text, locale) {return Number.fromLocaleString(locale, text.split(" ")[0])}
+                    textFromValue: (value, locale) => i18n("%1 ms", value)
+                    valueFromText: (text, locale) => Number.fromLocaleString(locale, text.split(" ")[0])
 
                     value: kcm.virtualDesktopsSettings.popupHideDelay
 
