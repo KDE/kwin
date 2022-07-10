@@ -95,7 +95,8 @@ enum class ConfigKey {
     ScrollFactor,
     Orientation,
     Calibration,
-    OutputName
+    OutputName,
+    OutputArea,
 };
 
 struct ConfigDataBase
@@ -201,7 +202,9 @@ static const QMap<ConfigKey, ConfigDataBase *> s_configData{
     {ConfigKey::ScrollFactor, new ConfigData<qreal>(QByteArrayLiteral("ScrollFactor"), &Device::setScrollFactor, &Device::scrollFactorDefault)},
     {ConfigKey::Orientation, new ConfigData<DeviceOrientation>{}},
     {ConfigKey::Calibration, new ConfigData<CalibrationMatrix>{}},
-    {ConfigKey::OutputName, new ConfigData<QString>(QByteArrayLiteral("OutputName"), &Device::setOutputName, &Device::defaultOutputName)}};
+    {ConfigKey::OutputName, new ConfigData<QString>(QByteArrayLiteral("OutputName"), &Device::setOutputName, &Device::defaultOutputName)},
+    {ConfigKey::OutputArea, new ConfigData<QRectF>(QByteArrayLiteral("OutputArea"), &Device::setOutputArea, &Device::defaultOutputArea)},
+};
 
 namespace
 {
@@ -706,5 +709,28 @@ void Device::setLeds(LEDs leds)
     }
 }
 
+bool Device::supportsOutputArea() const
+{
+    return m_tabletTool;
+}
+
+QRectF Device::defaultOutputArea() const
+{
+    return QRectF(0, 0, 1, 1);
+}
+
+QRectF Device::outputArea() const
+{
+    return m_outputArea;
+}
+
+void Device::setOutputArea(const QRectF &outputArea)
+{
+    if (m_outputArea != outputArea) {
+        m_outputArea = outputArea;
+        writeEntry(ConfigKey::OutputArea, m_outputArea);
+        Q_EMIT outputAreaChanged();
+    }
+}
 }
 }

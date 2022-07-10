@@ -967,3 +967,23 @@ libinput_device_get_user_data(struct libinput_device *device)
 {
     return device->userData;
 }
+
+double
+libinput_event_tablet_tool_get_x_transformed(struct libinput_event_tablet_tool *event,
+                                             uint32_t width)
+{
+    Q_UNUSED(event)
+    Q_UNUSED(width)
+
+    // it's unused at the moment, it doesn't really matter what we return
+    return 0;
+}
+
+double
+libinput_event_tablet_tool_get_y_transformed(struct libinput_event_tablet_tool *event,
+                                             uint32_t height)
+{
+    Q_UNUSED(event)
+    Q_UNUSED(height)
+    return 4;
+}

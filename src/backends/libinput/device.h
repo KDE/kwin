@@ -138,6 +138,10 @@ class KWIN_EXPORT Device : public InputDevice
     Q_PROPERTY(bool defaultClickMethodClickfinger READ defaultClickMethodClickfinger CONSTANT)
     Q_PROPERTY(bool clickMethodClickfinger READ isClickMethodClickfinger WRITE setClickMethodClickfinger NOTIFY clickMethodChanged)
 
+    Q_PROPERTY(bool supportsOutputArea READ supportsOutputArea CONSTANT)
+    Q_PROPERTY(QRectF defaultOutputArea READ defaultOutputArea CONSTANT)
+    Q_PROPERTY(QRectF outputArea READ outputArea WRITE setOutputArea NOTIFY outputAreaChanged)
+
 public:
     explicit Device(libinput_device *device, QObject *parent = nullptr);
     ~Device() override;
@@ -619,6 +623,11 @@ public:
     LEDs leds() const override;
     void setLeds(LEDs leds) override;
 
+    QRectF defaultOutputArea() const;
+    bool supportsOutputArea() const;
+    QRectF outputArea() const;
+    void setOutputArea(const QRectF &outputArea);
+
     /**
      * Gets the Device for @p native. @c null if there is no Device for @p native.
      */
@@ -643,6 +652,7 @@ Q_SIGNALS:
     void scrollButtonChanged();
     void scrollFactorChanged();
     void clickMethodChanged();
+    void outputAreaChanged();
 
 private:
     template<typename T>
@@ -729,6 +739,7 @@ private:
     enum libinput_config_click_method m_clickMethod;
 
     LEDs m_leds;
+    QRectF m_outputArea = QRectF(0, 0, 1, 1);
 };
 
 }
