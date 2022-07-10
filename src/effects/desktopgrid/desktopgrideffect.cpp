@@ -199,7 +199,7 @@ void DesktopGridEffect::swapDesktops(int from, int to)
     QList<EffectWindow *> fromList;
     QList<EffectWindow *> toList;
     for (auto *w : effects->stackingOrder()) {
-        if (!w->isNormalWindow()) {
+        if (!w->isNormalWindow() || !w->isOnCurrentActivity() ) {
             continue;
         }
         if (w->isOnDesktop(from)) {
