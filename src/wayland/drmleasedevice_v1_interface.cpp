@@ -30,16 +30,10 @@ DrmLeaseDeviceV1Interface::~DrmLeaseDeviceV1Interface()
 
 void DrmLeaseDeviceV1Interface::setDrmMaster(bool hasDrmMaster)
 {
-    if (hasDrmMaster && !d->hasDrmMaster) {
-        // withdraw all connectors
-        for (const auto &connector : qAsConst(d->connectors)) {
-            DrmLeaseConnectorV1InterfacePrivate::get(connector)->withdraw();
-        }
-        // and revoke all leases
-        for (const auto &lease : qAsConst(d->leases)) {
-            lease->deny();
-        }
-    } else if (!hasDrmMaster && d->hasDrmMaster) {
+    if (hasDrmMaster == d->hasDrmMaster) {
+        return;
+    }
+    if (hasDrmMaster) {
         // send pending drm fds
         while (!d->pendingFds.isEmpty()) {
             int fd = d->createNonMasterFd();
@@ -56,8 +50,18 @@ void DrmLeaseDeviceV1Interface::setDrmMaster(bool hasDrmMaster)
                 connectorPrivate->send(connectorResource->handle);
             }
         }
+    } else {
+        // withdraw all connectors
+        for (const auto &connector : qAsConst(d->connectors)) {
+            DrmLeaseConnectorV1InterfacePrivate::get(connector)->withdraw();
+        }
+        // and revoke all leases
+        for (const auto &lease : qAsConst(d->leases)) {
+            lease->deny();
+        }
     }
     d->hasDrmMaster = hasDrmMaster;
+    done();
 }
 
 void DrmLeaseDeviceV1Interface::done()
