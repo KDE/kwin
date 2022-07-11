@@ -239,6 +239,7 @@ public:
     RgbRange rgbRange() const;
 
     bool isPlaceholder() const;
+    bool isNonDesktop() const;
 
     virtual void setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation);
 
@@ -310,6 +311,7 @@ protected:
         Capabilities capabilities;
         bool internal = false;
         bool placeholder = false;
+        bool nonDesktop = false;
     };
 
     void setInformation(const Information &information);

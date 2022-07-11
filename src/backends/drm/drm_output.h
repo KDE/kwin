@@ -21,6 +21,13 @@
 #include <chrono>
 #include <xf86drmMode.h>
 
+namespace KWaylandServer
+{
+class DrmLeaseConnectorV1Interface;
+class DrmLeaseDeviceV1Interface;
+class DrmLeaseV1Interface;
+}
+
 namespace KWin
 {
 
@@ -35,7 +42,7 @@ class KWIN_EXPORT DrmOutput : public DrmAbstractOutput
 {
     Q_OBJECT
 public:
-    DrmOutput(DrmPipeline *pipeline);
+    DrmOutput(DrmPipeline *pipeline, KWaylandServer::DrmLeaseDeviceV1Interface *leaseDevice);
     ~DrmOutput() override;
 
     DrmConnector *connector() const;
@@ -52,6 +59,11 @@ public:
     bool usesSoftwareCursor() const override;
     void updateCursor();
     void moveCursor();
+
+    KWaylandServer::DrmLeaseV1Interface *lease() const;
+    bool addLeaseObjects(QVector<uint32_t> &objectList);
+    void leased(KWaylandServer::DrmLeaseV1Interface *lease);
+    void leaseEnded();
 
     void setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation) override;
 
@@ -73,6 +85,8 @@ private:
     bool m_cursorTextureDirty = true;
     std::unique_ptr<GLTexture> m_cursorTexture;
     QTimer m_turnOffTimer;
+    std::unique_ptr<KWaylandServer::DrmLeaseConnectorV1Interface> m_offer;
+    KWaylandServer::DrmLeaseV1Interface *m_lease = nullptr;
 };
 
 }

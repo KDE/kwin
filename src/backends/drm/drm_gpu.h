@@ -41,7 +41,6 @@ class DrmPlane;
 class DrmBackend;
 class EglGbmBackend;
 class DrmAbstractOutput;
-class DrmLeaseOutput;
 class DrmRenderBackend;
 
 class DrmGpu : public QObject
@@ -94,9 +93,9 @@ Q_SIGNALS:
 private:
     void dispatchEvents();
     DrmOutput *findOutput(quint32 connector);
-    DrmLeaseOutput *findLeaseOutput(quint32 connector);
+    DrmOutput *findNonDesktopOutput(quint32 connector);
     void removeOutput(DrmOutput *output);
-    void removeLeaseOutput(DrmLeaseOutput *output);
+    void removeNonDesktopOutput(DrmOutput *output);
     void initDrmResources();
     void waitIdle();
 
@@ -129,7 +128,7 @@ private:
 
     QVector<DrmOutput *> m_drmOutputs;
     QVector<DrmAbstractOutput *> m_outputs;
-    QVector<DrmLeaseOutput *> m_leaseOutputs;
+    QVector<DrmOutput *> m_nonDesktopOutputs;
     KWaylandServer::DrmLeaseDeviceV1Interface *m_leaseDevice = nullptr;
 
     QSocketNotifier *m_socketNotifier = nullptr;

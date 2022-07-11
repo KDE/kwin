@@ -13,7 +13,6 @@
 #include "abstract_egl_backend.h"
 #include "drm_backend.h"
 #include "drm_layer.h"
-#include "drm_lease_output.h"
 #include "drm_object_connector.h"
 #include "drm_object_crtc.h"
 #include "drm_object_plane.h"
@@ -116,9 +115,9 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
 
 DrmGpu::~DrmGpu()
 {
-    const auto leaseOutputs = m_leaseOutputs;
+    const auto leaseOutputs = m_nonDesktopOutputs;
     for (const auto &output : leaseOutputs) {
-        removeLeaseOutput(output);
+        removeNonDesktopOutput(output);
     }
     delete m_leaseDevice;
     waitIdle();
@@ -232,7 +231,7 @@ bool DrmGpu::updateOutputs()
     // In principle these things are supposed to be detected through the wayland protocol.
     // In practice SteamVR doesn't always behave correctly
     auto lessees = drmModeListLessees(m_fd);
-    for (const auto &leaseOutput : qAsConst(m_leaseOutputs)) {
+    for (const auto &leaseOutput : qAsConst(m_nonDesktopOutputs)) {
         if (leaseOutput->lease()) {
             bool leaseActive = false;
             for (uint i = 0; i < lessees->count; i++) {
@@ -271,24 +270,24 @@ bool DrmGpu::updateOutputs()
     for (auto it = m_connectors.begin(); it != m_connectors.end();) {
         DrmConnector *conn = it->get();
         const auto output = findOutput(conn->id());
-        const auto leaseOutput = findLeaseOutput(conn->id());
+        const auto nonDesktopOutput = findNonDesktopOutput(conn->id());
         const bool stillExists = existing.contains(conn);
         if (!stillExists || !conn->isConnected()) {
             if (output) {
                 removeOutput(output);
-            } else if (leaseOutput) {
-                removeLeaseOutput(leaseOutput);
+            } else if (nonDesktopOutput) {
+                removeNonDesktopOutput(nonDesktopOutput);
             }
             conn->disable();
-        } else if (!output && !leaseOutput) {
+        } else if (!output && !nonDesktopOutput) {
             qCDebug(KWIN_DRM, "New %soutput on GPU %s: %s", conn->isNonDesktop() ? "non-desktop " : "", qPrintable(m_devNode), qPrintable(conn->modelName()));
             const auto pipeline = conn->pipeline();
             m_pipelines << pipeline;
             if (conn->isNonDesktop()) {
-                auto leaseOutput = new DrmLeaseOutput(pipeline, m_leaseDevice);
-                m_leaseOutputs << leaseOutput;
+                auto output = new DrmOutput(pipeline, m_leaseDevice);
+                m_nonDesktopOutputs << output;
             } else {
-                auto output = new DrmOutput(pipeline);
+                auto output = new DrmOutput(pipeline, m_leaseDevice);
                 m_drmOutputs << output;
                 m_outputs << output;
                 addedOutputs << output;
@@ -416,7 +415,7 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
     QVector<DrmCrtc *> crtcs;
     // only change resources that aren't currently leased away
     for (const auto &conn : m_connectors) {
-        bool isLeased = std::any_of(m_leaseOutputs.cbegin(), m_leaseOutputs.cend(), [&conn](const auto output) {
+        bool isLeased = std::any_of(m_nonDesktopOutputs.cbegin(), m_nonDesktopOutputs.cend(), [&conn](const auto output) {
             return output->lease() && output->pipeline()->connector() == conn.get();
         });
         if (!isLeased) {
@@ -424,7 +423,7 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
         }
     }
     for (const auto &crtc : m_crtcs) {
-        bool isLeased = std::any_of(m_leaseOutputs.cbegin(), m_leaseOutputs.cend(), [&crtc](const auto output) {
+        bool isLeased = std::any_of(m_nonDesktopOutputs.cbegin(), m_nonDesktopOutputs.cend(), [&crtc](const auto output) {
             return output->lease() && output->pipeline()->crtc() == crtc.get();
         });
         if (!isLeased) {
@@ -624,12 +623,12 @@ void DrmGpu::removeVirtualOutput(DrmVirtualOutput *output)
     }
 }
 
-DrmLeaseOutput *DrmGpu::findLeaseOutput(quint32 connector)
+DrmOutput *DrmGpu::findNonDesktopOutput(quint32 connector)
 {
-    auto it = std::find_if(m_leaseOutputs.constBegin(), m_leaseOutputs.constEnd(), [connector](DrmLeaseOutput *o) {
+    auto it = std::find_if(m_nonDesktopOutputs.constBegin(), m_nonDesktopOutputs.constEnd(), [connector](DrmOutput *o) {
         return o->pipeline()->connector()->id() == connector;
     });
-    if (it != m_leaseOutputs.constEnd()) {
+    if (it != m_nonDesktopOutputs.constEnd()) {
         return *it;
     }
     return nullptr;
@@ -638,11 +637,11 @@ DrmLeaseOutput *DrmGpu::findLeaseOutput(quint32 connector)
 void DrmGpu::handleLeaseRequest(KWaylandServer::DrmLeaseV1Interface *leaseRequest)
 {
     QVector<uint32_t> objects;
-    QVector<DrmLeaseOutput *> outputs;
+    QVector<DrmOutput *> outputs;
 
     const auto connectors = leaseRequest->connectors();
     for (KWaylandServer::DrmLeaseConnectorV1Interface *connector : connectors) {
-        if (DrmLeaseOutput *output = findLeaseOutput(connector->id())) {
+        if (DrmOutput *output = findNonDesktopOutput(connector->id())) {
             if (output->lease()) {
                 continue; // already leased
             }
@@ -679,7 +678,7 @@ void DrmGpu::handleLeaseRevoked(KWaylandServer::DrmLeaseV1Interface *lease)
 {
     const auto connectors = lease->connectors();
     for (KWaylandServer::DrmLeaseConnectorV1Interface *connector : connectors) {
-        if (DrmLeaseOutput *output = findLeaseOutput(connector->id())) {
+        if (DrmOutput *output = findNonDesktopOutput(connector->id())) {
             output->leaseEnded();
         }
     }
@@ -687,10 +686,10 @@ void DrmGpu::handleLeaseRevoked(KWaylandServer::DrmLeaseV1Interface *lease)
     drmModeRevokeLease(m_fd, lease->lesseeId());
 }
 
-void DrmGpu::removeLeaseOutput(DrmLeaseOutput *output)
+void DrmGpu::removeNonDesktopOutput(DrmOutput *output)
 {
     qCDebug(KWIN_DRM) << "Removing leased output" << output;
-    m_leaseOutputs.removeOne(output);
+    m_nonDesktopOutputs.removeOne(output);
     m_pipelines.removeOne(output->pipeline());
     output->pipeline()->setLayers(nullptr, nullptr);
     delete output;
@@ -759,7 +758,7 @@ bool DrmGpu::needsModeset() const
 bool DrmGpu::maybeModeset()
 {
     auto pipelines = m_pipelines;
-    for (const auto &output : qAsConst(m_leaseOutputs)) {
+    for (const auto &output : qAsConst(m_nonDesktopOutputs)) {
         if (output->lease()) {
             pipelines.removeOne(output->pipeline());
         }

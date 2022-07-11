@@ -28,6 +28,7 @@
 #include "renderloop_p.h"
 #include "scene.h"
 #include "session.h"
+#include "wayland/drmleasedevice_v1_interface.h"
 // Qt
 #include <QCryptographicHash>
 #include <QMatrix4x4>
@@ -42,7 +43,7 @@
 namespace KWin
 {
 
-DrmOutput::DrmOutput(DrmPipeline *pipeline)
+DrmOutput::DrmOutput(DrmPipeline *pipeline, KWaylandServer::DrmLeaseDeviceV1Interface *leaseDevice)
     : DrmAbstractOutput(pipeline->connector()->gpu())
     , m_pipeline(pipeline)
     , m_connector(pipeline->connector())
@@ -78,6 +79,7 @@ DrmOutput::DrmOutput(DrmPipeline *pipeline)
         .subPixel = conn->subpixel(),
         .capabilities = capabilities,
         .internal = conn->isInternal(),
+        .nonDesktop = conn->isNonDesktop(),
     });
 
     const QList<std::shared_ptr<OutputMode>> modes = getModes();
@@ -93,14 +95,56 @@ DrmOutput::DrmOutput(DrmPipeline *pipeline)
         setDrmDpmsMode(DpmsMode::Off);
     });
 
-    connect(Cursors::self(), &Cursors::currentCursorChanged, this, &DrmOutput::updateCursor);
-    connect(Cursors::self(), &Cursors::hiddenChanged, this, &DrmOutput::updateCursor);
-    connect(Cursors::self(), &Cursors::positionChanged, this, &DrmOutput::moveCursor);
+    if (conn->isNonDesktop()) {
+        m_offer = std::make_unique<KWaylandServer::DrmLeaseConnectorV1Interface>(
+            leaseDevice,
+            conn->id(),
+            conn->modelName(),
+            QStringLiteral("%1 %2").arg(conn->edid()->manufacturerString(), conn->modelName()));
+    } else {
+        connect(Cursors::self(), &Cursors::currentCursorChanged, this, &DrmOutput::updateCursor);
+        connect(Cursors::self(), &Cursors::hiddenChanged, this, &DrmOutput::updateCursor);
+        connect(Cursors::self(), &Cursors::positionChanged, this, &DrmOutput::moveCursor);
+    }
 }
 
 DrmOutput::~DrmOutput()
 {
     m_pipeline->setOutput(nullptr);
+}
+
+bool DrmOutput::addLeaseObjects(QVector<uint32_t> &objectList)
+{
+    Q_ASSERT(m_offer);
+    if (!m_pipeline->crtc()) {
+        qCWarning(KWIN_DRM) << "Can't lease connector: No suitable crtc available";
+        return false;
+    }
+    qCDebug(KWIN_DRM) << "adding connector" << m_pipeline->connector()->id() << "to lease";
+    objectList << m_pipeline->connector()->id();
+    objectList << m_pipeline->crtc()->id();
+    if (m_pipeline->crtc()->primaryPlane()) {
+        objectList << m_pipeline->crtc()->primaryPlane()->id();
+    }
+    return true;
+}
+
+void DrmOutput::leased(KWaylandServer::DrmLeaseV1Interface *lease)
+{
+    Q_ASSERT(m_offer);
+    m_lease = lease;
+}
+
+void DrmOutput::leaseEnded()
+{
+    Q_ASSERT(m_offer);
+    qCDebug(KWIN_DRM) << "ended lease for connector" << m_pipeline->connector()->id();
+    m_lease = nullptr;
+}
+
+KWaylandServer::DrmLeaseV1Interface *DrmOutput::lease() const
+{
+    return m_lease;
 }
 
 void DrmOutput::updateCursor()

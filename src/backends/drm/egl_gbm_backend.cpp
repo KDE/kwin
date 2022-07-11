@@ -240,7 +240,7 @@ EGLConfig EglGbmBackend::config(uint32_t format) const
 
 std::shared_ptr<DrmPipelineLayer> EglGbmBackend::createPrimaryLayer(DrmPipeline *pipeline)
 {
-    if (pipeline->output()) {
+    if (!pipeline->output()->isNonDesktop()) {
         return std::make_shared<EglGbmLayer>(this, pipeline);
     } else {
         return std::make_shared<DrmLeaseEglGbmLayer>(pipeline);

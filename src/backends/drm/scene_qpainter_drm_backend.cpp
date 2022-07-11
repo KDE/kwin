@@ -46,7 +46,7 @@ OutputLayer *DrmQPainterBackend::primaryLayer(Output *output)
 
 std::shared_ptr<DrmPipelineLayer> DrmQPainterBackend::createPrimaryLayer(DrmPipeline *pipeline)
 {
-    if (pipeline->output()) {
+    if (!pipeline->output()->isNonDesktop()) {
         return std::make_shared<DrmQPainterLayer>(pipeline);
     } else {
         return std::make_shared<DrmLeaseQPainterLayer>(pipeline);

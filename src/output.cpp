@@ -399,6 +399,11 @@ bool Output::isPlaceholder() const
     return m_information.placeholder;
 }
 
+bool Output::isNonDesktop() const
+{
+    return m_information.nonDesktop;
+}
+
 Output::RgbRange Output::rgbRange() const
 {
     return m_rgbRange;
