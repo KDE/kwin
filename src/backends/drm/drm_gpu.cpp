@@ -349,6 +349,9 @@ bool DrmGpu::updateOutputs()
         }
     }
     m_leaseDevice->setDrmMaster(true);
+    // after (potential) lease offer changes, a done event needs to be sent
+    // to signal clients to handle the changes
+    m_leaseDevice->done();
     return true;
 }
 

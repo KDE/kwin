@@ -60,6 +60,14 @@ void DrmLeaseDeviceV1Interface::setDrmMaster(bool hasDrmMaster)
     d->hasDrmMaster = hasDrmMaster;
 }
 
+void DrmLeaseDeviceV1Interface::done()
+{
+    const auto resources = d->resourceMap();
+    for (const auto resource : resources) {
+        d->send_done(resource->handle);
+    }
+}
+
 DrmLeaseDeviceV1InterfacePrivate::DrmLeaseDeviceV1InterfacePrivate(Display *display, DrmLeaseDeviceV1Interface *device, std::function<int()> createNonMasterFd)
     : QtWaylandServer::wp_drm_lease_device_v1(*display, s_version)
     , q(device)
@@ -82,6 +90,7 @@ void DrmLeaseDeviceV1InterfacePrivate::remove()
     for (const auto &request : qAsConst(leaseRequests)) {
         request->connectors.clear();
     }
+    q->done();
     globalRemove();
 }
 
@@ -157,6 +166,7 @@ void DrmLeaseDeviceV1InterfacePrivate::wp_drm_lease_device_v1_bind_resource(Reso
             connectorPrivate->send(connectorResource->handle);
         }
     }
+    send_done(resource->handle);
 }
 
 void DrmLeaseDeviceV1InterfacePrivate::wp_drm_lease_device_v1_destroy_global()
@@ -227,12 +237,6 @@ void DrmLeaseConnectorV1InterfacePrivate::withdraw()
         withdrawn = true;
         for (const auto &resource : resourceMap()) {
             send_withdrawn(resource->handle);
-        }
-
-        auto devicePrivate = DrmLeaseDeviceV1InterfacePrivate::get(device);
-        const auto deviceMap = devicePrivate->resourceMap();
-        for (DrmLeaseDeviceV1InterfacePrivate::Resource *resource : deviceMap) {
-            devicePrivate->send_done(resource->handle);
         }
     }
 }
@@ -326,6 +330,7 @@ void DrmLeaseV1Interface::grant(int leaseFd, uint32_t lesseeId)
     for (const auto &connector : qAsConst(d->connectors)) {
         DrmLeaseConnectorV1InterfacePrivate::get(connector)->withdraw();
     }
+    d->device->q->done();
 }
 
 void DrmLeaseV1Interface::deny()
@@ -352,9 +357,7 @@ void DrmLeaseV1Interface::deny()
             }
         }
         if (sent) {
-            for (const auto &resource : d->device->resourceMap()) {
-                d->device->send_done(resource->handle);
-            }
+            d->device->q->done();
         }
     }
     d->lesseeId = 0;
