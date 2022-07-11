@@ -13,7 +13,6 @@
 #include "output.h"
 #include "platform.h"
 #include "screenedge.h"
-#include "screens.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -694,7 +693,7 @@ void StrutsTest::test363804()
                               Qt::DirectConnection,
                               Q_ARG(int, 2),
                               Q_ARG(QVector<QRect>, geometries));
-    QCOMPARE(screens()->geometry(), QRect(0, 0, 1920, 1848));
+    QCOMPARE(workspace()->geometry(), QRect(0, 0, 1920, 1848));
 
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
     const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
@@ -778,7 +777,7 @@ void StrutsTest::testLeftScreenSmallerBottomAligned()
                               Qt::DirectConnection,
                               Q_ARG(int, 2),
                               Q_ARG(QVector<QRect>, geometries));
-    QCOMPARE(screens()->geometry(), QRect(0, 0, 3046, 1050));
+    QCOMPARE(workspace()->geometry(), QRect(0, 0, 3046, 1050));
 
     const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
     QCOMPARE(outputs[0]->geometry(), geometries.at(0));
@@ -895,7 +894,7 @@ void StrutsTest::testWindowMoveWithPanelBetweenScreens()
                               Qt::DirectConnection,
                               Q_ARG(int, 2),
                               Q_ARG(QVector<QRect>, geometries));
-    QCOMPARE(screens()->geometry(), QRect(0, 0, 3046, 1050));
+    QCOMPARE(workspace()->geometry(), QRect(0, 0, 3046, 1050));
 
     const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
     QCOMPARE(outputs[0]->geometry(), geometries.at(0));

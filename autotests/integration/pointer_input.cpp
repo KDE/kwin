@@ -398,7 +398,7 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
                               Q_ARG(int, 1),
                               Q_ARG(QVector<QRect>, QVector<QRect>{QRect(0, 0, 1280, 1024)}));
     QVERIFY(screensChangedSpy.wait());
-    QCOMPARE(screens()->count(), 1);
+    QCOMPARE(kwinApp()->platform()->enabledOutputs().count(), 1);
 
     // this should have warped the cursor
     QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(639, 511));
@@ -1584,11 +1584,13 @@ void PointerInputTest::testConfineToScreenGeometry()
                               Qt::DirectConnection,
                               Q_ARG(int, geometries.count()),
                               Q_ARG(QVector<QRect>, geometries));
-    QCOMPARE(screens()->count(), geometries.count());
-    QCOMPARE(screens()->geometry(0), geometries.at(0));
-    QCOMPARE(screens()->geometry(1), geometries.at(1));
-    QCOMPARE(screens()->geometry(2), geometries.at(2));
-    QCOMPARE(screens()->geometry(3), geometries.at(3));
+
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    QCOMPARE(outputs.count(), geometries.count());
+    QCOMPARE(outputs[0]->geometry(), geometries.at(0));
+    QCOMPARE(outputs[1]->geometry(), geometries.at(1));
+    QCOMPARE(outputs[2]->geometry(), geometries.at(2));
+    QCOMPARE(outputs[3]->geometry(), geometries.at(3));
 
     // move pointer to initial position
     QFETCH(QPoint, startPos);

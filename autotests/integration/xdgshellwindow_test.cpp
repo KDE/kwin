@@ -16,7 +16,6 @@
 #include "effects.h"
 #include "output.h"
 #include "platform.h"
-#include "screens.h"
 #include "virtualdesktops.h"
 #include "wayland/clientconnection.h"
 #include "wayland/display.h"
@@ -611,7 +610,7 @@ void TestXdgShellWindow::testFullscreenMultipleOutputs()
 
         QVERIFY(window->isFullScreen());
 
-        QCOMPARE(window->frameGeometry(), screens()->geometry(i));
+        QCOMPARE(window->frameGeometry(), outputs[i]->geometry());
     }
 }
 

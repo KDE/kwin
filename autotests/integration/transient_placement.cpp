@@ -11,7 +11,6 @@
 #include "cursor.h"
 #include "output.h"
 #include "platform.h"
-#include "screens.h"
 #include "wayland/seat_interface.h"
 #include "wayland/surface_interface.h"
 #include "wayland_server.h"
@@ -467,6 +466,8 @@ void TransientPlacementTest::testXdgPopupWithPanel()
 {
     using namespace KWayland::Client;
 
+    const Output *output = workspace()->activeOutput();
+
     QScopedPointer<KWayland::Client::Surface> surface{Test::createSurface()};
     QVERIFY(!surface.isNull());
     QScopedPointer<Test::XdgToplevel> dockShellSurface{Test::createXdgToplevelSurface(surface.data())};
@@ -474,7 +475,7 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     QScopedPointer<PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(surface.data()));
     QVERIFY(!plasmaSurface.isNull());
     plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
-    plasmaSurface->setPosition(QPoint(0, screens()->geometry(0).height() - 50));
+    plasmaSurface->setPosition(QPoint(0, output->geometry().height() - 50));
     plasmaSurface->setPanelBehavior(PlasmaShellSurface::PanelBehavior::AlwaysVisible);
 
     // now render and map the window
@@ -482,7 +483,7 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     QVERIFY(dock);
     QCOMPARE(dock->windowType(), NET::Dock);
     QVERIFY(dock->isDock());
-    QCOMPARE(dock->frameGeometry(), QRect(0, screens()->geometry(0).height() - 50, 1280, 50));
+    QCOMPARE(dock->frameGeometry(), QRect(0, output->geometry().height() - 50, 1280, 50));
     QCOMPARE(dock->hasStrut(), true);
     QCOMPARE(workspace()->clientArea(PlacementArea, dock), QRect(0, 0, 1280, 1024 - 50));
     QCOMPARE(workspace()->clientArea(FullScreenArea, dock), QRect(0, 0, 1280, 1024));
@@ -496,9 +497,9 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     QVERIFY(parent);
 
     QVERIFY(!parent->isDecorated());
-    parent->move({0, screens()->geometry(0).height() - 600});
+    parent->move({0, output->geometry().height() - 600});
     parent->keepInArea(workspace()->clientArea(PlacementArea, parent));
-    QCOMPARE(parent->frameGeometry(), QRect(0, screens()->geometry(0).height() - 600 - 50, 800, 600));
+    QCOMPARE(parent->frameGeometry(), QRect(0, output->geometry().height() - 600 - 50, 800, 600));
 
     QScopedPointer<KWayland::Client::Surface> transientSurface(Test::createSurface());
     QVERIFY(transientSurface);
@@ -514,7 +515,7 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     QVERIFY(!transient->isDecorated());
     QVERIFY(transient->hasTransientPlacementHint());
 
-    QCOMPARE(transient->frameGeometry(), QRect(50, screens()->geometry(0).height() - 200 - 50, 200, 200));
+    QCOMPARE(transient->frameGeometry(), QRect(50, output->geometry().height() - 200 - 50, 200, 200));
 
     transientShellSurface.reset();
     transientSurface.reset();
@@ -530,14 +531,14 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     QVERIFY(frameGeometryChangedSpy.isValid());
     Test::render(parentSurface.data(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::red);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(parent->frameGeometry(), screens()->geometry(0));
+    QCOMPARE(parent->frameGeometry(), output->geometry());
     QVERIFY(parent->isFullScreen());
 
     // another transient, with same hints as before from bottom of window
     transientSurface.reset(Test::createSurface());
     QVERIFY(transientSurface);
 
-    const QRect anchorRect2(50, screens()->geometry(0).height() - 100, 200, 200);
+    const QRect anchorRect2(50, output->geometry().height() - 100, 200, 200);
     QScopedPointer<Test::XdgPositioner> positioner2(Test::createXdgPositioner());
     positioner2->set_size(200, 200);
     positioner2->set_anchor_rect(anchorRect2.x(), anchorRect2.y(), anchorRect2.width(), anchorRect2.height());
@@ -548,7 +549,7 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     QVERIFY(!transient->isDecorated());
     QVERIFY(transient->hasTransientPlacementHint());
 
-    QCOMPARE(transient->frameGeometry(), QRect(50, screens()->geometry(0).height() - 200, 200, 200));
+    QCOMPARE(transient->frameGeometry(), QRect(50, output->geometry().height() - 200, 200, 200));
 }
 
 }

@@ -81,7 +81,7 @@ void ScreenChangesTest::testScreenAddRemove()
     auto xdgOutputManager = registry.createXdgOutputManager(xdgOMData.name, xdgOMData.version);
 
     // should be one output
-    QCOMPARE(screens()->count(), 1);
+    QCOMPARE(kwinApp()->platform()->enabledOutputs().count(), 1);
     QCOMPARE(outputAnnouncedSpy.count(), 1);
     const quint32 firstOutputId = outputAnnouncedSpy.first().first().value<quint32>();
     QVERIFY(firstOutputId != 0u);
@@ -97,7 +97,7 @@ void ScreenChangesTest::testScreenAddRemove()
                               Q_ARG(QVector<QRect>, geometries));
     QVERIFY(screensChangedSpy.wait());
     QCOMPARE(screensChangedSpy.count(), 2);
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    auto outputs = kwinApp()->platform()->enabledOutputs();
     QCOMPARE(outputs.count(), 2);
     QCOMPARE(outputs[0]->geometry(), geometries[0]);
     QCOMPARE(outputs[1]->geometry(), geometries[1]);
@@ -169,8 +169,9 @@ void ScreenChangesTest::testScreenAddRemove()
                               Q_ARG(QVector<QRect>, geometries2));
     QVERIFY(screensChangedSpy.wait());
     QCOMPARE(screensChangedSpy.count(), 2);
-    QCOMPARE(screens()->count(), 1);
-    QCOMPARE(screens()->geometry(0), geometries2.at(0));
+    outputs = kwinApp()->platform()->enabledOutputs();
+    QCOMPARE(outputs.count(), 1);
+    QCOMPARE(outputs[0]->geometry(), geometries2.at(0));
 
     QVERIFY(outputAnnouncedSpy.wait());
     QCOMPARE(outputAnnouncedSpy.count(), 1);

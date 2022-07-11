@@ -15,7 +15,6 @@
 #include "effects.h"
 #include "output.h"
 #include "platform.h"
-#include "screens.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
@@ -660,7 +659,7 @@ void MoveResizeWindowTest::testNetMove()
     const QRect origGeo = window->frameGeometry();
 
     // let's move the cursor outside the window
-    Cursors::self()->mouse()->setPos(screens()->geometry(0).center());
+    Cursors::self()->mouse()->setPos(workspace()->activeOutput()->geometry().center());
     QVERIFY(!origGeo.contains(Cursors::self()->mouse()->pos()));
 
     QSignalSpy moveStartSpy(window, &X11Window::clientStartUserMovedResized);

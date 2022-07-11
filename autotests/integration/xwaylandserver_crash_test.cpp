@@ -11,7 +11,6 @@
 #include "output.h"
 #include "platform.h"
 #include "scene.h"
-#include "screens.h"
 #include "unmanaged.h"
 #include "wayland_server.h"
 #include "workspace.h"

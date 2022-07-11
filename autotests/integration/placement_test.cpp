@@ -12,7 +12,6 @@
 #include "cursor.h"
 #include "output.h"
 #include "platform.h"
-#include "screens.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
@@ -371,11 +370,11 @@ void TestPlacement::testFullscreen()
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.data(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::red);
     QVERIFY(geometryChangedSpy.wait());
-    QCOMPARE(window->frameGeometry(), screens()->geometry(0));
+    QCOMPARE(window->frameGeometry(), outputs[0]->geometry());
 
     // this doesn't require a round trip, so should be immediate
     window->sendToOutput(outputs[1]);
-    QCOMPARE(window->frameGeometry(), screens()->geometry(1));
+    QCOMPARE(window->frameGeometry(), outputs[1]->geometry());
     QCOMPARE(geometryChangedSpy.count(), 2);
 }
 

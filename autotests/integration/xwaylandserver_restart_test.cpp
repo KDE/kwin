@@ -10,7 +10,6 @@
 #include "main.h"
 #include "platform.h"
 #include "scene.h"
-#include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"
@@ -57,9 +56,6 @@ void XwaylandServerRestartTest::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-    QCOMPARE(screens()->count(), 2);
-    QCOMPARE(screens()->geometry(0), QRect(0, 0, 1280, 1024));
-    QCOMPARE(screens()->geometry(1), QRect(1280, 0, 1280, 1024));
     Test::initWaylandWorkspace();
 }
 

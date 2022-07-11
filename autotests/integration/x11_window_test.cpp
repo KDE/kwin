@@ -15,7 +15,6 @@
 #include "effectloader.h"
 #include "effects.h"
 #include "platform.h"
-#include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"
@@ -517,7 +516,7 @@ void X11WindowTest::testFullscreenLayerWithActiveWaylandWindow()
 {
     // this test verifies that an X11 fullscreen window does not stay in the active layer
     // when a Wayland window is active, see BUG: 375759
-    QCOMPARE(screens()->count(), 1);
+    QCOMPARE(kwinApp()->platform()->enabledOutputs().count(), 1);
 
     // first create an X11 window
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
