@@ -338,8 +338,14 @@ void DrmLeaseV1Interface::deny()
         d->finished = true;
         d->send_finished();
     }
-    if (!d->lesseeId) {
-        return;
+}
+
+void DrmLeaseV1Interface::revoke()
+{
+    Q_ASSERT(d->lesseeId != 0);
+    if (!d->finished) {
+        d->finished = true;
+        d->send_finished();
     }
     Q_EMIT d->device->q->leaseRevoked(this);
     // check if we should offer connectors again
