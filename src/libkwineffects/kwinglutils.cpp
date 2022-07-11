@@ -1335,11 +1335,6 @@ static const uint16_t indices[] = {
     2029, 2028, 2031, 2031, 2030, 2029, 2033, 2032, 2035, 2035, 2034, 2033, 2037, 2036, 2039, 2039, 2038, 2037,
     2041, 2040, 2043, 2043, 2042, 2041, 2045, 2044, 2047, 2047, 2046, 2045};
 
-template<typename T>
-T align(T value, int bytes)
-{
-    return (value + bytes - 1) & ~T(bytes - 1);
-}
 
 class IndexBuffer
 {
@@ -1380,7 +1375,6 @@ void IndexBuffer::accommodate(int count)
         return;
     }
 
-    count = align(count, 128);
     size_t size = 6 * sizeof(uint16_t) * count;
 
     // Create a new buffer object
@@ -1743,7 +1737,7 @@ void GLVertexBufferPrivate::reallocatePersistentBuffer(size_t size)
 
     // Round the size up to 64 kb
     size_t minSize = qMax<size_t>(frameSizes.average() * 3, 128 * 1024);
-    bufferSize = align(qMax(size, minSize), 64 * 1024);
+    bufferSize = qMax(size, minSize);
 
     const GLbitfield storage = GL_DYNAMIC_STORAGE_BIT;
     const GLbitfield access = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
@@ -1825,7 +1819,7 @@ void GLVertexBufferPrivate::reallocateBuffer(size_t size)
 {
     // Round the size up to 4 Kb for streaming/dynamic buffers.
     const size_t minSize = 32768; // Minimum size for streaming buffers
-    const size_t alloc = usage != GL_STATIC_DRAW ? align(qMax(size, minSize), 4096) : size;
+    const size_t alloc = usage != GL_STATIC_DRAW ? qMax(size, minSize) : size;
 
     glBufferData(GL_ARRAY_BUFFER, alloc, nullptr, usage);
 
@@ -1920,7 +1914,7 @@ void GLVertexBuffer::unmap()
 {
     if (d->persistent) {
         d->baseAddress = d->nextOffset;
-        d->nextOffset += align(d->mappedSize, 16); // Align to 16 bytes for SSE
+        d->nextOffset += d->mappedSize;
         d->mappedSize = 0;
         return;
     }
@@ -1931,7 +1925,6 @@ void GLVertexBuffer::unmap()
         glUnmapBuffer(GL_ARRAY_BUFFER);
 
         d->baseAddress = d->nextOffset;
-        d->nextOffset += align(d->mappedSize, 16); // Align to 16 bytes for SSE
     } else {
         // Upload the data from local memory to the buffer object
         if (preferBufferSubData) {
@@ -1943,7 +1936,7 @@ void GLVertexBuffer::unmap()
             glBufferSubData(GL_ARRAY_BUFFER, d->nextOffset, d->mappedSize, d->dataStore.constData());
 
             d->baseAddress = d->nextOffset;
-            d->nextOffset += align(d->mappedSize, 16); // Align to 16 bytes for SSE
+            d->nextOffset += d->mappedSize;
         } else {
             glBufferData(GL_ARRAY_BUFFER, d->mappedSize, d->dataStore.data(), d->usage);
             d->baseAddress = 0;
