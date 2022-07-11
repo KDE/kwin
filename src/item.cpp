@@ -11,7 +11,6 @@
 #include "platform.h"
 #include "renderloop.h"
 #include "scene.h"
-#include "screens.h"
 #include "utils/common.h"
 
 namespace KWin
@@ -350,7 +349,7 @@ WindowQuadList Item::quads() const
 
 QRegion Item::repaints(Output *output) const
 {
-    return m_repaints.value(output, QRect(QPoint(0, 0), screens()->size()));
+    return m_repaints.value(output);
 }
 
 void Item::resetRepaints(Output *output)
