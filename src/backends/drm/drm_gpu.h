@@ -93,9 +93,7 @@ Q_SIGNALS:
 private:
     void dispatchEvents();
     DrmOutput *findOutput(quint32 connector);
-    DrmOutput *findNonDesktopOutput(quint32 connector);
     void removeOutput(DrmOutput *output);
-    void removeNonDesktopOutput(DrmOutput *output);
     void initDrmResources();
     void waitIdle();
 
@@ -128,7 +126,6 @@ private:
 
     QVector<DrmOutput *> m_drmOutputs;
     QVector<DrmAbstractOutput *> m_outputs;
-    QVector<DrmOutput *> m_nonDesktopOutputs;
     KWaylandServer::DrmLeaseDeviceV1Interface *m_leaseDevice = nullptr;
 
     QSocketNotifier *m_socketNotifier = nullptr;

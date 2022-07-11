@@ -386,7 +386,7 @@ QString connectedOutputsHash(const QVector<DrmAbstractOutput *> &outputs)
     QStringList hashedOutputs;
     hashedOutputs.reserve(outputs.count());
     for (auto output : qAsConst(outputs)) {
-        if (!output->isPlaceholder()) {
+        if (!output->isPlaceholder() && !output->isNonDesktop()) {
             hashedOutputs << outputHash(output);
         }
     }
@@ -465,7 +465,7 @@ bool DrmBackend::readOutputsConfiguration(const QVector<DrmAbstractOutput *> &ou
     // default position goes from left to right
     QPoint pos(0, 0);
     for (const auto &output : qAsConst(outputs)) {
-        if (output->isPlaceholder()) {
+        if (output->isPlaceholder() || output->isNonDesktop()) {
             continue;
         }
         auto props = cfg.changeSet(output);
@@ -688,8 +688,8 @@ bool DrmBackend::applyOutputChanges(const OutputConfiguration &config)
         const auto &outputs = gpu->outputs();
         for (const auto &o : outputs) {
             DrmOutput *output = qobject_cast<DrmOutput *>(o);
-            if (!output) {
-                // virtual outputs don't need testing
+            if (!output || output->isNonDesktop()) {
+                // virtual and non-desktop outputs don't need testing
                 continue;
             }
             output->queueChanges(config);
