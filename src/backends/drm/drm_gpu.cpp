@@ -244,7 +244,7 @@ bool DrmGpu::updateOutputs()
                 }
             }
             if (!leaseActive) {
-                leaseOutput->lease()->deny();
+                leaseOutput->lease()->revoke();
             }
         }
     }
