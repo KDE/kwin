@@ -313,7 +313,7 @@ void WaylandWindow::updateGeometry(const QRectF &rect)
         return;
     }
 
-    m_output = kwinApp()->platform()->outputAt(rect.center());
+    m_output = workspace()->outputAt(rect.center());
     updateWindowRules(Rules::Position | Rules::Size);
 
     if (changedGeometries & WaylandGeometryBuffer) {

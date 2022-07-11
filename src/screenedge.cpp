@@ -568,7 +568,7 @@ void Edge::setGeometry(const QRect &geometry)
     doGeometryUpdate();
 
     if (isScreenEdge()) {
-        const Output *output = kwinApp()->platform()->outputAt(m_geometry.center());
+        const Output *output = workspace()->outputAt(m_geometry.center());
         m_gesture->setStartGeometry(m_geometry);
         m_gesture->setMinimumDelta(QSizeF(MINIMUM_DELTA, MINIMUM_DELTA) / output->scale());
     }
@@ -956,7 +956,7 @@ void ScreenEdges::updateLayout()
 
 static bool isLeftScreen(const QRect &screen, const QRect &fullArea)
 {
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    const auto outputs = workspace()->outputs();
     if (outputs.count() == 1) {
         return true;
     }
@@ -983,7 +983,7 @@ static bool isLeftScreen(const QRect &screen, const QRect &fullArea)
 
 static bool isRightScreen(const QRect &screen, const QRect &fullArea)
 {
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    const auto outputs = workspace()->outputs();
     if (outputs.count() == 1) {
         return true;
     }
@@ -1010,7 +1010,7 @@ static bool isRightScreen(const QRect &screen, const QRect &fullArea)
 
 static bool isTopScreen(const QRect &screen, const QRect &fullArea)
 {
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    const auto outputs = workspace()->outputs();
     if (outputs.count() == 1) {
         return true;
     }
@@ -1037,7 +1037,7 @@ static bool isTopScreen(const QRect &screen, const QRect &fullArea)
 
 static bool isBottomScreen(const QRect &screen, const QRect &fullArea)
 {
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    const auto outputs = workspace()->outputs();
     if (outputs.count() == 1) {
         return true;
     }
@@ -1074,7 +1074,7 @@ void ScreenEdges::recreateEdges()
     const QRect fullArea = workspace()->geometry();
     QRegion processedRegion;
 
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    const auto outputs = workspace()->outputs();
     for (Output *output : outputs) {
         const QRegion screen = QRegion(output->geometry()).subtracted(processedRegion);
         processedRegion += screen;
@@ -1348,7 +1348,7 @@ void ScreenEdges::createEdgeForClient(Window *client, ElectricBorder border)
     const QRect geo = client->frameGeometry().toRect();
     const QRect fullArea = workspace()->geometry();
 
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    const auto outputs = workspace()->outputs();
     Output *foundOutput = nullptr;
     for (Output *output : outputs) {
         foundOutput = output;

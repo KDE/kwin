@@ -218,28 +218,6 @@ Output *Platform::findOutput(const QString &name) const
     return nullptr;
 }
 
-Output *Platform::outputAt(const QPointF &pos) const
-{
-    Output *bestOutput = nullptr;
-    int minDistance = INT_MAX;
-    const auto candidates = enabledOutputs();
-    for (Output *output : candidates) {
-        const QRect &geo = output->geometry();
-        if (geo.contains(pos.toPoint())) {
-            return output;
-        }
-        qreal distance = QPointF(geo.topLeft() - pos).manhattanLength();
-        distance = std::min(distance, QPointF(geo.topRight() - pos).manhattanLength());
-        distance = std::min(distance, QPointF(geo.bottomRight() - pos).manhattanLength());
-        distance = std::min(distance, QPointF(geo.bottomLeft() - pos).manhattanLength());
-        if (distance < minDistance) {
-            minDistance = distance;
-            bestOutput = output;
-        }
-    }
-    return bestOutput;
-}
-
 void Platform::repaint(const QRect &rect)
 {
     if (Compositor::compositing()) {

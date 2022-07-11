@@ -55,7 +55,7 @@ public:
 private Q_SLOTS:
     void handleOutputEnabled(Output *output);
     void handleOutputDisabled(Output *output);
-    void handlePlatformCreated();
+    void handleWorkspaceCreated();
 
 private:
     QScopedPointer<QPlatformFontDatabase> m_fontDb;

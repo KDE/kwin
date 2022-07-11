@@ -11,8 +11,8 @@
 #include <kwingltexture.h>
 #include <kwinglutils.h>
 #include <output.h>
-#include <platform.h>
 #include <scene.h>
+#include <workspace.h>
 
 #include <QPainter>
 
@@ -78,7 +78,7 @@ void RegionScreenCastSource::render(GLFramebuffer *target)
     if (!m_renderedTexture) {
         m_renderedTexture.reset(new GLTexture(hasAlphaChannel() ? GL_RGBA8 : GL_RGB8, textureSize()));
         m_target.reset(new GLFramebuffer(m_renderedTexture.data()));
-        const auto allOutputs = kwinApp()->platform()->enabledOutputs();
+        const auto allOutputs = workspace()->outputs();
         for (auto output : allOutputs) {
             if (output->geometry().intersects(m_region)) {
                 updateOutput(output);

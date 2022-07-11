@@ -363,7 +363,7 @@ void XdgSurfaceWindow::updateShowOnScreenEdge()
         const QRect clientGeometry = frameGeometry().toRect(); // converted here to match output checks
         Qt::Edges edges;
 
-        const auto outputs = kwinApp()->platform()->enabledOutputs();
+        const auto outputs = workspace()->outputs();
         for (const Output *output : outputs) {
             const QRect screenGeometry = output->geometry();
             if (screenGeometry.left() == clientGeometry.left()) {
@@ -1615,7 +1615,7 @@ void XdgToplevelWindow::setFullScreen(bool set, bool user)
     configureDecoration();
 
     if (set) {
-        const Output *output = m_fullScreenRequestedOutput ? m_fullScreenRequestedOutput.data() : kwinApp()->platform()->outputAt(moveResizeGeometry().center());
+        const Output *output = m_fullScreenRequestedOutput ? m_fullScreenRequestedOutput.data() : workspace()->outputAt(moveResizeGeometry().center());
         setFullscreenGeometryRestore(moveResizeGeometry());
         moveResize(workspace()->clientArea(FullScreenArea, this, output));
     } else {

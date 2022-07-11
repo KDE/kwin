@@ -160,7 +160,7 @@ void ScreencastManager::streamRegion(KWaylandServer::ScreencastStreamV1Interface
     connect(stream, &ScreenCastStream::startStreaming, waylandStream, [geometry, stream, source] {
         Compositor::self()->scene()->addRepaint(geometry);
 
-        const auto allOutputs = kwinApp()->platform()->enabledOutputs();
+        const auto allOutputs = workspace()->outputs();
         for (auto output : allOutputs) {
             if (output->geometry().intersects(geometry)) {
                 auto bufferToStream = [output, stream, source](const QRegion &damagedRegion) {

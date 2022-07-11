@@ -327,6 +327,9 @@ public:
     Output *previousOutput(Output *reference) const;
     void switchToOutput(Output *output);
 
+    QList<Output *> outputs() const;
+    Output *outputAt(const QPointF &pos) const;
+
     /**
      * Set "Show Desktop" status
      *
@@ -528,6 +531,8 @@ Q_SIGNALS:
     void deletedRemoved(KWin::Deleted *);
     void configChanged();
     void showingDesktopChanged(bool showing, bool animated);
+    void outputAdded(KWin::Output *);
+    void outputRemoved(KWin::Output *);
     /**
      * This signal is emitted when the stacking order changed, i.e. a window is risen
      * or lowered
@@ -608,6 +613,7 @@ private:
     void updateXStackingOrder();
     void updateTabbox();
 
+    QList<Output *> m_outputs;
     Output *m_activeOutput = nullptr;
     Window *m_activeWindow;
     Window *m_lastActiveWindow;
@@ -727,6 +733,11 @@ private:
 
 //---------------------------------------------------------
 // Unsorted
+
+inline QList<Output *> Workspace::outputs() const
+{
+    return m_outputs;
+}
 
 inline bool Workspace::initializing() const
 {

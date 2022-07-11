@@ -82,7 +82,7 @@ TabBoxHandlerImpl::~TabBoxHandlerImpl()
 
 int TabBoxHandlerImpl::activeScreen() const
 {
-    return kwinApp()->platform()->enabledOutputs().indexOf(workspace()->activeOutput());
+    return workspace()->outputs().indexOf(workspace()->activeOutput());
 }
 
 int TabBoxHandlerImpl::currentDesktop() const

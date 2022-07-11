@@ -843,13 +843,13 @@ Output *WindowRules::checkOutput(Output *output, bool init) const
     if (rules.isEmpty()) {
         return output;
     }
-    int ret = kwinApp()->platform()->enabledOutputs().indexOf(output);
+    int ret = workspace()->outputs().indexOf(output);
     for (Rules *rule : rules) {
         if (rule->applyScreen(ret, init)) {
             break;
         }
     }
-    Output *ruleOutput = kwinApp()->platform()->enabledOutputs().value(ret);
+    Output *ruleOutput = workspace()->outputs().value(ret);
     return ruleOutput ? ruleOutput : output;
 }
 

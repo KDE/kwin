@@ -153,7 +153,7 @@ void PointerInputTest::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
     QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));
     QCOMPARE(outputs[1]->geometry(), QRect(1280, 0, 1280, 1024));
@@ -398,7 +398,7 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
                               Q_ARG(int, 1),
                               Q_ARG(QVector<QRect>, QVector<QRect>{QRect(0, 0, 1280, 1024)}));
     QVERIFY(screensChangedSpy.wait());
-    QCOMPARE(kwinApp()->platform()->enabledOutputs().count(), 1);
+    QCOMPARE(workspace()->outputs().count(), 1);
 
     // this should have warped the cursor
     QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(639, 511));
@@ -1585,7 +1585,7 @@ void PointerInputTest::testConfineToScreenGeometry()
                               Q_ARG(int, geometries.count()),
                               Q_ARG(QVector<QRect>, geometries));
 
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), geometries.count());
     QCOMPARE(outputs[0]->geometry(), geometries.at(0));
     QCOMPARE(outputs[1]->geometry(), geometries.at(1));

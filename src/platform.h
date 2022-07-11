@@ -314,7 +314,6 @@ public:
     }
     Output *findOutput(const QUuid &uuid) const;
     Output *findOutput(const QString &name) const;
-    Output *outputAt(const QPointF &pos) const;
 
     /**
      * A string of information to include in kwin debug output

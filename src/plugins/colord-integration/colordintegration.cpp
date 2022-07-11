@@ -69,6 +69,9 @@ void ColordIntegration::teardown()
 
 void ColordIntegration::handleOutputAdded(Output *output)
 {
+    if (output->isNonDesktop()) {
+        return;
+    }
     ColordDevice *device = new ColordDevice(output, this);
 
     CdStringMap properties;
@@ -122,6 +125,9 @@ void ColordIntegration::handleOutputAdded(Output *output)
 
 void ColordIntegration::handleOutputRemoved(Output *output)
 {
+    if (output->isNonDesktop()) {
+        return;
+    }
     ColordDevice *device = m_outputToDevice.take(output);
     if (device) {
         m_colordInterface->DeleteDevice(device->objectPath());

@@ -87,7 +87,7 @@ void TestPlacement::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
     QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));
     QCOMPARE(outputs[1]->geometry(), QRect(1280, 0, 1280, 1024));
@@ -348,7 +348,7 @@ void TestPlacement::testPlaceRandom()
 
 void TestPlacement::testFullscreen()
 {
-    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
+    const QList<Output *> outputs = workspace()->outputs();
 
     setPlacementPolicy(Placement::Smart);
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());

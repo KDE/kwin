@@ -3941,7 +3941,7 @@ void X11Window::configureRequest(int value_mask, int rx, int ry, int rw, int rh,
         requestedFrameSize = rules()->checkSize(requestedFrameSize);
         new_pos = rules()->checkPosition(new_pos);
 
-        Output *newOutput = kwinApp()->platform()->outputAt(QRectF(new_pos, requestedFrameSize).center());
+        Output *newOutput = workspace()->outputAt(QRectF(new_pos, requestedFrameSize).center());
         if (newOutput != rules()->checkOutput(newOutput)) {
             return; // not allowed by rule
         }
@@ -4199,7 +4199,7 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
         return;
     }
 
-    m_output = kwinApp()->platform()->outputAt(frameGeometry.center());
+    m_output = workspace()->outputAt(frameGeometry.center());
     if (areGeometryUpdatesBlocked()) {
         setPendingMoveResizeMode(mode);
         return;
@@ -4620,7 +4620,7 @@ void X11Window::setFullScreen(bool set, bool user)
 
 void X11Window::updateFullscreenMonitors(NETFullscreenMonitors topology)
 {
-    const int outputCount = kwinApp()->platform()->enabledOutputs().count();
+    const int outputCount = workspace()->outputs().count();
 
     //    qDebug() << "incoming request with top: " << topology.top << " bottom: " << topology.bottom
     //                   << " left: " << topology.left << " right: " << topology.right

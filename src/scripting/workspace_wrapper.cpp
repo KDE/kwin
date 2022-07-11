@@ -51,10 +51,10 @@ WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
 #endif
     connect(ws, &Workspace::geometryChanged, this, &WorkspaceWrapper::virtualScreenSizeChanged);
     connect(ws, &Workspace::geometryChanged, this, &WorkspaceWrapper::virtualScreenGeometryChanged);
-    connect(kwinApp()->platform(), &Platform::outputEnabled, this, [this]() {
+    connect(ws, &Workspace::outputAdded, this, [this]() {
         Q_EMIT numberScreensChanged(numScreens());
     });
-    connect(kwinApp()->platform(), &Platform::outputDisabled, this, [this]() {
+    connect(ws, &Workspace::outputRemoved, this, [this]() {
         Q_EMIT numberScreensChanged(numScreens());
     });
     // TODO Plasma 6: Remove it.
@@ -267,14 +267,14 @@ static VirtualDesktop *resolveVirtualDesktop(int desktopId)
 
 QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, const QPoint &p, int desktop) const
 {
-    const Output *output = kwinApp()->platform()->outputAt(p);
+    const Output *output = Workspace::self()->outputAt(p);
     const VirtualDesktop *virtualDesktop = resolveVirtualDesktop(desktop);
     return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), output, virtualDesktop);
 }
 
 QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, const QPoint &p, VirtualDesktop *desktop) const
 {
-    return workspace()->clientArea(static_cast<clientAreaOption>(option), kwinApp()->platform()->outputAt(p), desktop);
+    return workspace()->clientArea(static_cast<clientAreaOption>(option), workspace()->outputAt(p), desktop);
 }
 
 QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, const KWin::Window *c) const
@@ -301,7 +301,7 @@ static Output *resolveOutput(int outputId)
     if (outputId == -1) {
         return workspace()->activeOutput();
     }
-    return kwinApp()->platform()->enabledOutputs().value(outputId);
+    return workspace()->outputs().value(outputId);
 }
 
 QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, int outputId, int desktopId) const
@@ -413,17 +413,17 @@ int WorkspaceWrapper::workspaceWidth() const
 
 int WorkspaceWrapper::numScreens() const
 {
-    return kwinApp()->platform()->enabledOutputs().count();
+    return workspace()->outputs().count();
 }
 
 int WorkspaceWrapper::screenAt(const QPointF &pos) const
 {
-    return kwinApp()->platform()->enabledOutputs().indexOf(kwinApp()->platform()->outputAt(pos));
+    return workspace()->outputs().indexOf(workspace()->outputAt(pos));
 }
 
 int WorkspaceWrapper::activeScreen() const
 {
-    return kwinApp()->platform()->enabledOutputs().indexOf(workspace()->activeOutput());
+    return workspace()->outputs().indexOf(workspace()->activeOutput());
 }
 
 QRect WorkspaceWrapper::virtualScreenGeometry() const
@@ -438,7 +438,7 @@ QSize WorkspaceWrapper::virtualScreenSize() const
 
 void WorkspaceWrapper::sendClientToScreen(Window *client, int screen)
 {
-    Output *output = kwinApp()->platform()->enabledOutputs().value(screen);
+    Output *output = workspace()->outputs().value(screen);
     if (output) {
         workspace()->sendWindowToOutput(client, output);
     }

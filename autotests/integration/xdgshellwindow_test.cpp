@@ -176,7 +176,7 @@ void TestXdgShellWindow::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
     QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));
     QCOMPARE(outputs[1]->geometry(), QRect(1280, 0, 1280, 1024));
@@ -565,7 +565,7 @@ void TestXdgShellWindow::testFullscreenMultipleOutputs()
 {
     // this test verifies that kwin will place fullscreen windows in the outputs its instructed to
 
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    const auto outputs = workspace()->outputs();
     for (int i = 0; i < outputs.count(); ++i) {
         Test::XdgToplevel::States states;
 

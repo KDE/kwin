@@ -12,6 +12,7 @@
 #include "renderloop.h"
 #include "scene.h"
 #include "utils/common.h"
+#include "workspace.h"
 
 namespace KWin
 {
@@ -19,7 +20,7 @@ namespace KWin
 Item::Item(Item *parent)
 {
     setParentItem(parent);
-    connect(kwinApp()->platform(), &Platform::outputDisabled, this, &Item::removeRepaints);
+    connect(workspace(), &Workspace::outputRemoved, this, &Item::removeRepaints);
 }
 
 Item::~Item()
@@ -291,7 +292,7 @@ void Item::scheduleRepaint(const QRegion &region)
 
 void Item::scheduleRepaintInternal(const QRegion &region)
 {
-    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
+    const QList<Output *> outputs = workspace()->outputs();
     const QRegion globalRegion = mapToGlobal(region);
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
         for (const auto &output : outputs) {
@@ -312,7 +313,7 @@ void Item::scheduleFrame()
     if (!isVisible()) {
         return;
     }
-    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
+    const QList<Output *> outputs = workspace()->outputs();
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
         const QRect geometry = mapToGlobal(rect()).toAlignedRect();
         for (const Output *output : outputs) {

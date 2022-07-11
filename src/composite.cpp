@@ -354,7 +354,7 @@ void Compositor::startupWithWorkspace()
     Q_ASSERT(m_scene);
     m_scene->initialize();
 
-    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
+    const QList<Output *> outputs = workspace()->outputs();
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         auto workspaceLayer = new RenderLayer(outputs.constFirst()->renderLoop());
         workspaceLayer->setDelegate(new SceneDelegate(m_scene.get()));
@@ -367,8 +367,8 @@ void Compositor::startupWithWorkspace()
         for (Output *output : outputs) {
             addOutput(output);
         }
-        connect(kwinApp()->platform(), &Platform::outputEnabled, this, &Compositor::addOutput);
-        connect(kwinApp()->platform(), &Platform::outputDisabled, this, &Compositor::removeOutput);
+        connect(workspace(), &Workspace::outputAdded, this, &Compositor::addOutput);
+        connect(workspace(), &Workspace::outputRemoved, this, &Compositor::removeOutput);
     }
 
     m_state = State::On;
@@ -402,7 +402,7 @@ void Compositor::startupWithWorkspace()
 
 Output *Compositor::findOutput(RenderLoop *loop) const
 {
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    const auto outputs = workspace()->outputs();
     for (Output *output : outputs) {
         if (output->renderLoop() == loop) {
             return output;
@@ -505,6 +505,9 @@ void Compositor::stop()
         while (!workspace()->deletedList().isEmpty()) {
             workspace()->deletedList().first()->discard();
         }
+
+        disconnect(workspace(), &Workspace::outputAdded, this, &Compositor::addOutput);
+        disconnect(workspace(), &Workspace::outputRemoved, this, &Compositor::removeOutput);
     }
 
     if (waylandServer()) {
@@ -518,9 +521,6 @@ void Compositor::stop()
     for (auto it = superlayers.begin(); it != superlayers.end(); ++it) {
         removeSuperLayer(*it);
     }
-
-    disconnect(kwinApp()->platform(), &Platform::outputEnabled, this, &Compositor::addOutput);
-    disconnect(kwinApp()->platform(), &Platform::outputDisabled, this, &Compositor::removeOutput);
 
     m_scene.reset();
     m_backend.reset();

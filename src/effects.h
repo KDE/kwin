@@ -289,8 +289,8 @@ protected Q_SLOTS:
     void slotGeometryShapeChanged(KWin::Window *window, const QRectF &old);
     void slotFrameGeometryChanged(Window *window, const QRectF &oldGeometry);
     void slotWindowDamaged(KWin::Window *window, const QRegion &r);
-    void slotOutputEnabled(Output *output);
-    void slotOutputDisabled(Output *output);
+    void slotOutputAdded(Output *output);
+    void slotOutputRemoved(Output *output);
 
 protected:
     void connectNotify(const QMetaMethod &signal) override;

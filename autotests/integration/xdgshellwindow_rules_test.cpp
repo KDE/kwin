@@ -186,7 +186,7 @@ void TestXdgShellWindowRules::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
     QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));
     QCOMPARE(outputs[1]->geometry(), QRect(1280, 0, 1280, 1024));
@@ -2831,7 +2831,7 @@ void TestXdgShellWindowRules::testNoBorderForceTemporarily()
 
 void TestXdgShellWindowRules::testScreenDontAffect()
 {
-    const KWin::Outputs outputs = kwinApp()->platform()->enabledOutputs();
+    const QList<KWin::Output *> outputs = workspace()->outputs();
 
     setWindowRule("screen", int(1), int(Rules::DontAffect));
 
@@ -2849,7 +2849,7 @@ void TestXdgShellWindowRules::testScreenDontAffect()
 
 void TestXdgShellWindowRules::testScreenApply()
 {
-    const KWin::Outputs outputs = kwinApp()->platform()->enabledOutputs();
+    const QList<KWin::Output *> outputs = workspace()->outputs();
 
     setWindowRule("screen", int(1), int(Rules::Apply));
 
@@ -2868,7 +2868,7 @@ void TestXdgShellWindowRules::testScreenApply()
 
 void TestXdgShellWindowRules::testScreenRemember()
 {
-    const KWin::Outputs outputs = kwinApp()->platform()->enabledOutputs();
+    const QList<KWin::Output *> outputs = workspace()->outputs();
 
     setWindowRule("screen", int(1), int(Rules::Remember));
 
@@ -2893,7 +2893,7 @@ void TestXdgShellWindowRules::testScreenRemember()
 
 void TestXdgShellWindowRules::testScreenForce()
 {
-    const KWin::Outputs outputs = kwinApp()->platform()->enabledOutputs();
+    const QList<KWin::Output *> outputs = workspace()->outputs();
 
     createTestWindow();
     QVERIFY(m_window->isActive());
@@ -2935,7 +2935,7 @@ void TestXdgShellWindowRules::testScreenForce()
 
 void TestXdgShellWindowRules::testScreenApplyNow()
 {
-    const KWin::Outputs outputs = kwinApp()->platform()->enabledOutputs();
+    const QList<KWin::Output *> outputs = workspace()->outputs();
 
     createTestWindow();
 
@@ -2958,7 +2958,7 @@ void TestXdgShellWindowRules::testScreenApplyNow()
 
 void TestXdgShellWindowRules::testScreenForceTemporarily()
 {
-    const KWin::Outputs outputs = kwinApp()->platform()->enabledOutputs();
+    const QList<KWin::Output *> outputs = workspace()->outputs();
 
     createTestWindow();
 

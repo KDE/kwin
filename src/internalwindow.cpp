@@ -496,7 +496,7 @@ void InternalWindow::commitGeometry(const QRectF &rect)
         return;
     }
 
-    m_output = kwinApp()->platform()->outputAt(rect.center());
+    m_output = workspace()->outputAt(rect.center());
     syncGeometryToInternalWindow();
 
     if (oldClientGeometry != m_clientGeometry) {

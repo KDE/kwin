@@ -300,28 +300,28 @@ void WaylandServer::initPlatform()
 
 void WaylandServer::handleOutputAdded(Output *output)
 {
-    if (!output->isPlaceholder()) {
+    if (!output->isPlaceholder() && !output->isNonDesktop()) {
         m_waylandOutputDevices.insert(output, new WaylandOutputDevice(output));
     }
 }
 
 void WaylandServer::handleOutputRemoved(Output *output)
 {
-    if (!output->isPlaceholder()) {
+    if (!output->isPlaceholder() && !output->isNonDesktop()) {
         delete m_waylandOutputDevices.take(output);
     }
 }
 
 void WaylandServer::handleOutputEnabled(Output *output)
 {
-    if (!output->isPlaceholder()) {
+    if (!output->isPlaceholder() && !output->isNonDesktop()) {
         m_waylandOutputs.insert(output, new WaylandOutput(output));
     }
 }
 
 void WaylandServer::handleOutputDisabled(Output *output)
 {
-    if (!output->isPlaceholder()) {
+    if (!output->isPlaceholder() && !output->isNonDesktop()) {
         delete m_waylandOutputs.take(output);
     }
 }
@@ -784,7 +784,7 @@ WaylandServer::LockScreenPresentationWatcher::LockScreenPresentationWatcher(Wayl
                 // window might be destroyed before a frame is presented, so it's wrapped in QPointer
                 if (windowGuard) {
                     m_signaledOutputs << windowGuard->output();
-                    if (m_signaledOutputs.size() == kwinApp()->platform()->enabledOutputs().size()) {
+                    if (m_signaledOutputs.size() == workspace()->outputs().size()) {
                         ScreenLocker::KSldApp::self()->lockScreenShown();
                         delete this;
                     }

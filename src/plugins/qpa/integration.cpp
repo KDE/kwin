@@ -18,6 +18,7 @@
 #include "main.h"
 #include "output.h"
 #include "platform.h"
+#include "workspace.h"
 
 #include <QCoreApplication>
 #include <QTimer>
@@ -93,11 +94,11 @@ void Integration::initialize()
 {
     // This method is called from QGuiApplication's constructor, before kwinApp is built
     QTimer::singleShot(0, this, [this] {
-        // The QPA is initialized before the platform plugin is loaded.
-        if (kwinApp()->platform()) {
-            handlePlatformCreated();
+        // The QPA is initialized before the workspace is created.
+        if (workspace()) {
+            handleWorkspaceCreated();
         } else {
-            connect(kwinApp(), &Application::platformCreated, this, &Integration::handlePlatformCreated);
+            connect(kwinApp(), &Application::workspaceCreated, this, &Integration::handleWorkspaceCreated);
         }
     });
 
@@ -159,14 +160,14 @@ QPlatformOpenGLContext *Integration::createPlatformOpenGLContext(QOpenGLContext 
     return nullptr;
 }
 
-void Integration::handlePlatformCreated()
+void Integration::handleWorkspaceCreated()
 {
-    connect(kwinApp()->platform(), &Platform::outputEnabled,
+    connect(workspace(), &Workspace::outputAdded,
             this, &Integration::handleOutputEnabled);
-    connect(kwinApp()->platform(), &Platform::outputDisabled,
+    connect(workspace(), &Workspace::outputRemoved,
             this, &Integration::handleOutputDisabled);
 
-    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
+    const QList<Output *> outputs = workspace()->outputs();
     for (Output *output : outputs) {
         handleOutputEnabled(output);
     }

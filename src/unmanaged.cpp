@@ -233,7 +233,7 @@ QWindow *Unmanaged::findInternalWindow() const
 
 void Unmanaged::checkOutput()
 {
-    setOutput(kwinApp()->platform()->outputAt(frameGeometry().center()));
+    setOutput(workspace()->outputAt(frameGeometry().center()));
 }
 
 void Unmanaged::damageNotifyEvent()

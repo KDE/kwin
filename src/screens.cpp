@@ -26,8 +26,6 @@ Screens *Screens::create(QObject *parent)
 {
     Q_ASSERT(!s_self);
     s_self = new Screens(parent);
-    Q_ASSERT(s_self);
-    s_self->init();
     return s_self;
 }
 
@@ -96,7 +94,7 @@ void Screens::updateSize()
 
 void Screens::updateCount()
 {
-    setCount(kwinApp()->platform()->enabledOutputs().size());
+    setCount(workspace()->outputs().size());
 }
 
 void Screens::setCount(int count)
@@ -111,7 +109,7 @@ void Screens::setCount(int count)
 
 Output *Screens::findOutput(int screen) const
 {
-    return kwinApp()->platform()->enabledOutputs().value(screen);
+    return workspace()->outputs().value(screen);
 }
 
 } // namespace

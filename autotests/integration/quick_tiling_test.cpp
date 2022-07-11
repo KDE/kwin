@@ -101,7 +101,7 @@ void QuickTilingTest::initTestCase()
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
 
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
     QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));
     QCOMPARE(outputs[1]->geometry(), QRect(1280, 0, 1280, 1024));
@@ -197,7 +197,7 @@ void QuickTilingTest::testQuickTiling()
     QCOMPARE(window->frameGeometry(), expectedGeometry);
 
     // send window to other screen
-    QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
+    QList<Output *> outputs = workspace()->outputs();
     QCOMPARE(window->output(), outputs[0]);
     window->sendToOutput(outputs[1]);
     QCOMPARE(window->output(), outputs[1]);
@@ -612,7 +612,7 @@ void QuickTilingTest::testX11QuickTiling()
     QCOMPARE(quickTileChangedSpy.count(), 1);
 
     // quick tile to same edge again should also act like send to screen
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    const auto outputs = workspace()->outputs();
     QCOMPARE(window->output(), outputs[0]);
     window->setQuickTileMode(mode, true);
     QFETCH(int, screenId);

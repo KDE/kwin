@@ -33,6 +33,9 @@ class KWIN_EXPORT Screens : public QObject
 
 public:
     ~Screens() override;
+
+    void init();
+
     int count() const;
     QRect geometry(int screen) const;
     /**
@@ -90,14 +93,6 @@ Q_SIGNALS:
 protected Q_SLOTS:
     void setCount(int count);
     void updateCount();
-
-protected:
-    /**
-     * Called once the singleton instance has been created.
-     * Any initialization code should go into this method. Overriding classes have to call
-     * the base implementation first.
-     */
-    void init();
 
 private Q_SLOTS:
     void updateSize();

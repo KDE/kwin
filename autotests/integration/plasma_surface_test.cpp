@@ -204,7 +204,7 @@ void PlasmaSurfaceTest::testOSDPlacement()
                               Q_ARG(QVector<QRect>, geometries));
     QVERIFY(screensChangedSpy.wait());
     QCOMPARE(screensChangedSpy.count(), 2);
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
     QCOMPARE(outputs[0]->geometry(), geometries[0]);
     QCOMPARE(outputs[1]->geometry(), geometries[1]);
@@ -272,7 +272,7 @@ void PlasmaSurfaceTest::testPanelTypeHasStrut()
     auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
     // the panel is on the first output and the current desktop
-    Output *output = kwinApp()->platform()->enabledOutputs().constFirst();
+    Output *output = workspace()->outputs().constFirst();
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
 
     QVERIFY(window);
@@ -323,7 +323,7 @@ void PlasmaSurfaceTest::testPanelWindowsCanCover()
     auto panel = Test::renderAndWaitForShown(surface.data(), panelGeometry.size(), Qt::blue);
 
     // the panel is on the first output and the current desktop
-    Output *output = kwinApp()->platform()->enabledOutputs().constFirst();
+    Output *output = workspace()->outputs().constFirst();
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
 
     QVERIFY(panel);
