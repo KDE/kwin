@@ -173,7 +173,7 @@ protected:
     void handleRoleCommit() override;
     void handleRolePrecommit() override;
     void doMinimize() override;
-    void doInteractiveResizeSync() override;
+    void doInteractiveResizeSync(const QRectF &rect) override;
     void doSetActive() override;
     void doSetFullScreen();
     void doSetMaximized();

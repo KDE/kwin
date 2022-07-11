@@ -4721,8 +4721,10 @@ bool X11Window::isWaitingForInteractiveMoveResizeSync() const
     return m_syncRequest.isPending && m_syncRequest.interactiveResize;
 }
 
-void X11Window::doInteractiveResizeSync()
+void X11Window::doInteractiveResizeSync(const QRectF &rect)
 {
+    setMoveResizeGeometry(rect);
+
     if (!m_syncRequest.timeout) {
         m_syncRequest.timeout = new QTimer(this);
         connect(m_syncRequest.timeout, &QTimer::timeout, this, &X11Window::handleSyncTimeout);
@@ -4750,7 +4752,7 @@ void X11Window::doInteractiveResizeSync()
     // this, then we might render partially updated client window. I know, it sucks.
     m_frame.setGeometry(moveResizeBufferGeometry);
     m_wrapper.setGeometry(QRectF(clientPos(), moveResizeClientGeometry.size()));
-    m_client.setGeometry(QRectF(QPoint(0, 0), moveResizeClientGeometry.size()));
+    m_client.setGeometry(QRectF(QPointF(0, 0), moveResizeClientGeometry.size()));
 }
 
 void X11Window::handleSyncTimeout()

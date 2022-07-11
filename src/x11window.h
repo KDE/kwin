@@ -349,7 +349,7 @@ protected:
     bool belongsToDesktop() const override;
     bool doStartInteractiveMoveResize() override;
     bool isWaitingForInteractiveMoveResizeSync() const override;
-    void doInteractiveResizeSync() override;
+    void doInteractiveResizeSync(const QRectF &rect) override;
     QSizeF resizeIncrements() const override;
     bool acceptsFocus() const override;
     void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;

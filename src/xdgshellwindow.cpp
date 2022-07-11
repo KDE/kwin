@@ -909,9 +909,9 @@ void XdgToplevelWindow::doMinimize()
     workspace()->updateMinimizedOfTransients(this);
 }
 
-void XdgToplevelWindow::doInteractiveResizeSync()
+void XdgToplevelWindow::doInteractiveResizeSync(const QRectF &rect)
 {
-    moveResizeInternal(moveResizeGeometry(), MoveResizeMode::Resize);
+    moveResize(rect);
 }
 
 void XdgToplevelWindow::doSetActive()
