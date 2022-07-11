@@ -43,6 +43,11 @@ public:
      */
     void setDrmMaster(bool hasDrmMaster);
 
+    /**
+     * Must be called after connectors have been added or removed
+     */
+    void done();
+
 Q_SIGNALS:
     /**
      * Emitted when a lease is requested. The compositor needs to either
