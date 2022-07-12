@@ -27,7 +27,6 @@
 #include "renderloop.h"
 #include "renderloop_p.h"
 #include "scene.h"
-#include "screens.h"
 #include "session.h"
 // Qt
 #include <QCryptographicHash>

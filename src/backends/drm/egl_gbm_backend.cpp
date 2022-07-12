@@ -29,7 +29,6 @@
 #include "logging.h"
 #include "options.h"
 #include "renderloop_p.h"
-#include "screens.h"
 #include "shadowbuffer.h"
 #include "surfaceitem_wayland.h"
 #include "virtual_egl_gbm_layer.h"
