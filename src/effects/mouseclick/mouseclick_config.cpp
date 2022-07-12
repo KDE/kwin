@@ -28,18 +28,13 @@ K_PLUGIN_CLASS(KWin::MouseClickEffectConfig)
 namespace KWin
 {
 
-MouseClickEffectConfigForm::MouseClickEffectConfigForm(QWidget *parent)
-    : QWidget(parent)
-{
-    setupUi(this);
-}
-
 MouseClickEffectConfig::MouseClickEffectConfig(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)
-    , m_ui(this)
 {
+    QWidget *wrapperWidget = new QWidget(this);
     QVBoxLayout *layout = new QVBoxLayout(this);
-    layout->addWidget(&m_ui);
+    layout->addWidget(wrapperWidget);
+    m_ui.setupUi(wrapperWidget);
 
     connect(m_ui.editor, &KShortcutsEditor::keyChange, this, &MouseClickEffectConfig::markAsChanged);
 
@@ -56,7 +51,7 @@ MouseClickEffectConfig::MouseClickEffectConfig(QWidget *parent, const QVariantLi
     m_ui.editor->addCollection(m_actionCollection);
 
     MouseClickConfig::instance(KWIN_CONFIG);
-    addConfig(MouseClickConfig::self(), &m_ui);
+    addConfig(MouseClickConfig::self(), wrapperWidget);
 }
 
 MouseClickEffectConfig::~MouseClickEffectConfig()
