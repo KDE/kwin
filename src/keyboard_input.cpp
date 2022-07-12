@@ -294,8 +294,14 @@ std::optional<KeyCodeState> keycodeFromKeysym(xkb_keysym_t keysym, Xkb *xkb)
     return {};
 }
 
-void KeyboardInputRedirection::processKeySym(uint32_t keysym, InputRedirection::KeyboardKeyState state, uint32_t time, InputDevice *device)
+void KeyboardInputRedirection::processKeySym(uint32_t keysym, InputRedirection::KeyboardKeyState state, void *keymap, uint32_t time, InputDevice *device)
 {
+    xkb_keymap *previousKeymap = nullptr;
+    if (keymap && keymap != m_xkb->keymap()) {
+        previousKeymap = m_xkb->keymap();
+        m_xkb->updateKeymap((xkb_keymap *)keymap);
+    }
+
     auto keyCodeState = keycodeFromKeysym(keysym, m_xkb.get());
     if (!keyCodeState) {
         qCWarning(KWIN_CORE) << "Could not process keysym" << keysym;
@@ -308,6 +314,10 @@ void KeyboardInputRedirection::processKeySym(uint32_t keysym, InputRedirection::
         processKey(KEY_RIGHTALT, state, time, device);
     }
     processKey(keyCodeState->keycode, state, time, device);
+
+    if (previousKeymap) {
+        m_xkb->updateKeymap(previousKeymap);
+    }
 }
 
 void KeyboardInputRedirection::processModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)

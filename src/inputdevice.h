@@ -46,7 +46,7 @@ public:
 
 Q_SIGNALS:
     void keyChanged(quint32 key, InputRedirection::KeyboardKeyState, quint32 time, InputDevice *device);
-    void keySymChanged(quint32 keysym, InputRedirection::KeyboardKeyState, quint32 time, InputDevice *device);
+    void keySymChanged(quint32 keysym, InputRedirection::KeyboardKeyState, void *keymap, quint32 time, InputDevice *device);
     void pointerButtonChanged(quint32 button, InputRedirection::PointerButtonState state, quint32 time, InputDevice *device);
     void pointerMotionAbsolute(const QPointF &position, quint32 time, InputDevice *device);
     void pointerMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint32 time, quint64 timeMicroseconds, InputDevice *device);

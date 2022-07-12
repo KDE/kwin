@@ -10,6 +10,7 @@
 #include <QSizeF>
 
 #include <qwayland-server-fake-input.h>
+#include <sys/mman.h>
 #include <wayland-server.h>
 
 namespace KWaylandServer
@@ -42,6 +43,7 @@ protected:
     void org_kde_kwin_fake_input_touch_frame(Resource *resource) override;
     void org_kde_kwin_fake_input_pointer_motion_absolute(Resource *resource, wl_fixed_t x, wl_fixed_t y) override;
     void org_kde_kwin_fake_input_keyboard_key(Resource *resource, uint32_t button, uint32_t state) override;
+    void org_kde_kwin_fake_input_keyboard_keymap(Resource *resource, int32_t fd, uint32_t size) override;
     void org_kde_kwin_fake_input_keyboard_keysym(Resource *resource, uint32_t button, uint32_t state) override;
 };
 
@@ -219,6 +221,23 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_keyboard_key(Resource *r
         return;
     }
     Q_EMIT d->keyboardKeyCodeRequested(button, state == WL_KEYBOARD_KEY_STATE_PRESSED);
+}
+
+void FakeInputInterfacePrivate::org_kde_kwin_fake_input_keyboard_keymap(Resource *resource, int32_t fd, uint32_t size)
+{
+    FakeInputDevice *d = device(resource->handle);
+    if (!d || !d->isAuthenticated()) {
+        return;
+    }
+
+    char *map_str = static_cast<char *>(mmap(nullptr, size, PROT_READ, MAP_SHARED, fd, 0));
+    if (map_str == MAP_FAILED) {
+        close(fd);
+        return;
+    }
+
+    Q_EMIT d->keyboardKeymap(QByteArray(map_str, size));
+    close(fd);
 }
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_keyboard_keysym(Resource *resource, uint32_t button, uint32_t state)

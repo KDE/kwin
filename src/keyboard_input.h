@@ -54,7 +54,7 @@ public:
      * @internal
      */
     void processKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time, InputDevice *device = nullptr);
-    void processKeySym(uint32_t keysym, InputRedirection::KeyboardKeyState state, uint32_t time, InputDevice *device = nullptr);
+    void processKeySym(uint32_t keysym, InputRedirection::KeyboardKeyState state, void *keymap, uint32_t time, InputDevice *device = nullptr);
     /**
      * @internal
      */

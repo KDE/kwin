@@ -7,11 +7,13 @@
 #pragma once
 
 #include "inputdevice.h"
+#include <QtXkbCommonSupport/private/qxkbcommon_p.h>
 
 namespace KWaylandServer
 {
 class FakeInputDevice;
 }
+struct xkb_keymap;
 
 namespace KWin
 {
@@ -44,6 +46,7 @@ public:
 
 private:
     QString m_name;
+    QXkbCommon::ScopedXKBKeymap mXkbKeymap;
 };
 
 } // namespace KWin

@@ -6,6 +6,8 @@
 
 #include "fakeinputdevice.h"
 #include "wayland/fakeinput_interface.h"
+#include <keyboard_input.h>
+#include <xkbcommon/xkbcommon.h>
 
 namespace KWin
 {
@@ -78,7 +80,14 @@ FakeInputDevice::FakeInputDevice(KWaylandServer::FakeInputDevice *device, QObjec
     });
     connect(device, &KWaylandServer::FakeInputDevice::keyboardKeySymRequested, this, [this](quint32 keysym, bool pressed) {
         // TODO: Fix time
-        Q_EMIT keySymChanged(keysym, pressed ? InputRedirection::KeyboardKeyPressed : InputRedirection::KeyboardKeyReleased, 0, this);
+        Q_EMIT keySymChanged(keysym, pressed ? InputRedirection::KeyboardKeyPressed : InputRedirection::KeyboardKeyReleased, mXkbKeymap.get(), 0, this);
+    });
+    connect(device, &KWaylandServer::FakeInputDevice::keyboardKeymap, this, [this](const QByteArray &keymap) {
+        // TODO: Fix time
+        auto xkb = input()->keyboard()->xkb();
+        mXkbKeymap.reset(xkb_keymap_new_from_buffer(xkb->context(), keymap.constData(), keymap.size(),
+                                                    XKB_KEYMAP_FORMAT_TEXT_V1,
+                                                    XKB_KEYMAP_COMPILE_NO_FLAGS));
     });
 }
 

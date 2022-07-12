@@ -138,6 +138,12 @@ Q_SIGNALS:
      * Requests a keyboard key code (i.e. KEY_, see linux/input.h) pressed for @p keycode.
      */
     void keyboardKeyCodeRequested(quint32 keycode, bool pressed);
+
+    /**
+     * Requests the keymap to use when a keysym is received
+     */
+    void keyboardKeymap(const QByteArray &keymap);
+
     /**
      * Requests a keyboard keysym (i.e. XKB) pressed for @p keysym.
      */

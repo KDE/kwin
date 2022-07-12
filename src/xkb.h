@@ -47,6 +47,7 @@ public:
     void reconfigure();
 
     void installKeymap(int fd, uint32_t size);
+    void updateKeymap(xkb_keymap *keymap);
     void updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group);
     void updateKey(uint32_t key, InputRedirection::KeyboardKeyState state);
     void updateKeySym(uint32_t keysym, InputRedirection::KeyboardKeyState state);
@@ -104,6 +105,10 @@ public:
 
     void setSeat(KWaylandServer::SeatInterface *seat);
     QByteArray keymapContents() const;
+    xkb_context *context() const
+    {
+        return m_context;
+    }
 
 Q_SIGNALS:
     void ledsChanged(const LEDs &leds);
@@ -113,7 +118,6 @@ private:
     void applyEnvironmentRules(xkb_rule_names &);
     xkb_keymap *loadKeymapFromConfig();
     xkb_keymap *loadDefaultKeymap();
-    void updateKeymap(xkb_keymap *keymap);
     void createKeymapFile();
     void updateModifiers();
     void updateConsumedModifiers(uint32_t key);
