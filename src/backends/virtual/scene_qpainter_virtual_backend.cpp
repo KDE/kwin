@@ -61,12 +61,12 @@ VirtualQPainterBackend::~VirtualQPainterBackend() = default;
 
 void VirtualQPainterBackend::addOutput(Output *output)
 {
-    m_outputs.insert(output, std::make_shared<VirtualQPainterLayer>(output));
+    m_outputs[output] = std::make_unique<VirtualQPainterLayer>(output);
 }
 
 void VirtualQPainterBackend::removeOutput(Output *output)
 {
-    m_outputs.remove(output);
+    m_outputs.erase(output);
 }
 
 void VirtualQPainterBackend::present(Output *output)
