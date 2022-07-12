@@ -122,7 +122,7 @@ void KWinScreenEdgesConfig::monitorInit()
     m_form->monitorHideEdge(ElectricBottomLeft, true);
 
     m_form->monitorAddItem(i18n("No Action"));
-    m_form->monitorAddItem(i18n("Show Desktop"));
+    m_form->monitorAddItem(i18n("Peek at Desktop"));
     m_form->monitorAddItem(i18n("Lock Screen"));
     m_form->monitorAddItem(i18n("Show KRunner"));
     m_form->monitorAddItem(i18n("Activity Manager"));
