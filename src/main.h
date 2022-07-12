@@ -138,7 +138,6 @@ public:
         }
     }
     void updateX11Time(xcb_generic_event_t *event);
-    void createScreens();
 
     static void setCrashCount(int count);
     static bool wasCrash();
@@ -238,7 +237,6 @@ Q_SIGNALS:
     void x11ConnectionAboutToBeDestroyed();
     void xwaylandScaleChanged();
     void workspaceCreated();
-    void screensCreated();
     void platformCreated();
     void virtualTerminalCreated();
     void started();

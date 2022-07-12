@@ -149,7 +149,6 @@ void ApplicationWayland::performStartup()
     TabletModeManager::create(this);
     createPlugins();
 
-    createScreens();
     WaylandCompositor::create();
 
     connect(Compositor::self(), &Compositor::sceneCreated, platform(), &Platform::sceneInitialized);

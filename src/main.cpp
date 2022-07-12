@@ -12,15 +12,14 @@
 #include <config-kwin.h>
 
 #include "atoms.h"
-#include "platform.h"
 #include "colormanager.h"
 #include "composite.h"
 #include "cursor.h"
 #include "input.h"
 #include "inputmethod.h"
 #include "options.h"
+#include "platform.h"
 #include "pluginmanager.h"
-#include "screens.h"
 #if KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
 #endif
@@ -278,15 +277,6 @@ void Application::createInput()
     auto input = InputRedirection::create(this);
     input->init();
     m_platform->createPlatformCursor(this);
-}
-
-void Application::createScreens()
-{
-    if (Screens::self()) {
-        return;
-    }
-    Screens::create(this);
-    Q_EMIT screensCreated();
 }
 
 void Application::createAtoms()
