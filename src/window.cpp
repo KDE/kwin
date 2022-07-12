@@ -1597,7 +1597,7 @@ bool Window::startInteractiveMoveResize()
     if (QApplication::activePopupWidget() != nullptr) {
         return false; // popups have grab
     }
-    if (isFullScreen() && (screens()->count() < 2 || !isMovableAcrossScreens())) {
+    if (isFullScreen() && (kwinApp()->platform()->enabledOutputs().count() < 2 || !isMovableAcrossScreens())) {
         return false;
     }
     if (!doStartInteractiveMoveResize()) {
@@ -2079,7 +2079,7 @@ void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
                     // by moving the window slightly downwards, but it won't stuck)
                     // see bug #274466
                     // and bug #301805 for why we can't just match the titlearea against the screen
-                    if (screens()->count() > 1) { // optimization
+                    if (kwinApp()->platform()->enabledOutputs().count() > 1) { // optimization
                         // TODO: could be useful on partial screen struts (half-width panels etc.)
                         int newTitleTop = -1;
                         for (const QRect &r : strut) {

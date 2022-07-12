@@ -33,7 +33,6 @@
 #include "atoms.h"
 #include "group.h"
 #include "rules.h"
-#include "screens.h"
 #include "useractions.h"
 #include <QDebug>
 
@@ -243,7 +242,7 @@ void Workspace::setActiveWindow(Window *window)
         m_activeWindow->demandAttention(false);
 
         // activating a client can cause a non active fullscreen window to loose the ActiveLayer status on > 1 screens
-        if (screens()->count() > 1) {
+        if (kwinApp()->platform()->enabledOutputs().count() > 1) {
             for (auto it = m_allClients.begin(); it != m_allClients.end(); ++it) {
                 if (*it != m_activeWindow && (*it)->layer() == ActiveLayer && (*it)->output() == m_activeWindow->output()) {
                     (*it)->updateLayer();

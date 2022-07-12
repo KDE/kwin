@@ -29,7 +29,6 @@
 #include "input.h"
 #include "output.h"
 #include "platform.h"
-#include "screens.h"
 #include "scripting/scripting.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
@@ -370,7 +369,7 @@ void UserActionsMenu::menuAboutToShow()
     } else {
         initDesktopPopup();
     }
-    if (screens()->count() == 1 || (!m_window->isMovable() && !m_window->isMovableAcrossScreens())) {
+    if (kwinApp()->platform()->enabledOutputs().count() == 1 || (!m_window->isMovable() && !m_window->isMovableAcrossScreens())) {
         delete m_screenMenu;
         m_screenMenu = nullptr;
     } else {
