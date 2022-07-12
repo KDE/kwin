@@ -10,8 +10,8 @@
 
 #include "workspace_wrapper.h"
 #include "outline.h"
+#include "output.h"
 #include "platform.h"
-#include "screens.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
 #include "x11window.h"
@@ -49,11 +49,13 @@ WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
         connect(activities, &Activities::removed, this, &WorkspaceWrapper::activityRemoved);
     }
 #endif
-    connect(screens(), &Screens::sizeChanged, this, &WorkspaceWrapper::virtualScreenSizeChanged);
-    connect(screens(), &Screens::geometryChanged, this, &WorkspaceWrapper::virtualScreenGeometryChanged);
-    connect(screens(), &Screens::countChanged, this, [this](int previousCount, int currentCount) {
-        Q_UNUSED(previousCount)
-        Q_EMIT numberScreensChanged(currentCount);
+    connect(ws, &Workspace::geometryChanged, this, &WorkspaceWrapper::virtualScreenSizeChanged);
+    connect(ws, &Workspace::geometryChanged, this, &WorkspaceWrapper::virtualScreenGeometryChanged);
+    connect(kwinApp()->platform(), &Platform::outputEnabled, this, [this]() {
+        Q_EMIT numberScreensChanged(numScreens());
+    });
+    connect(kwinApp()->platform(), &Platform::outputDisabled, this, [this]() {
+        Q_EMIT numberScreensChanged(numScreens());
     });
     // TODO Plasma 6: Remove it.
     connect(QApplication::desktop(), &QDesktopWidget::resized, this, &WorkspaceWrapper::screenResized);
@@ -411,7 +413,7 @@ int WorkspaceWrapper::workspaceWidth() const
 
 int WorkspaceWrapper::numScreens() const
 {
-    return screens()->count();
+    return kwinApp()->platform()->enabledOutputs().count();
 }
 
 int WorkspaceWrapper::screenAt(const QPointF &pos) const
