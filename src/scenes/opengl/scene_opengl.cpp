@@ -14,20 +14,14 @@
 #include "scene_opengl.h"
 #include "openglsurfacetexture.h"
 
-#include "platform.h"
-#include "wayland_server.h"
-
 #include <kwinglplatform.h>
 #include <kwinoffscreenquickview.h>
 
 #include "composite.h"
-#include "cursor.h"
 #include "decorations/decoratedclient.h"
 #include "effects.h"
 #include "main.h"
 #include "output.h"
-#include "overlaywindow.h"
-#include "renderloop.h"
 #include "shadowitem.h"
 #include "surfaceitem.h"
 #include "utils/common.h"
@@ -37,7 +31,6 @@
 #include <cmath>
 #include <cstddef>
 
-#include <QGraphicsScale>
 #include <QMatrix4x4>
 #include <QPainter>
 #include <QStringList>
