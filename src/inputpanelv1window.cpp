@@ -96,7 +96,9 @@ void KWin::InputPanelV1Window::reposition()
 
         panelSize = panelSize.boundedTo(availableArea.size());
 
-        QRect geo(availableArea.bottomLeft() - QPoint{0, panelSize.height()}, panelSize);
+        // bottomLeft appears to be 1px off, so take an extra pixel off the
+        // input panel height, to even things back out
+        QRect geo(availableArea.bottomLeft() - QPoint{0, panelSize.height() - 1}, panelSize);
         geo.translate((availableArea.width() - panelSize.width()) / 2, availableArea.height() - outputArea.height());
         moveResize(geo);
     } break;
