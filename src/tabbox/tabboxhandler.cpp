@@ -88,7 +88,7 @@ private:
 
 TabBoxHandlerPrivate::TabBoxHandlerPrivate(TabBoxHandler *q)
     : m_qmlContext()
-    , m_qmlComponent()
+    , m_qmlComponent(nullptr)
     , m_mainItem(nullptr)
 {
     this->q = q;
@@ -289,6 +289,7 @@ QObject *TabBoxHandlerPrivate::createSwitcherItem(bool desktopMode)
                                                          "Contact your distribution about this.")
              << QStringLiteral("20");
         KProcess::startDetached(QStringLiteral("kdialog"), args);
+        m_qmlComponent.reset(nullptr);
     } else {
         QObject *object = m_qmlComponent->create(m_qmlContext.data());
         if (desktopMode) {
