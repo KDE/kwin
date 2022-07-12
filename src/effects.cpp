@@ -33,7 +33,6 @@
 #include "tabbox.h"
 #endif
 #include "screenedge.h"
-#include "screens.h"
 #include "scripting/scriptedeffect.h"
 #if KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
@@ -195,8 +194,8 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
         Q_EMIT desktopGridHeightChanged(height);
     });
     connect(Cursors::self()->mouse(), &Cursor::mouseChanged, this, &EffectsHandler::mouseChanged);
-    connect(Screens::self(), &Screens::sizeChanged, this, &EffectsHandler::virtualScreenSizeChanged);
-    connect(Screens::self(), &Screens::geometryChanged, this, &EffectsHandler::virtualScreenGeometryChanged);
+    connect(ws, &Workspace::geometryChanged, this, &EffectsHandler::virtualScreenSizeChanged);
+    connect(ws, &Workspace::geometryChanged, this, &EffectsHandler::virtualScreenGeometryChanged);
 #if KWIN_BUILD_ACTIVITIES
     if (Activities *activities = Activities::self()) {
         connect(activities, &Activities::added, this, &EffectsHandler::activityAdded);
@@ -1026,12 +1025,12 @@ int EffectsHandlerImpl::desktopGridHeight() const
 
 int EffectsHandlerImpl::workspaceWidth() const
 {
-    return desktopGridWidth() * Screens::self()->size().width();
+    return desktopGridWidth() * Workspace::self()->geometry().width();
 }
 
 int EffectsHandlerImpl::workspaceHeight() const
 {
-    return desktopGridHeight() * Screens::self()->size().height();
+    return desktopGridHeight() * Workspace::self()->geometry().height();
 }
 
 int EffectsHandlerImpl::desktopAtCoords(QPoint coords) const
@@ -1053,7 +1052,7 @@ QPoint EffectsHandlerImpl::desktopCoords(int id) const
     if (coords.x() == -1) {
         return QPoint(-1, -1);
     }
-    const QSize displaySize = Screens::self()->size();
+    const QSize displaySize = Workspace::self()->geometry().size();
     return QPoint(coords.x() * displaySize.width(), coords.y() * displaySize.height());
 }
 
@@ -1292,12 +1291,12 @@ QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const QPoint &p, int 
 
 QRect EffectsHandlerImpl::virtualScreenGeometry() const
 {
-    return Screens::self()->geometry();
+    return Workspace::self()->geometry();
 }
 
 QSize EffectsHandlerImpl::virtualScreenSize() const
 {
-    return Screens::self()->size();
+    return Workspace::self()->geometry().size();
 }
 
 void EffectsHandlerImpl::defineCursor(Qt::CursorShape shape)
