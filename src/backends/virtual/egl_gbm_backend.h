@@ -21,13 +21,19 @@ class EglGbmBackend;
 class VirtualOutputLayer : public OutputLayer
 {
 public:
-    VirtualOutputLayer(EglGbmBackend *backend);
+    VirtualOutputLayer(Output *output, EglGbmBackend *backend);
+    ~VirtualOutputLayer() override;
 
     OutputLayerBeginFrameInfo beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
+    GLTexture *texture() const;
+
 private:
     EglGbmBackend *const m_backend;
+    Output *m_output;
+    std::unique_ptr<GLFramebuffer> m_fbo;
+    std::unique_ptr<GLTexture> m_texture;
 };
 
 /**
@@ -46,17 +52,17 @@ public:
     void present(Output *output) override;
     void init() override;
 
-    OutputLayerBeginFrameInfo beginFrame();
-
 private:
     bool initializeEgl();
     bool initBufferConfigs();
     bool initRenderingContext();
+
+    void addOutput(Output *output);
+    void removeOutput(Output *output);
+
     VirtualBackend *m_backend;
-    GLTexture *m_backBuffer = nullptr;
-    GLFramebuffer *m_fbo = nullptr;
     int m_frameCounter = 0;
-    std::unique_ptr<VirtualOutputLayer> m_layer;
+    std::map<Output *, std::unique_ptr<VirtualOutputLayer>> m_outputs;
 };
 
 } // namespace

@@ -12,7 +12,6 @@
 #include "basiceglsurfacetexture_wayland.h"
 #include "composite.h"
 #include "options.h"
-#include "screens.h"
 #include "softwarevsyncmonitor.h"
 #include "virtual_backend.h"
 #include "virtual_output.h"
@@ -30,27 +29,48 @@
 namespace KWin
 {
 
-VirtualOutputLayer::VirtualOutputLayer(EglGbmBackend *backend)
+VirtualOutputLayer::VirtualOutputLayer(Output *output, EglGbmBackend *backend)
     : m_backend(backend)
+    , m_output(output)
 {
+}
+
+VirtualOutputLayer::~VirtualOutputLayer() = default;
+
+GLTexture *VirtualOutputLayer::texture() const
+{
+    return m_texture.get();
 }
 
 OutputLayerBeginFrameInfo VirtualOutputLayer::beginFrame()
 {
-    return m_backend->beginFrame();
+    m_backend->makeCurrent();
+
+    const QSize nativeSize = m_output->geometry().size() * m_output->scale();
+    if (!m_texture || m_texture->size() != nativeSize) {
+        m_fbo.reset();
+        m_texture = std::make_unique<GLTexture>(GL_RGB8, nativeSize);
+        m_fbo = std::make_unique<GLFramebuffer>(m_texture.get());
+    }
+
+    GLFramebuffer::pushFramebuffer(m_fbo.get());
+    return OutputLayerBeginFrameInfo{
+        .renderTarget = RenderTarget(m_fbo.get()),
+        .repaint = infiniteRegion(),
+    };
 }
 
 bool VirtualOutputLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(renderedRegion)
     Q_UNUSED(damagedRegion)
+    GLFramebuffer::popFramebuffer();
     return true;
 }
 
 EglGbmBackend::EglGbmBackend(VirtualBackend *b)
     : AbstractEglBackend()
     , m_backend(b)
-    , m_layer(new VirtualOutputLayer(this))
 {
     // Egl is always direct rendering
     setIsDirectRendering(true);
@@ -58,11 +78,7 @@ EglGbmBackend::EglGbmBackend(VirtualBackend *b)
 
 EglGbmBackend::~EglGbmBackend()
 {
-    while (GLFramebuffer::currentFramebuffer()) {
-        GLFramebuffer::popFramebuffer();
-    }
-    delete m_fbo;
-    delete m_backBuffer;
+    m_outputs.clear();
     cleanup();
 }
 
@@ -101,18 +117,6 @@ void EglGbmBackend::init()
     }
 
     initKWinGL();
-
-    m_backBuffer = new GLTexture(GL_RGB8, screens()->size().width(), screens()->size().height());
-    m_fbo = new GLFramebuffer(m_backBuffer);
-    if (!m_fbo->valid()) {
-        setFailed("Could not create framebuffer object");
-        return;
-    }
-    GLFramebuffer::pushFramebuffer(m_fbo);
-    if (!GLFramebuffer::currentFramebuffer()) {
-        setFailed("Failed to bind framebuffer object");
-        return;
-    }
     if (checkGLError("Init")) {
         setFailed("Error during init of EglGbmBackend");
         return;
@@ -120,6 +124,14 @@ void EglGbmBackend::init()
 
     setSupportsBufferAge(false);
     initWayland();
+
+    const auto outputs = m_backend->enabledOutputs();
+    for (Output *output : outputs) {
+        addOutput(output);
+    }
+
+    connect(m_backend, &VirtualBackend::outputEnabled, this, &EglGbmBackend::addOutput);
+    connect(m_backend, &VirtualBackend::outputDisabled, this, &EglGbmBackend::removeOutput);
 }
 
 bool EglGbmBackend::initRenderingContext()
@@ -131,6 +143,18 @@ bool EglGbmBackend::initRenderingContext()
     }
 
     return makeCurrent();
+}
+
+void EglGbmBackend::addOutput(Output *output)
+{
+    makeCurrent();
+    m_outputs[output] = std::make_unique<VirtualOutputLayer>(output, this);
+}
+
+void EglGbmBackend::removeOutput(Output *output)
+{
+    makeCurrent();
+    m_outputs.erase(output);
 }
 
 bool EglGbmBackend::initBufferConfigs()
@@ -176,51 +200,9 @@ std::unique_ptr<SurfaceTexture> EglGbmBackend::createSurfaceTextureWayland(Surfa
     return std::make_unique<BasicEGLSurfaceTextureWayland>(this, pixmap);
 }
 
-OutputLayerBeginFrameInfo EglGbmBackend::beginFrame()
-{
-    if (!GLFramebuffer::currentFramebuffer()) {
-        GLFramebuffer::pushFramebuffer(m_fbo);
-    }
-    return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_fbo),
-        .repaint = infiniteRegion(),
-    };
-}
-
-static void convertFromGLImage(QImage &img, int w, int h)
-{
-    // from QtOpenGL/qgl.cpp
-    // SPDX-FileCopyrightText: 2010 Nokia Corporation and /or its subsidiary(-ies)
-    // see https://github.com/qt/qtbase/blob/dev/src/opengl/qgl.cpp
-    if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
-        // OpenGL gives RGBA; Qt wants ARGB
-        uint *p = reinterpret_cast<uint *>(img.bits());
-        uint *end = p + w * h;
-        while (p < end) {
-            uint a = *p << 24;
-            *p = (*p >> 8) | a;
-            p++;
-        }
-    } else {
-        // OpenGL gives ABGR (i.e. RGBA backwards); Qt wants ARGB
-        for (int y = 0; y < h; y++) {
-            uint *q = reinterpret_cast<uint *>(img.scanLine(y));
-            for (int x = 0; x < w; ++x) {
-                const uint pixel = *q;
-                *q = ((pixel << 16) & 0xff0000) | ((pixel >> 16) & 0xff)
-                    | (pixel & 0xff00ff00);
-
-                q++;
-            }
-        }
-    }
-    img = img.mirrored();
-}
-
 OutputLayer *EglGbmBackend::primaryLayer(Output *output)
 {
-    Q_UNUSED(output)
-    return m_layer.get();
+    return m_outputs[output].get();
 }
 
 void EglGbmBackend::present(Output *output)
@@ -230,12 +212,9 @@ void EglGbmBackend::present(Output *output)
     static_cast<VirtualOutput *>(output)->vsyncMonitor()->arm();
 
     if (m_backend->saveFrames()) {
-        QImage img = QImage(QSize(m_backBuffer->width(), m_backBuffer->height()), QImage::Format_ARGB32);
-        glReadnPixels(0, 0, m_backBuffer->width(), m_backBuffer->height(), GL_RGBA, GL_UNSIGNED_BYTE, img.sizeInBytes(), (GLvoid *)img.bits());
-        convertFromGLImage(img, m_backBuffer->width(), m_backBuffer->height());
-        img.save(QStringLiteral("%1/%2.png").arg(m_backend->saveFrames()).arg(QString::number(m_frameCounter++)));
+        const std::unique_ptr<VirtualOutputLayer> &layer = m_outputs[output];
+        layer->texture()->toImage().save(QStringLiteral("%1/%2.png").arg(m_backend->saveFrames()).arg(QString::number(m_frameCounter++)));
     }
-    GLFramebuffer::popFramebuffer();
 
     eglSwapBuffers(eglDisplay(), surface());
 }

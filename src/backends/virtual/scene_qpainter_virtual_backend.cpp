@@ -8,7 +8,6 @@
 */
 #include "scene_qpainter_virtual_backend.h"
 #include "cursor.h"
-#include "screens.h"
 #include "softwarevsyncmonitor.h"
 #include "virtual_backend.h"
 #include "virtual_output.h"
@@ -49,19 +48,25 @@ VirtualQPainterBackend::VirtualQPainterBackend(VirtualBackend *backend)
     : QPainterBackend()
     , m_backend(backend)
 {
-    connect(screens(), &Screens::changed, this, &VirtualQPainterBackend::createOutputs);
-    createOutputs();
+    connect(backend, &VirtualBackend::outputEnabled, this, &VirtualQPainterBackend::addOutput);
+    connect(backend, &VirtualBackend::outputDisabled, this, &VirtualQPainterBackend::removeOutput);
+
+    const auto outputs = backend->enabledOutputs();
+    for (Output *output : outputs) {
+        addOutput(output);
+    }
 }
 
 VirtualQPainterBackend::~VirtualQPainterBackend() = default;
 
-void VirtualQPainterBackend::createOutputs()
+void VirtualQPainterBackend::addOutput(Output *output)
 {
-    m_outputs.clear();
-    const auto outputs = m_backend->enabledOutputs();
-    for (const auto &output : outputs) {
-        m_outputs.insert(output, std::make_shared<VirtualQPainterLayer>(output));
-    }
+    m_outputs.insert(output, std::make_shared<VirtualQPainterLayer>(output));
+}
+
+void VirtualQPainterBackend::removeOutput(Output *output)
+{
+    m_outputs.remove(output);
 }
 
 void VirtualQPainterBackend::present(Output *output)

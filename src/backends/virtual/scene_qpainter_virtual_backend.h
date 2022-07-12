@@ -47,7 +47,8 @@ public:
     VirtualQPainterLayer *primaryLayer(Output *output) override;
 
 private:
-    void createOutputs();
+    void addOutput(Output *output);
+    void removeOutput(Output *output);
 
     QMap<Output *, std::shared_ptr<VirtualQPainterLayer>> m_outputs;
     VirtualBackend *m_backend;
