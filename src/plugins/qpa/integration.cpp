@@ -18,9 +18,9 @@
 #include "main.h"
 #include "output.h"
 #include "platform.h"
-#include "screens.h"
 
 #include <QCoreApplication>
+#include <QTimer>
 #include <QtConcurrentRun>
 
 #include <qpa/qplatformnativeinterface.h>

@@ -10,7 +10,6 @@
 #include "window.h"
 #include "eglhelpers.h"
 #include "platform.h"
-#include "screens.h"
 
 #include "internalwindow.h"
 
@@ -29,7 +28,7 @@ Window::Window(QWindow *window)
     : QPlatformWindow(window)
     , m_eglDisplay(kwinApp()->platform()->sceneEglDisplay())
     , m_windowId(++s_windowId)
-    , m_scale(std::max(qreal(1), screens()->maxScale()))
+    , m_scale(kwinApp()->devicePixelRatio())
 {
 }
 
