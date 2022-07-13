@@ -619,7 +619,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     } else {
         Output *output = nullptr;
         if (asn_data.xinerama() != -1) {
-            output = kwinApp()->platform()->findOutput(asn_data.xinerama());
+            output = workspace()->xineramaIndexToOutput(asn_data.xinerama());
         }
         if (!output) {
             output = workspace()->activeOutput();
@@ -4649,16 +4649,16 @@ QRect X11Window::fullscreenMonitorsArea(NETFullscreenMonitors requestedTopology)
 {
     QRect total;
 
-    if (auto output = kwinApp()->platform()->findOutput(requestedTopology.top)) {
+    if (auto output = workspace()->xineramaIndexToOutput(requestedTopology.top)) {
         total = total.united(output->geometry());
     }
-    if (auto output = kwinApp()->platform()->findOutput(requestedTopology.bottom)) {
+    if (auto output = workspace()->xineramaIndexToOutput(requestedTopology.bottom)) {
         total = total.united(output->geometry());
     }
-    if (auto output = kwinApp()->platform()->findOutput(requestedTopology.left)) {
+    if (auto output = workspace()->xineramaIndexToOutput(requestedTopology.left)) {
         total = total.united(output->geometry());
     }
-    if (auto output = kwinApp()->platform()->findOutput(requestedTopology.right)) {
+    if (auto output = workspace()->xineramaIndexToOutput(requestedTopology.right)) {
         total = total.united(output->geometry());
     }
 

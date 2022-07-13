@@ -2248,7 +2248,7 @@ QRectF Workspace::clientArea(clientAreaOption opt, const Output *output, const V
 
     const Output *effectiveOutput = output;
     if (is_multihead) {
-        effectiveOutput = kwinApp()->platform()->findOutput(screen_number);
+        effectiveOutput = xineramaIndexToOutput(screen_number);
     }
 
     if (auto desktopIt = m_screenAreas.constFind(desktop); desktopIt != m_screenAreas.constEnd()) {
@@ -2350,6 +2350,11 @@ int Workspace::oldDisplayWidth() const
 int Workspace::oldDisplayHeight() const
 {
     return olddisplaysize.height();
+}
+
+Output *Workspace::xineramaIndexToOutput(int index) const
+{
+    return kwinApp()->platform()->enabledOutputs().value(index);
 }
 
 Output *Workspace::activeOutput() const

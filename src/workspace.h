@@ -151,6 +151,8 @@ public:
 
     bool initializing() const;
 
+    Output *xineramaIndexToOutput(int index) const;
+
     Output *activeOutput() const;
     void setActiveOutput(Output *output);
     void setActiveOutput(const QPointF &pos);

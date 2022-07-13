@@ -768,7 +768,7 @@ void X11Window::startupIdChanged()
         workspace()->sendWindowToDesktop(this, desktop, true);
     }
     if (asn_data.xinerama() != -1) {
-        Output *output = kwinApp()->platform()->findOutput(asn_data.xinerama());
+        Output *output = workspace()->xineramaIndexToOutput(asn_data.xinerama());
         if (output) {
             workspace()->sendWindowToOutput(this, output);
         }
