@@ -39,6 +39,7 @@
 #include <netwm.h>
 
 #include <climits>
+#include <cmath>
 #include <functional>
 
 class KConfigGroup;
@@ -197,6 +198,14 @@ KWINEFFECTS_EXPORT inline QRect infiniteRegion()
 {
     // INT_MIN / 2 because width/height is used (INT_MIN+INT_MAX==-1)
     return QRect(INT_MIN / 2, INT_MIN / 2, INT_MAX, INT_MAX);
+}
+
+/**
+ * Round a vector to nearest integer.
+ */
+KWINEFFECTS_EXPORT inline QVector2D roundVector(const QVector2D &input)
+{
+    return QVector2D(std::round(input.x()), std::round(input.y()));
 }
 
 /**
