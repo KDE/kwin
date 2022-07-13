@@ -10,17 +10,12 @@
 // kwin
 #include "basiceglsurfacetexture_internal.h"
 #include "basiceglsurfacetexture_wayland.h"
-#include "composite.h"
-#include "options.h"
 #include "softwarevsyncmonitor.h"
 #include "virtual_backend.h"
 #include "virtual_output.h"
 #include <logging.h>
 // kwin libs
-#include <kwinglplatform.h>
 #include <kwinglutils.h>
-// Qt
-#include <QOpenGLContext>
 
 #ifndef EGL_PLATFORM_SURFACELESS_MESA
 #define EGL_PLATFORM_SURFACELESS_MESA 0x31DD

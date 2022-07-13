@@ -8,19 +8,13 @@
 */
 #include "virtual_backend.h"
 
-#include <config-kwin.h>
-
 #include "composite.h"
 #include "egl_gbm_backend.h"
 #include "scene_qpainter_virtual_backend.h"
 #include "session.h"
 #include "virtual_output.h"
-#include "wayland_server.h"
 // Qt
 #include <QTemporaryDir>
-// system
-#include <fcntl.h>
-#include <unistd.h>
 
 namespace KWin
 {
