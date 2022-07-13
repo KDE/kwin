@@ -201,7 +201,6 @@ void InputMethodTest::testEnableActive()
 {
     QVERIFY(!InputMethod::self()->isActive());
 
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QSignalSpy windowRemovedSpy(workspace(), &Workspace::windowRemoved);
 
     QSignalSpy activateSpy(InputMethod::self(), &InputMethod::activeChanged);
@@ -223,9 +222,9 @@ void InputMethodTest::testEnableActive()
     QVERIFY(!textInput.isNull());
     textInput->enable(surface.data());
     QVERIFY(surfaceConfigureRequestedSpy.wait());
-    QCOMPARE(windowAddedSpy.count(), 1);
 
     // Show the keyboard
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     textInput->showInputPanel();
     QVERIFY(windowAddedSpy.wait());
 
