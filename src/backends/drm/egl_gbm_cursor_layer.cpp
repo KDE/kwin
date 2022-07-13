@@ -24,7 +24,9 @@ EglGbmCursorLayer::EglGbmCursorLayer(EglGbmBackend *eglBackend, DrmPipeline *pip
 
 OutputLayerBeginFrameInfo EglGbmCursorLayer::beginFrame()
 {
-    return m_surface.startRendering(m_pipeline->gpu()->cursorSize(), m_pipeline->renderOrientation(), DrmPlane::Transformation::Rotate0, m_pipeline->cursorFormats(), GBM_BO_USE_LINEAR);
+    // some legacy drivers don't work with linear gbm buffers for the cursor
+    const auto target = m_pipeline->gpu()->atomicModeSetting() ? EglGbmLayerSurface::BufferTarget::Linear : EglGbmLayerSurface::BufferTarget::Dumb;
+    return m_surface.startRendering(m_pipeline->gpu()->cursorSize(), m_pipeline->renderOrientation(), DrmPlane::Transformation::Rotate0, m_pipeline->cursorFormats(), target);
 }
 
 void EglGbmCursorLayer::aboutToStartPainting(const QRegion &damagedRegion)
@@ -35,7 +37,9 @@ void EglGbmCursorLayer::aboutToStartPainting(const QRegion &damagedRegion)
 bool EglGbmCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(renderedRegion)
-    const auto ret = m_surface.endRendering(m_pipeline->renderOrientation(), damagedRegion);
+    // some legacy drivers don't work with linear gbm buffers for the cursor
+    const auto target = m_pipeline->gpu()->atomicModeSetting() ? EglGbmLayerSurface::BufferTarget::Linear : EglGbmLayerSurface::BufferTarget::Dumb;
+    const auto ret = m_surface.endRendering(m_pipeline->renderOrientation(), damagedRegion, target);
     if (ret.has_value()) {
         QRegion throwaway;
         std::tie(m_currentBuffer, throwaway) = ret.value();
