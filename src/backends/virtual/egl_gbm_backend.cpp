@@ -215,8 +215,6 @@ void EglGbmBackend::present(Output *output)
         const std::unique_ptr<VirtualOutputLayer> &layer = m_outputs[output];
         layer->texture()->toImage().save(QStringLiteral("%1/%2.png").arg(m_backend->saveFrames()).arg(QString::number(m_frameCounter++)));
     }
-
-    eglSwapBuffers(eglDisplay(), surface());
 }
 
 } // namespace
