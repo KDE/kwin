@@ -647,7 +647,14 @@ std::shared_ptr<DmaBufTexture> DrmBackend::createDmaBufTexture(const QSize &size
     gbm_bo_destroy(bo);
     const auto eglBackend = static_cast<EglGbmBackend *>(m_renderBackend);
     eglBackend->makeCurrent();
-    return std::make_shared<DmaBufTexture>(eglBackend->importDmaBufAsTexture(attributes), attributes);
+    if (auto texture = eglBackend->importDmaBufAsTexture(attributes)) {
+        return std::make_shared<DmaBufTexture>(texture, attributes);
+    } else {
+        for (int i = 0; i < attributes.planeCount; ++i) {
+            ::close(attributes.fd[i]);
+        }
+        return nullptr;
+    }
 }
 
 DrmGpu *DrmBackend::primaryGpu() const
