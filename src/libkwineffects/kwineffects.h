@@ -38,6 +38,7 @@
 #include <netwm.h>
 
 #include <climits>
+#include <cmath>
 #include <functional>
 #include <optional>
 
@@ -194,6 +195,14 @@ enum EffectFrameStyle {
 KWINEFFECTS_EXPORT inline QRectF scaledRect(const QRectF &rect, qreal scale)
 {
     return QRectF{rect.x() * scale, rect.y() * scale, rect.width() * scale, rect.height() * scale};
+}
+
+/**
+ * Round a vector to nearest integer.
+ */
+KWINEFFECTS_EXPORT inline QVector2D roundVector(const QVector2D &input)
+{
+    return QVector2D(std::round(input.x()), std::round(input.y()));
 }
 
 /**
