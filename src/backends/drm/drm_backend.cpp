@@ -654,7 +654,15 @@ QSharedPointer<DmaBufTexture> DrmBackend::createDmaBufTexture(const QSize &size)
         const DmaBufAttributes attributes = dmaBufAttributesForBo(bo);
         gbm_bo_destroy(bo);
 
-        return QSharedPointer<DmaBufTexture>::create(eglBackend->importDmaBufAsTexture(attributes), attributes);
+        auto texture = eglBackend->importDmaBufAsTexture(attributes);
+        if (texture) {
+            return QSharedPointer<DmaBufTexture>::create(texture, attributes);
+        } else {
+            for (int i = 0; i < attributes.planeCount; ++i) {
+                ::close(attributes.fd[i]);
+            }
+            return nullptr;
+        }
     } else {
         return nullptr;
     }
