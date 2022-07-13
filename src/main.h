@@ -251,7 +251,6 @@ Q_SIGNALS:
     void x11ConnectionAboutToBeDestroyed();
     void xwaylandScaleChanged();
     void workspaceCreated();
-    void platformCreated();
     void virtualTerminalCreated();
     void started();
 

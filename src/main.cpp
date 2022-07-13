@@ -557,7 +557,6 @@ void Application::initPlatform(const KPluginMetaData &plugin)
     m_platform = qobject_cast<Platform *>(loader.instance());
     if (m_platform) {
         m_platform->setParent(this);
-        Q_EMIT platformCreated();
     } else {
         qCWarning(KWIN_CORE) << "Could not create plugin" << plugin.name() << "error:" << loader.errorString();
     }
