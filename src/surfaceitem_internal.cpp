@@ -9,6 +9,8 @@
 #include "internalwindow.h"
 #include "scene.h"
 
+#include <QOpenGLFramebufferObject>
+
 namespace KWin
 {
 
@@ -71,9 +73,11 @@ void SurfacePixmapInternal::update()
 
     if (window->internalFramebufferObject()) {
         m_fbo = window->internalFramebufferObject();
+        m_size = m_fbo->size();
         m_hasAlphaChannel = true;
     } else if (!window->internalImageObject().isNull()) {
         m_rasterBuffer = window->internalImageObject();
+        m_size = m_rasterBuffer.size();
         m_hasAlphaChannel = m_rasterBuffer.hasAlphaChannel();
     }
 }

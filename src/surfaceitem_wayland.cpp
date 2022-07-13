@@ -193,6 +193,7 @@ void SurfacePixmapWayland::setBuffer(KWaylandServer::ClientBuffer *buffer)
     if (m_buffer) {
         m_buffer->ref();
         m_hasAlphaChannel = m_buffer->hasAlphaChannel();
+        m_size = m_buffer->size();
     }
 }
 
