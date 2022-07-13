@@ -156,6 +156,7 @@ Item {
         width: PlasmaCore.Units.iconSizes.large
         height: width
         source: thumb.client.icon
+        usesPlasmaTheme: false
         anchors.horizontalCenter: thumbSource.horizontalCenter
         anchors.bottom: thumbSource.bottom
         anchors.bottomMargin: -height / 4
