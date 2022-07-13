@@ -1348,7 +1348,7 @@ void Workspace::slotSwitchToScreen()
     if (screenSwitchImpossible()) {
         return;
     }
-    Output *output = kwinApp()->platform()->findOutput(senderValue(sender()));
+    Output *output = kwinApp()->platform()->enabledOutputs().value(senderValue(sender()));
     if (output) {
         switchToOutput(output);
     }
@@ -1373,7 +1373,7 @@ void Workspace::slotSwitchToPrevScreen()
 void Workspace::slotWindowToScreen()
 {
     if (USABLE_ACTIVE_WINDOW) {
-        Output *output = kwinApp()->platform()->findOutput(senderValue(sender()));
+        Output *output = kwinApp()->platform()->enabledOutputs().value(senderValue(sender()));
         if (output) {
             sendWindowToOutput(m_activeWindow, output);
         }

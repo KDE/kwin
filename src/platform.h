@@ -312,7 +312,6 @@ public:
     {
         return Outputs();
     }
-    Output *findOutput(int screenId) const;
     Output *findOutput(const QUuid &uuid) const;
     Output *findOutput(const QString &name) const;
     Output *outputAt(const QPointF &pos) const;

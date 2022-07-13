@@ -111,7 +111,7 @@ void Screens::setCount(int count)
 
 Output *Screens::findOutput(int screen) const
 {
-    return kwinApp()->platform()->findOutput(screen);
+    return kwinApp()->platform()->enabledOutputs().value(screen);
 }
 
 } // namespace

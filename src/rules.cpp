@@ -849,7 +849,7 @@ Output *WindowRules::checkOutput(Output *output, bool init) const
             break;
         }
     }
-    Output *ruleOutput = kwinApp()->platform()->findOutput(ret);
+    Output *ruleOutput = kwinApp()->platform()->enabledOutputs().value(ret);
     return ruleOutput ? ruleOutput : output;
 }
 

@@ -301,7 +301,7 @@ static Output *resolveOutput(int outputId)
     if (outputId == -1) {
         return workspace()->activeOutput();
     }
-    return kwinApp()->platform()->findOutput(outputId);
+    return kwinApp()->platform()->enabledOutputs().value(outputId);
 }
 
 QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, int outputId, int desktopId) const
@@ -438,7 +438,7 @@ QSize WorkspaceWrapper::virtualScreenSize() const
 
 void WorkspaceWrapper::sendClientToScreen(Window *client, int screen)
 {
-    Output *output = kwinApp()->platform()->findOutput(screen);
+    Output *output = kwinApp()->platform()->enabledOutputs().value(screen);
     if (output) {
         workspace()->sendWindowToOutput(client, output);
     }

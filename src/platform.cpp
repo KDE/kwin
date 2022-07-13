@@ -191,11 +191,6 @@ bool Platform::applyOutputChanges(const OutputConfiguration &config)
     return true;
 }
 
-Output *Platform::findOutput(int screenId) const
-{
-    return enabledOutputs().value(screenId);
-}
-
 Output *Platform::findOutput(const QUuid &uuid) const
 {
     const auto outs = outputs();
