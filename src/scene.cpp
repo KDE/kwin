@@ -411,28 +411,8 @@ void Scene::postPaint()
 
 static QMatrix4x4 createProjectionMatrix(const QRect &rect)
 {
-    // Create a perspective projection with a 60° field-of-view,
-    // and an aspect ratio of 1.0.
     QMatrix4x4 ret;
-    ret.setToIdentity();
-    const float fovY = std::tan(qDegreesToRadians(60.0f) / 2);
-    const float aspect = 1.0f;
-    const float zNear = 0.1f;
-    const float zFar = 100.0f;
-
-    const float yMax = zNear * fovY;
-    const float yMin = -yMax;
-    const float xMin = yMin * aspect;
-    const float xMax = yMax * aspect;
-
-    ret.frustum(xMin, xMax, yMin, yMax, zNear, zFar);
-
-    const float scaleFactor = 1.1 * fovY / yMax;
-    ret.translate(xMin * scaleFactor, yMax * scaleFactor, -1.1);
-    ret.scale((xMax - xMin) * scaleFactor / rect.width(),
-              -(yMax - yMin) * scaleFactor / rect.height(),
-              0.001);
-    ret.translate(-rect.x(), -rect.y());
+    ret.ortho(QRectF(rect.left(), rect.top(), rect.width(), rect.height()));
     return ret;
 }
 
