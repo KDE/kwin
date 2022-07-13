@@ -1005,52 +1005,84 @@ public:
     bool swipeGestureBegin(int fingerCount, quint32 time) override
     {
         Q_UNUSED(time)
-        input()->shortcuts()->processSwipeStart(DeviceType::Touchpad, fingerCount);
-        return false;
+        m_touchpadGestureFingerCount = fingerCount;
+        if (m_touchpadGestureFingerCount >= 3) {
+            input()->shortcuts()->processSwipeStart(DeviceType::Touchpad, fingerCount);
+            return true;
+        } else {
+            return false;
+        }
     }
     bool swipeGestureUpdate(const QSizeF &delta, quint32 time) override
     {
         Q_UNUSED(time)
-        input()->shortcuts()->processSwipeUpdate(DeviceType::Touchpad, delta);
-        return false;
+        if (m_touchpadGestureFingerCount >= 3) {
+            input()->shortcuts()->processSwipeUpdate(DeviceType::Touchpad, delta);
+            return true;
+        } else {
+            return false;
+        }
     }
     bool swipeGestureCancelled(quint32 time) override
     {
         Q_UNUSED(time)
-        input()->shortcuts()->processSwipeCancel(DeviceType::Touchpad);
-        return false;
+        if (m_touchpadGestureFingerCount >= 3) {
+            input()->shortcuts()->processSwipeCancel(DeviceType::Touchpad);
+            return true;
+        } else {
+            return false;
+        }
     }
     bool swipeGestureEnd(quint32 time) override
     {
         Q_UNUSED(time)
-        input()->shortcuts()->processSwipeEnd(DeviceType::Touchpad);
-        return false;
+        if (m_touchpadGestureFingerCount >= 3) {
+            input()->shortcuts()->processSwipeEnd(DeviceType::Touchpad);
+            return true;
+        } else {
+            return false;
+        }
     }
     bool pinchGestureBegin(int fingerCount, quint32 time) override
     {
         Q_UNUSED(time);
-        if (fingerCount >= 3) {
+        m_touchpadGestureFingerCount = fingerCount;
+        if (m_touchpadGestureFingerCount >= 3) {
             input()->shortcuts()->processPinchStart(fingerCount);
+            return true;
+        } else {
+            return false;
         }
-        return false;
     }
     bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time) override
     {
         Q_UNUSED(time);
-        input()->shortcuts()->processPinchUpdate(scale, angleDelta, delta);
-        return false;
+        if (m_touchpadGestureFingerCount >= 3) {
+            input()->shortcuts()->processPinchUpdate(scale, angleDelta, delta);
+            return true;
+        } else {
+            return false;
+        }
     }
     bool pinchGestureEnd(quint32 time) override
     {
         Q_UNUSED(time);
-        input()->shortcuts()->processPinchEnd();
-        return false;
+        if (m_touchpadGestureFingerCount >= 3) {
+            input()->shortcuts()->processPinchEnd();
+            return true;
+        } else {
+            return false;
+        }
     }
     bool pinchGestureCancelled(quint32 time) override
     {
         Q_UNUSED(time);
-        input()->shortcuts()->processPinchCancel();
-        return false;
+        if (m_touchpadGestureFingerCount >= 3) {
+            input()->shortcuts()->processPinchCancel();
+            return true;
+        } else {
+            return false;
+        }
     }
     bool touchDown(qint32 id, const QPointF &pos, quint32 time) override
     {
@@ -1159,6 +1191,7 @@ private:
     uint32_t m_lastTouchDownTime = 0;
     QPointF m_lastAverageDistance;
     QMap<int32_t, QPointF> m_touchPoints;
+    int m_touchpadGestureFingerCount = 0;
 
     QTimer m_powerDown;
 };
