@@ -653,7 +653,7 @@ bool XdgToplevelWindow::isMovable() const
     if (isRequestedFullScreen()) {
         return false;
     }
-    if (isSpecialWindow() && !isSplash() && !isToolbar() && !isAppletPopup()) {
+    if ((isSpecialWindow() && !isSplash() && !isToolbar()) || isAppletPopup()) {
         return false;
     }
     if (rules()->checkPosition(invalidPoint) != invalidPoint) {
