@@ -113,6 +113,8 @@ void RenderLoopPrivate::maybeScheduleRepaint()
 void RenderLoopPrivate::notifyFrameFailed()
 {
     Q_ASSERT(pendingFrameCount > 0);
+
+    qDebug() << "end frame1";
     pendingFrameCount--;
 
     if (!inhibitCount) {
@@ -124,6 +126,7 @@ void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp)
 {
     Q_ASSERT(pendingFrameCount > 0);
     pendingFrameCount--;
+    qDebug() << "end frame2";
 
     if (lastPresentationTimestamp <= timestamp) {
         lastPresentationTimestamp = timestamp;
@@ -195,6 +198,7 @@ void RenderLoop::beginFrame()
     d->pendingRepaint = false;
     d->pendingFrameCount++;
     d->renderJournal.beginFrame();
+    qDebug() << "begin frame";
 }
 
 void RenderLoop::endFrame()

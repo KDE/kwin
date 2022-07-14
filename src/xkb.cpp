@@ -25,6 +25,7 @@
 #include <xkbcommon/xkbcommon-keysyms.h>
 // system
 #include <bitset>
+#include <qscopeguard.h>
 #include <sys/mman.h>
 #include <unistd.h>
 
@@ -222,6 +223,9 @@ xkb_keymap *Xkb::loadDefaultKeymap()
 
 void Xkb::installKeymap(int fd, uint32_t size)
 {
+    auto cleanup = qScopeGuard([fd] {
+        close(fd);
+    });
     if (!m_context) {
         return;
     }

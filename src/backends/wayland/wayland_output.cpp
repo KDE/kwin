@@ -37,6 +37,7 @@ WaylandOutput::WaylandOutput(const QString &name, Surface *surface, WaylandBacke
     });
 
     connect(surface, &Surface::frameRendered, this, [this] {
+        qDebug() << "rendered";
         m_rendered = true;
         Q_EMIT frameRendered();
     });

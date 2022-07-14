@@ -506,8 +506,8 @@ WaylandSeat::~WaylandSeat()
 
 void WaylandSeat::createPointerDevice()
 {
-    m_pointerDevice = new WaylandInputDevice(m_seat->createPointer(), this);
-    Q_EMIT deviceAdded(m_pointerDevice);
+//     m_pointerDevice = new WaylandInputDevice(m_seat->createPointer(), this);
+//     Q_EMIT deviceAdded(m_pointerDevice);
 }
 
 void WaylandSeat::destroyPointerDevice()
@@ -679,35 +679,35 @@ bool WaylandBackend::initialize()
         m_seat = new WaylandSeat(m_registry->createSeat(seatInterface.name, std::min(2u, seatInterface.version), this), this);
         Q_EMIT seatCreated();
 
-        m_waylandCursor = new WaylandCursor(this);
+//         m_waylandCursor = new WaylandCursor(this);
     });
     if (!deviceIdentifier().isEmpty()) {
         m_connectionThreadObject->setSocketName(deviceIdentifier());
     }
-    connect(Cursors::self(), &Cursors::currentCursorChanged, this, [this]() {
-        if (!m_seat || !m_waylandCursor) {
-            return;
-        }
-        m_waylandCursor->installImage();
-    });
-    connect(Cursors::self(), &Cursors::positionChanged, this, [this](Cursor *cursor, const QPoint &position) {
-        Q_UNUSED(cursor)
-        if (m_waylandCursor) {
-            m_waylandCursor->move(position);
-        }
-    });
-    connect(this, &WaylandBackend::pointerLockChanged, this, [this](bool locked) {
-        delete m_waylandCursor;
-        if (locked) {
-            m_waylandCursor = new WaylandSubSurfaceCursor(this);
-            m_waylandCursor->move(input()->pointer()->pos());
-            m_seat->createRelativePointer();
-        } else {
-            m_seat->destroyRelativePointer();
-            m_waylandCursor = new WaylandCursor(this);
-        }
-        m_waylandCursor->init();
-    });
+//     connect(Cursors::self(), &Cursors::currentCursorChanged, this, [this]() {
+//         if (!m_seat || !m_waylandCursor) {
+//             return;
+//         }
+//         m_waylandCursor->installImage();
+//     });
+//     connect(Cursors::self(), &Cursors::positionChanged, this, [this](Cursor *cursor, const QPoint &position) {
+//         Q_UNUSED(cursor)
+//         if (m_waylandCursor) {
+//             m_waylandCursor->move(position);
+//         }
+//     });
+//     connect(this, &WaylandBackend::pointerLockChanged, this, [this](bool locked) {
+//         delete m_waylandCursor;
+//         if (locked) {
+//             m_waylandCursor = new WaylandSubSurfaceCursor(this);
+//             m_waylandCursor->move(input()->pointer()->pos());
+//             m_seat->createRelativePointer();
+//         } else {
+//             m_seat->destroyRelativePointer();
+//             m_waylandCursor = new WaylandCursor(this);
+//         }
+//         m_waylandCursor->init();
+//     });
     initConnection();
     return true;
 }

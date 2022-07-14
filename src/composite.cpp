@@ -632,6 +632,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         return;
     }
 
+    qDebug() << "compositing{";
     Output *output = findOutput(renderLoop);
     OutputLayer *outputLayer = m_backend->primaryLayer(output);
     fTraceDuration("Paint (", output->name(), ")");
@@ -687,6 +688,8 @@ void Compositor::composite(RenderLoop *renderLoop)
             }
         }
     }
+
+    qDebug() << "compositing}";
 }
 
 void Compositor::prePaintPass(RenderLayer *layer)

@@ -394,6 +394,7 @@ void SurfaceInterface::frameRendered(quint32 msec)
     wl_resource *resource;
     wl_resource *tmp;
 
+    qDebug() << "surface123: sending done" << this << wl_list_length(&d->current.frameCallbacks);
     wl_resource_for_each_safe (resource, tmp, &d->current.frameCallbacks) {
         wl_callback_send_done(resource, msec);
         wl_resource_destroy(resource);
@@ -572,6 +573,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         confinedPointerPrivate->commit();
     }
 
+    qDebug() << "surface123: swapping buffer" << current.buffer << bufferRef;
     if (bufferRef != current.buffer) {
         if (bufferRef) {
             bufferRef->unref();

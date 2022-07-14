@@ -40,6 +40,7 @@ void SurfaceItem::setSurfaceToBufferMatrix(const QMatrix4x4 &matrix)
 
 void SurfaceItem::addDamage(const QRegion &region)
 {
+    qDebug() << "damaged" << region;
     m_damage += region;
     scheduleRepaint(region);
 
