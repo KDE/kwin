@@ -11,7 +11,6 @@
 #include "basiceglsurfacetexture_internal.h"
 #include "basiceglsurfacetexture_wayland.h"
 #include "main.h"
-#include "screens.h"
 #include "softwarevsyncmonitor.h"
 #include "x11windowed_backend.h"
 #include "x11windowed_output.h"

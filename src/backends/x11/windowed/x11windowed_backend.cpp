@@ -13,7 +13,6 @@
 #include "egl_x11_backend.h"
 #include "logging.h"
 #include "scene_qpainter_x11_backend.h"
-#include "screens.h"
 #include "session.h"
 #include "utils/xcbutils.h"
 #include "wayland_server.h"
@@ -516,7 +515,7 @@ void X11WindowedBackend::handleClientMessage(xcb_client_message_event_t *event)
                 Q_EMIT outputDisabled(removedOutput);
                 Q_EMIT outputRemoved(removedOutput);
                 delete removedOutput;
-                QMetaObject::invokeMethod(screens(), "updateCount");
+                Q_EMIT screensQueried();
             }
         }
     }

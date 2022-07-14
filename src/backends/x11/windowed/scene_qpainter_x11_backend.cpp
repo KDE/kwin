@@ -8,7 +8,6 @@
 */
 #include "scene_qpainter_x11_backend.h"
 #include "main.h"
-#include "screens.h"
 #include "softwarevsyncmonitor.h"
 #include "x11windowed_backend.h"
 #include "x11windowed_output.h"
@@ -52,8 +51,13 @@ X11WindowedQPainterBackend::X11WindowedQPainterBackend(X11WindowedBackend *backe
     : QPainterBackend()
     , m_backend(backend)
 {
-    connect(screens(), &Screens::changed, this, &X11WindowedQPainterBackend::createOutputs);
-    createOutputs();
+    const auto outputs = m_backend->enabledOutputs();
+    for (Output *output : outputs) {
+        addOutput(output);
+    }
+
+    connect(backend, &X11WindowedBackend::outputEnabled, this, &X11WindowedQPainterBackend::addOutput);
+    connect(backend, &X11WindowedBackend::outputDisabled, this, &X11WindowedQPainterBackend::removeOutput);
 }
 
 X11WindowedQPainterBackend::~X11WindowedQPainterBackend()
@@ -64,13 +68,14 @@ X11WindowedQPainterBackend::~X11WindowedQPainterBackend()
     }
 }
 
-void X11WindowedQPainterBackend::createOutputs()
+void X11WindowedQPainterBackend::addOutput(Output *output)
 {
-    m_outputs.clear();
-    const auto &outputs = m_backend->outputs();
-    for (const auto &x11Output : outputs) {
-        m_outputs[x11Output] = std::make_shared<X11WindowedQPainterOutput>(x11Output, m_backend->windowForScreen(x11Output));
-    }
+    m_outputs[output] = std::make_shared<X11WindowedQPainterOutput>(output, m_backend->windowForScreen(output));
+}
+
+void X11WindowedQPainterBackend::removeOutput(Output *output)
+{
+    m_outputs.remove(output);
 }
 
 void X11WindowedQPainterBackend::present(Output *output)
