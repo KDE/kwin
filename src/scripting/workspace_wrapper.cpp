@@ -418,7 +418,7 @@ int WorkspaceWrapper::numScreens() const
 
 int WorkspaceWrapper::screenAt(const QPointF &pos) const
 {
-    return kwinApp()->platform()->enabledOutputs().indexOf(kwinApp()->platform()->outputAt(pos.toPoint()));
+    return kwinApp()->platform()->enabledOutputs().indexOf(kwinApp()->platform()->outputAt(pos));
 }
 
 int WorkspaceWrapper::activeScreen() const

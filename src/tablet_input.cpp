@@ -155,7 +155,7 @@ void TabletInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *
     const auto pos = m_lastPosition - now->window()->pos();
     QHoverEvent event(QEvent::HoverEnter, pos, pos);
     QCoreApplication::instance()->sendEvent(now->decoration(), &event);
-    now->window()->processDecorationMove(pos.toPoint(), m_lastPosition.toPoint());
+    now->window()->processDecorationMove(pos, m_lastPosition);
 
     m_decorationGeometryConnection = connect(
         decoration()->window(), &Window::frameGeometryChanged, this, [this]() {

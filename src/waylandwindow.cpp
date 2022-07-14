@@ -162,6 +162,10 @@ bool WaylandWindow::belongsToDesktop() const
 void WaylandWindow::updateClientOutputs()
 {
     surface()->setOutputs(waylandServer()->display()->outputsIntersecting(frameGeometry().toAlignedRect()));
+    auto output = kwinApp()->platform()->outputAt(frameGeometry().center());
+    if (output) {
+        surface()->setPreferredScale(output->scale());
+    }
 }
 
 void WaylandWindow::updateIcon()

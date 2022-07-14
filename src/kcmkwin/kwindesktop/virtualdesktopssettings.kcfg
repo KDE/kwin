@@ -7,7 +7,7 @@
   <group name="Windows">
     <entry name="rollOverDesktops" key="RollOverDesktops" type="bool">
       <label>Whether or not, we circle through the virtual desktop when moving from one to the next</label>
-      <default>true</default>
+      <default>false</default>
     </entry>
   </group>
   <group name="Plugins">
