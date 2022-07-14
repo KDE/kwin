@@ -21,26 +21,26 @@
 namespace KWin
 {
 
-EglX11Output::EglX11Output(EglX11Backend *backend, Output *output, EGLSurface surface)
+X11WindowedEglOutput::X11WindowedEglOutput(X11WindowedEglBackend *backend, Output *output, EGLSurface surface)
     : m_eglSurface(surface)
     , m_output(output)
     , m_backend(backend)
 {
 }
 
-EglX11Output::~EglX11Output()
+X11WindowedEglOutput::~X11WindowedEglOutput()
 {
     eglDestroySurface(m_backend->eglDisplay(), m_eglSurface);
 }
 
-void EglX11Output::ensureFbo()
+void X11WindowedEglOutput::ensureFbo()
 {
     if (!m_fbo || m_fbo->size() != m_output->pixelSize()) {
         m_fbo.reset(new GLFramebuffer(0, m_output->pixelSize()));
     }
 }
 
-OutputLayerBeginFrameInfo EglX11Output::beginFrame()
+OutputLayerBeginFrameInfo X11WindowedEglOutput::beginFrame()
 {
     eglMakeCurrent(m_backend->eglDisplay(), m_eglSurface, m_eglSurface, m_backend->context());
     ensureFbo();
@@ -51,7 +51,7 @@ OutputLayerBeginFrameInfo EglX11Output::beginFrame()
     };
 }
 
-bool EglX11Output::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool X11WindowedEglOutput::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(renderedRegion)
     m_lastDamage = damagedRegion;
@@ -59,25 +59,25 @@ bool EglX11Output::endFrame(const QRegion &renderedRegion, const QRegion &damage
     return true;
 }
 
-EGLSurface EglX11Output::surface() const
+EGLSurface X11WindowedEglOutput::surface() const
 {
     return m_eglSurface;
 }
 
-QRegion EglX11Output::lastDamage() const
+QRegion X11WindowedEglOutput::lastDamage() const
 {
     return m_lastDamage;
 }
 
-EglX11Backend::EglX11Backend(X11WindowedBackend *backend)
+X11WindowedEglBackend::X11WindowedEglBackend(X11WindowedBackend *backend)
     : EglOnXBackend(backend->connection(), backend->display(), backend->rootWindow(), backend->screenNumer(), XCB_WINDOW_NONE)
     , m_backend(backend)
 {
 }
 
-EglX11Backend::~EglX11Backend() = default;
+X11WindowedEglBackend::~X11WindowedEglBackend() = default;
 
-void EglX11Backend::init()
+void X11WindowedEglBackend::init()
 {
     EglOnXBackend::init();
 
@@ -86,12 +86,12 @@ void EglX11Backend::init()
     }
 }
 
-void EglX11Backend::cleanupSurfaces()
+void X11WindowedEglBackend::cleanupSurfaces()
 {
     m_outputs.clear();
 }
 
-bool EglX11Backend::createSurfaces()
+bool X11WindowedEglBackend::createSurfaces()
 {
     const auto &outputs = m_backend->outputs();
     for (const auto &output : outputs) {
@@ -99,7 +99,7 @@ bool EglX11Backend::createSurfaces()
         if (s == EGL_NO_SURFACE) {
             return false;
         }
-        m_outputs[output] = std::make_shared<EglX11Output>(this, output, s);
+        m_outputs[output] = std::make_shared<X11WindowedEglOutput>(this, output, s);
     }
     if (m_outputs.isEmpty()) {
         return false;
@@ -108,7 +108,7 @@ bool EglX11Backend::createSurfaces()
     return true;
 }
 
-void EglX11Backend::present(Output *output)
+void X11WindowedEglBackend::present(Output *output)
 {
     static_cast<X11WindowedOutput *>(output)->vsyncMonitor()->arm();
 
@@ -116,7 +116,7 @@ void EglX11Backend::present(Output *output)
     presentSurface(renderOutput->surface(), renderOutput->lastDamage(), output->geometry());
 }
 
-void EglX11Backend::presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry)
+void X11WindowedEglBackend::presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry)
 {
     if (damage.isEmpty()) {
         return;
@@ -134,17 +134,17 @@ void EglX11Backend::presentSurface(EGLSurface surface, const QRegion &damage, co
     }
 }
 
-OutputLayer *EglX11Backend::primaryLayer(Output *output)
+OutputLayer *X11WindowedEglBackend::primaryLayer(Output *output)
 {
     return m_outputs[output].get();
 }
 
-std::unique_ptr<SurfaceTexture> EglX11Backend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+std::unique_ptr<SurfaceTexture> X11WindowedEglBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
     return std::make_unique<BasicEGLSurfaceTextureWayland>(this, pixmap);
 }
 
-std::unique_ptr<SurfaceTexture> EglX11Backend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
+std::unique_ptr<SurfaceTexture> X11WindowedEglBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
     return std::make_unique<BasicEGLSurfaceTextureInternal>(this, pixmap);
 }

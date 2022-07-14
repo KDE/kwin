@@ -18,13 +18,13 @@ namespace KWin
 {
 
 class X11WindowedBackend;
-class EglX11Backend;
+class X11WindowedEglBackend;
 
-class EglX11Output : public OutputLayer
+class X11WindowedEglOutput : public OutputLayer
 {
 public:
-    EglX11Output(EglX11Backend *backend, Output *output, EGLSurface surface);
-    ~EglX11Output();
+    X11WindowedEglOutput(X11WindowedEglBackend *backend, Output *output, EGLSurface surface);
+    ~X11WindowedEglOutput();
 
     OutputLayerBeginFrameInfo beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
@@ -39,19 +39,19 @@ private:
     QRegion m_lastDamage;
 
     Output *const m_output;
-    EglX11Backend *const m_backend;
+    X11WindowedEglBackend *const m_backend;
 };
 
 /**
  * @brief OpenGL Backend using Egl windowing system over an X overlay window.
  */
-class EglX11Backend : public EglOnXBackend
+class X11WindowedEglBackend : public EglOnXBackend
 {
     Q_OBJECT
 
 public:
-    explicit EglX11Backend(X11WindowedBackend *backend);
-    ~EglX11Backend() override;
+    explicit X11WindowedEglBackend(X11WindowedBackend *backend);
+    ~X11WindowedEglBackend() override;
 
     std::unique_ptr<SurfaceTexture> createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
@@ -67,7 +67,7 @@ protected:
 private:
     void presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry);
 
-    QMap<Output *, std::shared_ptr<EglX11Output>> m_outputs;
+    QMap<Output *, std::shared_ptr<X11WindowedEglOutput>> m_outputs;
     X11WindowedBackend *m_backend;
 };
 

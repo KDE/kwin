@@ -664,7 +664,7 @@ X11WindowedInputDevice *X11WindowedBackend::touchDevice() const
 
 OpenGLBackend *X11WindowedBackend::createOpenGLBackend()
 {
-    return new EglX11Backend(this);
+    return new X11WindowedEglBackend(this);
 }
 
 QPainterBackend *X11WindowedBackend::createQPainterBackend()
