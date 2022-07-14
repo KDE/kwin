@@ -98,7 +98,7 @@ void TouchInputRedirection::focusUpdate(Window *focusOld, Window *focusNow)
     m_focusGeometryConnection = QMetaObject::Connection();
 
     if (focusNow && focusNow->isClient()) {
-        focusNow->pointerEnterEvent(m_lastPosition.toPoint());
+        focusNow->pointerEnterEvent(m_lastPosition);
     }
 
     auto seat = waylandServer()->seat();

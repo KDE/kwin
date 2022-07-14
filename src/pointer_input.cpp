@@ -534,7 +534,7 @@ void PointerInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl 
     auto pos = m_pos - now->window()->pos();
     QHoverEvent event(QEvent::HoverEnter, pos, pos);
     QCoreApplication::instance()->sendEvent(now->decoration(), &event);
-    now->window()->processDecorationMove(pos.toPoint(), m_pos.toPoint());
+    now->window()->processDecorationMove(pos, m_pos);
 
     m_decorationGeometryConnection = connect(
         decoration()->window(), &Window::frameGeometryChanged, this, [this]() {
@@ -565,7 +565,7 @@ void PointerInputRedirection::focusUpdate(Window *focusOld, Window *focusNow)
     m_focusGeometryConnection = QMetaObject::Connection();
 
     if (focusNow && focusNow->isClient()) {
-        focusNow->pointerEnterEvent(m_pos.toPoint());
+        focusNow->pointerEnterEvent(m_pos);
     }
 
     auto seat = waylandServer()->seat();
@@ -800,7 +800,7 @@ void PointerInputRedirection::updatePosition(const QPointF &pos)
         const QRectF unitedScreensGeometry = workspace()->geometry();
         p = confineToBoundingBox(p, unitedScreensGeometry);
         if (!screenContainsPos(p)) {
-            const Output *currentOutput = kwinApp()->platform()->outputAt(m_pos.toPoint());
+            const Output *currentOutput = kwinApp()->platform()->outputAt(m_pos);
             p = confineToBoundingBox(p, currentOutput->geometry());
         }
     }
@@ -884,14 +884,14 @@ void PointerInputRedirection::updateAfterScreenChange()
         return;
     }
     // pointer no longer on a screen, reposition to closes screen
-    const Output *output = kwinApp()->platform()->outputAt(m_pos.toPoint());
+    const Output *output = kwinApp()->platform()->outputAt(m_pos);
     // TODO: better way to get timestamps
     processMotionAbsolute(output->geometry().center(), waylandServer()->seat()->timestamp());
 }
 
 QPointF PointerInputRedirection::position() const
 {
-    return m_pos.toPoint();
+    return m_pos;
 }
 
 void PointerInputRedirection::setEffectsOverrideCursor(Qt::CursorShape shape)
