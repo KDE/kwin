@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_WAYLAND_OUTPUT_H
-#define KWIN_WAYLAND_OUTPUT_H
+#pragma once
 
 #include "output.h"
 
@@ -112,7 +111,5 @@ private:
     bool m_hasBeenConfigured = false;
 };
 
-}
-}
-
-#endif
+} // namespace Wayland
+} // namespace KWin

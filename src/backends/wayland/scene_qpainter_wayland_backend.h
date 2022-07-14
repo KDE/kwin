@@ -7,8 +7,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_SCENE_QPAINTER_WAYLAND_BACKEND_H
-#define KWIN_SCENE_QPAINTER_WAYLAND_BACKEND_H
+#pragma once
 
 #include "outputlayer.h"
 #include "qpainterbackend.h"
@@ -96,7 +95,5 @@ private:
     QMap<Output *, std::shared_ptr<WaylandQPainterOutput>> m_outputs;
 };
 
-}
-}
-
-#endif
+} // namespace Wayland
+} // namespace KWin

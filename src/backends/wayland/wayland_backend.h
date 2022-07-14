@@ -7,8 +7,8 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_WAYLAND_BACKEND_H
-#define KWIN_WAYLAND_BACKEND_H
+#pragma once
+
 #include <config-kwin.h>
 // KWin
 #include "inputbackend.h"
@@ -387,5 +387,3 @@ inline KWayland::Client::ShmPool *WaylandBackend::shmPool()
 
 } // namespace Wayland
 } // namespace KWin
-
-#endif //  KWIN_WAYLAND_BACKEND_H

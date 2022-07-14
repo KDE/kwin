@@ -6,10 +6,9 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_WAYLAND_LOGGING_H
-#define KWIN_WAYLAND_LOGGING_H
+#pragma once
+
 #include <QDebug>
 #include <QLoggingCategory>
 
 Q_DECLARE_LOGGING_CATEGORY(KWIN_WAYLAND_BACKEND)
-#endif

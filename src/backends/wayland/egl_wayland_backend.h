@@ -7,8 +7,8 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_EGL_WAYLAND_BACKEND_H
-#define KWIN_EGL_WAYLAND_BACKEND_H
+#pragma once
+
 #include "abstract_egl_backend.h"
 #include "outputlayer.h"
 #include "utils/damagejournal.h"
@@ -116,7 +116,5 @@ private:
     friend class EglWaylandTexture;
 };
 
-}
-}
-
-#endif
+} // namespace Wayland
+} // namespace KWin
