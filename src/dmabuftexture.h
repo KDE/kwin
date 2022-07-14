@@ -20,10 +20,10 @@ class GLTexture;
 class KWIN_EXPORT DmaBufTexture
 {
 public:
-    explicit DmaBufTexture(std::shared_ptr<GLTexture> texture, const DmaBufAttributes &attributes);
+    explicit DmaBufTexture(std::shared_ptr<GLTexture> texture, DmaBufAttributes &&attributes);
     virtual ~DmaBufTexture();
 
-    DmaBufAttributes attributes() const;
+    const DmaBufAttributes &attributes() const;
     GLTexture *texture() const;
     GLFramebuffer *framebuffer() const;
 

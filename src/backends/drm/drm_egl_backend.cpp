@@ -263,14 +263,7 @@ bool operator==(const GbmFormat &lhs, const GbmFormat &rhs)
 
 EGLImageKHR EglGbmBackend::importBufferObjectAsImage(gbm_bo *bo)
 {
-    const DmaBufAttributes dmabuf = dmaBufAttributesForBo(bo);
-    EGLImage image = importDmaBufAsImage(dmabuf);
-
-    for (int i = 0; i < dmabuf.planeCount; ++i) {
-        close(dmabuf.fd[i]);
-    }
-
-    return image;
+    return importDmaBufAsImage(dmaBufAttributesForBo(bo));
 }
 
 std::shared_ptr<GLTexture> EglGbmBackend::importBufferObjectAsTexture(gbm_bo *bo)

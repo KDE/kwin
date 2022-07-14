@@ -91,22 +91,23 @@ YuvFormat yuvFormats[] = {
        2}}}};
 
 EglDmabufBuffer::EglDmabufBuffer(EGLImage image,
-                                 const DmaBufAttributes &attrs,
+                                 DmaBufAttributes &&attrs,
                                  quint32 flags,
                                  EglDmabuf *interfaceImpl)
-    : EglDmabufBuffer(attrs, flags, interfaceImpl)
+    : EglDmabufBuffer(QVector{image}, std::move(attrs), flags, interfaceImpl)
 {
     m_importType = ImportType::Direct;
-    addImage(image);
 }
 
-EglDmabufBuffer::EglDmabufBuffer(const DmaBufAttributes &attrs,
+EglDmabufBuffer::EglDmabufBuffer(const QVector<EGLImage> &images,
+                                 DmaBufAttributes &&attrs,
                                  quint32 flags,
                                  EglDmabuf *interfaceImpl)
-    : LinuxDmaBufV1ClientBuffer(attrs, flags)
+    : LinuxDmaBufV1ClientBuffer(std::move(attrs), flags)
+    , m_images(images)
     , m_interfaceImpl(interfaceImpl)
+    , m_importType(ImportType::Conversion)
 {
-    m_importType = ImportType::Conversion;
 }
 
 EglDmabufBuffer::~EglDmabufBuffer()
@@ -119,9 +120,9 @@ void EglDmabufBuffer::setInterfaceImplementation(EglDmabuf *interfaceImpl)
     m_interfaceImpl = interfaceImpl;
 }
 
-void EglDmabufBuffer::addImage(EGLImage image)
+void EglDmabufBuffer::setImages(const QVector<EGLImage> &images)
 {
-    m_images << image;
+    m_images = images;
 }
 
 void EglDmabufBuffer::removeImages()
@@ -132,13 +133,13 @@ void EglDmabufBuffer::removeImages()
     m_images.clear();
 }
 
-KWaylandServer::LinuxDmaBufV1ClientBuffer *EglDmabuf::importBuffer(const DmaBufAttributes &attrs, quint32 flags)
+KWaylandServer::LinuxDmaBufV1ClientBuffer *EglDmabuf::importBuffer(DmaBufAttributes &&attrs, quint32 flags)
 {
     Q_ASSERT(attrs.planeCount > 0);
 
     // Try first to import as a single image
     if (auto *img = m_backend->importDmaBufAsImage(attrs)) {
-        return new EglDmabufBuffer(img, attrs, flags, this);
+        return new EglDmabufBuffer(img, std::move(attrs), flags, this);
     }
 
     // TODO: to enable this we must be able to store multiple textures per window pixmap
@@ -149,7 +150,7 @@ KWaylandServer::LinuxDmaBufV1ClientBuffer *EglDmabuf::importBuffer(const DmaBufA
     return nullptr;
 }
 
-KWaylandServer::LinuxDmaBufV1ClientBuffer *EglDmabuf::yuvImport(const DmaBufAttributes &attrs, quint32 flags)
+KWaylandServer::LinuxDmaBufV1ClientBuffer *EglDmabuf::yuvImport(DmaBufAttributes &&attrs, quint32 flags)
 {
     YuvFormat yuvFormat;
     for (YuvFormat f : yuvFormats) {
@@ -165,29 +166,27 @@ KWaylandServer::LinuxDmaBufV1ClientBuffer *EglDmabuf::yuvImport(const DmaBufAttr
         return nullptr;
     }
 
-    auto *buf = new EglDmabufBuffer(attrs, flags, this);
-
+    QVector<EGLImage> images;
     for (int i = 0; i < yuvFormat.outputPlanes; i++) {
         const int planeIndex = yuvFormat.planes[i].planeIndex;
-        const DmaBufAttributes planeAttrs {
+        const DmaBufAttributes planeAttrs{
             .planeCount = 1,
             .width = attrs.width / yuvFormat.planes[i].widthDivisor,
             .height = attrs.height / yuvFormat.planes[i].heightDivisor,
             .format = yuvFormat.planes[i].format,
             .modifier = attrs.modifier,
-            .fd = {attrs.fd[planeIndex], -1, -1, -1},
+            .fd = {attrs.fd[planeIndex].duplicate()},
             .offset = {attrs.offset[planeIndex], 0, 0, 0},
             .pitch = {attrs.pitch[planeIndex], 0, 0, 0},
         };
         auto *image = m_backend->importDmaBufAsImage(planeAttrs);
         if (!image) {
-            delete buf;
             return nullptr;
         }
-        buf->addImage(image);
+        images.push_back(image);
     }
-    // TODO: add buf import properties
-    return buf;
+
+    return new EglDmabufBuffer(images, std::move(attrs), flags, this);
 }
 
 EglDmabuf *EglDmabuf::factory(AbstractEglBackend *backend)
@@ -215,7 +214,7 @@ EglDmabuf::EglDmabuf(AbstractEglBackend *backend)
     for (auto *buffer : prevBuffersSet) {
         auto *buf = static_cast<EglDmabufBuffer *>(buffer);
         buf->setInterfaceImplementation(this);
-        buf->addImage(m_backend->importDmaBufAsImage(buf->attributes()));
+        buf->setImages({m_backend->importDmaBufAsImage(buf->attributes())});
     }
     setSupportedFormatsAndModifiers();
 }

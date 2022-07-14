@@ -62,7 +62,6 @@ class LinuxDmaBufParamsV1 : public QtWaylandServer::zwp_linux_buffer_params_v1
 {
 public:
     LinuxDmaBufParamsV1(LinuxDmaBufV1ClientBufferIntegration *integration, ::wl_resource *resource);
-    ~LinuxDmaBufParamsV1() override;
 
 protected:
     void zwp_linux_buffer_params_v1_destroy_resource(Resource *resource) override;
@@ -90,9 +89,8 @@ class LinuxDmaBufV1FormatTable
 {
 public:
     LinuxDmaBufV1FormatTable(const QHash<uint32_t, QVector<uint64_t>> &supportedModifiers);
-    ~LinuxDmaBufV1FormatTable();
 
-    int fd = -1;
+    KWin::FileDescriptor fd;
     int size;
     QMap<std::pair<uint32_t, uint64_t>, uint16_t> indices;
 };

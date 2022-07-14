@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "utils/filedescriptor.h"
 #include <cstdint>
 
 namespace KWin
@@ -28,7 +29,7 @@ struct DmaBufAttributes
     uint32_t format = 0;
     uint64_t modifier = 0;
 
-    int fd[4] = {-1, -1, -1, -1};
+    FileDescriptor fd[4];
     int offset[4] = {0, 0, 0, 0};
     int pitch[4] = {0, 0, 0, 0};
 };

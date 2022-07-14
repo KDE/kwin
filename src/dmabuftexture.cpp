@@ -13,21 +13,15 @@
 namespace KWin
 {
 
-DmaBufTexture::DmaBufTexture(std::shared_ptr<GLTexture> texture, const DmaBufAttributes &attributes)
+DmaBufTexture::DmaBufTexture(std::shared_ptr<GLTexture> texture, DmaBufAttributes &&attributes)
     : m_texture(texture)
     , m_framebuffer(std::make_unique<GLFramebuffer>(texture.get()))
-    , m_attributes(attributes)
+    , m_attributes(std::move(attributes))
 {
 }
+DmaBufTexture::~DmaBufTexture() = default;
 
-DmaBufTexture::~DmaBufTexture()
-{
-    for (int i = 0; i < m_attributes.planeCount; ++i) {
-        ::close(m_attributes.fd[i]);
-    }
-}
-
-DmaBufAttributes DmaBufTexture::attributes() const
+const DmaBufAttributes &DmaBufTexture::attributes() const
 {
     return m_attributes;
 }

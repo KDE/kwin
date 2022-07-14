@@ -192,11 +192,11 @@ void ScreenCastStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
     if (dmabuff) {
         spa_data->maxsize = dmabuff->attributes().pitch[0] * stream->m_resolution.height();
 
-        const DmaBufAttributes dmabufAttribs = dmabuff->attributes();
+        const DmaBufAttributes &dmabufAttribs = dmabuff->attributes();
         Q_ASSERT(buffer->buffer->n_datas >= uint(dmabufAttribs.planeCount));
         for (int i = 0; i < dmabufAttribs.planeCount; ++i) {
             buffer->buffer->datas[i].type = SPA_DATA_DmaBuf;
-            buffer->buffer->datas[i].fd = dmabufAttribs.fd[i];
+            buffer->buffer->datas[i].fd = dmabufAttribs.fd[i].get();
             buffer->buffer->datas[i].data = nullptr;
         }
         stream->m_dmabufDataForPwBuffer.insert(buffer, dmabuff);
@@ -450,7 +450,7 @@ void ScreenCastStream::recordFrame(const QRegion &damagedRegion)
         auto &buf = m_dmabufDataForPwBuffer[buffer];
         Q_ASSERT(buf);
 
-        const DmaBufAttributes dmabufAttribs = buf->attributes();
+        const DmaBufAttributes &dmabufAttribs = buf->attributes();
         Q_ASSERT(buffer->buffer->n_datas >= uint(dmabufAttribs.planeCount));
         for (int i = 0; i < dmabufAttribs.planeCount; ++i) {
             buffer->buffer->datas[i].chunk->stride = dmabufAttribs.pitch[i];

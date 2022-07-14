@@ -28,18 +28,19 @@ public:
     };
 
     EglDmabufBuffer(EGLImage image,
-                    const DmaBufAttributes &attrs,
+                    DmaBufAttributes &&attrs,
                     quint32 flags,
                     EglDmabuf *interfaceImpl);
 
-    EglDmabufBuffer(const DmaBufAttributes &attrs,
+    EglDmabufBuffer(const QVector<EGLImage> &images,
+                    DmaBufAttributes &&attrs,
                     quint32 flags,
                     EglDmabuf *interfaceImpl);
 
     ~EglDmabufBuffer() override;
 
     void setInterfaceImplementation(EglDmabuf *interfaceImpl);
-    void addImage(EGLImage image);
+    void setImages(const QVector<EGLImage> &images);
     void removeImages();
 
     QVector<EGLImage> images() const
@@ -61,7 +62,7 @@ public:
     explicit EglDmabuf(AbstractEglBackend *backend);
     ~EglDmabuf() override;
 
-    KWaylandServer::LinuxDmaBufV1ClientBuffer *importBuffer(const DmaBufAttributes &attrs, quint32 flags) override;
+    KWaylandServer::LinuxDmaBufV1ClientBuffer *importBuffer(DmaBufAttributes &&attrs, quint32 flags) override;
 
     QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> tranches() const
     {
@@ -69,7 +70,7 @@ public:
     }
 
 private:
-    KWaylandServer::LinuxDmaBufV1ClientBuffer *yuvImport(const DmaBufAttributes &attrs, quint32 flags);
+    KWaylandServer::LinuxDmaBufV1ClientBuffer *yuvImport(DmaBufAttributes &&attrs, quint32 flags);
 
     void setSupportedFormatsAndModifiers();
 

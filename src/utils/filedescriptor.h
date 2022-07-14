@@ -22,7 +22,7 @@ public:
     FileDescriptor &operator=(FileDescriptor &&);
     ~FileDescriptor();
 
-    explicit operator bool() const;
+    bool isValid() const;
     int get() const;
     FileDescriptor duplicate() const;
 

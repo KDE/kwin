@@ -26,7 +26,7 @@ inline DmaBufAttributes dmaBufAttributesForBo(gbm_bo *bo)
 
 #if HAVE_GBM_BO_GET_FD_FOR_PLANE
     for (int i = 0; i < attributes.planeCount; ++i) {
-        attributes.fd[i] = gbm_bo_get_fd_for_plane(bo, i);
+        attributes.fd[i] = FileDescriptor{gbm_bo_get_fd_for_plane(bo, i)};
         attributes.offset[i] = gbm_bo_get_offset(bo, i);
         attributes.pitch[i] = gbm_bo_get_stride_for_plane(bo, i);
     }

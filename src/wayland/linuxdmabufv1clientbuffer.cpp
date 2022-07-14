@@ -90,15 +90,6 @@ LinuxDmaBufParamsV1::LinuxDmaBufParamsV1(LinuxDmaBufV1ClientBufferIntegration *i
 {
 }
 
-LinuxDmaBufParamsV1::~LinuxDmaBufParamsV1()
-{
-    for (int i = 0; i < m_attrs.planeCount; ++i) {
-        if (m_attrs.fd[i] != -1) {
-            close(m_attrs.fd[i]);
-        }
-    }
-}
-
 void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_destroy_resource(Resource *resource)
 {
     Q_UNUSED(resource)
@@ -130,13 +121,12 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_add(Resource *resource,
         return;
     }
 
-    if (Q_UNLIKELY(m_attrs.fd[plane_idx] != -1)) {
+    if (Q_UNLIKELY(m_attrs.fd[plane_idx].isValid())) {
         wl_resource_post_error(resource->handle, error_plane_set, "the plane index %d was already set", plane_idx);
         close(fd);
         return;
     }
-
-    m_attrs.fd[plane_idx] = fd;
+    m_attrs.fd[plane_idx] = KWin::FileDescriptor{fd};
     m_attrs.offset[plane_idx] = offset;
     m_attrs.pitch[plane_idx] = stride;
     m_attrs.modifier = (quint64(modifier_hi) << 32) | modifier_lo;
@@ -160,13 +150,11 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create(Resource *resource, 
     m_attrs.height = height;
     m_attrs.format = format;
 
-    LinuxDmaBufV1ClientBuffer *clientBuffer = m_integration->rendererInterface()->importBuffer(m_attrs, flags);
+    LinuxDmaBufV1ClientBuffer *clientBuffer = m_integration->rendererInterface()->importBuffer(std::move(m_attrs), flags);
     if (!clientBuffer) {
         send_failed(resource->handle);
         return;
     }
-
-    m_attrs = KWin::DmaBufAttributes{}; // the ownership of file descriptors has been moved to the buffer
 
     wl_resource *bufferResource = wl_resource_create(resource->client(), &wl_buffer_interface, 1, 0);
     if (!bufferResource) {
@@ -204,13 +192,11 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create_immed(Resource *reso
     m_attrs.height = height;
     m_attrs.format = format;
 
-    LinuxDmaBufV1ClientBuffer *clientBuffer = m_integration->rendererInterface()->importBuffer(m_attrs, flags);
+    LinuxDmaBufV1ClientBuffer *clientBuffer = m_integration->rendererInterface()->importBuffer(std::move(m_attrs), flags);
     if (!clientBuffer) {
         wl_resource_post_error(resource->handle, error_invalid_wl_buffer, "importing the supplied dmabufs failed");
         return;
     }
-
-    m_attrs = KWin::DmaBufAttributes{}; // the ownership of file descriptors has been moved to the buffer
 
     wl_resource *bufferResource = wl_resource_create(resource->client(), &wl_buffer_interface, 1, buffer_id);
     if (!bufferResource) {
@@ -234,7 +220,7 @@ bool LinuxDmaBufParamsV1::test(Resource *resource, uint32_t width, uint32_t heig
 
     // Check for holes in the dmabuf set (e.g. [0, 1, 3]).
     for (int i = 0; i < m_attrs.planeCount; ++i) {
-        if (m_attrs.fd[i] == -1) {
+        if (!m_attrs.fd[i].isValid()) {
             wl_resource_post_error(resource->handle, error_incomplete, "no dmabuf has been added for plane %d", i);
             return false;
         }
@@ -259,7 +245,7 @@ bool LinuxDmaBufParamsV1::test(Resource *resource, uint32_t width, uint32_t heig
 
         // Don't report an error as it might be caused by the kernel not supporting
         // seeking on dmabuf.
-        const off_t size = lseek(m_attrs.fd[i], 0, SEEK_END);
+        const off_t size = lseek(m_attrs.fd[i].get(), 0, SEEK_END);
         if (size == -1) {
             continue;
         }
@@ -366,25 +352,16 @@ void LinuxDmaBufV1ClientBufferPrivate::buffer_destroy(Resource *resource)
     wl_resource_destroy(resource->handle);
 }
 
-LinuxDmaBufV1ClientBuffer::LinuxDmaBufV1ClientBuffer(const KWin::DmaBufAttributes &attrs, quint32 flags)
+LinuxDmaBufV1ClientBuffer::LinuxDmaBufV1ClientBuffer(KWin::DmaBufAttributes &&attrs, quint32 flags)
     : ClientBuffer(*new LinuxDmaBufV1ClientBufferPrivate)
 {
     Q_D(LinuxDmaBufV1ClientBuffer);
-    d->attrs = attrs;
+    d->attrs = std::move(attrs);
     d->flags = flags;
     d->hasAlphaChannel = testAlphaChannel(attrs.format);
 }
 
-LinuxDmaBufV1ClientBuffer::~LinuxDmaBufV1ClientBuffer()
-{
-    Q_D(LinuxDmaBufV1ClientBuffer);
-    for (int i = 0; i < d->attrs.planeCount; ++i) {
-        if (d->attrs.fd[i] != -1) {
-            close(d->attrs.fd[i]);
-            d->attrs.fd[i] = -1;
-        }
-    }
-}
+LinuxDmaBufV1ClientBuffer::~LinuxDmaBufV1ClientBuffer() = default;
 
 void LinuxDmaBufV1ClientBuffer::initialize(wl_resource *resource)
 {
@@ -405,7 +382,7 @@ quint32 LinuxDmaBufV1ClientBuffer::flags() const
     return d->flags;
 }
 
-KWin::DmaBufAttributes LinuxDmaBufV1ClientBuffer::attributes() const
+const KWin::DmaBufAttributes &LinuxDmaBufV1ClientBuffer::attributes() const
 {
     Q_D(const LinuxDmaBufV1ClientBuffer);
     return d->attrs;
@@ -463,7 +440,7 @@ LinuxDmaBufV1FeedbackPrivate::LinuxDmaBufV1FeedbackPrivate(LinuxDmaBufV1ClientBu
 
 void LinuxDmaBufV1FeedbackPrivate::send(Resource *resource)
 {
-    send_format_table(resource->handle, m_bufferintegration->table->fd, m_bufferintegration->table->size);
+    send_format_table(resource->handle, m_bufferintegration->table->fd.get(), m_bufferintegration->table->size);
     QByteArray bytes;
     bytes.append(reinterpret_cast<const char *>(&m_bufferintegration->mainDevice), sizeof(dev_t));
     send_main_device(resource->handle, bytes);
@@ -529,8 +506,8 @@ LinuxDmaBufV1FormatTable::LinuxDmaBufV1FormatTable(const QHash<uint32_t, QVector
         qCWarning(KWIN_CORE) << "Failed to create keymap file:" << tmp->errorString();
         return;
     }
-    fd = open(tmp->fileName().toUtf8().constData(), O_RDONLY | O_CLOEXEC);
-    if (fd < 0) {
+    fd = KWin::FileDescriptor(open(tmp->fileName().toUtf8().constData(), O_RDONLY | O_CLOEXEC));
+    if (!fd.isValid()) {
         qCWarning(KWIN_CORE) << "Could not create readonly shm fd!" << strerror(errno);
         return;
     }
@@ -545,13 +522,6 @@ LinuxDmaBufV1FormatTable::LinuxDmaBufV1FormatTable(const QHash<uint32_t, QVector
         return;
     }
     memcpy(address, data.data(), size);
-}
-
-LinuxDmaBufV1FormatTable::~LinuxDmaBufV1FormatTable()
-{
-    if (fd != -1) {
-        close(fd);
-    }
 }
 
 } // namespace KWaylandServer

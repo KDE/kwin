@@ -58,7 +58,7 @@ void DmabufFeedback::scanoutFailed(KWaylandServer::SurfaceInterface *surface, co
     if (const auto &feedback = m_surface->dmabufFeedbackV1()) {
         const auto buffer = qobject_cast<KWaylandServer::LinuxDmaBufV1ClientBuffer *>(surface->buffer());
         Q_ASSERT(buffer);
-        const DmaBufAttributes dmabufAttrs = buffer->attributes();
+        const DmaBufAttributes &dmabufAttrs = buffer->attributes();
         if (!m_attemptedFormats[dmabufAttrs.format].contains(dmabufAttrs.modifier)) {
             m_attemptedFormats[dmabufAttrs.format] << dmabufAttrs.modifier;
             QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> scanoutTranches;
