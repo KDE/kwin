@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_X11WINDOWED_BACKEND_H
-#define KWIN_X11WINDOWED_BACKEND_H
+#pragma once
 
 #include "inputbackend.h"
 #include "inputdevice.h"
@@ -177,6 +176,4 @@ private:
     QVector<X11WindowedOutput *> m_outputs;
 };
 
-}
-
-#endif
+} // namespace KWin

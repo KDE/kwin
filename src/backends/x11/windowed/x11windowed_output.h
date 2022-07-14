@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_X11WINDOWED_OUTPUT_H
-#define KWIN_X11WINDOWED_OUTPUT_H
+#pragma once
 
 #include "output.h"
 #include <kwin_export.h>
@@ -82,6 +81,4 @@ private:
     X11WindowedBackend *m_backend;
 };
 
-}
-
-#endif
+} // namespace KWin

@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_SCENE_QPAINTER_X11_BACKEND_H
-#define KWIN_SCENE_QPAINTER_X11_BACKEND_H
+#pragma once
 
 #include "outputlayer.h"
 #include "qpainterbackend.h"
@@ -57,6 +56,4 @@ private:
     QMap<Output *, std::shared_ptr<X11WindowedQPainterOutput>> m_outputs;
 };
 
-}
-
-#endif
+} // namespace KWin

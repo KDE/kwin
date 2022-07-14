@@ -6,8 +6,8 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_EGL_X11_BACKEND_H
-#define KWIN_EGL_X11_BACKEND_H
+#pragma once
+
 #include "eglonxbackend.h"
 #include "kwinglutils.h"
 #include "outputlayer.h"
@@ -71,6 +71,4 @@ private:
     X11WindowedBackend *m_backend;
 };
 
-} // namespace
-
-#endif
+} // namespace KWin
