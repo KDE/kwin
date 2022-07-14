@@ -245,7 +245,9 @@ FocusScope {
         const nextIndex = findNextItem(heap.selectedIndex, direction);
         if (nextIndex != -1) {
             heap.selectedIndex = nextIndex;
+            return true;
         }
+        return false;
     }
 
     function selectLastItem(direction) {
@@ -260,39 +262,43 @@ FocusScope {
         }
         if (last != -1) {
             heap.selectedIndex = last;
+            return true;
         }
+        return false;
     }
 
     onActiveFocusChanged: resetSelected();
 
     Keys.onPressed: {
+        let handled = false;
         switch (event.key) {
         case Qt.Key_Up:
-            selectNextItem(WindowHeap.Direction.Up);
+            handled = selectNextItem(WindowHeap.Direction.Up);
             break;
         case Qt.Key_Down:
-            selectNextItem(WindowHeap.Direction.Down);
+            handled = selectNextItem(WindowHeap.Direction.Down);
             break;
         case Qt.Key_Left:
-            selectNextItem(WindowHeap.Direction.Left);
+            handled = selectNextItem(WindowHeap.Direction.Left);
             break;
         case Qt.Key_Right:
-            selectNextItem(WindowHeap.Direction.Right);
+            handled = selectNextItem(WindowHeap.Direction.Right);
             break;
         case Qt.Key_Home:
-            selectLastItem(WindowHeap.Direction.Left);
+            handled = selectLastItem(WindowHeap.Direction.Left);
             break;
         case Qt.Key_End:
-            selectLastItem(WindowHeap.Direction.Right);
+            handled = selectLastItem(WindowHeap.Direction.Right);
             break;
         case Qt.Key_PageUp:
-            selectLastItem(WindowHeap.Direction.Up);
+            handled = selectLastItem(WindowHeap.Direction.Up);
             break;
         case Qt.Key_PageDown:
-            selectLastItem(WindowHeap.Direction.Down);
+            handled = selectLastItem(WindowHeap.Direction.Down);
             break;
         case Qt.Key_Return:
         case Qt.Key_Space:
+            handled = true;
             let selectedItem = null;
             if (heap.selectedIndex != -1) {
                 selectedItem = windowsRepeater.itemAt(heap.selectedIndex);
@@ -317,6 +323,6 @@ FocusScope {
         default:
             return;
         }
-        event.accepted = true;
+        event.accepted = handled;
     }
 }
