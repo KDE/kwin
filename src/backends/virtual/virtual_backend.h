@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_VIRTUAL_BACKEND_H
-#define KWIN_VIRTUAL_BACKEND_H
+#pragma once
 
 #include "platform.h"
 
@@ -73,6 +72,4 @@ private:
     std::unique_ptr<Session> m_session;
 };
 
-}
-
-#endif
+} // namespace KWin

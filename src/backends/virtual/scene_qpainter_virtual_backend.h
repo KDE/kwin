@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_SCENE_QPAINTER_VIRTUAL_BACKEND_H
-#define KWIN_SCENE_QPAINTER_VIRTUAL_BACKEND_H
+#pragma once
 
 #include "outputlayer.h"
 #include "qpainterbackend.h"
@@ -55,6 +54,4 @@ private:
     int m_frameCounter = 0;
 };
 
-}
-
-#endif
+} // namespace KWin

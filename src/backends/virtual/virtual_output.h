@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_VIRTUAL_OUTPUT_H
-#define KWIN_VIRTUAL_OUTPUT_H
+#pragma once
 
 #include "output.h"
 
@@ -49,6 +48,4 @@ private:
     int m_identifier;
 };
 
-}
-
-#endif
+} // namespace KWin

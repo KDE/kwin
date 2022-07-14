@@ -6,8 +6,8 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_EGL_GBM_BACKEND_H
-#define KWIN_EGL_GBM_BACKEND_H
+#pragma once
+
 #include "abstract_egl_backend.h"
 #include "outputlayer.h"
 
@@ -65,6 +65,4 @@ private:
     std::map<Output *, std::unique_ptr<VirtualEglLayer>> m_outputs;
 };
 
-} // namespace
-
-#endif
+} // namespace KWin
