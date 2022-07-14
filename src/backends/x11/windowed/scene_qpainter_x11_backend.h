@@ -12,9 +12,9 @@
 #include "qpainterbackend.h"
 
 #include <QImage>
-#include <QMap>
 #include <QObject>
 #include <QVector>
+
 #include <memory>
 
 #include <xcb/xcb.h>
@@ -55,7 +55,7 @@ private:
 
     xcb_gcontext_t m_gc = XCB_NONE;
     X11WindowedBackend *m_backend;
-    QMap<Output *, std::shared_ptr<X11WindowedQPainterOutput>> m_outputs;
+    std::map<Output *, std::unique_ptr<X11WindowedQPainterOutput>> m_outputs;
 };
 
 } // namespace KWin

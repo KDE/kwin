@@ -70,12 +70,12 @@ X11WindowedQPainterBackend::~X11WindowedQPainterBackend()
 
 void X11WindowedQPainterBackend::addOutput(Output *output)
 {
-    m_outputs[output] = std::make_shared<X11WindowedQPainterOutput>(output, m_backend->windowForScreen(output));
+    m_outputs[output] = std::make_unique<X11WindowedQPainterOutput>(output, m_backend->windowForScreen(output));
 }
 
 void X11WindowedQPainterBackend::removeOutput(Output *output)
 {
-    m_outputs.remove(output);
+    m_outputs.erase(output);
 }
 
 void X11WindowedQPainterBackend::present(Output *output)
