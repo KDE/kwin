@@ -73,7 +73,6 @@
 #include "netinfo.h"
 #include "rules.h"
 #include "screenedge.h"
-#include "screens.h"
 #include "tabbox.h"
 #include "unmanaged.h"
 #include "utils/common.h"

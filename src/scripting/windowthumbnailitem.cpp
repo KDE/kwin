@@ -11,7 +11,6 @@
 #include "effects.h"
 #include "renderbackend.h"
 #include "scene.h"
-#include "screens.h"
 #include "scripting_logging.h"
 #include "virtualdesktops.h"
 #include "window.h"

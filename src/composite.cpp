@@ -29,7 +29,6 @@
 #include "scene.h"
 #include "scenes/opengl/scene_opengl.h"
 #include "scenes/qpainter/scene_qpainter.h"
-#include "screens.h"
 #include "shadow.h"
 #include "surfaceitem_x11.h"
 #include "unmanaged.h"
@@ -39,8 +38,8 @@
 #include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "x11window.h"
 #include "x11syncmanager.h"
+#include "x11window.h"
 
 #include <kwinglplatform.h>
 #include <kwingltexture.h>

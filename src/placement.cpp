@@ -15,7 +15,6 @@
 #include "cursor.h"
 #include "options.h"
 #include "rules.h"
-#include "screens.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
 #include "x11window.h"

@@ -13,7 +13,6 @@
 #include "input.h"
 #include "inputpanelv1window.h"
 #include "keyboard_input.h"
-#include "screens.h"
 #include "utils/common.h"
 #include "virtualkeyboard_dbus.h"
 #include "wayland_server.h"

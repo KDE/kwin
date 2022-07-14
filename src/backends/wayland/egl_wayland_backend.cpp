@@ -20,8 +20,6 @@
 #include "kwinglutils.h"
 #include "logging.h"
 #include "options.h"
-
-#include "screens.h"
 #include "wayland_server.h"
 
 #include <fcntl.h>

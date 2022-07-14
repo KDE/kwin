@@ -19,7 +19,6 @@
 #include "output.h"
 #include "platform.h"
 #include "scene.h"
-#include "screens.h"
 #include "unmanaged.h"
 #include "utils/serviceutils.h"
 #include "virtualdesktops.h"

@@ -19,7 +19,6 @@
 
 #include <QProcess>
 
-#include "screens.h"
 #include "settings.h"
 #include <QOpenGLContext>
 #include <kwinglplatform.h>

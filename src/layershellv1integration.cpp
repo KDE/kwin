@@ -8,7 +8,6 @@
 #include "layershellv1window.h"
 #include "output.h"
 #include "platform.h"
-#include "screens.h"
 #include "wayland/display.h"
 #include "wayland/layershell_v1_interface.h"
 #include "wayland_server.h"

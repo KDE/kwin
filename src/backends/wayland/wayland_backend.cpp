@@ -27,7 +27,6 @@
 #include "main.h"
 #include "pointer_input.h"
 #include "scene.h"
-#include "screens.h"
 #include "wayland_server.h"
 
 #include <KWayland/Client/buffer.h>

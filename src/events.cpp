@@ -27,7 +27,6 @@
 #include "group.h"
 #include "rules.h"
 #include "screenedge.h"
-#include "screens.h"
 #include "unmanaged.h"
 #include "useractions.h"
 #include "utils/xcbutils.h"
