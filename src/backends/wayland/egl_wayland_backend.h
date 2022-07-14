@@ -32,13 +32,13 @@ namespace Wayland
 {
 class WaylandBackend;
 class WaylandOutput;
-class EglWaylandBackend;
+class WaylandEglBackend;
 
-class EglWaylandOutput : public OutputLayer
+class WaylandEglOutput : public OutputLayer
 {
 public:
-    EglWaylandOutput(WaylandOutput *output, EglWaylandBackend *backend);
-    ~EglWaylandOutput() override;
+    WaylandEglOutput(WaylandOutput *output, WaylandEglBackend *backend);
+    ~WaylandEglOutput() override;
 
     bool init();
     void updateSize();
@@ -60,9 +60,9 @@ private:
     int m_bufferAge = 0;
     DamageJournal m_damageJournal;
     std::unique_ptr<GLFramebuffer> m_fbo;
-    EglWaylandBackend *const m_backend;
+    WaylandEglBackend *const m_backend;
 
-    friend class EglWaylandBackend;
+    friend class WaylandEglBackend;
 };
 
 /**
@@ -77,12 +77,12 @@ private:
  * repaints, which is obviously not optimal. Best solution is probably to go for buffer_age extension
  * and make it the only available solution next to fullscreen repaints.
  */
-class EglWaylandBackend : public AbstractEglBackend
+class WaylandEglBackend : public AbstractEglBackend
 {
     Q_OBJECT
 public:
-    EglWaylandBackend(WaylandBackend *b);
-    ~EglWaylandBackend() override;
+    WaylandEglBackend(WaylandBackend *b);
+    ~WaylandEglBackend() override;
 
     std::unique_ptr<SurfaceTexture> createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
@@ -108,10 +108,10 @@ private:
 
     void cleanupSurfaces() override;
 
-    void presentOnSurface(EglWaylandOutput *output, const QRegion &damagedRegion);
+    void presentOnSurface(WaylandEglOutput *output, const QRegion &damagedRegion);
 
     WaylandBackend *m_backend;
-    QMap<Output *, std::shared_ptr<EglWaylandOutput>> m_outputs;
+    QMap<Output *, std::shared_ptr<WaylandEglOutput>> m_outputs;
     bool m_havePlatformBase;
     friend class EglWaylandTexture;
 };

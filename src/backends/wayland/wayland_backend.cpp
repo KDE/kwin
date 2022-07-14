@@ -854,7 +854,7 @@ InputBackend *WaylandBackend::createInputBackend()
 OpenGLBackend *WaylandBackend::createOpenGLBackend()
 {
 #if HAVE_WAYLAND_EGL
-    return new EglWaylandBackend(this);
+    return new WaylandEglBackend(this);
 #else
     return nullptr;
 #endif

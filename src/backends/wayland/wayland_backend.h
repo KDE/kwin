@@ -68,7 +68,7 @@ namespace Wayland
 class WaylandBackend;
 class WaylandSeat;
 class WaylandOutput;
-class EglWaylandBackend;
+class WaylandEglBackend;
 
 class WaylandCursor : public QObject
 {
@@ -311,7 +311,7 @@ public:
         return m_gbmDevice;
     }
 
-    void setEglBackend(EglWaylandBackend *eglBackend)
+    void setEglBackend(WaylandEglBackend *eglBackend)
     {
         m_eglBackend = eglBackend;
     }
@@ -345,7 +345,7 @@ private:
     KWayland::Client::RelativePointerManager *m_relativePointerManager = nullptr;
     KWayland::Client::PointerConstraints *m_pointerConstraints = nullptr;
     KWayland::Client::PointerGestures *m_pointerGestures = nullptr;
-    EglWaylandBackend *m_eglBackend = nullptr;
+    WaylandEglBackend *m_eglBackend = nullptr;
 
     QThread *m_connectionThread;
     QVector<WaylandOutput *> m_outputs;

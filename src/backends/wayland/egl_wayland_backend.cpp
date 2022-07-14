@@ -64,13 +64,13 @@ static QVector<EGLint> regionToRects(const QRegion &region, Output *output)
     return rects;
 }
 
-EglWaylandOutput::EglWaylandOutput(WaylandOutput *output, EglWaylandBackend *backend)
+WaylandEglOutput::WaylandEglOutput(WaylandOutput *output, WaylandEglBackend *backend)
     : m_waylandOutput(output)
     , m_backend(backend)
 {
 }
 
-bool EglWaylandOutput::init()
+bool WaylandEglOutput::init()
 {
     auto surface = m_waylandOutput->surface();
     const QSize nativeSize = m_waylandOutput->geometry().size() * m_waylandOutput->scale();
@@ -94,24 +94,24 @@ bool EglWaylandOutput::init()
     }
     m_eglSurface = eglSurface;
 
-    connect(m_waylandOutput, &WaylandOutput::sizeChanged, this, &EglWaylandOutput::updateSize);
-    connect(m_waylandOutput, &WaylandOutput::currentModeChanged, this, &EglWaylandOutput::updateSize);
-    connect(m_waylandOutput, &WaylandOutput::geometryChanged, this, &EglWaylandOutput::resetBufferAge);
+    connect(m_waylandOutput, &WaylandOutput::sizeChanged, this, &WaylandEglOutput::updateSize);
+    connect(m_waylandOutput, &WaylandOutput::currentModeChanged, this, &WaylandEglOutput::updateSize);
+    connect(m_waylandOutput, &WaylandOutput::geometryChanged, this, &WaylandEglOutput::resetBufferAge);
 
     return true;
 }
 
-EglWaylandOutput::~EglWaylandOutput()
+WaylandEglOutput::~WaylandEglOutput()
 {
     wl_egl_window_destroy(m_overlay);
 }
 
-GLFramebuffer *EglWaylandOutput::fbo() const
+GLFramebuffer *WaylandEglOutput::fbo() const
 {
     return m_fbo.get();
 }
 
-void EglWaylandOutput::updateSize()
+void WaylandEglOutput::updateSize()
 {
     const QSize nativeSize = m_waylandOutput->geometry().size() * m_waylandOutput->scale();
     m_fbo.reset(new GLFramebuffer(0, nativeSize));
@@ -120,12 +120,12 @@ void EglWaylandOutput::updateSize()
     resetBufferAge();
 }
 
-void EglWaylandOutput::resetBufferAge()
+void WaylandEglOutput::resetBufferAge()
 {
     m_bufferAge = 0;
 }
 
-bool EglWaylandOutput::makeContextCurrent() const
+bool WaylandEglOutput::makeContextCurrent() const
 {
     if (m_eglSurface == EGL_NO_SURFACE) {
         return false;
@@ -142,7 +142,7 @@ bool EglWaylandOutput::makeContextCurrent() const
     return true;
 }
 
-OutputLayerBeginFrameInfo EglWaylandOutput::beginFrame()
+OutputLayerBeginFrameInfo WaylandEglOutput::beginFrame()
 {
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
     makeContextCurrent();
@@ -159,7 +159,7 @@ OutputLayerBeginFrameInfo EglWaylandOutput::beginFrame()
     };
 }
 
-bool EglWaylandOutput::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool WaylandEglOutput::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(renderedRegion)
     m_damageJournal.add(damagedRegion);
@@ -167,7 +167,7 @@ bool EglWaylandOutput::endFrame(const QRegion &renderedRegion, const QRegion &da
     return true;
 }
 
-void EglWaylandOutput::aboutToStartPainting(const QRegion &damage)
+void WaylandEglOutput::aboutToStartPainting(const QRegion &damage)
 {
     if (m_bufferAge > 0 && !damage.isEmpty() && m_backend->supportsPartialUpdate()) {
         QVector<EGLint> rects = regionToRects(damage, m_waylandOutput);
@@ -179,7 +179,7 @@ void EglWaylandOutput::aboutToStartPainting(const QRegion &damage)
     }
 }
 
-void EglWaylandOutput::present()
+void WaylandEglOutput::present()
 {
     m_waylandOutput->surface()->setupFrameCallback();
     m_waylandOutput->surface()->setScale(std::ceil(m_waylandOutput->scale()));
@@ -202,7 +202,7 @@ void EglWaylandOutput::present()
     }
 }
 
-EglWaylandBackend::EglWaylandBackend(WaylandBackend *b)
+WaylandEglBackend::WaylandEglBackend(WaylandBackend *b)
     : AbstractEglBackend()
     , m_backend(b)
 {
@@ -219,7 +219,7 @@ EglWaylandBackend::EglWaylandBackend(WaylandBackend *b)
     // Egl is always direct rendering
     setIsDirectRendering(true);
 
-    connect(m_backend, &WaylandBackend::outputAdded, this, &EglWaylandBackend::createEglWaylandOutput);
+    connect(m_backend, &WaylandBackend::outputAdded, this, &WaylandEglBackend::createEglWaylandOutput);
     connect(m_backend, &WaylandBackend::outputRemoved, this, [this](Output *output) {
         auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [output](const auto &o) {
             return o->m_waylandOutput == output;
@@ -233,19 +233,19 @@ EglWaylandBackend::EglWaylandBackend(WaylandBackend *b)
     b->setEglBackend(this);
 }
 
-EglWaylandBackend::~EglWaylandBackend()
+WaylandEglBackend::~WaylandEglBackend()
 {
     cleanup();
 }
 
-void EglWaylandBackend::cleanupSurfaces()
+void WaylandEglBackend::cleanupSurfaces()
 {
     m_outputs.clear();
 }
 
-bool EglWaylandBackend::createEglWaylandOutput(Output *waylandOutput)
+bool WaylandEglBackend::createEglWaylandOutput(Output *waylandOutput)
 {
-    const auto output = std::make_shared<EglWaylandOutput>(static_cast<WaylandOutput *>(waylandOutput), this);
+    const auto output = std::make_shared<WaylandEglOutput>(static_cast<WaylandOutput *>(waylandOutput), this);
     if (!output->init()) {
         return false;
     }
@@ -253,7 +253,7 @@ bool EglWaylandBackend::createEglWaylandOutput(Output *waylandOutput)
     return true;
 }
 
-bool EglWaylandBackend::initializeEgl()
+bool WaylandEglBackend::initializeEgl()
 {
     initClientExtensions();
     EGLDisplay display = m_backend->sceneEglDisplay();
@@ -281,7 +281,7 @@ bool EglWaylandBackend::initializeEgl()
     return initEglAPI();
 }
 
-void EglWaylandBackend::init()
+void WaylandEglBackend::init()
 {
     if (!initializeEgl()) {
         setFailed("Could not initialize egl");
@@ -297,7 +297,7 @@ void EglWaylandBackend::init()
     initWayland();
 }
 
-bool EglWaylandBackend::initRenderingContext()
+bool WaylandEglBackend::initRenderingContext()
 {
     initBufferConfigs();
 
@@ -329,7 +329,7 @@ bool EglWaylandBackend::initRenderingContext()
     return firstOutput->makeContextCurrent();
 }
 
-bool EglWaylandBackend::initBufferConfigs()
+bool WaylandEglBackend::initBufferConfigs()
 {
     const EGLint config_attribs[] = {
         EGL_SURFACE_TYPE,
@@ -364,7 +364,7 @@ bool EglWaylandBackend::initBufferConfigs()
     return true;
 }
 
-std::shared_ptr<KWin::GLTexture> EglWaylandBackend::textureForOutput(KWin::Output *output) const
+std::shared_ptr<KWin::GLTexture> WaylandEglBackend::textureForOutput(KWin::Output *output) const
 {
     std::shared_ptr<GLTexture> texture(new GLTexture(GL_RGBA8, output->pixelSize()));
     GLFramebuffer::pushFramebuffer(m_outputs[output]->fbo());
@@ -374,22 +374,22 @@ std::shared_ptr<KWin::GLTexture> EglWaylandBackend::textureForOutput(KWin::Outpu
     return texture;
 }
 
-std::unique_ptr<SurfaceTexture> EglWaylandBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
+std::unique_ptr<SurfaceTexture> WaylandEglBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
     return std::make_unique<BasicEGLSurfaceTextureInternal>(this, pixmap);
 }
 
-std::unique_ptr<SurfaceTexture> EglWaylandBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+std::unique_ptr<SurfaceTexture> WaylandEglBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
     return std::make_unique<BasicEGLSurfaceTextureWayland>(this, pixmap);
 }
 
-void EglWaylandBackend::present(Output *output)
+void WaylandEglBackend::present(Output *output)
 {
     m_outputs[output]->present();
 }
 
-OutputLayer *EglWaylandBackend::primaryLayer(Output *output)
+OutputLayer *WaylandEglBackend::primaryLayer(Output *output)
 {
     return m_outputs[output].get();
 }
