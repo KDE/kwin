@@ -16,13 +16,13 @@ namespace KWin
 class VirtualBackend;
 class GLFramebuffer;
 class GLTexture;
-class EglGbmBackend;
+class VirtualEglBackend;
 
-class VirtualOutputLayer : public OutputLayer
+class VirtualEglLayer : public OutputLayer
 {
 public:
-    VirtualOutputLayer(Output *output, EglGbmBackend *backend);
-    ~VirtualOutputLayer() override;
+    VirtualEglLayer(Output *output, VirtualEglBackend *backend);
+    ~VirtualEglLayer() override;
 
     OutputLayerBeginFrameInfo beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
@@ -30,7 +30,7 @@ public:
     GLTexture *texture() const;
 
 private:
-    EglGbmBackend *const m_backend;
+    VirtualEglBackend *const m_backend;
     Output *m_output;
     std::unique_ptr<GLFramebuffer> m_fbo;
     std::unique_ptr<GLTexture> m_texture;
@@ -39,13 +39,13 @@ private:
 /**
  * @brief OpenGL Backend using Egl on a GBM surface.
  */
-class EglGbmBackend : public AbstractEglBackend
+class VirtualEglBackend : public AbstractEglBackend
 {
     Q_OBJECT
 
 public:
-    EglGbmBackend(VirtualBackend *b);
-    ~EglGbmBackend() override;
+    VirtualEglBackend(VirtualBackend *b);
+    ~VirtualEglBackend() override;
     std::unique_ptr<SurfaceTexture> createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
     OutputLayer *primaryLayer(Output *output) override;
@@ -62,7 +62,7 @@ private:
 
     VirtualBackend *m_backend;
     int m_frameCounter = 0;
-    std::map<Output *, std::unique_ptr<VirtualOutputLayer>> m_outputs;
+    std::map<Output *, std::unique_ptr<VirtualEglLayer>> m_outputs;
 };
 
 } // namespace

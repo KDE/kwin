@@ -87,7 +87,7 @@ QPainterBackend *VirtualBackend::createQPainterBackend()
 
 OpenGLBackend *VirtualBackend::createOpenGLBackend()
 {
-    return new EglGbmBackend(this);
+    return new VirtualEglBackend(this);
 }
 
 Outputs VirtualBackend::outputs() const

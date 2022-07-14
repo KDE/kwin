@@ -24,20 +24,20 @@
 namespace KWin
 {
 
-VirtualOutputLayer::VirtualOutputLayer(Output *output, EglGbmBackend *backend)
+VirtualEglLayer::VirtualEglLayer(Output *output, VirtualEglBackend *backend)
     : m_backend(backend)
     , m_output(output)
 {
 }
 
-VirtualOutputLayer::~VirtualOutputLayer() = default;
+VirtualEglLayer::~VirtualEglLayer() = default;
 
-GLTexture *VirtualOutputLayer::texture() const
+GLTexture *VirtualEglLayer::texture() const
 {
     return m_texture.get();
 }
 
-OutputLayerBeginFrameInfo VirtualOutputLayer::beginFrame()
+OutputLayerBeginFrameInfo VirtualEglLayer::beginFrame()
 {
     m_backend->makeCurrent();
 
@@ -55,7 +55,7 @@ OutputLayerBeginFrameInfo VirtualOutputLayer::beginFrame()
     };
 }
 
-bool VirtualOutputLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool VirtualEglLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(renderedRegion)
     Q_UNUSED(damagedRegion)
@@ -63,7 +63,7 @@ bool VirtualOutputLayer::endFrame(const QRegion &renderedRegion, const QRegion &
     return true;
 }
 
-EglGbmBackend::EglGbmBackend(VirtualBackend *b)
+VirtualEglBackend::VirtualEglBackend(VirtualBackend *b)
     : AbstractEglBackend()
     , m_backend(b)
 {
@@ -71,13 +71,13 @@ EglGbmBackend::EglGbmBackend(VirtualBackend *b)
     setIsDirectRendering(true);
 }
 
-EglGbmBackend::~EglGbmBackend()
+VirtualEglBackend::~VirtualEglBackend()
 {
     m_outputs.clear();
     cleanup();
 }
 
-bool EglGbmBackend::initializeEgl()
+bool VirtualEglBackend::initializeEgl()
 {
     initClientExtensions();
     EGLDisplay display = m_backend->sceneEglDisplay();
@@ -100,7 +100,7 @@ bool EglGbmBackend::initializeEgl()
     return initEglAPI();
 }
 
-void EglGbmBackend::init()
+void VirtualEglBackend::init()
 {
     if (!initializeEgl()) {
         setFailed("Could not initialize egl");
@@ -125,11 +125,11 @@ void EglGbmBackend::init()
         addOutput(output);
     }
 
-    connect(m_backend, &VirtualBackend::outputEnabled, this, &EglGbmBackend::addOutput);
-    connect(m_backend, &VirtualBackend::outputDisabled, this, &EglGbmBackend::removeOutput);
+    connect(m_backend, &VirtualBackend::outputEnabled, this, &VirtualEglBackend::addOutput);
+    connect(m_backend, &VirtualBackend::outputDisabled, this, &VirtualEglBackend::removeOutput);
 }
 
-bool EglGbmBackend::initRenderingContext()
+bool VirtualEglBackend::initRenderingContext()
 {
     initBufferConfigs();
 
@@ -140,19 +140,19 @@ bool EglGbmBackend::initRenderingContext()
     return makeCurrent();
 }
 
-void EglGbmBackend::addOutput(Output *output)
+void VirtualEglBackend::addOutput(Output *output)
 {
     makeCurrent();
-    m_outputs[output] = std::make_unique<VirtualOutputLayer>(output, this);
+    m_outputs[output] = std::make_unique<VirtualEglLayer>(output, this);
 }
 
-void EglGbmBackend::removeOutput(Output *output)
+void VirtualEglBackend::removeOutput(Output *output)
 {
     makeCurrent();
     m_outputs.erase(output);
 }
 
-bool EglGbmBackend::initBufferConfigs()
+bool VirtualEglBackend::initBufferConfigs()
 {
     const EGLint config_attribs[] = {
         EGL_SURFACE_TYPE,
@@ -185,29 +185,29 @@ bool EglGbmBackend::initBufferConfigs()
     return true;
 }
 
-std::unique_ptr<SurfaceTexture> EglGbmBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
+std::unique_ptr<SurfaceTexture> VirtualEglBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
     return std::make_unique<BasicEGLSurfaceTextureInternal>(this, pixmap);
 }
 
-std::unique_ptr<SurfaceTexture> EglGbmBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+std::unique_ptr<SurfaceTexture> VirtualEglBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
     return std::make_unique<BasicEGLSurfaceTextureWayland>(this, pixmap);
 }
 
-OutputLayer *EglGbmBackend::primaryLayer(Output *output)
+OutputLayer *VirtualEglBackend::primaryLayer(Output *output)
 {
     return m_outputs[output].get();
 }
 
-void EglGbmBackend::present(Output *output)
+void VirtualEglBackend::present(Output *output)
 {
     glFlush();
 
     static_cast<VirtualOutput *>(output)->vsyncMonitor()->arm();
 
     if (m_backend->saveFrames()) {
-        const std::unique_ptr<VirtualOutputLayer> &layer = m_outputs[output];
+        const std::unique_ptr<VirtualEglLayer> &layer = m_outputs[output];
         layer->texture()->toImage().save(QStringLiteral("%1/%2.png").arg(m_backend->saveFrames()).arg(QString::number(m_frameCounter++)));
     }
 }
