@@ -316,6 +316,7 @@ FocusScope {
                 }
             }
             if (selectedItem) {
+                handled = true;
                 KWinComponents.Workspace.activeClient = selectedItem.client;
                 heap.activated();
             }
