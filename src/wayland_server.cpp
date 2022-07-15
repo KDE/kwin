@@ -171,7 +171,7 @@ public:
             if (!requestedInterfaces.toStringList().contains(QString::fromUtf8(interfaceName))) {
                 if (KWIN_CORE().isDebugEnabled()) {
                     const QString id = client->executablePath() + QLatin1Char('|') + QString::fromUtf8(interfaceName);
-                    if (!m_reported.contains({id})) {
+                    if (!m_reported.contains(id)) {
                         m_reported.insert(id);
                         qCDebug(KWIN_CORE) << "Interface" << interfaceName << "not in X-KDE-Wayland-Interfaces of" << client->executablePath();
                     }
