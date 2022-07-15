@@ -104,7 +104,7 @@ FocusScope {
         y: heap.padding
         width: parent.width - 2 * heap.padding
         height: parent.height - 2 * heap.padding
-        spacing: PlasmaCore.Units.largeSpacing
+        spacing: PlasmaCore.Units.smallSpacing * 5
 
         Repeater {
             id: windowsRepeater

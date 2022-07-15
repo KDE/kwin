@@ -283,8 +283,13 @@ Item {
 
 
     PlasmaCore.FrameSvgItem {
-        anchors.fill: parent
-        anchors.margins: -PlasmaCore.Units.smallSpacing
+        anchors {
+            fill: parent
+            topMargin: -PlasmaCore.Units.smallSpacing * 2
+            leftMargin: -PlasmaCore.Units.smallSpacing * 2
+            rightMargin: -PlasmaCore.Units.smallSpacing * 2
+            bottomMargin: -(Math.round(icon.height / 4) + caption.height + (PlasmaCore.Units.smallSpacing * 2))
+        }
         imagePath: "widgets/viewitem"
         prefix: "hover"
         z: -1
