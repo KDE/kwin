@@ -17,9 +17,38 @@
 
 // Qt
 #include <QMatrix4x4>
+#include <qmath.h>
 
 namespace KWin
 {
+
+static QMatrix4x4 createPerspectiveMatrix(const QRectF &rect, const qreal scale)
+{
+    QMatrix4x4 ret;
+
+    const float fovY = std::tan(qDegreesToRadians(60.0f) / 2);
+    const float aspect = 1.0f;
+    const float zNear = 0.1f;
+    const float zFar = 100.0f;
+
+    const float yMax = zNear * fovY;
+    const float yMin = -yMax;
+    const float xMin = yMin * aspect;
+    const float xMax = yMax * aspect;
+
+    ret.frustum(xMin, xMax, yMin, yMax, zNear, zFar);
+
+    const auto scaledRect = QRectF{rect.x() * scale, rect.y() * scale, rect.width() * scale, rect.height() * scale};
+
+    const float scaleFactor = 1.1 * fovY / yMax;
+    ret.translate(xMin * scaleFactor, yMax * scaleFactor, -1.1);
+    ret.scale((xMax - xMin) * scaleFactor / scaledRect.width(),
+              -(yMax - yMin) * scaleFactor / scaledRect.height(),
+              0.001);
+    ret.translate(-scaledRect.x(), -scaledRect.y());
+
+    return ret;
+}
 
 SheetEffect::SheetEffect()
 {
@@ -81,7 +110,7 @@ void SheetEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowP
     // this is how the window will be transformed:
     //  [move to the origin] -> [scale] -> [rotate] -> [translate] ->
     //    -> [perspective projection] -> [reverse "move to the origin"]
-    const QMatrix4x4 oldProjMatrix = data.screenProjectionMatrix();
+    const QMatrix4x4 oldProjMatrix = createPerspectiveMatrix(effects->renderTargetRect(), effects->renderTargetScale());
     const QRectF windowGeo = w->frameGeometry();
     const QVector3D invOffset = oldProjMatrix.map(QVector3D(windowGeo.center()));
     QMatrix4x4 invOffsetMatrix;
