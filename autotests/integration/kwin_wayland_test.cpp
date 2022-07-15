@@ -40,7 +40,7 @@ namespace KWin
 {
 
 WaylandTestApplication::WaylandTestApplication(OperationMode mode, int &argc, char **argv)
-    : ApplicationWaylandAbstract(mode, argc, argv)
+    : Application(mode, argc, argv)
 {
     QStandardPaths::setTestModeEnabled(true);
     // TODO: add a test move to kglobalaccel instead?

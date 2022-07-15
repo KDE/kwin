@@ -10,7 +10,6 @@
 #define KWIN_MAIN_WAYLAND_H
 #include "main.h"
 #include <KConfigWatcher>
-#include <QProcessEnvironment>
 #include <QTimer>
 
 namespace KWin
@@ -20,7 +19,7 @@ namespace Xwl
 class Xwayland;
 }
 
-class ApplicationWayland : public ApplicationWaylandAbstract
+class ApplicationWayland : public Application
 {
     Q_OBJECT
 public:
@@ -51,18 +50,9 @@ public:
     {
         m_inputMethodServerToStart = inputMethodServer;
     }
-    void setProcessStartupEnvironment(const QProcessEnvironment &environment) override
-    {
-        m_environment = environment;
-    }
     void setSessionArgument(const QString &session)
     {
         m_sessionArgument = session;
-    }
-
-    QProcessEnvironment processStartupEnvironment() const override
-    {
-        return m_environment;
     }
 
 protected:
@@ -71,13 +61,12 @@ protected:
 private:
     void continueStartupWithScene();
     void finalizeStartup();
-    void startSession() override;
+    void startSession();
     void refreshSettings(const KConfigGroup &group, const QByteArrayList &names);
 
     bool m_startXWayland = false;
     QStringList m_applicationsToStart;
     QString m_inputMethodServerToStart;
-    QProcessEnvironment m_environment;
     QString m_sessionArgument;
 
     Xwl::Xwayland *m_xwayland = nullptr;

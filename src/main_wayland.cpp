@@ -104,7 +104,7 @@ Q_CONSTRUCTOR_FUNCTION(disableDrKonqi)
 //************************************
 
 ApplicationWayland::ApplicationWayland(int &argc, char **argv)
-    : ApplicationWaylandAbstract(OperationModeWaylandOnly, argc, argv)
+    : Application(OperationModeWaylandOnly, argc, argv)
 {
 }
 

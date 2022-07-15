@@ -567,7 +567,12 @@ bool XcbEventFilter::nativeEventFilter(const QByteArray &eventType, void *messag
 
 QProcessEnvironment Application::processStartupEnvironment() const
 {
-    return QProcessEnvironment::systemEnvironment();
+    return m_processEnvironment;
+}
+
+void Application::setProcessStartupEnvironment(const QProcessEnvironment &environment)
+{
+    m_processEnvironment = environment;
 }
 
 void Application::initPlatform(const KPluginMetaData &plugin)
@@ -581,15 +586,6 @@ void Application::initPlatform(const KPluginMetaData &plugin)
     } else {
         qCWarning(KWIN_CORE) << "Could not create plugin" << plugin.name() << "error:" << loader.errorString();
     }
-}
-
-ApplicationWaylandAbstract::ApplicationWaylandAbstract(OperationMode mode, int &argc, char **argv)
-    : Application(mode, argc, argv)
-{
-}
-
-ApplicationWaylandAbstract::~ApplicationWaylandAbstract()
-{
 }
 
 } // namespace

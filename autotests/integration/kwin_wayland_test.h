@@ -68,7 +68,7 @@ namespace Test
 class VirtualInputDevice;
 }
 
-class WaylandTestApplication : public ApplicationWaylandAbstract
+class WaylandTestApplication : public Application
 {
     Q_OBJECT
 public:

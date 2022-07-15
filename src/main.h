@@ -190,6 +190,31 @@ public:
         return m_defaultScreen;
     }
 
+    /**
+     * Inheriting classes should use this method to set the X11 root window
+     * before accessing any X11 specific code pathes.
+     */
+    void setX11RootWindow(xcb_window_t root)
+    {
+        m_rootWindow = root;
+    }
+    /**
+     * Inheriting classes should use this method to set the xcb connection
+     * before accessing any X11 specific code pathes.
+     */
+    void setX11Connection(xcb_connection_t *c)
+    {
+        m_connection = c;
+    }
+    /**
+     * Inheriting classes should use this method to set the default screen
+     * before accessing any X11 specific code pathes.
+     */
+    void setX11DefaultScreen(xcb_screen_t *screen)
+    {
+        m_defaultScreen = screen;
+    }
+
     qreal xwaylandScale() const
     {
         return m_xwaylandScale;
@@ -216,7 +241,8 @@ public:
     }
 #endif
 
-    virtual QProcessEnvironment processStartupEnvironment() const;
+    QProcessEnvironment processStartupEnvironment() const;
+    void setProcessStartupEnvironment(const QProcessEnvironment &environment);
 
     void initPlatform(const KPluginMetaData &plugin);
     Platform *platform() const
@@ -228,6 +254,12 @@ public:
     {
         return m_terminating;
     }
+
+    void installNativeX11EventFilter();
+    void removeNativeX11EventFilter();
+
+    void createAtoms();
+    void destroyAtoms();
 
     static void setupMalloc();
     static void setupLocalizedString();
@@ -249,44 +281,16 @@ protected:
     void notifyStarted();
     void createInput();
     void createWorkspace();
-    void createAtoms();
     void createOptions();
     void createPlugins();
     void createColorManager();
     void createInputMethod();
-    void installNativeX11EventFilter();
-    void removeNativeX11EventFilter();
     void destroyInput();
     void destroyWorkspace();
     void destroyCompositor();
     void destroyPlugins();
     void destroyColorManager();
     void destroyInputMethod();
-    /**
-     * Inheriting classes should use this method to set the X11 root window
-     * before accessing any X11 specific code pathes.
-     */
-    void setX11RootWindow(xcb_window_t root)
-    {
-        m_rootWindow = root;
-    }
-    /**
-     * Inheriting classes should use this method to set the xcb connection
-     * before accessing any X11 specific code pathes.
-     */
-    void setX11Connection(xcb_connection_t *c)
-    {
-        m_connection = c;
-    }
-    /**
-     * Inheriting classes should use this method to set the default screen
-     * before accessing any X11 specific code pathes.
-     */
-    void setX11DefaultScreen(xcb_screen_t *screen)
-    {
-        m_defaultScreen = screen;
-    }
-    void destroyAtoms();
     void destroyPlatform();
 
     void setTerminating()
@@ -316,36 +320,13 @@ private:
     bool m_terminating = false;
     bool m_isClosingX11Connection = false;
     qreal m_xwaylandScale = 1;
+    QProcessEnvironment m_processEnvironment;
 };
 
 inline static Application *kwinApp()
 {
     return static_cast<Application *>(QCoreApplication::instance());
 }
-
-namespace Xwl
-{
-class Xwayland;
-}
-
-class KWIN_EXPORT ApplicationWaylandAbstract : public Application
-{
-    Q_OBJECT
-public:
-    ~ApplicationWaylandAbstract() override = 0;
-
-protected:
-    friend class Xwl::Xwayland;
-
-    ApplicationWaylandAbstract(OperationMode mode, int &argc, char **argv);
-    virtual void setProcessStartupEnvironment(const QProcessEnvironment &environment)
-    {
-        Q_UNUSED(environment);
-    }
-    virtual void startSession()
-    {
-    }
-};
 
 } // namespace
 

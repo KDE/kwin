@@ -18,7 +18,7 @@ class QSocketNotifier;
 namespace KWin
 {
 class Output;
-class ApplicationWaylandAbstract;
+class Application;
 
 namespace Xwl
 {
@@ -30,7 +30,7 @@ class KWIN_EXPORT Xwayland : public XwaylandInterface
     Q_OBJECT
 
 public:
-    Xwayland(ApplicationWaylandAbstract *app, QObject *parent = nullptr);
+    Xwayland(Application *app, QObject *parent = nullptr);
     ~Xwayland() override;
 
     void start();
@@ -72,7 +72,7 @@ private:
     KWaylandServer::AbstractDropHandler *xwlDropHandler() override;
     QSocketNotifier *m_socketNotifier = nullptr;
 
-    ApplicationWaylandAbstract *m_app;
+    Application *m_app;
     QScopedPointer<KSelectionOwner> m_selectionOwner;
 
     XrandrEventFilter *m_xrandrEventsFilter = nullptr;
