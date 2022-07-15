@@ -36,10 +36,7 @@ WaylandOutput::WaylandOutput(const QString &name, Surface *surface, WaylandBacke
         .capabilities = Capability::Dpms,
     });
 
-    connect(surface, &Surface::frameRendered, this, [this] {
-        m_rendered = true;
-        Q_EMIT frameRendered();
-    });
+    connect(surface, &Surface::frameRendered, this, &WaylandOutput::frameRendered);
     m_turnOffTimer.setSingleShot(true);
     m_turnOffTimer.setInterval(dimAnimationTime());
     connect(&m_turnOffTimer, &QTimer::timeout, this, [this] {

@@ -70,15 +70,6 @@ public:
         return m_surface;
     }
 
-    bool rendered() const
-    {
-        return m_rendered;
-    }
-    void resetRendered()
-    {
-        m_rendered = false;
-    }
-
     void updateEnablement(bool enable) override;
     void setDpmsMode(DpmsMode mode) override;
 
@@ -97,8 +88,6 @@ private:
     KWayland::Client::Surface *m_surface;
     WaylandBackend *m_backend;
     QTimer m_turnOffTimer;
-
-    bool m_rendered = false;
 };
 
 class XdgShellOutput : public WaylandOutput

@@ -823,8 +823,6 @@ WaylandOutput *WaylandBackend::createOutput(const QString &name, const QPoint &p
 
     waylandOutput->init(position, size);
     connect(waylandOutput, &WaylandOutput::frameRendered, this, [waylandOutput]() {
-        waylandOutput->resetRendered();
-
         // The current time of the monotonic clock is a pretty good estimate when the frame
         // has been presented, however it will be much better if we check whether the host
         // compositor supports the wp_presentation protocol.
