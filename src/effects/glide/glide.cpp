@@ -19,6 +19,9 @@
 // Qt
 #include <QMatrix4x4>
 #include <QSet>
+#include <qmath.h>
+
+#include <cmath>
 
 namespace KWin
 {
@@ -28,6 +31,34 @@ static const QSet<QString> s_blacklist{
     QStringLiteral("ksmserver-logout-greeter ksmserver-logout-greeter"),
     QStringLiteral("ksplashqml ksplashqml"),
 };
+
+static QMatrix4x4 createPerspectiveMatrix(const QRectF &rect, const qreal scale)
+{
+    QMatrix4x4 ret;
+
+    const float fovY = std::tan(qDegreesToRadians(60.0f) / 2);
+    const float aspect = 1.0f;
+    const float zNear = 0.1f;
+    const float zFar = 100.0f;
+
+    const float yMax = zNear * fovY;
+    const float yMin = -yMax;
+    const float xMin = yMin * aspect;
+    const float xMax = yMax * aspect;
+
+    ret.frustum(xMin, xMax, yMin, yMax, zNear, zFar);
+
+    const auto scaledRect = QRectF{rect.x() * scale, rect.y() * scale, rect.width() * scale, rect.height() * scale};
+
+    const float scaleFactor = 1.1 * fovY / yMax;
+    ret.translate(xMin * scaleFactor, yMax * scaleFactor, -1.1);
+    ret.scale((xMax - xMin) * scaleFactor / scaledRect.width(),
+              -(yMax - yMin) * scaleFactor / scaledRect.height(),
+              0.001);
+    ret.translate(-scaledRect.x(), -scaledRect.y());
+
+    return ret;
+}
 
 GlideEffect::GlideEffect()
 {
@@ -105,16 +136,20 @@ void GlideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowP
     // will be transformed:
     //  [move to the origin] -> [rotate] -> [translate] ->
     //    -> [perspective projection] -> [reverse "move to the origin"]
-    const QMatrix4x4 oldProjMatrix = data.screenProjectionMatrix();
-    const QRectF windowGeo = w->frameGeometry();
+
+    const QMatrix4x4 oldProjMatrix = createPerspectiveMatrix(effects->renderTargetRect(), effects->renderTargetScale());
+    const auto frame = w->frameGeometry();
+    const auto scale = effects->renderTargetScale();
+    const QRectF windowGeo = QRectF{frame.x() * scale, frame.y() * scale, frame.width() * scale, frame.height() * scale};
     const QVector3D invOffset = oldProjMatrix.map(QVector3D(windowGeo.center()));
     QMatrix4x4 invOffsetMatrix;
     invOffsetMatrix.translate(invOffset.x(), invOffset.y());
+
     data.setProjectionMatrix(invOffsetMatrix * oldProjMatrix);
 
     // Move the center of the window to the origin.
     const QRectF screenGeo = effects->renderTargetRect();
-    const QPointF offset = screenGeo.center() - windowGeo.center();
+    const QPointF offset = screenGeo.center() - frame.center();
     data.translate(offset.x(), offset.y());
 
     const GlideParams params = w->isDeleted() ? m_outParams : m_inParams;
