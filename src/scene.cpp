@@ -429,6 +429,10 @@ QRect Scene::renderTargetRect() const
 
 void Scene::setRenderTargetRect(const QRect &rect)
 {
+    if (rect == m_renderTargetRect) {
+        return;
+    }
+
     m_renderTargetRect = rect;
     m_renderTargetProjectionMatrix = createProjectionMatrix(rect);
 }
@@ -440,6 +444,10 @@ qreal Scene::renderTargetScale() const
 
 void Scene::setRenderTargetScale(qreal scale)
 {
+    if (qFuzzyCompare(scale, m_renderTargetScale)) {
+        return;
+    }
+
     m_renderTargetScale = scale;
 }
 
