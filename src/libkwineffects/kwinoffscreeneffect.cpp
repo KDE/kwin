@@ -157,7 +157,7 @@ void OffscreenData::paint(EffectWindow *window, const QRegion &region,
     const size_t size = verticesPerQuad * quads.count() * sizeof(GLVertex2D);
     GLVertex2D *map = static_cast<GLVertex2D *>(vbo->map(size));
 
-    quads.makeInterleavedArrays(primitiveType, map, m_texture->matrix(NormalizedCoordinates));
+    quads.makeInterleavedArrays(primitiveType, map, m_texture->matrix(NormalizedCoordinates), window->screen()->devicePixelRatio());
     vbo->unmap();
     vbo->bindArrays();
 

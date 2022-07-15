@@ -409,10 +409,10 @@ void Scene::postPaint()
     clearStackingOrder();
 }
 
-static QMatrix4x4 createProjectionMatrix(const QRect &rect)
+static QMatrix4x4 createProjectionMatrix(const QRect &rect, qreal scale)
 {
     QMatrix4x4 ret;
-    ret.ortho(QRectF(rect.left(), rect.top(), rect.width(), rect.height()));
+    ret.ortho(QRectF(rect.left() * scale, rect.top() * scale, rect.width() * scale, rect.height() * scale));
     return ret;
 }
 
@@ -433,7 +433,7 @@ void Scene::setRenderTargetRect(const QRect &rect)
     }
 
     m_renderTargetRect = rect;
-    m_renderTargetProjectionMatrix = createProjectionMatrix(rect);
+    m_renderTargetProjectionMatrix = createProjectionMatrix(rect, m_renderTargetScale);
 }
 
 qreal Scene::renderTargetScale() const
@@ -443,7 +443,12 @@ qreal Scene::renderTargetScale() const
 
 void Scene::setRenderTargetScale(qreal scale)
 {
+    if (qFuzzyCompare(scale, m_renderTargetScale)) {
+        return;
+    }
+
     m_renderTargetScale = scale;
+    m_renderTargetProjectionMatrix = createProjectionMatrix(m_renderTargetRect, scale);
 }
 
 QRegion Scene::mapToRenderTarget(const QRegion &region) const
