@@ -15,12 +15,16 @@
 #include "virtualdesktops.h"
 #include "workspace.h"
 #include "x11window.h"
+#include <iostream>
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
 
 #include <QApplication>
 #include <QDesktopWidget>
+
+#include <QMetaMethod>
+#include <QMetaProperty>
 
 namespace KWin
 {
@@ -64,6 +68,49 @@ WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
     for (Window *client : clients) {
         setupClientConnections(client);
     }
+
+    QTimer::singleShot(1000, this, [this, ws] {
+        for (int i = QObject::staticMetaObject.propertyCount(); i < metaObject()->propertyCount(); i++) {
+            const auto prop = metaObject()->property(i);
+            QString typeName;
+            switch (prop.type()) {
+            case qMetaTypeId<QString>():
+                typeName = "string";
+                break;
+            case qMetaTypeId<int>():
+                typeName = "int";
+                break;
+            case qMetaTypeId<qreal>():
+                typeName = "real";
+                break;
+            case qMetaTypeId<QSize>():
+                Q_FALLTHROUGH();
+            case qMetaTypeId<QSizeF>():
+                typeName = "size";
+                break;
+            case qMetaTypeId<QRect>():
+                Q_FALLTHROUGH();
+            case qMetaTypeId<QRectF>():
+                typeName = "rect";
+                break;
+            default:
+                typeName = QStringLiteral("var ") + "/*" + prop.typeName() + "*/";
+                break;
+            }
+            std::cout << "property " << qPrintable(typeName) << " " << prop.name() << " : " << qPrintable(prop.read(this).toString()) << "\n";
+        }
+
+        std::cout << "Window {\n";
+
+        const QList<Window *> clients = ws->allClientList();
+        for (Window *client : clients) {
+            for (int i = QObject::staticMetaObject.propertyCount(); i < client->metaObject()->propertyCount(); i++) {
+                const auto prop = client->metaObject()->property(i);
+                std::cout << prop.name() << " : " << qPrintable(prop.read(client).toString()) << "\n";
+            }
+            std::cout << "} \n";
+        }
+    });
 }
 
 int WorkspaceWrapper::currentDesktop() const

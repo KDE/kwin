@@ -10,7 +10,7 @@ import org.kde.kwin 3.0 as KWinComponents
 import org.kde.kwin.private.effects 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 3.0 as PC3
-import org.kde.kwin.private.desktopgrid 1.0
+//import org.kde.kwin.private.desktopgrid 1.0
 
 
 DropArea {
@@ -147,6 +147,10 @@ DropArea {
                 easing.type: Easing.InOutCubic
             }
         }
+    }
+
+    Keys.onPressed: {
+        console.log("I HAVE BEEN ACTIVATED")
     }
 
     PC3.Control {

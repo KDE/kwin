@@ -1,0 +1,7 @@
+module org.kde.kwin
+VirtualDesktopModel 3.0 VirtualDesktopModel.qml
+ClientModel 3.0 ClientModel.qml
+ClientFilterModel 3.0 ClientFilterModel.qml
+WindowThumbnailItem 3.0 WindowThumbnailItem.qml
+singleton Workspace 3.0 Workspace.qml
+Window 3.0 Window.qml
