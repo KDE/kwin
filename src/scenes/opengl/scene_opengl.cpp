@@ -101,7 +101,9 @@ void SceneOpenGL::paintBackground(const QRegion &region)
         QVector<float> verts;
         verts.reserve(region.rectCount() * 6 * 2);
 
-        for (const QRect &r : region) {
+        const auto mappedRegion = mapToRenderTarget(region);
+
+        for (const QRect &r : mappedRegion) {
             verts << r.x() + r.width() << r.y();
             verts << r.x() << r.y();
             verts << r.x() << r.y() + r.height();
@@ -289,7 +291,11 @@ static WindowQuadList clipQuads(const Item *item, const SceneOpenGL::RenderConte
 {
     const WindowQuadList quads = item->quads();
     if (context->clip != infiniteRegion() && !context->hardwareClipping) {
-        const QPoint offset = context->transformStack.top().map(QPoint(0, 0));
+        // transformStack contains translations in device pixels, but clipping
+        // here happens on WindowQuad which is in logical pixels. So convert
+        // this position back to logical pixels as WindowQuad is only converted
+        // to device pixels when the final conversion to GPU geometry happens.
+        const QPointF offset = context->transformStack.top().map(QPointF(0., 0.)) / item->scale();
 
         WindowQuadList ret;
         ret.reserve(quads.count());
@@ -322,10 +328,11 @@ void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
 
     QMatrix4x4 matrix;
 
+    const auto logicalPosition = QVector2D(item->position().x(), item->position().y());
     const auto scale = item->scale();
     auto position = QPointF{std::round(item->position().x() * scale) / scale,
                             std::round(item->position().y() * scale) / scale};
-    matrix.translate(position.x(), position.y());
+    matrix.translate(logicalPosition * item->scale());
 
     matrix *= item->transform();
     context->transformStack.push(context->transformStack.top() * matrix);
@@ -353,7 +360,7 @@ void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .opacity = context->opacityStack.top(),
                 .hasAlpha = true,
                 .coordinateType = UnnormalizedCoordinates,
-                .scale = item->scale(),
+                .scale = scale,
             });
         }
     } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {
@@ -367,7 +374,7 @@ void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .opacity = context->opacityStack.top(),
                 .hasAlpha = true,
                 .coordinateType = UnnormalizedCoordinates,
-                .scale = item->scale(),
+                .scale = scale,
             });
         }
     } else if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
@@ -384,7 +391,7 @@ void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
                     .opacity = context->opacityStack.top(),
                     .hasAlpha = hasAlpha,
                     .coordinateType = NormalizedCoordinates,
-                    .scale = item->scale(),
+                    .scale = scale,
                 });
             }
         }

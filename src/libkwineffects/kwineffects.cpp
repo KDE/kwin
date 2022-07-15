@@ -1057,8 +1057,9 @@ void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertic
             for (int j = 0; j < 4; j++) {
                 const WindowVertex &wv = quad[j];
 
+                auto vertexPos = roundVector(QVector2D(wv.x(), wv.y()) * scale);
                 GLVertex2D v;
-                v.position = QVector2D(std::round(wv.x() * scale) / scale, std::round(wv.y() * scale) / scale);
+                v.position = vertexPos;
                 v.texcoord = QVector2D(wv.u(), wv.v()) * coeff + offset;
 
                 *(vertex++) = v;
@@ -1073,7 +1074,8 @@ void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertic
             for (int j = 0; j < 4; j++) {
                 const WindowVertex &wv = quad[j];
 
-                v[j].position = QVector2D(std::round(wv.x() * scale) / scale, std::round(wv.y() * scale) / scale);
+                auto vertexPos = roundVector(QVector2D(wv.x(), wv.y()) * scale);
+                v[j].position = vertexPos;
                 v[j].texcoord = QVector2D(wv.u(), wv.v()) * coeff + offset;
             }
 
