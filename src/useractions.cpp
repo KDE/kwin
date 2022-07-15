@@ -1091,7 +1091,7 @@ void Workspace::initShortcuts()
     }
     DEF(kli18n("Window to Next Screen"), Qt::META | Qt::SHIFT | Qt::Key_Right, slotWindowToNextScreen);
     DEF(kli18n("Window to Previous Screen"), Qt::META | Qt::SHIFT | Qt::Key_Left, slotWindowToPrevScreen);
-    DEF(kli18n("Peek at Desktop"), Qt::META | Qt::Key_D, slotToggleShowDesktop);
+    DEF2("Show Desktop", kli18n("Peek at Desktop"), Qt::META | Qt::Key_D, slotToggleShowDesktop);
 
     for (int i = 0; i < 8; ++i) {
         DEF3(kli18n("Switch to Screen %1"), 0, slotSwitchToScreen, i);
