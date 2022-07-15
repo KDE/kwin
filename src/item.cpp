@@ -289,10 +289,21 @@ void Item::scheduleRepaint(const QRegion &region)
     }
 }
 
+QRegion thicken(const QRegion &region)
+{
+    QRegion ret = region;
+    constexpr QMargins margins(1, 1, 1, 1);
+    for (QRect rect : region) {
+        rect = rect.marginsAdded(margins);
+        ret += rect;
+    }
+    return ret;
+}
+
 void Item::scheduleRepaintInternal(const QRegion &region)
 {
     const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
-    const QRegion globalRegion = mapToGlobal(region);
+    const QRegion globalRegion = thicken(mapToGlobal(region));
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
         for (const auto &output : outputs) {
             const QRegion dirtyRegion = globalRegion & output->geometry();
