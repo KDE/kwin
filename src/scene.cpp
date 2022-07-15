@@ -428,6 +428,10 @@ QRect Scene::renderTargetRect() const
 
 void Scene::setRenderTargetRect(const QRect &rect)
 {
+    if (rect == m_renderTargetRect) {
+        return;
+    }
+
     m_renderTargetRect = rect;
     m_renderTargetProjectionMatrix = createProjectionMatrix(rect);
 }
