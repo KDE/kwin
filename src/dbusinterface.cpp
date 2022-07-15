@@ -49,11 +49,18 @@ DBusInterface::DBusInterface(QObject *parent)
     dbus.registerService(m_serviceName);
     dbus.connect(QString(), QStringLiteral("/KWin"), QStringLiteral("org.kde.KWin"), QStringLiteral("reloadConfig"),
                  Workspace::self(), SLOT(slotReloadConfig()));
+
+    connect(Workspace::self(), &Workspace::showingDesktopChanged, this, &DBusInterface::onShowingDesktopChanged);
 }
 
 DBusInterface::~DBusInterface()
 {
     QDBusConnection::sessionBus().unregisterService(m_serviceName);
+}
+
+bool DBusInterface::showingDesktop() const
+{
+    return workspace()->showingDesktop();
 }
 
 // wrap void methods with no arguments to Workspace
@@ -227,6 +234,45 @@ QVariantMap DBusInterface::getWindowInfo(const QString &uuid)
     } else {
         return {};
     }
+}
+
+void DBusInterface::showDesktop(bool show)
+{
+    workspace()->setShowingDesktop(show, true);
+
+    auto m = message();
+    if (m.service().isEmpty()) {
+        return;
+    }
+
+    // Keep track of whatever D-Bus client asked to show the desktop. If
+    // they disappear from the bus, cancel the show desktop state so we do
+    // not end up in a state where we are stuck showing the desktop.
+    static QPointer<QDBusServiceWatcher> watcher;
+
+    if (show) {
+        if (watcher) {
+            // If we get a second call to `showDesktop(true)`, drop the previous
+            // watcher and watch the new client. That way, we simply always
+            // track the last state.
+            watcher->deleteLater();
+        }
+
+        watcher = new QDBusServiceWatcher(m.service(), QDBusConnection::sessionBus(), QDBusServiceWatcher::WatchForUnregistration, this);
+        connect(watcher, &QDBusServiceWatcher::serviceUnregistered, []() {
+            workspace()->setShowingDesktop(false, true);
+            watcher->deleteLater();
+        });
+    } else if (watcher) {
+        // Someone cancelled showing the desktop, so there's no more need to
+        // watch to cancel the show desktop state.
+        watcher->deleteLater();
+    }
+}
+
+void DBusInterface::onShowingDesktopChanged(bool show, bool /*animated*/)
+{
+    Q_EMIT showingDesktopChanged(show);
 }
 
 CompositorDBusInterface::CompositorDBusInterface(Compositor *parent)

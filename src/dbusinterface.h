@@ -45,6 +45,9 @@ public:
     ~DBusInterface() override;
 
 public: // PROPERTIES
+    Q_PROPERTY(bool showingDesktop READ showingDesktop NOTIFY showingDesktopChanged)
+    bool showingDesktop() const;
+
 public Q_SLOTS: // METHODS
     Q_NOREPLY void cascadeDesktop();
     int currentDesktop();
@@ -85,6 +88,14 @@ public Q_SLOTS: // METHODS
      * @param uuid is a QUuid from Window::internalId().
      */
     QVariantMap getWindowInfo(const QString &uuid);
+
+    Q_NOREPLY void showDesktop(bool show);
+
+Q_SIGNALS:
+    void showingDesktopChanged(bool showing);
+
+private Q_SLOTS:
+    void onShowingDesktopChanged(bool show, bool /*animated*/);
 
 private:
     QString m_serviceName;
