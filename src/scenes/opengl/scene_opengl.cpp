@@ -302,7 +302,7 @@ static WindowQuadList clipQuads(const Item *item, const SceneOpenGL::RenderConte
 
         // split all quads in bounding rect with the actual rects in the region
         for (const WindowQuad &quad : qAsConst(quads)) {
-            for (const QRect &r : qAsConst(context->clip)) {
+            for (const QRectF r : qAsConst(context->clip)) {
                 const QRectF rf(r.translated(-offset));
                 const QRectF quadRect(QPointF(quad.left(), quad.top()), QPointF(quad.right(), quad.bottom()));
                 const QRectF &intersected = rf.intersected(quadRect);
@@ -330,9 +330,7 @@ void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
 
     const auto logicalPosition = QVector2D(item->position().x(), item->position().y());
     const auto scale = item->scale();
-    auto position = QPointF{std::round(item->position().x() * scale) / scale,
-                            std::round(item->position().y() * scale) / scale};
-    matrix.translate(logicalPosition * item->scale());
+    matrix.translate(roundVector(logicalPosition * item->scale()));
 
     matrix *= item->transform();
     context->transformStack.push(context->transformStack.top() * matrix);
@@ -361,6 +359,7 @@ void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .hasAlpha = true,
                 .coordinateType = UnnormalizedCoordinates,
                 .scale = scale,
+                .position = logicalPosition,
             });
         }
     } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {
@@ -375,6 +374,7 @@ void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .hasAlpha = true,
                 .coordinateType = UnnormalizedCoordinates,
                 .scale = scale,
+                .position = logicalPosition,
             });
         }
     } else if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
@@ -392,6 +392,7 @@ void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
                     .hasAlpha = hasAlpha,
                     .coordinateType = NormalizedCoordinates,
                     .scale = scale,
+                    .position = logicalPosition,
                 });
             }
         }
@@ -518,7 +519,7 @@ void SceneOpenGL::render(Item *item, int mask, const QRegion &region, const Wind
 
         const QMatrix4x4 matrix = renderNode.texture->matrix(renderNode.coordinateType);
 
-        renderNode.quads.makeInterleavedArrays(primitiveType, &map[v], matrix, renderNode.scale);
+        renderNode.quads.makeInterleavedArrays(primitiveType, &map[v], matrix, renderNode.scale, renderNode.position);
         v += renderNode.quads.count() * verticesPerQuad;
     }
 

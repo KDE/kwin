@@ -39,6 +39,7 @@ public:
         bool hasAlpha = false;
         TextureCoordinateType coordinateType = UnnormalizedCoordinates;
         qreal scale = 1.0;
+        QVector2D position;
     };
 
     struct RenderContext

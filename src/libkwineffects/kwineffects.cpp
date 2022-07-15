@@ -1039,7 +1039,7 @@ WindowQuadList WindowQuadList::makeRegularGrid(int xSubdivisions, int ySubdivisi
 #define GL_QUADS 0x0007
 #endif
 
-void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertices, const QMatrix4x4 &textureMatrix, qreal scale) const
+void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertices, const QMatrix4x4 &textureMatrix, qreal scale, const QVector2D &position) const
 {
     // Since we know that the texture matrix just scales and translates
     // we can use this information to optimize the transformation
@@ -1057,7 +1057,9 @@ void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertic
             for (int j = 0; j < 4; j++) {
                 const WindowVertex &wv = quad[j];
 
-                auto vertexPos = roundVector(QVector2D(wv.x(), wv.y()) * scale);
+                auto vertexPos = roundVector((QVector2D(wv.x(), wv.y()) + position) * scale);
+                vertexPos -= roundVector(position * scale);
+
                 GLVertex2D v;
                 v.position = vertexPos;
                 v.texcoord = QVector2D(wv.u(), wv.v()) * coeff + offset;
@@ -1074,7 +1076,9 @@ void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertic
             for (int j = 0; j < 4; j++) {
                 const WindowVertex &wv = quad[j];
 
-                auto vertexPos = roundVector(QVector2D(wv.x(), wv.y()) * scale);
+                auto vertexPos = roundVector((QVector2D(wv.x(), wv.y()) + position) * scale);
+                vertexPos -= roundVector(position * scale);
+
                 v[j].position = vertexPos;
                 v[j].texcoord = QVector2D(wv.u(), wv.v()) * coeff + offset;
             }
