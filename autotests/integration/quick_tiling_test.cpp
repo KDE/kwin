@@ -126,22 +126,22 @@ void QuickTilingTest::testQuickTiling_data()
 {
     QTest::addColumn<QuickTileMode>("mode");
     QTest::addColumn<QRectF>("expectedGeometry");
-    QTest::addColumn<QRect>("secondScreen");
+    QTest::addColumn<QRectF>("secondScreen");
     QTest::addColumn<QuickTileMode>("expectedModeAfterToggle");
 
 #define FLAG(name) QuickTileMode(QuickTileFlag::name)
 
-    QTest::newRow("left") << FLAG(Left) << QRectF(0, 0, 640, 1024) << QRect(1280, 0, 640, 1024) << FLAG(Right);
-    QTest::newRow("top") << FLAG(Top) << QRectF(0, 0, 1280, 512) << QRect(1280, 0, 1280, 512) << FLAG(Top);
-    QTest::newRow("right") << FLAG(Right) << QRectF(640, 0, 640, 1024) << QRect(1920, 0, 640, 1024) << QuickTileMode();
-    QTest::newRow("bottom") << FLAG(Bottom) << QRectF(0, 512, 1280, 512) << QRect(1280, 512, 1280, 512) << FLAG(Bottom);
+    QTest::newRow("left") << FLAG(Left) << QRectF(0, 0, 640, 1024) << QRectF(1280, 0, 640, 1024) << FLAG(Right);
+    QTest::newRow("top") << FLAG(Top) << QRectF(0, 0, 1280, 512) << QRectF(1280, 0, 1280, 512) << FLAG(Top);
+    QTest::newRow("right") << FLAG(Right) << QRectF(640, 0, 640, 1024) << QRectF(1920, 0, 640, 1024) << QuickTileMode();
+    QTest::newRow("bottom") << FLAG(Bottom) << QRectF(0, 512, 1280, 512) << QRectF(1280, 512, 1280, 512) << FLAG(Bottom);
 
-    QTest::newRow("top left") << (FLAG(Left) | FLAG(Top)) << QRectF(0, 0, 640, 512) << QRect(1280, 0, 640, 512) << (FLAG(Right) | FLAG(Top));
-    QTest::newRow("top right") << (FLAG(Right) | FLAG(Top)) << QRectF(640, 0, 640, 512) << QRect(1920, 0, 640, 512) << QuickTileMode();
-    QTest::newRow("bottom left") << (FLAG(Left) | FLAG(Bottom)) << QRectF(0, 512, 640, 512) << QRect(1280, 512, 640, 512) << (FLAG(Right) | FLAG(Bottom));
-    QTest::newRow("bottom right") << (FLAG(Right) | FLAG(Bottom)) << QRectF(640, 512, 640, 512) << QRect(1920, 512, 640, 512) << QuickTileMode();
+    QTest::newRow("top left") << (FLAG(Left) | FLAG(Top)) << QRectF(0, 0, 640, 512) << QRectF(1280, 0, 640, 512) << (FLAG(Right) | FLAG(Top));
+    QTest::newRow("top right") << (FLAG(Right) | FLAG(Top)) << QRectF(640, 0, 640, 512) << QRectF(1920, 0, 640, 512) << QuickTileMode();
+    QTest::newRow("bottom left") << (FLAG(Left) | FLAG(Bottom)) << QRectF(0, 512, 640, 512) << QRectF(1280, 512, 640, 512) << (FLAG(Right) | FLAG(Bottom));
+    QTest::newRow("bottom right") << (FLAG(Right) | FLAG(Bottom)) << QRectF(640, 512, 640, 512) << QRectF(1920, 512, 640, 512) << QuickTileMode();
 
-    QTest::newRow("maximize") << FLAG(Maximize) << QRectF(0, 0, 1280, 1024) << QRect(1280, 0, 1280, 1024) << QuickTileMode();
+    QTest::newRow("maximize") << FLAG(Maximize) << QRectF(0, 0, 1280, 1024) << QRectF(1280, 0, 1280, 1024) << QuickTileMode();
 
 #undef FLAG
 }
@@ -203,7 +203,7 @@ void QuickTilingTest::testQuickTiling()
     QCOMPARE(window->output(), outputs[1]);
     // quick tile should not be changed
     QCOMPARE(window->quickTileMode(), mode);
-    QTEST(window->frameGeometry().toRect(), "secondScreen");
+    QTEST(window->frameGeometry(), "secondScreen");
 
     // now try to toggle again
     window->setQuickTileMode(mode, true);
@@ -551,23 +551,23 @@ struct XcbConnectionDeleter
 void QuickTilingTest::testX11QuickTiling_data()
 {
     QTest::addColumn<QuickTileMode>("mode");
-    QTest::addColumn<QRect>("expectedGeometry");
+    QTest::addColumn<QRectF>("expectedGeometry");
     QTest::addColumn<int>("screenId");
     QTest::addColumn<QuickTileMode>("modeAfterToggle");
 
 #define FLAG(name) QuickTileMode(QuickTileFlag::name)
 
-    QTest::newRow("left") << FLAG(Left) << QRect(0, 0, 640, 1024) << 0 << QuickTileMode();
-    QTest::newRow("top") << FLAG(Top) << QRect(0, 0, 1280, 512) << 1 << FLAG(Top);
-    QTest::newRow("right") << FLAG(Right) << QRect(640, 0, 640, 1024) << 1 << FLAG(Left);
-    QTest::newRow("bottom") << FLAG(Bottom) << QRect(0, 512, 1280, 512) << 1 << FLAG(Bottom);
+    QTest::newRow("left") << FLAG(Left) << QRectF(0, 0, 640, 1024) << 0 << QuickTileMode();
+    QTest::newRow("top") << FLAG(Top) << QRectF(0, 0, 1280, 512) << 1 << FLAG(Top);
+    QTest::newRow("right") << FLAG(Right) << QRectF(640, 0, 640, 1024) << 1 << FLAG(Left);
+    QTest::newRow("bottom") << FLAG(Bottom) << QRectF(0, 512, 1280, 512) << 1 << FLAG(Bottom);
 
-    QTest::newRow("top left") << (FLAG(Left) | FLAG(Top)) << QRect(0, 0, 640, 512) << 0 << QuickTileMode();
-    QTest::newRow("top right") << (FLAG(Right) | FLAG(Top)) << QRect(640, 0, 640, 512) << 1 << (FLAG(Left) | FLAG(Top));
-    QTest::newRow("bottom left") << (FLAG(Left) | FLAG(Bottom)) << QRect(0, 512, 640, 512) << 0 << QuickTileMode();
-    QTest::newRow("bottom right") << (FLAG(Right) | FLAG(Bottom)) << QRect(640, 512, 640, 512) << 1 << (FLAG(Left) | FLAG(Bottom));
+    QTest::newRow("top left") << (FLAG(Left) | FLAG(Top)) << QRectF(0, 0, 640, 512) << 0 << QuickTileMode();
+    QTest::newRow("top right") << (FLAG(Right) | FLAG(Top)) << QRectF(640, 0, 640, 512) << 1 << (FLAG(Left) | FLAG(Top));
+    QTest::newRow("bottom left") << (FLAG(Left) | FLAG(Bottom)) << QRectF(0, 512, 640, 512) << 0 << QuickTileMode();
+    QTest::newRow("bottom right") << (FLAG(Right) | FLAG(Bottom)) << QRectF(640, 512, 640, 512) << 1 << (FLAG(Left) | FLAG(Bottom));
 
-    QTest::newRow("maximize") << FLAG(Maximize) << QRect(0, 0, 1280, 1024) << 0 << QuickTileMode();
+    QTest::newRow("maximize") << FLAG(Maximize) << QRectF(0, 0, 1280, 1024) << 0 << QuickTileMode();
 
 #undef FLAG
 }
@@ -606,7 +606,7 @@ void QuickTilingTest::testX11QuickTiling()
     QFETCH(QuickTileMode, mode);
     window->setQuickTileMode(mode, true);
     QCOMPARE(window->quickTileMode(), mode);
-    QTEST(window->frameGeometry().toRect(), "expectedGeometry");
+    QTEST(window->frameGeometry(), "expectedGeometry");
     QCOMPARE(window->geometryRestore(), origGeo);
     QEXPECT_FAIL("maximize", "For maximize we get two changed signals", Continue);
     QCOMPARE(quickTileChangedSpy.count(), 1);
@@ -634,21 +634,21 @@ void QuickTilingTest::testX11QuickTiling()
 void QuickTilingTest::testX11QuickTilingAfterVertMaximize_data()
 {
     QTest::addColumn<QuickTileMode>("mode");
-    QTest::addColumn<QRect>("expectedGeometry");
+    QTest::addColumn<QRectF>("expectedGeometry");
 
 #define FLAG(name) QuickTileMode(QuickTileFlag::name)
 
-    QTest::newRow("left") << FLAG(Left) << QRect(0, 0, 640, 1024);
-    QTest::newRow("top") << FLAG(Top) << QRect(0, 0, 1280, 512);
-    QTest::newRow("right") << FLAG(Right) << QRect(640, 0, 640, 1024);
-    QTest::newRow("bottom") << FLAG(Bottom) << QRect(0, 512, 1280, 512);
+    QTest::newRow("left") << FLAG(Left) << QRectF(0, 0, 640, 1024);
+    QTest::newRow("top") << FLAG(Top) << QRectF(0, 0, 1280, 512);
+    QTest::newRow("right") << FLAG(Right) << QRectF(640, 0, 640, 1024);
+    QTest::newRow("bottom") << FLAG(Bottom) << QRectF(0, 512, 1280, 512);
 
-    QTest::newRow("top left") << (FLAG(Left) | FLAG(Top)) << QRect(0, 0, 640, 512);
-    QTest::newRow("top right") << (FLAG(Right) | FLAG(Top)) << QRect(640, 0, 640, 512);
-    QTest::newRow("bottom left") << (FLAG(Left) | FLAG(Bottom)) << QRect(0, 512, 640, 512);
-    QTest::newRow("bottom right") << (FLAG(Right) | FLAG(Bottom)) << QRect(640, 512, 640, 512);
+    QTest::newRow("top left") << (FLAG(Left) | FLAG(Top)) << QRectF(0, 0, 640, 512);
+    QTest::newRow("top right") << (FLAG(Right) | FLAG(Top)) << QRectF(640, 0, 640, 512);
+    QTest::newRow("bottom left") << (FLAG(Left) | FLAG(Bottom)) << QRectF(0, 512, 640, 512);
+    QTest::newRow("bottom right") << (FLAG(Right) | FLAG(Bottom)) << QRectF(640, 512, 640, 512);
 
-    QTest::newRow("maximize") << FLAG(Maximize) << QRect(0, 0, 1280, 1024);
+    QTest::newRow("maximize") << FLAG(Maximize) << QRectF(0, 0, 1280, 1024);
 
 #undef FLAG
 }
@@ -695,7 +695,7 @@ void QuickTilingTest::testX11QuickTilingAfterVertMaximize()
     QFETCH(QuickTileMode, mode);
     window->setQuickTileMode(mode, true);
     QCOMPARE(window->quickTileMode(), mode);
-    QTEST(window->frameGeometry().toRect(), "expectedGeometry");
+    QTEST(window->frameGeometry(), "expectedGeometry");
     QEXPECT_FAIL("", "We get two changed events", Continue);
     QCOMPARE(quickTileChangedSpy.count(), 1);
 

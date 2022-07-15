@@ -685,7 +685,7 @@ void MoveResizeWindowTest::testNetMove()
     // let's move a step
     Cursors::self()->mouse()->setPos(Cursors::self()->mouse()->pos() + QPoint(10, 10));
     QCOMPARE(moveStepSpy.count(), 1);
-    QCOMPARE(moveStepSpy.first().last().toRect(), origGeo.translated(10, 10));
+    QCOMPARE(moveStepSpy.first().last(), origGeo.translated(10, 10));
 
     // let's cancel the move resize again through the net API
     root.moveResizeRequest(windowId, window->frameGeometry().center().x(), window->frameGeometry().center().y(), NET::MoveResizeCancel);
