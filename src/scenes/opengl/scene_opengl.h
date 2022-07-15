@@ -38,6 +38,7 @@ public:
         qreal opacity = 1;
         bool hasAlpha = false;
         TextureCoordinateType coordinateType = UnnormalizedCoordinates;
+        qreal scale = 1.0;
     };
 
     struct RenderContext
@@ -47,6 +48,7 @@ public:
         QStack<qreal> opacityStack;
         const QRegion clip;
         const bool hardwareClipping;
+        const qreal renderTargetScale;
     };
 
     explicit SceneOpenGL(OpenGLBackend *backend);

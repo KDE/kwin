@@ -151,7 +151,7 @@ void OffscreenEffectPrivate::paint(EffectWindow *window, GLTexture *texture, con
     const size_t size = verticesPerQuad * quads.count() * sizeof(GLVertex2D);
     GLVertex2D *map = static_cast<GLVertex2D *>(vbo->map(size));
 
-    quads.makeInterleavedArrays(primitiveType, map, texture->matrix(NormalizedCoordinates));
+    quads.makeInterleavedArrays(primitiveType, map, texture->matrix(NormalizedCoordinates), window->screen()->devicePixelRatio());
     vbo->unmap();
     vbo->bindArrays();
 

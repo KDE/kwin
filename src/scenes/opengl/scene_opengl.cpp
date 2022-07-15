@@ -100,7 +100,9 @@ void SceneOpenGL::paintBackground(const QRegion &region)
         QVector<float> verts;
         verts.reserve(region.rectCount() * 6 * 2);
 
-        for (const QRect &r : region) {
+        const auto mappedRegion = mapToRenderTarget(region);
+
+        for (const QRect &r : mappedRegion) {
             verts << r.x() + r.width() << r.y();
             verts << r.x() << r.y();
             verts << r.x() << r.y() + r.height();
@@ -288,7 +290,11 @@ static WindowQuadList clipQuads(const Item *item, const SceneOpenGL::RenderConte
 {
     const WindowQuadList quads = item->quads();
     if (context->clip != infiniteRegion() && !context->hardwareClipping) {
-        const QPoint offset = context->transformStack.top().map(QPoint(0, 0));
+        // transformStack contains translations in device pixels, but clipping
+        // here happens on WindowQuad which is in logical pixels. So convert
+        // this position back to logical pixels as WindowQuad is only converted
+        // to device pixels when the final conversion to GPU geometry happens.
+        const QPointF offset = context->transformStack.top().map(QPointF(0., 0.)) / context->renderTargetScale;
 
         WindowQuadList ret;
         ret.reserve(quads.count());
@@ -296,7 +302,7 @@ static WindowQuadList clipQuads(const Item *item, const SceneOpenGL::RenderConte
         // split all quads in bounding rect with the actual rects in the region
         for (const WindowQuad &quad : qAsConst(quads)) {
             for (const QRect &r : qAsConst(context->clip)) {
-                const QRectF rf(r.translated(-offset));
+                const QRectF rf(QRectF(r).translated(-offset));
                 const QRectF quadRect(QPointF(quad.left(), quad.top()), QPointF(quad.right(), quad.bottom()));
                 const QRectF &intersected = rf.intersected(quadRect);
                 if (intersected.isValid()) {
@@ -320,7 +326,9 @@ void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
     const QList<Item *> sortedChildItems = item->sortedChildItems();
 
     QMatrix4x4 matrix;
-    matrix.translate(item->position().x(), item->position().y());
+    const auto logicalPosition = QVector2D(item->position().x(), item->position().y());
+    const auto scale = context->renderTargetScale;
+    matrix.translate(logicalPosition * scale);
     matrix *= item->transform();
     context->transformStack.push(context->transformStack.top() * matrix);
 
@@ -347,6 +355,7 @@ void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .opacity = context->opacityStack.top(),
                 .hasAlpha = true,
                 .coordinateType = UnnormalizedCoordinates,
+                .scale = scale,
             });
         }
     } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {
@@ -360,6 +369,7 @@ void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .opacity = context->opacityStack.top(),
                 .hasAlpha = true,
                 .coordinateType = UnnormalizedCoordinates,
+                .scale = scale,
             });
         }
     } else if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
@@ -376,6 +386,7 @@ void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
                     .opacity = context->opacityStack.top(),
                     .hasAlpha = hasAlpha,
                     .coordinateType = NormalizedCoordinates,
+                    .scale = scale,
                 });
             }
         }
@@ -418,6 +429,7 @@ void SceneOpenGL::render(Item *item, int mask, const QRegion &region, const Wind
     RenderContext renderContext{
         .clip = region,
         .hardwareClipping = region != infiniteRegion() && ((mask & Scene::PAINT_WINDOW_TRANSFORMED) || (mask & Scene::PAINT_SCREEN_TRANSFORMED)),
+        .renderTargetScale = renderTargetScale(),
     };
 
     renderContext.transformStack.push(QMatrix4x4());
@@ -475,7 +487,7 @@ void SceneOpenGL::render(Item *item, int mask, const QRegion &region, const Wind
 
         const QMatrix4x4 matrix = renderNode.texture->matrix(renderNode.coordinateType);
 
-        renderNode.quads.makeInterleavedArrays(primitiveType, &map[v], matrix);
+        renderNode.quads.makeInterleavedArrays(primitiveType, &map[v], matrix, renderNode.scale);
         v += renderNode.quads.count() * verticesPerQuad;
     }
 
