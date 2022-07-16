@@ -281,6 +281,7 @@ find_package(XCB 1.10 REQUIRED COMPONENTS
     SYNC
     XCB
     XFIXES
+    XINERAMA
 )
 set_package_properties(XCB PROPERTIES TYPE REQUIRED)
 

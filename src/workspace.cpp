@@ -60,6 +60,8 @@
 #include <KStartupInfo>
 // Qt
 #include <QtConcurrentRun>
+// xcb
+#include <xcb/xinerama.h>
 
 namespace KWin
 {
@@ -2354,7 +2356,37 @@ int Workspace::oldDisplayHeight() const
 
 Output *Workspace::xineramaIndexToOutput(int index) const
 {
-    return kwinApp()->platform()->enabledOutputs().value(index);
+    xcb_connection_t *connection = kwinApp()->x11Connection();
+    if (!connection) {
+        return nullptr;
+    }
+
+    const ScopedCPointer<xcb_xinerama_is_active_reply_t> active{xcb_xinerama_is_active_reply(connection, xcb_xinerama_is_active(connection), nullptr)};
+    if (!active || !active->state) {
+        return nullptr;
+    }
+
+    const ScopedCPointer<xcb_xinerama_query_screens_reply_t> screens(xcb_xinerama_query_screens_reply(connection, xcb_xinerama_query_screens(connection), nullptr));
+    if (!screens) {
+        return nullptr;
+    }
+
+    const int infoCount = xcb_xinerama_query_screens_screen_info_length(screens.data());
+    if (index >= infoCount) {
+        return nullptr;
+    }
+
+    const xcb_xinerama_screen_info_t *infos = xcb_xinerama_query_screens_screen_info(screens.data());
+    const QRect needle(infos[index].x_org, infos[index].y_org, infos[index].width, infos[index].height);
+
+    const auto haystack = kwinApp()->platform()->enabledOutputs();
+    for (Output *output : haystack) {
+        if (Xcb::toXNative(output->geometry()) == needle) {
+            return output;
+        }
+    }
+
+    return nullptr;
 }
 
 Output *Workspace::activeOutput() const

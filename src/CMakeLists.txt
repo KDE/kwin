@@ -200,6 +200,7 @@ target_link_libraries(kwin
     XCB::SYNC
     XCB::XCB
     XCB::XFIXES
+    XCB::XINERAMA
 
     UDev::UDev
     XKB::XKB
