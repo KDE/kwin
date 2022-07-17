@@ -27,7 +27,7 @@
         "Description[uk]": "Параметри засобу композиції для ефектів стільниці",
         "Description[vi]": "Các thiết lập trình kết hợp cho các hiệu ứng bàn làm việc",
         "Description[x-test]": "xxCompositor Settings for Desktop Effectsxx",
-        "Description[zh_CN]": "桌面特效显示混合器设置",
+        "Description[zh_CN]": "桌面特效显示合成器设置",
         "Description[zh_TW]": "合成器的桌面效果設定",
         "Icon": "preferences-desktop",
         "Name": "Compositor",
@@ -58,7 +58,7 @@
         "Name[uk]": "Засіб композиції",
         "Name[vi]": "Trình kết hợp",
         "Name[x-test]": "xxCompositorxx",
-        "Name[zh_CN]": "显示特效混合器",
+        "Name[zh_CN]": "显示特效合成器",
         "Name[zh_TW]": "合成器",
         "ServiceTypes": [
             "KCModule"
