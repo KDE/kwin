@@ -27,7 +27,7 @@
         "Description[uk]": "Налаштовування параметрів засобу композиції для ефектів стільниці",
         "Description[vi]": "Cấu hình các thiết lập trình kết hợp cho các hiệu ứng bàn làm việc",
         "Description[x-test]": "xxConfigure compositor settings for desktop effectsxx",
-        "Description[zh_CN]": "配置桌面特效的显示混合器设置",
+        "Description[zh_CN]": "配置桌面的显示特效合成器设置",
         "FormFactors": [
             "desktop",
             "tablet"
