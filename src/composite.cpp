@@ -70,11 +70,6 @@ Q_DECLARE_METATYPE(KWin::X11Compositor::SuspendReason)
 namespace KWin
 {
 
-// See main.cpp:
-extern int screen_number;
-
-extern bool is_multihead;
-
 Compositor *Compositor::s_compositor = nullptr;
 Compositor *Compositor::self()
 {

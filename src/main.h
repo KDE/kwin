@@ -157,14 +157,6 @@ public:
      * Sets the X11 screen number of this KWin instance to @p screenNumber.
      */
     static void setX11ScreenNumber(int screenNumber);
-    /**
-     * @returns whether this is a multi head setup on X11.
-     */
-    static bool isX11MultiHead();
-    /**
-     * Sets whether this is a multi head setup on X11.
-     */
-    static void setX11MultiHead(bool multiHead);
 
     /**
      * @returns the X11 root window.

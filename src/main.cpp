@@ -64,19 +64,8 @@ Options *options;
 Atoms *atoms;
 
 int screen_number = -1;
-bool is_multihead = false;
 
 int Application::crashes = 0;
-
-bool Application::isX11MultiHead()
-{
-    return is_multihead;
-}
-
-void Application::setX11MultiHead(bool multiHead)
-{
-    is_multihead = multiHead;
-}
 
 void Application::setX11ScreenNumber(int screenNumber)
 {

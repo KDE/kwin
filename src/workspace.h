@@ -268,7 +268,6 @@ private:
     // Unsorted
 
 public:
-    bool isOnCurrentHead();
     // True when performing Workspace::updateClientArea().
     // The calls below are valid only in that case.
     bool inUpdateClientArea() const;

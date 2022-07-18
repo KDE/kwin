@@ -66,9 +66,6 @@
 namespace KWin
 {
 
-extern int screen_number;
-extern bool is_multihead;
-
 X11EventFilterContainer::X11EventFilterContainer(X11EventFilter *filter)
     : m_filter(filter)
 {
@@ -1295,34 +1292,6 @@ void Workspace::sendWindowToDesktop(Window *window, int desk, bool dont_activate
     updateClientArea();
 }
 
-/**
- * checks whether the X Window with the input focus is on our X11 screen
- * if the window cannot be determined or inspected, resturn depends on whether there's actually
- * more than one screen
- *
- * this is NOT in any way related to XRandR multiscreen
- *
- */
-extern bool is_multihead; // main.cpp
-bool Workspace::isOnCurrentHead()
-{
-    if (!is_multihead) {
-        return true;
-    }
-
-    Xcb::CurrentInput currentInput;
-    if (currentInput.window() == XCB_WINDOW_NONE) {
-        return !is_multihead;
-    }
-
-    Xcb::WindowGeometry geometry(currentInput.window());
-    if (geometry.isNull()) { // should not happen
-        return !is_multihead;
-    }
-
-    return kwinApp()->x11RootWindow() == geometry->root;
-}
-
 void Workspace::sendWindowToOutput(Window *window, Output *output)
 {
     window->sendToOutput(output);
@@ -1560,13 +1529,6 @@ QString Workspace::supportInformation() const
     }
     support.append(QStringLiteral("\nScreens\n"));
     support.append(QStringLiteral("=======\n"));
-    support.append(QStringLiteral("Multi-Head: "));
-    if (is_multihead) {
-        support.append(QStringLiteral("yes\n"));
-        support.append(QStringLiteral("Head: %1\n").arg(screen_number));
-    } else {
-        support.append(QStringLiteral("no\n"));
-    }
     support.append(QStringLiteral("Active screen follows mouse: "));
     if (options->activeMouseScreen()) {
         support.append(QStringLiteral(" yes\n"));
@@ -2238,11 +2200,6 @@ QRectF Workspace::clientArea(clientAreaOption opt, const Output *output, const V
     QRectF workArea;
     QRectF screenArea;
 
-    const Output *effectiveOutput = output;
-    if (is_multihead) {
-        effectiveOutput = xineramaIndexToOutput(screen_number);
-    }
-
     if (auto desktopIt = m_screenAreas.constFind(desktop); desktopIt != m_screenAreas.constEnd()) {
         if (auto outputIt = desktopIt->constFind(output); outputIt != desktopIt->constEnd()) {
             screenArea = *outputIt;
@@ -2250,12 +2207,12 @@ QRectF Workspace::clientArea(clientAreaOption opt, const Output *output, const V
     }
 
     if (screenArea.isNull()) { // screens may be missing during KWin initialization or screen config changes
-        screenArea = effectiveOutput->geometry();
+        screenArea = output->geometry();
     }
 
     workArea = m_workAreas.value(desktop);
     if (workArea.isNull()) {
-        workArea = is_multihead ? effectiveOutput->geometry() : m_geometry;
+        workArea = m_geometry;
     }
 
     switch (opt) {
@@ -2266,9 +2223,9 @@ QRectF Workspace::clientArea(clientAreaOption opt, const Output *output, const V
     case FullScreenArea:
     case MovementArea:
     case ScreenArea:
-        return effectiveOutput->geometry();
+        return output->geometry();
     case WorkArea:
-        return is_multihead ? screenArea : workArea;
+        return workArea;
     case FullArea:
         return m_geometry;
     default:

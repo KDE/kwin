@@ -207,16 +207,14 @@ bool X11StandalonePlatform::requiresCompositing() const
 
 bool X11StandalonePlatform::openGLCompositingIsBroken() const
 {
-    const QString unsafeKey(QLatin1String("OpenGLIsUnsafe") + (kwinApp()->isX11MultiHead() ? QString::number(kwinApp()->x11ScreenNumber()) : QString()));
-    return KConfigGroup(kwinApp()->config(), "Compositing").readEntry(unsafeKey, false);
+    return KConfigGroup(kwinApp()->config(), "Compositing").readEntry(QLatin1String("OpenGLIsUnsafe"), false);
 }
 
 QString X11StandalonePlatform::compositingNotPossibleReason() const
 {
     // first off, check whether we figured that we'll crash on detection because of a buggy driver
     KConfigGroup gl_workaround_group(kwinApp()->config(), "Compositing");
-    const QString unsafeKey(QLatin1String("OpenGLIsUnsafe") + (kwinApp()->isX11MultiHead() ? QString::number(kwinApp()->x11ScreenNumber()) : QString()));
-    if (gl_workaround_group.readEntry("Backend", "OpenGL") == QLatin1String("OpenGL") && gl_workaround_group.readEntry(unsafeKey, false)) {
+    if (gl_workaround_group.readEntry("Backend", "OpenGL") == QLatin1String("OpenGL") && gl_workaround_group.readEntry(QLatin1String("OpenGLIsUnsafe"), false)) {
         return i18n("<b>OpenGL compositing (the default) has crashed KWin in the past.</b><br>"
                     "This was most likely due to a driver bug."
                     "<p>If you think that you have meanwhile upgraded to a stable driver,<br>"
@@ -236,10 +234,9 @@ bool X11StandalonePlatform::compositingPossible() const
 {
     // first off, check whether we figured that we'll crash on detection because of a buggy driver
     KConfigGroup gl_workaround_group(kwinApp()->config(), "Compositing");
-    const QString unsafeKey(QLatin1String("OpenGLIsUnsafe") + (kwinApp()->isX11MultiHead() ? QString::number(kwinApp()->x11ScreenNumber()) : QString()));
-    if (gl_workaround_group.readEntry("Backend", "OpenGL") == QLatin1String("OpenGL") && gl_workaround_group.readEntry(unsafeKey, false)) {
+    if (gl_workaround_group.readEntry("Backend", "OpenGL") == QLatin1String("OpenGL") && gl_workaround_group.readEntry(QLatin1String("OpenGLIsUnsafe"), false)) {
         qCWarning(KWIN_X11STANDALONE) << "Compositing disabled: video driver seems unstable. If you think it's a false positive, please remove "
-                                      << unsafeKey << " from [Compositing] in kwinrc and restart kwin.";
+                                      << "OpenGLIsUnsafe from [Compositing] in kwinrc and restart kwin.";
         return false;
     }
 
@@ -270,11 +267,10 @@ bool X11StandalonePlatform::hasGlx()
 
 void X11StandalonePlatform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
 {
-    const QString unsafeKey(QLatin1String("OpenGLIsUnsafe") + (kwinApp()->isX11MultiHead() ? QString::number(kwinApp()->x11ScreenNumber()) : QString()));
     auto group = KConfigGroup(kwinApp()->config(), "Compositing");
     switch (safePoint) {
     case OpenGLSafePoint::PreInit:
-        group.writeEntry(unsafeKey, true);
+        group.writeEntry(QLatin1String("OpenGLIsUnsafe"), true);
         group.sync();
         // Deliberately continue with PreFrame
         Q_FALLTHROUGH();
@@ -293,9 +289,8 @@ void X11StandalonePlatform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
             connect(
                 m_openGLFreezeProtection, &QTimer::timeout, m_openGLFreezeProtection,
                 [configName] {
-                    const QString unsafeKey(QLatin1String("OpenGLIsUnsafe") + (kwinApp()->isX11MultiHead() ? QString::number(kwinApp()->x11ScreenNumber()) : QString()));
                     auto group = KConfigGroup(KSharedConfig::openConfig(configName), "Compositing");
-                    group.writeEntry(unsafeKey, true);
+                    group.writeEntry(QLatin1String("OpenGLIsUnsafe"), true);
                     group.sync();
                     KCrash::setDrKonqiEnabled(false);
                     qFatal("Freeze in OpenGL initialization detected");
@@ -307,7 +302,7 @@ void X11StandalonePlatform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
         }
         break;
     case OpenGLSafePoint::PostInit:
-        group.writeEntry(unsafeKey, false);
+        group.writeEntry(QLatin1String("OpenGLIsUnsafe"), false);
         group.sync();
         // Deliberately continue with PostFrame
         Q_FALLTHROUGH();

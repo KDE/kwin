@@ -355,64 +355,6 @@ int main(int argc, char *argv[])
     KWin::Application::setupMalloc();
     KWin::Application::setupLocalizedString();
 
-    int primaryScreen = 0;
-    xcb_connection_t *c = xcb_connect(nullptr, &primaryScreen);
-    if (!c || xcb_connection_has_error(c)) {
-        fprintf(stderr, "%s: FATAL ERROR while trying to open display %s\n",
-                argv[0], qgetenv("DISPLAY").constData());
-        exit(1);
-    }
-
-    const int number_of_screens = xcb_setup_roots_length(xcb_get_setup(c));
-    xcb_disconnect(c);
-    c = nullptr;
-
-    // multi head
-    auto isMultiHead = []() -> bool {
-        QByteArray multiHead = qgetenv("KDE_MULTIHEAD");
-        if (!multiHead.isEmpty()) {
-            return (multiHead.toLower() == "true");
-        }
-        return true;
-    };
-    if (number_of_screens != 1 && isMultiHead()) {
-        KWin::Application::setX11MultiHead(true);
-        KWin::Application::setX11ScreenNumber(primaryScreen);
-        int pos; // Temporarily needed to reconstruct DISPLAY var if multi-head
-        QByteArray display_name = qgetenv("DISPLAY");
-
-        if ((pos = display_name.lastIndexOf('.')) != -1) {
-            display_name.remove(pos, 10); // 10 is enough to be sure we removed ".s"
-        }
-
-        for (int i = 0; i < number_of_screens; i++) {
-            // If execution doesn't pass by here, then kwin
-            // acts exactly as previously
-            if (i != KWin::Application::x11ScreenNumber() && fork() == 0) {
-                KWin::Application::setX11ScreenNumber(i);
-                QByteArray dBusSuffix = qgetenv("KWIN_DBUS_SERVICE_SUFFIX");
-                if (!dBusSuffix.isNull()) {
-                    dBusSuffix.append(".");
-                }
-                dBusSuffix.append(QByteArrayLiteral("head-")).append(QByteArray::number(i));
-                qputenv("KWIN_DBUS_SERVICE_SUFFIX", dBusSuffix);
-                // Break here because we are the child process, we don't
-                // want to fork() anymore
-                break;
-            }
-        }
-        // In the next statement, display_name shouldn't contain a screen
-        // number. If it had it, it was removed at the "pos" check
-        const QString envir = QStringLiteral("DISPLAY=%1.%2")
-                                  .arg(display_name.data())
-                                  .arg(KWin::Application::x11ScreenNumber());
-
-        if (putenv(strdup(envir.toLatin1().constData()))) {
-            fprintf(stderr, "%s: WARNING: unable to set DISPLAY environment variable\n", argv[0]);
-            perror("putenv()");
-        }
-    }
-
     if (signal(SIGTERM, KWin::sighandler) == SIG_IGN) {
         signal(SIGTERM, SIG_IGN);
     }

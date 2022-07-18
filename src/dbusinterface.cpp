@@ -46,10 +46,6 @@ DBusInterface::DBusInterface(QObject *parent)
 
     QDBusConnection dbus = QDBusConnection::sessionBus();
     dbus.registerObject(QStringLiteral("/KWin"), this);
-    const QByteArray dBusSuffix = qgetenv("KWIN_DBUS_SERVICE_SUFFIX");
-    if (!dBusSuffix.isNull()) {
-        m_serviceName = m_serviceName + QLatin1Char('.') + dBusSuffix;
-    }
     dbus.registerService(m_serviceName);
     dbus.connect(QString(), QStringLiteral("/KWin"), QStringLiteral("org.kde.KWin"), QStringLiteral("reloadConfig"),
                  Workspace::self(), SLOT(slotReloadConfig()));

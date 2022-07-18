@@ -1036,7 +1036,7 @@ static bool areModKeysDepressed(const QKeySequence &seq)
 
 void TabBox::navigatingThroughWindows(bool forward, const QKeySequence &shortcut, TabBoxMode mode)
 {
-    if (!m_ready || isGrabbed() || !Workspace::self()->isOnCurrentHead()) {
+    if (!m_ready || isGrabbed()) {
         return;
     }
     if (!options->focusPolicyIsReasonable()) {
@@ -1098,7 +1098,7 @@ void TabBox::slotWalkBackThroughCurrentAppWindowsAlternative()
 
 void TabBox::slotWalkThroughDesktops()
 {
-    if (!m_ready || isGrabbed() || !Workspace::self()->isOnCurrentHead()) {
+    if (!m_ready || isGrabbed()) {
         return;
     }
     if (areModKeysDepressed(m_cutWalkThroughDesktops)) {
@@ -1112,7 +1112,7 @@ void TabBox::slotWalkThroughDesktops()
 
 void TabBox::slotWalkBackThroughDesktops()
 {
-    if (!m_ready || isGrabbed() || !Workspace::self()->isOnCurrentHead()) {
+    if (!m_ready || isGrabbed()) {
         return;
     }
     if (areModKeysDepressed(m_cutWalkThroughDesktopsReverse)) {
@@ -1126,7 +1126,7 @@ void TabBox::slotWalkBackThroughDesktops()
 
 void TabBox::slotWalkThroughDesktopList()
 {
-    if (!m_ready || isGrabbed() || !Workspace::self()->isOnCurrentHead()) {
+    if (!m_ready || isGrabbed()) {
         return;
     }
     if (areModKeysDepressed(m_cutWalkThroughDesktopList)) {
@@ -1140,7 +1140,7 @@ void TabBox::slotWalkThroughDesktopList()
 
 void TabBox::slotWalkBackThroughDesktopList()
 {
-    if (!m_ready || isGrabbed() || !Workspace::self()->isOnCurrentHead()) {
+    if (!m_ready || isGrabbed()) {
         return;
     }
     if (areModKeysDepressed(m_cutWalkThroughDesktopListReverse)) {
