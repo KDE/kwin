@@ -12,26 +12,29 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 3.0 as PC3
 import org.kde.kwin.private.desktopgrid 1.0
 
-
-DropArea {
+FocusScope {
     id: desktopView
 
     required property QtObject clientModel
     required property QtObject desktop
     readonly property bool dragActive: heap.dragActive || dragHandler.active || xAnim.running || yAnim.running
     property real panelOpacity: 1
+    focus: true
 
-    onEntered: {
-        drag.accepted = true;
-    }
-    onDropped: {
-        if (drag.source instanceof DropArea) {
-            if (desktopView === drag.source) {
-                return;
+    DropArea {
+        anchors.fill: parent
+        onEntered: {
+            drag.accepted = true;
+        }
+        onDropped: {
+            if (drag.source instanceof DropArea) {
+                if (desktopView === drag.source) {
+                    return;
+                }
+                effect.swapDesktops(drag.source.desktop.x11DesktopNumber, desktop.x11DesktopNumber);
+            } else {
+                drag.source.desktop = desktopView.desktop.x11DesktopNumber;
             }
-            effect.swapDesktops(drag.source.desktop.x11DesktopNumber, desktop.x11DesktopNumber);
-        } else {
-            drag.source.desktop = desktopView.desktop.x11DesktopNumber;
         }
     }
     Connections {
