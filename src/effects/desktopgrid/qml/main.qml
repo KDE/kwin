@@ -38,6 +38,53 @@ Rectangle {
         container.effect.deactivate(container.effect.animationDuration);
     }
 
+    function selectNext(direction) {
+        let currentIndex = 0
+        for (let i = 0; i < gridRepeater.count; i++) {
+            if (gridRepeater.itemAt(i).focus) {
+                currentIndex = i;
+                break;
+            }
+        }
+        let x = currentIndex % grid.columns;
+        let y = Math.floor(currentIndex / grid.columns);
+
+        // the direction we move in is the opposite of the window to select
+        // i.e pressing left should select the rightmost window on the desktop
+        // to the left
+        let invertedDirection;
+        switch(direction) {
+            case WindowHeap.Direction.Up:
+                y--;
+                invertedDirection = WindowHeap.Direction.Down;
+                break;
+            case WindowHeap.Direction.Down:
+                y++
+                invertedDirection = WindowHeap.Direction.Up;
+                break;
+            case WindowHeap.Direction.Left:
+                x--;
+                invertedDirection = WindowHeap.Direction.Right;
+                break;
+            case WindowHeap.Direction.Right:
+                x++;
+                invertedDirection = WindowHeap.Direction.Left;
+                break;
+        }
+
+        if (x < 0 || x >= grid.columns) {
+            return false;
+        }
+        if (y < 0 || y >= grid.rows) {
+            return false;
+        }
+        let newIndex = y * grid.columns + x;
+
+        gridRepeater.itemAt(newIndex).focus = true;
+        gridRepeater.itemAt(newIndex).selectLastItem(invertedDirection);
+        return true;
+    }
+
     Keys.onPressed: {
         if (event.key == Qt.Key_Escape) {
             effect.deactivate(effect.animationDuration);
@@ -51,6 +98,21 @@ Rectangle {
         } else if (event.key >= Qt.Key_0 && event.key <= Qt.Key_9) {
             const desktopId = event.key == Qt.Key_0 ? 10 : (event.key - Qt.Key_0);
             switchTo(desktopId);
+        } else if (event.key == Qt.Key_Up) {
+            event.accepted = selectNext(WindowHeap.Direction.Up);
+        } else if (event.key == Qt.Key_Down) {
+            event.accepted = selectNext(WindowHeap.Direction.Down);
+        } else if (event.key == Qt.Key_Left) {
+            event.accepted = selectNext(WindowHeap.Direction.Left);
+        } else if (event.key == Qt.Key_Right) {
+            event.accepted = selectNext(WindowHeap.Direction.Right);
+        } else if (event.key == Qt.Key_Return || event.key == Qt.Key_Space) {
+            for (let i = 0; i < gridRepeater.count; i++) {
+                if (gridRepeater.itemAt(i).focus) {
+                    switchTo(gridRepeater.itemAt(i).desktop.x11DesktopNumber)
+                    break;
+                }
+            }
         }
     }
     Keys.priority: Keys.AfterItem
@@ -145,6 +207,7 @@ Rectangle {
             }
         ]
         Repeater {
+            id: gridRepeater
             model: desktopModel
             DesktopView {
                 id: thumbnail
