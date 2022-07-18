@@ -21,6 +21,10 @@ FocusScope {
     property real panelOpacity: 1
     focus: true
 
+    function selectLastItem(direction) {
+        heap.selectLastItem(direction);
+    }
+
     DropArea {
         anchors.fill: parent
         onEntered: {
