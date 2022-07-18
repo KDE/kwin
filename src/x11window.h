@@ -110,6 +110,7 @@ public:
     QSizeF frameSizeToClientSize(const QSizeF &size) const override;
     QSizeF clientSizeToFrameSize(const QSizeF &size) const override;
     QRectF frameRectToBufferRect(const QRectF &rect) const;
+    QSizeF implicitSize() const;
 
     QMatrix4x4 inputTransformation() const override;
 

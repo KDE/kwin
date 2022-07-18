@@ -4226,15 +4226,6 @@ void Window::checkOffscreenPosition(QRectF *geom, const QRectF &screenArea)
 }
 
 /**
- * Returns the natural size of the window, if the window is not shaded it's the same
- * as size().
- */
-QSizeF Window::implicitSize() const
-{
-    return clientSizeToFrameSize(clientSize());
-}
-
-/**
  * Constrains the client size @p size according to a set of the window's size hints.
  *
  * Default implementation applies only minimum and maximum size constraints.

@@ -1147,7 +1147,6 @@ public:
 
     virtual QSizeF constrainClientSize(const QSizeF &size, SizeMode mode = SizeModeAny) const;
     QSizeF constrainFrameSize(const QSizeF &size, SizeMode mode = SizeModeAny) const;
-    QSizeF implicitSize() const;
 
     /**
      * Calculates the matching client position for the given frame position @p point.
