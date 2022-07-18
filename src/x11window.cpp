@@ -1154,7 +1154,7 @@ void X11Window::createDecoration(const QRect &oldgeom)
     }
     setDecoration(decoration);
 
-    moveResize(QRect(calculateGravitation(false), implicitSize()));
+    moveResize(QRect(calculateGravitation(false), clientSizeToFrameSize(clientSize())));
     maybeCreateX11DecorationRenderer();
     Q_EMIT geometryShapeChanged(this, oldgeom);
 }
@@ -1166,7 +1166,7 @@ void X11Window::destroyDecoration()
         QPoint grav = calculateGravitation(true);
         setDecoration(nullptr);
         maybeDestroyX11DecorationRenderer();
-        moveResize(QRect(grav, implicitSize()));
+        moveResize(QRect(grav, clientSizeToFrameSize(clientSize())));
         if (!isZombie()) {
             Q_EMIT geometryShapeChanged(this, oldgeom);
         }
@@ -2667,6 +2667,15 @@ QRect X11Window::frameRectToBufferRect(const QRect &rect) const
         return rect;
     }
     return frameRectToClientRect(rect);
+}
+
+/**
+ * Returns the natural size of the window, if the window is not shaded it's the same
+ * as size().
+ */
+QSize X11Window::implicitSize() const
+{
+    return clientSizeToFrameSize(m_client.geometry().size());
 }
 
 QMatrix4x4 X11Window::inputTransformation() const
