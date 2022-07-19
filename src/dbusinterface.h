@@ -86,11 +86,7 @@ public Q_SLOTS: // METHODS
      */
     QVariantMap getWindowInfo(const QString &uuid);
 
-private Q_SLOTS:
-    void becomeKWinService(const QString &service);
-
 private:
-    void announceService();
     QString m_serviceName;
     QDBusMessage m_replyQueryWindowInfo;
 };

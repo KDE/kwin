@@ -22,7 +22,6 @@ class KWIN_EXPORT Atoms
 public:
     Atoms();
 
-    Xcb::Atom kwin_running;
     Xcb::Atom activities;
 
     Xcb::Atom wm_protocols;
@@ -62,7 +61,6 @@ public:
     Xcb::Atom kde_color_sheme;
     Xcb::Atom kde_skip_close_animation;
     Xcb::Atom kde_screen_edge_show;
-    Xcb::Atom kwin_dbus_service;
     Xcb::Atom utf8_string;
     Xcb::Atom text;
     Xcb::Atom uri_list;

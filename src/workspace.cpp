@@ -307,12 +307,6 @@ void Workspace::initializeX11()
     // Compatibility
     int32_t data = 1;
 
-    xcb_change_property(kwinApp()->x11Connection(),
-                        XCB_PROP_MODE_APPEND,
-                        kwinApp()->x11RootWindow(),
-                        atoms->kwin_running,
-                        atoms->kwin_running, 32, 1, &data);
-
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         m_wasUserInteractionFilter.reset(new WasUserInteractionX11Filter);
         m_movingClientFilter.reset(new MovingClientX11Filter);
@@ -458,10 +452,6 @@ void Workspace::cleanupX11()
     X11Window::cleanupX11();
     RootInfo::destroy();
     Xcb::Extensions::destroy();
-
-    if (xcb_connection_t *connection = kwinApp()->x11Connection()) {
-        xcb_delete_property(connection, kwinApp()->x11RootWindow(), atoms->kwin_running);
-    }
 
     m_colorMapper.reset();
     m_movingClientFilter.reset();

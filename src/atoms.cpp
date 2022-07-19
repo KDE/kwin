@@ -15,8 +15,7 @@ namespace KWin
 {
 
 Atoms::Atoms()
-    : kwin_running(QByteArrayLiteral("KWIN_RUNNING"))
-    , activities(QByteArrayLiteral("_KDE_NET_WM_ACTIVITIES"))
+    : activities(QByteArrayLiteral("_KDE_NET_WM_ACTIVITIES"))
     , wm_protocols(QByteArrayLiteral("WM_PROTOCOLS"))
     , wm_delete_window(QByteArrayLiteral("WM_DELETE_WINDOW"))
     , wm_take_focus(QByteArrayLiteral("WM_TAKE_FOCUS"))
@@ -53,7 +52,6 @@ Atoms::Atoms()
     , kde_color_sheme(QByteArrayLiteral("_KDE_NET_WM_COLOR_SCHEME"))
     , kde_skip_close_animation(QByteArrayLiteral("_KDE_NET_WM_SKIP_CLOSE_ANIMATION"))
     , kde_screen_edge_show(QByteArrayLiteral("_KDE_NET_WM_SCREEN_EDGE_SHOW"))
-    , kwin_dbus_service(QByteArrayLiteral("_ORG_KDE_KWIN_DBUS_SERVICE"))
     , utf8_string(QByteArrayLiteral("UTF8_STRING"))
     , text(QByteArrayLiteral("TEXT"))
     , uri_list(QByteArrayLiteral("text/uri-list"))
