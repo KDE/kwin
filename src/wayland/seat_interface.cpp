@@ -527,10 +527,10 @@ void SeatInterface::setDragTarget(AbstractDropHandler *dropTarget,
         notifyTouchMotion(d->globalTouch.ids.first(), globalPosition);
     }
 
-    QMatrix4x4 surfaceInputTransformation = inputTransformation;
-    surfaceInputTransformation.scale(surface->scaleOverride());
 
     if (d->drag.target) {
+        QMatrix4x4 surfaceInputTransformation = inputTransformation;
+        surfaceInputTransformation.scale(surface->scaleOverride());
         d->drag.surface = surface;
         d->drag.transformation = surfaceInputTransformation;
         d->drag.target->updateDragTarget(surface, serial);
