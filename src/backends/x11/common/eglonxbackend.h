@@ -60,7 +60,6 @@ private:
     xcb_connection_t *m_connection;
     Display *m_x11Display;
     xcb_window_t m_rootWindow;
-    int m_x11ScreenNumber;
     xcb_window_t m_renderingWindow = XCB_WINDOW_NONE;
     bool m_havePlatformBase = false;
 };
