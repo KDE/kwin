@@ -324,8 +324,6 @@ bool WaylandEglBackend::initRenderingContext()
     }
 
     const auto &firstOutput = m_outputs.first();
-    // set our first surface as the one for the abstract backend, just to make it happy
-    setSurface(firstOutput->m_eglSurface);
     return firstOutput->makeContextCurrent();
 }
 
