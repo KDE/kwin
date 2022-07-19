@@ -103,7 +103,6 @@ bool X11WindowedEglBackend::createSurfaces()
     if (m_outputs.isEmpty()) {
         return false;
     }
-    setSurface(m_outputs.first()->surface());
     return true;
 }
 
