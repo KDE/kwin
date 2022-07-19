@@ -58,8 +58,6 @@ DBusInterface::DBusInterface(QObject *parent)
 DBusInterface::~DBusInterface()
 {
     QDBusConnection::sessionBus().unregisterService(m_serviceName);
-    // KApplication automatically also grabs org.kde.kwin, so it's often been used externally - ensure to free it as well
-    QDBusConnection::sessionBus().unregisterService(QStringLiteral("org.kde.kwin"));
 }
 
 // wrap void methods with no arguments to Workspace
