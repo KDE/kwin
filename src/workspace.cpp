@@ -2197,35 +2197,22 @@ void Workspace::updateClientArea()
  */
 QRectF Workspace::clientArea(clientAreaOption opt, const Output *output, const VirtualDesktop *desktop) const
 {
-    QRectF workArea;
-    QRectF screenArea;
-
-    if (auto desktopIt = m_screenAreas.constFind(desktop); desktopIt != m_screenAreas.constEnd()) {
-        if (auto outputIt = desktopIt->constFind(output); outputIt != desktopIt->constEnd()) {
-            screenArea = *outputIt;
-        }
-    }
-
-    if (screenArea.isNull()) { // screens may be missing during KWin initialization or screen config changes
-        screenArea = output->geometry();
-    }
-
-    workArea = m_workAreas.value(desktop);
-    if (workArea.isNull()) {
-        workArea = m_geometry;
-    }
-
     switch (opt) {
     case MaximizeArea:
     case PlacementArea:
-        return screenArea;
+        if (auto desktopIt = m_screenAreas.constFind(desktop); desktopIt != m_screenAreas.constEnd()) {
+            if (auto outputIt = desktopIt->constFind(output); outputIt != desktopIt->constEnd()) {
+                return *outputIt;
+            }
+        }
+        return output->geometry();
     case MaximizeFullArea:
     case FullScreenArea:
     case MovementArea:
     case ScreenArea:
         return output->geometry();
     case WorkArea:
-        return workArea;
+        return m_workAreas.value(desktop, m_geometry);
     case FullArea:
         return m_geometry;
     default:
