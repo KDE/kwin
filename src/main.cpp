@@ -266,7 +266,7 @@ void Application::createOptions()
 
 void Application::createPlugins()
 {
-    PluginManager::create(this);
+    m_pluginManager = std::make_unique<PluginManager>();
 }
 
 void Application::createColorManager()
@@ -306,7 +306,7 @@ void Application::destroyCompositor()
 
 void Application::destroyPlugins()
 {
-    delete PluginManager::self();
+    m_pluginManager.reset();
 }
 
 void Application::destroyColorManager()
@@ -560,6 +560,11 @@ void Application::initPlatform(const KPluginMetaData &plugin)
     } else {
         qCWarning(KWIN_CORE) << "Could not create plugin" << plugin.name() << "error:" << loader.errorString();
     }
+}
+
+PluginManager *Application::pluginManager() const
+{
+    return m_pluginManager.get();
 }
 
 } // namespace

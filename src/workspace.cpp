@@ -1724,14 +1724,14 @@ QString Workspace::supportInformation() const
         }
         support.append(QLatin1String("\nLoaded Plugins:\n"));
         support.append(QLatin1String("---------------\n"));
-        QStringList loadedPlugins = PluginManager::self()->loadedPlugins();
+        QStringList loadedPlugins = kwinApp()->pluginManager()->loadedPlugins();
         loadedPlugins.sort();
         for (const QString &plugin : qAsConst(loadedPlugins)) {
             support.append(plugin + QLatin1Char('\n'));
         }
         support.append(QLatin1String("\nAvailable Plugins:\n"));
         support.append(QLatin1String("------------------\n"));
-        QStringList availablePlugins = PluginManager::self()->availablePlugins();
+        QStringList availablePlugins = kwinApp()->pluginManager()->availablePlugins();
         availablePlugins.sort();
         for (const QString &plugin : qAsConst(availablePlugins)) {
             support.append(plugin + QLatin1Char('\n'));

@@ -17,8 +17,6 @@
 namespace KWin
 {
 
-KWIN_SINGLETON_FACTORY(PluginManager)
-
 static const QString s_pluginDirectory = QStringLiteral("kwin/plugins");
 
 static QJsonValue readPluginInfo(const QJsonObject &metadata, const QString &key)
@@ -26,8 +24,7 @@ static QJsonValue readPluginInfo(const QJsonObject &metadata, const QString &key
     return metadata.value(QLatin1String("KPlugin")).toObject().value(key);
 }
 
-PluginManager::PluginManager(QObject *parent)
-    : QObject(parent)
+PluginManager::PluginManager()
 {
     const KConfigGroup config(kwinApp()->config(), QStringLiteral("Plugins"));
 
@@ -77,10 +74,7 @@ PluginManager::PluginManager(QObject *parent)
     new PluginManagerDBusInterface(this);
 }
 
-PluginManager::~PluginManager()
-{
-    s_self = nullptr;
-}
+PluginManager::~PluginManager() = default;
 
 QStringList PluginManager::loadedPlugins() const
 {

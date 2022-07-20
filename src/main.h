@@ -15,6 +15,7 @@
 #include <kwinglobals.h>
 
 #include <KSharedConfig>
+#include <memory>
 // Qt
 #include <QAbstractNativeEventFilter>
 #include <QApplication>
@@ -28,6 +29,7 @@ namespace KWin
 
 class Platform;
 class X11EventFilter;
+class PluginManager;
 
 class XcbEventFilter : public QAbstractNativeEventFilter
 {
@@ -238,6 +240,8 @@ public:
     static void setupMalloc();
     static void setupLocalizedString();
 
+    PluginManager *pluginManager() const;
+
 Q_SIGNALS:
     void x11ConnectionChanged();
     void x11ConnectionAboutToBeDestroyed();
@@ -293,6 +297,7 @@ private:
     bool m_terminating = false;
     qreal m_xwaylandScale = 1;
     QProcessEnvironment m_processEnvironment;
+    std::unique_ptr<PluginManager> m_pluginManager;
 };
 
 inline static Application *kwinApp()

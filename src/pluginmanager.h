@@ -28,6 +28,7 @@ class KWIN_EXPORT PluginManager : public QObject
     Q_OBJECT
 
 public:
+    PluginManager();
     ~PluginManager() override;
 
     QStringList loadedPlugins() const;
@@ -45,7 +46,6 @@ private:
 
     std::map<QString, std::unique_ptr<Plugin>> m_plugins;
     QHash<QString, QStaticPlugin> m_staticPlugins;
-    KWIN_SINGLETON(PluginManager)
 };
 
 } // namespace KWin
