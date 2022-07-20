@@ -604,12 +604,8 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         setOnActivities(activitiesList);
     }
 
-    QRectF geom = windowGeometry.rect();
+    QRectF geom = session ? session->geometry : windowGeometry.rect();
     bool placementDone = false;
-
-    if (session) {
-        geom = session->geometry;
-    }
 
     QRectF area;
     bool partial_keep_in_area = isMapped || session;
