@@ -20,7 +20,6 @@
 
 namespace KWin
 {
-extern int screen_number;
 
 std::unique_ptr<RootInfo> RootInfo::s_self;
 
@@ -116,7 +115,7 @@ RootInfo *RootInfo::create()
         | NET::ActionChangeDesktop
         | NET::ActionClose;
 
-    s_self.reset(new RootInfo(supportWindow, "KWin", properties, types, states, properties2, actions, screen_number));
+    s_self.reset(new RootInfo(supportWindow, "KWin", properties, types, states, properties2, actions));
     return s_self.get();
 }
 

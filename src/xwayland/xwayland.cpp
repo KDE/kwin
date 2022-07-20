@@ -261,7 +261,6 @@ bool Xwayland::createX11Connection()
 
     m_app->setX11Connection(connection);
     m_app->setX11DefaultScreen(screen);
-    m_app->setX11ScreenNumber(0);
     m_app->setX11RootWindow(screen->root);
 
     m_app->createAtoms();
@@ -269,8 +268,8 @@ bool Xwayland::createX11Connection()
 
     installSocketNotifier();
 
-    // Note that it's very important to have valid x11RootWindow(), x11ScreenNumber(), and
-    // atoms when the rest of kwin is notified about the new X11 connection.
+    // Note that it's very important to have valid x11RootWindow(), and atoms when the
+    // rest of kwin is notified about the new X11 connection.
     Q_EMIT m_app->x11ConnectionChanged();
 
     return true;
@@ -292,7 +291,6 @@ void Xwayland::destroyX11Connection()
 
     m_app->setX11Connection(nullptr);
     m_app->setX11DefaultScreen(nullptr);
-    m_app->setX11ScreenNumber(-1);
     m_app->setX11RootWindow(XCB_WINDOW_NONE);
 
     Q_EMIT m_app->x11ConnectionChanged();

@@ -17,8 +17,6 @@
 namespace KWin
 {
 
-int screen_number = 0;
-
 InputRedirection *InputRedirection::s_self = nullptr;
 
 void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *action)
@@ -101,7 +99,6 @@ private:
 void TestVirtualDesktops::init()
 {
     VirtualDesktopManager::create();
-    screen_number = 0;
 }
 
 void TestVirtualDesktops::cleanup()

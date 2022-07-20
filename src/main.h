@@ -58,7 +58,6 @@ class KWIN_EXPORT Application : public QApplication
     Q_PROPERTY(quint32 x11Time READ x11Time WRITE setX11Time)
     Q_PROPERTY(quint32 x11RootWindow READ x11RootWindow CONSTANT)
     Q_PROPERTY(void *x11Connection READ x11Connection NOTIFY x11ConnectionChanged)
-    Q_PROPERTY(int x11ScreenNumber READ x11ScreenNumber CONSTANT)
     Q_PROPERTY(KSharedConfigPtr config READ config WRITE setConfig)
     Q_PROPERTY(KSharedConfigPtr kxkbConfig READ kxkbConfig WRITE setKxkbConfig)
 public:
@@ -148,15 +147,6 @@ public:
      * KAboutData::setApplicationData.
      */
     static void createAboutData();
-
-    /**
-     * @returns the X11 Screen number. If not applicable it's set to @c -1.
-     */
-    static int x11ScreenNumber();
-    /**
-     * Sets the X11 screen number of this KWin instance to @p screenNumber.
-     */
-    static void setX11ScreenNumber(int screenNumber);
 
     /**
      * @returns the X11 root window.

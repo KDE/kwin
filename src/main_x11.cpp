@@ -108,8 +108,8 @@ class KWinSelectionOwner : public KSelectionOwner
 {
     Q_OBJECT
 public:
-    explicit KWinSelectionOwner(int screen)
-        : KSelectionOwner(make_selection_atom(screen), screen)
+    explicit KWinSelectionOwner()
+        : KSelectionOwner(make_selection_atom())
     {
     }
 
@@ -150,13 +150,9 @@ private:
         }
     }
 
-    xcb_atom_t make_selection_atom(int screen_P)
+    xcb_atom_t make_selection_atom()
     {
-        if (screen_P < 0) {
-            screen_P = QX11Info::appScreen();
-        }
-        QByteArray screen(QByteArrayLiteral("WM_S"));
-        screen.append(QByteArray::number(screen_P));
+        QByteArray screen(QByteArrayLiteral("WM_S0"));
         ScopedCPointer<xcb_intern_atom_reply_t> atom(xcb_intern_atom_reply(
             kwinApp()->x11Connection(),
             xcb_intern_atom_unchecked(kwinApp()->x11Connection(), false, screen.length(), screen.constData()),
@@ -209,28 +205,15 @@ void ApplicationX11::lostSelection()
     quit();
 }
 
-static xcb_screen_t *findXcbScreen(xcb_connection_t *connection, int screen)
-{
-    for (xcb_screen_iterator_t it = xcb_setup_roots_iterator(xcb_get_setup(connection));
-         it.rem;
-         --screen, xcb_screen_next(&it)) {
-        if (screen == 0) {
-            return it.data;
-        }
-    }
-    return nullptr;
-}
-
 void ApplicationX11::performStartup()
 {
     crashChecking();
 
-    if (Application::x11ScreenNumber() == -1) {
-        Application::setX11ScreenNumber(QX11Info::appScreen());
-    }
-    setX11DefaultScreen(findXcbScreen(x11Connection(), x11ScreenNumber()));
+    xcb_screen_t *screen = xcb_setup_roots_iterator(xcb_get_setup(x11Connection())).data;
+    Q_ASSERT(screen);
+    setX11DefaultScreen(screen);
 
-    owner.reset(new KWinSelectionOwner(Application::x11ScreenNumber()));
+    owner.reset(new KWinSelectionOwner());
     connect(owner.data(), &KSelectionOwner::failedToClaimOwnership, [] {
         fputs(i18n("kwin: unable to claim manager selection, another wm running? (try using --replace)\n").toLocal8Bit().constData(), stderr);
         ::exit(1);

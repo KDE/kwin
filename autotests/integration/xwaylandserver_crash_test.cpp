@@ -129,7 +129,6 @@ void XwaylandServerCrashTest::testCrash()
     QCOMPARE(kwinApp()->x11Connection(), nullptr);
     QCOMPARE(kwinApp()->x11DefaultScreen(), nullptr);
     QCOMPARE(kwinApp()->x11RootWindow(), XCB_WINDOW_NONE);
-    QCOMPARE(kwinApp()->x11ScreenNumber(), -1);
 
     // Render a frame to ensure that the compositor doesn't crash.
     Compositor::self()->scene()->addRepaintFull();

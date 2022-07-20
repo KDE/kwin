@@ -60,22 +60,8 @@ namespace KWin
 {
 
 Options *options;
-
 Atoms *atoms;
-
-int screen_number = -1;
-
 int Application::crashes = 0;
-
-void Application::setX11ScreenNumber(int screenNumber)
-{
-    screen_number = screenNumber;
-}
-
-int Application::x11ScreenNumber()
-{
-    return screen_number;
-}
 
 Application::Application(Application::OperationMode mode, int &argc, char **argv)
     : QApplication(argc, argv)
