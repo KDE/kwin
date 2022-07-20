@@ -70,8 +70,8 @@ TabBoxHandlerImpl::TabBoxHandlerImpl(TabBox *tabBox)
     connect(vds, &VirtualDesktopManager::countChanged, m_desktopFocusChain, &DesktopChainManager::resize);
     connect(vds, &VirtualDesktopManager::currentChanged, m_desktopFocusChain, &DesktopChainManager::addDesktop);
 #if KWIN_BUILD_ACTIVITIES
-    if (Activities::self()) {
-        connect(Activities::self(), &Activities::currentChanged, m_desktopFocusChain, &DesktopChainManager::useChain);
+    if (Workspace::self()->activities()) {
+        connect(Workspace::self()->activities(), &Activities::currentChanged, m_desktopFocusChain, &DesktopChainManager::useChain);
     }
 #endif
 }

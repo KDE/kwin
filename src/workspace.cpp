@@ -135,12 +135,11 @@ Workspace::Workspace()
     _self = this;
 
 #if KWIN_BUILD_ACTIVITIES
-    Activities *activities = nullptr;
     if (kwinApp()->usesKActivities()) {
-        activities = Activities::create(this);
+        m_activities = std::make_unique<Activities>();
     }
-    if (activities) {
-        connect(activities, &Activities::currentChanged, this, &Workspace::updateCurrentActivity);
+    if (m_activities) {
+        connect(m_activities.get(), &Activities::currentChanged, this, &Workspace::updateCurrentActivity);
     }
 #endif
 
@@ -1102,7 +1101,7 @@ Window *Workspace::findWindowToActivateOnDesktop(VirtualDesktop *desktop)
 void Workspace::updateCurrentActivity(const QString &new_activity)
 {
 #if KWIN_BUILD_ACTIVITIES
-    if (!Activities::self()) {
+    if (!m_activities) {
         return;
     }
     // closeActivePopup();
@@ -2827,5 +2826,12 @@ FocusChain *Workspace::focusChain() const
 {
     return m_focusChain.get();
 }
+
+#if KWIN_BUILD_ACTIVITIES
+Activities *Workspace::activities() const
+{
+    return m_activities.get();
+}
+#endif
 
 } // namespace

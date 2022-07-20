@@ -102,10 +102,10 @@ QString DBusInterface::activeOutputName()
 bool DBusInterface::startActivity(const QString &in0)
 {
 #if KWIN_BUILD_ACTIVITIES
-    if (!Activities::self()) {
+    if (!Workspace::self()->activities()) {
         return false;
     }
-    return Activities::self()->start(in0);
+    return Workspace::self()->activities()->start(in0);
 #else
     Q_UNUSED(in0)
     return false;
@@ -115,10 +115,10 @@ bool DBusInterface::startActivity(const QString &in0)
 bool DBusInterface::stopActivity(const QString &in0)
 {
 #if KWIN_BUILD_ACTIVITIES
-    if (!Activities::self()) {
+    if (!Workspace::self()->activities()) {
         return false;
     }
-    return Activities::self()->stop(in0);
+    return Workspace::self()->activities()->stop(in0);
 #else
     Q_UNUSED(in0)
     return false;

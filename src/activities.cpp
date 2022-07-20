@@ -21,21 +21,13 @@
 namespace KWin
 {
 
-KWIN_SINGLETON_FACTORY(Activities)
-
-Activities::Activities(QObject *parent)
-    : QObject(parent)
-    , m_controller(new KActivities::Controller(this))
+Activities::Activities()
+    : m_controller(new KActivities::Controller(this))
 {
     connect(m_controller, &KActivities::Controller::activityRemoved, this, &Activities::slotRemoved);
     connect(m_controller, &KActivities::Controller::activityRemoved, this, &Activities::removed);
     connect(m_controller, &KActivities::Controller::activityAdded, this, &Activities::added);
     connect(m_controller, &KActivities::Controller::currentActivityChanged, this, &Activities::slotCurrentChanged);
-}
-
-Activities::~Activities()
-{
-    s_self = nullptr;
 }
 
 KActivities::Consumer::ServiceStatus Activities::serviceStatus() const

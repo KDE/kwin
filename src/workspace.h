@@ -56,6 +56,9 @@ class X11Window;
 class X11EventFilter;
 class FocusChain;
 enum class Predicate;
+#if KWIN_BUILD_ACTIVITIES
+class Activities;
+#endif
 
 class KWIN_EXPORT Workspace : public QObject
 {
@@ -425,6 +428,9 @@ public:
         return m_lastActiveWindow;
     }
     FocusChain *focusChain() const;
+#if KWIN_BUILD_ACTIVITIES
+    Activities *activities() const;
+#endif
 
 public Q_SLOTS:
     void performWindowOperation(KWin::Window *window, Options::WindowOperation op);
@@ -694,6 +700,9 @@ private:
 
     SessionManager *m_sessionManager;
     std::unique_ptr<FocusChain> m_focusChain;
+#if KWIN_BUILD_ACTIVITIES
+    std::unique_ptr<Activities> m_activities;
+#endif
 
 private:
     friend bool performTransiencyCheck();

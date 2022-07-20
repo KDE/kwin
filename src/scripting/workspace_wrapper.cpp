@@ -41,7 +41,7 @@ WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
     connect(vds, &VirtualDesktopManager::currentChanged, this, &WorkspaceWrapper::currentVirtualDesktopChanged);
     connect(ws, &Workspace::windowDemandsAttentionChanged, this, &WorkspaceWrapper::clientDemandsAttentionChanged);
 #if KWIN_BUILD_ACTIVITIES
-    if (KWin::Activities *activities = KWin::Activities::self()) {
+    if (KWin::Activities *activities = ws->activities()) {
         connect(activities, &Activities::currentChanged, this, &WorkspaceWrapper::currentActivityChanged);
         connect(activities, &Activities::added, this, &WorkspaceWrapper::activitiesChanged);
         connect(activities, &Activities::added, this, &WorkspaceWrapper::activityAdded);
@@ -104,10 +104,10 @@ Window *WorkspaceWrapper::activeClient() const
 QString WorkspaceWrapper::currentActivity() const
 {
 #if KWIN_BUILD_ACTIVITIES
-    if (!Activities::self()) {
+    if (!Workspace::self()->activities()) {
         return QString();
     }
-    return Activities::self()->current();
+    return Workspace::self()->activities()->current();
 #else
     return QString();
 #endif
@@ -116,8 +116,8 @@ QString WorkspaceWrapper::currentActivity() const
 void WorkspaceWrapper::setCurrentActivity(QString activity)
 {
 #if KWIN_BUILD_ACTIVITIES
-    if (Activities::self()) {
-        Activities::self()->setCurrent(activity);
+    if (Workspace::self()->activities()) {
+        Workspace::self()->activities()->setCurrent(activity);
     }
 #else
     Q_UNUSED(activity)
@@ -127,10 +127,10 @@ void WorkspaceWrapper::setCurrentActivity(QString activity)
 QStringList WorkspaceWrapper::activityList() const
 {
 #if KWIN_BUILD_ACTIVITIES
-    if (!Activities::self()) {
+    if (!Workspace::self()->activities()) {
         return QStringList();
     }
-    return Activities::self()->all();
+    return Workspace::self()->activities()->all();
 #else
     return QStringList();
 #endif

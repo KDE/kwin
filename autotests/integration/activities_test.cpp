@@ -128,8 +128,8 @@ void ActivitiesTest::testSetOnActivitiesValidates()
     QVERIFY(window->isDecorated());
 
     // verify the test machine doesn't have the following activities used
-    QVERIFY(!Activities::self()->all().contains(QStringLiteral("foo")));
-    QVERIFY(!Activities::self()->all().contains(QStringLiteral("bar")));
+    QVERIFY(!Workspace::self()->activities()->all().contains(QStringLiteral("foo")));
+    QVERIFY(!Workspace::self()->activities()->all().contains(QStringLiteral("bar")));
 
     window->setOnActivities(QStringList{QStringLiteral("foo"), QStringLiteral("bar")});
     QVERIFY(!window->activities().contains(QLatin1String("foo")));

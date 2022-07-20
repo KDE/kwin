@@ -297,7 +297,8 @@ void Workspace::activateWindow(Window *window, bool force)
     if (!window->isOnCurrentActivity()) {
         ++block_focus;
         // DBUS!
-        Activities::self()->setCurrent(window->activities().constFirst()); // first isn't necessarily best, but it's easiest
+        // first isn't necessarily best, but it's easiest
+        m_activities->setCurrent(window->activities().constFirst());
         --block_focus;
     }
 #endif

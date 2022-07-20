@@ -418,10 +418,10 @@ void UserActionsMenu::menuAboutToShow()
 void UserActionsMenu::showHideActivityMenu()
 {
 #if KWIN_BUILD_ACTIVITIES
-    if (!Activities::self()) {
+    if (!Workspace::self()->activities()) {
         return;
     }
-    const QStringList &openActivities_ = Activities::self()->running();
+    const QStringList &openActivities_ = Workspace::self()->activities()->running();
     qCDebug(KWIN_CORE) << "activities:" << openActivities_.size();
     if (openActivities_.size() < 2) {
         delete m_activityMenu;
@@ -696,7 +696,7 @@ void UserActionsMenu::activityPopupAboutToShow()
     }
 
 #if KWIN_BUILD_ACTIVITIES
-    if (!Activities::self()) {
+    if (!Workspace::self()->activities()) {
         return;
     }
     m_activityMenu->clear();
@@ -717,7 +717,7 @@ void UserActionsMenu::activityPopupAboutToShow()
     }
     m_activityMenu->addSeparator();
 
-    const auto activities = Activities::self()->running();
+    const auto activities = Workspace::self()->activities()->running();
     for (const QString &id : activities) {
         KActivities::Info activity(id);
         QString name = activity.name();
@@ -776,7 +776,7 @@ void UserActionsMenu::slotWindowOperation(QAction *action)
 void UserActionsMenu::slotToggleOnActivity(QAction *action)
 {
 #if KWIN_BUILD_ACTIVITIES
-    if (!Activities::self()) {
+    if (!Workspace::self()->activities()) {
         return;
     }
     QString activity = action->data().toString();
@@ -789,7 +789,7 @@ void UserActionsMenu::slotToggleOnActivity(QAction *action)
         return;
     }
 
-    Activities::self()->toggleWindowOnActivity(m_window, activity, false);
+    Workspace::self()->activities()->toggleWindowOnActivity(m_window, activity, false);
     if (m_activityMenu && m_activityMenu->isVisible() && m_activityMenu->actions().count()) {
         const bool isOnAll = m_window->isOnAllActivities();
         m_activityMenu->actions().at(0)->setChecked(isOnAll);

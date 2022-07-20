@@ -546,10 +546,10 @@ bool Window::isDeleted() const
 bool Window::isOnCurrentActivity() const
 {
 #if KWIN_BUILD_ACTIVITIES
-    if (!Activities::self()) {
+    if (!Workspace::self()->activities()) {
         return true;
     }
-    return isOnActivity(Activities::self()->current());
+    return isOnActivity(Workspace::self()->activities()->current());
 #else
     return true;
 #endif
@@ -3464,7 +3464,7 @@ QStringList Window::activities() const
 void Window::setOnActivity(const QString &activity, bool enable)
 {
 #if KWIN_BUILD_ACTIVITIES
-    if (!Activities::self()) {
+    if (!Workspace::self()->activities()) {
         return;
     }
     QStringList newActivitiesList = activities();
@@ -3473,7 +3473,7 @@ void Window::setOnActivity(const QString &activity, bool enable)
         return;
     }
     if (enable) {
-        QStringList allActivities = Activities::self()->all();
+        QStringList allActivities = Workspace::self()->activities()->all();
         if (!allActivities.contains(activity)) {
             // bogus ID
             return;
@@ -3495,10 +3495,10 @@ void Window::setOnActivity(const QString &activity, bool enable)
 void Window::setOnActivities(const QStringList &newActivitiesList)
 {
 #if KWIN_BUILD_ACTIVITIES
-    if (!Activities::self()) {
+    if (!Workspace::self()->activities()) {
         return;
     }
-    const auto allActivities = Activities::self()->all();
+    const auto allActivities = Workspace::self()->activities()->all();
     const auto activityList = [&] {
         auto result = rules()->checkActivity(newActivitiesList);
 
@@ -3543,7 +3543,7 @@ void Window::setOnAllActivities(bool all)
     if (all) {
         setOnActivities(QStringList());
     } else {
-        setOnActivity(Activities::self()->current(), true);
+        setOnActivity(Workspace::self()->activities()->current(), true);
     }
 #else
     Q_UNUSED(all)

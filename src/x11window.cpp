@@ -571,7 +571,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
             }
         }
 #if KWIN_BUILD_ACTIVITIES
-        if (Activities::self() && !isMapped && !skipTaskbar() && isNormalWindow() && !activitiesDefined) {
+        if (Workspace::self()->activities() && !isMapped && !skipTaskbar() && isNormalWindow() && !activitiesDefined) {
             // a new, regular window, when we're not recovering from a crash,
             // and it hasn't got an activity. let's try giving it the current one.
             // TODO: decide whether to keep this before the 4.6 release
@@ -579,7 +579,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
             // with a public API for setting windows to be on all activities.
             // something like KWindowSystem::setOnAllActivities or
             // KActivityConsumer::setOnAllActivities
-            setOnActivity(Activities::self()->current(), true);
+            setOnActivity(Workspace::self()->activities()->current(), true);
         }
 #endif
     }
@@ -2504,8 +2504,8 @@ void X11Window::readActivities(Xcb::StringProperty &property)
     // if the activities are not synced, and there are existing clients with
     // activities specified, somebody has restarted kwin. we can not validate
     // activities in this case. we need to trust the old values.
-    if (Activities::self() && Activities::self()->serviceStatus() != KActivities::Consumer::Unknown) {
-        QStringList allActivities = Activities::self()->all();
+    if (Workspace::self()->activities() && Workspace::self()->activities()->serviceStatus() != KActivities::Consumer::Unknown) {
+        QStringList allActivities = Workspace::self()->activities()->all();
         if (allActivities.isEmpty()) {
             qCDebug(KWIN_CORE) << "no activities!?!?";
             // don't touch anything, there's probably something bad going on and we don't wanna make it worse

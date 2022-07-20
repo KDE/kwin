@@ -197,7 +197,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     connect(ws, &Workspace::geometryChanged, this, &EffectsHandler::virtualScreenSizeChanged);
     connect(ws, &Workspace::geometryChanged, this, &EffectsHandler::virtualScreenGeometryChanged);
 #if KWIN_BUILD_ACTIVITIES
-    if (Activities *activities = Activities::self()) {
+    if (Activities *activities = Workspace::self()->activities()) {
         connect(activities, &Activities::added, this, &EffectsHandler::activityAdded);
         connect(activities, &Activities::removed, this, &EffectsHandler::activityRemoved);
         connect(activities, &Activities::currentChanged, this, &EffectsHandler::currentActivityChanged);
@@ -979,10 +979,10 @@ void EffectsHandlerImpl::setShowingDesktop(bool showing)
 QString EffectsHandlerImpl::currentActivity() const
 {
 #if KWIN_BUILD_ACTIVITIES
-    if (!Activities::self()) {
+    if (!Workspace::self()->activities()) {
         return QString();
     }
-    return Activities::self()->current();
+    return Workspace::self()->activities()->current();
 #else
     return QString();
 #endif

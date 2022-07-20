@@ -31,7 +31,7 @@ ClientLevel::ClientLevel(ClientModel *model, AbstractLevel *parent)
     : AbstractLevel(model, parent)
 {
 #if KWIN_BUILD_ACTIVITIES
-    if (Activities *activities = Activities::self()) {
+    if (Activities *activities = Workspace::self()->activities()) {
         connect(activities, &Activities::currentChanged, this, &ClientLevel::reInit);
     }
 #endif
@@ -307,8 +307,8 @@ AbstractLevel *AbstractLevel::create(const QList<ClientModel::LevelRestriction> 
     switch (restriction) {
     case ClientModel::ActivityRestriction: {
 #if KWIN_BUILD_ACTIVITIES
-        if (Activities::self()) {
-            const QStringList &activities = Activities::self()->all();
+        if (Workspace::self()->activities()) {
+            const QStringList &activities = Workspace::self()->activities()->all();
             for (QStringList::const_iterator it = activities.begin(); it != activities.end(); ++it) {
                 AbstractLevel *childLevel = create(childRestrictions, childrenRestrictions, model, currentLevel);
                 if (!childLevel) {
@@ -400,7 +400,7 @@ ForkLevel::ForkLevel(const QList<ClientModel::LevelRestriction> &childRestrictio
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::countChanged, this, &ForkLevel::desktopCountChanged);
     connect(screens(), &Screens::countChanged, this, &ForkLevel::screenCountChanged);
 #if KWIN_BUILD_ACTIVITIES
-    if (Activities *activities = Activities::self()) {
+    if (Activities *activities = Workspace::self()->activities()) {
         connect(activities, &Activities::added, this, &ForkLevel::activityAdded);
         connect(activities, &Activities::removed, this, &ForkLevel::activityRemoved);
     }

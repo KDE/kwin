@@ -30,7 +30,7 @@ class KWIN_EXPORT Activities : public QObject
     Q_OBJECT
 
 public:
-    ~Activities() override;
+    explicit Activities();
 
     bool stop(const QString &id);
     bool start(const QString &id);
@@ -79,8 +79,6 @@ private:
     QString m_previous;
     QString m_current;
     KActivities::Controller *m_controller;
-
-    KWIN_SINGLETON(Activities)
 };
 
 inline QStringList Activities::all() const

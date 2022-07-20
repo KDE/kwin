@@ -562,7 +562,7 @@ XdgToplevelWindow::XdgToplevelWindow(XdgToplevelInterface *shellSurface)
 {
     setDesktops({VirtualDesktopManager::self()->currentDesktop()});
 #if KWIN_BUILD_ACTIVITIES
-    if (auto a = Activities::self()) {
+    if (auto a = Workspace::self()->activities()) {
         setOnActivities({a->current()});
     }
 #endif
@@ -1771,7 +1771,7 @@ XdgPopupWindow::XdgPopupWindow(XdgPopupInterface *shellSurface)
     m_windowType = NET::Unknown;
     setDesktops({VirtualDesktopManager::self()->currentDesktop()});
 #if KWIN_BUILD_ACTIVITIES
-    if (auto a = Activities::self()) {
+    if (auto a = Workspace::self()->activities()) {
         setOnActivities({a->current()});
     }
 #endif
