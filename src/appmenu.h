@@ -32,7 +32,7 @@ class ApplicationMenu : public QObject
     Q_OBJECT
 
 public:
-    ~ApplicationMenu() override;
+    explicit ApplicationMenu();
 
     void showApplicationMenu(const QPoint &pos, Window *c, int actionId);
 
@@ -55,8 +55,6 @@ private:
     Window *findWindowWithApplicationMenu(const QString &serviceName, const QDBusObjectPath &menuObjectPath);
 
     bool m_applicationMenuEnabled = false;
-
-    KWIN_SINGLETON(ApplicationMenu)
 };
 
 }

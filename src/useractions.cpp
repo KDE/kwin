@@ -1744,7 +1744,7 @@ void Workspace::showWindowMenu(const QRect &pos, Window *window)
 
 void Workspace::showApplicationMenu(const QRect &pos, Window *window, int actionId)
 {
-    ApplicationMenu::self()->showApplicationMenu(window->pos().toPoint() + pos.bottomLeft(), window, actionId);
+    Workspace::self()->applicationMenu()->showApplicationMenu(window->pos().toPoint() + pos.bottomLeft(), window, actionId);
 }
 
 /**

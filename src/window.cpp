@@ -115,7 +115,7 @@ Window::Window()
         }
     });
 
-    connect(ApplicationMenu::self(), &ApplicationMenu::applicationMenuEnabledChanged, this, [this] {
+    connect(Workspace::self()->applicationMenu(), &ApplicationMenu::applicationMenuEnabledChanged, this, [this] {
         Q_EMIT hasApplicationMenuChanged(hasApplicationMenu());
     });
 }
@@ -3339,7 +3339,7 @@ QString Window::findDesktopFile(const QString &desktopFileName)
 
 bool Window::hasApplicationMenu() const
 {
-    return ApplicationMenu::self()->applicationMenuEnabled() && !m_applicationMenuServiceName.isEmpty() && !m_applicationMenuObjectPath.isEmpty();
+    return Workspace::self()->applicationMenu()->applicationMenuEnabled() && !m_applicationMenuServiceName.isEmpty() && !m_applicationMenuObjectPath.isEmpty();
 }
 
 void Window::updateApplicationMenuServiceName(const QString &serviceName)

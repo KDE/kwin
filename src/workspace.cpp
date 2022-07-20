@@ -122,6 +122,7 @@ Workspace::Workspace()
     , workspaceInit(true)
     , m_sessionManager(new SessionManager(this))
     , m_focusChain(std::make_unique<FocusChain>())
+    , m_applicationMenu(std::make_unique<ApplicationMenu>())
 {
     // If KWin was already running it saved its configuration after loosing the selection -> Reread
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -129,8 +130,6 @@ Workspace::Workspace()
 #else
     QFuture<void> reparseConfigFuture = QtConcurrent::run(&Options::reparseConfiguration, options);
 #endif
-
-    ApplicationMenu::create(this);
 
     _self = this;
 
@@ -2825,6 +2824,11 @@ void Workspace::fixPositionAfterCrash(xcb_window_t w, const xcb_get_geometry_rep
 FocusChain *Workspace::focusChain() const
 {
     return m_focusChain.get();
+}
+
+ApplicationMenu *Workspace::applicationMenu() const
+{
+    return m_applicationMenu.get();
 }
 
 #if KWIN_BUILD_ACTIVITIES

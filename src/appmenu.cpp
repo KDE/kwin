@@ -22,13 +22,10 @@
 namespace KWin
 {
 
-KWIN_SINGLETON_FACTORY(ApplicationMenu)
-
 static const QString s_viewService(QStringLiteral("org.kde.kappmenuview"));
 
-ApplicationMenu::ApplicationMenu(QObject *parent)
-    : QObject(parent)
-    , m_appmenuInterface(new OrgKdeKappmenuInterface(QStringLiteral("org.kde.kappmenu"), QStringLiteral("/KAppMenu"), QDBusConnection::sessionBus(), this))
+ApplicationMenu::ApplicationMenu()
+    : m_appmenuInterface(new OrgKdeKappmenuInterface(QStringLiteral("org.kde.kappmenu"), QStringLiteral("/KAppMenu"), QDBusConnection::sessionBus(), this))
 {
     connect(m_appmenuInterface, &OrgKdeKappmenuInterface::showRequest, this, &ApplicationMenu::slotShowRequest);
     connect(m_appmenuInterface, &OrgKdeKappmenuInterface::menuShown, this, &ApplicationMenu::slotMenuShown);
@@ -47,11 +44,6 @@ ApplicationMenu::ApplicationMenu(QObject *parent)
     });
 
     m_applicationMenuEnabled = QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.kappmenu"));
-}
-
-ApplicationMenu::~ApplicationMenu()
-{
-    s_self = nullptr;
 }
 
 bool ApplicationMenu::applicationMenuEnabled() const

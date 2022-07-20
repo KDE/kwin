@@ -55,6 +55,7 @@ class VirtualDesktop;
 class X11Window;
 class X11EventFilter;
 class FocusChain;
+class ApplicationMenu;
 enum class Predicate;
 #if KWIN_BUILD_ACTIVITIES
 class Activities;
@@ -428,6 +429,7 @@ public:
         return m_lastActiveWindow;
     }
     FocusChain *focusChain() const;
+    ApplicationMenu *applicationMenu() const;
 #if KWIN_BUILD_ACTIVITIES
     Activities *activities() const;
 #endif
@@ -700,6 +702,7 @@ private:
 
     SessionManager *m_sessionManager;
     std::unique_ptr<FocusChain> m_focusChain;
+    std::unique_ptr<ApplicationMenu> m_applicationMenu;
 #if KWIN_BUILD_ACTIVITIES
     std::unique_ptr<Activities> m_activities;
 #endif
