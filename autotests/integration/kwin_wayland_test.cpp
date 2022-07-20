@@ -123,10 +123,10 @@ void WaylandTestApplication::destroyVirtualInputDevices()
 void WaylandTestApplication::performStartup()
 {
     if (!m_inputMethodServerToStart.isEmpty()) {
-        InputMethod::create();
+        createInputMethod();
         if (m_inputMethodServerToStart != QStringLiteral("internal")) {
-            InputMethod::self()->setInputMethodCommand(m_inputMethodServerToStart);
-            InputMethod::self()->setEnabled(true);
+            inputMethod()->setInputMethodCommand(m_inputMethodServerToStart);
+            inputMethod()->setEnabled(true);
         }
     }
 

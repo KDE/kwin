@@ -254,7 +254,7 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
     m_input->processFilters(std::bind(&InputEventFilter::keyEvent, std::placeholders::_1, &event));
 
     m_xkb->forwardModifiers();
-    if (auto *inputmethod = InputMethod::self()) {
+    if (auto *inputmethod = kwinApp()->inputMethod()) {
         inputmethod->forwardModifiers(InputMethod::NoForce);
     }
 

@@ -41,7 +41,7 @@ InputPanelV1Window::InputPanelV1Window(InputPanelSurfaceV1Interface *panelSurfac
     connect(panelSurface, &InputPanelSurfaceV1Interface::overlayPanel, this, &InputPanelV1Window::showOverlayPanel);
     connect(panelSurface, &InputPanelSurfaceV1Interface::destroyed, this, &InputPanelV1Window::destroyWindow);
 
-    InputMethod::self()->setPanel(this);
+    kwinApp()->inputMethod()->setPanel(this);
 }
 
 void InputPanelV1Window::showOverlayPanel()

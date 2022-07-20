@@ -48,6 +48,7 @@ public:
         Force = 1,
     };
 
+    InputMethod();
     ~InputMethod() override;
 
     void init();
@@ -133,8 +134,6 @@ private:
     QString m_inputMethodCommand;
 
     bool m_hasPendingModifiers = false;
-
-    KWIN_SINGLETON(InputMethod)
 };
 
 }

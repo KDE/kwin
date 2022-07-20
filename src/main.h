@@ -30,6 +30,7 @@ namespace KWin
 class Platform;
 class X11EventFilter;
 class PluginManager;
+class InputMethod;
 
 class XcbEventFilter : public QAbstractNativeEventFilter
 {
@@ -241,6 +242,7 @@ public:
     static void setupLocalizedString();
 
     PluginManager *pluginManager() const;
+    InputMethod *inputMethod() const;
 
 Q_SIGNALS:
     void x11ConnectionChanged();
@@ -298,6 +300,7 @@ private:
     qreal m_xwaylandScale = 1;
     QProcessEnvironment m_processEnvironment;
     std::unique_ptr<PluginManager> m_pluginManager;
+    std::unique_ptr<InputMethod> m_inputMethod;
 };
 
 inline static Application *kwinApp()

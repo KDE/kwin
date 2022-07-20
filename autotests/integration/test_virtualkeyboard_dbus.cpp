@@ -59,7 +59,7 @@ void VirtualKeyboardDBusTest::initTestCase()
 
 void VirtualKeyboardDBusTest::init()
 {
-    InputMethod::self()->setEnabled(false);
+    kwinApp()->inputMethod()->setEnabled(false);
 }
 
 void VirtualKeyboardDBusTest::cleanup()
@@ -69,7 +69,7 @@ void VirtualKeyboardDBusTest::cleanup()
 
 void VirtualKeyboardDBusTest::testEnabled()
 {
-    VirtualKeyboardDBus dbus(KWin::InputMethod::self());
+    VirtualKeyboardDBus dbus(KWin::kwinApp()->inputMethod());
     OrgKdeKwinVirtualKeyboardInterface iface(QStringLiteral("org.kde.kwin.testvirtualkeyboard"), QStringLiteral("/VirtualKeyboard"), QDBusConnection::sessionBus());
     QSignalSpy helperChangedSpy(&iface, &OrgKdeKwinVirtualKeyboardInterface::enabledChanged);
     QVERIFY(helperChangedSpy.isValid());
@@ -118,7 +118,7 @@ void VirtualKeyboardDBusTest::testRequestEnabled()
     QFETCH(QString, method);
     QFETCH(bool, expectedResult);
 
-    VirtualKeyboardDBus dbus(KWin::InputMethod::self());
+    VirtualKeyboardDBus dbus(KWin::kwinApp()->inputMethod());
     OrgKdeKwinVirtualKeyboardInterface iface(QStringLiteral("org.kde.kwin.testvirtualkeyboard"), QStringLiteral("/VirtualKeyboard"), QDBusConnection::sessionBus());
 
     iface.setEnabled(expectedResult);

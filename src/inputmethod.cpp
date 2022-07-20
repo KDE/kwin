@@ -49,10 +49,7 @@ using namespace KWaylandServer;
 namespace KWin
 {
 
-KWIN_SINGLETON_FACTORY(InputMethod)
-
-InputMethod::InputMethod(QObject *parent)
-    : QObject(parent)
+InputMethod::InputMethod()
 {
     m_enabled = kwinApp()->config()->group("Wayland").readEntry("VirtualKeyboardEnabled", true);
     // this is actually too late. Other processes are started before init,
@@ -68,7 +65,6 @@ InputMethod::InputMethod(QObject *parent)
 InputMethod::~InputMethod()
 {
     stopInputMethod();
-    s_self = nullptr;
 }
 
 void InputMethod::init()

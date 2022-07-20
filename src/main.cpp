@@ -276,7 +276,7 @@ void Application::createColorManager()
 
 void Application::createInputMethod()
 {
-    InputMethod::create(this);
+    m_inputMethod = std::make_unique<InputMethod>();
 }
 
 void Application::installNativeX11EventFilter()
@@ -316,7 +316,7 @@ void Application::destroyColorManager()
 
 void Application::destroyInputMethod()
 {
-    delete InputMethod::self();
+    m_inputMethod.reset();
 }
 
 void Application::registerEventFilter(X11EventFilter *filter)
@@ -565,6 +565,11 @@ void Application::initPlatform(const KPluginMetaData &plugin)
 PluginManager *Application::pluginManager() const
 {
     return m_pluginManager.get();
+}
+
+InputMethod *Application::inputMethod() const
+{
+    return m_inputMethod.get();
 }
 
 } // namespace

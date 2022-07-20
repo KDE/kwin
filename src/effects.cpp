@@ -263,7 +263,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
         slotOutputAdded(output);
     }
 
-    connect(InputMethod::self(), &InputMethod::panelChanged, this, &EffectsHandlerImpl::inputPanelChanged);
+    connect(kwinApp()->inputMethod(), &InputMethod::panelChanged, this, &EffectsHandlerImpl::inputPanelChanged);
 
     reconfigure();
 }
@@ -1821,11 +1821,11 @@ qreal EffectsHandlerImpl::renderTargetScale() const
 
 KWin::EffectWindow *EffectsHandlerImpl::inputPanel() const
 {
-    if (!InputMethod::self() || !InputMethod::self()->isEnabled()) {
+    if (!kwinApp()->inputMethod() || !kwinApp()->inputMethod()->isEnabled()) {
         return nullptr;
     }
 
-    auto panel = InputMethod::self()->panel();
+    auto panel = kwinApp()->inputMethod()->panel();
     if (panel) {
         return panel->effectWindow();
     }
@@ -1834,11 +1834,11 @@ KWin::EffectWindow *EffectsHandlerImpl::inputPanel() const
 
 bool EffectsHandlerImpl::isInputPanelOverlay() const
 {
-    if (!InputMethod::self() || !InputMethod::self()->isEnabled()) {
+    if (!kwinApp()->inputMethod() || !kwinApp()->inputMethod()->isEnabled()) {
         return true;
     }
 
-    auto panel = InputMethod::self()->panel();
+    auto panel = kwinApp()->inputMethod()->panel();
     if (panel) {
         return panel->mode() == InputPanelV1Window::Overlay;
     }

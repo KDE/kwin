@@ -193,7 +193,7 @@ void ApplicationWayland::refreshSettings(const KConfigGroup &group, const QByteA
 {
     if (group.name() == "Wayland" && names.contains("InputMethod")) {
         KDesktopFile file(group.readPathEntry("InputMethod", QString()));
-        InputMethod::self()->setInputMethodCommand(file.desktopGroup().readEntry("Exec", QString()));
+        kwinApp()->inputMethod()->setInputMethodCommand(file.desktopGroup().readEntry("Exec", QString()));
     }
 
     if (m_startXWayland && group.name() == "Xwayland" && names.contains("Scale")) {
@@ -212,7 +212,7 @@ void ApplicationWayland::startSession()
     connect(m_settingsWatcher.data(), &KConfigWatcher::configChanged, this, &ApplicationWayland::refreshSettings);
 
     if (!m_inputMethodServerToStart.isEmpty()) {
-        InputMethod::self()->setInputMethodCommand(m_inputMethodServerToStart);
+        kwinApp()->inputMethod()->setInputMethodCommand(m_inputMethodServerToStart);
     } else {
         refreshSettings(kwinSettings->group("Wayland"), {"InputMethod"});
     }
