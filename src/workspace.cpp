@@ -78,9 +78,10 @@ X11EventFilter *X11EventFilterContainer::filter() const
 
 ColorMapper::ColorMapper(QObject *parent)
     : QObject(parent)
-    , m_default(kwinApp()->x11DefaultScreen()->default_colormap)
-    , m_installed(kwinApp()->x11DefaultScreen()->default_colormap)
 {
+    const xcb_screen_t *screen = Xcb::defaultScreen();
+    m_default = screen->default_colormap;
+    m_installed = screen->default_colormap;
 }
 
 ColorMapper::~ColorMapper()

@@ -212,10 +212,6 @@ void ApplicationX11::performStartup()
 {
     crashChecking();
 
-    xcb_screen_t *screen = xcb_setup_roots_iterator(xcb_get_setup(x11Connection())).data;
-    Q_ASSERT(screen);
-    setX11DefaultScreen(screen);
-
     owner.reset(new KWinSelectionOwner());
     connect(owner.data(), &KSelectionOwner::failedToClaimOwnership, [] {
         fputs(i18n("kwin: unable to claim manager selection, another wm running? (try using --replace)\n").toLocal8Bit().constData(), stderr);

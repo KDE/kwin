@@ -127,7 +127,6 @@ void XwaylandServerCrashTest::testCrash()
     QTRY_VERIFY(!window);
     QTRY_VERIFY(!unmanaged);
     QCOMPARE(kwinApp()->x11Connection(), nullptr);
-    QCOMPARE(kwinApp()->x11DefaultScreen(), nullptr);
     QCOMPARE(kwinApp()->x11RootWindow(), XCB_WINDOW_NONE);
 
     // Render a frame to ensure that the compositor doesn't crash.

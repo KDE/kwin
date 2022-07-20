@@ -260,7 +260,6 @@ bool Xwayland::createX11Connection()
     Q_ASSERT(screen);
 
     m_app->setX11Connection(connection);
-    m_app->setX11DefaultScreen(screen);
     m_app->setX11RootWindow(screen->root);
 
     m_app->createAtoms();
@@ -290,7 +289,6 @@ void Xwayland::destroyX11Connection()
     xcb_disconnect(m_app->x11Connection());
 
     m_app->setX11Connection(nullptr);
-    m_app->setX11DefaultScreen(nullptr);
     m_app->setX11RootWindow(XCB_WINDOW_NONE);
 
     Q_EMIT m_app->x11ConnectionChanged();

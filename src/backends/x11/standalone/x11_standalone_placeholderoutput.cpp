@@ -6,6 +6,7 @@
 
 #include "x11_standalone_placeholderoutput.h"
 #include "x11_standalone_platform.h"
+#include "utils/xcbutils.h"
 
 namespace KWin
 {
@@ -15,7 +16,7 @@ X11PlaceholderOutput::X11PlaceholderOutput(X11StandalonePlatform *backend, QObje
     , m_backend(backend)
 {
     QSize pixelSize;
-    xcb_screen_t *screen = kwinApp()->x11DefaultScreen();
+    xcb_screen_t *screen = Xcb::defaultScreen();
     if (screen) {
         pixelSize = QSize(screen->width_in_pixels, screen->height_in_pixels);
     }

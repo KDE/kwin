@@ -1971,16 +1971,14 @@ static inline void restackWindowsWithRaise(const QVector<xcb_window_t> &windows)
     restackWindows(windows);
 }
 
+static xcb_screen_t *defaultScreen()
+{
+    return xcb_setup_roots_iterator(xcb_get_setup(connection())).data;
+}
+
 static inline int defaultDepth()
 {
-    static int depth = 0;
-    if (depth != 0) {
-        return depth;
-    }
-    xcb_screen_t *screen = xcb_setup_roots_iterator(xcb_get_setup(connection())).data;
-    Q_ASSERT(screen);
-    depth = screen->root_depth;
-    return depth;
+    return defaultScreen()->root_depth;
 }
 
 static inline xcb_rectangle_t fromQt(const QRect &rect)

@@ -337,7 +337,7 @@ void SceneQPainterTest::testX11Window()
     QVERIFY(!xcb_connection_has_error(c.data()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.data());
-    uint32_t value = kwinApp()->x11DefaultScreen()->white_pixel;
+    uint32_t value = Xcb::defaultScreen()->white_pixel;
     xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
