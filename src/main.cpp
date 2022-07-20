@@ -271,7 +271,7 @@ void Application::createPlugins()
 
 void Application::createColorManager()
 {
-    ColorManager::create(this);
+    m_colorManager = std::make_unique<ColorManager>();
 }
 
 void Application::createInputMethod()
@@ -311,7 +311,7 @@ void Application::destroyPlugins()
 
 void Application::destroyColorManager()
 {
-    delete ColorManager::self();
+    m_colorManager.reset();
 }
 
 void Application::destroyInputMethod()
@@ -570,6 +570,11 @@ PluginManager *Application::pluginManager() const
 InputMethod *Application::inputMethod() const
 {
     return m_inputMethod.get();
+}
+
+ColorManager *Application::colorManager() const
+{
+    return m_colorManager.get();
 }
 
 } // namespace

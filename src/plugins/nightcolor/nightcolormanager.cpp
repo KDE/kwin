@@ -114,7 +114,7 @@ void NightColorManager::init()
     KGlobalAccel::setGlobalShortcut(toggleAction, QList<QKeySequence>());
     input()->registerShortcut(QKeySequence(), toggleAction, this, &NightColorManager::toggle);
 
-    connect(ColorManager::self(), &ColorManager::deviceAdded, this, &NightColorManager::hardReset);
+    connect(kwinApp()->colorManager(), &ColorManager::deviceAdded, this, &NightColorManager::hardReset);
 
     connect(kwinApp()->platform()->session(), &Session::activeChanged, this, [this](bool active) {
         if (active) {
@@ -671,7 +671,7 @@ int NightColorManager::currentTargetTemp() const
 
 void NightColorManager::commitGammaRamps(int temperature)
 {
-    const QVector<ColorDevice *> devices = ColorManager::self()->devices();
+    const QVector<ColorDevice *> devices = kwinApp()->colorManager()->devices();
     for (ColorDevice *device : devices) {
         device->setTemperature(temperature);
     }

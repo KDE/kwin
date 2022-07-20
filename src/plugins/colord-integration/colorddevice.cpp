@@ -54,7 +54,7 @@ void ColordDevice::updateProfile()
         return;
     }
 
-    ColorDevice *device = ColorManager::self()->findDevice(m_output);
+    ColorDevice *device = kwinApp()->colorManager()->findDevice(m_output);
     if (device) {
         device->setProfile(profile.filename());
     }

@@ -15,17 +15,14 @@
 namespace KWin
 {
 
-KWIN_SINGLETON_FACTORY(ColorManager)
-
 class ColorManagerPrivate
 {
 public:
     QVector<ColorDevice *> devices;
 };
 
-ColorManager::ColorManager(QObject *parent)
-    : QObject(parent)
-    , d(new ColorManagerPrivate)
+ColorManager::ColorManager()
+    : d(std::make_unique<ColorManagerPrivate>())
 {
     Platform *platform = kwinApp()->platform();
     Session *session = platform->session();
@@ -40,10 +37,7 @@ ColorManager::ColorManager(QObject *parent)
     connect(session, &Session::activeChanged, this, &ColorManager::handleSessionActiveChanged);
 }
 
-ColorManager::~ColorManager()
-{
-    s_self = nullptr;
-}
+ColorManager::~ColorManager() = default;
 
 QVector<ColorDevice *> ColorManager::devices() const
 {

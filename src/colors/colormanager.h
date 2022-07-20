@@ -9,6 +9,7 @@
 #include "kwinglobals.h"
 
 #include <QObject>
+#include <memory>
 
 namespace KWin
 {
@@ -25,6 +26,7 @@ class KWIN_EXPORT ColorManager : public QObject
     Q_OBJECT
 
 public:
+    ColorManager();
     ~ColorManager() override;
 
     /**
@@ -55,8 +57,7 @@ private Q_SLOTS:
     void handleSessionActiveChanged(bool active);
 
 private:
-    QScopedPointer<ColorManagerPrivate> d;
-    KWIN_SINGLETON(ColorManager)
+    std::unique_ptr<ColorManagerPrivate> d;
 };
 
 } // namespace KWin

@@ -31,6 +31,7 @@ class Platform;
 class X11EventFilter;
 class PluginManager;
 class InputMethod;
+class ColorManager;
 
 class XcbEventFilter : public QAbstractNativeEventFilter
 {
@@ -243,6 +244,7 @@ public:
 
     PluginManager *pluginManager() const;
     InputMethod *inputMethod() const;
+    ColorManager *colorManager() const;
 
 Q_SIGNALS:
     void x11ConnectionChanged();
@@ -301,6 +303,7 @@ private:
     QProcessEnvironment m_processEnvironment;
     std::unique_ptr<PluginManager> m_pluginManager;
     std::unique_ptr<InputMethod> m_inputMethod;
+    std::unique_ptr<ColorManager> m_colorManager;
 };
 
 inline static Application *kwinApp()
