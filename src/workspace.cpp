@@ -121,6 +121,7 @@ Workspace::Workspace()
     , m_userActionsMenu(new UserActionsMenu(this))
     , workspaceInit(true)
     , m_sessionManager(new SessionManager(this))
+    , m_focusChain(std::make_unique<FocusChain>())
 {
     // If KWin was already running it saved its configuration after loosing the selection -> Reread
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -198,14 +199,13 @@ void Workspace::init()
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::layoutChanged, screenEdges, &ScreenEdges::updateLayout);
     connect(this, &Workspace::windowActivated, screenEdges, &ScreenEdges::checkBlocking);
 
-    FocusChain *focusChain = FocusChain::create(this);
-    connect(this, &Workspace::windowRemoved, focusChain, &FocusChain::remove);
-    connect(this, &Workspace::windowActivated, focusChain, &FocusChain::setActiveWindow);
-    connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, focusChain, [focusChain]() {
-        focusChain->setCurrentDesktop(VirtualDesktopManager::self()->currentDesktop());
+    connect(this, &Workspace::windowRemoved, m_focusChain.get(), &FocusChain::remove);
+    connect(this, &Workspace::windowActivated, m_focusChain.get(), &FocusChain::setActiveWindow);
+    connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, m_focusChain.get(), [this]() {
+        m_focusChain->setCurrentDesktop(VirtualDesktopManager::self()->currentDesktop());
     });
-    connect(options, &Options::separateScreenFocusChanged, focusChain, &FocusChain::setSeparateScreenFocus);
-    focusChain->setSeparateScreenFocus(options->isSeparateScreenFocus());
+    connect(options, &Options::separateScreenFocusChanged, m_focusChain.get(), &FocusChain::setSeparateScreenFocus);
+    m_focusChain->setSeparateScreenFocus(options->isSeparateScreenFocus());
 
     Platform *platform = kwinApp()->platform();
     connect(platform, &Platform::outputEnabled, this, &Workspace::slotOutputEnabled);
@@ -682,7 +682,7 @@ void Workspace::addX11Window(X11Window *window)
             requestFocus(window); // TODO: Make sure desktop is active after startup if there's no other window active
         }
     } else {
-        FocusChain::self()->update(window, FocusChain::Update);
+        m_focusChain->update(window, FocusChain::Update);
     }
     m_x11Clients.append(window);
     m_allClients.append(window);
@@ -1063,7 +1063,7 @@ void Workspace::activateWindowOnNewDesktop(VirtualDesktop *desktop)
 
 Window *Workspace::findWindowToActivateOnDesktop(VirtualDesktop *desktop)
 {
-    if (m_moveResizeWindow != nullptr && m_activeWindow == m_moveResizeWindow && FocusChain::self()->contains(m_activeWindow, desktop) && m_activeWindow->isShown() && m_activeWindow->isOnCurrentDesktop()) {
+    if (m_moveResizeWindow != nullptr && m_activeWindow == m_moveResizeWindow && m_focusChain->contains(m_activeWindow, desktop) && m_activeWindow->isShown() && m_activeWindow->isOnCurrentDesktop()) {
         // A requestFocus call will fail, as the window is already active
         return m_activeWindow;
     }
@@ -1089,7 +1089,7 @@ Window *Workspace::findWindowToActivateOnDesktop(VirtualDesktop *desktop)
             }
         }
     }
-    return FocusChain::self()->getForActivation(desktop);
+    return m_focusChain->getForActivation(desktop);
 }
 
 /**
@@ -1158,7 +1158,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
         window = m_activeWindow;
     } else if (options->focusPolicyIsReasonable()) {
         // Search in focus chain
-        window = FocusChain::self()->getForActivation(VirtualDesktopManager::self()->currentDesktop());
+        window = m_focusChain->getForActivation(VirtualDesktopManager::self()->currentDesktop());
     }
 
     if (!window) {
@@ -1251,7 +1251,7 @@ void Workspace::slotOutputDisabled(Output *output)
 
 void Workspace::slotDesktopAdded(VirtualDesktop *desktop)
 {
-    FocusChain::self()->addDesktop(desktop);
+    m_focusChain->addDesktop(desktop);
     Placement::self()->reinitCascading(0);
     updateClientArea();
 }
@@ -1271,7 +1271,7 @@ void Workspace::slotDesktopRemoved(VirtualDesktop *desktop)
 
     updateClientArea();
     Placement::self()->reinitCascading(0);
-    FocusChain::self()->removeDesktop(desktop);
+    m_focusChain->removeDesktop(desktop);
 }
 
 void Workspace::selectWmInputEventMask()
@@ -1415,7 +1415,7 @@ void Workspace::setShowingDesktop(bool showing, bool animated)
     if (showing_desktop && topDesk) {
         requestFocus(topDesk);
     } else if (!showing_desktop && changed) {
-        const auto window = FocusChain::self()->getForActivation(VirtualDesktopManager::self()->currentDesktop());
+        const auto window = m_focusChain->getForActivation(VirtualDesktopManager::self()->currentDesktop());
         if (window) {
             activateWindow(window);
         }
@@ -2821,6 +2821,11 @@ void Workspace::fixPositionAfterCrash(xcb_window_t w, const xcb_get_geometry_rep
         const uint32_t values[] = {Xcb::toXNative(geometry->x - left), Xcb::toXNative(geometry->y - top)};
         xcb_configure_window(kwinApp()->x11Connection(), w, XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y, values);
     }
+}
+
+FocusChain *Workspace::focusChain() const
+{
+    return m_focusChain.get();
 }
 
 } // namespace

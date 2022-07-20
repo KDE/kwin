@@ -794,7 +794,7 @@ void Window::setSkipTaskbar(bool b)
     doSetSkipTaskbar();
     updateWindowRules(Rules::SkipTaskbar);
     if (was_wants_tab_focus != wantsTabFocus()) {
-        FocusChain::self()->update(this, isActive() ? FocusChain::MakeFirst : FocusChain::Update);
+        Workspace::self()->focusChain()->update(this, isActive() ? FocusChain::MakeFirst : FocusChain::Update);
     }
     Q_EMIT skipTaskbarChanged();
 }
@@ -1144,7 +1144,7 @@ void Window::setDesktops(QVector<VirtualDesktop *> desktops)
 
     doSetDesktop();
 
-    FocusChain::self()->update(this, FocusChain::MakeFirst);
+    Workspace::self()->focusChain()->update(this, FocusChain::MakeFirst);
     updateWindowRules(Rules::Desktops);
 
     Q_EMIT desktopChanged();
@@ -1387,7 +1387,7 @@ void Window::minimize(bool avoid_animation)
     updateWindowRules(Rules::Minimize);
 
     if (options->moveMinimizedWindowsToEndOfTabBoxFocusChain()) {
-        FocusChain::self()->update(this, FocusChain::MakeFirstMinimized);
+        Workspace::self()->focusChain()->update(this, FocusChain::MakeFirstMinimized);
     }
 
     // TODO: merge signal with s_minimized
@@ -3561,7 +3561,7 @@ void Window::updateActivities(bool includeTransients)
     }
     Q_EMIT activitiesChanged(this);
     m_blockedActivityUpdatesRequireTransients = false; // reset
-    FocusChain::self()->update(this, FocusChain::MakeFirst);
+    Workspace::self()->focusChain()->update(this, FocusChain::MakeFirst);
     updateWindowRules(Rules::Activity);
 }
 

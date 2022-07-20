@@ -13,20 +13,6 @@
 namespace KWin
 {
 
-KWIN_SINGLETON_FACTORY_VARIABLE(FocusChain, s_manager)
-
-FocusChain::FocusChain(QObject *parent)
-    : QObject(parent)
-    , m_separateScreenFocus(false)
-    , m_activeWindow(nullptr)
-{
-}
-
-FocusChain::~FocusChain()
-{
-    s_manager = nullptr;
-}
-
 void FocusChain::remove(Window *window)
 {
     for (auto it = m_desktopFocusChains.begin();

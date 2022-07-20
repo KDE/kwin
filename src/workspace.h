@@ -54,6 +54,7 @@ class UserActionsMenu;
 class VirtualDesktop;
 class X11Window;
 class X11EventFilter;
+class FocusChain;
 enum class Predicate;
 
 class KWIN_EXPORT Workspace : public QObject
@@ -423,6 +424,7 @@ public:
     {
         return m_lastActiveWindow;
     }
+    FocusChain *focusChain() const;
 
 public Q_SLOTS:
     void performWindowOperation(KWin::Window *window, Options::WindowOperation op);
@@ -691,6 +693,7 @@ private:
     QScopedPointer<X11EventFilter> m_syncAlarmFilter;
 
     SessionManager *m_sessionManager;
+    std::unique_ptr<FocusChain> m_focusChain;
 
 private:
     friend bool performTransiencyCheck();

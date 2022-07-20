@@ -46,7 +46,8 @@ public:
         Update,
         MakeFirstMinimized = MakeFirst
     };
-    ~FocusChain() override;
+    explicit FocusChain() = default;
+
     /**
      * @brief Updates the position of the @p window according to the requested @p change in the
      * focus chain.
@@ -201,11 +202,9 @@ private:
     void insertWindowIntoChain(Window *window, Chain &chain);
     Chain m_mostRecentlyUsed;
     QHash<VirtualDesktop *, Chain> m_desktopFocusChains;
-    bool m_separateScreenFocus;
-    Window *m_activeWindow;
+    bool m_separateScreenFocus = false;
+    Window *m_activeWindow = nullptr;
     VirtualDesktop *m_currentDesktop = nullptr;
-
-    KWIN_SINGLETON_VARIABLE(FocusChain, s_manager)
 };
 
 inline bool FocusChain::contains(Window *window) const

@@ -443,7 +443,7 @@ void Workspace::restack(Window *window, Window *under, bool force)
     }
 
     Q_ASSERT(unconstrained_stacking_order.contains(window));
-    FocusChain::self()->moveAfterWindow(window, under);
+    m_focusChain->moveAfterWindow(window, under);
     updateStackingOrder();
 }
 

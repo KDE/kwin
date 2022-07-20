@@ -238,7 +238,7 @@ void Workspace::setActiveWindow(Window *window)
 
     if (m_activeWindow) {
         m_lastActiveWindow = m_activeWindow;
-        FocusChain::self()->update(m_activeWindow, FocusChain::MakeFirst);
+        m_focusChain->update(m_activeWindow, FocusChain::MakeFirst);
         m_activeWindow->demandAttention(false);
 
         // activating a client can cause a non active fullscreen window to loose the ActiveLayer status on > 1 screens
@@ -489,14 +489,14 @@ bool Workspace::activateNextWindow(Window *window)
         // first try to pass the focus to the (former) active clients leader
         if (window && window->isTransient()) {
             auto leaders = window->mainWindows();
-            if (leaders.count() == 1 && FocusChain::self()->isUsableFocusCandidate(leaders.at(0), window)) {
+            if (leaders.count() == 1 && m_focusChain->isUsableFocusCandidate(leaders.at(0), window)) {
                 focusCandidate = leaders.at(0);
                 raiseWindow(focusCandidate); // also raise - we don't know where it came from
             }
         }
         if (!focusCandidate) {
             // nope, ask the focus chain for the next candidate
-            focusCandidate = FocusChain::self()->nextForDesktop(window, desktop);
+            focusCandidate = m_focusChain->nextForDesktop(window, desktop);
         }
     }
 
@@ -520,7 +520,7 @@ void Workspace::switchToOutput(Output *output)
     }
     closeActivePopup();
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
-    Window *get_focus = FocusChain::self()->getForActivation(desktop, output);
+    Window *get_focus = m_focusChain->getForActivation(desktop, output);
     if (get_focus == nullptr) {
         get_focus = findDesktop(true, desktop);
     }

@@ -109,7 +109,7 @@ QString TabBoxHandlerImpl::desktopName(int desktop) const
 QWeakPointer<TabBoxClient> TabBoxHandlerImpl::nextClientFocusChain(TabBoxClient *client) const
 {
     if (TabBoxClientImpl *c = static_cast<TabBoxClientImpl *>(client)) {
-        auto next = FocusChain::self()->nextMostRecentlyUsed(c->client());
+        auto next = Workspace::self()->focusChain()->nextMostRecentlyUsed(c->client());
         if (next) {
             return qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(next->tabBoxClient());
         }
@@ -119,7 +119,7 @@ QWeakPointer<TabBoxClient> TabBoxHandlerImpl::nextClientFocusChain(TabBoxClient 
 
 QWeakPointer<TabBoxClient> TabBoxHandlerImpl::firstClientFocusChain() const
 {
-    if (auto c = FocusChain::self()->firstMostRecentlyUsed()) {
+    if (auto c = Workspace::self()->focusChain()->firstMostRecentlyUsed()) {
         return qWeakPointerCast<TabBoxClient, TabBoxClientImpl>(c->tabBoxClient());
     } else {
         return QWeakPointer<TabBoxClient>();
@@ -129,7 +129,7 @@ QWeakPointer<TabBoxClient> TabBoxHandlerImpl::firstClientFocusChain() const
 bool TabBoxHandlerImpl::isInFocusChain(TabBoxClient *client) const
 {
     if (TabBoxClientImpl *c = static_cast<TabBoxClientImpl *>(client)) {
-        return FocusChain::self()->contains(c->client());
+        return Workspace::self()->focusChain()->contains(c->client());
     }
     return false;
 }
