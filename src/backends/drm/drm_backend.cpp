@@ -31,7 +31,7 @@
 #include "scene.h"
 #include "scene_qpainter_drm_backend.h"
 #include "session.h"
-#include "udev.h"
+#include "utils/udev.h"
 // KF5
 #include <KCoreAddons>
 #include <KLocalizedString>

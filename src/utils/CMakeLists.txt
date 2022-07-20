@@ -5,5 +5,6 @@ target_sources(kwin PRIVATE
     egl_context_attribute_builder.cpp
     realtime.cpp
     subsurfacemonitor.cpp
+    udev.cpp
     xcbutils.cpp
 )

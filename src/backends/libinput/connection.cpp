@@ -23,8 +23,8 @@
 #include "input_event.h"
 #include "libinput_logging.h"
 #include "session.h"
-#include "udev.h"
 #include "utils/realtime.h"
+#include "utils/udev.h"
 
 #include <QDBusConnection>
 #include <QMutexLocker>

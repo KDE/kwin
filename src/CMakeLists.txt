@@ -138,7 +138,6 @@ target_sources(kwin PRIVATE
     tabletmodemanager.cpp
     hide_cursor_spy.cpp
     touch_input.cpp
-    udev.cpp
     unmanaged.cpp
     useractions.cpp
     virtualdesktops.cpp

@@ -13,7 +13,7 @@
 #include "main.h"
 #include "platform.h"
 #include "session.h"
-#include "udev.h"
+#include "utils/udev.h"
 
 #include <fcntl.h>
 #include <unistd.h>
