@@ -175,9 +175,9 @@ Workspace::Workspace()
         X11Compositor::create(this);
     }
 
-    auto decorationBridge = Decoration::DecorationBridge::create(this);
-    decorationBridge->init();
-    connect(this, &Workspace::configChanged, decorationBridge, &Decoration::DecorationBridge::reconfigure);
+    m_decorationBridge = std::make_unique<Decoration::DecorationBridge>();
+    m_decorationBridge->init();
+    connect(this, &Workspace::configChanged, m_decorationBridge.get(), &Decoration::DecorationBridge::reconfigure);
 
     new DBusInterface(this);
     Outline::create(this);
@@ -1516,10 +1516,10 @@ QString Workspace::supportInformation() const
         support.append(QStringLiteral("\n"));
     }
 
-    if (auto bridge = Decoration::DecorationBridge::self()) {
+    if (m_decorationBridge) {
         support.append(QStringLiteral("Decoration\n"));
         support.append(QStringLiteral("==========\n"));
-        support.append(bridge->supportInformation());
+        support.append(m_decorationBridge->supportInformation());
         support.append(QStringLiteral("\n"));
     }
     support.append(QStringLiteral("Platform\n"));
@@ -2829,6 +2829,11 @@ FocusChain *Workspace::focusChain() const
 ApplicationMenu *Workspace::applicationMenu() const
 {
     return m_applicationMenu.get();
+}
+
+Decoration::DecorationBridge *Workspace::decorationBridge() const
+{
+    return m_decorationBridge.get();
 }
 
 #if KWIN_BUILD_ACTIVITIES

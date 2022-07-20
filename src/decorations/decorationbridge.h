@@ -35,7 +35,7 @@ class KWIN_EXPORT DecorationBridge : public KDecoration2::DecorationBridge
 {
     Q_OBJECT
 public:
-    ~DecorationBridge() override;
+    explicit DecorationBridge();
 
     static bool hasPlugin();
 
@@ -82,7 +82,6 @@ private:
     QString m_theme;
     QSharedPointer<KDecoration2::DecorationSettings> m_settings;
     bool m_noPlugin;
-    KWIN_SINGLETON(DecorationBridge)
 };
 } // Decoration
 } // KWin

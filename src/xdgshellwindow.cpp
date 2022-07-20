@@ -1513,7 +1513,7 @@ void XdgToplevelWindow::configureDecoration()
         break;
     case DecorationMode::Server:
         if (!m_nextDecoration) {
-            m_nextDecoration.reset(Decoration::DecorationBridge::self()->createDecoration(this));
+            m_nextDecoration.reset(Workspace::self()->decorationBridge()->createDecoration(this));
         }
         break;
     }

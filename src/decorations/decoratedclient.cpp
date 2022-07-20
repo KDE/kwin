@@ -177,7 +177,7 @@ QColor DecoratedClientImpl::color(KDecoration2::ColorGroup group, KDecoration2::
 
 void DecoratedClientImpl::requestShowToolTip(const QString &text)
 {
-    if (!DecorationBridge::self()->showToolTips()) {
+    if (!workspace()->decorationBridge()->showToolTips()) {
         return;
     }
 

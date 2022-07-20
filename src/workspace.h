@@ -34,6 +34,11 @@ class KStartupInfoId;
 namespace KWin
 {
 
+namespace Decoration
+{
+class DecorationBridge;
+}
+
 namespace Xcb
 {
 class Tree;
@@ -430,6 +435,7 @@ public:
     }
     FocusChain *focusChain() const;
     ApplicationMenu *applicationMenu() const;
+    Decoration::DecorationBridge *decorationBridge() const;
 #if KWIN_BUILD_ACTIVITIES
     Activities *activities() const;
 #endif
@@ -703,6 +709,7 @@ private:
     SessionManager *m_sessionManager;
     std::unique_ptr<FocusChain> m_focusChain;
     std::unique_ptr<ApplicationMenu> m_applicationMenu;
+    std::unique_ptr<Decoration::DecorationBridge> m_decorationBridge;
 #if KWIN_BUILD_ACTIVITIES
     std::unique_ptr<Activities> m_activities;
 #endif

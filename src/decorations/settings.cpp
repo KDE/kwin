@@ -44,7 +44,7 @@ SettingsImpl::SettingsImpl(KDecoration2::DecorationSettings *parent)
         disconnect(c);
     });
     connect(Workspace::self(), &Workspace::configChanged, this, &SettingsImpl::readSettings);
-    connect(DecorationBridge::self(), &DecorationBridge::metaDataLoaded, this, &SettingsImpl::readSettings);
+    connect(Workspace::self()->decorationBridge(), &DecorationBridge::metaDataLoaded, this, &SettingsImpl::readSettings);
 }
 
 SettingsImpl::~SettingsImpl() = default;
@@ -160,7 +160,7 @@ void SettingsImpl::readSettings()
     auto size = stringToSize(config.readEntry("BorderSize", QStringLiteral("Normal")));
     if (m_autoBorderSize) {
         /* Falls back to Normal border size, if the plugin does not provide a valid recommendation. */
-        size = stringToSize(DecorationBridge::self()->recommendedBorderSize());
+        size = stringToSize(Workspace::self()->decorationBridge()->recommendedBorderSize());
     }
     if (size != m_borderSize) {
         m_borderSize = size;

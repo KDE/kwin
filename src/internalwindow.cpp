@@ -324,7 +324,7 @@ void InternalWindow::setNoBorder(bool set)
 
 void InternalWindow::createDecoration(const QRectF &oldGeometry)
 {
-    setDecoration(std::shared_ptr<KDecoration2::Decoration>(Decoration::DecorationBridge::self()->createDecoration(this)));
+    setDecoration(std::shared_ptr<KDecoration2::Decoration>(Workspace::self()->decorationBridge()->createDecoration(this)));
     moveResize(oldGeometry);
 
     Q_EMIT geometryShapeChanged(this, oldGeometry);

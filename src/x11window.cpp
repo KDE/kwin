@@ -1144,7 +1144,7 @@ void X11Window::invalidateDecoration()
 
 void X11Window::createDecoration(const QRectF &oldgeom)
 {
-    std::shared_ptr<KDecoration2::Decoration> decoration(Decoration::DecorationBridge::self()->createDecoration(this));
+    std::shared_ptr<KDecoration2::Decoration> decoration(Workspace::self()->decorationBridge()->createDecoration(this));
     if (decoration) {
         connect(decoration.get(), &KDecoration2::Decoration::resizeOnlyBordersChanged, this, &X11Window::updateInputWindow);
         connect(decoration.get(), &KDecoration2::Decoration::bordersChanged, this, &X11Window::updateFrameExtents);
