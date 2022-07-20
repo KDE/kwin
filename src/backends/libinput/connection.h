@@ -26,12 +26,16 @@ class QThread;
 
 namespace KWin
 {
+
+class Udev;
+
 namespace LibInput
 {
 
 class Event;
 class Device;
 class Context;
+class ConnectionAdaptor;
 
 class KWIN_EXPORT Connection : public QObject
 {
@@ -52,6 +56,8 @@ public:
 
     QStringList devicesSysNames() const;
 
+    static std::unique_ptr<Connection> create();
+
 Q_SIGNALS:
     void deviceAdded(KWin::LibInput::Device *);
     void deviceRemoved(KWin::LibInput::Device *);
@@ -63,18 +69,18 @@ private Q_SLOTS:
     void slotKGlobalSettingsNotifyChange(int type, int arg);
 
 private:
-    Connection(Context *input, QObject *parent = nullptr);
+    Connection(std::unique_ptr<Context> &&input);
     void handleEvent();
     void applyDeviceConfig(Device *device);
     void applyScreenToDevice(Device *device);
-    Context *m_input;
     QSocketNotifier *m_notifier;
     QRecursiveMutex m_mutex;
     std::deque<std::unique_ptr<Event>> m_eventQueue;
     QVector<Device *> m_devices;
     KSharedConfigPtr m_config;
-
-    KWIN_SINGLETON(Connection)
+    std::unique_ptr<ConnectionAdaptor> m_connectionAdaptor;
+    std::unique_ptr<Context> m_input;
+    std::unique_ptr<Udev> m_udev;
 };
 
 }

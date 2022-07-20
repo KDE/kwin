@@ -25,7 +25,7 @@ class Event;
 class Context
 {
 public:
-    Context(const Udev &udev);
+    Context(std::unique_ptr<Udev> &&udev);
     ~Context();
     bool assignSeat(const char *seat);
     bool isValid() const
@@ -65,6 +65,7 @@ private:
     void closeRestricted(int fd);
     struct libinput *m_libinput;
     bool m_suspended;
+    std::unique_ptr<Udev> m_udev;
 };
 
 }

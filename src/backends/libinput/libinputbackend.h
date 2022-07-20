@@ -29,8 +29,8 @@ public:
     void initialize() override;
 
 private:
-    QThread *m_thread = nullptr;
-    LibInput::Connection *m_connection = nullptr;
+    QThread m_thread;
+    std::unique_ptr<LibInput::Connection> m_connection;
 };
 
 } // namespace KWin

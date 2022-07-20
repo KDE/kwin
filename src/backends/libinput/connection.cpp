@@ -80,53 +80,30 @@ Q_SIGNALS:
     void deviceRemoved(QString sysName);
 };
 
-Connection *Connection::s_self = nullptr;
-
-static ConnectionAdaptor *s_adaptor = nullptr;
-static Context *s_context = nullptr;
-
-Connection::Connection(QObject *parent)
-    : Connection(nullptr, parent)
+std::unique_ptr<Connection> Connection::create()
 {
-    // only here to fix build, using will crash, BUG 343529
-}
-
-Connection *Connection::create(QObject *parent)
-{
-    Q_ASSERT(!s_self);
-    static Udev s_udev;
-    if (!s_udev.isValid()) {
+    std::unique_ptr<Udev> udev = std::make_unique<Udev>();
+    if (!udev->isValid()) {
         qCWarning(KWIN_LIBINPUT) << "Failed to initialize udev";
         return nullptr;
     }
-    if (!s_context) {
-        s_context = new Context(s_udev);
-        if (!s_context->isValid()) {
-            qCWarning(KWIN_LIBINPUT) << "Failed to create context from udev";
-            delete s_context;
-            s_context = nullptr;
-            return nullptr;
-        }
-        const QString seat = kwinApp()->platform()->session()->seat();
-        if (!s_context->assignSeat(seat.toUtf8().constData())) {
-            qCWarning(KWIN_LIBINPUT) << "Failed to assign seat" << seat;
-            delete s_context;
-            s_context = nullptr;
-            return nullptr;
-        }
+    std::unique_ptr<Context> context = std::make_unique<Context>(std::move(udev));
+    if (!context->isValid()) {
+        qCWarning(KWIN_LIBINPUT) << "Failed to create context from udev";
+        return nullptr;
     }
-    s_self = new Connection(s_context);
-    if (!s_adaptor) {
-        s_adaptor = new ConnectionAdaptor(s_self);
+    const QString seat = kwinApp()->platform()->session()->seat();
+    if (!context->assignSeat(seat.toUtf8().constData())) {
+        qCWarning(KWIN_LIBINPUT) << "Failed to assign seat" << seat;
+        return nullptr;
     }
-
-    return s_self;
+    return std::unique_ptr<Connection>(new Connection(std::move(context)));
 }
 
-Connection::Connection(Context *input, QObject *parent)
-    : QObject(parent)
-    , m_input(input)
-    , m_notifier(nullptr)
+Connection::Connection(std::unique_ptr<Context> &&input)
+    : m_notifier(nullptr)
+    , m_connectionAdaptor(std::make_unique<ConnectionAdaptor>(this))
+    , m_input(std::move(input))
 {
     Q_ASSERT(m_input);
     // need to connect to KGlobalSettings as the mouse KCM does not emit a dedicated signal
@@ -134,14 +111,7 @@ Connection::Connection(Context *input, QObject *parent)
                                           QStringLiteral("notifyChange"), this, SLOT(slotKGlobalSettingsNotifyChange(int, int)));
 }
 
-Connection::~Connection()
-{
-    delete s_adaptor;
-    s_adaptor = nullptr;
-    s_self = nullptr;
-    delete s_context;
-    s_context = nullptr;
-}
+Connection::~Connection() = default;
 
 void Connection::setup()
 {
