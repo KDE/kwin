@@ -541,7 +541,7 @@ public:
     QVector<TabletPadStripV2Interface *> m_strips;
     TabletPadGroupV2Interface *const m_padGroup;
     TabletSeatV2Interface *m_seat = nullptr;
-    SurfaceInterface *m_currentSurface = nullptr;
+    QPointer<SurfaceInterface> m_currentSurface;
     Display *const m_display;
 };
 
