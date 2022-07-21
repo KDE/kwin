@@ -21,6 +21,7 @@ public:
     TouchInterfacePrivate(TouchInterface *q, SeatInterface *seat);
 
     QList<Resource *> touchesForClient(ClientConnection *client) const;
+    bool hasTouchesForClient(ClientConnection *client) const;
 
     TouchInterface *q;
     QPointer<SurfaceInterface> focusedSurface;
