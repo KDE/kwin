@@ -1081,7 +1081,7 @@ void SeatInterface::notifyTouchDown(qint32 id, const QPointF &globalPosition)
 
     if (id == 0 && hasPointer() && focusedTouchSurface()) {
         TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(d->touch.data());
-        if (touchPrivate->touchesForClient(focusedTouchSurface()->client()).isEmpty()) {
+        if (!touchPrivate->hasTouchesForClient(focusedTouchSurface()->client())) {
             // If the client did not bind the touch interface fall back
             // to at least emulating touch through pointer events.
             d->pointer->sendEnter(focusedTouchSurface(), pos, serial);
@@ -1117,7 +1117,7 @@ void SeatInterface::notifyTouchMotion(qint32 id, const QPointF &globalPosition)
 
         if (hasPointer() && focusedTouchSurface()) {
             TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(d->touch.data());
-            if (touchPrivate->touchesForClient(focusedTouchSurface()->client()).isEmpty()) {
+            if (!touchPrivate->hasTouchesForClient(focusedTouchSurface()->client())) {
                 // Client did not bind touch, fall back to emulating with pointer events.
                 d->pointer->sendMotion(pos);
                 d->pointer->sendFrame();
@@ -1148,7 +1148,7 @@ void SeatInterface::notifyTouchUp(qint32 id)
 
     if (id == 0 && hasPointer() && focusedTouchSurface()) {
         TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(d->touch.data());
-        if (touchPrivate->touchesForClient(focusedTouchSurface()->client()).isEmpty()) {
+        if (!touchPrivate->hasTouchesForClient(focusedTouchSurface()->client())) {
             // Client did not bind touch, fall back to emulating with pointer events.
             const quint32 serial = display()->nextSerial();
             d->pointer->sendButton(BTN_LEFT, PointerButtonState::Released, serial);

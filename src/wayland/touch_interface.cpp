@@ -35,6 +35,11 @@ QList<TouchInterfacePrivate::Resource *> TouchInterfacePrivate::touchesForClient
     return resourceMap().values(client->client());
 }
 
+bool TouchInterfacePrivate::hasTouchesForClient(ClientConnection *client) const
+{
+    return resourceMap().contains(client->client());
+}
+
 TouchInterface::TouchInterface(SeatInterface *seat)
     : d(new TouchInterfacePrivate(this, seat))
 {
