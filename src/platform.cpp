@@ -49,7 +49,15 @@ Platform::Platform(QObject *parent)
 {
     connect(this, &Platform::outputDisabled, this, [this](Output *output) {
         if (m_primaryOutput == output) {
-            setPrimaryOutput(enabledOutputs().value(0, nullptr));
+            Output *primary = nullptr;
+            const auto candidates = outputs();
+            for (Output *output : candidates) {
+                if (output->isEnabled()) {
+                    primary = output;
+                    break;
+                }
+            }
+            setPrimaryOutput(primary);
         }
     });
     connect(this, &Platform::outputEnabled, this, [this](Output *output) {
@@ -170,7 +178,14 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationV2Interfa
             if (requestedPrimaryOutput && requestedPrimaryOutput->isEnabled()) {
                 setPrimaryOutput(requestedPrimaryOutput);
             } else {
-                auto defaultPrimaryOutput = enabledOutputs().constFirst();
+                Output *defaultPrimaryOutput = nullptr;
+                const auto candidates = outputs();
+                for (Output *output : candidates) {
+                    if (output->isEnabled()) {
+                        defaultPrimaryOutput = output;
+                        break;
+                    }
+                }
                 qCWarning(KWIN_CORE) << "Requested invalid primary screen, using" << defaultPrimaryOutput;
                 setPrimaryOutput(defaultPrimaryOutput);
             }

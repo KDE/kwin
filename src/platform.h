@@ -300,13 +300,7 @@ public:
         return m_supportsGammaControl;
     }
 
-    // outputs with connections (org_kde_kwin_outputdevice)
     virtual Outputs outputs() const
-    {
-        return Outputs();
-    }
-    // actively compositing outputs (wl_output)
-    virtual Outputs enabledOutputs() const
     {
         return Outputs();
     }

@@ -140,7 +140,7 @@ void WaylandTestApplication::performStartup()
     createInput();
     createVirtualInputDevices();
 
-    if (!platform()->enabledOutputs().isEmpty()) {
+    if (!platform()->outputs().isEmpty()) {
         continueStartupWithScreens();
     } else {
         connect(platform(), &Platform::screensQueried, this, &WaylandTestApplication::continueStartupWithScreens);

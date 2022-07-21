@@ -290,11 +290,9 @@ void WaylandServer::initPlatform()
     const QVector<Output *> outputs = kwinApp()->platform()->outputs();
     for (Output *output : outputs) {
         handleOutputAdded(output);
-    }
-
-    const QVector<Output *> enabledOutputs = kwinApp()->platform()->enabledOutputs();
-    for (Output *output : enabledOutputs) {
-        handleOutputEnabled(output);
+        if (output->isEnabled()) {
+            handleOutputEnabled(output);
+        }
     }
 }
 

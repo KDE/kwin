@@ -108,11 +108,6 @@ Outputs DrmBackend::outputs() const
     return m_outputs;
 }
 
-Outputs DrmBackend::enabledOutputs() const
-{
-    return m_enabledOutputs;
-}
-
 void DrmBackend::createDpmsFilter()
 {
     if (m_dpmsFilter) {

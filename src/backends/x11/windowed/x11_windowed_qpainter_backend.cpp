@@ -50,9 +50,11 @@ X11WindowedQPainterBackend::X11WindowedQPainterBackend(X11WindowedBackend *backe
     : QPainterBackend()
     , m_backend(backend)
 {
-    const auto outputs = m_backend->enabledOutputs();
+    const auto outputs = m_backend->outputs();
     for (Output *output : outputs) {
-        addOutput(output);
+        if (output->isEnabled()) {
+            addOutput(output);
+        }
     }
 
     connect(backend, &X11WindowedBackend::outputEnabled, this, &X11WindowedQPainterBackend::addOutput);

@@ -942,17 +942,6 @@ Outputs WaylandBackend::outputs() const
     return m_outputs;
 }
 
-Outputs WaylandBackend::enabledOutputs() const
-{
-    Outputs ret;
-    for (auto o : m_outputs) {
-        if (o->isEnabled()) {
-            ret << o;
-        }
-    }
-    return ret;
-}
-
 void WaylandBackend::addConfiguredOutput(WaylandOutput *output)
 {
     m_outputs << output;

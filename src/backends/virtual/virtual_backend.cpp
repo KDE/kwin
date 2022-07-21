@@ -87,11 +87,6 @@ Outputs VirtualBackend::outputs() const
     return m_outputs;
 }
 
-Outputs VirtualBackend::enabledOutputs() const
-{
-    return m_outputsEnabled;
-}
-
 void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVector<int> scales)
 {
     Q_ASSERT(geometries.size() == 0 || geometries.size() == count);

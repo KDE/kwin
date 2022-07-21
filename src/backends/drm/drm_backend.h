@@ -54,7 +54,6 @@ public:
     bool initialize() override;
 
     Outputs outputs() const override;
-    Outputs enabledOutputs() const override;
 
     void enableOutput(DrmAbstractOutput *output, bool enable);
 

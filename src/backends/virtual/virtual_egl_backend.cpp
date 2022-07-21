@@ -120,9 +120,11 @@ void VirtualEglBackend::init()
     setSupportsBufferAge(false);
     initWayland();
 
-    const auto outputs = m_backend->enabledOutputs();
+    const auto outputs = m_backend->outputs();
     for (Output *output : outputs) {
-        addOutput(output);
+        if (output->isEnabled()) {
+            addOutput(output);
+        }
     }
 
     connect(m_backend, &VirtualBackend::outputEnabled, this, &VirtualEglBackend::addOutput);

@@ -131,7 +131,6 @@ public:
     X11WindowedInputDevice *touchDevice() const;
 
     Outputs outputs() const override;
-    Outputs enabledOutputs() const override;
 
 Q_SIGNALS:
     void sizeChanged();

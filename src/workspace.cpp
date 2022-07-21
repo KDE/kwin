@@ -209,9 +209,11 @@ void Workspace::init()
     connect(platform, &Platform::outputEnabled, this, &Workspace::slotOutputEnabled);
     connect(platform, &Platform::outputDisabled, this, &Workspace::slotOutputDisabled);
 
-    const QVector<Output *> outputs = platform->enabledOutputs();
+    const QVector<Output *> outputs = platform->outputs();
     for (Output *output : outputs) {
-        slotOutputEnabled(output);
+        if (output->isEnabled()) {
+            slotOutputEnabled(output);
+        }
     }
 
     Screens *screens = Screens::self();
@@ -1572,7 +1574,7 @@ QString Workspace::supportInformation() const
     } else {
         support.append(QStringLiteral(" no\n"));
     }
-    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
+    const QVector<Output *> outputs = kwinApp()->platform()->outputs();
     support.append(QStringLiteral("Number of Screens: %1\n\n").arg(outputs.count()));
     for (int i = 0; i < outputs.count(); ++i) {
         const auto output = outputs[i];
@@ -1580,28 +1582,31 @@ QString Workspace::supportInformation() const
         support.append(QStringLiteral("Screen %1:\n").arg(i));
         support.append(QStringLiteral("---------\n"));
         support.append(QStringLiteral("Name: %1\n").arg(output->name()));
-        support.append(QStringLiteral("Geometry: %1,%2,%3x%4\n")
-                           .arg(geo.x())
-                           .arg(geo.y())
-                           .arg(geo.width())
-                           .arg(geo.height()));
-        support.append(QStringLiteral("Scale: %1\n").arg(output->scale()));
-        support.append(QStringLiteral("Refresh Rate: %1\n").arg(output->refreshRate()));
-        QString vrr = QStringLiteral("incapable");
-        if (output->capabilities() & Output::Capability::Vrr) {
-            switch (output->vrrPolicy()) {
-            case RenderLoop::VrrPolicy::Never:
-                vrr = QStringLiteral("never");
-                break;
-            case RenderLoop::VrrPolicy::Always:
-                vrr = QStringLiteral("always");
-                break;
-            case RenderLoop::VrrPolicy::Automatic:
-                vrr = QStringLiteral("automatic");
-                break;
+        support.append(QStringLiteral("Enabled: %1\n").arg(output->isEnabled()));
+        if (output->isEnabled()) {
+            support.append(QStringLiteral("Geometry: %1,%2,%3x%4\n")
+                               .arg(geo.x())
+                               .arg(geo.y())
+                               .arg(geo.width())
+                               .arg(geo.height()));
+            support.append(QStringLiteral("Scale: %1\n").arg(output->scale()));
+            support.append(QStringLiteral("Refresh Rate: %1\n").arg(output->refreshRate()));
+            QString vrr = QStringLiteral("incapable");
+            if (output->capabilities() & Output::Capability::Vrr) {
+                switch (output->vrrPolicy()) {
+                case RenderLoop::VrrPolicy::Never:
+                    vrr = QStringLiteral("never");
+                    break;
+                case RenderLoop::VrrPolicy::Always:
+                    vrr = QStringLiteral("always");
+                    break;
+                case RenderLoop::VrrPolicy::Automatic:
+                    vrr = QStringLiteral("automatic");
+                    break;
+                }
             }
+            support.append(QStringLiteral("Adaptive Sync: %1\n").arg(vrr));
         }
-        support.append(QStringLiteral("Adaptive Sync: %1\n").arg(vrr));
     }
     support.append(QStringLiteral("\nCompositing\n"));
     support.append(QStringLiteral("===========\n"));

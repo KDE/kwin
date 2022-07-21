@@ -696,9 +696,4 @@ Outputs X11WindowedBackend::outputs() const
     return m_outputs;
 }
 
-Outputs X11WindowedBackend::enabledOutputs() const
-{
-    return m_outputs;
-}
-
-}
+} // namespace KWin

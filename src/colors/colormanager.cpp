@@ -26,9 +26,11 @@ ColorManager::ColorManager()
 {
     Platform *platform = kwinApp()->platform();
 
-    const QVector<Output *> outputs = platform->enabledOutputs();
+    const QVector<Output *> outputs = platform->outputs();
     for (Output *output : outputs) {
-        handleOutputEnabled(output);
+        if (output->isEnabled()) {
+            handleOutputEnabled(output);
+        }
     }
 
     connect(platform, &Platform::outputEnabled, this, &ColorManager::handleOutputEnabled);

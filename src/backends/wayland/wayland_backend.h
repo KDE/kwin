@@ -289,7 +289,6 @@ public:
     WaylandOutput *getOutputAt(const QPointF &globalPosition);
     WaylandOutput *findOutput(KWayland::Client::Surface *nativeSurface) const;
     Outputs outputs() const override;
-    Outputs enabledOutputs() const override;
     QVector<WaylandOutput *> waylandOutputs() const
     {
         return m_outputs;

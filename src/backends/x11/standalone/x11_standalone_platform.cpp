@@ -638,11 +638,6 @@ Outputs X11StandalonePlatform::outputs() const
     return m_outputs;
 }
 
-Outputs X11StandalonePlatform::enabledOutputs() const
-{
-    return m_outputs;
-}
-
 RenderLoop *X11StandalonePlatform::renderLoop() const
 {
     return m_renderLoop.get();
@@ -660,7 +655,7 @@ static int currentRefreshRate()
         return refreshRate;
     }
 
-    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
+    const QVector<Output *> outputs = kwinApp()->platform()->outputs();
     if (outputs.isEmpty()) {
         return 60000;
     }

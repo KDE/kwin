@@ -522,14 +522,15 @@ void Connection::applyScreenToDevice(Device *device)
     }
 
     Output *deviceOutput = nullptr;
-    const QVector<Output *> outputs = kwinApp()->platform()->enabledOutputs();
+    const QVector<Output *> outputs = kwinApp()->platform()->outputs();
+
     // let's try to find a screen for it
-    if (outputs.count() == 1) {
-        deviceOutput = outputs.constFirst();
-    }
-    if (!deviceOutput && !device->outputName().isEmpty()) {
+    if (!device->outputName().isEmpty()) {
         // we have an output name, try to find a screen with matching name
         for (Output *output : outputs) {
+            if (!output->isEnabled()) {
+                continue;
+            }
             if (output->name() == device->outputName()) {
                 deviceOutput = output;
                 break;
@@ -540,6 +541,9 @@ void Connection::applyScreenToDevice(Device *device)
         // do we have an internal screen?
         Output *internalOutput = nullptr;
         for (Output *output : outputs) {
+            if (!output->isEnabled()) {
+                continue;
+            }
             if (output->isInternal()) {
                 internalOutput = output;
                 break;
@@ -556,6 +560,9 @@ void Connection::applyScreenToDevice(Device *device)
         }
         // let's compare all screens for size
         for (Output *output : outputs) {
+            if (!output->isEnabled()) {
+                continue;
+            }
             if (testScreenMatches(output)) {
                 deviceOutput = output;
                 break;
@@ -566,9 +573,14 @@ void Connection::applyScreenToDevice(Device *device)
             if (internalOutput) {
                 // we have an internal id, so let's use that
                 deviceOutput = internalOutput;
-            } else if (!outputs.isEmpty()) {
-                // just take first screen, we have no clue
-                deviceOutput = outputs.constFirst();
+            } else {
+                for (Output *output : outputs) {
+                    // just take first screen, we have no clue
+                    if (output->isEnabled()) {
+                        deviceOutput = output;
+                        break;
+                    }
+                }
             }
         }
     }

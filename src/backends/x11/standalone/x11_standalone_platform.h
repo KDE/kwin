@@ -65,7 +65,6 @@ public:
 
     RenderLoop *renderLoop() const;
     Outputs outputs() const override;
-    Outputs enabledOutputs() const override;
 
 private:
     /**
