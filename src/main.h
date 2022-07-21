@@ -204,14 +204,6 @@ public:
 
     void setXwaylandScale(qreal scale);
 
-    /**
-     * Returns @c true if we're in the middle of destroying the X11 connection.
-     */
-    bool isClosingX11Connection() const
-    {
-        return m_isClosingX11Connection;
-    }
-
 #if KWIN_BUILD_ACTIVITIES
     bool usesKActivities() const
     {
@@ -299,7 +291,6 @@ private:
 #endif
     Platform *m_platform = nullptr;
     bool m_terminating = false;
-    bool m_isClosingX11Connection = false;
     qreal m_xwaylandScale = 1;
     QProcessEnvironment m_processEnvironment;
 };
