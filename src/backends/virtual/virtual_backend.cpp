@@ -55,9 +55,8 @@ bool VirtualBackend::initialize()
         VirtualOutput *dummyOutput = new VirtualOutput(this);
         dummyOutput->init(QPoint(0, 0), initialWindowSize());
         m_outputs << dummyOutput;
-        m_outputsEnabled << dummyOutput;
         Q_EMIT outputAdded(dummyOutput);
-        Q_EMIT outputEnabled(dummyOutput);
+        dummyOutput->setEnabled(true);
     }
     setReady(true);
 
@@ -115,14 +114,12 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
             vo->setScale(scales.at(i));
         }
         m_outputs.append(vo);
-        m_outputsEnabled.append(vo);
         Q_EMIT outputAdded(vo);
-        Q_EMIT outputEnabled(vo);
+        vo->setEnabled(true);
     }
 
     for (VirtualOutput *output : disabled) {
-        m_outputsEnabled.removeOne(output);
-        Q_EMIT outputDisabled(output);
+        output->setEnabled(false);
     }
 
     for (VirtualOutput *output : removed) {
@@ -145,8 +142,6 @@ void VirtualBackend::enableOutput(VirtualOutput *output, bool enable)
         m_outputsEnabled.removeOne(output);
         Q_EMIT outputDisabled(output);
     }
-
-    Q_EMIT screensQueried();
 }
 
 void VirtualBackend::removeOutput(Output *output)

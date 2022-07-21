@@ -530,7 +530,7 @@ void X11StandalonePlatform::doUpdateOutputs()
                         changed.append(output);
                         removed.removeOne(output);
                     } else {
-                        output = new X11Output();
+                        output = new X11Output(this);
                         added.append(output);
                     }
 
@@ -585,23 +585,23 @@ void X11StandalonePlatform::doUpdateOutputs()
     // The workspace handles having no outputs poorly. If the last output is about to be
     // removed, create a dummy output to avoid crashing.
     if (changed.isEmpty() && added.isEmpty()) {
-        auto dummyOutput = new X11PlaceholderOutput(m_renderLoop.get());
+        auto dummyOutput = new X11PlaceholderOutput(this);
         m_outputs << dummyOutput;
         Q_EMIT outputAdded(dummyOutput);
-        Q_EMIT outputEnabled(dummyOutput);
+        dummyOutput->setEnabled(true);
     }
 
     // Process new outputs. Note new outputs must be introduced before removing any other outputs.
     for (Output *output : qAsConst(added)) {
         m_outputs.append(output);
         Q_EMIT outputAdded(output);
-        Q_EMIT outputEnabled(output);
+        output->setEnabled(true);
     }
 
     // Outputs have to be removed last to avoid the case where there are no enabled outputs.
     for (Output *output : qAsConst(removed)) {
         m_outputs.removeOne(output);
-        Q_EMIT outputDisabled(output);
+        output->setEnabled(false);
         Q_EMIT outputRemoved(output);
         delete output;
     }

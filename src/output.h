@@ -343,7 +343,7 @@ private:
     std::shared_ptr<OutputMode> m_currentMode;
     DpmsMode m_dpmsMode = DpmsMode::On;
     SubPixel m_subPixel = SubPixel::Unknown;
-    bool m_isEnabled = true;
+    bool m_isEnabled = false;
     uint32_t m_overscan = 0;
     RgbRange m_rgbRange = RgbRange::Automatic;
     friend class EffectScreenImpl; // to access m_effectScreen

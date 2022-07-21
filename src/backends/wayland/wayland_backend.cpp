@@ -832,7 +832,7 @@ void WaylandBackend::destroyOutputs()
 {
     while (!m_outputs.isEmpty()) {
         WaylandOutput *output = m_outputs.takeLast();
-        Q_EMIT outputDisabled(output);
+        output->setEnabled(false);
         Q_EMIT outputRemoved(output);
         delete output;
     }
@@ -957,7 +957,7 @@ void WaylandBackend::addConfiguredOutput(WaylandOutput *output)
 {
     m_outputs << output;
     Q_EMIT outputAdded(output);
-    Q_EMIT outputEnabled(output);
+    output->setEnabled(true);
 
     m_pendingInitialOutputs--;
     if (m_pendingInitialOutputs == 0) {
@@ -993,7 +993,7 @@ void WaylandBackend::removeVirtualOutput(Output *output)
 {
     WaylandOutput *waylandOutput = dynamic_cast<WaylandOutput *>(output);
     if (waylandOutput && m_outputs.removeAll(waylandOutput)) {
-        Q_EMIT outputDisabled(waylandOutput);
+        waylandOutput->setEnabled(false);
         Q_EMIT outputRemoved(waylandOutput);
         delete waylandOutput;
     }

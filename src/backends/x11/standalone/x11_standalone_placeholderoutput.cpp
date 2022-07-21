@@ -5,14 +5,14 @@
 */
 
 #include "x11_standalone_placeholderoutput.h"
-#include "main.h"
+#include "x11_standalone_platform.h"
 
 namespace KWin
 {
 
-X11PlaceholderOutput::X11PlaceholderOutput(RenderLoop *loop, QObject *parent)
+X11PlaceholderOutput::X11PlaceholderOutput(X11StandalonePlatform *backend, QObject *parent)
     : Output(parent)
-    , m_loop(loop)
+    , m_backend(backend)
 {
     QSize pixelSize;
     xcb_screen_t *screen = kwinApp()->x11DefaultScreen();
@@ -30,7 +30,16 @@ X11PlaceholderOutput::X11PlaceholderOutput(RenderLoop *loop, QObject *parent)
 
 RenderLoop *X11PlaceholderOutput::renderLoop() const
 {
-    return m_loop;
+    return m_backend->renderLoop();
+}
+
+void X11PlaceholderOutput::updateEnablement(bool enabled)
+{
+    if (enabled) {
+        Q_EMIT m_backend->outputEnabled(this);
+    } else {
+        Q_EMIT m_backend->outputDisabled(this);
+    }
 }
 
 } // namespace KWin

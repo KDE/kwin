@@ -20,6 +20,8 @@
 namespace KWin
 {
 
+class X11StandalonePlatform;
+
 /**
  * X11 output representation
  */
@@ -28,9 +30,10 @@ class KWIN_EXPORT X11Output : public Output
     Q_OBJECT
 
 public:
-    explicit X11Output(QObject *parent = nullptr);
+    explicit X11Output(X11StandalonePlatform *backend, QObject *parent = nullptr);
 
     bool usesSoftwareCursor() const override;
+    void updateEnablement(bool enabled) override;
 
     RenderLoop *renderLoop() const override;
     void setRenderLoop(RenderLoop *loop);
@@ -46,6 +49,7 @@ private:
     void setCrtc(xcb_randr_crtc_t crtc);
     void setGammaRampSize(int size);
 
+    X11StandalonePlatform *m_backend;
     RenderLoop *m_loop = nullptr;
     xcb_randr_crtc_t m_crtc = XCB_NONE;
     int m_gammaRampSize;

@@ -302,7 +302,7 @@ void X11WindowedBackend::createOutputs()
         logicalWidthSum += logicalWidth;
         m_outputs << output;
         Q_EMIT outputAdded(output);
-        Q_EMIT outputEnabled(output);
+        output->setEnabled(true);
     }
 
     updateWindowTitle();
@@ -507,7 +507,7 @@ void X11WindowedBackend::handleClientMessage(xcb_client_message_event_t *event)
                     x += (*it)->geometry().width();
                 }
 
-                Q_EMIT outputDisabled(removedOutput);
+                removedOutput->setEnabled(false);
                 Q_EMIT outputRemoved(removedOutput);
                 delete removedOutput;
                 Q_EMIT screensQueried();

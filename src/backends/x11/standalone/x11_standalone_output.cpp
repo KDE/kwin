@@ -8,13 +8,14 @@
 */
 #include "x11_standalone_output.h"
 #include "colorlut.h"
-#include "main.h"
+#include "x11_standalone_platform.h"
 
 namespace KWin
 {
 
-X11Output::X11Output(QObject *parent)
+X11Output::X11Output(X11StandalonePlatform *backend, QObject *parent)
     : Output(parent)
+    , m_backend(backend)
 {
 }
 
@@ -71,4 +72,13 @@ void X11Output::setMode(const QSize &size, uint32_t refreshRate)
     }
 }
 
+void X11Output::updateEnablement(bool enabled)
+{
+    if (enabled) {
+        Q_EMIT m_backend->outputEnabled(this);
+    } else {
+        Q_EMIT m_backend->outputDisabled(this);
+    }
 }
+
+} // namespace KWin
