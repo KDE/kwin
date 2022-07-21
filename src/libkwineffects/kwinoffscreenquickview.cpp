@@ -528,7 +528,7 @@ void OffscreenQuickView::Private::updateTouchState(Qt::TouchPointState state, qi
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
                           point.setState(Qt::TouchPointStationary);
 #else
-                              static_cast<QMutableEventPoint &>(point).setState(QEventPoint::Stationary);
+                          QMutableEventPoint::setState(point, QEventPoint::Stationary);
 #endif
                           return false;
                       }),
@@ -552,17 +552,20 @@ void OffscreenQuickView::Private::updateTouchState(Qt::TouchPointState state, qi
             return;
         }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         QTouchEvent::TouchPoint point;
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         point.setState(Qt::TouchPointPressed);
-#else
-        QMutableEventPoint point;
-        point.setState(QEventPoint::Pressed);
-#endif
         point.setId(id + idOffset);
         point.setScreenPos(pos);
         point.setScenePos(m_view->mapFromGlobal(pos.toPoint()));
         point.setPos(m_view->mapFromGlobal(pos.toPoint()));
+#else
+        QMutableEventPoint::setState(point, QEventPoint::Pressed);
+        QMutableEventPoint::setId(point, id + idOffset);
+        QMutableEventPoint::setGlobalPosition(point, pos);
+        QMutableEventPoint::setScenePosition(point, m_view->mapFromGlobal(pos.toPoint()));
+        QMutableEventPoint::setPosition(point, m_view->mapFromGlobal(pos.toPoint()));
+#endif
 
         touchPoints.append(point);
     } break;
@@ -571,35 +574,36 @@ void OffscreenQuickView::Private::updateTouchState(Qt::TouchPointState state, qi
             return;
         }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         auto &point = *changed;
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         point.setLastPos(point.pos());
         point.setLastScenePos(point.scenePos());
         point.setLastScreenPos(point.screenPos());
         point.setState(Qt::TouchPointMoved);
-#else
-        auto &point = static_cast<QMutableEventPoint &>(*changed);
-        point.setGlobalLastPosition(point.globalPosition());
-        point.setState(QEventPoint::Updated);
-#endif
         point.setScenePos(m_view->mapFromGlobal(pos.toPoint()));
         point.setPos(m_view->mapFromGlobal(pos.toPoint()));
         point.setScreenPos(pos);
+#else
+        QMutableEventPoint::setGlobalLastPosition(point, point.globalPosition());
+        QMutableEventPoint::setState(point, QEventPoint::Updated);
+        QMutableEventPoint::setScenePosition(point, m_view->mapFromGlobal(pos.toPoint()));
+        QMutableEventPoint::setPosition(point, m_view->mapFromGlobal(pos.toPoint()));
+        QMutableEventPoint::setGlobalPosition(point, pos);
+#endif
     } break;
     case Qt::TouchPointReleased: {
         if (changed == touchPoints.end()) {
             return;
         }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         auto &point = *changed;
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         point.setLastPos(point.pos());
         point.setLastScreenPos(point.screenPos());
         point.setState(Qt::TouchPointReleased);
 #else
-        auto &point = static_cast<QMutableEventPoint &>(*changed);
-        point.setGlobalLastPosition(point.globalPosition());
-        point.setState(QEventPoint::Released);
+        QMutableEventPoint::setGlobalLastPosition(point, point.globalPosition());
+        QMutableEventPoint::setState(point, QEventPoint::Released);
 #endif
     } break;
     default:
