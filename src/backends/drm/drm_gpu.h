@@ -87,8 +87,6 @@ public:
 Q_SIGNALS:
     void outputAdded(DrmAbstractOutput *output);
     void outputRemoved(DrmAbstractOutput *output);
-    void outputEnabled(DrmAbstractOutput *output);
-    void outputDisabled(DrmAbstractOutput *output);
 
 private:
     void dispatchEvents();

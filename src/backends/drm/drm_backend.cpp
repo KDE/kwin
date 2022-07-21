@@ -525,7 +525,6 @@ void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
     }
     if (enable) {
         m_enabledOutputs << output;
-        Q_EMIT output->gpu()->outputEnabled(output);
         Q_EMIT outputEnabled(output);
         checkOutputsAreOn();
         if (m_placeHolderOutput) {
@@ -544,7 +543,6 @@ void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
             input()->prependInputEventFilter(m_placeholderFilter.get());
         }
         m_enabledOutputs.removeOne(output);
-        Q_EMIT output->gpu()->outputDisabled(output);
         Q_EMIT outputDisabled(output);
     }
 }

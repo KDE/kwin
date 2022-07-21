@@ -598,7 +598,6 @@ DrmVirtualOutput *DrmGpu::createVirtualOutput(const QString &name, const QSize &
     auto output = new DrmVirtualOutput(name, this, size, type);
     output->setScale(scale);
     m_outputs << output;
-    Q_EMIT outputEnabled(output);
     Q_EMIT outputAdded(output);
     return output;
 }
