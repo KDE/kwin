@@ -1056,7 +1056,6 @@ void SeatInterface::setFocusedTouchSurface(SurfaceInterface *surface, const QPoi
             d->globalTouch.focus = SeatInterfacePrivate::Touch::Focus();
         });
     }
-    d->touch->setFocusedSurface(surface);
 }
 
 void SeatInterface::setFocusedTouchSurfacePosition(const QPointF &surfacePosition)
@@ -1068,12 +1067,19 @@ void SeatInterface::setFocusedTouchSurfacePosition(const QPointF &surfacePositio
 
 void SeatInterface::notifyTouchDown(qint32 id, const QPointF &globalPosition)
 {
-    if (!d->touch) {
+    if (!d->touch || !focusedTouchSurface()) {
         return;
     }
     const qint32 serial = display()->nextSerial();
-    const auto pos = globalPosition - d->globalTouch.focus.offset;
-    d->touch->sendDown(id, serial, pos);
+    auto pos = globalPosition - d->globalTouch.focus.offset;
+
+    SurfaceInterface *effectiveFocusedSurface = focusedTouchSurface()->inputSurfaceAt(pos);
+    if (effectiveFocusedSurface && effectiveFocusedSurface != focusedTouchSurface()) {
+        pos = focusedTouchSurface()->mapToChild(effectiveFocusedSurface, pos);
+    } else if (!effectiveFocusedSurface) {
+        effectiveFocusedSurface = focusedTouchSurface();
+    }
+    d->touch->sendDown(id, serial, pos, effectiveFocusedSurface);
 
     if (id == 0) {
         d->globalTouch.focus.firstTouchPos = globalPosition;
@@ -1081,10 +1087,10 @@ void SeatInterface::notifyTouchDown(qint32 id, const QPointF &globalPosition)
 
     if (id == 0 && hasPointer() && focusedTouchSurface()) {
         TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(d->touch.data());
-        if (!touchPrivate->hasTouchesForClient(focusedTouchSurface()->client())) {
+        if (!touchPrivate->hasTouchesForClient(effectiveFocusedSurface->client())) {
             // If the client did not bind the touch interface fall back
             // to at least emulating touch through pointer events.
-            d->pointer->sendEnter(focusedTouchSurface(), pos, serial);
+            d->pointer->sendEnter(effectiveFocusedSurface, pos, serial);
             d->pointer->sendMotion(pos);
             d->pointer->sendFrame();
         }
@@ -1105,7 +1111,12 @@ void SeatInterface::notifyTouchMotion(qint32 id, const QPointF &globalPosition)
         return;
     }
 
-    const auto pos = globalPosition - d->globalTouch.focus.offset;
+    auto pos = globalPosition - d->globalTouch.focus.offset;
+    SurfaceInterface *effectiveFocusedSurface = d->touch->focusedSurface();
+    if (effectiveFocusedSurface && focusedTouchSurface() != effectiveFocusedSurface) {
+        pos = focusedTouchSurface()->mapToChild(effectiveFocusedSurface, pos);
+    }
+
     if (isDragTouch()) {
         // handled by DataDevice
     } else {

@@ -54,11 +54,6 @@ SurfaceInterface *TouchInterface::focusedSurface() const
     return d->focusedSurface;
 }
 
-void TouchInterface::setFocusedSurface(SurfaceInterface *surface)
-{
-    d->focusedSurface = surface;
-}
-
 void TouchInterface::sendCancel()
 {
     if (!d->focusedSurface) {
@@ -109,11 +104,13 @@ void TouchInterface::sendUp(qint32 id, quint32 serial)
     }
 }
 
-void TouchInterface::sendDown(qint32 id, quint32 serial, const QPointF &localPos)
+void TouchInterface::sendDown(qint32 id, quint32 serial, const QPointF &localPos, SurfaceInterface *surface)
 {
-    if (!d->focusedSurface) {
+    if (!surface) {
         return;
     }
+
+    d->focusedSurface = surface;
 
     QPointF pos = d->focusedSurface->toSurfaceLocal(localPos);
 
