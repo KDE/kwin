@@ -12,8 +12,10 @@
 #include "gestures.h"
 #include <kwinglobals.h>
 // Qt
+#include <QHash>
 #include <QKeySequence>
 
+#include <KCoreConfigSkeleton>
 #include <memory>
 #include <vector>
 
@@ -23,7 +25,9 @@ class KGlobalAccelInterface;
 
 namespace KWin
 {
+class GestureShortcut;
 class GlobalShortcut;
+class GlobalShortcutsManager;
 
 /**
  * @brief Manager for the global shortcut system inside KWin.
@@ -60,6 +64,9 @@ public:
     void registerAxisShortcut(QAction *action, Qt::KeyboardModifiers modifiers, PointerAxisDirection axis);
 
     void registerGesture(GestureDeviceType device, GestureDirections direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback = nullptr);
+
+    void registerGesture(Gesture *gesture, GestureDeviceType device);
+    void unregisterGesture(Gesture *gesture, GestureDeviceType device);
 
     void forceRegisterTouchscreenSwipe(QAction *action, std::function<void(qreal)> progressCallback, GestureDirection direction, uint fingerCount);
 
@@ -112,6 +119,7 @@ private:
     std::vector<GlobalShortcut> m_shortcuts;
 
     std::unique_ptr<KGlobalAccelD> m_kglobalAccel;
+
     KGlobalAccelInterface *m_kglobalAccelInterface = nullptr;
     QScopedPointer<GestureRecognizer> m_touchpadGestureRecognizer;
     QScopedPointer<GestureRecognizer> m_touchscreenGestureRecognizer;

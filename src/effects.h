@@ -104,6 +104,10 @@ public:
     void registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action) override;
     void registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action) override;
     void registerGesture(GestureDeviceType device, GestureDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback) override;
+    void registerEffectContext(EffectContext *activity) override;
+    void registerEffectAction(EffectAction *slot) override;
+    void setCurrentContext(const QString activityName) override;
+    QString getCurrentContext() override;
 
     void *getProxy(QString name) override;
     void startMousePolling() override;

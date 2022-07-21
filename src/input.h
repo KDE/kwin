@@ -10,6 +10,7 @@
 */
 #ifndef KWIN_INPUT_H
 #define KWIN_INPUT_H
+#include "globalshortcuts.h"
 #include <config-kwin.h>
 
 #include <QAction>

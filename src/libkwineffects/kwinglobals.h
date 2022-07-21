@@ -116,6 +116,21 @@ enum PointerAxisDirection {
     PointerAxisRight,
 };
 
+static const QString DEFAULT_CONTEXT = "Default";
+
+/**
+ * A generic configurable parameter.
+ */
+struct Parameter
+{
+    const QString humanReadableLabel;
+    const QString name;
+    const QMetaType::Type type;
+    const QVariant defaultValue;
+    //     label   value
+    QHash<QString, QVariant> possibleValues;
+};
+
 /**
  * @brief What device is this gesture using?
  */
@@ -236,6 +251,7 @@ enum class GestureDirection {
     HorizontalAxis = Left | Right, // Right is positive
     DirectionlessSwipe = Left | Right | Up | Down, // Positive is Up/Right
     BiDirectionalPinch = Expanding | Contracting, // Positive is Expanding
+    AllDirections = Up | Down | Left | Right | Expanding | Contracting,
 };
 
 Q_DECLARE_FLAGS(GestureDirections, GestureDirection)
@@ -251,6 +267,24 @@ static bool isPinchDirection(GestureDirections d)
 {
     return d & (GestureDirection::Contracting | GestureDirection::Expanding);
 }
+
+/**
+ * By the time you recieve this enum,
+ * settings for reversing the direction
+ * of the scroll have already been applied.
+ * The stuff on the screen should be moving:
+ */
+enum class AnimationDirection {
+    None,
+    Up,
+    Down,
+    Left,
+    Right,
+    Contracting,
+    Expanding,
+};
+
+Q_DECLARE_METATYPE(AnimationDirection)
 
 Q_DECLARE_METATYPE(std::chrono::nanoseconds)
 

@@ -20,6 +20,7 @@
 #include "appmenu.h"
 #include "atoms.h"
 #include "composite.h"
+#include "contexts.h"
 #include "cursor.h"
 #include "dbusinterface.h"
 #include "deleted.h"
@@ -951,6 +952,7 @@ void Workspace::slotReconfigure()
 
     kwinApp()->config()->reparseConfiguration();
     options->updateSettings();
+    contexts()->reconfigure();
 
     Q_EMIT configChanged();
     m_userActionsMenu->discard();

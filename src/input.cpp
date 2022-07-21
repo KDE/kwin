@@ -13,6 +13,7 @@
 #include "backends/fakeinput/fakeinputbackend.h"
 #include "backends/libinput/connection.h"
 #include "backends/libinput/device.h"
+#include "contexts.h"
 #include "effects.h"
 #include "gestures.h"
 #include "globalshortcuts.h"
@@ -2641,6 +2642,8 @@ void InputRedirection::init()
             this, &InputRedirection::handleInputConfigChanged);
 
     m_shortcuts->init();
+    ContextManager::create(this);
+    ContextManager::self()->init();
 }
 
 void InputRedirection::setupWorkspace()

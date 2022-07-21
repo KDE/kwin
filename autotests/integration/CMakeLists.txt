@@ -137,6 +137,7 @@ integrationTest(WAYLAND_ONLY NAME testInputMethod SRCS inputmethod_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testScreens SRCS screens_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testScreenEdges SRCS screenedges_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testOutputChanges SRCS outputchanges_test.cpp)
+integrationTest(NAME testContexts SRCS contexts_test.cpp)
 
 qt_add_dbus_interfaces(DBUS_SRCS ${CMAKE_BINARY_DIR}/src/org.kde.kwin.VirtualKeyboard.xml)
 integrationTest(WAYLAND_ONLY NAME testVirtualKeyboardDBus SRCS test_virtualkeyboard_dbus.cpp ${DBUS_SRCS})

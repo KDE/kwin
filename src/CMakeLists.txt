@@ -37,6 +37,7 @@ target_sources(kwin PRIVATE
     colors/colorpipelinestage.cpp
     colors/colortransformation.cpp
     composite.cpp
+    contexts.cpp
     cursor.cpp
     cursordelegate_opengl.cpp
     cursordelegate_qpainter.cpp

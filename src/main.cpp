@@ -14,6 +14,7 @@
 #include "atoms.h"
 #include "colormanager.h"
 #include "composite.h"
+#include "contexts.h"
 #include "cursor.h"
 #include "input.h"
 #include "inputmethod.h"

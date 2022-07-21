@@ -1446,6 +1446,66 @@ void EffectFrame::enableCrossFade(bool enable)
 }
 
 /***************************************************************
+EffectAction
+***************************************************************/
+EffectAction::EffectAction(const QString label, const QString name)
+    : humanReadableLabel(label)
+    , name(name)
+{
+    effects->registerEffectAction(this);
+}
+
+/***************************************************************
+ EffectContext
+***************************************************************/
+
+EffectContext::EffectContext(const QString label, const QString name)
+    : humanReadableLabel(label)
+    , name(name)
+    , activationParameters(std::make_shared<std::vector<Parameter>>())
+{
+    Q_ASSERT(!humanReadableLabel.isNull());
+    Q_ASSERT(!name.isNull());
+    // Because these connections are made first,
+    // the state will be updated before any other things
+    // connected to the signals
+    connect(this, &EffectContext::activated, [this]() {
+        m_state = State::Active;
+    });
+    connect(this, &EffectContext::activating, [this]() {
+        m_state = State::Activating;
+    });
+    connect(this, &EffectContext::deactivating, [this]() {
+        m_state = State::Deactivating;
+    });
+    connect(this, &EffectContext::deactivated, [this]() {
+        m_state = State::Inactive;
+    });
+
+    effects->registerEffectContext(this);
+}
+
+void EffectContext::grabActive(bool forceComplete)
+{
+    Q_EMIT grabActive_Internal(forceComplete);
+}
+
+void EffectContext::ungrabActive(bool forceComplete)
+{
+    Q_EMIT ungrabActive_Internal(forceComplete);
+}
+
+void EffectContext::addActivationParameter(Parameter param)
+{
+    activationParameters->push_back(std::move(param));
+}
+
+EffectContext::State EffectContext::state() const
+{
+    return m_state;
+}
+
+/***************************************************************
  TimeLine
 ***************************************************************/
 

@@ -38,6 +38,7 @@
 #include "screenlockerwatcher.h"
 #endif
 #include "composite.h"
+#include "contexts.h"
 #include "decorations/decorationbridge.h"
 #include "inputmethod.h"
 #include "inputpanelv1window.h"
@@ -264,6 +265,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     }
 
     connect(kwinApp()->inputMethod(), &InputMethod::panelChanged, this, &EffectsHandlerImpl::inputPanelChanged);
+    connect(contexts(), &ContextManager::contextChanged, this, &EffectsHandler::currentContextChanged);
 
     reconfigure();
 }
@@ -790,6 +792,50 @@ void EffectsHandlerImpl::registerAxisShortcut(Qt::KeyboardModifiers modifiers, P
 void EffectsHandlerImpl::registerGesture(GestureDeviceType device, GestureDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
 {
     input()->registerGesture(device, direction, fingerCount, onUp, progressCallback);
+}
+
+void EffectsHandlerImpl::registerEffectAction(EffectAction *action)
+{
+    Action *a = new Action(action->humanReadableLabel, action->name);
+    connect(action, &QObject::destroyed, [a]() {
+        delete a;
+    });
+
+    connect(a, &Action::gestureReleased, action, &EffectAction::released);
+    connect(a, &Action::triggered, action, &EffectAction::releasedComplete);
+    connect(a, &Action::cancelled, action, &EffectAction::releasedCancelled);
+    connect(a, &Action::crossTriggerThreshold, action, &EffectAction::crossTriggerThreshold);
+    connect(a, &Action::semanticProgressUpdate, action, &EffectAction::semanticProgressUpdate);
+    connect(a, &Action::semanticAxisUpdate, action, &EffectAction::semanticAxisUpdate);
+    connect(a, &Action::semanticDeltaUpdate, action, &EffectAction::semanticDeltaUpdate);
+    connect(a, &Action::pixelDeltaUpdate, action, &EffectAction::pixelDeltaUpdate);
+}
+
+void EffectsHandlerImpl::registerEffectContext(EffectContext *context)
+{
+    Context *internalContext = new Context(context->humanReadableLabel, context->name);
+    connect(context, &QObject::destroyed, [internalContext]() {
+        delete internalContext;
+    });
+
+    connect(internalContext, &Context::activating, context, &EffectContext::activating);
+    connect(internalContext, &Context::deactivating, context, &EffectContext::deactivating);
+    connect(internalContext, &Context::deactivated, context, &EffectContext::deactivated);
+    connect(internalContext, &Context::activated, context, &EffectContext::activated);
+    connect(context, &EffectContext::grabActive_Internal, internalContext, &Context::grabActive);
+    connect(context, &EffectContext::ungrabActive_Internal, internalContext, &Context::ungrabActive);
+    connect(internalContext, &Context::setActivationParameters, context, &EffectContext::setActivationParameters);
+    internalContext->activationParameters = context->activationParameters;
+}
+
+void EffectsHandlerImpl::setCurrentContext(const QString context)
+{
+    contexts()->setContext(context);
+}
+
+QString EffectsHandlerImpl::getCurrentContext()
+{
+    return contexts()->currentContext();
 }
 
 void *EffectsHandlerImpl::getProxy(QString name)

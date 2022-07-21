@@ -9,11 +9,12 @@
 // own
 #include "globalshortcuts.h"
 // config
+#include <KConfigWatcher>
 #include <config-kwin.h>
 // kwin
-#include "gestures.h"
-#include "kwinglobals.h"
 #include "main.h"
+#include "options.h"
+#include "screenedge.h"
 #include "utils/common.h"
 // KDE
 #include <KGlobalAccel/private/kglobalaccel_interface.h>
@@ -28,6 +29,7 @@
 
 namespace KWin
 {
+
 GlobalShortcut::GlobalShortcut(Shortcut &&sc, QAction *action)
     : m_shortcut(std::move(sc))
     , m_action(action)
@@ -146,6 +148,26 @@ void GlobalShortcutsManager::registerGesture(GestureDeviceType device, GestureDi
     shortcut.gesture()->setDirection(direction);
 
     addIfNotExists(GlobalShortcut(std::move(shortcut), onUp), device);
+}
+
+void GlobalShortcutsManager::registerGesture(Gesture *gesture, GestureDeviceType device)
+{
+    const auto &recognizer = device == GestureDeviceType::Touchpad ? m_touchpadGestureRecognizer : m_touchscreenGestureRecognizer;
+    if (qobject_cast<SwipeGesture *>(gesture)) {
+        recognizer->registerSwipeGesture(qobject_cast<SwipeGesture *>(gesture));
+    } else {
+        recognizer->registerPinchGesture(qobject_cast<PinchGesture *>(gesture));
+    }
+}
+
+void GlobalShortcutsManager::unregisterGesture(Gesture *gesture, GestureDeviceType device)
+{
+    const auto &recognizer = device == GestureDeviceType::Touchpad ? m_touchpadGestureRecognizer : m_touchscreenGestureRecognizer;
+    if (qobject_cast<SwipeGesture *>(gesture)) {
+        recognizer->unregisterSwipeGesture(qobject_cast<SwipeGesture *>(gesture));
+    } else {
+        recognizer->unregisterPinchGesture(qobject_cast<PinchGesture *>(gesture));
+    }
 }
 
 void GlobalShortcutsManager::forceRegisterTouchscreenSwipe(QAction *onUp, std::function<void(qreal)> progressCallback, GestureDirection direction, uint fingerCount)
