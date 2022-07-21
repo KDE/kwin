@@ -29,6 +29,7 @@ class DrmObject
 {
 public:
     virtual ~DrmObject() = default;
+    DrmObject(const DrmObject &) = delete;
 
     /**
      * Must be called to query necessary data directly after creation.
