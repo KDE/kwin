@@ -29,9 +29,8 @@ public:
     ~TouchInterface() override;
 
     SurfaceInterface *focusedSurface() const;
-    void setFocusedSurface(SurfaceInterface *surface);
 
-    void sendDown(qint32 id, quint32 serial, const QPointF &localPos);
+    void sendDown(qint32 id, quint32 serial, const QPointF &localPos, SurfaceInterface *surface);
     void sendUp(qint32 id, quint32 serial);
     void sendFrame();
     void sendCancel();
