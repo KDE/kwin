@@ -300,10 +300,7 @@ public:
         return m_supportsGammaControl;
     }
 
-    virtual Outputs outputs() const
-    {
-        return Outputs();
-    }
+    virtual Outputs outputs() const = 0;
     Output *findOutput(const QUuid &uuid) const;
     Output *findOutput(const QString &name) const;
 
