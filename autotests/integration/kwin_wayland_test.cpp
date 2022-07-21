@@ -140,7 +140,6 @@ void WaylandTestApplication::performStartup()
 
     // try creating the Wayland Backend
     createInput();
-    createPlugins();
     createVirtualInputDevices();
 
     if (!platform()->enabledOutputs().isEmpty()) {
@@ -171,6 +170,7 @@ void WaylandTestApplication::continueStartupWithScene()
     disconnect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::continueStartupWithScene);
 
     createWorkspace();
+    createPlugins();
 
     if (!waylandServer()->start()) {
         qFatal("Failed to initialize the Wayland server, exiting now");

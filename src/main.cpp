@@ -123,7 +123,6 @@ void Application::start()
 Application::~Application()
 {
     delete options;
-    destroyPlugins();
     destroyColorManager();
     destroyAtoms();
     destroyPlatform();

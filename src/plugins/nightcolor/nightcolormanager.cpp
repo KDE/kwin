@@ -47,6 +47,7 @@ NightColorManager *NightColorManager::self()
 
 NightColorManager::NightColorManager()
 {
+    NightColorSettings::instance(kwinApp()->config());
     s_instance = this;
 
     m_iface = new NightColorDBusInterface(this);
@@ -72,22 +73,6 @@ NightColorManager::NightColorManager()
 
         QDBusConnection::sessionBus().asyncCall(message);
     });
-
-    if (workspace()) {
-        init();
-    } else {
-        connect(kwinApp(), &Application::workspaceCreated, this, &NightColorManager::init);
-    }
-}
-
-NightColorManager::~NightColorManager()
-{
-    s_instance = nullptr;
-}
-
-void NightColorManager::init()
-{
-    NightColorSettings::instance(kwinApp()->config());
 
     m_configWatcher = KConfigWatcher::create(kwinApp()->config());
     connect(m_configWatcher.data(), &KConfigWatcher::configChanged, this, &NightColorManager::reconfigure);
@@ -151,6 +136,11 @@ void NightColorManager::init()
     });
 
     hardReset();
+}
+
+NightColorManager::~NightColorManager()
+{
+    s_instance = nullptr;
 }
 
 void NightColorManager::hardReset()

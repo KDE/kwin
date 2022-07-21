@@ -182,6 +182,7 @@ ApplicationX11::ApplicationX11(int &argc, char **argv)
 ApplicationX11::~ApplicationX11()
 {
     setTerminating();
+    destroyPlugins();
     destroyCompositor();
     destroyWorkspace();
     if (!owner.isNull() && owner->ownerWindow() != XCB_WINDOW_NONE) { // If there was no --replace (no new WM)
@@ -197,6 +198,7 @@ void ApplicationX11::setReplace(bool replace)
 void ApplicationX11::lostSelection()
 {
     sendPostedEvents();
+    destroyPlugins();
     destroyCompositor();
     destroyWorkspace();
     // Remove windowmanager privileges

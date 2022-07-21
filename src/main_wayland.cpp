@@ -115,6 +115,8 @@ ApplicationWayland::~ApplicationWayland()
         return;
     }
 
+    destroyPlugins();
+
     // need to unload all effects prior to destroying X connection as they might do X calls
     if (effects) {
         static_cast<EffectsHandlerImpl *>(effects)->unloadAllEffects();
@@ -146,7 +148,6 @@ void ApplicationWayland::performStartup()
     createInput();
     createInputMethod();
     TabletModeManager::create(this);
-    createPlugins();
 
     WaylandCompositor::create();
 
@@ -160,6 +161,7 @@ void ApplicationWayland::continueStartupWithScene()
 
     // Note that we start accepting client connections after creating the Workspace.
     createWorkspace();
+    createPlugins();
 
     if (!waylandServer()->start()) {
         qFatal("Failed to initialze the Wayland server, exiting now");

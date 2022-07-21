@@ -81,8 +81,6 @@ public:
     explicit NightColorManager();
     ~NightColorManager() override;
 
-    void init();
-
     void autoLocationUpdate(double latitude, double longitude);
 
     /**
