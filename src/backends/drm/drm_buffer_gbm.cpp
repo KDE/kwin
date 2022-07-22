@@ -8,12 +8,12 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_buffer_gbm.h"
-#include "gbm_surface.h"
+#include "drm_gbm_surface.h"
 
 #include "config-kwin.h"
 #include "drm_gpu.h"
+#include "drm_logging.h"
 #include "kwineglutils_p.h"
-#include "logging.h"
 #include "wayland/clientbuffer.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
 

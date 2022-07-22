@@ -12,8 +12,8 @@
 #include "drm_backend.h"
 #include "drm_gpu.h"
 #include "drm_layer.h"
+#include "drm_logging.h"
 #include "drm_render_backend.h"
-#include "logging.h"
 #include "renderloop_p.h"
 #include "softwarevsyncmonitor.h"
 

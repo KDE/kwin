@@ -6,20 +6,20 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "egl_gbm_layer_surface.h"
+#include "drm_egl_layer_surface.h"
 
 #include "config-kwin.h"
 #include "drm_buffer_gbm.h"
 #include "drm_dumb_buffer.h"
+#include "drm_dumb_swapchain.h"
+#include "drm_egl_backend.h"
+#include "drm_gbm_surface.h"
 #include "drm_gpu.h"
+#include "drm_logging.h"
 #include "drm_output.h"
-#include "dumb_swapchain.h"
+#include "drm_shadow_buffer.h"
 #include "egl_dmabuf.h"
-#include "egl_gbm_backend.h"
-#include "gbm_surface.h"
 #include "kwineglutils_p.h"
-#include "logging.h"
-#include "shadowbuffer.h"
 #include "surfaceitem_wayland.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/surface_interface.h"

@@ -10,8 +10,8 @@
 
 #include "drm_property.h"
 #include "drm_gpu.h"
+#include "drm_logging.h"
 #include "drm_object.h"
-#include "logging.h"
 #include <cerrno>
 
 namespace KWin

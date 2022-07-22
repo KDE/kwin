@@ -12,8 +12,8 @@
 
 #include "drm_buffer.h"
 #include "drm_gpu.h"
+#include "drm_logging.h"
 #include "drm_pointer.h"
-#include "logging.h"
 
 #include <drm_fourcc.h>
 

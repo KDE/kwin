@@ -6,10 +6,10 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "shadowbuffer.h"
+#include "drm_shadow_buffer.h"
 
+#include "drm_logging.h"
 #include "drm_output.h"
-#include "logging.h"
 
 namespace KWin
 {

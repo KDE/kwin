@@ -10,7 +10,7 @@
 #include "drm_buffer.h"
 
 #include "drm_gpu.h"
-#include "logging.h"
+#include "drm_logging.h"
 
 // system
 #include <sys/mman.h>

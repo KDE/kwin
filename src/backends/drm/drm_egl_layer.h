@@ -9,8 +9,8 @@
 #pragma once
 #include "drm_layer.h"
 
-#include "dmabuf_feedback.h"
-#include "egl_gbm_layer_surface.h"
+#include "drm_dmabuf_feedback.h"
+#include "drm_egl_layer_surface.h"
 
 #include <QMap>
 #include <QPointer>
@@ -22,25 +22,31 @@ namespace KWin
 {
 
 class EglGbmBackend;
-class DrmGbmBuffer;
+class GbmBuffer;
 
-class EglGbmCursorLayer : public DrmOverlayLayer
+class EglGbmLayer : public DrmPipelineLayer
 {
 public:
-    EglGbmCursorLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline);
+    EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline);
 
     OutputLayerBeginFrameInfo beginFrame() override;
     void aboutToStartPainting(const QRegion &damagedRegion) override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
-    std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
-    QRegion currentDamage() const override;
+    bool scanout(SurfaceItem *surfaceItem) override;
     bool checkTestBuffer() override;
+    std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
+    bool hasDirectScanoutBuffer() const override;
+    QRegion currentDamage() const override;
+    std::shared_ptr<GLTexture> texture() const override;
     void releaseBuffers() override;
 
 private:
+    std::shared_ptr<DrmFramebuffer> m_scanoutBuffer;
     std::shared_ptr<DrmFramebuffer> m_currentBuffer;
+    QRegion m_currentDamage;
 
     EglGbmLayerSurface m_surface;
+    DmabufFeedback m_dmabufFeedback;
 };
 
 }

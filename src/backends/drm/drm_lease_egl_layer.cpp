@@ -6,13 +6,13 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "drm_lease_egl_gbm_layer.h"
+#include "drm_lease_egl_layer.h"
 #include "drm_buffer.h"
 #include "drm_buffer_gbm.h"
+#include "drm_egl_backend.h"
 #include "drm_gpu.h"
+#include "drm_logging.h"
 #include "drm_pipeline.h"
-#include "egl_gbm_backend.h"
-#include "logging.h"
 
 #include <drm_fourcc.h>
 #include <gbm.h>

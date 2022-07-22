@@ -6,10 +6,10 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "egl_gbm_cursor_layer.h"
+#include "drm_egl_cursor_layer.h"
+#include "drm_egl_backend.h"
 #include "drm_gpu.h"
 #include "drm_pipeline.h"
-#include "egl_gbm_backend.h"
 
 #include <gbm.h>
 

@@ -7,18 +7,18 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "gbm_surface.h"
+#include "drm_gbm_surface.h"
 
 #include <errno.h>
 #include <gbm.h>
 
 #include "drm_backend.h"
+#include "drm_egl_backend.h"
 #include "drm_gpu.h"
-#include "egl_gbm_backend.h"
+#include "drm_logging.h"
 #include "kwineffects.h"
 #include "kwineglutils_p.h"
 #include "kwinglplatform.h"
-#include "logging.h"
 
 namespace KWin
 {

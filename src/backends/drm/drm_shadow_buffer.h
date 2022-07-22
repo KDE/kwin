@@ -11,8 +11,8 @@
 #include <QSize>
 #include <kwinglutils.h>
 
+#include "drm_egl_backend.h"
 #include "drm_object_plane.h"
-#include "egl_gbm_backend.h"
 
 namespace KWin
 {

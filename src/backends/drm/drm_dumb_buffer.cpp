@@ -9,7 +9,7 @@
 #include "drm_dumb_buffer.h"
 
 #include "drm_gpu.h"
-#include "logging.h"
+#include "drm_logging.h"
 
 #include <cerrno>
 #include <drm_fourcc.h>

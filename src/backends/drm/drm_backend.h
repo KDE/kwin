@@ -11,7 +11,7 @@
 #include "platform.h"
 
 #include "dpmsinputeventfilter.h"
-#include "placeholderinputeventfilter.h"
+#include "drm_placeholderinputeventfilter.h"
 
 #include <QPointer>
 #include <QSize>

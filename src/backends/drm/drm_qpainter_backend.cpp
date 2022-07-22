@@ -6,7 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "scene_qpainter_drm_backend.h"
+#include "drm_qpainter_backend.h"
 #include "drm_backend.h"
 #include "drm_buffer.h"
 #include "drm_gpu.h"

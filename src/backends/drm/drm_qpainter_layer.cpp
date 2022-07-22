@@ -11,13 +11,13 @@
 #include "drm_backend.h"
 #include "drm_buffer.h"
 #include "drm_dumb_buffer.h"
+#include "drm_dumb_swapchain.h"
 #include "drm_gpu.h"
+#include "drm_logging.h"
 #include "drm_output.h"
 #include "drm_pipeline.h"
+#include "drm_qpainter_backend.h"
 #include "drm_virtual_output.h"
-#include "dumb_swapchain.h"
-#include "logging.h"
-#include "scene_qpainter_drm_backend.h"
 
 #include <drm_fourcc.h>
 

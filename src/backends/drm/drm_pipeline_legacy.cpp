@@ -10,10 +10,10 @@
 #include "drm_buffer.h"
 #include "drm_gpu.h"
 #include "drm_layer.h"
+#include "drm_logging.h"
 #include "drm_object_connector.h"
 #include "drm_object_crtc.h"
 #include "drm_pipeline.h"
-#include "logging.h"
 
 #include <errno.h>
 #include <gbm.h>

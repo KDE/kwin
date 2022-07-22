@@ -7,12 +7,12 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "dumb_swapchain.h"
+#include "drm_dumb_swapchain.h"
 #include "drm_buffer.h"
 #include "drm_dumb_buffer.h"
 #include "drm_gpu.h"
+#include "drm_logging.h"
 #include "kwineffects.h"
-#include "logging.h"
 
 namespace KWin
 {
