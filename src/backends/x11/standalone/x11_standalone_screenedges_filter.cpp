@@ -6,7 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "screenedges_filter.h"
+#include "x11_standalone_screenedges_filter.h"
 #include "atoms.h"
 #include "screenedge.h"
 

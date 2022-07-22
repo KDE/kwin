@@ -12,7 +12,7 @@
 
 #include <config-kwin.h>
 
-#include "backends/x11/standalone/x11_platform.h"
+#include "backends/x11/standalone/x11_standalone_platform.h"
 #include "platform.h"
 #include "sm.h"
 #include "tabletmodemanager.h"

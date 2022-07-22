@@ -6,7 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "glx_context_attribute_builder.h"
+#include "x11_standalone_glx_context_attribute_builder.h"
 #include <epoxy/glx.h>
 
 #ifndef GLX_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV

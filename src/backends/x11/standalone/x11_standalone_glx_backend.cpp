@@ -12,17 +12,15 @@
 */
 
 // own
-#include "glxbackend.h"
-#include "glx_context_attribute_builder.h"
-#include "glxconvenience.h"
-#include "logging.h"
-#include "omlsynccontrolvsyncmonitor.h"
-#include "sgivideosyncvsyncmonitor.h"
-#include "softwarevsyncmonitor.h"
-#include "x11_platform.h"
-
+#include "x11_standalone_glx_backend.h"
 #include "../common/kwinxrenderutils.h"
-
+#include "softwarevsyncmonitor.h"
+#include "x11_standalone_glx_context_attribute_builder.h"
+#include "x11_standalone_glxconvenience.h"
+#include "x11_standalone_logging.h"
+#include "x11_standalone_omlsynccontrolvsyncmonitor.h"
+#include "x11_standalone_platform.h"
+#include "x11_standalone_sgivideosyncvsyncmonitor.h"
 // kwin
 #include "composite.h"
 #include "options.h"

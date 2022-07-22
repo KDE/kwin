@@ -8,7 +8,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "windowselector.h"
+#include "x11_standalone_windowselector.h"
 #include "cursor.h"
 #include "unmanaged.h"
 #include "utils/xcbutils.h"

@@ -15,7 +15,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "edge.h"
+#include "x11_standalone_edge.h"
 #include "atoms.h"
 #include "cursor.h"
 

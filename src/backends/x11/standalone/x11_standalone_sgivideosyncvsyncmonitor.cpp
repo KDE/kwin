@@ -4,9 +4,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "omlsynccontrolvsyncmonitor.h"
-#include "glxconvenience.h"
-#include "logging.h"
+#include "x11_standalone_sgivideosyncvsyncmonitor.h"
+#include "x11_standalone_glxconvenience.h"
+#include "x11_standalone_logging.h"
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <private/qtx11extras_p.h>
@@ -17,15 +17,15 @@
 namespace KWin
 {
 
-std::unique_ptr<OMLSyncControlVsyncMonitor> OMLSyncControlVsyncMonitor::create()
+std::unique_ptr<SGIVideoSyncVsyncMonitor> SGIVideoSyncVsyncMonitor::create()
 {
     const char *extensions = glXQueryExtensionsString(QX11Info::display(),
                                                       QX11Info::appScreen());
-    if (!strstr(extensions, "GLX_OML_sync_control")) {
-        return nullptr; // GLX_OML_sync_control is unsupported.
+    if (!strstr(extensions, "GLX_SGI_video_sync")) {
+        return nullptr; // GLX_SGI_video_sync is unsupported.
     }
 
-    std::unique_ptr<OMLSyncControlVsyncMonitor> monitor{new OMLSyncControlVsyncMonitor()};
+    std::unique_ptr<SGIVideoSyncVsyncMonitor> monitor{new SGIVideoSyncVsyncMonitor()};
     if (monitor->isValid()) {
         return monitor;
     } else {
@@ -33,7 +33,7 @@ std::unique_ptr<OMLSyncControlVsyncMonitor> OMLSyncControlVsyncMonitor::create()
     }
 }
 
-OMLSyncControlVsyncMonitorHelper::OMLSyncControlVsyncMonitorHelper()
+SGIVideoSyncVsyncMonitorHelper::SGIVideoSyncVsyncMonitorHelper()
 {
     // Establish a new X11 connection to avoid locking up the main X11 connection.
     m_display = XOpenDisplay(DisplayString(QX11Info::display()));
@@ -89,7 +89,7 @@ OMLSyncControlVsyncMonitorHelper::OMLSyncControlVsyncMonitorHelper()
     }
 }
 
-OMLSyncControlVsyncMonitorHelper::~OMLSyncControlVsyncMonitorHelper()
+SGIVideoSyncVsyncMonitorHelper::~SGIVideoSyncVsyncMonitorHelper()
 {
     if (m_localContext) {
         glXDestroyContext(m_display, m_localContext);
@@ -105,53 +105,55 @@ OMLSyncControlVsyncMonitorHelper::~OMLSyncControlVsyncMonitorHelper()
     }
 }
 
-bool OMLSyncControlVsyncMonitorHelper::isValid() const
+bool SGIVideoSyncVsyncMonitorHelper::isValid() const
 {
     return m_display && m_localContext && m_drawable;
 }
 
-void OMLSyncControlVsyncMonitorHelper::poll()
+void SGIVideoSyncVsyncMonitorHelper::poll()
 {
     if (!glXMakeCurrent(m_display, m_drawable, m_localContext)) {
         qCDebug(KWIN_X11STANDALONE) << "Failed to make vsync monitor OpenGL context current";
+        Q_EMIT errorOccurred();
         return;
     }
 
-    int64_t ust, msc, sbc;
+    uint count;
 
-    glXGetSyncValuesOML(m_display, m_drawable, &ust, &msc, &sbc);
-    glXWaitForMscOML(m_display, m_drawable, 0, 2, (msc + 1) % 2, &ust, &msc, &sbc);
+    glXGetVideoSyncSGI(&count);
+    glXWaitVideoSyncSGI(2, (count + 1) % 2, &count);
 
-    Q_EMIT vblankOccurred(std::chrono::microseconds(ust));
+    // Using monotonic clock is inaccurate, but it's still a pretty good estimate.
+    Q_EMIT vblankOccurred(std::chrono::steady_clock::now().time_since_epoch());
 }
 
-OMLSyncControlVsyncMonitor::OMLSyncControlVsyncMonitor()
+SGIVideoSyncVsyncMonitor::SGIVideoSyncVsyncMonitor()
 {
     m_helper.moveToThread(&m_thread);
 
-    connect(&m_helper, &OMLSyncControlVsyncMonitorHelper::errorOccurred,
-            this, &OMLSyncControlVsyncMonitor::errorOccurred);
-    connect(&m_helper, &OMLSyncControlVsyncMonitorHelper::vblankOccurred,
-            this, &OMLSyncControlVsyncMonitor::vblankOccurred);
+    connect(&m_helper, &SGIVideoSyncVsyncMonitorHelper::errorOccurred,
+            this, &SGIVideoSyncVsyncMonitor::errorOccurred);
+    connect(&m_helper, &SGIVideoSyncVsyncMonitorHelper::vblankOccurred,
+            this, &SGIVideoSyncVsyncMonitor::vblankOccurred);
 
     m_thread.setObjectName(QStringLiteral("vsync event monitor"));
     m_thread.start();
 }
 
-OMLSyncControlVsyncMonitor::~OMLSyncControlVsyncMonitor()
+SGIVideoSyncVsyncMonitor::~SGIVideoSyncVsyncMonitor()
 {
     m_thread.quit();
     m_thread.wait();
 }
 
-bool OMLSyncControlVsyncMonitor::isValid() const
+bool SGIVideoSyncVsyncMonitor::isValid() const
 {
     return m_helper.isValid();
 }
 
-void OMLSyncControlVsyncMonitor::arm()
+void SGIVideoSyncVsyncMonitor::arm()
 {
-    QMetaObject::invokeMethod(&m_helper, &OMLSyncControlVsyncMonitorHelper::poll);
+    QMetaObject::invokeMethod(&m_helper, &SGIVideoSyncVsyncMonitorHelper::poll);
 }
 
 } // namespace KWin

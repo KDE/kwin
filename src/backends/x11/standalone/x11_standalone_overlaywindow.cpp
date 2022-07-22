@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "overlaywindow_x11.h"
+#include "x11_standalone_overlaywindow.h"
 
 #include "composite.h"
 #include "kwinglobals.h"

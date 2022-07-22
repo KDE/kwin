@@ -13,7 +13,7 @@
 
 #include <kwinconfig.h>
 #if HAVE_EPOXY_GLX
-#include "../src/backends/x11/standalone/glx_context_attribute_builder.h"
+#include "../src/backends/x11/standalone/x11_standalone_glx_context_attribute_builder.h"
 #include <epoxy/glx.h>
 
 #ifndef GLX_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV

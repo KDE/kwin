@@ -6,9 +6,9 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "xfixes_cursor_event_filter.h"
+#include "x11_standalone_xfixes_cursor_event_filter.h"
 #include "utils/xcbutils.h"
-#include "x11cursor.h"
+#include "x11_standalone_cursor.h"
 
 namespace KWin
 {

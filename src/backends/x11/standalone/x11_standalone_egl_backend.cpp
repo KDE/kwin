@@ -5,9 +5,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "eglbackend.h"
+#include "x11_standalone_egl_backend.h"
 #include "kwinglplatform.h"
-#include "logging.h"
 #include "options.h"
 #include "overlaywindow.h"
 #include "platform.h"
@@ -16,7 +15,8 @@
 #include "screens.h"
 #include "softwarevsyncmonitor.h"
 #include "surfaceitem_x11.h"
-#include "x11_platform.h"
+#include "x11_standalone_logging.h"
+#include "x11_standalone_platform.h"
 
 #include <QOpenGLContext>
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)

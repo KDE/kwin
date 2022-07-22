@@ -6,7 +6,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "glxconvenience.h"
+#include "x11_standalone_glxconvenience.h"
 
 #include <algorithm>
 #include <deque>

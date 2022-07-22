@@ -6,38 +6,38 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "x11_platform.h"
+#include "x11_standalone_platform.h"
 
 #include <config-kwin.h>
 
 #include "atoms.h"
-#include "edge.h"
 #include "session.h"
-#include "windowselector.h"
-#include "x11cursor.h"
-#include "x11placeholderoutput.h"
+#include "x11_standalone_cursor.h"
+#include "x11_standalone_edge.h"
+#include "x11_standalone_placeholderoutput.h"
+#include "x11_standalone_windowselector.h"
 #include <kwinconfig.h>
 #if HAVE_EPOXY_GLX
-#include "glxbackend.h"
+#include "x11_standalone_glx_backend.h"
 #endif
 #if HAVE_X11_XINPUT
-#include "xinputintegration.h"
+#include "x11_standalone_xinputintegration.h"
 #endif
-#include "effects_x11.h"
-#include "eglbackend.h"
 #include "keyboard_input.h"
-#include "logging.h"
-#include "non_composited_outline.h"
 #include "options.h"
-#include "overlaywindow_x11.h"
 #include "renderloop.h"
-#include "screenedges_filter.h"
 #include "utils/c_ptr.h"
 #include "utils/edid.h"
 #include "utils/xcbutils.h"
 #include "window.h"
 #include "workspace.h"
-#include "x11_output.h"
+#include "x11_standalone_effects.h"
+#include "x11_standalone_egl_backend.h"
+#include "x11_standalone_logging.h"
+#include "x11_standalone_non_composited_outline.h"
+#include "x11_standalone_output.h"
+#include "x11_standalone_overlaywindow.h"
+#include "x11_standalone_screenedges_filter.h"
 
 #include "../common/kwinxrenderutils.h"
 

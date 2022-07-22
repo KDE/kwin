@@ -4,7 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "x11placeholderoutput.h"
+#include "x11_standalone_placeholderoutput.h"
 #include "main.h"
 
 namespace KWin

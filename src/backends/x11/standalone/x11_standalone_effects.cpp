@@ -7,13 +7,13 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "effects_x11.h"
+#include "x11_standalone_effects.h"
 #include "cursor.h"
-#include "effects_mouse_interception_x11_filter.h"
 #include "screenedge.h"
 #include "screens.h"
 #include "utils/common.h"
 #include "workspace.h"
+#include "x11_standalone_effects_mouse_interception_filter.h"
 
 #include <QDesktopWidget>
 

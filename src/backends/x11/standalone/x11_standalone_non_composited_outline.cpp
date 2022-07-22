@@ -8,7 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 // own
-#include "non_composited_outline.h"
+#include "x11_standalone_non_composited_outline.h"
 // KWin libs
 #include "../common/kwinxrenderutils.h"
 // xcb
