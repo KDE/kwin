@@ -2652,8 +2652,8 @@ QRectF Workspace::adjustWindowSize(Window *window, QRectF moveResizeGeom, Gravit
             for (auto l = m_allClients.constBegin(); l != m_allClients.constEnd(); ++l) {
                 if ((*l)->isOnCurrentDesktop() && !(*l)->isMinimized()
                     && (*l) != window) {
-                    lx = (*l)->x() - 1;
-                    ly = (*l)->y() - 1;
+                    lx = (*l)->x();
+                    ly = (*l)->y();
                     lrx = (*l)->x() + (*l)->width();
                     lry = (*l)->y() + (*l)->height();
 
