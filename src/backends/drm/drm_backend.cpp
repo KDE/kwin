@@ -670,14 +670,6 @@ DrmGpu *DrmBackend::findGpu(dev_t deviceId) const
     return it == m_gpus.end() ? nullptr : it->get();
 }
 
-DrmGpu *DrmBackend::findGpuByFd(int fd) const
-{
-    auto it = std::find_if(m_gpus.begin(), m_gpus.end(), [fd](const auto &gpu) {
-        return gpu->fd() == fd;
-    });
-    return it == m_gpus.end() ? nullptr : it->get();
-}
-
 bool DrmBackend::applyOutputChanges(const OutputConfiguration &config)
 {
     QVector<DrmOutput *> toBeEnabled;

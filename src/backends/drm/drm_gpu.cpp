@@ -22,7 +22,6 @@
 #include "egl_gbm_backend.h"
 #include "gbm_dmabuf.h"
 #include "logging.h"
-#include "main.h"
 #include "renderloop_p.h"
 #include "session.h"
 #include "wayland/drmleasedevice_v1_interface.h"
@@ -527,16 +526,10 @@ static std::chrono::nanoseconds convertTimestamp(clockid_t sourceClock, clockid_
 
 void DrmGpu::pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, unsigned int usec, unsigned int crtc_id, void *user_data)
 {
+    Q_UNUSED(fd)
     Q_UNUSED(sequence)
-    Q_UNUSED(user_data)
-    auto backend = dynamic_cast<DrmBackend *>(kwinApp()->platform());
-    if (!backend) {
-        return;
-    }
-    auto gpu = backend->findGpuByFd(fd);
-    if (!gpu) {
-        return;
-    }
+
+    DrmGpu *gpu = static_cast<DrmGpu *>(user_data);
 
     // The static_cast<> here are for a 32-bit environment where
     // sizeof(time_t) == sizeof(unsigned int) == 4 . Putting @p sec

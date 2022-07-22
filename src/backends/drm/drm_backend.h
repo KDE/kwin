@@ -68,7 +68,6 @@ public:
 
     DrmGpu *primaryGpu() const;
     DrmGpu *findGpu(dev_t deviceId) const;
-    DrmGpu *findGpuByFd(int fd) const;
 
     bool isActive() const;
 

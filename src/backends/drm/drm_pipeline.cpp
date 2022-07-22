@@ -145,12 +145,13 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline 
     } else {
         flags |= DRM_MODE_ATOMIC_NONBLOCK;
     }
-    if (drmModeAtomicCommit(pipelines[0]->gpu()->fd(), req, (flags & (~DRM_MODE_PAGE_FLIP_EVENT)) | DRM_MODE_ATOMIC_TEST_ONLY, nullptr) != 0) {
+    DrmGpu *gpu = pipelines[0]->gpu();
+    if (drmModeAtomicCommit(gpu->fd(), req, (flags & (~DRM_MODE_PAGE_FLIP_EVENT)) | DRM_MODE_ATOMIC_TEST_ONLY, nullptr) != 0) {
         qCDebug(KWIN_DRM) << "Atomic test for" << mode << "failed!" << strerror(errno);
         failed();
         return errnoToError();
     }
-    if (mode != CommitMode::Test && drmModeAtomicCommit(pipelines[0]->gpu()->fd(), req, flags, nullptr) != 0) {
+    if (mode != CommitMode::Test && drmModeAtomicCommit(gpu->fd(), req, flags, gpu) != 0) {
         qCCritical(KWIN_DRM) << "Atomic commit failed! This should never happen!" << strerror(errno);
         failed();
         return errnoToError();

@@ -30,7 +30,7 @@ DrmPipeline::Error DrmPipeline::presentLegacy()
         }
     }
     const auto buffer = m_pending.layer->currentBuffer();
-    if (drmModePageFlip(gpu()->fd(), m_pending.crtc->id(), buffer->framebufferId(), DRM_MODE_PAGE_FLIP_EVENT, nullptr) != 0) {
+    if (drmModePageFlip(gpu()->fd(), m_pending.crtc->id(), buffer->framebufferId(), DRM_MODE_PAGE_FLIP_EVENT, gpu()) != 0) {
         qCWarning(KWIN_DRM) << "Page flip failed:" << strerror(errno);
         return errnoToError();
     }
