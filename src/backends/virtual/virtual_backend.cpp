@@ -9,10 +9,10 @@
 #include "virtual_backend.h"
 
 #include "composite.h"
-#include "egl_gbm_backend.h"
-#include "scene_qpainter_virtual_backend.h"
 #include "session.h"
+#include "virtual_egl_backend.h"
 #include "virtual_output.h"
+#include "virtual_qpainter_backend.h"
 // Qt
 #include <QTemporaryDir>
 

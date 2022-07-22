@@ -1,7 +1,7 @@
 target_sources(kwin PRIVATE
-    egl_gbm_backend.cpp
-    logging.cpp
-    scene_qpainter_virtual_backend.cpp
     virtual_backend.cpp
+    virtual_egl_backend.cpp
+    virtual_logging.cpp
     virtual_output.cpp
+    virtual_qpainter_backend.cpp
 )

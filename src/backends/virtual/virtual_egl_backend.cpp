@@ -6,11 +6,11 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "egl_gbm_backend.h"
+#include "virtual_egl_backend.h"
 // kwin
 #include "basiceglsurfacetexture_internal.h"
 #include "basiceglsurfacetexture_wayland.h"
-#include "logging.h"
+#include "virtual_logging.h"
 #include "softwarevsyncmonitor.h"
 #include "virtual_backend.h"
 #include "virtual_output.h"

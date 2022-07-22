@@ -4,6 +4,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "logging.h"
+#include "virtual_logging.h"
 
 Q_LOGGING_CATEGORY(KWIN_VIRTUAL, "kwin_platform_virtual", QtWarningMsg)
