@@ -6,13 +6,13 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "egl_x11_backend.h"
+#include "x11_windowed_egl_backend.h"
 // kwin
 #include "basiceglsurfacetexture_internal.h"
 #include "basiceglsurfacetexture_wayland.h"
 #include "softwarevsyncmonitor.h"
-#include "x11windowed_backend.h"
-#include "x11windowed_output.h"
+#include "x11_windowed_backend.h"
+#include "x11_windowed_output.h"
 // kwin libs
 #include <kwinglplatform.h>
 

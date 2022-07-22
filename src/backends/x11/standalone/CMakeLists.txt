@@ -27,8 +27,8 @@ endif()
 
 if (HAVE_EPOXY_GLX)
     target_sources(KWinX11Platform PRIVATE
-        x11_standalone_glx_context_attribute_builder.cpp
         x11_standalone_glx_backend.cpp
+        x11_standalone_glx_context_attribute_builder.cpp
         x11_standalone_glxconvenience.cpp
         x11_standalone_omlsynccontrolvsyncmonitor.cpp
         x11_standalone_sgivideosyncvsyncmonitor.cpp

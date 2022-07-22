@@ -12,8 +12,10 @@
 
 #include <xcb/xcb.h>
 
-#include <X11/Xlib-xcb.h>
-#include <fixx11h.h>
+struct _XDisplay;
+typedef struct _XDisplay Display;
+typedef unsigned long XID;
+typedef XID Window;
 
 namespace KWin
 {

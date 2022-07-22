@@ -6,10 +6,10 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "scene_qpainter_x11_backend.h"
+#include "x11_windowed_qpainter_backend.h"
 #include "softwarevsyncmonitor.h"
-#include "x11windowed_backend.h"
-#include "x11windowed_output.h"
+#include "x11_windowed_backend.h"
+#include "x11_windowed_output.h"
 
 namespace KWin
 {

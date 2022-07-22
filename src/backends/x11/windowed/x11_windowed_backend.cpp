@@ -6,18 +6,18 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "x11windowed_backend.h"
+#include "x11_windowed_backend.h"
 #include "../common/kwinxrenderutils.h"
 
 #include <config-kwin.h>
 
-#include "egl_x11_backend.h"
-#include "logging.h"
-#include "scene_qpainter_x11_backend.h"
 #include "session.h"
 #include "utils/xcbutils.h"
 #include "wayland_server.h"
-#include "x11windowed_output.h"
+#include "x11_windowed_egl_backend.h"
+#include "x11_windowed_logging.h"
+#include "x11_windowed_output.h"
+#include "x11_windowed_qpainter_backend.h"
 #include <cursor.h>
 #include <pointer_input.h>
 // KDE
@@ -28,6 +28,8 @@
 // xcb
 #include <xcb/xcb_keysyms.h>
 // X11
+#include <X11/Xlib-xcb.h>
+#include <fixx11h.h>
 #if HAVE_X11_XINPUT
 #include "../common/ge_event_mem_mover.h"
 #include <X11/extensions/XI2proto.h>

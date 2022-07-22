@@ -16,6 +16,9 @@
 #include "platform.h"
 #include "utils/common.h"
 #include "utils/xcbutils.h"
+// X11
+#include <X11/Xlib-xcb.h>
+#include <fixx11h.h>
 
 namespace KWin
 {

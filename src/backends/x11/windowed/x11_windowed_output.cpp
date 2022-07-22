@@ -6,13 +6,13 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "x11windowed_output.h"
+#include "x11_windowed_output.h"
 
 #include <config-kwin.h>
 
 #include "renderloop_p.h"
 #include "softwarevsyncmonitor.h"
-#include "x11windowed_backend.h"
+#include "x11_windowed_backend.h"
 
 #include <NETWM>
 

@@ -13,7 +13,7 @@
 #include "backends/drm/drm_backend.h"
 #include "backends/virtual/virtual_backend.h"
 #include "backends/wayland/wayland_backend.h"
-#include "backends/x11/windowed/x11windowed_backend.h"
+#include "backends/x11/windowed/x11_windowed_backend.h"
 #include "composite.h"
 #include "effects.h"
 #include "inputmethod.h"
