@@ -247,8 +247,7 @@ private:
 class KWIN_EXPORT WaylandBackend : public Platform
 {
     Q_OBJECT
-    Q_INTERFACES(KWin::Platform)
-    Q_PLUGIN_METADATA(IID "org.kde.kwin.Platform" FILE "wayland.json")
+
 public:
     explicit WaylandBackend(QObject *parent = nullptr);
     ~WaylandBackend() override;

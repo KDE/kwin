@@ -1,4 +1,4 @@
-set(DRM_SOURCES
+target_sources(kwin PRIVATE
     drm_backend.cpp
     drm_object.cpp
     drm_property.cpp
@@ -31,13 +31,4 @@ set(DRM_SOURCES
     egl_gbm_cursor_layer.cpp
 )
 
-add_library(KWinWaylandDrmBackend MODULE ${DRM_SOURCES})
-set_target_properties(KWinWaylandDrmBackend PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org.kde.kwin.waylandbackends/")
-target_link_libraries(KWinWaylandDrmBackend kwin Libdrm::Libdrm gbm::gbm PkgConfig::Libxcvt)
-
-install(
-    TARGETS
-        KWinWaylandDrmBackend
-    DESTINATION
-        ${KDE_INSTALL_PLUGINDIR}/org.kde.kwin.waylandbackends/
-)
+target_link_libraries(kwin Libdrm::Libdrm gbm::gbm PkgConfig::Libxcvt)

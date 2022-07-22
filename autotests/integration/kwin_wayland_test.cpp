@@ -8,6 +8,7 @@
 */
 #include "kwin_wayland_test.h"
 
+#include "backends/virtual/virtual_backend.h"
 #include "composite.h"
 #include "effects.h"
 #include "inputmethod.h"
@@ -67,12 +68,7 @@ WaylandTestApplication::WaylandTestApplication(OperationMode mode, int &argc, ch
     removeLibraryPath(ownPath);
     addLibraryPath(ownPath);
 
-    const KPluginMetaData plugin = KPluginMetaData::findPluginById(QStringLiteral("org.kde.kwin.waylandbackends"), "KWinWaylandVirtualBackend");
-    if (!plugin.isValid()) {
-        quit();
-        return;
-    }
-    initPlatform(plugin);
+    setPlatform(std::make_unique<VirtualBackend>());
     WaylandServer::create(this);
     setProcessStartupEnvironment(QProcessEnvironment::systemEnvironment());
 }

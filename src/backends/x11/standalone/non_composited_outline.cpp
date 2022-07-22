@@ -10,7 +10,7 @@
 // own
 #include "non_composited_outline.h"
 // KWin libs
-#include <kwinxrenderutils.h>
+#include "../common/kwinxrenderutils.h"
 // xcb
 #include <xcb/render.h>
 

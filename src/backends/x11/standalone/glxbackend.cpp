@@ -20,6 +20,9 @@
 #include "sgivideosyncvsyncmonitor.h"
 #include "softwarevsyncmonitor.h"
 #include "x11_platform.h"
+
+#include "../common/kwinxrenderutils.h"
+
 // kwin
 #include "composite.h"
 #include "options.h"
@@ -34,7 +37,6 @@
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
 #include <kwinoffscreenquickview.h>
-#include <kwinxrenderutils.h>
 // Qt
 #include <QDebug>
 #include <QOpenGLContext>

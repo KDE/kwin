@@ -14,12 +14,8 @@
 #include "options.h"
 #include "overlaywindow.h"
 #include "platform.h"
+#include "utils/common.h"
 #include "utils/xcbutils.h"
-// Qt
-#include <QDebug>
-#include <QLoggingCategory>
-
-Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core", QtWarningMsg)
 
 namespace KWin
 {

@@ -7,7 +7,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "xinputintegration.h"
-#include "ge_event_mem_mover.h"
 #include "gestures.h"
 #include "keyboard_input.h"
 #include "logging.h"
@@ -16,6 +15,8 @@
 #include "pointer_input.h"
 #include "screenedge.h"
 #include "x11cursor.h"
+
+#include "../common/ge_event_mem_mover.h"
 
 #include "input.h"
 #include "modifier_only_shortcuts.h"

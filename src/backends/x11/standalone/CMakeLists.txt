@@ -15,9 +15,8 @@ set(X11PLATFORM_SOURCES
     xfixes_cursor_event_filter.cpp
 )
 
-add_library(KWinX11Platform MODULE ${X11PLATFORM_SOURCES})
-set_target_properties(KWinX11Platform PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org.kde.kwin.platforms/")
-target_link_libraries(KWinX11Platform eglx11common kwin KF5::Crash X11::X11)
+add_library(KWinX11Platform OBJECT ${X11PLATFORM_SOURCES})
+target_link_libraries(KWinX11Platform kwin KF5::Crash X11::X11)
 if (QT_MAJOR_VERSION EQUAL "5")
     target_link_libraries(KWinX11Platform Qt::X11Extras)
 endif()
@@ -39,10 +38,3 @@ endif()
 if (HAVE_DL_LIBRARY)
     target_link_libraries(KWinX11Platform ${DL_LIBRARY})
 endif()
-
-install(
-    TARGETS
-        KWinX11Platform
-    DESTINATION
-        ${KDE_INSTALL_PLUGINDIR}/org.kde.kwin.platforms/
-)

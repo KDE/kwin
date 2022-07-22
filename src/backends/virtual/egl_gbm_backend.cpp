@@ -10,10 +10,10 @@
 // kwin
 #include "basiceglsurfacetexture_internal.h"
 #include "basiceglsurfacetexture_wayland.h"
+#include "logging.h"
 #include "softwarevsyncmonitor.h"
 #include "virtual_backend.h"
 #include "virtual_output.h"
-#include <logging.h>
 // kwin libs
 #include <kwinglutils.h>
 

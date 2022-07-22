@@ -83,8 +83,7 @@ private:
 class KWIN_EXPORT X11WindowedBackend : public Platform
 {
     Q_OBJECT
-    Q_INTERFACES(KWin::Platform)
-    Q_PLUGIN_METADATA(IID "org.kde.kwin.Platform" FILE "x11.json")
+
 public:
     X11WindowedBackend(QObject *parent = nullptr);
     ~X11WindowedBackend() override;

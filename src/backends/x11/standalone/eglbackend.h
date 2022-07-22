@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "eglonxbackend.h"
+#include "../common/eglonxbackend.h"
 #include "openglsurfacetexture_x11.h"
 #include "outputlayer.h"
 #include "utils/damagejournal.h"

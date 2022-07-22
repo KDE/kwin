@@ -10,6 +10,10 @@
 
 #include <config-kwin.h>
 
+#include "backends/drm/drm_backend.h"
+#include "backends/virtual/virtual_backend.h"
+#include "backends/wayland/wayland_backend.h"
+#include "backends/x11/windowed/x11windowed_backend.h"
 #include "composite.h"
 #include "effects.h"
 #include "inputmethod.h"
@@ -27,7 +31,6 @@
 #include <KCrash>
 #include <KDesktopFile>
 #include <KLocalizedString>
-#include <KPluginMetaData>
 #include <KShell>
 
 // Qt
@@ -272,22 +275,6 @@ void ApplicationWayland::startSession()
     }
 }
 
-static const QString s_waylandPlugin = QStringLiteral("KWinWaylandWaylandBackend");
-static const QString s_x11Plugin = QStringLiteral("KWinWaylandX11Backend");
-static const QString s_drmPlugin = QStringLiteral("KWinWaylandDrmBackend");
-static const QString s_virtualPlugin = QStringLiteral("KWinWaylandVirtualBackend");
-
-static QString automaticBackendSelection()
-{
-    if (qEnvironmentVariableIsSet("WAYLAND_DISPLAY")) {
-        return s_waylandPlugin;
-    }
-    if (qEnvironmentVariableIsSet("DISPLAY")) {
-        return s_x11Plugin;
-    }
-    return s_drmPlugin;
-}
-
 } // namespace
 
 int main(int argc, char *argv[])
@@ -328,20 +315,6 @@ int main(int argc, char *argv[])
     qunsetenv("QT_QPA_PLATFORM");
 
     KWin::Application::createAboutData();
-
-    const auto availablePlugins = KPluginMetaData::findPlugins(QStringLiteral("org.kde.kwin.waylandbackends"));
-    auto hasPlugin = [&availablePlugins](const QString &name) {
-        return std::any_of(availablePlugins.begin(), availablePlugins.end(),
-                           [name](const KPluginMetaData &plugin) {
-                               return plugin.pluginId() == name;
-                           });
-    };
-    const bool hasSizeOption = hasPlugin(KWin::s_x11Plugin) || hasPlugin(KWin::s_virtualPlugin);
-    const bool hasOutputCountOption = hasPlugin(KWin::s_x11Plugin);
-    const bool hasX11Option = hasPlugin(KWin::s_x11Plugin);
-    const bool hasVirtualOption = hasPlugin(KWin::s_virtualPlugin);
-    const bool hasWaylandOption = hasPlugin(KWin::s_waylandPlugin);
-    const bool hasDrmOption = hasPlugin(KWin::s_drmPlugin);
 
     QCommandLineOption xwaylandOption(QStringLiteral("xwayland"),
                                       i18n("Start a rootless Xwayland server."));
@@ -393,6 +366,8 @@ int main(int argc, char *argv[])
     QCommandLineOption replaceOption(QStringLiteral("replace"),
                                      i18n("Exits this instance so it can be restarted by kwin_wayland_wrapper."));
 
+    QCommandLineOption drmOption(QStringLiteral("drm"), i18n("Render through drm node."));
+
     QCommandLineParser parser;
     a.setupCommandLine(&parser);
     parser.addOption(xwaylandOption);
@@ -402,37 +377,19 @@ int main(int argc, char *argv[])
     parser.addOption(xwaylandDisplayOption);
     parser.addOption(xwaylandXAuthorityOption);
     parser.addOption(replaceOption);
-
-    if (hasX11Option) {
-        parser.addOption(x11DisplayOption);
-    }
-    if (hasWaylandOption) {
-        parser.addOption(waylandDisplayOption);
-    }
-    if (hasVirtualOption) {
-        parser.addOption(virtualFbOption);
-    }
-    if (hasSizeOption) {
-        parser.addOption(widthOption);
-        parser.addOption(heightOption);
-        parser.addOption(scaleOption);
-    }
-    if (hasOutputCountOption) {
-        parser.addOption(outputCountOption);
-    }
-    QCommandLineOption drmOption(QStringLiteral("drm"), i18n("Render through drm node."));
-    if (hasDrmOption) {
-        parser.addOption(drmOption);
-    }
+    parser.addOption(x11DisplayOption);
+    parser.addOption(waylandDisplayOption);
+    parser.addOption(virtualFbOption);
+    parser.addOption(widthOption);
+    parser.addOption(heightOption);
+    parser.addOption(scaleOption);
+    parser.addOption(outputCountOption);
+    parser.addOption(drmOption);
 
     QCommandLineOption inputMethodOption(QStringLiteral("inputmethod"),
                                          i18n("Input method that KWin starts."),
                                          QStringLiteral("path/to/imserver"));
     parser.addOption(inputMethodOption);
-
-    QCommandLineOption listBackendsOption(QStringLiteral("list-backends"),
-                                          i18n("List all available backends and quit."));
-    parser.addOption(listBackendsOption);
 
 #if KWIN_BUILD_SCREENLOCKER
     QCommandLineOption screenLockerOption(QStringLiteral("lockscreen"),
@@ -478,81 +435,69 @@ int main(int argc, char *argv[])
         QDBusConnection::sessionBus().call(msg, QDBus::NoBlock);
         return 0;
     }
-    if (parser.isSet(listBackendsOption)) {
-        for (const auto &plugin : availablePlugins) {
-            std::cout << std::setw(40) << std::left << qPrintable(plugin.name()) << qPrintable(plugin.description()) << std::endl;
-        }
-        return 0;
-    }
 
     if (parser.isSet(exitWithSessionOption)) {
         a.setSessionArgument(parser.value(exitWithSessionOption));
     }
 
+    enum class BackendType {
+        Kms,
+        X11,
+        Wayland,
+        Virtual,
+    };
+
+    BackendType backendType;
     QString pluginName;
     QSize initialWindowSize;
     QByteArray deviceIdentifier;
     int outputCount = 1;
     qreal outputScale = 1;
 
-    if (hasDrmOption && parser.isSet(drmOption)) {
-        pluginName = KWin::s_drmPlugin;
-    }
-
-    if (hasSizeOption) {
-        bool ok = false;
-        const int width = parser.value(widthOption).toInt(&ok);
-        if (!ok) {
-            std::cerr << "FATAL ERROR incorrect value for width" << std::endl;
-            return 1;
-        }
-        const int height = parser.value(heightOption).toInt(&ok);
-        if (!ok) {
-            std::cerr << "FATAL ERROR incorrect value for height" << std::endl;
-            return 1;
-        }
-        const qreal scale = parser.value(scaleOption).toDouble(&ok);
-        if (!ok || scale <= 0) {
-            std::cerr << "FATAL ERROR incorrect value for scale" << std::endl;
-            return 1;
-        }
-
-        outputScale = scale;
-        initialWindowSize = QSize(width, height);
-    }
-
-    if (hasOutputCountOption) {
-        bool ok = false;
-        const int count = parser.value(outputCountOption).toInt(&ok);
-        if (ok) {
-            outputCount = qMax(1, count);
-        }
-    }
-
-    if (hasX11Option && parser.isSet(x11DisplayOption)) {
+    // Decide what backend to use.
+    if (parser.isSet(drmOption)) {
+        backendType = BackendType::Kms;
+    } else if (parser.isSet(x11DisplayOption)) {
+        backendType = BackendType::X11;
         deviceIdentifier = parser.value(x11DisplayOption).toUtf8();
-        pluginName = KWin::s_x11Plugin;
-    } else if (hasWaylandOption && parser.isSet(waylandDisplayOption)) {
+    } else if (parser.isSet(waylandDisplayOption)) {
+        backendType = BackendType::Wayland;
         deviceIdentifier = parser.value(waylandDisplayOption).toUtf8();
-        pluginName = KWin::s_waylandPlugin;
+    } else if (parser.isSet(virtualFbOption)) {
+        backendType = BackendType::Virtual;
+    } else {
+        if (qEnvironmentVariableIsSet("WAYLAND_DISPLAY")) {
+            backendType = BackendType::Wayland;
+        } else if (qEnvironmentVariableIsSet("DISPLAY")) {
+            backendType = BackendType::X11;
+        } else {
+            backendType = BackendType::Kms;
+        }
     }
 
-    if (hasVirtualOption && parser.isSet(virtualFbOption)) {
-        pluginName = KWin::s_virtualPlugin;
-    }
-
-    if (pluginName.isEmpty()) {
-        std::cerr << "No backend specified through command line argument, trying auto resolution" << std::endl;
-        pluginName = KWin::automaticBackendSelection();
-    }
-
-    auto pluginIt = std::find_if(availablePlugins.begin(), availablePlugins.end(),
-                                 [&pluginName](const KPluginMetaData &plugin) {
-                                     return plugin.pluginId() == pluginName;
-                                 });
-    if (pluginIt == availablePlugins.end()) {
-        std::cerr << "FATAL ERROR: could not find a backend" << std::endl;
+    bool ok = false;
+    const int width = parser.value(widthOption).toInt(&ok);
+    if (!ok) {
+        std::cerr << "FATAL ERROR incorrect value for width" << std::endl;
         return 1;
+    }
+    const int height = parser.value(heightOption).toInt(&ok);
+    if (!ok) {
+        std::cerr << "FATAL ERROR incorrect value for height" << std::endl;
+        return 1;
+    }
+    const qreal scale = parser.value(scaleOption).toDouble(&ok);
+    if (!ok || scale <= 0) {
+        std::cerr << "FATAL ERROR incorrect value for scale" << std::endl;
+        return 1;
+    }
+
+    outputScale = scale;
+    initialWindowSize = QSize(width, height);
+
+    const int count = parser.value(outputCountOption).toInt(&ok);
+    if (ok) {
+        outputCount = qMax(1, count);
     }
 
     // TODO: create backend without having the server running
@@ -595,11 +540,21 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    a.initPlatform(*pluginIt);
-    if (!a.platform()) {
-        std::cerr << "FATAL ERROR: could not instantiate a backend" << std::endl;
-        return 1;
+    switch (backendType) {
+    case BackendType::Kms:
+        a.setPlatform(std::make_unique<KWin::DrmBackend>());
+        break;
+    case BackendType::Virtual:
+        a.setPlatform(std::make_unique<KWin::VirtualBackend>());
+        break;
+    case BackendType::X11:
+        a.setPlatform(std::make_unique<KWin::X11WindowedBackend>());
+        break;
+    case BackendType::Wayland:
+        a.setPlatform(std::make_unique<KWin::Wayland::WaylandBackend>());
+        break;
     }
+
     if (!deviceIdentifier.isEmpty()) {
         a.platform()->setDeviceIdentifier(deviceIdentifier);
     }

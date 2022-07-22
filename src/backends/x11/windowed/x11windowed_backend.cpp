@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "x11windowed_backend.h"
+#include "../common/kwinxrenderutils.h"
 
 #include <config-kwin.h>
 
@@ -18,7 +19,6 @@
 #include "wayland_server.h"
 #include "x11windowed_output.h"
 #include <cursor.h>
-#include <kwinxrenderutils.h>
 #include <pointer_input.h>
 // KDE
 #include <KLocalizedString>
@@ -29,7 +29,7 @@
 #include <xcb/xcb_keysyms.h>
 // X11
 #if HAVE_X11_XINPUT
-#include "ge_event_mem_mover.h"
+#include "../common/ge_event_mem_mover.h"
 #include <X11/extensions/XI2proto.h>
 #include <X11/extensions/XInput2.h>
 #endif

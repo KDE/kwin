@@ -439,8 +439,6 @@ private:
     Output *m_primaryOutput = nullptr;
 };
 
-}
-
-Q_DECLARE_INTERFACE(KWin::Platform, "org.kde.kwin.Platform")
+} // namespace KWin
 
 #endif

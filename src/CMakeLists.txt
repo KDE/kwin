@@ -287,6 +287,7 @@ generate_export_header(kwin EXPORT_FILE_NAME kwin_export.h)
 
 add_executable(kwin_x11 main_x11.cpp)
 target_link_libraries(kwin_x11
+    KWinX11Platform
     kwin
     KF5::Crash
 )

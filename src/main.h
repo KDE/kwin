@@ -222,11 +222,11 @@ public:
     QProcessEnvironment processStartupEnvironment() const;
     void setProcessStartupEnvironment(const QProcessEnvironment &environment);
 
-    void initPlatform(const KPluginMetaData &plugin);
     Platform *platform() const
     {
-        return m_platform;
+        return m_platform.get();
     }
+    void setPlatform(std::unique_ptr<Platform> &&platform);
 
     bool isTerminating() const
     {
@@ -297,7 +297,7 @@ private:
 #if KWIN_BUILD_ACTIVITIES
     bool m_useKActivities = true;
 #endif
-    Platform *m_platform = nullptr;
+    std::unique_ptr<Platform> m_platform;
     bool m_terminating = false;
     qreal m_xwaylandScale = 1;
     QProcessEnvironment m_processEnvironment;

@@ -12,6 +12,7 @@
 
 #include <config-kwin.h>
 
+#include "backends/x11/standalone/x11_platform.h"
 #include "platform.h"
 #include "sm.h"
 #include "tabletmodemanager.h"
@@ -21,7 +22,6 @@
 #include <KConfigGroup>
 #include <KCrash>
 #include <KLocalizedString>
-#include <KPluginMetaData>
 #include <KSelectionOwner>
 
 #include <QComboBox>
@@ -410,19 +410,7 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    // find and load the X11 platform plugin
-    const KPluginMetaData plugin = KPluginMetaData::findPluginById(QStringLiteral("org.kde.kwin.platforms"), QStringLiteral("KWinX11Platform"));
-
-    if (!plugin.isValid()) {
-        std::cerr << "FATAL ERROR: KWin could not find the KWinX11Platform plugin" << std::endl;
-        return 1;
-    }
-    a.initPlatform(plugin);
-    if (!a.platform()) {
-        std::cerr << "FATAL ERROR: could not instantiate the platform plugin" << std::endl;
-        return 1;
-    }
-
+    a.setPlatform(std::make_unique<KWin::X11StandalonePlatform>());
     a.start();
 
     return a.exec();

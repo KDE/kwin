@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include "eglonxbackend.h"
+#include "../common/eglonxbackend.h"
 #include "kwinglutils.h"
 #include "outputlayer.h"
 

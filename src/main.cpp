@@ -34,7 +34,6 @@
 // KDE
 #include <KAboutData>
 #include <KLocalizedString>
-#include <KPluginMetaData>
 // Qt
 #include <QCommandLineParser>
 #include <QLibraryInfo>
@@ -141,8 +140,7 @@ void Application::destroyAtoms()
 
 void Application::destroyPlatform()
 {
-    delete m_platform;
-    m_platform = nullptr;
+    m_platform.reset();
 }
 
 void Application::resetCrashesCount()
@@ -549,16 +547,10 @@ void Application::setProcessStartupEnvironment(const QProcessEnvironment &enviro
     m_processEnvironment = environment;
 }
 
-void Application::initPlatform(const KPluginMetaData &plugin)
+void Application::setPlatform(std::unique_ptr<Platform> &&platform)
 {
     Q_ASSERT(!m_platform);
-    QPluginLoader loader(plugin.fileName());
-    m_platform = qobject_cast<Platform *>(loader.instance());
-    if (m_platform) {
-        m_platform->setParent(this);
-    } else {
-        qCWarning(KWIN_CORE) << "Could not create plugin" << plugin.name() << "error:" << loader.errorString();
-    }
+    m_platform = std::move(platform);
 }
 
 PluginManager *Application::pluginManager() const

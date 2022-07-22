@@ -30,8 +30,7 @@ class X11Output;
 class KWIN_EXPORT X11StandalonePlatform : public Platform
 {
     Q_OBJECT
-    Q_INTERFACES(KWin::Platform)
-    Q_PLUGIN_METADATA(IID "org.kde.kwin.Platform" FILE "x11.json")
+
 public:
     X11StandalonePlatform(QObject *parent = nullptr);
     ~X11StandalonePlatform() override;

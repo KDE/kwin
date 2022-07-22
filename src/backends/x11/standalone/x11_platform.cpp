@@ -39,7 +39,7 @@
 #include "workspace.h"
 #include "x11_output.h"
 
-#include "kwinxrenderutils.h"
+#include "../common/kwinxrenderutils.h"
 
 #include <KConfigGroup>
 #include <KCrash>
