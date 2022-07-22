@@ -24,7 +24,6 @@
 #include "dpmsinputeventfilter.h"
 #include "input.h"
 #include "keyboard_input.h"
-#include "main.h"
 #include "pointer_input.h"
 #include "scene.h"
 #include "wayland_server.h"

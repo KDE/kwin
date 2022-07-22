@@ -22,7 +22,6 @@
 #include "egl_gbm_backend.h"
 #include "kwinglutils.h"
 #include "logging.h"
-#include "main.h"
 #include "outputconfiguration.h"
 #include "renderloop.h"
 #include "renderloop_p.h"
