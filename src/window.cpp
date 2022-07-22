@@ -1726,11 +1726,11 @@ void Window::checkUnrestrictedInteractiveMoveResize()
         }
     }
     if (isInteractiveMove()) {
-        if (moveResizeGeom.bottom() < desktopArea.top() + titlebar_marge - 1) {
+        if (moveResizeGeom.bottom() < desktopArea.top() + titlebar_marge) {
             setUnrestrictedInteractiveMoveResize(true);
         }
         // no need to check top_marge, titlebar_marge already handles it
-        if (moveResizeGeom.top() > desktopArea.bottom() - bottom_marge + 1) { // titlebar mustn't go out
+        if (moveResizeGeom.top() > desktopArea.bottom() - bottom_marge) { // titlebar mustn't go out
             setUnrestrictedInteractiveMoveResize(true);
         }
         if (moveResizeGeom.right() < desktopArea.left() + left_marge) {
@@ -4159,19 +4159,18 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
         keep[Top] = newGeom.y() != topMax;
     }
 
-    //DAVE are all these -1's QRect hacks?
-    if (oldGeometry.right() <= oldRightMax - 1) {
-        save[Right] = newGeom.right() > rightMax - 1;
+    if (oldGeometry.right() <= oldRightMax) {
+        save[Right] = newGeom.right() > rightMax;
     }
-    if (oldGeometry.right() == oldRightMax - 1) {
-        keep[Right] = newGeom.right() != rightMax - 1;
+    if (oldGeometry.right() == oldRightMax) {
+        keep[Right] = newGeom.right() != rightMax;
     }
 
-    if (oldGeometry.bottom() <= oldBottomMax - 1) {
-        save[Bottom] = newGeom.bottom() > bottomMax - 1;
+    if (oldGeometry.bottom() <= oldBottomMax) {
+        save[Bottom] = newGeom.bottom() > bottomMax;
     }
-    if (oldGeometry.bottom() == oldBottomMax - 1) {
-        keep[Bottom] = newGeom.bottom() != bottomMax - 1;
+    if (oldGeometry.bottom() == oldBottomMax) {
+        keep[Bottom] = newGeom.bottom() != bottomMax;
     }
 
     // if randomly touches opposing edges, do not favor either
@@ -4189,10 +4188,10 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
         newGeom.moveTop(qMax(topMax, screenArea.y()));
     }
     if (save[Right] || keep[Right]) {
-        newGeom.moveRight(qMin(rightMax - 1, screenArea.right()));
+        newGeom.moveRight(qMin(rightMax, screenArea.right()));
     }
     if (save[Bottom] || keep[Bottom]) {
-        newGeom.moveBottom(qMin(bottomMax - 1, screenArea.bottom()));
+        newGeom.moveBottom(qMin(bottomMax, screenArea.bottom()));
     }
 
     if (oldGeometry.x() >= oldLeftMax && newGeom.x() < leftMax) {
