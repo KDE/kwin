@@ -6,5 +6,5 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "logging_p.h"
+#include "x11_common_logging_p.h"
 Q_LOGGING_CATEGORY(LIBKWINXRENDERUTILS, "libkwinxrenderutils", QtWarningMsg)

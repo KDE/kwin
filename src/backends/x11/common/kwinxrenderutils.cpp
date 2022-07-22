@@ -10,7 +10,7 @@
 */
 
 #include "kwinxrenderutils.h"
-#include "logging_p.h"
+#include "x11_common_logging_p.h"
 
 #include <QCoreApplication>
 #include <QImage>

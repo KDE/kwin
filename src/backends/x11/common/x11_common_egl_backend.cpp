@@ -6,7 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "eglonxbackend.h"
+#include "x11_common_egl_backend.h"
 // kwineffects
 #include <kwinglutils.h>
 // kwin
