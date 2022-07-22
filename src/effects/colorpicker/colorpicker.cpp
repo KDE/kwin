@@ -55,12 +55,12 @@ void ColorPickerEffect::paintScreen(int mask, const QRegion &region, ScreenPaint
     effects->paintScreen(mask, region, data);
 
     if (m_scheduledPosition != QPoint(-1, -1) && effects->renderTargetRect().contains(m_scheduledPosition)) {
-        uint8_t data[3];
+        uint8_t data[4];
         const QRect geo = effects->renderTargetRect();
         const QPoint screenPosition(m_scheduledPosition.x() - geo.x(), m_scheduledPosition.y() - geo.y());
         const QPoint texturePosition(screenPosition.x() * effects->renderTargetScale(), (geo.height() - screenPosition.y()) * effects->renderTargetScale());
 
-        glReadnPixels(texturePosition.x(), texturePosition.y(), 1, 1, GL_RGB, GL_UNSIGNED_BYTE, 3, data);
+        glReadnPixels(texturePosition.x(), texturePosition.y(), 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 4, data);
         QDBusConnection::sessionBus().send(m_replyMessage.createReply(QColor(data[0], data[1], data[2])));
         m_picking = false;
         m_scheduledPosition = QPoint(-1, -1);
