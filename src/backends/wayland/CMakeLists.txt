@@ -1,12 +1,12 @@
 target_sources(kwin PRIVATE
-    logging.cpp
-    scene_qpainter_wayland_backend.cpp
     wayland_backend.cpp
+    wayland_logging.cpp
     wayland_output.cpp
+    wayland_qpainter_backend.cpp
 )
 
 if (HAVE_WAYLAND_EGL)
-    target_sources(kwin PRIVATE egl_wayland_backend.cpp)
+    target_sources(kwin PRIVATE wayland_egl_backend.cpp)
 endif()
 
 target_link_libraries(kwin KF5::WaylandClient)

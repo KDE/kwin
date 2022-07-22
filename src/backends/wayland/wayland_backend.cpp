@@ -10,14 +10,14 @@
 #include "wayland_backend.h"
 
 #if HAVE_WAYLAND_EGL
-#include "egl_wayland_backend.h"
+#include "wayland_egl_backend.h"
 #include <gbm.h>
 #endif
-#include "logging.h"
 #include "renderloop_p.h"
-#include "scene_qpainter_wayland_backend.h"
 #include "session.h"
+#include "wayland_logging.h"
 #include "wayland_output.h"
+#include "wayland_qpainter_backend.h"
 
 #include "composite.h"
 #include "cursor.h"

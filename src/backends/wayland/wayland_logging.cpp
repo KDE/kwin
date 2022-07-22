@@ -6,5 +6,5 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "logging.h"
+#include "wayland_logging.h"
 Q_LOGGING_CATEGORY(KWIN_WAYLAND_BACKEND, "kwin_wayland_backend", QtWarningMsg)

@@ -7,13 +7,13 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "scene_qpainter_wayland_backend.h"
+#include "wayland_qpainter_backend.h"
 #include "wayland_backend.h"
 #include "wayland_output.h"
 
 #include "composite.h"
 #include "kwineffects.h"
-#include "logging.h"
+#include "wayland_logging.h"
 
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Client/shm_pool.h>

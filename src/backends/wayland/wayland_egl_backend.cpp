@@ -9,7 +9,7 @@
 */
 #define WL_EGL_PLATFORM 1
 
-#include "egl_wayland_backend.h"
+#include "wayland_egl_backend.h"
 #include "basiceglsurfacetexture_internal.h"
 #include "basiceglsurfacetexture_wayland.h"
 
@@ -18,8 +18,8 @@
 
 #include "composite.h"
 #include "kwinglutils.h"
-#include "logging.h"
 #include "options.h"
+#include "wayland_logging.h"
 #include "wayland_server.h"
 
 #include <fcntl.h>
