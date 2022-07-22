@@ -40,7 +40,7 @@
 #include "kwintabboxsettings.h"
 #include "layoutpreview.h"
 
-K_PLUGIN_FACTORY_WITH_JSON(KWinTabBoxConfigFactory, "metadata.json", registerPlugin<KWin::KWinTabBoxConfig>(); registerPlugin<KWin::TabBox::KWinTabboxData>();)
+K_PLUGIN_FACTORY_WITH_JSON(KWinTabBoxConfigFactory, "kcm_kwintabbox.json", registerPlugin<KWin::KWinTabBoxConfig>(); registerPlugin<KWin::TabBox::KWinTabboxData>();)
 
 namespace KWin
 {

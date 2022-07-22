@@ -225,7 +225,7 @@ void KWinCompositingKCM::save()
     QDBusConnection::sessionBus().send(message);
 }
 
-K_PLUGIN_FACTORY_WITH_JSON(KWinCompositingConfigFactory, "metadata.json",
+K_PLUGIN_FACTORY_WITH_JSON(KWinCompositingConfigFactory, "kwincompositing.json",
                            registerPlugin<KWinCompositingKCM>();
                            registerPlugin<KWinCompositingData>();)
 

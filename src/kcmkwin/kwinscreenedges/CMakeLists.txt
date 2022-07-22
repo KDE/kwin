@@ -57,5 +57,3 @@ ki18n_wrap_ui(kcm_kwintouchscreenedges_PART_SRCS main.ui touch.ui)
 kconfig_add_kcfg_files(kcm_kwintouchscreenedges_PART_SRCS kwintouchscreensettings.kcfgc kwintouchscreenscriptsettings.kcfgc kwintouchscreenedgeeffectsettings.kcfgc)
 kcoreaddons_add_plugin(kcm_kwintouchscreen SOURCES ${kcm_kwintouchscreenedges_PART_SRCS} INSTALL_NAMESPACE "plasma/kcms/systemsettings_qwidgets")
 target_link_libraries(kcm_kwintouchscreen ${X11_LIBRARIES} ${kcm_screenedges_LIBS})
-
-install(FILES kcm_kwinscreenedges.desktop kcm_kwintouchscreen.desktop DESTINATION ${KDE_INSTALL_APPDIR})

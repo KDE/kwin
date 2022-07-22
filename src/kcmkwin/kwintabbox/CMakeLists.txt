@@ -20,6 +20,7 @@ qt_add_dbus_interface(kcm_kwintabbox_PART_SRCS ${KWin_SOURCE_DIR}/src/org.kde.kw
 kconfig_add_kcfg_files(kcm_kwintabbox_PART_SRCS kwintabboxsettings.kcfgc kwinswitcheffectsettings.kcfgc kwinpluginssettings.kcfgc)
 kcoreaddons_add_plugin(kcm_kwintabbox SOURCES ${kcm_kwintabbox_PART_SRCS} INSTALL_NAMESPACE "plasma/kcms/systemsettings_qwidgets")
 
+kcmutils_generate_desktop_file(kcm_kwintabbox)
 target_link_libraries(kcm_kwintabbox
     Qt::Quick
 
@@ -34,7 +35,6 @@ target_link_libraries(kcm_kwintabbox
 )
 
 ########### install files ###############
-install(FILES kcm_kwintabbox.desktop DESTINATION ${KDE_INSTALL_KSERVICESDIR})
 install(FILES thumbnails/konqueror.png
               thumbnails/kmail.png
               thumbnails/systemsettings.png

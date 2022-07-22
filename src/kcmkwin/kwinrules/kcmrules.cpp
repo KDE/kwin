@@ -485,7 +485,7 @@ void KCMKWinRules::fillSettingsFromProperties(RuleSettings *settings, const QVar
     }
 }
 
-K_PLUGIN_CLASS_WITH_JSON(KCMKWinRules, "metadata.json");
+K_PLUGIN_CLASS_WITH_JSON(KCMKWinRules, "kcm_kwinrules.json");
 
 } // namespace
 

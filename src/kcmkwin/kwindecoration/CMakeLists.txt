@@ -21,6 +21,7 @@ kcmutils_generate_module_data(
 kconfig_add_kcfg_files(kcmkwindecoration_SRCS kwindecorationsettings.kcfgc GENERATE_MOC)
 
 kcoreaddons_add_plugin(kcm_kwindecoration SOURCES ${kcmkwindecoration_SRCS} INSTALL_NAMESPACE "plasma/kcms/systemsettings")
+kcmutils_generate_desktop_file(kcm_kwindecoration)
 
 target_link_libraries(kcm_kwindecoration
     KDecoration2::KDecoration
@@ -51,7 +52,6 @@ configure_file(window-decorations.knsrc.cmake ${CMAKE_CURRENT_BINARY_DIR}/window
 
 # This desktop file is installed only for retrocompatibility with sycoca
 install(FILES kwindecorationsettings.kcfg DESTINATION ${KDE_INSTALL_KCFGDIR})
-install(FILES kcm_kwindecoration.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/window-decorations.knsrc DESTINATION ${KDE_INSTALL_KNSRCDIR})
 install(TARGETS kwin-applywindowdecoration DESTINATION ${KDE_INSTALL_LIBEXECDIR})
 
