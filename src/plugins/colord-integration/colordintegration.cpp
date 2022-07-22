@@ -7,9 +7,8 @@
 #include "colordintegration.h"
 #include "colorddevice.h"
 #include "colordlogging.h"
-#include "main.h"
 #include "output.h"
-#include "platform.h"
+#include "workspace.h"
 
 #include <QDBusPendingCallWatcher>
 #include <QDBusServiceWatcher>
@@ -36,26 +35,22 @@ ColordIntegration::ColordIntegration()
 
 void ColordIntegration::initialize()
 {
-    const Platform *platform = kwinApp()->platform();
-
     m_colordInterface = new CdInterface(QStringLiteral("org.freedesktop.ColorManager"),
                                         QStringLiteral("/org/freedesktop/ColorManager"),
                                         QDBusConnection::systemBus(), this);
 
-    const QVector<Output *> outputs = platform->outputs();
+    const QList<Output *> outputs = workspace()->outputs();
     for (Output *output : outputs) {
         handleOutputAdded(output);
     }
 
-    connect(platform, &Platform::outputAdded, this, &ColordIntegration::handleOutputAdded);
-    connect(platform, &Platform::outputRemoved, this, &ColordIntegration::handleOutputRemoved);
+    connect(workspace(), &Workspace::outputAdded, this, &ColordIntegration::handleOutputAdded);
+    connect(workspace(), &Workspace::outputRemoved, this, &ColordIntegration::handleOutputRemoved);
 }
 
 void ColordIntegration::teardown()
 {
-    const Platform *platform = kwinApp()->platform();
-
-    const QVector<Output *> outputs = platform->outputs();
+    const QList<Output *> outputs = workspace()->outputs();
     for (Output *output : outputs) {
         handleOutputRemoved(output);
     }
@@ -63,8 +58,8 @@ void ColordIntegration::teardown()
     delete m_colordInterface;
     m_colordInterface = nullptr;
 
-    disconnect(platform, &Platform::outputAdded, this, &ColordIntegration::handleOutputAdded);
-    disconnect(platform, &Platform::outputRemoved, this, &ColordIntegration::handleOutputRemoved);
+    disconnect(workspace(), &Workspace::outputAdded, this, &ColordIntegration::handleOutputAdded);
+    disconnect(workspace(), &Workspace::outputRemoved, this, &ColordIntegration::handleOutputRemoved);
 }
 
 void ColordIntegration::handleOutputAdded(Output *output)
