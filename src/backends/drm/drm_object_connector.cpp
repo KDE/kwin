@@ -445,20 +445,22 @@ std::shared_ptr<DrmConnectorMode> DrmConnector::generateMode(const QSize &size, 
 {
     auto modeInfo = libxcvt_gen_mode_info(size.width(), size.height(), refreshRate, false, false);
 
-    drmModeModeInfo mode;
-    mode.vdisplay = modeInfo->vdisplay;
-    mode.hdisplay = modeInfo->hdisplay;
-    mode.clock = modeInfo->dot_clock;
-    mode.hsync_start = modeInfo->hsync_start;
-    mode.hsync_end = modeInfo->hsync_end;
-    mode.htotal = modeInfo->htotal;
-    mode.vsync_start = modeInfo->vsync_start;
-    mode.vsync_end = modeInfo->vsync_end;
-    mode.vtotal = modeInfo->vtotal;
-    mode.vrefresh = modeInfo->vrefresh;
-    mode.flags = modeInfo->mode_flags;
+    drmModeModeInfo mode{
+        .clock = uint32_t(modeInfo->dot_clock),
+        .hdisplay = uint16_t(modeInfo->hdisplay),
+        .hsync_start = modeInfo->hsync_start,
+        .hsync_end = modeInfo->hsync_end,
+        .htotal = modeInfo->htotal,
+        .vdisplay = uint16_t(modeInfo->vdisplay),
+        .vsync_start = modeInfo->vsync_start,
+        .vsync_end = modeInfo->vsync_end,
+        .vtotal = modeInfo->vtotal,
+        .vscan = 1,
+        .vrefresh = uint32_t(modeInfo->vrefresh),
+        .flags = modeInfo->mode_flags,
+        .type = DRM_MODE_TYPE_USERDEF,
+    };
 
-    mode.type = DRM_MODE_TYPE_USERDEF;
     sprintf(mode.name, "%dx%d@%d", size.width(), size.height(), mode.vrefresh);
 
     free(modeInfo);
