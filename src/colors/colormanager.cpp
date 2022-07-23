@@ -8,9 +8,9 @@
 #include "colordevice.h"
 #include "main.h"
 #include "output.h"
-#include "platform.h"
 #include "session.h"
 #include "utils/common.h"
+#include "workspace.h"
 
 namespace KWin
 {
@@ -24,17 +24,13 @@ public:
 ColorManager::ColorManager()
     : d(std::make_unique<ColorManagerPrivate>())
 {
-    Platform *platform = kwinApp()->platform();
-
-    const QVector<Output *> outputs = platform->outputs();
+    const QList<Output *> outputs = workspace()->outputs();
     for (Output *output : outputs) {
-        if (output->isEnabled()) {
-            handleOutputEnabled(output);
-        }
+        handleOutputAdded(output);
     }
 
-    connect(platform, &Platform::outputEnabled, this, &ColorManager::handleOutputEnabled);
-    connect(platform, &Platform::outputDisabled, this, &ColorManager::handleOutputDisabled);
+    connect(workspace(), &Workspace::outputAdded, this, &ColorManager::handleOutputAdded);
+    connect(workspace(), &Workspace::outputRemoved, this, &ColorManager::handleOutputRemoved);
     connect(kwinApp()->session(), &Session::activeChanged, this, &ColorManager::handleSessionActiveChanged);
 }
 
@@ -56,14 +52,14 @@ ColorDevice *ColorManager::findDevice(Output *output) const
     return nullptr;
 }
 
-void ColorManager::handleOutputEnabled(Output *output)
+void ColorManager::handleOutputAdded(Output *output)
 {
     ColorDevice *device = new ColorDevice(output, this);
     d->devices.append(device);
     Q_EMIT deviceAdded(device);
 }
 
-void ColorManager::handleOutputDisabled(Output *output)
+void ColorManager::handleOutputRemoved(Output *output)
 {
     auto it = std::find_if(d->devices.begin(), d->devices.end(), [&output](ColorDevice *device) {
         return device->output() == output;

@@ -52,8 +52,8 @@ Q_SIGNALS:
     void deviceRemoved(ColorDevice *device);
 
 private Q_SLOTS:
-    void handleOutputEnabled(Output *output);
-    void handleOutputDisabled(Output *output);
+    void handleOutputAdded(Output *output);
+    void handleOutputRemoved(Output *output);
     void handleSessionActiveChanged(bool active);
 
 private:
