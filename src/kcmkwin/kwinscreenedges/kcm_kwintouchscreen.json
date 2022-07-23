@@ -61,10 +61,7 @@
         "Name[vi]": "Màn hình cảm ứng",
         "Name[x-test]": "xxTouch Screenxx",
         "Name[zh_CN]": "触摸屏",
-        "Name[zh_TW]": "觸控螢幕",
-        "ServiceTypes": [
-            "KCModule"
-        ]
+        "Name[zh_TW]": "觸控螢幕"
     },
     "X-DocPath": "kcontrol/kwintouchscreen/index.html",
     "X-KDE-Keywords": "kwin,window,manager,effect,edge,border,action,switch,desktop,desktop edges,screen edges,side of screen,screen behavior,touch screen",

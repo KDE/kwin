@@ -61,10 +61,7 @@
         "Name[vi]": "Trình kết hợp",
         "Name[x-test]": "xxCompositorxx",
         "Name[zh_CN]": "显示特效合成器",
-        "Name[zh_TW]": "合成器",
-        "ServiceTypes": [
-            "KCModule"
-        ]
+        "Name[zh_TW]": "合成器"
     },
     "X-DocPath": "https://userbase.kde.org/Desktop_Effects_Performance#Advanced_Desktop_Effects_Settings",
     "X-KDE-Keywords": "kwin,window,manager,compositing,compositor,effect,3D effects,2D effects,OpenGL,XRender,video settings,graphical effects,desktop effects,graphics,latency,vsync,tearing,window thumbnails,scale method,scaling method,backend",

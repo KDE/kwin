@@ -62,10 +62,7 @@
         "Name[vi]": "Bàn phím ảo",
         "Name[x-test]": "xxVirtual Keyboardxx",
         "Name[zh_CN]": "虚拟键盘",
-        "Name[zh_TW]": "虛擬鍵盤",
-        "ServiceTypes": [
-            "KCModule"
-        ]
+        "Name[zh_TW]": "虛擬鍵盤"
     },
     "X-DocPath": "kcontrol/kwinvirtualkeyboard/index.html",
     "X-KDE-Keywords": "software keyboard,virtual keyboard,touch keyboard,on screen keyboard,input methods",

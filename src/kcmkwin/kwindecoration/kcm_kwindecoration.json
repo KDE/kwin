@@ -66,10 +66,7 @@
         "Name[vi]": "Trang trí cửa sổ",
         "Name[x-test]": "xxWindow Decorationsxx",
         "Name[zh_CN]": "窗口装饰元素",
-        "Name[zh_TW]": "視窗裝飾",
-        "ServiceTypes": [
-            "KCModule"
-        ]
+        "Name[zh_TW]": "視窗裝飾"
     },
     "X-DocPath": "kcontrol/kwindecoration/index.html",
     "X-KDE-Keywords": "kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,window decorations,titlebar,window buttons,window border,skin",

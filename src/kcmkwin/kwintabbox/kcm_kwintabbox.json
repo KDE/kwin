@@ -61,10 +61,7 @@
         "Name[vi]": "Trình chuyển tác vụ",
         "Name[x-test]": "xxTask Switcherxx",
         "Name[zh_CN]": "任务切换器",
-        "Name[zh_TW]": "工作切換器",
-        "ServiceTypes": [
-            "KCModule"
-        ]
+        "Name[zh_TW]": "工作切換器"
     },
     "X-DocPath": "kcontrol/kwintabbox/index.html",
     "X-KDE-Keywords": "window,windows,switcher,window switcher,switching,window switching,alttab,alt-tab,alt+tab,alt tab,apps changer,application changer,app,task,switch,task switcher",

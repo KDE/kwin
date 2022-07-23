@@ -61,10 +61,7 @@
         "Name[vi]": "Cạnh màn hình",
         "Name[x-test]": "xxScreen Edgesxx",
         "Name[zh_CN]": "屏幕边缘",
-        "Name[zh_TW]": "螢幕邊緣",
-        "ServiceTypes": [
-            "KCModule"
-        ]
+        "Name[zh_TW]": "螢幕邊緣"
     },
     "X-DocPath": "kcontrol/kwinscreenedges/index.html",
     "X-KDE-Keywords": "kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners,borders,screen borders,desktop borders,desktop corners,corners",

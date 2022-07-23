@@ -62,10 +62,7 @@
         "Name[vi]": "Ứng xử của cửa sổ",
         "Name[x-test]": "xxWindow Behaviorxx",
         "Name[zh_CN]": "窗口行为",
-        "Name[zh_TW]": "視窗行為",
-        "ServiceTypes": [
-            "KCModule"
-        ]
+        "Name[zh_TW]": "視窗行為"
     },
     "X-DocPath": "kcontrol/windowbehaviour/index.html",
     "X-KDE-Keywords": "focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,desktop,snap,movement,shading,shade,unshade,unshading,activation,activate",

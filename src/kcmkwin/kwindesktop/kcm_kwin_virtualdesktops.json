@@ -65,10 +65,7 @@
         "Name[vi]": "Bàn làm việc ảo",
         "Name[x-test]": "xxVirtual Desktopsxx",
         "Name[zh_CN]": "虚拟桌面",
-        "Name[zh_TW]": "虛擬桌面",
-        "ServiceTypes": [
-            "KCModule"
-        ]
+        "Name[zh_TW]": "虛擬桌面"
     },
     "X-DocPath": "kcontrol/kwin_virtualdesktops/index.html",
     "X-KDE-Keywords": "desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings,indicator,navigation,cube,slide,workspaces",
