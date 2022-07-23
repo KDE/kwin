@@ -24,6 +24,7 @@ struct gbm_bo;
 namespace KWin
 {
 
+class Session;
 class Udev;
 class UdevMonitor;
 class UdevDevice;
@@ -39,8 +40,10 @@ class KWIN_EXPORT DrmBackend : public Platform
     Q_OBJECT
 
 public:
-    explicit DrmBackend(QObject *parent = nullptr);
+    explicit DrmBackend(Session *session, QObject *parent = nullptr);
     ~DrmBackend() override;
+
+    Session *session() const;
 
     std::unique_ptr<InputBackend> createInputBackend() override;
     std::unique_ptr<QPainterBackend> createQPainterBackend() override;
@@ -48,7 +51,6 @@ public:
 
     std::optional<DmaBufParams> testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers) override;
     std::shared_ptr<DmaBufTexture> createDmaBufTexture(const QSize &size, quint32 format, const uint64_t modifier) override;
-    Session *session() const override;
     bool initialize() override;
 
     Outputs outputs() const override;
@@ -100,7 +102,7 @@ private:
 
     std::unique_ptr<Udev> m_udev;
     std::unique_ptr<UdevMonitor> m_udevMonitor;
-    std::unique_ptr<Session> m_session;
+    Session *m_session;
     // all outputs, enabled and disabled
     QVector<DrmAbstractOutput *> m_outputs;
     // only enabled outputs

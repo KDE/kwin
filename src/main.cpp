@@ -23,6 +23,7 @@
 #if KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
 #endif
+#include "session.h"
 #include "sm.h"
 #include "utils/xcbutils.h"
 #include "wayland/surface_interface.h"
@@ -125,6 +126,7 @@ Application::~Application()
     destroyColorManager();
     destroyAtoms();
     destroyPlatform();
+    m_session.reset();
 }
 
 void Application::notifyStarted()
@@ -551,6 +553,12 @@ void Application::setPlatform(std::unique_ptr<Platform> &&platform)
 {
     Q_ASSERT(!m_platform);
     m_platform = std::move(platform);
+}
+
+void Application::setSession(std::unique_ptr<Session> &&session)
+{
+    Q_ASSERT(!m_session);
+    m_session = std::move(session);
 }
 
 PluginManager *Application::pluginManager() const

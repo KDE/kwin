@@ -316,7 +316,7 @@ public:
         if (event->type() == QEvent::KeyPress && !event->isAutoRepeat()) {
             const xkb_keysym_t keysym = event->nativeVirtualKey();
             if (keysym >= XKB_KEY_XF86Switch_VT_1 && keysym <= XKB_KEY_XF86Switch_VT_12) {
-                kwinApp()->platform()->session()->switchTo(keysym - XKB_KEY_XF86Switch_VT_1 + 1);
+                kwinApp()->session()->switchTo(keysym - XKB_KEY_XF86Switch_VT_1 + 1);
                 return true;
             }
         }
@@ -2846,7 +2846,7 @@ private:
 void InputRedirection::setupInputFilters()
 {
     const bool hasGlobalShortcutSupport = waylandServer()->hasGlobalShortcutSupport();
-    if ((kwinApp()->platform()->session()->capabilities() & Session::Capability::SwitchTerminal)
+    if ((kwinApp()->session()->capabilities() & Session::Capability::SwitchTerminal)
         && hasGlobalShortcutSupport) {
         installInputEventFilter(new VirtualTerminalFilter);
     }

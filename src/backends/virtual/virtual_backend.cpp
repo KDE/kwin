@@ -9,7 +9,6 @@
 #include "virtual_backend.h"
 
 #include "composite.h"
-#include "session.h"
 #include "virtual_egl_backend.h"
 #include "virtual_output.h"
 #include "virtual_qpainter_backend.h"
@@ -21,7 +20,6 @@ namespace KWin
 
 VirtualBackend::VirtualBackend(QObject *parent)
     : Platform(parent)
-    , m_session(Session::create(Session::Type::Noop))
 {
     if (qEnvironmentVariableIsSet("KWIN_WAYLAND_VIRTUAL_SCREENSHOTS")) {
         m_screenshotDir.reset(new QTemporaryDir);
@@ -43,11 +41,6 @@ VirtualBackend::~VirtualBackend()
     if (sceneEglDisplay() != EGL_NO_DISPLAY) {
         eglTerminate(sceneEglDisplay());
     }
-}
-
-Session *VirtualBackend::session() const
-{
-    return m_session.get();
 }
 
 bool VirtualBackend::initialize()

@@ -35,7 +35,6 @@ public:
     X11StandalonePlatform(QObject *parent = nullptr);
     ~X11StandalonePlatform() override;
     bool initialize() override;
-    Session *session() const override;
 
     std::unique_ptr<OpenGLBackend> createOpenGLBackend() override;
     Edge *createScreenEdge(ScreenEdges *parent) override;
@@ -86,7 +85,6 @@ private:
     void updateRefreshRate();
     void updateCursor();
 
-    std::unique_ptr<Session> m_session;
     std::unique_ptr<XInputIntegration> m_xinputIntegration;
     QThread *m_openGLFreezeProtectionThread = nullptr;
     QTimer *m_openGLFreezeProtection = nullptr;

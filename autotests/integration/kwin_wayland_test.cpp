@@ -14,6 +14,7 @@
 #include "inputmethod.h"
 #include "platform.h"
 #include "pluginmanager.h"
+#include "session.h"
 #include "utils/xcbutils.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -68,6 +69,7 @@ WaylandTestApplication::WaylandTestApplication(OperationMode mode, int &argc, ch
     removeLibraryPath(ownPath);
     addLibraryPath(ownPath);
 
+    setSession(Session::create(Session::Type::Noop));
     setPlatform(std::make_unique<VirtualBackend>());
     WaylandServer::create(this);
     setProcessStartupEnvironment(QProcessEnvironment::systemEnvironment());

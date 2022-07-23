@@ -25,7 +25,6 @@ ColorManager::ColorManager()
     : d(std::make_unique<ColorManagerPrivate>())
 {
     Platform *platform = kwinApp()->platform();
-    Session *session = platform->session();
 
     const QVector<Output *> outputs = platform->enabledOutputs();
     for (Output *output : outputs) {
@@ -34,7 +33,7 @@ ColorManager::ColorManager()
 
     connect(platform, &Platform::outputEnabled, this, &ColorManager::handleOutputEnabled);
     connect(platform, &Platform::outputDisabled, this, &ColorManager::handleOutputDisabled);
-    connect(session, &Session::activeChanged, this, &ColorManager::handleSessionActiveChanged);
+    connect(kwinApp()->session(), &Session::activeChanged, this, &ColorManager::handleSessionActiveChanged);
 }
 
 ColorManager::~ColorManager() = default;

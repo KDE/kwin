@@ -30,7 +30,6 @@ public:
     VirtualBackend(QObject *parent = nullptr);
     ~VirtualBackend() override;
 
-    Session *session() const override;
     bool initialize() override;
 
     bool saveFrames() const
@@ -67,7 +66,6 @@ private:
     QVector<VirtualOutput *> m_outputs;
     QVector<VirtualOutput *> m_outputsEnabled;
     std::unique_ptr<QTemporaryDir> m_screenshotDir;
-    std::unique_ptr<Session> m_session;
 };
 
 } // namespace KWin

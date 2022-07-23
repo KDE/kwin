@@ -101,7 +101,7 @@ NightColorManager::NightColorManager()
 
     connect(kwinApp()->colorManager(), &ColorManager::deviceAdded, this, &NightColorManager::hardReset);
 
-    connect(kwinApp()->platform()->session(), &Session::activeChanged, this, [this](bool active) {
+    connect(kwinApp()->session(), &Session::activeChanged, this, [this](bool active) {
         if (active) {
             hardReset();
         } else {

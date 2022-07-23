@@ -18,6 +18,7 @@
 #include "effects.h"
 #include "inputmethod.h"
 #include "platform.h"
+#include "session.h"
 #include "tabletmodemanager.h"
 #include "utils/realtime.h"
 #include "wayland/display.h"
@@ -542,15 +543,23 @@ int main(int argc, char *argv[])
 
     switch (backendType) {
     case BackendType::Kms:
-        a.setPlatform(std::make_unique<KWin::DrmBackend>());
+        a.setSession(KWin::Session::create());
+        if (!a.session()) {
+            std::cerr << "FATAl ERROR: could not acquire a session" << std::endl;
+            return 1;
+        }
+        a.setPlatform(std::make_unique<KWin::DrmBackend>(a.session()));
         break;
     case BackendType::Virtual:
+        a.setSession(KWin::Session::create(KWin::Session::Type::Noop));
         a.setPlatform(std::make_unique<KWin::VirtualBackend>());
         break;
     case BackendType::X11:
+        a.setSession(KWin::Session::create(KWin::Session::Type::Noop));
         a.setPlatform(std::make_unique<KWin::X11WindowedBackend>());
         break;
     case BackendType::Wayland:
+        a.setSession(KWin::Session::create(KWin::Session::Type::Noop));
         a.setPlatform(std::make_unique<KWin::Wayland::WaylandBackend>());
         break;
     }

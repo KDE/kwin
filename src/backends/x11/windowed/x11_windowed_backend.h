@@ -88,7 +88,6 @@ public:
     X11WindowedBackend(QObject *parent = nullptr);
     ~X11WindowedBackend() override;
     bool initialize() override;
-    Session *session() const override;
 
     xcb_connection_t *connection() const
     {
@@ -151,7 +150,6 @@ private:
     void initXInput();
     X11WindowedOutput *findOutput(xcb_window_t window) const;
 
-    std::unique_ptr<Session> m_session;
     xcb_connection_t *m_connection = nullptr;
     xcb_screen_t *m_screen = nullptr;
     xcb_key_symbols_t *m_keySymbols = nullptr;

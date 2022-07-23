@@ -14,7 +14,6 @@
 #include <gbm.h>
 #endif
 #include "renderloop_p.h"
-#include "session.h"
 #include "wayland_logging.h"
 #include "wayland_output.h"
 #include "wayland_qpainter_backend.h"
@@ -568,7 +567,6 @@ void WaylandSeat::destroyTouchDevice()
 
 WaylandBackend::WaylandBackend(QObject *parent)
     : Platform(parent)
-    , m_session(Session::create(Session::Type::Noop))
     , m_display(nullptr)
     , m_eventQueue(new EventQueue(this))
     , m_registry(new Registry(this))
@@ -708,11 +706,6 @@ bool WaylandBackend::initialize()
     });
     initConnection();
     return true;
-}
-
-Session *WaylandBackend::session() const
-{
-    return m_session.get();
 }
 
 void WaylandBackend::initConnection()

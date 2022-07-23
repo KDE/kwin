@@ -115,7 +115,7 @@ std::vector<UdevDevice::Ptr> UdevEnumerate::find()
         if (deviceSeat.isEmpty()) {
             deviceSeat = defaultSeat;
         }
-        if (deviceSeat != kwinApp()->platform()->session()->seat()) {
+        if (deviceSeat != kwinApp()->session()->seat()) {
             continue;
         }
         vect.push_back(std::move(device));

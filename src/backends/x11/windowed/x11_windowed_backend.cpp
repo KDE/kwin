@@ -11,7 +11,6 @@
 
 #include <config-kwin.h>
 
-#include "session.h"
 #include "utils/xcbutils.h"
 #include "wayland_server.h"
 #include "x11_windowed_egl_backend.h"
@@ -164,7 +163,6 @@ void X11WindowedInputBackend::initialize()
 
 X11WindowedBackend::X11WindowedBackend(QObject *parent)
     : Platform(parent)
-    , m_session(Session::create(Session::Type::Noop))
 {
     setSupportsPointerWarping(true);
 }
@@ -232,11 +230,6 @@ bool X11WindowedBackend::initialize()
     } else {
         return false;
     }
-}
-
-Session *X11WindowedBackend::session() const
-{
-    return m_session.get();
 }
 
 void X11WindowedBackend::initXInput()

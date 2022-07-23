@@ -252,7 +252,6 @@ public:
     explicit WaylandBackend(QObject *parent = nullptr);
     ~WaylandBackend() override;
     bool initialize() override;
-    Session *session() const override;
     wl_display *display();
     KWayland::Client::Compositor *compositor();
     KWayland::Client::SubCompositor *subCompositor();
@@ -330,7 +329,6 @@ private:
 
     WaylandOutput *createOutput(const QString &name, const QPoint &position, const QSize &size);
 
-    std::unique_ptr<Session> m_session;
     wl_display *m_display;
     KWayland::Client::EventQueue *m_eventQueue;
     KWayland::Client::Registry *m_registry;

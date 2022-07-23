@@ -14,6 +14,7 @@
 
 #include "backends/x11/standalone/x11_standalone_platform.h"
 #include "platform.h"
+#include "session.h"
 #include "sm.h"
 #include "tabletmodemanager.h"
 #include "utils/xcbutils.h"
@@ -410,6 +411,7 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
+    a.setSession(KWin::Session::create(KWin::Session::Type::Noop));
     a.setPlatform(std::make_unique<KWin::X11StandalonePlatform>());
     a.start();
 

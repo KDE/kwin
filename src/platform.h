@@ -42,7 +42,6 @@ class OutlineVisual;
 class QPainterBackend;
 class Scene;
 class ScreenEdges;
-class Session;
 class OutputConfiguration;
 struct DmaBufParams;
 
@@ -64,7 +63,6 @@ class KWIN_EXPORT Platform : public QObject
 public:
     ~Platform() override;
 
-    virtual Session *session() const = 0;
     virtual bool initialize() = 0;
     virtual std::unique_ptr<InputBackend> createInputBackend();
     virtual std::unique_ptr<OpenGLBackend> createOpenGLBackend();

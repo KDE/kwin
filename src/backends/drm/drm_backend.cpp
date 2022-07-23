@@ -78,11 +78,11 @@ static QStringList splitPathList(const QString &input, const QChar delimiter)
     return ret;
 }
 
-DrmBackend::DrmBackend(QObject *parent)
+DrmBackend::DrmBackend(Session *session, QObject *parent)
     : Platform(parent)
     , m_udev(std::make_unique<Udev>())
     , m_udevMonitor(m_udev->monitor())
-    , m_session(Session::create())
+    , m_session(session)
     , m_explicitGpus(splitPathList(qEnvironmentVariable("KWIN_DRM_DEVICES"), ':'))
     , m_dpmsFilter()
 {
@@ -93,14 +93,14 @@ DrmBackend::DrmBackend(QObject *parent)
 
 DrmBackend::~DrmBackend() = default;
 
+Session *DrmBackend::session() const
+{
+    return m_session;
+}
+
 bool DrmBackend::isActive() const
 {
     return m_active;
-}
-
-Session *DrmBackend::session() const
-{
-    return m_session.get();
 }
 
 Outputs DrmBackend::outputs() const
@@ -196,17 +196,17 @@ void DrmBackend::deactivate()
 bool DrmBackend::initialize()
 {
     // TODO: Pause/Resume individual GPU devices instead.
-    connect(session(), &Session::devicePaused, this, [this](dev_t deviceId) {
+    connect(m_session, &Session::devicePaused, this, [this](dev_t deviceId) {
         if (primaryGpu()->deviceId() == deviceId) {
             deactivate();
         }
     });
-    connect(session(), &Session::deviceResumed, this, [this](dev_t deviceId) {
+    connect(m_session, &Session::deviceResumed, this, [this](dev_t deviceId) {
         if (primaryGpu()->deviceId() == deviceId) {
             reactivate();
         }
     });
-    connect(session(), &Session::awoke, this, &DrmBackend::turnOutputsOn);
+    connect(m_session, &Session::awoke, this, &DrmBackend::turnOutputsOn);
 
     if (!m_explicitGpus.isEmpty()) {
         for (const QString &fileName : m_explicitGpus) {
@@ -280,7 +280,7 @@ void DrmBackend::handleUdevEvent()
 
 DrmGpu *DrmBackend::addGpu(const QString &fileName)
 {
-    int fd = session()->openRestricted(fileName);
+    int fd = m_session->openRestricted(fileName);
     if (fd < 0) {
         qCWarning(KWIN_DRM) << "failed to open drm device at" << fileName;
         return nullptr;
@@ -290,7 +290,7 @@ DrmGpu *DrmBackend::addGpu(const QString &fileName)
     drmModeRes *resources = drmModeGetResources(fd);
     if (!resources) {
         qCDebug(KWIN_DRM) << "Skipping KMS incapable drm device node at" << fileName;
-        session()->closeRestricted(fd);
+        m_session->closeRestricted(fd);
         return nullptr;
     }
     drmModeFreeResources(resources);
@@ -298,7 +298,7 @@ DrmGpu *DrmBackend::addGpu(const QString &fileName)
     struct stat buf;
     if (fstat(fd, &buf) == -1) {
         qCDebug(KWIN_DRM, "Failed to fstat %s: %s", qPrintable(fileName), strerror(errno));
-        session()->closeRestricted(fd);
+        m_session->closeRestricted(fd);
         return nullptr;
     }
 
@@ -549,7 +549,7 @@ void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
 
 std::unique_ptr<InputBackend> DrmBackend::createInputBackend()
 {
-    return std::make_unique<LibinputBackend>(session());
+    return std::make_unique<LibinputBackend>(m_session);
 }
 
 std::unique_ptr<QPainterBackend> DrmBackend::createQPainterBackend()

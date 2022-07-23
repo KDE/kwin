@@ -28,6 +28,7 @@ namespace KWin
 {
 
 class Platform;
+class Session;
 class X11EventFilter;
 class PluginManager;
 class InputMethod;
@@ -228,6 +229,12 @@ public:
     }
     void setPlatform(std::unique_ptr<Platform> &&platform);
 
+    Session *session() const
+    {
+        return m_session.get();
+    }
+    void setSession(std::unique_ptr<Session> &&session);
+
     bool isTerminating() const
     {
         return m_terminating;
@@ -297,6 +304,7 @@ private:
 #if KWIN_BUILD_ACTIVITIES
     bool m_useKActivities = true;
 #endif
+    std::unique_ptr<Session> m_session;
     std::unique_ptr<Platform> m_platform;
     bool m_terminating = false;
     qreal m_xwaylandScale = 1;
