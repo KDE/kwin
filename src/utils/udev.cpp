@@ -153,30 +153,6 @@ std::vector<UdevDevice::Ptr> Udev::listGPUs()
 #endif
 }
 
-std::vector<UdevDevice::Ptr> Udev::listFramebuffers()
-{
-    if (!m_udev) {
-        return {};
-    }
-    UdevEnumerate enumerate(this);
-    enumerate.addMatch(UdevEnumerate::Match::SubSystem, "graphics");
-    enumerate.addMatch(UdevEnumerate::Match::SysName, "fb[0-9]");
-    enumerate.scan();
-    auto vect = enumerate.find();
-    std::sort(vect.begin(), vect.end(), [](const UdevDevice::Ptr &device1, const UdevDevice::Ptr &device2) {
-        // if set as boot GPU, prefer 1
-        if (device1->isBootVga()) {
-            return true;
-        }
-        // if set as boot GPU, prefer 2
-        if (device2->isBootVga()) {
-            return false;
-        }
-        return true;
-    });
-    return vect;
-}
-
 UdevDevice::Ptr Udev::deviceFromSyspath(const char *syspath)
 {
     auto dev = udev_device_new_from_syspath(m_udev, syspath);
