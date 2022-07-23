@@ -80,21 +80,20 @@ Q_SIGNALS:
     void deviceRemoved(QString sysName);
 };
 
-std::unique_ptr<Connection> Connection::create()
+std::unique_ptr<Connection> Connection::create(Session *session)
 {
     std::unique_ptr<Udev> udev = std::make_unique<Udev>();
     if (!udev->isValid()) {
         qCWarning(KWIN_LIBINPUT) << "Failed to initialize udev";
         return nullptr;
     }
-    std::unique_ptr<Context> context = std::make_unique<Context>(std::move(udev));
+    std::unique_ptr<Context> context = std::make_unique<Context>(session, std::move(udev));
     if (!context->isValid()) {
         qCWarning(KWIN_LIBINPUT) << "Failed to create context from udev";
         return nullptr;
     }
-    const QString seat = kwinApp()->platform()->session()->seat();
-    if (!context->assignSeat(seat.toUtf8().constData())) {
-        qCWarning(KWIN_LIBINPUT) << "Failed to assign seat" << seat;
+    if (!context->initialize()) {
+        qCWarning(KWIN_LIBINPUT) << "Failed to initialize context";
         return nullptr;
     }
     return std::unique_ptr<Connection>(new Connection(std::move(context)));
@@ -127,7 +126,7 @@ void Connection::doSetup()
     m_notifier = new QSocketNotifier(m_input->fileDescriptor(), QSocketNotifier::Read, this);
     connect(m_notifier, &QSocketNotifier::activated, this, &Connection::handleEvent);
 
-    connect(kwinApp()->platform()->session(), &Session::activeChanged, this, [this](bool active) {
+    connect(m_input->session(), &Session::activeChanged, this, [this](bool active) {
         if (active) {
             if (!m_input->isSuspended()) {
                 return;

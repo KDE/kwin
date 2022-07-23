@@ -15,6 +15,7 @@
 namespace KWin
 {
 
+class Session;
 class Udev;
 
 namespace LibInput
@@ -25,9 +26,9 @@ class Event;
 class Context
 {
 public:
-    Context(std::unique_ptr<Udev> &&udev);
+    Context(Session *session, std::unique_ptr<Udev> &&udev);
     ~Context();
-    bool assignSeat(const char *seat);
+    bool initialize();
     bool isValid() const
     {
         return m_libinput != nullptr;
@@ -37,6 +38,7 @@ public:
         return m_suspended;
     }
 
+    Session *session() const;
     int fileDescriptor();
     void dispatch();
     void suspend();
@@ -63,6 +65,8 @@ public:
 private:
     int openRestricted(const char *path, int flags);
     void closeRestricted(int fd);
+
+    Session *m_session;
     struct libinput *m_libinput;
     bool m_suspended;
     std::unique_ptr<Udev> m_udev;

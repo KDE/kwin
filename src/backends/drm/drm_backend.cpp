@@ -549,7 +549,7 @@ void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
 
 std::unique_ptr<InputBackend> DrmBackend::createInputBackend()
 {
-    return std::make_unique<LibinputBackend>();
+    return std::make_unique<LibinputBackend>(session());
 }
 
 std::unique_ptr<QPainterBackend> DrmBackend::createQPainterBackend()

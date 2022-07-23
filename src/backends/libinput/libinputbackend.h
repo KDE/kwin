@@ -13,6 +13,8 @@
 namespace KWin
 {
 
+class Session;
+
 namespace LibInput
 {
 class Connection;
@@ -23,7 +25,7 @@ class KWIN_EXPORT LibinputBackend : public InputBackend
     Q_OBJECT
 
 public:
-    explicit LibinputBackend(QObject *parent = nullptr);
+    explicit LibinputBackend(Session *session, QObject *parent = nullptr);
     ~LibinputBackend() override;
 
     void initialize() override;

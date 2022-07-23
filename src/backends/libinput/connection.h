@@ -27,6 +27,7 @@ class QThread;
 namespace KWin
 {
 
+class Session;
 class Udev;
 
 namespace LibInput
@@ -56,7 +57,7 @@ public:
 
     QStringList devicesSysNames() const;
 
-    static std::unique_ptr<Connection> create();
+    static std::unique_ptr<Connection> create(Session *session);
 
 Q_SIGNALS:
     void deviceAdded(KWin::LibInput::Device *);

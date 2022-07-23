@@ -11,13 +11,13 @@
 namespace KWin
 {
 
-LibinputBackend::LibinputBackend(QObject *parent)
+LibinputBackend::LibinputBackend(Session *session, QObject *parent)
     : InputBackend(parent)
 {
     m_thread.setObjectName(QStringLiteral("libinput-connection"));
     m_thread.start();
 
-    m_connection = LibInput::Connection::create();
+    m_connection = LibInput::Connection::create(session);
     m_connection->moveToThread(&m_thread);
 
     connect(
