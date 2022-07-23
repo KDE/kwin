@@ -202,7 +202,7 @@ void ApplicationWayland::refreshSettings(const KConfigGroup &group, const QByteA
     }
 
     if (group.name() == "Wayland" && names.contains("EnablePrimarySelection")) {
-        waylandServer()->setEnablePrimarySelection(group.readEntry("EnablePrimarySelection", true));
+        waylandServer()->seat()->setPrimarySelectionEnabled(group.readEntry("EnablePrimarySelection", true));
     }
 }
 

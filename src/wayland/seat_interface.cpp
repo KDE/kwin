@@ -1316,6 +1316,14 @@ AbstractDataSource *SeatInterface::primarySelection() const
     return d->currentPrimarySelection;
 }
 
+void SeatInterface::setPrimarySelectionEnabled(bool enabled)
+{
+    if (enabled != d->primarySelectionEnabled) {
+        setPrimarySelection(nullptr);
+        d->primarySelectionEnabled = enabled;
+    }
+}
+
 void SeatInterface::setPrimarySelection(AbstractDataSource *selection)
 {
     if (d->currentPrimarySelection == selection) {
@@ -1324,6 +1332,13 @@ void SeatInterface::setPrimarySelection(AbstractDataSource *selection)
     if (d->currentPrimarySelection) {
         d->currentPrimarySelection->cancel();
         disconnect(d->currentPrimarySelection, nullptr, this, nullptr);
+    }
+
+    if (!d->primarySelectionEnabled) {
+        if (selection) {
+            selection->cancel();
+        }
+        return;
     }
 
     if (selection) {
