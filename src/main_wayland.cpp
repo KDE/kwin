@@ -126,6 +126,7 @@ ApplicationWayland::~ApplicationWayland()
         static_cast<EffectsHandlerImpl *>(effects)->unloadAllEffects();
     }
     m_xwayland.reset();
+    destroyColorManager();
     destroyWorkspace();
 
     destroyInputMethod();
@@ -147,7 +148,6 @@ void ApplicationWayland::performStartup()
     }
 
     waylandServer()->initPlatform();
-    createColorManager();
 
     createInput();
     createInputMethod();
@@ -165,6 +165,7 @@ void ApplicationWayland::continueStartupWithScene()
 
     // Note that we start accepting client connections after creating the Workspace.
     createWorkspace();
+    createColorManager();
     createPlugins();
 
     if (!waylandServer()->start()) {

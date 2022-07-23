@@ -124,7 +124,6 @@ void Application::start()
 Application::~Application()
 {
     delete options;
-    destroyColorManager();
     destroyAtoms();
     destroyPlatform();
     m_session.reset();
