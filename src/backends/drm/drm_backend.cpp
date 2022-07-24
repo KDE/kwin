@@ -215,7 +215,9 @@ bool DrmBackend::initialize()
     } else {
         const auto devices = m_udev->listGPUs();
         for (const UdevDevice::Ptr &device : devices) {
-            addGpu(device->devNode());
+            if (device->seat() == m_session->seat()) {
+                addGpu(device->devNode());
+            }
         }
     }
 
@@ -244,8 +246,16 @@ void DrmBackend::handleUdevEvent()
         if (!m_active) {
             continue;
         }
-        if (!m_explicitGpus.isEmpty() && !m_explicitGpus.contains(device->devNode())) {
-            continue;
+
+        // Ignore the device seat if the KWIN_DRM_DEVICES envvar is set.
+        if (!m_explicitGpus.isEmpty()) {
+            if (!m_explicitGpus.contains(device->devNode())) {
+                continue;
+            }
+        } else {
+            if (device->seat() != m_session->seat()) {
+                continue;
+            }
         }
 
         if (device->action() == QStringLiteral("add")) {

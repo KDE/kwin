@@ -7,9 +7,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "udev.h"
-#include "main.h"
-#include "platform.h"
-#include "session.h"
 #include "utils/common.h"
 // Qt
 #include <QByteArray>
@@ -102,23 +99,14 @@ std::vector<UdevDevice::Ptr> UdevEnumerate::find()
         return {};
     }
     std::vector<UdevDevice::Ptr> vect;
-    QString defaultSeat = QStringLiteral("seat0");
     udev_list_entry *it = udev_enumerate_get_list_entry(m_enumerate.data());
     while (it) {
         auto current = it;
         it = udev_list_entry_get_next(it);
         auto device = m_udev->deviceFromSyspath(udev_list_entry_get_name(current));
-        if (!device) {
-            continue;
+        if (device) {
+            vect.push_back(std::move(device));
         }
-        QString deviceSeat = device->property("ID_SEAT");
-        if (deviceSeat.isEmpty()) {
-            deviceSeat = defaultSeat;
-        }
-        if (deviceSeat != kwinApp()->session()->seat()) {
-            continue;
-        }
-        vect.push_back(std::move(device));
     }
     return vect;
 }
@@ -228,6 +216,15 @@ bool UdevDevice::isBootVga() const
     }
     const char *systAttrValue = udev_device_get_sysattr_value(pci, "boot_vga");
     return systAttrValue && qstrcmp(systAttrValue, "1") == 0;
+}
+
+QString UdevDevice::seat() const
+{
+    QString deviceSeat = udev_device_get_property_value(m_device, "ID_SEAT");
+    if (deviceSeat.isEmpty()) {
+        deviceSeat = QStringLiteral("seat0");
+    }
+    return deviceSeat;
 }
 
 QString UdevDevice::action() const
