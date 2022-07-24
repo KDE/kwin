@@ -15,10 +15,6 @@
 #include "drm_pipeline.h"
 #include "drm_pointer.h"
 
-#include <main.h>
-// frameworks
-#include <KConfigGroup>
-
 #include <cerrno>
 #include <cstring>
 #include <libxcvt/libxcvt.h>
@@ -321,16 +317,6 @@ bool DrmConnector::updateProperties()
         m_physicalSize = QSize(m_conn->mmWidth, m_conn->mmHeight);
     } else {
         m_physicalSize = m_edid.physicalSize();
-    }
-
-    // the size might be completely borked. E.g. Samsung SyncMaster 2494HS reports 160x90 while in truth it's 520x292
-    // as this information is used to calculate DPI info, it's going to result in everything being huge
-    const QByteArray unknown = QByteArrayLiteral("unknown");
-    KConfigGroup group = kwinApp()->config()->group("EdidOverwrite").group(m_edid.eisaId().isEmpty() ? unknown : m_edid.eisaId()).group(m_edid.monitorName().isEmpty() ? unknown : m_edid.monitorName()).group(m_edid.serialNumber().isEmpty() ? unknown : m_edid.serialNumber());
-    if (group.hasKey("PhysicalSize")) {
-        const QSize overwriteSize = group.readEntry("PhysicalSize", m_physicalSize);
-        qCWarning(KWIN_DRM) << "Overwriting monitor physical size for" << m_edid.eisaId() << "/" << m_edid.monitorName() << "/" << m_edid.serialNumber() << " from " << m_physicalSize << "to " << overwriteSize;
-        m_physicalSize = overwriteSize;
     }
 
     // update modes
