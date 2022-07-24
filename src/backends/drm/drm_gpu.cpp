@@ -287,6 +287,7 @@ bool DrmGpu::updateOutputs()
         if (stillExists) {
             it++;
         } else {
+            m_allObjects.removeOne(it->get());
             it = m_connectors.erase(it);
         }
     }
@@ -318,6 +319,7 @@ bool DrmGpu::updateOutputs()
                 return conn.get() == output->connector();
             });
             Q_ASSERT(it != m_connectors.end());
+            m_allObjects.removeOne(it->get());
             m_connectors.erase(it);
         }
         QTimer::singleShot(50, m_platform, &DrmBackend::updateOutputs);
