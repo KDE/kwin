@@ -313,12 +313,12 @@ bool DrmGpu::updateOutputs()
             pipeline->revertPendingChanges();
         }
         for (const auto &output : qAsConst(addedOutputs)) {
+            removeOutput(output);
             const auto it = std::find_if(m_connectors.begin(), m_connectors.end(), [output](const auto &conn) {
                 return conn.get() == output->connector();
             });
             Q_ASSERT(it != m_connectors.end());
             m_connectors.erase(it);
-            removeOutput(output);
         }
         QTimer::singleShot(50, m_platform, &DrmBackend::updateOutputs);
     } else {
