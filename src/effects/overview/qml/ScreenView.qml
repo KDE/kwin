@@ -11,6 +11,7 @@ import org.kde.kwin.private.effects 1.0
 import org.kde.milou 0.3 as Milou
 import org.kde.plasma.components 3.0 as PC3
 import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.kirigami 2.12 as Kirigami
 
 FocusScope {
@@ -30,6 +31,7 @@ FocusScope {
     function start() {
         container.animationEnabled = true;
         container.organized = true;
+        searchField.text = "";
     }
 
     function stop() {
@@ -40,6 +42,12 @@ FocusScope {
 
     Keys.priority: Keys.AfterItem
     Keys.forwardTo: searchField
+    Keys.onEnterPressed: {
+        heap.forceActiveFocus();
+        if (heap.count === 1) {
+            heap.activateCurrentClient();
+        }
+    }
 
     KWinComponents.DesktopBackgroundItem {
         id: backgroundItem
@@ -169,9 +177,18 @@ FocusScope {
                     focus: true
                     placeholderText: i18nd("kwin_effects", "Search...")
                     clearButtonShown: true
-                    Keys.priority: Keys.AfterItem
-                    Keys.forwardTo: text ? searchResults : heap
-                    onTextEdited: forceActiveFocus();
+                    Keys.priority: Keys.BeforeItem
+                    Keys.forwardTo: text && heap.count === 0 ? searchResults : heap
+                    onTextChanged: {
+                        effect.searchText = text;
+                        heap.resetSelected();
+                        heap.selectNextItem(WindowHeap.Direction.Down);
+                    }
+                     Binding {
+                        target: searchField
+                        property: "text"
+                        value: effect.searchText
+                    }
                 }
             }
         }
@@ -180,11 +197,20 @@ FocusScope {
             width: parent.width
             height: parent.height - topBar.height
 
+            PlasmaExtras.PlaceholderMessage {
+                id: placeholderMessage
+                anchors.top: parent
+                anchors.horizontalCenter: parent.horizontalCenter
+                visible: container.organized && searchField.text && heap.count === 0
+                text: i18nd("kwin_effects", "No matching windows")
+            }
+
             WindowHeap {
                 id: heap
-                visible: !(container.organized && searchField.text)
+                visible: !(container.organized && searchField.text) || heap.count !== 0
                 anchors.fill: parent
                 layout.mode: effect.layout
+                focus: true
                 padding: PlasmaCore.Units.largeSpacing
                 animationDuration: effect.animationDuration
                 animationEnabled: container.animationEnabled
@@ -195,11 +221,14 @@ FocusScope {
                     }
                     window.closeWindow();
                 }
+                Keys.priority: Keys.AfterItem
+                Keys.forwardTo: searchResults
                 model: KWinComponents.ClientFilterModel {
                     activity: KWinComponents.Workspace.currentActivity
                     desktop: KWinComponents.Workspace.currentVirtualDesktop
                     screenName: targetScreen.name
                     clientModel: stackModel
+                    filter: searchField.text
                     minimizedWindows: !effect.ignoreMinimized
                     windowType: ~KWinComponents.ClientFilterModel.Dock &
                             ~KWinComponents.ClientFilterModel.Desktop &
@@ -226,11 +255,12 @@ FocusScope {
 
             Milou.ResultsView {
                 id: searchResults
+                anchors.bottom: parent.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: parent.width / 2
-                height: Math.min(contentHeight, parent.height)
+                height: parent.height - placeholderMessage.height - PlasmaCore.Units.largeSpacing
                 queryString: searchField.text
-                visible: container.organized && searchField.text
+                visible: container.organized && searchField.text && heap.count === 0
 
                 onActivated: {
                     effect.deactivate();
