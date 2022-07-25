@@ -537,14 +537,17 @@ void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
         m_enabledOutputs << output;
         Q_EMIT outputEnabled(output);
         checkOutputsAreOn();
-        if (m_placeHolderOutput) {
+        if (m_placeHolderOutput && !output->isNonDesktop()) {
             qCDebug(KWIN_DRM) << "removing placeholder output";
             primaryGpu()->removeVirtualOutput(m_placeHolderOutput);
             m_placeHolderOutput = nullptr;
             m_placeholderFilter.reset();
         }
     } else {
-        if (m_enabledOutputs.count() == 1 && !kwinApp()->isTerminating()) {
+        int normalOutputsCount = std::count_if(m_enabledOutputs.begin(), m_enabledOutputs.end(), [](const auto output) {
+            return !output->isNonDesktop();
+        });
+        if (normalOutputsCount == 1 && !output->isNonDesktop() && !kwinApp()->isTerminating()) {
             qCDebug(KWIN_DRM) << "adding placeholder output";
             m_placeHolderOutput = primaryGpu()->createVirtualOutput({}, m_enabledOutputs.constFirst()->pixelSize(), 1, DrmVirtualOutput::Type::Placeholder);
             // placeholder doesn't actually need to render anything
