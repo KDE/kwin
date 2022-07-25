@@ -1525,7 +1525,7 @@ QRectF X11Window::iconGeometry() const
             if (!mainwin) {
                 continue;
             }
-            geom = mainwin->iconGeometry().toRect();
+            geom = mainwin->iconGeometry();
             if (geom.isValid()) {
                 return geom;
             }
