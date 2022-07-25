@@ -646,5 +646,11 @@ qreal nativeFloor(qreal value)
     return std::floor(value / kwinApp()->xwaylandScale()) * kwinApp()->xwaylandScale();
 }
 
+QRectF nativeFloor(const QRectF &value)
+{
+    return QRectF(nativeFloor(value.left()), nativeFloor(value.top()),
+                  nativeFloor(value.width()), nativeFloor(value.height()));
+}
+
 } // namespace Xcb
 } // namespace KWin

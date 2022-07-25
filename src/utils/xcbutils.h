@@ -47,6 +47,7 @@ QSizeF KWIN_EXPORT fromXNative(const QSize &value);
  *  i.e floor(a/scale) * scale
  */
 qreal KWIN_EXPORT nativeFloor(qreal value);
+QRectF KWIN_EXPORT nativeFloor(const QRectF &value);
 
 // forward declaration of methods
 static void defineCursor(xcb_window_t window, xcb_cursor_t cursor);

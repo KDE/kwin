@@ -27,4 +27,8 @@ QSizeF Xcb::fromXNative(const QSize &value)
     return value;
 }
 
+QRectF Xcb::nativeFloor(const QRectF &value)
+{
+    return value;
+}
 }

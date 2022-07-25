@@ -4536,6 +4536,10 @@ void X11Window::changeMaximize(bool horizontal, bool vertical, bool adjust)
             }
             r.moveTopLeft(rules()->checkPosition(r.topLeft()));
         }
+        // The above code tries to center align the window followed by setting top and bottom
+        // it's possible that we no longer have a valid size
+        r = Xcb::nativeFloor(r);
+
         moveResize(r);
         if (options->electricBorderMaximize() && r.top() == clientArea.top()) {
             updateQuickTileMode(QuickTileFlag::Maximize);
