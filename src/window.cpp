@@ -3615,8 +3615,8 @@ QPointF Window::clientPosToFramePos(const QPointF &point) const
 
 QSizeF Window::frameSizeToClientSize(const QSizeF &size) const
 {
-    const int width = size.width() - borderLeft() - borderRight();
-    const int height = size.height() - borderTop() - borderBottom();
+    const qreal width = size.width() - borderLeft() - borderRight();
+    const qreal height = size.height() - borderTop() - borderBottom();
     return QSizeF(width, height);
 }
 
