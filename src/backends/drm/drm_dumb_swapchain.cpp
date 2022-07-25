@@ -12,7 +12,6 @@
 #include "drm_dumb_buffer.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
-#include "kwineffects.h"
 
 namespace KWin
 {

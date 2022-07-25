@@ -16,7 +16,6 @@
 #include "drm_egl_backend.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
-#include "kwineffects.h"
 #include "kwineglutils_p.h"
 #include "kwinglplatform.h"
 

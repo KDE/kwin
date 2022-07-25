@@ -191,15 +191,6 @@ enum EffectFrameStyle {
 };
 
 /**
- * Infinite region (i.e. a special region type saying that everything needs to be painted).
- */
-KWINEFFECTS_EXPORT inline QRect infiniteRegion()
-{
-    // INT_MIN / 2 because width/height is used (INT_MIN+INT_MAX==-1)
-    return QRect(INT_MIN / 2, INT_MIN / 2, INT_MAX, INT_MAX);
-}
-
-/**
  * @short Base class for all KWin effects
  *
  * This is the base class for all effects. By reimplementing virtual methods

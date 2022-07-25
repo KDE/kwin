@@ -218,6 +218,15 @@ private:
     QPoint m_hotSpot;
 };
 
+/**
+ * Infinite region (i.e. a special region type saying that everything needs to be painted).
+ */
+inline KWIN_EXPORT QRect infiniteRegion()
+{
+    // INT_MIN / 2 because width/height is used (INT_MIN+INT_MAX==-1)
+    return QRect(INT_MIN / 2, INT_MIN / 2, INT_MAX, INT_MAX);
+}
+
 } // namespace
 
 Q_DECLARE_METATYPE(std::chrono::nanoseconds)
