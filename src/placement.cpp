@@ -700,8 +700,6 @@ void Workspace::slotWindowMoveRight()
 {
     if (m_activeWindow && m_activeWindow->isMovable()) {
         const QRectF geometry = m_activeWindow->moveResizeGeometry();
-        qDebug() << geometry;
-        qDebug() << packPositionRight(m_activeWindow, geometry.right(), true);
         m_activeWindow->packTo(packPositionRight(m_activeWindow, geometry.right(), true) - geometry.width(),
                                geometry.y());
     }
