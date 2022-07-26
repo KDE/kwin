@@ -138,6 +138,15 @@ struct DrmDeleter<drmModeRes>
     }
 };
 
+template<>
+struct DrmDeleter<drmModeLesseeListRes>
+{
+    void operator()(drmModeLesseeListRes *ptr)
+    {
+        drmFree(ptr);
+    }
+};
+
 template<typename T>
 using DrmScopedPointer = QScopedPointer<T, DrmDeleter<T>>;
 

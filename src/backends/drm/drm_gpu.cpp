@@ -233,7 +233,7 @@ bool DrmGpu::updateOutputs()
 
     // In principle these things are supposed to be detected through the wayland protocol.
     // In practice SteamVR doesn't always behave correctly
-    auto lessees = drmModeListLessees(m_fd);
+    DrmScopedPointer<drmModeLesseeListRes> lessees{drmModeListLessees(m_fd)};
     for (const auto &leaseOutput : qAsConst(m_leaseOutputs)) {
         if (leaseOutput->lease()) {
             bool leaseActive = false;
