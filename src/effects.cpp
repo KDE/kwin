@@ -127,6 +127,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     , m_trackingCursorChanges(0)
 {
     qRegisterMetaType<QVector<KWin::EffectWindow *>>();
+    qRegisterMetaType<KWin::SessionState>();
     connect(m_effectLoader, &AbstractEffectLoader::effectLoaded, this, [this](Effect *effect, const QString &name) {
         effect_order.insert(effect->requestedEffectChainPosition(), EffectPair(name, effect));
         loaded_effects << EffectPair(name, effect);
