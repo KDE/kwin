@@ -108,6 +108,14 @@ private Q_SLOTS:
      * Adjust the items according to the respective Window.
      */
     void menuAboutToShow();
+
+    /**
+     * The menu is about to close, all actions have been handled
+     *
+     * Perform cleanup
+     */
+    void menuAboutToHide();
+
     /**
      * Adjusts the desktop popup to the current values and the location of
      * the Window.
