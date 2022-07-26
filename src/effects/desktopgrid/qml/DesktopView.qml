@@ -31,12 +31,14 @@ FocusScope {
             drag.accepted = true;
         }
         onDropped: {
-            if (drag.source instanceof DropArea) {
+            if (drag.source instanceof DesktopView) {
+                // dragging a desktop as a whole
                 if (desktopView === drag.source) {
                     return;
                 }
                 effect.swapDesktops(drag.source.desktop.x11DesktopNumber, desktop.x11DesktopNumber);
             } else {
+                // dragging a KWin::Window
                 drag.source.desktop = desktopView.desktop.x11DesktopNumber;
             }
         }
