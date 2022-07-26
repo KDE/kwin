@@ -318,14 +318,13 @@ Item {
     }
 
     component DragManager : DragHandler {
-        id: dragHandler
         target: null
         grabPermissions: PointerHandler.CanTakeOverFromAnything
 
         onActiveChanged: {
             thumb.windowHeap.dragActive = active;
             if (active) {
-                thumb.activeDragHandler = dragHandler;
+                thumb.activeDragHandler = this;
             } else {
                 thumbSource.Drag.drop();
                 var globalPos = targetScreen.mapToGlobal(centroid.scenePosition);
