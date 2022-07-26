@@ -247,6 +247,7 @@ Rectangle {
             bottom: parent.bottom
             margins: PlasmaCore.Units.smallSpacing
         }
+        spacing: PlasmaCore.Units.smallSpacing
         visible: container.effect.showAddRemove
         PC3.Button {
             id: addButton
