@@ -122,7 +122,6 @@ Item {
                             thumb.activeDragHandler.centroid.position.y
                     width: cell.width * thumb.targetScale
                     height: cell.height * thumb.targetScale
-                    opacity: thumb.activeDragHandler.targetOpacity
                 }
             }
         ]
