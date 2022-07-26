@@ -232,6 +232,10 @@ enum class GestureDirection {
     Right = 1 << 4,
     Expanding = 1 << 5,
     Contracting = 1 << 6,
+    VerticalAxis = Up | Down, // Up is positive values
+    HorizontalAxis = Left | Right, // Right is positive
+    DirectionlessSwipe = Left | Right | Up | Down, // Positive is Up/Right
+    BiDirectionalPinch = Expanding | Contracting, // Positive is Expanding
 };
 
 Q_DECLARE_FLAGS(GestureDirections, GestureDirection)

@@ -24,6 +24,8 @@
 #include <signal.h>
 #include <variant>
 
+#include <iostream>
+
 namespace KWin
 {
 GlobalShortcut::GlobalShortcut(Shortcut &&sc, QAction *action)
@@ -121,22 +123,22 @@ void GlobalShortcutsManager::registerAxisShortcut(QAction *action, Qt::KeyboardM
     addIfNotExists(GlobalShortcut(PointerAxisShortcut{modifiers, axis}, action));
 }
 
-void GlobalShortcutsManager::registerGesture(GestureDeviceType device, GestureDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
+void GlobalShortcutsManager::registerGesture(GestureDeviceType device, GestureDirections direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
 {
     // Create and setup the GestureShortcut
     GestureShortcut shortcut{device, direction};
     if (isSwipeDirection(direction)) {
         std::unique_ptr<SwipeGesture> gesture = std::make_unique<SwipeGesture>();
         gesture->addFingerCount(fingerCount);
-        gesture->setMinimumDelta(QSizeF(200, 200));
-        connect(gesture.get(), &SwipeGesture::progress, progressCallback);
+        gesture->setTriggerDelta(QSizeF(200, 200));
+        connect(gesture.get(), &SwipeGesture::triggerProgress, progressCallback);
         connect(gesture.get(), &Gesture::triggered, onUp, &QAction::trigger, Qt::QueuedConnection);
         connect(gesture.get(), &Gesture::cancelled, onUp, &QAction::trigger, Qt::QueuedConnection);
         shortcut.swipeGesture = std::move(gesture);
     } else if (isPinchDirection(direction)) {
         std::unique_ptr<PinchGesture> gesture = std::make_unique<PinchGesture>();
         gesture->addFingerCount(fingerCount);
-        connect(gesture.get(), &PinchGesture::progress, progressCallback);
+        connect(gesture.get(), &PinchGesture::triggerProgress, progressCallback);
         connect(gesture.get(), &Gesture::triggered, onUp, &QAction::trigger, Qt::QueuedConnection);
         connect(gesture.get(), &Gesture::cancelled, onUp, &QAction::trigger, Qt::QueuedConnection);
         shortcut.pinchGesture = std::move(gesture);
@@ -151,19 +153,21 @@ void GlobalShortcutsManager::forceRegisterTouchscreenSwipe(QAction *onUp, std::f
     std::unique_ptr<SwipeGesture> gesture = std::make_unique<SwipeGesture>();
     gesture->addFingerCount(fingerCount);
     gesture->setDirection(direction);
-    gesture->setMinimumDelta(QSizeF(200, 200));
-    connect(gesture.get(), &SwipeGesture::progress, progressCallback);
+    gesture->setTriggerDelta(QSizeF(200, 200));
+    connect(gesture.get(), &SwipeGesture::triggerProgress, progressCallback);
     connect(gesture.get(), &Gesture::triggered, onUp, &QAction::trigger, Qt::QueuedConnection);
     connect(gesture.get(), &Gesture::cancelled, onUp, &QAction::trigger, Qt::QueuedConnection);
+    GestureShortcut gestureShortcut{GestureDeviceType::Touchscreen, direction};
+    gestureShortcut.swipeGesture = std::move(gesture);
+    m_touchscreenGestureRecognizer->registerSwipeGesture(gestureShortcut.swipeGesture.get());
 
-    GlobalShortcut shortcut{GestureShortcut{GestureDeviceType::Touchscreen, direction, std::move(gesture)}, onUp};
+    GlobalShortcut shortcut{std::move(gestureShortcut), onUp};
     const auto it = std::find_if(m_shortcuts.begin(), m_shortcuts.end(), [&shortcut](const auto &s) {
         return shortcut.shortcut() == s.shortcut();
     });
     if (it != m_shortcuts.end()) {
         m_shortcuts.erase(it);
     }
-    m_touchscreenGestureRecognizer->registerSwipeGesture(gesture.get());
     connect(shortcut.action(), &QAction::destroyed, this, &GlobalShortcutsManager::objectDeleted);
     m_shortcuts.push_back(std::move(shortcut));
 }
