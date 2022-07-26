@@ -24,6 +24,8 @@ FocusScope {
 
     property alias model: windowsRepeater.model
     property alias delegate: windowsRepeater.delegate
+    readonly property alias count: windowsRepeater.count
+
     property alias layout: expoLayout
     property int selectedIndex: -1
     property int animationDuration: PlasmaCore.Units.longDuration
@@ -32,7 +34,6 @@ FocusScope {
     property real padding: 0
     property var showOnly: []
     property string activeClass
-    readonly property alias count: windowsRepeater.count
 
     required property bool organized
     readonly property bool effectiveOrganized: expoLayout.ready && organized
