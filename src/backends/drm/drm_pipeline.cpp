@@ -371,9 +371,6 @@ bool DrmPipeline::moveCursor()
 
 void DrmPipeline::applyPendingChanges()
 {
-    if (!m_pending.crtc) {
-        m_pending.active = false;
-    }
     m_next = m_pending;
 }
 

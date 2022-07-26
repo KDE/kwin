@@ -397,7 +397,6 @@ bool DrmOutput::queueChanges(const OutputConfiguration &config)
     static int envOnlySoftwareRotations = qEnvironmentVariableIntValue("KWIN_DRM_SW_ROTATIONS_ONLY", &valid) == 1 || !valid;
 
     const auto props = config.constChangeSet(this);
-    m_pipeline->setActive(props->enabled);
     const auto modelist = m_connector->modes();
     const auto it = std::find_if(modelist.begin(), modelist.end(), [&props](const auto &mode) {
         return mode->size() == props->modeSize && mode->refreshRate() == props->refreshRate;

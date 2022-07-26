@@ -726,7 +726,7 @@ bool DrmGpu::maybeModeset()
         }
     }
     bool presentPendingForAll = std::all_of(pipelines.constBegin(), pipelines.constEnd(), [](const auto &pipeline) {
-        return pipeline->modesetPresentPending() || !pipeline->active();
+        return pipeline->modesetPresentPending() || !pipeline->activePending();
     });
     if (!presentPendingForAll) {
         // commit only once all pipelines are ready for presentation

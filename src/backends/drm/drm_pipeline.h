@@ -103,6 +103,7 @@ public:
     DrmCrtc *crtc() const;
     std::shared_ptr<DrmConnectorMode> mode() const;
     bool active() const;
+    bool activePending() const;
     bool enabled() const;
     DrmPipelineLayer *primaryLayer() const;
     DrmOverlayLayer *cursorLayer() const;
@@ -133,7 +134,6 @@ public:
     static Error commitPipelines(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects = {});
 
 private:
-    bool activePending() const;
     bool isBufferForDirectScanout() const;
     uint32_t calculateUnderscan();
     static Error errnoToError();
