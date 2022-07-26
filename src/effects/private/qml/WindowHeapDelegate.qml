@@ -367,7 +367,7 @@ Item {
             margins: PlasmaCore.Units.smallSpacing
         }
 
-        visible: thumb.closeButtonVisible && (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && thumb.client.closeable && !dragHandler.active
+        visible: thumb.closeButtonVisible && (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && thumb.client.closeable && !thumb.activeDragHandler.active
         LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
 
         text: i18ndc("kwin_effects", "@info:tooltip as in: 'close this window'", "Close window")
