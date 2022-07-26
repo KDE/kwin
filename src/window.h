@@ -135,109 +135,109 @@ class KWIN_EXPORT Window : public QObject
      * Returns whether the window is a desktop background window (the one with wallpaper).
      * See _NET_WM_WINDOW_TYPE_DESKTOP at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    Q_PROPERTY(bool desktopWindow READ isDesktop)
+    Q_PROPERTY(bool desktopWindow READ isDesktop CONSTANT)
 
     /**
      * Returns whether the window is a dock (i.e. a panel).
      * See _NET_WM_WINDOW_TYPE_DOCK at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    Q_PROPERTY(bool dock READ isDock)
+    Q_PROPERTY(bool dock READ isDock CONSTANT)
 
     /**
      * Returns whether the window is a standalone (detached) toolbar window.
      * See _NET_WM_WINDOW_TYPE_TOOLBAR at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    Q_PROPERTY(bool toolbar READ isToolbar)
+    Q_PROPERTY(bool toolbar READ isToolbar CONSTANT)
 
     /**
      * Returns whether the window is a torn-off menu.
      * See _NET_WM_WINDOW_TYPE_MENU at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    Q_PROPERTY(bool menu READ isMenu)
+    Q_PROPERTY(bool menu READ isMenu CONSTANT)
 
     /**
      * Returns whether the window is a "normal" window, i.e. an application or any other window
      * for which none of the specialized window types fit.
      * See _NET_WM_WINDOW_TYPE_NORMAL at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    Q_PROPERTY(bool normalWindow READ isNormalWindow)
+    Q_PROPERTY(bool normalWindow READ isNormalWindow CONSTANT)
 
     /**
      * Returns whether the window is a dialog window.
      * See _NET_WM_WINDOW_TYPE_DIALOG at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    Q_PROPERTY(bool dialog READ isDialog)
+    Q_PROPERTY(bool dialog READ isDialog CONSTANT)
 
     /**
      * Returns whether the window is a splashscreen. Note that many (especially older) applications
      * do not support marking their splash windows with this type.
      * See _NET_WM_WINDOW_TYPE_SPLASH at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    Q_PROPERTY(bool splash READ isSplash)
+    Q_PROPERTY(bool splash READ isSplash CONSTANT)
 
     /**
      * Returns whether the window is a utility window, such as a tool window.
      * See _NET_WM_WINDOW_TYPE_UTILITY at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    Q_PROPERTY(bool utility READ isUtility)
+    Q_PROPERTY(bool utility READ isUtility CONSTANT)
 
     /**
      * Returns whether the window is a dropdown menu (i.e. a popup directly or indirectly open
      * from the applications menubar).
      * See _NET_WM_WINDOW_TYPE_DROPDOWN_MENU at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    Q_PROPERTY(bool dropdownMenu READ isDropdownMenu)
+    Q_PROPERTY(bool dropdownMenu READ isDropdownMenu CONSTANT)
 
     /**
      * Returns whether the window is a popup menu (that is not a torn-off or dropdown menu).
      * See _NET_WM_WINDOW_TYPE_POPUP_MENU at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    Q_PROPERTY(bool popupMenu READ isPopupMenu)
+    Q_PROPERTY(bool popupMenu READ isPopupMenu CONSTANT)
 
     /**
      * Returns whether the window is a tooltip.
      * See _NET_WM_WINDOW_TYPE_TOOLTIP at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    Q_PROPERTY(bool tooltip READ isTooltip)
+    Q_PROPERTY(bool tooltip READ isTooltip CONSTANT)
 
     /**
      * Returns whether the window is a window with a notification.
      * See _NET_WM_WINDOW_TYPE_NOTIFICATION at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    Q_PROPERTY(bool notification READ isNotification)
+    Q_PROPERTY(bool notification READ isNotification CONSTANT)
 
     /**
      * Returns whether the window is a window with a critical notification.
      */
-    Q_PROPERTY(bool criticalNotification READ isCriticalNotification)
+    Q_PROPERTY(bool criticalNotification READ isCriticalNotification CONSTANT)
 
     /**
      * Returns whether the window is an applet popup.
      */
-    Q_PROPERTY(bool appletPopup READ isAppletPopup)
+    Q_PROPERTY(bool appletPopup READ isAppletPopup CONSTANT)
 
     /**
      * Returns whether the window is an On Screen Display.
      */
-    Q_PROPERTY(bool onScreenDisplay READ isOnScreenDisplay)
+    Q_PROPERTY(bool onScreenDisplay READ isOnScreenDisplay CONSTANT)
 
     /**
      * Returns whether the window is a combobox popup.
      * See _NET_WM_WINDOW_TYPE_COMBO at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    Q_PROPERTY(bool comboBox READ isComboBox)
+    Q_PROPERTY(bool comboBox READ isComboBox CONSTANT)
 
     /**
      * Returns whether the window is a Drag&Drop icon.
      * See _NET_WM_WINDOW_TYPE_DND at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    Q_PROPERTY(bool dndIcon READ isDNDIcon)
+    Q_PROPERTY(bool dndIcon READ isDNDIcon CONSTANT)
 
     /**
      * Returns the NETWM window type
      * See https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    Q_PROPERTY(int windowType READ windowType)
+    Q_PROPERTY(int windowType READ windowType CONSTANT)
 
     /**
      * Whether this Window is managed by KWin (it has control over its placement and other
