@@ -397,15 +397,7 @@ bool DrmOutput::queueChanges(const OutputConfiguration &config)
     static int envOnlySoftwareRotations = qEnvironmentVariableIntValue("KWIN_DRM_SW_ROTATIONS_ONLY", &valid) == 1 || !valid;
 
     const auto props = config.constChangeSet(this);
-    const auto modelist = m_connector->modes();
-    const auto it = std::find_if(modelist.begin(), modelist.end(), [&props](const auto &mode) {
-        return mode->size() == props->modeSize && mode->refreshRate() == props->refreshRate;
-    });
-    if (it == modelist.end()) {
-        qCWarning(KWIN_DRM).nospace() << "Could not find mode " << props->modeSize << "@" << props->refreshRate << " for output " << this;
-        return false;
-    }
-    m_pipeline->setMode(*it);
+    m_pipeline->setMode(std::static_pointer_cast<DrmConnectorMode>(props->mode));
     m_pipeline->setOverscan(props->overscan);
     m_pipeline->setRgbRange(props->rgbRange);
     m_pipeline->setRenderOrientation(outputToPlaneTransform(props->transform));

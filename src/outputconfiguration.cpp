@@ -25,8 +25,7 @@ std::shared_ptr<OutputChangeSet> OutputConfiguration::constChangeSet(Output *out
         props->enabled = output->isEnabled();
         props->pos = output->geometry().topLeft();
         props->scale = output->scale();
-        props->modeSize = output->modeSize();
-        props->refreshRate = output->refreshRate();
+        props->mode = output->currentMode();
         props->transform = output->transform();
         props->overscan = output->overscan();
         props->rgbRange = output->rgbRange();

@@ -463,6 +463,19 @@ DrmOutput::Transform toDrmTransform(int rotation)
         Q_UNREACHABLE();
     }
 }
+
+std::shared_ptr<OutputMode> parseMode(Output *output, const QJsonObject &modeInfo)
+{
+    const QJsonObject size = modeInfo["size"].toObject();
+    const QSize modeSize = QSize(size["width"].toInt(), size["height"].toInt());
+    const int refreshRate = round(modeInfo["refresh"].toDouble() * 1000);
+
+    const auto modes = output->modes();
+    auto it = std::find_if(modes.begin(), modes.end(), [&modeSize, &refreshRate](const auto &mode) {
+        return mode->size() == modeSize && mode->refreshRate() == refreshRate;
+    });
+    return (it != modes.end()) ? *it : nullptr;
+}
 }
 
 bool DrmBackend::readOutputsConfiguration(const QVector<DrmAbstractOutput *> &outputs)
@@ -497,10 +510,10 @@ bool DrmBackend::readOutputsConfiguration(const QVector<DrmAbstractOutput *> &ou
             props->vrrPolicy = static_cast<RenderLoop::VrrPolicy>(outputInfo["vrrpolicy"].toInt(static_cast<uint32_t>(props->vrrPolicy)));
             props->rgbRange = static_cast<Output::RgbRange>(outputInfo["rgbrange"].toInt(static_cast<uint32_t>(props->rgbRange)));
 
-            if (const QJsonObject mode = outputInfo["mode"].toObject(); !mode.isEmpty()) {
-                const QJsonObject size = mode["size"].toObject();
-                props->modeSize = QSize(size["width"].toInt(), size["height"].toInt());
-                props->refreshRate = round(mode["refresh"].toDouble() * 1000);
+            if (const QJsonObject modeInfo = outputInfo["mode"].toObject(); !modeInfo.isEmpty()) {
+                if (auto mode = KWinKScreenIntegration::parseMode(output, modeInfo)) {
+                    props->mode = mode;
+                }
             }
         } else {
             props->enabled = true;

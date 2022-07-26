@@ -132,12 +132,22 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationV2Interfa
             qCWarning(KWIN_CORE) << "Could NOT find output matching " << it.key()->uuid();
             continue;
         }
+
+        const auto modes = output->modes();
+        const auto modeIt = std::find_if(modes.begin(), modes.end(), [&changeset](const auto &mode) {
+            return mode->size() == changeset->size() && mode->refreshRate() == changeset->refreshRate();
+        });
+        if (modeIt == modes.end()) {
+            qCWarning(KWIN_CORE).nospace() << "Could not find mode " << changeset->size() << "@" << changeset->refreshRate() << " for output " << this;
+            config->setFailed();
+            return;
+        }
+
         auto props = cfg.changeSet(output);
         props->enabled = changeset->enabled();
         props->pos = changeset->position();
         props->scale = changeset->scale();
-        props->modeSize = changeset->size();
-        props->refreshRate = changeset->refreshRate();
+        props->mode = *modeIt;
         props->transform = static_cast<Output::Transform>(changeset->transform());
         props->overscan = changeset->overscan();
         props->rgbRange = static_cast<Output::RgbRange>(changeset->rgbRange());
