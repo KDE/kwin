@@ -13,7 +13,6 @@ target_sources(kwin PRIVATE
     drm_gbm_surface.cpp
     drm_gpu.cpp
     drm_layer.cpp
-    drm_lease_egl_layer.cpp
     drm_logging.cpp
     drm_object_connector.cpp
     drm_object.cpp

@@ -75,22 +75,4 @@ private:
     QRegion m_currentDamage;
     DrmVirtualOutput *const m_output;
 };
-
-class DrmLeaseQPainterLayer : public DrmPipelineLayer
-{
-public:
-    DrmLeaseQPainterLayer(DrmPipeline *pipeline);
-
-    OutputLayerBeginFrameInfo beginFrame() override;
-    bool endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion) override;
-
-    bool checkTestBuffer() override;
-    std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
-    void releaseBuffers() override;
-
-private:
-    std::shared_ptr<DrmFramebuffer> m_framebuffer;
-    std::shared_ptr<DrmDumbBuffer> m_buffer;
-};
-
 }

@@ -19,7 +19,6 @@
 #include "drm_egl_layer.h"
 #include "drm_gbm_surface.h"
 #include "drm_gpu.h"
-#include "drm_lease_egl_layer.h"
 #include "drm_logging.h"
 #include "drm_output.h"
 #include "drm_pipeline.h"
@@ -240,11 +239,7 @@ EGLConfig EglGbmBackend::config(uint32_t format) const
 
 std::shared_ptr<DrmPipelineLayer> EglGbmBackend::createPrimaryLayer(DrmPipeline *pipeline)
 {
-    if (!pipeline->output()->isNonDesktop()) {
-        return std::make_shared<EglGbmLayer>(this, pipeline);
-    } else {
-        return std::make_shared<DrmLeaseEglGbmLayer>(pipeline);
-    }
+    return std::make_shared<EglGbmLayer>(this, pipeline);
 }
 
 std::shared_ptr<DrmOverlayLayer> EglGbmBackend::createCursorLayer(DrmPipeline *pipeline)

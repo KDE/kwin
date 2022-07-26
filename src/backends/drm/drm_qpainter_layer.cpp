@@ -174,48 +174,4 @@ QRegion DrmVirtualQPainterLayer::currentDamage() const
 void DrmVirtualQPainterLayer::releaseBuffers()
 {
 }
-
-DrmLeaseQPainterLayer::DrmLeaseQPainterLayer(DrmPipeline *pipeline)
-    : DrmPipelineLayer(pipeline)
-{
-}
-
-bool DrmLeaseQPainterLayer::checkTestBuffer()
-{
-    const auto size = m_pipeline->bufferSize();
-    if (!m_framebuffer || m_buffer->size() != size) {
-        m_buffer = DrmDumbBuffer::createDumbBuffer(m_pipeline->gpu(), size, DRM_FORMAT_XRGB8888);
-        if (m_buffer) {
-            m_framebuffer = DrmFramebuffer::createFramebuffer(m_buffer);
-            if (!m_framebuffer) {
-                qCWarning(KWIN_DRM, "Failed to create dumb framebuffer for lease output: %s", strerror(errno));
-            }
-        } else {
-            m_framebuffer.reset();
-        }
-    }
-    return m_framebuffer != nullptr;
-}
-
-std::shared_ptr<DrmFramebuffer> DrmLeaseQPainterLayer::currentBuffer() const
-{
-    return m_framebuffer;
-}
-
-OutputLayerBeginFrameInfo DrmLeaseQPainterLayer::beginFrame()
-{
-    return {};
-}
-
-bool DrmLeaseQPainterLayer::endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion)
-{
-    Q_UNUSED(damagedRegion)
-    Q_UNUSED(renderedRegion)
-    return false;
-}
-
-void DrmLeaseQPainterLayer::releaseBuffers()
-{
-    m_buffer.reset();
-}
 }
