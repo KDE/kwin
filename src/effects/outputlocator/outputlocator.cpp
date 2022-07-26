@@ -8,7 +8,6 @@
 
 #include <kwinoffscreenquickview.h>
 
-#include <QApplication>
 #include <QDBusConnection>
 #include <QQuickItem>
 
