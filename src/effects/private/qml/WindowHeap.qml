@@ -100,10 +100,9 @@ FocusScope {
 
     ExpoLayout {
         id: expoLayout
-        x: heap.padding
-        y: heap.padding
-        width: parent.width - 2 * heap.padding
-        height: parent.height - 2 * heap.padding
+
+        anchors.fill: parent
+        anchors.margins: heap.padding
         spacing: PlasmaCore.Units.smallSpacing * 5
 
         Repeater {
