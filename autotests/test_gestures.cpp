@@ -19,10 +19,8 @@ class GestureTest : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
-    void testSwipeDirection_data();
-    void testSwipeDirection();
-    void testPinchDirection_data();
-    void testPinchDirection();
+    void testDirection_data();
+    void testDirection();
 
     // swipe only
     void testMinimumX_data();
@@ -54,46 +52,28 @@ private Q_SLOTS:
     void testSwipeGeometryStart();
 };
 
-void GestureTest::testSwipeDirection_data()
+void GestureTest::testDirection_data()
 {
-    QTest::addColumn<GestureDirection>("swipe_direction");
+    QTest::addColumn<GestureDirection>("direction");
 
     QTest::newRow("Up") << GestureDirection::Up;
     QTest::newRow("Left") << GestureDirection::Left;
     QTest::newRow("Right") << GestureDirection::Right;
     QTest::newRow("Down") << GestureDirection::Down;
-}
-
-void GestureTest::testSwipeDirection()
-{
-    SwipeGesture gesture;
-    QCOMPARE(gesture.direction(), GestureDirection::Down);
-    QFETCH(GestureDirection, swipe_direction);
-    gesture.setDirection(swipe_direction);
-    QCOMPARE(gesture.direction(), swipe_direction);
-    // back to down
-    gesture.setDirection(GestureDirection::Down);
-    QCOMPARE(gesture.direction(), GestureDirection::Down);
-}
-
-void GestureTest::testPinchDirection_data()
-{
-    QTest::addColumn<GestureDirection>("pinch_direction");
-
     QTest::newRow("Contracting") << GestureDirection::Contracting;
     QTest::newRow("Expanding") << GestureDirection::Expanding;
 }
 
-void GestureTest::testPinchDirection()
+void GestureTest::testDirection()
 {
-    PinchGesture gesture;
-    QCOMPARE(gesture.direction(), GestureDirection::Expanding);
-    QFETCH(GestureDirection, pinch_direction);
-    gesture.setDirection(pinch_direction);
-    QCOMPARE(gesture.direction(), pinch_direction);
+    SwipeGesture gesture;
+    QCOMPARE(gesture.direction(), 0);
+    QFETCH(GestureDirection, direction);
+    gesture.setDirection(direction);
+    QCOMPARE(gesture.direction(), direction);
     // back to down
-    gesture.setDirection(GestureDirection::Expanding);
-    QCOMPARE(gesture.direction(), GestureDirection::Expanding);
+    gesture.setDirection(GestureDirection::Down);
+    QCOMPARE(gesture.direction(), GestureDirection::Down);
 }
 
 void GestureTest::testMinimumX_data()
