@@ -140,7 +140,7 @@ void SlidingPopupsEffect::paintWindow(EffectWindow *w, int mask, QRegion region,
     const AnimationData &animData = m_animationsData[w];
     const qreal slideLength = (animData.slideLength > 0) ? animData.slideLength : m_slideLength;
 
-    const QRect screenRect = effects->clientArea(FullScreenArea, w->screen(), effects->currentDesktop());
+    const QRectF screenRect = effects->clientArea(FullScreenArea, w->screen(), effects->currentDesktop());
     int splitPoint = 0;
     const QRectF geo = w->expandedGeometry();
     const qreal t = (*animationIt).timeLine.value();
@@ -319,7 +319,7 @@ void SlidingPopupsEffect::slotWindowFrameGeometryChanged(EffectWindow *w, const 
 
 void SlidingPopupsEffect::setupAnimData(EffectWindow *w)
 {
-    const QRect screenRect = effects->clientArea(FullScreenArea, w->screen(), effects->currentDesktop());
+    const QRectF screenRect = effects->clientArea(FullScreenArea, w->screen(), effects->currentDesktop());
     const QRectF windowGeo = w->frameGeometry();
     AnimationData &animData = m_animationsData[w];
 
