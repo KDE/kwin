@@ -7,7 +7,6 @@
 #include "outputlocator.h"
 
 #include <kwinoffscreenquickview.h>
-#include <main.h>
 
 #include <QApplication>
 #include <QDBusConnection>
