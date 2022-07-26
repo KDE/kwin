@@ -141,7 +141,7 @@ struct DrmDeleter<drmModeRes>
 template<>
 struct DrmDeleter<drmModeLesseeListRes>
 {
-    void operator()(drmModeLesseeListRes *ptr)
+    static void cleanup(drmModeLesseeListRes *ptr)
     {
         drmFree(ptr);
     }
