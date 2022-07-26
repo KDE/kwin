@@ -107,7 +107,9 @@ FocusScope {
 
         Repeater {
             id: windowsRepeater
-            delegate: WindowHeapDelegate {}
+            delegate: WindowHeapDelegate {
+                windowHeap: heap
+            }
         }
     }
 
