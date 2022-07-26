@@ -367,16 +367,6 @@ void GestureRecognizer::endPinchGesture() // because fingers up
     m_currentSwipeAxis = Axis::None;
 }
 
-GestureDirections SwipeGesture::direction() const
-{
-    return m_direction;
-}
-
-void SwipeGesture::setDirection(GestureDirections direction)
-{
-    m_direction = direction;
-}
-
 void SwipeGesture::setMinimumX(int x)
 {
     m_minimumX = x;
@@ -457,16 +447,6 @@ bool SwipeGesture::isMinimumDeltaRelevant() const
     return m_minimumDeltaRelevant;
 }
 
-GestureDirections PinchGesture::direction() const
-{
-    return m_direction;
-}
-
-void PinchGesture::setDirection(GestureDirections direction)
-{
-    m_direction = direction;
-}
-
 qreal PinchGesture::minimumScaleDelta() const
 {
     return m_minimumScaleDelta;
@@ -509,5 +489,15 @@ bool Gesture::isFingerCountAcceptable(uint fingers) const
 QSet<uint> Gesture::acceptableFingerCounts() const
 {
     return m_validFingerCounts;
+}
+
+GestureDirections Gesture::direction() const
+{
+    return m_direction;
+}
+
+void Gesture::setDirection(GestureDirections direction)
+{
+    m_direction = direction;
 }
 }
