@@ -17,16 +17,17 @@
 #include <QPointF>
 #include <QSet>
 #include <QSizeF>
+#include <QVector2D>
 #include <QVector>
 
 namespace KWin
 {
 static const QSet<uint> DEFAULT_VALID_FINGER_COUNTS = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
-/*
- * Everytime the scale of the gesture changes by this much, the callback changes by 1.
+/**
  * This is the amount of change for 1 unit of change, like switch by 1 desktop.
- * */
+ */
+static const qreal DEFAULT_UNIT_DELTA = 400; // Pixels
 static const qreal DEFAULT_UNIT_SCALE_DELTA = .2; // 20%
 
 class Gesture : public QObject
@@ -72,6 +73,24 @@ Q_SIGNALS:
      * This Gesture no longer matches.
      */
     void cancelled();
+    /**
+     * Progress towards the minimum threshold to trigger
+     */
+    void triggerProgress(qreal);
+    /**
+     * The progress of the gesture if a minimumDelta is set.
+     * The progress is reported in [0.0,1.0+]
+     * Progress is always positive
+     * It can be more than 1, indicating an action should happen more than once.
+     */
+    void semanticProgress(qreal, GestureDirections);
+    /**
+     * Like semantic progress except [-1, 1] and
+     * it captures both of something
+     * example: Up and Down (VerticalAxis), Contracting and Expanding (BiDirectionalPinch)
+     * Positive values are Up, Right and Expanding
+     */
+    void semanticProgressAxis(qreal, GestureDirections);
 
 private:
     QSet<uint> m_validFingerCounts = DEFAULT_VALID_FINGER_COUNTS;
@@ -99,24 +118,39 @@ public:
     bool maximumYIsRelevant() const;
     void setStartGeometry(const QRect &geometry);
 
-    QSizeF minimumDelta() const;
-    void setMinimumDelta(const QSizeF &delta);
-    bool isMinimumDeltaRelevant() const;
+    QSizeF triggerDelta() const;
+    void setTriggerDelta(const QSizeF &delta);
+    bool isTriggerDeltaRelevant() const;
 
-    qreal deltaToProgress(const QSizeF &delta) const;
-    bool minimumDeltaReached(const QSizeF &delta) const;
+    qreal getTriggerProgress(const QSizeF &delta) const;
+    bool triggerDeltaReached(const QSizeF &delta) const;
+
+    /**
+     * Take the given pixel delta and
+     * map it to a simple [0, 1+] semantic scale.
+     *  0 = no progress
+     *  1 = complete something once
+     * The value can be greater than 1, indicating
+     * that the action should be done more times.
+     */
+    qreal getSemanticProgress(const QSizeF &delta) const;
+    /**
+     * Like the last one, except [-1, 1]
+     * Positive values are Up and Right
+     */
+    qreal getSemanticAxisProgress(const QSizeF &delta) const;
+    /**
+     * A two dimensional semantic delta.
+     * [-1, 1] on each axis.
+     * Positive is Up and Right
+     */
+    QSizeF getSemanticDelta(const QSizeF &delta) const;
 
 Q_SIGNALS:
-    /**
-     * The progress of the gesture if a minimumDelta is set.
-     * The progress is reported in [0.0,1.0]
-     */
-    void progress(qreal);
+    void pixelDelta(const QSizeF &delta, GestureDirections);
+    void semanticDelta(const QSizeF &delta, GestureDirections);
 
-    /**
-     * The progress in actual pixel distance traveled by the fingers
-     */
-    void deltaProgress(const QSizeF &delta);
+    void swipePixelVector(const QVector2D &vector);
 
 private:
     bool m_minimumXRelevant = false;
@@ -127,8 +161,9 @@ private:
     int m_maximumX = 0;
     bool m_maximumYRelevant = false;
     int m_maximumY = 0;
-    bool m_minimumDeltaRelevant = false;
-    QSizeF m_minimumDelta;
+    bool m_triggerDeltaRelevant = false;
+    QSizeF m_triggerDelta;
+    qreal m_unitDelta = DEFAULT_UNIT_DELTA;
 };
 
 class PinchGesture : public Gesture
@@ -138,28 +173,44 @@ public:
     explicit PinchGesture(QObject *parent = nullptr);
     ~PinchGesture() override;
 
-    qreal minimumScaleDelta() const;
+    qreal triggerScaleDelta() const;
 
     /**
      * scaleDelta is the % scale difference needed to trigger
      * 0.25 will trigger when scale reaches 0.75 or 1.25
      */
-    void setMinimumScaleDelta(const qreal &scaleDelta);
-    bool isMinimumScaleDeltaRelevant() const;
+    void setTriggerScaleDelta(const qreal &scaleDelta);
+    bool isTriggerScaleDeltaRelevant() const;
 
-    qreal scaleDeltaToProgress(const qreal &scaleDelta) const;
-    bool minimumScaleDeltaReached(const qreal &scaleDelta) const;
+    qreal getTriggerProgress(const qreal &scaleDelta) const;
+    bool triggerScaleDeltaReached(const qreal &scaleDelta) const;
+
+    /**
+     * Take the given pixel delta and
+     * map it to a simple [0, 1+] semantic scale.
+     *  0 = no progress
+     *  1 = complete something once
+     * The value can be greater than 1, indicating
+     * that the action should be done more times.
+     */
+    qreal getSemanticProgress(const qreal scale) const;
+    /**
+     * Like the last one, except [-1, 1]
+     * Positive is expanding.
+     * Positive values are Expanding
+     */
+    qreal getSemanticAxisProgress(const qreal scale) const;
 
 Q_SIGNALS:
     /**
-     * The progress of the gesture if a minimumDelta is set.
      * The progress is reported in [0.0,1.0]
      */
-    void progress(qreal);
+    void triggerProgress(qreal);
 
 private:
-    bool m_minimumScaleDeltaRelevant = false;
-    qreal m_minimumScaleDelta = DEFAULT_UNIT_SCALE_DELTA;
+    bool m_triggerScaleDeltaRelevant = false;
+    qreal m_triggerScaleDelta = .2;
+    qreal m_unitScaleDelta = DEFAULT_UNIT_SCALE_DELTA;
 };
 
 class KWIN_EXPORT GestureRecognizer : public QObject
@@ -188,6 +239,7 @@ public:
 
 private:
     void cancelActiveGestures();
+    bool mutuallyExclusive(GestureDirections d, GestureDirections gestureDir);
     enum class StartPositionBehavior {
         Relevant,
         Irrelevant,

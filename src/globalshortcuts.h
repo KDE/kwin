@@ -15,6 +15,7 @@
 #include <QKeySequence>
 
 #include <memory>
+#include <vector>
 
 class QAction;
 class KGlobalAccelD;
@@ -58,7 +59,7 @@ public:
      */
     void registerAxisShortcut(QAction *action, Qt::KeyboardModifiers modifiers, PointerAxisDirection axis);
 
-    void registerGesture(GestureDeviceType device, GestureDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback = nullptr);
+    void registerGesture(GestureDeviceType device, GestureDirections direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback = nullptr);
 
     void forceRegisterTouchscreenSwipe(QAction *action, std::function<void(qreal)> progressCallback, GestureDirection direction, uint fingerCount);
 

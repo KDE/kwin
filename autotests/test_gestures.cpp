@@ -342,11 +342,11 @@ void GestureTest::testNotEmitCallbacksBeforeDirectionDecided()
     recognizer.registerPinchGesture(&expand);
     recognizer.registerPinchGesture(&contract);
 
-    QSignalSpy upSpy(&up, &SwipeGesture::progress);
-    QSignalSpy downSpy(&down, &SwipeGesture::progress);
-    QSignalSpy rightSpy(&right, &SwipeGesture::progress);
-    QSignalSpy expandSpy(&expand, &PinchGesture::progress);
-    QSignalSpy contractSpy(&contract, &PinchGesture::progress);
+    QSignalSpy upSpy(&up, &SwipeGesture::triggerProgress);
+    QSignalSpy downSpy(&down, &SwipeGesture::triggerProgress);
+    QSignalSpy rightSpy(&right, &SwipeGesture::triggerProgress);
+    QSignalSpy expandSpy(&expand, &PinchGesture::triggerProgress);
+    QSignalSpy contractSpy(&contract, &PinchGesture::triggerProgress);
 
     // don't release callback until we know the direction of swipe gesture
     recognizer.startSwipeGesture(4);
