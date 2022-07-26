@@ -137,6 +137,15 @@ struct DrmDeleter<drmModeRes>
     }
 };
 
+template<>
+struct DrmDeleter<drmModeLesseeListRes>
+{
+    void operator()(drmModeLesseeListRes *ptr)
+    {
+        drmFree(ptr);
+    }
+};
+
 template<typename T>
 using DrmUniquePtr = std::unique_ptr<T, DrmDeleter<T>>;
 }
