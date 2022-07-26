@@ -232,7 +232,7 @@ void EffectsModel::loadBuiltInEffects(const KConfigGroup &kwinConfig)
     while (it.hasNext()) {
         it.next();
 
-        const KPluginMetaData metaData(it.filePath());
+        const KPluginMetaData metaData = KPluginMetaData::fromJsonFile(it.filePath());
         if (!metaData.isValid()) {
             continue;
         }
