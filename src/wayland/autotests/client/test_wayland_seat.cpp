@@ -161,7 +161,7 @@ void TestWaylandSeat::init()
     registry.setup();
     QVERIFY(compositorSpy.wait());
 
-    m_seatInterface = new SeatInterface(m_display);
+    m_seatInterface = new SeatInterface(m_display, m_display);
     QVERIFY(m_seatInterface);
     m_seatInterface->setName(QStringLiteral("seat0"));
     QVERIFY(seatSpy.wait());
