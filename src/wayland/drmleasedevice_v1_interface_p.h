@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "utils/filedescriptor.h"
 #include <qwayland-server-drm-lease-v1.h>
 
 #include <QObject>
@@ -23,7 +24,7 @@ class DrmLeaseV1Interface;
 class DrmLeaseDeviceV1InterfacePrivate : public QtWaylandServer::wp_drm_lease_device_v1
 {
 public:
-    DrmLeaseDeviceV1InterfacePrivate(Display *display, DrmLeaseDeviceV1Interface *device, std::function<int()> createNonMasterFd);
+    DrmLeaseDeviceV1InterfacePrivate(Display *display, DrmLeaseDeviceV1Interface *device, std::function<KWin::FileDescriptor()> createNonMasterFd);
     ~DrmLeaseDeviceV1InterfacePrivate();
     void remove();
 
@@ -37,7 +38,7 @@ public:
     QVector<DrmLeaseRequestV1Interface *> leaseRequests;
     QVector<DrmLeaseV1Interface *> leases;
     QQueue<wl_resource *> pendingFds;
-    std::function<int()> createNonMasterFd;
+    std::function<KWin::FileDescriptor()> createNonMasterFd;
     bool hasDrmMaster = true;
     bool removed = false;
 

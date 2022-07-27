@@ -18,7 +18,7 @@ namespace KWaylandServer
 
 static const quint32 s_version = 1;
 
-DrmLeaseDeviceV1Interface::DrmLeaseDeviceV1Interface(Display *display, std::function<int()> createNonMasterFd)
+DrmLeaseDeviceV1Interface::DrmLeaseDeviceV1Interface(Display *display, std::function<KWin::FileDescriptor()> createNonMasterFd)
     : d(new DrmLeaseDeviceV1InterfacePrivate(display, this, createNonMasterFd))
 {
 }
@@ -36,9 +36,8 @@ void DrmLeaseDeviceV1Interface::setDrmMaster(bool hasDrmMaster)
     if (hasDrmMaster) {
         // send pending drm fds
         while (!d->pendingFds.isEmpty()) {
-            int fd = d->createNonMasterFd();
-            d->send_drm_fd(d->pendingFds.dequeue(), fd);
-            close(fd);
+            KWin::FileDescriptor fd = d->createNonMasterFd();
+            d->send_drm_fd(d->pendingFds.dequeue(), fd.get());
         }
         // offer all connectors again
         for (const auto &connector : qAsConst(d->connectors)) {
@@ -72,7 +71,7 @@ void DrmLeaseDeviceV1Interface::done()
     }
 }
 
-DrmLeaseDeviceV1InterfacePrivate::DrmLeaseDeviceV1InterfacePrivate(Display *display, DrmLeaseDeviceV1Interface *device, std::function<int()> createNonMasterFd)
+DrmLeaseDeviceV1InterfacePrivate::DrmLeaseDeviceV1InterfacePrivate(Display *display, DrmLeaseDeviceV1Interface *device, std::function<KWin::FileDescriptor()> createNonMasterFd)
     : QtWaylandServer::wp_drm_lease_device_v1(*display, s_version)
     , q(device)
     , createNonMasterFd(createNonMasterFd)
@@ -159,9 +158,8 @@ void DrmLeaseDeviceV1InterfacePrivate::wp_drm_lease_device_v1_bind_resource(Reso
         pendingFds << resource->handle;
         return;
     }
-    int fd = createNonMasterFd();
-    send_drm_fd(resource->handle, fd);
-    close(fd);
+    KWin::FileDescriptor fd = createNonMasterFd();
+    send_drm_fd(resource->handle, fd.get());
     for (const auto &connector : qAsConst(connectors)) {
         auto connectorPrivate = DrmLeaseConnectorV1InterfacePrivate::get(connector);
         if (!connectorPrivate->withdrawn) {
@@ -326,10 +324,10 @@ DrmLeaseV1Interface::~DrmLeaseV1Interface()
     d->device->leases.removeOne(this);
 }
 
-void DrmLeaseV1Interface::grant(int leaseFd, uint32_t lesseeId)
+void DrmLeaseV1Interface::grant(KWin::FileDescriptor &&leaseFd, uint32_t lesseeId)
 {
-    d->send_lease_fd(leaseFd);
-    close(leaseFd);
+    KWin::FileDescriptor tmp = std::move(leaseFd);
+    d->send_lease_fd(tmp.get());
     d->lesseeId = lesseeId;
     for (const auto &connector : qAsConst(d->connectors)) {
         DrmLeaseConnectorV1InterfacePrivate::get(connector)->withdraw();

@@ -7,6 +7,7 @@
 #pragma once
 
 #include "kwin_export.h"
+#include "utils/filedescriptor.h"
 
 #include <QObject>
 #include <QPointer>
@@ -35,7 +36,7 @@ public:
      * @param createNonMasterFd a function that creates non-master drm file descriptors for
      *          this device that clients can use to enumerate connectors and their properties
      */
-    explicit DrmLeaseDeviceV1Interface(Display *display, std::function<int()> createNonMasterFd);
+    explicit DrmLeaseDeviceV1Interface(Display *display, std::function<KWin::FileDescriptor()> createNonMasterFd);
     ~DrmLeaseDeviceV1Interface() override;
 
     /**
@@ -98,7 +99,7 @@ public:
      * drive the outputs corresponding to the requested connectors.
      * Must only be called once in response to DrmLeaseDeviceV1Interface::leaseRequested
      */
-    void grant(int leaseFd, uint32_t lesseeId);
+    void grant(KWin::FileDescriptor &&leaseFd, uint32_t lesseeId);
 
     /**
      * Deny the lease request. The compositor may call this in response to

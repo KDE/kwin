@@ -88,15 +88,14 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
 
     m_leaseDevice = new KWaylandServer::DrmLeaseDeviceV1Interface(waylandServer()->display(), [this] {
         char *path = drmGetDeviceNameFromFd2(m_fd);
-        int fd = open(path, O_RDWR | O_CLOEXEC);
-        if (fd < 0) {
+        FileDescriptor fd{open(path, O_RDWR | O_CLOEXEC)};
+        if (!fd.isValid()) {
             qCWarning(KWIN_DRM) << "Could not open DRM fd for leasing!" << strerror(errno);
         } else {
-            if (drmIsMaster(fd)) {
-                if (drmDropMaster(fd) != 0) {
-                    close(fd);
+            if (drmIsMaster(fd.get())) {
+                if (drmDropMaster(fd.get()) != 0) {
                     qCWarning(KWIN_DRM) << "Could not create a non-master DRM fd for leasing!" << strerror(errno);
-                    return -1;
+                    return FileDescriptor{};
                 }
             }
         }
@@ -625,8 +624,8 @@ void DrmGpu::handleLeaseRequest(KWaylandServer::DrmLeaseV1Interface *leaseReques
     }
 
     uint32_t lesseeId;
-    int fd = drmModeCreateLease(m_fd, objects.constData(), objects.count(), 0, &lesseeId);
-    if (fd < 0) {
+    FileDescriptor fd{drmModeCreateLease(m_fd, objects.constData(), objects.count(), 0, &lesseeId)};
+    if (!fd.isValid()) {
         qCWarning(KWIN_DRM) << "Could not create DRM lease!" << strerror(errno);
         qCWarning(KWIN_DRM, "Tried to lease the following %d resources:", objects.count());
         for (const auto &res : qAsConst(objects)) {
@@ -634,11 +633,11 @@ void DrmGpu::handleLeaseRequest(KWaylandServer::DrmLeaseV1Interface *leaseReques
         }
         leaseRequest->deny();
     } else {
-        qCDebug(KWIN_DRM, "Created lease with leaseFd %d and lesseeId %d for %d resources:", fd, lesseeId, objects.count());
+        qCDebug(KWIN_DRM, "Created lease for %d resources:", objects.count());
         for (const auto &res : qAsConst(objects)) {
             qCDebug(KWIN_DRM) << res;
         }
-        leaseRequest->grant(fd, lesseeId);
+        leaseRequest->grant(std::move(fd), lesseeId);
         for (const auto &output : qAsConst(outputs)) {
             output->leased(leaseRequest);
         }
