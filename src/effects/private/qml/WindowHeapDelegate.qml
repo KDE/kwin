@@ -90,8 +90,6 @@ Item {
         id: thumbSource
         wId: thumb.client.internalId
         state: thumb.activeDragHandler.active ? "drag" : "normal"
-        readonly property QtObject screen: targetScreen
-        readonly property QtObject client: thumb.client
 
         Drag.active: thumb.activeDragHandler.active
         Drag.source: thumb.client
