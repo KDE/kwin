@@ -20,7 +20,6 @@ Item {
     required property int index
     required property Item windowHeap
 
-    readonly property alias dragHandler: thumb.activeDragHandler
     readonly property bool selected: thumb.windowHeap.selectedIndex == index
     //TODO: move?
     readonly property bool hidden: {
