@@ -199,7 +199,7 @@ FocusScope {
 
             PlasmaExtras.PlaceholderMessage {
                 id: placeholderMessage
-                anchors.top: parent
+                anchors.top: parent.top
                 anchors.horizontalCenter: parent.horizontalCenter
                 visible: container.organized && searchField.text && heap.count === 0
                 text: i18nd("kwin_effects", "No matching windows")
