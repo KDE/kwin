@@ -109,7 +109,6 @@ void UserActionsMenu::close()
         return;
     }
     m_menu->close();
-    m_window.clear();
 }
 
 bool UserActionsMenu::isMenuWindow(const Window *window) const
@@ -137,15 +136,7 @@ void UserActionsMenu::show(const QRect &pos, Window *window)
     }
     m_window = windowPtr;
     init();
-    m_window->blockActivityUpdates(true);
-    if (kwinApp()->shouldUseWaylandForCompositing()) {
-        m_menu->popup(pos.bottomLeft());
-    } else {
-        m_menu->exec(pos.bottomLeft());
-    }
-    if (m_window) {
-        m_window->blockActivityUpdates(false);
-    }
+    m_menu->popup(pos.bottomLeft());
 }
 
 void UserActionsMenu::grabInput()
@@ -223,7 +214,10 @@ void UserActionsMenu::init()
     }
     m_menu = new QMenu;
     connect(m_menu, &QMenu::aboutToShow, this, &UserActionsMenu::menuAboutToShow);
-    connect(m_menu, &QMenu::triggered, this, &UserActionsMenu::slotWindowOperation, Qt::QueuedConnection);
+
+    // the toplevel menu gets closed before a submenu's action is invoked
+    connect(m_menu, &QMenu::aboutToHide, this, &UserActionsMenu::menuAboutToHide, Qt::QueuedConnection);
+    connect(m_menu, &QMenu::triggered, this, &UserActionsMenu::slotWindowOperation);
 
     QMenu *advancedMenu = new QMenu(m_menu);
     connect(advancedMenu, &QMenu::aboutToShow, this, [this, advancedMenu]() {
@@ -362,6 +356,8 @@ void UserActionsMenu::menuAboutToShow()
         return;
     }
 
+    m_window->blockActivityUpdates(true);
+
     if (VirtualDesktopManager::self()->count() == 1) {
         delete m_desktopMenu;
         m_desktopMenu = nullptr;
@@ -414,6 +410,14 @@ void UserActionsMenu::menuAboutToShow()
     m_applicationRulesOperation->setEnabled(m_window->supportsWindowRules());
 
     showHideActivityMenu();
+}
+
+void UserActionsMenu::menuAboutToHide()
+{
+    if (m_window) {
+        m_window->blockActivityUpdates(false);
+        m_window.clear();
+    }
 }
 
 void UserActionsMenu::showHideActivityMenu()
