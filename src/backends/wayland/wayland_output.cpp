@@ -77,11 +77,11 @@ void WaylandOutput::setGeometry(const QPoint &logicalPosition, const QSize &pixe
 
 void WaylandOutput::updateEnablement(bool enable)
 {
-    setDpmsMode(enable ? DpmsMode::On : DpmsMode::Off);
-    if (enable)
+    if (enable) {
         Q_EMIT m_backend->outputEnabled(this);
-    else
+    } else {
         Q_EMIT m_backend->outputDisabled(this);
+    }
 }
 
 void WaylandOutput::setDpmsMode(DpmsMode mode)
