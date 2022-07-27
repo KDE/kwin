@@ -9,6 +9,8 @@
 */
 #pragma once
 
+#include "utils/filedescriptor.h"
+
 #include <QImage>
 #include <QSize>
 #include <array>
@@ -25,13 +27,13 @@ class DrmGpuBuffer
 {
 public:
     DrmGpuBuffer(DrmGpu *gpu, QSize size, uint32_t format, uint64_t modifier, const std::array<uint32_t, 4> &handles, const std::array<uint32_t, 4> &strides, const std::array<uint32_t, 4> &offsets, uint32_t planeCount);
-    virtual ~DrmGpuBuffer();
+    virtual ~DrmGpuBuffer() = default;
 
     DrmGpu *gpu() const;
     uint32_t format() const;
     uint64_t modifier() const;
     QSize size() const;
-    std::array<int, 4> fds();
+    const std::array<FileDescriptor, 4> &fds();
     std::array<uint32_t, 4> handles() const;
     std::array<uint32_t, 4> strides() const;
     std::array<uint32_t, 4> offsets() const;
@@ -48,7 +50,7 @@ protected:
     const std::array<uint32_t, 4> m_strides;
     const std::array<uint32_t, 4> m_offsets;
     const uint32_t m_planeCount;
-    std::array<int, 4> m_fds;
+    std::array<FileDescriptor, 4> m_fds;
 };
 
 class DrmFramebuffer

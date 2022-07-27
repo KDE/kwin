@@ -132,12 +132,9 @@ void GbmBuffer::createFds()
 {
 #if HAVE_GBM_BO_GET_FD_FOR_PLANE
     for (uint32_t i = 0; i < m_planeCount; i++) {
-        m_fds[i] = gbm_bo_get_fd_for_plane(m_bo, i);
-        if (m_fds[i] == -1) {
-            for (uint32_t i2 = 0; i2 < i; i2++) {
-                close(m_fds[i2]);
-                m_fds[i2] = -1;
-            }
+        m_fds[i] = FileDescriptor(gbm_bo_get_fd_for_plane(m_bo, i));
+        if (!m_fds[i].isValid()) {
+            m_fds = {};
             return;
         }
     }
@@ -146,7 +143,7 @@ void GbmBuffer::createFds()
     if (m_planeCount > 1) {
         return;
     }
-    m_fds[0] = gbm_bo_get_fd(m_bo);
+    m_fds[0] = FileDescriptor(gbm_bo_get_fd(m_bo));
 #endif
 }
 
@@ -185,8 +182,8 @@ std::shared_ptr<GbmBuffer> GbmBuffer::importBuffer(DrmGpu *gpu, KWaylandServer::
 
 std::shared_ptr<GbmBuffer> GbmBuffer::importBuffer(DrmGpu *gpu, GbmBuffer *buffer, uint32_t flags)
 {
-    const auto fds = buffer->fds();
-    if (fds[0] == -1) {
+    const auto &fds = buffer->fds();
+    if (!fds[0].isValid()) {
         return nullptr;
     }
     const auto strides = buffer->strides();
@@ -202,7 +199,7 @@ std::shared_ptr<GbmBuffer> GbmBuffer::importBuffer(DrmGpu *gpu, GbmBuffer *buffe
         .modifier = buffer->modifier(),
     };
     for (uint32_t i = 0; i < data.num_fds; i++) {
-        data.fds[i] = fds[i];
+        data.fds[i] = fds[i].get();
         data.strides[i] = strides[i];
         data.offsets[i] = offsets[i];
     }
