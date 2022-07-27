@@ -106,8 +106,8 @@ Item {
                     target: thumbSource
                     x: 0
                     y: 0
-                    width: thumb.width * thumb.targetScale
-                    height: thumb.height * thumb.targetScale
+                    width: thumb.width
+                    height: thumb.height
                 }
             },
             State {

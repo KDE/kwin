@@ -239,6 +239,9 @@ FocusScope {
                     windowHeap: heap
 
                     targetScale: {
+                        if (!activeDragHandler.active) {
+                            return targetScale; // leave it alone, so it won't affect transitions before they start
+                        }
                         var localPressPosition = activeDragHandler.centroid.scenePressPosition.y - heap.layout.Kirigami.ScenePosition.y;
                         if (localPressPosition == 0) {
                             return 0.1
