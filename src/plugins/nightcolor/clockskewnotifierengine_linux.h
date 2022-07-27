@@ -7,6 +7,7 @@
 #pragma once
 
 #include "clockskewnotifierengine_p.h"
+#include "utils/filedescriptor.h"
 
 namespace KWin
 {
@@ -16,17 +17,15 @@ class LinuxClockSkewNotifierEngine : public ClockSkewNotifierEngine
     Q_OBJECT
 
 public:
-    ~LinuxClockSkewNotifierEngine() override;
-
     static LinuxClockSkewNotifierEngine *create(QObject *parent);
 
 private Q_SLOTS:
     void handleTimerCancelled();
 
 private:
-    LinuxClockSkewNotifierEngine(int fd, QObject *parent);
+    LinuxClockSkewNotifierEngine(FileDescriptor &&fd, QObject *parent);
 
-    int m_fd;
+    FileDescriptor m_fd;
 };
 
 } // namespace KWin

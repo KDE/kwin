@@ -22,40 +22,33 @@ namespace KWin
 
 LinuxClockSkewNotifierEngine *LinuxClockSkewNotifierEngine::create(QObject *parent)
 {
-    const int fd = timerfd_create(CLOCK_REALTIME, O_CLOEXEC | O_NONBLOCK);
-    if (fd == -1) {
+    FileDescriptor fd{timerfd_create(CLOCK_REALTIME, O_CLOEXEC | O_NONBLOCK)};
+    if (!fd.isValid()) {
         qWarning("Couldn't create clock skew notifier engine: %s", strerror(errno));
         return nullptr;
     }
 
     const itimerspec spec = {};
-    const int ret = timerfd_settime(fd, TFD_TIMER_ABSTIME | TFD_TIMER_CANCEL_ON_SET, &spec, nullptr);
+    const int ret = timerfd_settime(fd.get(), TFD_TIMER_ABSTIME | TFD_TIMER_CANCEL_ON_SET, &spec, nullptr);
     if (ret == -1) {
         qWarning("Couldn't create clock skew notifier engine: %s", strerror(errno));
-        close(fd);
         return nullptr;
     }
-
-    return new LinuxClockSkewNotifierEngine(fd, parent);
+    return new LinuxClockSkewNotifierEngine(std::move(fd), parent);
 }
 
-LinuxClockSkewNotifierEngine::LinuxClockSkewNotifierEngine(int fd, QObject *parent)
+LinuxClockSkewNotifierEngine::LinuxClockSkewNotifierEngine(FileDescriptor &&fd, QObject *parent)
     : ClockSkewNotifierEngine(parent)
-    , m_fd(fd)
+    , m_fd(std::move(fd))
 {
-    const QSocketNotifier *notifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
+    const QSocketNotifier *notifier = new QSocketNotifier(m_fd.get(), QSocketNotifier::Read, this);
     connect(notifier, &QSocketNotifier::activated, this, &LinuxClockSkewNotifierEngine::handleTimerCancelled);
-}
-
-LinuxClockSkewNotifierEngine::~LinuxClockSkewNotifierEngine()
-{
-    close(m_fd);
 }
 
 void LinuxClockSkewNotifierEngine::handleTimerCancelled()
 {
     uint64_t expirationCount;
-    read(m_fd, &expirationCount, sizeof(expirationCount));
+    read(m_fd.get(), &expirationCount, sizeof(expirationCount));
 
     Q_EMIT clockSkewed();
 }
