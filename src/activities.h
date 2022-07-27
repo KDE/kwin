@@ -70,6 +70,8 @@ Q_SIGNALS:
      */
     void removed(const QString &id);
 
+    void serviceStatusChanged();
+
 private Q_SLOTS:
     void slotRemoved(const QString &activity);
     void slotCurrentChanged(const QString &newActivity);

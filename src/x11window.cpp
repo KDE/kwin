@@ -515,7 +515,25 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
                 initialDesktops = QVector<VirtualDesktop *>{desktop};
             }
         }
-        setOnActivities(session->activities);
+
+        const QStringList activityList = session->activities;
+        auto activityController = Workspace::self()->activities();
+
+        // this data is based on a cache not running activities therefore it's possible to hit this
+        // path before our activity manager is loaded
+        if (activityController->serviceStatus() != KActivities::Consumer::Running) {
+            auto connection = std::make_shared<QMetaObject::Connection>();
+            *connection = connect(activityController, &Activities::serviceStatusChanged, this, [this, activityList, connection]() {
+                if (Workspace::self()->activities()->serviceStatus() != KActivities::Consumer::Running) {
+                    return;
+                }
+                setOnActivities(activityList);
+                disconnect(*connection);
+            });
+        } else {
+            setOnActivities(session->activities);
+        }
+
     } else {
         // If this window is transient, ensure that it is opened on the
         // same window as its parent.  this is necessary when an application

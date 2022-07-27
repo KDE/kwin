@@ -24,10 +24,11 @@ namespace KWin
 Activities::Activities()
     : m_controller(new KActivities::Controller(this))
 {
-    connect(m_controller, &KActivities::Controller::activityRemoved, this, &Activities::slotRemoved);
-    connect(m_controller, &KActivities::Controller::activityRemoved, this, &Activities::removed);
-    connect(m_controller, &KActivities::Controller::activityAdded, this, &Activities::added);
-    connect(m_controller, &KActivities::Controller::currentActivityChanged, this, &Activities::slotCurrentChanged);
+    connect(m_controller, &KActivities::Consumer::activityRemoved, this, &Activities::slotRemoved);
+    connect(m_controller, &KActivities::Consumer::activityRemoved, this, &Activities::removed);
+    connect(m_controller, &KActivities::Consumer::activityAdded, this, &Activities::added);
+    connect(m_controller, &KActivities::Consumer::currentActivityChanged, this, &Activities::slotCurrentChanged);
+    connect(m_controller, &KActivities::Consumer::serviceStatusChanged, this, &Activities::serviceStatusChanged);
 }
 
 KActivities::Consumer::ServiceStatus Activities::serviceStatus() const
