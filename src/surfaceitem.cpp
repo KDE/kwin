@@ -128,6 +128,7 @@ void SurfaceItem::preprocess()
 WindowQuadList SurfaceItem::buildQuads() const
 {
     const QRegion region = shape();
+    const auto size = pixmap()->size();
 
     WindowQuadList quads;
     quads.reserve(region.rectCount());
@@ -139,8 +140,6 @@ WindowQuadList SurfaceItem::buildQuads() const
         const QPointF bufferTopRight = m_surfaceToBufferMatrix.map(rect.topRight());
         const QPointF bufferBottomRight = m_surfaceToBufferMatrix.map(rect.bottomRight());
         const QPointF bufferBottomLeft = m_surfaceToBufferMatrix.map(rect.bottomLeft());
-
-        const auto size = m_pixmap->size();
 
         quad[0] = WindowVertex(rect.topLeft(), QPointF{bufferTopLeft.x() / size.width(), bufferTopLeft.y() / size.height()});
         quad[1] = WindowVertex(rect.topRight(), QPointF{bufferTopRight.x() / size.width(), bufferTopRight.y() / size.height()});
