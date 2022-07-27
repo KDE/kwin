@@ -29,13 +29,13 @@ FocusScope {
     property bool organized: false
 
     function start() {
-        container.animationEnabled = true;
-        container.organized = true;
+        animationEnabled = true;
+        organized = true;
         searchField.text = "";
     }
 
     function stop() {
-        container.organized = false;
+        organized = false;
     }
 
     Keys.onEscapePressed: effect.deactivate();
@@ -65,7 +65,7 @@ FocusScope {
     state: {
         if (effect.gestureInProgress) {
             return "partial";
-        } else if (container.organized) {
+        } else if (organized) {
             return "active";
         } else {
             return "initial";
@@ -184,7 +184,7 @@ FocusScope {
                         heap.resetSelected();
                         heap.selectNextItem(WindowHeap.Direction.Down);
                     }
-                     Binding {
+                    Binding {
                         target: searchField
                         property: "text"
                         value: effect.searchText
@@ -232,7 +232,7 @@ FocusScope {
                     minimizedWindows: !effect.ignoreMinimized
                     windowType: ~KWinComponents.ClientFilterModel.Dock &
                             ~KWinComponents.ClientFilterModel.Desktop &
-                            ~KWinComponents.ClientFilterModel.Notification;
+                            ~KWinComponents.ClientFilterModel.Notification
                 }
                 onActivated: effect.deactivate();
                 delegate: WindowHeapDelegate {
