@@ -269,7 +269,7 @@ Item {
     ]
 
     transitions: Transition {
-        to: "initial, active, active-hidden"
+        to: "initial, initial-minimized, active, active-hidden"
         enabled: thumb.windowHeap.animationEnabled
         NumberAnimation {
             duration: thumb.windowHeap.animationDuration
