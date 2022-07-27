@@ -15,6 +15,7 @@
 #include "main.h"
 #include "scene.h"
 #include "unmanaged.h"
+#include "utils/filedescriptor.h"
 #include "utils/subsurfacemonitor.h"
 #include "wayland/abstract_data_source.h"
 #include "wayland/clientconnection.h"
@@ -1642,9 +1643,7 @@ static QByteArray readData(int fd)
     pollfd pfd;
     pfd.fd = fd;
     pfd.events = POLLIN;
-    auto closeFd = qScopeGuard([fd] {
-        close(fd);
-    });
+    FileDescriptor closeFd{fd};
     QByteArray data;
     while (true) {
         const int ready = poll(&pfd, 1, 1000);

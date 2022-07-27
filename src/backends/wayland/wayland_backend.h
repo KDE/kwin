@@ -14,6 +14,7 @@
 #include "inputbackend.h"
 #include "inputdevice.h"
 #include "platform.h"
+#include "utils/filedescriptor.h"
 #include <kwinglobals.h>
 // Qt
 #include <QHash>
@@ -356,7 +357,7 @@ private:
     KWayland::Client::ServerSideDecorationManager *ssdManager();
     int m_nextId = 0;
 #if HAVE_WAYLAND_EGL
-    int m_drmFileDescriptor = 0;
+    FileDescriptor m_drmFileDescriptor;
     gbm_device *m_gbmDevice;
 #endif
 };
