@@ -11,8 +11,6 @@
 #include <config-kwin.h>
 
 #include "backends/libinput/libinputbackend.h"
-#include "composite.h"
-#include "cursor.h"
 #include "drm_egl_backend.h"
 #include "drm_fourcc.h"
 #include "drm_gpu.h"
@@ -29,7 +27,6 @@
 #include "main.h"
 #include "outputconfiguration.h"
 #include "renderloop.h"
-#include "scene.h"
 #include "session.h"
 #include "utils/udev.h"
 // KF5
@@ -162,10 +159,7 @@ void DrmBackend::reactivate()
 
     for (const auto &output : qAsConst(m_outputs)) {
         output->renderLoop()->uninhibit();
-    }
-
-    if (Compositor::compositing()) {
-        Compositor::self()->scene()->addRepaintFull();
+        output->renderLoop()->scheduleRepaint();
     }
 
     // While the session had been inactive, an output could have been added or
@@ -733,9 +727,6 @@ bool DrmBackend::applyOutputChanges(const OutputConfiguration &config)
         if (!qobject_cast<DrmOutput *>(output)) {
             output->applyChanges(config);
         }
-    }
-    if (Compositor::compositing()) {
-        Compositor::self()->scene()->addRepaintFull();
     }
     return true;
 }

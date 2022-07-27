@@ -10,7 +10,6 @@
 #include "basiceglsurfacetexture_internal.h"
 #include "basiceglsurfacetexture_wayland.h"
 // kwin
-#include "composite.h"
 #include "drm_abstract_output.h"
 #include "drm_backend.h"
 #include "drm_buffer_gbm.h"

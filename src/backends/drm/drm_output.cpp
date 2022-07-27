@@ -14,7 +14,6 @@
 #include "drm_object_crtc.h"
 #include "drm_pipeline.h"
 
-#include "composite.h"
 #include "cursor.h"
 #include "drm_dumb_buffer.h"
 #include "drm_dumb_swapchain.h"
@@ -25,7 +24,6 @@
 #include "outputconfiguration.h"
 #include "renderloop.h"
 #include "renderloop_p.h"
-#include "scene.h"
 #include "session.h"
 #include "wayland/drmleasedevice_v1_interface.h"
 // Qt
@@ -277,11 +275,9 @@ bool DrmOutput::setDrmDpmsMode(DpmsMode mode)
         m_pipeline->applyPendingChanges();
         setDpmsModeInternal(mode);
         if (active) {
-            m_renderLoop->uninhibit();
             m_gpu->platform()->checkOutputsAreOn();
-            if (Compositor::compositing()) {
-                Compositor::self()->scene()->addRepaintFull();
-            }
+            m_renderLoop->uninhibit();
+            m_renderLoop->scheduleRepaint();
         } else {
             m_renderLoop->inhibit();
             m_gpu->platform()->createDpmsFilter();
