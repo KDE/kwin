@@ -146,7 +146,7 @@ void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
             if (panel) {
                 // Assumption: width of horizonal panel is greater than its height and vice versa
                 // The panel has to border one screen edge, so get it's screen area
-                QRect panelScreen = effects->clientArea(ScreenArea, panel);
+                QRectF panelScreen = effects->clientArea(ScreenArea, panel);
                 if (panel->width() >= panel->height()) {
                     // horizontal panel
                     if (panel->y() <= panelScreen.height() / 2) {
@@ -164,9 +164,9 @@ void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
                 }
             } else {
                 // we did not find a panel, so it might be autohidden
-                QRect iconScreen = effects->clientArea(ScreenArea, icon.topLeft(), effects->currentDesktop());
+                QRectF iconScreen = effects->clientArea(ScreenArea, icon.topLeft(), effects->currentDesktop());
                 // as the icon geometry could be overlap a screen edge we use an intersection
-                QRect rect = iconScreen.intersected(icon);
+                QRectF rect = iconScreen.intersected(icon);
                 // here we need a different assumption: icon geometry borders one screen edge
                 // this assumption might be wrong for e.g. task applet being the only applet in panel
                 // in this case the icon borders two screen edges

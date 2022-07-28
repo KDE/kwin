@@ -1069,9 +1069,9 @@ public:
     virtual bool optionRollOverDesktops() const = 0;
 
     virtual EffectScreen *activeScreen() const = 0; // Xinerama
-    virtual QRect clientArea(clientAreaOption, const EffectScreen *screen, int desktop) const = 0;
-    virtual QRect clientArea(clientAreaOption, const EffectWindow *c) const = 0;
-    virtual QRect clientArea(clientAreaOption, const QPoint &p, int desktop) const = 0;
+    virtual QRectF clientArea(clientAreaOption, const EffectScreen *screen, int desktop) const = 0;
+    virtual QRectF clientArea(clientAreaOption, const EffectWindow *c) const = 0;
+    virtual QRectF clientArea(clientAreaOption, const QPoint &p, int desktop) const = 0;
 
     /**
      * The bounding size of all screens combined. Overlapping areas

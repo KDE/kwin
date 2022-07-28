@@ -14,22 +14,22 @@ ExpoArea::ExpoArea(QObject *parent)
 {
 }
 
-int ExpoArea::x() const
+qreal ExpoArea::x() const
 {
     return m_rect.x();
 }
 
-int ExpoArea::y() const
+qreal ExpoArea::y() const
 {
     return m_rect.y();
 }
 
-int ExpoArea::width() const
+qreal ExpoArea::width() const
 {
     return m_rect.width();
 }
 
-int ExpoArea::height() const
+qreal ExpoArea::height() const
 {
     return m_rect.height();
 }
@@ -59,7 +59,7 @@ void ExpoArea::update()
     if (!m_screen) {
         return;
     }
-    const QRect oldRect = m_rect;
+    const QRectF oldRect = m_rect;
 
     m_rect = effects->clientArea(MaximizeArea, m_screen, effects->currentDesktop());
 

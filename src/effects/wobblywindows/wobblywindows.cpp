@@ -446,7 +446,7 @@ void WobblyWindowsEffect::stepMovedResized(EffectWindow *w)
     WindowWobblyInfos &wwi = windows[w];
     wwi.status = Free;
 
-    QRect maximized_area = effects->clientArea(MaximizeArea, w);
+    QRectF maximized_area = effects->clientArea(MaximizeArea, w);
     bool throb_direction_out = (new_geometry.top() == maximized_area.top() && new_geometry.bottom() == maximized_area.bottom()) || (new_geometry.left() == maximized_area.left() && new_geometry.right() == maximized_area.right());
     qreal magnitude = throb_direction_out ? 10 : -30; // a small throb out when maximized, a larger throb inwards when restored
     for (unsigned int j = 0; j < wwi.height; ++j) {

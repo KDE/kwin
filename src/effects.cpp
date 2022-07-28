@@ -1275,23 +1275,23 @@ static VirtualDesktop *resolveVirtualDesktop(int desktopId)
     }
 }
 
-QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectScreen *screen, int desktop) const
+QRectF EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectScreen *screen, int desktop) const
 {
     const EffectScreenImpl *screenImpl = static_cast<const EffectScreenImpl *>(screen);
-    return Workspace::self()->clientArea(opt, screenImpl->platformOutput(), resolveVirtualDesktop(desktop)).toRect();
+    return Workspace::self()->clientArea(opt, screenImpl->platformOutput(), resolveVirtualDesktop(desktop));
 }
 
-QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectWindow *effectWindow) const
+QRectF EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectWindow *effectWindow) const
 {
     const Window *window = static_cast<const EffectWindowImpl *>(effectWindow)->window();
-    return Workspace::self()->clientArea(opt, window).toRect();
+    return Workspace::self()->clientArea(opt, window);
 }
 
-QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const QPoint &p, int desktop) const
+QRectF EffectsHandlerImpl::clientArea(clientAreaOption opt, const QPoint &p, int desktop) const
 {
     const Output *output = Workspace::self()->outputAt(p);
     const VirtualDesktop *virtualDesktop = resolveVirtualDesktop(desktop);
-    return Workspace::self()->clientArea(opt, output, virtualDesktop).toRect();
+    return Workspace::self()->clientArea(opt, output, virtualDesktop);
 }
 
 QRect EffectsHandlerImpl::virtualScreenGeometry() const

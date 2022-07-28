@@ -139,9 +139,9 @@ public:
     void addRepaint(const QRegion &r) override;
     void addRepaint(int x, int y, int w, int h) override;
     EffectScreen *activeScreen() const override;
-    QRect clientArea(clientAreaOption, const EffectScreen *screen, int desktop) const override;
-    QRect clientArea(clientAreaOption, const EffectWindow *c) const override;
-    QRect clientArea(clientAreaOption, const QPoint &p, int desktop) const override;
+    QRectF clientArea(clientAreaOption, const EffectScreen *screen, int desktop) const override;
+    QRectF clientArea(clientAreaOption, const EffectWindow *c) const override;
+    QRectF clientArea(clientAreaOption, const QPoint &p, int desktop) const override;
     QSize virtualScreenSize() const override;
     QRect virtualScreenGeometry() const override;
     double animationTimeFactor() const override;

@@ -89,7 +89,7 @@ void AnimationEffect::validate(Attribute a, uint &meta, FPx2 *from, FPx2 *to, co
 {
     if (a < NonFloatBase) {
         if (a == Scale) {
-            QRect area = effects->clientArea(ScreenArea, w);
+            QRectF area = effects->clientArea(ScreenArea, w);
             if (from && from->isValid()) {
                 RELATIVE_XY(Source);
                 from->set(relative[0] ? (*from)[0] * area.width() / w->width() : (*from)[0],
@@ -143,7 +143,7 @@ void AnimationEffect::validate(Attribute a, uint &meta, FPx2 *from, FPx2 *to, co
         }
 
     } else if (a == Size) {
-        QRect area = effects->clientArea(ScreenArea, w);
+        QRectF area = effects->clientArea(ScreenArea, w);
         if (from) {
             if (from->isValid()) {
                 RELATIVE_XY(Source);
