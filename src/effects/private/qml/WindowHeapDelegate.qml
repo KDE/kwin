@@ -136,7 +136,8 @@ Item {
         MouseArea {
             anchors.fill: parent
             acceptedButtons: Qt.NoButton
-            cursorShape: thumb.activeDragHandler.active ? Qt.ClosedHandCursor : Qt.ArrowCursor
+            cursorShape: Qt.ClosedHandCursor
+            visible: thumb.activeDragHandler.active
         }
     }
 

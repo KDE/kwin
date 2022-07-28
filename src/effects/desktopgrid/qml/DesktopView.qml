@@ -87,7 +87,6 @@ FocusScope {
         id: dragHandler
         target: heap
         grabPermissions: PointerHandler.ApprovesTakeOverByHandlersOfSameType
-        cursorShape: active ? Qt.ClosedHandCursor : Qt.ArrowCursor
         onActiveChanged: {
             if (!active) {
                 heap.Drag.drop();
@@ -139,6 +138,12 @@ FocusScope {
                     window.desktop = desktopView.desktop.x11DesktopNumber;
                 }
             }
+        }
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.NoButton
+            cursorShape: Qt.ClosedHandCursor
+            visible: parent.Drag.active
         }
         Behavior on x {
             enabled: !dragHandler.active
