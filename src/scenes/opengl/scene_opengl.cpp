@@ -328,7 +328,7 @@ void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
     QMatrix4x4 matrix;
     const auto logicalPosition = QVector2D(item->position().x(), item->position().y());
     const auto scale = context->renderTargetScale;
-    matrix.translate(logicalPosition * scale);
+    matrix.translate(roundVector(logicalPosition * scale));
     matrix *= item->transform();
     context->transformStack.push(context->transformStack.top() * matrix);
 
