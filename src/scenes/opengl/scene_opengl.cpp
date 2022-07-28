@@ -363,10 +363,10 @@ void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
             });
         }
     } else if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
-        WindowQuadList quads = clipQuads(item, context);
-        if (!quads.isEmpty()) {
-            SurfacePixmap *pixmap = surfaceItem->pixmap();
-            if (pixmap) {
+        SurfacePixmap *pixmap = surfaceItem->pixmap();
+        if (pixmap) {
+            WindowQuadList quads = clipQuads(item, context);
+            if (!quads.isEmpty()) {
                 // Don't bother with blending if the entire surface is opaque
                 bool hasAlpha = pixmap->hasAlphaChannel() && !surfaceItem->shape().subtracted(surfaceItem->opaque()).isEmpty();
                 context->renderNodes.append(RenderNode{
