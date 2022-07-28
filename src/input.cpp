@@ -359,7 +359,7 @@ public:
         if (event->type() == QEvent::MouseMove) {
             if (pointerSurfaceAllowed()) {
                 // TODO: should the pointer position always stay in sync, i.e. not do the check?
-                seat->notifyPointerMotion(event->screenPos().toPoint());
+                seat->notifyPointerMotion(event->screenPos());
                 seat->notifyPointerFrame();
             }
         } else if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonRelease) {
@@ -659,7 +659,7 @@ public:
         }
         switch (event->type()) {
         case QEvent::MouseMove:
-            window->updateInteractiveMoveResize(event->screenPos().toPoint());
+            window->updateInteractiveMoveResize(event->screenPos());
             break;
         case QEvent::MouseButtonRelease:
             if (event->buttons() == Qt::NoButton) {
@@ -717,7 +717,7 @@ public:
             m_set = true;
         }
         if (m_id == id) {
-            window->updateInteractiveMoveResize(pos.toPoint());
+            window->updateInteractiveMoveResize(pos);
         }
         return true;
     }
@@ -917,21 +917,18 @@ private:
         }
         deactivate();
     }
-    void accept(const QPoint &pos)
+    void accept(const QPointF &pos)
     {
         if (m_callback) {
             // TODO: this ignores shaped windows
             m_callback(input()->findToplevel(pos));
         }
         if (m_pointSelectionFallback) {
-            m_pointSelectionFallback(pos);
+            m_pointSelectionFallback(pos.toPoint());
         }
         deactivate();
     }
-    void accept(const QPointF &pos)
-    {
-        accept(pos.toPoint());
-    }
+
     bool m_active = false;
     std::function<void(KWin::Window *)> m_callback;
     std::function<void(const QPoint &)> m_pointSelectionFallback;
@@ -1100,7 +1097,7 @@ public:
                     return false;
                 }
                 m_lastTouchDownTime = time;
-                auto output = workspace()->outputAt(pos.toPoint());
+                auto output = workspace()->outputAt(pos);
                 auto physicalSize = output->physicalSize();
                 if (!physicalSize.isValid()) {
                     physicalSize = QSize(190, 100);
@@ -1135,7 +1132,7 @@ public:
             if (m_gestureCancelled) {
                 return true;
             }
-            auto output = workspace()->outputAt(pos.toPoint());
+            auto output = workspace()->outputAt(pos);
             const float xfactor = output->physicalSize().width() / (float)output->geometry().width();
             const float yfactor = output->physicalSize().height() / (float)output->geometry().height();
 
@@ -1251,7 +1248,7 @@ std::pair<bool, bool> performWindowWheelAction(QWheelEvent *event, Window *windo
         }
     }
     if (wasAction) {
-        return std::make_pair(wasAction, !window->performMouseCommand(command, event->globalPosition().toPoint()));
+        return std::make_pair(wasAction, !window->performMouseCommand(command, event->globalPosition()));
     }
     return std::make_pair(wasAction, false);
 }
@@ -1443,7 +1440,7 @@ public:
         case QEvent::MouseMove: {
             QHoverEvent e(QEvent::HoverMove, p, p);
             QCoreApplication::instance()->sendEvent(decoration->decoration(), &e);
-            decoration->window()->processDecorationMove(p.toPoint(), event->globalPos());
+            decoration->window()->processDecorationMove(p, event->globalPos());
             return true;
         }
         case QEvent::MouseButtonPress:
@@ -1498,7 +1495,7 @@ public:
         }
         if ((orientation == Qt::Vertical) && decoration->window()->titlebarPositionUnderMouse()) {
             decoration->window()->performMouseCommand(options->operationTitlebarMouseWheel(delta * -1),
-                                                      event->globalPosition().toPoint());
+                                                      event->globalPosition());
         }
         return true;
     }
@@ -1552,7 +1549,7 @@ public:
 
         QHoverEvent e(QEvent::HoverMove, m_lastLocalTouchPos, m_lastLocalTouchPos);
         QCoreApplication::instance()->sendEvent(decoration->decoration(), &e);
-        decoration->window()->processDecorationMove(m_lastLocalTouchPos.toPoint(), pos.toPoint());
+        decoration->window()->processDecorationMove(m_lastLocalTouchPos, pos);
         return true;
     }
     bool touchUp(qint32 id, quint32 time) override
@@ -1603,7 +1600,7 @@ public:
         case QEvent::TabletEnterProximity: {
             QHoverEvent e(QEvent::HoverMove, p, p);
             QCoreApplication::instance()->sendEvent(decoration->decoration(), &e);
-            decoration->window()->processDecorationMove(p.toPoint(), event->globalPos());
+            decoration->window()->processDecorationMove(p, event->globalPos());
             break;
         }
         case QEvent::TabletPress:
@@ -1793,7 +1790,7 @@ public:
         bool wasAction = false;
         const Options::MouseCommand command = window->getMouseCommand(Qt::LeftButton, &wasAction);
         if (wasAction) {
-            return !window->performMouseCommand(command, pos.toPoint());
+            return !window->performMouseCommand(command, pos);
         }
         return false;
     }
@@ -2512,7 +2509,7 @@ public:
         seat->setTimestamp(time);
         seat->notifyTouchMotion(id, pos);
 
-        if (Window *t = input()->findToplevel(pos.toPoint())) {
+        if (Window *t = input()->findToplevel(pos)) {
             // TODO: consider decorations
             if (t->surface() != seat->dragSurface()) {
                 if ((m_dragTarget = static_cast<Window *>(t->isClient() ? t : nullptr))) {
@@ -3466,14 +3463,14 @@ void InputDeviceHandler::update()
     setHover(window);
 
     if (focusUpdatesBlocked()) {
-        workspace()->updateFocusMousePosition(position().toPoint());
+        workspace()->updateFocusMousePosition(position());
         return;
     }
 
     updateDecoration();
     updateFocus();
 
-    workspace()->updateFocusMousePosition(position().toPoint());
+    workspace()->updateFocusMousePosition(position());
 }
 
 Window *InputDeviceHandler::hover() const
