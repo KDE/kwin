@@ -12,6 +12,7 @@
 #include <KIdleTime/private/abstractsystempoller.h>
 #include <QHash>
 #include <QTimer>
+#include <optional>
 
 namespace KWin
 {
@@ -43,6 +44,9 @@ public Q_SLOTS:
 private:
     IdleDetector *m_catchResumeTimeout = nullptr;
     QHash<int, IdleDetector *> m_timeouts;
+    using TimePointType = std::chrono::time_point<std::chrono::steady_clock, std::chrono::milliseconds>;
+    IdleDetector *m_idleTimePoller = nullptr;
+    std::optional<TimePointType> m_lastIdleTime;
 };
 
 }

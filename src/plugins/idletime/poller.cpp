@@ -13,9 +13,25 @@
 namespace KWin
 {
 
+namespace
+{
+
+auto nowInMs()
+{
+    return std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now());
+}
+}
+
 KWinIdleTimePoller::KWinIdleTimePoller(QObject *parent)
     : AbstractSystemPoller(parent)
+    , m_idleTimePoller(new IdleDetector(std::chrono::milliseconds(1000), this))
 {
+    connect(m_idleTimePoller, &IdleDetector::resumed, this, [this]() {
+        m_lastIdleTime = std::nullopt;
+    });
+    connect(m_idleTimePoller, &IdleDetector::idle, this, [this]() {
+        m_lastIdleTime = nowInMs();
+    });
 }
 
 bool KWinIdleTimePoller::isAvailable()
@@ -78,6 +94,14 @@ void KWinIdleTimePoller::stopCatchingIdleEvents()
 
 int KWinIdleTimePoller::forcePollRequest()
 {
+    if (m_idleTimePoller->isInhibited()) {
+        return 0;
+    }
+
+    if (m_lastIdleTime.has_value()) {
+        std::chrono::milliseconds diff = nowInMs() - *m_lastIdleTime;
+        return diff.count();
+    }
     return 0;
 }
 
