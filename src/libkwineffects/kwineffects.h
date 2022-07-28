@@ -1576,7 +1576,7 @@ Q_SIGNALS:
      * @see EffectWindow::isUserResize
      * @since 4.7
      */
-    void windowStepUserMovedResized(KWin::EffectWindow *w, const QRect &geometry);
+    void windowStepUserMovedResized(KWin::EffectWindow *w, const QRectF &geometry);
     /**
      * Signal emitted when the user finishes move/resize of window @p w.
      * @param w The window which has been moved/resized

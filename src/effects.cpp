@@ -294,7 +294,7 @@ void EffectsHandlerImpl::setupWindowConnections(Window *window)
         Q_EMIT windowStartUserMovedResized(window->effectWindow());
     });
     connect(window, &Window::clientStepUserMovedResized, this, [this](Window *window, const QRectF &geometry) {
-        Q_EMIT windowStepUserMovedResized(window->effectWindow(), geometry.toRect());
+        Q_EMIT windowStepUserMovedResized(window->effectWindow(), geometry);
     });
     connect(window, &Window::clientFinishUserMovedResized, this, [this](Window *window) {
         Q_EMIT windowFinishUserMovedResized(window->effectWindow());

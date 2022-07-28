@@ -320,7 +320,7 @@ void WobblyWindowsEffect::slotWindowStartUserMovedResized(EffectWindow *w)
     }
 }
 
-void WobblyWindowsEffect::slotWindowStepUserMovedResized(EffectWindow *w, const QRect &geometry)
+void WobblyWindowsEffect::slotWindowStepUserMovedResized(EffectWindow *w, const QRectF &geometry)
 {
     Q_UNUSED(geometry)
     if (windows.contains(w)) {
