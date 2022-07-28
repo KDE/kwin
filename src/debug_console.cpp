@@ -760,6 +760,10 @@ QString DebugConsoleDelegate::displayText(const QVariant &value, const QLocale &
         const QRect r = value.toRect();
         return QStringLiteral("%1,%2 %3x%4").arg(r.x()).arg(r.y()).arg(r.width()).arg(r.height());
     }
+    case QMetaType::QRectF: {
+        const QRectF r = value.toRectF();
+        return QStringLiteral("%1,%2 %3x%4").arg(r.x()).arg(r.y()).arg(r.width()).arg(r.height());
+    }
     default:
         if (value.userType() == qMetaTypeId<KWaylandServer::SurfaceInterface *>()) {
             if (auto s = value.value<KWaylandServer::SurfaceInterface *>()) {
