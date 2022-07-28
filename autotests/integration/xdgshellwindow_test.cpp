@@ -300,19 +300,16 @@ void TestXdgShellWindow::testWindowOutputs()
     QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     auto size = QSize(200, 200);
 
-    QSignalSpy outputEnteredSpy(surface.data(), &KWayland::Client::Surface::outputEntered);
-    QSignalSpy outputLeftSpy(surface.data(), &KWayland::Client::Surface::outputLeft);
 
     auto window = Test::renderAndWaitForShown(surface.data(), size, Qt::blue);
     // move to be in the first screen
     window->moveResize(QRect(QPoint(100, 100), size));
-    // we don't don't know where the compositor first placed this window,
-    // this might fire, it might not
-    outputEnteredSpy.wait(5);
-    outputEnteredSpy.clear();
 
-    QCOMPARE(surface->outputs().count(), 1);
+    QTRY_COMPARE(surface->outputs().count(), 1);
     QCOMPARE(surface->outputs().first()->globalPosition(), QPoint(0, 0));
+
+    QSignalSpy outputEnteredSpy(surface.data(), &KWayland::Client::Surface::outputEntered);
+    QSignalSpy outputLeftSpy(surface.data(), &KWayland::Client::Surface::outputLeft);
 
     // move to overlapping both first and second screen
     window->moveResize(QRect(QPoint(1250, 100), size));
