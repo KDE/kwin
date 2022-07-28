@@ -566,8 +566,8 @@ void X11StandalonePlatform::doUpdateOutputs()
                     };
 
                     bool ok;
-                    if (auto data = edids[i].toByteArray(&ok); ok && !data.isEmpty()) {
-                        if (auto edid = Edid(data, edids[i].data()->num_items); edid.isValid()) {
+                    if (auto data = edids[j].toByteArray(&ok); ok && !data.isEmpty()) {
+                        if (auto edid = Edid(data, edids[j].data()->num_items); edid.isValid()) {
                             information.manufacturer = edid.manufacturerString();
                             information.model = edid.monitorName();
                             information.serialNumber = edid.serialNumber();
