@@ -350,9 +350,6 @@ public:
      * @li do various housekeeping tasks such as initing your effect's variables
             for the upcoming paint pass or updating animation's progress
      *
-     * In OpenGL based compositing, the frameworks ensures that the context is current
-     * when this method is invoked.
-     *
      * @a presentTime specifies the expected monotonic time when the rendered frame
      * will be displayed on the screen.
     */
