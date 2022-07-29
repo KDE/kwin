@@ -165,7 +165,7 @@ void WindowThumbnailItem::updateFrameRenderingConnection()
     }
 
     if (Compositor::self()->backend()->compositingType() == OpenGLCompositing) {
-        m_frameRenderingConnection = connect(Compositor::self()->scene(), &Scene::frameRendered, this, &WindowThumbnailItem::updateOffscreenTexture);
+        m_frameRenderingConnection = connect(Compositor::self()->scene(), &Scene::preFrameRender, this, &WindowThumbnailItem::updateOffscreenTexture);
     }
 }
 

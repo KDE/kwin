@@ -286,6 +286,9 @@ void Scene::prePaint(Output *output)
     prePaintData.mask = 0;
     prePaintData.screen = EffectScreenImpl::get(painted_screen);
 
+    effects->makeOpenGLContextCurrent();
+    Q_EMIT preFrameRender();
+
     effects->prePaintScreen(prePaintData, m_expectedPresentTimestamp);
     m_paintContext.damage = prePaintData.paint;
     m_paintContext.mask = prePaintData.mask;

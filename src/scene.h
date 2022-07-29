@@ -178,6 +178,7 @@ public:
     virtual void render(Item *item, int mask, const QRegion &region, const WindowPaintData &data) = 0;
 
 Q_SIGNALS:
+    void preFrameRender();
     void frameRendered();
 
 protected:
