@@ -54,6 +54,8 @@
 #include <QX11Info>
 #endif
 
+#include <span>
+
 namespace KWin
 {
 
@@ -400,8 +402,7 @@ void X11StandalonePlatform::invertScreen()
         ScreenResources res((active_client && active_client->window() != XCB_WINDOW_NONE) ? active_client->window() : rootWindow());
 
         if (!res.isNull()) {
-            for (int j = 0; j < res->num_crtcs; ++j) {
-                auto crtc = res.crtcs()[j];
+            for (auto crtc : std::span(res.crtcs(), res->num_crtcs)) {
                 CrtcGamma gamma(crtc);
                 if (gamma.isNull()) {
                     continue;
@@ -474,54 +475,39 @@ void X11StandalonePlatform::doUpdateOutputs()
     if (Xcb::Extensions::self()->isRandrAvailable()) {
         T resources(rootWindow());
         if (!resources.isNull()) {
-            xcb_randr_crtc_t *crtcs = resources.crtcs();
-            const xcb_randr_mode_info_t *modes = resources.modes();
 
-            QVector<Xcb::RandR::CrtcInfo> infos(resources->num_crtcs);
-            for (int i = 0; i < resources->num_crtcs; ++i) {
-                infos[i] = Xcb::RandR::CrtcInfo(crtcs[i], resources->config_timestamp);
-            }
-
-            for (int i = 0; i < resources->num_crtcs; ++i) {
-                Xcb::RandR::CrtcInfo info(infos.at(i));
+            std::span crtcs(resources.crtcs(), resources->num_crtcs);
+            for (auto crtc : crtcs) {
+                Xcb::RandR::CrtcInfo info(crtc, resources->config_timestamp);
 
                 const QRect geometry = info.rect();
                 if (!geometry.isValid()) {
                     continue;
                 }
 
-                xcb_randr_output_t *outputs = info.outputs();
-                QVector<Xcb::RandR::OutputInfo> outputInfos(outputs ? resources->num_outputs : 0);
-                QVector<Xcb::RandR::OutputProperty> edids(outputs ? resources->num_outputs : 0);
-                if (outputs) {
-                    for (int i = 0; i < resources->num_outputs; ++i) {
-                        outputInfos[i] = Xcb::RandR::OutputInfo(outputs[i], resources->config_timestamp);
-                        edids[i] = Xcb::RandR::OutputProperty(outputs[i], atoms->edid, XCB_ATOM_INTEGER, 0, 100, false, false);
-                    }
-                }
-
                 float refreshRate = -1.0f;
-                for (int j = 0; j < resources->num_modes; ++j) {
-                    if (info->mode == modes[j].id) {
-                        if (modes[j].htotal != 0 && modes[j].vtotal != 0) { // BUG 313996
+
+                for (auto mode : std::span(resources.modes(), resources->num_modes)) {
+                    if (info->mode == mode.id) {
+                        if (mode.htotal != 0 && mode.vtotal != 0) { // BUG 313996
                             // refresh rate calculation - WTF was wikipedia 1998 when I needed it?
-                            int dotclock = modes[j].dot_clock,
-                                vtotal = modes[j].vtotal;
-                            if (modes[j].mode_flags & XCB_RANDR_MODE_FLAG_INTERLACE) {
+                            int dotclock = mode.dot_clock,
+                                vtotal = mode.vtotal;
+                            if (mode.mode_flags & XCB_RANDR_MODE_FLAG_INTERLACE) {
                                 dotclock *= 2;
                             }
-                            if (modes[j].mode_flags & XCB_RANDR_MODE_FLAG_DOUBLE_SCAN) {
+                            if (mode.mode_flags & XCB_RANDR_MODE_FLAG_DOUBLE_SCAN) {
                                 vtotal *= 2;
                             }
-                            refreshRate = dotclock / float(modes[j].htotal * vtotal);
+                            refreshRate = dotclock / float(mode.htotal * vtotal);
                         }
                         break; // found mode
                     }
                 }
 
-                for (int j = 0; j < info->num_outputs; ++j) {
-                    Xcb::RandR::OutputInfo outputInfo(outputInfos.at(j));
-                    if (outputInfo->crtc != crtcs[i]) {
+                for (auto xcbOutput : std::span(info.outputs(), info->num_outputs)) {
+                    Xcb::RandR::OutputInfo outputInfo(xcbOutput, resources->config_timestamp);
+                    if (outputInfo->crtc != crtc) {
                         continue;
                     }
 
@@ -537,14 +523,16 @@ void X11StandalonePlatform::doUpdateOutputs()
                     // TODO: Perhaps the output has to save the inherited gamma ramp and
                     // restore it during tear down. Currently neither standalone x11 nor
                     // drm platform do this.
-                    Xcb::RandR::CrtcGamma gamma(crtcs[i]);
+                    Xcb::RandR::CrtcGamma gamma(crtc);
 
                     output->setRenderLoop(m_renderLoop.get());
-                    output->setCrtc(crtcs[i]);
+                    output->setCrtc(crtc);
                     output->setGammaRampSize(gamma.isNull() ? 0 : gamma->size);
                     output->setMode(geometry.size(), refreshRate * 1000);
                     output->moveTo(geometry.topLeft());
-                    output->setXineramaNumber(i);
+                    auto it = std::find(crtcs.begin(), crtcs.end(), crtc);
+                    int crtcIndex = std::distance(crtcs.begin(), it);
+                    output->setXineramaNumber(crtcIndex);
 
                     QSize physicalSize(outputInfo->mm_width, outputInfo->mm_height);
                     switch (info->rotation) {
@@ -565,9 +553,10 @@ void X11StandalonePlatform::doUpdateOutputs()
                         .physicalSize = physicalSize,
                     };
 
+                    auto edidProperty = Xcb::RandR::OutputProperty(xcbOutput, atoms->edid, XCB_ATOM_INTEGER, 0, 100, false, false);
                     bool ok;
-                    if (auto data = edids[j].toByteArray(&ok); ok && !data.isEmpty()) {
-                        if (auto edid = Edid(data, edids[j].data()->num_items); edid.isValid()) {
+                    if (auto data = edidProperty.toByteArray(&ok); ok && !data.isEmpty()) {
+                        if (auto edid = Edid(data, edidProperty.data()->num_items); edid.isValid()) {
                             information.manufacturer = edid.manufacturerString();
                             information.model = edid.monitorName();
                             information.serialNumber = edid.serialNumber();
