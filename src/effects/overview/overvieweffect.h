@@ -18,17 +18,8 @@ class OverviewEffect : public QuickSceneEffect
     Q_PROPERTY(int layout READ layout NOTIFY layoutChanged)
     Q_PROPERTY(bool ignoreMinimized READ ignoreMinimized NOTIFY ignoreMinimizedChanged)
     Q_PROPERTY(bool blurBackground READ blurBackground NOTIFY blurBackgroundChanged)
-    Q_PROPERTY(qreal partialActivationFactor READ partialActivationFactor NOTIFY partialActivationFactorChanged)
-    // More efficient from a property binding pov rather than binding to partialActivationFactor !== 0
-    Q_PROPERTY(bool gestureInProgress READ gestureInProgress NOTIFY gestureInProgressChanged)
 
 public:
-    enum class Status {
-        Inactive,
-        Activating,
-        Deactivating,
-        Active
-    };
     OverviewEffect();
     ~OverviewEffect() override;
 
@@ -43,12 +34,6 @@ public:
     bool blurBackground() const;
     void setBlurBackground(bool blur);
 
-    qreal partialActivationFactor() const;
-    void setPartialActivationFactor(qreal factor);
-
-    bool gestureInProgress() const;
-    void setGestureInProgress(bool gesture);
-
     int requestedEffectChainPosition() const override;
     bool borderActivated(ElectricBorder border) override;
     void reconfigure(ReconfigureFlags flags) override;
@@ -58,8 +43,6 @@ Q_SIGNALS:
     void animationDurationChanged();
     void layoutChanged();
     void blurBackgroundChanged();
-    void partialActivationFactorChanged();
-    void gestureInProgressChanged();
     void ignoreMinimizedChanged();
 
 public Q_SLOTS:
@@ -84,12 +67,9 @@ private:
     QList<QKeySequence> m_toggleShortcut;
     QList<ElectricBorder> m_borderActivate;
     QList<ElectricBorder> m_touchBorderActivate;
-    qreal m_partialActivationFactor = 0;
     bool m_blurBackground = false;
-    Status m_status = Status::Inactive;
     int m_animationDuration = 200;
     int m_layout = 1;
-    bool m_gestureInProgress = false;
 };
 
 } // namespace KWin

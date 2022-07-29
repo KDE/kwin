@@ -84,13 +84,13 @@ WindowViewEffect::WindowViewEffect()
     m_realtimeToggleAction = new QAction(this);
     connect(m_realtimeToggleAction, &QAction::triggered, this, [this]() {
         if (m_status == Status::Deactivating) {
-            if (m_partialActivationFactor < 0.5) {
+            if (partialActivationFactor() < 0.5) {
                 deactivate(animationDuration());
             } else {
                 cancelPartialDeactivate();
             }
         } else if (m_status == Status::Activating) {
-            if (m_partialActivationFactor > 0.5) {
+            if (partialActivationFactor() > 0.5) {
                 activate();
             } else {
                 cancelPartialActivate();
@@ -258,32 +258,6 @@ void WindowViewEffect::grabbedKeyboardEvent(QKeyEvent *e)
         }
     }
     QuickSceneEffect::grabbedKeyboardEvent(e);
-}
-
-qreal WindowViewEffect::partialActivationFactor() const
-{
-    return m_partialActivationFactor;
-}
-
-void WindowViewEffect::setPartialActivationFactor(qreal factor)
-{
-    if (m_partialActivationFactor != factor) {
-        m_partialActivationFactor = factor;
-        Q_EMIT partialActivationFactorChanged();
-    }
-}
-
-bool WindowViewEffect::gestureInProgress() const
-{
-    return m_gestureInProgress;
-}
-
-void WindowViewEffect::setGestureInProgress(bool gesture)
-{
-    if (m_gestureInProgress != gesture) {
-        m_gestureInProgress = gesture;
-        Q_EMIT gestureInProgressChanged();
-    }
 }
 
 void WindowViewEffect::activate(const QStringList &windowIds)

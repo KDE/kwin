@@ -66,6 +66,8 @@ private:
 class KWINEFFECTS_EXPORT QuickSceneEffect : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(qreal partialActivationFactor READ partialActivationFactor NOTIFY partialActivationFactorChanged)
+    Q_PROPERTY(bool gestureInProgress READ gestureInProgress NOTIFY gestureInProgressChanged)
 
 public:
     explicit QuickSceneEffect(QObject *parent = nullptr);
@@ -113,6 +115,11 @@ public:
      */
     void setSource(const QUrl &url);
 
+    qreal partialActivationFactor() const;
+    void setPartialActivationFactor(qreal factor);
+    bool gestureInProgress() const;
+    void setGestureInProgress(bool gesture);
+
     bool eventFilter(QObject *watched, QEvent *event) override;
 
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
@@ -131,9 +138,19 @@ public:
     Q_INVOKABLE void checkItemDraggedOutOfScreen(QQuickItem *item);
     Q_INVOKABLE void checkItemDroppedOutOfScreen(const QPointF &globalPos, QQuickItem *item);
 
+    enum class Status {
+        Inactive,
+        Activating,
+        Deactivating,
+        Active
+    };
+    Q_ENUM(Status)
+
 Q_SIGNALS:
     void itemDraggedOutOfScreen(QQuickItem *item, QList<EffectScreen *> screens);
     void itemDroppedOutOfScreen(const QPointF &globalPos, QQuickItem *item, EffectScreen *screen);
+    void partialActivationFactorChanged();
+    void gestureInProgressChanged();
 
 protected:
     /**
@@ -143,6 +160,8 @@ protected:
      * @see QQmlComponent::createWithInitialProperties()
      */
     virtual QVariantMap initialProperties(EffectScreen *screen);
+
+    Status m_status = Status::Inactive;
 
 private:
     void handleScreenAdded(EffectScreen *screen);
@@ -154,6 +173,9 @@ private:
 
     QScopedPointer<QuickSceneEffectPrivate> d;
     friend class QuickSceneEffectPrivate;
+
+    qreal m_partialActivationFactor = 0;
+    bool m_gestureInProgress = false;
 };
 
 } // namespace KWin

@@ -37,13 +37,13 @@ OverviewEffect::OverviewEffect()
     m_realtimeToggleAction = new QAction(this);
     connect(m_realtimeToggleAction, &QAction::triggered, this, [this]() {
         if (m_status == Status::Deactivating) {
-            if (m_partialActivationFactor < 0.5) {
+            if (partialActivationFactor() < 0.5) {
                 deactivate();
             } else {
                 cancelPartialDeactivate();
             }
         } else if (m_status == Status::Activating) {
-            if (m_partialActivationFactor > 0.5) {
+            if (partialActivationFactor() > 0.5) {
                 activate();
             } else {
                 cancelPartialActivate();
@@ -175,32 +175,6 @@ void OverviewEffect::setBlurBackground(bool blur)
     }
 }
 
-qreal OverviewEffect::partialActivationFactor() const
-{
-    return m_partialActivationFactor;
-}
-
-void OverviewEffect::setPartialActivationFactor(qreal factor)
-{
-    if (m_partialActivationFactor != factor) {
-        m_partialActivationFactor = factor;
-        Q_EMIT partialActivationFactorChanged();
-    }
-}
-
-bool OverviewEffect::gestureInProgress() const
-{
-    return m_gestureInProgress;
-}
-
-void OverviewEffect::setGestureInProgress(bool gesture)
-{
-    if (m_gestureInProgress != gesture) {
-        m_gestureInProgress = gesture;
-        Q_EMIT gestureInProgressChanged();
-    }
-}
-
 int OverviewEffect::requestedEffectChainPosition() const
 {
     return 70;
@@ -217,7 +191,7 @@ bool OverviewEffect::borderActivated(ElectricBorder border)
 
 void OverviewEffect::toggle()
 {
-    if (!isRunning() || m_partialActivationFactor > 0.5) {
+    if (!isRunning() || partialActivationFactor() > 0.5) {
         activate();
     } else {
         deactivate();

@@ -47,13 +47,13 @@ DesktopGridEffect::DesktopGridEffect()
 
     connect(m_realtimeToggleAction, &QAction::triggered, this, [this]() {
         if (m_status == Status::Deactivating) {
-            if (m_partialActivationFactor < 0.5) {
+            if (partialActivationFactor() < 0.5) {
                 deactivate(animationDuration());
             } else {
                 cancelPartialDeactivate();
             }
         } else if (m_status == Status::Activating) {
-            if (m_partialActivationFactor > 0.5) {
+            if (partialActivationFactor() > 0.5) {
                 activate();
             } else {
                 cancelPartialActivate();
@@ -273,35 +273,9 @@ void DesktopGridEffect::setLayout(int layout)
     }
 }
 
-qreal DesktopGridEffect::partialActivationFactor() const
-{
-    return m_partialActivationFactor;
-}
-
-void DesktopGridEffect::setPartialActivationFactor(qreal factor)
-{
-    if (m_partialActivationFactor != factor) {
-        m_partialActivationFactor = factor;
-        Q_EMIT partialActivationFactorChanged();
-    }
-}
-
-bool DesktopGridEffect::gestureInProgress() const
-{
-    return m_gestureInProgress;
-}
-
-void DesktopGridEffect::setGestureInProgress(bool gesture)
-{
-    if (m_gestureInProgress != gesture) {
-        m_gestureInProgress = gesture;
-        Q_EMIT gestureInProgressChanged();
-    }
-}
-
 void DesktopGridEffect::toggle()
 {
-    if (!isRunning() || m_partialActivationFactor > 0.5) {
+    if (!isRunning() || partialActivationFactor() > 0.5) {
         activate();
     } else {
         deactivate(animationDuration());

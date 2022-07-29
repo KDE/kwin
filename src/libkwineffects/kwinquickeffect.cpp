@@ -193,6 +193,32 @@ QUrl QuickSceneEffect::source() const
     return d->source;
 }
 
+qreal QuickSceneEffect::partialActivationFactor() const
+{
+    return m_partialActivationFactor;
+}
+
+void QuickSceneEffect::setPartialActivationFactor(qreal factor)
+{
+    if (m_partialActivationFactor != factor) {
+        m_partialActivationFactor = factor;
+        Q_EMIT partialActivationFactorChanged();
+    }
+}
+
+bool QuickSceneEffect::gestureInProgress() const
+{
+    return m_gestureInProgress;
+}
+
+void QuickSceneEffect::setGestureInProgress(bool gesture)
+{
+    if (m_gestureInProgress != gesture) {
+        m_gestureInProgress = gesture;
+        Q_EMIT gestureInProgressChanged();
+    }
+}
+
 void QuickSceneEffect::setSource(const QUrl &url)
 {
     if (isRunning()) {
