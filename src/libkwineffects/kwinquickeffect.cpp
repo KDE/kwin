@@ -32,7 +32,6 @@ public:
     QPointer<QuickSceneView> mouseImplicitGrab;
     bool running = false;
     QScopedPointer<QWindow> dummyWindow;
-    EffectScreen *paintedScreen = nullptr;
 };
 
 bool QuickSceneEffectPrivate::isItemOnScreen(QQuickItem *item, EffectScreen *screen)
@@ -234,12 +233,31 @@ void QuickSceneEffect::activateView(QuickSceneView *view)
     }
 }
 
+// Screen views are repainted just before kwin performs its compositing cycle to avoid stalling for vblank
+void QuickSceneEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
+{
+    Q_UNUSED(presentTime)
+
+    if (effects->waylandDisplay()) {
+        QuickSceneView *screenView = d->views.value(data.screen);
+        if (screenView && screenView->isDirty()) {
+            screenView->update();
+            screenView->resetDirty();
+        }
+    } else {
+        for (QuickSceneView *screenView : qAsConst(d->views)) {
+            if (screenView->isDirty()) {
+                screenView->update();
+                screenView->resetDirty();
+            }
+        }
+    }
+}
+
 void QuickSceneEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
     Q_UNUSED(mask)
     Q_UNUSED(region)
-
-    d->paintedScreen = data.screen();
 
     if (effects->waylandDisplay()) {
         QuickSceneView *screenView = d->views.value(data.screen());
@@ -251,27 +269,6 @@ void QuickSceneEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
             effects->renderOffscreenQuickView(screenView);
         }
     }
-}
-
-void QuickSceneEffect::postPaintScreen()
-{
-    // Screen views are repainted after kwin performs its compositing cycle. Another alternative
-    // is to update the views after receiving a vblank.
-    if (effects->waylandDisplay()) {
-        QuickSceneView *screenView = d->views.value(d->paintedScreen);
-        if (screenView && screenView->isDirty()) {
-            QMetaObject::invokeMethod(screenView, &QuickSceneView::update, Qt::QueuedConnection);
-            screenView->resetDirty();
-        }
-    } else {
-        for (QuickSceneView *screenView : qAsConst(d->views)) {
-            if (screenView->isDirty()) {
-                QMetaObject::invokeMethod(screenView, &QuickSceneView::update, Qt::QueuedConnection);
-                screenView->resetDirty();
-            }
-        }
-    }
-    effects->postPaintScreen();
 }
 
 bool QuickSceneEffect::isActive() const
