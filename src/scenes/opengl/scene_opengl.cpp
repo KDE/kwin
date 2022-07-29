@@ -409,33 +409,6 @@ QMatrix4x4 SceneOpenGL::modelViewProjectionMatrix(const WindowPaintData &data) c
     }
 }
 
-static QMatrix4x4 transformForPaintData(int mask, const WindowPaintData &data)
-{
-    // TODO: Switch to QTransform.
-    QMatrix4x4 matrix;
-
-    if (!(mask & Scene::PAINT_WINDOW_TRANSFORMED)) {
-        return matrix;
-    }
-
-    matrix.translate(data.translation());
-    const QVector3D scale = data.scale();
-    matrix.scale(scale.x(), scale.y(), scale.z());
-
-    if (data.rotationAngle() == 0.0) {
-        return matrix;
-    }
-
-    // Apply the rotation
-    // cannot use data.rotation.applyTo(&matrix) as QGraphicsRotation uses projectedRotate to map back to 2D
-    matrix.translate(data.rotationOrigin());
-    const QVector3D axis = data.rotationAxis();
-    matrix.rotate(data.rotationAngle(), axis.x(), axis.y(), axis.z());
-    matrix.translate(-data.rotationOrigin());
-
-    return matrix;
-}
-
 void SceneOpenGL::render(Item *item, int mask, const QRegion &region, const WindowPaintData &data)
 {
     if (region.isEmpty()) {
@@ -450,7 +423,7 @@ void SceneOpenGL::render(Item *item, int mask, const QRegion &region, const Wind
     renderContext.transformStack.push(QMatrix4x4());
     renderContext.opacityStack.push(data.opacity());
 
-    item->setTransform(transformForPaintData(mask, data));
+    item->setTransform(data.toMatrix());
 
     createRenderNode(item, &renderContext);
 

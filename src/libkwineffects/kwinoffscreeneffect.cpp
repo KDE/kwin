@@ -160,7 +160,8 @@ void OffscreenEffectPrivate::paint(EffectWindow *window, GLTexture *texture, con
 
     QMatrix4x4 mvp = data.screenProjectionMatrix();
     mvp.translate(window->x(), window->y());
-    shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
+
+    shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp * data.toMatrix());
     shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
     shader->setUniform(GLShader::Saturation, data.saturation());
     shader->setUniform(GLShader::TextureWidth, texture->width());

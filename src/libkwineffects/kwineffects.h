@@ -3092,6 +3092,11 @@ public:
      */
     QVector3D rotationAxis() const;
 
+    /**
+     * Returns the corresponding transform matrix.
+     */
+    QMatrix4x4 toMatrix() const;
+
 protected:
     PaintData();
     PaintData(const PaintData &other);
