@@ -169,6 +169,8 @@ void WaylandTestApplication::continueStartupWithScene()
     createWorkspace();
     createPlugins();
 
+    waylandServer()->initWorkspace();
+
     if (!waylandServer()->start()) {
         qFatal("Failed to initialize the Wayland server, exiting now");
     }

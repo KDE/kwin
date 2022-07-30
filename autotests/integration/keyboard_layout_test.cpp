@@ -146,7 +146,6 @@ void KeyboardLayoutTest::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-    Test::initWaylandWorkspace();
 
     // don't get DBus signal on one-layout configuration
     //    QVERIFY(layoutsReconfiguredSpy.wait());

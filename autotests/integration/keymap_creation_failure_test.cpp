@@ -63,7 +63,6 @@ void KeymapCreationFailureTest::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-    Test::initWaylandWorkspace();
 }
 
 void KeymapCreationFailureTest::init()

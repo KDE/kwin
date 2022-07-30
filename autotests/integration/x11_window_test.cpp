@@ -74,7 +74,6 @@ void X11WindowTest::initTestCase()
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
     QVERIFY(KWin::Compositor::self());
-    Test::initWaylandWorkspace();
 }
 
 void X11WindowTest::init()

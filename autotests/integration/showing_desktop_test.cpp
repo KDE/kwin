@@ -43,7 +43,6 @@ void ShowingDesktopTest::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-    Test::initWaylandWorkspace();
 }
 
 void ShowingDesktopTest::init()

@@ -65,7 +65,6 @@ void TestDbusInterface::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-    Test::initWaylandWorkspace();
     VirtualDesktopManager::self()->setCount(4);
 }
 

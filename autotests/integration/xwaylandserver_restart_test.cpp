@@ -56,7 +56,6 @@ void XwaylandServerRestartTest::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-    Test::initWaylandWorkspace();
 }
 
 static void kwin_safe_kill(QProcess *process)

@@ -100,7 +100,6 @@ void NoGlobalShortcutsTest::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-    Test::initWaylandWorkspace();
 }
 
 void NoGlobalShortcutsTest::init()

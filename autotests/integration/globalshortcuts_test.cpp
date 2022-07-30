@@ -69,7 +69,6 @@ void GlobalShortcutsTest::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-    Test::initWaylandWorkspace();
 }
 
 void GlobalShortcutsTest::init()

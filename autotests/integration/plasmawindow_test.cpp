@@ -73,7 +73,6 @@ void PlasmaWindowTest::initTestCase()
     QCOMPARE(outputs[1]->geometry(), QRect(1280, 0, 1280, 1024));
     setenv("QT_QPA_PLATFORM", "wayland", true);
     setenv("QMLSCENE_DEVICE", "softwarecontext", true);
-    Test::initWaylandWorkspace();
 }
 
 void PlasmaWindowTest::init()

@@ -654,8 +654,6 @@ bool lockScreen();
  */
 bool unlockScreen();
 
-void initWaylandWorkspace();
-
 Window *inputPanelWindow();
 MockInputMethod *inputMethod();
 KWayland::Client::Surface *inputPanelSurface();

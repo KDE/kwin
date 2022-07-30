@@ -92,7 +92,6 @@ void ModifierOnlyShortcutTest::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-    Test::initWaylandWorkspace();
 }
 
 void ModifierOnlyShortcutTest::init()

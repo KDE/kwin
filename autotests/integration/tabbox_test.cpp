@@ -55,7 +55,6 @@ void TabBoxTest::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-    Test::initWaylandWorkspace();
 }
 
 void TabBoxTest::init()

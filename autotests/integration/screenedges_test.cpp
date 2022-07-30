@@ -85,7 +85,6 @@ void ScreenEdgesTest::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-    Test::initWaylandWorkspace();
 }
 
 void ScreenEdgesTest::init()

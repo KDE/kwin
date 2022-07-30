@@ -969,13 +969,6 @@ bool unlockScreen()
 }
 #endif // KWIN_BUILD_LOCKSCREEN
 
-void initWaylandWorkspace()
-{
-    QSignalSpy workspaceInitializedSpy(waylandServer(), &WaylandServer::initialized);
-    waylandServer()->initWorkspace();
-    QVERIFY(workspaceInitializedSpy.count() || workspaceInitializedSpy.wait());
-}
-
 WaylandOutputManagementV2::WaylandOutputManagementV2(struct ::wl_registry *registry, int id, int version)
     : QObject()
     , QtWayland::kde_output_management_v2()

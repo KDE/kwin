@@ -59,7 +59,6 @@ void MaximizeAnimationTest::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
-    Test::initWaylandWorkspace();
 }
 
 void MaximizeAnimationTest::init()
