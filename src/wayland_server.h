@@ -179,7 +179,6 @@ public:
      */
     bool hasGlobalShortcutSupport() const;
 
-    void initPlatform();
     void initWorkspace();
 
     KWaylandServer::ClientConnection *xWaylandConnection() const;

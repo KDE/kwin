@@ -147,8 +147,6 @@ void ApplicationWayland::performStartup()
         std::exit(1);
     }
 
-    waylandServer()->initPlatform();
-
     createInput();
     createInputMethod();
     createTabletModeManager();
