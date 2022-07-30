@@ -72,13 +72,4 @@ void X11Output::setMode(const QSize &size, uint32_t refreshRate)
     }
 }
 
-void X11Output::updateEnablement(bool enabled)
-{
-    if (enabled) {
-        Q_EMIT m_backend->outputEnabled(this);
-    } else {
-        Q_EMIT m_backend->outputDisabled(this);
-    }
-}
-
 } // namespace KWin

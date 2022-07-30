@@ -66,9 +66,4 @@ void VirtualOutput::vblank(std::chrono::nanoseconds timestamp)
     renderLoopPrivate->notifyFrameCompleted(timestamp);
 }
 
-void VirtualOutput::updateEnablement(bool enable)
-{
-    m_backend->enableOutput(this, enable);
-}
-
 }

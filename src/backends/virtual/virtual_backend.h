@@ -53,8 +53,6 @@ public:
         return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
     }
 
-    void enableOutput(VirtualOutput *output, bool enable);
-
     Q_INVOKABLE void removeOutput(Output *output);
     Q_INVOKABLE QImage captureOutput(Output *output) const;
 
@@ -63,7 +61,6 @@ Q_SIGNALS:
 
 private:
     QVector<VirtualOutput *> m_outputs;
-    QVector<VirtualOutput *> m_outputsEnabled;
     std::unique_ptr<QTemporaryDir> m_screenshotDir;
 };
 

@@ -23,8 +23,6 @@ public:
     RenderLoop *renderLoop() const override;
 
 private:
-    void updateEnablement(bool enabled) override;
-
     X11StandalonePlatform *m_backend;
 };
 

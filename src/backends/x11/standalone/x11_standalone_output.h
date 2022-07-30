@@ -33,7 +33,6 @@ public:
     explicit X11Output(X11StandalonePlatform *backend, QObject *parent = nullptr);
 
     bool usesSoftwareCursor() const override;
-    void updateEnablement(bool enabled) override;
 
     RenderLoop *renderLoop() const override;
     void setRenderLoop(RenderLoop *loop);

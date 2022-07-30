@@ -194,13 +194,4 @@ bool X11WindowedOutput::usesSoftwareCursor() const
     return false;
 }
 
-void X11WindowedOutput::updateEnablement(bool enabled)
-{
-    if (enabled) {
-        Q_EMIT m_backend->outputEnabled(this);
-    } else {
-        Q_EMIT m_backend->outputDisabled(this);
-    }
-}
-
 } // namespace KWin

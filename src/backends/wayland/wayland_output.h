@@ -64,7 +64,6 @@ public:
         return m_surface;
     }
 
-    void updateEnablement(bool enable) override;
     void setDpmsMode(DpmsMode mode) override;
 
 Q_SIGNALS:

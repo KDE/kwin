@@ -34,13 +34,4 @@ RenderLoop *X11PlaceholderOutput::renderLoop() const
     return m_backend->renderLoop();
 }
 
-void X11PlaceholderOutput::updateEnablement(bool enabled)
-{
-    if (enabled) {
-        Q_EMIT m_backend->outputEnabled(this);
-    } else {
-        Q_EMIT m_backend->outputDisabled(this);
-    }
-}
-
 } // namespace KWin

@@ -110,8 +110,10 @@ void DrmBackend::createDpmsFilter()
 void DrmBackend::turnOutputsOn()
 {
     m_dpmsFilter.reset();
-    for (auto it = m_enabledOutputs.constBegin(), end = m_enabledOutputs.constEnd(); it != end; it++) {
-        (*it)->setDpmsMode(Output::DpmsMode::On);
+    for (Output *output : std::as_const(m_outputs)) {
+        if (output->isEnabled()) {
+            output->setDpmsMode(Output::DpmsMode::On);
+        }
     }
 }
 
@@ -121,8 +123,8 @@ void DrmBackend::checkOutputsAreOn()
         // already disabled, all outputs are on
         return;
     }
-    for (auto it = m_enabledOutputs.constBegin(), end = m_enabledOutputs.constEnd(); it != end; it++) {
-        if ((*it)->dpmsMode() != Output::DpmsMode::On) {
+    for (Output *output : std::as_const(m_outputs)) {
+        if (output->isEnabled() && output->dpmsMode() != Output::DpmsMode::On) {
             // dpms still disabled, need to keep the filter
             return;
         }
@@ -355,12 +357,7 @@ void DrmBackend::updateOutputs()
 
 void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
 {
-    if (m_enabledOutputs.contains(output) == enable) {
-        return;
-    }
     if (enable) {
-        m_enabledOutputs << output;
-        Q_EMIT outputEnabled(output);
         checkOutputsAreOn();
         if (m_placeHolderOutput && !output->isNonDesktop()) {
             qCDebug(KWIN_DRM) << "removing placeholder output";
@@ -369,19 +366,17 @@ void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
             m_placeholderFilter.reset();
         }
     } else {
-        int normalOutputsCount = std::count_if(m_enabledOutputs.begin(), m_enabledOutputs.end(), [](const auto output) {
-            return !output->isNonDesktop();
+        const int normalOutputsCount = std::count_if(m_outputs.constBegin(), m_outputs.constEnd(), [](const auto output) {
+            return output->isEnabled() && !output->isNonDesktop();
         });
-        if (normalOutputsCount == 1 && !output->isNonDesktop() && !kwinApp()->isTerminating()) {
+        if (normalOutputsCount == 0 && !output->isNonDesktop() && !kwinApp()->isTerminating()) {
             qCDebug(KWIN_DRM) << "adding placeholder output";
-            m_placeHolderOutput = primaryGpu()->createVirtualOutput({}, m_enabledOutputs.constFirst()->pixelSize(), 1, DrmVirtualOutput::Type::Placeholder);
+            m_placeHolderOutput = primaryGpu()->createVirtualOutput({}, output->pixelSize(), 1, DrmVirtualOutput::Type::Placeholder);
             // placeholder doesn't actually need to render anything
             m_placeHolderOutput->renderLoop()->inhibit();
             m_placeholderFilter = std::make_unique<PlaceholderInputEventFilter>();
             input()->prependInputEventFilter(m_placeholderFilter.get());
         }
-        m_enabledOutputs.removeOne(output);
-        Q_EMIT outputDisabled(output);
     }
 }
 

@@ -102,10 +102,7 @@ private:
     std::unique_ptr<Udev> m_udev;
     std::unique_ptr<UdevMonitor> m_udevMonitor;
     Session *m_session;
-    // all outputs, enabled and disabled
     QVector<DrmAbstractOutput *> m_outputs;
-    // only enabled outputs
-    QVector<DrmAbstractOutput *> m_enabledOutputs;
     DrmVirtualOutput *m_placeHolderOutput = nullptr;
 
     bool m_active = false;

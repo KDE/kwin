@@ -61,7 +61,6 @@ public:
     QPointF mapFromGlobal(const QPointF &pos) const;
 
     bool usesSoftwareCursor() const override;
-    void updateEnablement(bool enabled) override;
 
     QRegion exposedArea() const;
     void addExposedArea(const QRect &rect);
