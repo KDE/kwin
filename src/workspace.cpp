@@ -232,7 +232,7 @@ void Workspace::init()
     vds->setConfig(config);
 
     // Now we know how many desktops we'll have, thus we initialize the positioning object
-    Placement::create(this);
+    m_placement = std::make_unique<Placement>();
 
     // positioning object needs to be created before the virtual desktops are loaded.
     vds->load();
@@ -490,7 +490,7 @@ Workspace::~Workspace()
     delete RuleBook::self();
     kwinApp()->config()->sync();
 
-    delete Placement::self();
+    m_placement.reset();
     delete m_windowKeysDialog;
 
     _self = nullptr;
@@ -774,7 +774,7 @@ void Workspace::addWaylandWindow(Window *window)
             placementDone = true;
         }
         if (!placementDone) {
-            Placement::self()->place(window, area);
+            m_placement->place(window, area);
         }
     }
     m_allClients.append(window);
@@ -1253,7 +1253,7 @@ void Workspace::slotOutputDisabled(Output *output)
 void Workspace::slotDesktopAdded(VirtualDesktop *desktop)
 {
     m_focusChain->addDesktop(desktop);
-    Placement::self()->reinitCascading(0);
+    m_placement->reinitCascading(0);
     updateClientArea();
 }
 
@@ -1271,7 +1271,7 @@ void Workspace::slotDesktopRemoved(VirtualDesktop *desktop)
     }
 
     updateClientArea();
-    Placement::self()->reinitCascading(0);
+    m_placement->reinitCascading(0);
     m_focusChain->removeDesktop(desktop);
 }
 
@@ -1892,7 +1892,7 @@ void Workspace::addInternalWindow(InternalWindow *window)
 
     if (window->isPlaceable()) {
         const QRectF area = clientArea(PlacementArea, window, workspace()->activeOutput());
-        Placement::self()->place(window, area);
+        m_placement->place(window, area);
     }
 
     updateStackingOrder(true);
@@ -2845,6 +2845,11 @@ Decoration::DecorationBridge *Workspace::decorationBridge() const
 Outline *Workspace::outline() const
 {
     return m_outline.get();
+}
+
+Placement *Workspace::placement() const
+{
+    return m_placement.get();
 }
 
 #if KWIN_BUILD_ACTIVITIES

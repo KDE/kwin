@@ -111,7 +111,7 @@ Window::Window()
         Q_UNUSED(c)
         if (isOnScreenDisplay() && !frameGeometry().isEmpty() && old.size() != frameGeometry().size() && isPlaceable()) {
             GeometryUpdatesBlocker blocker(this);
-            Placement::self()->place(this, workspace()->clientArea(PlacementArea, this, workspace()->activeOutput()));
+            workspace()->placement()->place(this, workspace()->clientArea(PlacementArea, this, workspace()->activeOutput()));
         }
     });
 

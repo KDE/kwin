@@ -438,6 +438,7 @@ public:
     ApplicationMenu *applicationMenu() const;
     Decoration::DecorationBridge *decorationBridge() const;
     Outline *outline() const;
+    Placement *placement() const;
 #if KWIN_BUILD_ACTIVITIES
     Activities *activities() const;
 #endif
@@ -713,6 +714,7 @@ private:
     std::unique_ptr<ApplicationMenu> m_applicationMenu;
     std::unique_ptr<Decoration::DecorationBridge> m_decorationBridge;
     std::unique_ptr<Outline> m_outline;
+    std::unique_ptr<Placement> m_placement;
 #if KWIN_BUILD_ACTIVITIES
     std::unique_ptr<Activities> m_activities;
 #endif

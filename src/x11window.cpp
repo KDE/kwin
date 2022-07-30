@@ -702,7 +702,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     }
     if (!placementDone) {
         // Placement needs to be after setting size
-        Placement::self()->place(this, area);
+        workspace()->placement()->place(this, area);
         // The client may have been moved to another screen, update placement area.
         area = workspace()->clientArea(PlacementArea, this);
         dontKeepInArea = true;
@@ -4416,7 +4416,7 @@ void X11Window::changeMaximize(bool horizontal, bool vertical, bool adjust)
             if (geometryRestore().width() == 0 || !clientArea.contains(geometryRestore().center())) {
                 // needs placement
                 resize(constrainFrameSize(QSize(width() * 2 / 3, clientArea.height()), SizeModeFixedH));
-                Placement::self()->placeSmart(this, clientArea);
+                workspace()->placement()->placeSmart(this, clientArea);
             } else {
                 moveResize(QRectF(QPointF(geometryRestore().x(), clientArea.top()),
                                   constrainFrameSize(QSize(geometryRestore().width(), clientArea.height()), SizeModeFixedH)));
@@ -4436,7 +4436,7 @@ void X11Window::changeMaximize(bool horizontal, bool vertical, bool adjust)
             if (geometryRestore().height() == 0 || !clientArea.contains(geometryRestore().center())) {
                 // needs placement
                 resize(constrainFrameSize(QSize(clientArea.width(), height() * 2 / 3), SizeModeFixedW));
-                Placement::self()->placeSmart(this, clientArea);
+                workspace()->placement()->placeSmart(this, clientArea);
             } else {
                 moveResize(QRectF(QPoint(clientArea.left(), geometryRestore().y()),
                                   constrainFrameSize(QSize(clientArea.width(), geometryRestore().height()), SizeModeFixedW)));
@@ -4471,7 +4471,7 @@ void X11Window::changeMaximize(bool horizontal, bool vertical, bool adjust)
                 s.setHeight(geometryRestore().height());
             }
             resize(constrainFrameSize(s));
-            Placement::self()->placeSmart(this, clientArea);
+            workspace()->placement()->placeSmart(this, clientArea);
             restore = frameGeometry();
             if (geometryRestore().width() > 0) {
                 restore.moveLeft(geometryRestore().x());
@@ -4486,7 +4486,7 @@ void X11Window::changeMaximize(bool horizontal, bool vertical, bool adjust)
         }
         moveResize(restore);
         if (!clientArea.contains(geometryRestore().center())) { // Not restoring to the same screen
-            Placement::self()->place(this, clientArea);
+            workspace()->placement()->place(this, clientArea);
         }
         info->setState(NET::States(), NET::Max);
         updateQuickTileMode(QuickTileFlag::None);

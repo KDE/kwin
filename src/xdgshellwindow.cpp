@@ -1409,7 +1409,7 @@ void XdgToplevelWindow::initialize()
     }
     if (needsPlacement) {
         const QRectF area = workspace()->clientArea(PlacementArea, this, workspace()->activeOutput());
-        Placement::self()->place(this, area);
+        workspace()->placement()->place(this, area);
     }
 
     configureDecoration();
@@ -1806,7 +1806,7 @@ void XdgPopupWindow::handleRepositionRequested(quint32 token)
 
 void XdgPopupWindow::relayout()
 {
-    Placement::self()->place(this, QRect());
+    workspace()->placement()->place(this, QRect());
     scheduleConfigure();
 }
 
@@ -2029,7 +2029,7 @@ void XdgPopupWindow::initialize()
     updateReactive();
 
     const QRectF area = workspace()->clientArea(PlacementArea, this, workspace()->activeOutput());
-    Placement::self()->place(this, area);
+    workspace()->placement()->place(this, area);
     scheduleConfigure();
 }
 

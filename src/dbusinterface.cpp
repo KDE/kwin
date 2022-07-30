@@ -79,10 +79,10 @@ void DBusInterface::killWindow()
     Workspace::self()->slotKillWindow();
 }
 
-#define WRAP(name)                 \
-    void DBusInterface::name()     \
-    {                              \
-        Placement::self()->name(); \
+#define WRAP(name)                        \
+    void DBusInterface::name()            \
+    {                                     \
+        workspace()->placement()->name(); \
     }
 
 WRAP(cascadeDesktop)

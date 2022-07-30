@@ -28,16 +28,9 @@ namespace KWin
 
 #ifndef KCMRULES
 
-KWIN_SINGLETON_FACTORY(Placement)
-
-Placement::Placement(QObject *)
+Placement::Placement()
 {
     reinitCascading(0);
-}
-
-Placement::~Placement()
-{
-    s_self = nullptr;
 }
 
 /**

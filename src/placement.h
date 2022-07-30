@@ -28,7 +28,7 @@ class Window;
 class KWIN_EXPORT Placement
 {
 public:
-    virtual ~Placement();
+    explicit Placement();
 
     /**
      * Placement policies. How workspace decides the way windows get positioned
@@ -91,8 +91,6 @@ private:
     };
 
     QList<DesktopCascadingInfo> cci;
-
-    KWIN_SINGLETON(Placement)
 };
 
 } // namespace
