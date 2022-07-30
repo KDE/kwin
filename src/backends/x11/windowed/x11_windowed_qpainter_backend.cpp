@@ -52,13 +52,11 @@ X11WindowedQPainterBackend::X11WindowedQPainterBackend(X11WindowedBackend *backe
 {
     const auto outputs = m_backend->outputs();
     for (Output *output : outputs) {
-        if (output->isEnabled()) {
-            addOutput(output);
-        }
+        addOutput(output);
     }
 
-    connect(backend, &X11WindowedBackend::outputEnabled, this, &X11WindowedQPainterBackend::addOutput);
-    connect(backend, &X11WindowedBackend::outputDisabled, this, &X11WindowedQPainterBackend::removeOutput);
+    connect(backend, &X11WindowedBackend::outputAdded, this, &X11WindowedQPainterBackend::addOutput);
+    connect(backend, &X11WindowedBackend::outputRemoved, this, &X11WindowedQPainterBackend::removeOutput);
 }
 
 X11WindowedQPainterBackend::~X11WindowedQPainterBackend()

@@ -47,14 +47,12 @@ VirtualQPainterBackend::VirtualQPainterBackend(VirtualBackend *backend)
     : QPainterBackend()
     , m_backend(backend)
 {
-    connect(backend, &VirtualBackend::outputEnabled, this, &VirtualQPainterBackend::addOutput);
-    connect(backend, &VirtualBackend::outputDisabled, this, &VirtualQPainterBackend::removeOutput);
+    connect(backend, &VirtualBackend::outputAdded, this, &VirtualQPainterBackend::addOutput);
+    connect(backend, &VirtualBackend::outputRemoved, this, &VirtualQPainterBackend::removeOutput);
 
     const auto outputs = backend->outputs();
     for (Output *output : outputs) {
-        if (output->isEnabled()) {
-            addOutput(output);
-        }
+        addOutput(output);
     }
 }
 

@@ -122,13 +122,11 @@ void VirtualEglBackend::init()
 
     const auto outputs = m_backend->outputs();
     for (Output *output : outputs) {
-        if (output->isEnabled()) {
-            addOutput(output);
-        }
+        addOutput(output);
     }
 
-    connect(m_backend, &VirtualBackend::outputEnabled, this, &VirtualEglBackend::addOutput);
-    connect(m_backend, &VirtualBackend::outputDisabled, this, &VirtualEglBackend::removeOutput);
+    connect(m_backend, &VirtualBackend::outputAdded, this, &VirtualEglBackend::addOutput);
+    connect(m_backend, &VirtualBackend::outputRemoved, this, &VirtualEglBackend::removeOutput);
 }
 
 bool VirtualEglBackend::initRenderingContext()
