@@ -172,6 +172,9 @@ public:
 
     Output *xineramaIndexToOutput(int index) const;
 
+    Output *primaryOutput() const;
+    void setPrimaryOutput(Output *output);
+
     Output *activeOutput() const;
     void setActiveOutput(Output *output);
     void setActiveOutput(const QPointF &pos);
@@ -564,6 +567,7 @@ Q_SIGNALS:
     void deletedRemoved(KWin::Deleted *);
     void configChanged();
     void showingDesktopChanged(bool showing, bool animated);
+    void primaryOutputChanged();
     void outputAdded(KWin::Output *);
     void outputRemoved(KWin::Output *);
     /**
@@ -650,6 +654,7 @@ private:
 
     QList<Output *> m_outputs;
     Output *m_activeOutput = nullptr;
+    Output *m_primaryOutput = nullptr;
     QString m_outputsHash;
 
     Window *m_activeWindow;

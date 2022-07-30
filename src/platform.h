@@ -321,19 +321,6 @@ public:
     virtual void removeVirtualOutput(Output *output);
 
     /**
-     * @returns the primary output amomg the enabled outputs
-     */
-    Output *primaryOutput() const
-    {
-        return m_primaryOutput;
-    }
-
-    /**
-     * Assigns a the @p primary output among the enabled outputs
-     */
-    void setPrimaryOutput(Output *primary);
-
-    /**
      * Applies the output changes. Default implementation only sets values common between platforms
      */
     virtual bool applyOutputChanges(const OutputConfiguration &config);
@@ -367,8 +354,6 @@ Q_SIGNALS:
      */
     void outputDisabled(Output *output);
 
-    void primaryOutputChanged(Output *primaryOutput);
-
 protected:
     explicit Platform(QObject *parent = nullptr);
     void setReady(bool ready);
@@ -400,7 +385,6 @@ private:
     EGLContext m_globalShareContext = EGL_NO_CONTEXT;
     bool m_supportsGammaControl = false;
     CompositingType m_selectedCompositor = NoCompositing;
-    Output *m_primaryOutput = nullptr;
 };
 
 } // namespace KWin

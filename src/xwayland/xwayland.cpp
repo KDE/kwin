@@ -24,6 +24,7 @@
 #include "utils/common.h"
 #include "utils/xcbutils.h"
 #include "wayland_server.h"
+#include "workspace.h"
 #include "x11eventfilter.h"
 #include "xwayland_logging.h"
 
@@ -69,7 +70,7 @@ XrandrEventFilter::XrandrEventFilter(Xwayland *backend)
 bool XrandrEventFilter::event(xcb_generic_event_t *event)
 {
     Q_ASSERT((event->response_type & ~0x80) == Xcb::Extensions::self()->randrNotifyEvent());
-    m_backend->updatePrimary(kwinApp()->platform()->primaryOutput());
+    m_backend->updatePrimary();
     return false;
 }
 
@@ -150,7 +151,7 @@ void Xwayland::uninstallSocketNotifier()
 
 void Xwayland::handleXwaylandFinished()
 {
-    disconnect(kwinApp()->platform(), &Platform::primaryOutputChanged, this, &Xwayland::updatePrimary);
+    disconnect(workspace(), &Workspace::primaryOutputChanged, this, &Xwayland::updatePrimary);
 
     delete m_xrandrEventsFilter;
     m_xrandrEventsFilter = nullptr;
@@ -198,8 +199,8 @@ void Xwayland::handleXwaylandReady()
     qputenv("XAUTHORITY", m_launcher->xauthority().toLatin1());
     m_app->setProcessStartupEnvironment(env);
 
-    connect(kwinApp()->platform(), &Platform::primaryOutputChanged, this, &Xwayland::updatePrimary);
-    updatePrimary(kwinApp()->platform()->primaryOutput());
+    connect(workspace(), &Workspace::primaryOutputChanged, this, &Xwayland::updatePrimary);
+    updatePrimary();
 
     Xcb::sync(); // Trigger possible errors, there's still a chance to abort
 
@@ -207,7 +208,7 @@ void Xwayland::handleXwaylandReady()
     m_xrandrEventsFilter = new XrandrEventFilter(this);
 }
 
-void Xwayland::updatePrimary(Output *primaryOutput)
+void Xwayland::updatePrimary()
 {
     Xcb::RandR::ScreenResources resources(kwinApp()->x11RootWindow());
     xcb_randr_crtc_t *crtcs = resources.crtcs();
@@ -215,6 +216,7 @@ void Xwayland::updatePrimary(Output *primaryOutput)
         return;
     }
 
+    Output *primaryOutput = workspace()->primaryOutput();
     for (int i = 0; i < resources->num_crtcs; ++i) {
         Xcb::RandR::CrtcInfo crtcInfo(crtcs[i], resources->config_timestamp);
         const QRect geometry = crtcInfo.rect();

@@ -43,24 +43,6 @@ Platform::Platform(QObject *parent)
     : QObject(parent)
     , m_eglDisplay(EGL_NO_DISPLAY)
 {
-    connect(this, &Platform::outputDisabled, this, [this](Output *output) {
-        if (m_primaryOutput == output) {
-            Output *primary = nullptr;
-            const auto candidates = outputs();
-            for (Output *output : candidates) {
-                if (output->isEnabled()) {
-                    primary = output;
-                    break;
-                }
-            }
-            setPrimaryOutput(primary);
-        }
-    });
-    connect(this, &Platform::outputEnabled, this, [this](Output *output) {
-        if (!m_primaryOutput) {
-            setPrimaryOutput(output);
-        }
-    });
 }
 
 Platform::~Platform()
@@ -316,14 +298,4 @@ void Platform::setSceneEglGlobalShareContext(EGLContext context)
     m_globalShareContext = context;
 }
 
-void Platform::setPrimaryOutput(Output *primary)
-{
-    if (primary == m_primaryOutput) {
-        return;
-    }
-    Q_ASSERT(kwinApp()->isTerminating() || primary->isEnabled());
-    m_primaryOutput = primary;
-    Q_EMIT primaryOutputChanged(primary);
-}
-
-}
+} // namespace KWin

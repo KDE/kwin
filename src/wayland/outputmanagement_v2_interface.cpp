@@ -228,21 +228,10 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
     }
 
     if (kwinApp()->platform()->applyOutputChanges(config)) {
-        if (primaryOutput.has_value() || !kwinApp()->platform()->primaryOutput()->isEnabled()) {
+        if (primaryOutput.has_value()) {
             auto requestedPrimaryOutput = (*primaryOutput)->handle();
             if (requestedPrimaryOutput && requestedPrimaryOutput->isEnabled()) {
-                kwinApp()->platform()->setPrimaryOutput(requestedPrimaryOutput);
-            } else {
-                Output *defaultPrimaryOutput = nullptr;
-                const auto candidates = kwinApp()->platform()->outputs();
-                for (Output *output : candidates) {
-                    if (output->isEnabled()) {
-                        defaultPrimaryOutput = output;
-                        break;
-                    }
-                }
-                qCWarning(KWIN_CORE) << "Requested invalid primary screen, using" << defaultPrimaryOutput;
-                kwinApp()->platform()->setPrimaryOutput(defaultPrimaryOutput);
+                workspace()->setPrimaryOutput(requestedPrimaryOutput);
             }
         }
         Q_EMIT workspace()->screens()->changed();

@@ -533,12 +533,13 @@ void WaylandServer::initWorkspace()
         });
     }
 
-    connect(kwinApp()->platform(), &Platform::primaryOutputChanged, this, [this](Output *primaryOutput) {
-        m_primary->setPrimaryOutput(primaryOutput ? primaryOutput->name() : QString());
-    });
-    if (auto primaryOutput = kwinApp()->platform()->primaryOutput()) {
+    if (auto primaryOutput = workspace()->primaryOutput()) {
         m_primary->setPrimaryOutput(primaryOutput->name());
     }
+    connect(workspace(), &Workspace::primaryOutputChanged, this, [this]() {
+        const Output *primaryOutput = workspace()->primaryOutput();
+        m_primary->setPrimaryOutput(primaryOutput ? primaryOutput->name() : QString());
+    });
 
     const auto availableOutputs = kwinApp()->platform()->outputs();
     for (Output *output : availableOutputs) {
