@@ -370,11 +370,11 @@ void SessionManager::setState(SessionState state)
     }
     // If we're starting to save a session
     if (state == SessionState::Saving) {
-        RuleBook::self()->setUpdatesDisabled(true);
+        workspace()->rulebook()->setUpdatesDisabled(true);
     }
     // If we're ending a save session due to either completion or cancellation
     if (m_sessionState == SessionState::Saving) {
-        RuleBook::self()->setUpdatesDisabled(false);
+        workspace()->rulebook()->setUpdatesDisabled(false);
         Workspace::self()->forEachClient([](X11Window *client) {
             client->setSessionActivityOverride(false);
         });

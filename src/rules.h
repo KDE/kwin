@@ -301,6 +301,7 @@ class KWIN_EXPORT RuleBook : public QObject
 {
     Q_OBJECT
 public:
+    explicit RuleBook();
     ~RuleBook() override;
     WindowRules find(const Window *, bool);
     void discardUsed(Window *c, bool withdraw);
@@ -329,8 +330,6 @@ private:
     QList<Rules *> m_rules;
     QScopedPointer<KXMessages> m_temporaryRulesMessages;
     KSharedConfig::Ptr m_config;
-
-    KWIN_SINGLETON(RuleBook)
 };
 
 inline bool RuleBook::areUpdatesDisabled() const

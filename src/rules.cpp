@@ -776,7 +776,7 @@ void WindowRules::update(Window *c, int selection)
         }
     }
     if (updated) {
-        RuleBook::self()->requestDiskStorage();
+        workspace()->rulebook()->requestDiskStorage();
     }
 }
 
@@ -879,11 +879,8 @@ CHECK_RULE(DesktopFile, QString)
 #undef CHECK_RULE
 #undef CHECK_FORCE_RULE
 
-KWIN_SINGLETON_FACTORY(RuleBook)
-
-RuleBook::RuleBook(QObject *parent)
-    : QObject(parent)
-    , m_updateTimer(new QTimer(this))
+RuleBook::RuleBook()
+    : m_updateTimer(new QTimer(this))
     , m_updatesDisabled(false)
     , m_temporaryRulesMessages()
 {

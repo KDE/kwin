@@ -291,7 +291,7 @@ void X11Window::releaseWindow(bool on_shutdown)
     }
     Q_EMIT windowClosed(this, del);
     finishCompositing();
-    RuleBook::self()->discardUsed(this, true); // Remove ForceTemporarily rules
+    workspace()->rulebook()->discardUsed(this, true); // Remove ForceTemporarily rules
     StackingUpdatesBlocker blocker(workspace());
     if (isInteractiveMoveResize()) {
         leaveInteractiveMoveResize();
@@ -357,7 +357,7 @@ void X11Window::destroyWindow()
     }
     Q_EMIT windowClosed(this, del);
     finishCompositing(ReleaseReason::Destroyed);
-    RuleBook::self()->discardUsed(this, true); // Remove ForceTemporarily rules
+    workspace()->rulebook()->discardUsed(this, true); // Remove ForceTemporarily rules
     StackingUpdatesBlocker blocker(workspace());
     if (isInteractiveMoveResize()) {
         leaveInteractiveMoveResize();
@@ -956,7 +956,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
 
     discardTemporaryRules();
     applyWindowRules(); // Just in case
-    RuleBook::self()->discardUsed(this, false); // Remove ApplyNow rules
+    workspace()->rulebook()->discardUsed(this, false); // Remove ApplyNow rules
     updateWindowRules(Rules::All); // Was blocked while !isManaged()
 
     setBlockingCompositing(info->isBlockingCompositing());

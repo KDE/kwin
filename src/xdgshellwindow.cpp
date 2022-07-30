@@ -333,7 +333,7 @@ void XdgSurfaceWindow::destroyWindow()
     Deleted *deleted = Deleted::create(this);
     Q_EMIT windowClosed(this, deleted);
     StackingUpdatesBlocker blocker(workspace());
-    RuleBook::self()->discardUsed(this, true);
+    workspace()->rulebook()->discardUsed(this, true);
     setDecoration(nullptr);
     cleanGrouping();
     waylandServer()->removeWindow(this);
@@ -1401,7 +1401,7 @@ void XdgToplevelWindow::initialize()
     }
 
     discardTemporaryRules();
-    RuleBook::self()->discardUsed(this, false); // Remove Apply Now rules.
+    workspace()->rulebook()->discardUsed(this, false); // Remove Apply Now rules.
     updateWindowRules(Rules::All);
 
     if (isRequestedFullScreen()) {

@@ -193,7 +193,7 @@ void TestXdgShellWindowRules::initTestCase()
     Test::initWaylandWorkspace();
 
     m_config = KSharedConfig::openConfig(QStringLiteral("kwinrulesrc"), KConfig::SimpleConfig);
-    RuleBook::self()->setConfig(m_config);
+    workspace()->rulebook()->setConfig(m_config);
 }
 
 void TestXdgShellWindowRules::init()

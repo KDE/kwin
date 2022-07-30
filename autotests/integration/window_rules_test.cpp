@@ -68,7 +68,7 @@ void WindowRuleTest::init()
 void WindowRuleTest::cleanup()
 {
     // discards old rules
-    RuleBook::self()->load();
+    workspace()->rulebook()->load();
 }
 
 struct XcbConnectionDeleter
@@ -94,7 +94,7 @@ void WindowRuleTest::testApplyInitialMaximizeVert()
     // load the rule
     QFile ruleFile(QFINDTESTDATA("./data/rules/maximize-vert-apply-initial"));
     QVERIFY(ruleFile.open(QIODevice::ReadOnly | QIODevice::Text));
-    QMetaObject::invokeMethod(RuleBook::self(), "temporaryRulesMessage", Q_ARG(QString, QString::fromUtf8(ruleFile.readAll())));
+    QMetaObject::invokeMethod(workspace()->rulebook(), "temporaryRulesMessage", Q_ARG(QString, QString::fromUtf8(ruleFile.readAll())));
 
     // create the test window
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
@@ -161,7 +161,7 @@ void WindowRuleTest::testWindowClassChange()
     group.writeEntry("wmclassmatch", 1);
     group.sync();
 
-    RuleBook::self()->setConfig(config);
+    workspace()->rulebook()->setConfig(config);
     workspace()->slotReconfigure();
 
     // create the test window

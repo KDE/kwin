@@ -1260,10 +1260,10 @@ void Workspace::performWindowOperation(Window *window, Options::WindowOperation 
         window->performMouseCommand(Options::MouseShade, Cursors::self()->mouse()->pos());
         break;
     case Options::WindowRulesOp:
-        RuleBook::self()->edit(window, false);
+        m_rulebook->edit(window, false);
         break;
     case Options::ApplicationRulesOp:
-        RuleBook::self()->edit(window, true);
+        m_rulebook->edit(window, true);
         break;
     case Options::SetupWindowShortcutOp:
         setupWindowShortcut(window);

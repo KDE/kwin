@@ -4442,13 +4442,13 @@ void Window::cleanTabBox()
 void Window::setupWindowRules(bool ignore_temporary)
 {
     disconnect(this, &Window::captionChanged, this, &Window::evaluateWindowRules);
-    m_rules = RuleBook::self()->find(this, ignore_temporary);
+    m_rules = workspace()->rulebook()->find(this, ignore_temporary);
     // check only after getting the rules, because there may be a rule forcing window type
 }
 
 void Window::updateWindowRules(Rules::Types selection)
 {
-    if (RuleBook::self()->areUpdatesDisabled()) {
+    if (workspace()->rulebook()->areUpdatesDisabled()) {
         return;
     }
     m_rules.update(this, selection);

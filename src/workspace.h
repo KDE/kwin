@@ -63,6 +63,7 @@ class FocusChain;
 class ApplicationMenu;
 enum class Predicate;
 class Outline;
+class RuleBook;
 #if KWIN_BUILD_ACTIVITIES
 class Activities;
 #endif
@@ -439,6 +440,7 @@ public:
     Decoration::DecorationBridge *decorationBridge() const;
     Outline *outline() const;
     Placement *placement() const;
+    RuleBook *rulebook() const;
 #if KWIN_BUILD_ACTIVITIES
     Activities *activities() const;
 #endif
@@ -715,6 +717,7 @@ private:
     std::unique_ptr<Decoration::DecorationBridge> m_decorationBridge;
     std::unique_ptr<Outline> m_outline;
     std::unique_ptr<Placement> m_placement;
+    std::unique_ptr<RuleBook> m_rulebook;
 #if KWIN_BUILD_ACTIVITIES
     std::unique_ptr<Activities> m_activities;
 #endif

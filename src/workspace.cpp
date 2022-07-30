@@ -154,7 +154,8 @@ Workspace::Workspace()
     m_quickTileCombineTimer = new QTimer(this);
     m_quickTileCombineTimer->setSingleShot(true);
 
-    RuleBook::create(this)->load();
+    m_rulebook = std::make_unique<RuleBook>();
+    m_rulebook->load();
 
     Screens::create(this);
     ScreenEdges::create(this);
@@ -487,7 +488,7 @@ Workspace::~Workspace()
         it = deleted.erase(it);
     }
 
-    delete RuleBook::self();
+    m_rulebook.reset();
     kwinApp()->config()->sync();
 
     m_placement.reset();
@@ -957,11 +958,11 @@ void Workspace::slotReconfigure()
     m_userActionsMenu->discard();
     updateToolWindows(true);
 
-    RuleBook::self()->load();
+    m_rulebook->load();
     for (Window *window : qAsConst(m_allClients)) {
         if (window->supportsWindowRules()) {
             window->evaluateWindowRules();
-            RuleBook::self()->discardUsed(window, false);
+            m_rulebook->discardUsed(window, false);
         }
     }
 
@@ -2850,6 +2851,11 @@ Outline *Workspace::outline() const
 Placement *Workspace::placement() const
 {
     return m_placement.get();
+}
+
+RuleBook *Workspace::rulebook() const
+{
+    return m_rulebook.get();
 }
 
 #if KWIN_BUILD_ACTIVITIES
