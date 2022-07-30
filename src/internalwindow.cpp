@@ -56,11 +56,10 @@ InternalWindow::InternalWindow(QWindow *handle)
     setupCompositing();
     updateColorScheme();
 
-    blockGeometryUpdates(true);
+    setMoveResizeGeometry(m_handle->geometry());
     commitGeometry(m_handle->geometry());
+
     updateDecoration(true);
-    moveResize(clientRectToFrameRect(m_handle->geometry()));
-    blockGeometryUpdates(false);
 
     m_handle->installEventFilter(this);
 }
@@ -325,7 +324,7 @@ void InternalWindow::setNoBorder(bool set)
 void InternalWindow::createDecoration(const QRectF &oldGeometry)
 {
     setDecoration(std::shared_ptr<KDecoration2::Decoration>(Workspace::self()->decorationBridge()->createDecoration(this)));
-    moveResize(oldGeometry);
+    moveResize(QRectF(oldGeometry.topLeft(), clientSizeToFrameSize(clientSize())));
 
     Q_EMIT geometryShapeChanged(this, oldGeometry);
 }
