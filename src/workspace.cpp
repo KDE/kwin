@@ -181,7 +181,7 @@ Workspace::Workspace()
     connect(this, &Workspace::configChanged, m_decorationBridge.get(), &Decoration::DecorationBridge::reconfigure);
 
     new DBusInterface(this);
-    Outline::create(this);
+    m_outline = std::make_unique<Outline>();
 
     initShortcuts();
 
@@ -2840,6 +2840,11 @@ ApplicationMenu *Workspace::applicationMenu() const
 Decoration::DecorationBridge *Workspace::decorationBridge() const
 {
     return m_decorationBridge.get();
+}
+
+Outline *Workspace::outline() const
+{
+    return m_outline.get();
 }
 
 #if KWIN_BUILD_ACTIVITIES

@@ -368,17 +368,17 @@ void WorkspaceWrapper::setupClientConnections(Window *client)
 
 void WorkspaceWrapper::showOutline(const QRect &geometry)
 {
-    outline()->show(geometry);
+    workspace()->outline()->show(geometry);
 }
 
 void WorkspaceWrapper::showOutline(int x, int y, int width, int height)
 {
-    outline()->show(QRect(x, y, width, height));
+    workspace()->outline()->show(QRect(x, y, width, height));
 }
 
 void WorkspaceWrapper::hideOutline()
 {
-    outline()->hide();
+    workspace()->outline()->hide();
 }
 
 X11Window *WorkspaceWrapper::getClient(qulonglong windowId)

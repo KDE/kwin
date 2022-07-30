@@ -42,7 +42,7 @@ void NonCompositedOutlineVisual::show()
 
     const int defaultDepth = Xcb::defaultDepth();
 
-    const QRect &outlineGeometry = outline()->geometry();
+    const QRect &outlineGeometry = m_outline->geometry();
     // left/right parts are between top/bottom, they don't reach as far as the corners
     const uint16_t verticalWidth = 5;
     const uint16_t verticalHeight = outlineGeometry.height() - 10;

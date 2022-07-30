@@ -62,6 +62,7 @@ class X11EventFilter;
 class FocusChain;
 class ApplicationMenu;
 enum class Predicate;
+class Outline;
 #if KWIN_BUILD_ACTIVITIES
 class Activities;
 #endif
@@ -436,6 +437,7 @@ public:
     FocusChain *focusChain() const;
     ApplicationMenu *applicationMenu() const;
     Decoration::DecorationBridge *decorationBridge() const;
+    Outline *outline() const;
 #if KWIN_BUILD_ACTIVITIES
     Activities *activities() const;
 #endif
@@ -710,6 +712,7 @@ private:
     std::unique_ptr<FocusChain> m_focusChain;
     std::unique_ptr<ApplicationMenu> m_applicationMenu;
     std::unique_ptr<Decoration::DecorationBridge> m_decorationBridge;
+    std::unique_ptr<Outline> m_outline;
 #if KWIN_BUILD_ACTIVITIES
     std::unique_ptr<Activities> m_activities;
 #endif

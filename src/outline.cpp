@@ -28,25 +28,20 @@
 namespace KWin
 {
 
-KWIN_SINGLETON_FACTORY(Outline)
-
-Outline::Outline(QObject *parent)
-    : QObject(parent)
-    , m_active(false)
+Outline::Outline()
+    : m_active(false)
 {
     connect(Compositor::self(), &Compositor::compositingToggled, this, &Outline::compositingChanged);
 }
 
-Outline::~Outline()
-{
-}
+Outline::~Outline() = default;
 
 void Outline::show()
 {
-    if (m_visual.isNull()) {
+    if (!m_visual) {
         createHelper();
     }
-    if (m_visual.isNull()) {
+    if (!m_visual) {
         // something went wrong
         return;
     }
@@ -62,7 +57,7 @@ void Outline::hide()
     }
     m_active = false;
     Q_EMIT activeChanged();
-    if (m_visual.isNull()) {
+    if (!m_visual) {
         return;
     }
     m_visual->hide();
@@ -107,7 +102,7 @@ QRect Outline::unifiedGeometry() const
 
 void Outline::createHelper()
 {
-    if (!m_visual.isNull()) {
+    if (m_visual) {
         return;
     }
     m_visual.reset(kwinApp()->platform()->createOutline(this));
@@ -119,6 +114,21 @@ void Outline::compositingChanged()
     if (m_active) {
         show();
     }
+}
+
+const QRect &Outline::geometry() const
+{
+    return m_outlineGeometry;
+}
+
+const QRect &Outline::visualParentGeometry() const
+{
+    return m_visualParentGeometry;
+}
+
+bool Outline::isActive() const
+{
+    return m_active;
 }
 
 OutlineVisual::OutlineVisual(Outline *outline)
@@ -144,7 +154,7 @@ CompositedOutlineVisual::~CompositedOutlineVisual()
 
 void CompositedOutlineVisual::hide()
 {
-    if (QQuickWindow *w = qobject_cast<QQuickWindow *>(m_mainItem.data())) {
+    if (QQuickWindow *w = qobject_cast<QQuickWindow *>(m_mainItem.get())) {
         w->hide();
         w->destroy();
     }
@@ -152,12 +162,12 @@ void CompositedOutlineVisual::hide()
 
 void CompositedOutlineVisual::show()
 {
-    if (m_qmlContext.isNull()) {
-        m_qmlContext.reset(new QQmlContext(Scripting::self()->qmlEngine()));
-        m_qmlContext->setContextProperty(QStringLiteral("outline"), outline());
+    if (!m_qmlContext) {
+        m_qmlContext = std::make_unique<QQmlContext>(Scripting::self()->qmlEngine());
+        m_qmlContext->setContextProperty(QStringLiteral("outline"), m_outline);
     }
-    if (m_qmlComponent.isNull()) {
-        m_qmlComponent.reset(new QQmlComponent(Scripting::self()->qmlEngine()));
+    if (!m_qmlComponent) {
+        m_qmlComponent = std::make_unique<QQmlComponent>(Scripting::self()->qmlEngine());
         const QString fileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
                                                         kwinApp()->config()->group(QStringLiteral("Outline")).readEntry("QmlPath", QStringLiteral(KWIN_NAME "/outline/plasma/outline.qml")));
         if (fileName.isEmpty()) {
@@ -168,9 +178,9 @@ void CompositedOutlineVisual::show()
         if (m_qmlComponent->isError()) {
             qCDebug(KWIN_CORE) << "Component failed to load: " << m_qmlComponent->errors();
         } else {
-            m_mainItem.reset(m_qmlComponent->create(m_qmlContext.data()));
+            m_mainItem.reset(m_qmlComponent->create(m_qmlContext.get()));
         }
-        if (auto w = qobject_cast<QQuickWindow *>(m_mainItem.data())) {
+        if (auto w = qobject_cast<QQuickWindow *>(m_mainItem.get())) {
             w->setProperty("__kwin_outline", true);
         }
     }

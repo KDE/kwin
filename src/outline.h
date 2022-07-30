@@ -12,6 +12,7 @@
 #include <QObject>
 #include <QRect>
 #include <kwinglobals.h>
+#include <memory>
 
 #include <kwin_export.h>
 
@@ -33,7 +34,7 @@ class OutlineVisual;
  * @author Arthur Arlt
  * @since 4.7
  */
-class Outline : public QObject
+class KWIN_EXPORT Outline : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QRect geometry READ geometry NOTIFY geometryChanged)
@@ -41,6 +42,7 @@ class Outline : public QObject
     Q_PROPERTY(QRect unifiedGeometry READ unifiedGeometry NOTIFY unifiedGeometryChanged)
     Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
 public:
+    explicit Outline();
     ~Outline() override;
 
     /**
@@ -110,11 +112,10 @@ Q_SIGNALS:
 
 private:
     void createHelper();
-    QScopedPointer<OutlineVisual> m_visual;
+    std::unique_ptr<OutlineVisual> m_visual;
     QRect m_outlineGeometry;
     QRect m_visualParentGeometry;
     bool m_active;
-    KWIN_SINGLETON(Outline)
 };
 
 class KWIN_EXPORT OutlineVisual
@@ -126,11 +127,7 @@ public:
     virtual void hide() = 0;
 
 protected:
-    Outline *outline();
-    const Outline *outline() const;
-
-private:
-    Outline *m_outline;
+    Outline *const m_outline;
 };
 
 class CompositedOutlineVisual : public OutlineVisual
@@ -142,41 +139,10 @@ public:
     void hide() override;
 
 private:
-    QScopedPointer<QQmlContext> m_qmlContext;
-    QScopedPointer<QQmlComponent> m_qmlComponent;
-    QScopedPointer<QObject> m_mainItem;
+    std::unique_ptr<QQmlContext> m_qmlContext;
+    std::unique_ptr<QQmlComponent> m_qmlComponent;
+    std::unique_ptr<QObject> m_mainItem;
 };
-
-inline bool Outline::isActive() const
-{
-    return m_active;
-}
-
-inline const QRect &Outline::geometry() const
-{
-    return m_outlineGeometry;
-}
-
-inline const QRect &Outline::visualParentGeometry() const
-{
-    return m_visualParentGeometry;
-}
-
-inline Outline *OutlineVisual::outline()
-{
-    return m_outline;
-}
-
-inline const Outline *OutlineVisual::outline() const
-{
-    return m_outline;
-}
-
-inline Outline *outline()
-{
-    return Outline::self();
-}
-
 }
 
 #endif

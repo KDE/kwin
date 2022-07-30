@@ -2788,7 +2788,7 @@ void Window::leaveInteractiveMoveResize()
         ScreenEdges::self()->reserveDesktopSwitching(false, Qt::Vertical | Qt::Horizontal);
     }
     if (isElectricBorderMaximizing()) {
-        outline()->hide();
+        workspace()->outline()->hide();
         elevate(false);
     }
 }
@@ -3687,9 +3687,9 @@ void Window::setElectricBorderMaximizing(bool maximizing)
 {
     m_electricMaximizing = maximizing;
     if (maximizing) {
-        outline()->show(quickTileGeometry(electricBorderMode(), Cursors::self()->mouse()->pos()).toRect(), moveResizeGeometry().toRect());
+        workspace()->outline()->show(quickTileGeometry(electricBorderMode(), Cursors::self()->mouse()->pos()).toRect(), moveResizeGeometry().toRect());
     } else {
-        outline()->hide();
+        workspace()->outline()->hide();
     }
     elevate(maximizing);
 }
