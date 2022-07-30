@@ -108,7 +108,7 @@ void ScreensTest::testSize_data()
 
 void ScreensTest::testSize()
 {
-    QSignalSpy sizeChangedSpy(screens(), &Screens::sizeChanged);
+    QSignalSpy sizeChangedSpy(workspace()->screens(), &Screens::sizeChanged);
     QVERIFY(sizeChangedSpy.isValid());
 
     QFETCH(QVector<QRect>, geometries);
@@ -116,25 +116,25 @@ void ScreensTest::testSize()
                               Q_ARG(int, geometries.count()), Q_ARG(QVector<QRect>, geometries));
 
     QVERIFY(sizeChangedSpy.wait());
-    QTEST(screens()->size(), "expectedSize");
+    QTEST(workspace()->screens()->size(), "expectedSize");
 }
 
 void ScreensTest::testCount()
 {
-    QSignalSpy countChangedSpy(screens(), &Screens::countChanged);
+    QSignalSpy countChangedSpy(workspace()->screens(), &Screens::countChanged);
     QVERIFY(countChangedSpy.isValid());
 
     // the test environments has two outputs
-    QCOMPARE(screens()->count(), 2);
+    QCOMPARE(workspace()->screens()->count(), 2);
 
     // change to one screen
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::QueuedConnection, Q_ARG(int, 1));
     QVERIFY(countChangedSpy.wait());
     QCOMPARE(countChangedSpy.count(), 1);
-    QCOMPARE(screens()->count(), 1);
+    QCOMPARE(workspace()->screens()->count(), 1);
 
     // setting the same geometries shouldn't emit the signal, but we should get a changed signal
-    QSignalSpy changedSpy(screens(), &Screens::changed);
+    QSignalSpy changedSpy(workspace()->screens(), &Screens::changed);
     QVERIFY(changedSpy.isValid());
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::QueuedConnection, Q_ARG(int, 1));
     QVERIFY(changedSpy.wait());
@@ -179,7 +179,7 @@ void ScreensTest::testCurrentWithFollowsMouse_data()
 
 void ScreensTest::testCurrentWithFollowsMouse()
 {
-    QSignalSpy changedSpy(screens(), &Screens::changed);
+    QSignalSpy changedSpy(workspace()->screens(), &Screens::changed);
     QVERIFY(changedSpy.isValid());
 
     // Enable "active screen follows mouse"
@@ -216,7 +216,7 @@ void ScreensTest::testCurrentPoint_data()
 
 void ScreensTest::testCurrentPoint()
 {
-    QSignalSpy changedSpy(screens(), &KWin::Screens::changed);
+    QSignalSpy changedSpy(workspace()->screens(), &KWin::Screens::changed);
     QVERIFY(changedSpy.isValid());
 
     QFETCH(QVector<QRect>, geometries);

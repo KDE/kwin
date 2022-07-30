@@ -324,7 +324,7 @@ AbstractLevel *AbstractLevel::create(const QList<ClientModel::LevelRestriction> 
 #endif
     }
     case ClientModel::ScreenRestriction:
-        for (int i = 0; i < screens()->count(); ++i) {
+        for (int i = 0; i < workspace()->screens()->count(); ++i) {
             AbstractLevel *childLevel = create(childRestrictions, childrenRestrictions, model, currentLevel);
             if (!childLevel) {
                 continue;
@@ -398,7 +398,7 @@ ForkLevel::ForkLevel(const QList<ClientModel::LevelRestriction> &childRestrictio
     , m_childRestrictions(childRestrictions)
 {
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::countChanged, this, &ForkLevel::desktopCountChanged);
-    connect(screens(), &Screens::countChanged, this, &ForkLevel::screenCountChanged);
+    connect(workspace()->screens(), &Screens::countChanged, this, &ForkLevel::screenCountChanged);
 #if KWIN_BUILD_ACTIVITIES
     if (Activities *activities = Workspace::self()->activities()) {
         connect(activities, &Activities::added, this, &ForkLevel::activityAdded);

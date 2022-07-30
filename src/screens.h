@@ -32,7 +32,7 @@ class KWIN_EXPORT Screens : public QObject
     Q_PROPERTY(int count READ count WRITE setCount NOTIFY countChanged)
 
 public:
-    ~Screens() override;
+    explicit Screens();
 
     void init();
 
@@ -103,30 +103,7 @@ private:
     int m_count;
     QSize m_boundingSize;
     qreal m_maxScale;
-
-    KWIN_SINGLETON(Screens)
 };
-
-inline int Screens::count() const
-{
-    return m_count;
-}
-
-inline QSize Screens::size() const
-{
-    return m_boundingSize;
-}
-
-inline QRect Screens::geometry() const
-{
-    return QRect(QPoint(0, 0), size());
-}
-
-inline Screens *screens()
-{
-    return Screens::self();
-}
-
 }
 
 #endif // KWIN_SCREENS_H

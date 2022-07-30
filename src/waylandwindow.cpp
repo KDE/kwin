@@ -47,7 +47,7 @@ WaylandWindow::WaylandWindow(SurfaceInterface *surface)
             this, &WaylandWindow::updateClientOutputs);
     connect(this, &WaylandWindow::desktopFileNameChanged,
             this, &WaylandWindow::updateIcon);
-    connect(screens(), &Screens::changed, this, &WaylandWindow::updateClientOutputs);
+    connect(workspace()->screens(), &Screens::changed, this, &WaylandWindow::updateClientOutputs);
     connect(surface->client(), &ClientConnection::aboutToBeDestroyed,
             this, &WaylandWindow::destroyWindow);
 

@@ -142,7 +142,7 @@ void PointerInputRedirection::init()
     });
     Q_EMIT m_cursor->changed();
 
-    connect(screens(), &Screens::changed, this, &PointerInputRedirection::updateAfterScreenChange);
+    connect(workspace()->screens(), &Screens::changed, this, &PointerInputRedirection::updateAfterScreenChange);
 #if KWIN_BUILD_SCREENLOCKER
     if (waylandServer()->hasScreenLockerIntegration()) {
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, [this]() {
@@ -1248,7 +1248,7 @@ WaylandCursorImage::WaylandCursorImage(QObject *parent)
     Cursor *pointerCursor = Cursors::self()->mouse();
 
     connect(pointerCursor, &Cursor::themeChanged, this, &WaylandCursorImage::invalidateCursorTheme);
-    connect(screens(), &Screens::maxScaleChanged, this, &WaylandCursorImage::invalidateCursorTheme);
+    connect(workspace()->screens(), &Screens::maxScaleChanged, this, &WaylandCursorImage::invalidateCursorTheme);
 }
 
 bool WaylandCursorImage::ensureCursorTheme()
@@ -1258,7 +1258,7 @@ bool WaylandCursorImage::ensureCursorTheme()
     }
 
     const Cursor *pointerCursor = Cursors::self()->mouse();
-    const qreal targetDevicePixelRatio = screens()->maxScale();
+    const qreal targetDevicePixelRatio = workspace()->screens()->maxScale();
 
     m_cursorTheme = KXcursorTheme(pointerCursor->themeName(), pointerCursor->themeSize(), targetDevicePixelRatio);
     if (!m_cursorTheme.isEmpty()) {

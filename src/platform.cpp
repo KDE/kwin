@@ -29,6 +29,7 @@
 #include "wayland/outputchangeset_v2.h"
 #include "wayland/outputconfiguration_v2_interface.h"
 #include "wayland_server.h"
+#include "workspace.h"
 
 #include <KCoreAddons>
 
@@ -190,7 +191,7 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationV2Interfa
                 setPrimaryOutput(defaultPrimaryOutput);
             }
         }
-        Q_EMIT screens()->changed();
+        Q_EMIT workspace()->screens()->changed();
         config->setApplied();
     } else {
         qCDebug(KWIN_CORE) << "Applying config failed";

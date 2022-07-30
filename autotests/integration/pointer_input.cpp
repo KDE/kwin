@@ -56,7 +56,7 @@ static PlatformCursorImage loadReferenceThemeCursor(const QByteArray &name)
 {
     const Cursor *pointerCursor = Cursors::self()->mouse();
 
-    const KXcursorTheme theme(pointerCursor->themeName(), pointerCursor->themeSize(), screens()->maxScale());
+    const KXcursorTheme theme(pointerCursor->themeName(), pointerCursor->themeSize(), workspace()->screens()->maxScale());
     if (theme.isEmpty()) {
         return PlatformCursorImage();
     }
@@ -390,7 +390,7 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     QVERIFY(!window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
     QVERIFY(leftSpy.wait());
 
-    QSignalSpy screensChangedSpy(screens(), &Screens::changed);
+    QSignalSpy screensChangedSpy(workspace()->screens(), &Screens::changed);
     QVERIFY(screensChangedSpy.isValid());
     // now let's remove the screen containing the cursor
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs",

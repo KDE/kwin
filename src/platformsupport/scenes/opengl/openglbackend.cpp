@@ -14,6 +14,7 @@
 #include "screens.h"
 #include "surfaceitem.h"
 #include "utils/common.h"
+#include "workspace.h"
 
 #include <QElapsedTimer>
 
@@ -46,7 +47,7 @@ void OpenGLBackend::setFailed(const QString &reason)
 
 void OpenGLBackend::copyPixels(const QRegion &region)
 {
-    const int height = screens()->size().height();
+    const int height = workspace()->screens()->size().height();
     for (const QRect &r : region) {
         const int x0 = r.x();
         const int y0 = height - r.y() - r.height();

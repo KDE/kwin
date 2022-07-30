@@ -15,6 +15,7 @@
 #include "screens.h"
 #include "utils/common.h"
 #include "utils/xcbutils.h"
+#include "workspace.h"
 
 #include <QVector>
 
@@ -57,7 +58,7 @@ bool OverlayWindowX11::create()
     if (m_window == XCB_WINDOW_NONE) {
         return false;
     }
-    resize(screens()->size());
+    resize(workspace()->screens()->size());
     return true;
 #else
     return false;
@@ -70,7 +71,7 @@ void OverlayWindowX11::setup(xcb_window_t window)
     Q_ASSERT(Xcb::Extensions::self()->isShapeInputAvailable());
     setNoneBackgroundPixmap(m_window);
     m_shape = QRegion();
-    const QSize &s = screens()->size();
+    const QSize &s = workspace()->screens()->size();
     setShape(QRect(0, 0, s.width(), s.height()));
     if (window != XCB_WINDOW_NONE) {
         setNoneBackgroundPixmap(window);
@@ -107,7 +108,7 @@ void OverlayWindowX11::hide()
     Q_ASSERT(m_window != XCB_WINDOW_NONE);
     xcb_unmap_window(connection(), m_window);
     m_shown = false;
-    const QSize &s = screens()->size();
+    const QSize &s = workspace()->screens()->size();
     setShape(QRect(0, 0, s.width(), s.height()));
 }
 
@@ -151,7 +152,7 @@ void OverlayWindowX11::destroy()
         return;
     }
     // reset the overlay shape
-    const QSize &s = screens()->size();
+    const QSize &s = workspace()->screens()->size();
     xcb_rectangle_t rec = {0, 0, static_cast<uint16_t>(s.width()), static_cast<uint16_t>(s.height())};
     xcb_shape_rectangles(connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, XCB_CLIP_ORDERING_UNSORTED, m_window, 0, 0, 1, &rec);
     xcb_shape_rectangles(connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_CLIP_ORDERING_UNSORTED, m_window, 0, 0, 1, &rec);

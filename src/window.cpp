@@ -80,7 +80,7 @@ Window::Window()
 #endif
     , m_colorScheme(QStringLiteral("kdeglobals"))
 {
-    connect(screens(), &Screens::changed, this, &Window::screenChanged);
+    connect(workspace()->screens(), &Screens::changed, this, &Window::screenChanged);
     connect(this, &Window::bufferGeometryChanged, this, &Window::inputTransformationChanged);
 
     // Only for compatibility reasons, drop in the next major release.
