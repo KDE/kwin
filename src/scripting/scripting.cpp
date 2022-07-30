@@ -372,7 +372,7 @@ bool KWin::Script::registerScreenEdge(int edge, const QJSValue &callback)
 
     QJSValueList &callbacks = m_screenEdgeCallbacks[edge];
     if (callbacks.isEmpty()) {
-        ScreenEdges::self()->reserve(static_cast<KWin::ElectricBorder>(edge), this, "slotBorderActivated");
+        workspace()->screenEdges()->reserve(static_cast<KWin::ElectricBorder>(edge), this, "slotBorderActivated");
     }
 
     callbacks << callback;
@@ -387,7 +387,7 @@ bool KWin::Script::unregisterScreenEdge(int edge)
         return false;
     }
 
-    ScreenEdges::self()->unreserve(static_cast<KWin::ElectricBorder>(edge), this);
+    workspace()->screenEdges()->unreserve(static_cast<KWin::ElectricBorder>(edge), this);
     m_screenEdgeCallbacks.erase(it);
 
     return true;
@@ -404,7 +404,7 @@ bool KWin::Script::registerTouchScreenEdge(int edge, const QJSValue &callback)
     }
 
     QAction *action = new QAction(this);
-    ScreenEdges::self()->reserveTouch(KWin::ElectricBorder(edge), action);
+    workspace()->screenEdges()->reserveTouch(KWin::ElectricBorder(edge), action);
     m_touchScreenEdgeCallbacks.insert(edge, action);
 
     connect(action, &QAction::triggered, this, [callback]() {

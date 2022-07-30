@@ -158,7 +158,7 @@ Workspace::Workspace()
     m_rulebook->load();
 
     Screens::create(this);
-    ScreenEdges::create(this);
+    m_screenEdges = std::make_unique<ScreenEdges>();
 
     // VirtualDesktopManager needs to be created prior to init shortcuts
     // and prior to TabBox, due to TabBox connecting to signals
@@ -192,12 +192,11 @@ Workspace::Workspace()
 void Workspace::init()
 {
     KSharedConfigPtr config = kwinApp()->config();
-    ScreenEdges *screenEdges = ScreenEdges::self();
-    screenEdges->setConfig(config);
-    screenEdges->init();
-    connect(options, &Options::configChanged, screenEdges, &ScreenEdges::reconfigure);
-    connect(VirtualDesktopManager::self(), &VirtualDesktopManager::layoutChanged, screenEdges, &ScreenEdges::updateLayout);
-    connect(this, &Workspace::windowActivated, screenEdges, &ScreenEdges::checkBlocking);
+    m_screenEdges->setConfig(config);
+    m_screenEdges->init();
+    connect(options, &Options::configChanged, m_screenEdges.get(), &ScreenEdges::reconfigure);
+    connect(VirtualDesktopManager::self(), &VirtualDesktopManager::layoutChanged, m_screenEdges.get(), &ScreenEdges::updateLayout);
+    connect(this, &Workspace::windowActivated, m_screenEdges.get(), &ScreenEdges::checkBlocking);
 
     connect(this, &Workspace::windowRemoved, m_focusChain.get(), &FocusChain::remove);
     connect(this, &Workspace::windowActivated, m_focusChain.get(), &FocusChain::setActiveWindow);
@@ -501,7 +500,7 @@ void Workspace::setupWindowConnections(Window *window)
 {
     connect(window, &Window::desktopPresenceChanged, this, &Workspace::desktopPresenceChanged);
     connect(window, &Window::minimizedChanged, this, std::bind(&Workspace::windowMinimizedChanged, this, window));
-    connect(window, &Window::fullScreenChanged, ScreenEdges::self(), &ScreenEdges::checkBlocking);
+    connect(window, &Window::fullScreenChanged, m_screenEdges.get(), &ScreenEdges::checkBlocking);
 }
 
 void Workspace::constrain(Window *below, Window *above)
@@ -1560,13 +1559,13 @@ QString Workspace::supportInformation() const
     }
     support.append(QStringLiteral("\nScreen Edges\n"));
     support.append(QStringLiteral("============\n"));
-    const QMetaObject *metaScreenEdges = ScreenEdges::self()->metaObject();
+    const QMetaObject *metaScreenEdges = m_screenEdges->metaObject();
     for (int i = 0; i < metaScreenEdges->propertyCount(); ++i) {
         const QMetaProperty property = metaScreenEdges->property(i);
         if (QLatin1String(property.name()) == QLatin1String("objectName")) {
             continue;
         }
-        support.append(QStringLiteral("%1: %2\n").arg(property.name(), printProperty(ScreenEdges::self()->property(property.name()))));
+        support.append(QStringLiteral("%1: %2\n").arg(property.name(), printProperty(m_screenEdges->property(property.name()))));
     }
     support.append(QStringLiteral("\nScreens\n"));
     support.append(QStringLiteral("=======\n"));
@@ -2038,7 +2037,7 @@ void Workspace::desktopResized()
     saveOldScreenSizes(); // after updateClientArea(), so that one still uses the previous one
 
     // TODO: emit a signal instead and remove the deep function calls into edges and effects
-    ScreenEdges::self()->recreateEdges();
+    m_screenEdges->recreateEdges();
 
     if (m_geometry != oldGeometry) {
         Q_EMIT geometryChanged();
@@ -2856,6 +2855,11 @@ Placement *Workspace::placement() const
 RuleBook *Workspace::rulebook() const
 {
     return m_rulebook.get();
+}
+
+ScreenEdges *Workspace::screenEdges() const
+{
+    return m_screenEdges.get();
 }
 
 #if KWIN_BUILD_ACTIVITIES

@@ -74,8 +74,8 @@ void ScreenEdgeTest::initTestCase()
     QVERIFY(applicationStartedSpy.wait());
     QVERIFY(Scripting::self());
 
-    ScreenEdges::self()->setTimeThreshold(0);
-    ScreenEdges::self()->setReActivationThreshold(0);
+    workspace()->screenEdges()->setTimeThreshold(0);
+    workspace()->screenEdges()->setReActivationThreshold(0);
 }
 
 void ScreenEdgeTest::init()

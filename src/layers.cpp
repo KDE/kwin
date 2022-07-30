@@ -132,7 +132,7 @@ void Workspace::stackScreenEdgesUnderOverrideRedirect()
     if (!rootInfo()) {
         return;
     }
-    Xcb::restackWindows(QVector<xcb_window_t>() << rootInfo()->supportWindow() << ScreenEdges::self()->windows());
+    Xcb::restackWindows(QVector<xcb_window_t>() << rootInfo()->supportWindow() << workspace()->screenEdges()->windows());
 }
 
 /**
@@ -155,7 +155,7 @@ void Workspace::propagateWindows(bool propagate_new_windows)
     // windows (e.g. popups).
     newWindowStack << rootInfo()->supportWindow();
 
-    newWindowStack << ScreenEdges::self()->windows();
+    newWindowStack << workspace()->screenEdges()->windows();
 
     newWindowStack << manual_overlays;
 

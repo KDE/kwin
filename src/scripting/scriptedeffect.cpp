@@ -322,7 +322,7 @@ QList<int> ScriptedEffect::touchEdgesForAction(const QString &action) const
         const QVector borders({ElectricTop, ElectricRight, ElectricBottom, ElectricLeft});
 
         for (const auto b : borders) {
-            if (ScreenEdges::self()->actionForTouchBorder(b) == ElectricActionShowDesktop) {
+            if (workspace()->screenEdges()->actionForTouchBorder(b) == ElectricActionShowDesktop) {
                 ret.append(b);
             }
         }
@@ -707,7 +707,7 @@ bool ScriptedEffect::registerScreenEdge(int edge, const QJSValue &callback)
     auto it = screenEdgeCallbacks().find(edge);
     if (it == screenEdgeCallbacks().end()) {
         // not yet registered
-        ScreenEdges::self()->reserve(static_cast<KWin::ElectricBorder>(edge), this, "borderActivated");
+        workspace()->screenEdges()->reserve(static_cast<KWin::ElectricBorder>(edge), this, "borderActivated");
         screenEdgeCallbacks().insert(edge, QJSValueList{callback});
     } else {
         it->append(callback);
@@ -759,7 +759,7 @@ bool ScriptedEffect::unregisterScreenEdge(int edge)
         // not previously registered
         return false;
     }
-    ScreenEdges::self()->unreserve(static_cast<KWin::ElectricBorder>(edge), this);
+    workspace()->screenEdges()->unreserve(static_cast<KWin::ElectricBorder>(edge), this);
     screenEdgeCallbacks().erase(it);
     return true;
 }
@@ -777,7 +777,7 @@ bool ScriptedEffect::registerTouchScreenEdge(int edge, const QJSValue &callback)
     connect(action, &QAction::triggered, this, [callback]() {
         QJSValue(callback).call();
     });
-    ScreenEdges::self()->reserveTouch(KWin::ElectricBorder(edge), action);
+    workspace()->screenEdges()->reserveTouch(KWin::ElectricBorder(edge), action);
     m_touchScreenEdgeCallbacks.insert(edge, action);
     return true;
 }

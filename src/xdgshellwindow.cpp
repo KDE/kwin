@@ -350,11 +350,11 @@ void XdgSurfaceWindow::updateClientArea()
 
 void XdgSurfaceWindow::updateShowOnScreenEdge()
 {
-    if (!ScreenEdges::self()) {
+    if (!workspace()->screenEdges()) {
         return;
     }
     if (!readyForPainting() || !m_plasmaShellSurface || m_plasmaShellSurface->role() != PlasmaShellSurfaceInterface::Role::Panel) {
-        ScreenEdges::self()->reserve(this, ElectricNone);
+        workspace()->screenEdges()->reserve(this, ElectricNone);
         return;
     }
     const PlasmaShellSurfaceInterface::PanelBehavior panelBehavior = m_plasmaShellSurface->panelBehavior();
@@ -419,9 +419,9 @@ void XdgSurfaceWindow::updateShowOnScreenEdge()
         if (edges & Qt::BottomEdge) {
             border = ElectricBottom;
         }
-        ScreenEdges::self()->reserve(this, border);
+        workspace()->screenEdges()->reserve(this, border);
     } else {
-        ScreenEdges::self()->reserve(this, ElectricNone);
+        workspace()->screenEdges()->reserve(this, ElectricNone);
     }
 }
 
@@ -516,7 +516,7 @@ void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
     });
     connect(shellSurface, &PlasmaShellSurfaceInterface::panelAutoHideShowRequested, this, [this] {
         showClient();
-        ScreenEdges::self()->reserve(this, ElectricNone);
+        workspace()->screenEdges()->reserve(this, ElectricNone);
         m_plasmaShellSurface->showAutoHidingPanel();
     });
     connect(shellSurface, &PlasmaShellSurfaceInterface::panelTakesFocusChanged, this, [this] {

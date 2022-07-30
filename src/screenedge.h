@@ -233,7 +233,7 @@ class KWIN_EXPORT ScreenEdges : public QObject
     Q_PROPERTY(int actionBottomLeft READ actionBottomLeft)
     Q_PROPERTY(int actionLeft READ actionLeft)
 public:
-    ~ScreenEdges() override;
+    explicit ScreenEdges();
     /**
      * @internal
      */
@@ -431,8 +431,6 @@ private:
     int m_cornerOffset;
     GestureRecognizer *m_gestureRecognizer;
     bool m_remainActiveOnFullscreen = false;
-
-    KWIN_SINGLETON(ScreenEdges)
 };
 
 /**********************************************************

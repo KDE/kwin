@@ -1091,7 +1091,7 @@ bool X11Window::motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x
 
     handleInteractiveMoveResize(QPoint(x, y), QPoint(x_root, y_root));
     if (isInteractiveMove()) {
-        ScreenEdges::self()->check(QPoint(x_root, y_root), QDateTime::fromMSecsSinceEpoch(xTime(), Qt::UTC));
+        workspace()->screenEdges()->check(QPoint(x_root, y_root), QDateTime::fromMSecsSinceEpoch(xTime(), Qt::UTC));
     }
 
     return true;

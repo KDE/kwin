@@ -1686,7 +1686,7 @@ public:
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
     {
         Q_UNUSED(nativeButton)
-        ScreenEdges::self()->isEntered(event);
+        workspace()->screenEdges()->isEntered(event);
         // always forward
         return false;
     }
@@ -1696,12 +1696,12 @@ public:
         // TODO: better check whether a touch sequence is in progress
         if (m_touchInProgress || waylandServer()->seat()->isTouchSequence()) {
             // cancel existing touch
-            ScreenEdges::self()->gestureRecognizer()->cancelSwipeGesture();
+            workspace()->screenEdges()->gestureRecognizer()->cancelSwipeGesture();
             m_touchInProgress = false;
             m_id = 0;
             return false;
         }
-        if (ScreenEdges::self()->gestureRecognizer()->startSwipeGesture(pos) > 0) {
+        if (workspace()->screenEdges()->gestureRecognizer()->startSwipeGesture(pos) > 0) {
             m_touchInProgress = true;
             m_id = id;
             m_lastPos = pos;
@@ -1713,7 +1713,7 @@ public:
     {
         Q_UNUSED(time)
         if (m_touchInProgress && m_id == id) {
-            ScreenEdges::self()->gestureRecognizer()->updateSwipeGesture(QSizeF(pos.x() - m_lastPos.x(), pos.y() - m_lastPos.y()));
+            workspace()->screenEdges()->gestureRecognizer()->updateSwipeGesture(QSizeF(pos.x() - m_lastPos.x(), pos.y() - m_lastPos.y()));
             m_lastPos = pos;
             return true;
         }
@@ -1723,7 +1723,7 @@ public:
     {
         Q_UNUSED(time)
         if (m_touchInProgress && m_id == id) {
-            ScreenEdges::self()->gestureRecognizer()->endSwipeGesture();
+            workspace()->screenEdges()->gestureRecognizer()->endSwipeGesture();
             m_touchInProgress = false;
             return true;
         }

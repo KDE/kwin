@@ -82,7 +82,7 @@ void EffectsHandlerImplX11::doStartMouseInterception(Qt::CursorShape shape)
     m_x11MouseInterception = std::make_unique<EffectsMouseInterceptionX11Filter>(m_mouseInterceptionWindow, this);
     // Raise electric border windows above the input windows
     // so they can still be triggered.
-    ScreenEdges::self()->ensureOnTop();
+    workspace()->screenEdges()->ensureOnTop();
 }
 
 void EffectsHandlerImplX11::doStopMouseInterception()
@@ -105,7 +105,7 @@ void EffectsHandlerImplX11::doCheckInputWindowStacking()
     m_mouseInterceptionWindow.raise();
     // Raise electric border windows above the input windows
     // so they can still be triggered. TODO: Do both at once.
-    ScreenEdges::self()->ensureOnTop();
+    workspace()->screenEdges()->ensureOnTop();
 }
 
 }

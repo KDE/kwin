@@ -1656,8 +1656,8 @@ bool Window::startInteractiveMoveResize()
     updateElectricGeometryRestore();
     checkUnrestrictedInteractiveMoveResize();
     Q_EMIT clientStartUserMovedResized(this);
-    if (ScreenEdges::self()->isDesktopSwitchingMovingClients()) {
-        ScreenEdges::self()->reserveDesktopSwitching(true, Qt::Vertical | Qt::Horizontal);
+    if (workspace()->screenEdges()->isDesktopSwitchingMovingClients()) {
+        workspace()->screenEdges()->reserveDesktopSwitching(true, Qt::Vertical | Qt::Horizontal);
     }
     return true;
 }
@@ -2784,8 +2784,8 @@ void Window::leaveInteractiveMoveResize()
 {
     workspace()->setMoveResizeWindow(nullptr);
     setInteractiveMoveResize(false);
-    if (ScreenEdges::self()->isDesktopSwitchingMovingClients()) {
-        ScreenEdges::self()->reserveDesktopSwitching(false, Qt::Vertical | Qt::Horizontal);
+    if (workspace()->screenEdges()->isDesktopSwitchingMovingClients()) {
+        workspace()->screenEdges()->reserveDesktopSwitching(false, Qt::Vertical | Qt::Horizontal);
     }
     if (isElectricBorderMaximizing()) {
         workspace()->outline()->hide();

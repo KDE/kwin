@@ -760,11 +760,9 @@ Output *Edge::output() const
 /**********************************************************
  * ScreenEdges
  *********************************************************/
-KWIN_SINGLETON_FACTORY(ScreenEdges)
 
-ScreenEdges::ScreenEdges(QObject *parent)
-    : QObject(parent)
-    , m_desktopSwitching(false)
+ScreenEdges::ScreenEdges()
+    : m_desktopSwitching(false)
     , m_desktopSwitchingMovingClients(false)
     , m_timeThreshold(0)
     , m_reactivateThreshold(0)
@@ -783,11 +781,6 @@ ScreenEdges::ScreenEdges(QObject *parent)
     m_cornerOffset = 4 * gridUnit;
 
     connect(workspace(), &Workspace::windowRemoved, this, &ScreenEdges::deleteEdgeForClient);
-}
-
-ScreenEdges::~ScreenEdges()
-{
-    s_self = nullptr;
 }
 
 void ScreenEdges::init()

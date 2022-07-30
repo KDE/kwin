@@ -2748,7 +2748,7 @@ void X11Window::readShowOnScreenEdge(Xcb::Property &property)
 
             m_edgeRemoveConnection = connect(this, &Window::keepBelowChanged, this, [this]() {
                 if (!keepBelow()) {
-                    ScreenEdges::self()->reserve(this, ElectricNone);
+                    workspace()->screenEdges()->reserve(this, ElectricNone);
                 }
             });
         } else {
@@ -2757,14 +2757,14 @@ void X11Window::readShowOnScreenEdge(Xcb::Property &property)
 
             m_edgeGeometryTrackingConnection = connect(this, &X11Window::frameGeometryChanged, this, [this, border]() {
                 hideClient();
-                ScreenEdges::self()->reserve(this, border);
+                workspace()->screenEdges()->reserve(this, border);
             });
         }
 
         if (successfullyHidden) {
-            ScreenEdges::self()->reserve(this, border);
+            workspace()->screenEdges()->reserve(this, border);
         } else {
-            ScreenEdges::self()->reserve(this, ElectricNone);
+            workspace()->screenEdges()->reserve(this, ElectricNone);
         }
     } else if (!property.isNull() && property->type != XCB_ATOM_NONE) {
         // property value is incorrect, delete the property
@@ -2776,7 +2776,7 @@ void X11Window::readShowOnScreenEdge(Xcb::Property &property)
 
         // this will call showOnScreenEdge to reset the state
         disconnect(m_edgeGeometryTrackingConnection);
-        ScreenEdges::self()->reserve(this, ElectricNone);
+        workspace()->screenEdges()->reserve(this, ElectricNone);
     }
 }
 

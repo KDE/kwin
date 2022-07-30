@@ -64,6 +64,7 @@ class ApplicationMenu;
 enum class Predicate;
 class Outline;
 class RuleBook;
+class ScreenEdges;
 #if KWIN_BUILD_ACTIVITIES
 class Activities;
 #endif
@@ -441,6 +442,7 @@ public:
     Outline *outline() const;
     Placement *placement() const;
     RuleBook *rulebook() const;
+    ScreenEdges *screenEdges() const;
 #if KWIN_BUILD_ACTIVITIES
     Activities *activities() const;
 #endif
@@ -718,6 +720,7 @@ private:
     std::unique_ptr<Outline> m_outline;
     std::unique_ptr<Placement> m_placement;
     std::unique_ptr<RuleBook> m_rulebook;
+    std::unique_ptr<ScreenEdges> m_screenEdges;
 #if KWIN_BUILD_ACTIVITIES
     std::unique_ptr<Activities> m_activities;
 #endif

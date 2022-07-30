@@ -212,7 +212,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     connect(tabBox, &TabBox::TabBox::tabBoxClosed, this, &EffectsHandler::tabBoxClosed);
     connect(tabBox, &TabBox::TabBox::tabBoxKeyEvent, this, &EffectsHandler::tabBoxKeyEvent);
 #endif
-    connect(ScreenEdges::self(), &ScreenEdges::approaching, this, &EffectsHandler::screenEdgeApproaching);
+    connect(workspace()->screenEdges(), &ScreenEdges::approaching, this, &EffectsHandler::screenEdgeApproaching);
 #if KWIN_BUILD_SCREENLOCKER
     connect(ScreenLockerWatcher::self(), &ScreenLockerWatcher::locked, this, &EffectsHandler::screenLockingChanged);
     connect(ScreenLockerWatcher::self(), &ScreenLockerWatcher::aboutToLock, this, &EffectsHandler::screenAboutToLock);
@@ -589,7 +589,7 @@ void EffectsHandlerImpl::setActiveFullScreenEffect(Effect *e)
             }
         }
         Q_EMIT hasActiveFullScreenEffectChanged();
-        ScreenEdges::self()->checkBlocking();
+        workspace()->screenEdges()->checkBlocking();
     }
 }
 
@@ -1377,29 +1377,29 @@ QPoint EffectsHandlerImpl::cursorPos() const
 
 void EffectsHandlerImpl::reserveElectricBorder(ElectricBorder border, Effect *effect)
 {
-    ScreenEdges::self()->reserve(border, effect, "borderActivated");
+    workspace()->screenEdges()->reserve(border, effect, "borderActivated");
 }
 
 void EffectsHandlerImpl::unreserveElectricBorder(ElectricBorder border, Effect *effect)
 {
-    ScreenEdges::self()->unreserve(border, effect);
+    workspace()->screenEdges()->unreserve(border, effect);
 }
 
 void EffectsHandlerImpl::registerTouchBorder(ElectricBorder border, QAction *action)
 {
-    ScreenEdges::self()->reserveTouch(border, action);
+    workspace()->screenEdges()->reserveTouch(border, action);
 }
 
 void EffectsHandlerImpl::registerRealtimeTouchBorder(ElectricBorder border, QAction *action, EffectsHandler::TouchBorderCallback progressCallback)
 {
-    ScreenEdges::self()->reserveTouch(border, action, [progressCallback](ElectricBorder border, const QSizeF &deltaProgress, Output *output) {
+    workspace()->screenEdges()->reserveTouch(border, action, [progressCallback](ElectricBorder border, const QSizeF &deltaProgress, Output *output) {
         progressCallback(border, deltaProgress, EffectScreenImpl::get(output));
     });
 }
 
 void EffectsHandlerImpl::unregisterTouchBorder(ElectricBorder border, QAction *action)
 {
-    ScreenEdges::self()->unreserveTouch(border, action);
+    workspace()->screenEdges()->unreserveTouch(border, action);
 }
 
 QPainter *EffectsHandlerImpl::scenePainter()
@@ -1597,9 +1597,9 @@ QVariant EffectsHandlerImpl::kwinOption(KWinOption kwopt)
         return settings && settings->decorationButtonsLeft().contains(KDecoration2::DecorationButtonType::Close) ? Qt::TopLeftCorner : Qt::TopRightCorner;
     }
     case SwitchDesktopOnScreenEdge:
-        return ScreenEdges::self()->isDesktopSwitching();
+        return workspace()->screenEdges()->isDesktopSwitching();
     case SwitchDesktopOnScreenEdgeMovingWindows:
-        return ScreenEdges::self()->isDesktopSwitchingMovingClients();
+        return workspace()->screenEdges()->isDesktopSwitchingMovingClients();
     default:
         return QVariant(); // an invalid one
     }

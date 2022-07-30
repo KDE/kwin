@@ -90,7 +90,7 @@ void ScreenEdgesTest::initTestCase()
 
 void ScreenEdgesTest::init()
 {
-    ScreenEdges::self()->recreateEdges();
+    workspace()->screenEdges()->recreateEdges();
     Workspace::self()->setActiveOutput(QPoint(640, 512));
     KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
 
@@ -126,7 +126,7 @@ void ScreenEdgesTest::testTouchCallback()
     group.writeEntry("Right", "none");
     config->sync();
 
-    auto s = ScreenEdges::self();
+    auto s = workspace()->screenEdges();
     s->setConfig(config);
     s->reconfigure();
 
@@ -222,7 +222,7 @@ void ScreenEdgesTest::testPushBack()
     config->group("Windows").writeEntry("ElectricBorderPushbackPixels", pushback);
     config->sync();
 
-    auto s = ScreenEdges::self();
+    auto s = workspace()->screenEdges();
     s->setConfig(config);
     s->reconfigure();
 
@@ -264,7 +264,7 @@ void ScreenEdgesTest::testClientEdge()
 
     // Reserve an electric border.
     QFETCH(ElectricBorder, border);
-    ScreenEdges::self()->reserve(window, border);
+    workspace()->screenEdges()->reserve(window, border);
 
     // Hide the window.
     window->hideClient();
@@ -302,7 +302,7 @@ void ScreenEdgesTest::testObjectEdge()
 
     // Reserve a screen edge border.
     QFETCH(ElectricBorder, border);
-    ScreenEdges::self()->reserve(border, &callback, "callback");
+    workspace()->screenEdges()->reserve(border, &callback, "callback");
 
     QFETCH(QPointF, triggerPoint);
     QFETCH(QPointF, delta);
