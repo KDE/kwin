@@ -1103,7 +1103,7 @@ void Workspace::initShortcuts()
     initShortcut("Invert Screen Colors", i18n("Invert Screen Colors"), 0, kwinApp()->platform(), &Platform::invertScreen);
 
 #if KWIN_BUILD_TABBOX
-    TabBox::TabBox::self()->initShortcuts();
+    m_tabbox->initShortcuts();
 #endif
     vds->initShortcuts();
     m_userActionsMenu->discard(); // so that it's recreated next time

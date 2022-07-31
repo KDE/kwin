@@ -4432,7 +4432,7 @@ void Window::setFullscreenGeometryRestore(const QRectF &geom)
 void Window::cleanTabBox()
 {
 #if KWIN_BUILD_TABBOX
-    TabBox::TabBox *tabBox = TabBox::TabBox::self();
+    TabBox::TabBox *tabBox = workspace()->tabbox();
     if (tabBox && tabBox->isDisplayed() && tabBox->currentClient() == this) {
         tabBox->nextPrev(true);
     }

@@ -169,7 +169,7 @@ Workspace::Workspace()
 
 #if KWIN_BUILD_TABBOX
     // need to create the tabbox before compositing scene is setup
-    TabBox::TabBox::create(this);
+    m_tabbox = std::make_unique<TabBox::TabBox>();
 #endif
 
     if (!Compositor::self()) {
@@ -1874,9 +1874,8 @@ void Workspace::setWasUserInteraction()
 void Workspace::updateTabbox()
 {
 #if KWIN_BUILD_TABBOX
-    TabBox::TabBox *tabBox = TabBox::TabBox::self();
-    if (tabBox->isDisplayed()) {
-        tabBox->reset(true);
+    if (m_tabbox->isDisplayed()) {
+        m_tabbox->reset(true);
     }
 #endif
 }
@@ -2865,6 +2864,13 @@ Screens *Workspace::screens() const
 {
     return m_screens.get();
 }
+
+#if KWIN_BUILD_TABBOX
+TabBox::TabBox *Workspace::tabbox() const
+{
+    return m_tabbox.get();
+}
+#endif
 
 #if KWIN_BUILD_ACTIVITIES
 Activities *Workspace::activities() const

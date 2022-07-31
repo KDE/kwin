@@ -45,6 +45,11 @@ class Tree;
 class Window;
 }
 
+namespace TabBox
+{
+class TabBox;
+}
+
 class Window;
 class Output;
 class ColorMapper;
@@ -445,6 +450,9 @@ public:
     RuleBook *rulebook() const;
     ScreenEdges *screenEdges() const;
     Screens *screens() const;
+#if KWIN_BUILD_TABBOX
+    TabBox::TabBox *tabbox() const;
+#endif
 #if KWIN_BUILD_ACTIVITIES
     Activities *activities() const;
 #endif
@@ -724,6 +732,9 @@ private:
     std::unique_ptr<RuleBook> m_rulebook;
     std::unique_ptr<ScreenEdges> m_screenEdges;
     std::unique_ptr<Screens> m_screens;
+#if KWIN_BUILD_TABBOX
+    std::unique_ptr<TabBox::TabBox> m_tabbox;
+#endif
 #if KWIN_BUILD_ACTIVITIES
     std::unique_ptr<Activities> m_activities;
 #endif

@@ -440,18 +440,9 @@ QUuid TabBoxClientImpl::internalId() const
 /*********************************************************
  * TabBox
  *********************************************************/
-TabBox *TabBox::s_self = nullptr;
 
-TabBox *TabBox::create(QObject *parent)
-{
-    Q_ASSERT(!s_self);
-    s_self = new TabBox(parent);
-    return s_self;
-}
-
-TabBox::TabBox(QObject *parent)
-    : QObject(parent)
-    , m_displayRefcount(0)
+TabBox::TabBox()
+    : m_displayRefcount(0)
     , m_desktopGrab(false)
     , m_tabGrab(false)
     , m_noModifierGrab(false)
@@ -506,10 +497,7 @@ TabBox::TabBox(QObject *parent)
     connect(Workspace::self(), &Workspace::configChanged, this, &TabBox::reconfigure);
 }
 
-TabBox::~TabBox()
-{
-    s_self = nullptr;
-}
+TabBox::~TabBox() = default;
 
 void TabBox::handlerReady()
 {
@@ -526,7 +514,7 @@ void TabBox::key(const KLazyLocalizedString &actionName, Slot slot, const QKeySe
     a->setObjectName(QString::fromUtf8(actionName.untranslatedText()));
     a->setText(actionName.toString());
     KGlobalAccel::self()->setGlobalShortcut(a, QList<QKeySequence>() << shortcut);
-    input()->registerShortcut(shortcut, a, TabBox::self(), slot);
+    input()->registerShortcut(shortcut, a, this, slot);
     auto cuts = KGlobalAccel::self()->shortcut(a);
     globalShortcutChanged(a, cuts.isEmpty() ? QKeySequence() : cuts.first());
 }

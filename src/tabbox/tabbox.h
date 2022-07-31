@@ -106,7 +106,8 @@ class KWIN_EXPORT TabBox : public QObject
 {
     Q_OBJECT
 public:
-    ~TabBox() override;
+    explicit TabBox();
+    ~TabBox();
 
     /**
      * Returns the currently displayed client ( only works in TabBoxWindowsMode ).
@@ -261,9 +262,6 @@ public:
     }
     void setCurrentIndex(QModelIndex index, bool notifyEffects = true);
 
-    static TabBox *self();
-    static TabBox *create(QObject *parent);
-
 public Q_SLOTS:
     /**
      * Notify effects that the tab box is being shown, and only display the
@@ -357,15 +355,8 @@ private:
     QList<ElectricBorder> m_borderActivate, m_borderAlternativeActivate;
     QHash<ElectricBorder, QAction *> m_touchActivate;
     QHash<ElectricBorder, QAction *> m_touchAlternativeActivate;
-    QScopedPointer<X11EventFilter> m_x11EventFilter;
-
-    static TabBox *s_self;
+    std::unique_ptr<X11EventFilter> m_x11EventFilter;
 };
-
-inline TabBox *TabBox::self()
-{
-    return s_self;
-}
 
 } // namespace TabBox
 } // namespace

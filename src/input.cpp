@@ -1646,14 +1646,14 @@ public:
     bool pointerEvent(QMouseEvent *event, quint32 button) override
     {
         Q_UNUSED(button)
-        if (!TabBox::TabBox::self() || !TabBox::TabBox::self()->isGrabbed()) {
+        if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
             return false;
         }
-        return TabBox::TabBox::self()->handleMouseEvent(event);
+        return workspace()->tabbox()->handleMouseEvent(event);
     }
     bool keyEvent(QKeyEvent *event) override
     {
-        if (!TabBox::TabBox::self() || !TabBox::TabBox::self()->isGrabbed()) {
+        if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
             return false;
         }
         auto seat = waylandServer()->seat();
@@ -1664,18 +1664,18 @@ public:
         passToWaylandServer(event);
 
         if (event->type() == QEvent::KeyPress) {
-            TabBox::TabBox::self()->keyPress(event->modifiers() | event->key());
+            workspace()->tabbox()->keyPress(event->modifiers() | event->key());
         } else if (static_cast<KeyEvent *>(event)->modifiersRelevantForGlobalShortcuts() == Qt::NoModifier) {
-            TabBox::TabBox::self()->modifiersReleased();
+            workspace()->tabbox()->modifiersReleased();
         }
         return true;
     }
     bool wheelEvent(QWheelEvent *event) override
     {
-        if (!TabBox::TabBox::self() || !TabBox::TabBox::self()->isGrabbed()) {
+        if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
             return false;
         }
-        return TabBox::TabBox::self()->handleWheelEvent(event);
+        return workspace()->tabbox()->handleWheelEvent(event);
     }
 };
 #endif
