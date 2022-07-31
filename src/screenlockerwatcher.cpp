@@ -16,13 +16,10 @@
 namespace KWin
 {
 
-KWIN_SINGLETON_FACTORY(ScreenLockerWatcher)
-
 static const QString SCREEN_LOCKER_SERVICE_NAME = QStringLiteral("org.freedesktop.ScreenSaver");
 
-ScreenLockerWatcher::ScreenLockerWatcher(QObject *parent)
-    : QObject(parent)
-    , m_serviceWatcher(new QDBusServiceWatcher(this))
+ScreenLockerWatcher::ScreenLockerWatcher()
+    : m_serviceWatcher(new QDBusServiceWatcher(this))
     , m_locked(false)
 {
     if (waylandServer() && waylandServer()->hasScreenLockerIntegration()) {
@@ -30,10 +27,6 @@ ScreenLockerWatcher::ScreenLockerWatcher(QObject *parent)
     } else {
         initialize();
     }
-}
-
-ScreenLockerWatcher::~ScreenLockerWatcher()
-{
 }
 
 void ScreenLockerWatcher::initialize()
@@ -88,4 +81,8 @@ void ScreenLockerWatcher::setLocked(bool activated)
     Q_EMIT locked(m_locked);
 }
 
+bool ScreenLockerWatcher::isLocked() const
+{
+    return m_locked;
+}
 }

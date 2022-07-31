@@ -246,7 +246,7 @@ void Application::createWorkspace()
 void Application::createInput()
 {
 #if KWIN_BUILD_SCREENLOCKER
-    ScreenLockerWatcher::create(this);
+    m_screenLockerWatcher = std::make_unique<ScreenLockerWatcher>();
 #endif
     auto input = InputRedirection::create(this);
     input->init();
@@ -575,5 +575,12 @@ ColorManager *Application::colorManager() const
 {
     return m_colorManager.get();
 }
+
+#if KWIN_BUILD_SCREENLOCKER
+ScreenLockerWatcher *Application::screenLockerWatcher() const
+{
+    return m_screenLockerWatcher.get();
+}
+#endif
 
 } // namespace

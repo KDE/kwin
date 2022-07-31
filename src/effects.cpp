@@ -214,8 +214,8 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
 #endif
     connect(workspace()->screenEdges(), &ScreenEdges::approaching, this, &EffectsHandler::screenEdgeApproaching);
 #if KWIN_BUILD_SCREENLOCKER
-    connect(ScreenLockerWatcher::self(), &ScreenLockerWatcher::locked, this, &EffectsHandler::screenLockingChanged);
-    connect(ScreenLockerWatcher::self(), &ScreenLockerWatcher::aboutToLock, this, &EffectsHandler::screenAboutToLock);
+    connect(kwinApp()->screenLockerWatcher(), &ScreenLockerWatcher::locked, this, &EffectsHandler::screenLockingChanged);
+    connect(kwinApp()->screenLockerWatcher(), &ScreenLockerWatcher::aboutToLock, this, &EffectsHandler::screenAboutToLock);
 #endif
 
     connect(kwinApp(), &Application::x11ConnectionChanged, this, [this]() {
@@ -1631,7 +1631,7 @@ QString EffectsHandlerImpl::supportInformation(const QString &name) const
 bool EffectsHandlerImpl::isScreenLocked() const
 {
 #if KWIN_BUILD_SCREENLOCKER
-    return ScreenLockerWatcher::self()->isLocked();
+    return kwinApp()->screenLockerWatcher()->isLocked();
 #else
     return false;
 #endif

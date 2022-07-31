@@ -30,7 +30,7 @@ ModifierOnlyShortcuts::ModifierOnlyShortcuts()
     , InputEventSpy()
 {
 #if KWIN_BUILD_SCREENLOCKER
-    connect(ScreenLockerWatcher::self(), &ScreenLockerWatcher::locked, this, &ModifierOnlyShortcuts::reset);
+    connect(kwinApp()->screenLockerWatcher(), &ScreenLockerWatcher::locked, this, &ModifierOnlyShortcuts::reset);
 #endif
 }
 
@@ -46,7 +46,7 @@ void ModifierOnlyShortcuts::keyEvent(KeyEvent *event)
         m_pressedKeys.insert(event->nativeScanCode());
         if (wasEmpty && m_pressedKeys.size() == 1 &&
 #if KWIN_BUILD_SCREENLOCKER
-            !ScreenLockerWatcher::self()->isLocked() &&
+            !kwinApp()->screenLockerWatcher()->isLocked() &&
 #endif
             m_pressedButtons == Qt::NoButton && m_cachedMods == Qt::NoModifier) {
             m_modifier = Qt::KeyboardModifier(int(event->modifiersRelevantForGlobalShortcuts()));

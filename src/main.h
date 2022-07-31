@@ -33,6 +33,7 @@ class X11EventFilter;
 class PluginManager;
 class InputMethod;
 class ColorManager;
+class ScreenLockerWatcher;
 
 class XcbEventFilter : public QAbstractNativeEventFilter
 {
@@ -236,6 +237,9 @@ public:
     PluginManager *pluginManager() const;
     InputMethod *inputMethod() const;
     ColorManager *colorManager() const;
+#if KWIN_BUILD_SCREENLOCKER
+    ScreenLockerWatcher *screenLockerWatcher() const;
+#endif
 
 Q_SIGNALS:
     void x11ConnectionChanged();
@@ -295,6 +299,9 @@ private:
     std::unique_ptr<PluginManager> m_pluginManager;
     std::unique_ptr<InputMethod> m_inputMethod;
     std::unique_ptr<ColorManager> m_colorManager;
+#if KWIN_BUILD_SCREENLOCKER
+    std::unique_ptr<ScreenLockerWatcher> m_screenLockerWatcher;
+#endif
 };
 
 inline static Application *kwinApp()

@@ -25,11 +25,9 @@ class KWIN_EXPORT ScreenLockerWatcher : public QObject
 {
     Q_OBJECT
 public:
-    ~ScreenLockerWatcher() override;
-    bool isLocked() const
-    {
-        return m_locked;
-    }
+    explicit ScreenLockerWatcher();
+
+    bool isLocked() const;
 Q_SIGNALS:
     void locked(bool locked);
     void aboutToLock();
@@ -45,8 +43,6 @@ private:
     OrgKdeScreensaverInterface *m_kdeInterface = nullptr;
     QDBusServiceWatcher *m_serviceWatcher;
     bool m_locked;
-
-    KWIN_SINGLETON(ScreenLockerWatcher)
 };
 }
 

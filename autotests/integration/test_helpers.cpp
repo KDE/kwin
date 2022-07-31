@@ -917,15 +917,15 @@ bool lockScreen()
     if (!waylandServer()->isScreenLocked()) {
         return false;
     }
-    if (!ScreenLockerWatcher::self()->isLocked()) {
-        QSignalSpy lockedSpy(ScreenLockerWatcher::self(), &ScreenLockerWatcher::locked);
+    if (!kwinApp()->screenLockerWatcher()->isLocked()) {
+        QSignalSpy lockedSpy(kwinApp()->screenLockerWatcher(), &ScreenLockerWatcher::locked);
         if (!lockedSpy.isValid()) {
             return false;
         }
         if (!lockedSpy.wait()) {
             return false;
         }
-        if (!ScreenLockerWatcher::self()->isLocked()) {
+        if (!kwinApp()->screenLockerWatcher()->isLocked()) {
             return false;
         }
     }
@@ -953,15 +953,15 @@ bool unlockScreen()
     if (waylandServer()->isScreenLocked()) {
         return true;
     }
-    if (ScreenLockerWatcher::self()->isLocked()) {
-        QSignalSpy lockedSpy(ScreenLockerWatcher::self(), &ScreenLockerWatcher::locked);
+    if (kwinApp()->screenLockerWatcher()->isLocked()) {
+        QSignalSpy lockedSpy(kwinApp()->screenLockerWatcher(), &ScreenLockerWatcher::locked);
         if (!lockedSpy.isValid()) {
             return false;
         }
         if (!lockedSpy.wait()) {
             return false;
         }
-        if (ScreenLockerWatcher::self()->isLocked()) {
+        if (kwinApp()->screenLockerWatcher()->isLocked()) {
             return false;
         }
     }

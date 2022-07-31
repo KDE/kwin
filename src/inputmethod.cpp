@@ -76,7 +76,7 @@ void InputMethod::init()
         m_inputMethodCrashes = 0;
     });
 #if KWIN_BUILD_SCREENLOCKER
-    connect(ScreenLockerWatcher::self(), &ScreenLockerWatcher::aboutToLock, this, &InputMethod::hide);
+    connect(kwinApp()->screenLockerWatcher(), &ScreenLockerWatcher::aboutToLock, this, &InputMethod::hide);
 #endif
 
     new VirtualKeyboardDBus(this);
