@@ -203,7 +203,7 @@ void SelectionTest::testClearOnEnter()
     // now create a Surface
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
     QVERIFY(surfaceCreatedSpy.isValid());
-    QScopedPointer<Surface> s1(m_client1.compositor->createSurface());
+    std::unique_ptr<Surface> s1(m_client1.compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
     auto serverSurface1 = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface1);
@@ -214,9 +214,9 @@ void SelectionTest::testClearOnEnter()
     QVERIFY(selectionClearedClient1Spy.wait());
 
     // let's set a selection
-    QScopedPointer<DataSource> dataSource(m_client1.ddm->createDataSource());
+    std::unique_ptr<DataSource> dataSource(m_client1.ddm->createDataSource());
     dataSource->offer(QStringLiteral("text/plain"));
-    m_client1.dataDevice->setSelection(keyboardEnteredClient1Spy.first().first().value<quint32>(), dataSource.data());
+    m_client1.dataDevice->setSelection(keyboardEnteredClient1Spy.first().first().value<quint32>(), dataSource.get());
 
     // now let's bring in client 2
     QSignalSpy selectionOfferedClient2Spy(m_client2.dataDevice, &DataDevice::selectionOffered);
@@ -225,7 +225,7 @@ void SelectionTest::testClearOnEnter()
     QVERIFY(selectionClearedClient2Spy.isValid());
     QSignalSpy keyboardEnteredClient2Spy(m_client2.keyboard, &Keyboard::entered);
     QVERIFY(keyboardEnteredClient2Spy.isValid());
-    QScopedPointer<Surface> s2(m_client2.compositor->createSurface());
+    std::unique_ptr<Surface> s2(m_client2.compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
     auto serverSurface2 = surfaceCreatedSpy.last().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface2);
@@ -236,8 +236,8 @@ void SelectionTest::testClearOnEnter()
     QVERIFY(selectionClearedClient2Spy.isEmpty());
 
     // set a data source but without offers
-    QScopedPointer<DataSource> dataSource2(m_client2.ddm->createDataSource());
-    m_client2.dataDevice->setSelection(keyboardEnteredClient2Spy.first().first().value<quint32>(), dataSource2.data());
+    std::unique_ptr<DataSource> dataSource2(m_client2.ddm->createDataSource());
+    m_client2.dataDevice->setSelection(keyboardEnteredClient2Spy.first().first().value<quint32>(), dataSource2.get());
     QVERIFY(selectionOfferedClient2Spy.wait());
     // and clear
     m_client2.dataDevice->clearSelection(keyboardEnteredClient2Spy.first().first().value<quint32>());

@@ -8,6 +8,7 @@
 #include "kwin_export.h"
 
 #include <QObject>
+#include <memory>
 
 struct wl_resource;
 struct wl_client;
@@ -52,7 +53,7 @@ private:
     friend class PrimarySelectionDeviceManagerV1InterfacePrivate;
     explicit PrimarySelectionDeviceV1Interface(SeatInterface *seat, wl_resource *resource);
 
-    QScopedPointer<PrimarySelectionDeviceV1InterfacePrivate> d;
+    std::unique_ptr<PrimarySelectionDeviceV1InterfacePrivate> d;
 };
 
 }

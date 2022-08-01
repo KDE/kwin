@@ -7,6 +7,7 @@
 #pragma once
 
 #include <QObject>
+#include <memory>
 
 namespace KWin
 {
@@ -56,7 +57,7 @@ Q_SIGNALS:
 
 private:
     class Private;
-    QScopedPointer<Private> d;
+    std::unique_ptr<Private> d;
 };
 
 } // namespace KWin

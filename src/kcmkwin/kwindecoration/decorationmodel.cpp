@@ -118,7 +118,7 @@ void DecorationsModel::init()
     m_plugins.clear();
     const auto plugins = KPluginMetaData::findPlugins(s_pluginName);
     for (const auto &info : plugins) {
-        QScopedPointer<KDecoration2::DecorationThemeProvider> themeFinder(
+        std::unique_ptr<KDecoration2::DecorationThemeProvider> themeFinder(
             KPluginFactory::instantiatePlugin<KDecoration2::DecorationThemeProvider>(info).plugin);
         KDecoration2::DecorationThemeMetaData data;
         const auto decoSettingsMap = info.rawData().value("org.kde.kdecoration2").toObject().toVariantMap();

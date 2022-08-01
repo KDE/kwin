@@ -38,10 +38,10 @@ public:
     SurfaceInterface *focusedSurface = nullptr;
     QMetaObject::Connection destroyConnection;
     Cursor *cursor = nullptr;
-    QScopedPointer<RelativePointerV1Interface> relativePointersV1;
-    QScopedPointer<PointerSwipeGestureV1Interface> swipeGesturesV1;
-    QScopedPointer<PointerPinchGestureV1Interface> pinchGesturesV1;
-    QScopedPointer<PointerHoldGestureV1Interface> holdGesturesV1;
+    std::unique_ptr<RelativePointerV1Interface> relativePointersV1;
+    std::unique_ptr<PointerSwipeGestureV1Interface> swipeGesturesV1;
+    std::unique_ptr<PointerPinchGestureV1Interface> pinchGesturesV1;
+    std::unique_ptr<PointerHoldGestureV1Interface> holdGesturesV1;
     QPointF lastPosition;
 
     void sendLeave(quint32 serial);

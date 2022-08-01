@@ -320,7 +320,7 @@ private:
     /**
      * Lock to protect the scripts member variable.
      */
-    QScopedPointer<QRecursiveMutex> m_scriptsLock;
+    std::unique_ptr<QRecursiveMutex> m_scriptsLock;
 
     // Preferably call ONLY at load time
     void runScripts();

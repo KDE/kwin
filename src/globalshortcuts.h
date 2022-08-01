@@ -126,8 +126,8 @@ private:
 
     std::unique_ptr<KGlobalAccelD> m_kglobalAccel;
     KGlobalAccelInterface *m_kglobalAccelInterface = nullptr;
-    QScopedPointer<GestureRecognizer> m_touchpadGestureRecognizer;
-    QScopedPointer<GestureRecognizer> m_touchscreenGestureRecognizer;
+    std::unique_ptr<GestureRecognizer> m_touchpadGestureRecognizer;
+    std::unique_ptr<GestureRecognizer> m_touchscreenGestureRecognizer;
 };
 
 struct KeyboardShortcut

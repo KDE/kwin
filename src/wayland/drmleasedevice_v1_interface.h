@@ -83,7 +83,7 @@ public:
 
 private:
     friend class DrmLeaseConnectorV1InterfacePrivate;
-    QScopedPointer<DrmLeaseConnectorV1InterfacePrivate> d;
+    std::unique_ptr<DrmLeaseConnectorV1InterfacePrivate> d;
 };
 
 /**
@@ -128,7 +128,7 @@ private:
     friend class DrmLeaseDeviceV1InterfacePrivate;
     friend class DrmLeaseRequestV1Interface;
     friend class DrmLeaseV1InterfacePrivate;
-    QScopedPointer<DrmLeaseV1InterfacePrivate> d;
+    std::unique_ptr<DrmLeaseV1InterfacePrivate> d;
 };
 
 }

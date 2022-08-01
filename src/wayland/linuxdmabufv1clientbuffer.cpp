@@ -52,7 +52,7 @@ void LinuxDmaBufV1ClientBufferIntegrationPrivate::zwp_linux_dmabuf_v1_bind_resou
 
 void LinuxDmaBufV1ClientBufferIntegrationPrivate::zwp_linux_dmabuf_v1_get_default_feedback(Resource *resource, uint32_t id)
 {
-    LinuxDmaBufV1FeedbackPrivate::get(defaultFeedback.data())->add(resource->client(), id, resource->version());
+    LinuxDmaBufV1FeedbackPrivate::get(defaultFeedback.get())->add(resource->client(), id, resource->version());
 }
 
 void LinuxDmaBufV1ClientBufferIntegrationPrivate::zwp_linux_dmabuf_v1_get_surface_feedback(Resource *resource, uint32_t id, wl_resource *surfaceResource)
@@ -66,7 +66,7 @@ void LinuxDmaBufV1ClientBufferIntegrationPrivate::zwp_linux_dmabuf_v1_get_surfac
     if (!surfacePrivate->dmabufFeedbackV1) {
         surfacePrivate->dmabufFeedbackV1.reset(new LinuxDmaBufV1Feedback(this));
     }
-    LinuxDmaBufV1FeedbackPrivate::get(surfacePrivate->dmabufFeedbackV1.data())->add(resource->client(), id, resource->version());
+    LinuxDmaBufV1FeedbackPrivate::get(surfacePrivate->dmabufFeedbackV1.get())->add(resource->client(), id, resource->version());
 }
 
 void LinuxDmaBufV1ClientBufferIntegrationPrivate::zwp_linux_dmabuf_v1_destroy(Resource *resource)
@@ -312,7 +312,7 @@ bool operator==(const LinuxDmaBufV1Feedback::Tranche &t1, const LinuxDmaBufV1Fee
 
 void LinuxDmaBufV1ClientBufferIntegration::setSupportedFormatsWithModifiers(const QVector<LinuxDmaBufV1Feedback::Tranche> &tranches)
 {
-    if (LinuxDmaBufV1FeedbackPrivate::get(d->defaultFeedback.data())->m_tranches != tranches) {
+    if (LinuxDmaBufV1FeedbackPrivate::get(d->defaultFeedback.get())->m_tranches != tranches) {
         QHash<uint32_t, QVector<uint64_t>> set;
         for (const auto &tranche : tranches) {
             set.insert(tranche.formatTable);
@@ -453,7 +453,7 @@ void LinuxDmaBufV1Feedback::setTranches(const QVector<Tranche> &tranches)
 
 LinuxDmaBufV1FeedbackPrivate *LinuxDmaBufV1FeedbackPrivate::get(LinuxDmaBufV1Feedback *q)
 {
-    return q->d.data();
+    return q->d.get();
 }
 
 LinuxDmaBufV1FeedbackPrivate::LinuxDmaBufV1FeedbackPrivate(LinuxDmaBufV1ClientBufferIntegrationPrivate *bufferintegration)
@@ -487,7 +487,7 @@ void LinuxDmaBufV1FeedbackPrivate::send(Resource *resource)
         sendTranche(tranche);
     }
     // send default hints as the last fallback tranche
-    const auto defaultFeedbackPrivate = get(m_bufferintegration->defaultFeedback.data());
+    const auto defaultFeedbackPrivate = get(m_bufferintegration->defaultFeedback.get());
     if (this != defaultFeedbackPrivate) {
         for (const auto &tranche : qAsConst(defaultFeedbackPrivate->m_tranches)) {
             sendTranche(tranche);
@@ -524,7 +524,7 @@ LinuxDmaBufV1FormatTable::LinuxDmaBufV1FormatTable(const QHash<uint32_t, QVector
         }
     }
     size = data.size() * sizeof(linux_dmabuf_feedback_v1_table_entry);
-    QScopedPointer<QTemporaryFile> tmp(new QTemporaryFile());
+    std::unique_ptr<QTemporaryFile> tmp(new QTemporaryFile());
     if (!tmp->open()) {
         qCWarning(KWIN_CORE) << "Failed to create keymap file:" << tmp->errorString();
         return;

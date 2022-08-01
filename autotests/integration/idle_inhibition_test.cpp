@@ -70,15 +70,15 @@ void TestIdleInhibition::testInhibit()
     QCOMPARE(input()->idleInhibitors(), QList<Window *>{});
 
     // now create window
-    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
 
     // now create inhibition on window
-    QScopedPointer<Test::IdleInhibitorV1> inhibitor(Test::createIdleInhibitorV1(surface.data()));
+    std::unique_ptr<Test::IdleInhibitorV1> inhibitor(Test::createIdleInhibitorV1(surface.get()));
     QVERIFY(inhibitor);
 
     // render the window
-    auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
 
     // this should inhibit our server object
@@ -91,7 +91,7 @@ void TestIdleInhibition::testInhibit()
     QCOMPARE(input()->idleInhibitors(), QList<Window *>{});
 
     // inhibit again and destroy window
-    QScopedPointer<Test::IdleInhibitorV1> inhibitor2(Test::createIdleInhibitorV1(surface.data()));
+    std::unique_ptr<Test::IdleInhibitorV1> inhibitor2(Test::createIdleInhibitorV1(surface.get()));
     Test::flushWaylandConnection();
     QGuiApplication::processEvents();
     QCOMPARE(input()->idleInhibitors(), QList<Window *>{window});
@@ -110,17 +110,17 @@ void TestIdleInhibition::testDontInhibitWhenNotOnCurrentDesktop()
     QCOMPARE(VirtualDesktopManager::self()->count(), 2u);
 
     // Create the test window.
-    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QVERIFY(!surface.isNull());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    QVERIFY(!shellSurface.isNull());
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    QVERIFY(surface != nullptr);
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    QVERIFY(shellSurface != nullptr);
 
     // Create the inhibitor object.
-    QScopedPointer<Test::IdleInhibitorV1> inhibitor(Test::createIdleInhibitorV1(surface.data()));
+    std::unique_ptr<Test::IdleInhibitorV1> inhibitor(Test::createIdleInhibitorV1(surface.get()));
     QVERIFY(inhibitor);
 
     // Render the window.
-    auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
 
     // The test window should be only on the first virtual desktop.
@@ -156,17 +156,17 @@ void TestIdleInhibition::testDontInhibitWhenMinimized()
     // associated surface is minimized.
 
     // Create the test window.
-    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QVERIFY(!surface.isNull());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    QVERIFY(!shellSurface.isNull());
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    QVERIFY(surface != nullptr);
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    QVERIFY(shellSurface != nullptr);
 
     // Create the inhibitor object.
-    QScopedPointer<Test::IdleInhibitorV1> inhibitor(Test::createIdleInhibitorV1(surface.data()));
+    std::unique_ptr<Test::IdleInhibitorV1> inhibitor(Test::createIdleInhibitorV1(surface.get()));
     QVERIFY(inhibitor);
 
     // Render the window.
-    auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
 
     // This should inhibit our server object.
@@ -192,21 +192,21 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
     // when the associated window is unmapped.
 
     // Create the test window.
-    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QVERIFY(!surface.isNull());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    QVERIFY(!shellSurface.isNull());
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    QVERIFY(surface != nullptr);
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    QVERIFY(shellSurface != nullptr);
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.isValid());
 
     // Create the inhibitor object.
-    QScopedPointer<Test::IdleInhibitorV1> inhibitor(Test::createIdleInhibitorV1(surface.data()));
+    std::unique_ptr<Test::IdleInhibitorV1> inhibitor(Test::createIdleInhibitorV1(surface.get()));
     QVERIFY(inhibitor);
 
     // Map the window.
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowAddedSpy.isValid());
-    Test::render(surface.data(), QSize(100, 50), Qt::blue);
+    Test::render(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(windowAddedSpy.isEmpty());
     QVERIFY(windowAddedSpy.wait());
     QCOMPARE(windowAddedSpy.count(), 1);
@@ -238,7 +238,7 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
 
     // Map the window.
-    Test::render(surface.data(), QSize(100, 50), Qt::blue);
+    Test::render(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(windowAddedSpy.wait());
     QCOMPARE(windowAddedSpy.count(), 2);
     window = windowAddedSpy.last().first().value<Window *>();
@@ -264,17 +264,17 @@ void TestIdleInhibition::testDontInhibitWhenLeftCurrentDesktop()
     QCOMPARE(VirtualDesktopManager::self()->count(), 2u);
 
     // Create the test window.
-    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QVERIFY(!surface.isNull());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    QVERIFY(!shellSurface.isNull());
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    QVERIFY(surface != nullptr);
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    QVERIFY(shellSurface != nullptr);
 
     // Create the inhibitor object.
-    QScopedPointer<Test::IdleInhibitorV1> inhibitor(Test::createIdleInhibitorV1(surface.data()));
+    std::unique_ptr<Test::IdleInhibitorV1> inhibitor(Test::createIdleInhibitorV1(surface.get()));
     QVERIFY(inhibitor);
 
     // Render the window.
-    auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
 
     // The test window should be only on the first virtual desktop.

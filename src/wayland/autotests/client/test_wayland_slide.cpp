@@ -138,13 +138,13 @@ void TestSlide::testCreate()
     QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWaylandServer::CompositorInterface::surfaceCreated);
     QVERIFY(serverSurfaceCreated.isValid());
 
-    QScopedPointer<KWayland::Client::Surface> surface(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
 
     auto serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
     QSignalSpy slideChanged(serverSurface, &KWaylandServer::SurfaceInterface::slideOnShowHideChanged);
 
-    auto slide = m_slideManager->createSlide(surface.data(), surface.data());
+    auto slide = m_slideManager->createSlide(surface.get(), surface.get());
     slide->setLocation(KWayland::Client::Slide::Location::Top);
     slide->setOffset(15);
     slide->commit();
@@ -167,14 +167,14 @@ void TestSlide::testSurfaceDestroy()
     QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
     QVERIFY(serverSurfaceCreated.isValid());
 
-    QScopedPointer<KWayland::Client::Surface> surface(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
 
     auto serverSurface = serverSurfaceCreated.first().first().value<SurfaceInterface *>();
     QSignalSpy slideChanged(serverSurface, &SurfaceInterface::slideOnShowHideChanged);
     QVERIFY(slideChanged.isValid());
 
-    QScopedPointer<Slide> slide(m_slideManager->createSlide(surface.data()));
+    std::unique_ptr<Slide> slide(m_slideManager->createSlide(surface.get()));
     slide->commit();
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(slideChanged.wait());

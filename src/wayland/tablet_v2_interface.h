@@ -9,6 +9,7 @@
 
 #include <QObject>
 #include <QVector>
+#include <memory>
 
 namespace KWaylandServer
 {
@@ -50,7 +51,7 @@ public:
     TabletSeatV2Interface *seat(SeatInterface *seat) const;
 
 private:
-    QScopedPointer<TabletManagerV2InterfacePrivate> d;
+    std::unique_ptr<TabletManagerV2InterfacePrivate> d;
 };
 
 class KWIN_EXPORT TabletToolV2Interface : public QObject
@@ -120,7 +121,7 @@ private:
                                    quint32 hil,
                                    const QVector<Capability> &capability,
                                    QObject *parent);
-    QScopedPointer<TabletToolV2InterfacePrivate> d;
+    std::unique_ptr<TabletToolV2InterfacePrivate> d;
 };
 
 class KWIN_EXPORT TabletCursorV2 : public QObject
@@ -137,7 +138,7 @@ Q_SIGNALS:
 
 private:
     TabletCursorV2();
-    const QScopedPointer<TabletCursorV2Private> d;
+    const std::unique_ptr<TabletCursorV2Private> d;
     friend class TabletToolV2InterfacePrivate;
 };
 
@@ -168,7 +169,7 @@ private:
                                   quint32 currentMode,
                                   Display *display,
                                   TabletSeatV2Interface *parent);
-    QScopedPointer<TabletPadV2InterfacePrivate> d;
+    std::unique_ptr<TabletPadV2InterfacePrivate> d;
 };
 
 class KWIN_EXPORT TabletPadRingV2Interface : public QObject
@@ -192,7 +193,7 @@ private:
     friend class TabletPadV2InterfacePrivate;
     friend class TabletSeatV2InterfacePrivate;
     explicit TabletPadRingV2Interface(TabletPadV2Interface *parent);
-    QScopedPointer<TabletPadRingV2InterfacePrivate> d;
+    std::unique_ptr<TabletPadRingV2InterfacePrivate> d;
 };
 
 class KWIN_EXPORT TabletPadStripV2Interface : public QObject
@@ -215,7 +216,7 @@ private:
     friend class TabletPadV2InterfacePrivate;
     friend class TabletSeatV2InterfacePrivate;
     explicit TabletPadStripV2Interface(TabletPadV2Interface *parent);
-    QScopedPointer<TabletPadStripV2InterfacePrivate> d;
+    std::unique_ptr<TabletPadStripV2InterfacePrivate> d;
 };
 
 class KWIN_EXPORT TabletPadGroupV2Interface : public QObject
@@ -231,7 +232,7 @@ private:
     friend class TabletPadV2InterfacePrivate;
     friend class TabletSeatV2InterfacePrivate;
     explicit TabletPadGroupV2Interface(quint32 currentMode, TabletPadV2Interface *parent);
-    QScopedPointer<TabletPadGroupV2InterfacePrivate> d;
+    std::unique_ptr<TabletPadGroupV2InterfacePrivate> d;
 };
 
 class KWIN_EXPORT TabletV2Interface : public QObject
@@ -253,7 +254,7 @@ private:
     friend class TabletPadV2Interface;
     friend class TabletToolV2Interface;
     explicit TabletV2Interface(quint32 vendorId, quint32 productId, const QString &name, const QStringList &paths, QObject *parent);
-    QScopedPointer<TabletV2InterfacePrivate> d;
+    std::unique_ptr<TabletV2InterfacePrivate> d;
 };
 
 class KWIN_EXPORT TabletSeatV2Interface : public QObject
@@ -286,7 +287,7 @@ public:
 private:
     friend class TabletManagerV2InterfacePrivate;
     explicit TabletSeatV2Interface(Display *display, QObject *parent);
-    QScopedPointer<TabletSeatV2InterfacePrivate> d;
+    std::unique_ptr<TabletSeatV2InterfacePrivate> d;
 };
 
 }

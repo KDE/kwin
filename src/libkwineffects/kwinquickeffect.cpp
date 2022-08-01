@@ -21,17 +21,17 @@ class QuickSceneEffectPrivate
 public:
     static QuickSceneEffectPrivate *get(QuickSceneEffect *effect)
     {
-        return effect->d.data();
+        return effect->d.get();
     }
     bool isItemOnScreen(QQuickItem *item, EffectScreen *screen);
 
     SharedQmlEngine::Ptr qmlEngine;
-    QScopedPointer<QQmlComponent> qmlComponent;
+    std::unique_ptr<QQmlComponent> qmlComponent;
     QUrl source;
     QHash<EffectScreen *, QuickSceneView *> views;
     QPointer<QuickSceneView> mouseImplicitGrab;
     bool running = false;
-    QScopedPointer<QWindow> dummyWindow;
+    std::unique_ptr<QWindow> dummyWindow;
 };
 
 bool QuickSceneEffectPrivate::isItemOnScreen(QQuickItem *item, EffectScreen *screen)
@@ -54,7 +54,7 @@ bool QuickSceneEffectPrivate::isItemOnScreen(QQuickItem *item, EffectScreen *scr
 }
 
 QuickSceneView::QuickSceneView(QuickSceneEffect *effect, EffectScreen *screen)
-    : OffscreenQuickView(effect, QuickSceneEffectPrivate::get(effect)->dummyWindow.data())
+    : OffscreenQuickView(effect, QuickSceneEffectPrivate::get(effect)->dummyWindow.get())
     , m_effect(effect)
     , m_screen(screen)
 {
@@ -70,7 +70,7 @@ QuickSceneView::~QuickSceneView()
 
 QQuickItem *QuickSceneView::rootItem() const
 {
-    return m_rootItem.data();
+    return m_rootItem.get();
 }
 
 void QuickSceneView::setRootItem(QQuickItem *item)
@@ -83,8 +83,8 @@ void QuickSceneView::setRootItem(QQuickItem *item)
         m_rootItem->setSize(contentItem()->size());
     };
     updateSize();
-    connect(contentItem(), &QQuickItem::widthChanged, m_rootItem.data(), updateSize);
-    connect(contentItem(), &QQuickItem::heightChanged, m_rootItem.data(), updateSize);
+    connect(contentItem(), &QQuickItem::widthChanged, m_rootItem.get(), updateSize);
+    connect(contentItem(), &QQuickItem::heightChanged, m_rootItem.get(), updateSize);
 }
 
 QuickSceneEffect *QuickSceneView::effect() const

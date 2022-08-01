@@ -50,7 +50,7 @@ void Window::focusInEvent(QFocusEvent *event)
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
-    QScopedPointer<Window> w(new Window);
+    std::unique_ptr<Window> w(new Window);
     w->setGeometry(QRect(0, 0, 100, 200));
     w->show();
 

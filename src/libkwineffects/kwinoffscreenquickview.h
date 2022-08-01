@@ -167,7 +167,7 @@ private:
     void handleSceneChanged();
 
     class Private;
-    QScopedPointer<Private> d;
+    std::unique_ptr<Private> d;
 };
 
 /**
@@ -193,7 +193,7 @@ public:
 
 private:
     class Private;
-    QScopedPointer<Private> d;
+    std::unique_ptr<Private> d;
 };
 
 }

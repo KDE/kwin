@@ -501,11 +501,11 @@ QRegion Window::shapeRegion() const
 
     if (shape()) {
         auto cookie = xcb_shape_get_rectangles_unchecked(kwinApp()->x11Connection(), frameId(), XCB_SHAPE_SK_BOUNDING);
-        ScopedCPointer<xcb_shape_get_rectangles_reply_t> reply(xcb_shape_get_rectangles_reply(kwinApp()->x11Connection(), cookie, nullptr));
-        if (!reply.isNull()) {
+        UniqueCPtr<xcb_shape_get_rectangles_reply_t> reply(xcb_shape_get_rectangles_reply(kwinApp()->x11Connection(), cookie, nullptr));
+        if (reply) {
             m_shapeRegion = QRegion();
-            const xcb_rectangle_t *rects = xcb_shape_get_rectangles_rectangles(reply.data());
-            const int rectCount = xcb_shape_get_rectangles_rectangles_length(reply.data());
+            const xcb_rectangle_t *rects = xcb_shape_get_rectangles_rectangles(reply.get());
+            const int rectCount = xcb_shape_get_rectangles_rectangles_length(reply.get());
             for (int i = 0; i < rectCount; ++i) {
                 m_shapeRegion += Xcb::fromXNative(QRect(rects[i].x, rects[i].y, rects[i].width, rects[i].height)).toAlignedRect();
             }

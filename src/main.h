@@ -280,7 +280,7 @@ protected:
 private:
     QList<QPointer<X11EventFilterContainer>> m_eventFilters;
     QList<QPointer<X11EventFilterContainer>> m_genericEventFilters;
-    QScopedPointer<XcbEventFilter> m_eventFilter;
+    std::unique_ptr<XcbEventFilter> m_eventFilter;
     bool m_configLock;
     KSharedConfigPtr m_config;
     KSharedConfigPtr m_kxkbConfig;

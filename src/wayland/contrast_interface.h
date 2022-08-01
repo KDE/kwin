@@ -8,6 +8,7 @@
 
 #include "kwin_export.h"
 
+#include <memory>
 #include <optional>
 
 #include <QColor>
@@ -40,7 +41,7 @@ public:
     void remove();
 
 private:
-    QScopedPointer<ContrastManagerInterfacePrivate> d;
+    std::unique_ptr<ContrastManagerInterfacePrivate> d;
 };
 
 /**
@@ -71,7 +72,7 @@ private:
     explicit ContrastInterface(wl_resource *resource);
     friend class ContrastManagerInterfacePrivate;
 
-    QScopedPointer<ContrastInterfacePrivate> d;
+    std::unique_ptr<ContrastInterfacePrivate> d;
 };
 
 }

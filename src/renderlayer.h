@@ -83,7 +83,7 @@ private:
     bool computeEffectiveVisibility() const;
 
     RenderLoop *m_loop;
-    QScopedPointer<RenderLayerDelegate> m_delegate;
+    std::unique_ptr<RenderLayerDelegate> m_delegate;
     QRegion m_repaints;
     QRect m_boundingRect;
     QRect m_geometry;

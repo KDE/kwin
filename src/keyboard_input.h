@@ -65,7 +65,7 @@ public:
 
     Xkb *xkb() const
     {
-        return m_xkb.data();
+        return m_xkb.get();
     }
     Qt::KeyboardModifiers modifiers() const
     {
@@ -82,7 +82,7 @@ Q_SIGNALS:
 private:
     InputRedirection *m_input;
     bool m_inited = false;
-    QScopedPointer<Xkb> m_xkb;
+    std::unique_ptr<Xkb> m_xkb;
     QMetaObject::Connection m_activeWindowSurfaceChangedConnection;
     ModifiersChangedSpy *m_modifiersChangedSpy = nullptr;
     KeyboardLayout *m_keyboardLayout = nullptr;

@@ -10,6 +10,7 @@
 #include "kwin_export.h"
 
 #include <QObject>
+#include <memory>
 
 namespace KWaylandServer
 {
@@ -31,7 +32,7 @@ public:
     ~PointerGesturesV1Interface() override;
 
 private:
-    QScopedPointer<PointerGesturesV1InterfacePrivate> d;
+    std::unique_ptr<PointerGesturesV1InterfacePrivate> d;
 };
 
 } // namespace KWaylandServer

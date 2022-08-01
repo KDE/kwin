@@ -42,14 +42,14 @@ void RegionScreenCastSource::updateOutput(Output *output)
 {
     m_last = output->renderLoop()->lastPresentationTimestamp();
 
-    if (!m_renderedTexture.isNull()) {
+    if (m_renderedTexture) {
         const std::shared_ptr<GLTexture> outputTexture = Compositor::self()->scene()->textureForOutput(output);
         const auto outputGeometry = output->geometry();
         if (!outputTexture || !m_region.intersects(output->geometry())) {
             return;
         }
 
-        GLFramebuffer::pushFramebuffer(m_target.data());
+        GLFramebuffer::pushFramebuffer(m_target.get());
         const QRect geometry({0, 0}, m_target->size());
 
         ShaderBinder shaderBinder(ShaderTrait::MapTexture);
@@ -77,7 +77,7 @@ void RegionScreenCastSource::render(GLFramebuffer *target)
 {
     if (!m_renderedTexture) {
         m_renderedTexture.reset(new GLTexture(hasAlphaChannel() ? GL_RGBA8 : GL_RGB8, textureSize()));
-        m_target.reset(new GLFramebuffer(m_renderedTexture.data()));
+        m_target.reset(new GLFramebuffer(m_renderedTexture.get()));
         const auto allOutputs = workspace()->outputs();
         for (auto output : allOutputs) {
             if (output->geometry().intersects(m_region)) {

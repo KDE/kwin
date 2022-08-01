@@ -161,11 +161,11 @@ void TestXcbWindow::destroy()
     window.create(geometry, XCB_CW_OVERRIDE_REDIRECT, values);
     // wId should now be invalid
     xcb_generic_error_t *error = nullptr;
-    ScopedCPointer<xcb_get_window_attributes_reply_t> attribs(xcb_get_window_attributes_reply(
+    UniqueCPtr<xcb_get_window_attributes_reply_t> attribs(xcb_get_window_attributes_reply(
         connection(),
         xcb_get_window_attributes(connection(), wId),
         &error));
-    QVERIFY(attribs.isNull());
+    QVERIFY(!attribs);
     QCOMPARE(error->error_code, uint8_t(3));
     QCOMPARE(error->resource_id, wId);
     free(error);
@@ -177,11 +177,11 @@ void TestXcbWindow::destroy()
         wId = scopedWindow;
     }
     error = nullptr;
-    ScopedCPointer<xcb_get_window_attributes_reply_t> attribs2(xcb_get_window_attributes_reply(
+    UniqueCPtr<xcb_get_window_attributes_reply_t> attribs2(xcb_get_window_attributes_reply(
         connection(),
         xcb_get_window_attributes(connection(), wId),
         &error));
-    QVERIFY(attribs2.isNull());
+    QVERIFY(!attribs2);
     QCOMPARE(error->error_code, uint8_t(3));
     QCOMPARE(error->resource_id, wId);
     free(error);

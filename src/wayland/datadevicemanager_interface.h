@@ -9,6 +9,7 @@
 #include "kwin_export.h"
 
 #include <QObject>
+#include <memory>
 
 #include "datadevice_interface.h"
 
@@ -46,7 +47,7 @@ Q_SIGNALS:
     void dataDeviceCreated(KWaylandServer::DataDeviceInterface *);
 
 private:
-    QScopedPointer<DataDeviceManagerInterfacePrivate> d;
+    std::unique_ptr<DataDeviceManagerInterfacePrivate> d;
 };
 
 }

@@ -936,7 +936,7 @@ Q_SIGNALS:
 private:
     void setElectricBorders(int borders);
     void syncFromKcfgc();
-    QScopedPointer<Settings> m_settings;
+    std::unique_ptr<Settings> m_settings;
     KConfigWatcher::Ptr m_configWatcher;
 
     FocusPolicy m_focusPolicy;

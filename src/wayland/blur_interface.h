@@ -10,6 +10,7 @@
 #include "kwin_export.h"
 
 #include <QObject>
+#include <memory>
 
 struct wl_resource;
 
@@ -37,7 +38,7 @@ public:
     void remove();
 
 private:
-    QScopedPointer<BlurManagerInterfacePrivate> d;
+    std::unique_ptr<BlurManagerInterfacePrivate> d;
 };
 
 /**
@@ -69,7 +70,7 @@ private:
     explicit BlurInterface(wl_resource *resource);
     friend class BlurManagerInterfacePrivate;
 
-    QScopedPointer<BlurInterfacePrivate> d;
+    std::unique_ptr<BlurInterfacePrivate> d;
 };
 
 }

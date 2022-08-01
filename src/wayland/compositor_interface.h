@@ -42,7 +42,7 @@ Q_SIGNALS:
     void surfaceCreated(KWaylandServer::SurfaceInterface *surface);
 
 private:
-    QScopedPointer<CompositorInterfacePrivate> d;
+    std::unique_ptr<CompositorInterfacePrivate> d;
 };
 
 } // namespace KWaylandServer

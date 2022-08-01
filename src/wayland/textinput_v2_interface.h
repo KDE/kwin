@@ -6,6 +6,7 @@
 #pragma once
 
 #include <QObject>
+#include <memory>
 
 #include "textinput.h"
 
@@ -35,7 +36,7 @@ public:
     ~TextInputManagerV2Interface() override;
 
 private:
-    QScopedPointer<TextInputManagerV2InterfacePrivate> d;
+    std::unique_ptr<TextInputManagerV2InterfacePrivate> d;
 };
 
 /**
@@ -277,7 +278,7 @@ private:
     friend class TextInputV2InterfacePrivate;
     explicit TextInputV2Interface(SeatInterface *seat);
 
-    QScopedPointer<TextInputV2InterfacePrivate> d;
+    std::unique_ptr<TextInputV2InterfacePrivate> d;
 };
 
 }

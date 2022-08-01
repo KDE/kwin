@@ -92,7 +92,7 @@ private:
     QVector<GLTexture *> m_renderTextures;
     QStack<GLFramebuffer *> m_renderTargetStack;
 
-    QScopedPointer<GLTexture> m_noiseTexture;
+    std::unique_ptr<GLTexture> m_noiseTexture;
 
     bool m_renderTargetsValid;
     long net_wm_blur_region = 0;

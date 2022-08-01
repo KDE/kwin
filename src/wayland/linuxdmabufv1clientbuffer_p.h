@@ -34,8 +34,8 @@ public:
 
     LinuxDmaBufV1ClientBufferIntegration *q;
     LinuxDmaBufV1ClientBufferIntegration::RendererInterface *rendererInterface = nullptr;
-    QScopedPointer<LinuxDmaBufV1Feedback> defaultFeedback;
-    QScopedPointer<LinuxDmaBufV1FormatTable> table;
+    std::unique_ptr<LinuxDmaBufV1Feedback> defaultFeedback;
+    std::unique_ptr<LinuxDmaBufV1FormatTable> table;
     dev_t mainDevice;
     QHash<uint32_t, QVector<uint64_t>> supportedModifiers;
 

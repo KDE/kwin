@@ -784,7 +784,7 @@ bool KWin::Scripting::isScriptLoaded(const QString &pluginName) const
 
 KWin::AbstractScript *KWin::Scripting::findScript(const QString &pluginName) const
 {
-    QMutexLocker locker(m_scriptsLock.data());
+    QMutexLocker locker(m_scriptsLock.get());
     for (AbstractScript *script : qAsConst(scripts)) {
         if (script->pluginName() == pluginName) {
             return script;
@@ -795,7 +795,7 @@ KWin::AbstractScript *KWin::Scripting::findScript(const QString &pluginName) con
 
 bool KWin::Scripting::unloadScript(const QString &pluginName)
 {
-    QMutexLocker locker(m_scriptsLock.data());
+    QMutexLocker locker(m_scriptsLock.get());
     for (AbstractScript *script : qAsConst(scripts)) {
         if (script->pluginName() == pluginName) {
             script->deleteLater();
@@ -807,7 +807,7 @@ bool KWin::Scripting::unloadScript(const QString &pluginName)
 
 void KWin::Scripting::runScripts()
 {
-    QMutexLocker locker(m_scriptsLock.data());
+    QMutexLocker locker(m_scriptsLock.get());
     for (int i = 0; i < scripts.size(); i++) {
         scripts.at(i)->run();
     }
@@ -815,13 +815,13 @@ void KWin::Scripting::runScripts()
 
 void KWin::Scripting::scriptDestroyed(QObject *object)
 {
-    QMutexLocker locker(m_scriptsLock.data());
+    QMutexLocker locker(m_scriptsLock.get());
     scripts.removeAll(static_cast<KWin::Script *>(object));
 }
 
 int KWin::Scripting::loadScript(const QString &filePath, const QString &pluginName)
 {
-    QMutexLocker locker(m_scriptsLock.data());
+    QMutexLocker locker(m_scriptsLock.get());
     if (isScriptLoaded(pluginName)) {
         return -1;
     }
@@ -834,7 +834,7 @@ int KWin::Scripting::loadScript(const QString &filePath, const QString &pluginNa
 
 int KWin::Scripting::loadDeclarativeScript(const QString &filePath, const QString &pluginName)
 {
-    QMutexLocker locker(m_scriptsLock.data());
+    QMutexLocker locker(m_scriptsLock.get());
     if (isScriptLoaded(pluginName)) {
         return -1;
     }

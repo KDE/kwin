@@ -69,13 +69,13 @@ class Q_DECL_HIDDEN OffscreenQuickView::Private
 public:
     QQuickWindow *m_view;
     QQuickRenderControl *m_renderControl;
-    QScopedPointer<QOffscreenSurface> m_offscreenSurface;
-    QScopedPointer<QOpenGLContext> m_glcontext;
-    QScopedPointer<QOpenGLFramebufferObject> m_fbo;
+    std::unique_ptr<QOffscreenSurface> m_offscreenSurface;
+    std::unique_ptr<QOpenGLContext> m_glcontext;
+    std::unique_ptr<QOpenGLFramebufferObject> m_fbo;
 
     QTimer *m_repaintTimer;
     QImage m_image;
-    QScopedPointer<GLTexture> m_textureExport;
+    std::unique_ptr<GLTexture> m_textureExport;
     // if we should capture a QImage after rendering into our BO.
     // Used for either software QtQuick rendering and nonGL kwin rendering
     bool m_useBlit = false;
@@ -108,8 +108,8 @@ public:
     }
 
     SharedQmlEngine::Ptr qmlEngine;
-    QScopedPointer<QQmlComponent> qmlComponent;
-    QScopedPointer<QQuickItem> quickItem;
+    std::unique_ptr<QQmlComponent> qmlComponent;
+    std::unique_ptr<QQuickItem> quickItem;
 };
 
 OffscreenQuickView::OffscreenQuickView(QObject *parent)
@@ -164,8 +164,8 @@ OffscreenQuickView::OffscreenQuickView(QObject *parent, QWindow *renderWindow, E
         d->m_offscreenSurface->setFormat(d->m_glcontext->format());
         d->m_offscreenSurface->create();
 
-        d->m_glcontext->makeCurrent(d->m_offscreenSurface.data());
-        d->m_renderControl->initialize(d->m_glcontext.data());
+        d->m_glcontext->makeCurrent(d->m_offscreenSurface.get());
+        d->m_renderControl->initialize(d->m_glcontext.get());
         d->m_glcontext->doneCurrent();
 
         // On Wayland, contexts are implicitly shared and QOpenGLContext::globalShareContext() is null.
@@ -205,7 +205,7 @@ OffscreenQuickView::~OffscreenQuickView()
 {
     if (d->m_glcontext) {
         // close the view whilst we have an active GL context
-        d->m_glcontext->makeCurrent(d->m_offscreenSurface.data());
+        d->m_glcontext->makeCurrent(d->m_offscreenSurface.get());
     }
 
     delete d->m_renderControl; // Always delete render control first.
@@ -257,16 +257,16 @@ void OffscreenQuickView::update()
         return;
     }
 
-    bool usingGl = !d->m_glcontext.isNull();
+    bool usingGl = d->m_glcontext != nullptr;
 
     if (usingGl) {
-        if (!d->m_glcontext->makeCurrent(d->m_offscreenSurface.data())) {
+        if (!d->m_glcontext->makeCurrent(d->m_offscreenSurface.get())) {
             // probably a context loss event, kwin is about to reset all the effects anyway
             return;
         }
 
         const QSize nativeSize = d->m_view->size() * d->m_view->effectiveDevicePixelRatio();
-        if (d->m_fbo.isNull() || d->m_fbo->size() != nativeSize) {
+        if (!d->m_fbo || d->m_fbo->size() != nativeSize) {
             d->m_textureExport.reset(nullptr);
             d->m_fbo.reset(new QOpenGLFramebufferObject(nativeSize, QOpenGLFramebufferObject::CombinedDepthStencil));
             if (!d->m_fbo->isValid()) {
@@ -276,7 +276,7 @@ void OffscreenQuickView::update()
             }
         }
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        d->m_view->setRenderTarget(d->m_fbo.data());
+        d->m_view->setRenderTarget(d->m_fbo.get());
 #else
         d->m_view->setRenderTarget(QQuickRenderTarget::fromOpenGLTexture(d->m_fbo->texture(), d->m_fbo->size()));
 #endif
@@ -484,7 +484,7 @@ GLTexture *OffscreenQuickView::bufferAsTexture()
             d->m_textureExport.reset(new GLTexture(d->m_fbo->texture(), d->m_fbo->format().internalTextureFormat(), d->m_fbo->size()));
         }
     }
-    return d->m_textureExport.data();
+    return d->m_textureExport.get();
 }
 
 QImage OffscreenQuickView::bufferAsImage() const
@@ -507,7 +507,7 @@ void OffscreenQuickView::setGeometry(const QRect &rect)
 void OffscreenQuickView::Private::releaseResources()
 {
     if (m_glcontext) {
-        m_glcontext->makeCurrent(m_offscreenSurface.data());
+        m_glcontext->makeCurrent(m_offscreenSurface.get());
         m_view->releaseResources();
         m_glcontext->doneCurrent();
     } else {
@@ -665,14 +665,14 @@ void OffscreenQuickScene::setSource(const QUrl &source, const QVariantMap &initi
 
     d->quickItem.reset();
 
-    QScopedPointer<QObject> qmlObject(d->qmlComponent->createWithInitialProperties(initialProperties));
-    QQuickItem *item = qobject_cast<QQuickItem *>(qmlObject.data());
+    std::unique_ptr<QObject> qmlObject(d->qmlComponent->createWithInitialProperties(initialProperties));
+    QQuickItem *item = qobject_cast<QQuickItem *>(qmlObject.get());
     if (!item) {
         qCWarning(LIBKWINEFFECTS) << "Root object of effect quick view" << source << "is not a QQuickItem";
         return;
     }
 
-    qmlObject.take();
+    qmlObject.release();
     d->quickItem.reset(item);
 
     item->setParentItem(contentItem());
@@ -692,7 +692,7 @@ QQmlContext *OffscreenQuickScene::rootContext() const
 
 QQuickItem *OffscreenQuickScene::rootItem() const
 {
-    return d->quickItem.data();
+    return d->quickItem.release();
 }
 
 } // namespace KWin

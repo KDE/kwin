@@ -8,6 +8,7 @@
 #include "kwin_export.h"
 
 #include <QObject>
+#include <memory>
 
 struct wl_resource;
 
@@ -46,7 +47,7 @@ Q_SIGNALS:
     void appMenuCreated(KWaylandServer::AppMenuInterface *);
 
 private:
-    QScopedPointer<AppMenuManagerInterfacePrivate> d;
+    std::unique_ptr<AppMenuManagerInterfacePrivate> d;
 };
 
 /**
@@ -90,7 +91,7 @@ private:
     explicit AppMenuInterface(SurfaceInterface *s, wl_resource *resource);
     friend class AppMenuManagerInterfacePrivate;
 
-    QScopedPointer<AppMenuInterfacePrivate> d;
+    std::unique_ptr<AppMenuInterfacePrivate> d;
 };
 
 }

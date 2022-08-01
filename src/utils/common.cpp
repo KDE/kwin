@@ -115,8 +115,8 @@ bool grabXKeyboard(xcb_window_t w)
     }
     const xcb_grab_keyboard_cookie_t c = xcb_grab_keyboard_unchecked(connection(), false, w, xTime(),
                                                                      XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC);
-    ScopedCPointer<xcb_grab_keyboard_reply_t> grab(xcb_grab_keyboard_reply(connection(), c, nullptr));
-    if (grab.isNull()) {
+    UniqueCPtr<xcb_grab_keyboard_reply_t> grab(xcb_grab_keyboard_reply(connection(), c, nullptr));
+    if (!grab) {
         qCDebug(KWIN_CORE) << "Failed to grab X Keyboard: grab null";
         return false;
     }

@@ -104,4 +104,4 @@ private:
  * In GPUVis this will appear as a timed block with begin_ctx and end_ctx markers
  */
 #define fTraceDuration(...) \
-    QScopedPointer<KWin::FTraceDuration> _duration(KWin::FTraceLogger::self()->isEnabled() ? new KWin::FTraceDuration(__VA_ARGS__) : nullptr);
+    std::unique_ptr<KWin::FTraceDuration> _duration(KWin::FTraceLogger::self()->isEnabled() ? new KWin::FTraceDuration(__VA_ARGS__) : nullptr);

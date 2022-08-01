@@ -38,7 +38,7 @@ private:
 
     static void crashHandler(int signal);
 
-    QScopedPointer<KWinSelectionOwner> owner;
+    std::unique_ptr<KWinSelectionOwner> owner;
     bool m_replace;
 };
 

@@ -29,7 +29,6 @@
 #include <QHash>
 #include <QList>
 #include <QLoggingCategory>
-#include <QScopedPointer>
 #include <QStack>
 #include <QVector>
 
@@ -2701,7 +2700,7 @@ protected:
 
 private:
     class Private;
-    QScopedPointer<Private> d;
+    std::unique_ptr<Private> d;
 };
 
 /**
@@ -3307,7 +3306,7 @@ public:
 
 private:
     class Private;
-    QScopedPointer<Private> d;
+    std::unique_ptr<Private> d;
 };
 
 class KWINEFFECTS_EXPORT ScreenPrePaintData

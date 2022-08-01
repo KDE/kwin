@@ -62,7 +62,7 @@ private:
     friend class KeyboardInterfacePrivate;
     explicit KeyboardInterface(SeatInterface *seat);
 
-    QScopedPointer<KeyboardInterfacePrivate> d;
+    std::unique_ptr<KeyboardInterfacePrivate> d;
 };
 
 }

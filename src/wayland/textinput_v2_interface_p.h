@@ -52,7 +52,7 @@ public:
     QList<Resource *> textInputsForClient(ClientConnection *client) const;
     static TextInputV2InterfacePrivate *get(TextInputV2Interface *inputInterface)
     {
-        return inputInterface->d.data();
+        return inputInterface->d.get();
     }
 
     QString preferredLanguage;

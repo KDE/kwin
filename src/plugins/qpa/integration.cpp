@@ -130,7 +130,7 @@ QPlatformOffscreenSurface *Integration::createPlatformOffscreenSurface(QOffscree
 
 QPlatformFontDatabase *Integration::fontDatabase() const
 {
-    return m_fontDb.data();
+    return m_fontDb.get();
 }
 
 QPlatformTheme *Integration::createPlatformTheme(const QString &name) const
@@ -203,12 +203,12 @@ void Integration::handleOutputDisabled(Output *output)
 
 QPlatformNativeInterface *Integration::nativeInterface() const
 {
-    return m_nativeInterface.data();
+    return m_nativeInterface.get();
 }
 
 QPlatformServices *Integration::services() const
 {
-    return m_services.data();
+    return m_services.get();
 }
 
 }

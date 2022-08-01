@@ -907,7 +907,7 @@ void TabBox::grabbedKeyEvent(QKeyEvent *event)
 
 struct KeySymbolsDeleter
 {
-    static inline void cleanup(xcb_key_symbols_t *symbols)
+    void operator()(xcb_key_symbols_t *symbols)
     {
         xcb_key_symbols_free(symbols);
     }
@@ -920,8 +920,8 @@ static bool areKeySymXsDepressed(const uint keySyms[], int nKeySyms)
 {
     Xcb::QueryKeymap keys;
 
-    QScopedPointer<xcb_key_symbols_t, KeySymbolsDeleter> symbols(xcb_key_symbols_alloc(connection()));
-    if (symbols.isNull() || !keys) {
+    std::unique_ptr<xcb_key_symbols_t, KeySymbolsDeleter> symbols(xcb_key_symbols_alloc(connection()));
+    if (!symbols || !keys) {
         return false;
     }
     const auto keymap = keys->keys;
@@ -929,7 +929,7 @@ static bool areKeySymXsDepressed(const uint keySyms[], int nKeySyms)
     bool depressed = false;
     for (int iKeySym = 0; iKeySym < nKeySyms; iKeySym++) {
         uint keySymX = keySyms[iKeySym];
-        xcb_keycode_t *keyCodes = xcb_key_symbols_get_keycode(symbols.data(), keySymX);
+        xcb_keycode_t *keyCodes = xcb_key_symbols_get_keycode(symbols.get(), keySymX);
         if (!keyCodes) {
             continue;
         }

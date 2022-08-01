@@ -25,7 +25,7 @@ namespace KWin
 
 struct XcbConnectionDeleter
 {
-    static inline void cleanup(xcb_connection_t *pointer)
+    void operator()(xcb_connection_t *pointer)
     {
         xcb_disconnect(pointer);
     }
@@ -72,11 +72,11 @@ void XwaylandServerCrashTest::testCrash()
     // This test verifies that all connected X11 clients get destroyed when Xwayland crashes.
 
     // Create a normal window.
-    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
-    QVERIFY(!xcb_connection_has_error(c.data()));
+    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
-    xcb_window_t windowId1 = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId1, rootWindow(),
+    xcb_window_t windowId1 = xcb_generate_id(c.get());
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId1, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
@@ -87,9 +87,9 @@ void XwaylandServerCrashTest::testCrash()
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
     xcb_icccm_size_hints_set_min_size(&hints, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.data(), windowId1, &hints);
-    xcb_map_window(c.data(), windowId1);
-    xcb_flush(c.data());
+    xcb_icccm_set_wm_normal_hints(c.get(), windowId1, &hints);
+    xcb_map_window(c.get(), windowId1);
+    xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
@@ -99,15 +99,15 @@ void XwaylandServerCrashTest::testCrash()
     QVERIFY(window->isDecorated());
 
     // Create an override-redirect window.
-    xcb_window_t windowId2 = xcb_generate_id(c.data());
+    xcb_window_t windowId2 = xcb_generate_id(c.get());
     const uint32_t values[] = {true};
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId2, rootWindow(),
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId2, rootWindow(),
                       windowGeometry.x(), windowGeometry.y(),
                       windowGeometry.width(), windowGeometry.height(), 0,
                       XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT,
                       XCB_CW_OVERRIDE_REDIRECT, values);
-    xcb_map_window(c.data(), windowId2);
-    xcb_flush(c.data());
+    xcb_map_window(c.get(), windowId2);
+    xcb_flush(c.get());
 
     QSignalSpy unmanagedAddedSpy(workspace(), &Workspace::unmanagedAdded);
     QVERIFY(unmanagedAddedSpy.isValid());

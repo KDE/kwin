@@ -12,7 +12,6 @@
 
 #include <QMatrix4x4>
 #include <QObject>
-#include <QScopedPointer>
 #include <QVector2D>
 #include <QVector4D>
 

@@ -39,8 +39,8 @@ public:
 private:
     const QRect m_region;
     const qreal m_scale;
-    QScopedPointer<GLFramebuffer> m_target;
-    QScopedPointer<GLTexture> m_renderedTexture;
+    std::unique_ptr<GLFramebuffer> m_target;
+    std::unique_ptr<GLTexture> m_renderedTexture;
     std::chrono::nanoseconds m_last;
 };
 

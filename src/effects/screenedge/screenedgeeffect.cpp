@@ -76,7 +76,7 @@ void ScreenEdgeEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
             continue;
         }
         if (effects->isOpenGLCompositing()) {
-            GLTexture *texture = glow->texture.data();
+            GLTexture *texture = glow->texture.get();
             glEnable(GL_BLEND);
             glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
             texture->bind();
@@ -93,7 +93,7 @@ void ScreenEdgeEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
             QImage tmp(glow->image->size(), QImage::Format_ARGB32_Premultiplied);
             tmp.fill(Qt::transparent);
             QPainter p(&tmp);
-            p.drawImage(0, 0, *glow->image.data());
+            p.drawImage(0, 0, *glow->image.get());
             QColor color(Qt::transparent);
             color.setAlphaF(opacity);
             p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
@@ -174,10 +174,10 @@ std::unique_ptr<Glow> ScreenEdgeEffect::createGlow(ElectricBorder border, qreal 
         } else {
             glow->texture.reset(createEdgeGlow<GLTexture>(border, geometry.size()));
         }
-        if (!glow->texture.isNull()) {
+        if (glow->texture) {
             glow->texture->setWrapMode(GL_CLAMP_TO_EDGE);
         }
-        if (glow->texture.isNull()) {
+        if (!glow->texture) {
             return nullptr;
         }
     } else if (effects->compositingType() == QPainterCompositing) {
@@ -188,7 +188,7 @@ std::unique_ptr<Glow> ScreenEdgeEffect::createGlow(ElectricBorder border, qreal 
             glow->image.reset(createEdgeGlow<QImage>(border, geometry.size()));
             glow->pictureSize = geometry.size();
         }
-        if (glow->image.isNull()) {
+        if (!glow->image) {
             return nullptr;
         }
     }

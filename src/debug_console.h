@@ -18,6 +18,7 @@
 #include <QStyledItemDelegate>
 #include <QVector>
 #include <functional>
+#include <memory>
 
 class QTextEdit;
 
@@ -108,8 +109,8 @@ private:
     void initGLTab();
     void updateKeyboardTab();
 
-    QScopedPointer<Ui::DebugConsole> m_ui;
-    QScopedPointer<DebugConsoleFilter> m_inputFilter;
+    std::unique_ptr<Ui::DebugConsole> m_ui;
+    std::unique_ptr<DebugConsoleFilter> m_inputFilter;
 };
 
 class SurfaceTreeModel : public QAbstractItemModel

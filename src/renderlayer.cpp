@@ -92,7 +92,7 @@ RenderLoop *RenderLayer::loop() const
 
 RenderLayerDelegate *RenderLayer::delegate() const
 {
-    return m_delegate.data();
+    return m_delegate.get();
 }
 
 void RenderLayer::setDelegate(RenderLayerDelegate *delegate)

@@ -98,7 +98,7 @@ private:
     QTimer *m_configureTimer;
     XdgSurfaceConfigure::ConfigureFlags m_configureFlags;
     QQueue<XdgSurfaceConfigure *> m_configureEvents;
-    QScopedPointer<XdgSurfaceConfigure> m_lastAcknowledgedConfigure;
+    std::unique_ptr<XdgSurfaceConfigure> m_lastAcknowledgedConfigure;
     std::optional<quint32> m_lastAcknowledgedConfigureSerial;
     QRectF m_windowGeometry;
     bool m_haveNextWindowGeometry = false;

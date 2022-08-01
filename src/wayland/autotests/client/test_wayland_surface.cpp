@@ -920,8 +920,8 @@ void TestWaylandSurface::testDestroyWithPendingCallback()
     // first create surface
     using namespace KWayland::Client;
     using namespace KWaylandServer;
-    QScopedPointer<Surface> s(m_compositor->createSurface());
-    QVERIFY(!s.isNull());
+    std::unique_ptr<Surface> s(m_compositor->createSurface());
+    QVERIFY(s != nullptr);
     QVERIFY(s->isValid());
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
     QVERIFY(surfaceCreatedSpy.isValid());
@@ -956,8 +956,8 @@ void TestWaylandSurface::testDisconnect()
     // this test verifies that the server side correctly tears down the resources when the client disconnects
     using namespace KWayland::Client;
     using namespace KWaylandServer;
-    QScopedPointer<Surface> s(m_compositor->createSurface());
-    QVERIFY(!s.isNull());
+    std::unique_ptr<Surface> s(m_compositor->createSurface());
+    QVERIFY(s != nullptr);
     QVERIFY(s->isValid());
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
     QVERIFY(surfaceCreatedSpy.isValid());
@@ -994,13 +994,13 @@ void TestWaylandSurface::testOutput()
     using namespace KWayland::Client;
     using namespace KWaylandServer;
     qRegisterMetaType<KWayland::Client::Output *>();
-    QScopedPointer<Surface> s(m_compositor->createSurface());
-    QVERIFY(!s.isNull());
+    std::unique_ptr<Surface> s(m_compositor->createSurface());
+    QVERIFY(s != nullptr);
     QVERIFY(s->isValid());
     QVERIFY(s->outputs().isEmpty());
-    QSignalSpy enteredSpy(s.data(), &Surface::outputEntered);
+    QSignalSpy enteredSpy(s.get(), &Surface::outputEntered);
     QVERIFY(enteredSpy.isValid());
-    QSignalSpy leftSpy(s.data(), &Surface::outputLeft);
+    QSignalSpy leftSpy(s.get(), &Surface::outputLeft);
     QVERIFY(leftSpy.isValid());
     // wait for the surface on the Server side
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
@@ -1024,7 +1024,7 @@ void TestWaylandSurface::testOutput()
 
     auto serverOutput = new OutputInterface(m_display, m_display);
     QVERIFY(outputAnnouncedSpy.wait());
-    QScopedPointer<Output> clientOutput(
+    std::unique_ptr<Output> clientOutput(
         registry.createOutput(outputAnnouncedSpy.first().first().value<quint32>(), outputAnnouncedSpy.first().last().value<quint32>()));
     QVERIFY(clientOutput->isValid());
     m_connection->flush();
@@ -1035,8 +1035,8 @@ void TestWaylandSurface::testOutput()
     QCOMPARE(serverSurface->outputs(), QVector<OutputInterface *>{serverOutput});
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 1);
-    QCOMPARE(enteredSpy.first().first().value<Output *>(), clientOutput.data());
-    QCOMPARE(s->outputs(), QVector<Output *>{clientOutput.data()});
+    QCOMPARE(enteredSpy.first().first().value<Output *>(), clientOutput.get());
+    QCOMPARE(s->outputs(), QVector<Output *>{clientOutput.get()});
 
     // adding to same should not trigger
     serverSurface->setOutputs(QVector<OutputInterface *>{serverOutput});
@@ -1047,7 +1047,7 @@ void TestWaylandSurface::testOutput()
     QVERIFY(leftSpy.wait());
     QCOMPARE(enteredSpy.count(), 1);
     QCOMPARE(leftSpy.count(), 1);
-    QCOMPARE(leftSpy.first().first().value<Output *>(), clientOutput.data());
+    QCOMPARE(leftSpy.first().first().value<Output *>(), clientOutput.get());
     QCOMPARE(s->outputs(), QVector<Output *>());
 
     // leave again should not trigger
@@ -1071,7 +1071,7 @@ void TestWaylandSurface::testInhibit()
 {
     using namespace KWayland::Client;
     using namespace KWaylandServer;
-    QScopedPointer<Surface> s(m_compositor->createSurface());
+    std::unique_ptr<Surface> s(m_compositor->createSurface());
     // wait for the surface on the Server side
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
     QVERIFY(surfaceCreatedSpy.isValid());
@@ -1084,12 +1084,12 @@ void TestWaylandSurface::testInhibit()
     QVERIFY(inhibitsChangedSpy.isValid());
 
     // now create an idle inhibition
-    QScopedPointer<IdleInhibitor> inhibitor1(m_idleInhibitManager->createInhibitor(s.data()));
+    std::unique_ptr<IdleInhibitor> inhibitor1(m_idleInhibitManager->createInhibitor(s.get()));
     QVERIFY(inhibitsChangedSpy.wait());
     QCOMPARE(serverSurface->inhibitsIdle(), true);
 
     // creating a second idle inhibition should not trigger the signal
-    QScopedPointer<IdleInhibitor> inhibitor2(m_idleInhibitManager->createInhibitor(s.data()));
+    std::unique_ptr<IdleInhibitor> inhibitor2(m_idleInhibitManager->createInhibitor(s.get()));
     QVERIFY(!inhibitsChangedSpy.wait(500));
     QCOMPARE(serverSurface->inhibitsIdle(), true);
 
@@ -1105,7 +1105,7 @@ void TestWaylandSurface::testInhibit()
     QCOMPARE(inhibitsChangedSpy.count(), 2);
 
     // recreate inhibitor1 should inhibit again
-    inhibitor1.reset(m_idleInhibitManager->createInhibitor(s.data()));
+    inhibitor1.reset(m_idleInhibitManager->createInhibitor(s.get()));
     QVERIFY(inhibitsChangedSpy.wait());
     QCOMPARE(serverSurface->inhibitsIdle(), true);
     // and destroying should uninhibit

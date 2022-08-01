@@ -2027,7 +2027,7 @@ bool X11Window::takeFocus()
         xcb_void_cookie_t cookie = xcb_set_input_focus_checked(kwinApp()->x11Connection(),
                                                                XCB_INPUT_FOCUS_POINTER_ROOT,
                                                                window(), XCB_TIME_CURRENT_TIME);
-        ScopedCPointer<xcb_generic_error_t> error(xcb_request_check(kwinApp()->x11Connection(), cookie));
+        UniqueCPtr<xcb_generic_error_t> error(xcb_request_check(kwinApp()->x11Connection(), cookie));
         if (error) {
             qCWarning(KWIN_CORE, "Failed to focus 0x%x (error %d)", window(), error->error_code);
             return false;
@@ -2316,8 +2316,8 @@ void X11Window::getSyncCounter()
                 1};
             m_syncRequest.alarm = xcb_generate_id(c);
             auto cookie = xcb_sync_create_alarm_checked(c, m_syncRequest.alarm, mask, values);
-            ScopedCPointer<xcb_generic_error_t> error(xcb_request_check(c, cookie));
-            if (!error.isNull()) {
+            UniqueCPtr<xcb_generic_error_t> error(xcb_request_check(c, cookie));
+            if (error) {
                 m_syncRequest.alarm = XCB_NONE;
             } else {
                 xcb_sync_change_alarm_value_list_t value;
@@ -4680,8 +4680,8 @@ bool X11Window::doStartInteractiveMoveResize()
         const xcb_grab_pointer_cookie_t cookie = xcb_grab_pointer_unchecked(kwinApp()->x11Connection(), false, m_moveResizeGrabWindow,
                                                                             XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION | XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW,
                                                                             XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, m_moveResizeGrabWindow, Cursors::self()->mouse()->x11Cursor(cursor()), xTime());
-        ScopedCPointer<xcb_grab_pointer_reply_t> pointerGrab(xcb_grab_pointer_reply(kwinApp()->x11Connection(), cookie, nullptr));
-        if (!pointerGrab.isNull() && pointerGrab->status == XCB_GRAB_STATUS_SUCCESS) {
+        UniqueCPtr<xcb_grab_pointer_reply_t> pointerGrab(xcb_grab_pointer_reply(kwinApp()->x11Connection(), cookie, nullptr));
+        if (pointerGrab && pointerGrab->status == XCB_GRAB_STATUS_SUCCESS) {
             has_grab = true;
         }
         if (!has_grab && grabXKeyboard(frameId())) {

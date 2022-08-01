@@ -208,7 +208,7 @@ void DecorationItem::handleWindowClosed(Window *original, Deleted *deleted)
 
 DecorationRenderer *DecorationItem::renderer() const
 {
-    return m_renderer.data();
+    return m_renderer.get();
 }
 
 Window *DecorationItem::window() const

@@ -9,6 +9,7 @@
 #include "kwin_export.h"
 
 #include <QObject>
+#include <memory>
 
 struct wl_resource;
 
@@ -47,7 +48,7 @@ Q_SIGNALS:
     void decorationCreated(XdgToplevelDecorationV1Interface *decoration);
 
 private:
-    QScopedPointer<XdgDecorationManagerV1InterfacePrivate> d;
+    std::unique_ptr<XdgDecorationManagerV1InterfacePrivate> d;
 };
 
 /**
@@ -108,7 +109,7 @@ Q_SIGNALS:
     void preferredModeChanged(KWaylandServer::XdgToplevelDecorationV1Interface::Mode mode);
 
 private:
-    QScopedPointer<XdgToplevelDecorationV1InterfacePrivate> d;
+    std::unique_ptr<XdgToplevelDecorationV1InterfacePrivate> d;
 };
 
 } // namespace KWaylandServer

@@ -100,7 +100,7 @@ private:
     Window *m_window;
     QPointer<Output> m_output;
     QPointer<KDecoration2::Decoration> m_decoration;
-    QScopedPointer<DecorationRenderer> m_renderer;
+    std::unique_ptr<DecorationRenderer> m_renderer;
 };
 
 } // namespace KWin

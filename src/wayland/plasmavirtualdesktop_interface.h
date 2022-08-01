@@ -8,6 +8,7 @@
 #include "kwin_export.h"
 
 #include <QObject>
+#include <memory>
 
 namespace KWaylandServer
 {
@@ -88,7 +89,7 @@ Q_SIGNALS:
     void desktopCreateRequested(const QString &name, quint32 position);
 
 private:
-    QScopedPointer<PlasmaVirtualDesktopManagementInterfacePrivate> d;
+    std::unique_ptr<PlasmaVirtualDesktopManagementInterfacePrivate> d;
 };
 
 class KWIN_EXPORT PlasmaVirtualDesktopInterface : public QObject
@@ -143,7 +144,7 @@ private:
     friend class PlasmaVirtualDesktopManagementInterface;
     friend class PlasmaVirtualDesktopManagementInterfacePrivate;
 
-    QScopedPointer<PlasmaVirtualDesktopInterfacePrivate> d;
+    std::unique_ptr<PlasmaVirtualDesktopInterfacePrivate> d;
 };
 
 }

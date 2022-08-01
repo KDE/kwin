@@ -21,7 +21,6 @@
 #include <QMatrix4x4>
 #include <QPoint>
 #include <QRect>
-#include <QScopedPointer>
 // system
 #include <climits>
 Q_DECLARE_LOGGING_CATEGORY(KWIN_CORE)
@@ -115,9 +114,6 @@ enum class QuickTileFlag {
     Maximize = Left | Right | Top | Bottom,
 };
 Q_DECLARE_FLAGS(QuickTileMode, QuickTileFlag)
-
-template<typename T>
-using ScopedCPointer = QScopedPointer<T, QScopedPointerPodDeleter>;
 
 void KWIN_EXPORT updateXTime();
 void KWIN_EXPORT grabXServer();

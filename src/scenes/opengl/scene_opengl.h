@@ -135,11 +135,11 @@ public:
 
     GLTexture *texture()
     {
-        return m_texture.data();
+        return m_texture.get();
     }
     GLTexture *texture() const
     {
-        return m_texture.data();
+        return m_texture.get();
     }
 
 private:
@@ -147,7 +147,7 @@ private:
     static const QMargins texturePadForPart(const QRect &rect, const QRect &partRect);
     void resizeTexture();
     int toNativeSize(int size) const;
-    QScopedPointer<GLTexture> m_texture;
+    std::unique_ptr<GLTexture> m_texture;
 };
 
 } // namespace

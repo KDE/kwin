@@ -128,9 +128,9 @@ void VirtualDesktopTest::testLastDesktopRemoved()
     QCOMPARE(VirtualDesktopManager::self()->current(), 2u);
 
     // now create a window on this desktop
-    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
 
     QVERIFY(window);
     QCOMPARE(window->desktop(), 2);
@@ -163,9 +163,9 @@ void VirtualDesktopTest::testWindowOnMultipleDesktops()
     QCOMPARE(VirtualDesktopManager::self()->current(), 3u);
 
     // now create a window on this desktop
-    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
 
     QVERIFY(window);
     QCOMPARE(window->desktop(), 3u);
@@ -242,9 +242,9 @@ void VirtualDesktopTest::testRemoveDesktopWithWindow()
     QCOMPARE(VirtualDesktopManager::self()->current(), 3u);
 
     // now create a window on this desktop
-    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
 
     QVERIFY(window);
     QCOMPARE(window->desktop(), 3u);

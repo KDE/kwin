@@ -64,7 +64,7 @@ public:
     QQmlContext *rootContext();
     QQmlComponent *svgComponent()
     {
-        return m_svgComponent.data();
+        return m_svgComponent.get();
     }
 
     static Helper &instance();
@@ -74,9 +74,9 @@ private:
     void init();
     QQmlComponent *loadComponent(const QString &themeName);
     int m_refCount = 0;
-    QScopedPointer<QQmlEngine> m_engine;
+    std::unique_ptr<QQmlEngine> m_engine;
     QHash<QString, QQmlComponent *> m_components;
-    QScopedPointer<QQmlComponent> m_svgComponent;
+    std::unique_ptr<QQmlComponent> m_svgComponent;
 };
 
 Helper &Helper::instance()
@@ -118,7 +118,7 @@ QQmlComponent *Helper::component(const QString &themeName)
 {
     // maybe it's an SVG theme?
     if (themeName.startsWith(QLatin1String("__aurorae__svg__"))) {
-        if (m_svgComponent.isNull()) {
+        if (!m_svgComponent) {
             /* use logic from KDeclarative::setupBindings():
             "addImportPath adds the path at the beginning, so to honour user's
             paths we need to traverse the list in reverse order" */
@@ -127,12 +127,12 @@ QQmlComponent *Helper::component(const QString &themeName)
             while (paths.hasPrevious()) {
                 m_engine->addImportPath(paths.previous());
             }
-            m_svgComponent.reset(new QQmlComponent(m_engine.data()));
+            m_svgComponent.reset(new QQmlComponent(m_engine.get()));
             m_svgComponent->loadUrl(QUrl(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/aurorae/aurorae.qml"))));
         }
         // verify that the theme exists
         if (!QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("aurorae/themes/%1/%1rc").arg(themeName.mid(16))).isEmpty()) {
-            return m_svgComponent.data();
+            return m_svgComponent.get();
         }
     }
     // try finding the QML package
@@ -184,7 +184,7 @@ QQmlComponent *Helper::loadComponent(const QString &themeName)
     while (paths.hasPrevious()) {
         m_engine->addImportPath(paths.previous());
     }
-    QQmlComponent *component = new QQmlComponent(m_engine.data(), m_engine.data());
+    QQmlComponent *component = new QQmlComponent(m_engine.get(), m_engine.get());
     component->loadUrl(QUrl::fromLocalFile(file));
     return component;
 }

@@ -134,7 +134,7 @@ Q_SIGNALS:
     void bound(ClientConnection *client, wl_resource *boundResource);
 
 private:
-    QScopedPointer<OutputInterfacePrivate> d;
+    std::unique_ptr<OutputInterfacePrivate> d;
 };
 
 } // namespace KWaylandServer

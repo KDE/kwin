@@ -68,7 +68,7 @@ void XWaylandInputTest::init()
 
 struct XcbConnectionDeleter
 {
-    static inline void cleanup(xcb_connection_t *pointer)
+    void operator()(xcb_connection_t *pointer)
     {
         xcb_disconnect(pointer);
     }
@@ -126,24 +126,24 @@ void XWaylandInputTest::testPointerEnterLeaveSsd()
     // this test simulates a pointer enter and pointer leave on a server-side decorated X11 window
 
     // create the test window
-    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
-    QVERIFY(!xcb_connection_has_error(c.data()));
-    if (xcb_get_setup(c.data())->release_number < 11800000) {
+    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    if (xcb_get_setup(c.get())->release_number < 11800000) {
         QSKIP("XWayland 1.18 required");
     }
-    X11EventReaderHelper eventReader(c.data());
+    X11EventReaderHelper eventReader(c.get());
     QSignalSpy enteredSpy(&eventReader, &X11EventReaderHelper::entered);
     QVERIFY(enteredSpy.isValid());
     QSignalSpy leftSpy(&eventReader, &X11EventReaderHelper::left);
     QVERIFY(leftSpy.isValid());
     // atom for the screenedge show hide functionality
-    Xcb::Atom atom(QByteArrayLiteral("_KDE_NET_WM_SCREEN_EDGE_SHOW"), false, c.data());
+    Xcb::Atom atom(QByteArrayLiteral("_KDE_NET_WM_SCREEN_EDGE_SHOW"), false, c.get());
 
-    xcb_window_t windowId = xcb_generate_id(c.data());
+    xcb_window_t windowId = xcb_generate_id(c.get());
     const QRect windowGeometry = QRect(0, 0, 100, 200);
     const uint32_t values[] = {
         XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW};
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
@@ -153,11 +153,11 @@ void XWaylandInputTest::testPointerEnterLeaveSsd()
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
-    NETWinInfo info(c.data(), windowId, rootWindow(), NET::WMAllProperties, NET::WM2AllProperties);
+    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
+    NETWinInfo info(c.get(), windowId, rootWindow(), NET::WMAllProperties, NET::WM2AllProperties);
     info.setWindowType(NET::Normal);
-    xcb_map_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_map_window(c.get(), windowId);
+    xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
@@ -189,9 +189,9 @@ void XWaylandInputTest::testPointerEnterLeaveSsd()
     // destroy window again
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
-    xcb_unmap_window(c.data(), windowId);
-    xcb_destroy_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_unmap_window(c.get(), windowId);
+    xcb_destroy_window(c.get(), windowId);
+    xcb_flush(c.get());
     QVERIFY(windowClosedSpy.wait());
 }
 
@@ -199,17 +199,17 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
 {
     // this test simulates a pointer enter and pointer leave on a client-side decorated X11 window
 
-    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
-    QVERIFY(!xcb_connection_has_error(c.data()));
+    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.get()));
 
-    if (xcb_get_setup(c.data())->release_number < 11800000) {
+    if (xcb_get_setup(c.get())->release_number < 11800000) {
         QSKIP("XWayland 1.18 required");
     }
     if (!Xcb::Extensions::self()->isShapeAvailable()) {
         QSKIP("SHAPE extension is required");
     }
 
-    X11EventReaderHelper eventReader(c.data());
+    X11EventReaderHelper eventReader(c.get());
     QSignalSpy enteredSpy(&eventReader, &X11EventReaderHelper::entered);
     QVERIFY(enteredSpy.isValid());
     QSignalSpy leftSpy(&eventReader, &X11EventReaderHelper::left);
@@ -229,24 +229,24 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
     boundingRect.width = 100 + clientFrameExtent.left + clientFrameExtent.right;
     boundingRect.height = 200 + clientFrameExtent.top + clientFrameExtent.bottom;
 
-    xcb_window_t windowId = xcb_generate_id(c.data());
+    xcb_window_t windowId = xcb_generate_id(c.get());
     const uint32_t values[] = {
         XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW};
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       boundingRect.x, boundingRect.y, boundingRect.width, boundingRect.height,
                       0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, XCB_CW_EVENT_MASK, values);
     xcb_size_hints_t hints;
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, boundingRect.x, boundingRect.y);
     xcb_icccm_size_hints_set_size(&hints, 1, boundingRect.width, boundingRect.height);
-    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
-    xcb_shape_rectangles(c.data(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING,
+    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
+    xcb_shape_rectangles(c.get(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING,
                          XCB_CLIP_ORDERING_UNSORTED, windowId, 0, 0, 1, &boundingRect);
-    NETWinInfo info(c.data(), windowId, rootWindow(), NET::WMAllProperties, NET::WM2AllProperties);
+    NETWinInfo info(c.get(), windowId, rootWindow(), NET::WMAllProperties, NET::WM2AllProperties);
     info.setWindowType(NET::Normal);
     info.setGtkFrameExtents(clientFrameExtent);
-    xcb_map_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_map_window(c.get(), windowId);
+    xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
@@ -279,9 +279,9 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
     // Destroy the window.
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
-    xcb_unmap_window(c.data(), windowId);
-    xcb_destroy_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_unmap_window(c.get(), windowId);
+    xcb_destroy_window(c.get(), windowId);
+    xcb_flush(c.get());
     QVERIFY(windowClosedSpy.wait());
 }
 

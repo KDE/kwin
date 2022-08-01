@@ -89,7 +89,7 @@ void X11WindowTest::cleanup()
 
 struct XcbConnectionDeleter
 {
-    static inline void cleanup(xcb_connection_t *pointer)
+    void operator()(xcb_connection_t *pointer)
     {
         xcb_disconnect(pointer);
     }
@@ -103,11 +103,11 @@ void X11WindowTest::testMinimumSize()
     kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
-    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
-    QVERIFY(!xcb_connection_has_error(c.data()));
+    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
-    xcb_window_t windowId = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+    xcb_window_t windowId = xcb_generate_id(c.get());
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
@@ -118,9 +118,9 @@ void X11WindowTest::testMinimumSize()
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
     xcb_icccm_size_hints_set_min_size(&hints, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
-    xcb_map_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
+    xcb_map_window(c.get(), windowId);
+    xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
@@ -197,9 +197,9 @@ void X11WindowTest::testMinimumSize()
     // Destroy the window.
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
-    xcb_unmap_window(c.data(), windowId);
-    xcb_destroy_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_unmap_window(c.get(), windowId);
+    xcb_destroy_window(c.get(), windowId);
+    xcb_flush(c.get());
     QVERIFY(windowClosedSpy.wait());
     c.reset();
 }
@@ -211,11 +211,11 @@ void X11WindowTest::testMaximumSize()
     kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
-    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
-    QVERIFY(!xcb_connection_has_error(c.data()));
+    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
-    xcb_window_t windowId = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+    xcb_window_t windowId = xcb_generate_id(c.get());
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
@@ -226,9 +226,9 @@ void X11WindowTest::testMaximumSize()
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
     xcb_icccm_size_hints_set_max_size(&hints, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
-    xcb_map_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
+    xcb_map_window(c.get(), windowId);
+    xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
@@ -304,9 +304,9 @@ void X11WindowTest::testMaximumSize()
     // Destroy the window.
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
-    xcb_unmap_window(c.data(), windowId);
-    xcb_destroy_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_unmap_window(c.get(), windowId);
+    xcb_destroy_window(c.get(), windowId);
+    xcb_flush(c.get());
     QVERIFY(windowClosedSpy.wait());
     c.reset();
 }
@@ -318,11 +318,11 @@ void X11WindowTest::testResizeIncrements()
     kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
-    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
-    QVERIFY(!xcb_connection_has_error(c.data()));
+    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
-    xcb_window_t windowId = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+    xcb_window_t windowId = xcb_generate_id(c.get());
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
@@ -334,9 +334,9 @@ void X11WindowTest::testResizeIncrements()
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
     xcb_icccm_size_hints_set_base_size(&hints, windowGeometry.width(), windowGeometry.height());
     xcb_icccm_size_hints_set_resize_inc(&hints, 3, 5);
-    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
-    xcb_map_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
+    xcb_map_window(c.get(), windowId);
+    xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
@@ -391,9 +391,9 @@ void X11WindowTest::testResizeIncrements()
     // Destroy the window.
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
-    xcb_unmap_window(c.data(), windowId);
-    xcb_destroy_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_unmap_window(c.get(), windowId);
+    xcb_destroy_window(c.get(), windowId);
+    xcb_flush(c.get());
     QVERIFY(windowClosedSpy.wait());
     c.reset();
 }
@@ -404,11 +404,11 @@ void X11WindowTest::testResizeIncrementsNoBaseSize()
     kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
-    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
-    QVERIFY(!xcb_connection_has_error(c.data()));
+    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
-    xcb_window_t windowId = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+    xcb_window_t windowId = xcb_generate_id(c.get());
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
@@ -420,9 +420,9 @@ void X11WindowTest::testResizeIncrementsNoBaseSize()
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
     xcb_icccm_size_hints_set_min_size(&hints, windowGeometry.width(), windowGeometry.height());
     xcb_icccm_size_hints_set_resize_inc(&hints, 3, 5);
-    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
-    xcb_map_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
+    xcb_map_window(c.get(), windowId);
+    xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
@@ -477,9 +477,9 @@ void X11WindowTest::testResizeIncrementsNoBaseSize()
     // Destroy the window.
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
-    xcb_unmap_window(c.data(), windowId);
-    xcb_destroy_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_unmap_window(c.get(), windowId);
+    xcb_destroy_window(c.get(), windowId);
+    xcb_flush(c.get());
     QVERIFY(windowClosedSpy.wait());
     c.reset();
 }
@@ -509,11 +509,11 @@ void X11WindowTest::testTrimCaption()
     // this test verifies that caption is properly trimmed
 
     // create an xcb window
-    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
-    QVERIFY(!xcb_connection_has_error(c.data()));
+    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
-    xcb_window_t windowId = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+    xcb_window_t windowId = xcb_generate_id(c.get());
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
@@ -523,12 +523,12 @@ void X11WindowTest::testTrimCaption()
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
-    NETWinInfo winInfo(c.data(), windowId, rootWindow(), NET::Properties(), NET::Properties2());
+    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
+    NETWinInfo winInfo(c.get(), windowId, rootWindow(), NET::Properties(), NET::Properties2());
     QFETCH(QByteArray, originalTitle);
     winInfo.setName(originalTitle);
-    xcb_map_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_map_window(c.get(), windowId);
+    xcb_flush(c.get());
 
     // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
@@ -541,13 +541,13 @@ void X11WindowTest::testTrimCaption()
     QCOMPARE(window->caption(), QString::fromUtf8(expectedTitle));
 
     // and destroy the window again
-    xcb_unmap_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_unmap_window(c.get(), windowId);
+    xcb_flush(c.get());
 
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
     QVERIFY(windowClosedSpy.wait());
-    xcb_destroy_window(c.data(), windowId);
+    xcb_destroy_window(c.get(), windowId);
     c.reset();
 }
 
@@ -561,11 +561,11 @@ void X11WindowTest::testFullscreenLayerWithActiveWaylandWindow()
     QCOMPARE(workspace()->outputs().count(), 1);
 
     // first create an X11 window
-    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
-    QVERIFY(!xcb_connection_has_error(c.data()));
+    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
-    xcb_window_t windowId = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+    xcb_window_t windowId = xcb_generate_id(c.get());
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
@@ -575,9 +575,9 @@ void X11WindowTest::testFullscreenLayerWithActiveWaylandWindow()
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
-    xcb_map_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
+    xcb_map_window(c.get(), windowId);
+    xcb_flush(c.get());
 
     // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
@@ -596,9 +596,9 @@ void X11WindowTest::testFullscreenLayerWithActiveWaylandWindow()
     QCOMPARE(workspace()->stackingOrder().last(), window);
 
     // now let's open a Wayland window
-    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    auto waylandWindow = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto waylandWindow = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(waylandWindow);
     QVERIFY(waylandWindow->isActive());
     QCOMPARE(waylandWindow->layer(), NormalLayer);
@@ -646,11 +646,11 @@ void X11WindowTest::testFullscreenLayerWithActiveWaylandWindow()
     workspace()->slotWindowFullScreen();
     QVERIFY(!window->isFullScreen());
     // and fullscreen through X API
-    NETWinInfo info(c.data(), windowId, kwinApp()->x11RootWindow(), NET::Properties(), NET::Properties2());
+    NETWinInfo info(c.get(), windowId, kwinApp()->x11RootWindow(), NET::Properties(), NET::Properties2());
     info.setState(NET::FullScreen, NET::FullScreen);
-    NETRootInfo rootInfo(c.data(), NET::Properties());
+    NETRootInfo rootInfo(c.get(), NET::Properties());
     rootInfo.setActiveWindow(windowId, NET::FromApplication, XCB_CURRENT_TIME, XCB_WINDOW_NONE);
-    xcb_flush(c.data());
+    xcb_flush(c.get());
     QTRY_VERIFY(window->isFullScreen());
     QCOMPARE(workspace()->stackingOrder().last(), window);
     QCOMPARE(workspace()->stackingOrder().last(), window);
@@ -670,8 +670,8 @@ void X11WindowTest::testFullscreenLayerWithActiveWaylandWindow()
     QCOMPARE(window->layer(), ActiveLayer);
 
     // and destroy the window again
-    xcb_unmap_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_unmap_window(c.get(), windowId);
+    xcb_flush(c.get());
 }
 
 void X11WindowTest::testFocusInWithWaylandLastActiveWindow()
@@ -681,11 +681,11 @@ void X11WindowTest::testFocusInWithWaylandLastActiveWindow()
     kwinApp()->setXwaylandScale(scale);
 
     // create an X11 window
-    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
-    QVERIFY(!xcb_connection_has_error(c.data()));
+    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
-    xcb_window_t windowId = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+    xcb_window_t windowId = xcb_generate_id(c.get());
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
@@ -695,9 +695,9 @@ void X11WindowTest::testFocusInWithWaylandLastActiveWindow()
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
-    xcb_map_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
+    xcb_map_window(c.get(), windowId);
+    xcb_flush(c.get());
 
     // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
@@ -709,9 +709,9 @@ void X11WindowTest::testFocusInWithWaylandLastActiveWindow()
     QVERIFY(window->isActive());
 
     // create Wayland window
-    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    auto waylandWindow = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto waylandWindow = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(waylandWindow);
     QVERIFY(waylandWindow->isActive());
     // activate no window
@@ -724,15 +724,15 @@ void X11WindowTest::testFocusInWithWaylandLastActiveWindow()
     QVERIFY(Test::waitForWindowDestroyed(waylandWindow));
 
     // and try to activate the x11 window through X11 api
-    const auto cookie = xcb_set_input_focus_checked(c.data(), XCB_INPUT_FOCUS_NONE, windowId, XCB_CURRENT_TIME);
-    auto error = xcb_request_check(c.data(), cookie);
+    const auto cookie = xcb_set_input_focus_checked(c.get(), XCB_INPUT_FOCUS_NONE, windowId, XCB_CURRENT_TIME);
+    auto error = xcb_request_check(c.get(), cookie);
     QVERIFY(!error);
     // this accesses m_lastActiveWindow on trying to activate
     QTRY_VERIFY(window->isActive());
 
     // and destroy the window again
-    xcb_unmap_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_unmap_window(c.get(), windowId);
+    xcb_flush(c.get());
 }
 
 void X11WindowTest::testX11WindowId()
@@ -741,11 +741,11 @@ void X11WindowTest::testX11WindowId()
     kwinApp()->setXwaylandScale(scale);
 
     // create an X11 window
-    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
-    QVERIFY(!xcb_connection_has_error(c.data()));
+    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
-    xcb_window_t windowId = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+    xcb_window_t windowId = xcb_generate_id(c.get());
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
@@ -755,9 +755,9 @@ void X11WindowTest::testX11WindowId()
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
-    xcb_map_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
+    xcb_map_window(c.get(), windowId);
+    xcb_flush(c.get());
 
     // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
@@ -777,18 +777,18 @@ void X11WindowTest::testX11WindowId()
         deletedUuid = d->internalId();
     });
 
-    NETRootInfo rootInfo(c.data(), NET::WMAllProperties);
+    NETRootInfo rootInfo(c.get(), NET::WMAllProperties);
     QCOMPARE(rootInfo.activeWindow(), window->window());
 
     // activate a wayland window
-    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    auto waylandWindow = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto waylandWindow = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(waylandWindow);
     QVERIFY(waylandWindow->isActive());
     xcb_flush(kwinApp()->x11Connection());
 
-    NETRootInfo rootInfo2(c.data(), NET::WMAllProperties);
+    NETRootInfo rootInfo2(c.get(), NET::WMAllProperties);
     QCOMPARE(rootInfo2.activeWindow(), 0u);
 
     // back to X11 window
@@ -797,12 +797,12 @@ void X11WindowTest::testX11WindowId()
     QVERIFY(Test::waitForWindowDestroyed(waylandWindow));
 
     QTRY_VERIFY(window->isActive());
-    NETRootInfo rootInfo3(c.data(), NET::WMAllProperties);
+    NETRootInfo rootInfo3(c.get(), NET::WMAllProperties);
     QCOMPARE(rootInfo3.activeWindow(), window->window());
 
     // and destroy the window again
-    xcb_unmap_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_unmap_window(c.get(), windowId);
+    xcb_flush(c.get());
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
     QVERIFY(windowClosedSpy.wait());
@@ -818,11 +818,11 @@ void X11WindowTest::testCaptionChanges()
 
     // verifies that caption is updated correctly when the X11 window updates it
     // BUG: 383444
-    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
-    QVERIFY(!xcb_connection_has_error(c.data()));
+    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
-    xcb_window_t windowId = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+    xcb_window_t windowId = xcb_generate_id(c.get());
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
@@ -832,11 +832,11 @@ void X11WindowTest::testCaptionChanges()
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
-    NETWinInfo info(c.data(), windowId, kwinApp()->x11RootWindow(), NET::Properties(), NET::Properties2());
+    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
+    NETWinInfo info(c.get(), windowId, kwinApp()->x11RootWindow(), NET::Properties(), NET::Properties2());
     info.setName("foo");
-    xcb_map_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_map_window(c.get(), windowId);
+    xcb_flush(c.get());
 
     // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
@@ -850,17 +850,17 @@ void X11WindowTest::testCaptionChanges()
     QSignalSpy captionChangedSpy(window, &X11Window::captionChanged);
     QVERIFY(captionChangedSpy.isValid());
     info.setName("bar");
-    xcb_flush(c.data());
+    xcb_flush(c.get());
     QVERIFY(captionChangedSpy.wait());
     QCOMPARE(window->caption(), QStringLiteral("bar"));
 
     // and destroy the window again
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
-    xcb_unmap_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_unmap_window(c.get(), windowId);
+    xcb_flush(c.get());
     QVERIFY(windowClosedSpy.wait());
-    xcb_destroy_window(c.data(), windowId);
+    xcb_destroy_window(c.get(), windowId);
     c.reset();
 }
 
@@ -897,11 +897,11 @@ void X11WindowTest::testCaptionMultipleWindows()
 
     // BUG 384760
     // create first window
-    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
-    QVERIFY(!xcb_connection_has_error(c.data()));
+    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
-    xcb_window_t windowId = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+    xcb_window_t windowId = xcb_generate_id(c.get());
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
@@ -911,11 +911,11 @@ void X11WindowTest::testCaptionMultipleWindows()
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
-    NETWinInfo info(c.data(), windowId, kwinApp()->x11RootWindow(), NET::Properties(), NET::Properties2());
+    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
+    NETWinInfo info(c.get(), windowId, kwinApp()->x11RootWindow(), NET::Properties(), NET::Properties2());
     info.setName("foo");
-    xcb_map_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_map_window(c.get(), windowId);
+    xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
@@ -926,19 +926,19 @@ void X11WindowTest::testCaptionMultipleWindows()
     QCOMPARE(window->caption(), QStringLiteral("foo"));
 
     // create second window with same caption
-    xcb_window_t w2 = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w2, rootWindow(),
+    xcb_window_t w2 = xcb_generate_id(c.get());
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, w2, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
                       windowGeometry.height(),
                       0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
-    xcb_icccm_set_wm_normal_hints(c.data(), w2, &hints);
-    NETWinInfo info2(c.data(), w2, kwinApp()->x11RootWindow(), NET::Properties(), NET::Properties2());
+    xcb_icccm_set_wm_normal_hints(c.get(), w2, &hints);
+    NETWinInfo info2(c.get(), w2, kwinApp()->x11RootWindow(), NET::Properties(), NET::Properties2());
     info2.setName("foo");
     info2.setIconName("foo");
-    xcb_map_window(c.data(), w2);
-    xcb_flush(c.data());
+    xcb_map_window(c.get(), w2);
+    xcb_flush(c.get());
 
     windowCreatedSpy.clear();
     QVERIFY(windowCreatedSpy.wait());
@@ -953,11 +953,11 @@ void X11WindowTest::testCaptionMultipleWindows()
     QSignalSpy captionChangedSpy(window2, &X11Window::captionChanged);
     QVERIFY(captionChangedSpy.isValid());
 
-    NETWinInfo info4(c.data(), w2, kwinApp()->x11RootWindow(), NET::Properties(), NET::Properties2());
+    NETWinInfo info4(c.get(), w2, kwinApp()->x11RootWindow(), NET::Properties(), NET::Properties2());
     info4.setName("foobar");
     info4.setIconName("foobar");
-    xcb_map_window(c.data(), w2);
-    xcb_flush(c.data());
+    xcb_map_window(c.get(), w2);
+    xcb_flush(c.get());
 
     QVERIFY(captionChangedSpy.wait());
     QCOMPARE(window2->caption(), QStringLiteral("foobar"));
@@ -975,11 +975,11 @@ void X11WindowTest::testFullscreenWindowGroups()
     QFETCH_GLOBAL(qreal, scale);
     kwinApp()->setXwaylandScale(scale);
 
-    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
-    QVERIFY(!xcb_connection_has_error(c.data()));
+    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
-    xcb_window_t windowId = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+    xcb_window_t windowId = xcb_generate_id(c.get());
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
@@ -989,10 +989,10 @@ void X11WindowTest::testFullscreenWindowGroups()
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
-    xcb_change_property(c.data(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
-    xcb_map_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
+    xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+    xcb_map_window(c.get(), windowId);
+    xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
@@ -1010,8 +1010,8 @@ void X11WindowTest::testFullscreenWindowGroups()
 
     // now let's create a second window
     windowCreatedSpy.clear();
-    xcb_window_t w2 = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w2, rootWindow(),
+    xcb_window_t w2 = xcb_generate_id(c.get());
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, w2, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
@@ -1021,10 +1021,10 @@ void X11WindowTest::testFullscreenWindowGroups()
     memset(&hints2, 0, sizeof(hints2));
     xcb_icccm_size_hints_set_position(&hints2, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints2, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.data(), w2, &hints2);
-    xcb_change_property(c.data(), XCB_PROP_MODE_REPLACE, w2, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
-    xcb_map_window(c.data(), w2);
-    xcb_flush(c.data());
+    xcb_icccm_set_wm_normal_hints(c.get(), w2, &hints2);
+    xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, w2, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+    xcb_map_window(c.get(), w2);
+    xcb_flush(c.get());
 
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window2 = windowCreatedSpy.first().first().value<X11Window *>();
@@ -1052,8 +1052,8 @@ void X11WindowTest::testActivateFocusedWindow()
     QFETCH_GLOBAL(qreal, scale);
     kwinApp()->setXwaylandScale(scale);
 
-    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> connection(xcb_connect(nullptr, nullptr));
-    QVERIFY(!xcb_connection_has_error(connection.data()));
+    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> connection(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(connection.get()));
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
@@ -1065,16 +1065,16 @@ void X11WindowTest::testActivateFocusedWindow()
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
 
     // Create the first test window.
-    const xcb_window_t windowId1 = xcb_generate_id(connection.data());
-    xcb_create_window(connection.data(), XCB_COPY_FROM_PARENT, windowId1, rootWindow(),
+    const xcb_window_t windowId1 = xcb_generate_id(connection.get());
+    xcb_create_window(connection.get(), XCB_COPY_FROM_PARENT, windowId1, rootWindow(),
                       windowGeometry.x(), windowGeometry.y(),
                       windowGeometry.width(), windowGeometry.height(),
                       0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
-    xcb_icccm_set_wm_normal_hints(connection.data(), windowId1, &hints);
-    xcb_change_property(connection.data(), XCB_PROP_MODE_REPLACE, windowId1,
+    xcb_icccm_set_wm_normal_hints(connection.get(), windowId1, &hints);
+    xcb_change_property(connection.get(), XCB_PROP_MODE_REPLACE, windowId1,
                         atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId1);
-    xcb_map_window(connection.data(), windowId1);
-    xcb_flush(connection.data());
+    xcb_map_window(connection.get(), windowId1);
+    xcb_flush(connection.get());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window1 = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window1);
@@ -1082,16 +1082,16 @@ void X11WindowTest::testActivateFocusedWindow()
     QCOMPARE(window1->isActive(), true);
 
     // Create the second test window.
-    const xcb_window_t windowId2 = xcb_generate_id(connection.data());
-    xcb_create_window(connection.data(), XCB_COPY_FROM_PARENT, windowId2, rootWindow(),
+    const xcb_window_t windowId2 = xcb_generate_id(connection.get());
+    xcb_create_window(connection.get(), XCB_COPY_FROM_PARENT, windowId2, rootWindow(),
                       windowGeometry.x(), windowGeometry.y(),
                       windowGeometry.width(), windowGeometry.height(),
                       0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
-    xcb_icccm_set_wm_normal_hints(connection.data(), windowId2, &hints);
-    xcb_change_property(connection.data(), XCB_PROP_MODE_REPLACE, windowId2,
+    xcb_icccm_set_wm_normal_hints(connection.get(), windowId2, &hints);
+    xcb_change_property(connection.get(), XCB_PROP_MODE_REPLACE, windowId2,
                         atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId2);
-    xcb_map_window(connection.data(), windowId2);
-    xcb_flush(connection.data());
+    xcb_map_window(connection.get(), windowId2);
+    xcb_flush(connection.get());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window2 = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(window2);
@@ -1100,15 +1100,15 @@ void X11WindowTest::testActivateFocusedWindow()
 
     // When the second test window is destroyed, the window manager will attempt to activate the
     // next window in the focus chain, which is the first window.
-    xcb_set_input_focus(connection.data(), XCB_INPUT_FOCUS_POINTER_ROOT, windowId1, XCB_CURRENT_TIME);
-    xcb_destroy_window(connection.data(), windowId2);
-    xcb_flush(connection.data());
+    xcb_set_input_focus(connection.get(), XCB_INPUT_FOCUS_POINTER_ROOT, windowId1, XCB_CURRENT_TIME);
+    xcb_destroy_window(connection.get(), windowId2);
+    xcb_flush(connection.get());
     QVERIFY(Test::waitForWindowDestroyed(window2));
     QVERIFY(window1->isActive());
 
     // Destroy the first test window.
-    xcb_destroy_window(connection.data(), windowId1);
-    xcb_flush(connection.data());
+    xcb_destroy_window(connection.get(), windowId1);
+    xcb_flush(connection.get());
     QVERIFY(Test::waitForWindowDestroyed(window1));
 }
 
@@ -1121,11 +1121,11 @@ void X11WindowTest::testReentrantMoveResize()
     kwinApp()->setXwaylandScale(scale);
 
     // Create a test window.
-    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
-    QVERIFY(!xcb_connection_has_error(c.data()));
+    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
-    xcb_window_t windowId = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+    xcb_window_t windowId = xcb_generate_id(c.get());
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
@@ -1135,10 +1135,10 @@ void X11WindowTest::testReentrantMoveResize()
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
-    xcb_change_property(c.data(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
-    xcb_map_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
+    xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+    xcb_map_window(c.get(), windowId);
+    xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
@@ -1159,8 +1159,8 @@ void X11WindowTest::testReentrantMoveResize()
     QCOMPARE(window->pos(), QPoint(100, 100));
 
     // Destroy the test window.
-    xcb_destroy_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_destroy_window(c.get(), windowId);
+    xcb_flush(c.get());
     QVERIFY(Test::waitForWindowDestroyed(window));
 }
 

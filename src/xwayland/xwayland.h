@@ -10,6 +10,8 @@
 #ifndef KWIN_XWL_XWAYLAND
 #define KWIN_XWL_XWAYLAND
 
+#include <memory>
+
 #include "xwayland_interface.h"
 
 class KSelectionOwner;
@@ -73,7 +75,7 @@ private:
     QSocketNotifier *m_socketNotifier = nullptr;
 
     Application *m_app;
-    QScopedPointer<KSelectionOwner> m_selectionOwner;
+    std::unique_ptr<KSelectionOwner> m_selectionOwner;
 
     XrandrEventFilter *m_xrandrEventsFilter = nullptr;
     XwaylandLauncher *m_launcher;

@@ -611,9 +611,9 @@ DebugConsole::DebugConsole()
     connect(m_ui->quitButton, &QAbstractButton::clicked, this, &DebugConsole::deleteLater);
     connect(m_ui->tabWidget, &QTabWidget::currentChanged, this, [this](int index) {
         // delay creation of input event filter until the tab is selected
-        if (index == 2 && m_inputFilter.isNull()) {
+        if (index == 2 && !m_inputFilter) {
             m_inputFilter.reset(new DebugConsoleFilter(m_ui->inputTextEdit));
-            input()->installInputEventSpy(m_inputFilter.data());
+            input()->installInputEventSpy(m_inputFilter.get());
         }
         if (index == 5) {
             updateKeyboardTab();

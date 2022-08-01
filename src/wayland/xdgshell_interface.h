@@ -10,6 +10,7 @@
 
 #include <QObject>
 #include <QSharedDataPointer>
+#include <memory>
 
 struct wl_resource;
 
@@ -94,7 +95,7 @@ Q_SIGNALS:
     void pingDelayed(quint32 serial);
 
 private:
-    QScopedPointer<XdgShellInterfacePrivate> d;
+    std::unique_ptr<XdgShellInterfacePrivate> d;
     friend class XdgShellInterfacePrivate;
 };
 
@@ -181,7 +182,7 @@ Q_SIGNALS:
     void resetOccurred();
 
 private:
-    QScopedPointer<XdgSurfaceInterfacePrivate> d;
+    std::unique_ptr<XdgSurfaceInterfacePrivate> d;
     friend class XdgSurfaceInterfacePrivate;
 };
 
@@ -388,7 +389,7 @@ Q_SIGNALS:
     void parentXdgToplevelChanged();
 
 private:
-    QScopedPointer<XdgToplevelInterfacePrivate> d;
+    std::unique_ptr<XdgToplevelInterfacePrivate> d;
     friend class XdgToplevelInterfacePrivate;
 };
 
@@ -577,7 +578,7 @@ Q_SIGNALS:
     void repositionRequested(quint32 token);
 
 private:
-    QScopedPointer<XdgPopupInterfacePrivate> d;
+    std::unique_ptr<XdgPopupInterfacePrivate> d;
     friend class XdgPopupInterfacePrivate;
 };
 

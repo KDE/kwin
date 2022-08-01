@@ -8,6 +8,7 @@
 #include "kwin_export.h"
 
 #include <QObject>
+#include <memory>
 
 struct wl_resource;
 
@@ -67,7 +68,7 @@ Q_SIGNALS:
     void decorationCreated(KWaylandServer::ServerSideDecorationInterface *);
 
 private:
-    QScopedPointer<ServerSideDecorationManagerInterfacePrivate> d;
+    std::unique_ptr<ServerSideDecorationManagerInterfacePrivate> d;
 };
 
 /**
@@ -122,7 +123,7 @@ private:
     explicit ServerSideDecorationInterface(ServerSideDecorationManagerInterface *manager, SurfaceInterface *surface, wl_resource *resource);
     friend class ServerSideDecorationManagerInterfacePrivate;
 
-    QScopedPointer<ServerSideDecorationInterfacePrivate> d;
+    std::unique_ptr<ServerSideDecorationInterfacePrivate> d;
 };
 
 }

@@ -38,7 +38,7 @@ private:
     friend class DataControlDeviceManagerV1InterfacePrivate;
     explicit DataControlSourceV1Interface(DataControlDeviceManagerV1Interface *parent, ::wl_resource *resource);
 
-    QScopedPointer<DataControlSourceV1InterfacePrivate> d;
+    std::unique_ptr<DataControlSourceV1InterfacePrivate> d;
 };
 
 }

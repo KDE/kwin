@@ -42,7 +42,7 @@ private:
                                                    SeatInterface *seat,
                                                    KeyboardShortcutsInhibitManagerV1Interface *manager,
                                                    wl_resource *resource);
-    QScopedPointer<KeyboardShortcutsInhibitorV1InterfacePrivate> d;
+    std::unique_ptr<KeyboardShortcutsInhibitorV1InterfacePrivate> d;
 };
 
 /**
@@ -72,7 +72,7 @@ Q_SIGNALS:
 private:
     friend class KeyboardShortcutsInhibitorV1InterfacePrivate;
     void removeInhibitor(SurfaceInterface *const surface, SeatInterface *const seat);
-    QScopedPointer<KeyboardShortcutsInhibitManagerV1InterfacePrivate> d;
+    std::unique_ptr<KeyboardShortcutsInhibitManagerV1InterfacePrivate> d;
 };
 
 }

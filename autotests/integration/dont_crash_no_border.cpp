@@ -84,10 +84,10 @@ void DontCrashNoBorder::cleanup()
 void DontCrashNoBorder::testCreateWindow()
 {
     // create a window and ensure that this doesn't crash
-    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
-    QScopedPointer<Test::XdgToplevelDecorationV1> decoration(Test::createXdgToplevelDecorationV1(shellSurface.data()));
-    QSignalSpy decorationConfigureRequestedSpy(decoration.data(), &Test::XdgToplevelDecorationV1::configureRequested);
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly));
+    std::unique_ptr<Test::XdgToplevelDecorationV1> decoration(Test::createXdgToplevelDecorationV1(shellSurface.get()));
+    QSignalSpy decorationConfigureRequestedSpy(decoration.get(), &Test::XdgToplevelDecorationV1::configureRequested);
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
 
     // Initialize the xdg-toplevel surface.
@@ -98,7 +98,7 @@ void DontCrashNoBorder::testCreateWindow()
 
     // let's render
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
-    auto window = Test::renderAndWaitForShown(surface.data(), QSize(500, 50), Qt::blue);
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(500, 50), Qt::blue);
     QVERIFY(window);
     QCOMPARE(workspace()->activeWindow(), window);
     QVERIFY(!window->isDecorated());

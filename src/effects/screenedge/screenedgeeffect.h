@@ -56,8 +56,8 @@ private:
 class Glow
 {
 public:
-    QScopedPointer<GLTexture> texture;
-    QScopedPointer<QImage> image;
+    std::unique_ptr<GLTexture> texture;
+    std::unique_ptr<QImage> image;
     QSize pictureSize;
     qreal strength;
     QRect geometry;

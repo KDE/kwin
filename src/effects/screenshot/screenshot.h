@@ -99,8 +99,8 @@ private:
     QVector<ScreenShotAreaData> m_areaScreenShots;
     QVector<ScreenShotScreenData> m_screenScreenShots;
 
-    QScopedPointer<ScreenShotDBusInterface1> m_dbusInterface1;
-    QScopedPointer<ScreenShotDBusInterface2> m_dbusInterface2;
+    std::unique_ptr<ScreenShotDBusInterface1> m_dbusInterface1;
+    std::unique_ptr<ScreenShotDBusInterface2> m_dbusInterface2;
     EffectScreen *m_paintedScreen = nullptr;
 };
 

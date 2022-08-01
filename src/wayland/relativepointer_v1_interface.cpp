@@ -60,7 +60,7 @@ RelativePointerV1Interface *RelativePointerV1Interface::get(PointerInterface *po
 {
     if (pointer) {
         PointerInterfacePrivate *pointerPrivate = PointerInterfacePrivate::get(pointer);
-        return pointerPrivate->relativePointersV1.data();
+        return pointerPrivate->relativePointersV1.get();
     }
     return nullptr;
 }

@@ -10,6 +10,7 @@
 #include <sys/types.h>
 
 #include <QObject>
+#include <memory>
 
 struct wl_client;
 struct wl_resource;
@@ -139,7 +140,7 @@ Q_SIGNALS:
 private:
     friend class Display;
     explicit ClientConnection(wl_client *c, Display *parent);
-    QScopedPointer<ClientConnectionPrivate> d;
+    std::unique_ptr<ClientConnectionPrivate> d;
 };
 
 }

@@ -39,7 +39,7 @@ public:
 private:
     QQuickWindow *m_window;
     std::shared_ptr<GLTexture> m_nativeTexture;
-    QScopedPointer<QSGTexture> m_texture;
+    std::unique_ptr<QSGTexture> m_texture;
 };
 
 ThumbnailTextureProvider::ThumbnailTextureProvider(QQuickWindow *window)
@@ -49,7 +49,7 @@ ThumbnailTextureProvider::ThumbnailTextureProvider(QQuickWindow *window)
 
 QSGTexture *ThumbnailTextureProvider::texture() const
 {
-    return m_texture.data();
+    return m_texture.get();
 }
 
 void ThumbnailTextureProvider::setTexture(const std::shared_ptr<GLTexture> &nativeTexture)
@@ -97,7 +97,7 @@ public:
     }
 
 private:
-    QScopedPointer<ThumbnailTextureProvider> m_provider;
+    std::unique_ptr<ThumbnailTextureProvider> m_provider;
 };
 
 WindowThumbnailItem::WindowThumbnailItem(QQuickItem *parent)
@@ -423,7 +423,7 @@ void WindowThumbnailItem::updateOffscreenTexture()
         m_offscreenTarget.reset(new GLFramebuffer(m_offscreenTexture.get()));
     }
 
-    GLFramebuffer::pushFramebuffer(m_offscreenTarget.data());
+    GLFramebuffer::pushFramebuffer(m_offscreenTarget.get());
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
 

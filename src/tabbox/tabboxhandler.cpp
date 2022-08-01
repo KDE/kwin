@@ -67,8 +67,8 @@ public:
     TabBoxHandler *q; // public pointer
     // members
     TabBoxConfig config;
-    QScopedPointer<QQmlContext> m_qmlContext;
-    QScopedPointer<QQmlComponent> m_qmlComponent;
+    std::unique_ptr<QQmlContext> m_qmlContext;
+    std::unique_ptr<QQmlComponent> m_qmlComponent;
     QObject *m_mainItem;
     QMap<QString, QObject *> m_clientTabBoxes;
     QMap<QString, QObject *> m_desktopTabBoxes;
@@ -291,7 +291,7 @@ QObject *TabBoxHandlerPrivate::createSwitcherItem(bool desktopMode)
         KProcess::startDetached(QStringLiteral("kdialog"), args);
         m_qmlComponent.reset(nullptr);
     } else {
-        QObject *object = m_qmlComponent->create(m_qmlContext.data());
+        QObject *object = m_qmlComponent->create(m_qmlContext.get());
         if (desktopMode) {
             m_desktopTabBoxes.insert(config.layoutName(), object);
         } else {
@@ -306,12 +306,12 @@ QObject *TabBoxHandlerPrivate::createSwitcherItem(bool desktopMode)
 void TabBoxHandlerPrivate::show()
 {
 #ifndef KWIN_UNIT_TEST
-    if (m_qmlContext.isNull()) {
+    if (!m_qmlContext) {
         qmlRegisterType<SwitcherItem>("org.kde.kwin", 2, 0, "Switcher");
         qmlRegisterType<SwitcherItem>("org.kde.kwin", 3, 0, "TabBoxSwitcher");
         m_qmlContext.reset(new QQmlContext(Scripting::self()->qmlEngine()));
     }
-    if (m_qmlComponent.isNull()) {
+    if (!m_qmlComponent) {
         m_qmlComponent.reset(new QQmlComponent(Scripting::self()->qmlEngine()));
     }
     const bool desktopMode = (config.tabBoxMode() == TabBoxConfig::DesktopTabBox);

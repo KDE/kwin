@@ -41,7 +41,7 @@ QWeakPointer<TabBox::TabBoxClient> MockTabBoxHandler::clientToAddToList(TabBox::
     Q_UNUSED(desktop)
     QList<QSharedPointer<TabBox::TabBoxClient>>::const_iterator it = m_windows.constBegin();
     for (; it != m_windows.constEnd(); ++it) {
-        if ((*it).data() == client) {
+        if ((*it).get() == client) {
             return QWeakPointer<TabBox::TabBoxClient>(*it);
         }
     }
@@ -52,7 +52,7 @@ QWeakPointer<TabBox::TabBoxClient> MockTabBoxHandler::nextClientFocusChain(TabBo
 {
     QList<QSharedPointer<TabBox::TabBoxClient>>::const_iterator it = m_windows.constBegin();
     for (; it != m_windows.constEnd(); ++it) {
-        if ((*it).data() == client) {
+        if ((*it).get() == client) {
             ++it;
             if (it == m_windows.constEnd()) {
                 return QWeakPointer<TabBox::TabBoxClient>(m_windows.first());
@@ -82,7 +82,7 @@ bool MockTabBoxHandler::isInFocusChain(TabBox::TabBoxClient *client) const
     }
     QList<QSharedPointer<TabBox::TabBoxClient>>::const_iterator it = m_windows.constBegin();
     for (; it != m_windows.constEnd(); ++it) {
-        if ((*it).data() == client) {
+        if ((*it).get() == client) {
             return true;
         }
     }
@@ -101,7 +101,7 @@ void MockTabBoxHandler::closeWindow(TabBox::TabBoxClient *client)
 {
     QList<QSharedPointer<TabBox::TabBoxClient>>::iterator it = m_windows.begin();
     for (; it != m_windows.end(); ++it) {
-        if ((*it).data() == client) {
+        if ((*it).get() == client) {
             m_windows.erase(it);
             return;
         }

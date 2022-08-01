@@ -116,7 +116,7 @@ XdgToplevel::~XdgToplevel()
 
 XdgSurface *XdgToplevel::xdgSurface() const
 {
-    return m_xdgSurface.data();
+    return m_xdgSurface.get();
 }
 
 void XdgToplevel::xdg_toplevel_configure(int32_t width, int32_t height, wl_array *states)
@@ -175,7 +175,7 @@ XdgPopup::~XdgPopup()
 
 XdgSurface *XdgPopup::xdgSurface() const
 {
-    return m_xdgSurface.data();
+    return m_xdgSurface.get();
 }
 
 void XdgPopup::xdg_popup_configure(int32_t x, int32_t y, int32_t width, int32_t height)

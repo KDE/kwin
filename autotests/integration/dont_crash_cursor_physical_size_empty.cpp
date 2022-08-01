@@ -79,11 +79,11 @@ void DontCrashCursorPhysicalSizeEmpty::testMoveCursorOverDeco()
     // This test ensures that there is no endless recursion if the cursor theme cannot be created
     // a reason for creation failure could be physical size not existing
     // see BUG: 390314
-    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    Test::waylandServerSideDecoration()->create(surface.data(), surface.data());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    Test::waylandServerSideDecoration()->create(surface.get(), surface.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
 
-    auto window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QVERIFY(window->isDecorated());
 

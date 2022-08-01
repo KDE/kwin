@@ -16,7 +16,7 @@ namespace KWaylandServer
 {
 TouchInterfacePrivate *TouchInterfacePrivate::get(TouchInterface *touch)
 {
-    return touch->d.data();
+    return touch->d.get();
 }
 
 TouchInterfacePrivate::TouchInterfacePrivate(TouchInterface *q, SeatInterface *seat)

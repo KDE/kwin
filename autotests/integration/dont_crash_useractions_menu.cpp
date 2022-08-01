@@ -81,9 +81,9 @@ void TestDontCrashUseractionsMenu::cleanup()
 void TestDontCrashUseractionsMenu::testShowHideShowUseractionsMenu()
 {
     // this test creates the condition of BUG 382063
-    QScopedPointer<KWayland::Client::Surface> surface1(Test::createSurface());
-    QScopedPointer<Test::XdgToplevel> shellSurface1(Test::createXdgToplevelSurface(surface1.data()));
-    auto window = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::blue);
+    std::unique_ptr<KWayland::Client::Surface> surface1(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface1(Test::createXdgToplevelSurface(surface1.get()));
+    auto window = Test::renderAndWaitForShown(surface1.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
 
     workspace()->showWindowMenu(QRect(), window);

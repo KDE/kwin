@@ -24,8 +24,8 @@ public:
     XdgForeignV2InterfacePrivate(Display *display, XdgForeignV2Interface *q);
 
     XdgForeignV2Interface *q;
-    QScopedPointer<XdgExporterV2Interface> exporter;
-    QScopedPointer<XdgImporterV2Interface> importer;
+    std::unique_ptr<XdgExporterV2Interface> exporter;
+    std::unique_ptr<XdgImporterV2Interface> importer;
 };
 
 class XdgExporterV2Interface : public QObject, public QtWaylandServer::zxdg_exporter_v2

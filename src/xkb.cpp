@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "xkb.h"
+#include "utils/c_ptr.h"
 #include "utils/common.h"
 #include "wayland/keyboard_interface.h"
 #include "wayland/seat_interface.h"
@@ -333,11 +334,11 @@ QByteArray Xkb::keymapContents() const
         return {};
     }
 
-    ScopedCPointer<char> keymapString(xkb_keymap_get_as_string(m_keymap, XKB_KEYMAP_FORMAT_TEXT_V1));
-    if (keymapString.isNull()) {
+    UniqueCPtr<char> keymapString(xkb_keymap_get_as_string(m_keymap, XKB_KEYMAP_FORMAT_TEXT_V1));
+    if (!keymapString) {
         return {};
     }
-    return keymapString.data();
+    return keymapString.get();
 }
 
 void Xkb::updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)

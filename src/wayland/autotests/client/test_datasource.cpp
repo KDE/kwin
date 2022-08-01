@@ -121,7 +121,7 @@ void TestDataSource::testOffer()
     QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &KWaylandServer::DataDeviceManagerInterface::dataSourceCreated);
     QVERIFY(dataSourceCreatedSpy.isValid());
 
-    QScopedPointer<DataSource> dataSource(m_dataDeviceManager->createDataSource());
+    std::unique_ptr<DataSource> dataSource(m_dataDeviceManager->createDataSource());
     QVERIFY(dataSource->isValid());
 
     QVERIFY(dataSourceCreatedSpy.wait());
@@ -179,10 +179,10 @@ void TestDataSource::testTargetAccepts()
     QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &KWaylandServer::DataDeviceManagerInterface::dataSourceCreated);
     QVERIFY(dataSourceCreatedSpy.isValid());
 
-    QScopedPointer<DataSource> dataSource(m_dataDeviceManager->createDataSource());
+    std::unique_ptr<DataSource> dataSource(m_dataDeviceManager->createDataSource());
     QVERIFY(dataSource->isValid());
 
-    QSignalSpy targetAcceptsSpy(dataSource.data(), &KWayland::Client::DataSource::targetAccepts);
+    QSignalSpy targetAcceptsSpy(dataSource.get(), &KWayland::Client::DataSource::targetAccepts);
     QVERIFY(targetAcceptsSpy.isValid());
 
     QVERIFY(dataSourceCreatedSpy.wait());
@@ -204,9 +204,9 @@ void TestDataSource::testRequestSend()
     QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &KWaylandServer::DataDeviceManagerInterface::dataSourceCreated);
     QVERIFY(dataSourceCreatedSpy.isValid());
 
-    QScopedPointer<DataSource> dataSource(m_dataDeviceManager->createDataSource());
+    std::unique_ptr<DataSource> dataSource(m_dataDeviceManager->createDataSource());
     QVERIFY(dataSource->isValid());
-    QSignalSpy sendRequestedSpy(dataSource.data(), &KWayland::Client::DataSource::sendDataRequested);
+    QSignalSpy sendRequestedSpy(dataSource.get(), &KWayland::Client::DataSource::sendDataRequested);
     QVERIFY(sendRequestedSpy.isValid());
 
     const QString plain = QStringLiteral("text/plain");
@@ -235,9 +235,9 @@ void TestDataSource::testCancel()
     QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &KWaylandServer::DataDeviceManagerInterface::dataSourceCreated);
     QVERIFY(dataSourceCreatedSpy.isValid());
 
-    QScopedPointer<DataSource> dataSource(m_dataDeviceManager->createDataSource());
+    std::unique_ptr<DataSource> dataSource(m_dataDeviceManager->createDataSource());
     QVERIFY(dataSource->isValid());
-    QSignalSpy cancelledSpy(dataSource.data(), &KWayland::Client::DataSource::cancelled);
+    QSignalSpy cancelledSpy(dataSource.get(), &KWayland::Client::DataSource::cancelled);
     QVERIFY(cancelledSpy.isValid());
 
     QVERIFY(dataSourceCreatedSpy.wait());
@@ -257,7 +257,7 @@ void TestDataSource::testServerGet()
     QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &KWaylandServer::DataDeviceManagerInterface::dataSourceCreated);
     QVERIFY(dataSourceCreatedSpy.isValid());
 
-    QScopedPointer<DataSource> dataSource(m_dataDeviceManager->createDataSource());
+    std::unique_ptr<DataSource> dataSource(m_dataDeviceManager->createDataSource());
     QVERIFY(dataSource->isValid());
 
     QVERIFY(!DataSourceInterface::get(nullptr));

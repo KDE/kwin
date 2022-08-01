@@ -55,7 +55,7 @@ public:
     ~DpmsManagerInterface() override;
 
 private:
-    QScopedPointer<DpmsManagerInterfacePrivate> d;
+    std::unique_ptr<DpmsManagerInterfacePrivate> d;
 };
 
 }

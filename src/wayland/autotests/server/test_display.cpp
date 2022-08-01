@@ -55,8 +55,8 @@ void TestWaylandServerDisplay::testStartStop()
     QVERIFY(runtimeDir.exists());
     QVERIFY(!runtimeDir.exists(testSocketName));
 
-    QScopedPointer<KWaylandServer::Display> display(new KWaylandServer::Display);
-    QSignalSpy runningSpy(display.data(), SIGNAL(runningChanged(bool)));
+    std::unique_ptr<KWaylandServer::Display> display(new KWaylandServer::Display);
+    QSignalSpy runningSpy(display.get(), SIGNAL(runningChanged(bool)));
     QVERIFY(runningSpy.isValid());
     display->addSocketName(testSocketName);
     QVERIFY(!display->isRunning());

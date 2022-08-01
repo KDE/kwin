@@ -95,7 +95,7 @@ private:
 
     mutable ThumbnailTextureProvider *m_provider = nullptr;
     std::shared_ptr<GLTexture> m_offscreenTexture;
-    QScopedPointer<GLFramebuffer> m_offscreenTarget;
+    std::unique_ptr<GLFramebuffer> m_offscreenTarget;
     GLsync m_acquireFence = 0;
     qreal m_devicePixelRatio = 1;
 

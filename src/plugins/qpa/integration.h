@@ -58,11 +58,11 @@ private Q_SLOTS:
     void handleWorkspaceCreated();
 
 private:
-    QScopedPointer<QPlatformFontDatabase> m_fontDb;
-    QScopedPointer<QPlatformNativeInterface> m_nativeInterface;
+    std::unique_ptr<QPlatformFontDatabase> m_fontDb;
+    std::unique_ptr<QPlatformNativeInterface> m_nativeInterface;
     QPlatformPlaceholderScreen *m_dummyScreen = nullptr;
     QHash<Output *, Screen *> m_screens;
-    QScopedPointer<QGenericUnixServices> m_services;
+    std::unique_ptr<QGenericUnixServices> m_services;
 };
 
 }

@@ -61,7 +61,7 @@ SurfaceInterface *DragAndDropIcon::surface() const
 
 DataDeviceInterfacePrivate *DataDeviceInterfacePrivate::get(DataDeviceInterface *device)
 {
-    return device->d.data();
+    return device->d.get();
 }
 
 DataDeviceInterfacePrivate::DataDeviceInterfacePrivate(SeatInterface *seat, DataDeviceInterface *_q, wl_resource *resource)

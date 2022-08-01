@@ -117,7 +117,7 @@ QMatrix4x4 XdgSurfaceWindow::inputTransformation() const
 
 XdgSurfaceConfigure *XdgSurfaceWindow::lastAcknowledgedConfigure() const
 {
-    return m_lastAcknowledgedConfigure.data();
+    return m_lastAcknowledgedConfigure.get();
 }
 
 void XdgSurfaceWindow::scheduleConfigure()

@@ -141,11 +141,11 @@ private:
         KSelectionOwner::getAtoms();
         if (xa_version == XCB_ATOM_NONE) {
             const QByteArray name(QByteArrayLiteral("VERSION"));
-            ScopedCPointer<xcb_intern_atom_reply_t> atom(xcb_intern_atom_reply(
+            UniqueCPtr<xcb_intern_atom_reply_t> atom(xcb_intern_atom_reply(
                 kwinApp()->x11Connection(),
                 xcb_intern_atom_unchecked(kwinApp()->x11Connection(), false, name.length(), name.constData()),
                 nullptr));
-            if (!atom.isNull()) {
+            if (atom) {
                 xa_version = atom->atom;
             }
         }
@@ -154,11 +154,11 @@ private:
     xcb_atom_t make_selection_atom()
     {
         QByteArray screen(QByteArrayLiteral("WM_S0"));
-        ScopedCPointer<xcb_intern_atom_reply_t> atom(xcb_intern_atom_reply(
+        UniqueCPtr<xcb_intern_atom_reply_t> atom(xcb_intern_atom_reply(
             kwinApp()->x11Connection(),
             xcb_intern_atom_unchecked(kwinApp()->x11Connection(), false, screen.length(), screen.constData()),
             nullptr));
-        if (atom.isNull()) {
+        if (!atom) {
             return XCB_ATOM_NONE;
         }
         return atom->atom;
@@ -186,7 +186,8 @@ ApplicationX11::~ApplicationX11()
     destroyPlugins();
     destroyCompositor();
     destroyWorkspace();
-    if (!owner.isNull() && owner->ownerWindow() != XCB_WINDOW_NONE) { // If there was no --replace (no new WM)
+    // If there was no --replace (no new WM)
+    if (owner != nullptr && owner->ownerWindow() != XCB_WINDOW_NONE) {
         Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
     }
 }
@@ -213,12 +214,12 @@ void ApplicationX11::performStartup()
     crashChecking();
 
     owner.reset(new KWinSelectionOwner());
-    connect(owner.data(), &KSelectionOwner::failedToClaimOwnership, [] {
+    connect(owner.get(), &KSelectionOwner::failedToClaimOwnership, [] {
         fputs(i18n("kwin: unable to claim manager selection, another wm running? (try using --replace)\n").toLocal8Bit().constData(), stderr);
         ::exit(1);
     });
-    connect(owner.data(), &KSelectionOwner::lostOwnership, this, &ApplicationX11::lostSelection);
-    connect(owner.data(), &KSelectionOwner::claimedOwnership, this, [this] {
+    connect(owner.get(), &KSelectionOwner::lostOwnership, this, &ApplicationX11::lostSelection);
+    connect(owner.get(), &KSelectionOwner::claimedOwnership, this, [this] {
         installNativeX11EventFilter();
         // first load options - done internally by a different thread
         createOptions();
@@ -231,12 +232,12 @@ void ApplicationX11::performStartup()
 
         // Check  whether another windowmanager is running
         const uint32_t maskValues[] = {XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT};
-        ScopedCPointer<xcb_generic_error_t> redirectCheck(xcb_request_check(kwinApp()->x11Connection(),
-                                                                            xcb_change_window_attributes_checked(kwinApp()->x11Connection(),
-                                                                                                                 kwinApp()->x11RootWindow(),
-                                                                                                                 XCB_CW_EVENT_MASK,
-                                                                                                                 maskValues)));
-        if (!redirectCheck.isNull()) {
+        UniqueCPtr<xcb_generic_error_t> redirectCheck(xcb_request_check(kwinApp()->x11Connection(),
+                                                                        xcb_change_window_attributes_checked(kwinApp()->x11Connection(),
+                                                                                                             kwinApp()->x11RootWindow(),
+                                                                                                             XCB_CW_EVENT_MASK,
+                                                                                                             maskValues)));
+        if (redirectCheck) {
             fputs(i18n("kwin: another window manager is running (try using --replace)\n").toLocal8Bit().constData(), stderr);
             if (!wasCrash()) { // if this is a crash-restart, DrKonqi may have stopped the process w/o killing the connection
                 ::exit(1);

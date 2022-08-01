@@ -10,6 +10,7 @@
 #include <QObject>
 #include <QPointF>
 #include <QSizeF>
+#include <memory>
 
 struct wl_resource;
 
@@ -52,7 +53,7 @@ Q_SIGNALS:
     void deviceCreated(KWaylandServer::FakeInputDevice *device);
 
 private:
-    QScopedPointer<FakeInputInterfacePrivate> d;
+    std::unique_ptr<FakeInputInterfacePrivate> d;
 };
 
 /**
@@ -146,7 +147,7 @@ Q_SIGNALS:
 private:
     friend class FakeInputInterfacePrivate;
     FakeInputDevice(FakeInputInterface *parent, wl_resource *resource);
-    QScopedPointer<FakeInputDevicePrivate> d;
+    std::unique_ptr<FakeInputDevicePrivate> d;
 };
 
 }

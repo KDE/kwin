@@ -10,6 +10,7 @@
 #include "kwin_export.h"
 
 #include <QObject>
+#include <memory>
 
 struct wl_resource;
 
@@ -74,7 +75,7 @@ Q_SIGNALS:
 
 private:
     explicit PointerInterface(SeatInterface *seat);
-    QScopedPointer<PointerInterfacePrivate> d;
+    std::unique_ptr<PointerInterfacePrivate> d;
 
     friend class SeatInterface;
     friend class PointerInterfacePrivate;
@@ -113,7 +114,7 @@ Q_SIGNALS:
     void changed();
 
 private:
-    QScopedPointer<CursorPrivate> d;
+    std::unique_ptr<CursorPrivate> d;
     friend class PointerInterfacePrivate;
     explicit Cursor(PointerInterface *parent);
 };

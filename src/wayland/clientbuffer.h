@@ -11,6 +11,7 @@
 #include <QImage>
 #include <QObject>
 #include <QSize>
+#include <memory>
 
 struct wl_resource;
 
@@ -70,7 +71,7 @@ protected:
     ClientBuffer(wl_resource *resource, ClientBufferPrivate &dd);
 
     void initialize(wl_resource *resource);
-    QScopedPointer<ClientBufferPrivate> d_ptr;
+    std::unique_ptr<ClientBufferPrivate> d_ptr;
 };
 
 } // namespace KWaylandServer

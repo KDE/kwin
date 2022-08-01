@@ -280,12 +280,12 @@ void Application::createInputMethod()
 
 void Application::installNativeX11EventFilter()
 {
-    installNativeEventFilter(m_eventFilter.data());
+    installNativeEventFilter(m_eventFilter.get());
 }
 
 void Application::removeNativeX11EventFilter()
 {
-    removeNativeEventFilter(m_eventFilter.data());
+    removeNativeEventFilter(m_eventFilter.get());
 }
 
 void Application::destroyInput()

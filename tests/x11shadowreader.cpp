@@ -108,10 +108,10 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    QScopedPointer<QWidget> widget(new QWidget());
-    QFormLayout *layout = new QFormLayout(widget.data());
+    std::unique_ptr<QWidget> widget(new QWidget());
+    QFormLayout *layout = new QFormLayout(widget.get());
     for (const auto &pix : pixmaps) {
-        QLabel *l = new QLabel(widget.data());
+        QLabel *l = new QLabel(widget.get());
         l->setPixmap(pix);
         layout->addRow(QStringLiteral("%1x%2:").arg(pix.width()).arg(pix.height()), l);
     }

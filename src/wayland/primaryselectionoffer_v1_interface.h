@@ -8,6 +8,7 @@
 #include "kwin_export.h"
 
 #include <QObject>
+#include <memory>
 
 #include "primaryselectiondevicemanager_v1_interface.h"
 
@@ -36,7 +37,7 @@ private:
     friend class PrimarySelectionDeviceV1InterfacePrivate;
     explicit PrimarySelectionOfferV1Interface(AbstractDataSource *source, wl_resource *resource);
 
-    QScopedPointer<PrimarySelectionOfferV1InterfacePrivate> d;
+    std::unique_ptr<PrimarySelectionOfferV1InterfacePrivate> d;
 };
 
 }

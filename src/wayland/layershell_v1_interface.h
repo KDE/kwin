@@ -46,7 +46,7 @@ Q_SIGNALS:
     void surfaceCreated(LayerSurfaceV1Interface *surface);
 
 private:
-    QScopedPointer<LayerShellV1InterfacePrivate> d;
+    std::unique_ptr<LayerShellV1InterfacePrivate> d;
 };
 
 /**
@@ -183,7 +183,7 @@ Q_SIGNALS:
     void marginsChanged();
 
 private:
-    QScopedPointer<LayerSurfaceV1InterfacePrivate> d;
+    std::unique_ptr<LayerSurfaceV1InterfacePrivate> d;
 };
 
 } // namespace KWaylandServer

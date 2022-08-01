@@ -8,9 +8,9 @@
 #ifndef KWIN_ONSCREENNOTIFICATION_H
 #define KWIN_ONSCREENNOTIFICATION_H
 
-#include <QObject>
-
 #include <KSharedConfig>
+#include <QObject>
+#include <memory>
 
 class QPropertyAnimation;
 class QTimer;
@@ -68,11 +68,11 @@ private:
     QString m_iconName;
     QTimer *m_timer;
     KSharedConfigPtr m_config;
-    QScopedPointer<QQmlContext> m_qmlContext;
-    QScopedPointer<QQmlComponent> m_qmlComponent;
+    std::unique_ptr<QQmlContext> m_qmlContext;
+    std::unique_ptr<QQmlComponent> m_qmlComponent;
     QQmlEngine *m_qmlEngine = nullptr;
-    QScopedPointer<QObject> m_mainItem;
-    QScopedPointer<OnScreenNotificationInputEventSpy> m_spy;
+    std::unique_ptr<QObject> m_mainItem;
+    std::unique_ptr<OnScreenNotificationInputEventSpy> m_spy;
     QPropertyAnimation *m_animation = nullptr;
     bool m_containsPointer = false;
 };

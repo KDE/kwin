@@ -328,7 +328,7 @@ private:
     QTimer *m_updateTimer;
     bool m_updatesDisabled;
     QList<Rules *> m_rules;
-    QScopedPointer<KXMessages> m_temporaryRulesMessages;
+    std::unique_ptr<KXMessages> m_temporaryRulesMessages;
     KSharedConfig::Ptr m_config;
 };
 

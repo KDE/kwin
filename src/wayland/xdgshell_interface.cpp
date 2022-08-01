@@ -56,7 +56,7 @@ void XdgShellInterfacePrivate::registerPing(quint32 serial)
 
 XdgShellInterfacePrivate *XdgShellInterfacePrivate::get(XdgShellInterface *shell)
 {
-    return shell->d.data();
+    return shell->d.get();
 }
 
 void XdgShellInterfacePrivate::xdg_wm_base_destroy(Resource *resource)
@@ -163,7 +163,7 @@ void XdgSurfaceInterfacePrivate::reset()
 
 XdgSurfaceInterfacePrivate *XdgSurfaceInterfacePrivate::get(XdgSurfaceInterface *surface)
 {
-    return surface->d.data();
+    return surface->d.get();
 }
 
 void XdgSurfaceInterfacePrivate::xdg_surface_destroy_resource(Resource *resource)
@@ -474,7 +474,7 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_set_minimized(Resource *resource)
 
 XdgToplevelInterfacePrivate *XdgToplevelInterfacePrivate::get(XdgToplevelInterface *toplevel)
 {
-    return toplevel->d.data();
+    return toplevel->d.get();
 }
 
 XdgToplevelInterfacePrivate *XdgToplevelInterfacePrivate::get(wl_resource *resource)
@@ -606,7 +606,7 @@ XdgToplevelInterface *XdgToplevelInterface::get(::wl_resource *resource)
 
 XdgPopupInterfacePrivate *XdgPopupInterfacePrivate::get(XdgPopupInterface *popup)
 {
-    return popup->d.data();
+    return popup->d.get();
 }
 
 XdgPopupInterfacePrivate::XdgPopupInterfacePrivate(XdgPopupInterface *popup, XdgSurfaceInterface *surface)

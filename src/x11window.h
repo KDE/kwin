@@ -539,7 +539,7 @@ private:
     QRectF m_lastBufferGeometry;
     QRectF m_lastFrameGeometry;
     QRectF m_lastClientGeometry;
-    QScopedPointer<X11DecorationRenderer> m_decorationRenderer;
+    std::unique_ptr<X11DecorationRenderer> m_decorationRenderer;
 };
 
 inline xcb_window_t X11Window::wrapperId() const

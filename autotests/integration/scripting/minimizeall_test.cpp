@@ -108,16 +108,16 @@ void MinimizeAllScriptTest::testMinimizeUnminimize()
     using namespace KWayland::Client;
 
     // Create a couple of test windows.
-    QScopedPointer<KWayland::Client::Surface> surface1(Test::createSurface());
-    QScopedPointer<Test::XdgToplevel> shellSurface1(Test::createXdgToplevelSurface(surface1.data()));
-    Window *window1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::blue);
+    std::unique_ptr<KWayland::Client::Surface> surface1(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface1(Test::createXdgToplevelSurface(surface1.get()));
+    Window *window1 = Test::renderAndWaitForShown(surface1.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window1);
     QVERIFY(window1->isActive());
     QVERIFY(window1->isMinimizable());
 
-    QScopedPointer<KWayland::Client::Surface> surface2(Test::createSurface());
-    QScopedPointer<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.data()));
-    Window *window2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::red);
+    std::unique_ptr<KWayland::Client::Surface> surface2(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.get()));
+    Window *window2 = Test::renderAndWaitForShown(surface2.get(), QSize(100, 50), Qt::red);
     QVERIFY(window2);
     QVERIFY(window2->isActive());
     QVERIFY(window2->isMinimizable());

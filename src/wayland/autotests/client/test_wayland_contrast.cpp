@@ -142,13 +142,13 @@ void TestContrast::testCreate()
     QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWaylandServer::CompositorInterface::surfaceCreated);
     QVERIFY(serverSurfaceCreated.isValid());
 
-    QScopedPointer<KWayland::Client::Surface> surface(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
 
     auto serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
     QSignalSpy contrastChanged(serverSurface, &KWaylandServer::SurfaceInterface::contrastChanged);
 
-    auto contrast = m_contrastManager->createContrast(surface.data(), surface.data());
+    auto contrast = m_contrastManager->createContrast(surface.get(), surface.get());
     contrast->setRegion(m_compositor->createRegion(QRegion(0, 0, 10, 20), nullptr));
 
     contrast->setContrast(0.2);
@@ -176,14 +176,14 @@ void TestContrast::testSurfaceDestroy()
     QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWaylandServer::CompositorInterface::surfaceCreated);
     QVERIFY(serverSurfaceCreated.isValid());
 
-    QScopedPointer<KWayland::Client::Surface> surface(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
 
     auto serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
     QSignalSpy contrastChanged(serverSurface, &KWaylandServer::SurfaceInterface::contrastChanged);
     QVERIFY(contrastChanged.isValid());
 
-    QScopedPointer<KWayland::Client::Contrast> contrast(m_contrastManager->createContrast(surface.data()));
+    std::unique_ptr<KWayland::Client::Contrast> contrast(m_contrastManager->createContrast(surface.get()));
     contrast->setRegion(m_compositor->createRegion(QRegion(0, 0, 10, 20), nullptr));
     contrast->commit();
     surface->commit(KWayland::Client::Surface::CommitFlag::None);

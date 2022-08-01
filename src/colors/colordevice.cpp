@@ -19,22 +19,16 @@
 namespace KWin
 {
 
-template<typename T>
-struct CmsDeleter;
-
-template<typename T>
-using CmsScopedPointer = QScopedPointer<T, CmsDeleter<T>>;
-
-template<>
-struct CmsDeleter<cmsToneCurve>
+struct CmsDeleter
 {
-    static inline void cleanup(cmsToneCurve *toneCurve)
+    void operator()(cmsToneCurve *toneCurve)
     {
         if (toneCurve) {
             cmsFreeToneCurve(toneCurve);
         }
     }
 };
+using UniqueToneCurvePtr = std::unique_ptr<cmsToneCurve, CmsDeleter>;
 
 class ColorDevicePrivate
 {
@@ -113,6 +107,11 @@ static qreal interpolate(qreal a, qreal b, qreal blendFactor)
     return (1 - blendFactor) * a + blendFactor * b;
 }
 
+QString ColorDevice::profile() const
+{
+    return d->profile;
+}
+
 void ColorDevicePrivate::updateTemperatureToneCurves()
 {
     temperatureStage.reset();
@@ -139,24 +138,24 @@ void ColorDevicePrivate::updateTemperatureToneCurves()
     const double greenCurveParams[] = {1.0, yWhitePoint, 0.0};
     const double blueCurveParams[] = {1.0, zWhitePoint, 0.0};
 
-    CmsScopedPointer<cmsToneCurve> redCurve(cmsBuildParametricToneCurve(nullptr, 2, redCurveParams));
+    UniqueToneCurvePtr redCurve(cmsBuildParametricToneCurve(nullptr, 2, redCurveParams));
     if (!redCurve) {
         qCWarning(KWIN_CORE) << "Failed to build the temperature tone curve for the red channel";
         return;
     }
-    CmsScopedPointer<cmsToneCurve> greenCurve(cmsBuildParametricToneCurve(nullptr, 2, greenCurveParams));
+    UniqueToneCurvePtr greenCurve(cmsBuildParametricToneCurve(nullptr, 2, greenCurveParams));
     if (!greenCurve) {
         qCWarning(KWIN_CORE) << "Failed to build the temperature tone curve for the green channel";
         return;
     }
-    CmsScopedPointer<cmsToneCurve> blueCurve(cmsBuildParametricToneCurve(nullptr, 2, blueCurveParams));
+    UniqueToneCurvePtr blueCurve(cmsBuildParametricToneCurve(nullptr, 2, blueCurveParams));
     if (!blueCurve) {
         qCWarning(KWIN_CORE) << "Failed to build the temperature tone curve for the blue channel";
         return;
     }
 
     // The ownership of the tone curves will be moved to the pipeline stage.
-    cmsToneCurve *toneCurves[] = {redCurve.take(), greenCurve.take(), blueCurve.take()};
+    cmsToneCurve *toneCurves[] = {redCurve.release(), greenCurve.release(), blueCurve.release()};
 
     temperatureStage = std::make_unique<ColorPipelineStage>(cmsStageAllocToneCurves(nullptr, 3, toneCurves));
     if (!temperatureStage) {
@@ -174,26 +173,26 @@ void ColorDevicePrivate::updateBrightnessToneCurves()
 
     const double curveParams[] = {1.0, brightness / 100.0, 0.0};
 
-    CmsScopedPointer<cmsToneCurve> redCurve(cmsBuildParametricToneCurve(nullptr, 2, curveParams));
+    UniqueToneCurvePtr redCurve(cmsBuildParametricToneCurve(nullptr, 2, curveParams));
     if (!redCurve) {
         qCWarning(KWIN_CORE) << "Failed to build the brightness tone curve for the red channel";
         return;
     }
 
-    CmsScopedPointer<cmsToneCurve> greenCurve(cmsBuildParametricToneCurve(nullptr, 2, curveParams));
+    UniqueToneCurvePtr greenCurve(cmsBuildParametricToneCurve(nullptr, 2, curveParams));
     if (!greenCurve) {
         qCWarning(KWIN_CORE) << "Failed to build the brightness tone curve for the green channel";
         return;
     }
 
-    CmsScopedPointer<cmsToneCurve> blueCurve(cmsBuildParametricToneCurve(nullptr, 2, curveParams));
+    UniqueToneCurvePtr blueCurve(cmsBuildParametricToneCurve(nullptr, 2, curveParams));
     if (!blueCurve) {
         qCWarning(KWIN_CORE) << "Failed to build the brightness tone curve for the blue channel";
         return;
     }
 
     // The ownership of the tone curves will be moved to the pipeline stage.
-    cmsToneCurve *toneCurves[] = {redCurve.take(), greenCurve.take(), blueCurve.take()};
+    cmsToneCurve *toneCurves[] = {redCurve.release(), greenCurve.release(), blueCurve.release()};
 
     brightnessStage = std::make_unique<ColorPipelineStage>(cmsStageAllocToneCurves(nullptr, 3, toneCurves));
     if (!brightnessStage) {
@@ -292,10 +291,10 @@ void ColorDevice::setTemperature(uint temperature)
     Q_EMIT temperatureChanged();
 }
 
-QString ColorDevice::profile() const
-{
-    return d->profile;
-}
+// QString ColorDevice::profile() const
+// {
+//     return d->profile;
+// }
 
 void ColorDevice::setProfile(const QString &profile)
 {

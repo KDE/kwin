@@ -10,6 +10,7 @@
 #include "kwin_export.h"
 
 #include <QObject>
+#include <memory>
 
 #include "abstract_drop_handler.h"
 
@@ -53,7 +54,7 @@ public:
 private:
     explicit DragAndDropIcon(SurfaceInterface *surface);
     friend class DataDeviceInterfacePrivate;
-    QScopedPointer<DragAndDropIconPrivate> d;
+    std::unique_ptr<DragAndDropIconPrivate> d;
 };
 
 /**
@@ -108,7 +109,7 @@ Q_SIGNALS:
 private:
     friend class DataDeviceManagerInterfacePrivate;
     explicit DataDeviceInterface(SeatInterface *seat, wl_resource *resource);
-    QScopedPointer<DataDeviceInterfacePrivate> d;
+    std::unique_ptr<DataDeviceInterfacePrivate> d;
     friend class DataDeviceInterfacePrivate;
 };
 

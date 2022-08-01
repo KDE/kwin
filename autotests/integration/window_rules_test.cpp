@@ -73,7 +73,7 @@ void WindowRuleTest::cleanup()
 
 struct XcbConnectionDeleter
 {
-    static inline void cleanup(xcb_connection_t *pointer)
+    void operator()(xcb_connection_t *pointer)
     {
         xcb_disconnect(pointer);
     }
@@ -97,14 +97,14 @@ void WindowRuleTest::testApplyInitialMaximizeVert()
     QMetaObject::invokeMethod(workspace()->rulebook(), "temporaryRulesMessage", Q_ARG(QString, QString::fromUtf8(ruleFile.readAll())));
 
     // create the test window
-    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
-    QVERIFY(!xcb_connection_has_error(c.data()));
+    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.get()));
 
-    xcb_window_t windowId = xcb_generate_id(c.data());
+    xcb_window_t windowId = xcb_generate_id(c.get());
     const QRect windowGeometry = QRect(0, 0, 10, 20);
     const uint32_t values[] = {
         XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW};
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
@@ -114,16 +114,16 @@ void WindowRuleTest::testApplyInitialMaximizeVert()
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
-    xcb_icccm_set_wm_class(c.data(), windowId, 9, "kpat\0kpat");
+    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
+    xcb_icccm_set_wm_class(c.get(), windowId, 9, "kpat\0kpat");
 
     QFETCH(QByteArray, role);
-    xcb_change_property(c.data(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_window_role, XCB_ATOM_STRING, 8, role.length(), role.constData());
+    xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_window_role, XCB_ATOM_STRING, 8, role.length(), role.constData());
 
-    NETWinInfo info(c.data(), windowId, rootWindow(), NET::WMAllProperties, NET::WM2AllProperties);
+    NETWinInfo info(c.get(), windowId, rootWindow(), NET::WMAllProperties, NET::WM2AllProperties);
     info.setWindowType(NET::Normal);
-    xcb_map_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_map_window(c.get(), windowId);
+    xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
@@ -142,9 +142,9 @@ void WindowRuleTest::testApplyInitialMaximizeVert()
     // destroy window again
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
-    xcb_unmap_window(c.data(), windowId);
-    xcb_destroy_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_unmap_window(c.get(), windowId);
+    xcb_destroy_window(c.get(), windowId);
+    xcb_flush(c.get());
     QVERIFY(windowClosedSpy.wait());
 }
 
@@ -165,14 +165,14 @@ void WindowRuleTest::testWindowClassChange()
     workspace()->slotReconfigure();
 
     // create the test window
-    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
-    QVERIFY(!xcb_connection_has_error(c.data()));
+    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.get()));
 
-    xcb_window_t windowId = xcb_generate_id(c.data());
+    xcb_window_t windowId = xcb_generate_id(c.get());
     const QRect windowGeometry = QRect(0, 0, 10, 20);
     const uint32_t values[] = {
         XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW};
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
@@ -182,13 +182,13 @@ void WindowRuleTest::testWindowClassChange()
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
-    xcb_icccm_set_wm_class(c.data(), windowId, 23, "org.kde.bar\0org.kde.bar");
+    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
+    xcb_icccm_set_wm_class(c.get(), windowId, 23, "org.kde.bar\0org.kde.bar");
 
-    NETWinInfo info(c.data(), windowId, rootWindow(), NET::WMAllProperties, NET::WM2AllProperties);
+    NETWinInfo info(c.get(), windowId, rootWindow(), NET::WMAllProperties, NET::WM2AllProperties);
     info.setWindowType(NET::Normal);
-    xcb_map_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_map_window(c.get(), windowId);
+    xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.isValid());
@@ -207,17 +207,17 @@ void WindowRuleTest::testWindowClassChange()
     // now change class
     QSignalSpy windowClassChangedSpy{window, &X11Window::windowClassChanged};
     QVERIFY(windowClassChangedSpy.isValid());
-    xcb_icccm_set_wm_class(c.data(), windowId, 23, "org.kde.foo\0org.kde.foo");
-    xcb_flush(c.data());
+    xcb_icccm_set_wm_class(c.get(), windowId, 23, "org.kde.foo\0org.kde.foo");
+    xcb_flush(c.get());
     QVERIFY(windowClassChangedSpy.wait());
     QCOMPARE(window->keepAbove(), true);
 
     // destroy window
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
-    xcb_unmap_window(c.data(), windowId);
-    xcb_destroy_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_unmap_window(c.get(), windowId);
+    xcb_destroy_window(c.get(), windowId);
+    xcb_flush(c.get());
     QVERIFY(windowClosedSpy.wait());
 }
 

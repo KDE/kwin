@@ -10,6 +10,7 @@
 
 #include <QObject>
 #include <QVector>
+#include <memory>
 
 #include "textinput.h"
 
@@ -59,7 +60,7 @@ public:
     InputMethodContextV1Interface *context() const;
 
 private:
-    QScopedPointer<InputMethodV1InterfacePrivate> d;
+    std::unique_ptr<InputMethodV1InterfacePrivate> d;
 };
 
 /**
@@ -99,7 +100,7 @@ private:
     friend class InputMethodV1Interface;
     friend class InputMethodV1InterfacePrivate;
     InputMethodContextV1Interface(InputMethodV1Interface *parent);
-    QScopedPointer<InputMethodContextV1InterfacePrivate> d;
+    std::unique_ptr<InputMethodContextV1InterfacePrivate> d;
 };
 
 /**
@@ -116,7 +117,7 @@ Q_SIGNALS:
     void inputPanelSurfaceAdded(InputPanelSurfaceV1Interface *surface);
 
 private:
-    QScopedPointer<InputPanelV1InterfacePrivate> d;
+    std::unique_ptr<InputPanelV1InterfacePrivate> d;
 };
 
 /**
@@ -142,7 +143,7 @@ Q_SIGNALS:
 private:
     InputPanelSurfaceV1Interface(SurfaceInterface *surface, quint32 id, QObject *parent);
     friend class InputPanelV1InterfacePrivate;
-    QScopedPointer<InputPanelSurfaceV1InterfacePrivate> d;
+    std::unique_ptr<InputPanelSurfaceV1InterfacePrivate> d;
 };
 
 /**
@@ -162,7 +163,7 @@ private:
     InputMethodGrabV1(QObject *parent);
     friend class InputPanelV1InterfacePrivate;
     friend class InputMethodContextV1InterfacePrivate;
-    QScopedPointer<InputKeyboardV1InterfacePrivate> d;
+    std::unique_ptr<InputKeyboardV1InterfacePrivate> d;
 };
 
 }

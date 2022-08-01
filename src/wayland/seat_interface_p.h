@@ -50,9 +50,9 @@ public:
     quint32 timestamp = 0;
     quint32 accumulatedCapabilities = 0;
     quint32 capabilities = 0;
-    QScopedPointer<KeyboardInterface> keyboard;
-    QScopedPointer<PointerInterface> pointer;
-    QScopedPointer<TouchInterface> touch;
+    std::unique_ptr<KeyboardInterface> keyboard;
+    std::unique_ptr<PointerInterface> pointer;
+    std::unique_ptr<TouchInterface> touch;
     QVector<DataDeviceInterface *> dataDevices;
     QVector<PrimarySelectionDeviceV1Interface *> primarySelectionDevices;
     QVector<DataControlDeviceV1Interface *> dataControlDevices;

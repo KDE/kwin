@@ -74,7 +74,7 @@ void KeyboardInterfacePrivate::sendEnter(SurfaceInterface *surface, quint32 seri
 
 void KeyboardInterfacePrivate::sendKeymap(Resource *resource)
 {
-    QScopedPointer<QTemporaryFile> tmp(new QTemporaryFile());
+    std::unique_ptr<QTemporaryFile> tmp(new QTemporaryFile());
     if (!tmp->open()) {
         qCWarning(KWIN_CORE) << "Failed to create keymap file:" << tmp->errorString();
         return;

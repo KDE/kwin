@@ -36,7 +36,7 @@ public:
 
 PointerInterfacePrivate *PointerInterfacePrivate::get(PointerInterface *pointer)
 {
-    return pointer->d.data();
+    return pointer->d.get();
 }
 
 PointerInterfacePrivate::PointerInterfacePrivate(PointerInterface *q, SeatInterface *seat)

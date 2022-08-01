@@ -109,7 +109,7 @@ private:
     friend class OutputConfigurationV2InterfacePrivate;
     explicit OutputChangeSetV2(OutputDeviceV2Interface *outputdevice, QObject *parent = nullptr);
 
-    QScopedPointer<OutputChangeSetV2Private> d;
+    std::unique_ptr<OutputChangeSetV2Private> d;
 };
 
 }

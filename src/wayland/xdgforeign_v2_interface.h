@@ -54,7 +54,7 @@ Q_SIGNALS:
 private:
     friend class XdgExporterV2Interface;
     friend class XdgImporterV2Interface;
-    QScopedPointer<XdgForeignV2InterfacePrivate> d;
+    std::unique_ptr<XdgForeignV2InterfacePrivate> d;
 };
 
 }

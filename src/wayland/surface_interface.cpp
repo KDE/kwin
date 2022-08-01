@@ -1021,7 +1021,7 @@ bool SurfaceInterface::inhibitsIdle() const
 
 LinuxDmaBufV1Feedback *SurfaceInterface::dmabufFeedbackV1() const
 {
-    return d->dmabufFeedbackV1.data();
+    return d->dmabufFeedbackV1.get();
 }
 
 QPointF SurfaceInterface::mapToBuffer(const QPointF &point) const

@@ -98,9 +98,9 @@ private:
     Xwl::Xwayland *m_xwayland = nullptr;
     QString m_inputMethodServerToStart;
 
-    QScopedPointer<Test::VirtualInputDevice> m_virtualPointer;
-    QScopedPointer<Test::VirtualInputDevice> m_virtualKeyboard;
-    QScopedPointer<Test::VirtualInputDevice> m_virtualTouch;
+    std::unique_ptr<Test::VirtualInputDevice> m_virtualPointer;
+    std::unique_ptr<Test::VirtualInputDevice> m_virtualKeyboard;
+    std::unique_ptr<Test::VirtualInputDevice> m_virtualTouch;
 };
 
 namespace Test
@@ -225,7 +225,7 @@ protected:
     void xdg_toplevel_close() override;
 
 private:
-    QScopedPointer<XdgSurface> m_xdgSurface;
+    std::unique_ptr<XdgSurface> m_xdgSurface;
 };
 
 /**
@@ -261,7 +261,7 @@ protected:
     void xdg_popup_popup_done() override;
 
 private:
-    QScopedPointer<XdgSurface> m_xdgSurface;
+    std::unique_ptr<XdgSurface> m_xdgSurface;
 };
 
 class XdgDecorationManagerV1 : public QtWayland::zxdg_decoration_manager_v1

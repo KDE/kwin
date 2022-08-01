@@ -11,6 +11,7 @@
 
 #include <QObject>
 #include <QRegion>
+#include <memory>
 
 struct wl_resource;
 
@@ -39,7 +40,7 @@ public:
     ~PointerConstraintsV1Interface() override;
 
 private:
-    QScopedPointer<PointerConstraintsV1InterfacePrivate> d;
+    std::unique_ptr<PointerConstraintsV1InterfacePrivate> d;
 };
 
 /**
@@ -151,7 +152,7 @@ Q_SIGNALS:
 
 private:
     LockedPointerV1Interface(LifeTime lifeTime, const QRegion &region, ::wl_resource *resource);
-    QScopedPointer<LockedPointerV1InterfacePrivate> d;
+    std::unique_ptr<LockedPointerV1InterfacePrivate> d;
     friend class LockedPointerV1InterfacePrivate;
     friend class PointerConstraintsV1InterfacePrivate;
 };
@@ -236,7 +237,7 @@ Q_SIGNALS:
 
 private:
     ConfinedPointerV1Interface(LifeTime lifeTime, const QRegion &region, ::wl_resource *resource);
-    QScopedPointer<ConfinedPointerV1InterfacePrivate> d;
+    std::unique_ptr<ConfinedPointerV1InterfacePrivate> d;
     friend class ConfinedPointerV1InterfacePrivate;
     friend class PointerConstraintsV1InterfacePrivate;
 };

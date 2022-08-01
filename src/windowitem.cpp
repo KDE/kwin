@@ -55,17 +55,17 @@ WindowItem::~WindowItem()
 
 SurfaceItem *WindowItem::surfaceItem() const
 {
-    return m_surfaceItem.data();
+    return m_surfaceItem.get();
 }
 
 DecorationItem *WindowItem::decorationItem() const
 {
-    return m_decorationItem.data();
+    return m_decorationItem.get();
 }
 
 ShadowItem *WindowItem::shadowItem() const
 {
-    return m_shadowItem.data();
+    return m_shadowItem.get();
 }
 
 Window *WindowItem::window() const
@@ -206,9 +206,9 @@ void WindowItem::updateShadowItem()
             m_shadowItem.reset(new ShadowItem(shadow, m_window, this));
         }
         if (m_decorationItem) {
-            m_shadowItem->stackBefore(m_decorationItem.data());
+            m_shadowItem->stackBefore(m_decorationItem.get());
         } else if (m_surfaceItem) {
-            m_shadowItem->stackBefore(m_decorationItem.data());
+            m_shadowItem->stackBefore(m_decorationItem.get());
         }
     } else {
         m_shadowItem.reset();
@@ -223,9 +223,9 @@ void WindowItem::updateDecorationItem()
     if (m_window->decoration()) {
         m_decorationItem.reset(new DecorationItem(m_window->decoration(), m_window, this));
         if (m_shadowItem) {
-            m_decorationItem->stackAfter(m_shadowItem.data());
+            m_decorationItem->stackAfter(m_shadowItem.get());
         } else if (m_surfaceItem) {
-            m_decorationItem->stackBefore(m_surfaceItem.data());
+            m_decorationItem->stackBefore(m_surfaceItem.get());
         }
     } else {
         m_decorationItem.reset();

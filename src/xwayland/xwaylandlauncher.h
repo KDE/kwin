@@ -12,10 +12,10 @@
 
 #include <QObject>
 #include <QProcess>
-#include <QScopedPointer>
 #include <QSocketNotifier>
 #include <QTemporaryFile>
 #include <QVector>
+#include <memory>
 
 #include <kwin_export.h>
 
@@ -98,7 +98,7 @@ private:
     QSocketNotifier *m_readyNotifier = nullptr;
     QTimer *m_resetCrashCountTimer = nullptr;
     // this is only used when kwin is run without kwin_wayland_wrapper
-    QScopedPointer<XwaylandSocket> m_socket;
+    std::unique_ptr<XwaylandSocket> m_socket;
     QVector<int> m_listenFds;
     QString m_displayName;
     QString m_xAuthority;

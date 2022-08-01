@@ -8,6 +8,7 @@
 #include "kwin_export.h"
 
 #include <QObject>
+#include <memory>
 
 struct wl_resource;
 
@@ -53,7 +54,7 @@ private:
     friend class DataControlDeviceManagerV1InterfacePrivate;
     explicit DataControlDeviceV1Interface(SeatInterface *seat, wl_resource *resource);
 
-    QScopedPointer<DataControlDeviceV1InterfacePrivate> d;
+    std::unique_ptr<DataControlDeviceV1InterfacePrivate> d;
 };
 
 }

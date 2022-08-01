@@ -234,13 +234,13 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
         }
     }
     bool validTarget = true;
-    QScopedPointer<GLTexture> offscreenTexture;
-    QScopedPointer<GLFramebuffer> target;
+    std::unique_ptr<GLTexture> offscreenTexture;
+    std::unique_ptr<GLFramebuffer> target;
     if (effects->isOpenGLCompositing()) {
         offscreenTexture.reset(new GLTexture(GL_RGBA8, QSizeF(geometry.size() * devicePixelRatio).toSize()));
         offscreenTexture->setFilter(GL_LINEAR);
         offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
-        target.reset(new GLFramebuffer(offscreenTexture.data()));
+        target.reset(new GLFramebuffer(offscreenTexture.get()));
         validTarget = target->valid();
     }
     if (validTarget) {
@@ -251,7 +251,7 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
         int mask = PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_TRANSLUCENT;
         QImage img;
         if (effects->isOpenGLCompositing()) {
-            GLFramebuffer::pushFramebuffer(target.data());
+            GLFramebuffer::pushFramebuffer(target.get());
             glClearColor(0.0, 0.0, 0.0, 0.0);
             glClear(GL_COLOR_BUFFER_BIT);
             glClearColor(0.0, 0.0, 0.0, 1.0);

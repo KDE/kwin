@@ -170,8 +170,8 @@ private:
     void hideInfoMessage();
 
     ScreenShotEffect *m_effect;
-    QScopedPointer<ScreenShotSink1> m_sink;
-    QScopedPointer<ScreenShotSource1> m_source;
+    std::unique_ptr<ScreenShotSink1> m_sink;
+    std::unique_ptr<ScreenShotSource1> m_source;
 };
 
 } // namespace KWin

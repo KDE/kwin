@@ -10,6 +10,7 @@
 #include "kwin_export.h"
 
 #include <QObject>
+#include <memory>
 
 namespace KWaylandServer
 {
@@ -38,7 +39,7 @@ public:
 
 private:
     explicit TouchInterface(SeatInterface *seat);
-    QScopedPointer<TouchInterfacePrivate> d;
+    std::unique_ptr<TouchInterfacePrivate> d;
 
     friend class SeatInterface;
     friend class TouchInterfacePrivate;

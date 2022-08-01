@@ -83,7 +83,7 @@ PointerSwipeGestureV1Interface *PointerSwipeGestureV1Interface::get(PointerInter
 {
     if (pointer) {
         PointerInterfacePrivate *pointerPrivate = PointerInterfacePrivate::get(pointer);
-        return pointerPrivate->swipeGesturesV1.data();
+        return pointerPrivate->swipeGesturesV1.get();
     }
     return nullptr;
 }
@@ -169,7 +169,7 @@ PointerPinchGestureV1Interface *PointerPinchGestureV1Interface::get(PointerInter
 {
     if (pointer) {
         PointerInterfacePrivate *pointerPrivate = PointerInterfacePrivate::get(pointer);
-        return pointerPrivate->pinchGesturesV1.data();
+        return pointerPrivate->pinchGesturesV1.get();
     }
     return nullptr;
 }
@@ -260,7 +260,7 @@ PointerHoldGestureV1Interface *PointerHoldGestureV1Interface::get(PointerInterfa
 {
     if (pointer) {
         PointerInterfacePrivate *pointerPrivate = PointerInterfacePrivate::get(pointer);
-        return pointerPrivate->holdGesturesV1.data();
+        return pointerPrivate->holdGesturesV1.get();
     }
     return nullptr;
 }

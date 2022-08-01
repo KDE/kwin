@@ -10,11 +10,11 @@
 #define KWIN_XCB_UTILS_H
 
 #include "main.h"
+#include "utils/c_ptr.h"
 #include <kwinglobals.h>
 
 #include <QRect>
 #include <QRegion>
-#include <QScopedPointer>
 #include <QVector>
 
 #include <xcb/composite.h>
@@ -27,9 +27,6 @@ class TestXcbSizeHints;
 
 namespace KWin
 {
-
-template<typename T>
-using ScopedCPointer = QScopedPointer<T, QScopedPointerPodDeleter>;
 
 namespace Xcb
 {
@@ -521,8 +518,8 @@ private:
         if (m_retrieved || !m_cookie.sequence) {
             return;
         }
-        ScopedCPointer<xcb_intern_atom_reply_t> reply(xcb_intern_atom_reply(m_connection, m_cookie, nullptr));
-        if (!reply.isNull()) {
+        UniqueCPtr<xcb_intern_atom_reply_t> reply(xcb_intern_atom_reply(m_connection, m_cookie, nullptr));
+        if (reply) {
             m_atom = reply->atom;
         }
         m_retrieved = true;
@@ -2023,7 +2020,7 @@ static inline void sync()
     auto *c = connection();
     const auto cookie = xcb_get_input_focus(c);
     xcb_generic_error_t *error = nullptr;
-    ScopedCPointer<xcb_get_input_focus_reply_t> sync(xcb_get_input_focus_reply(c, cookie, &error));
+    UniqueCPtr<xcb_get_input_focus_reply_t> sync(xcb_get_input_focus_reply(c, cookie, &error));
     if (error) {
         free(error);
     }

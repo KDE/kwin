@@ -13,8 +13,8 @@ namespace KWin
 
 struct OffscreenData
 {
-    QScopedPointer<GLTexture> texture;
-    QScopedPointer<GLFramebuffer> fbo;
+    std::unique_ptr<GLTexture> texture;
+    std::unique_ptr<GLFramebuffer> fbo;
     bool isDirty = true;
     GLShader *shader = nullptr;
 };
@@ -102,12 +102,12 @@ GLTexture *OffscreenEffectPrivate::maybeRender(EffectWindow *window, OffscreenDa
         offscreenData->texture.reset(new GLTexture(GL_RGBA8, textureSize));
         offscreenData->texture->setFilter(GL_LINEAR);
         offscreenData->texture->setWrapMode(GL_CLAMP_TO_EDGE);
-        offscreenData->fbo.reset(new GLFramebuffer(offscreenData->texture.data()));
+        offscreenData->fbo.reset(new GLFramebuffer(offscreenData->texture.get()));
         offscreenData->isDirty = true;
     }
 
     if (offscreenData->isDirty) {
-        GLFramebuffer::pushFramebuffer(offscreenData->fbo.data());
+        GLFramebuffer::pushFramebuffer(offscreenData->fbo.get());
         glClearColor(0.0, 0.0, 0.0, 0.0);
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -127,7 +127,7 @@ GLTexture *OffscreenEffectPrivate::maybeRender(EffectWindow *window, OffscreenDa
         offscreenData->isDirty = false;
     }
 
-    return offscreenData->texture.data();
+    return offscreenData->texture.get();
 }
 
 void OffscreenEffectPrivate::paint(EffectWindow *window, GLTexture *texture, const QRegion &region,

@@ -12,7 +12,6 @@
 #include <qpa/qplatformscreen.h>
 
 #include <QPointer>
-#include <QScopedPointer>
 
 namespace KWin
 {
@@ -46,7 +45,7 @@ private Q_SLOTS:
 
 private:
     QPointer<Output> m_output;
-    QScopedPointer<PlatformCursor> m_cursor;
+    std::unique_ptr<PlatformCursor> m_cursor;
     Integration *m_integration;
 };
 

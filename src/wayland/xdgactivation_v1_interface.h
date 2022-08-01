@@ -11,6 +11,7 @@
 #include <QObject>
 #include <QVector>
 #include <functional>
+#include <memory>
 #include <optional>
 
 struct wl_resource;
@@ -44,7 +45,7 @@ Q_SIGNALS:
 private:
     friend class XdgActivationV1InterfacePrivate;
     XdgActivationV1Interface(XdgActivationV1Interface *parent);
-    QScopedPointer<XdgActivationV1InterfacePrivate> d;
+    std::unique_ptr<XdgActivationV1InterfacePrivate> d;
 };
 
 }

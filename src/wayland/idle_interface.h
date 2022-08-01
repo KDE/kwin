@@ -43,7 +43,7 @@ public:
     ~IdleInterface() override;
 
 private:
-    QScopedPointer<IdleInterfacePrivate> d;
+    std::unique_ptr<IdleInterfacePrivate> d;
 };
 
 }

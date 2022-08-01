@@ -53,7 +53,7 @@ private:
     friend class DataDeviceManagerInterfacePrivate;
     explicit DataSourceInterface(DataDeviceManagerInterface *parent, wl_resource *parentResource);
 
-    QScopedPointer<DataSourceInterfacePrivate> d;
+    std::unique_ptr<DataSourceInterfacePrivate> d;
 };
 
 }

@@ -136,7 +136,7 @@ void TestViewporterInterface::testCropScale()
     // Create a test surface.
     QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
     QVERIFY(serverSurfaceCreatedSpy.isValid());
-    QScopedPointer<KWayland::Client::Surface> clientSurface(m_clientCompositor->createSurface(this));
+    std::unique_ptr<KWayland::Client::Surface> clientSurface(m_clientCompositor->createSurface(this));
     QVERIFY(serverSurfaceCreatedSpy.wait());
     SurfaceInterface *serverSurface = serverSurfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface);
@@ -162,7 +162,7 @@ void TestViewporterInterface::testCropScale()
     QCOMPARE(serverSurface->mapToBuffer(QPointF(0, 0)), QPointF(0, 0));
 
     // Create a viewport for the surface.
-    QScopedPointer<Viewport> clientViewport(new Viewport);
+    std::unique_ptr<Viewport> clientViewport(new Viewport);
     clientViewport->init(m_viewporter->get_viewport(*clientSurface));
 
     // Crop the surface.

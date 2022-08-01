@@ -79,7 +79,7 @@ private:
     LinuxDmaBufV1Feedback(LinuxDmaBufV1ClientBufferIntegrationPrivate *integration);
     friend class LinuxDmaBufV1ClientBufferIntegrationPrivate;
     friend class LinuxDmaBufV1FeedbackPrivate;
-    QScopedPointer<LinuxDmaBufV1FeedbackPrivate> d;
+    std::unique_ptr<LinuxDmaBufV1FeedbackPrivate> d;
 };
 
 /**
@@ -131,7 +131,7 @@ public:
 
 private:
     friend class LinuxDmaBufV1ClientBufferIntegrationPrivate;
-    QScopedPointer<LinuxDmaBufV1ClientBufferIntegrationPrivate> d;
+    std::unique_ptr<LinuxDmaBufV1ClientBufferIntegrationPrivate> d;
 };
 
 } // namespace KWaylandServer

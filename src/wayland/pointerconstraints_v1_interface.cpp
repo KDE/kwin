@@ -125,7 +125,7 @@ PointerConstraintsV1Interface::~PointerConstraintsV1Interface()
 
 LockedPointerV1InterfacePrivate *LockedPointerV1InterfacePrivate::get(LockedPointerV1Interface *q)
 {
-    return q->d.data();
+    return q->d.get();
 }
 
 LockedPointerV1InterfacePrivate::LockedPointerV1InterfacePrivate(LockedPointerV1Interface *q,
@@ -227,7 +227,7 @@ void LockedPointerV1Interface::setLocked(bool locked)
 
 ConfinedPointerV1InterfacePrivate *ConfinedPointerV1InterfacePrivate::get(ConfinedPointerV1Interface *q)
 {
-    return q->d.data();
+    return q->d.get();
 }
 
 ConfinedPointerV1InterfacePrivate::ConfinedPointerV1InterfacePrivate(ConfinedPointerV1Interface *q,

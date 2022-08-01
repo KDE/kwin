@@ -68,7 +68,7 @@ class SurfaceInterfacePrivate : public QtWaylandServer::wl_surface
 public:
     static SurfaceInterfacePrivate *get(SurfaceInterface *surface)
     {
-        return surface->d.data();
+        return surface->d.get();
     }
 
     explicit SurfaceInterfacePrivate(SurfaceInterface *q);
@@ -133,7 +133,7 @@ public:
 
     QVector<IdleInhibitorV1Interface *> idleInhibitors;
     ViewportInterface *viewportExtension = nullptr;
-    QScopedPointer<LinuxDmaBufV1Feedback> dmabufFeedbackV1;
+    std::unique_ptr<LinuxDmaBufV1Feedback> dmabufFeedbackV1;
     ClientConnection *client = nullptr;
 
 protected:

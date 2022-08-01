@@ -8,6 +8,7 @@
 #include "kwin_export.h"
 
 #include <QObject>
+#include <memory>
 
 struct wl_resource;
 
@@ -28,7 +29,7 @@ public:
     void remove();
 
 private:
-    QScopedPointer<SlideManagerInterfacePrivate> d;
+    std::unique_ptr<SlideManagerInterfacePrivate> d;
 };
 
 class KWIN_EXPORT SlideInterface : public QObject
@@ -59,6 +60,6 @@ private:
     explicit SlideInterface(wl_resource *resource);
     friend class SlideManagerInterfacePrivate;
 
-    QScopedPointer<SlideInterfacePrivate> d;
+    std::unique_ptr<SlideInterfacePrivate> d;
 };
 }

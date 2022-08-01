@@ -8,6 +8,7 @@
 #include "kwin_export.h"
 
 #include <QObject>
+#include <memory>
 
 namespace KWaylandServer
 {
@@ -31,7 +32,7 @@ public:
     void setPrimaryOutput(const QString &outputName);
 
 private:
-    QScopedPointer<PrimaryOutputV1InterfacePrivate> d;
+    std::unique_ptr<PrimaryOutputV1InterfacePrivate> d;
 };
 
 }

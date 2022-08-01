@@ -9,6 +9,7 @@
 #include "kwin_export.h"
 
 #include <QObject>
+#include <memory>
 
 class QSize;
 struct wl_resource;
@@ -47,7 +48,7 @@ Q_SIGNALS:
     void surfaceCreated(KWaylandServer::PlasmaShellSurfaceInterface *);
 
 private:
-    QScopedPointer<PlasmaShellInterfacePrivate> d;
+    std::unique_ptr<PlasmaShellInterfacePrivate> d;
 };
 
 /**
@@ -224,7 +225,7 @@ Q_SIGNALS:
 private:
     friend class PlasmaShellInterfacePrivate;
     explicit PlasmaShellSurfaceInterface(SurfaceInterface *surface, wl_resource *resource);
-    QScopedPointer<PlasmaShellSurfaceInterfacePrivate> d;
+    std::unique_ptr<PlasmaShellSurfaceInterfacePrivate> d;
 };
 
 }

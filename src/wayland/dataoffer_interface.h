@@ -60,7 +60,7 @@ private:
     friend class DataDeviceInterfacePrivate;
     explicit DataOfferInterface(AbstractDataSource *source, wl_resource *resource);
 
-    QScopedPointer<DataOfferInterfacePrivate> d;
+    std::unique_ptr<DataOfferInterfacePrivate> d;
 };
 
 }

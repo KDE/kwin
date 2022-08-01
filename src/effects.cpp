@@ -102,10 +102,10 @@ static xcb_atom_t registerSupportProperty(const QByteArray &propertyName)
         return XCB_ATOM_NONE;
     }
     // get the atom for the propertyName
-    ScopedCPointer<xcb_intern_atom_reply_t> atomReply(xcb_intern_atom_reply(c,
-                                                                            xcb_intern_atom_unchecked(c, false, propertyName.size(), propertyName.constData()),
-                                                                            nullptr));
-    if (atomReply.isNull()) {
+    UniqueCPtr<xcb_intern_atom_reply_t> atomReply(xcb_intern_atom_reply(c,
+                                                                        xcb_intern_atom_unchecked(c, false, propertyName.size(), propertyName.constData()),
+                                                                        nullptr));
+    if (!atomReply) {
         return XCB_ATOM_NONE;
     }
     // announce property on root window

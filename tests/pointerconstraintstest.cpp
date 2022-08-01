@@ -20,7 +20,6 @@
 #include <QQmlEngine>
 
 #include <QDebug>
-#include <QScopedPointer>
 
 #include <xcb/xproto.h>
 
@@ -106,13 +105,13 @@ void WaylandBackend::lockRequest(bool persistent, QRect region)
     }
     qDebug() << "------ Lock requested ------";
     qDebug() << "Persistent:" << persistent << "| Region:" << region;
-    QScopedPointer<Surface> winSurface(Surface::fromWindow(view()));
-    QScopedPointer<Region> wlRegion(m_compositor->createRegion(this));
+    std::unique_ptr<Surface> winSurface(Surface::fromWindow(view()));
+    std::unique_ptr<Region> wlRegion(m_compositor->createRegion(this));
     wlRegion->add(region);
 
-    auto *lockedPointer = m_pointerConstraints->lockPointer(winSurface.data(),
+    auto *lockedPointer = m_pointerConstraints->lockPointer(winSurface.get(),
                                                             m_pointer,
-                                                            wlRegion.data(),
+                                                            wlRegion.get(),
                                                             lifeTime(persistent),
                                                             this);
 
@@ -179,13 +178,13 @@ void WaylandBackend::confineRequest(bool persistent, QRect region)
     }
     qDebug() << "------ Confine requested ------";
     qDebug() << "Persistent:" << persistent << "| Region:" << region;
-    QScopedPointer<Surface> winSurface(Surface::fromWindow(view()));
-    QScopedPointer<Region> wlRegion(m_compositor->createRegion(this));
+    std::unique_ptr<Surface> winSurface(Surface::fromWindow(view()));
+    std::unique_ptr<Region> wlRegion(m_compositor->createRegion(this));
     wlRegion->add(region);
 
-    auto *confinedPointer = m_pointerConstraints->confinePointer(winSurface.data(),
+    auto *confinedPointer = m_pointerConstraints->confinePointer(winSurface.get(),
                                                                  m_pointer,
-                                                                 wlRegion.data(),
+                                                                 wlRegion.get(),
                                                                  lifeTime(persistent),
                                                                  this);
 

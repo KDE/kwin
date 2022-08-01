@@ -9,6 +9,7 @@
 #include <kwinglobals.h>
 
 #include <QObject>
+#include <memory>
 
 namespace KWin
 {
@@ -81,7 +82,7 @@ Q_SIGNALS:
     void profileChanged();
 
 private:
-    QScopedPointer<ColorDevicePrivate> d;
+    std::unique_ptr<ColorDevicePrivate> d;
 };
 
 } // namespace KWin

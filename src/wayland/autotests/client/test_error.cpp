@@ -128,8 +128,8 @@ void ErrorTest::testMultiplePlasmaShellSurfacesForSurface()
     // PlasmaShell is too smart and doesn't allow us to create a second PlasmaShellSurface
     // thus we need to cheat by creating a surface manually
     auto surface = wl_compositor_create_surface(*m_compositor);
-    QScopedPointer<PlasmaShellSurface> shellSurface1(m_plasmaShell->createSurface(surface));
-    QScopedPointer<PlasmaShellSurface> shellSurface2(m_plasmaShell->createSurface(surface));
+    std::unique_ptr<PlasmaShellSurface> shellSurface1(m_plasmaShell->createSurface(surface));
+    std::unique_ptr<PlasmaShellSurface> shellSurface2(m_plasmaShell->createSurface(surface));
     QVERIFY(!m_connection->hasError());
     QVERIFY(errorSpy.wait());
     QVERIFY(m_connection->hasError());

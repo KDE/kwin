@@ -905,7 +905,7 @@ void RuleBook::initializeX11()
         return;
     }
     m_temporaryRulesMessages.reset(new KXMessages(c, kwinApp()->x11RootWindow(), "_KDE_NET_WM_TEMPORARY_RULES", nullptr));
-    connect(m_temporaryRulesMessages.data(), &KXMessages::gotMessage, this, &RuleBook::temporaryRulesMessage);
+    connect(m_temporaryRulesMessages.get(), &KXMessages::gotMessage, this, &RuleBook::temporaryRulesMessage);
 }
 
 void RuleBook::cleanupX11()

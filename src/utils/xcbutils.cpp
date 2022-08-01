@@ -334,7 +334,7 @@ ExtensionData::ExtensionData()
 template<typename reply, typename T, typename F>
 void Extensions::initVersion(T cookie, F f, ExtensionData *dataToFill)
 {
-    ScopedCPointer<reply> version(f(connection(), cookie, nullptr));
+    UniqueCPtr<reply> version(f(connection(), cookie, nullptr));
     dataToFill->version = version->major_version * 0x10 + version->minor_version;
 }
 
@@ -490,9 +490,9 @@ bool Extensions::hasShape(xcb_window_t w) const
     if (!isShapeAvailable()) {
         return false;
     }
-    ScopedCPointer<xcb_shape_query_extents_reply_t> extents(xcb_shape_query_extents_reply(
+    UniqueCPtr<xcb_shape_query_extents_reply_t> extents(xcb_shape_query_extents_reply(
         connection(), xcb_shape_query_extents_unchecked(connection(), w), nullptr));
-    if (extents.isNull()) {
+    if (!extents) {
         return false;
     }
     return extents->bounding_shaped > 0;
@@ -579,9 +579,9 @@ bool Shm::init()
         qCDebug(KWIN_CORE) << "SHM extension not available";
         return false;
     }
-    ScopedCPointer<xcb_shm_query_version_reply_t> version(xcb_shm_query_version_reply(connection(),
-                                                                                      xcb_shm_query_version_unchecked(connection()), nullptr));
-    if (version.isNull()) {
+    UniqueCPtr<xcb_shm_query_version_reply_t> version(xcb_shm_query_version_reply(connection(),
+                                                                                  xcb_shm_query_version_unchecked(connection()), nullptr));
+    if (!version) {
         qCDebug(KWIN_CORE) << "Failed to get SHM extension version information";
         return false;
     }
@@ -602,8 +602,8 @@ bool Shm::init()
 
     m_segment = xcb_generate_id(connection());
     const xcb_void_cookie_t cookie = xcb_shm_attach_checked(connection(), m_segment, m_shmId, false);
-    ScopedCPointer<xcb_generic_error_t> error(xcb_request_check(connection(), cookie));
-    if (!error.isNull()) {
+    UniqueCPtr<xcb_generic_error_t> error(xcb_request_check(connection(), cookie));
+    if (error) {
         qCDebug(KWIN_CORE) << "xcb_shm_attach error: " << error->error_code;
         shmdt(m_buffer);
         return false;

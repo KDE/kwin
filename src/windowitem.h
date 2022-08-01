@@ -70,9 +70,9 @@ private:
     void updateVisibility();
 
     Window *m_window;
-    QScopedPointer<SurfaceItem> m_surfaceItem;
-    QScopedPointer<DecorationItem> m_decorationItem;
-    QScopedPointer<ShadowItem> m_shadowItem;
+    std::unique_ptr<SurfaceItem> m_surfaceItem;
+    std::unique_ptr<DecorationItem> m_decorationItem;
+    std::unique_ptr<ShadowItem> m_shadowItem;
     int m_forceVisibleByHiddenCount = 0;
     int m_forceVisibleByDeleteCount = 0;
     int m_forceVisibleByDesktopCount = 0;

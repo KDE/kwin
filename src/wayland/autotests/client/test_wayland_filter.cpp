@@ -103,13 +103,13 @@ void TestFilter::testFilter()
     QFETCH(bool, accessAllowed);
 
     // setup connection
-    QScopedPointer<KWayland::Client::ConnectionThread> connection(new KWayland::Client::ConnectionThread());
-    QSignalSpy connectedSpy(connection.data(), &ConnectionThread::connected);
+    std::unique_ptr<KWayland::Client::ConnectionThread> connection(new KWayland::Client::ConnectionThread());
+    QSignalSpy connectedSpy(connection.get(), &ConnectionThread::connected);
     QVERIFY(connectedSpy.isValid());
     connection->setSocketName(s_socketName);
 
-    QScopedPointer<QThread> thread(new QThread(this));
-    connection->moveToThread(thread.data());
+    std::unique_ptr<QThread> thread(new QThread(this));
+    connection->moveToThread(thread.get());
     thread->start();
 
     connection->initConnection();
@@ -126,7 +126,7 @@ void TestFilter::testFilter()
     }
 
     KWayland::Client::EventQueue queue;
-    queue.setup(connection.data());
+    queue.setup(connection.get());
 
     Registry registry;
     QSignalSpy registryDoneSpy(&registry, &Registry::interfacesAnnounced);

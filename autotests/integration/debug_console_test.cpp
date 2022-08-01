@@ -310,11 +310,11 @@ void DebugConsoleTest::testWaylandClient()
 
     // create the Surface and ShellSurface
     using namespace KWayland::Client;
-    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface->isValid());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    QVERIFY(!shellSurface.isNull());
-    Test::render(surface.data(), QSize(10, 10), Qt::red);
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    QVERIFY(shellSurface != nullptr);
+    Test::render(surface.get(), QSize(10, 10), Qt::red);
 
     // now we have the window, it should be added to our model
     QVERIFY(rowsInsertedSpy.wait());
@@ -424,7 +424,7 @@ void DebugConsoleTest::testInternalWindow()
     QSignalSpy rowsInsertedSpy(&model, &QAbstractItemModel::rowsInserted);
     QVERIFY(rowsInsertedSpy.isValid());
 
-    QScopedPointer<HelperWindow> w(new HelperWindow);
+    std::unique_ptr<HelperWindow> w(new HelperWindow);
     w->setGeometry(0, 0, 100, 100);
     w->show();
 

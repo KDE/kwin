@@ -720,7 +720,7 @@ Q_SIGNALS:
     void focusedTextInputSurfaceChanged();
 
 private:
-    QScopedPointer<SeatInterfacePrivate> d;
+    std::unique_ptr<SeatInterfacePrivate> d;
     friend class SeatInterfacePrivate;
 };
 

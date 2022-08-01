@@ -9,7 +9,7 @@
 #include "kwin_export.h"
 
 #include <QObject>
-#include <QScopedPointer>
+#include <memory>
 
 struct wl_resource;
 
@@ -37,7 +37,7 @@ Q_SIGNALS:
 private:
     friend class ScreencastV1InterfacePrivate;
     explicit ScreencastStreamV1Interface(QObject *parent);
-    QScopedPointer<ScreencastStreamV1InterfacePrivate> d;
+    std::unique_ptr<ScreencastStreamV1InterfacePrivate> d;
 };
 
 class KWIN_EXPORT ScreencastV1Interface : public QObject
@@ -62,7 +62,7 @@ Q_SIGNALS:
     void regionScreencastRequested(ScreencastStreamV1Interface *stream, const QRect &geometry, qreal scaling, CursorMode mode);
 
 private:
-    QScopedPointer<ScreencastV1InterfacePrivate> d;
+    std::unique_ptr<ScreencastV1InterfacePrivate> d;
 };
 
 }

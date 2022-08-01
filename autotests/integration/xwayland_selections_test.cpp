@@ -26,7 +26,7 @@ static const QString s_socketName = QStringLiteral("wayland_test_kwin_xwayland_s
 
 struct ProcessKillBeforeDeleter
 {
-    static inline void cleanup(QProcess *pointer)
+    void operator()(QProcess *pointer)
     {
         if (pointer) {
             pointer->kill();
@@ -98,7 +98,7 @@ void XwaylandSelectionsTest::testSync()
     QFETCH(QString, copyPlatform);
     environment.insert(QStringLiteral("QT_QPA_PLATFORM"), copyPlatform);
     environment.insert(QStringLiteral("WAYLAND_DISPLAY"), s_socketName);
-    QScopedPointer<QProcess, ProcessKillBeforeDeleter> copyProcess(new QProcess());
+    std::unique_ptr<QProcess, ProcessKillBeforeDeleter> copyProcess(new QProcess());
     copyProcess->setProcessEnvironment(environment);
     copyProcess->setProcessChannelMode(QProcess::ForwardedChannels);
     copyProcess->setProgram(copy);
@@ -116,8 +116,8 @@ void XwaylandSelectionsTest::testSync()
     clipboardChangedSpy.wait();
 
     // start the paste process
-    QScopedPointer<QProcess, ProcessKillBeforeDeleter> pasteProcess(new QProcess());
-    QSignalSpy finishedSpy(pasteProcess.data(), static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished));
+    std::unique_ptr<QProcess, ProcessKillBeforeDeleter> pasteProcess(new QProcess());
+    QSignalSpy finishedSpy(pasteProcess.get(), static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished));
     QVERIFY(finishedSpy.isValid());
     QFETCH(QString, pastePlatform);
     environment.insert(QStringLiteral("QT_QPA_PLATFORM"), pastePlatform);

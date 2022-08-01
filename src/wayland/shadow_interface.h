@@ -9,6 +9,7 @@
 
 #include <QMarginsF>
 #include <QObject>
+#include <memory>
 
 struct wl_resource;
 
@@ -30,7 +31,7 @@ public:
     Display *display() const;
 
 private:
-    QScopedPointer<ShadowManagerInterfacePrivate> d;
+    std::unique_ptr<ShadowManagerInterfacePrivate> d;
 };
 
 class KWIN_EXPORT ShadowInterface : public QObject
@@ -54,7 +55,7 @@ private:
     explicit ShadowInterface(ShadowManagerInterface *manager, wl_resource *resource);
     friend class ShadowManagerInterfacePrivate;
 
-    QScopedPointer<ShadowInterfacePrivate> d;
+    std::unique_ptr<ShadowInterfacePrivate> d;
 };
 
 }

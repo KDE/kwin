@@ -9,6 +9,7 @@
 #include "kwin_export.h"
 
 #include <QObject>
+#include <memory>
 
 namespace KWaylandServer
 {
@@ -27,7 +28,7 @@ public:
     ~KeyStateInterface() override;
 
 private:
-    QScopedPointer<KeyStateInterfacePrivate> d;
+    std::unique_ptr<KeyStateInterfacePrivate> d;
 };
 
 }

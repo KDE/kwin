@@ -427,7 +427,7 @@ Q_SIGNALS:
     void committed();
 
 private:
-    QScopedPointer<SurfaceInterfacePrivate> d;
+    std::unique_ptr<SurfaceInterfacePrivate> d;
     friend class SurfaceInterfacePrivate;
 };
 

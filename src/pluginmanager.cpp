@@ -114,13 +114,13 @@ bool PluginManager::loadStaticPlugin(const QString &pluginId)
         return false;
     }
 
-    QScopedPointer<PluginFactory> factory(qobject_cast<PluginFactory *>(staticIt->instance()));
+    std::unique_ptr<PluginFactory> factory(qobject_cast<PluginFactory *>(staticIt->instance()));
     if (!factory) {
         qCWarning(KWIN_CORE) << "Failed to get plugin factory for" << pluginId;
         return false;
     }
 
-    return instantiatePlugin(pluginId, factory.data());
+    return instantiatePlugin(pluginId, factory.get());
 }
 
 bool PluginManager::loadDynamicPlugin(const QString &pluginId)
@@ -148,13 +148,13 @@ bool PluginManager::loadDynamicPlugin(const KPluginMetaData &metadata)
         return false;
     }
 
-    QScopedPointer<PluginFactory> factory(qobject_cast<PluginFactory *>(pluginLoader.instance()));
+    std::unique_ptr<PluginFactory> factory(qobject_cast<PluginFactory *>(pluginLoader.instance()));
     if (!factory) {
         qCWarning(KWIN_CORE) << "Failed to get plugin factory for" << pluginId;
         return false;
     }
 
-    return instantiatePlugin(pluginId, factory.data());
+    return instantiatePlugin(pluginId, factory.get());
 }
 
 bool PluginManager::instantiatePlugin(const QString &pluginId, PluginFactory *factory)

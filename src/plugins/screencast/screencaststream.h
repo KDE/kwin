@@ -90,7 +90,7 @@ private:
                          const QVector<uint64_t> &modifiers, quint32 modifiersFlags);
 
     std::shared_ptr<PipeWireCore> pwCore;
-    QScopedPointer<ScreenCastSource> m_source;
+    std::unique_ptr<ScreenCastSource> m_source;
     struct pw_stream *pwStream = nullptr;
     spa_hook streamListener;
     pw_stream_events pwStreamEvents = {};
@@ -113,7 +113,7 @@ private:
         QRect viewport;
         qint64 lastKey = 0;
         QRect lastRect;
-        QScopedPointer<GLTexture> texture;
+        std::unique_ptr<GLTexture> texture;
         bool visible = false;
     } m_cursor;
     QRect cursorGeometry(Cursor *cursor) const;

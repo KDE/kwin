@@ -35,7 +35,7 @@ public:
     virtual bool allowInterface(ClientConnection *client, const QByteArray &interfaceName) = 0;
 
 private:
-    QScopedPointer<FilteredDisplayPrivate> d;
+    std::unique_ptr<FilteredDisplayPrivate> d;
 };
 
 }

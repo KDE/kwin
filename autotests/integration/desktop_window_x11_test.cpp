@@ -71,7 +71,7 @@ void X11DesktopWindowTest::cleanup()
 
 struct XcbConnectionDeleter
 {
-    static inline void cleanup(xcb_connection_t *pointer)
+    void operator()(xcb_connection_t *pointer)
     {
         xcb_disconnect(pointer);
     }
@@ -83,16 +83,16 @@ void X11DesktopWindowTest::testDesktopWindow()
     // as an RGB (opaque) window in KWin
 
     // create an xcb window
-    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
-    QVERIFY(!xcb_connection_has_error(c.data()));
+    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.get()));
 
-    xcb_window_t windowId = xcb_generate_id(c.data());
+    xcb_window_t windowId = xcb_generate_id(c.get());
     const QRect windowGeometry(0, 0, 1280, 1024);
 
     // helper to find the visual
     auto findDepth = [&c]() -> xcb_visualid_t {
         // find a visual with 32 depth
-        const xcb_setup_t *setup = xcb_get_setup(c.data());
+        const xcb_setup_t *setup = xcb_get_setup(c.get());
 
         for (auto screen = xcb_setup_roots_iterator(setup); screen.rem; xcb_screen_next(&screen)) {
             for (auto depth = xcb_screen_allowed_depths_iterator(screen.data); depth.rem; xcb_depth_next(&depth)) {
@@ -110,27 +110,27 @@ void X11DesktopWindowTest::testDesktopWindow()
         return 0;
     };
     auto visualId = findDepth();
-    auto colormapId = xcb_generate_id(c.data());
-    auto cmCookie = xcb_create_colormap_checked(c.data(), XCB_COLORMAP_ALLOC_NONE, colormapId, rootWindow(), visualId);
-    QVERIFY(!xcb_request_check(c.data(), cmCookie));
+    auto colormapId = xcb_generate_id(c.get());
+    auto cmCookie = xcb_create_colormap_checked(c.get(), XCB_COLORMAP_ALLOC_NONE, colormapId, rootWindow(), visualId);
+    QVERIFY(!xcb_request_check(c.get(), cmCookie));
 
     const uint32_t values[] = {XCB_PIXMAP_NONE, Xcb::defaultScreen()->black_pixel, colormapId};
-    auto cookie = xcb_create_window_checked(c.data(), 32, windowId, rootWindow(),
+    auto cookie = xcb_create_window_checked(c.get(), 32, windowId, rootWindow(),
                                             windowGeometry.x(),
                                             windowGeometry.y(),
                                             windowGeometry.width(),
                                             windowGeometry.height(),
                                             0, XCB_WINDOW_CLASS_INPUT_OUTPUT, visualId, XCB_CW_BACK_PIXMAP | XCB_CW_BORDER_PIXEL | XCB_CW_COLORMAP, values);
-    QVERIFY(!xcb_request_check(c.data(), cookie));
+    QVERIFY(!xcb_request_check(c.get(), cookie));
     xcb_size_hints_t hints;
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
-    NETWinInfo info(c.data(), windowId, rootWindow(), NET::WMAllProperties, NET::WM2AllProperties);
+    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
+    NETWinInfo info(c.get(), windowId, rootWindow(), NET::WMAllProperties, NET::WM2AllProperties);
     info.setWindowType(NET::Desktop);
-    xcb_map_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_map_window(c.get(), windowId);
+    xcb_flush(c.get());
 
     // verify through a geometry request that it's depth 32
     Xcb::WindowGeometry geo(windowId);
@@ -151,9 +151,9 @@ void X11DesktopWindowTest::testDesktopWindow()
     QVERIFY(!window->hasAlpha());
 
     // and destroy the window again
-    xcb_unmap_window(c.data(), windowId);
-    xcb_destroy_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_unmap_window(c.get(), windowId);
+    xcb_destroy_window(c.get(), windowId);
+    xcb_flush(c.get());
     c.reset();
 
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);

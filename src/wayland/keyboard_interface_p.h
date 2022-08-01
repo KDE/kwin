@@ -31,7 +31,7 @@ public:
 
     static KeyboardInterfacePrivate *get(KeyboardInterface *keyboard)
     {
-        return keyboard->d.data();
+        return keyboard->d.get();
     }
 
     SeatInterface *seat;

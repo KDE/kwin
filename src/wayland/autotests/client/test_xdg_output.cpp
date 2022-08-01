@@ -134,11 +134,11 @@ void TestXdgOutput::testChanges()
     output.setup(registry.bindOutput(announced.first().first().value<quint32>(), announced.first().last().value<quint32>()));
     QVERIFY(outputChanged.wait());
 
-    QScopedPointer<KWayland::Client::XdgOutputManager> xdgOutputManager(
+    std::unique_ptr<KWayland::Client::XdgOutputManager> xdgOutputManager(
         registry.createXdgOutputManager(xdgOutputAnnounced.first().first().value<quint32>(), xdgOutputAnnounced.first().last().value<quint32>(), this));
 
-    QScopedPointer<KWayland::Client::XdgOutput> xdgOutput(xdgOutputManager->getXdgOutput(&output, this));
-    QSignalSpy xdgOutputChanged(xdgOutput.data(), &KWayland::Client::XdgOutput::changed);
+    std::unique_ptr<KWayland::Client::XdgOutput> xdgOutput(xdgOutputManager->getXdgOutput(&output, this));
+    QSignalSpy xdgOutputChanged(xdgOutput.get(), &KWayland::Client::XdgOutput::changed);
 
     // check details are sent on client bind
     QVERIFY(xdgOutputChanged.wait());

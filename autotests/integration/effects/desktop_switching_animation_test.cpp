@@ -105,11 +105,11 @@ void DesktopSwitchingAnimationTest::testSwitchDesktops()
     // The Fade Desktop effect will do nothing if there are no windows to fade,
     // so we have to create a dummy test window.
     using namespace KWayland::Client;
-    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QVERIFY(!surface.isNull());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    QVERIFY(!shellSurface.isNull());
-    Window *window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    QVERIFY(surface != nullptr);
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    QVERIFY(shellSurface != nullptr);
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QCOMPARE(window->desktops().count(), 1);
     QCOMPARE(window->desktops().first(), VirtualDesktopManager::self()->desktops().first());

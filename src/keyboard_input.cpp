@@ -42,7 +42,7 @@ KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *parent)
     , m_input(parent)
     , m_xkb(new Xkb(parent))
 {
-    connect(m_xkb.data(), &Xkb::ledsChanged, this, &KeyboardInputRedirection::ledsChanged);
+    connect(m_xkb.get(), &Xkb::ledsChanged, this, &KeyboardInputRedirection::ledsChanged);
     if (waylandServer()) {
         m_xkb->setSeat(waylandServer()->seat());
     }
@@ -117,7 +117,7 @@ void KeyboardInputRedirection::init()
     m_input->installInputEventSpy(new KeyStateChangedSpy(m_input));
     m_modifiersChangedSpy = new ModifiersChangedSpy(m_input);
     m_input->installInputEventSpy(m_modifiersChangedSpy);
-    m_keyboardLayout = new KeyboardLayout(m_xkb.data(), config);
+    m_keyboardLayout = new KeyboardLayout(m_xkb.get(), config);
     m_keyboardLayout->init();
     m_input->installInputEventSpy(m_keyboardLayout);
 
@@ -125,7 +125,7 @@ void KeyboardInputRedirection::init()
         m_input->installInputEventSpy(new ModifierOnlyShortcuts);
     }
 
-    KeyboardRepeat *keyRepeatSpy = new KeyboardRepeat(m_xkb.data());
+    KeyboardRepeat *keyRepeatSpy = new KeyboardRepeat(m_xkb.get());
     connect(keyRepeatSpy, &KeyboardRepeat::keyRepeat, this,
             std::bind(&KeyboardInputRedirection::processKey, this, std::placeholders::_1, InputRedirection::KeyboardKeyAutoRepeat, std::placeholders::_2, nullptr));
     m_input->installInputEventSpy(keyRepeatSpy);

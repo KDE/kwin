@@ -78,7 +78,7 @@ SubCompositorInterface::~SubCompositorInterface()
 
 SubSurfaceInterfacePrivate *SubSurfaceInterfacePrivate::get(SubSurfaceInterface *subsurface)
 {
-    return subsurface->d.data();
+    return subsurface->d.get();
 }
 
 SubSurfaceInterfacePrivate::SubSurfaceInterfacePrivate(SubSurfaceInterface *q, SurfaceInterface *surface, SurfaceInterface *parent, ::wl_resource *resource)

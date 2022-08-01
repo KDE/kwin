@@ -48,7 +48,7 @@ public:
 
     static TextInputV3InterfacePrivate *get(TextInputV3Interface *inputInterface)
     {
-        return inputInterface->d.data();
+        return inputInterface->d.get();
     }
 
     QRect cursorRectangle;

@@ -178,8 +178,8 @@ void ScreenEdgesTest::testTouchCallback()
     }
 
     // reserve another action
-    QScopedPointer<QAction> action2(new QAction);
-    s->reserveTouch(border, action2.data());
+    std::unique_ptr<QAction> action2(new QAction);
+    s->reserveTouch(border, action2.get());
     for (auto edge : edges) {
         QCOMPARE(edge->isReserved(), edge->border() == border);
         QCOMPARE(edge->activatesForPointer(), false);
@@ -255,9 +255,9 @@ void ScreenEdgesTest::testClientEdge()
     // This test verifies that a window will be shown when its screen edge is activated.
     QFETCH(QRect, geometry);
 
-    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    Window *window = Test::renderAndWaitForShown(surface.data(), geometry.size(), Qt::red);
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    Window *window = Test::renderAndWaitForShown(surface.get(), geometry.size(), Qt::red);
     QVERIFY(window);
     QVERIFY(window->isActive());
     window->move(geometry.topLeft());

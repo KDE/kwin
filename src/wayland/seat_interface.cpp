@@ -41,7 +41,7 @@ static const int s_version = 7;
 
 SeatInterfacePrivate *SeatInterfacePrivate::get(SeatInterface *seat)
 {
-    return seat->d.data();
+    return seat->d.get();
 }
 
 SeatInterfacePrivate::SeatInterfacePrivate(SeatInterface *q, Display *display)
@@ -69,7 +69,7 @@ void SeatInterfacePrivate::seat_get_pointer(Resource *resource, uint32_t id)
         return;
     }
     if (pointer) {
-        PointerInterfacePrivate *pointerPrivate = PointerInterfacePrivate::get(pointer.data());
+        PointerInterfacePrivate *pointerPrivate = PointerInterfacePrivate::get(pointer.get());
         pointerPrivate->add(resource->client(), id, resource->version());
     }
 }
@@ -81,7 +81,7 @@ void SeatInterfacePrivate::seat_get_keyboard(Resource *resource, uint32_t id)
         return;
     }
     if (keyboard) {
-        KeyboardInterfacePrivate *keyboardPrivate = KeyboardInterfacePrivate::get(keyboard.data());
+        KeyboardInterfacePrivate *keyboardPrivate = KeyboardInterfacePrivate::get(keyboard.get());
         keyboardPrivate->add(resource->client(), id, resource->version());
     }
 }
@@ -93,7 +93,7 @@ void SeatInterfacePrivate::seat_get_touch(Resource *resource, uint32_t id)
         return;
     }
     if (touch) {
-        TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(touch.data());
+        TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(touch.get());
         touchPrivate->add(resource->client(), id, resource->version());
     }
 }
@@ -339,7 +339,7 @@ void SeatInterfacePrivate::sendCapabilities()
 
 void SeatInterface::setHasKeyboard(bool has)
 {
-    if (d->keyboard.isNull() != has) {
+    if (!d->keyboard != has) {
         return;
     }
     if (has) {
@@ -352,12 +352,12 @@ void SeatInterface::setHasKeyboard(bool has)
     d->accumulatedCapabilities |= d->capabilities;
 
     d->sendCapabilities();
-    Q_EMIT hasKeyboardChanged(!d->keyboard.isNull());
+    Q_EMIT hasKeyboardChanged(d->keyboard != nullptr);
 }
 
 void SeatInterface::setHasPointer(bool has)
 {
-    if (d->pointer.isNull() != has) {
+    if (!d->pointer != has) {
         return;
     }
     if (has) {
@@ -370,12 +370,12 @@ void SeatInterface::setHasPointer(bool has)
     d->accumulatedCapabilities |= d->capabilities;
 
     d->sendCapabilities();
-    Q_EMIT hasPointerChanged(!d->pointer.isNull());
+    Q_EMIT hasPointerChanged(d->pointer != nullptr);
 }
 
 void SeatInterface::setHasTouch(bool has)
 {
-    if (d->touch.isNull() != has) {
+    if (!d->touch != has) {
         return;
     }
     if (has) {
@@ -388,7 +388,7 @@ void SeatInterface::setHasTouch(bool has)
     d->accumulatedCapabilities |= d->capabilities;
 
     d->sendCapabilities();
-    Q_EMIT hasTouchChanged(!d->touch.isNull());
+    Q_EMIT hasTouchChanged(d->touch != nullptr);
 }
 
 void SeatInterface::setName(const QString &name)
@@ -415,17 +415,17 @@ QString SeatInterface::name() const
 
 bool SeatInterface::hasPointer() const
 {
-    return !d->pointer.isNull();
+    return d->pointer != nullptr;
 }
 
 bool SeatInterface::hasKeyboard() const
 {
-    return !d->keyboard.isNull();
+    return d->keyboard != nullptr;
 }
 
 bool SeatInterface::hasTouch() const
 {
-    return !d->touch.isNull();
+    return d->touch != nullptr;
 }
 
 Display *SeatInterface::display() const
@@ -649,7 +649,7 @@ QMatrix4x4 SeatInterface::focusedPointerSurfaceTransformation() const
 
 PointerInterface *SeatInterface::pointer() const
 {
-    return d->pointer.data();
+    return d->pointer.get();
 }
 
 static quint32 qtToWaylandButton(Qt::MouseButton button)
@@ -970,7 +970,7 @@ void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface)
 
 KeyboardInterface *SeatInterface::keyboard() const
 {
-    return d->keyboard.data();
+    return d->keyboard.get();
 }
 
 void SeatInterface::notifyKeyboardKey(quint32 keyCode, KeyboardKeyState state)
@@ -1020,7 +1020,7 @@ bool SeatInterface::isTouchSequence() const
 
 TouchInterface *SeatInterface::touch() const
 {
-    return d->touch.data();
+    return d->touch.get();
 }
 
 QPointF SeatInterface::firstTouchPointPosition() const
@@ -1086,7 +1086,7 @@ void SeatInterface::notifyTouchDown(qint32 id, const QPointF &globalPosition)
     }
 
     if (id == 0 && hasPointer() && focusedTouchSurface()) {
-        TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(d->touch.data());
+        TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(d->touch.get());
         if (!touchPrivate->hasTouchesForClient(effectiveFocusedSurface->client())) {
             // If the client did not bind the touch interface fall back
             // to at least emulating touch through pointer events.
@@ -1127,7 +1127,7 @@ void SeatInterface::notifyTouchMotion(qint32 id, const QPointF &globalPosition)
         d->globalTouch.focus.firstTouchPos = globalPosition;
 
         if (hasPointer() && focusedTouchSurface()) {
-            TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(d->touch.data());
+            TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(d->touch.get());
             if (!touchPrivate->hasTouchesForClient(focusedTouchSurface()->client())) {
                 // Client did not bind touch, fall back to emulating with pointer events.
                 d->pointer->sendMotion(pos);
@@ -1158,7 +1158,7 @@ void SeatInterface::notifyTouchUp(qint32 id)
     d->touch->sendUp(id, serial);
 
     if (id == 0 && hasPointer() && focusedTouchSurface()) {
-        TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(d->touch.data());
+        TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(d->touch.get());
         if (!touchPrivate->hasTouchesForClient(focusedTouchSurface()->client())) {
             // Client did not bind touch, fall back to emulating with pointer events.
             const quint32 serial = display()->nextSerial();

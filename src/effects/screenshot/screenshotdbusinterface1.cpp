@@ -786,7 +786,7 @@ QString ScreenShotDBusInterface1::screenshotArea(int x, int y, int width, int he
 
 bool ScreenShotDBusInterface1::isTakingScreenshot() const
 {
-    return !m_source.isNull();
+    return m_source != nullptr;
 }
 
 void ScreenShotDBusInterface1::showInfoMessage(InfoMessageMode mode)
@@ -818,7 +818,7 @@ void ScreenShotDBusInterface1::handleSourceCancelled()
 
 void ScreenShotDBusInterface1::handleSourceCompleted()
 {
-    m_source->marshal(m_sink.data());
+    m_source->marshal(m_sink.get());
 
     m_source.reset();
     m_sink.reset();
@@ -829,9 +829,9 @@ void ScreenShotDBusInterface1::bind(ScreenShotSink1 *sink, ScreenShotSource1 *so
     m_sink.reset(sink);
     m_source.reset(source);
 
-    connect(m_source.data(), &ScreenShotSource1::cancelled,
+    connect(m_source.get(), &ScreenShotSource1::cancelled,
             this, &ScreenShotDBusInterface1::handleSourceCancelled);
-    connect(m_source.data(), &ScreenShotSource1::completed,
+    connect(m_source.get(), &ScreenShotSource1::completed,
             this, &ScreenShotDBusInterface1::handleSourceCompleted);
 }
 

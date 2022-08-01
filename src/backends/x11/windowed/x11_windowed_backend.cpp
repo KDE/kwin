@@ -447,8 +447,8 @@ void X11WindowedBackend::grabKeyboard(xcb_timestamp_t time)
     } else {
         const auto c = xcb_grab_keyboard_unchecked(m_connection, false, window(), time,
                                                    XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC);
-        ScopedCPointer<xcb_grab_keyboard_reply_t> grab(xcb_grab_keyboard_reply(m_connection, c, nullptr));
-        if (grab.isNull()) {
+        UniqueCPtr<xcb_grab_keyboard_reply_t> grab(xcb_grab_keyboard_reply(m_connection, c, nullptr));
+        if (!grab) {
             return;
         }
         if (grab->status == XCB_GRAB_STATUS_SUCCESS) {
@@ -456,8 +456,8 @@ void X11WindowedBackend::grabKeyboard(xcb_timestamp_t time)
                                                       XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION | XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW,
                                                       XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC,
                                                       window(), XCB_CURSOR_NONE, time);
-            ScopedCPointer<xcb_grab_pointer_reply_t> grab(xcb_grab_pointer_reply(m_connection, c, nullptr));
-            if (grab.isNull() || grab->status != XCB_GRAB_STATUS_SUCCESS) {
+            UniqueCPtr<xcb_grab_pointer_reply_t> grab(xcb_grab_pointer_reply(m_connection, c, nullptr));
+            if (!grab || grab->status != XCB_GRAB_STATUS_SUCCESS) {
                 xcb_ungrab_keyboard(m_connection, time);
                 return;
             }

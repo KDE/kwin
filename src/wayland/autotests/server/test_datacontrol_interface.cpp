@@ -251,20 +251,20 @@ void DataControlInterfaceTest::testCopyToControl()
     // we set a dummy data source on the seat using abstract client directly
     // then confirm we receive the offer despite not having a surface
 
-    QScopedPointer<DataControlDevice> dataControlDevice(new DataControlDevice);
+    std::unique_ptr<DataControlDevice> dataControlDevice(new DataControlDevice);
     dataControlDevice->init(m_dataControlDeviceManager->get_data_device(*m_clientSeat));
 
-    QSignalSpy newOfferSpy(dataControlDevice.data(), &DataControlDevice::dataControlOffer);
-    QSignalSpy selectionSpy(dataControlDevice.data(), &DataControlDevice::selection);
+    QSignalSpy newOfferSpy(dataControlDevice.get(), &DataControlDevice::dataControlOffer);
+    QSignalSpy selectionSpy(dataControlDevice.get(), &DataControlDevice::selection);
 
-    QScopedPointer<TestDataSource> testSelection(new TestDataSource);
-    m_seat->setSelection(testSelection.data());
+    std::unique_ptr<TestDataSource> testSelection(new TestDataSource);
+    m_seat->setSelection(testSelection.get());
 
     // selection will be sent after we've been sent a new offer object and the mimes have been sent to that object
     selectionSpy.wait();
 
     QCOMPARE(newOfferSpy.count(), 1);
-    QScopedPointer<DataControlOffer> offer(newOfferSpy.first().first().value<DataControlOffer *>());
+    std::unique_ptr<DataControlOffer> offer(newOfferSpy.first().first().value<DataControlOffer *>());
     QCOMPARE(selectionSpy.first().first().value<struct ::zwlr_data_control_offer_v1 *>(), offer->object());
 
     QCOMPARE(offer->receivedOffers().count(), 2);
@@ -277,20 +277,20 @@ void DataControlInterfaceTest::testCopyToControlPrimarySelection()
     // we set a dummy data source on the seat using abstract client directly
     // then confirm we receive the offer despite not having a surface
 
-    QScopedPointer<DataControlDevice> dataControlDevice(new DataControlDevice);
+    std::unique_ptr<DataControlDevice> dataControlDevice(new DataControlDevice);
     dataControlDevice->init(m_dataControlDeviceManager->get_data_device(*m_clientSeat));
 
-    QSignalSpy newOfferSpy(dataControlDevice.data(), &DataControlDevice::dataControlOffer);
-    QSignalSpy selectionSpy(dataControlDevice.data(), &DataControlDevice::primary_selection);
+    QSignalSpy newOfferSpy(dataControlDevice.get(), &DataControlDevice::dataControlOffer);
+    QSignalSpy selectionSpy(dataControlDevice.get(), &DataControlDevice::primary_selection);
 
-    QScopedPointer<TestDataSource> testSelection(new TestDataSource);
-    m_seat->setPrimarySelection(testSelection.data());
+    std::unique_ptr<TestDataSource> testSelection(new TestDataSource);
+    m_seat->setPrimarySelection(testSelection.get());
 
     // selection will be sent after we've been sent a new offer object and the mimes have been sent to that object
     selectionSpy.wait();
 
     QCOMPARE(newOfferSpy.count(), 1);
-    QScopedPointer<DataControlOffer> offer(newOfferSpy.first().first().value<DataControlOffer *>());
+    std::unique_ptr<DataControlOffer> offer(newOfferSpy.first().first().value<DataControlOffer *>());
     QCOMPARE(selectionSpy.first().first().value<struct ::zwlr_data_control_offer_v1 *>(), offer->object());
 
     QCOMPARE(offer->receivedOffers().count(), 2);
@@ -304,10 +304,10 @@ void DataControlInterfaceTest::testCopyFromControl()
     // then confirm the server sees the new selection
     QSignalSpy serverSelectionChangedSpy(m_seat, &SeatInterface::selectionChanged);
 
-    QScopedPointer<DataControlDevice> dataControlDevice(new DataControlDevice);
+    std::unique_ptr<DataControlDevice> dataControlDevice(new DataControlDevice);
     dataControlDevice->init(m_dataControlDeviceManager->get_data_device(*m_clientSeat));
 
-    QScopedPointer<DataControlSource> source(new DataControlSource);
+    std::unique_ptr<DataControlSource> source(new DataControlSource);
     source->init(m_dataControlDeviceManager->create_data_source());
     source->offer("cheese/test1");
     source->offer("cheese/test2");
@@ -325,10 +325,10 @@ void DataControlInterfaceTest::testCopyFromControlPrimarySelection()
     // then confirm the server sees the new selection
     QSignalSpy serverSelectionChangedSpy(m_seat, &SeatInterface::primarySelectionChanged);
 
-    QScopedPointer<DataControlDevice> dataControlDevice(new DataControlDevice);
+    std::unique_ptr<DataControlDevice> dataControlDevice(new DataControlDevice);
     dataControlDevice->init(m_dataControlDeviceManager->get_data_device(*m_clientSeat));
 
-    QScopedPointer<DataControlSource> source(new DataControlSource);
+    std::unique_ptr<DataControlSource> source(new DataControlSource);
     source->init(m_dataControlDeviceManager->create_data_source());
     source->offer("cheese/test1");
     source->offer("cheese/test2");
@@ -345,16 +345,16 @@ void DataControlInterfaceTest::testKlipperCase()
     // This tests the setup of klipper's real world operation and a race with a common pattern seen between clients and klipper
     // The client's behaviour is faked with direct access to the seat
 
-    QScopedPointer<DataControlDevice> dataControlDevice(new DataControlDevice);
+    std::unique_ptr<DataControlDevice> dataControlDevice(new DataControlDevice);
     dataControlDevice->init(m_dataControlDeviceManager->get_data_device(*m_clientSeat));
 
-    QSignalSpy newOfferSpy(dataControlDevice.data(), &DataControlDevice::dataControlOffer);
-    QSignalSpy selectionSpy(dataControlDevice.data(), &DataControlDevice::selection);
+    QSignalSpy newOfferSpy(dataControlDevice.get(), &DataControlDevice::dataControlOffer);
+    QSignalSpy selectionSpy(dataControlDevice.get(), &DataControlDevice::selection);
     QSignalSpy serverSelectionChangedSpy(m_seat, &SeatInterface::selectionChanged);
 
     // Client A has a data source
-    QScopedPointer<TestDataSource> testSelection(new TestDataSource);
-    m_seat->setSelection(testSelection.data());
+    std::unique_ptr<TestDataSource> testSelection(new TestDataSource);
+    m_seat->setSelection(testSelection.get());
 
     // klipper gets it
     selectionSpy.wait();
@@ -366,11 +366,11 @@ void DataControlInterfaceTest::testKlipperCase()
     selectionSpy.wait();
 
     // Client A sets something else
-    QScopedPointer<TestDataSource> testSelection2(new TestDataSource);
-    m_seat->setSelection(testSelection2.data());
+    std::unique_ptr<TestDataSource> testSelection2(new TestDataSource);
+    m_seat->setSelection(testSelection2.get());
 
     // Meanwhile klipper updates with the old content
-    QScopedPointer<DataControlSource> source(new DataControlSource);
+    std::unique_ptr<DataControlSource> source(new DataControlSource);
     source->init(m_dataControlDeviceManager->create_data_source());
     source->offer("fromKlipper/test1");
     source->offer("application/x-kde-onlyReplaceEmpty");
@@ -378,7 +378,7 @@ void DataControlInterfaceTest::testKlipperCase()
     dataControlDevice->set_selection(source->object());
 
     QVERIFY(!serverSelectionChangedSpy.wait(10));
-    QCOMPARE(m_seat->selection(), testSelection2.data());
+    QCOMPARE(m_seat->selection(), testSelection2.get());
 }
 
 QTEST_GUILESS_MAIN(DataControlInterfaceTest)

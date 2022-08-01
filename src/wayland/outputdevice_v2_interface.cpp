@@ -99,7 +99,7 @@ public:
 
     static OutputDeviceModeV2InterfacePrivate *get(OutputDeviceModeV2Interface *mode)
     {
-        return mode->d.data();
+        return mode->d.get();
     }
 
     OutputDeviceModeV2Interface *q;

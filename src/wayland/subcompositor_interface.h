@@ -10,6 +10,7 @@
 #include "kwin_export.h"
 
 #include <QObject>
+#include <memory>
 
 struct wl_resource;
 
@@ -43,7 +44,7 @@ Q_SIGNALS:
     void subSurfaceCreated(KWaylandServer::SubSurfaceInterface *subsurface);
 
 private:
-    QScopedPointer<SubCompositorInterfacePrivate> d;
+    std::unique_ptr<SubCompositorInterfacePrivate> d;
 };
 
 /**
@@ -115,7 +116,7 @@ Q_SIGNALS:
 
 private:
     SubSurfaceInterface(SurfaceInterface *surface, SurfaceInterface *parent, wl_resource *resource);
-    QScopedPointer<SubSurfaceInterfacePrivate> d;
+    std::unique_ptr<SubSurfaceInterfacePrivate> d;
     friend class SubSurfaceInterfacePrivate;
     friend class SubCompositorInterfacePrivate;
 };

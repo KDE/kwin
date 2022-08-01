@@ -58,7 +58,7 @@ private:
     void renderItem(QPainter *painter, Item *item) const;
 
     QPainterBackend *m_backend;
-    QScopedPointer<QPainter> m_painter;
+    std::unique_ptr<QPainter> m_painter;
 };
 
 class SceneQPainterShadow : public Shadow
@@ -95,7 +95,7 @@ private:
 
 inline QPainter *SceneQPainter::scenePainter() const
 {
-    return m_painter.data();
+    return m_painter.get();
 }
 
 } // KWin

@@ -426,17 +426,17 @@ void GestureTest::testMinimumScaleDelta()
 void GestureTest::testUnregisterSwipeCancels()
 {
     GestureRecognizer recognizer;
-    QScopedPointer<SwipeGesture> gesture(new SwipeGesture);
-    QSignalSpy startedSpy(gesture.data(), &SwipeGesture::started);
+    std::unique_ptr<SwipeGesture> gesture(new SwipeGesture);
+    QSignalSpy startedSpy(gesture.get(), &SwipeGesture::started);
     QVERIFY(startedSpy.isValid());
-    QSignalSpy cancelledSpy(gesture.data(), &SwipeGesture::cancelled);
+    QSignalSpy cancelledSpy(gesture.get(), &SwipeGesture::cancelled);
     QVERIFY(cancelledSpy.isValid());
 
-    recognizer.registerSwipeGesture(gesture.data());
+    recognizer.registerSwipeGesture(gesture.get());
     recognizer.startSwipeGesture(1);
     QCOMPARE(startedSpy.count(), 1);
     QCOMPARE(cancelledSpy.count(), 0);
-    recognizer.unregisterSwipeGesture(gesture.data());
+    recognizer.unregisterSwipeGesture(gesture.get());
     QCOMPARE(cancelledSpy.count(), 1);
 
     // delete the gesture should not trigger cancel
@@ -447,17 +447,17 @@ void GestureTest::testUnregisterSwipeCancels()
 void GestureTest::testUnregisterPinchCancels()
 {
     GestureRecognizer recognizer;
-    QScopedPointer<PinchGesture> gesture(new PinchGesture);
-    QSignalSpy startedSpy(gesture.data(), &PinchGesture::started);
+    std::unique_ptr<PinchGesture> gesture(new PinchGesture);
+    QSignalSpy startedSpy(gesture.get(), &PinchGesture::started);
     QVERIFY(startedSpy.isValid());
-    QSignalSpy cancelledSpy(gesture.data(), &PinchGesture::cancelled);
+    QSignalSpy cancelledSpy(gesture.get(), &PinchGesture::cancelled);
     QVERIFY(cancelledSpy.isValid());
 
-    recognizer.registerPinchGesture(gesture.data());
+    recognizer.registerPinchGesture(gesture.get());
     recognizer.startPinchGesture(1);
     QCOMPARE(startedSpy.count(), 1);
     QCOMPARE(cancelledSpy.count(), 0);
-    recognizer.unregisterPinchGesture(gesture.data());
+    recognizer.unregisterPinchGesture(gesture.get());
     QCOMPARE(cancelledSpy.count(), 1);
 
     // delete the gesture should not trigger cancel
@@ -468,13 +468,13 @@ void GestureTest::testUnregisterPinchCancels()
 void GestureTest::testDeleteSwipeCancels()
 {
     GestureRecognizer recognizer;
-    QScopedPointer<SwipeGesture> gesture(new SwipeGesture);
-    QSignalSpy startedSpy(gesture.data(), &SwipeGesture::started);
+    std::unique_ptr<SwipeGesture> gesture(new SwipeGesture);
+    QSignalSpy startedSpy(gesture.get(), &SwipeGesture::started);
     QVERIFY(startedSpy.isValid());
-    QSignalSpy cancelledSpy(gesture.data(), &SwipeGesture::cancelled);
+    QSignalSpy cancelledSpy(gesture.get(), &SwipeGesture::cancelled);
     QVERIFY(cancelledSpy.isValid());
 
-    recognizer.registerSwipeGesture(gesture.data());
+    recognizer.registerSwipeGesture(gesture.get());
     recognizer.startSwipeGesture(1);
     QCOMPARE(startedSpy.count(), 1);
     QCOMPARE(cancelledSpy.count(), 0);
@@ -495,17 +495,17 @@ void GestureTest::testSwipeCancel_data()
 void GestureTest::testSwipeCancel()
 {
     GestureRecognizer recognizer;
-    QScopedPointer<SwipeGesture> gesture(new SwipeGesture);
+    std::unique_ptr<SwipeGesture> gesture(new SwipeGesture);
     QFETCH(SwipeGesture::Direction, direction);
     gesture->setDirection(direction);
-    QSignalSpy startedSpy(gesture.data(), &SwipeGesture::started);
+    QSignalSpy startedSpy(gesture.get(), &SwipeGesture::started);
     QVERIFY(startedSpy.isValid());
-    QSignalSpy cancelledSpy(gesture.data(), &SwipeGesture::cancelled);
+    QSignalSpy cancelledSpy(gesture.get(), &SwipeGesture::cancelled);
     QVERIFY(cancelledSpy.isValid());
-    QSignalSpy triggeredSpy(gesture.data(), &SwipeGesture::triggered);
+    QSignalSpy triggeredSpy(gesture.get(), &SwipeGesture::triggered);
     QVERIFY(triggeredSpy.isValid());
 
-    recognizer.registerSwipeGesture(gesture.data());
+    recognizer.registerSwipeGesture(gesture.get());
     recognizer.startSwipeGesture(1);
     QCOMPARE(startedSpy.count(), 1);
     QCOMPARE(cancelledSpy.count(), 0);

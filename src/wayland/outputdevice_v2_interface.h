@@ -13,6 +13,7 @@
 #include <QSize>
 #include <QUuid>
 #include <QVector>
+#include <memory>
 
 struct wl_resource;
 
@@ -137,7 +138,7 @@ public:
     static OutputDeviceV2Interface *get(wl_resource *native);
 
 private:
-    QScopedPointer<OutputDeviceV2InterfacePrivate> d;
+    std::unique_ptr<OutputDeviceV2InterfacePrivate> d;
 };
 
 /**
@@ -171,7 +172,7 @@ public:
 
 private:
     friend class OutputDeviceModeV2InterfacePrivate;
-    QScopedPointer<OutputDeviceModeV2InterfacePrivate> d;
+    std::unique_ptr<OutputDeviceModeV2InterfacePrivate> d;
 };
 
 }

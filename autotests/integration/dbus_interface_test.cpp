@@ -104,13 +104,13 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowAddedSpy.isValid());
 
-    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
     shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
     shellSurface->set_title(QStringLiteral("Test window"));
 
     // now let's render
-    Test::render(surface.data(), QSize(100, 50), Qt::blue);
+    Test::render(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(windowAddedSpy.isEmpty());
     QVERIFY(windowAddedSpy.wait());
     auto window = windowAddedSpy.first().first().value<Window *>();
@@ -223,7 +223,7 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
 
 struct XcbConnectionDeleter
 {
-    static inline void cleanup(xcb_connection_t *pointer)
+    void operator()(xcb_connection_t *pointer)
     {
         xcb_disconnect(pointer);
     }
@@ -231,11 +231,11 @@ struct XcbConnectionDeleter
 
 void TestDbusInterface::testGetWindowInfoX11Client()
 {
-    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
-    QVERIFY(!xcb_connection_has_error(c.data()));
+    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 600, 400);
-    xcb_window_t windowId = xcb_generate_id(c.data());
-    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+    xcb_window_t windowId = xcb_generate_id(c.get());
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
                       windowGeometry.width(),
@@ -245,13 +245,13 @@ void TestDbusInterface::testGetWindowInfoX11Client()
     memset(&hints, 0, sizeof(hints));
     xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
     xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.data(), windowId, &hints);
-    xcb_icccm_set_wm_class(c.data(), windowId, 7, "foo\0bar");
-    NETWinInfo winInfo(c.data(), windowId, rootWindow(), NET::Properties(), NET::Properties2());
+    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
+    xcb_icccm_set_wm_class(c.get(), windowId, 7, "foo\0bar");
+    NETWinInfo winInfo(c.get(), windowId, rootWindow(), NET::Properties(), NET::Properties2());
     winInfo.setName("Some caption");
     winInfo.setDesktopFileName("org.kde.foo");
-    xcb_map_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_map_window(c.get(), windowId);
+    xcb_flush(c.get());
 
     // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
@@ -373,13 +373,13 @@ void TestDbusInterface::testGetWindowInfoX11Client()
 
     const auto id = window->internalId();
     // destroy the window
-    xcb_unmap_window(c.data(), windowId);
-    xcb_flush(c.data());
+    xcb_unmap_window(c.get(), windowId);
+    xcb_flush(c.get());
 
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
     QVERIFY(windowClosedSpy.wait());
-    xcb_destroy_window(c.data(), windowId);
+    xcb_destroy_window(c.get(), windowId);
     c.reset();
 
     reply = getWindowInfo(id);

@@ -21,7 +21,7 @@ namespace KWaylandServer
 {
 DisplayPrivate *DisplayPrivate::get(Display *display)
 {
-    return display->d.data();
+    return display->d.get();
 }
 
 DisplayPrivate::DisplayPrivate(Display *q)

@@ -30,7 +30,7 @@ public:
     ~IdleInhibitManagerV1Interface() override;
 
 private:
-    QScopedPointer<IdleInhibitManagerV1InterfacePrivate> d;
+    std::unique_ptr<IdleInhibitManagerV1InterfacePrivate> d;
 };
 
 }

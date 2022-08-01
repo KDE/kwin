@@ -77,7 +77,7 @@ private:
     void setupConnections();
     void destroyConnections();
 
-    QScopedPointer<OffscreenEffectPrivate> d;
+    std::unique_ptr<OffscreenEffectPrivate> d;
 };
 
 } // namespace KWin

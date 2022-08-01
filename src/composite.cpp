@@ -773,7 +773,7 @@ X11Compositor::~X11Compositor()
 
 X11SyncManager *X11Compositor::syncManager() const
 {
-    return m_syncManager.data();
+    return m_syncManager.get();
 }
 
 void X11Compositor::toggleCompositing()

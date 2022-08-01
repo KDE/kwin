@@ -675,7 +675,7 @@ private:
     QList<Group *> groups;
 
     bool was_user_interaction;
-    QScopedPointer<X11EventFilter> m_wasUserInteractionFilter;
+    std::unique_ptr<X11EventFilter> m_wasUserInteractionFilter;
 
     int block_focus;
 
@@ -700,8 +700,8 @@ private:
 
     bool workspaceInit;
 
-    QScopedPointer<KStartupInfo> m_startup;
-    QScopedPointer<ColorMapper> m_colorMapper;
+    std::unique_ptr<KStartupInfo> m_startup;
+    std::unique_ptr<ColorMapper> m_colorMapper;
 
     QHash<const VirtualDesktop *, QRectF> m_workAreas;
     QHash<const VirtualDesktop *, StrutRects> m_restrictedAreas;
@@ -716,12 +716,12 @@ private:
     int m_setActiveWindowRecursion = 0;
     int m_blockStackingUpdates = 0; // When > 0, stacking updates are temporarily disabled
     bool m_blockedPropagatingNewWindows; // Propagate also new windows after enabling stacking updates?
-    QScopedPointer<Xcb::Window> m_nullFocus;
+    std::unique_ptr<Xcb::Window> m_nullFocus;
     friend class StackingUpdatesBlocker;
 
-    QScopedPointer<KillWindow> m_windowKiller;
-    QScopedPointer<X11EventFilter> m_movingClientFilter;
-    QScopedPointer<X11EventFilter> m_syncAlarmFilter;
+    std::unique_ptr<KillWindow> m_windowKiller;
+    std::unique_ptr<X11EventFilter> m_movingClientFilter;
+    std::unique_ptr<X11EventFilter> m_syncAlarmFilter;
 
     SessionManager *m_sessionManager;
     std::unique_ptr<FocusChain> m_focusChain;

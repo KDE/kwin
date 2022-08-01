@@ -16,7 +16,7 @@ WaylandOutput::WaylandOutput(Output *output, QObject *parent)
     : QObject(parent)
     , m_platformOutput(output)
     , m_waylandOutput(new KWaylandServer::OutputInterface(waylandServer()->display()))
-    , m_xdgOutputV1(waylandServer()->xdgOutputManagerV1()->createXdgOutput(m_waylandOutput.data(), m_waylandOutput.data()))
+    , m_xdgOutputV1(waylandServer()->xdgOutputManagerV1()->createXdgOutput(m_waylandOutput.get(), m_waylandOutput.get()))
 {
     const QRect geometry = m_platformOutput->geometry();
 
@@ -42,7 +42,7 @@ WaylandOutput::WaylandOutput(Output *output, QObject *parent)
     // The dpms functionality is not part of the wl_output interface, but org_kde_kwin_dpms.
     connect(output, &Output::dpmsModeChanged,
             this, &WaylandOutput::handleDpmsModeChanged);
-    connect(m_waylandOutput.data(), &KWaylandServer::OutputInterface::dpmsModeRequested,
+    connect(m_waylandOutput.get(), &KWaylandServer::OutputInterface::dpmsModeRequested,
             this, &WaylandOutput::handleDpmsModeRequested);
 
     // The timer is used to compress output updates so the wayland clients are not spammed.
@@ -57,7 +57,7 @@ WaylandOutput::WaylandOutput(Output *output, QObject *parent)
 
 KWaylandServer::OutputInterface *WaylandOutput::waylandOutput() const
 {
-    return m_waylandOutput.data();
+    return m_waylandOutput.get();
 }
 
 void WaylandOutput::scheduleUpdate()

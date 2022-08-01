@@ -85,14 +85,14 @@ void MaximizeAnimationTest::testMaximizeRestore()
     using namespace KWayland::Client;
 
     // Create the test window.
-    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QVERIFY(!surface.isNull());
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    QVERIFY(surface != nullptr);
 
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly));
 
     // Wait for the initial configure event.
     Test::XdgToplevel::States states;
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
 
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
@@ -106,7 +106,7 @@ void MaximizeAnimationTest::testMaximizeRestore()
 
     // Draw contents of the surface.
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
-    Window *window = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QVERIFY(window->isActive());
     QCOMPARE(window->maximizeMode(), MaximizeMode::MaximizeRestore);
@@ -145,7 +145,7 @@ void MaximizeAnimationTest::testMaximizeRestore()
 
     // Draw contents of the maximized window.
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
-    Test::render(surface.data(), QSize(1280, 1024), Qt::red);
+    Test::render(surface.get(), QSize(1280, 1024), Qt::red);
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(frameGeometryChangedSpy.count(), 1);
     QCOMPARE(maximizeChangedSpy.count(), 1);
@@ -166,7 +166,7 @@ void MaximizeAnimationTest::testMaximizeRestore()
 
     // Draw contents of the restored window.
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
-    Test::render(surface.data(), QSize(100, 50), Qt::blue);
+    Test::render(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(frameGeometryChangedSpy.count(), 2);
     QCOMPARE(maximizeChangedSpy.count(), 2);

@@ -36,7 +36,7 @@ private:
     friend class PrimarySelectionDeviceManagerV1InterfacePrivate;
     explicit PrimarySelectionSourceV1Interface(PrimarySelectionDeviceManagerV1Interface *parent, ::wl_resource *resource);
 
-    QScopedPointer<PrimarySelectionSourceV1InterfacePrivate> d;
+    std::unique_ptr<PrimarySelectionSourceV1InterfacePrivate> d;
 };
 
 }

@@ -301,28 +301,28 @@ int main(int argc, char **argv)
     QApplication app(argc, argv);
     QApplication::setApplicationDisplayName(QStringLiteral("Screen Edge Show Test App"));
     ScreenEdgeHelper *helper = nullptr;
-    QScopedPointer<QWidget> widget(new QWidget(nullptr, Qt::FramelessWindowHint));
+    std::unique_ptr<QWidget> widget(new QWidget(nullptr, Qt::FramelessWindowHint));
     if (KWindowSystem::isPlatformX11()) {
         app.setProperty("x11Connection", QVariant::fromValue<void *>(QX11Info::connection()));
-        helper = new ScreenEdgeHelperX11(widget.data(), &app);
+        helper = new ScreenEdgeHelperX11(widget.get(), &app);
     } else if (KWindowSystem::isPlatformWayland()) {
-        helper = new ScreenEdgeHelperWayland(widget.data(), &app);
+        helper = new ScreenEdgeHelperWayland(widget.get(), &app);
     }
 
     if (!helper) {
         return 2;
     }
 
-    QPushButton *hideWindowButton = new QPushButton(QStringLiteral("Hide"), widget.data());
+    QPushButton *hideWindowButton = new QPushButton(QStringLiteral("Hide"), widget.get());
 
     QObject::connect(hideWindowButton, &QPushButton::clicked, helper, &ScreenEdgeHelper::hide);
 
-    QPushButton *hideAndRestoreButton = new QPushButton(QStringLiteral("Hide and Restore after 10 sec"), widget.data());
+    QPushButton *hideAndRestoreButton = new QPushButton(QStringLiteral("Hide and Restore after 10 sec"), widget.get());
     QObject::connect(hideAndRestoreButton, &QPushButton::clicked, helper, &ScreenEdgeHelper::hideAndRestore);
 
-    QToolButton *edgeButton = new QToolButton(widget.data());
+    QToolButton *edgeButton = new QToolButton(widget.get());
 
-    QCheckBox *raiseCheckBox = new QCheckBox("Raise:", widget.data());
+    QCheckBox *raiseCheckBox = new QCheckBox("Raise:", widget.get());
     QObject::connect(raiseCheckBox, &QCheckBox::toggled, helper, &ScreenEdgeHelper::raiseOrShow);
 
     edgeButton->setText(QStringLiteral("Edge"));
@@ -336,7 +336,7 @@ int main(int argc, char **argv)
     QObject::connect(edgeButtonMenu->addAction("Floating"), &QAction::triggered, helper, &ScreenEdgeHelper::moveToFloating);
     edgeButton->setMenu(edgeButtonMenu);
 
-    QHBoxLayout *layout = new QHBoxLayout(widget.data());
+    QHBoxLayout *layout = new QHBoxLayout(widget.get());
     layout->addWidget(hideWindowButton);
     layout->addWidget(hideAndRestoreButton);
     layout->addWidget(edgeButton);

@@ -157,7 +157,7 @@ Q_SIGNALS:
 
 private:
     friend class DisplayPrivate;
-    QScopedPointer<DisplayPrivate> d;
+    std::unique_ptr<DisplayPrivate> d;
 };
 
 }

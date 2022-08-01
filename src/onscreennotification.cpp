@@ -71,7 +71,7 @@ OnScreenNotification::OnScreenNotification(QObject *parent)
 
 OnScreenNotification::~OnScreenNotification()
 {
-    if (QQuickWindow *w = qobject_cast<QQuickWindow *>(m_mainItem.data())) {
+    if (QQuickWindow *w = qobject_cast<QQuickWindow *>(m_mainItem.get())) {
         w->hide();
         w->destroy();
     }
@@ -157,7 +157,7 @@ void OnScreenNotification::show()
 void OnScreenNotification::ensureQmlContext()
 {
     Q_ASSERT(m_qmlEngine);
-    if (!m_qmlContext.isNull()) {
+    if (m_qmlContext) {
         return;
     }
     m_qmlContext.reset(new QQmlContext(m_qmlEngine));
@@ -168,7 +168,7 @@ void OnScreenNotification::ensureQmlComponent()
 {
     Q_ASSERT(m_config);
     Q_ASSERT(m_qmlEngine);
-    if (!m_qmlComponent.isNull()) {
+    if (m_qmlComponent) {
         return;
     }
     m_qmlComponent.reset(new QQmlComponent(m_qmlEngine));
@@ -179,7 +179,7 @@ void OnScreenNotification::ensureQmlComponent()
     }
     m_qmlComponent->loadUrl(QUrl::fromLocalFile(fileName));
     if (!m_qmlComponent->isError()) {
-        m_mainItem.reset(m_qmlComponent->create(m_qmlContext.data()));
+        m_mainItem.reset(m_qmlComponent->create(m_qmlContext.get()));
     } else {
         m_qmlComponent.reset();
     }
@@ -187,10 +187,10 @@ void OnScreenNotification::ensureQmlComponent()
 
 void OnScreenNotification::createInputSpy()
 {
-    Q_ASSERT(m_spy.isNull());
-    if (auto w = qobject_cast<QQuickWindow *>(m_mainItem.data())) {
+    Q_ASSERT(!m_spy);
+    if (auto w = qobject_cast<QQuickWindow *>(m_mainItem.get())) {
         m_spy.reset(new OnScreenNotificationInputEventSpy(this));
-        input()->installInputEventSpy(m_spy.data());
+        input()->installInputEventSpy(m_spy.get());
         if (!m_animation) {
             m_animation = new QPropertyAnimation(w, "opacity", this);
             m_animation->setStartValue(1.0);
@@ -203,7 +203,7 @@ void OnScreenNotification::createInputSpy()
 
 QRect OnScreenNotification::geometry() const
 {
-    if (QQuickWindow *w = qobject_cast<QQuickWindow *>(m_mainItem.data())) {
+    if (QQuickWindow *w = qobject_cast<QQuickWindow *>(m_mainItem.get())) {
         return w->geometry();
     }
     return QRect();
@@ -224,7 +224,7 @@ void OnScreenNotification::setContainsPointer(bool contains)
 
 void OnScreenNotification::setSkipCloseAnimation(bool skip)
 {
-    if (QQuickWindow *w = qobject_cast<QQuickWindow *>(m_mainItem.data())) {
+    if (QQuickWindow *w = qobject_cast<QQuickWindow *>(m_mainItem.get())) {
         w->setProperty("KWIN_SKIP_CLOSE_ANIMATION", skip);
     }
 }

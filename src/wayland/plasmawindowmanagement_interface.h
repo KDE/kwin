@@ -35,7 +35,7 @@ private:
     friend class PlasmaWindowActivationFeedbackInterface;
     explicit PlasmaWindowActivationInterface();
 
-    QScopedPointer<PlasmaWindowActivationInterfacePrivate> d;
+    std::unique_ptr<PlasmaWindowActivationInterfacePrivate> d;
 };
 
 class KWIN_EXPORT PlasmaWindowActivationFeedbackInterface : public QObject
@@ -55,7 +55,7 @@ public:
     std::unique_ptr<PlasmaWindowActivationInterface> createActivation(const QString &app_id);
 
 private:
-    QScopedPointer<PlasmaWindowActivationFeedbackInterfacePrivate> d;
+    std::unique_ptr<PlasmaWindowActivationFeedbackInterfacePrivate> d;
 };
 
 class KWIN_EXPORT PlasmaWindowManagementInterface : public QObject
@@ -97,7 +97,7 @@ Q_SIGNALS:
     void requestChangeShowingDesktop(ShowingDesktopState requestedState);
 
 private:
-    QScopedPointer<PlasmaWindowManagementInterfacePrivate> d;
+    std::unique_ptr<PlasmaWindowManagementInterfacePrivate> d;
 };
 
 /**
@@ -296,7 +296,7 @@ private:
     friend class PlasmaWindowManagementInterfacePrivate;
     explicit PlasmaWindowInterface(PlasmaWindowManagementInterface *wm, QObject *parent);
 
-    QScopedPointer<PlasmaWindowInterfacePrivate> d;
+    std::unique_ptr<PlasmaWindowInterfacePrivate> d;
 };
 
 }

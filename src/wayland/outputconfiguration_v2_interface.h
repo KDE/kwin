@@ -85,7 +85,7 @@ private:
     explicit OutputConfigurationV2Interface(OutputManagementV2Interface *parent, wl_resource *resource);
     friend class OutputManagementV2InterfacePrivate;
 
-    QScopedPointer<OutputConfigurationV2InterfacePrivate> d;
+    std::unique_ptr<OutputConfigurationV2InterfacePrivate> d;
 };
 
 }

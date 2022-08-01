@@ -295,7 +295,7 @@ void Workspace::initializeX11()
     // first initialize the extensions
     Xcb::Extensions::self();
     m_colorMapper.reset(new ColorMapper(this));
-    connect(this, &Workspace::windowActivated, m_colorMapper.data(), &ColorMapper::update);
+    connect(this, &Workspace::windowActivated, m_colorMapper.get(), &ColorMapper::update);
 
     // Call this before XSelectInput() on the root window
     m_startup.reset(new KStartupInfo(
@@ -2332,22 +2332,22 @@ Output *Workspace::xineramaIndexToOutput(int index) const
         return nullptr;
     }
 
-    const ScopedCPointer<xcb_xinerama_is_active_reply_t> active{xcb_xinerama_is_active_reply(connection, xcb_xinerama_is_active(connection), nullptr)};
+    const UniqueCPtr<xcb_xinerama_is_active_reply_t> active{xcb_xinerama_is_active_reply(connection, xcb_xinerama_is_active(connection), nullptr)};
     if (!active || !active->state) {
         return nullptr;
     }
 
-    const ScopedCPointer<xcb_xinerama_query_screens_reply_t> screens(xcb_xinerama_query_screens_reply(connection, xcb_xinerama_query_screens(connection), nullptr));
+    const UniqueCPtr<xcb_xinerama_query_screens_reply_t> screens(xcb_xinerama_query_screens_reply(connection, xcb_xinerama_query_screens(connection), nullptr));
     if (!screens) {
         return nullptr;
     }
 
-    const int infoCount = xcb_xinerama_query_screens_screen_info_length(screens.data());
+    const int infoCount = xcb_xinerama_query_screens_screen_info_length(screens.get());
     if (index >= infoCount) {
         return nullptr;
     }
 
-    const xcb_xinerama_screen_info_t *infos = xcb_xinerama_query_screens_screen_info(screens.data());
+    const xcb_xinerama_screen_info_t *infos = xcb_xinerama_query_screens_screen_info(screens.get());
     const QRect needle(infos[index].x_org, infos[index].y_org, infos[index].width, infos[index].height);
 
     for (Output *output : std::as_const(m_outputs)) {

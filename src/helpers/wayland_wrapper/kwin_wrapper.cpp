@@ -50,7 +50,7 @@ private:
     int m_crashCount = 0;
     QProcess *m_kwinProcess = nullptr;
 
-    QScopedPointer<KWin::XwaylandSocket> m_xwlSocket;
+    std::unique_ptr<KWin::XwaylandSocket> m_xwlSocket;
     QTemporaryFile m_xauthorityFile;
 };
 

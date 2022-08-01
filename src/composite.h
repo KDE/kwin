@@ -251,7 +251,7 @@ protected:
 
 private:
     explicit X11Compositor(QObject *parent);
-    QScopedPointer<X11SyncManager> m_syncManager;
+    std::unique_ptr<X11SyncManager> m_syncManager;
     /**
      * Whether the Compositor is currently suspended, 8 bits encoding the reason
      */

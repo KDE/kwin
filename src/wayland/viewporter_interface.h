@@ -9,6 +9,7 @@
 #include "kwin_export.h"
 
 #include <QObject>
+#include <memory>
 
 namespace KWaylandServer
 {
@@ -32,7 +33,7 @@ public:
     ~ViewporterInterface() override;
 
 private:
-    QScopedPointer<ViewporterInterfacePrivate> d;
+    std::unique_ptr<ViewporterInterfacePrivate> d;
 };
 
 } // namespace KWaylandServer

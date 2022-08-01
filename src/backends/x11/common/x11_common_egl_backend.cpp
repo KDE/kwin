@@ -250,9 +250,9 @@ bool EglOnXBackend::initBufferConfigs()
         return false;
     }
 
-    ScopedCPointer<xcb_get_window_attributes_reply_t> attribs(xcb_get_window_attributes_reply(m_connection,
-                                                                                              xcb_get_window_attributes_unchecked(m_connection, m_rootWindow),
-                                                                                              nullptr));
+    UniqueCPtr<xcb_get_window_attributes_reply_t> attribs(xcb_get_window_attributes_reply(m_connection,
+                                                                                          xcb_get_window_attributes_unchecked(m_connection, m_rootWindow),
+                                                                                          nullptr));
     if (!attribs) {
         qCCritical(KWIN_CORE) << "Failed to get window attributes of root window";
         return false;

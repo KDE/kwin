@@ -11,7 +11,6 @@
 // Qt
 #include <QByteArray>
 #include <QDebug>
-#include <QScopedPointer>
 // system
 #include <cerrno>
 #include <functional>
@@ -51,12 +50,12 @@ private:
 
     struct EnumerateDeleter
     {
-        static inline void cleanup(udev_enumerate *e)
+        void operator()(udev_enumerate *e)
         {
             udev_enumerate_unref(e);
         }
     };
-    QScopedPointer<udev_enumerate, EnumerateDeleter> m_enumerate;
+    std::unique_ptr<udev_enumerate, EnumerateDeleter> m_enumerate;
 };
 
 UdevEnumerate::UdevEnumerate(Udev *udev)
@@ -69,15 +68,15 @@ UdevEnumerate::~UdevEnumerate() = default;
 
 void UdevEnumerate::addMatch(UdevEnumerate::Match match, const char *name)
 {
-    if (m_enumerate.isNull()) {
+    if (!m_enumerate) {
         return;
     }
     switch (match) {
     case Match::SubSystem:
-        udev_enumerate_add_match_subsystem(m_enumerate.data(), name);
+        udev_enumerate_add_match_subsystem(m_enumerate.get(), name);
         break;
     case Match::SysName:
-        udev_enumerate_add_match_sysname(m_enumerate.data(), name);
+        udev_enumerate_add_match_sysname(m_enumerate.get(), name);
         break;
     default:
         Q_UNREACHABLE();
@@ -87,19 +86,19 @@ void UdevEnumerate::addMatch(UdevEnumerate::Match match, const char *name)
 
 void UdevEnumerate::scan()
 {
-    if (m_enumerate.isNull()) {
+    if (!m_enumerate) {
         return;
     }
-    udev_enumerate_scan_devices(m_enumerate.data());
+    udev_enumerate_scan_devices(m_enumerate.get());
 }
 
 std::vector<UdevDevice::Ptr> UdevEnumerate::find()
 {
-    if (m_enumerate.isNull()) {
+    if (!m_enumerate) {
         return {};
     }
     std::vector<UdevDevice::Ptr> vect;
-    udev_list_entry *it = udev_enumerate_get_list_entry(m_enumerate.data());
+    udev_list_entry *it = udev_enumerate_get_list_entry(m_enumerate.get());
     while (it) {
         auto current = it;
         it = udev_list_entry_get_next(it);

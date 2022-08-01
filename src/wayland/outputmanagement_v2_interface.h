@@ -8,6 +8,7 @@
 #include "kwin_export.h"
 
 #include <QObject>
+#include <memory>
 
 namespace KWaylandServer
 {
@@ -54,7 +55,7 @@ Q_SIGNALS:
     void configurationChangeRequested(KWaylandServer::OutputConfigurationV2Interface *configurationInterface);
 
 private:
-    QScopedPointer<OutputManagementV2InterfacePrivate> d;
+    std::unique_ptr<OutputManagementV2InterfacePrivate> d;
 };
 
 }

@@ -10,6 +10,7 @@
 #include "kwin_export.h"
 
 #include <QObject>
+#include <memory>
 
 namespace KWaylandServer
 {
@@ -32,7 +33,7 @@ public:
     ~RelativePointerManagerV1Interface() override;
 
 private:
-    QScopedPointer<RelativePointerManagerV1InterfacePrivate> d;
+    std::unique_ptr<RelativePointerManagerV1InterfacePrivate> d;
 };
 
 } // namespace KWaylandServer

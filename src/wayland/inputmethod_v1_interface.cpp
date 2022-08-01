@@ -47,7 +47,7 @@ InputMethodGrabV1::~InputMethodGrabV1()
 
 void InputMethodGrabV1::sendKeymap(const QByteArray &keymap)
 {
-    QScopedPointer<QTemporaryFile> tmp(new QTemporaryFile());
+    std::unique_ptr<QTemporaryFile> tmp(new QTemporaryFile());
     if (!tmp->open()) {
         qCWarning(KWIN_CORE) << "Failed to create keymap file:" << tmp->errorString();
         return;
@@ -142,7 +142,7 @@ public:
     {
         m_keyboardGrab.reset(new InputMethodGrabV1(q));
         m_keyboardGrab->d->add(resource->client(), id, 1);
-        Q_EMIT q->keyboardGrabRequested(m_keyboardGrab.data());
+        Q_EMIT q->keyboardGrabRequested(m_keyboardGrab.get());
     }
     void zwp_input_method_context_v1_key(Resource *, uint32_t serial, uint32_t time, uint32_t key, uint32_t state) override
     {
@@ -187,7 +187,7 @@ public:
     }
 
     InputMethodContextV1Interface *const q;
-    QScopedPointer<InputMethodGrabV1> m_keyboardGrab;
+    std::unique_ptr<InputMethodGrabV1> m_keyboardGrab;
 };
 
 InputMethodContextV1Interface::InputMethodContextV1Interface(InputMethodV1Interface *parent)
@@ -430,7 +430,7 @@ public:
         send_activate(resource->handle, addedResource->handle);
     }
 
-    QScopedPointer<InputMethodContextV1Interface> m_context;
+    std::unique_ptr<InputMethodContextV1Interface> m_context;
     InputMethodV1Interface *const q;
     Display *const m_display;
 };

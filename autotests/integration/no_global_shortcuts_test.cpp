@@ -172,13 +172,13 @@ void NoGlobalShortcutsTest::testTrigger()
 
 void NoGlobalShortcutsTest::testKGlobalAccel()
 {
-    QScopedPointer<QAction> action(new QAction(nullptr));
+    std::unique_ptr<QAction> action(new QAction(nullptr));
     action->setProperty("componentName", QStringLiteral(KWIN_NAME));
     action->setObjectName(QStringLiteral("globalshortcuts-test-meta-shift-w"));
-    QSignalSpy triggeredSpy(action.data(), &QAction::triggered);
+    QSignalSpy triggeredSpy(action.get(), &QAction::triggered);
     QVERIFY(triggeredSpy.isValid());
-    KGlobalAccel::self()->setShortcut(action.data(), QList<QKeySequence>{Qt::META | Qt::SHIFT | Qt::Key_W}, KGlobalAccel::NoAutoloading);
-    input()->registerShortcut(Qt::META | Qt::SHIFT | Qt::Key_W, action.data());
+    KGlobalAccel::self()->setShortcut(action.get(), QList<QKeySequence>{Qt::META | Qt::SHIFT | Qt::Key_W}, KGlobalAccel::NoAutoloading);
+    input()->registerShortcut(Qt::META | Qt::SHIFT | Qt::Key_W, action.get());
 
     // press meta+shift+w
     quint32 timestamp = 0;
@@ -200,10 +200,10 @@ void NoGlobalShortcutsTest::testKGlobalAccel()
 void NoGlobalShortcutsTest::testPointerShortcut()
 {
     // based on LockScreenTest::testPointerShortcut
-    QScopedPointer<QAction> action(new QAction(nullptr));
-    QSignalSpy actionSpy(action.data(), &QAction::triggered);
+    std::unique_ptr<QAction> action(new QAction(nullptr));
+    QSignalSpy actionSpy(action.get(), &QAction::triggered);
     QVERIFY(actionSpy.isValid());
-    input()->registerPointerShortcut(Qt::MetaModifier, Qt::LeftButton, action.data());
+    input()->registerPointerShortcut(Qt::MetaModifier, Qt::LeftButton, action.get());
 
     // try to trigger the shortcut
     quint32 timestamp = 1;
@@ -231,8 +231,8 @@ void NoGlobalShortcutsTest::testAxisShortcut_data()
 void NoGlobalShortcutsTest::testAxisShortcut()
 {
     // based on LockScreenTest::testAxisShortcut
-    QScopedPointer<QAction> action(new QAction(nullptr));
-    QSignalSpy actionSpy(action.data(), &QAction::triggered);
+    std::unique_ptr<QAction> action(new QAction(nullptr));
+    QSignalSpy actionSpy(action.get(), &QAction::triggered);
     QVERIFY(actionSpy.isValid());
     QFETCH(Qt::Orientation, direction);
     QFETCH(int, sign);
@@ -242,7 +242,7 @@ void NoGlobalShortcutsTest::testAxisShortcut()
     } else {
         axisDirection = sign > 0 ? PointerAxisLeft : PointerAxisRight;
     }
-    input()->registerAxisShortcut(Qt::MetaModifier, axisDirection, action.data());
+    input()->registerAxisShortcut(Qt::MetaModifier, axisDirection, action.get());
 
     // try to trigger the shortcut
     quint32 timestamp = 1;
