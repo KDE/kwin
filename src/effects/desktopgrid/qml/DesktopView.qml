@@ -17,7 +17,8 @@ FocusScope {
 
     required property QtObject clientModel
     required property QtObject desktop
-    readonly property bool dragActive: heap.dragActive || dragHandler.active || xAnim.running || yAnim.running
+    readonly property bool hasActiveContent: heap.hasActiveDelegates || dragHandler.active || xAnim.running || yAnim.running
+    property bool sceneHasActiveItems: hasActiveContent
     property real panelOpacity: 1
     focus: true
 
@@ -128,6 +129,7 @@ FocusScope {
             closeButtonVisible: false
             windowTitleVisible: false
         }
+        sceneHasActiveItems: desktopView.sceneHasActiveItems
         onActivated: effect.deactivate(effect.animationDuration);
         onWindowClicked: {
             if (eventPoint.event.button === Qt.MiddleButton) {

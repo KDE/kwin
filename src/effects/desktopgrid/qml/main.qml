@@ -85,6 +85,19 @@ Rectangle {
         return true;
     }
 
+    property bool sceneHasActiveItems
+
+    // an attempt to maintain many-to-one semaphore, similar to a non-exclusive ButtonGroup
+    function updateActiveStatus() {
+        for (let i = 0; i < gridRepeater.count; i++) {
+            if (gridRepeater.itemAt(i).hasActiveContent) {
+                sceneHasActiveItems = true;
+                return;
+            }
+        }
+        sceneHasActiveItems = false;
+    }
+
     Keys.onPressed: {
         if (event.key == Qt.Key_Escape) {
             effect.deactivate(effect.animationDuration);
@@ -214,7 +227,8 @@ Rectangle {
 
                 panelOpacity: grid.panelOpacity
                 readonly property bool current: KWinComponents.Workspace.currentVirtualDesktop === desktop
-                z: dragActive ? 1 : 0
+                z: hasActiveContent ? 1 : 0
+                sceneHasActiveItems: container.sceneHasActiveItems
                 onCurrentChanged: {
                     if (current) {
                         grid.currentItem = thumbnail;
@@ -225,6 +239,8 @@ Rectangle {
                         grid.currentItem = thumbnail;
                     }
                 }
+                onHasActiveContentChanged: container.updateActiveStatus()
+                Component.onDestruction: container.updateActiveStatus()
                 width: container.width
                 height: container.height
 

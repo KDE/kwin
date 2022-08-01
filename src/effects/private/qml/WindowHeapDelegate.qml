@@ -42,7 +42,9 @@ Item {
     readonly property alias downGestureProgress: touchDragHandler.downGestureProgress
     signal downGestureTriggered()
 
-
+    // This window should stay higher than other windows and desktops
+    readonly property bool active: dragHandler.active || touchDragHandler.active || returnTransition.running
+    property DragManager activeDragHandler: dragHandler
 
     Component.onCompleted: {
         if (thumb.client.active) {
@@ -69,7 +71,7 @@ Item {
     }
 
     visible: opacity > 0
-    z: thumb.activeDragHandler.active ? 1000
+    z: active ? 1000
         : client.stackingOrder + (thumb.client.desktop == KWinComponents.Workspace.currentDesktop ? 100 : 0)
 
     component TweenBehavior : Behavior {
@@ -124,6 +126,7 @@ Item {
             }
         ]
         transitions: Transition {
+            id: returnTransition
             to: "normal"
             enabled: thumb.windowHeap.animationEnabled
             NumberAnimation {
@@ -290,7 +293,7 @@ Item {
         imagePath: "widgets/viewitem"
         prefix: "hover"
         z: -1
-        visible: !thumb.windowHeap.dragActive && (hoverHandler.hovered || selected)
+        visible: !thumb.windowHeap.sceneHasActiveItems && (hoverHandler.hovered || selected)
     }
 
     HoverHandler {
@@ -321,7 +324,6 @@ Item {
         grabPermissions: PointerHandler.CanTakeOverFromAnything
 
         onActiveChanged: {
-            thumb.windowHeap.dragActive = active;
             if (active) {
                 thumb.activeDragHandler = this;
             } else {
@@ -331,7 +333,6 @@ Item {
             }
         }
     }
-    property DragManager activeDragHandler: dragHandler
     DragManager {
         id: dragHandler
         acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad | PointerDevice.Stylus
@@ -367,7 +368,7 @@ Item {
             margins: PlasmaCore.Units.smallSpacing
         }
 
-        visible: thumb.closeButtonVisible && (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && thumb.client.closeable && !thumb.activeDragHandler.active
+        visible: thumb.closeButtonVisible && (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && thumb.client.closeable && !thumb.active
         LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
 
         text: i18ndc("kwin_effects", "@info:tooltip as in: 'close this window'", "Close window")
@@ -382,9 +383,12 @@ Item {
         onClicked: thumb.client.closeWindow();
     }
 
+    onActiveChanged: windowHeap.updateTopStatus()
+
     Component.onDestruction: {
         if (selected) {
-            thumb.windowHeap.resetSelected();
+            windowHeap.resetSelected();
         }
+        windowHeap.updateTopStatus();
     }
 }

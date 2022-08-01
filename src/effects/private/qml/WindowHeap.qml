@@ -37,7 +37,11 @@ FocusScope {
 
     required property bool organized
     readonly property bool effectiveOrganized: expoLayout.ready && organized
-    property bool dragActive: false
+
+    // whether there are any delegates that are either being dragged or already animating back
+    property bool hasActiveDelegates
+    // may be overriden by client code to track more than one WindowHeap at once
+    property bool sceneHasActiveItems: hasActiveDelegates
 
     signal activated()
     //TODO: for 5.26 the delegate will be a separate component instead
@@ -46,6 +50,17 @@ FocusScope {
     function activateIndex(index) {
         KWinComponents.Workspace.activeClient = windowsRepeater.itemAt(index).client;
         activated();
+    }
+
+    // an attempt to maintain many-to-one semaphore, similar to a non-exclusive ButtonGroup
+    function updateTopStatus() {
+        for (let i = 0; i < windowsRepeater.count; i++) {
+            if (windowsRepeater.itemAt(i).active) {
+                hasActiveDelegates = true;
+                return;
+            }
+        }
+        hasActiveDelegates = false;
     }
 
     KWinComponents.WindowThumbnailItem {
