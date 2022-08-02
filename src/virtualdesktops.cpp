@@ -810,6 +810,9 @@ void VirtualDesktopManager::initShortcuts()
     QAction *slotDownAction = addAction(QStringLiteral("Switch One Desktop Down"), i18n("Switch One Desktop Down"), &VirtualDesktopManager::slotDown);
     KGlobalAccel::setGlobalShortcut(slotDownAction, QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Down));
 
+    Q_UNUSED(addAction(QStringLiteral("Add Virtual Desktop"), i18n("Add Virtual Desktop"), &VirtualDesktopManager::slotCreate));
+    Q_UNUSED(addAction(QStringLiteral("Remove Virtual Desktop"), i18n("Remove Virtual Desktop"), &VirtualDesktopManager::slotRemove));
+
     // Gestures
     // These connections decide which desktop to end on after gesture ends
     connect(m_swipeGestureReleasedX.get(), &QAction::triggered, this, &VirtualDesktopManager::gestureReleasedX);
@@ -981,6 +984,16 @@ void VirtualDesktopManager::slotRight()
 void VirtualDesktopManager::slotUp()
 {
     moveTo(Direction::Up, isNavigationWrappingAround());
+}
+
+void VirtualDesktopManager::slotCreate()
+{
+    createVirtualDesktop(VirtualDesktopManager::count());
+}
+
+void VirtualDesktopManager::slotRemove()
+{
+    removeVirtualDesktop(VirtualDesktopManager::currentDesktop());
 }
 
 } // KWin

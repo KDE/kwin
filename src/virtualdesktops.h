@@ -441,6 +441,14 @@ private Q_SLOTS:
      * Slot for switch to desktop below action.
      */
     void slotDown();
+    /**
+     * Slot for create new desktop action.
+     */
+    void slotCreate();
+    /**
+     * Slot for remove desktop action.
+     */
+    void slotRemove();
 
     /* For gestured desktopSwitching
      * Called when gesture ended, the thing that actually switches the desktop.
