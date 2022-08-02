@@ -264,7 +264,9 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
         slotOutputAdded(output);
     }
 
-    connect(kwinApp()->inputMethod(), &InputMethod::panelChanged, this, &EffectsHandlerImpl::inputPanelChanged);
+    if (auto inputMethod = kwinApp()->inputMethod()) {
+        connect(inputMethod, &InputMethod::panelChanged, this, &EffectsHandlerImpl::inputPanelChanged);
+    }
 
     reconfigure();
 }
