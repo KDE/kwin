@@ -352,7 +352,7 @@ set(HAVE_ACCESSIBILITY ${QAccessibilityClient_FOUND})
 
 include(ECMFindQmlModule)
 ecm_find_qmlmodule(QtQuick 2.3)
-ecm_find_qmlmodule(QtQuick.Controls 1.2)
+ecm_find_qmlmodule(QtQuick.Controls 2.15)
 ecm_find_qmlmodule(QtQuick.Layouts 1.3)
 ecm_find_qmlmodule(QtQuick.Window 2.1)
 ecm_find_qmlmodule(QtMultimedia 5.0)
