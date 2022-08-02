@@ -30,15 +30,21 @@ FocusScope {
         onEntered: {
             drag.accepted = true;
         }
-        onDropped: {
+        onDropped: drop => {
+            drop.accepted = true;
             if (drag.source instanceof DesktopView) {
                 // dragging a desktop as a whole
-                if (desktopView === drag.source) {
+                if (drag.source === desktopView) {
+                    drop.action = Qt.IgnoreAction;
                     return;
                 }
                 effect.swapDesktops(drag.source.desktop.x11DesktopNumber, desktop.x11DesktopNumber);
             } else {
                 // dragging a KWin::Window
+                if (drag.source.desktop === desktopView.desktop.x11DesktopNumber) {
+                    drop.action = Qt.IgnoreAction;
+                    return;
+                }
                 drag.source.desktop = desktopView.desktop.x11DesktopNumber;
             }
         }
@@ -96,6 +102,8 @@ FocusScope {
             y = 0;
         }
         Drag.active: dragHandler.active
+        Drag.proposedAction: Qt.MoveAction
+        Drag.supportedActions: Qt.MoveAction
         Drag.source: desktopView
         Drag.hotSpot: Qt.point(width * 0.5, height * 0.5)
         width: parent.width

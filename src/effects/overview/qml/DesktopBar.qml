@@ -199,10 +199,13 @@ Item {
                             id: dropArea
                             anchors.fill: parent
 
-                            onEntered: {
-                                drag.accepted = true;
-                            }
-                            onDropped: {
+                            onDropped: drop => {
+                                drop.accepted = true;
+                                // dragging a KWin::Window
+                                if (drag.source.desktop === delegate.desktop.x11DesktopNumber) {
+                                    drop.action = Qt.IgnoreAction;
+                                    return;
+                                }
                                 drag.source.desktop = delegate.desktop.x11DesktopNumber;
                             }
                         }

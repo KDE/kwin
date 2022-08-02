@@ -92,6 +92,8 @@ Item {
         state: thumb.activeDragHandler.active ? "drag" : "normal"
 
         Drag.active: thumb.activeDragHandler.active
+        Drag.proposedAction: Qt.MoveAction
+        Drag.supportedActions: Qt.MoveAction
         Drag.source: thumb.client
         Drag.hotSpot: Qt.point(
             thumb.activeDragHandler.centroid.pressPosition.x * thumb.targetScale,
@@ -324,7 +326,12 @@ Item {
             if (active) {
                 thumb.activeDragHandler = this;
             } else {
-                thumbSource.Drag.drop();
+                var action = thumbSource.Drag.drop();
+                if (action === Qt.MoveAction) {
+                    // this whole component is in the process of being destroyed due to drop onto
+                    // another virtual desktop (not another screen).
+                    return;
+                }
                 var globalPos = targetScreen.mapToGlobal(centroid.scenePosition);
                 effect.checkItemDroppedOutOfScreen(globalPos, thumbSource);
             }
