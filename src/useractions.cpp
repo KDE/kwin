@@ -22,6 +22,8 @@
 //       in sync
 //////////////////////////////////////////////////////////////////////////////
 
+#include <config-kwin.h>
+
 #include "useractions.h"
 #include "composite.h"
 #include "cursor.h"
@@ -279,6 +281,7 @@ void UserActionsMenu::init()
     setShortcut(m_shortcutOperation, QStringLiteral("Setup Window Shortcut"));
     m_shortcutOperation->setData(Options::SetupWindowShortcutOp);
 
+#if KWIN_BUILD_KCMS
     QAction *action = advancedMenu->addAction(i18n("Configure Special &Window Settings..."));
     action->setIcon(QIcon::fromTheme(QStringLiteral("preferences-system-windows-actions")));
     action->setData(Options::WindowRulesOp);
@@ -316,6 +319,7 @@ void UserActionsMenu::init()
             p->start();
         });
     }
+#endif
 
     m_maximizeOperation = m_menu->addAction(i18n("Ma&ximize"));
     m_maximizeOperation->setIcon(QIcon::fromTheme(QStringLiteral("window-maximize")));
@@ -328,9 +332,9 @@ void UserActionsMenu::init()
     setShortcut(m_minimizeOperation, QStringLiteral("Window Minimize"));
     m_minimizeOperation->setData(Options::MinimizeOp);
 
-    action = m_menu->addMenu(advancedMenu);
-    action->setText(i18n("&More Actions"));
-    action->setIcon(QIcon::fromTheme(QStringLiteral("overflow-menu")));
+    QAction *overflowAction = m_menu->addMenu(advancedMenu);
+    overflowAction->setText(i18n("&More Actions"));
+    overflowAction->setIcon(QIcon::fromTheme(QStringLiteral("overflow-menu")));
 
     m_closeOperation = m_menu->addAction(i18n("&Close"));
     m_closeOperation->setIcon(QIcon::fromTheme(QStringLiteral("window-close")));
@@ -405,8 +409,12 @@ void UserActionsMenu::menuAboutToShow()
         action->setText(i18n("&Extensions"));
     }
 
-    m_rulesOperation->setEnabled(m_window->supportsWindowRules());
-    m_applicationRulesOperation->setEnabled(m_window->supportsWindowRules());
+    if (m_rulesOperation) {
+        m_rulesOperation->setEnabled(m_window->supportsWindowRules());
+    }
+    if (m_applicationRulesOperation) {
+        m_applicationRulesOperation->setEnabled(m_window->supportsWindowRules());
+    }
 
     showHideActivityMenu();
 }
