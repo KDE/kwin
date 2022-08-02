@@ -155,7 +155,7 @@ Rectangle {
 
         property Item currentItem
         readonly property real targetScale : 1 / Math.max(rows, columns)
-        property real panelOpacity
+        property real panelOpacity: 1
 
         Behavior on x {
             enabled: !container.effect.gestureInProgress
@@ -172,6 +172,13 @@ Rectangle {
             }
         }
         Behavior on scale {
+            enabled: !container.effect.gestureInProgress
+            NumberAnimation {
+                duration: container.effect.animationDuration
+                easing.type: Easing.InOutCubic
+            }
+        }
+        Behavior on panelOpacity {
             enabled: !container.effect.gestureInProgress
             NumberAnimation {
                 duration: container.effect.animationDuration

@@ -73,13 +73,6 @@ FocusScope {
             height: model.client.height
             z: model.client.stackingOrder
             opacity: model.client.dock ? desktopView.panelOpacity : 1
-            Behavior on opacity {
-                enabled: !container.effect.gestureInProgress
-                OpacityAnimator {
-                    duration: container.effect.animationDuration
-                    easing.type: Easing.InOutCubic
-                }
-            }
         }
     }
 
