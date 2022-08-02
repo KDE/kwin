@@ -42,10 +42,36 @@ FocusScope {
 
     Keys.priority: Keys.AfterItem
     Keys.forwardTo: searchField
+
     Keys.onEnterPressed: {
         heap.forceActiveFocus();
         if (heap.count === 1) {
             heap.activateCurrentClient();
+        }
+    }
+
+    Keys.onLeftPressed: {
+        let view = effect.getView(Qt.LeftEdge)
+        if (view) {
+            effect.activateView(view)
+        }
+    }
+    Keys.onRightPressed: {
+        let view = effect.getView(Qt.RightEdge)
+        if (view) {
+            effect.activateView(view)
+        }
+    }
+    Keys.onUpPressed: {
+        let view = effect.getView(Qt.TopEdge)
+        if (view) {
+            effect.activateView(view)
+        }
+    }
+    Keys.onDownPressed: {
+        let view = effect.getView(Qt.BottomEdge)
+        if (view) {
+            effect.activateView(view)
         }
     }
 

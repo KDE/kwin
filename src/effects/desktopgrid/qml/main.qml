@@ -6,6 +6,7 @@
 */
 
 import QtQuick 2.12
+import QtQuick.Window 2.12
 import QtQuick.Layouts 1.12
 import QtGraphicalEffects 1.12
 import org.kde.kwin 3.0 as KWinComponents
@@ -100,12 +101,36 @@ Rectangle {
             switchTo(desktopId);
         } else if (event.key == Qt.Key_Up) {
             event.accepted = selectNext(WindowHeap.Direction.Up);
+            if (!event.accepted) {
+                let view = effect.getView(Qt.TopEdge)
+                if (view) {
+                    effect.activateView(view)
+                }
+            }
         } else if (event.key == Qt.Key_Down) {
             event.accepted = selectNext(WindowHeap.Direction.Down);
+            if (!event.accepted) {
+                let view = effect.getView(Qt.BottomEdge)
+                if (view) {
+                    effect.activateView(view)
+                }
+            }
         } else if (event.key == Qt.Key_Left) {
             event.accepted = selectNext(WindowHeap.Direction.Left);
+            if (!event.accepted) {
+                let view = effect.getView(Qt.LeftEdge)
+                if (view) {
+                    effect.activateView(view)
+                }
+            }
         } else if (event.key == Qt.Key_Right) {
             event.accepted = selectNext(WindowHeap.Direction.Right);
+            if (!event.accepted) {
+                let view = effect.getView(Qt.RightEdge)
+                if (view) {
+                    effect.activateView(view)
+                }
+            }
         } else if (event.key == Qt.Key_Return || event.key == Qt.Key_Space) {
             for (let i = 0; i < gridRepeater.count; i++) {
                 if (gridRepeater.itemAt(i).focus) {
@@ -229,6 +254,15 @@ Rectangle {
                 height: container.height
 
                 clientModel: stackModel
+                Rectangle {
+                    anchors.fill: parent
+                    color: "transparent"
+                    border {
+                        color: PlasmaCore.Theme.highlightColor
+                        width: 1 / grid.scale
+                    }
+                    visible: parent.activeFocus
+                }
                 TapHandler {
                     acceptedButtons: Qt.LeftButton
                     onTapped: {

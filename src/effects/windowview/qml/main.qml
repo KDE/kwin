@@ -38,6 +38,30 @@ Item {
 
     Keys.priority: Keys.AfterItem
     Keys.forwardTo: searchField
+    Keys.onLeftPressed: {
+        let view = effect.getView(Qt.LeftEdge)
+        if (view) {
+            effect.activateView(view)
+        }
+    }
+    Keys.onRightPressed: {
+        let view = effect.getView(Qt.RightEdge)
+        if (view) {
+            effect.activateView(view)
+        }
+    }
+    Keys.onUpPressed: {
+        let view = effect.getView(Qt.TopEdge)
+        if (view) {
+            effect.activateView(view)
+        }
+    }
+    Keys.onDownPressed: {
+        let view = effect.getView(Qt.BottomEdge)
+        if (view) {
+            effect.activateView(view)
+        }
+    }
 
     KWinComponents.DesktopBackgroundItem {
         activity: KWinComponents.Workspace.currentActivity

@@ -13,6 +13,7 @@
 // own
 #include "dbuscall.h"
 #include "desktopbackgrounditem.h"
+#include "kwinquickeffect.h"
 #include "screenedgeitem.h"
 #include "scripting_logging.h"
 #include "scriptingutils.h"
@@ -658,6 +659,7 @@ void KWin::Scripting::init()
     qmlRegisterType<ScriptingModels::V3::ClientModel>("org.kde.kwin", 3, 0, "ClientModel");
     qmlRegisterType<ScriptingModels::V3::ClientFilterModel>("org.kde.kwin", 3, 0, "ClientFilterModel");
     qmlRegisterType<ScriptingModels::V3::VirtualDesktopModel>("org.kde.kwin", 3, 0, "VirtualDesktopModel");
+    qmlRegisterUncreatableType<KWin::QuickSceneView>("org.kde.kwin", 3, 0, "SceneView", QStringLiteral("Can't instantiate an object of type SceneView"));
 
     qmlRegisterSingletonType<DeclarativeScriptWorkspaceWrapper>("org.kde.kwin", 3, 0, "Workspace", [](QQmlEngine *qmlEngine, QJSEngine *jsEngine) {
         Q_UNUSED(qmlEngine)

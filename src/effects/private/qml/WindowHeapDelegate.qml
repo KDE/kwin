@@ -290,7 +290,7 @@ Item {
         imagePath: "widgets/viewitem"
         prefix: "hover"
         z: -1
-        visible: !thumb.windowHeap.dragActive && (hoverHandler.hovered || selected)
+        visible: !thumb.windowHeap.dragActive && (hoverHandler.hovered || selected) && Window.window.activeFocusItem
     }
 
     HoverHandler {

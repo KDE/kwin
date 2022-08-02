@@ -10,6 +10,7 @@ if (KWIN_BUILD_KCMS)
         KF5::Service
         Qt::DBus
         Qt::UiTools
+        kwineffects
     )
     install(TARGETS kcm_kwin4_genericscripted DESTINATION ${KDE_INSTALL_PLUGINDIR}/kwin/effects/configs)
 endif()
