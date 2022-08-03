@@ -118,6 +118,7 @@ Q_SIGNALS:
      * @param count The new number of screens
      */
     void numberScreensChanged(int count);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     /**
      * This signal is emitted when the size of @p screen changes.
      * Don't forget to fetch an updated client area.
@@ -125,6 +126,7 @@ Q_SIGNALS:
      * @deprecated Use QScreen::geometryChanged signal instead.
      */
     void screenResized(int screen);
+#endif
     /**
      * Signal emitted whenever the current activity changed.
      * @param id id of the new activity

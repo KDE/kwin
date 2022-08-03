@@ -20,7 +20,9 @@
 #endif
 
 #include <QApplication>
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QDesktopWidget>
+#endif
 
 namespace KWin
 {
@@ -57,8 +59,9 @@ WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
     connect(ws, &Workspace::outputRemoved, this, [this]() {
         Q_EMIT numberScreensChanged(numScreens());
     });
-    // TODO Plasma 6: Remove it.
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     connect(QApplication::desktop(), &QDesktopWidget::resized, this, &WorkspaceWrapper::screenResized);
+#endif
 
     const QList<Window *> clients = ws->allClientList();
     for (Window *client : clients) {
