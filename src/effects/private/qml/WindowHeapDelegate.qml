@@ -263,7 +263,7 @@ Item {
         },
         State {
             name: "active-hidden"
-            extend: "active"
+            extend: "initial"
             PropertyChanges {
                 target: thumb
                 opacity: 0
