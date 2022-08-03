@@ -61,6 +61,7 @@
 #include "wayland/xdgforeign_v2_interface.h"
 #include "wayland/xdgoutput_v1_interface.h"
 #include "wayland/xdgshell_interface.h"
+#include "wayland/xwaylandkeyboardgrab_v1_interface.h"
 #include "waylandoutput.h"
 #include "workspace.h"
 #include "x11window.h"
@@ -151,6 +152,10 @@ public:
         }
 
         if (client != waylandServer()->inputMethodConnection() && inputmethodInterfaces.contains(interfaceName)) {
+            return false;
+        }
+
+        if (client != waylandServer()->xWaylandConnection() && interfaceName == "zwp_xwayland_keyboard_grab_manager_v1") {
             return false;
         }
 
@@ -462,6 +467,7 @@ bool WaylandServer::init(InitializationFlags flags)
     new SubCompositorInterface(m_display, m_display);
     m_XdgForeign = new XdgForeignV2Interface(m_display, m_display);
     m_inputMethod = new InputMethodV1Interface(m_display, m_display);
+    m_xWaylandKeyboardGrabManager = new XWaylandKeyboardGrabManagerV1Interface(m_display, m_display);
 
     auto activation = new KWaylandServer::XdgActivationV1Interface(m_display, this);
     auto init = [this, activation] {
@@ -755,7 +761,12 @@ bool WaylandServer::isKeyboardShortcutsInhibited() const
     auto surface = seat()->focusedKeyboardSurface();
     if (surface) {
         auto inhibitor = keyboardShortcutsInhibitManager()->findInhibitor(surface, seat());
-        return inhibitor && inhibitor->isActive();
+        if (inhibitor && inhibitor->isActive()) {
+            return true;
+        }
+        if (m_xWaylandKeyboardGrabManager->hasGrab(surface, seat())) {
+            return true;
+        }
     }
     return false;
 }
