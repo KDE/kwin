@@ -55,6 +55,8 @@ public:
         m_sessionArgument = session;
     }
 
+    XwaylandInterface *xwayland() const override;
+
 protected:
     void performStartup() override;
 

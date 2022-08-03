@@ -37,28 +37,19 @@ enum class DragEventReply {
 };
 } // namespace Xwl
 
-class KWIN_EXPORT XwaylandInterface : public QObject
+class KWIN_EXPORT XwaylandInterface
 {
-    Q_OBJECT
-
 public:
-    static XwaylandInterface *self();
-
     virtual Xwl::DragEventReply dragMoveFilter(Window *target, const QPoint &pos) = 0;
     virtual KWaylandServer::AbstractDropHandler *xwlDropHandler() = 0;
 
 protected:
-    explicit XwaylandInterface(QObject *parent = nullptr);
-    ~XwaylandInterface() override;
+    explicit XwaylandInterface() = default;
+    virtual ~XwaylandInterface() = default;
 
 private:
     Q_DISABLE_COPY(XwaylandInterface)
 };
-
-inline XwaylandInterface *xwayland()
-{
-    return XwaylandInterface::self();
-}
 
 } // namespace KWin
 

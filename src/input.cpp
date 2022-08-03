@@ -2382,8 +2382,8 @@ static KWaylandServer::AbstractDropHandler *dropHandler(Window *window)
         return dropTarget;
     }
 
-    if (qobject_cast<X11Window *>(window) && xwayland()) {
-        return xwayland()->xwlDropHandler();
+    if (qobject_cast<X11Window *>(window) && kwinApp()->xwayland()) {
+        return kwinApp()->xwayland()->xwlDropHandler();
     }
 
     return nullptr;
@@ -2433,7 +2433,7 @@ public:
             }
             m_dragTarget = dragTarget;
 
-            if (auto *xwl = xwayland()) {
+            if (auto *xwl = kwinApp()->xwayland()) {
                 const auto ret = xwl->dragMoveFilter(t, eventPos);
                 if (ret == Xwl::DragEventReply::Ignore) {
                     return false;

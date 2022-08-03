@@ -83,8 +83,7 @@ WaylandTestApplication::~WaylandTestApplication()
     if (effects) {
         static_cast<EffectsHandlerImpl *>(effects)->unloadAllEffects();
     }
-    delete m_xwayland;
-    m_xwayland = nullptr;
+    m_xwayland.reset();
     destroyVirtualInputDevices();
     destroyWorkspace();
     destroyInputMethod();
@@ -157,8 +156,8 @@ void WaylandTestApplication::continueStartupWithScreens()
 void WaylandTestApplication::finalizeStartup()
 {
     if (m_xwayland) {
-        disconnect(m_xwayland, &Xwl::Xwayland::errorOccurred, this, &WaylandTestApplication::finalizeStartup);
-        disconnect(m_xwayland, &Xwl::Xwayland::started, this, &WaylandTestApplication::finalizeStartup);
+        disconnect(m_xwayland.get(), &Xwl::Xwayland::errorOccurred, this, &WaylandTestApplication::finalizeStartup);
+        disconnect(m_xwayland.get(), &Xwl::Xwayland::started, this, &WaylandTestApplication::finalizeStartup);
     }
     notifyStarted();
 }
@@ -179,9 +178,9 @@ void WaylandTestApplication::continueStartupWithScene()
         return;
     }
 
-    m_xwayland = new Xwl::Xwayland(this);
-    connect(m_xwayland, &Xwl::Xwayland::errorOccurred, this, &WaylandTestApplication::finalizeStartup);
-    connect(m_xwayland, &Xwl::Xwayland::started, this, &WaylandTestApplication::finalizeStartup);
+    m_xwayland = std::make_unique<Xwl::Xwayland>(this);
+    connect(m_xwayland.get(), &Xwl::Xwayland::errorOccurred, this, &WaylandTestApplication::finalizeStartup);
+    connect(m_xwayland.get(), &Xwl::Xwayland::started, this, &WaylandTestApplication::finalizeStartup);
     m_xwayland->start();
 }
 
@@ -198,5 +197,10 @@ Test::VirtualInputDevice *WaylandTestApplication::virtualKeyboard() const
 Test::VirtualInputDevice *WaylandTestApplication::virtualTouch() const
 {
     return m_virtualTouch.get();
+}
+
+XwaylandInterface *WaylandTestApplication::xwayland() const
+{
+    return m_xwayland.get();
 }
 }

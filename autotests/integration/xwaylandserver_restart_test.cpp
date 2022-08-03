@@ -69,7 +69,7 @@ void XwaylandServerRestartTest::testRestart()
 {
     // This test verifies that the Xwayland server will be restarted after a crash.
 
-    Xwl::Xwayland *xwayland = static_cast<Xwl::Xwayland *>(XwaylandInterface::self());
+    Xwl::Xwayland *xwayland = static_cast<Xwl::Xwayland *>(kwinApp()->xwayland());
 
     // Pretend that the Xwayland process has crashed by sending a SIGKILL to it.
     QSignalSpy startedSpy(xwayland, &Xwl::Xwayland::started);

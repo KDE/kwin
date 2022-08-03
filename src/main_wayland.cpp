@@ -276,6 +276,11 @@ void ApplicationWayland::startSession()
     }
 }
 
+XwaylandInterface *ApplicationWayland::xwayland() const
+{
+    return m_xwayland.get();
+}
+
 } // namespace
 
 int main(int argc, char *argv[])

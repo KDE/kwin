@@ -35,6 +35,7 @@ class InputMethod;
 class ColorManager;
 class ScreenLockerWatcher;
 class TabletModeManager;
+class XwaylandInterface;
 
 class XcbEventFilter : public QAbstractNativeEventFilter
 {
@@ -238,6 +239,7 @@ public:
     PluginManager *pluginManager() const;
     InputMethod *inputMethod() const;
     ColorManager *colorManager() const;
+    virtual XwaylandInterface *xwayland() const;
 #if KWIN_BUILD_SCREENLOCKER
     ScreenLockerWatcher *screenLockerWatcher() const;
 #endif

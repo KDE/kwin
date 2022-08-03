@@ -582,6 +582,11 @@ ColorManager *Application::colorManager() const
     return m_colorManager.get();
 }
 
+XwaylandInterface *Application::xwayland() const
+{
+    return nullptr;
+}
+
 #if KWIN_BUILD_SCREENLOCKER
 ScreenLockerWatcher *Application::screenLockerWatcher() const
 {

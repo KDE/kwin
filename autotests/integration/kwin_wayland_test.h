@@ -83,6 +83,7 @@ public:
     Test::VirtualInputDevice *virtualPointer() const;
     Test::VirtualInputDevice *virtualKeyboard() const;
     Test::VirtualInputDevice *virtualTouch() const;
+    XwaylandInterface *xwayland() const override;
 
 protected:
     void performStartup() override;
@@ -95,7 +96,7 @@ private:
     void createVirtualInputDevices();
     void destroyVirtualInputDevices();
 
-    Xwl::Xwayland *m_xwayland = nullptr;
+    std::unique_ptr<Xwl::Xwayland> m_xwayland;
     QString m_inputMethodServerToStart;
 
     std::unique_ptr<Test::VirtualInputDevice> m_virtualPointer;

@@ -118,7 +118,7 @@ void XwaylandServerCrashTest::testCrash()
     // Let's pretend that the Xwayland process has crashed.
     QSignalSpy x11ConnectionChangedSpy(kwinApp(), &Application::x11ConnectionChanged);
     QVERIFY(x11ConnectionChangedSpy.isValid());
-    Xwl::Xwayland *xwayland = static_cast<Xwl::Xwayland *>(XwaylandInterface::self());
+    Xwl::Xwayland *xwayland = static_cast<Xwl::Xwayland *>(kwinApp()->xwayland());
     xwayland->xwaylandLauncher()->process()->terminate();
     QVERIFY(x11ConnectionChangedSpy.wait());
 
