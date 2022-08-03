@@ -650,6 +650,14 @@ void RulesModel::populateRuleList()
                          RulePolicy::ForceRule, RuleItem::Boolean,
                          i18n("Block compositing"), i18n("Appearance & Fixes"),
                          QIcon::fromTheme("composite-track-on")));
+    if (KWindowSystem::isPlatformWayland()) {
+        addRule(new RuleItem(QLatin1String("confinepointer"),
+                             RulePolicy::ForceRule, RuleItem::Boolean,
+                             i18n("Confine mouse to window"), i18n("Appearance & Fixes"),
+                             QIcon::fromTheme("followmouse"),
+                             i18n("The mouse cursor will be locked to the window when it has focus and cannot be moved outside.\n"
+                                  "Keyboard shortcuts can be used to switch to another window and unlock the mouse.")));
+    }
 }
 
 const QHash<QString, QString> RulesModel::x11PropertyHash()

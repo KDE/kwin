@@ -431,5 +431,13 @@
       <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
       <default code="true">Rules::UnusedSetRule</default>
     </entry>
+
+    <entry name="confinepointer" type="Bool">
+      <label>Confine mouse to window</label>
+    </entry>
+    <entry name="confinepointerrule" type="Int">
+      <label>confine pointer rule type</label>
+      <default code="true">Rules::UnusedForceRule</default>
+    </entry>
   </group>
 </kcfg>

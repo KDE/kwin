@@ -711,7 +711,7 @@ void PointerInputRedirection::updatePointerConstraints()
             return;
         }
     } else {
-        m_confined = false;
+        m_confined = focus()->rules()->checkConfinePointer(false) && canConstrain;
         disconnectConfinedPointerRegionConnection();
     }
     const auto lock = s->lockedPointer();
@@ -757,6 +757,10 @@ void PointerInputRedirection::updatePointerConstraints()
 
 QPointF PointerInputRedirection::applyPointerConfinement(const QPointF &pos) const
 {
+    if (!m_confined) {
+        return pos;
+    }
+
     if (!focus()) {
         return pos;
     }
@@ -764,11 +768,13 @@ QPointF PointerInputRedirection::applyPointerConfinement(const QPointF &pos) con
     if (!s) {
         return pos;
     }
-    auto cf = s->confinedPointer();
-    if (!cf) {
-        return pos;
-    }
-    if (!cf->isConfined()) {
+
+    QRegion confinementRegion;
+    if (focus()->rules()->checkConfinePointer(false)) {
+        confinementRegion = focus()->inputShape().translated(QPointF(focus()->pos() + focus()->clientPos()).toPoint());
+    } else if (auto cf = s->confinedPointer(); cf && cf->isConfined()) {
+        confinementRegion = getConstraintRegion(focus(), cf);
+    } else {
         return pos;
     }
 
@@ -776,12 +782,12 @@ QPointF PointerInputRedirection::applyPointerConfinement(const QPointF &pos) con
         return QPoint(std::floor(point.x()), std::floor(point.y()));
     };
 
-    const QRegion confinementRegion = getConstraintRegion(focus(), cf);
     if (confinementRegion.contains(floorPoint(pos))) {
         return pos;
     }
     QPointF p = pos;
     // allow either x or y to pass
+
     p = QPointF(m_pos.x(), pos.y());
 
     if (confinementRegion.contains(floorPoint(p))) {
