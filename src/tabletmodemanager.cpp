@@ -21,8 +21,6 @@
 namespace KWin
 {
 
-KWIN_SINGLETON_FACTORY_VARIABLE(TabletModeManager, s_manager)
-
 static bool shouldIgnoreDevice(InputDevice *device)
 {
     if (qobject_cast<FakeInputDevice*>(device)) {
@@ -111,8 +109,7 @@ private:
     TabletModeManager *const m_parent;
 };
 
-TabletModeManager::TabletModeManager(QObject *parent)
-    : QObject(parent)
+TabletModeManager::TabletModeManager()
 {
     if (waylandServer()) {
         if (input()->hasTabletModeSwitch()) {

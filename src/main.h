@@ -34,6 +34,7 @@ class PluginManager;
 class InputMethod;
 class ColorManager;
 class ScreenLockerWatcher;
+class TabletModeManager;
 
 class XcbEventFilter : public QAbstractNativeEventFilter
 {
@@ -261,6 +262,7 @@ protected:
     void createPlugins();
     void createColorManager();
     void createInputMethod();
+    void createTabletModeManager();
     void destroyInput();
     void destroyWorkspace();
     void destroyCompositor();
@@ -299,6 +301,7 @@ private:
     std::unique_ptr<PluginManager> m_pluginManager;
     std::unique_ptr<InputMethod> m_inputMethod;
     std::unique_ptr<ColorManager> m_colorManager;
+    std::unique_ptr<TabletModeManager> m_tabletModeManager;
 #if KWIN_BUILD_SCREENLOCKER
     std::unique_ptr<ScreenLockerWatcher> m_screenLockerWatcher;
 #endif

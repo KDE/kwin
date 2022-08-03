@@ -32,6 +32,7 @@ public:
         On
     };
 
+    explicit TabletModeManager();
     ~TabletModeManager() override = default;
 
     void setTabletModeAvailable(bool detecting);
@@ -56,7 +57,6 @@ private:
     bool m_isTabletMode = false;
     bool m_detecting = false;
     ConfiguredMode m_configuredMode = ConfiguredMode::Auto;
-    KWIN_SINGLETON_VARIABLE(TabletModeManager, s_manager)
 };
 }
 

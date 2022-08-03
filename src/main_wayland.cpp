@@ -151,7 +151,7 @@ void ApplicationWayland::performStartup()
 
     createInput();
     createInputMethod();
-    TabletModeManager::create(this);
+    createTabletModeManager();
 
     WaylandCompositor::create();
 

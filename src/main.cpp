@@ -25,6 +25,7 @@
 #endif
 #include "session.h"
 #include "sm.h"
+#include "tabletmodemanager.h"
 #include "utils/xcbutils.h"
 #include "wayland/surface_interface.h"
 #include "workspace.h"
@@ -276,6 +277,11 @@ void Application::createColorManager()
 void Application::createInputMethod()
 {
     m_inputMethod = std::make_unique<InputMethod>();
+}
+
+void Application::createTabletModeManager()
+{
+    m_tabletModeManager = std::make_unique<TabletModeManager>();
 }
 
 void Application::installNativeX11EventFilter()
