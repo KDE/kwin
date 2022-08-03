@@ -29,23 +29,9 @@ namespace KWin
 namespace Xwl
 {
 
-KWIN_SINGLETON_FACTORY(DataBridge)
-
-void DataBridge::destroy()
+DataBridge::DataBridge()
 {
-    delete s_self;
-}
-
-DataBridge::DataBridge(QObject *parent)
-    : QObject(parent)
-{
-    s_self = this;
     init();
-}
-
-DataBridge::~DataBridge()
-{
-    s_self = nullptr;
 }
 
 void DataBridge::init()

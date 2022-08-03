@@ -35,6 +35,11 @@ namespace KWin
 namespace Xwl
 {
 
+WlToXDrag::WlToXDrag(Dnd *dnd)
+    : m_dnd(dnd)
+{
+}
+
 DragEventReply WlToXDrag::moveFilter(Window *target, const QPoint &pos)
 {
     Q_UNUSED(target)
@@ -44,11 +49,12 @@ DragEventReply WlToXDrag::moveFilter(Window *target, const QPoint &pos)
 
 bool WlToXDrag::handleClientMessage(xcb_client_message_event_t *event)
 {
-    return DataBridge::self()->dnd()->dropHandler()->handleClientMessage(event);
+    return m_dnd->dropHandler()->handleClientMessage(event);
 }
 
-Xvisit::Xvisit(Window *target, KWaylandServer::AbstractDataSource *dataSource, QObject *parent)
+Xvisit::Xvisit(Window *target, KWaylandServer::AbstractDataSource *dataSource, Dnd *dnd, QObject *parent)
     : QObject(parent)
+    , m_dnd(dnd)
     , m_target(target)
     , m_dataSource(dataSource)
 {
@@ -170,7 +176,7 @@ void Xvisit::sendPosition(const QPointF &globalPos)
     m_pos.pending = true;
 
     xcb_client_message_data_t data = {};
-    data.data32[0] = DataBridge::self()->dnd()->window();
+    data.data32[0] = m_dnd->window();
     data.data32[2] = (x << 16) | y;
     data.data32[3] = XCB_CURRENT_TIME;
     data.data32[4] = Dnd::clientActionToAtom(m_proposedAction);
@@ -223,7 +229,7 @@ void Xvisit::sendEnter()
     }
 
     xcb_client_message_data_t data = {};
-    data.data32[0] = DataBridge::self()->dnd()->window();
+    data.data32[0] = m_dnd->window();
     data.data32[1] = m_version << 24;
 
     const auto mimeTypesNames = m_dataSource->mimeTypes();
@@ -267,7 +273,7 @@ void Xvisit::sendEnter()
 
         xcb_change_property(kwinApp()->x11Connection(),
                             XCB_PROP_MODE_REPLACE,
-                            DataBridge::self()->dnd()->window(),
+                            m_dnd->window(),
                             atoms->xdnd_type_list,
                             XCB_ATOM_ATOM,
                             32, cnt, targets.data());
@@ -278,7 +284,7 @@ void Xvisit::sendEnter()
 void Xvisit::sendDrop(uint32_t time)
 {
     xcb_client_message_data_t data = {};
-    data.data32[0] = DataBridge::self()->dnd()->window();
+    data.data32[0] = m_dnd->window();
     data.data32[2] = time;
 
     Drag::sendClientMessage(m_target->window(), atoms->xdnd_drop, &data);
@@ -291,7 +297,7 @@ void Xvisit::sendDrop(uint32_t time)
 void Xvisit::sendLeave()
 {
     xcb_client_message_data_t data = {};
-    data.data32[0] = DataBridge::self()->dnd()->window();
+    data.data32[0] = m_dnd->window();
     Drag::sendClientMessage(m_target->window(), atoms->xdnd_leave, &data);
 }
 

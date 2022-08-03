@@ -33,6 +33,7 @@ namespace Xwl
 class X11Source;
 enum class DragEventReply;
 class Xvisit;
+class Dnd;
 
 class WlToXDrag : public Drag
 {
@@ -40,10 +41,12 @@ class WlToXDrag : public Drag
     using Drag::Drag;
 
 public:
+    explicit WlToXDrag(Dnd *dnd);
     DragEventReply moveFilter(Window *target, const QPoint &pos) override;
     bool handleClientMessage(xcb_client_message_event_t *event) override;
 
 private:
+    Dnd *const m_dnd;
     Q_DISABLE_COPY(WlToXDrag)
 };
 
@@ -55,7 +58,7 @@ class Xvisit : public QObject
 public:
     // TODO: handle ask action
 
-    Xvisit(Window *target, KWaylandServer::AbstractDataSource *dataSource, QObject *parent);
+    Xvisit(Window *target, KWaylandServer::AbstractDataSource *dataSource, Dnd *dnd, QObject *parent);
 
     bool handleClientMessage(xcb_client_message_event_t *event);
     bool handleStatus(xcb_client_message_event_t *event);
@@ -92,6 +95,7 @@ private:
     void doFinish();
     void stopConnections();
 
+    Dnd *const m_dnd;
     Window *m_target;
     QPointer<KWaylandServer::AbstractDataSource> m_dataSource;
     uint32_t m_version = 0;

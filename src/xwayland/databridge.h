@@ -43,9 +43,7 @@ class DataBridge : public QObject, public QAbstractNativeEventFilter
     Q_OBJECT
 
 public:
-    static void destroy();
-
-    ~DataBridge() override;
+    explicit DataBridge();
 
     DragEventReply dragMoveFilter(Window *target, const QPoint &pos);
 
@@ -66,8 +64,6 @@ private:
     Clipboard *m_clipboard = nullptr;
     Dnd *m_dnd = nullptr;
     Primary *m_primary = nullptr;
-
-    KWIN_SINGLETON(DataBridge)
 };
 
 } // namespace Xwl

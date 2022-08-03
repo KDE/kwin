@@ -27,6 +27,7 @@ namespace Xwl
 class X11Source;
 enum class DragEventReply;
 class WlVisit;
+class Dnd;
 
 using Mimes = QVector<QPair<QString, xcb_atom_t>>;
 
@@ -35,7 +36,7 @@ class XToWlDrag : public Drag
     Q_OBJECT
 
 public:
-    explicit XToWlDrag(X11Source *source);
+    explicit XToWlDrag(X11Source *source, Dnd *dnd);
     ~XToWlDrag() override;
 
     DragEventReply moveFilter(Window *target, const QPoint &pos) override;
@@ -55,6 +56,7 @@ private:
 
     bool checkForFinished();
 
+    Dnd *const m_dnd;
     Mimes m_offers;
 
     XwlDataSource m_selectionSource;
@@ -76,7 +78,7 @@ class WlVisit : public QObject
     Q_OBJECT
 
 public:
-    WlVisit(Window *target, XToWlDrag *drag);
+    WlVisit(Window *target, XToWlDrag *drag, Dnd *dnd);
     ~WlVisit() override;
 
     bool handleClientMessage(xcb_client_message_event_t *event);
@@ -123,6 +125,7 @@ private:
     void doFinish();
     void unmapProxyWindow();
 
+    Dnd *const m_dnd;
     Window *m_target;
     xcb_window_t m_window;
 

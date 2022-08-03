@@ -47,7 +47,7 @@ XwlDropHandler *Dnd::dropHandler() const
 
 Dnd::Dnd(xcb_atom_t atom, QObject *parent)
     : Selection(atom, parent)
-    , m_dropHandler(new XwlDropHandler)
+    , m_dropHandler(new XwlDropHandler(this))
 {
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
 
@@ -110,7 +110,7 @@ void Dnd::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
     if (!source) {
         return;
     }
-    m_currentDrag = new XToWlDrag(source);
+    m_currentDrag = new XToWlDrag(source, this);
 }
 
 void Dnd::x11OffersChanged(const QStringList &added, const QStringList &removed)
@@ -149,7 +149,7 @@ void Dnd::startDrag()
     Q_ASSERT(!m_currentDrag);
 
     // New Wl to X drag, init drag and Wl source.
-    m_currentDrag = new WlToXDrag();
+    m_currentDrag = new WlToXDrag(this);
     auto source = new WlSource(this);
     source->setDataSourceIface(dragSource);
      connect(dragSource, &KWaylandServer::AbstractDataSource::aboutToBeDestroyed, this, [this, source] {

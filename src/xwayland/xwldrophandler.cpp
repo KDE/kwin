@@ -20,8 +20,9 @@
 namespace KWin::Xwl
 {
 
-XwlDropHandler::XwlDropHandler()
+XwlDropHandler::XwlDropHandler(Dnd *dnd)
     : KWaylandServer::AbstractDropHandler(nullptr)
+    , m_dnd(dnd)
 {
 }
 
@@ -70,7 +71,7 @@ void XwlDropHandler::updateDragTarget(KWaylandServer::SurfaceInterface *surface,
         m_xvisit = nullptr;
     }
     if (client) {
-        m_xvisit = new Xvisit(client, waylandServer()->seat()->dragSource(), this);
+        m_xvisit = new Xvisit(client, waylandServer()->seat()->dragSource(), m_dnd, this);
     }
 }
 }

@@ -54,10 +54,11 @@ static QStringList atomToMimeTypes(xcb_atom_t atom)
     return mimeTypes;
 }
 
-XToWlDrag::XToWlDrag(X11Source *source)
-    : m_source(source)
+XToWlDrag::XToWlDrag(X11Source *source, Dnd *dnd)
+    : m_dnd(dnd)
+    , m_source(source)
 {
-    connect(DataBridge::self()->dnd(), &Dnd::transferFinished, this, [this](xcb_timestamp_t eventTime) {
+    connect(m_dnd, &Dnd::transferFinished, this, [this](xcb_timestamp_t eventTime) {
         // we use this mechanism, because the finished call is not
         // reliable done by Wayland clients
         auto it = std::find_if(m_dataRequests.begin(), m_dataRequests.end(), [eventTime](const QPair<xcb_timestamp_t, bool> &req) {
@@ -154,7 +155,7 @@ DragEventReply XToWlDrag::moveFilter(Window *target, const QPoint &pos)
     }
     // new Wl native target
     auto *ac = static_cast<Window *>(target);
-    m_visit = new WlVisit(ac, this);
+    m_visit = new WlVisit(ac, this, m_dnd);
     connect(m_visit, &WlVisit::offersReceived, this, &XToWlDrag::setOffers);
     return DragEventReply::Ignore;
 }
@@ -252,15 +253,16 @@ bool XToWlDrag::checkForFinished()
     return transfersFinished;
 }
 
-WlVisit::WlVisit(Window *target, XToWlDrag *drag)
+WlVisit::WlVisit(Window *target, XToWlDrag *drag, Dnd *dnd)
     : QObject(drag)
+    , m_dnd(dnd)
     , m_target(target)
     , m_drag(drag)
 {
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
 
     m_window = xcb_generate_id(xcbConn);
-    DataBridge::self()->dnd()->overwriteRequestorWindow(m_window);
+    m_dnd->overwriteRequestorWindow(m_window);
 
     const uint32_t dndValues[] = {XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY | XCB_EVENT_MASK_PROPERTY_CHANGE};
     xcb_create_window(xcbConn,
@@ -300,7 +302,7 @@ WlVisit::~WlVisit()
 
 bool WlVisit::leave()
 {
-    DataBridge::self()->dnd()->overwriteRequestorWindow(XCB_WINDOW_NONE);
+    m_dnd->overwriteRequestorWindow(XCB_WINDOW_NONE);
     unmapProxyWindow();
     return m_finished;
 }
