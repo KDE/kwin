@@ -161,8 +161,13 @@ void BlurEffect::updateTexture()
         }
     }
 
+    // Note that we currently render the entire blur effect in logical
+    // coordinates - this means that when using high DPI screens the underlying
+    // texture will be low DPI. This isn't really visible since we're blurring
+    // anyway.
+    const auto screenSize = effects->virtualScreenSize();
     for (int i = 0; i <= m_downSampleIterations; i++) {
-        m_renderTextures.append(new GLTexture(textureFormat, effects->virtualScreenSize() / (1 << i)));
+        m_renderTextures.append(new GLTexture(textureFormat, screenSize / (1 << i)));
         m_renderTextures.constLast()->setFilter(GL_LINEAR);
         m_renderTextures.constLast()->setWrapMode(GL_CLAMP_TO_EDGE);
 
@@ -170,7 +175,7 @@ void BlurEffect::updateTexture()
     }
 
     // This last set is used as a temporary helper texture
-    m_renderTextures.append(new GLTexture(textureFormat, effects->virtualScreenSize()));
+    m_renderTextures.append(new GLTexture(textureFormat, screenSize));
     m_renderTextures.constLast()->setFilter(GL_LINEAR);
     m_renderTextures.constLast()->setWrapMode(GL_CLAMP_TO_EDGE);
 
@@ -630,8 +635,16 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region, Wi
         const bool transientForIsDock = (modal ? modal->isDock() : false);
 
         shape &= region;
+
+        // Note that we render blurring in logical coordinates since the
+        // textures used are of all screens. This means we need to ensure all
+        // rendering takes care of that, starting with the projection matrix
+        // here that we reset to a simple unscaled orthographic projection.
+        QMatrix4x4 projectionMatrix;
+        projectionMatrix.ortho(screen);
+
         if (!shape.isEmpty()) {
-            doBlur(shape, screen, data.opacity(), data.screenProjectionMatrix(), w->isDock() || transientForIsDock, w->frameGeometry().toRect());
+            doBlur(shape, screen, data.opacity(), projectionMatrix, w->isDock() || transientForIsDock, w->frameGeometry().toRect());
         }
     }
 
@@ -684,8 +697,9 @@ void BlurEffect::doBlur(const QRegion &shape, const QRect &screen, const float o
     uploadGeometry(vbo, expandedBlurRegion.translated(xTranslate, yTranslate), shape);
     vbo->bindArrays();
 
-    const QRect sourceRect = expandedBlurRegion.boundingRect() & screen;
-    const QRect destRect = sourceRect.translated(xTranslate, yTranslate);
+    const QRect logicalSourceRect = (expandedBlurRegion.boundingRect() & screen).translated(xTranslate, -screen.y());
+    const QRect deviceSourceRect = scaledRect(logicalSourceRect, effects->renderTargetScale()).toRect();
+    const QRect destRect = logicalSourceRect.translated(0, yTranslate + screen.y());
     int blurRectCount = expandedBlurRegion.rectCount() * 6;
 
     /*
@@ -696,19 +710,27 @@ void BlurEffect::doBlur(const QRegion &shape, const QRect &screen, const float o
      * when maximized windows or windows near the panel affect the dock blur.
      */
     if (isDock) {
-        m_renderTargets.last()->blitFromFramebuffer(effects->mapToRenderTarget(sourceRect), destRect);
+        // This assumes the source frame buffer is in device coordinates, while
+        // our target framebuffer is in logical coordinates. It's a bit ugly but
+        // to fix it properly we probably need to do blits in normalized
+        // coordinates.
+        m_renderTargets.last()->blitFromFramebuffer(deviceSourceRect, destRect);
         GLFramebuffer::pushFramebuffers(m_renderTargetStack);
 
         if (useSRGB) {
             glEnable(GL_FRAMEBUFFER_SRGB);
         }
 
-        const QRect screenRect = effects->virtualScreenGeometry();
+        const QRectF screenRect = effects->virtualScreenGeometry();
         QMatrix4x4 mvp;
         mvp.ortho(0, screenRect.width(), screenRect.height(), 0, 0, 65535);
         copyScreenSampleTexture(vbo, blurRectCount, shape.translated(xTranslate, yTranslate), mvp);
     } else {
-        m_renderTargets.first()->blitFromFramebuffer(effects->mapToRenderTarget(sourceRect), destRect);
+        // This assumes the source frame buffer is in device coordinates, while
+        // our target framebuffer is in logical coordinates. It's a bit ugly but
+        // to fix it properly we probably need to do blits in normalized
+        // coordinates.
+        m_renderTargets.first()->blitFromFramebuffer(deviceSourceRect, destRect);
         GLFramebuffer::pushFramebuffers(m_renderTargetStack);
 
         if (useSRGB) {
@@ -794,9 +816,9 @@ void BlurEffect::applyNoise(GLVertexBuffer *vbo, int vboStart, int blurRectCount
     }
 
     m_shader->bind(BlurShader::NoiseSampleType);
-    m_shader->setTargetTextureSize(m_renderTextures[0]->size() * effects->renderTargetScale());
-    m_shader->setNoiseTextureSize(m_noiseTexture->size() * effects->renderTargetScale());
-    m_shader->setTexturePosition(windowPosition * effects->renderTargetScale());
+    m_shader->setTargetTextureSize(m_renderTextures[0]->size());
+    m_shader->setNoiseTextureSize(m_noiseTexture->size());
+    m_shader->setTexturePosition(windowPosition);
 
     m_noiseTexture->bind();
 
