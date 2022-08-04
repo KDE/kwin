@@ -48,7 +48,7 @@ void ShowPaintEffect::paintScreen(int mask, const QRegion &region, ScreenPaintDa
     m_painted = QRegion();
     effects->paintScreen(mask, region, data);
     if (effects->isOpenGLCompositing()) {
-        paintGL(data.projectionMatrix());
+        paintGL(data.projectionMatrix(), data.screen()->devicePixelRatio());
     } else if (effects->compositingType() == QPainterCompositing) {
         paintQPainter();
     }
@@ -63,7 +63,7 @@ void ShowPaintEffect::paintWindow(EffectWindow *w, int mask, QRegion region, Win
     effects->paintWindow(w, mask, region, data);
 }
 
-void ShowPaintEffect::paintGL(const QMatrix4x4 &projection)
+void ShowPaintEffect::paintGL(const QMatrix4x4 &projection, qreal scale)
 {
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
@@ -78,12 +78,13 @@ void ShowPaintEffect::paintGL(const QMatrix4x4 &projection)
     QVector<float> verts;
     verts.reserve(m_painted.rectCount() * 12);
     for (const QRect &r : m_painted) {
-        verts << r.x() + r.width() << r.y();
-        verts << r.x() << r.y();
-        verts << r.x() << r.y() + r.height();
-        verts << r.x() << r.y() + r.height();
-        verts << r.x() + r.width() << r.y() + r.height();
-        verts << r.x() + r.width() << r.y();
+        const auto scaled = QRectF{r.x() * scale, r.y() * scale, r.width() * scale, r.height() * scale};
+        verts << scaled.x() + scaled.width() << scaled.y();
+        verts << scaled.x() << scaled.y();
+        verts << scaled.x() << scaled.y() + scaled.height();
+        verts << scaled.x() << scaled.y() + scaled.height();
+        verts << scaled.x() + scaled.width() << scaled.y() + scaled.height();
+        verts << scaled.x() + scaled.width() << scaled.y();
     }
     vbo->setData(verts.count() / 2, 2, verts.data(), nullptr);
     vbo->render(GL_TRIANGLES);
