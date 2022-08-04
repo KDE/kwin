@@ -23,7 +23,7 @@ class VirtualOutputLayer : public OutputLayer
 public:
     VirtualOutputLayer(EglGbmBackend *backend);
 
-    OutputLayerBeginFrameInfo beginFrame() override;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
 private:

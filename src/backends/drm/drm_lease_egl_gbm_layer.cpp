@@ -62,9 +62,9 @@ std::shared_ptr<DrmFramebuffer> DrmLeaseEglGbmLayer::currentBuffer() const
     return m_framebuffer;
 }
 
-OutputLayerBeginFrameInfo DrmLeaseEglGbmLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> DrmLeaseEglGbmLayer::beginFrame()
 {
-    return {};
+    return std::nullopt;
 }
 
 bool DrmLeaseEglGbmLayer::endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion)

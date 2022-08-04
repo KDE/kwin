@@ -25,7 +25,7 @@ VirtualQPainterLayer::VirtualQPainterLayer(Output *output)
     m_image.fill(Qt::black);
 }
 
-OutputLayerBeginFrameInfo VirtualQPainterLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> VirtualQPainterLayer::beginFrame()
 {
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(&m_image),

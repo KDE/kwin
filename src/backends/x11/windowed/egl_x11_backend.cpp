@@ -34,7 +34,7 @@ EglX11Output::~EglX11Output()
     eglDestroySurface(m_backend->eglDisplay(), m_eglSurface);
 }
 
-OutputLayerBeginFrameInfo EglX11Output::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> EglX11Output::beginFrame()
 {
     eglMakeCurrent(m_backend->eglDisplay(), m_eglSurface, m_eglSurface, m_backend->context());
     GLFramebuffer::pushFramebuffer(m_fbo.data());

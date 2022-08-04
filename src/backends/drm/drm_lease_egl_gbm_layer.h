@@ -21,7 +21,7 @@ class DrmLeaseEglGbmLayer : public DrmPipelineLayer
 public:
     DrmLeaseEglGbmLayer(DrmPipeline *pipeline);
 
-    OutputLayerBeginFrameInfo beginFrame() override;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion) override;
 
     bool checkTestBuffer() override;

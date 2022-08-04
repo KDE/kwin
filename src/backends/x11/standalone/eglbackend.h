@@ -27,7 +27,7 @@ class EglLayer : public OutputLayer
 public:
     EglLayer(EglBackend *backend);
 
-    OutputLayerBeginFrameInfo beginFrame() override;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
 private:

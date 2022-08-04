@@ -660,14 +660,16 @@ void Compositor::composite(RenderLoop *renderLoop)
         outputLayer->resetRepaints();
         preparePaintPass(superLayer, &surfaceDamage);
 
-        OutputLayerBeginFrameInfo beginInfo = outputLayer->beginFrame();
-        beginInfo.renderTarget.setDevicePixelRatio(output->scale());
+        if (auto beginInfo = outputLayer->beginFrame()) {
+            auto &[renderTarget, repaint] = beginInfo.value();
+            renderTarget.setDevicePixelRatio(output->scale());
 
-        const QRegion bufferDamage = surfaceDamage.united(beginInfo.repaint).intersected(superLayer->rect());
-        outputLayer->aboutToStartPainting(bufferDamage);
+            const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(superLayer->rect());
+            outputLayer->aboutToStartPainting(bufferDamage);
 
-        paintPass(superLayer, &beginInfo.renderTarget, bufferDamage);
-        outputLayer->endFrame(bufferDamage, surfaceDamage);
+            paintPass(superLayer, &renderTarget, bufferDamage);
+            outputLayer->endFrame(bufferDamage, surfaceDamage);
+        }
     }
     renderLoop->endFrame();
 

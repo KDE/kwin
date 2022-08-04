@@ -142,7 +142,7 @@ bool EglWaylandOutput::makeContextCurrent() const
     return true;
 }
 
-OutputLayerBeginFrameInfo EglWaylandOutput::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> EglWaylandOutput::beginFrame()
 {
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
     makeContextCurrent();

@@ -35,7 +35,7 @@ VirtualOutputLayer::VirtualOutputLayer(EglGbmBackend *backend)
 {
 }
 
-OutputLayerBeginFrameInfo VirtualOutputLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> VirtualOutputLayer::beginFrame()
 {
     return m_backend->beginFrame();
 }

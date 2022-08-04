@@ -22,7 +22,7 @@ EglGbmCursorLayer::EglGbmCursorLayer(EglGbmBackend *eglBackend, DrmPipeline *pip
 {
 }
 
-OutputLayerBeginFrameInfo EglGbmCursorLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> EglGbmCursorLayer::beginFrame()
 {
     // some legacy drivers don't work with linear gbm buffers for the cursor
     const auto target = m_pipeline->gpu()->atomicModeSetting() ? EglGbmLayerSurface::BufferTarget::Linear : EglGbmLayerSurface::BufferTarget::Dumb;

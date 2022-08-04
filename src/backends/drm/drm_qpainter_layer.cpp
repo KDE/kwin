@@ -29,14 +29,14 @@ DrmQPainterLayer::DrmQPainterLayer(DrmPipeline *pipeline)
 {
 }
 
-OutputLayerBeginFrameInfo DrmQPainterLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> DrmQPainterLayer::beginFrame()
 {
     if (!doesSwapchainFit()) {
         m_swapchain = std::make_shared<DumbSwapchain>(m_pipeline->gpu(), m_pipeline->bufferSize(), DRM_FORMAT_XRGB8888);
     }
     QRegion needsRepaint;
     if (!m_swapchain->acquireBuffer(&needsRepaint)) {
-        return {};
+        return std::nullopt;
     }
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_swapchain->currentBuffer()->image()),
@@ -97,14 +97,14 @@ DrmCursorQPainterLayer::DrmCursorQPainterLayer(DrmPipeline *pipeline)
 {
 }
 
-OutputLayerBeginFrameInfo DrmCursorQPainterLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> DrmCursorQPainterLayer::beginFrame()
 {
     if (!m_swapchain) {
         m_swapchain = std::make_shared<DumbSwapchain>(m_pipeline->gpu(), m_pipeline->gpu()->cursorSize(), DRM_FORMAT_ARGB8888);
     }
     QRegion needsRepaint;
     if (!m_swapchain->acquireBuffer(&needsRepaint)) {
-        return {};
+        return std::nullopt;
     }
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_swapchain->currentBuffer()->image()),
@@ -148,7 +148,7 @@ DrmVirtualQPainterLayer::DrmVirtualQPainterLayer(DrmVirtualOutput *output)
 {
 }
 
-OutputLayerBeginFrameInfo DrmVirtualQPainterLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> DrmVirtualQPainterLayer::beginFrame()
 {
     if (m_image.isNull() || m_image.size() != m_output->pixelSize()) {
         m_image = QImage(m_output->pixelSize(), QImage::Format_RGB32);
@@ -202,9 +202,9 @@ std::shared_ptr<DrmFramebuffer> DrmLeaseQPainterLayer::currentBuffer() const
     return m_framebuffer;
 }
 
-OutputLayerBeginFrameInfo DrmLeaseQPainterLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> DrmLeaseQPainterLayer::beginFrame()
 {
-    return {};
+    return std::nullopt;
 }
 
 bool DrmLeaseQPainterLayer::endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion)

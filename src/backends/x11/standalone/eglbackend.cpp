@@ -31,7 +31,7 @@ EglLayer::EglLayer(EglBackend *backend)
 {
 }
 
-OutputLayerBeginFrameInfo EglLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> EglLayer::beginFrame()
 {
     return m_backend->beginFrame();
 }

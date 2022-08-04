@@ -26,7 +26,7 @@ public:
     EglX11Output(EglX11Backend *backend, Output *output, EGLSurface surface);
     ~EglX11Output();
 
-    OutputLayerBeginFrameInfo beginFrame() override;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     EGLSurface surface() const;
     QRegion lastDamage() const;

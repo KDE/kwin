@@ -30,7 +30,7 @@ class EglGbmCursorLayer : public DrmOverlayLayer
 public:
     EglGbmCursorLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline);
 
-    OutputLayerBeginFrameInfo beginFrame() override;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     void aboutToStartPainting(const QRegion &damagedRegion) override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;

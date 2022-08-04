@@ -24,7 +24,7 @@ X11WindowedQPainterOutput::X11WindowedQPainterOutput(Output *output, xcb_window_
     buffer.fill(Qt::black);
 }
 
-OutputLayerBeginFrameInfo X11WindowedQPainterOutput::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterOutput::beginFrame()
 {
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(&buffer),
