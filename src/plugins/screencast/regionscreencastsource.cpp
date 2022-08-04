@@ -45,6 +45,7 @@ void RegionScreenCastSource::updateOutput(Output *output)
     if (m_renderedTexture) {
         const std::shared_ptr<GLTexture> outputTexture = Compositor::self()->scene()->textureForOutput(output);
         const auto outputGeometry = output->geometry();
+        const auto outputScale = output->scale();
         if (!outputTexture || !m_region.intersects(output->geometry())) {
             return;
         }
@@ -62,7 +63,7 @@ void RegionScreenCastSource::updateOutput(Output *output)
         shaderBinder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
 
         outputTexture->bind();
-        outputTexture->render(output->geometry());
+        outputTexture->render(output->geometry(), outputScale);
         outputTexture->unbind();
         GLFramebuffer::popFramebuffer();
     }
@@ -95,7 +96,7 @@ void RegionScreenCastSource::render(GLFramebuffer *target)
     shader->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
 
     m_renderedTexture->bind();
-    m_renderedTexture->render(r);
+    m_renderedTexture->render(r, m_scale);
     m_renderedTexture->unbind();
 
     ShaderManager::instance()->popShader();

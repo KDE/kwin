@@ -114,6 +114,7 @@ void TrackMouseEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
         const QPointF p = m_lastRect[0].topLeft() + QPoint(m_lastRect[0].width() / 2.0, m_lastRect[0].height() / 2.0);
         const float x = p.x();
         const float y = p.y();
+        const auto scale = effects->renderTargetScale();
         for (int i = 0; i < 2; ++i) {
             matrix.translate(x, y, 0.0);
             matrix.rotate(i ? -2 * m_angle : m_angle, 0, 0, 1.0);
@@ -122,7 +123,7 @@ void TrackMouseEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
             mvp.translate(m_lastRect[i].x(), m_lastRect[i].y());
             shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
             m_texture[i]->bind();
-            m_texture[i]->render(m_lastRect[i]);
+            m_texture[i]->render(m_lastRect[i], scale);
             m_texture[i]->unbind();
         }
         glDisable(GL_BLEND);

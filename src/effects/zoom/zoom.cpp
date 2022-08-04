@@ -414,7 +414,7 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &d
             QMatrix4x4 mvp = data.projectionMatrix();
             mvp.translate(rect.x(), rect.y());
             s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-            cursorTexture->render(rect);
+            cursorTexture->render(rect, effects->renderTargetScale());
             ShaderManager::instance()->popShader();
             cursorTexture->unbind();
             glDisable(GL_BLEND);

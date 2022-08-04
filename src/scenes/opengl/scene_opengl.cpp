@@ -141,7 +141,7 @@ void SceneOpenGL::paintOffscreenQuickView(OffscreenQuickView *w)
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     t->bind();
-    t->render(rect.toRect());
+    t->render(w->geometry(), renderTargetScale());
     t->unbind();
     glDisable(GL_BLEND);
 

@@ -119,6 +119,7 @@ void MagnifierEffect::paintScreen(int mask, const QRegion &region, ScreenPaintDa
         // get the right area from the current rendered screen
         const QRect area = magnifierArea();
         const QPoint cursor = cursorPos();
+        const auto scale = effects->renderTargetScale();
 
         QRect srcArea(cursor.x() - (double)area.width() / (m_zoom * 2),
                       cursor.y() - (double)area.height() / (m_zoom * 2),
@@ -133,7 +134,7 @@ void MagnifierEffect::paintScreen(int mask, const QRegion &region, ScreenPaintDa
             mvp.ortho(0, size.width(), size.height(), 0, 0, 65535);
             mvp.translate(area.x(), area.y());
             s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-            m_texture->render(area);
+            m_texture->render(area, scale);
             ShaderManager::instance()->popShader();
             m_texture->unbind();
             QVector<float> verts;
