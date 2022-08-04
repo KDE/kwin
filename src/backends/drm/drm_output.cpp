@@ -490,6 +490,8 @@ void DrmOutput::renderCursorOpengl(const RenderTarget &renderTarget, const QSize
         }
     }
 
+    const auto scale = renderTarget.devicePixelRatio();
+
     QMatrix4x4 mvp;
     mvp.ortho(QRect(QPoint(), renderTarget.size()));
 
@@ -502,7 +504,7 @@ void DrmOutput::renderCursorOpengl(const RenderTarget &renderTarget, const QSize
     m_cursorTexture->bind();
     ShaderBinder binder(ShaderTrait::MapTexture);
     binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-    m_cursorTexture->render(QRect(0, 0, cursorSize.width(), cursorSize.height()));
+    m_cursorTexture->render(QRect(0, 0, cursorSize.width(), cursorSize.height()), scale);
     m_cursorTexture->unbind();
     glDisable(GL_BLEND);
 }

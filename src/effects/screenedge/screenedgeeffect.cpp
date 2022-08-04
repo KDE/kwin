@@ -83,10 +83,11 @@ void ScreenEdgeEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
             ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::Modulate);
             const QVector4D constant(opacity, opacity, opacity, opacity);
             binder.shader()->setUniform(GLShader::ModulationConstant, constant);
+            const auto scale = effects->renderTargetScale();
             QMatrix4x4 mvp = data.projectionMatrix();
             mvp.translate(glow->geometry.x(), glow->geometry.y());
             binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-            texture->render(glow->geometry);
+            texture->render(glow->geometry, scale);
             texture->unbind();
             glDisable(GL_BLEND);
         } else if (effects->compositingType() == QPainterCompositing) {

@@ -58,7 +58,7 @@ void OutputScreenCastSource::render(GLFramebuffer *target)
 
     GLFramebuffer::pushFramebuffer(target);
     outputTexture->bind();
-    outputTexture->render(geometry);
+    outputTexture->render(geometry, m_output->scale());
     outputTexture->unbind();
     GLFramebuffer::popFramebuffer();
 }
