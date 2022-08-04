@@ -161,8 +161,9 @@ void BlurEffect::updateTexture()
         }
     }
 
+    const auto scale = effects->renderTargetScale();
     for (int i = 0; i <= m_downSampleIterations; i++) {
-        m_renderTextures.append(new GLTexture(textureFormat, effects->virtualScreenSize() / (1 << i)));
+        m_renderTextures.append(new GLTexture(textureFormat, (effects->virtualScreenSize() / (1 << i)) * scale));
         m_renderTextures.constLast()->setFilter(GL_LINEAR);
         m_renderTextures.constLast()->setWrapMode(GL_CLAMP_TO_EDGE);
 
@@ -170,7 +171,7 @@ void BlurEffect::updateTexture()
     }
 
     // This last set is used as a temporary helper texture
-    m_renderTextures.append(new GLTexture(textureFormat, effects->virtualScreenSize()));
+    m_renderTextures.append(new GLTexture(textureFormat, effects->virtualScreenSize() * scale));
     m_renderTextures.constLast()->setFilter(GL_LINEAR);
     m_renderTextures.constLast()->setWrapMode(GL_CLAMP_TO_EDGE);
 
@@ -475,16 +476,18 @@ QRegion BlurEffect::blurRegion(const EffectWindow *w) const
     return region;
 }
 
-void BlurEffect::uploadRegion(QVector2D *&map, const QRegion &region, const int downSampleIterations)
+void BlurEffect::uploadRegion(QVector2D *&map, const QRegion &region, const int downSampleIterations, qreal scale)
 {
     for (int i = 0; i <= downSampleIterations; i++) {
         const int divisionRatio = (1 << i);
 
         for (const QRect &r : region) {
-            const QVector2D topLeft(r.x() / divisionRatio, r.y() / divisionRatio);
-            const QVector2D topRight((r.x() + r.width()) / divisionRatio, r.y() / divisionRatio);
-            const QVector2D bottomLeft(r.x() / divisionRatio, (r.y() + r.height()) / divisionRatio);
-            const QVector2D bottomRight((r.x() + r.width()) / divisionRatio, (r.y() + r.height()) / divisionRatio);
+            const auto scaled = scaledRect(r, scale);
+
+            const QVector2D topLeft(scaled.x() / divisionRatio, scaled.y() / divisionRatio);
+            const QVector2D topRight((scaled.x() + scaled.width()) / divisionRatio, scaled.y() / divisionRatio);
+            const QVector2D bottomLeft(scaled.x() / divisionRatio, (scaled.y() + scaled.height()) / divisionRatio);
+            const QVector2D bottomRight((scaled.x() + scaled.width()) / divisionRatio, (scaled.y() + scaled.height()) / divisionRatio);
 
             // First triangle
             *(map++) = topRight;
@@ -499,7 +502,7 @@ void BlurEffect::uploadRegion(QVector2D *&map, const QRegion &region, const int 
     }
 }
 
-void BlurEffect::uploadGeometry(GLVertexBuffer *vbo, const QRegion &blurRegion, const QRegion &windowRegion)
+void BlurEffect::uploadGeometry(GLVertexBuffer *vbo, const QRegion &blurRegion, const QRegion &windowRegion, qreal scale)
 {
     const int vertexCount = ((blurRegion.rectCount() * (m_downSampleIterations + 1)) + windowRegion.rectCount()) * 6;
 
@@ -509,8 +512,8 @@ void BlurEffect::uploadGeometry(GLVertexBuffer *vbo, const QRegion &blurRegion, 
 
     QVector2D *map = (QVector2D *)vbo->map(vertexCount * sizeof(QVector2D));
 
-    uploadRegion(map, blurRegion, m_downSampleIterations);
-    uploadRegion(map, windowRegion, 0);
+    uploadRegion(map, blurRegion, m_downSampleIterations, scale);
+    uploadRegion(map, windowRegion, 0, scale);
 
     vbo->unmap();
 
@@ -691,11 +694,11 @@ void BlurEffect::doBlur(const QRegion &shape, const QRect &screen, const float o
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
 
-    uploadGeometry(vbo, expandedBlurRegion.translated(xTranslate, yTranslate), shape);
+    uploadGeometry(vbo, expandedBlurRegion.translated(xTranslate, yTranslate), shape, effects->renderTargetScale());
     vbo->bindArrays();
 
-    const QRect sourceRect = expandedBlurRegion.boundingRect() & screen;
-    const QRect destRect = sourceRect.translated(xTranslate, yTranslate);
+    const QRectF sourceRect = expandedBlurRegion.boundingRect() & screen;
+    const QRect destRect = sourceRect.translated(xTranslate, yTranslate).toRect();
     int blurRectCount = expandedBlurRegion.rectCount() * 6;
 
     /*
@@ -706,19 +709,19 @@ void BlurEffect::doBlur(const QRegion &shape, const QRect &screen, const float o
      * when maximized windows or windows near the panel affect the dock blur.
      */
     if (isDock) {
-        m_renderTargets.last()->blitFromFramebuffer(effects->mapToRenderTarget(sourceRect), destRect);
+        m_renderTargets.last()->blitFromFramebuffer(effects->mapToRenderTarget(sourceRect).toRect(), destRect);
         GLFramebuffer::pushFramebuffers(m_renderTargetStack);
 
         if (useSRGB) {
             glEnable(GL_FRAMEBUFFER_SRGB);
         }
 
-        const QRect screenRect = effects->virtualScreenGeometry();
+        const QRectF screenRect = scaledRect(effects->virtualScreenGeometry(), effects->renderTargetScale());
         QMatrix4x4 mvp;
         mvp.ortho(0, screenRect.width(), screenRect.height(), 0, 0, 65535);
         copyScreenSampleTexture(vbo, blurRectCount, shape.translated(xTranslate, yTranslate), mvp);
     } else {
-        m_renderTargets.first()->blitFromFramebuffer(effects->mapToRenderTarget(sourceRect), destRect);
+        m_renderTargets.first()->blitFromFramebuffer(effects->mapToRenderTarget(sourceRect).toRect(), destRect);
         GLFramebuffer::pushFramebuffers(m_renderTargetStack);
 
         if (useSRGB) {
