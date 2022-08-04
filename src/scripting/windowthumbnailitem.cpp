@@ -57,15 +57,20 @@ void ThumbnailTextureProvider::setTexture(const std::shared_ptr<GLTexture> &nati
     if (m_nativeTexture != nativeTexture) {
         const GLuint textureId = nativeTexture->texture();
         m_nativeTexture = nativeTexture;
+
+        QFlags<QQuickWindow::CreateTextureOption> flags;
+        flags.setFlag(QQuickWindow::TextureHasAlphaChannel);
+        flags.setFlag(QQuickWindow::TextureHasMipmaps);
+
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         m_texture.reset(m_window->createTextureFromNativeObject(QQuickWindow::NativeObjectTexture,
                                                                 &textureId, 0,
                                                                 nativeTexture->size(),
-                                                                QQuickWindow::TextureHasAlphaChannel));
+                                                                flags));
 #else
         m_texture.reset(QNativeInterface::QSGOpenGLTexture::fromNative(textureId, m_window,
                                                                        nativeTexture->size(),
-                                                                       QQuickWindow::TextureHasAlphaChannel));
+                                                                       flags));
 #endif
         m_texture->setFiltering(QSGTexture::Linear);
         m_texture->setHorizontalWrapMode(QSGTexture::ClampToEdge);
@@ -235,6 +240,7 @@ QSGNode *WindowThumbnailItem::updatePaintNode(QSGNode *oldNode, QQuickItem::Upda
     if (!node) {
         node = window()->createImageNode();
         node->setFiltering(QSGTexture::Linear);
+        node->setMipmapFiltering(QSGTexture::Linear);
     }
     node->setTexture(m_provider->texture());
 
@@ -440,6 +446,7 @@ void WindowThumbnailItem::updateOffscreenTexture()
     const int mask = Scene::PAINT_WINDOW_TRANSFORMED;
     Compositor::self()->scene()->render(m_client->windowItem(), mask, infiniteRegion(), data);
     GLFramebuffer::popFramebuffer();
+    m_offscreenTexture->generateMipmaps();
 
     // The fence is needed to avoid the case where qtquick renderer starts using
     // the texture while all rendering commands to it haven't completed yet.
