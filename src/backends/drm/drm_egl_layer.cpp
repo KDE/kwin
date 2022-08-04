@@ -36,7 +36,7 @@ EglGbmLayer::EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline)
 {
 }
 
-OutputLayerBeginFrameInfo EglGbmLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::beginFrame()
 {
     m_scanoutBuffer.reset();
     m_dmabufFeedback.renderingSurface();

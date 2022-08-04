@@ -37,7 +37,7 @@ GLTexture *VirtualEglLayer::texture() const
     return m_texture.get();
 }
 
-OutputLayerBeginFrameInfo VirtualEglLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame()
 {
     m_backend->makeCurrent();
 

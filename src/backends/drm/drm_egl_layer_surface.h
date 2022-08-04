@@ -46,7 +46,7 @@ public:
         Linear,
         Dumb
     };
-    OutputLayerBeginFrameInfo startRendering(const QSize &bufferSize, DrmPlane::Transformations renderOrientation, DrmPlane::Transformations bufferOrientation, const QMap<uint32_t, QVector<uint64_t>> &formats, BufferTarget target = BufferTarget::Normal);
+    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, DrmPlane::Transformations renderOrientation, DrmPlane::Transformations bufferOrientation, const QMap<uint32_t, QVector<uint64_t>> &formats, BufferTarget target = BufferTarget::Normal);
     void aboutToStartPainting(DrmOutput *output, const QRegion &damagedRegion);
     std::optional<std::tuple<std::shared_ptr<DrmFramebuffer>, QRegion>> endRendering(DrmPlane::Transformations renderOrientation, const QRegion &damagedRegion, BufferTarget target = BufferTarget::Normal);
 

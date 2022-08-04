@@ -26,7 +26,7 @@ class VirtualQPainterLayer : public OutputLayer
 public:
     VirtualQPainterLayer(Output *output);
 
-    OutputLayerBeginFrameInfo beginFrame() override;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     QImage *image();
 

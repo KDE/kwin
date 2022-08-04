@@ -52,7 +52,7 @@ void VirtualEglGbmLayer::aboutToStartPainting(const QRegion &damagedRegion)
     }
 }
 
-OutputLayerBeginFrameInfo VirtualEglGbmLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame()
 {
     // gbm surface
     if (doesGbmSurfaceFit(m_gbmSurface.get())) {
@@ -62,12 +62,12 @@ OutputLayerBeginFrameInfo VirtualEglGbmLayer::beginFrame()
             m_gbmSurface = m_oldGbmSurface;
         } else {
             if (!createGbmSurface()) {
-                return {};
+                return std::nullopt;
             }
         }
     }
     if (!m_gbmSurface->makeContextCurrent()) {
-        return {};
+        return std::nullopt;
     }
     GLFramebuffer::pushFramebuffer(m_gbmSurface->fbo());
     return OutputLayerBeginFrameInfo{

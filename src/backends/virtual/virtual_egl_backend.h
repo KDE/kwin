@@ -24,7 +24,7 @@ public:
     VirtualEglLayer(Output *output, VirtualEglBackend *backend);
     ~VirtualEglLayer() override;
 
-    OutputLayerBeginFrameInfo beginFrame() override;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
     GLTexture *texture() const;

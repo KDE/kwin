@@ -11,6 +11,7 @@
 
 #include <QObject>
 #include <QRegion>
+#include <optional>
 
 namespace KWin
 {
@@ -40,7 +41,7 @@ public:
      */
     virtual void aboutToStartPainting(const QRegion &damage);
 
-    virtual OutputLayerBeginFrameInfo beginFrame() = 0;
+    virtual std::optional<OutputLayerBeginFrameInfo> beginFrame() = 0;
     virtual bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) = 0;
 
     /**

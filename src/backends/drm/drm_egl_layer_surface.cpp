@@ -55,13 +55,13 @@ void EglGbmLayerSurface::destroyResources()
     m_oldGbmSurface.reset();
 }
 
-OutputLayerBeginFrameInfo EglGbmLayerSurface::startRendering(const QSize &bufferSize, DrmPlane::Transformations renderOrientation, DrmPlane::Transformations bufferOrientation, const QMap<uint32_t, QVector<uint64_t>> &formats, BufferTarget target)
+std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, DrmPlane::Transformations renderOrientation, DrmPlane::Transformations bufferOrientation, const QMap<uint32_t, QVector<uint64_t>> &formats, BufferTarget target)
 {
     if (!checkGbmSurface(bufferSize, formats, target == BufferTarget::Linear)) {
-        return {};
+        return std::nullopt;
     }
     if (!m_gbmSurface->makeContextCurrent()) {
-        return {};
+        return std::nullopt;
     }
 
     // shadow buffer
@@ -75,11 +75,11 @@ OutputLayerBeginFrameInfo EglGbmLayerSurface::startRendering(const QSize &buffer
             if (renderOrientation != bufferOrientation) {
                 const auto format = m_eglBackend->gbmFormatForDrmFormat(m_gbmSurface->format());
                 if (!format.has_value()) {
-                    return {};
+                    return std::nullopt;
                 }
                 m_shadowBuffer = std::make_shared<ShadowBuffer>(renderSize, format.value());
                 if (!m_shadowBuffer->isComplete()) {
-                    return {};
+                    return std::nullopt;
                 }
             } else {
                 m_shadowBuffer.reset();

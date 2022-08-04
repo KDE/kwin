@@ -26,7 +26,7 @@ public:
     X11WindowedEglOutput(X11WindowedEglBackend *backend, Output *output, EGLSurface surface);
     ~X11WindowedEglOutput();
 
-    OutputLayerBeginFrameInfo beginFrame() override;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     EGLSurface surface() const;
     QRegion lastDamage() const;

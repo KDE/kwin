@@ -165,27 +165,26 @@ void DrmOutput::updateCursor()
         }
         return;
     }
+    bool rendered = false;
     const QMatrix4x4 monitorMatrix = logicalToNativeMatrix(geometry(), scale(), transform());
     const QRect cursorRect = monitorMatrix.mapRect(cursor->geometry());
-    if (cursorRect.width() > m_gpu->cursorSize().width() || cursorRect.height() > m_gpu->cursorSize().height()) {
+    if (cursorRect.width() <= m_gpu->cursorSize().width() && cursorRect.height() <= m_gpu->cursorSize().height()) {
+        if (const auto beginInfo = layer->beginFrame()) {
+            const auto &[renderTarget, repaint] = beginInfo.value();
+            if (dynamic_cast<EglGbmBackend *>(m_gpu->platform()->renderBackend())) {
+                renderCursorOpengl(renderTarget, cursor->geometry().size() * scale());
+            } else {
+                renderCursorQPainter(renderTarget);
+            }
+            rendered = layer->endFrame(infiniteRegion(), infiniteRegion());
+        }
+    }
+    if (!rendered) {
         if (layer->isVisible()) {
             layer->setVisible(false);
             m_pipeline->setCursor();
         }
         m_setCursorSuccessful = false;
-        return;
-    }
-    const auto [renderTarget, repaint] = layer->beginFrame();
-    if (dynamic_cast<EglGbmBackend *>(m_gpu->platform()->renderBackend())) {
-        renderCursorOpengl(renderTarget, cursor->geometry().size() * scale());
-    } else {
-        renderCursorQPainter(renderTarget);
-    }
-    bool rendered = layer->endFrame(infiniteRegion(), infiniteRegion());
-    if (!rendered) {
-        m_setCursorSuccessful = false;
-        layer->setVisible(false);
-        return;
     }
 
     const QSize surfaceSize = m_gpu->cursorSize() / scale();

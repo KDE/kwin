@@ -30,7 +30,7 @@ void X11WindowedQPainterOutput::ensureBuffer()
     }
 }
 
-OutputLayerBeginFrameInfo X11WindowedQPainterOutput::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterOutput::beginFrame()
 {
     ensureBuffer();
     return OutputLayerBeginFrameInfo{

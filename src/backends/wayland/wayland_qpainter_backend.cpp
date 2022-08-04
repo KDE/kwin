@@ -127,7 +127,7 @@ QRegion WaylandQPainterOutput::accumulateDamage(int bufferAge) const
     return m_damageJournal.accumulate(bufferAge, infiniteRegion());
 }
 
-OutputLayerBeginFrameInfo WaylandQPainterOutput::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> WaylandQPainterOutput::beginFrame()
 {
     WaylandQPainterBufferSlot *slot = acquire();
     return OutputLayerBeginFrameInfo{

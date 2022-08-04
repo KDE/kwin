@@ -38,7 +38,7 @@ void X11WindowedEglOutput::ensureFbo()
     }
 }
 
-OutputLayerBeginFrameInfo X11WindowedEglOutput::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> X11WindowedEglOutput::beginFrame()
 {
     eglMakeCurrent(m_backend->eglDisplay(), m_eglSurface, m_eglSurface, m_backend->context());
     ensureFbo();

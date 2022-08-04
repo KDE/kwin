@@ -31,7 +31,7 @@ public:
 
     void ensureBuffer();
 
-    OutputLayerBeginFrameInfo beginFrame() override;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
     xcb_window_t window;
