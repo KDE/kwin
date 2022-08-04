@@ -20,7 +20,8 @@ Item {
     required property Item windowHeap
 
     readonly property bool selected: windowHeap.selectedIndex === index
-    //TODO: move?
+
+    readonly property bool initialHidden: client.minimized || client.desktop !== KWinComponents.Workspace.currentDesktop
     readonly property bool hidden: {
         if (windowHeap.showOnly === "activeClass") {
             // client.resourceName is not an actual String as comes from a QByteArray so === would fail
@@ -66,7 +67,7 @@ Item {
         if (windowHeap.effectiveOrganized) {
             return hidden ? "active-hidden" : "active";
         }
-        return client.minimized ? "initial-minimized" : "initial";
+        return initialHidden ? "initial-hidden" : "initial";
     }
 
     visible: opacity > 0
@@ -215,7 +216,7 @@ Item {
                 y: (thumb.client.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.y : 0)) * (1 - effect.partialActivationFactor) + cell.y * effect.partialActivationFactor
                 width: thumb.client.width * (1 - effect.partialActivationFactor) + cell.width * effect.partialActivationFactor
                 height: thumb.client.height * (1 - effect.partialActivationFactor) + cell.height * effect.partialActivationFactor
-                opacity: thumb.client.minimized || thumb.client.desktop !== KWinComponents.Workspace.currentDesktop ? effect.partialActivationFactor : 1
+                opacity: thumb.initialHidden ? effect.partialActivationFactor : 1
             }
             PropertyChanges {
                 target: icon
@@ -227,7 +228,7 @@ Item {
             }
         },
         State {
-            name: "initial-minimized"
+            name: "initial-hidden"
             extend: "initial"
             PropertyChanges {
                 target: thumb
@@ -271,7 +272,7 @@ Item {
     ]
 
     transitions: Transition {
-        to: "initial, initial-minimized, active, active-hidden"
+        to: "initial, initial-hidden, active, active-hidden"
         enabled: thumb.windowHeap.animationEnabled
         NumberAnimation {
             duration: thumb.windowHeap.animationDuration
