@@ -1426,7 +1426,7 @@ public:
      * Maps the given @a rect from the global screen cordinates to the render
      * target local coordinate system.
      */
-    QRect mapToRenderTarget(const QRect &rect) const;
+    QRectF mapToRenderTarget(const QRectF &rect) const;
     /**
      * Maps the given @a region from the global screen coordinates to the render
      * target local coordinate system.
