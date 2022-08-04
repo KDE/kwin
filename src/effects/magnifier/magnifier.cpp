@@ -121,18 +121,18 @@ void MagnifierEffect::paintScreen(int mask, const QRegion &region, ScreenPaintDa
         const QPoint cursor = cursorPos();
         const auto scale = effects->renderTargetScale();
 
-        QRect srcArea(cursor.x() - (double)area.width() / (m_zoom * 2),
-                      cursor.y() - (double)area.height() / (m_zoom * 2),
-                      (double)area.width() / m_zoom, (double)area.height() / m_zoom);
+        QRectF srcArea(cursor.x() - (double)area.width() / (m_zoom * 2),
+                       cursor.y() - (double)area.height() / (m_zoom * 2),
+                       (double)area.width() / m_zoom, (double)area.height() / m_zoom);
         if (effects->isOpenGLCompositing()) {
-            m_fbo->blitFromFramebuffer(effects->mapToRenderTarget(srcArea));
+            m_fbo->blitFromFramebuffer(effects->mapToRenderTarget(srcArea).toRect());
             // paint magnifier
             m_texture->bind();
             auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
             QMatrix4x4 mvp;
             const QSize size = effects->virtualScreenSize();
-            mvp.ortho(0, size.width(), size.height(), 0, 0, 65535);
-            mvp.translate(area.x(), area.y());
+            mvp.ortho(0, size.width() * scale, size.height() * scale, 0, 0, 65535);
+            mvp.translate(area.x() * scale, area.y() * scale);
             s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
             m_texture->render(area, scale);
             ShaderManager::instance()->popShader();
@@ -141,35 +141,37 @@ void MagnifierEffect::paintScreen(int mask, const QRegion &region, ScreenPaintDa
             GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
             vbo->reset();
             vbo->setColor(QColor(0, 0, 0));
-            const QRectF areaF = area;
+
+            QRectF areaF = scaledRect(area, scale);
+            const QRectF frame = scaledRect(area.adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH), scale);
             // top frame
-            verts << areaF.right() + FRAME_WIDTH << areaF.top() - FRAME_WIDTH;
-            verts << areaF.left() - FRAME_WIDTH << areaF.top() - FRAME_WIDTH;
-            verts << areaF.left() - FRAME_WIDTH << areaF.top();
-            verts << areaF.left() - FRAME_WIDTH << areaF.top();
-            verts << areaF.right() + FRAME_WIDTH << areaF.top();
-            verts << areaF.right() + FRAME_WIDTH << areaF.top() - FRAME_WIDTH;
+            verts << frame.right() << frame.top();
+            verts << frame.left() << frame.top();
+            verts << frame.left() << areaF.top();
+            verts << frame.left() << areaF.top();
+            verts << frame.right() << areaF.top();
+            verts << frame.right() << frame.top();
             // left frame
-            verts << areaF.left() << areaF.top() - FRAME_WIDTH;
-            verts << areaF.left() - FRAME_WIDTH << areaF.top() - FRAME_WIDTH;
-            verts << areaF.left() - FRAME_WIDTH << areaF.bottom() + FRAME_WIDTH;
-            verts << areaF.left() - FRAME_WIDTH << areaF.bottom() + FRAME_WIDTH;
-            verts << areaF.left() << areaF.bottom() + FRAME_WIDTH;
-            verts << areaF.left() << areaF.top() - FRAME_WIDTH;
+            verts << areaF.left() << frame.top();
+            verts << frame.left() << frame.top();
+            verts << frame.left() << frame.bottom();
+            verts << frame.left() << frame.bottom();
+            verts << areaF.left() << frame.bottom();
+            verts << areaF.left() << frame.top();
             // right frame
-            verts << areaF.right() + FRAME_WIDTH << areaF.top() - FRAME_WIDTH;
-            verts << areaF.right() << areaF.top() - FRAME_WIDTH;
-            verts << areaF.right() << areaF.bottom() + FRAME_WIDTH;
-            verts << areaF.right() << areaF.bottom() + FRAME_WIDTH;
-            verts << areaF.right() + FRAME_WIDTH << areaF.bottom() + FRAME_WIDTH;
-            verts << areaF.right() + FRAME_WIDTH << areaF.top() - FRAME_WIDTH;
+            verts << frame.right() << frame.top();
+            verts << areaF.right() << frame.top();
+            verts << areaF.right() << frame.bottom();
+            verts << areaF.right() << frame.bottom();
+            verts << frame.right() << frame.bottom();
+            verts << frame.right() << frame.top();
             // bottom frame
-            verts << areaF.right() + FRAME_WIDTH << areaF.bottom();
-            verts << areaF.left() - FRAME_WIDTH << areaF.bottom();
-            verts << areaF.left() - FRAME_WIDTH << areaF.bottom() + FRAME_WIDTH;
-            verts << areaF.left() - FRAME_WIDTH << areaF.bottom() + FRAME_WIDTH;
-            verts << areaF.right() + FRAME_WIDTH << areaF.bottom() + FRAME_WIDTH;
-            verts << areaF.right() + FRAME_WIDTH << areaF.bottom();
+            verts << frame.right() << areaF.bottom();
+            verts << frame.left() << areaF.bottom();
+            verts << frame.left() << frame.bottom();
+            verts << frame.left() << frame.bottom();
+            verts << frame.right() << frame.bottom();
+            verts << frame.right() << areaF.bottom();
             vbo->setData(verts.size() / 2, 2, verts.constData(), nullptr);
 
             ShaderBinder binder(ShaderTrait::UniformColor);
