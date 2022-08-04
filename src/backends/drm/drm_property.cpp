@@ -112,10 +112,8 @@ bool DrmProperty::needsCommit() const
 
 void DrmProperty::setCurrent(uint64_t value)
 {
-    if (m_current != value) {
-        updateBlob();
-        m_current = value;
-    }
+    m_current = value;
+    updateBlob();
 }
 
 uint64_t DrmProperty::current() const
