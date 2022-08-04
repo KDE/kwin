@@ -303,13 +303,14 @@ QRegion ContrastEffect::contrastRegion(const EffectWindow *w) const
     return region;
 }
 
-void ContrastEffect::uploadRegion(QVector2D *&map, const QRegion &region)
+void ContrastEffect::uploadRegion(QVector2D *&map, const QRegion &region, qreal scale)
 {
     for (const QRect &r : region) {
-        const QVector2D topLeft(r.x(), r.y());
-        const QVector2D topRight(r.x() + r.width(), r.y());
-        const QVector2D bottomLeft(r.x(), r.y() + r.height());
-        const QVector2D bottomRight(r.x() + r.width(), r.y() + r.height());
+        const auto deviceRect = scaledRect(r, scale);
+        const QVector2D topLeft(deviceRect.x(), deviceRect.y());
+        const QVector2D topRight(deviceRect.x() + deviceRect.width(), deviceRect.y());
+        const QVector2D bottomLeft(deviceRect.x(), deviceRect.y() + deviceRect.height());
+        const QVector2D bottomRight(deviceRect.x() + deviceRect.width(), deviceRect.y() + deviceRect.height());
 
         // First triangle
         *(map++) = topRight;
@@ -323,7 +324,7 @@ void ContrastEffect::uploadRegion(QVector2D *&map, const QRegion &region)
     }
 }
 
-void ContrastEffect::uploadGeometry(GLVertexBuffer *vbo, const QRegion &region)
+void ContrastEffect::uploadGeometry(GLVertexBuffer *vbo, const QRegion &region, qreal scale)
 {
     const int vertexCount = region.rectCount() * 6;
     if (!vertexCount) {
@@ -331,7 +332,7 @@ void ContrastEffect::uploadGeometry(GLVertexBuffer *vbo, const QRegion &region)
     }
 
     QVector2D *map = (QVector2D *)vbo->map(vertexCount * sizeof(QVector2D));
-    uploadRegion(map, region);
+    uploadRegion(map, region, scale);
     vbo->unmap();
 
     const GLVertexAttrib layout[] = {
@@ -403,26 +404,25 @@ void ContrastEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region
 
 void ContrastEffect::doContrast(EffectWindow *w, const QRegion &shape, const QRect &screen, const float opacity, const QMatrix4x4 &screenProjection)
 {
-    const QRegion actualShape = shape & screen;
-    const QRect r = actualShape.boundingRect();
-
     const qreal scale = effects->renderTargetScale();
+    const QRegion actualShape = shape & screen;
+    const QRectF r = scaledRect(actualShape.boundingRect(), scale);
 
     // Upload geometry for the horizontal and vertical passes
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
-    uploadGeometry(vbo, actualShape);
+    uploadGeometry(vbo, actualShape, scale);
     vbo->bindArrays();
 
     // Create a scratch texture and copy the area in the back buffer that we're
     // going to blur into it
-    GLTexture scratch(GL_RGBA8, r.width() * scale, r.height() * scale);
+    GLTexture scratch(GL_RGBA8, r.width(), r.height());
     scratch.setFilter(GL_LINEAR);
     scratch.setWrapMode(GL_CLAMP_TO_EDGE);
     scratch.bind();
 
-    const QRect sg = effects->renderTargetRect();
-    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, (r.x() - sg.x()) * scale, (sg.height() - (r.y() - sg.y() + r.height())) * scale,
+    const QRectF sg = scaledRect(effects->renderTargetRect(), scale);
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, (r.x() - sg.x()), (sg.height() - (r.y() - sg.y() + r.height())),
                         scratch.width(), scratch.height());
 
     // Draw the texture on the offscreen framebuffer object, while blurring it horizontally
