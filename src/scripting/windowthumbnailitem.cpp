@@ -433,9 +433,11 @@ void WindowThumbnailItem::updateOffscreenTexture()
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    auto scale = Compositor::self()->scene()->renderTargetScale();
+
     QMatrix4x4 projectionMatrix;
-    projectionMatrix.ortho(geometry.x(), geometry.x() + geometry.width(),
-                           geometry.y(), geometry.y() + geometry.height(), -1, 1);
+    projectionMatrix.ortho(geometry.x() * scale, (geometry.x() + geometry.width()) * scale,
+                           geometry.y() * scale, (geometry.y() + geometry.height()) * scale, -1, 1);
 
     WindowPaintData data;
     data.setProjectionMatrix(projectionMatrix);
