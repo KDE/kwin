@@ -85,7 +85,7 @@ void ScreenEdgeEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
             binder.shader()->setUniform(GLShader::ModulationConstant, constant);
             const auto scale = effects->renderTargetScale();
             QMatrix4x4 mvp = data.projectionMatrix();
-            mvp.translate(glow->geometry.x(), glow->geometry.y());
+            mvp.translate(glow->geometry.x() * scale, glow->geometry.y() * scale);
             binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
             texture->render(glow->geometry, scale);
             texture->unbind();
