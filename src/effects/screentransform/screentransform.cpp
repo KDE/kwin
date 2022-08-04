@@ -115,7 +115,7 @@ void ScreenTransformEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono
     effects->prePaintScreen(data, presentTime);
 }
 
-static GLVertexBuffer *texturedRectVbo(const QRectF &geometry)
+static GLVertexBuffer *texturedRectVbo(const QRectF &geometry, qreal scale)
 {
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
@@ -128,31 +128,33 @@ static GLVertexBuffer *texturedRectVbo(const QRectF &geometry)
 
     auto map = static_cast<GLVertex2D *>(vbo->map(6 * sizeof(GLVertex2D)));
 
+    auto deviceGeometry = scaledRect(geometry, scale);
+
     // first triangle
     map[0] = GLVertex2D{
-        .position = QVector2D(geometry.left(), geometry.top()),
+        .position = QVector2D(deviceGeometry.left(), deviceGeometry.top()),
         .texcoord = QVector2D(0.0, 1.0),
     };
     map[1] = GLVertex2D{
-        .position = QVector2D(geometry.right(), geometry.bottom()),
+        .position = QVector2D(deviceGeometry.right(), deviceGeometry.bottom()),
         .texcoord = QVector2D(1.0, 0.0),
     };
     map[2] = GLVertex2D{
-        .position = QVector2D(geometry.left(), geometry.bottom()),
+        .position = QVector2D(deviceGeometry.left(), deviceGeometry.bottom()),
         .texcoord = QVector2D(0.0, 0.0),
     };
 
     // second triangle
     map[3] = GLVertex2D{
-        .position = QVector2D(geometry.left(), geometry.top()),
+        .position = QVector2D(deviceGeometry.left(), deviceGeometry.top()),
         .texcoord = QVector2D(0.0, 1.0),
     };
     map[4] = GLVertex2D{
-        .position = QVector2D(geometry.right(), geometry.top()),
+        .position = QVector2D(deviceGeometry.right(), deviceGeometry.top()),
         .texcoord = QVector2D(1.0, 1.0),
     };
     map[5] = GLVertex2D{
-        .position = QVector2D(geometry.right(), geometry.bottom()),
+        .position = QVector2D(deviceGeometry.right(), deviceGeometry.bottom()),
         .texcoord = QVector2D(1.0, 0.0),
     };
 
@@ -199,12 +201,14 @@ void ScreenTransformEffect::paintScreen(int mask, const QRegion &region, KWin::S
     const QRectF screenRect = screen->geometry();
     const qreal angle = it->m_angle * (1 - blendFactor);
 
+    const auto scale = effects->renderTargetScale();
+
     // Projection matrix + rotate transform.
     const QVector3D transformOrigin(screenRect.center());
     QMatrix4x4 modelViewProjectionMatrix(data.projectionMatrix());
-    modelViewProjectionMatrix.translate(transformOrigin);
+    modelViewProjectionMatrix.translate(transformOrigin * scale);
     modelViewProjectionMatrix.rotate(angle, 0, 0, 1);
-    modelViewProjectionMatrix.translate(-transformOrigin);
+    modelViewProjectionMatrix.translate(-transformOrigin * scale);
 
     glActiveTexture(GL_TEXTURE1);
     it->m_prev.texture->bind();
@@ -222,7 +226,7 @@ void ScreenTransformEffect::paintScreen(int mask, const QRegion &region, KWin::S
     m_shader->setUniform(m_currentTextureLocation, 0);
     m_shader->setUniform(m_previousTextureLocation, 1);
 
-    GLVertexBuffer *vbo = texturedRectVbo(lerp(it->m_oldGeometry, screenRect, blendFactor));
+    GLVertexBuffer *vbo = texturedRectVbo(lerp(it->m_oldGeometry, screenRect, blendFactor), scale);
     vbo->bindArrays();
     vbo->draw(GL_TRIANGLES, 0, 6);
     vbo->unbindArrays();
