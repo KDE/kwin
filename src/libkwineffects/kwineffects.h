@@ -188,6 +188,14 @@ enum EffectFrameStyle {
 };
 
 /**
+ * Scale a rect by a scalar.
+ */
+KWINEFFECTS_EXPORT inline QRectF scaledRect(const QRectF &rect, qreal scale)
+{
+    return QRectF{rect.x() * scale, rect.y() * scale, rect.width() * scale, rect.height() * scale};
+}
+
+/**
  * @short Base class for all KWin effects
  *
  * This is the base class for all effects. By reimplementing virtual methods
