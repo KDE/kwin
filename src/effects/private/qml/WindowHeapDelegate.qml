@@ -22,7 +22,7 @@ Item {
     readonly property bool selected: windowHeap.selectedIndex === index
 
     readonly property bool initialHidden: client.minimized || client.desktop !== KWinComponents.Workspace.currentDesktop
-    readonly property bool hidden: {
+    readonly property bool activeHidden: {
         if (windowHeap.showOnly === "activeClass") {
             // client.resourceName is not an actual String as comes from a QByteArray so === would fail
             return windowHeap.activeClass !== String(client.resourceName);
@@ -65,7 +65,7 @@ Item {
             return "partial";
         }
         if (windowHeap.effectiveOrganized) {
-            return hidden ? "active-hidden" : "active";
+            return activeHidden ? "active-hidden" : "active";
         }
         return initialHidden ? "initial-hidden" : "initial";
     }
@@ -150,7 +150,7 @@ Item {
         verticalAlignment: Text.AlignVCenter
         text: i18nd("kwin_effects", "Drag Down To Close")
         opacity: 1 - thumbSource.opacity
-        visible: !thumb.hidden
+        visible: !thumb.activeHidden
     }
 
     PlasmaCore.IconItem {
@@ -162,7 +162,7 @@ Item {
         anchors.horizontalCenter: thumbSource.horizontalCenter
         anchors.bottom: thumbSource.bottom
         anchors.bottomMargin: -height / 4
-        visible: !thumb.hidden && !activeDragHandler.active
+        visible: !thumb.activeHidden && !activeDragHandler.active
 
         PC3.Label {
             id: caption
@@ -180,7 +180,7 @@ Item {
     ExpoCell {
         id: cell
         layout: windowHeap.layout
-        enabled: !thumb.hidden
+        enabled: !thumb.activeHidden
         naturalX: thumb.client.x
         naturalY: thumb.client.y
         naturalWidth: thumb.client.width
