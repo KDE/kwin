@@ -128,7 +128,7 @@ void SceneOpenGL::paintOffscreenQuickView(OffscreenQuickView *w)
     }
 
     GLShader *shader = ShaderManager::instance()->pushShader(traits);
-    const QRect rect = w->geometry();
+    const QRectF rect = scaledRect(w->geometry(), renderTargetScale());
 
     QMatrix4x4 mvp(renderTargetProjectionMatrix());
     mvp.translate(rect.x(), rect.y());
@@ -141,7 +141,7 @@ void SceneOpenGL::paintOffscreenQuickView(OffscreenQuickView *w)
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     t->bind();
-    t->render(w->geometry());
+    t->render(rect.toRect());
     t->unbind();
     glDisable(GL_BLEND);
 
