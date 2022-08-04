@@ -4,7 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.12
+import QtQuick 2.15
 import org.kde.kwin 3.0 as KWinComponents
 
 Item {

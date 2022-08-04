@@ -4,9 +4,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.12
-import QtQuick.Window 2.12
-import org.kde.kirigami 2.12 as Kirigami
+import QtQuick 2.15
+import QtQuick.Window 2.15
+import org.kde.kirigami 2.20 as Kirigami
 import org.kde.kwin 3.0 as KWinComponents
 import org.kde.kwin.private.effects 1.0
 import org.kde.plasma.components 3.0 as PC3
@@ -32,6 +32,7 @@ FocusScope {
     property bool animationEnabled: false
     property bool absolutePositioning: true
     property real padding: 0
+    // Either a string "activeClass" or a list internalIds of clients
     property var showOnly: []
     property string activeClass
 
@@ -125,7 +126,7 @@ FocusScope {
     }
 
     function findNextItem(selectedIndex, direction) {
-        if (selectedIndex == -1) {
+        if (selectedIndex === -1) {
             return findFirstItem();
         }
 
@@ -147,7 +148,7 @@ FocusScope {
                 }
 
                 if (candidateItem.x + candidateItem.width < selectedItem.x + selectedItem.width) {
-                    if (nextIndex == -1) {
+                    if (nextIndex === -1) {
                         nextIndex = candidateIndex;
                     } else {
                         const nextItem = windowsRepeater.itemAt(nextIndex);
@@ -172,11 +173,11 @@ FocusScope {
                 }
 
                 if (selectedItem.x < candidateItem.x) {
-                    if (nextIndex == -1) {
+                    if (nextIndex === -1) {
                         nextIndex = candidateIndex;
                     } else {
                         const nextItem = windowsRepeater.itemAt(nextIndex);
-                        if (nextIndex == -1 || candidateItem.x < nextItem.x) {
+                        if (nextIndex === -1 || candidateItem.x < nextItem.x) {
                             nextIndex = candidateIndex;
                         }
                     }
@@ -197,7 +198,7 @@ FocusScope {
                 }
 
                 if (candidateItem.y + candidateItem.height < selectedItem.y + selectedItem.height) {
-                    if (nextIndex == -1) {
+                    if (nextIndex === -1) {
                         nextIndex = candidateIndex;
                     } else {
                         const nextItem = windowsRepeater.itemAt(nextIndex);
@@ -222,7 +223,7 @@ FocusScope {
                 }
 
                 if (selectedItem.y < candidateItem.y) {
-                    if (nextIndex == -1) {
+                    if (nextIndex === -1) {
                         nextIndex = candidateIndex;
                     } else {
                         const nextItem = windowsRepeater.itemAt(nextIndex);
@@ -239,30 +240,30 @@ FocusScope {
     }
 
     function resetSelected() {
-        heap.selectedIndex = -1;
+        selectedIndex = -1;
     }
 
     function selectNextItem(direction) {
-        const nextIndex = findNextItem(heap.selectedIndex, direction);
-        if (nextIndex != -1) {
-            heap.selectedIndex = nextIndex;
+        const nextIndex = findNextItem(selectedIndex, direction);
+        if (nextIndex !== -1) {
+            selectedIndex = nextIndex;
             return true;
         }
         return false;
     }
 
     function selectLastItem(direction) {
-        let last = heap.selectedIndex;
+        let last = selectedIndex;
         while (true) {
             const next = findNextItem(last, direction);
-            if (next == -1) {
+            if (next === -1) {
                 break;
             } else {
                 last = next;
             }
         }
-        if (last != -1) {
-            heap.selectedIndex = last;
+        if (last !== -1) {
+            selectedIndex = last;
             return true;
         }
         return false;
@@ -301,8 +302,8 @@ FocusScope {
         case Qt.Key_Space:
             handled = true;
             let selectedItem = null;
-            if (heap.selectedIndex != -1) {
-                selectedItem = windowsRepeater.itemAt(heap.selectedIndex);
+            if (selectedIndex !== -1) {
+                selectedItem = windowsRepeater.itemAt(selectedIndex);
             } else {
                 // If the window heap has only one visible window, activate it.
                 for (let i = 0; i < windowsRepeater.count; ++i) {
@@ -319,7 +320,7 @@ FocusScope {
             if (selectedItem) {
                 handled = true;
                 KWinComponents.Workspace.activeClient = selectedItem.client;
-                heap.activated();
+                activated();
             }
             break;
         default:

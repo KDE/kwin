@@ -4,15 +4,15 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.12
-import QtGraphicalEffects 1.12
+import QtQuick 2.15
+import QtGraphicalEffects 1.15
+import org.kde.kirigami 2.20 as Kirigami
 import org.kde.kwin 3.0 as KWinComponents
 import org.kde.kwin.private.effects 1.0
 import org.kde.milou 0.3 as Milou
 import org.kde.plasma.components 3.0 as PC3
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.extras 2.0 as PlasmaExtras
-import org.kde.kirigami 2.12 as Kirigami
 
 FocusScope {
     id: container
@@ -257,8 +257,8 @@ FocusScope {
                     filter: searchField.text
                     minimizedWindows: !effect.ignoreMinimized
                     windowType: ~KWinComponents.ClientFilterModel.Dock &
-                            ~KWinComponents.ClientFilterModel.Desktop &
-                            ~KWinComponents.ClientFilterModel.Notification
+                                ~KWinComponents.ClientFilterModel.Desktop &
+                                ~KWinComponents.ClientFilterModel.Notification
                 }
                 onActivated: effect.deactivate();
                 delegate: WindowHeapDelegate {
@@ -269,11 +269,11 @@ FocusScope {
                             return targetScale; // leave it alone, so it won't affect transitions before they start
                         }
                         var localPressPosition = activeDragHandler.centroid.scenePressPosition.y - heap.layout.Kirigami.ScenePosition.y;
-                        if (localPressPosition == 0) {
-                            return 0.1
+                        if (localPressPosition === 0) {
+                            return 0.1;
                         } else {
                             var localPosition = activeDragHandler.centroid.scenePosition.y - heap.layout.Kirigami.ScenePosition.y;
-                            return Math.max(0.1, Math.min(localPosition / localPressPosition, 1))
+                            return Math.max(0.1, Math.min(localPosition / localPressPosition, 1));
                         }
                     }
 

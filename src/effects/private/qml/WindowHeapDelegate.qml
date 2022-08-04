@@ -4,14 +4,13 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.12
-import QtQuick.Window 2.12
-import org.kde.kirigami 2.12 as Kirigami
+import QtQuick 2.15
+import QtQuick.Window 2.15
+import org.kde.kirigami 2.20 as Kirigami
 import org.kde.kwin 3.0 as KWinComponents
 import org.kde.kwin.private.effects 1.0
 import org.kde.plasma.components 3.0 as PC3
 import org.kde.plasma.core 2.0 as PlasmaCore
-
 
 Item {
     id: thumb
@@ -20,13 +19,15 @@ Item {
     required property int index
     required property Item windowHeap
 
-    readonly property bool selected: thumb.windowHeap.selectedIndex == index
+    readonly property bool selected: windowHeap.selectedIndex === index
     //TODO: move?
     readonly property bool hidden: {
-        if (thumb.windowHeap.showOnly === "activeClass") {
-            return thumb.windowHeap.activeClass !== String(thumb.client.resourceName); // thumb.client.resourceName is not an actual String as comes from a QByteArray so === would fail
+        if (windowHeap.showOnly === "activeClass") {
+            // client.resourceName is not an actual String as comes from a QByteArray so === would fail
+            return windowHeap.activeClass !== String(client.resourceName);
         } else {
-            return thumb.windowHeap.showOnly.length && thumb.windowHeap.showOnly.indexOf(client.internalId) == -1;
+            return windowHeap.showOnly.length !== 0
+                && windowHeap.showOnly.indexOf(client.internalId) === -1;
         }
     }
 
@@ -38,15 +39,15 @@ Item {
     //scale up and down the whole thumbnail without affecting layouting
     property real targetScale: 1.0
 
+    property DragManager activeDragHandler: dragHandler
+
     // Swipe down gesture by touch, in some effects will close the window
     readonly property alias downGestureProgress: touchDragHandler.downGestureProgress
     signal downGestureTriggered()
 
-
-
     Component.onCompleted: {
-        if (thumb.client.active) {
-            thumb.windowHeap.activeClass = thumb.client.resourceName;
+        if (client.active) {
+            windowHeap.activeClass = client.resourceName;
         }
     }
     Connections {
@@ -62,15 +63,15 @@ Item {
         if (effect.gestureInProgress) {
             return "partial";
         }
-        if (thumb.windowHeap.effectiveOrganized) {
+        if (windowHeap.effectiveOrganized) {
             return hidden ? "active-hidden" : "active";
         }
         return client.minimized ? "initial-minimized" : "initial";
     }
 
     visible: opacity > 0
-    z: thumb.activeDragHandler.active ? 1000
-        : client.stackingOrder + (thumb.client.desktop == KWinComponents.Workspace.currentDesktop ? 100 : 0)
+    z: activeDragHandler.active ? 1000
+        : client.stackingOrder + (client.desktop === KWinComponents.Workspace.currentDesktop ? 100 : 0)
 
     component TweenBehavior : Behavior {
         enabled: thumb.state !== "partial" && thumb.windowHeap.animationEnabled && !thumb.activeDragHandler.active
@@ -160,7 +161,6 @@ Item {
         anchors.bottomMargin: -height / 4
         visible: !thumb.hidden && !activeDragHandler.active
 
-
         PC3.Label {
             id: caption
             visible: thumb.windowTitleVisible
@@ -213,7 +213,7 @@ Item {
                 y: (thumb.client.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.y : 0)) * (1 - effect.partialActivationFactor) + cell.y * effect.partialActivationFactor
                 width: thumb.client.width * (1 - effect.partialActivationFactor) + cell.width * effect.partialActivationFactor
                 height: thumb.client.height * (1 - effect.partialActivationFactor) + cell.height * effect.partialActivationFactor
-                opacity: thumb.client.minimized || thumb.client.desktop != KWinComponents.Workspace.currentDesktop ? effect.partialActivationFactor : 1
+                opacity: thumb.client.minimized || thumb.client.desktop !== KWinComponents.Workspace.currentDesktop ? effect.partialActivationFactor : 1
             }
             PropertyChanges {
                 target: icon
@@ -278,7 +278,6 @@ Item {
         }
     }
 
-
     PlasmaCore.FrameSvgItem {
         anchors {
             fill: parent
@@ -295,7 +294,7 @@ Item {
 
     HoverHandler {
         id: hoverHandler
-        onHoveredChanged: if (hovered != selected) {
+        onHoveredChanged: if (hovered !== selected) {
             thumb.windowHeap.resetSelected();
         }
     }
@@ -331,11 +330,12 @@ Item {
             }
         }
     }
-    property DragManager activeDragHandler: dragHandler
+
     DragManager {
         id: dragHandler
         acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad | PointerDevice.Stylus
     }
+
     DragManager {
         id: touchDragHandler
         acceptedDevices: PointerDevice.TouchScreen
@@ -384,7 +384,7 @@ Item {
 
     Component.onDestruction: {
         if (selected) {
-            thumb.windowHeap.resetSelected();
+            windowHeap.resetSelected();
         }
     }
 }

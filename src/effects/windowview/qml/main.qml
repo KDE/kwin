@@ -4,9 +4,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.12
-import QtQuick.Layouts 1.4
-import QtGraphicalEffects 1.12
+import QtQuick 2.15
+import QtQuick.Layouts 1.15
+import QtGraphicalEffects 1.15
 import org.kde.kwin 3.0 as KWinComponents
 import org.kde.kwin.private.effects 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
@@ -26,12 +26,12 @@ Item {
     readonly property int animationDuration: PlasmaCore.Units.longDuration
 
     function start() {
-        container.animationEnabled = true;
-        container.organized = true;
+        animationEnabled = true;
+        organized = true;
     }
 
     function stop() {
-        container.organized = false;
+        organized = false;
     }
 
     Keys.onEscapePressed: effect.deactivate(animationDuration);
@@ -150,9 +150,9 @@ Item {
                 switch (container.effect.mode) {
                     case WindowView.ModeWindowClass:
                     case WindowView.ModeWindowClassCurrentDesktop:
-                        return "activeClass"
+                        return "activeClass";
                     default:
-                        return selectedIds
+                        return selectedIds;
                 }
             }
             layout.mode: effect.layout
@@ -168,9 +168,9 @@ Item {
                     switch (container.effect.mode) {
                         case WindowView.ModeCurrentDesktop:
                         case WindowView.ModeWindowClassCurrentDesktop:
-                            return KWinComponents.Workspace.currentVirtualDesktop
+                            return KWinComponents.Workspace.currentVirtualDesktop;
                         default:
-                            return undefined
+                            return undefined;
                     }
                 }
                 screenName: targetScreen.name
@@ -178,8 +178,8 @@ Item {
                 filter: effect.searchText
                 minimizedWindows: !effect.ignoreMinimized
                 windowType: ~KWinComponents.ClientFilterModel.Dock &
-                        ~KWinComponents.ClientFilterModel.Desktop &
-                        ~KWinComponents.ClientFilterModel.Notification;
+                            ~KWinComponents.ClientFilterModel.Desktop &
+                            ~KWinComponents.ClientFilterModel.Notification
             }
             delegate: WindowHeapDelegate {
                 windowHeap: heap

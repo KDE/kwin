@@ -46,7 +46,7 @@ FocusScope {
     Connections {
         target: effect
         function onItemDroppedOutOfScreen(globalPos, item, screen) {
-            if (screen != targetScreen) {
+            if (screen !== targetScreen) {
                 return;
             }
             const pos = screen.mapFromGlobal(globalPos);
@@ -91,7 +91,7 @@ FocusScope {
 
     WindowHeap {
         id: heap
-        function resetPosition () {
+        function resetPosition() {
             x = 0;
             y = 0;
         }
@@ -113,8 +113,8 @@ FocusScope {
             screenName: targetScreen.name
             clientModel: desktopView.clientModel
             windowType: ~KWinComponents.ClientFilterModel.Dock &
-                    ~KWinComponents.ClientFilterModel.Desktop &
-                    ~KWinComponents.ClientFilterModel.Notification;
+                        ~KWinComponents.ClientFilterModel.Desktop &
+                        ~KWinComponents.ClientFilterModel.Notification
         }
         delegate: WindowHeapDelegate {
             windowHeap: heap
