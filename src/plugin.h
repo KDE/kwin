@@ -7,8 +7,7 @@
 #pragma once
 
 #include <config-kwin.h>
-
-#include "kwinglobals.h"
+#include <kwin_export.h>
 
 #include <QObject>
 #include <memory>
