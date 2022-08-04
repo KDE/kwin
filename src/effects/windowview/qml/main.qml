@@ -208,6 +208,7 @@ Item {
             wId: model.client.internalId
             x: model.client.x - targetScreen.geometry.x
             y: model.client.y - targetScreen.geometry.y
+            z: model.client.stackingOrder
             visible: opacity > 0
             opacity: (model.client.hidden || container.organized) ? 0 : 1
 

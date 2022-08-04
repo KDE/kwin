@@ -71,7 +71,7 @@ Item {
 
     visible: opacity > 0
     z: activeDragHandler.active ? 1000
-        : client.stackingOrder + (client.desktop === KWinComponents.Workspace.currentDesktop ? 100 : 0)
+        : client.stackingOrder * (client.desktop === KWinComponents.Workspace.currentDesktop ? 1 : 0.001)
 
     component TweenBehavior : Behavior {
         enabled: thumb.state !== "partial" && thumb.windowHeap.animationEnabled && !thumb.activeDragHandler.active

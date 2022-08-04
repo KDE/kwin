@@ -312,6 +312,7 @@ FocusScope {
             wId: model.client.internalId
             x: model.client.x - targetScreen.geometry.x
             y: model.client.y - targetScreen.geometry.y
+            z: model.client.stackingOrder
             width: model.client.width
             height: model.client.height
             opacity: container.effect.gestureInProgress
