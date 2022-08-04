@@ -188,8 +188,8 @@ Rectangle {
 
         width: parent.width * columns
         height: parent.height * rows
-        rowSpacing: PlasmaCore.Units.largeSpacing
-        columnSpacing: PlasmaCore.Units.largeSpacing
+        rowSpacing: PlasmaCore.Units.gridUnit
+        columnSpacing: PlasmaCore.Units.gridUnit
         rows: container.effect.gridRows
         columns: container.effect.gridColumns
         transformOrigin: Item.TopLeft
