@@ -146,7 +146,15 @@ Item {
             animationDuration: container.animationDuration
             animationEnabled: container.animationEnabled
             organized: container.organized
-            showOnly: container.effect.mode === WindowView.ModeWindowClass ? "activeClass" : selectedIds
+            showOnly: {
+                switch (container.effect.mode) {
+                    case WindowView.ModeWindowClass:
+                    case WindowView.ModeWindowClassCurrentDesktop:
+                        return "activeClass"
+                    default:
+                        return selectedIds
+                }
+            }
             layout.mode: effect.layout
             onWindowClicked: {
                 if (eventPoint.event.button !== Qt.MiddleButton) {
@@ -156,7 +164,15 @@ Item {
             }
             model: KWinComponents.ClientFilterModel {
                 activity: KWinComponents.Workspace.currentActivity
-                desktop: container.effect.mode == WindowView.ModeCurrentDesktop ? KWinComponents.Workspace.currentVirtualDesktop : undefined
+                desktop: {
+                    switch (container.effect.mode) {
+                        case WindowView.ModeCurrentDesktop:
+                        case WindowView.ModeWindowClassCurrentDesktop:
+                            return KWinComponents.Workspace.currentVirtualDesktop
+                        default:
+                            return undefined
+                    }
+                }
                 screenName: targetScreen.name
                 clientModel: stackModel
                 filter: effect.searchText

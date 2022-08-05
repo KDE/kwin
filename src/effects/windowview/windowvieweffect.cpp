@@ -26,6 +26,7 @@ WindowViewEffect::WindowViewEffect()
     , m_exposeAction(new QAction(this))
     , m_exposeAllAction(new QAction(this))
     , m_exposeClassAction(new QAction(this))
+    , m_exposeClassCurrentDesktopAction(new QAction(this))
 {
     qmlRegisterUncreatableType<WindowViewEffect>("org.kde.KWin.Effect.WindowView", 1, 0, "WindowView", QStringLiteral("WindowView cannot be created in QML"));
     initConfig<WindowViewConfig>();
@@ -68,6 +69,14 @@ WindowViewEffect::WindowViewEffect()
     connect(m_exposeClassAction, &QAction::triggered, this, [this]() {
         toggleMode(ModeWindowClass);
     });
+
+    m_exposeClassCurrentDesktopAction->setObjectName(QStringLiteral("ExposeClassCurrentDesktop"));
+    m_exposeClassAction->setText(i18n("Toggle Present Windows (Window class on current desktop)"));
+    effects->registerGlobalShortcut(QKeySequence{}, m_exposeClassAction);
+    connect(m_exposeClassAction, &QAction::triggered, this, [this]() {
+        toggleMode(ModeWindowClassCurrentDesktop);
+    });
+
     connect(KGlobalAccel::self(), &KGlobalAccel::globalShortcutChanged, this, [this](QAction *action, const QKeySequence &seq) {
         if (action->objectName() == QStringLiteral("Expose")) {
             m_shortcut.clear();
@@ -78,6 +87,9 @@ WindowViewEffect::WindowViewEffect()
         } else if (action->objectName() == QStringLiteral("ExposeClass")) {
             m_shortcutClass.clear();
             m_shortcutClass.append(seq);
+        } else if (action->objectName() == QStringLiteral("ExposeClassCurrentDesktop")) {
+            m_shortcutClassCurrentDesktop.clear();
+            m_shortcutClassCurrentDesktop.append(seq);
         }
     });
 
@@ -201,6 +213,11 @@ void WindowViewEffect::reconfigure(ReconfigureFlags)
         m_borderActivateClass.append(ElectricBorder(i));
         effects->reserveElectricBorder(ElectricBorder(i), this);
     }
+    const auto activateClassCurrentDesktop = WindowViewConfig::borderActivateClassCurrentDesktop();
+    for (int i : activateClassCurrentDesktop) {
+        m_borderActivateClassCurrentDesktop.append(ElectricBorder(i));
+        effects->reserveElectricBorder(ElectricBorder(i), this);
+    }
 
     auto touchCallback = [this](ElectricBorder border, const QSizeF &deltaProgress, const EffectScreen *screen) {
         Q_UNUSED(screen)
@@ -213,6 +230,8 @@ void WindowViewEffect::reconfigure(ReconfigureFlags)
             setMode(ModeAllDesktops);
         } else if (m_touchBorderActivateClass.contains(border)) {
             setMode(ModeWindowClass);
+        } else if (m_touchBorderActivateClassCurrentDesktop.contains(border)) {
+            setMode(ModeWindowClassCurrentDesktop);
         }
         const int maxDelta = 500; // Arbitrary logical pixels value seems to behave better than scaledScreenSize
         if (border == ElectricTop || border == ElectricBottom) {
@@ -234,7 +253,12 @@ void WindowViewEffect::reconfigure(ReconfigureFlags)
     }
     touchActivateBorders = WindowViewConfig::touchBorderActivateClass();
     for (const int &border : touchActivateBorders) {
-        m_touchBorderActivateAll.append(ElectricBorder(border));
+        m_touchBorderActivateClass.append(ElectricBorder(border));
+        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_realtimeToggleAction, touchCallback);
+    }
+    touchActivateBorders = WindowViewConfig::touchBorderActivateClassCurrentDesktop();
+    for (const int &border : touchActivateBorders) {
+        m_touchBorderActivateClassCurrentDesktop.append(ElectricBorder(border));
         effects->registerRealtimeTouchBorder(ElectricBorder(border), m_realtimeToggleAction, touchCallback);
     }
 }
@@ -252,6 +276,9 @@ void WindowViewEffect::grabbedKeyboardEvent(QKeyEvent *e)
             return;
         } else if (m_mode == ModeWindowClass && m_shortcutClass.contains(e->key() | e->modifiers())) {
             toggleMode(ModeWindowClass);
+            return;
+        } else if (m_mode == ModeWindowClassCurrentDesktop && m_shortcutClassCurrentDesktop.contains(e->key() | e->modifiers())) {
+            toggleMode(ModeWindowClassCurrentDesktop);
             return;
         } else if (e->key() == Qt::Key_Escape) {
             deactivate(animationDuration());
@@ -426,6 +453,8 @@ bool WindowViewEffect::borderActivated(ElectricBorder border)
         toggleMode(ModeAllDesktops);
     } else if (m_borderActivateClass.contains(border)) {
         toggleMode(ModeWindowClass);
+    } else if (m_touchBorderActivateClassCurrentDesktop.contains(border)) {
+        toggleMode(ModeWindowClassCurrentDesktop);
     } else {
         return false;
     }

@@ -31,7 +31,8 @@ public:
         ModeAllDesktops, // Shows windows of all desktops
         ModeCurrentDesktop, // Shows windows on current desktop
         ModeWindowGroup, // Shows windows selected via property
-        ModeWindowClass // Shows all windows of same class as selected class
+        ModeWindowClass, // Shows all windows of same class as selected class
+        ModeWindowClassCurrentDesktop, // Shows windows of same class on current desktop
     };
     Q_ENUM(PresentWindowsMode)
 
@@ -100,17 +101,21 @@ private:
     QAction *m_exposeAction = nullptr;
     QAction *m_exposeAllAction = nullptr;
     QAction *m_exposeClassAction = nullptr;
+    QAction *m_exposeClassCurrentDesktopAction = nullptr;
     QAction *m_realtimeToggleAction = nullptr;
     // Shortcut - needed to toggle the effect
     QList<QKeySequence> m_shortcut;
     QList<QKeySequence> m_shortcutAll;
     QList<QKeySequence> m_shortcutClass;
+    QList<QKeySequence> m_shortcutClassCurrentDesktop;
     QList<ElectricBorder> m_borderActivate;
     QList<ElectricBorder> m_borderActivateAll;
     QList<ElectricBorder> m_borderActivateClass;
+    QList<ElectricBorder> m_borderActivateClassCurrentDesktop;
     QList<ElectricBorder> m_touchBorderActivate;
     QList<ElectricBorder> m_touchBorderActivateAll;
     QList<ElectricBorder> m_touchBorderActivateClass;
+    QList<ElectricBorder> m_touchBorderActivateClassCurrentDesktop;
     QString m_searchText;
     Status m_status = Status::Inactive;
     qreal m_partialActivationFactor = 0;
