@@ -93,7 +93,8 @@ bool LookingGlassEffect::loadData()
 {
     ensureResources();
 
-    const QSize screenSize = effects->virtualScreenSize();
+    const auto scale = effects->renderTargetScale();
+    const QSize screenSize = effects->virtualScreenSize() * scale;
     int texw = screenSize.width();
     int texh = screenSize.height();
 
@@ -111,7 +112,7 @@ bool LookingGlassEffect::loadData()
     m_shader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), QStringLiteral(":/effects/lookingglass/shaders/lookingglass.frag"));
     if (m_shader->isValid()) {
         ShaderBinder binder(m_shader.get());
-        m_shader->setUniform("u_textureSize", QVector2D(screenSize.width(), screenSize.height()));
+        m_shader->setUniform("u_textureSize", QVector2D(texw, texh));
     } else {
         qCCritical(KWIN_LOOKINGGLASS) << "The shader failed to load!";
         return false;
