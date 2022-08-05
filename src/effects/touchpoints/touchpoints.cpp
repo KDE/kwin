@@ -206,6 +206,7 @@ void TouchPointsEffect::drawCircleGl(const QColor &color, float cx, float cy, fl
     static const float theta = 2 * 3.1415926 / float(num_segments);
     static const float c = cosf(theta); // precalculate the sine and cosine
     static const float s = sinf(theta);
+    const auto scale = effects->renderTargetScale();
     float t;
 
     float x = r; // we start at angle = 0
@@ -219,7 +220,7 @@ void TouchPointsEffect::drawCircleGl(const QColor &color, float cx, float cy, fl
     verts.reserve(num_segments * 2);
 
     for (int ii = 0; ii < num_segments; ++ii) {
-        verts << x + cx << y + cy; // output vertex
+        verts << (x + cx) * scale << (y + cy) * scale; // output vertex
         // apply the rotation matrix
         t = x;
         x = c * x - s * y;
