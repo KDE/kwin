@@ -277,25 +277,25 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(EffectScreen *screen)
     }
     if (!data.vbo || data.viewport != rect) {
         data.vbo.reset(new GLVertexBuffer(GLVertexBuffer::Static));
-        data.viewport = rect;
+        data.viewport = scaledRect(rect, devicePixelRatio).toRect();
 
         QVector<float> verts;
         QVector<float> texcoords;
 
         // The v-coordinate is flipped because projection matrix is "flipped."
         texcoords << 1.0 << 1.0;
-        verts << rect.x() + rect.width() << rect.y();
+        verts << (rect.x() + rect.width()) * devicePixelRatio << rect.y() * devicePixelRatio;
         texcoords << 0.0 << 1.0;
-        verts << rect.x() << rect.y();
+        verts << rect.x() * devicePixelRatio << rect.y() * devicePixelRatio;
         texcoords << 0.0 << 0.0;
-        verts << rect.x() << rect.y() + rect.height();
+        verts << rect.x() * devicePixelRatio << (rect.y() + rect.height()) * devicePixelRatio;
 
         texcoords << 1.0 << 0.0;
-        verts << rect.x() + rect.width() << rect.y() + rect.height();
+        verts << (rect.x() + rect.width()) * devicePixelRatio << (rect.y() + rect.height()) * devicePixelRatio;
         texcoords << 1.0 << 1.0;
-        verts << rect.x() + rect.width() << rect.y();
+        verts << (rect.x() + rect.width()) * devicePixelRatio << rect.y() * devicePixelRatio;
         texcoords << 0.0 << 0.0;
-        verts << rect.x() << rect.y() + rect.height();
+        verts << rect.x() * devicePixelRatio << (rect.y() + rect.height()) * devicePixelRatio;
 
         data.vbo->setData(6, 2, verts.constData(), texcoords.constData());
     }
@@ -313,6 +313,7 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &d
     GLFramebuffer::popFramebuffer();
 
     const QSize screenSize = effects->virtualScreenSize();
+    const auto scale = effects->renderTargetScale();
 
     // mouse-tracking allows navigation of the zoom-area using the mouse.
     qreal xTranslation = 0;
@@ -379,7 +380,7 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &d
     glClear(GL_COLOR_BUFFER_BIT);
 
     QMatrix4x4 matrix;
-    matrix.translate(xTranslation, yTranslation);
+    matrix.translate(xTranslation * scale, yTranslation * scale);
     matrix.scale(zoom, zoom);
 
     auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
@@ -412,9 +413,9 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &d
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
             QMatrix4x4 mvp = data.projectionMatrix();
-            mvp.translate(rect.x(), rect.y());
+            mvp.translate(rect.x() * scale, rect.y() * scale);
             s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-            cursorTexture->render(rect, effects->renderTargetScale());
+            cursorTexture->render(rect, scale);
             ShaderManager::instance()->popShader();
             cursorTexture->unbind();
             glDisable(GL_BLEND);
