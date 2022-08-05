@@ -3,6 +3,8 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2013 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2022 MBition GmbH
+    SPDX-FileContributor: Kai Uwe Broulik <kai_uwe.broulik@mbition.io>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -11,15 +13,11 @@
 #include <kwineffects.h>
 
 class QTimer;
-namespace Plasma
-{
-class Svg;
-}
+class QWindow;
 
 namespace KWin
 {
-class Glow;
-class GLTexture;
+class OffscreenQuickScene;
 
 class ScreenEdgeEffect : public Effect
 {
@@ -41,27 +39,11 @@ private Q_SLOTS:
     void cleanup();
 
 private:
-    void ensureGlowSvg();
-    std::unique_ptr<Glow> createGlow(ElectricBorder border, qreal factor, const QRect &geometry);
-    template<typename T>
-    T *createCornerGlow(ElectricBorder border);
-    template<typename T>
-    T *createEdgeGlow(ElectricBorder border, const QSize &size);
-    QSize cornerGlowSize(ElectricBorder border);
-    Plasma::Svg *m_glow = nullptr;
-    std::map<ElectricBorder, std::unique_ptr<Glow>> m_borders;
-    QTimer *m_cleanupTimer;
-};
+    std::unique_ptr<OffscreenQuickScene> createGlow(ElectricBorder border, qreal factor, const QRect &geometry);
 
-class Glow
-{
-public:
-    std::unique_ptr<GLTexture> texture;
-    std::unique_ptr<QImage> image;
-    QSize pictureSize;
-    qreal strength;
-    QRect geometry;
-    ElectricBorder border;
+    std::map<ElectricBorder, std::unique_ptr<OffscreenQuickScene>> m_borders;
+    std::unique_ptr<QWindow> m_dummyWindow;
+    QTimer *m_cleanupTimer;
 };
 
 }
