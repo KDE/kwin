@@ -87,6 +87,7 @@ void MouseMarkEffect::paintScreen(int mask, const QRegion &region, ScreenPaintDa
         vbo->reset();
         vbo->setUseColor(true);
         vbo->setColor(color);
+        const auto scale = effects->renderTargetScale();
         ShaderBinder binder(ShaderTrait::UniformColor);
         binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, data.projectionMatrix());
         QVector<float> verts;
@@ -94,7 +95,7 @@ void MouseMarkEffect::paintScreen(int mask, const QRegion &region, ScreenPaintDa
             verts.clear();
             verts.reserve(mark.size() * 2);
             for (const QPoint &p : qAsConst(mark)) {
-                verts << p.x() << p.y();
+                verts << p.x() * scale << p.y() * scale;
             }
             vbo->setData(verts.size() / 2, 2, verts.data(), nullptr);
             vbo->render(GL_LINE_STRIP);
@@ -103,7 +104,7 @@ void MouseMarkEffect::paintScreen(int mask, const QRegion &region, ScreenPaintDa
             verts.clear();
             verts.reserve(drawing.size() * 2);
             for (const QPoint &p : qAsConst(drawing)) {
-                verts << p.x() << p.y();
+                verts << p.x() * scale << p.y() * scale;
             }
             vbo->setData(verts.size() / 2, 2, verts.data(), nullptr);
             vbo->render(GL_LINE_STRIP);
