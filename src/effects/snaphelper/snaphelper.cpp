@@ -99,6 +99,8 @@ void SnapHelperEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
         : 1.0;
     const QList<EffectScreen *> screens = effects->screens();
 
+    const auto scale = effects->renderTargetScale();
+
     // Display the guide
     if (effects->isOpenGLCompositing()) {
         GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
@@ -124,28 +126,28 @@ void SnapHelperEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
             const int halfHeight = m_geometry.height() / 2;
 
             // Center vertical line.
-            verts << rect.x() + rect.width() / 2 << rect.y();
-            verts << rect.x() + rect.width() / 2 << rect.y() + rect.height();
+            verts << (rect.x() + rect.width() / 2) * scale << rect.y() * scale;
+            verts << (rect.x() + rect.width() / 2) * scale << (rect.y() + rect.height()) * scale;
 
             // Center horizontal line.
-            verts << rect.x() << rect.y() + rect.height() / 2;
-            verts << rect.x() + rect.width() << rect.y() + rect.height() / 2;
+            verts << rect.x() * scale << (rect.y() + rect.height() / 2) * scale;
+            verts << (rect.x() + rect.width()) * scale << (rect.y() + rect.height() / 2) * scale;
 
             // Top edge of the window outline.
-            verts << midX - halfWidth - s_lineWidth / 2 << midY - halfHeight;
-            verts << midX + halfWidth + s_lineWidth / 2 << midY - halfHeight;
+            verts << (midX - halfWidth - s_lineWidth / 2) * scale << (midY - halfHeight) * scale;
+            verts << (midX + halfWidth + s_lineWidth / 2) * scale << (midY - halfHeight) * scale;
 
             // Right edge of the window outline.
-            verts << midX + halfWidth << midY - halfHeight + s_lineWidth / 2;
-            verts << midX + halfWidth << midY + halfHeight - s_lineWidth / 2;
+            verts << (midX + halfWidth) * scale << (midY - halfHeight + s_lineWidth / 2) * scale;
+            verts << (midX + halfWidth) * scale << (midY + halfHeight - s_lineWidth / 2) * scale;
 
             // Bottom edge of the window outline.
-            verts << midX + halfWidth + s_lineWidth / 2 << midY + halfHeight;
-            verts << midX - halfWidth - s_lineWidth / 2 << midY + halfHeight;
+            verts << (midX + halfWidth + s_lineWidth / 2) * scale << (midY + halfHeight) * scale;
+            verts << (midX - halfWidth - s_lineWidth / 2) * scale << (midY + halfHeight) * scale;
 
             // Left edge of the window outline.
-            verts << midX - halfWidth << midY + halfHeight - s_lineWidth / 2;
-            verts << midX - halfWidth << midY - halfHeight + s_lineWidth / 2;
+            verts << (midX - halfWidth) * scale << (midY + halfHeight - s_lineWidth / 2) * scale;
+            verts << (midX - halfWidth) * scale << (midY - halfHeight + s_lineWidth / 2) * scale;
         }
         vbo->setData(verts.count() / 2, 2, verts.data(), nullptr);
         vbo->render(GL_LINES);
