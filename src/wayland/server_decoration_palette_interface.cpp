@@ -47,7 +47,7 @@ void ServerSideDecorationPaletteManagerInterfacePrivate::org_kde_kwin_server_dec
     auto palette = new ServerSideDecorationPaletteInterface(s, palette_resource);
 
     palettes.append(palette);
-    QObject::connect(palette, &QObject::destroyed, q, [=]() {
+    QObject::connect(palette, &QObject::destroyed, q, [this, palette]() {
         palettes.removeOne(palette);
     });
     Q_EMIT q->paletteCreated(palette);
