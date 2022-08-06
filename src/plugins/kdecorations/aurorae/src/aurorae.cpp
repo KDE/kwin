@@ -16,7 +16,6 @@
 #include <KDecoration2/DecorationSettings>
 #include <KDecoration2/DecorationShadow>
 // KDE
-#include <KConfigDialogManager>
 #include <KConfigGroup>
 #include <KConfigLoader>
 #include <KDesktopFile>

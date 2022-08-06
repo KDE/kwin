@@ -10,8 +10,6 @@
 
 #include <cstdlib>
 
-#include <KConfigDialogManager>
-
 #include "kwinoptions_settings.h"
 
 KWinMouseConfigForm::KWinMouseConfigForm(QWidget *parent)

@@ -28,7 +28,6 @@
 
 #include "kwinoptions_kdeglobals_settings.h"
 #include "kwinoptions_settings.h"
-#include <KConfigDialogManager>
 
 #define CLICK_TO_FOCUS 0
 #define CLICK_TO_FOCUS_MOUSE_PRECEDENT 1
