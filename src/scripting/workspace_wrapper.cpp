@@ -11,6 +11,7 @@
 #include "workspace_wrapper.h"
 #include "core/output.h"
 #include "core/outputbackend.h"
+#include "focuschain.h"
 #include "cursor.h"
 #include "outline.h"
 #include "tiles/tilemanager.h"
@@ -378,6 +379,16 @@ QtScriptWorkspaceWrapper::QtScriptWorkspaceWrapper(QObject *parent)
 QList<KWin::Window *> QtScriptWorkspaceWrapper::clientList() const
 {
     return workspace()->allClientList();
+}
+
+QList<KWin::Window *> QtScriptWorkspaceWrapper::clientListUsageOrder() const
+{
+    return workspace()->focusChain()->mostRecentlyUsed();
+}
+
+QList<KWin::Window *> QtScriptWorkspaceWrapper::clientListStackingOrder() const
+{
+    return workspace()->stackingOrder();
 }
 
 QQmlListProperty<KWin::Window> DeclarativeScriptWorkspaceWrapper::clients()
