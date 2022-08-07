@@ -48,6 +48,14 @@ public:
     explicit FocusChain() = default;
 
     /**
+     * Returns the list of windows sorted in order of recent usage, with most recently used window at the last position
+     */
+    QList<Window *> mostRecentlyUsed() const
+    {
+        return m_mostRecentlyUsed;
+    }
+
+    /**
      * @brief Updates the position of the @p window according to the requested @p change in the
      * focus chain.
      *
