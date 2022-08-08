@@ -369,6 +369,8 @@ class DeclarativeScriptWorkspaceWrapper : public WorkspaceWrapper
     Q_OBJECT
 
     Q_PROPERTY(QQmlListProperty<KWin::Window> clients READ clients)
+    Q_PROPERTY(QQmlListProperty<KWin::Window> usageOrder READ usageOrder)
+    Q_PROPERTY(QQmlListProperty<KWin::Window> stackingOrder READ stackingOrder)
 public:
     QQmlListProperty<KWin::Window> clients();
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -377,6 +379,24 @@ public:
 #else
     static qsizetype countClientList(QQmlListProperty<KWin::Window> *clients);
     static KWin::Window *atClientList(QQmlListProperty<KWin::Window> *clients, qsizetype index);
+#endif
+
+    QQmlListProperty<KWin::Window> usageOrder();
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    static int countUsageOrder(QQmlListProperty<KWin::Window> *usageOrder);
+    static KWin::Window *atUsageOrder(QQmlListProperty<KWin::Window> *usageOrder, int index);
+#else
+    static qsizetype countUsageOrder(QQmlListProperty<KWin::Window> *usageOrder);
+    static KWin::Window *atUsageOrder(QQmlListProperty<KWin::Window> *usageOrder, qsizetype index);
+#endif
+
+    QQmlListProperty<KWin::Window> stackingOrder();
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    static int countStackingOrder(QQmlListProperty<KWin::Window> *stackingOrder);
+    static KWin::Window *atStackingOrder(QQmlListProperty<KWin::Window> *stackingOrder, int index);
+#else
+    static qsizetype countStackingOrder(QQmlListProperty<KWin::Window> *stackingOrder);
+    static KWin::Window *atStackingOrder(QQmlListProperty<KWin::Window> *stackingOrder, qsizetype index);
 #endif
 
     explicit DeclarativeScriptWorkspaceWrapper(QObject *parent = nullptr);

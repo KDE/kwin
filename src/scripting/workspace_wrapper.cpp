@@ -414,6 +414,52 @@ KWin::Window *DeclarativeScriptWorkspaceWrapper::atClientList(QQmlListProperty<K
     return workspace()->allClientList().at(index);
 }
 
+QQmlListProperty<KWin::Window> DeclarativeScriptWorkspaceWrapper::usageOrder()
+{
+    return QQmlListProperty<KWin::Window>(this, nullptr, &DeclarativeScriptWorkspaceWrapper::countUsageOrder, &DeclarativeScriptWorkspaceWrapper::atUsageOrder);
+}
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+int DeclarativeScriptWorkspaceWrapper::countUsageOrder(QQmlListProperty<KWin::Window> *usageOrder)
+#else
+qsizetype DeclarativeScriptWorkspaceWrapper::countUsageOrder(QQmlListProperty<KWin::Window> *usageOrder)
+#endif
+{
+    return workspace()->focusChain()->mostRecentlyUsed().size();
+}
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+KWin::Window *DeclarativeScriptWorkspaceWrapper::atUsageOrder(QQmlListProperty<KWin::Window> *usageOrder, int index)
+#else
+KWin::Window *DeclarativeScriptWorkspaceWrapper::atUsageOrder(QQmlListProperty<KWin::Window> *clients, qsizetype index)
+#endif
+{
+    return workspace()->focusChain()->mostRecentlyUsed().at(index);
+}
+
+QQmlListProperty<KWin::Window> DeclarativeScriptWorkspaceWrapper::stackingOrder()
+{
+    return QQmlListProperty<KWin::Window>(this, nullptr, &DeclarativeScriptWorkspaceWrapper::countStackingOrder, &DeclarativeScriptWorkspaceWrapper::atStackingOrder);
+}
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+int DeclarativeScriptWorkspaceWrapper::countStackingOrder(QQmlListProperty<KWin::Window> *stackingOrder)
+#else
+qsizetype DeclarativeScriptWorkspaceWrapper::countStackingOrder(QQmlListProperty<KWin::Window> *stackingOrder)
+#endif
+{
+    return workspace()->stackingOrder().size();
+}
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+KWin::Window *DeclarativeScriptWorkspaceWrapper::atStackingOrder(QQmlListProperty<KWin::Window> *stackingOrder, int index)
+#else
+KWin::Window *DeclarativeScriptWorkspaceWrapper::atStackingOrder(QQmlListProperty<KWin::Window> *stackingOrder, qsizetype index)
+#endif
+{
+    return workspace()->stackingOrder().at(index);
+}
+
 DeclarativeScriptWorkspaceWrapper::DeclarativeScriptWorkspaceWrapper(QObject *parent)
     : WorkspaceWrapper(parent)
 {
