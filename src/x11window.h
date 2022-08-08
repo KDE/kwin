@@ -235,8 +235,8 @@ public:
     QPointF gravityAdjustment(xcb_gravity_t gravity) const;
     const QPointF calculateGravitation(bool invert) const;
 
-    void NETMoveResize(int x_root, int y_root, NET::Direction direction);
-    void NETMoveResizeWindow(int flags, int x, int y, int width, int height);
+    void NETMoveResize(qreal x_root, qreal y_root, NET::Direction direction);
+    void NETMoveResizeWindow(int flags, qreal x, qreal y, qreal width, qreal height);
     void GTKShowWindowMenu(int x_root, int y_root);
     void restackWindow(xcb_window_t above, int detail, NET::RequestSource source, xcb_timestamp_t timestamp,
                        bool send_event = false);
@@ -402,7 +402,7 @@ private:
     bool hasTransientInternal(const X11Window *c, bool indirect, QList<const X11Window *> &set) const;
     void setShortcutInternal() override;
 
-    void configureRequest(int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool);
+    void configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, qreal rh, int gravity, bool from_tool);
     NETExtendedStrut strut() const;
     int checkShadeGeometry(int w, int h);
     void getSyncCounter();
