@@ -160,7 +160,7 @@ add_feature_info("Breeze-Decoration" HAVE_BREEZE_DECO "Default decoration plugin
 
 find_package(EGL)
 set_package_properties(EGL PROPERTIES
-    TYPE RUNTIME
+    TYPE REQUIRED
     PURPOSE "Required to build KWin with EGL support"
 )
 
