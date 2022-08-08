@@ -79,6 +79,7 @@ install(FILES
     kwinoffscreeneffect.h
     kwinoffscreenquickview.h
     kwinquickeffect.h
+    kwinvector.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR} COMPONENT Devel)
 
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KWinEffects")
