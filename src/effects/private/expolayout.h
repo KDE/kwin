@@ -46,6 +46,8 @@ public:
     bool isReady() const;
     void setReady();
 
+    Q_INVOKABLE void forceLayout();
+
 protected:
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     void geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry) override;

@@ -297,6 +297,11 @@ void ExpoLayout::setReady()
     }
 }
 
+void ExpoLayout::forceLayout()
+{
+    updatePolish();
+}
+
 void ExpoLayout::updatePolish()
 {
     if (!m_cells.isEmpty()) {
