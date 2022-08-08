@@ -355,11 +355,11 @@ public:
     /**
      * List of Clients currently managed by KWin, sorted in order of most recent usage, with the most recent window at the last position.
      */
-    Q_INVOKABLE QList<KWin::Window *> clientListUsageOrder() const;
+    Q_INVOKABLE QList<KWin::Window *> usageOrder() const;
     /**
      * List of Clients currently managed by KWin, sorted in stacking order, with the topmost window at the last position.
      */
-    Q_INVOKABLE QList<KWin::Window *> clientListStackingOrder() const;
+    Q_INVOKABLE QList<KWin::Window *> stackingOrder() const;
 
     explicit QtScriptWorkspaceWrapper(QObject *parent = nullptr);
 };

@@ -381,12 +381,12 @@ QList<KWin::Window *> QtScriptWorkspaceWrapper::clientList() const
     return workspace()->allClientList();
 }
 
-QList<KWin::Window *> QtScriptWorkspaceWrapper::clientListUsageOrder() const
+QList<KWin::Window *> QtScriptWorkspaceWrapper::usageOrder() const
 {
     return workspace()->focusChain()->mostRecentlyUsed();
 }
 
-QList<KWin::Window *> QtScriptWorkspaceWrapper::clientListStackingOrder() const
+QList<KWin::Window *> QtScriptWorkspaceWrapper::stackingOrder() const
 {
     return workspace()->stackingOrder();
 }
