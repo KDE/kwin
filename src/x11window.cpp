@@ -3859,7 +3859,7 @@ const QPointF X11Window::calculateGravitation(bool invert) const
 }
 
 // co-ordinate are in kwin logical
-void X11Window::configureRequest(int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool)
+void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, qreal rh, int gravity, bool from_tool)
 {
     const int configurePositionMask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
     const int configureSizeMask = XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
@@ -3966,8 +3966,8 @@ void X11Window::configureRequest(int value_mask, int rx, int ry, int rw, int rh,
     }
 
     if (value_mask & configureSizeMask && !(value_mask & configurePositionMask)) { // pure resize
-        int nw = clientSize().width();
-        int nh = clientSize().height();
+        qreal nw = clientSize().width();
+        qreal nh = clientSize().height();
         if (value_mask & XCB_CONFIG_WINDOW_WIDTH) {
             nw = rw;
         }
@@ -3975,7 +3975,7 @@ void X11Window::configureRequest(int value_mask, int rx, int ry, int rw, int rh,
             nh = rh;
         }
 
-        const QSizeF requestedClientSize = constrainClientSize(QSize(nw, nh));
+        const QSizeF requestedClientSize = constrainClientSize(QSizeF(nw, nh));
         QSizeF requestedFrameSize = clientSizeToFrameSize(requestedClientSize);
         requestedFrameSize = rules()->checkSize(requestedFrameSize);
 
@@ -4067,7 +4067,7 @@ void X11Window::resizeWithChecks(qreal w, qreal h, xcb_gravity_t gravity)
 
 // _NET_MOVERESIZE_WINDOW
 // note co-ordinates are kwin logical
-void X11Window::NETMoveResizeWindow(int flags, int x, int y, int width, int height)
+void X11Window::NETMoveResizeWindow(int flags, qreal x, qreal y, qreal width, qreal height)
 {
     int gravity = flags & 0xff;
     int value_mask = 0;
@@ -4087,7 +4087,7 @@ void X11Window::NETMoveResizeWindow(int flags, int x, int y, int width, int heig
 }
 
 // _GTK_SHOW_WINDOW_MENU
-void X11Window::GTKShowWindowMenu(int x_root, int y_root)
+void X11Window::GTKShowWindowMenu(qreal x_root, qreal y_root)
 {
     QPoint globalPos(x_root, y_root);
     workspace()->showWindowMenu(QRect(globalPos, globalPos), this);

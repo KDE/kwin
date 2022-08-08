@@ -448,7 +448,7 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
 
         motionNotifyEvent(event->event, event->state,
                           x, y, root_x, root_y);
-        workspace()->updateFocusMousePosition(QPoint(root_x, root_y));
+        workspace()->updateFocusMousePosition(QPointF(root_x, root_y));
         break;
     }
     case XCB_ENTER_NOTIFY: {
@@ -466,7 +466,7 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
 
         motionNotifyEvent(event->event, event->state,
                           x, y, root_x, root_y);
-        workspace()->updateFocusMousePosition(QPoint(root_x, root_y));
+        workspace()->updateFocusMousePosition(QPointF(root_x, root_y));
         break;
     }
     case XCB_LEAVE_NOTIFY: {
@@ -1176,14 +1176,14 @@ void X11Window::focusOutEvent(xcb_focus_out_event_t *e)
 }
 
 // performs _NET_WM_MOVERESIZE
-void X11Window::NETMoveResize(int x_root, int y_root, NET::Direction direction)
+void X11Window::NETMoveResize(qreal x_root, qreal y_root, NET::Direction direction)
 {
     if (direction == NET::Move) {
         // move cursor to the provided position to prevent the window jumping there on first movement
         // the expectation is that the cursor is already at the provided position,
         // thus it's more a safety measurement
-        Cursors::self()->mouse()->setPos(QPoint(x_root, y_root));
-        performMouseCommand(Options::MouseMove, QPoint(x_root, y_root));
+        Cursors::self()->mouse()->setPos(QPointF(x_root, y_root));
+        performMouseCommand(Options::MouseMove, QPointF(x_root, y_root));
     } else if (isInteractiveMoveResize() && direction == NET::MoveResizeCancel) {
         finishInteractiveMoveResize(true);
         setInteractiveMoveResizePointerButtonDown(false);
@@ -1205,7 +1205,7 @@ void X11Window::NETMoveResize(int x_root, int y_root, NET::Direction direction)
             finishInteractiveMoveResize(false);
         }
         setInteractiveMoveResizePointerButtonDown(true);
-        setInteractiveMoveOffset(QPoint(x_root - x(), y_root - y())); // map from global
+        setInteractiveMoveOffset(QPointF(x_root - x(), y_root - y())); // map from global
         setInvertedInteractiveMoveOffset(rect().bottomRight() - interactiveMoveOffset());
         setUnrestrictedInteractiveMoveResize(false);
         setInteractiveMoveResizeGravity(convert[direction]);
