@@ -461,6 +461,9 @@ void SeatInterface::notifyPointerMotion(const QPointF &pos)
 
     if (d->pointer->focusedSurface() != effectiveFocusedSurface) {
         d->pointer->sendEnter(effectiveFocusedSurface, localPosition, display()->nextSerial());
+        if (d->keyboard) {
+            d->keyboard->setModifierFocusSurface(effectiveFocusedSurface);
+        }
     }
 
     d->pointer->sendMotion(localPosition);
@@ -580,6 +583,9 @@ void SeatInterface::notifyPointerEnter(SurfaceInterface *surface, const QPointF 
         localPosition = surface->mapToChild(effectiveFocusedSurface, localPosition);
     }
     d->pointer->sendEnter(effectiveFocusedSurface, localPosition, serial);
+    if (d->keyboard) {
+        d->keyboard->setModifierFocusSurface(effectiveFocusedSurface);
+    }
 }
 
 void SeatInterface::notifyPointerLeave()
@@ -599,6 +605,9 @@ void SeatInterface::notifyPointerLeave()
 
     const quint32 serial = d->display->nextSerial();
     d->pointer->sendLeave(serial);
+    if (d->keyboard) {
+        d->keyboard->setModifierFocusSurface(nullptr);
+    }
 }
 
 void SeatInterface::setFocusedPointerSurfacePosition(const QPointF &surfacePosition)

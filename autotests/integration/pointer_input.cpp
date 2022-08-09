@@ -23,10 +23,12 @@
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
+#include "x11window.h"
 
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
+#include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/pointer.h>
 #include <KWayland/Client/region.h>
 #include <KWayland/Client/seat.h>
@@ -35,6 +37,7 @@
 #include <KWayland/Client/surface.h>
 
 #include <linux/input.h>
+#include <xcb/xcb_icccm.h>
 
 namespace KWin
 {
@@ -121,6 +124,7 @@ private Q_SLOTS:
     void testHideShowCursor();
     void testDefaultInputRegion();
     void testEmptyInputRegion();
+    void testUnfocusedModifiers();
 
 private:
     void render(KWayland::Client::Surface *surface, const QSize &size = QSize(100, 50));
@@ -1817,6 +1821,69 @@ void PointerInputTest::testEmptyInputRegion()
     QVERIFY(Test::waitForWindowDestroyed(window));
 }
 
+void PointerInputTest::testUnfocusedModifiers()
+{
+    // This test verifies that a window under the cursor gets modifier events,
+    // even if it isn't focused
+
+    // create a Wayland window
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    QVERIFY(surface != nullptr);
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    QVERIFY(shellSurface != nullptr);
+    Window *waylandWindow = Test::renderAndWaitForShown(surface.get(), QSize(10, 10), Qt::blue);
+    QVERIFY(waylandWindow);
+    waylandWindow->move(QPoint(0, 0));
+    Test::waitForWaylandKeyboard();
+    std::unique_ptr<KWayland::Client::Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    const QRect windowGeometry(0, 0, 10, 10);
+    xcb_window_t windowId = xcb_generate_id(c.get());
+    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+                      windowGeometry.x(),
+                      windowGeometry.y(),
+                      windowGeometry.width(),
+                      windowGeometry.height(),
+                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+    xcb_size_hints_t hints = {};
+    xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
+    xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
+    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
+    xcb_map_window(c.get(), windowId);
+    xcb_flush(c.get());
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    QVERIFY(windowCreatedSpy.wait());
+    X11Window *x11window = windowCreatedSpy.last().first().value<X11Window *>();
+    QVERIFY(waylandWindow);
+    x11window->move(QPoint(10, 10));
+
+    workspace()->activateWindow(x11window, true);
+
+    // Move the pointer over the now unfocused Wayland window
+    input()->pointer()->warp(waylandWindow->frameGeometry().center());
+    QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), waylandWindow->surface());
+
+    QSignalSpy spy(keyboard.get(), &KWayland::Client::Keyboard::modifiersChanged);
+    Test::keyboardKeyPressed(KEY_LEFTCTRL, 1);
+    QVERIFY(spy.wait(50));
+    QCOMPARE(spy.last().at(0).toInt(), XCB_MOD_MASK_CONTROL);
+
+    Test::keyboardKeyReleased(KEY_LEFTCTRL, 2);
+
+    // Destroy the x11 window.
+    QSignalSpy windowClosedSpy(waylandWindow, &X11Window::closed);
+    xcb_unmap_window(c.get(), windowId);
+    xcb_destroy_window(c.get(), windowId);
+    xcb_flush(c.get());
+    c.reset();
+
+    // Destroy the Wayland window.
+    shellSurface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(waylandWindow));
+}
 }
 
 WAYLANDTEST_MAIN(KWin::PointerInputTest)
