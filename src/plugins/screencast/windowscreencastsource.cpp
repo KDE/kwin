@@ -50,7 +50,9 @@ void WindowScreenCastSource::render(QImage *image)
 
 void WindowScreenCastSource::render(GLFramebuffer *target)
 {
-    const QRectF geometry = m_window->clientGeometry();
+    auto targetScale = Compositor::self()->scene()->renderTargetScale();
+
+    const QRectF geometry = scaledRect(m_window->clientGeometry(), targetScale);
     QMatrix4x4 projectionMatrix;
     projectionMatrix.ortho(geometry.x(), geometry.x() + geometry.width(),
                            geometry.y(), geometry.y() + geometry.height(), -1, 1);

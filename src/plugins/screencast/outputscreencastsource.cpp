@@ -53,7 +53,7 @@ void OutputScreenCastSource::render(GLFramebuffer *target)
 
     ShaderBinder shaderBinder(ShaderTrait::MapTexture);
     QMatrix4x4 projectionMatrix;
-    projectionMatrix.ortho(geometry);
+    projectionMatrix.ortho(scaledRect(geometry, m_output->scale()));
     shaderBinder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
 
     GLFramebuffer::pushFramebuffer(target);
