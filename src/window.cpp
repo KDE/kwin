@@ -10,6 +10,7 @@
 #include "window.h"
 
 #include "output.h"
+#include <math.h>
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -54,9 +55,10 @@
 namespace KWin
 {
 
-static inline int sign(int v)
+static inline int sign(qreal v)
 {
-    return (v > 0) - (v < 0);
+    return qFuzzyIsNull(v) ? 0 : (v > 0) ? 1
+                                         : -1;
 }
 
 QHash<QString, std::weak_ptr<Decoration::DecorationPalette>> Window::s_palettes;
@@ -1793,7 +1795,7 @@ void Window::handleInteractiveMoveResize(const QPointF &local, const QPointF &gl
     }
 }
 
-void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
+void Window::handleInteractiveMoveResize(qreal x, qreal y, qreal x_root, qreal y_root)
 {
     if (isWaitingForInteractiveMoveResizeSync()) {
         return; // we're still waiting for the client or the timeout
@@ -1833,7 +1835,7 @@ void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
 
     // TODO move whole group when moving its leader or when the leader is not mapped?
 
-    auto titleBarRect = [this](bool &transposed, int &requiredPixels) -> QRectF {
+    auto titleBarRect = [this](bool &transposed, qreal &requiredPixels) -> QRectF {
         const QRectF &moveResizeGeom = moveResizeGeometry();
         QRectF r(moveResizeGeom);
         r.moveTopLeft(QPointF(0, 0));
@@ -1913,17 +1915,20 @@ void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
             QRegion availableArea(workspace()->clientArea(FullArea, this, workspace()->activeOutput()).toRect());
             availableArea -= workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop());
             bool transposed = false;
-            int requiredPixels;
+            qreal requiredPixels;
             QRectF bTitleRect = titleBarRect(transposed, requiredPixels);
-            int lastVisiblePixels = -1;
+            qreal lastVisiblePixels = -1;
             QRectF lastTry = moveResizeGeometry();
             bool titleFailed = false;
+
+            qDebug() << "entering loop" << moveResizeGeometry();
             for (;;) {
-                const QRect titleRect = bTitleRect.translated(moveResizeGeometry().topLeft()).toRect();
-                int visiblePixels = 0;
-                int realVisiblePixels = 0;
+
+                const QRectF titleRect = bTitleRect.translated(moveResizeGeometry().topLeft());
+                qreal visiblePixels = 0;
+                qreal realVisiblePixels = 0;
                 for (const QRect &rect : availableArea) {
-                    const QRect r = rect & titleRect;
+                    const QRectF r = QRectF(rect) & titleRect;
                     realVisiblePixels += r.width() * r.height();
                     if ((transposed && r.width() == titleRect.width()) || // Only the full size regions...
                         (!transposed && r.height() == titleRect.height())) { // ...prevents long slim areas
@@ -1955,10 +1960,14 @@ void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
                 // precedence. The opposing edge has no impact on visiblePixels and only one of
                 // the adjacent can alter at a time, ie. it's enough to ignore adjacent edges
                 // if the title edge altered
-                bool leftChanged = previousMoveResizeGeom.left() != moveResizeGeom.left();
-                bool rightChanged = previousMoveResizeGeom.right() != moveResizeGeom.right();
-                bool topChanged = previousMoveResizeGeom.top() != moveResizeGeom.top();
-                bool btmChanged = previousMoveResizeGeom.bottom() != moveResizeGeom.bottom();
+
+                bool leftChanged = !qFuzzyCompare(previousMoveResizeGeom.left(), moveResizeGeom.left());
+                bool rightChanged = !qFuzzyCompare(previousMoveResizeGeom.right(), moveResizeGeom.right());
+                bool topChanged = !qFuzzyCompare(previousMoveResizeGeom.top(), moveResizeGeom.top());
+                bool btmChanged = !qFuzzyCompare(previousMoveResizeGeom.bottom(), moveResizeGeom.bottom());
+
+                qDebug() << leftChanged << rightChanged << topChanged << btmChanged << previousMoveResizeGeom << moveResizeGeom;
+
                 auto fixChangedState = [titleFailed](bool &major, bool &counter, bool &ad1, bool &ad2) {
                     counter = false;
                     if (titleFailed) {
@@ -1994,6 +2003,7 @@ void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
                 } else {
                     break; // no position changed - that's certainly not good
                 }
+                qDebug() << "Resize to " << moveResizeGeom;
                 setMoveResizeGeometry(moveResizeGeom);
             }
         }
@@ -2050,12 +2060,12 @@ void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
                 QRegion availableArea(workspace()->clientArea(FullArea, this, workspace()->activeOutput()).toAlignedRect());
                 availableArea -= strut; // Strut areas
                 bool transposed = false;
-                int requiredPixels;
+                qreal requiredPixels;
                 QRectF bTitleRect = titleBarRect(transposed, requiredPixels);
                 for (;;) {
                     QRectF moveResizeGeom = moveResizeGeometry();
                     const QRectF titleRect(bTitleRect.translated(moveResizeGeom.topLeft()));
-                    int visiblePixels = 0;
+                    qreal visiblePixels = 0;
                     for (const QRect &rect : availableArea) {
                         const QRect r = rect & titleRect.toRect();
                         if ((transposed && r.width() == titleRect.width()) || // Only the full size regions...
@@ -2078,7 +2088,7 @@ void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
                     // and bug #301805 for why we can't just match the titlearea against the screen
                     if (workspace()->outputs().count() > 1) { // optimization
                         // TODO: could be useful on partial screen struts (half-width panels etc.)
-                        int newTitleTop = -1;
+                        qreal newTitleTop = -1;
                         for (const QRectF &r : strut) {
                             if (r.top() == 0 && r.width() > r.height() && // "top panel"
                                 r.intersects(moveResizeGeom) && moveResizeGeom.top() < r.bottom()) {
@@ -2093,8 +2103,8 @@ void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
                         }
                     }
 
-                    int dx = sign(previousMoveResizeGeom.x() - moveResizeGeom.x()),
-                        dy = sign(previousMoveResizeGeom.y() - moveResizeGeom.y());
+                    qreal dx = sign(previousMoveResizeGeom.x() - moveResizeGeom.x()),
+                          dy = sign(previousMoveResizeGeom.y() - moveResizeGeom.y());
                     if (visiblePixels && dx) { // means there's no full width cap -> favor horizontally
                         dy = 0;
                     } else if (dy) {
@@ -3648,6 +3658,7 @@ QRectF Window::moveResizeGeometry() const
 
 void Window::setMoveResizeGeometry(const QRectF &geo)
 {
+    qDebug() << "Set move resize" << geo;
     m_moveResizeGeometry = geo;
 }
 

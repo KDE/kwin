@@ -1392,7 +1392,7 @@ void X11Window::updateInputShape()
         // the window lose focus (which is a problem with mouse focus policies)
         // TODO: It seems there is, after all - XShapeGetRectangles() - but maybe this is better
         if (!shape_helper_window.isValid()) {
-            shape_helper_window.create(QRect(0, 0, 1, 1));
+            shape_helper_window.create(Xcb::fromXNative(QRect(0, 0, 1, 1)));
         }
         const QSizeF bufferSize = m_bufferGeometry.size();
         shape_helper_window.resize(bufferSize);
@@ -4179,6 +4179,7 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
     // for example using X11Window::clientSize()
 
     QRectF frameGeometry = rect;
+    qDebug() << "IN" << frameGeometry;
 
     if (shade_geometry_change) {
         ; // nothing
