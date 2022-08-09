@@ -93,7 +93,7 @@ void OverviewEffect::reconfigure(ReconfigureFlags)
 {
     OverviewConfig::self()->read();
     setLayout(OverviewConfig::layoutMode());
-    setAnimationDuration(animationTime(200));
+    setAnimationDuration(animationTime(400));
     setBlurBackground(OverviewConfig::blurBackground());
 
     for (const ElectricBorder &border : qAsConst(m_borderActivate)) {

@@ -87,7 +87,7 @@ private:
     qreal m_partialActivationFactor = 0;
     bool m_blurBackground = false;
     Status m_status = Status::Inactive;
-    int m_animationDuration = 200;
+    int m_animationDuration = 400;
     int m_layout = 1;
     bool m_gestureInProgress = false;
 };

@@ -274,7 +274,7 @@ Item {
         NumberAnimation {
             duration: thumb.windowHeap.animationDuration
             properties: "x, y, width, height, opacity"
-            easing.type: Easing.InOutCubic
+            easing.type: Easing.OutCubic
         }
     }
 

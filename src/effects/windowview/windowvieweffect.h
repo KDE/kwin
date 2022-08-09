@@ -120,7 +120,7 @@ private:
     Status m_status = Status::Inactive;
     qreal m_partialActivationFactor = 0;
     PresentWindowsMode m_mode;
-    int m_animationDuration = 200;
+    int m_animationDuration = 400;
     int m_layout = 1;
     bool m_gestureInProgress = false;
 };

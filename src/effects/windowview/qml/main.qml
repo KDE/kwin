@@ -23,8 +23,6 @@ Item {
     property bool animationEnabled: false
     property bool organized: false
 
-    readonly property int animationDuration: PlasmaCore.Units.longDuration
-
     function start() {
         animationEnabled = true;
         organized = true;
@@ -34,7 +32,7 @@ Item {
         organized = false;
     }
 
-    Keys.onEscapePressed: effect.deactivate(animationDuration);
+    Keys.onEscapePressed: effect.deactivate(container.effect.animationDuration);
 
     Keys.priority: Keys.AfterItem
     Keys.forwardTo: searchField
@@ -72,7 +70,7 @@ Item {
         layer.effect: FastBlur {
             radius: container.organized ? 64 : 0
             Behavior on radius {
-                NumberAnimation { duration: container.animationDuration; easing.type: Easing.OutCubic }
+                NumberAnimation { duration: container.effect.animationDuration; easing.type: Easing.OutCubic }
             }
         }
     }
@@ -83,11 +81,11 @@ Item {
         opacity: container.organized ? 0.75 : 0
 
         TapHandler {
-            onTapped: effect.deactivate(animationDuration);
+            onTapped: effect.deactivate(container.effect.animationDuration);
         }
 
         Behavior on opacity {
-            OpacityAnimator { duration: animationDuration; easing.type: Easing.OutCubic }
+            OpacityAnimator { duration: container.effect.animationDuration; easing.type: Easing.OutCubic }
         }
     }
 
@@ -143,7 +141,7 @@ Item {
             Layout.fillHeight: true
             focus: true
             padding: PlasmaCore.Units.largeSpacing
-            animationDuration: container.animationDuration
+            animationDuration: container.effect.animationDuration
             animationEnabled: container.animationEnabled
             organized: container.organized
             showOnly: {
@@ -186,7 +184,7 @@ Item {
                 opacity: 1 - downGestureProgress
                 onDownGestureTriggered: client.closeWindow()
             }
-            onActivated: effect.deactivate(animationDuration);
+            onActivated: effect.deactivate(container.effect.animationDuration);
         }
     }
     PlasmaExtras.PlaceholderMessage {
@@ -214,7 +212,7 @@ Item {
             opacity: (model.client.hidden || container.organized) ? 0 : 1
 
             Behavior on opacity {
-                NumberAnimation { duration: animationDuration; easing.type: Easing.OutCubic }
+                NumberAnimation { duration: container.effect.animationDuration; easing.type: Easing.OutCubic }
             }
         }
     }

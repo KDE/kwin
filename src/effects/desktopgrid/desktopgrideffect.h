@@ -108,7 +108,7 @@ private:
     QList<ElectricBorder> m_borderActivate;
     QList<ElectricBorder> m_touchBorderActivate;
     Status m_status = Status::Inactive;
-    int m_animationDuration = 200;
+    int m_animationDuration = 400;
     int m_layout = 1;
     bool m_gestureInProgress = false;
 };

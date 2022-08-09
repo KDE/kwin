@@ -98,7 +98,7 @@ void DesktopGridEffect::reconfigure(ReconfigureFlags)
 {
     DesktopGridConfig::self()->read();
     setLayout(DesktopGridConfig::layoutMode());
-    setAnimationDuration(animationTime(200));
+    setAnimationDuration(animationTime(400));
 
     for (const ElectricBorder &border : qAsConst(m_borderActivate)) {
         effects->unreserveElectricBorder(border, this);

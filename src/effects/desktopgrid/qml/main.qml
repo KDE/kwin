@@ -161,28 +161,28 @@ Rectangle {
             enabled: !container.effect.gestureInProgress
             NumberAnimation {
                 duration: container.effect.animationDuration
-                easing.type: Easing.InOutCubic
+                easing.type: Easing.OutCubic
             }
         }
         Behavior on y {
             enabled: !container.effect.gestureInProgress
             NumberAnimation {
                 duration: container.effect.animationDuration
-                easing.type: Easing.InOutCubic
+                easing.type: Easing.OutCubic
             }
         }
         Behavior on scale {
             enabled: !container.effect.gestureInProgress
             NumberAnimation {
                 duration: container.effect.animationDuration
-                easing.type: Easing.InOutCubic
+                easing.type: Easing.OutCubic
             }
         }
         Behavior on panelOpacity {
             enabled: !container.effect.gestureInProgress
             NumberAnimation {
                 duration: container.effect.animationDuration
-                easing.type: Easing.InOutCubic
+                easing.type: Easing.OutCubic
             }
         }
 
@@ -304,7 +304,7 @@ Rectangle {
             enabled: !container.effect.gestureInProgress
             NumberAnimation {
                 duration: container.effect.animationDuration
-                easing.type: Easing.InOutCubic
+                easing.type: Easing.OutCubic
             }
         }
     }

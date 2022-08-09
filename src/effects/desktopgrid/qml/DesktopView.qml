@@ -138,7 +138,7 @@ FocusScope {
             XAnimator {
                 id: xAnim
                 duration: container.effect.animationDuration
-                easing.type: Easing.InOutCubic
+                easing.type: Easing.OutCubic
             }
         }
         Behavior on y {
@@ -146,7 +146,7 @@ FocusScope {
             YAnimator {
                 id: yAnim
                 duration: container.effect.animationDuration
-                easing.type: Easing.InOutCubic
+                easing.type: Easing.OutCubic
             }
         }
     }

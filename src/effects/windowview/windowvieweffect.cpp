@@ -185,7 +185,7 @@ int WindowViewEffect::requestedEffectChainPosition() const
 void WindowViewEffect::reconfigure(ReconfigureFlags)
 {
     WindowViewConfig::self()->read();
-    setAnimationDuration(animationTime(200));
+    setAnimationDuration(animationTime(400));
     setLayout(WindowViewConfig::layoutMode());
 
     for (ElectricBorder border : qAsConst(m_borderActivate)) {
