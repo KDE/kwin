@@ -36,7 +36,7 @@ bool WindowScreenCastSource::hasAlphaChannel() const
 
 QSize WindowScreenCastSource::textureSize() const
 {
-    return m_window->clientGeometry().size().toSize();
+    return m_window->clientGeometry().size().toSize() * m_window->output()->scale();
 }
 
 void WindowScreenCastSource::render(QImage *image)
@@ -50,7 +50,7 @@ void WindowScreenCastSource::render(QImage *image)
 
 void WindowScreenCastSource::render(GLFramebuffer *target)
 {
-    const QRectF geometry = m_window->clientGeometry();
+    const QRectF geometry = scaledRect(m_window->clientGeometry(), m_window->output()->scale());
     QMatrix4x4 projectionMatrix;
     projectionMatrix.ortho(geometry.x(), geometry.x() + geometry.width(),
                            geometry.y(), geometry.y() + geometry.height(), -1, 1);
