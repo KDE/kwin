@@ -32,8 +32,7 @@ namespace KWin
 ScreencastManager::ScreencastManager()
     : m_screencast(new KWaylandServer::ScreencastV1Interface(waylandServer()->display(), this))
 {
-    connect(m_screencast, &KWaylandServer::ScreencastV1Interface::windowScreencastRequested,
-            this, &ScreencastManager::streamWindow);
+    connect(m_screencast, &KWaylandServer::ScreencastV1Interface::windowScreencastRequested, this, &ScreencastManager::streamWindow);
     connect(m_screencast, &KWaylandServer::ScreencastV1Interface::outputScreencastRequested, this, &ScreencastManager::streamWaylandOutput);
     connect(m_screencast, &KWaylandServer::ScreencastV1Interface::virtualOutputScreencastRequested, this, &ScreencastManager::streamVirtualOutput);
     connect(m_screencast, &KWaylandServer::ScreencastV1Interface::regionScreencastRequested, this, &ScreencastManager::streamRegion);
@@ -84,7 +83,9 @@ private:
     Window *m_window;
 };
 
-void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamV1Interface *waylandStream, const QString &winid)
+void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamV1Interface *waylandStream,
+                                     const QString &winid,
+                                     KWaylandServer::ScreencastV1Interface::CursorMode mode)
 {
     auto window = Workspace::self()->findToplevel(QUuid(winid));
     if (!window) {
@@ -93,6 +94,13 @@ void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamV1Interface
     }
 
     auto stream = new WindowStream(window, this);
+    stream->setCursorMode(mode, 1, window->clientGeometry().toRect());
+    if (mode != KWaylandServer::ScreencastV1Interface::CursorMode::Hidden) {
+        connect(window, &Window::clientGeometryChanged, stream, [window, stream, mode]() {
+            stream->setCursorMode(mode, 1, window->clientGeometry().toRect());
+        });
+    }
+
     integrateStreams(waylandStream, stream);
 }
 

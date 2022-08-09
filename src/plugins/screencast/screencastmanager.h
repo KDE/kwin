@@ -25,7 +25,9 @@ public:
     explicit ScreencastManager();
 
 private:
-    void streamWindow(KWaylandServer::ScreencastStreamV1Interface *stream, const QString &winid);
+    void streamWindow(KWaylandServer::ScreencastStreamV1Interface *stream,
+                      const QString &winid,
+                      KWaylandServer::ScreencastV1Interface::CursorMode mode);
     void streamWaylandOutput(KWaylandServer::ScreencastStreamV1Interface *stream,
                              KWaylandServer::OutputInterface *output,
                              KWaylandServer::ScreencastV1Interface::CursorMode mode);
