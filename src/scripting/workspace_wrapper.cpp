@@ -57,6 +57,7 @@ WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
         Q_EMIT numberScreensChanged(numScreens());
     });
     connect(Cursors::self()->mouse(), &Cursor::posChanged, this, &WorkspaceWrapper::cursorPosChanged);
+    connect(ws, &Workspace::stackingOrderChanged, this, &WorkspaceWrapper::stackingOrderChanged);
 }
 
 VirtualDesktop *WorkspaceWrapper::currentDesktop() const

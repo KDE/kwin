@@ -131,6 +131,11 @@ Q_SIGNALS:
      */
     void cursorPosChanged();
 
+    /**
+     * Signal emitted whenever the stacking order changed, e.g. a window was raised.
+     */
+    void stackingOrderChanged();
+
 public:
     //------------------------------------------------------------------
     // enums copy&pasted from kwinglobals.h because qtscript is evil
