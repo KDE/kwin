@@ -2158,10 +2158,7 @@ void Window::setupWindowManagementInterface()
         // already setup
         return;
     }
-    if (!waylandServer() || !surface()) {
-        return;
-    }
-    if (!waylandServer()->windowManagement()) {
+    if (!waylandServer() || !waylandServer()->windowManagement()) {
         return;
     }
     using namespace KWaylandServer;
