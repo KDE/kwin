@@ -962,6 +962,8 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     setBlockingCompositing(info->isBlockingCompositing());
     readShowOnScreenEdge(showOnScreenEdgeCookie);
 
+    setupWindowManagementInterface();
+
     // Forward all opacity values to the frame in case there'll be other CM running.
     connect(Compositor::self(), &Compositor::compositingToggled, this, [this](bool active) {
         if (active) {
@@ -2348,7 +2350,6 @@ void X11Window::sendSyncRequest()
             if (!ready_for_painting) {
                 // failed on initial pre-show request
                 setReadyForPainting();
-                setupWindowManagementInterface();
                 return;
             }
             // failed during resize
@@ -2844,7 +2845,6 @@ void X11Window::checkApplicationMenuObjectPath()
 void X11Window::handleSync()
 {
     setReadyForPainting();
-    setupWindowManagementInterface();
     m_syncRequest.isPending = false;
     if (m_syncRequest.failsafeTimeout) {
         m_syncRequest.failsafeTimeout->stop();
@@ -4874,7 +4874,6 @@ void X11Window::damageNotifyEvent()
     if (!readyForPainting()) { // avoid "setReadyForPainting()" function calling overhead
         if (m_syncRequest.counter == XCB_NONE) { // cannot detect complete redraw, consider done now
             setReadyForPainting();
-            setupWindowManagementInterface();
         }
     }
 
