@@ -64,10 +64,13 @@ void Platform::doHideCursor()
 
 void Platform::showCursor()
 {
+    m_hideCursorCounter = 1;
+#if 0
     m_hideCursorCounter--;
     if (m_hideCursorCounter == 0) {
         doShowCursor();
     }
+#endif
 }
 
 void Platform::doShowCursor()

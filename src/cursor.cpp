@@ -90,7 +90,9 @@ Cursor::Cursor(QObject *parent)
     , m_themeName(defaultThemeName())
     , m_themeSize(defaultThemeSize())
 {
+#if 0
     loadThemeSettings();
+#endif
     QDBusConnection::sessionBus().connect(QString(), QStringLiteral("/KGlobalSettings"), QStringLiteral("org.kde.KGlobalSettings"),
                                           QStringLiteral("notifyChange"), this, SLOT(slotKGlobalSettingsNotifyChange(int,int)));
 }
@@ -102,6 +104,7 @@ Cursor::~Cursor()
 
 void Cursor::loadThemeSettings()
 {
+#if 0
     QString themeName = QString::fromUtf8(qgetenv("XCURSOR_THEME"));
     bool ok = false;
     // XCURSOR_SIZE might not be set (e.g. by startkde)
@@ -112,29 +115,35 @@ void Cursor::loadThemeSettings()
     }
     // didn't get from environment variables, read from config file
     loadThemeFromKConfig();
+#endif
 }
 
 void Cursor::loadThemeFromKConfig()
 {
+#if 0
     KConfigGroup mousecfg(InputConfig::self()->inputConfig(), "Mouse");
     const QString themeName = mousecfg.readEntry("cursorTheme", defaultThemeName());
     const uint themeSize = mousecfg.readEntry("cursorSize", defaultThemeSize());
     updateTheme(themeName, themeSize);
+#endif
 }
 
 void Cursor::updateTheme(const QString &name, int size)
 {
+#if 0
     if (m_themeName != name || m_themeSize != size) {
         m_themeName = name;
         m_themeSize = size;
         m_cursors.clear();
         Q_EMIT themeChanged();
     }
+#endif
 }
 
 void Cursor::slotKGlobalSettingsNotifyChange(int type, int arg)
 {
 // #endif
+#if 0
     Q_UNUSED(arg)
     if (type == 5 /*CursorChanged*/) {
         InputConfig::self()->inputConfig()->reparseConfiguration();
@@ -143,6 +152,7 @@ void Cursor::slotKGlobalSettingsNotifyChange(int type, int arg)
         qputenv("XCURSOR_THEME", m_themeName.toUtf8());
         qputenv("XCURSOR_SIZE", QByteArray::number(m_themeSize));
     }
+#endif
 }
 
 QRect Cursor::geometry() const
@@ -178,7 +188,9 @@ void Cursor::setPos(int x, int y)
 
 void Cursor::updateCursor(const QImage &image, const QPoint &hotspot)
 {
+#if 0
     m_image = image;
+#endif
     m_hotspot = hotspot;
     Q_EMIT cursorChanged();
 }
