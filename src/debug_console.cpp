@@ -46,6 +46,7 @@
 #include <QMetaType>
 #include <QMouseEvent>
 #include <QScopeGuard>
+#include <QSortFilterProxyModel>
 #include <QtConcurrentRun>
 
 #include <wayland-server-core.h>
@@ -592,8 +593,15 @@ DebugConsole::DebugConsole()
 {
     setAttribute(Qt::WA_ShowWithoutActivating);
     m_ui->setupUi(this);
+
+    auto windowsModel = new DebugConsoleModel(this);
+    QSortFilterProxyModel *proxyWindowsModel = new QSortFilterProxyModel(this);
+    proxyWindowsModel->setSourceModel(windowsModel);
+    m_ui->windowsView->setModel(proxyWindowsModel);
+    m_ui->windowsView->sortByColumn(0, Qt::AscendingOrder);
+    m_ui->windowsView->header()->setSortIndicatorShown(true);
     m_ui->windowsView->setItemDelegate(new DebugConsoleDelegate(this));
-    m_ui->windowsView->setModel(new DebugConsoleModel(this));
+
     m_ui->surfacesView->setModel(new SurfaceTreeModel(this));
     m_ui->clipboardContent->setModel(new DataSourceModel(this));
     m_ui->primaryContent->setModel(new DataSourceModel(this));
