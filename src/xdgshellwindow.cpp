@@ -664,7 +664,7 @@ bool XdgToplevelWindow::isMovable() const
 
 bool XdgToplevelWindow::isMovableAcrossScreens() const
 {
-    if (isSpecialWindow() && !isSplash() && !isToolbar()) {
+    if ((isSpecialWindow() && !isSplash() && !isToolbar()) || isAppletPopup()) {
         return false;
     }
     if (rules()->checkPosition(invalidPoint) != invalidPoint) {

@@ -2505,7 +2505,7 @@ bool Window::performMouseCommand(Options::MouseCommand cmd, const QPointF &globa
         // fallthrough
     case Options::MouseMove:
     case Options::MouseUnrestrictedMove: {
-        if (!isMovable() || !isMovableAcrossScreens()) {
+        if (!isMovableAcrossScreens()) {
             break;
         }
         if (isInteractiveMoveResize()) {
