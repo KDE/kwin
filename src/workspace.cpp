@@ -2411,7 +2411,6 @@ QPointF Workspace::adjustWindowPosition(Window *window, QPointF pos, bool unrest
 
     if (options->windowSnapZone() || !borderSnapZone.isNull() || options->centerSnapZone()) {
 
-        const bool snappingToCenter = (options->centerSnapZone() * snapAdjust);
         const bool sOWO = options->isSnapOnlyWhenOverlapping();
         const Output *output = outputAt(pos + window->rect().center());
         if (maxRect.isNull()) {
@@ -2436,31 +2435,31 @@ QPointF Workspace::adjustWindowPosition(Window *window, QPointF pos, bool unrest
         int lx, ly, lrx, lry; // coords and size for the comparison window, l
 
         // border snap
-        const int snapX = borderSnapZone.width() * snapAdjust; // snap trigger
-        const int snapY = borderSnapZone.height() * snapAdjust;
-        if (snapX || snapY) {
-            if ((sOWO ? (cx < xmin) : true) && (qAbs(xmin - cx) < snapX)) {
+        const int borderXSnapZone = borderSnapZone.width() * snapAdjust; // snap trigger
+        const int borderYSnapZone = borderSnapZone.height() * snapAdjust;
+        if (borderXSnapZone > 0 || borderYSnapZone > 0) {
+            if ((sOWO ? (cx < xmin) : true) && (qAbs(xmin - cx) < borderXSnapZone)) {
                 deltaX = xmin - cx;
                 nx = xmin;
             }
-            if ((sOWO ? (rx > xmax) : true) && (qAbs(rx - xmax) < snapX) && (qAbs(xmax - rx) < deltaX)) {
+            if ((sOWO ? (rx > xmax) : true) && (qAbs(rx - xmax) < borderXSnapZone) && (qAbs(xmax - rx) < deltaX)) {
                 deltaX = rx - xmax;
                 nx = xmax - cw;
             }
 
-            if ((sOWO ? (cy < ymin) : true) && (qAbs(ymin - cy) < snapY)) {
+            if ((sOWO ? (cy < ymin) : true) && (qAbs(ymin - cy) < borderYSnapZone)) {
                 deltaY = ymin - cy;
                 ny = ymin;
             }
-            if ((sOWO ? (ry > ymax) : true) && (qAbs(ry - ymax) < snapY) && (qAbs(ymax - ry) < deltaY)) {
+            if ((sOWO ? (ry > ymax) : true) && (qAbs(ry - ymax) < borderYSnapZone) && (qAbs(ymax - ry) < deltaY)) {
                 deltaY = ry - ymax;
                 ny = ymax - ch;
             }
         }
 
         // windows snap
-        int snap = options->windowSnapZone() * snapAdjust;
-        if (snap) {
+        const int windowSnapZone = options->windowSnapZone() * snapAdjust;
+        if (windowSnapZone > 0) {
             for (auto l = m_allClients.constBegin(); l != m_allClients.constEnd(); ++l) {
                 if ((*l) == window) {
                     continue;
@@ -2487,23 +2486,23 @@ QPointF Workspace::adjustWindowPosition(Window *window, QPointF pos, bool unrest
                 lry = ly + (*l)->height();
 
                 if (!(guideMaximized & MaximizeHorizontal) && (((cy <= lry) && (cy >= ly)) || ((ry >= ly) && (ry <= lry)) || ((cy <= ly) && (ry >= lry)))) {
-                    if ((sOWO ? (cx < lrx) : true) && (qAbs(lrx - cx) < snap) && (qAbs(lrx - cx) < deltaX)) {
+                    if ((sOWO ? (cx < lrx) : true) && (qAbs(lrx - cx) < windowSnapZone) && (qAbs(lrx - cx) < deltaX)) {
                         deltaX = qAbs(lrx - cx);
                         nx = lrx;
                     }
-                    if ((sOWO ? (rx > lx) : true) && (qAbs(rx - lx) < snap) && (qAbs(rx - lx) < deltaX)) {
+                    if ((sOWO ? (rx > lx) : true) && (qAbs(rx - lx) < windowSnapZone) && (qAbs(rx - lx) < deltaX)) {
                         deltaX = qAbs(rx - lx);
                         nx = lx - cw;
                     }
                 }
 
                 if (!(guideMaximized & MaximizeVertical) && (((cx <= lrx) && (cx >= lx)) || ((rx >= lx) && (rx <= lrx)) || ((cx <= lx) && (rx >= lrx)))) {
-                    if ((sOWO ? (cy < lry) : true) && (qAbs(lry - cy) < snap) && (qAbs(lry - cy) < deltaY)) {
+                    if ((sOWO ? (cy < lry) : true) && (qAbs(lry - cy) < windowSnapZone) && (qAbs(lry - cy) < deltaY)) {
                         deltaY = qAbs(lry - cy);
                         ny = lry;
                     }
                     // if ( (qAbs( ry-ly ) < snap) && (qAbs( ry - ly ) < deltaY ))
-                    if ((sOWO ? (ry > ly) : true) && (qAbs(ry - ly) < snap) && (qAbs(ry - ly) < deltaY)) {
+                    if ((sOWO ? (ry > ly) : true) && (qAbs(ry - ly) < windowSnapZone) && (qAbs(ry - ly) < deltaY)) {
                         deltaY = qAbs(ry - ly);
                         ny = ly - ch;
                     }
@@ -2511,21 +2510,21 @@ QPointF Workspace::adjustWindowPosition(Window *window, QPointF pos, bool unrest
 
                 // Corner snapping
                 if (!(guideMaximized & MaximizeVertical) && (nx == lrx || nx + cw == lx)) {
-                    if ((sOWO ? (ry > lry) : true) && (qAbs(lry - ry) < snap) && (qAbs(lry - ry) < deltaY)) {
+                    if ((sOWO ? (ry > lry) : true) && (qAbs(lry - ry) < windowSnapZone) && (qAbs(lry - ry) < deltaY)) {
                         deltaY = qAbs(lry - ry);
                         ny = lry - ch;
                     }
-                    if ((sOWO ? (cy < ly) : true) && (qAbs(cy - ly) < snap) && (qAbs(cy - ly) < deltaY)) {
+                    if ((sOWO ? (cy < ly) : true) && (qAbs(cy - ly) < windowSnapZone) && (qAbs(cy - ly) < deltaY)) {
                         deltaY = qAbs(cy - ly);
                         ny = ly;
                     }
                 }
                 if (!(guideMaximized & MaximizeHorizontal) && (ny == lry || ny + ch == ly)) {
-                    if ((sOWO ? (rx > lrx) : true) && (qAbs(lrx - rx) < snap) && (qAbs(lrx - rx) < deltaX)) {
+                    if ((sOWO ? (rx > lrx) : true) && (qAbs(lrx - rx) < windowSnapZone) && (qAbs(lrx - rx) < deltaX)) {
                         deltaX = qAbs(lrx - rx);
                         nx = lrx - cw;
                     }
-                    if ((sOWO ? (cx < lx) : true) && (qAbs(cx - lx) < snap) && (qAbs(cx - lx) < deltaX)) {
+                    if ((sOWO ? (cx < lx) : true) && (qAbs(cx - lx) < windowSnapZone) && (qAbs(cx - lx) < deltaX)) {
                         deltaX = qAbs(cx - lx);
                         nx = lx;
                     }
@@ -2534,19 +2533,20 @@ QPointF Workspace::adjustWindowPosition(Window *window, QPointF pos, bool unrest
         }
 
         // center snap
-        if (snappingToCenter) { // snap trigger
+        const int centerSnapZone = options->centerSnapZone() * snapAdjust;
+        if (centerSnapZone > 0) {
             int diffX = qAbs((xmin + xmax) / 2 - (cx + cw / 2));
             int diffY = qAbs((ymin + ymax) / 2 - (cy + ch / 2));
-            if (diffX < snap && diffY < snap && diffX < deltaX && diffY < deltaY) {
+            if (diffX < centerSnapZone && diffY < centerSnapZone && diffX < deltaX && diffY < deltaY) {
                 // Snap to center of screen
                 nx = (xmin + xmax) / 2 - cw / 2;
                 ny = (ymin + ymax) / 2 - ch / 2;
-            } else if (options->borderSnapZone()) {
+            } else if (options->borderSnapZone() > 0) {
                 // Enhance border snap
-                if ((nx == xmin || nx == xmax - cw) && diffY < snap && diffY < deltaY) {
+                if ((nx == xmin || nx == xmax - cw) && diffY < centerSnapZone && diffY < deltaY) {
                     // Snap to vertical center on screen edge
                     ny = (ymin + ymax) / 2 - ch / 2;
-                } else if (((unrestricted ? ny == ymin : ny <= ymin) || ny == ymax - ch) && diffX < snap && diffX < deltaX) {
+                } else if (((unrestricted ? ny == ymin : ny <= ymin) || ny == ymax - ch) && diffX < centerSnapZone && diffX < deltaX) {
                     // Snap to horizontal center on screen edge
                     nx = (xmin + xmax) / 2 - cw / 2;
                 }
