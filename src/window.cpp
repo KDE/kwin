@@ -1100,24 +1100,6 @@ void Window::setDesktops(QVector<VirtualDesktop *> desktops)
 
     m_desktops = desktops;
 
-    if (windowManagementInterface()) {
-        if (m_desktops.isEmpty()) {
-            windowManagementInterface()->setOnAllDesktops(true);
-        } else {
-            windowManagementInterface()->setOnAllDesktops(false);
-            auto currentDesktops = windowManagementInterface()->plasmaVirtualDesktops();
-            for (auto desktop : qAsConst(m_desktops)) {
-                if (!currentDesktops.contains(desktop->id())) {
-                    windowManagementInterface()->addPlasmaVirtualDesktop(desktop->id());
-                } else {
-                    currentDesktops.removeOne(desktop->id());
-                }
-            }
-            for (const auto &desktopId : qAsConst(currentDesktops)) {
-                windowManagementInterface()->removePlasmaVirtualDesktop(desktopId);
-            }
-        }
-    }
     if (info) {
         info->setDesktop(desktop());
     }
@@ -2286,6 +2268,24 @@ void Window::setupWindowManagementInterface()
     // Otherwise it will unconditionally add the current desktop to the interface
     // which may not be the case, for example, when using rules
     w->setOnAllDesktops(isOnAllDesktops());
+
+    connect(this, &Window::desktopChanged, w, [this, w]() {
+        w->setOnAllDesktops(isOnAllDesktops());
+
+        if (!isOnAllDesktops()) {
+            auto currentDesktops = w->plasmaVirtualDesktops();
+            for (auto desktop : qAsConst(m_desktops)) {
+                if (!currentDesktops.contains(desktop->id())) {
+                    w->addPlasmaVirtualDesktop(desktop->id());
+                } else {
+                    currentDesktops.removeOne(desktop->id());
+                }
+            }
+            for (const auto &desktopId : qAsConst(currentDesktops)) {
+                w->removePlasmaVirtualDesktop(desktopId);
+            }
+        }
+    });
 
     // Plasma Virtual desktop management
     // show/hide when the window enters/exits from desktop
