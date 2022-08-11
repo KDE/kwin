@@ -121,7 +121,17 @@ class KWIN_EXPORT Window : public QObject
 
     Q_PROPERTY(QRect visibleRect READ visibleGeometry)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
+
+    /**
+     * The screen where the window center is on
+     */
     Q_PROPERTY(int screen READ screen NOTIFY screenChanged)
+
+    /**
+     * The output (screen) where the window center is on
+     */
+    Q_PROPERTY(KWin::Output *output READ output NOTIFY screenChanged)
+
     Q_PROPERTY(qulonglong windowId READ window CONSTANT)
 
     Q_PROPERTY(QRect rect READ rect)
@@ -626,7 +636,7 @@ public:
     int height() const;
     bool isOnOutput(Output *output) const;
     bool isOnActiveOutput() const;
-    int screen() const; // the screen where the center is
+    int screen() const;
     Output *output() const;
     void setOutput(Output *output);
     virtual QPoint clientPos() const
