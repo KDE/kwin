@@ -99,6 +99,7 @@ private Q_SLOTS:
     void testUpdateFocusOnDecorationDestroy();
     void testModifierClickUnrestrictedMove_data();
     void testModifierClickUnrestrictedMove();
+    void testModifierClickUnrestrictedFullscreenMove();
     void testModifierClickUnrestrictedMoveGlobalShortcutsDisabled();
     void testModifierScrollOpacity_data();
     void testModifierScrollOpacity();
@@ -605,6 +606,57 @@ void PointerInputTest::testModifierClickUnrestrictedMove()
     QCOMPARE(buttonSpy.count(), 0);
     // also waiting shouldn't give us the event
     QVERIFY(!buttonSpy.wait(100));
+}
+
+void PointerInputTest::testModifierClickUnrestrictedFullscreenMove()
+{
+    // this test ensures that Meta+mouse button press triggers unrestricted move for fullscreen windows
+    if (workspace()->outputs().size() < 2) {
+        QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
+    }
+
+    // first modify the config for this run
+    KConfigGroup group = kwinApp()->config()->group("MouseBindings");
+    group.writeEntry("CommandAllKey", "Meta");
+    group.writeEntry("CommandAll1", "Move");
+    group.writeEntry("CommandAll2", "Move");
+    group.writeEntry("CommandAll3", "Move");
+    group.sync();
+    workspace()->slotReconfigure();
+    QCOMPARE(options->commandAllModifier(), Qt::MetaModifier);
+    QCOMPARE(options->commandAll1(), Options::MouseUnrestrictedMove);
+    QCOMPARE(options->commandAll2(), Options::MouseUnrestrictedMove);
+    QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedMove);
+
+    // create a window
+    KWayland::Client::Surface *surface = Test::createSurface(m_compositor);
+    QVERIFY(surface);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    QVERIFY(shellSurface);
+    shellSurface->set_fullscreen(nullptr);
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface, &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Window *window = Test::renderAndWaitForShown(surface, toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::blue);
+    QVERIFY(window);
+    QVERIFY(window->isFullScreen());
+
+    // move cursor on window
+    Cursors::self()->mouse()->setPos(window->frameGeometry().center());
+
+    // simulate modifier+click
+    quint32 timestamp = 1;
+    Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
+    QVERIFY(!window->isInteractiveMove());
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    QVERIFY(window->isInteractiveMove());
+    // release modifier should not change it
+    Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+    QVERIFY(window->isInteractiveMove());
+    // but releasing the key should end move/resize
+    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+    QVERIFY(!window->isInteractiveMove());
 }
 
 void PointerInputTest::testModifierClickUnrestrictedMoveGlobalShortcutsDisabled()
