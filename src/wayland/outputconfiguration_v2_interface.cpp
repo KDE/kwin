@@ -109,7 +109,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_scale(Resource 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource *resource)
 {
     if (applied) {
-        wl_resource_post_error(resource->handle, 0, "an output configuration can be applied only once");
+        wl_resource_post_error(resource->handle, error_already_applied, "an output configuration can be applied only once");
         return;
     }
 
