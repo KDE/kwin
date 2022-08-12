@@ -11,49 +11,30 @@
 #include "outputdevice_v2_interface.h"
 #include "utils/common.h"
 
+#include "main.h"
+#include "outputconfiguration.h"
+#include "platform.h"
+#include "screens.h"
+#include "workspace.h"
+
 #include "qwayland-server-kde-output-device-v2.h"
-#include "qwayland-server-kde-output-management-v2.h"
 
-#include <wayland-client-protocol.h>
-
-#include <optional>
+using namespace KWin;
 
 namespace KWaylandServer
 {
-class OutputConfigurationV2InterfacePrivate : public QtWaylandServer::kde_output_configuration_v2
+
+OutputConfigurationV2Interface::OutputConfigurationV2Interface(wl_resource *resource)
+    : QtWaylandServer::kde_output_configuration_v2(resource)
 {
-public:
-    OutputConfigurationV2InterfacePrivate(OutputConfigurationV2Interface *q, OutputManagementV2Interface *outputManagement, wl_resource *resource);
+}
 
-    void sendApplied();
-    void sendFailed();
-    void emitConfigurationChangeRequested() const;
-    void clearPendingChanges();
+OutputConfigurationV2Interface::~OutputConfigurationV2Interface()
+{
+    qDeleteAll(changes.begin(), changes.end());
+}
 
-    bool hasPendingChanges(OutputDeviceV2Interface *outputdevice) const;
-    OutputChangeSetV2 *pendingChanges(OutputDeviceV2Interface *outputdevice);
-
-    OutputManagementV2Interface *outputManagement;
-    QHash<OutputDeviceV2Interface *, OutputChangeSetV2 *> changes;
-    std::optional<OutputDeviceV2Interface *> primaryOutput;
-    OutputConfigurationV2Interface *q;
-
-protected:
-    void kde_output_configuration_v2_enable(Resource *resource, wl_resource *outputdevice, int32_t enable) override;
-    void kde_output_configuration_v2_mode(Resource *resource, struct ::wl_resource *outputdevice, struct ::wl_resource *mode) override;
-    void kde_output_configuration_v2_transform(Resource *resource, wl_resource *outputdevice, int32_t transform) override;
-    void kde_output_configuration_v2_position(Resource *resource, wl_resource *outputdevice, int32_t x, int32_t y) override;
-    void kde_output_configuration_v2_scale(Resource *resource, wl_resource *outputdevice, wl_fixed_t scale) override;
-    void kde_output_configuration_v2_apply(Resource *resource) override;
-    void kde_output_configuration_v2_destroy(Resource *resource) override;
-    void kde_output_configuration_v2_destroy_resource(Resource *resource) override;
-    void kde_output_configuration_v2_overscan(Resource *resource, wl_resource *outputdevice, uint32_t overscan) override;
-    void kde_output_configuration_v2_set_vrr_policy(Resource *resource, struct ::wl_resource *outputdevice, uint32_t policy) override;
-    void kde_output_configuration_v2_set_rgb_range(Resource *resource, wl_resource *outputdevice, uint32_t rgbRange) override;
-    void kde_output_configuration_v2_set_primary_output(Resource *resource, struct ::wl_resource *output) override;
-};
-
-void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_enable(Resource *resource, wl_resource *outputdevice, int32_t enable)
+void OutputConfigurationV2Interface::kde_output_configuration_v2_enable(Resource *resource, wl_resource *outputdevice, int32_t enable)
 {
     Q_UNUSED(resource)
 
@@ -61,7 +42,7 @@ void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_enable(R
     pendingChanges(output)->d->enabled = enable == 1;
 }
 
-void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_mode(Resource *resource, wl_resource *outputdevice, wl_resource *modeResource)
+void OutputConfigurationV2Interface::kde_output_configuration_v2_mode(Resource *resource, wl_resource *outputdevice, wl_resource *modeResource)
 {
     Q_UNUSED(resource)
     OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
@@ -74,7 +55,7 @@ void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_mode(Res
     pendingChanges(output)->d->refreshRate = mode->refreshRate();
 }
 
-void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_transform(Resource *resource, wl_resource *outputdevice, int32_t transform)
+void OutputConfigurationV2Interface::kde_output_configuration_v2_transform(Resource *resource, wl_resource *outputdevice, int32_t transform)
 {
     Q_UNUSED(resource)
     auto toTransform = [transform]() {
@@ -103,7 +84,7 @@ void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_transfor
     pendingChanges(output)->d->transform = _transform;
 }
 
-void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_position(Resource *resource, wl_resource *outputdevice, int32_t x, int32_t y)
+void OutputConfigurationV2Interface::kde_output_configuration_v2_position(Resource *resource, wl_resource *outputdevice, int32_t x, int32_t y)
 {
     Q_UNUSED(resource)
     auto _pos = QPoint(x, y);
@@ -111,7 +92,7 @@ void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_position
     pendingChanges(output)->d->position = _pos;
 }
 
-void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_scale(Resource *resource, wl_resource *outputdevice, wl_fixed_t scale)
+void OutputConfigurationV2Interface::kde_output_configuration_v2_scale(Resource *resource, wl_resource *outputdevice, wl_fixed_t scale)
 {
     Q_UNUSED(resource)
     const qreal doubleScale = wl_fixed_to_double(scale);
@@ -125,13 +106,82 @@ void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_scale(Re
     pendingChanges(output)->d->scale = doubleScale;
 }
 
-void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_apply(Resource *resource)
+void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource *resource)
 {
-    Q_UNUSED(resource)
-    emitConfigurationChangeRequested();
+    if (applied) {
+        wl_resource_post_error(resource->handle, 0, "an output configuration can be applied only once");
+        return;
+    }
+
+    applied = true;
+
+    OutputConfiguration cfg;
+    for (auto it = changes.constBegin(); it != changes.constEnd(); ++it) {
+        const KWaylandServer::OutputChangeSetV2 *changeset = it.value();
+        auto output = kwinApp()->platform()->findOutput(it.key()->uuid());
+        if (!output) {
+            qCWarning(KWIN_CORE) << "Could NOT find output matching " << it.key()->uuid();
+            continue;
+        }
+
+        const auto modes = output->modes();
+        const auto modeIt = std::find_if(modes.begin(), modes.end(), [&changeset](const auto &mode) {
+            return mode->size() == changeset->size() && mode->refreshRate() == changeset->refreshRate();
+        });
+        if (modeIt == modes.end()) {
+            qCWarning(KWIN_CORE).nospace() << "Could not find mode " << changeset->size() << "@" << changeset->refreshRate() << " for output " << this;
+            send_failed();
+            return;
+        }
+
+        auto props = cfg.changeSet(output);
+        props->enabled = changeset->enabled();
+        props->pos = changeset->position();
+        props->scale = changeset->scale();
+        props->mode = *modeIt;
+        props->transform = static_cast<Output::Transform>(changeset->transform());
+        props->overscan = changeset->overscan();
+        props->rgbRange = static_cast<Output::RgbRange>(changeset->rgbRange());
+        props->vrrPolicy = static_cast<RenderLoop::VrrPolicy>(changeset->vrrPolicy());
+    }
+
+    const auto allOutputs = kwinApp()->platform()->outputs();
+    bool allDisabled = !std::any_of(allOutputs.begin(), allOutputs.end(), [&cfg](const auto &output) {
+        return cfg.changeSet(output)->enabled;
+    });
+    if (allDisabled) {
+        qCWarning(KWIN_CORE) << "Disabling all outputs through configuration changes is not allowed";
+        send_failed();
+        return;
+    }
+
+    if (kwinApp()->platform()->applyOutputChanges(cfg)) {
+        if (primaryOutput.has_value() || !kwinApp()->platform()->primaryOutput()->isEnabled()) {
+            auto requestedPrimaryOutput = kwinApp()->platform()->findOutput((*primaryOutput)->uuid());
+            if (requestedPrimaryOutput && requestedPrimaryOutput->isEnabled()) {
+                kwinApp()->platform()->setPrimaryOutput(requestedPrimaryOutput);
+            } else {
+                Output *defaultPrimaryOutput = nullptr;
+                const auto candidates = kwinApp()->platform()->outputs();
+                for (Output *output : candidates) {
+                    if (output->isEnabled()) {
+                        defaultPrimaryOutput = output;
+                        break;
+                    }
+                }
+                qCWarning(KWIN_CORE) << "Requested invalid primary screen, using" << defaultPrimaryOutput;
+                kwinApp()->platform()->setPrimaryOutput(defaultPrimaryOutput);
+            }
+        }
+        Q_EMIT workspace()->screens()->changed();
+        send_applied();
+    } else {
+        qCDebug(KWIN_CORE) << "Applying config failed";
+        send_failed();
+    }
 }
 
-void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_overscan(Resource *resource, wl_resource *outputdevice, uint32_t overscan)
+void OutputConfigurationV2Interface::kde_output_configuration_v2_overscan(Resource *resource, wl_resource *outputdevice, uint32_t overscan)
 {
     Q_UNUSED(resource)
     if (overscan > 100) {
@@ -142,7 +192,7 @@ void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_overscan
     pendingChanges(output)->d->overscan = overscan;
 }
 
-void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_set_vrr_policy(Resource *resource, wl_resource *outputdevice, uint32_t policy)
+void OutputConfigurationV2Interface::kde_output_configuration_v2_set_vrr_policy(Resource *resource, wl_resource *outputdevice, uint32_t policy)
 {
     Q_UNUSED(resource)
     if (policy > static_cast<uint32_t>(OutputDeviceV2Interface::VrrPolicy::Automatic)) {
@@ -153,7 +203,7 @@ void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_set_vrr_
     pendingChanges(output)->d->vrrPolicy = static_cast<OutputDeviceV2Interface::VrrPolicy>(policy);
 }
 
-void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_set_rgb_range(Resource *resource, wl_resource *outputdevice, uint32_t rgbRange)
+void OutputConfigurationV2Interface::kde_output_configuration_v2_set_rgb_range(Resource *resource, wl_resource *outputdevice, uint32_t rgbRange)
 {
     Q_UNUSED(resource)
     if (rgbRange > static_cast<uint32_t>(OutputDeviceV2Interface::RgbRange::Limited)) {
@@ -164,107 +214,30 @@ void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_set_rgb_
     pendingChanges(output)->d->rgbRange = static_cast<OutputDeviceV2Interface::RgbRange>(rgbRange);
 }
 
-void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_set_primary_output(Resource *resource, struct ::wl_resource *output)
+void OutputConfigurationV2Interface::kde_output_configuration_v2_set_primary_output(Resource *resource, struct ::wl_resource *output)
 {
     Q_UNUSED(resource);
     primaryOutput = OutputDeviceV2Interface::get(output);
 }
 
-void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_destroy(Resource *resource)
+void OutputConfigurationV2Interface::kde_output_configuration_v2_destroy(Resource *resource)
 {
     wl_resource_destroy(resource->handle);
 }
 
-void OutputConfigurationV2InterfacePrivate::kde_output_configuration_v2_destroy_resource(Resource *resource)
+void OutputConfigurationV2Interface::kde_output_configuration_v2_destroy_resource(Resource *resource)
 {
     Q_UNUSED(resource)
-    delete q;
+    delete this;
 }
 
-void OutputConfigurationV2InterfacePrivate::emitConfigurationChangeRequested() const
-{
-    Q_EMIT outputManagement->configurationChangeRequested(q);
-}
-
-OutputConfigurationV2InterfacePrivate::OutputConfigurationV2InterfacePrivate(OutputConfigurationV2Interface *q, OutputManagementV2Interface *outputManagement, wl_resource *resource)
-    : QtWaylandServer::kde_output_configuration_v2(resource)
-    , outputManagement(outputManagement)
-    , q(q)
-{
-}
-
-QHash<OutputDeviceV2Interface *, OutputChangeSetV2 *> OutputConfigurationV2Interface::changes() const
-{
-    return d->changes;
-}
-
-bool OutputConfigurationV2Interface::primaryChanged() const
-{
-    return d->primaryOutput.has_value();
-}
-
-OutputDeviceV2Interface *OutputConfigurationV2Interface::primary() const
-{
-    Q_ASSERT(d->primaryOutput.has_value());
-    return *d->primaryOutput;
-}
-
-void OutputConfigurationV2Interface::setApplied()
-{
-    d->clearPendingChanges();
-    d->sendApplied();
-}
-
-void OutputConfigurationV2InterfacePrivate::sendApplied()
-{
-    send_applied();
-}
-
-void OutputConfigurationV2Interface::setFailed()
-{
-    d->clearPendingChanges();
-    d->sendFailed();
-}
-
-void OutputConfigurationV2InterfacePrivate::sendFailed()
-{
-    send_failed();
-}
-
-OutputChangeSetV2 *OutputConfigurationV2InterfacePrivate::pendingChanges(OutputDeviceV2Interface *outputdevice)
+OutputChangeSetV2 *OutputConfigurationV2Interface::pendingChanges(OutputDeviceV2Interface *outputdevice)
 {
     auto &change = changes[outputdevice];
     if (!change) {
-        change = new OutputChangeSetV2(outputdevice, q);
+        change = new OutputChangeSetV2(outputdevice);
     }
     return change;
-}
-
-bool OutputConfigurationV2InterfacePrivate::hasPendingChanges(OutputDeviceV2Interface *outputdevice) const
-{
-    auto it = changes.constFind(outputdevice);
-    if (it == changes.constEnd()) {
-        return false;
-    }
-    auto c = *it;
-    return c->enabledChanged() || c->sizeChanged() || c->refreshRateChanged() || c->transformChanged() || c->positionChanged() || c->scaleChanged();
-}
-
-void OutputConfigurationV2InterfacePrivate::clearPendingChanges()
-{
-    qDeleteAll(changes.begin(), changes.end());
-    changes.clear();
-}
-
-OutputConfigurationV2Interface::OutputConfigurationV2Interface(OutputManagementV2Interface *parent, wl_resource *resource)
-    : QObject()
-    , d(new OutputConfigurationV2InterfacePrivate(this, parent, resource))
-{
-}
-
-OutputConfigurationV2Interface::~OutputConfigurationV2Interface()
-{
-    d->clearPendingChanges();
 }
 
 }

@@ -21,11 +21,6 @@
 
 class QAction;
 
-namespace KWaylandServer
-{
-class OutputConfigurationV2Interface;
-}
-
 namespace KWin
 {
 
@@ -104,15 +99,6 @@ public:
      * by rendering backends.
      */
     void setSceneEglGlobalShareContext(EGLContext context);
-
-    /**
-     * Implement this method to receive configuration change requests through KWayland's
-     * OutputManagement interface.
-     *
-     * Base implementation warns that the current backend does not implement this
-     * functionality.
-     */
-    void requestOutputsChange(KWaylandServer::OutputConfigurationV2Interface *config);
 
     /**
      * Whether the Platform requires compositing for rendering.

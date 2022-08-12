@@ -9,7 +9,6 @@
 #include "wayland/clientconnection.h"
 #include "wayland/display.h"
 #include "wayland/output_interface.h"
-#include "wayland/outputmanagement_v2_interface.h"
 // Wayland
 #include <wayland-server.h>
 // system
@@ -28,7 +27,6 @@ private Q_SLOTS:
     void testAddRemoveOutput();
     void testClientConnection();
     void testConnectNoSocket();
-    void testOutputManagement();
     void testAutoSocketName();
 };
 
@@ -176,14 +174,6 @@ void TestWaylandServerDisplay::testConnectNoSocket()
     wl_client_destroy(client->client());
     close(sv[0]);
     close(sv[1]);
-}
-
-void TestWaylandServerDisplay::testOutputManagement()
-{
-    KWaylandServer::Display display;
-    display.addSocketName("kwayland-test-0");
-    display.start();
-    new OutputManagementV2Interface(&display, this);
 }
 
 void TestWaylandServerDisplay::testAutoSocketName()

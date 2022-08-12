@@ -106,7 +106,7 @@ public:
     OutputDeviceV2Interface::RgbRange rgbRange() const;
 
 private:
-    friend class OutputConfigurationV2InterfacePrivate;
+    friend class OutputConfigurationV2Interface;
     explicit OutputChangeSetV2(OutputDeviceV2Interface *outputdevice, QObject *parent = nullptr);
 
     std::unique_ptr<OutputChangeSetV2Private> d;

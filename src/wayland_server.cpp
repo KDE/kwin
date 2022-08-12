@@ -465,9 +465,6 @@ bool WaylandServer::init(InitializationFlags flags)
     });
 
     m_outputManagement = new OutputManagementV2Interface(m_display, m_display);
-    connect(m_outputManagement, &OutputManagementV2Interface::configurationChangeRequested, this, [](KWaylandServer::OutputConfigurationV2Interface *config) {
-        kwinApp()->platform()->requestOutputsChange(config);
-    });
     m_primary = new PrimaryOutputV1Interface(m_display, m_display);
 
     m_xdgOutputManagerV1 = new XdgOutputManagerV1Interface(m_display, m_display);

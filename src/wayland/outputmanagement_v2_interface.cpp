@@ -42,7 +42,7 @@ void OutputManagementV2InterfacePrivate::kde_output_management_v2_create_configu
         wl_client_post_no_memory(resource->client());
         return;
     }
-    new OutputConfigurationV2Interface(q, config_resource);
+    new OutputConfigurationV2Interface(config_resource);
 }
 
 OutputManagementV2Interface::OutputManagementV2Interface(Display *display, QObject *parent)

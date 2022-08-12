@@ -25,11 +25,6 @@
 #include "qpainterbackend.h"
 #include "scene.h"
 #include "screenedge.h"
-#include "screens.h"
-#include "wayland/outputchangeset_v2.h"
-#include "wayland/outputconfiguration_v2_interface.h"
-#include "wayland_server.h"
-#include "workspace.h"
 
 #include <KCoreAddons>
 
@@ -122,81 +117,6 @@ Edge *Platform::createScreenEdge(ScreenEdges *edges)
 void Platform::createPlatformCursor(QObject *parent)
 {
     new InputRedirectionCursor(parent);
-}
-
-void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationV2Interface *config)
-{
-    if (!m_supportsOutputChanges) {
-        qCWarning(KWIN_CORE) << "This backend does not support configuration changes.";
-        config->setFailed();
-        return;
-    }
-
-    OutputConfiguration cfg;
-    const auto changes = config->changes();
-    for (auto it = changes.begin(); it != changes.end(); it++) {
-        const KWaylandServer::OutputChangeSetV2 *changeset = it.value();
-        auto output = findOutput(it.key()->uuid());
-        if (!output) {
-            qCWarning(KWIN_CORE) << "Could NOT find output matching " << it.key()->uuid();
-            continue;
-        }
-
-        const auto modes = output->modes();
-        const auto modeIt = std::find_if(modes.begin(), modes.end(), [&changeset](const auto &mode) {
-            return mode->size() == changeset->size() && mode->refreshRate() == changeset->refreshRate();
-        });
-        if (modeIt == modes.end()) {
-            qCWarning(KWIN_CORE).nospace() << "Could not find mode " << changeset->size() << "@" << changeset->refreshRate() << " for output " << this;
-            config->setFailed();
-            return;
-        }
-
-        auto props = cfg.changeSet(output);
-        props->enabled = changeset->enabled();
-        props->pos = changeset->position();
-        props->scale = changeset->scale();
-        props->mode = *modeIt;
-        props->transform = static_cast<Output::Transform>(changeset->transform());
-        props->overscan = changeset->overscan();
-        props->rgbRange = static_cast<Output::RgbRange>(changeset->rgbRange());
-        props->vrrPolicy = static_cast<RenderLoop::VrrPolicy>(changeset->vrrPolicy());
-    }
-
-    const auto allOutputs = outputs();
-    bool allDisabled = !std::any_of(allOutputs.begin(), allOutputs.end(), [&cfg](const auto &output) {
-        return cfg.changeSet(output)->enabled;
-    });
-    if (allDisabled) {
-        qCWarning(KWIN_CORE) << "Disabling all outputs through configuration changes is not allowed";
-        config->setFailed();
-        return;
-    }
-
-    if (applyOutputChanges(cfg)) {
-        if (config->primaryChanged() || !primaryOutput()->isEnabled()) {
-            auto requestedPrimaryOutput = findOutput(config->primary()->uuid());
-            if (requestedPrimaryOutput && requestedPrimaryOutput->isEnabled()) {
-                setPrimaryOutput(requestedPrimaryOutput);
-            } else {
-                Output *defaultPrimaryOutput = nullptr;
-                const auto candidates = outputs();
-                for (Output *output : candidates) {
-                    if (output->isEnabled()) {
-                        defaultPrimaryOutput = output;
-                        break;
-                    }
-                }
-                qCWarning(KWIN_CORE) << "Requested invalid primary screen, using" << defaultPrimaryOutput;
-                setPrimaryOutput(defaultPrimaryOutput);
-            }
-        }
-        Q_EMIT workspace()->screens()->changed();
-        config->setApplied();
-    } else {
-        qCDebug(KWIN_CORE) << "Applying config failed";
-        config->setFailed();
-    }
 }
 
 bool Platform::applyOutputChanges(const OutputConfiguration &config)
