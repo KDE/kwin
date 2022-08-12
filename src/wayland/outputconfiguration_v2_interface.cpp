@@ -17,8 +17,6 @@
 #include "screens.h"
 #include "workspace.h"
 
-#include "qwayland-server-kde-output-device-v2.h"
-
 using namespace KWin;
 
 namespace KWaylandServer
