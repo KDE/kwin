@@ -136,10 +136,14 @@ WindowQuadList SurfaceItem::buildQuads() const
     for (const QRectF rect : region) {
         WindowQuad quad;
 
-        const QPointF bufferTopLeft = m_surfaceToBufferMatrix.map(rect.topLeft());
-        const QPointF bufferTopRight = m_surfaceToBufferMatrix.map(rect.topRight());
-        const QPointF bufferBottomRight = m_surfaceToBufferMatrix.map(rect.bottomRight());
-        const QPointF bufferBottomLeft = m_surfaceToBufferMatrix.map(rect.bottomLeft());
+        // Use toPoint to round the device position to match what we eventually
+        // do for the geometry, otherwise we end up with mismatched UV
+        // coordinates as the texture size is going to be in (rounded) device
+        // coordinates as well.
+        const QPointF bufferTopLeft = m_surfaceToBufferMatrix.map(rect.topLeft()).toPoint();
+        const QPointF bufferTopRight = m_surfaceToBufferMatrix.map(rect.topRight()).toPoint();
+        const QPointF bufferBottomRight = m_surfaceToBufferMatrix.map(rect.bottomRight()).toPoint();
+        const QPointF bufferBottomLeft = m_surfaceToBufferMatrix.map(rect.bottomLeft()).toPoint();
 
         quad[0] = WindowVertex(rect.topLeft(), QPointF{bufferTopLeft.x() / size.width(), bufferTopLeft.y() / size.height()});
         quad[1] = WindowVertex(rect.topRight(), QPointF{bufferTopRight.x() / size.width(), bufferTopRight.y() / size.height()});
