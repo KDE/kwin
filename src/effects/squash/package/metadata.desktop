@@ -2,6 +2,7 @@
 Comment=Squash windows when they are minimized
 Comment[ar]=تنكمش النوافذ عند تصغيرها
 Comment[az]=Yığılarkən pəncrəni sıxlaşdıqmaq
+Comment[bg]=Свиване на прозорците при минимизиране
 Comment[ca]=Amuntega les finestres quan estan minimitzades
 Comment[ca@valencia]=Amuntega les finestres quan estan minimitzades
 Comment[da]=Mas vinduer når de minimeres
@@ -40,6 +41,7 @@ Icon=preferences-system-windows-effect-squash
 Name=Squash
 Name[ar]=الانكماش
 Name[az]=Sıxılma
+Name[bg]=Свиване
 Name[ca]=Amuntega
 Name[ca@valencia]=Amuntega
 Name[da]=Mas
