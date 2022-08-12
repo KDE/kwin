@@ -165,8 +165,15 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline 
             return errnoToError();
         }
         std::for_each(pipelines.begin(), pipelines.end(), std::mem_fn(&DrmPipeline::atomicModesetSuccessful));
-        std::for_each(unusedObjects.begin(), unusedObjects.end(), std::mem_fn(&DrmObject::commitPending));
-        std::for_each(unusedObjects.begin(), unusedObjects.end(), std::mem_fn(&DrmObject::commit));
+        for (const auto &obj : unusedObjects) {
+            obj->commitPending();
+            obj->commit();
+            if (auto crtc = dynamic_cast<DrmCrtc *>(obj)) {
+                crtc->flipBuffer();
+            } else if (auto plane = dynamic_cast<DrmPlane *>(obj)) {
+                plane->flipBuffer();
+            }
+        }
         return Error::None;
     }
     case CommitMode::Test: {
