@@ -279,29 +279,27 @@ void DrmBackend::handleUdevEvent()
 
 DrmGpu *DrmBackend::addGpu(const QString &fileName)
 {
-    int fd = m_session->openRestricted(fileName);
-    if (fd < 0) {
+    RestrictedFileDescriptor fd = m_session->openRestricted(fileName);
+    if (!fd.isValid()) {
         qCWarning(KWIN_DRM) << "failed to open drm device at" << fileName;
         return nullptr;
     }
 
     // try to make a simple drm get resource call, if it fails it is not useful for us
-    drmModeRes *resources = drmModeGetResources(fd);
+    drmModeRes *resources = drmModeGetResources(fd.get());
     if (!resources) {
         qCDebug(KWIN_DRM) << "Skipping KMS incapable drm device node at" << fileName;
-        m_session->closeRestricted(fd);
         return nullptr;
     }
     drmModeFreeResources(resources);
 
     struct stat buf;
-    if (fstat(fd, &buf) == -1) {
+    if (fstat(fd.get(), &buf) == -1) {
         qCDebug(KWIN_DRM, "Failed to fstat %s: %s", qPrintable(fileName), strerror(errno));
-        m_session->closeRestricted(fd);
         return nullptr;
     }
 
-    m_gpus.push_back(std::make_unique<DrmGpu>(this, fileName, fd, buf.st_rdev));
+    m_gpus.push_back(std::make_unique<DrmGpu>(this, fileName, std::move(fd), buf.st_rdev));
     auto gpu = m_gpus.back().get();
     m_active = true;
     connect(gpu, &DrmGpu::outputAdded, this, &DrmBackend::addOutput);

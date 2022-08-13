@@ -25,7 +25,7 @@ public:
     Capabilities capabilities() const override;
     QString seat() const override;
     uint terminal() const override;
-    int openRestricted(const QString &fileName) override;
+    RestrictedFileDescriptor openRestricted(const QString &fileName) override;
     void closeRestricted(int fileDescriptor) override;
     void switchTo(uint terminal) override;
 

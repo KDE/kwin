@@ -6,6 +6,7 @@
 
 #include "session_consolekit.h"
 #include "utils/common.h"
+#include "utils/filedescriptor.h"
 
 #include <QCoreApplication>
 #include <QDBusConnection>
@@ -160,11 +161,11 @@ uint ConsoleKitSession::terminal() const
     return m_terminal;
 }
 
-int ConsoleKitSession::openRestricted(const QString &fileName)
+RestrictedFileDescriptor ConsoleKitSession::openRestricted(const QString &fileName)
 {
     struct stat st;
     if (stat(fileName.toUtf8(), &st) < 0) {
-        return -1;
+        return RestrictedFileDescriptor{};
     }
 
     QDBusMessage message = QDBusMessage::createMethodCall(s_serviceName, m_sessionPath,
@@ -177,15 +178,15 @@ int ConsoleKitSession::openRestricted(const QString &fileName)
     if (reply.type() == QDBusMessage::ErrorMessage) {
         qCDebug(KWIN_CORE, "Failed to open %s device (%s)",
                 qPrintable(fileName), qPrintable(reply.errorMessage()));
-        return -1;
+        return RestrictedFileDescriptor{};
     }
 
     const QDBusUnixFileDescriptor descriptor = reply.arguments().constFirst().value<QDBusUnixFileDescriptor>();
     if (!descriptor.isValid()) {
-        return -1;
+        return RestrictedFileDescriptor{};
     }
 
-    return fcntl(descriptor.fileDescriptor(), F_DUPFD_CLOEXEC, 0);
+    return RestrictedFileDescriptor{this, fcntl(descriptor.fileDescriptor(), F_DUPFD_CLOEXEC, 0)};
 }
 
 void ConsoleKitSession::closeRestricted(int fileDescriptor)

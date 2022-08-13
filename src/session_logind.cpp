@@ -6,6 +6,7 @@
 
 #include "session_logind.h"
 #include "utils/common.h"
+#include "utils/filedescriptor.h"
 
 #include <QCoreApplication>
 #include <QDBusConnection>
@@ -158,11 +159,11 @@ uint LogindSession::terminal() const
     return m_terminal;
 }
 
-int LogindSession::openRestricted(const QString &fileName)
+RestrictedFileDescriptor LogindSession::openRestricted(const QString &fileName)
 {
     struct stat st;
     if (stat(fileName.toUtf8(), &st) < 0) {
-        return -1;
+        return RestrictedFileDescriptor{};
     }
 
     QDBusMessage message = QDBusMessage::createMethodCall(s_serviceName, m_sessionPath,
@@ -175,16 +176,16 @@ int LogindSession::openRestricted(const QString &fileName)
     if (reply.type() == QDBusMessage::ErrorMessage) {
         qCWarning(KWIN_CORE, "Failed to open %s device (%s)",
                   qPrintable(fileName), qPrintable(reply.errorMessage()));
-        return -1;
+        return RestrictedFileDescriptor{};
     }
 
     const QDBusUnixFileDescriptor descriptor = reply.arguments().constFirst().value<QDBusUnixFileDescriptor>();
     if (!descriptor.isValid()) {
         qCWarning(KWIN_CORE, "File descriptor for %s from logind is invalid", qPrintable(fileName));
-        return -1;
+        return RestrictedFileDescriptor{};
     }
 
-    return fcntl(descriptor.fileDescriptor(), F_DUPFD_CLOEXEC, 0);
+    return RestrictedFileDescriptor{this, fcntl(descriptor.fileDescriptor(), F_DUPFD_CLOEXEC, 0)};
 }
 
 void LogindSession::closeRestricted(int fileDescriptor)

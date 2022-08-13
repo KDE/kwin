@@ -13,6 +13,8 @@
 namespace KWin
 {
 
+class Session;
+
 class KWIN_EXPORT FileDescriptor
 {
 public:
@@ -30,4 +32,20 @@ private:
     int m_fd = -1;
 };
 
+class KWIN_EXPORT RestrictedFileDescriptor
+{
+public:
+    RestrictedFileDescriptor() = default;
+    explicit RestrictedFileDescriptor(Session *session, int fd);
+    RestrictedFileDescriptor(RestrictedFileDescriptor &&fd);
+    RestrictedFileDescriptor &operator=(RestrictedFileDescriptor &&);
+    ~RestrictedFileDescriptor();
+
+    bool isValid() const;
+    int get() const;
+
+private:
+    Session *m_session = nullptr;
+    int m_fd = -1;
+};
 }

@@ -11,12 +11,14 @@
 
 #include <libinput.h>
 #include <memory>
+#include <vector>
 
 namespace KWin
 {
 
 class Session;
 class Udev;
+class RestrictedFileDescriptor;
 
 namespace LibInput
 {
@@ -70,6 +72,7 @@ private:
     struct libinput *m_libinput;
     bool m_suspended;
     std::unique_ptr<Udev> m_udev;
+    std::vector<RestrictedFileDescriptor> m_fds;
 };
 
 }

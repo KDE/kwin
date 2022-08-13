@@ -11,6 +11,7 @@
 #include "libinput_logging.h"
 
 #include "session.h"
+#include "utils/filedescriptor.h"
 #include "utils/udev.h"
 
 #include <fcntl.h>
@@ -104,19 +105,14 @@ void Context::closeRestrictedCallBack(int fd, void *user_data)
 
 int Context::openRestricted(const char *path, int flags)
 {
-    int fd = m_session->openRestricted(path);
-    if (fd < 0) {
+    RestrictedFileDescriptor fd = m_session->openRestricted(path);
+    if (!fd.isValid()) {
         // failed
-        return fd;
+        return -1;
     }
     // adjust flags - based on Weston (logind-util.c)
-    int fl = fcntl(fd, F_GETFL);
-    auto errorHandling = [fd, this]() {
-        close(fd);
-        closeRestricted(fd);
-    };
+    int fl = fcntl(fd.get(), F_GETFL);
     if (fl < 0) {
-        errorHandling();
         return -1;
     }
 
@@ -124,14 +120,12 @@ int Context::openRestricted(const char *path, int flags)
         fl |= O_NONBLOCK;
     }
 
-    if (fcntl(fd, F_SETFL, fl) < 0) {
-        errorHandling();
+    if (fcntl(fd.get(), F_SETFL, fl) < 0) {
         return -1;
     }
 
-    fl = fcntl(fd, F_GETFD);
+    fl = fcntl(fd.get(), F_GETFD);
     if (fl < 0) {
-        errorHandling();
         return -1;
     }
 
@@ -139,16 +133,19 @@ int Context::openRestricted(const char *path, int flags)
         fl &= ~FD_CLOEXEC;
     }
 
-    if (fcntl(fd, F_SETFD, fl) < 0) {
-        errorHandling();
+    if (fcntl(fd.get(), F_SETFD, fl) < 0) {
         return -1;
     }
-    return fd;
+    m_fds.push_back(std::move(fd));
+    return m_fds.back().get();
 }
 
 void Context::closeRestricted(int fd)
 {
-    m_session->closeRestricted(fd);
+    auto it = std::remove_if(m_fds.begin(), m_fds.end(), [fd](const auto &restrictedFd) {
+        return restrictedFd.get() == fd;
+    });
+    m_fds.erase(it, m_fds.end());
 }
 
 std::unique_ptr<Event> Context::event()

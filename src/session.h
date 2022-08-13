@@ -17,6 +17,8 @@
 namespace KWin
 {
 
+class RestrictedFileDescriptor;
+
 /**
  * The Session class represents the session controlled by the compositor.
  *
@@ -73,7 +75,7 @@ public:
      * Opens the file with the specified @a fileName. Returns the file descriptor
      * of the file or @a -1 if an error has occurred.
      */
-    virtual int openRestricted(const QString &fileName) = 0;
+    virtual RestrictedFileDescriptor openRestricted(const QString &fileName) = 0;
 
     /**
      * Closes a file that has been opened using the openRestricted() function.

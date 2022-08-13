@@ -42,8 +42,8 @@
 namespace KWin
 {
 
-DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t deviceId)
-    : m_fd(fd)
+DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, RestrictedFileDescriptor &&fd, dev_t deviceId)
+    : m_fd(std::move(fd))
     , m_deviceId(deviceId)
     , m_devNode(devNode)
     , m_atomicModeSetting(false)
@@ -52,42 +52,42 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
 {
     uint64_t capability = 0;
 
-    if (drmGetCap(fd, DRM_CAP_CURSOR_WIDTH, &capability) == 0) {
+    if (drmGetCap(m_fd.get(), DRM_CAP_CURSOR_WIDTH, &capability) == 0) {
         m_cursorSize.setWidth(capability);
     } else {
         m_cursorSize.setWidth(64);
     }
 
-    if (drmGetCap(fd, DRM_CAP_CURSOR_HEIGHT, &capability) == 0) {
+    if (drmGetCap(m_fd.get(), DRM_CAP_CURSOR_HEIGHT, &capability) == 0) {
         m_cursorSize.setHeight(capability);
     } else {
         m_cursorSize.setHeight(64);
     }
 
-    int ret = drmGetCap(fd, DRM_CAP_TIMESTAMP_MONOTONIC, &capability);
+    int ret = drmGetCap(m_fd.get(), DRM_CAP_TIMESTAMP_MONOTONIC, &capability);
     if (ret == 0 && capability == 1) {
         m_presentationClock = CLOCK_MONOTONIC;
     } else {
         m_presentationClock = CLOCK_REALTIME;
     }
 
-    m_addFB2ModifiersSupported = drmGetCap(fd, DRM_CAP_ADDFB2_MODIFIERS, &capability) == 0 && capability == 1;
+    m_addFB2ModifiersSupported = drmGetCap(m_fd.get(), DRM_CAP_ADDFB2_MODIFIERS, &capability) == 0 && capability == 1;
     qCDebug(KWIN_DRM) << "drmModeAddFB2WithModifiers is" << (m_addFB2ModifiersSupported ? "supported" : "not supported") << "on GPU" << m_devNode;
 
     // find out what driver this kms device is using
-    DrmUniquePtr<drmVersion> version(drmGetVersion(fd));
+    DrmUniquePtr<drmVersion> version(drmGetVersion(m_fd.get()));
     m_isNVidia = strstr(version->name, "nvidia-drm");
     m_isVirtualMachine = strstr(version->name, "virtio") || strstr(version->name, "qxl")
         || strstr(version->name, "vmwgfx") || strstr(version->name, "vboxvideo");
-    m_gbmDevice = gbm_create_device(m_fd);
+    m_gbmDevice = gbm_create_device(m_fd.get());
 
-    m_socketNotifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
+    m_socketNotifier = new QSocketNotifier(m_fd.get(), QSocketNotifier::Read, this);
     connect(m_socketNotifier, &QSocketNotifier::activated, this, &DrmGpu::dispatchEvents);
 
     initDrmResources();
 
     m_leaseDevice = new KWaylandServer::DrmLeaseDeviceV1Interface(waylandServer()->display(), [this] {
-        char *path = drmGetDeviceNameFromFd2(m_fd);
+        char *path = drmGetDeviceNameFromFd2(m_fd.get());
         FileDescriptor fd{open(path, O_RDWR | O_CLOEXEC)};
         if (!fd.isValid()) {
             qCWarning(KWIN_DRM) << "Could not open DRM fd for leasing!" << strerror(errno);
@@ -133,7 +133,6 @@ DrmGpu::~DrmGpu()
     if (m_gbmDevice) {
         gbm_device_destroy(m_gbmDevice);
     }
-    m_platform->session()->closeRestricted(m_fd);
 }
 
 clockid_t DrmGpu::presentationClock() const
@@ -150,16 +149,16 @@ void DrmGpu::initDrmResources()
         qCWarning(KWIN_DRM, "Atomic Mode Setting disabled on GPU %s because of cursor offset issues in virtual machines", qPrintable(m_devNode));
     } else if (noAMS) {
         qCWarning(KWIN_DRM) << "Atomic Mode Setting requested off via environment variable. Using legacy mode on GPU" << m_devNode;
-    } else if (drmSetClientCap(m_fd, DRM_CLIENT_CAP_ATOMIC, 1) != 0) {
+    } else if (drmSetClientCap(m_fd.get(), DRM_CLIENT_CAP_ATOMIC, 1) != 0) {
         qCWarning(KWIN_DRM) << "drmSetClientCap for Atomic Mode Setting failed. Using legacy mode on GPU" << m_devNode;
     } else {
-        DrmUniquePtr<drmModePlaneRes> planeResources(drmModeGetPlaneResources(m_fd));
+        DrmUniquePtr<drmModePlaneRes> planeResources(drmModeGetPlaneResources(m_fd.get()));
         if (planeResources) {
             qCDebug(KWIN_DRM) << "Using Atomic Mode Setting on gpu" << m_devNode;
             qCDebug(KWIN_DRM) << "Number of planes on GPU" << m_devNode << ":" << planeResources->count_planes;
             // create the plane objects
             for (unsigned int i = 0; i < planeResources->count_planes; ++i) {
-                DrmUniquePtr<drmModePlane> kplane(drmModeGetPlane(m_fd, planeResources->planes[i]));
+                DrmUniquePtr<drmModePlane> kplane(drmModeGetPlane(m_fd.get(), planeResources->planes[i]));
                 auto plane = std::make_unique<DrmPlane>(this, kplane->plane_id);
                 if (plane->init()) {
                     m_allObjects << plane.get();
@@ -175,7 +174,7 @@ void DrmGpu::initDrmResources()
     }
     m_atomicModeSetting = !m_planes.empty();
 
-    DrmUniquePtr<drmModeRes> resources(drmModeGetResources(m_fd));
+    DrmUniquePtr<drmModeRes> resources(drmModeGetResources(m_fd.get()));
     if (!resources) {
         qCCritical(KWIN_DRM) << "drmModeGetResources for getting CRTCs failed on GPU" << m_devNode;
         return;
@@ -216,7 +215,7 @@ void DrmGpu::initDrmResources()
 bool DrmGpu::updateOutputs()
 {
     waitIdle();
-    DrmUniquePtr<drmModeRes> resources(drmModeGetResources(m_fd));
+    DrmUniquePtr<drmModeRes> resources(drmModeGetResources(m_fd.get()));
     if (!resources) {
         qCWarning(KWIN_DRM) << "drmModeGetResources failed";
         return false;
@@ -224,7 +223,7 @@ bool DrmGpu::updateOutputs()
 
     // In principle these things are supposed to be detected through the wayland protocol.
     // In practice SteamVR doesn't always behave correctly
-    DrmUniquePtr<drmModeLesseeListRes> lessees{drmModeListLessees(m_fd)};
+    DrmUniquePtr<drmModeLesseeListRes> lessees{drmModeListLessees(m_fd.get())};
     for (const auto &output : qAsConst(m_drmOutputs)) {
         if (output->lease()) {
             bool leaseActive = false;
@@ -484,7 +483,7 @@ void DrmGpu::waitIdle()
             break;
         }
         pollfd pfds[1];
-        pfds[0].fd = m_fd;
+        pfds[0].fd = m_fd.get();
         pfds[0].events = POLLIN;
 
         const int ready = poll(pfds, 1, 30000);
@@ -563,7 +562,7 @@ void DrmGpu::dispatchEvents()
     drmEventContext context = {};
     context.version = 3;
     context.page_flip_handler2 = pageFlipHandler;
-    drmHandleEvent(m_fd, &context);
+    drmHandleEvent(m_fd.get(), &context);
 }
 
 void DrmGpu::removeOutput(DrmOutput *output)
@@ -624,7 +623,7 @@ void DrmGpu::handleLeaseRequest(KWaylandServer::DrmLeaseV1Interface *leaseReques
     }
 
     uint32_t lesseeId;
-    FileDescriptor fd{drmModeCreateLease(m_fd, objects.constData(), objects.count(), 0, &lesseeId)};
+    FileDescriptor fd{drmModeCreateLease(m_fd.get(), objects.constData(), objects.count(), 0, &lesseeId)};
     if (!fd.isValid()) {
         qCWarning(KWIN_DRM) << "Could not create DRM lease!" << strerror(errno);
         qCWarning(KWIN_DRM, "Tried to lease the following %d resources:", objects.count());
@@ -653,7 +652,7 @@ void DrmGpu::handleLeaseRevoked(KWaylandServer::DrmLeaseV1Interface *lease)
         }
     }
     qCDebug(KWIN_DRM, "Revoking lease with leaseID %d", lease->lesseeId());
-    drmModeRevokeLease(m_fd, lease->lesseeId());
+    drmModeRevokeLease(m_fd.get(), lease->lesseeId());
 }
 
 QVector<DrmAbstractOutput *> DrmGpu::outputs() const
@@ -663,7 +662,7 @@ QVector<DrmAbstractOutput *> DrmGpu::outputs() const
 
 int DrmGpu::fd() const
 {
-    return m_fd;
+    return m_fd.get();
 }
 
 dev_t DrmGpu::deviceId() const

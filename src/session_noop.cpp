@@ -5,6 +5,7 @@
 */
 
 #include "session_noop.h"
+#include "utils/filedescriptor.h"
 
 namespace KWin
 {
@@ -38,10 +39,10 @@ uint NoopSession::terminal() const
     return 0;
 }
 
-int NoopSession::openRestricted(const QString &fileName)
+RestrictedFileDescriptor NoopSession::openRestricted(const QString &fileName)
 {
     Q_UNUSED(fileName)
-    return -1;
+    return RestrictedFileDescriptor{};
 }
 
 void NoopSession::closeRestricted(int fileDescriptor)

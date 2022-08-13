@@ -12,6 +12,7 @@
 
 #include "drm_pipeline.h"
 #include "drm_virtual_output.h"
+#include "utils/filedescriptor.h"
 
 #include <QPointer>
 #include <QSize>
@@ -47,7 +48,7 @@ class DrmGpu : public QObject
 {
     Q_OBJECT
 public:
-    DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t deviceId);
+    DrmGpu(DrmBackend *backend, const QString &devNode, RestrictedFileDescriptor &&fd, dev_t deviceId);
     ~DrmGpu();
 
     int fd() const;
@@ -104,7 +105,7 @@ private:
 
     static void pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, unsigned int usec, unsigned int crtc_id, void *user_data);
 
-    const int m_fd;
+    const RestrictedFileDescriptor m_fd;
     const dev_t m_deviceId;
     const QString m_devNode;
     bool m_atomicModeSetting;

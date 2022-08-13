@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "filedescriptor.h"
+#include "session.h"
 
 #include <unistd.h>
 #include <utility>
@@ -57,5 +58,44 @@ FileDescriptor FileDescriptor::duplicate() const
     } else {
         return {};
     }
+}
+
+RestrictedFileDescriptor::RestrictedFileDescriptor(Session *session, int fd)
+    : m_session(session)
+    , m_fd(fd)
+{
+}
+
+RestrictedFileDescriptor::RestrictedFileDescriptor(RestrictedFileDescriptor &&other)
+    : m_session(other.m_session)
+    , m_fd(std::exchange(other.m_fd, -1))
+{
+}
+
+RestrictedFileDescriptor &RestrictedFileDescriptor::operator=(RestrictedFileDescriptor &&other)
+{
+    if (m_fd != -1) {
+        m_session->closeRestricted(m_fd);
+    }
+    m_fd = std::exchange(other.m_fd, -1);
+    m_session = other.m_session;
+    return *this;
+}
+
+RestrictedFileDescriptor::~RestrictedFileDescriptor()
+{
+    if (m_fd != -1) {
+        m_session->closeRestricted(m_fd);
+    }
+}
+
+bool RestrictedFileDescriptor::isValid() const
+{
+    return m_fd != -1;
+}
+
+int RestrictedFileDescriptor::get() const
+{
+    return m_fd;
 }
 }
