@@ -11,6 +11,7 @@
 #include "drm_gbm_surface.h"
 
 #include "config-kwin.h"
+#include "drm_backend.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
 #include "kwineglutils_p.h"

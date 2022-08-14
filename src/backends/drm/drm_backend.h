@@ -68,6 +68,7 @@ public:
 
     DrmGpu *primaryGpu() const;
     DrmGpu *findGpu(dev_t deviceId) const;
+    size_t gpuCount() const;
 
     bool isActive() const;
 
