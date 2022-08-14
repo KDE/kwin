@@ -8,7 +8,7 @@ for configuring the theme details.
 This theme engine uses Plasma technologie to render the window decoration. Every detail can be
 themed by the usage of SVG. The theme engine uses Plasma's FrameSvg, so you can provide SVG files
 containing borders. This is described in more detail in techbase:
-https://techbase.kde.org/Development/Tutorials/Plasma5/ThemeDetails
+https://develop.kde.org/docs/extend/plasma/theme/theme-details/
 
 The theme consists of one folder containing svgz files for decoration and buttons, one KConfig file
 for the theme details and one metadata.desktop file which you can use to name your theme, author
