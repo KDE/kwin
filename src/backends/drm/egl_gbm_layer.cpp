@@ -143,6 +143,13 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
         m_dmabufFeedback.scanoutFailed(surface, formats);
         return false;
     }
+    if (buffer->planes().constFirst().modifier == DRM_FORMAT_MOD_INVALID && m_pipeline->gpu()->platform()->gpuCount() > 1) {
+        // importing a buffer from another GPU without an explicit modifier can mess up the buffer format
+        return false;
+    }
+    if (!formats[buffer->format()].contains(buffer->planes().constFirst().modifier)) {
+        return false;
+    }
     const auto gbmBuffer = GbmBuffer::importBuffer(m_pipeline->gpu(), buffer);
     if (!gbmBuffer) {
         m_dmabufFeedback.scanoutFailed(surface, formats);

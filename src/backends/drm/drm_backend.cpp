@@ -693,6 +693,11 @@ DrmGpu *DrmBackend::findGpuByFd(int fd) const
     return nullptr;
 }
 
+size_t DrmBackend::gpuCount() const
+{
+    return m_gpus.size();
+}
+
 bool DrmBackend::applyOutputChanges(const OutputConfiguration &config)
 {
     QVector<DrmOutput *> toBeEnabled;
