@@ -143,39 +143,13 @@ bool DrmConnector::isConnected() const
     return !m_driverModes.empty() && m_conn && m_conn->connection == DRM_MODE_CONNECTED;
 }
 
-static QHash<int, QByteArray> s_connectorNames = {
-    {DRM_MODE_CONNECTOR_Unknown, QByteArrayLiteral("Unknown")},
-    {DRM_MODE_CONNECTOR_VGA, QByteArrayLiteral("VGA")},
-    {DRM_MODE_CONNECTOR_DVII, QByteArrayLiteral("DVI-I")},
-    {DRM_MODE_CONNECTOR_DVID, QByteArrayLiteral("DVI-D")},
-    {DRM_MODE_CONNECTOR_DVIA, QByteArrayLiteral("DVI-A")},
-    {DRM_MODE_CONNECTOR_Composite, QByteArrayLiteral("Composite")},
-    {DRM_MODE_CONNECTOR_SVIDEO, QByteArrayLiteral("SVIDEO")},
-    {DRM_MODE_CONNECTOR_LVDS, QByteArrayLiteral("LVDS")},
-    {DRM_MODE_CONNECTOR_Component, QByteArrayLiteral("Component")},
-    {DRM_MODE_CONNECTOR_9PinDIN, QByteArrayLiteral("DIN")},
-    {DRM_MODE_CONNECTOR_DisplayPort, QByteArrayLiteral("DP")},
-    {DRM_MODE_CONNECTOR_HDMIA, QByteArrayLiteral("HDMI-A")},
-    {DRM_MODE_CONNECTOR_HDMIB, QByteArrayLiteral("HDMI-B")},
-    {DRM_MODE_CONNECTOR_TV, QByteArrayLiteral("TV")},
-    {DRM_MODE_CONNECTOR_eDP, QByteArrayLiteral("eDP")},
-    {DRM_MODE_CONNECTOR_VIRTUAL, QByteArrayLiteral("Virtual")},
-    {DRM_MODE_CONNECTOR_DSI, QByteArrayLiteral("DSI")},
-    {DRM_MODE_CONNECTOR_DPI, QByteArrayLiteral("DPI")},
-#ifdef DRM_MODE_CONNECTOR_WRITEBACK
-    {DRM_MODE_CONNECTOR_WRITEBACK, QByteArrayLiteral("Writeback")},
-#endif
-#ifdef DRM_MODE_CONNECTOR_SPI
-    {DRM_MODE_CONNECTOR_SPI, QByteArrayLiteral("SPI")},
-#endif
-#ifdef DRM_MODE_CONNECTOR_USB
-    {DRM_MODE_CONNECTOR_USB, QByteArrayLiteral("USB")},
-#endif
-};
-
 QString DrmConnector::connectorName() const
 {
-    return s_connectorNames.value(m_conn->connector_type, QByteArrayLiteral("Unknown")) + QStringLiteral("-") + QString::number(m_conn->connector_type_id);
+    const char *connectorName = drmModeGetConnectorTypeName(m_conn->connector_type);
+    if (!connectorName) {
+        connectorName = "Unknown";
+    }
+    return QStringLiteral("%1-%2").arg(connectorName).arg(m_conn->connector_type_id);
 }
 
 QString DrmConnector::modelName() const
