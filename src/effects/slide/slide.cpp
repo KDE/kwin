@@ -215,7 +215,7 @@ QPoint SlideEffect::getDrawCoords(QPointF pos, EffectScreen *screen)
 bool SlideEffect::isTranslated(const EffectWindow *w) const
 {
     if (w->isOnAllDesktops()) {
-        if (w->isDock()) {
+        if (w->isDock() || w->isAppletPopup()) {
             return m_slideDocks;
         }
         if (w->isDesktop()) {
