@@ -576,7 +576,6 @@ WaylandBackend::WaylandBackend(QObject *parent)
     , m_connectionThreadObject(new ConnectionThread(nullptr))
     , m_connectionThread(nullptr)
 {
-    supportsOutputChanges();
     connect(this, &WaylandBackend::connectionFailed, qApp, &QCoreApplication::quit);
 
 #if HAVE_WAYLAND_EGL

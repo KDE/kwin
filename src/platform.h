@@ -391,14 +391,6 @@ protected:
         m_supportsGammaControl = set;
     }
 
-    /**
-     * Whether the backend is supposed to change the configuration of outputs.
-     */
-    void supportsOutputChanges()
-    {
-        m_supportsOutputChanges = true;
-    }
-
 private:
     bool m_ready = false;
     QSize m_initialWindowSize;
@@ -409,7 +401,6 @@ private:
     EGLDisplay m_eglDisplay;
     EGLContext m_globalShareContext = EGL_NO_CONTEXT;
     bool m_supportsGammaControl = false;
-    bool m_supportsOutputChanges = false;
     CompositingType m_selectedCompositor = NoCompositing;
     Output *m_primaryOutput = nullptr;
 };
