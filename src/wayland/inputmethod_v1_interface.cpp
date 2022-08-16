@@ -13,9 +13,9 @@
 #include "surface_interface.h"
 #include "surfacerole_p.h"
 #include "utils/common.h"
+#include "utils/ramfile.h"
 
 #include <QHash>
-#include <QTemporaryFile>
 
 #include <unistd.h>
 
@@ -47,30 +47,11 @@ InputMethodGrabV1::~InputMethodGrabV1()
 
 void InputMethodGrabV1::sendKeymap(const QByteArray &keymap)
 {
-    std::unique_ptr<QTemporaryFile> tmp(new QTemporaryFile());
-    if (!tmp->open()) {
-        qCWarning(KWIN_CORE) << "Failed to create keymap file:" << tmp->errorString();
-        return;
-    }
-
-    unlink(tmp->fileName().toUtf8().constData());
-    if (!tmp->resize(keymap.size())) {
-        qCWarning(KWIN_CORE) << "Failed to resize keymap file:" << tmp->errorString();
-        return;
-    }
-
-    uchar *address = tmp->map(0, keymap.size());
-    if (!address) {
-        qCWarning(KWIN_CORE) << "Failed to map keymap file:" << tmp->errorString();
-        return;
-    }
-
-    qstrncpy(reinterpret_cast<char *>(address), keymap.constData(), keymap.size() + 1);
-    tmp->unmap(address);
+    KWin::RamFile keymapFile("kwin-xkb-input-method-grab-keymap", keymap.constData(), keymap.size() + 1); // include QByteArray null terminator
 
     const auto resources = d->resourceMap();
     for (auto r : resources) {
-        d->send_keymap(r->handle, QtWaylandServer::wl_keyboard::keymap_format::keymap_format_xkb_v1, tmp->handle(), tmp->size());
+        d->send_keymap(r->handle, QtWaylandServer::wl_keyboard::keymap_format::keymap_format_xkb_v1, keymapFile.fd(), keymapFile.size());
     }
 }
 
