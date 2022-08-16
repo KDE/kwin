@@ -10,7 +10,6 @@
 #include "surface_interface.h"
 #include "utils/common.h"
 // Qt
-#include <QTemporaryFile>
 #include <QVector>
 
 #include <unistd.h>
@@ -74,28 +73,15 @@ void KeyboardInterfacePrivate::sendEnter(SurfaceInterface *surface, quint32 seri
 
 void KeyboardInterfacePrivate::sendKeymap(Resource *resource)
 {
-    std::unique_ptr<QTemporaryFile> tmp(new QTemporaryFile());
-    if (!tmp->open()) {
-        qCWarning(KWIN_CORE) << "Failed to create keymap file:" << tmp->errorString();
-        return;
+    // From version 7 on, keymaps must be mapped privately, so that
+    // we can seal the fd and reuse it between clients.
+    if (resource->version() >= 7 && sharedKeymapFile.effectiveFlags().testFlag(KWin::RamFile::Flag::SealWrite)) {
+        send_keymap(resource->handle, keymap_format::keymap_format_xkb_v1, sharedKeymapFile.fd(), sharedKeymapFile.size());
+        // otherwise give each client its own unsealed copy.
+    } else {
+        KWin::RamFile keymapFile("kwin-xkb-keymap", keymap.constData(), keymap.size() + 1); // Include QByteArray null-terminator.
+        send_keymap(resource->handle, keymap_format::keymap_format_xkb_v1, keymapFile.fd(), keymapFile.size());
     }
-
-    unlink(tmp->fileName().toUtf8().constData());
-    if (!tmp->resize(keymap.size())) {
-        qCWarning(KWIN_CORE) << "Failed to resize keymap file:" << tmp->errorString();
-        return;
-    }
-
-    uchar *address = tmp->map(0, keymap.size());
-    if (!address) {
-        qCWarning(KWIN_CORE) << "Failed to map keymap file:" << tmp->errorString();
-        return;
-    }
-
-    qstrncpy(reinterpret_cast<char *>(address), keymap.constData(), keymap.size() + 1);
-    tmp->unmap(address);
-
-    send_keymap(resource->handle, keymap_format::keymap_format_xkb_v1, tmp->handle(), tmp->size());
 }
 
 void KeyboardInterface::setKeymap(const QByteArray &content)
@@ -105,6 +91,8 @@ void KeyboardInterface::setKeymap(const QByteArray &content)
     }
 
     d->keymap = content;
+    // +1 to include QByteArray null terminator.
+    d->sharedKeymapFile = KWin::RamFile("kwin-xkb-keymap-shared", content.constData(), content.size() + 1, KWin::RamFile::Flag::SealWrite);
 
     const auto keyboardResources = d->resourceMap();
     for (KeyboardInterfacePrivate::Resource *resource : keyboardResources) {

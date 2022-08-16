@@ -6,6 +6,7 @@
 #pragma once
 
 #include "keyboard_interface.h"
+#include "utils/ramfile.h"
 
 #include <qwayland-server-wayland.h>
 
@@ -38,6 +39,7 @@ public:
     SurfaceInterface *focusedSurface = nullptr;
     QMetaObject::Connection destroyConnection;
     QByteArray keymap;
+    KWin::RamFile sharedKeymapFile;
 
     struct
     {
