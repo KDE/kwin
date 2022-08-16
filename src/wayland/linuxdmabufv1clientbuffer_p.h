@@ -14,6 +14,7 @@
 #include "display.h"
 #include "display_p.h"
 #include "linuxdmabufv1clientbuffer.h"
+#include "utils/ramfile.h"
 
 #include "qwayland-server-linux-dmabuf-unstable-v1.h"
 #include "qwayland-server-wayland.h"
@@ -91,8 +92,7 @@ class LinuxDmaBufV1FormatTable
 public:
     LinuxDmaBufV1FormatTable(const QHash<uint32_t, QVector<uint64_t>> &supportedModifiers);
 
-    KWin::FileDescriptor fd;
-    int size;
+    KWin::RamFile file;
     QMap<std::pair<uint32_t, uint64_t>, uint16_t> indices;
 };
 

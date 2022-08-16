@@ -15,7 +15,6 @@
 #include "surface_interface_p.h"
 #include "utils/common.h"
 
-#include <QTemporaryFile>
 #include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -440,7 +439,7 @@ LinuxDmaBufV1FeedbackPrivate::LinuxDmaBufV1FeedbackPrivate(LinuxDmaBufV1ClientBu
 
 void LinuxDmaBufV1FeedbackPrivate::send(Resource *resource)
 {
-    send_format_table(resource->handle, m_bufferintegration->table->fd.get(), m_bufferintegration->table->size);
+    send_format_table(resource->handle, m_bufferintegration->table->file.fd(), m_bufferintegration->table->file.size());
     QByteArray bytes;
     bytes.append(reinterpret_cast<const char *>(&m_bufferintegration->mainDevice), sizeof(dev_t));
     send_main_device(resource->handle, bytes);
@@ -500,28 +499,13 @@ LinuxDmaBufV1FormatTable::LinuxDmaBufV1FormatTable(const QHash<uint32_t, QVector
             data.append({format, 0, mod});
         }
     }
-    size = data.size() * sizeof(linux_dmabuf_feedback_v1_table_entry);
-    std::unique_ptr<QTemporaryFile> tmp(new QTemporaryFile());
-    if (!tmp->open()) {
-        qCWarning(KWIN_CORE) << "Failed to create keymap file:" << tmp->errorString();
+
+    const auto size = data.size() * sizeof(linux_dmabuf_feedback_v1_table_entry);
+    file = KWin::RamFile("kwin-dmabuf-feedback-table", data.constData(), size, KWin::RamFile::Flag::SealWrite);
+    if (!file.isValid()) {
+        qCCritical(KWIN_CORE) << "Failed to create RamFile for LinuxDmaBufV1FormatTable";
         return;
     }
-    fd = KWin::FileDescriptor(open(tmp->fileName().toUtf8().constData(), O_RDONLY | O_CLOEXEC));
-    if (!fd.isValid()) {
-        qCWarning(KWIN_CORE) << "Could not create readonly shm fd!" << strerror(errno);
-        return;
-    }
-    unlink(tmp->fileName().toUtf8().constData());
-    if (!tmp->resize(size)) {
-        qCWarning(KWIN_CORE) << "Failed to resize keymap file:" << tmp->errorString();
-        return;
-    }
-    uchar *address = tmp->map(0, size);
-    if (!address) {
-        qCWarning(KWIN_CORE) << "Failed to map keymap file:" << tmp->errorString();
-        return;
-    }
-    memcpy(address, data.data(), size);
 }
 
 } // namespace KWaylandServer
