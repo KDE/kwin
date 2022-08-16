@@ -38,7 +38,6 @@
 #include "wayland/keystate_interface.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/output_interface.h"
-#include "wayland/outputconfiguration_v2_interface.h"
 #include "wayland/outputmanagement_v2_interface.h"
 #include "wayland/plasmashell_interface.h"
 #include "wayland/plasmavirtualdesktop_interface.h"

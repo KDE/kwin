@@ -7,8 +7,6 @@
 #include "primaryoutput_v1_interface.h"
 
 #include "display.h"
-#include "outputconfiguration_v2_interface.h"
-#include "outputmanagement_v2_interface.h"
 
 #include "qwayland-server-kde-primary-output-v1.h"
 #include <wayland-server.h>
