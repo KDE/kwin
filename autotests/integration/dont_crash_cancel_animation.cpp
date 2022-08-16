@@ -83,12 +83,12 @@ void DontCrashCancelAnimationFromAnimationEndedTest::testScript()
 
     using namespace KWayland::Client;
     // create a window
-    KWayland::Client::Surface *surface = Test::createSurface(Test::waylandCompositor());
+    std::unique_ptr<KWayland::Client::Surface> surface{Test::createSurface()};
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
     QVERIFY(shellSurface);
     // let's render
-    auto window = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QCOMPARE(workspace()->activeWindow(), window);
 
@@ -99,7 +99,7 @@ void DontCrashCancelAnimationFromAnimationEndedTest::testScript()
     QSignalSpy windowDeletedSpy(window, &Window::windowClosed);
     QVERIFY(windowDeletedSpy.isValid());
 
-    surface->deleteLater();
+    surface.reset();
 
     QVERIFY(windowDeletedSpy.wait());
     // make sure we animate

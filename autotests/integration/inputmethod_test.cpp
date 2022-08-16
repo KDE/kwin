@@ -301,22 +301,22 @@ void InputMethodTest::testSwitchFocusedSurfaces()
     std::unique_ptr<TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
 
     QVector<Window *> windows;
-    QVector<KWayland::Client::Surface *> surfaces;
+    std::vector<std::unique_ptr<KWayland::Client::Surface>> surfaces;
     QVector<Test::XdgToplevel *> toplevels;
     // We create 3 surfaces
     for (int i = 0; i < 3; ++i) {
-        auto surface = Test::createSurface();
-        auto shellSurface = Test::createXdgToplevelSurface(surface);
-        windows += Test::renderAndWaitForShown(surface, QSize(1280, 1024), Qt::red);
+        std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
+        auto shellSurface = Test::createXdgToplevelSurface(surface.get());
+        windows += Test::renderAndWaitForShown(surface.get(), QSize(1280, 1024), Qt::red);
         QCOMPARE(workspace()->activeWindow(), windows.constLast());
-        surfaces += surface;
+        surfaces.push_back(std::move(surface));
         toplevels += shellSurface;
     }
     QCOMPARE(windowAddedSpy.count(), 3);
     waylandServer()->seat()->setFocusedTextInputSurface(windows.constFirst()->surface());
 
     QVERIFY(!kwinApp()->inputMethod()->isActive());
-    textInput->enable(surfaces.last());
+    textInput->enable(surfaces.back().get());
     QVERIFY(!kwinApp()->inputMethod()->isActive());
     waylandServer()->seat()->setFocusedTextInputSurface(windows.first()->surface());
     QVERIFY(!kwinApp()->inputMethod()->isActive());

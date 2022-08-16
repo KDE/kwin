@@ -445,7 +445,7 @@ public:
     }
     KWayland::Client::Surface *inputPanelSurface() const
     {
-        return m_inputSurface;
+        return m_inputSurface.get();
     }
     auto *context() const
     {
@@ -460,7 +460,7 @@ protected:
     void zwp_input_method_v1_deactivate(struct ::zwp_input_method_context_v1 *context) override;
 
 private:
-    QPointer<KWayland::Client::Surface> m_inputSurface;
+    std::unique_ptr<KWayland::Client::Surface> m_inputSurface;
     QtWayland::zwp_input_panel_surface_v1 *m_inputMethodSurface = nullptr;
     QPointer<Window> m_window;
     struct ::zwp_input_method_context_v1 *m_context = nullptr;
@@ -581,7 +581,7 @@ bool waitForWaylandKeyboard();
 
 void flushWaylandConnection();
 
-KWayland::Client::Surface *createSurface(QObject *parent = nullptr);
+std::unique_ptr<KWayland::Client::Surface> createSurface();
 KWayland::Client::SubSurface *createSubSurface(KWayland::Client::Surface *surface,
                                                KWayland::Client::Surface *parentSurface, QObject *parent = nullptr);
 

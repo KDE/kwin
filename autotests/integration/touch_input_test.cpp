@@ -44,7 +44,7 @@ private Q_SLOTS:
     void testGestureDetection();
 
 private:
-    Window *showWindow(bool decorated = false);
+    std::pair<Window *, std::unique_ptr<KWayland::Client::Surface>> showWindow(bool decorated = false);
     KWayland::Client::Touch *m_touch = nullptr;
 };
 
@@ -85,19 +85,19 @@ void TouchInputTest::cleanup()
     Test::destroyWaylandConnection();
 }
 
-Window *TouchInputTest::showWindow(bool decorated)
+std::pair<Window *, std::unique_ptr<KWayland::Client::Surface>> TouchInputTest::showWindow(bool decorated)
 {
     using namespace KWayland::Client;
 #define VERIFY(statement)                                                 \
     if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__)) \
-        return nullptr;
+        return {nullptr, nullptr};
 #define COMPARE(actual, expected)                                                   \
     if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__)) \
-        return nullptr;
+        return {nullptr, nullptr};
 
-    KWayland::Client::Surface *surface = Test::createSurface(Test::waylandCompositor());
-    VERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, Test::CreationSetup::CreateOnly, surface);
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
+    VERIFY(surface.get());
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly, surface.get());
     VERIFY(shellSurface);
     if (decorated) {
         auto decoration = Test::createXdgToplevelDecorationV1(shellSurface, shellSurface);
@@ -108,7 +108,7 @@ Window *TouchInputTest::showWindow(bool decorated)
     VERIFY(surfaceConfigureRequestedSpy.wait());
     // let's render
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
-    auto window = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
 
     VERIFY(window);
     COMPARE(workspace()->activeWindow(), window);
@@ -116,7 +116,7 @@ Window *TouchInputTest::showWindow(bool decorated)
 #undef VERIFY
 #undef COMPARE
 
-    return window;
+    return {window, std::move(surface)};
 }
 
 void TouchInputTest::testTouchHidesCursor()
@@ -155,7 +155,7 @@ void TouchInputTest::testMultipleTouchPoints()
 {
     using namespace KWayland::Client;
     QFETCH(bool, decorated);
-    Window *window = showWindow(decorated);
+    auto [window, surface] = showWindow(decorated);
     QCOMPARE(window->isDecorated(), decorated);
     window->move(QPoint(100, 100));
     QVERIFY(window);
@@ -216,7 +216,7 @@ void TouchInputTest::testMultipleTouchPoints()
 void TouchInputTest::testCancel()
 {
     using namespace KWayland::Client;
-    Window *window = showWindow();
+    auto [window, surface] = showWindow();
     window->move(QPoint(100, 100));
     QVERIFY(window);
     QSignalSpy sequenceStartedSpy(m_touch, &Touch::sequenceStarted);
@@ -242,9 +242,9 @@ void TouchInputTest::testTouchMouseAction()
     // this test verifies that a touch down on an inactive window will activate it
     using namespace KWayland::Client;
     // create two windows
-    Window *c1 = showWindow();
+    auto [c1, surface] = showWindow();
     QVERIFY(c1);
-    Window *c2 = showWindow();
+    auto [c2, surface2] = showWindow();
     QVERIFY(c2);
 
     QVERIFY(!c1->isActive());

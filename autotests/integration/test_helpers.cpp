@@ -283,10 +283,10 @@ void MockInputMethod::zwp_input_method_v1_activate(struct ::zwp_input_method_con
     Q_UNUSED(context)
     if (!m_inputSurface) {
         m_inputSurface = Test::createSurface();
-        m_inputMethodSurface = Test::createInputPanelSurfaceV1(m_inputSurface, s_waylandConnection.outputs.first());
+        m_inputMethodSurface = Test::createInputPanelSurfaceV1(m_inputSurface.get(), s_waylandConnection.outputs.first());
     }
     m_context = context;
-    m_window = Test::renderAndWaitForShown(m_inputSurface, QSize(1280, 400), Qt::blue);
+    m_window = Test::renderAndWaitForShown(m_inputSurface.get(), QSize(1280, 400), Qt::blue);
 
     Q_EMIT activate();
 }
@@ -300,8 +300,7 @@ void MockInputMethod::zwp_input_method_v1_deactivate(struct ::zwp_input_method_c
     if (m_inputSurface) {
         m_inputSurface->release();
         m_inputSurface->destroy();
-        delete m_inputSurface;
-        m_inputSurface = nullptr;
+        m_inputSurface.reset();
         delete m_inputMethodSurface;
         m_inputMethodSurface = nullptr;
     }
@@ -738,17 +737,13 @@ void flushWaylandConnection()
     }
 }
 
-KWayland::Client::Surface *createSurface(QObject *parent)
+std::unique_ptr<KWayland::Client::Surface> createSurface()
 {
     if (!s_waylandConnection.compositor) {
         return nullptr;
     }
-    auto s = s_waylandConnection.compositor->createSurface(parent);
-    if (!s->isValid()) {
-        delete s;
-        return nullptr;
-    }
-    return s;
+    std::unique_ptr<KWayland::Client::Surface> s{s_waylandConnection.compositor->createSurface()};
+    return s->isValid() ? std::move(s) : nullptr;
 }
 
 SubSurface *createSubSurface(KWayland::Client::Surface *surface, KWayland::Client::Surface *parentSurface, QObject *parent)

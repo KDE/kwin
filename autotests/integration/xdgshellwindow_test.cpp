@@ -568,7 +568,7 @@ void TestXdgShellWindow::testFullscreenMultipleOutputs()
     for (int i = 0; i < outputs.count(); ++i) {
         Test::XdgToplevel::States states;
 
-        QSharedPointer<KWayland::Client::Surface> surface(Test::createSurface());
+        std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
         QVERIFY(surface);
         QSharedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
         QVERIFY(shellSurface);

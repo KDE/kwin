@@ -188,12 +188,12 @@ void ScriptedEffectsTest::testEffectsHandler()
 
     // create a window
     using namespace KWayland::Client;
-    auto *surface = Test::createSurface(Test::waylandCompositor());
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    auto *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    auto *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
     QVERIFY(shellSurface);
     shellSurface->set_title("WindowA");
-    auto *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    auto *c = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(workspace()->activeWindow(), c);
 
@@ -207,7 +207,7 @@ void ScriptedEffectsTest::testEffectsHandler()
     c->unminimize();
     waitFor("windowUnminimized - WindowA");
 
-    surface->deleteLater();
+    surface.reset();
     waitFor("windowClosed - WindowA");
 
     // desktop management
@@ -267,12 +267,12 @@ void ScriptedEffectsTest::testAnimations()
 
     // animated after window added connect
     using namespace KWayland::Client;
-    auto *surface = Test::createSurface(Test::waylandCompositor());
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    auto *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    auto *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
     QVERIFY(shellSurface);
     shellSurface->set_title("Window 1");
-    auto *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    auto *c = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(workspace()->activeWindow(), c);
 
@@ -374,12 +374,12 @@ void ScriptedEffectsTest::testFullScreenEffect()
     QSignalSpy isActiveFullScreenEffectSpyOther(effectOther, &ScriptedEffect::isActiveFullScreenEffectChanged);
 
     using namespace KWayland::Client;
-    auto *surface = Test::createSurface(Test::waylandCompositor());
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    auto *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    auto *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
     QVERIFY(shellSurface);
     shellSurface->set_title("Window 1");
-    auto *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    auto *c = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(workspace()->activeWindow(), c);
 
@@ -438,11 +438,11 @@ void ScriptedEffectsTest::testKeepAlive()
 
     // create a window
     using namespace KWayland::Client;
-    auto *surface = Test::createSurface(Test::waylandCompositor());
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    auto *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    auto *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
     QVERIFY(shellSurface);
-    auto *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    auto *c = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(workspace()->activeWindow(), c);
 
@@ -450,7 +450,7 @@ void ScriptedEffectsTest::testKeepAlive()
     QCOMPARE(effect->state().count(), 0);
 
     // trigger windowClosed signal
-    surface->deleteLater();
+    surface.reset();
     QVERIFY(effectOutputSpy.count() == 1 || effectOutputSpy.wait());
 
     if (keepAlive) {
@@ -484,11 +484,11 @@ void ScriptedEffectsTest::testGrab()
 
     // create test window
     using namespace KWayland::Client;
-    KWayland::Client::Surface *surface = Test::createSurface(Test::waylandCompositor());
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
     QVERIFY(shellSurface);
-    Window *window = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QCOMPARE(workspace()->activeWindow(), window);
 
@@ -517,11 +517,11 @@ void ScriptedEffectsTest::testGrabAlreadyGrabbedWindow()
 
     // create test window
     using namespace KWayland::Client;
-    KWayland::Client::Surface *surface = Test::createSurface(Test::waylandCompositor());
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
     QVERIFY(shellSurface);
-    Window *window = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QCOMPARE(workspace()->activeWindow(), window);
 
@@ -554,11 +554,11 @@ void ScriptedEffectsTest::testGrabAlreadyGrabbedWindowForced()
 
     // create test window
     using namespace KWayland::Client;
-    KWayland::Client::Surface *surface = Test::createSurface(Test::waylandCompositor());
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
     QVERIFY(shellSurface);
-    Window *window = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QCOMPARE(workspace()->activeWindow(), window);
 
@@ -585,11 +585,11 @@ void ScriptedEffectsTest::testUngrab()
 
     // create test window
     using namespace KWayland::Client;
-    KWayland::Client::Surface *surface = Test::createSurface(Test::waylandCompositor());
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
     QVERIFY(shellSurface);
-    Window *window = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QCOMPARE(workspace()->activeWindow(), window);
 
@@ -628,11 +628,11 @@ void ScriptedEffectsTest::testRedirect()
 
     // create test window
     using namespace KWayland::Client;
-    KWayland::Client::Surface *surface = Test::createSurface(Test::waylandCompositor());
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
     QVERIFY(shellSurface);
-    Window *window = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QCOMPARE(workspace()->activeWindow(), window);
 
@@ -706,11 +706,11 @@ void ScriptedEffectsTest::testComplete()
 
     // create test window
     using namespace KWayland::Client;
-    KWayland::Client::Surface *surface = Test::createSurface(Test::waylandCompositor());
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
     QVERIFY(shellSurface);
-    Window *window = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QCOMPARE(workspace()->activeWindow(), window);
 

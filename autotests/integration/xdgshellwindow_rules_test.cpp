@@ -229,7 +229,7 @@ void TestXdgShellWindowRules::createTestWindow(ClientFlags flags)
     const auto decorationMode = (flags & ServerSideDecoration) ? Test::XdgToplevelDecorationV1::mode_server_side
                                                                : Test::XdgToplevelDecorationV1::mode_client_side;
     // Create an xdg surface.
-    m_surface.reset(Test::createSurface());
+    m_surface = Test::createSurface();
     m_shellSurface.reset(Test::createXdgToplevelSurface(m_surface.get(), Test::CreationSetup::CreateOnly, m_surface.get()));
     Test::XdgToplevelDecorationV1 *decoration = Test::createXdgToplevelDecorationV1(m_shellSurface.get(), m_shellSurface.get());
 

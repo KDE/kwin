@@ -54,11 +54,11 @@ private Q_SLOTS:
 private:
     void setPlacementPolicy(Placement::Policy policy);
     /*
-     * Create a window with the lifespan of parent and return relevant results for testing
+     * Create a window and return relevant results for testing
      * defaultSize is the buffer size to use if the compositor returns an empty size in the first configure
      * event.
      */
-    PlaceWindowResult createAndPlaceWindow(const QSize &defaultSize, QObject *parent);
+    std::pair<PlaceWindowResult, std::unique_ptr<KWayland::Client::Surface>> createAndPlaceWindow(const QSize &defaultSize);
 };
 
 void TestPlacement::init()
@@ -101,13 +101,13 @@ void TestPlacement::setPlacementPolicy(Placement::Policy policy)
     Workspace::self()->slotReconfigure();
 }
 
-PlaceWindowResult TestPlacement::createAndPlaceWindow(const QSize &defaultSize, QObject *parent)
+std::pair<PlaceWindowResult, std::unique_ptr<KWayland::Client::Surface>> TestPlacement::createAndPlaceWindow(const QSize &defaultSize)
 {
     PlaceWindowResult rc;
 
     // create a new window
-    auto surface = Test::createSurface(parent);
-    auto shellSurface = Test::createXdgToplevelSurface(surface, Test::CreationSetup::CreateOnly, surface);
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
+    auto shellSurface = Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly, surface.get());
 
     QSignalSpy toplevelConfigureRequestedSpy(shellSurface, &Test::XdgToplevel::configureRequested);
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
@@ -124,22 +124,21 @@ PlaceWindowResult TestPlacement::createAndPlaceWindow(const QSize &defaultSize, 
         size = defaultSize;
     }
 
-    auto window = Test::renderAndWaitForShown(surface, size.toSize(), Qt::red);
+    auto window = Test::renderAndWaitForShown(surface.get(), size.toSize(), Qt::red);
 
     rc.finalGeometry = window->frameGeometry();
-    return rc;
+    return {rc, std::move(surface)};
 }
 
 void TestPlacement::testPlaceSmart()
 {
     setPlacementPolicy(Placement::Smart);
 
-    std::unique_ptr<QObject> testParent(new QObject); // dumb QObject just for scoping surfaces to the test
-
+    std::vector<std::unique_ptr<KWayland::Client::Surface>> surfaces;
     QRegion usedArea;
 
     for (int i = 0; i < 4; i++) {
-        PlaceWindowResult windowPlacement = createAndPlaceWindow(QSize(600, 500), testParent.get());
+        auto [windowPlacement, surface] = createAndPlaceWindow(QSize(600, 500));
         // smart placement shouldn't define a size on windows
         QCOMPARE(windowPlacement.initiallyConfiguredSize, QSize(0, 0));
         QCOMPARE(windowPlacement.finalGeometry.size(), QSize(600, 500));
@@ -149,6 +148,7 @@ void TestPlacement::testPlaceSmart()
         // 4 windows of 600, 500 should fit without overlap
         QVERIFY(!usedArea.intersects(windowPlacement.finalGeometry.toRect()));
         usedArea += windowPlacement.finalGeometry.toRect();
+        surfaces.push_back(std::move(surface));
     }
 }
 
@@ -156,16 +156,16 @@ void TestPlacement::testPlaceZeroCornered()
 {
     setPlacementPolicy(Placement::ZeroCornered);
 
-    std::unique_ptr<QObject> testParent(new QObject);
-
+    std::vector<std::unique_ptr<KWayland::Client::Surface>> surfaces;
     for (int i = 0; i < 4; i++) {
-        PlaceWindowResult windowPlacement = createAndPlaceWindow(QSize(600, 500), testParent.get());
+        auto [windowPlacement, surface] = createAndPlaceWindow(QSize(600, 500));
         // smart placement shouldn't define a size on windows
         QCOMPARE(windowPlacement.initiallyConfiguredSize, QSize(0, 0));
         // size should match our buffer
         QCOMPARE(windowPlacement.finalGeometry.size(), QSize(600, 500));
         // and it should be in the corner
         QCOMPARE(windowPlacement.finalGeometry.topLeft(), QPoint(0, 0));
+        surfaces.push_back(std::move(surface));
     }
 }
 
@@ -181,14 +181,15 @@ void TestPlacement::testPlaceMaximized()
     plasmaSurface->setPosition(QPoint(0, 0));
     Test::renderAndWaitForShown(panelSurface.get(), QSize(1280, 20), Qt::blue);
 
-    std::unique_ptr<QObject> testParent(new QObject);
+    std::vector<std::unique_ptr<KWayland::Client::Surface>> surfaces;
 
     // all windows should be initially maximized with an initial configure size sent
     for (int i = 0; i < 4; i++) {
-        PlaceWindowResult windowPlacement = createAndPlaceWindow(QSize(600, 500), testParent.get());
+        auto [windowPlacement, surface] = createAndPlaceWindow(QSize(600, 500));
         QVERIFY(windowPlacement.initiallyConfiguredStates & Test::XdgToplevel::State::Maximized);
         QCOMPARE(windowPlacement.initiallyConfiguredSize, QSize(1280, 1024 - 20));
         QCOMPARE(windowPlacement.finalGeometry, QRect(0, 20, 1280, 1024 - 20)); // under the panel
+        surfaces.push_back(std::move(surface));
     }
 }
 
@@ -204,12 +205,12 @@ void TestPlacement::testPlaceMaximizedLeavesFullscreen()
     plasmaSurface->setPosition(QPoint(0, 0));
     Test::renderAndWaitForShown(panelSurface.get(), QSize(1280, 20), Qt::blue);
 
-    std::unique_ptr<QObject> testParent(new QObject);
+    std::vector<std::unique_ptr<KWayland::Client::Surface>> surfaces;
 
     // all windows should be initially fullscreen with an initial configure size sent, despite the policy
     for (int i = 0; i < 4; i++) {
-        auto surface = Test::createSurface(testParent.get());
-        auto shellSurface = Test::createXdgToplevelSurface(surface, Test::CreationSetup::CreateOnly, surface);
+        std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
+        auto shellSurface = Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly, surface.get());
         shellSurface->set_fullscreen(nullptr);
         QSignalSpy toplevelConfigureRequestedSpy(shellSurface, &Test::XdgToplevel::configureRequested);
         QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
@@ -220,11 +221,13 @@ void TestPlacement::testPlaceMaximizedLeavesFullscreen()
         auto initiallyConfiguredStates = toplevelConfigureRequestedSpy[0][1].value<Test::XdgToplevel::States>();
         shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy[0][0].toUInt());
 
-        auto window = Test::renderAndWaitForShown(surface, initiallyConfiguredSize, Qt::red);
+        auto window = Test::renderAndWaitForShown(surface.get(), initiallyConfiguredSize, Qt::red);
 
         QVERIFY(initiallyConfiguredStates & Test::XdgToplevel::State::Fullscreen);
         QCOMPARE(initiallyConfiguredSize, QSize(1280, 1024));
         QCOMPARE(window->frameGeometry(), QRect(0, 0, 1280, 1024));
+
+        surfaces.push_back(std::move(surface));
     }
 }
 

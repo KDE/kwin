@@ -199,11 +199,11 @@ void PointerInputTest::testWarpingUpdatesFocus()
     // create a window
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowAddedSpy.isValid());
-    KWayland::Client::Surface *surface = Test::createSurface(m_compositor);
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
     QVERIFY(shellSurface);
-    render(surface);
+    render(surface.get());
     QVERIFY(windowAddedSpy.wait());
     Window *window = workspace()->activeWindow();
     QVERIFY(window);
@@ -218,7 +218,7 @@ void PointerInputTest::testWarpingUpdatesFocus()
     QCOMPARE(enteredSpy.count(), 1);
     QCOMPARE(enteredSpy.first().at(1).toPointF(), QPointF(25, 25));
     // window should have focus
-    QCOMPARE(pointer->enteredSurface(), surface);
+    QCOMPARE(pointer->enteredSurface(), surface.get());
     // also on the server
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), window->surface());
 
@@ -247,11 +247,11 @@ void PointerInputTest::testWarpingGeneratesPointerMotion()
     // create a window
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowAddedSpy.isValid());
-    KWayland::Client::Surface *surface = Test::createSurface(m_compositor);
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
     QVERIFY(shellSurface);
-    render(surface);
+    render(surface.get());
     QVERIFY(windowAddedSpy.wait());
     Window *window = workspace()->activeWindow();
     QVERIFY(window);
@@ -287,11 +287,11 @@ void PointerInputTest::testWarpingDuringFilter()
     // create a window
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowAddedSpy.isValid());
-    KWayland::Client::Surface *surface = Test::createSurface(m_compositor);
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
     QVERIFY(shellSurface);
-    render(surface);
+    render(surface.get());
     QVERIFY(windowAddedSpy.wait());
     Window *window = workspace()->activeWindow();
     QVERIFY(window);
@@ -373,11 +373,11 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     // create a window
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowAddedSpy.isValid());
-    KWayland::Client::Surface *surface = Test::createSurface(m_compositor);
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
     QVERIFY(shellSurface);
-    render(surface, QSize(1280, 1024));
+    render(surface.get(), QSize(1280, 1024));
     QVERIFY(windowAddedSpy.wait());
     Window *window = workspace()->activeWindow();
     QVERIFY(window);
@@ -568,11 +568,11 @@ void PointerInputTest::testModifierClickUnrestrictedMove()
     // create a window
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowAddedSpy.isValid());
-    KWayland::Client::Surface *surface = Test::createSurface(m_compositor);
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
     QVERIFY(shellSurface);
-    render(surface);
+    render(surface.get());
     QVERIFY(windowAddedSpy.wait());
     Window *window = workspace()->activeWindow();
     QVERIFY(window);
@@ -629,16 +629,16 @@ void PointerInputTest::testModifierClickUnrestrictedFullscreenMove()
     QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedMove);
 
     // create a window
-    KWayland::Client::Surface *surface = Test::createSurface(m_compositor);
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
     QVERIFY(shellSurface);
     shellSurface->set_fullscreen(nullptr);
     QSignalSpy toplevelConfigureRequestedSpy(shellSurface, &Test::XdgToplevel::configureRequested);
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
-    Window *window = Test::renderAndWaitForShown(surface, toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::blue);
+    Window *window = Test::renderAndWaitForShown(surface.get(), toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::blue);
     QVERIFY(window);
     QVERIFY(window->isFullScreen());
 
@@ -686,11 +686,11 @@ void PointerInputTest::testModifierClickUnrestrictedMoveGlobalShortcutsDisabled(
     // create a window
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowAddedSpy.isValid());
-    KWayland::Client::Surface *surface = Test::createSurface(m_compositor);
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
     QVERIFY(shellSurface);
-    render(surface);
+    render(surface.get());
     QVERIFY(windowAddedSpy.wait());
     Window *window = workspace()->activeWindow();
     QVERIFY(window);
@@ -759,11 +759,11 @@ void PointerInputTest::testModifierScrollOpacity()
     // create a window
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowAddedSpy.isValid());
-    KWayland::Client::Surface *surface = Test::createSurface(m_compositor);
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
     QVERIFY(shellSurface);
-    render(surface);
+    render(surface.get());
     QVERIFY(windowAddedSpy.wait());
     Window *window = workspace()->activeWindow();
     QVERIFY(window);
@@ -818,11 +818,11 @@ void PointerInputTest::testModifierScrollOpacityGlobalShortcutsDisabled()
     // create a window
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowAddedSpy.isValid());
-    KWayland::Client::Surface *surface = Test::createSurface(m_compositor);
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
     QVERIFY(shellSurface);
-    render(surface);
+    render(surface.get());
     QVERIFY(windowAddedSpy.wait());
     Window *window = workspace()->activeWindow();
     QVERIFY(window);
@@ -868,19 +868,19 @@ void PointerInputTest::testScrollAction()
     // create two windows
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowAddedSpy.isValid());
-    KWayland::Client::Surface *surface1 = Test::createSurface(m_compositor);
+    std::unique_ptr<KWayland::Client::Surface> surface1 = Test::createSurface();
     QVERIFY(surface1);
-    Test::XdgToplevel *shellSurface1 = Test::createXdgToplevelSurface(surface1, surface1);
+    Test::XdgToplevel *shellSurface1 = Test::createXdgToplevelSurface(surface1.get(), surface1.get());
     QVERIFY(shellSurface1);
-    render(surface1);
+    render(surface1.get());
     QVERIFY(windowAddedSpy.wait());
     Window *window1 = workspace()->activeWindow();
     QVERIFY(window1);
-    KWayland::Client::Surface *surface2 = Test::createSurface(m_compositor);
+    std::unique_ptr<KWayland::Client::Surface> surface2 = Test::createSurface();
     QVERIFY(surface2);
-    Test::XdgToplevel *shellSurface2 = Test::createXdgToplevelSurface(surface2, surface2);
+    Test::XdgToplevel *shellSurface2 = Test::createXdgToplevelSurface(surface2.get(), surface2.get());
     QVERIFY(shellSurface2);
-    render(surface2);
+    render(surface2.get());
     QVERIFY(windowAddedSpy.wait());
     Window *window2 = workspace()->activeWindow();
     QVERIFY(window2);
@@ -928,19 +928,19 @@ void PointerInputTest::testFocusFollowsMouse()
     // create two windows
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowAddedSpy.isValid());
-    KWayland::Client::Surface *surface1 = Test::createSurface(m_compositor);
+    std::unique_ptr<KWayland::Client::Surface> surface1 = Test::createSurface();
     QVERIFY(surface1);
-    Test::XdgToplevel *shellSurface1 = Test::createXdgToplevelSurface(surface1, surface1);
+    Test::XdgToplevel *shellSurface1 = Test::createXdgToplevelSurface(surface1.get(), surface1.get());
     QVERIFY(shellSurface1);
-    render(surface1, QSize(800, 800));
+    render(surface1.get(), QSize(800, 800));
     QVERIFY(windowAddedSpy.wait());
     Window *window1 = workspace()->activeWindow();
     QVERIFY(window1);
-    KWayland::Client::Surface *surface2 = Test::createSurface(m_compositor);
+    std::unique_ptr<KWayland::Client::Surface> surface2 = Test::createSurface();
     QVERIFY(surface2);
-    Test::XdgToplevel *shellSurface2 = Test::createXdgToplevelSurface(surface2, surface2);
+    Test::XdgToplevel *shellSurface2 = Test::createXdgToplevelSurface(surface2.get(), surface2.get());
     QVERIFY(shellSurface2);
-    render(surface2, QSize(800, 800));
+    render(surface2.get(), QSize(800, 800));
     QVERIFY(windowAddedSpy.wait());
     Window *window2 = workspace()->activeWindow();
     QVERIFY(window2);
@@ -1014,19 +1014,19 @@ void PointerInputTest::testMouseActionInactiveWindow()
     // create two windows
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowAddedSpy.isValid());
-    KWayland::Client::Surface *surface1 = Test::createSurface(m_compositor);
+    std::unique_ptr<KWayland::Client::Surface> surface1 = Test::createSurface();
     QVERIFY(surface1);
-    Test::XdgToplevel *shellSurface1 = Test::createXdgToplevelSurface(surface1, surface1);
+    Test::XdgToplevel *shellSurface1 = Test::createXdgToplevelSurface(surface1.get(), surface1.get());
     QVERIFY(shellSurface1);
-    render(surface1, QSize(800, 800));
+    render(surface1.get(), QSize(800, 800));
     QVERIFY(windowAddedSpy.wait());
     Window *window1 = workspace()->activeWindow();
     QVERIFY(window1);
-    KWayland::Client::Surface *surface2 = Test::createSurface(m_compositor);
+    std::unique_ptr<KWayland::Client::Surface> surface2 = Test::createSurface();
     QVERIFY(surface2);
-    Test::XdgToplevel *shellSurface2 = Test::createXdgToplevelSurface(surface2, surface2);
+    Test::XdgToplevel *shellSurface2 = Test::createXdgToplevelSurface(surface2.get(), surface2.get());
     QVERIFY(shellSurface2);
-    render(surface2, QSize(800, 800));
+    render(surface2.get(), QSize(800, 800));
     QVERIFY(windowAddedSpy.wait());
     Window *window2 = workspace()->activeWindow();
     QVERIFY(window2);
@@ -1104,21 +1104,21 @@ void PointerInputTest::testMouseActionActiveWindow()
     // create two windows
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowAddedSpy.isValid());
-    KWayland::Client::Surface *surface1 = Test::createSurface(m_compositor);
+    std::unique_ptr<KWayland::Client::Surface> surface1 = Test::createSurface();
     QVERIFY(surface1);
-    Test::XdgToplevel *shellSurface1 = Test::createXdgToplevelSurface(surface1, surface1);
+    Test::XdgToplevel *shellSurface1 = Test::createXdgToplevelSurface(surface1.get(), surface1.get());
     QVERIFY(shellSurface1);
-    render(surface1, QSize(800, 800));
+    render(surface1.get(), QSize(800, 800));
     QVERIFY(windowAddedSpy.wait());
     Window *window1 = workspace()->activeWindow();
     QVERIFY(window1);
     QSignalSpy window1DestroyedSpy(window1, &QObject::destroyed);
     QVERIFY(window1DestroyedSpy.isValid());
-    KWayland::Client::Surface *surface2 = Test::createSurface(m_compositor);
+    std::unique_ptr<KWayland::Client::Surface> surface2 = Test::createSurface();
     QVERIFY(surface2);
-    Test::XdgToplevel *shellSurface2 = Test::createXdgToplevelSurface(surface2, surface2);
+    Test::XdgToplevel *shellSurface2 = Test::createXdgToplevelSurface(surface2.get(), surface2.get());
     QVERIFY(shellSurface2);
-    render(surface2, QSize(800, 800));
+    render(surface2.get(), QSize(800, 800));
     QVERIFY(windowAddedSpy.wait());
     Window *window2 = workspace()->activeWindow();
     QVERIFY(window2);
@@ -1158,9 +1158,9 @@ void PointerInputTest::testMouseActionActiveWindow()
     // release again
     Test::pointerButtonReleased(button, timestamp++);
 
-    delete surface1;
+    surface1.reset();
     QVERIFY(window1DestroyedSpy.wait());
-    delete surface2;
+    surface2.reset();
     QVERIFY(window2DestroyedSpy.wait());
 }
 
@@ -1186,11 +1186,11 @@ void PointerInputTest::testCursorImage()
     // create a window
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowAddedSpy.isValid());
-    KWayland::Client::Surface *surface = Test::createSurface(m_compositor);
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
     QVERIFY(shellSurface);
-    render(surface);
+    render(surface.get());
     QVERIFY(windowAddedSpy.wait());
     Window *window = workspace()->activeWindow();
     QVERIFY(window);
@@ -1202,21 +1202,21 @@ void PointerInputTest::testCursorImage()
     QVERIFY(enteredSpy.wait());
 
     // create a cursor on the pointer
-    KWayland::Client::Surface *cursorSurface = Test::createSurface(m_compositor);
+    auto cursorSurface = Test::createSurface();
     QVERIFY(cursorSurface);
-    QSignalSpy cursorRenderedSpy(cursorSurface, &KWayland::Client::Surface::frameRendered);
+    QSignalSpy cursorRenderedSpy(cursorSurface.get(), &KWayland::Client::Surface::frameRendered);
     QVERIFY(cursorRenderedSpy.isValid());
     QImage red = QImage(QSize(10, 10), QImage::Format_ARGB32_Premultiplied);
     red.fill(Qt::red);
     cursorSurface->attachBuffer(Test::waylandShmPool()->createBuffer(red));
     cursorSurface->damage(QRect(0, 0, 10, 10));
     cursorSurface->commit();
-    pointer->setCursor(cursorSurface, QPoint(5, 5));
+    pointer->setCursor(cursorSurface.get(), QPoint(5, 5));
     QVERIFY(cursorRenderedSpy.wait());
     QCOMPARE(cursor->image(), red);
     QCOMPARE(cursor->hotspot(), QPoint(5, 5));
     // change hotspot
-    pointer->setCursor(cursorSurface, QPoint(6, 6));
+    pointer->setCursor(cursorSurface.get(), QPoint(6, 6));
     Test::flushWaylandConnection();
     QTRY_COMPARE(cursor->hotspot(), QPoint(6, 6));
     QCOMPARE(cursor->image(), red);
@@ -1291,11 +1291,11 @@ void PointerInputTest::testEffectOverrideCursorImage()
     // now let's create a window
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowAddedSpy.isValid());
-    KWayland::Client::Surface *surface = Test::createSurface(m_compositor);
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
     QVERIFY(shellSurface);
-    render(surface);
+    render(surface.get());
     QVERIFY(windowAddedSpy.wait());
     Window *window = workspace()->activeWindow();
     QVERIFY(window);
@@ -1367,11 +1367,11 @@ void PointerInputTest::testPopup()
 
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowAddedSpy.isValid());
-    KWayland::Client::Surface *surface = Test::createSurface(m_compositor);
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
     QVERIFY(shellSurface);
-    render(surface);
+    render(surface.get());
     QVERIFY(windowAddedSpy.wait());
     Window *window = workspace()->activeWindow();
     QVERIFY(window);
@@ -1392,14 +1392,14 @@ void PointerInputTest::testPopup()
     positioner->set_anchor_rect(0, 0, 80, 20);
     positioner->set_anchor(Test::XdgPositioner::anchor_bottom_right);
     positioner->set_gravity(Test::XdgPositioner::gravity_bottom_right);
-    KWayland::Client::Surface *popupSurface = Test::createSurface(m_compositor);
+    std::unique_ptr<Surface> popupSurface = Test::createSurface();
     QVERIFY(popupSurface);
-    Test::XdgPopup *popupShellSurface = Test::createXdgPopupSurface(popupSurface, shellSurface->xdgSurface(), positioner.get());
+    Test::XdgPopup *popupShellSurface = Test::createXdgPopupSurface(popupSurface.get(), shellSurface->xdgSurface(), positioner.get());
     QVERIFY(popupShellSurface);
     QSignalSpy doneReceivedSpy(popupShellSurface, &Test::XdgPopup::doneReceived);
     QVERIFY(doneReceivedSpy.isValid());
     popupShellSurface->grab(*Test::waylandSeat(), 0); // FIXME: Serial.
-    render(popupSurface, QSize(100, 50));
+    render(popupSurface.get(), QSize(100, 50));
     QVERIFY(windowAddedSpy.wait());
     auto popupWindow = windowAddedSpy.last().first().value<Window *>();
     QVERIFY(popupWindow);
@@ -1414,7 +1414,7 @@ void PointerInputTest::testPopup()
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 2);
     QCOMPARE(leftSpy.count(), 1);
-    QCOMPARE(pointer->enteredSurface(), popupSurface);
+    QCOMPARE(pointer->enteredSurface(), popupSurface.get());
 
     // let's move the pointer outside of the popup window
     // this should not really change anything, it gets a leave event
@@ -1479,14 +1479,14 @@ void PointerInputTest::testDecoCancelsPopup()
     positioner->set_anchor_rect(0, 0, 80, 20);
     positioner->set_anchor(Test::XdgPositioner::anchor_bottom_right);
     positioner->set_gravity(Test::XdgPositioner::gravity_bottom_right);
-    KWayland::Client::Surface *popupSurface = Test::createSurface(m_compositor);
+    std::unique_ptr<Surface> popupSurface = Test::createSurface();
     QVERIFY(popupSurface);
-    Test::XdgPopup *popupShellSurface = Test::createXdgPopupSurface(popupSurface, shellSurface->xdgSurface(), positioner.get());
+    Test::XdgPopup *popupShellSurface = Test::createXdgPopupSurface(popupSurface.get(), shellSurface->xdgSurface(), positioner.get());
     QVERIFY(popupShellSurface);
     QSignalSpy doneReceivedSpy(popupShellSurface, &Test::XdgPopup::doneReceived);
     QVERIFY(doneReceivedSpy.isValid());
     popupShellSurface->grab(*Test::waylandSeat(), 0); // FIXME: Serial.
-    auto popupWindow = Test::renderAndWaitForShown(popupSurface, QSize(100, 50), Qt::red);
+    auto popupWindow = Test::renderAndWaitForShown(popupSurface.get(), QSize(100, 50), Qt::red);
     QVERIFY(popupWindow);
     QVERIFY(popupWindow != window);
     QCOMPARE(window, workspace()->activeWindow());
@@ -1521,11 +1521,11 @@ void PointerInputTest::testWindowUnderCursorWhileButtonPressed()
     Cursors::self()->mouse()->setPos(800, 800);
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowAddedSpy.isValid());
-    KWayland::Client::Surface *surface = Test::createSurface(m_compositor);
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
     QVERIFY(shellSurface);
-    render(surface);
+    render(surface.get());
     QVERIFY(windowAddedSpy.wait());
     Window *window = workspace()->activeWindow();
     QVERIFY(window);
@@ -1544,11 +1544,11 @@ void PointerInputTest::testWindowUnderCursorWhileButtonPressed()
     positioner->set_anchor_rect(0, 0, 1, 1);
     positioner->set_anchor(Test::XdgPositioner::anchor_bottom_right);
     positioner->set_gravity(Test::XdgPositioner::gravity_bottom_right);
-    KWayland::Client::Surface *popupSurface = Test::createSurface(m_compositor);
+    std::unique_ptr<Surface> popupSurface = Test::createSurface();
     QVERIFY(popupSurface);
-    Test::XdgPopup *popupShellSurface = Test::createXdgPopupSurface(popupSurface, shellSurface->xdgSurface(), positioner.get());
+    Test::XdgPopup *popupShellSurface = Test::createXdgPopupSurface(popupSurface.get(), shellSurface->xdgSurface(), positioner.get());
     QVERIFY(popupShellSurface);
-    render(popupSurface, QSize(99, 49));
+    render(popupSurface.get(), QSize(99, 49));
     QVERIFY(windowAddedSpy.wait());
     auto popupWindow = windowAddedSpy.last().first().value<Window *>();
     QVERIFY(popupWindow);
@@ -1730,7 +1730,7 @@ void PointerInputTest::testResizeCursor()
 
     // wait for the enter event and set the cursor
     QVERIFY(enteredSpy.wait());
-    std::unique_ptr<KWayland::Client::Surface> cursorSurface(Test::createSurface(m_compositor));
+    std::unique_ptr<KWayland::Client::Surface> cursorSurface(Test::createSurface());
     QVERIFY(cursorSurface);
     QSignalSpy cursorRenderedSpy(cursorSurface.get(), &KWayland::Client::Surface::frameRendered);
     QVERIFY(cursorRenderedSpy.isValid());
@@ -1801,7 +1801,7 @@ void PointerInputTest::testMoveCursor()
 
     // wait for the enter event and set the cursor
     QVERIFY(enteredSpy.wait());
-    std::unique_ptr<KWayland::Client::Surface> cursorSurface(Test::createSurface(m_compositor));
+    std::unique_ptr<KWayland::Client::Surface> cursorSurface = Test::createSurface();
     QVERIFY(cursorSurface);
     QSignalSpy cursorRenderedSpy(cursorSurface.get(), &KWayland::Client::Surface::frameRendered);
     QVERIFY(cursorRenderedSpy.isValid());

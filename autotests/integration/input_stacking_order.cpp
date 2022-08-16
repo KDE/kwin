@@ -104,20 +104,20 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
     // now create the two windows and make them overlap
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowAddedSpy.isValid());
-    KWayland::Client::Surface *surface1 = Test::createSurface(Test::waylandCompositor());
+    std::unique_ptr<KWayland::Client::Surface> surface1 = Test::createSurface();
     QVERIFY(surface1);
-    Test::XdgToplevel *shellSurface1 = Test::createXdgToplevelSurface(surface1, surface1);
+    Test::XdgToplevel *shellSurface1 = Test::createXdgToplevelSurface(surface1.get(), surface1.get());
     QVERIFY(shellSurface1);
-    render(surface1);
+    render(surface1.get());
     QVERIFY(windowAddedSpy.wait());
     Window *window1 = workspace()->activeWindow();
     QVERIFY(window1);
 
-    KWayland::Client::Surface *surface2 = Test::createSurface(Test::waylandCompositor());
+    std::unique_ptr<KWayland::Client::Surface> surface2 = Test::createSurface();
     QVERIFY(surface2);
-    Test::XdgToplevel *shellSurface2 = Test::createXdgToplevelSurface(surface2, surface2);
+    Test::XdgToplevel *shellSurface2 = Test::createXdgToplevelSurface(surface2.get(), surface2.get());
     QVERIFY(shellSurface2);
-    render(surface2);
+    render(surface2.get());
     QVERIFY(windowAddedSpy.wait());
 
     Window *window2 = workspace()->activeWindow();
@@ -133,7 +133,7 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 1);
     // window 2 should have focus
-    QCOMPARE(pointer->enteredSurface(), surface2);
+    QCOMPARE(pointer->enteredSurface(), surface2.get());
     // also on the server
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), window2->surface());
 
@@ -145,17 +145,17 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
     QCOMPARE(leftSpy.count(), 1);
     // and an enter to window1
     QCOMPARE(enteredSpy.count(), 2);
-    QCOMPARE(pointer->enteredSurface(), surface1);
+    QCOMPARE(pointer->enteredSurface(), surface1.get());
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), window1->surface());
 
     // let's destroy window1, that should pass focus to window2 again
     QSignalSpy windowClosedSpy(window1, &Window::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
-    surface1->deleteLater();
+    surface1.reset();
     QVERIFY(windowClosedSpy.wait());
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 3);
-    QCOMPARE(pointer->enteredSurface(), surface2);
+    QCOMPARE(pointer->enteredSurface(), surface2.get());
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), window2->surface());
 }
 

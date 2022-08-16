@@ -161,12 +161,12 @@ void StrutsTest::testWaylandStruts()
 
     QFETCH(QVector<QRect>, windowGeometries);
     // create the panels
-    QHash<KWayland::Client::Surface *, Window *> windows;
+    std::map<Window *, std::unique_ptr<KWayland::Client::Surface>> windows;
     for (auto it = windowGeometries.constBegin(), end = windowGeometries.constEnd(); it != end; it++) {
         const QRect windowGeometry = *it;
-        KWayland::Client::Surface *surface = Test::createSurface(m_compositor);
-        Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, Test::CreationSetup::CreateOnly, surface);
-        PlasmaShellSurface *plasmaSurface = m_plasmaShell->createSurface(surface, surface);
+        std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
+        Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly, surface.get());
+        PlasmaShellSurface *plasmaSurface = m_plasmaShell->createSurface(surface.get(), surface.get());
         plasmaSurface->setPosition(windowGeometry.topLeft());
         plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
 
@@ -177,14 +177,14 @@ void StrutsTest::testWaylandStruts()
 
         // map the window
         shellSurface->xdgSurface()->ack_configure(configureRequestedSpy.last().first().toUInt());
-        auto window = Test::renderAndWaitForShown(surface, windowGeometry.size(), Qt::red, QImage::Format_RGB32);
+        auto window = Test::renderAndWaitForShown(surface.get(), windowGeometry.size(), Qt::red, QImage::Format_RGB32);
 
         QVERIFY(window);
         QVERIFY(!window->isActive());
         QCOMPARE(window->frameGeometry(), windowGeometry);
         QVERIFY(window->isDock());
         QVERIFY(window->hasStrut());
-        windows.insert(surface, window);
+        windows[window] = std::move(surface);
     }
 
     // some props are independent of struts - those first
@@ -210,10 +210,11 @@ void StrutsTest::testWaylandStruts()
     QTEST(workspace()->restrictedMoveArea(desktop), "restrictedMoveArea");
 
     // delete all surfaces
-    for (auto it = windows.begin(); it != windows.end(); it++) {
-        QSignalSpy destroyedSpy(it.value(), &QObject::destroyed);
+    for (auto it = windows.begin(); it != windows.end();) {
+        auto &[window, surface] = *it;
+        QSignalSpy destroyedSpy(window, &QObject::destroyed);
         QVERIFY(destroyedSpy.isValid());
-        delete it.key();
+        it = windows.erase(it);
         QVERIFY(destroyedSpy.wait());
     }
     QCOMPARE(workspace()->restrictedMoveArea(desktop), QRegion());

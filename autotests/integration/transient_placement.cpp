@@ -418,11 +418,11 @@ void TransientPlacementTest::testXdgPopup()
     QFETCH(QRect, expectedGeometry);
     const QRect expectedRelativeGeometry = expectedGeometry.translated(-parentPosition);
 
-    KWayland::Client::Surface *surface = Test::createSurface(Test::waylandCompositor());
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    auto parentShellSurface = Test::createXdgToplevelSurface(surface, Test::waylandCompositor());
+    auto parentShellSurface = Test::createXdgToplevelSurface(surface.get(), Test::waylandCompositor());
     QVERIFY(parentShellSurface);
-    auto parent = Test::renderAndWaitForShown(surface, parentSize, Qt::blue);
+    auto parent = Test::renderAndWaitForShown(surface.get(), parentSize, Qt::blue);
     QVERIFY(parent);
 
     QVERIFY(!parent->isDecorated());
@@ -432,7 +432,7 @@ void TransientPlacementTest::testXdgPopup()
     // create popup
     QFETCH(PopupLayout, layout);
 
-    KWayland::Client::Surface *transientSurface = Test::createSurface(Test::waylandCompositor());
+    std::unique_ptr<KWayland::Client::Surface> transientSurface = Test::createSurface();
     QVERIFY(transientSurface);
 
     std::unique_ptr<Test::XdgPositioner> positioner(Test::createXdgPositioner());
@@ -441,7 +441,7 @@ void TransientPlacementTest::testXdgPopup()
     positioner->set_anchor(layout.anchor);
     positioner->set_gravity(layout.gravity);
     positioner->set_constraint_adjustment(layout.constraint);
-    std::unique_ptr<Test::XdgPopup> popup(Test::createXdgPopupSurface(transientSurface, parentShellSurface->xdgSurface(), positioner.get(), Test::CreationSetup::CreateOnly));
+    std::unique_ptr<Test::XdgPopup> popup(Test::createXdgPopupSurface(transientSurface.get(), parentShellSurface->xdgSurface(), positioner.get(), Test::CreationSetup::CreateOnly));
     QSignalSpy popupConfigureRequestedSpy(popup.get(), &Test::XdgPopup::configureRequested);
     QSignalSpy surfaceConfigureRequestedSpy(popup->xdgSurface(), &Test::XdgSurface::configureRequested);
     transientSurface->commit(KWayland::Client::Surface::CommitFlag::None);
@@ -451,7 +451,7 @@ void TransientPlacementTest::testXdgPopup()
     QCOMPARE(popupConfigureRequestedSpy.last()[0].value<QRect>(), expectedRelativeGeometry);
     popup->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last()[0].toUInt());
 
-    auto transient = Test::renderAndWaitForShown(transientSurface, expectedRelativeGeometry.size(), Qt::red);
+    auto transient = Test::renderAndWaitForShown(transientSurface.get(), expectedRelativeGeometry.size(), Qt::red);
     QVERIFY(transient);
 
     QVERIFY(!transient->isDecorated());
@@ -534,7 +534,7 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     QVERIFY(parent->isFullScreen());
 
     // another transient, with same hints as before from bottom of window
-    transientSurface.reset(Test::createSurface());
+    transientSurface = Test::createSurface();
     QVERIFY(transientSurface);
 
     const QRect anchorRect2(50, output->geometry().height() - 100, 200, 200);
