@@ -17,6 +17,12 @@
 
 struct wl_resource;
 
+namespace KWin
+{
+class Output;
+class OutputMode;
+}
+
 namespace KWaylandServer
 {
 
@@ -76,11 +82,12 @@ public:
     };
     Q_ENUM(RgbRange)
 
-    explicit OutputDeviceV2Interface(Display *display, QObject *parent = nullptr);
+    explicit OutputDeviceV2Interface(Display *display, KWin::Output *handle, QObject *parent = nullptr);
     ~OutputDeviceV2Interface() override;
 
     void remove();
 
+    KWin::Output *handle() const;
     QSize physicalSize() const;
     QPoint globalPosition() const;
     QString manufacturer() const;
@@ -159,9 +166,10 @@ public:
     Q_ENUM(ModeFlag)
     Q_DECLARE_FLAGS(ModeFlags, ModeFlag)
 
-    OutputDeviceModeV2Interface(const QSize &size, int refreshRate, ModeFlags flags, QObject *parent = nullptr);
+    OutputDeviceModeV2Interface(std::weak_ptr<KWin::OutputMode> handle, const QSize &size, int refreshRate, ModeFlags flags, QObject *parent = nullptr);
     ~OutputDeviceModeV2Interface() override;
 
+    std::weak_ptr<KWin::OutputMode> handle() const;
     QSize size() const;
     int refreshRate() const;
     OutputDeviceModeV2Interface::ModeFlags flags() const;

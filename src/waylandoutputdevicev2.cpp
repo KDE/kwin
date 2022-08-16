@@ -51,7 +51,7 @@ static KWaylandServer::OutputDeviceV2Interface::RgbRange kwinRgbRangeToOutputDev
 WaylandOutputDevice::WaylandOutputDevice(Output *output, QObject *parent)
     : QObject(parent)
     , m_platformOutput(output)
-    , m_outputDeviceV2(new KWaylandServer::OutputDeviceV2Interface(waylandServer()->display()))
+    , m_outputDeviceV2(new KWaylandServer::OutputDeviceV2Interface(waylandServer()->display(), output))
 {
     m_outputDeviceV2->setManufacturer(output->manufacturer());
     m_outputDeviceV2->setEdid(output->edid());
@@ -110,7 +110,7 @@ void WaylandOutputDevice::updateModes(Output *output)
             flags |= OutputDeviceModeV2Interface::ModeFlag::Preferred;
         }
 
-        OutputDeviceModeV2Interface *deviceMode = new OutputDeviceModeV2Interface(mode->size(), mode->refreshRate(), flags);
+        OutputDeviceModeV2Interface *deviceMode = new OutputDeviceModeV2Interface(mode, mode->size(), mode->refreshRate(), flags);
         deviceModes << deviceMode;
     }
     m_outputDeviceV2->setModes(deviceModes);

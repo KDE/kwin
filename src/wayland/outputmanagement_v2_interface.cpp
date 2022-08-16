@@ -6,8 +6,6 @@
 */
 #include "outputmanagement_v2_interface.h"
 #include "display.h"
-#include "outputchangeset_v2.h"
-#include "outputchangeset_v2_p.h"
 #include "outputdevice_v2_interface.h"
 #include "outputmanagement_v2_interface.h"
 #include "utils/common.h"
@@ -42,12 +40,9 @@ class OutputConfigurationV2Interface : public QtWaylandServer::kde_output_config
 {
 public:
     explicit OutputConfigurationV2Interface(wl_resource *resource);
-    ~OutputConfigurationV2Interface() override;
-
-    OutputChangeSetV2 *pendingChanges(OutputDeviceV2Interface *outputdevice);
 
     bool applied = false;
-    QHash<OutputDeviceV2Interface *, OutputChangeSetV2 *> changes;
+    OutputConfiguration config;
     std::optional<OutputDeviceV2Interface *> primaryOutput;
 
 protected:
@@ -93,26 +88,12 @@ OutputConfigurationV2Interface::OutputConfigurationV2Interface(wl_resource *reso
 {
 }
 
-OutputConfigurationV2Interface::~OutputConfigurationV2Interface()
-{
-    qDeleteAll(changes.begin(), changes.end());
-}
-
-OutputChangeSetV2 *OutputConfigurationV2Interface::pendingChanges(OutputDeviceV2Interface *outputdevice)
-{
-    auto &change = changes[outputdevice];
-    if (!change) {
-        change = new OutputChangeSetV2(outputdevice);
-    }
-    return change;
-}
-
 void OutputConfigurationV2Interface::kde_output_configuration_v2_enable(Resource *resource, wl_resource *outputdevice, int32_t enable)
 {
     Q_UNUSED(resource)
 
     OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
-    pendingChanges(output)->d->enabled = enable == 1;
+    config.changeSet(output->handle())->enabled = enable;
 }
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_mode(Resource *resource, wl_resource *outputdevice, wl_resource *modeResource)
@@ -124,8 +105,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_mode(Resource *
         return;
     }
 
-    pendingChanges(output)->d->size = mode->size();
-    pendingChanges(output)->d->refreshRate = mode->refreshRate();
+    config.changeSet(output->handle())->mode = mode->handle().lock();
 }
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_transform(Resource *resource, wl_resource *outputdevice, int32_t transform)
@@ -134,35 +114,34 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_transform(Resou
     auto toTransform = [transform]() {
         switch (transform) {
         case WL_OUTPUT_TRANSFORM_90:
-            return OutputDeviceV2Interface::Transform::Rotated90;
+            return Output::Transform::Rotated90;
         case WL_OUTPUT_TRANSFORM_180:
-            return OutputDeviceV2Interface::Transform::Rotated180;
+            return Output::Transform::Rotated180;
         case WL_OUTPUT_TRANSFORM_270:
-            return OutputDeviceV2Interface::Transform::Rotated270;
+            return Output::Transform::Rotated270;
         case WL_OUTPUT_TRANSFORM_FLIPPED:
-            return OutputDeviceV2Interface::Transform::Flipped;
+            return Output::Transform::Flipped;
         case WL_OUTPUT_TRANSFORM_FLIPPED_90:
-            return OutputDeviceV2Interface::Transform::Flipped90;
+            return Output::Transform::Flipped90;
         case WL_OUTPUT_TRANSFORM_FLIPPED_180:
-            return OutputDeviceV2Interface::Transform::Flipped180;
+            return Output::Transform::Flipped180;
         case WL_OUTPUT_TRANSFORM_FLIPPED_270:
-            return OutputDeviceV2Interface::Transform::Flipped270;
+            return Output::Transform::Flipped270;
         case WL_OUTPUT_TRANSFORM_NORMAL:
         default:
-            return OutputDeviceV2Interface::Transform::Normal;
+            return Output::Transform::Normal;
         }
     };
     auto _transform = toTransform();
     OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
-    pendingChanges(output)->d->transform = _transform;
+    config.changeSet(output->handle())->transform = _transform;
 }
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_position(Resource *resource, wl_resource *outputdevice, int32_t x, int32_t y)
 {
     Q_UNUSED(resource)
-    auto _pos = QPoint(x, y);
     OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
-    pendingChanges(output)->d->position = _pos;
+    config.changeSet(output->handle())->pos = QPoint(x, y);
 }
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_scale(Resource *resource, wl_resource *outputdevice, wl_fixed_t scale)
@@ -174,9 +153,9 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_scale(Resource 
         qCWarning(KWIN_CORE) << "Requested to scale output device to" << doubleScale << ", but I can't do that.";
         return;
     }
-    OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
 
-    pendingChanges(output)->d->scale = doubleScale;
+    OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
+    config.changeSet(output->handle())->scale = doubleScale;
 }
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_overscan(Resource *resource, wl_resource *outputdevice, uint32_t overscan)
@@ -187,29 +166,29 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_overscan(Resour
         return;
     }
     OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
-    pendingChanges(output)->d->overscan = overscan;
+    config.changeSet(output->handle())->overscan = overscan;
 }
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_set_vrr_policy(Resource *resource, wl_resource *outputdevice, uint32_t policy)
 {
     Q_UNUSED(resource)
-    if (policy > static_cast<uint32_t>(OutputDeviceV2Interface::VrrPolicy::Automatic)) {
+    if (policy > static_cast<uint32_t>(RenderLoop::VrrPolicy::Automatic)) {
         qCWarning(KWIN_CORE) << "Invalid Vrr Policy requested:" << policy;
         return;
     }
     OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
-    pendingChanges(output)->d->vrrPolicy = static_cast<OutputDeviceV2Interface::VrrPolicy>(policy);
+    config.changeSet(output->handle())->vrrPolicy = static_cast<RenderLoop::VrrPolicy>(policy);
 }
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_set_rgb_range(Resource *resource, wl_resource *outputdevice, uint32_t rgbRange)
 {
     Q_UNUSED(resource)
-    if (rgbRange > static_cast<uint32_t>(OutputDeviceV2Interface::RgbRange::Limited)) {
+    if (rgbRange > static_cast<uint32_t>(Output::RgbRange::Limited)) {
         qCWarning(KWIN_CORE) << "Invalid Rgb Range requested:" << rgbRange;
         return;
     }
     OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
-    pendingChanges(output)->d->rgbRange = static_cast<OutputDeviceV2Interface::RgbRange>(rgbRange);
+    config.changeSet(output->handle())->rgbRange = static_cast<Output::RgbRange>(rgbRange);
 }
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_set_primary_output(Resource *resource, struct ::wl_resource *output)
@@ -238,39 +217,9 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
 
     applied = true;
 
-    OutputConfiguration cfg;
-    for (auto it = changes.constBegin(); it != changes.constEnd(); ++it) {
-        const KWaylandServer::OutputChangeSetV2 *changeset = it.value();
-        auto output = kwinApp()->platform()->findOutput(it.key()->uuid());
-        if (!output) {
-            qCWarning(KWIN_CORE) << "Could NOT find output matching " << it.key()->uuid();
-            continue;
-        }
-
-        const auto modes = output->modes();
-        const auto modeIt = std::find_if(modes.begin(), modes.end(), [&changeset](const auto &mode) {
-            return mode->size() == changeset->size() && mode->refreshRate() == changeset->refreshRate();
-        });
-        if (modeIt == modes.end()) {
-            qCWarning(KWIN_CORE).nospace() << "Could not find mode " << changeset->size() << "@" << changeset->refreshRate() << " for output " << this;
-            send_failed();
-            return;
-        }
-
-        auto props = cfg.changeSet(output);
-        props->enabled = changeset->enabled();
-        props->pos = changeset->position();
-        props->scale = changeset->scale();
-        props->mode = *modeIt;
-        props->transform = static_cast<Output::Transform>(changeset->transform());
-        props->overscan = changeset->overscan();
-        props->rgbRange = static_cast<Output::RgbRange>(changeset->rgbRange());
-        props->vrrPolicy = static_cast<RenderLoop::VrrPolicy>(changeset->vrrPolicy());
-    }
-
     const auto allOutputs = kwinApp()->platform()->outputs();
-    bool allDisabled = !std::any_of(allOutputs.begin(), allOutputs.end(), [&cfg](const auto &output) {
-        return cfg.changeSet(output)->enabled;
+    const bool allDisabled = !std::any_of(allOutputs.begin(), allOutputs.end(), [this](const auto &output) {
+        return config.constChangeSet(output)->enabled;
     });
     if (allDisabled) {
         qCWarning(KWIN_CORE) << "Disabling all outputs through configuration changes is not allowed";
@@ -278,7 +227,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
         return;
     }
 
-    if (kwinApp()->platform()->applyOutputChanges(cfg)) {
+    if (kwinApp()->platform()->applyOutputChanges(config)) {
         if (primaryOutput.has_value() || !kwinApp()->platform()->primaryOutput()->isEnabled()) {
             auto requestedPrimaryOutput = kwinApp()->platform()->findOutput((*primaryOutput)->uuid());
             if (requestedPrimaryOutput && requestedPrimaryOutput->isEnabled()) {

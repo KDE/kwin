@@ -211,7 +211,6 @@ target_sources(kwin PRIVATE
     output_interface.cpp
     outputdevice_v2_interface.cpp
     outputmanagement_v2_interface.cpp
-    outputchangeset_v2.cpp
     plasmashell_interface.cpp
     plasmavirtualdesktop_interface.cpp
     plasmawindowmanagement_interface.cpp

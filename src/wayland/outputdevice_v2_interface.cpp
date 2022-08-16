@@ -26,7 +26,7 @@ static const quint32 s_version = 2;
 class OutputDeviceV2InterfacePrivate : public QtWaylandServer::kde_output_device_v2
 {
 public:
-    OutputDeviceV2InterfacePrivate(OutputDeviceV2Interface *q, Display *display);
+    OutputDeviceV2InterfacePrivate(OutputDeviceV2Interface *q, Display *display, KWin::Output *handle);
     ~OutputDeviceV2InterfacePrivate() override;
 
     void updateGeometry();
@@ -47,6 +47,9 @@ public:
     void sendVrrPolicy(Resource *resource);
     void sendRgbRange(Resource *resource);
 
+    OutputDeviceV2Interface *q;
+    QPointer<Display> display;
+    KWin::Output *handle;
     QSize physicalSize;
     QPoint globalPosition;
     QString manufacturer = QStringLiteral("org.kde.kwin");
@@ -69,9 +72,6 @@ public:
     OutputDeviceV2Interface::VrrPolicy vrrPolicy = OutputDeviceV2Interface::VrrPolicy::Automatic;
     OutputDeviceV2Interface::RgbRange rgbRange = OutputDeviceV2Interface::RgbRange::Automatic;
 
-    QPointer<Display> display;
-    OutputDeviceV2Interface *q;
-
 private:
     int32_t toTransform() const;
     int32_t toSubPixel() const;
@@ -89,7 +89,7 @@ public:
         OutputDeviceV2InterfacePrivate::Resource *output;
     };
 
-    OutputDeviceModeV2InterfacePrivate(OutputDeviceModeV2Interface *q, const QSize &size, int refreshRate, OutputDeviceModeV2Interface::ModeFlags flags);
+    OutputDeviceModeV2InterfacePrivate(OutputDeviceModeV2Interface *q, std::weak_ptr<KWin::OutputMode> handle, const QSize &size, int refreshRate, OutputDeviceModeV2Interface::ModeFlags flags);
     ~OutputDeviceModeV2InterfacePrivate() override;
 
     Resource *createResource(OutputDeviceV2InterfacePrivate::Resource *output);
@@ -103,7 +103,7 @@ public:
     }
 
     OutputDeviceModeV2Interface *q;
-
+    std::weak_ptr<KWin::OutputMode> m_handle;
     QSize m_size;
     int m_refreshRate = 60000;
     OutputDeviceModeV2Interface::ModeFlags m_flags;
@@ -112,10 +112,11 @@ protected:
     Resource *kde_output_device_mode_v2_allocate() override;
 };
 
-OutputDeviceV2InterfacePrivate::OutputDeviceV2InterfacePrivate(OutputDeviceV2Interface *q, Display *display)
+OutputDeviceV2InterfacePrivate::OutputDeviceV2InterfacePrivate(OutputDeviceV2Interface *q, Display *display, KWin::Output *handle)
     : QtWaylandServer::kde_output_device_v2(*display, s_version)
-    , display(display)
     , q(q)
+    , display(display)
+    , handle(handle)
 {
     DisplayPrivate *displayPrivate = DisplayPrivate::get(display);
     displayPrivate->outputdevicesV2.append(q);
@@ -129,9 +130,9 @@ OutputDeviceV2InterfacePrivate::~OutputDeviceV2InterfacePrivate()
     }
 }
 
-OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, QObject *parent)
+OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, KWin::Output *handle, QObject *parent)
     : QObject(parent)
-    , d(new OutputDeviceV2InterfacePrivate(this, display))
+    , d(new OutputDeviceV2InterfacePrivate(this, display, handle))
 {
 }
 
@@ -152,6 +153,11 @@ void OutputDeviceV2Interface::remove()
     }
 
     d->globalRemove();
+}
+
+KWin::Output *OutputDeviceV2Interface::handle() const
+{
+    return d->handle;
 }
 
 QSize OutputDeviceV2Interface::pixelSize() const
@@ -688,18 +694,19 @@ OutputDeviceV2Interface *OutputDeviceV2Interface::get(wl_resource *native)
     return nullptr;
 }
 
-OutputDeviceModeV2InterfacePrivate::OutputDeviceModeV2InterfacePrivate(OutputDeviceModeV2Interface *q, const QSize &size, int refreshRate, OutputDeviceModeV2Interface::ModeFlags flags)
+OutputDeviceModeV2InterfacePrivate::OutputDeviceModeV2InterfacePrivate(OutputDeviceModeV2Interface *q, std::weak_ptr<KWin::OutputMode> handle, const QSize &size, int refreshRate, OutputDeviceModeV2Interface::ModeFlags flags)
     : QtWaylandServer::kde_output_device_mode_v2()
     , q(q)
+    , m_handle(handle)
     , m_size(size)
     , m_refreshRate(refreshRate)
     , m_flags(flags)
 {
 }
 
-OutputDeviceModeV2Interface::OutputDeviceModeV2Interface(const QSize &size, int refreshRate, ModeFlags flags, QObject *parent)
+OutputDeviceModeV2Interface::OutputDeviceModeV2Interface(std::weak_ptr<KWin::OutputMode> handle, const QSize &size, int refreshRate, ModeFlags flags, QObject *parent)
     : QObject(parent)
-    , d(new OutputDeviceModeV2InterfacePrivate(this, size, refreshRate, flags))
+    , d(new OutputDeviceModeV2InterfacePrivate(this, handle, size, refreshRate, flags))
 {
 }
 
@@ -735,6 +742,11 @@ OutputDeviceModeV2InterfacePrivate::Resource *OutputDeviceModeV2InterfacePrivate
 OutputDeviceModeV2InterfacePrivate::Resource *OutputDeviceModeV2InterfacePrivate::kde_output_device_mode_v2_allocate()
 {
     return new ModeResource;
+}
+
+std::weak_ptr<KWin::OutputMode> OutputDeviceModeV2Interface::handle() const
+{
+    return d->m_handle;
 }
 
 QSize OutputDeviceModeV2Interface::size() const
