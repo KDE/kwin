@@ -23,11 +23,12 @@ namespace KWin
 {
 
 class X11WindowedBackend;
+class X11WindowedOutput;
 
 class X11WindowedQPainterOutput : public OutputLayer
 {
 public:
-    X11WindowedQPainterOutput(Output *output, xcb_window_t window);
+    X11WindowedQPainterOutput(X11WindowedOutput *output, xcb_window_t window);
 
     void ensureBuffer();
 
@@ -36,7 +37,7 @@ public:
 
     xcb_window_t window;
     QImage buffer;
-    Output *const m_output;
+    X11WindowedOutput *const m_output;
 };
 
 class X11WindowedQPainterBackend : public QPainterBackend

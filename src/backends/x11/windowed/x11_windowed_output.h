@@ -69,6 +69,10 @@ public:
     bool usesSoftwareCursor() const override;
     void updateEnablement(bool enabled) override;
 
+    QRegion exposedArea() const;
+    void addExposedArea(const QRect &rect);
+    void clearExposedArea();
+
 private:
     void initXInputForWindow();
     void vblank(std::chrono::nanoseconds timestamp);
@@ -78,6 +82,7 @@ private:
     std::unique_ptr<RenderLoop> m_renderLoop;
     std::unique_ptr<SoftwareVsyncMonitor> m_vsyncMonitor;
     QPoint m_hostPosition;
+    QRegion m_exposedArea;
 
     X11WindowedBackend *m_backend;
 };

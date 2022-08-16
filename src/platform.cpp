@@ -164,13 +164,6 @@ Output *Platform::findOutput(const QString &name) const
     return nullptr;
 }
 
-void Platform::repaint(const QRect &rect)
-{
-    if (Compositor::compositing()) {
-        Compositor::self()->scene()->addRepaint(rect);
-    }
-}
-
 void Platform::setReady(bool ready)
 {
     if (m_ready == ready) {

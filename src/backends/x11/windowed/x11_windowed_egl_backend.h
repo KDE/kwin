@@ -18,12 +18,13 @@ namespace KWin
 {
 
 class X11WindowedBackend;
+class X11WindowedOutput;
 class X11WindowedEglBackend;
 
 class X11WindowedEglOutput : public OutputLayer
 {
 public:
-    X11WindowedEglOutput(X11WindowedEglBackend *backend, Output *output, EGLSurface surface);
+    X11WindowedEglOutput(X11WindowedEglBackend *backend, X11WindowedOutput *output, EGLSurface surface);
     ~X11WindowedEglOutput();
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
@@ -38,7 +39,7 @@ private:
     std::unique_ptr<GLFramebuffer> m_fbo;
     QRegion m_lastDamage;
 
-    Output *const m_output;
+    X11WindowedOutput *const m_output;
     X11WindowedEglBackend *const m_backend;
 };
 

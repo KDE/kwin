@@ -572,7 +572,11 @@ void X11WindowedBackend::handleButtonPress(xcb_button_press_event_t *event)
 
 void X11WindowedBackend::handleExpose(xcb_expose_event_t *event)
 {
-    repaint(QRect(event->x, event->y, event->width, event->height));
+    X11WindowedOutput *output = findOutput(event->window);
+    if (output) {
+        output->addExposedArea(QRect(event->x, event->y, event->width, event->height));
+        output->renderLoop()->scheduleRepaint();
+    }
 }
 
 void X11WindowedBackend::updateSize(xcb_configure_notify_event_t *event)

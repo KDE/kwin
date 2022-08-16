@@ -14,7 +14,7 @@
 namespace KWin
 {
 
-X11WindowedQPainterOutput::X11WindowedQPainterOutput(Output *output, xcb_window_t window)
+X11WindowedQPainterOutput::X11WindowedQPainterOutput(X11WindowedOutput *output, xcb_window_t window)
     : window(window)
     , m_output(output)
 {
@@ -33,9 +33,13 @@ void X11WindowedQPainterOutput::ensureBuffer()
 std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterOutput::beginFrame()
 {
     ensureBuffer();
+
+    QRegion repaint = m_output->exposedArea() + m_output->rect();
+    m_output->clearExposedArea();
+
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(&buffer),
-        .repaint = m_output->rect(),
+        .repaint = repaint,
     };
 }
 
@@ -69,7 +73,8 @@ X11WindowedQPainterBackend::~X11WindowedQPainterBackend()
 
 void X11WindowedQPainterBackend::addOutput(Output *output)
 {
-    m_outputs[output] = std::make_unique<X11WindowedQPainterOutput>(output, m_backend->windowForScreen(output));
+    X11WindowedOutput *x11Output = static_cast<X11WindowedOutput *>(output);
+    m_outputs[output] = std::make_unique<X11WindowedQPainterOutput>(x11Output, m_backend->windowForScreen(x11Output));
 }
 
 void X11WindowedQPainterBackend::removeOutput(Output *output)

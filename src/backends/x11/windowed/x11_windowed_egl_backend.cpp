@@ -19,7 +19,7 @@
 namespace KWin
 {
 
-X11WindowedEglOutput::X11WindowedEglOutput(X11WindowedEglBackend *backend, Output *output, EGLSurface surface)
+X11WindowedEglOutput::X11WindowedEglOutput(X11WindowedEglBackend *backend, X11WindowedOutput *output, EGLSurface surface)
     : m_eglSurface(surface)
     , m_output(output)
     , m_backend(backend)
@@ -43,9 +43,13 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglOutput::beginFrame()
     eglMakeCurrent(m_backend->eglDisplay(), m_eglSurface, m_eglSurface, m_backend->context());
     ensureFbo();
     GLFramebuffer::pushFramebuffer(m_fbo.get());
+
+    QRegion repaint = m_output->exposedArea() + m_output->rect();
+    m_output->clearExposedArea();
+
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_fbo.get()),
-        .repaint = m_output->rect(),
+        .repaint = repaint,
     };
 }
 
@@ -97,7 +101,7 @@ bool X11WindowedEglBackend::createSurfaces()
         if (s == EGL_NO_SURFACE) {
             return false;
         }
-        m_outputs[output] = std::make_shared<X11WindowedEglOutput>(this, output, s);
+        m_outputs[output] = std::make_shared<X11WindowedEglOutput>(this, static_cast<X11WindowedOutput *>(output), s);
     }
     if (m_outputs.isEmpty()) {
         return false;

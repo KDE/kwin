@@ -49,6 +49,21 @@ X11WindowedOutput::~X11WindowedOutput()
     xcb_flush(m_backend->connection());
 }
 
+QRegion X11WindowedOutput::exposedArea() const
+{
+    return m_exposedArea;
+}
+
+void X11WindowedOutput::addExposedArea(const QRect &rect)
+{
+    m_exposedArea += rect;
+}
+
+void X11WindowedOutput::clearExposedArea()
+{
+    m_exposedArea = QRegion();
+}
+
 RenderLoop *X11WindowedOutput::renderLoop() const
 {
     return m_renderLoop.get();

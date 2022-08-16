@@ -372,7 +372,6 @@ Q_SIGNALS:
 
 protected:
     explicit Platform(QObject *parent = nullptr);
-    void repaint(const QRect &rect);
     void setReady(bool ready);
     QSize initialWindowSize() const
     {
