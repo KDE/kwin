@@ -2084,7 +2084,8 @@ void TestWaylandSeat::testKeymap()
     QVERIFY(keymapChangedSpy.wait());
     int fd = keymapChangedSpy.first().first().toInt();
     QVERIFY(fd != -1);
-    QCOMPARE(keymapChangedSpy.first().last().value<quint32>(), 3u);
+    // Account for null terminator.
+    QCOMPARE(keymapChangedSpy.first().last().value<quint32>(), 4u);
     QFile file;
     QVERIFY(file.open(fd, QIODevice::ReadOnly));
     const char *address = reinterpret_cast<char *>(file.map(0, keymapChangedSpy.first().last().value<quint32>()));
@@ -2098,7 +2099,8 @@ void TestWaylandSeat::testKeymap()
     QVERIFY(keymapChangedSpy.wait());
     fd = keymapChangedSpy.first().first().toInt();
     QVERIFY(fd != -1);
-    QCOMPARE(keymapChangedSpy.first().last().value<quint32>(), 3u);
+    // Account for null terminator.
+    QCOMPARE(keymapChangedSpy.first().last().value<quint32>(), 4u);
     QVERIFY(file.open(fd, QIODevice::ReadWrite));
     address = reinterpret_cast<char *>(file.map(0, keymapChangedSpy.first().last().value<quint32>()));
     QVERIFY(address);

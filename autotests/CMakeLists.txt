@@ -238,3 +238,14 @@ target_link_libraries(testFtrace
 )
 add_test(NAME kwin-testFtrace COMMAND testFtrace)
 ecm_mark_as_test(testFtrace)
+
+########################################################
+# Test KWin Utils
+########################################################
+add_executable(testUtils test_utils.cpp)
+target_link_libraries(testUtils
+    Qt::Test
+    kwin
+)
+add_test(NAME kwin-testUtils COMMAND testUtils)
+ecm_mark_as_test(testUtils)

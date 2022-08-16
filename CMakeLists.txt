@@ -180,6 +180,19 @@ if (epoxy_HAS_GLX)
     endif()
 endif()
 
+check_cxx_source_compiles("
+#include <fcntl.h>
+#include <sys/mman.h>
+#include <unistd.h>
+
+int main() {
+    const int size = 10;
+    int fd = memfd_create(\"test\", MFD_CLOEXEC | MFD_ALLOW_SEALING);
+    ftruncate(fd, size);
+    fcntl(fd, F_ADD_SEALS, F_SEAL_SHRINK | F_SEAL_GROW | F_SEAL_WRITE | F_SEAL_SEAL);
+    mmap(nullptr, size, PROT_WRITE, MAP_SHARED, fd, 0);
+}" HAVE_MEMFD)
+
 find_package(Wayland 1.2 OPTIONAL_COMPONENTS Egl)
 set_package_properties(Wayland PROPERTIES
     TYPE REQUIRED

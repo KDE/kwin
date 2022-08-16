@@ -4,6 +4,7 @@ target_sources(kwin PRIVATE
     edid.cpp
     egl_context_attribute_builder.cpp
     filedescriptor.cpp
+    ramfile.cpp
     realtime.cpp
     subsurfacemonitor.cpp
     udev.cpp
