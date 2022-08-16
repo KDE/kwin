@@ -107,7 +107,7 @@ public:
 
 private:
     friend class OutputConfigurationV2Interface;
-    explicit OutputChangeSetV2(OutputDeviceV2Interface *outputdevice, QObject *parent = nullptr);
+    explicit OutputChangeSetV2(OutputDeviceV2Interface *outputdevice);
 
     std::unique_ptr<OutputChangeSetV2Private> d;
 };

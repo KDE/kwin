@@ -26,9 +26,8 @@ OutputChangeSetV2Private::OutputChangeSetV2Private(OutputDeviceV2Interface *outp
 {
 }
 
-OutputChangeSetV2::OutputChangeSetV2(OutputDeviceV2Interface *outputdevice, QObject *parent)
-    : QObject(parent)
-    , d(new OutputChangeSetV2Private(outputdevice, this))
+OutputChangeSetV2::OutputChangeSetV2(OutputDeviceV2Interface *outputdevice)
+    : d(new OutputChangeSetV2Private(outputdevice, this))
 {
 }
 
