@@ -72,6 +72,5 @@
         "Name[x-test]": "xxShow FPSxx",
         "Name[zh_CN]": "显示每秒帧数",
         "Name[zh_TW]": "顯示 FPS"
-    },
-    "X-KDE-ConfigModule": "kwin_showfps_config"
+    }
 }
