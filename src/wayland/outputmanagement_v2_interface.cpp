@@ -32,10 +32,7 @@ static const quint32 s_version = 2;
 class OutputManagementV2InterfacePrivate : public QtWaylandServer::kde_output_management_v2
 {
 public:
-    OutputManagementV2InterfacePrivate(OutputManagementV2Interface *_q, Display *display);
-
-private:
-    OutputManagementV2Interface *q;
+    OutputManagementV2InterfacePrivate(Display *display);
 
 protected:
     void kde_output_management_v2_create_configuration(Resource *resource, uint32_t id) override;
@@ -68,9 +65,8 @@ protected:
     void kde_output_configuration_v2_set_primary_output(Resource *resource, struct ::wl_resource *output) override;
 };
 
-OutputManagementV2InterfacePrivate::OutputManagementV2InterfacePrivate(OutputManagementV2Interface *_q, Display *display)
+OutputManagementV2InterfacePrivate::OutputManagementV2InterfacePrivate(Display *display)
     : QtWaylandServer::kde_output_management_v2(*display, s_version)
-    , q(_q)
 {
 }
 
@@ -86,7 +82,7 @@ void OutputManagementV2InterfacePrivate::kde_output_management_v2_create_configu
 
 OutputManagementV2Interface::OutputManagementV2Interface(Display *display, QObject *parent)
     : QObject(parent)
-    , d(new OutputManagementV2InterfacePrivate(this, display))
+    , d(new OutputManagementV2InterfacePrivate(display))
 {
 }
 
