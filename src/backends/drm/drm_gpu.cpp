@@ -362,7 +362,7 @@ bool DrmGpu::checkCrtcAssignment(QVector<DrmConnector *> connectors, const QVect
     }
     auto connector = connectors.takeFirst();
     auto pipeline = connector->pipeline();
-    if (!pipeline->enabled()) {
+    if (!pipeline->enabled() || !connector->isConnected()) {
         // disabled pipelines don't need CRTCs
         pipeline->setCrtc(nullptr);
         return checkCrtcAssignment(connectors, crtcs);
