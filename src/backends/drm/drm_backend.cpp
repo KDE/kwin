@@ -32,16 +32,10 @@
 #include <KCoreAddons>
 #include <KLocalizedString>
 // Qt
-#include <QCryptographicHash>
-#include <QFile>
-#include <QJsonArray>
-#include <QJsonDocument>
-#include <QJsonObject>
 #include <QSocketNotifier>
 // system
 #include <algorithm>
 #include <cerrno>
-#include <math.h>
 #include <sys/stat.h>
 #include <unistd.h>
 // drm
@@ -334,7 +328,6 @@ void DrmBackend::removeOutput(DrmAbstractOutput *o)
 
 void DrmBackend::updateOutputs()
 {
-    const auto oldOutputs = m_outputs;
     for (auto it = m_gpus.begin(); it < m_gpus.end();) {
         auto gpu = it->get();
         gpu->updateOutputs();
@@ -357,175 +350,7 @@ void DrmBackend::updateOutputs()
             return false;
         }
     });
-    if (oldOutputs != m_outputs) {
-        readOutputsConfiguration(m_outputs);
-    }
     Q_EMIT screensQueried();
-}
-
-namespace KWinKScreenIntegration
-{
-/// See KScreen::Output::hashMd5
-QString outputHash(DrmAbstractOutput *output)
-{
-    QCryptographicHash hash(QCryptographicHash::Md5);
-    if (!output->edid().isEmpty()) {
-        hash.addData(output->edid());
-    } else {
-        hash.addData(output->name().toLatin1());
-    }
-    return QString::fromLatin1(hash.result().toHex());
-}
-
-/// See KScreen::Config::connectedOutputsHash in libkscreen
-QString connectedOutputsHash(const QVector<DrmAbstractOutput *> &outputs)
-{
-    QStringList hashedOutputs;
-    hashedOutputs.reserve(outputs.count());
-    for (auto output : qAsConst(outputs)) {
-        if (!output->isPlaceholder() && !output->isNonDesktop()) {
-            hashedOutputs << outputHash(output);
-        }
-    }
-    std::sort(hashedOutputs.begin(), hashedOutputs.end());
-    const auto hash = QCryptographicHash::hash(hashedOutputs.join(QString()).toLatin1(), QCryptographicHash::Md5);
-    return QString::fromLatin1(hash.toHex());
-}
-
-QMap<DrmAbstractOutput *, QJsonObject> outputsConfig(const QVector<DrmAbstractOutput *> &outputs)
-{
-    const QString kscreenJsonPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kscreen/") % connectedOutputsHash(outputs));
-    if (kscreenJsonPath.isEmpty()) {
-        return {};
-    }
-
-    QFile f(kscreenJsonPath);
-    if (!f.open(QIODevice::ReadOnly)) {
-        qCWarning(KWIN_DRM) << "Could not open file" << kscreenJsonPath;
-        return {};
-    }
-
-    QJsonParseError error;
-    const auto doc = QJsonDocument::fromJson(f.readAll(), &error);
-    if (error.error != QJsonParseError::NoError) {
-        qCWarning(KWIN_DRM) << "Failed to parse" << kscreenJsonPath << error.errorString();
-        return {};
-    }
-
-    QMap<DrmAbstractOutput *, QJsonObject> ret;
-    const auto outputsJson = doc.array();
-    for (const auto &outputJson : outputsJson) {
-        const auto outputObject = outputJson.toObject();
-        for (auto it = outputs.constBegin(), itEnd = outputs.constEnd(); it != itEnd;) {
-            if (!ret.contains(*it) && outputObject["id"] == outputHash(*it)) {
-                ret[*it] = outputObject;
-                continue;
-            }
-            ++it;
-        }
-    }
-    return ret;
-}
-
-/// See KScreen::Output::Rotation
-enum Rotation {
-    None = 1,
-    Left = 2,
-    Inverted = 4,
-    Right = 8,
-};
-
-DrmOutput::Transform toDrmTransform(int rotation)
-{
-    switch (Rotation(rotation)) {
-    case None:
-        return DrmOutput::Transform::Normal;
-    case Left:
-        return DrmOutput::Transform::Rotated90;
-    case Inverted:
-        return DrmOutput::Transform::Rotated180;
-    case Right:
-        return DrmOutput::Transform::Rotated270;
-    default:
-        Q_UNREACHABLE();
-    }
-}
-
-std::shared_ptr<OutputMode> parseMode(Output *output, const QJsonObject &modeInfo)
-{
-    const QJsonObject size = modeInfo["size"].toObject();
-    const QSize modeSize = QSize(size["width"].toInt(), size["height"].toInt());
-    const int refreshRate = round(modeInfo["refresh"].toDouble() * 1000);
-
-    const auto modes = output->modes();
-    auto it = std::find_if(modes.begin(), modes.end(), [&modeSize, &refreshRate](const auto &mode) {
-        return mode->size() == modeSize && mode->refreshRate() == refreshRate;
-    });
-    return (it != modes.end()) ? *it : nullptr;
-}
-}
-
-bool DrmBackend::readOutputsConfiguration(const QVector<DrmAbstractOutput *> &outputs)
-{
-    Q_ASSERT(!outputs.isEmpty());
-    const auto outputsInfo = KWinKScreenIntegration::outputsConfig(outputs);
-
-    Output *primaryOutput = outputs.constFirst();
-    OutputConfiguration cfg;
-    // default position goes from left to right
-    QPoint pos(0, 0);
-    for (const auto &output : qAsConst(outputs)) {
-        if (output->isPlaceholder() || output->isNonDesktop()) {
-            continue;
-        }
-        auto props = cfg.changeSet(output);
-        const QJsonObject outputInfo = outputsInfo[output];
-        qCDebug(KWIN_DRM) << "Reading output configuration for " << output;
-        if (!outputInfo.isEmpty()) {
-            if (outputInfo["primary"].toBool()) {
-                primaryOutput = output;
-            }
-            props->enabled = outputInfo["enabled"].toBool(true);
-            const QJsonObject pos = outputInfo["pos"].toObject();
-            props->pos = QPoint(pos["x"].toInt(), pos["y"].toInt());
-            if (const QJsonValue scale = outputInfo["scale"]; !scale.isUndefined()) {
-                props->scale = scale.toDouble(1.);
-            }
-            props->transform = KWinKScreenIntegration::toDrmTransform(outputInfo["rotation"].toInt());
-
-            props->overscan = static_cast<uint32_t>(outputInfo["overscan"].toInt(props->overscan));
-            props->vrrPolicy = static_cast<RenderLoop::VrrPolicy>(outputInfo["vrrpolicy"].toInt(static_cast<uint32_t>(props->vrrPolicy)));
-            props->rgbRange = static_cast<Output::RgbRange>(outputInfo["rgbrange"].toInt(static_cast<uint32_t>(props->rgbRange)));
-
-            if (const QJsonObject modeInfo = outputInfo["mode"].toObject(); !modeInfo.isEmpty()) {
-                if (auto mode = KWinKScreenIntegration::parseMode(output, modeInfo)) {
-                    props->mode = mode;
-                }
-            }
-        } else {
-            props->enabled = true;
-            props->pos = pos;
-            props->transform = DrmOutput::Transform::Normal;
-        }
-        pos.setX(pos.x() + output->geometry().width());
-    }
-    bool allDisabled = std::all_of(outputs.begin(), outputs.end(), [&cfg](const auto &output) {
-        return !cfg.changeSet(output)->enabled;
-    });
-    if (allDisabled) {
-        qCWarning(KWIN_DRM) << "KScreen config would disable all outputs!";
-        return false;
-    }
-    if (!cfg.changeSet(primaryOutput)->enabled) {
-        qCWarning(KWIN_DRM) << "KScreen config would disable the primary output!";
-        return false;
-    }
-    if (!applyOutputChanges(cfg)) {
-        qCWarning(KWIN_DRM) << "Applying KScreen config failed!";
-        return false;
-    }
-    setPrimaryOutput(primaryOutput);
-    return true;
 }
 
 void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
@@ -611,7 +436,6 @@ QString DrmBackend::supportInformation() const
 Output *DrmBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
     auto output = primaryGpu()->createVirtualOutput(name, size * scale, scale, DrmVirtualOutput::Type::Virtual);
-    readOutputsConfiguration(m_outputs);
     Q_EMIT screensQueried();
     return output;
 }

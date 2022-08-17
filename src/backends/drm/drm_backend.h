@@ -95,7 +95,6 @@ private:
     void activate(bool active);
     void reactivate();
     void deactivate();
-    bool readOutputsConfiguration(const QVector<DrmAbstractOutput *> &outputs);
     void handleUdevEvent();
     void removeGpu(DrmGpu *gpu);
     DrmGpu *addGpu(const QString &fileName);

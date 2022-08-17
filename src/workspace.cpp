@@ -32,6 +32,7 @@
 #include "moving_client_x11_filter.h"
 #include "netinfo.h"
 #include "outline.h"
+#include "outputconfiguration.h"
 #include "placement.h"
 #include "platform.h"
 #include "pluginmanager.h"
@@ -205,6 +206,11 @@ void Workspace::init()
     });
     connect(options, &Options::separateScreenFocusChanged, m_focusChain.get(), &FocusChain::setSeparateScreenFocus);
     m_focusChain->setSeparateScreenFocus(options->isSeparateScreenFocus());
+
+    if (waylandServer()) {
+        updateOutputConfiguration();
+        connect(kwinApp()->platform(), &Platform::screensQueried, this, &Workspace::updateOutputConfiguration);
+    }
 
     Platform *platform = kwinApp()->platform();
     connect(platform, &Platform::outputEnabled, this, &Workspace::slotOutputEnabled);
@@ -493,6 +499,181 @@ Workspace::~Workspace()
     delete m_windowKeysDialog;
 
     _self = nullptr;
+}
+
+namespace KWinKScreenIntegration
+{
+/// See KScreen::Output::hashMd5
+QString outputHash(Output *output)
+{
+    QCryptographicHash hash(QCryptographicHash::Md5);
+    if (!output->edid().isEmpty()) {
+        hash.addData(output->edid());
+    } else {
+        hash.addData(output->name().toLatin1());
+    }
+    return QString::fromLatin1(hash.result().toHex());
+}
+
+/// See KScreen::Config::connectedOutputsHash in libkscreen
+QString connectedOutputsHash(const QVector<Output *> &outputs)
+{
+    QStringList hashedOutputs;
+    hashedOutputs.reserve(outputs.count());
+    for (auto output : qAsConst(outputs)) {
+        if (!output->isPlaceholder() && !output->isNonDesktop()) {
+            hashedOutputs << outputHash(output);
+        }
+    }
+    std::sort(hashedOutputs.begin(), hashedOutputs.end());
+    const auto hash = QCryptographicHash::hash(hashedOutputs.join(QString()).toLatin1(), QCryptographicHash::Md5);
+    return QString::fromLatin1(hash.toHex());
+}
+
+QMap<Output *, QJsonObject> outputsConfig(const QVector<Output *> &outputs, const QString &hash)
+{
+    const QString kscreenJsonPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kscreen/") % hash);
+    if (kscreenJsonPath.isEmpty()) {
+        return {};
+    }
+
+    QFile f(kscreenJsonPath);
+    if (!f.open(QIODevice::ReadOnly)) {
+        qCWarning(KWIN_CORE) << "Could not open file" << kscreenJsonPath;
+        return {};
+    }
+
+    QJsonParseError error;
+    const auto doc = QJsonDocument::fromJson(f.readAll(), &error);
+    if (error.error != QJsonParseError::NoError) {
+        qCWarning(KWIN_CORE) << "Failed to parse" << kscreenJsonPath << error.errorString();
+        return {};
+    }
+
+    QMap<Output *, QJsonObject> ret;
+    const auto outputsJson = doc.array();
+    for (const auto &outputJson : outputsJson) {
+        const auto outputObject = outputJson.toObject();
+        for (auto it = outputs.constBegin(), itEnd = outputs.constEnd(); it != itEnd;) {
+            if (!ret.contains(*it) && outputObject["id"] == outputHash(*it)) {
+                ret[*it] = outputObject;
+                continue;
+            }
+            ++it;
+        }
+    }
+    return ret;
+}
+
+/// See KScreen::Output::Rotation
+enum Rotation {
+    None = 1,
+    Left = 2,
+    Inverted = 4,
+    Right = 8,
+};
+
+Output::Transform toDrmTransform(int rotation)
+{
+    switch (Rotation(rotation)) {
+    case None:
+        return Output::Transform::Normal;
+    case Left:
+        return Output::Transform::Rotated90;
+    case Inverted:
+        return Output::Transform::Rotated180;
+    case Right:
+        return Output::Transform::Rotated270;
+    default:
+        Q_UNREACHABLE();
+    }
+}
+
+std::shared_ptr<OutputMode> parseMode(Output *output, const QJsonObject &modeInfo)
+{
+    const QJsonObject size = modeInfo["size"].toObject();
+    const QSize modeSize = QSize(size["width"].toInt(), size["height"].toInt());
+    const int refreshRate = std::round(modeInfo["refresh"].toDouble() * 1000);
+
+    const auto modes = output->modes();
+    auto it = std::find_if(modes.begin(), modes.end(), [&modeSize, &refreshRate](const auto &mode) {
+        return mode->size() == modeSize && mode->refreshRate() == refreshRate;
+    });
+    return (it != modes.end()) ? *it : nullptr;
+}
+}
+
+void Workspace::updateOutputConfiguration()
+{
+    // There's conflict between this code and setVirtualOutputs(), need to adjust the tests.
+    if (QStandardPaths::isTestModeEnabled()) {
+        return;
+    }
+
+    const auto outputs = kwinApp()->platform()->outputs();
+    const QString hash = KWinKScreenIntegration::connectedOutputsHash(outputs);
+    if (m_outputsHash == hash) {
+        return;
+    }
+
+    const auto outputsInfo = KWinKScreenIntegration::outputsConfig(outputs, hash);
+    m_outputsHash = hash;
+
+    Output *primaryOutput = outputs.constFirst();
+    OutputConfiguration cfg;
+    // default position goes from left to right
+    QPoint pos(0, 0);
+    for (const auto &output : qAsConst(outputs)) {
+        if (output->isPlaceholder() || output->isNonDesktop()) {
+            continue;
+        }
+        auto props = cfg.changeSet(output);
+        const QJsonObject outputInfo = outputsInfo[output];
+        qCDebug(KWIN_CORE) << "Reading output configuration for " << output;
+        if (!outputInfo.isEmpty()) {
+            if (outputInfo["primary"].toBool()) {
+                primaryOutput = output;
+            }
+            props->enabled = outputInfo["enabled"].toBool(true);
+            const QJsonObject pos = outputInfo["pos"].toObject();
+            props->pos = QPoint(pos["x"].toInt(), pos["y"].toInt());
+            if (const QJsonValue scale = outputInfo["scale"]; !scale.isUndefined()) {
+                props->scale = scale.toDouble(1.);
+            }
+            props->transform = KWinKScreenIntegration::toDrmTransform(outputInfo["rotation"].toInt());
+
+            props->overscan = static_cast<uint32_t>(outputInfo["overscan"].toInt(props->overscan));
+            props->vrrPolicy = static_cast<RenderLoop::VrrPolicy>(outputInfo["vrrpolicy"].toInt(static_cast<uint32_t>(props->vrrPolicy)));
+            props->rgbRange = static_cast<Output::RgbRange>(outputInfo["rgbrange"].toInt(static_cast<uint32_t>(props->rgbRange)));
+
+            if (const QJsonObject modeInfo = outputInfo["mode"].toObject(); !modeInfo.isEmpty()) {
+                if (auto mode = KWinKScreenIntegration::parseMode(output, modeInfo)) {
+                    props->mode = mode;
+                }
+            }
+        } else {
+            props->enabled = true;
+            props->pos = pos;
+            props->transform = Output::Transform::Normal;
+        }
+        pos.setX(pos.x() + output->geometry().width());
+    }
+    bool allDisabled = std::all_of(outputs.begin(), outputs.end(), [&cfg](const auto &output) {
+        return !cfg.changeSet(output)->enabled;
+    });
+    if (allDisabled) {
+        qCWarning(KWIN_CORE) << "KScreen config would disable all outputs!";
+        return;
+    }
+    if (!cfg.changeSet(primaryOutput)->enabled) {
+        qCWarning(KWIN_CORE) << "KScreen config would disable the primary output!";
+        return;
+    }
+    if (!kwinApp()->platform()->applyOutputChanges(cfg)) {
+        qCWarning(KWIN_CORE) << "Applying KScreen config failed!";
+        return;
+    }
+    kwinApp()->platform()->setPrimaryOutput(primaryOutput);
 }
 
 void Workspace::setupWindowConnections(Window *window)

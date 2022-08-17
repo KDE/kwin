@@ -626,6 +626,8 @@ private:
     Window *findWindowToActivateOnDesktop(VirtualDesktop *desktop);
     void removeWindow(Window *window);
 
+    void updateOutputConfiguration();
+
     struct Constraint
     {
         Window *below;
@@ -648,6 +650,8 @@ private:
 
     QList<Output *> m_outputs;
     Output *m_activeOutput = nullptr;
+    QString m_outputsHash;
+
     Window *m_activeWindow;
     Window *m_lastActiveWindow;
     Window *m_moveResizeWindow;
