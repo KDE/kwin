@@ -85,12 +85,13 @@ void OffscreenEffect::apply(EffectWindow *window, int mask, WindowPaintData &dat
 
 void OffscreenData::maybeRender(EffectWindow *window)
 {
-    const QRect geometry = window->expandedGeometry().toAlignedRect();
-    QSize textureSize = geometry.size();
+    QRectF geometry = window->expandedGeometry();
 
     if (const EffectScreen *screen = window->screen()) {
-        textureSize *= screen->devicePixelRatio();
+        geometry = scaledRect(geometry, effects->renderTargetScale());
     }
+
+    QSize textureSize = geometry.toAlignedRect().size();
 
     if (!m_texture || m_texture->size() != textureSize) {
         m_texture.reset(new GLTexture(GL_RGBA8, textureSize));
@@ -106,7 +107,7 @@ void OffscreenData::maybeRender(EffectWindow *window)
         glClear(GL_COLOR_BUFFER_BIT);
 
         QMatrix4x4 projectionMatrix;
-        projectionMatrix.ortho(QRect(0, 0, geometry.width(), geometry.height()));
+        projectionMatrix.ortho(QRectF(0, 0, geometry.width(), geometry.height()));
 
         WindowPaintData data;
         data.setXTranslation(-geometry.x());
@@ -146,6 +147,8 @@ void OffscreenData::paint(EffectWindow *window, const QRegion &region,
     const GLenum primitiveType = indexedQuads ? GL_QUADS : GL_TRIANGLES;
     const int verticesPerQuad = indexedQuads ? 4 : 6;
 
+    const qreal scale = effects->renderTargetScale();
+
     const GLVertexAttrib attribs[] = {
         {VA_Position, 2, GL_FLOAT, offsetof(GLVertex2D, position)},
         {VA_TexCoord, 2, GL_FLOAT, offsetof(GLVertex2D, texcoord)},
@@ -157,7 +160,8 @@ void OffscreenData::paint(EffectWindow *window, const QRegion &region,
     const size_t size = verticesPerQuad * quads.count() * sizeof(GLVertex2D);
     GLVertex2D *map = static_cast<GLVertex2D *>(vbo->map(size));
 
-    quads.makeInterleavedArrays(primitiveType, map, m_texture->matrix(NormalizedCoordinates), window->screen()->devicePixelRatio());
+    quads.makeInterleavedArrays(primitiveType, map, m_texture->matrix(NormalizedCoordinates), scale);
+
     vbo->unmap();
     vbo->bindArrays();
 
@@ -165,7 +169,7 @@ void OffscreenData::paint(EffectWindow *window, const QRegion &region,
     const qreal a = data.opacity();
 
     QMatrix4x4 mvp = data.screenProjectionMatrix();
-    mvp.translate(window->x(), window->y());
+    mvp.translate(window->x() * scale, window->y() * scale);
 
     shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp * data.toMatrix());
     shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
