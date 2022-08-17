@@ -692,7 +692,7 @@ QQmlContext *OffscreenQuickScene::rootContext() const
 
 QQuickItem *OffscreenQuickScene::rootItem() const
 {
-    return d->quickItem.release();
+    return d->quickItem.get();
 }
 
 } // namespace KWin
