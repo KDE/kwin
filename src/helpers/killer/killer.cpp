@@ -5,14 +5,9 @@
 
 */
 
+#include <KAuth/Action>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <kauth_version.h>
-#if KAUTH_VERSION >= QT_VERSION_CHECK(5, 92, 0)
-#include <KAuth/Action>
-#else
-#include <KAuth/KAuthAction>
-#endif
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QDebug>
