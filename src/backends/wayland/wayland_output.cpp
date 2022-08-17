@@ -146,7 +146,7 @@ void XdgShellOutput::handleConfigure(const QSize &size, XdgShellSurface::States 
     Q_UNUSED(states);
     m_xdgShellSurface->ackConfigure(serial);
     if (size.width() > 0 && size.height() > 0) {
-        setGeometry(geometry().topLeft(), size);
+        setGeometry(geometry().topLeft(), size * scale());
         if (m_hasBeenConfigured) {
             Q_EMIT sizeChanged(size);
         }
