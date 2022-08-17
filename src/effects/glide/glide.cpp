@@ -48,14 +48,14 @@ static QMatrix4x4 createPerspectiveMatrix(const QRectF &rect, const qreal scale)
 
     ret.frustum(xMin, xMax, yMin, yMax, zNear, zFar);
 
-    const auto scaledRect = QRectF{rect.x() * scale, rect.y() * scale, rect.width() * scale, rect.height() * scale};
+    const auto deviceRect = scaledRect(rect, scale);
 
     const float scaleFactor = 1.1 * fovY / yMax;
     ret.translate(xMin * scaleFactor, yMax * scaleFactor, -1.1);
-    ret.scale((xMax - xMin) * scaleFactor / scaledRect.width(),
-              -(yMax - yMin) * scaleFactor / scaledRect.height(),
+    ret.scale((xMax - xMin) * scaleFactor / deviceRect.width(),
+              -(yMax - yMin) * scaleFactor / deviceRect.height(),
               0.001);
-    ret.translate(-scaledRect.x(), -scaledRect.y());
+    ret.translate(-deviceRect.x(), -deviceRect.y());
 
     return ret;
 }
@@ -140,7 +140,7 @@ void GlideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowP
     const QMatrix4x4 oldProjMatrix = createPerspectiveMatrix(effects->renderTargetRect(), effects->renderTargetScale());
     const auto frame = w->frameGeometry();
     const auto scale = effects->renderTargetScale();
-    const QRectF windowGeo = QRectF{frame.x() * scale, frame.y() * scale, frame.width() * scale, frame.height() * scale};
+    const QRectF windowGeo = scaledRect(frame, scale);
     const QVector3D invOffset = oldProjMatrix.map(QVector3D(windowGeo.center()));
     QMatrix4x4 invOffsetMatrix;
     invOffsetMatrix.translate(invOffset.x(), invOffset.y());
@@ -148,8 +148,8 @@ void GlideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowP
     data.setProjectionMatrix(invOffsetMatrix * oldProjMatrix);
 
     // Move the center of the window to the origin.
-    const QRectF screenGeo = effects->renderTargetRect();
-    const QPointF offset = screenGeo.center() - frame.center();
+    const QRectF screenGeo = scaledRect(effects->renderTargetRect(), scale);
+    const QPointF offset = screenGeo.center() - windowGeo.center();
     data.translate(offset.x(), offset.y());
 
     const GlideParams params = w->isDeleted() ? m_outParams : m_inParams;
