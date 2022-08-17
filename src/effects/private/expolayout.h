@@ -81,10 +81,10 @@ class ExpoCell : public QObject
     Q_PROPERTY(int naturalY READ naturalY WRITE setNaturalY NOTIFY naturalYChanged)
     Q_PROPERTY(int naturalWidth READ naturalWidth WRITE setNaturalWidth NOTIFY naturalWidthChanged)
     Q_PROPERTY(int naturalHeight READ naturalHeight WRITE setNaturalHeight NOTIFY naturalHeightChanged)
-    Q_PROPERTY(int x READ x NOTIFY xChanged)
-    Q_PROPERTY(int y READ y NOTIFY yChanged)
-    Q_PROPERTY(int width READ width NOTIFY widthChanged)
-    Q_PROPERTY(int height READ height NOTIFY heightChanged)
+    Q_PROPERTY(int x READ x NOTIFY geometryChanged)
+    Q_PROPERTY(int y READ y NOTIFY geometryChanged)
+    Q_PROPERTY(int width READ width NOTIFY geometryChanged)
+    Q_PROPERTY(int height READ height NOTIFY geometryChanged)
     Q_PROPERTY(QString persistentKey READ persistentKey WRITE setPersistentKey NOTIFY persistentKeyChanged)
     Q_PROPERTY(int bottomMargin READ bottomMargin WRITE setBottomMargin NOTIFY bottomMarginChanged)
 
@@ -114,16 +114,10 @@ public:
     QMargins margins() const;
 
     int x() const;
-    void setX(int x);
-
     int y() const;
-    void setY(int y);
-
     int width() const;
-    void setWidth(int width);
-
     int height() const;
-    void setHeight(int height);
+    void setGeometry(const QRect &geometry);
 
     QString persistentKey() const;
     void setPersistentKey(const QString &key);
@@ -141,10 +135,7 @@ Q_SIGNALS:
     void naturalYChanged();
     void naturalWidthChanged();
     void naturalHeightChanged();
-    void xChanged();
-    void yChanged();
-    void widthChanged();
-    void heightChanged();
+    void geometryChanged();
     void persistentKeyChanged();
     void bottomMarginChanged();
 
@@ -156,9 +147,6 @@ private:
     int m_naturalWidth = 0;
     int m_naturalHeight = 0;
     QMargins m_margins;
-    std::optional<int> m_x;
-    std::optional<int> m_y;
-    std::optional<int> m_width;
-    std::optional<int> m_height;
+    QRect m_geometry;
     QPointer<ExpoLayout> m_layout;
 };

@@ -83,10 +83,10 @@ void ExpoCell::setNaturalX(int x)
         update();
         Q_EMIT naturalXChanged();
 
-        if (!m_x.has_value()) {
-            m_x = x;
-            Q_EMIT xChanged();
-        }
+        //         if (!m_x.has_value()) {
+        //             m_x = x;
+        //             Q_EMIT xChanged();
+        //         }
     }
 }
 
@@ -102,10 +102,10 @@ void ExpoCell::setNaturalY(int y)
         update();
         Q_EMIT naturalYChanged();
 
-        if (!m_y.has_value()) {
-            m_y = y;
-            Q_EMIT yChanged();
-        }
+        //         if (!m_y.has_value()) {
+        //             m_y = y;
+        //             Q_EMIT yChanged();
+        //         }
     }
 }
 
@@ -121,10 +121,10 @@ void ExpoCell::setNaturalWidth(int width)
         update();
         Q_EMIT naturalWidthChanged();
 
-        if (!m_width.has_value()) {
-            m_width = width;
-            Q_EMIT widthChanged();
-        }
+        //         if (!m_width.has_value()) {
+        //             m_width = width;
+        //             Q_EMIT widthChanged();
+        //         }
     }
 }
 
@@ -140,10 +140,10 @@ void ExpoCell::setNaturalHeight(int height)
         update();
         Q_EMIT naturalHeightChanged();
 
-        if (!m_height.has_value()) {
-            m_height = height;
-            Q_EMIT heightChanged();
-        }
+        //         if (!m_height.has_value()) {
+        //             m_height = height;
+        //             Q_EMIT heightChanged();
+        //         }
     }
 }
 
@@ -157,56 +157,30 @@ QMargins ExpoCell::margins() const
     return m_margins;
 }
 
-int ExpoCell::x() const
+void ExpoCell::setGeometry(const QRect &geometry)
 {
-    return m_x.value_or(0);
+    m_geometry = geometry;
+    Q_EMIT geometryChanged();
 }
 
-void ExpoCell::setX(int x)
+int ExpoCell::x() const
 {
-    if (m_x != x) {
-        m_x = x;
-        Q_EMIT xChanged();
-    }
+    return m_geometry.x();
 }
 
 int ExpoCell::y() const
 {
-    return m_y.value_or(0);
-}
-
-void ExpoCell::setY(int y)
-{
-    if (m_y != y) {
-        m_y = y;
-        Q_EMIT yChanged();
-    }
+    return m_geometry.y();
 }
 
 int ExpoCell::width() const
 {
-    return m_width.value_or(0);
-}
-
-void ExpoCell::setWidth(int width)
-{
-    if (m_width != width) {
-        m_width = width;
-        Q_EMIT widthChanged();
-    }
+    return m_geometry.width();
 }
 
 int ExpoCell::height() const
 {
-    return m_height.value_or(0);
-}
-
-void ExpoCell::setHeight(int height)
-{
-    if (m_height != height) {
-        m_height = height;
-        Q_EMIT heightChanged();
-    }
+    return m_geometry.height();
 }
 
 QString ExpoCell::persistentKey() const
@@ -444,10 +418,7 @@ void ExpoLayout::calculateWindowTransformationsClosest()
                 scale * cell->naturalWidth(), scale * cell->naturalHeight());
         }
 
-        cell->setX(target.x());
-        cell->setY(target.y());
-        cell->setWidth(target.width());
-        cell->setHeight(target.height());
+        cell->setGeometry(target);
     }
 }
 
@@ -710,9 +681,6 @@ void ExpoLayout::calculateWindowTransformationsNatural()
     for (ExpoCell *cell : qAsConst(m_cells)) {
         const QRect rect = centered(cell, targets.value(cell).marginsRemoved(cell->margins()));
 
-        cell->setX(rect.x());
-        cell->setY(rect.y());
-        cell->setWidth(rect.width());
-        cell->setHeight(rect.height());
+        cell->setGeometry(rect);
     }
 }

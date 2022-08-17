@@ -73,19 +73,6 @@ Item {
     z: activeDragHandler.active ? 1000
         : client.stackingOrder + (client.desktop === KWinComponents.Workspace.currentDesktop ? 100 : 0)
 
-    component TweenBehavior : Behavior {
-        enabled: thumb.state !== "partial" && thumb.windowHeap.animationEnabled && !thumb.activeDragHandler.active
-        NumberAnimation {
-            duration: thumb.windowHeap.animationDuration
-            easing.type: Easing.OutCubic
-        }
-    }
-
-    TweenBehavior on x {}
-    TweenBehavior on y {}
-    TweenBehavior on width {}
-    TweenBehavior on height {}
-
     KWinComponents.WindowThumbnailItem {
         id: thumbSource
         wId: thumb.client.internalId
@@ -186,6 +173,12 @@ Item {
         naturalHeight: thumb.client.height
         persistentKey: thumb.client.internalId
         bottomMargin: icon.height / 4 + caption.height
+
+        onGeometryChanged: function() {
+            if (state == "active") {
+                thumb.state = "moving" ; thumb.state = "active"
+            }
+        };
     }
 
     states: [
@@ -246,6 +239,8 @@ Item {
             name: "active"
             PropertyChanges {
                 target: thumb
+                explicit: true
+                restoreEntryValues: false
                 x: cell.x
                 y: cell.y
                 width: cell.width
