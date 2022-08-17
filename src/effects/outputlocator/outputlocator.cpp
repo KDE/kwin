@@ -8,6 +8,8 @@
 
 #include <kwinoffscreenquickview.h>
 
+#include <KLocalizedString>
+
 #include <QDBusConnection>
 #include <QQuickItem>
 
@@ -20,11 +22,25 @@ static QString outputName(const EffectScreen *screen)
     const bool shouldShowSerialNumber = std::any_of(screens.cbegin(), screens.cend(), [screen](const EffectScreen *other) {
         return other != screen && other->manufacturer() == screen->manufacturer() && other->model() == screen->model();
     });
-    QString name = screen->manufacturer() + QLatin1Char(' ') + screen->model();
-    if (shouldShowSerialNumber) {
-        name += QLatin1Char(' ') + screen->serialNumber();
+
+    QStringList parts;
+    if (!screen->manufacturer().isEmpty()) {
+        parts.append(screen->manufacturer());
     }
-    return name;
+
+    if (!screen->model().isEmpty()) {
+        parts.append(screen->model());
+    }
+
+    if (shouldShowSerialNumber && !screen->serialNumber().isEmpty()) {
+        parts.append(screen->serialNumber());
+    }
+
+    if (parts.isEmpty()) {
+        return i18nc("@label", "Unknown");
+    } else {
+        return parts.join(QLatin1Char(' '));
+    }
 }
 
 OutputLocatorEffect::OutputLocatorEffect(QObject *parent)
