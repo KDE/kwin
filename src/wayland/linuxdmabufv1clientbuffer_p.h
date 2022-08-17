@@ -13,7 +13,6 @@
 #include "clientbuffer_p.h"
 #include "display.h"
 #include "display_p.h"
-#include "drm_fourcc.h"
 #include "linuxdmabufv1clientbuffer.h"
 
 #include "qwayland-server-linux-dmabuf-unstable-v1.h"
@@ -21,6 +20,8 @@
 
 #include <QDebug>
 #include <QVector>
+
+#include <drm_fourcc.h>
 
 namespace KWaylandServer
 {

@@ -18,15 +18,16 @@
 #include "wayland_server.h"
 #include "dmabuftexture.h"
 // kwin libs
+#include <kwineglimagetexture.h>
+#include <kwineglutils_p.h>
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
 // Qt
 #include <QOpenGLContext>
 
 #include <memory>
-#include "drm_fourcc.h"
-#include <kwineglimagetexture.h>
-#include <kwineglutils_p.h>
+
+#include <drm_fourcc.h>
 
 namespace KWin
 {

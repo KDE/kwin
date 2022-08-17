@@ -12,7 +12,6 @@
 
 #include "backends/libinput/libinputbackend.h"
 #include "drm_egl_backend.h"
-#include "drm_fourcc.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
 #include "drm_object_connector.h"
