@@ -10,8 +10,10 @@
 #include <KConfig>
 #include <KConfigGroup>
 
+#include <QDebug>
 #include <QDir>
 #include <QFile>
+#include <QSet>
 #include <QSharedData>
 #include <QStandardPaths>
 
@@ -33,6 +35,7 @@ public:
     void loadCursors(const QString &packagePath, int size, qreal devicePixelRatio);
 
     QHash<QByteArray, QVector<KXcursorSprite>> registry;
+    QSet<QString> seenThemes;
 };
 
 KXcursorSprite::KXcursorSprite()
@@ -156,6 +159,12 @@ static QStringList searchPaths()
 
 void KXcursorThemePrivate::load(const QString &themeName, int size, qreal devicePixelRatio)
 {
+    if (seenThemes.contains(themeName)) {
+        qWarning() << "cursor theme" << themeName << "inherits itself";
+        return;
+    }
+    seenThemes << themeName;
+
     const QStringList paths = searchPaths();
     QStringList inherits;
 
