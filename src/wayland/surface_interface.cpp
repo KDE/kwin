@@ -772,7 +772,7 @@ bool SurfaceInterfacePrivate::contains(const QPointF &position) const
 
 bool SurfaceInterfacePrivate::inputContains(const QPointF &position) const
 {
-    return contains(position) && inputRegion.contains(position.toPoint());
+    return contains(position) && inputRegion.contains(QPoint(std::floor(position.x()), std::floor(position.y())));
 }
 
 QRegion SurfaceInterface::damage() const

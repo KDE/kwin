@@ -70,6 +70,8 @@
 
 #include <xkbcommon/xkbcommon.h>
 
+#include <cmath>
+
 namespace KWin
 {
 
@@ -3440,7 +3442,7 @@ void InputDeviceHandler::updateDecoration()
     Decoration::DecoratedClientImpl *decoration = nullptr;
     auto hover = m_hover.window.data();
     if (hover && hover->decoratedClient()) {
-        if (!hover->clientGeometry().toRect().contains(position().toPoint())) {
+        if (!hover->clientGeometry().toRect().contains(QPoint(std::floor(position().x()), std::floor(position().y())))) {
             // input device above decoration
             decoration = hover->decoratedClient();
         }

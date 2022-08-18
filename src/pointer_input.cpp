@@ -45,6 +45,8 @@
 
 #include <linux/input.h>
 
+#include <cmath>
+
 namespace KWin
 {
 
@@ -770,18 +772,23 @@ QPointF PointerInputRedirection::applyPointerConfinement(const QPointF &pos) con
         return pos;
     }
 
+    auto floorPoint = [](const QPointF &point) {
+        return QPoint(std::floor(point.x()), std::floor(point.y()));
+    };
+
     const QRegion confinementRegion = getConstraintRegion(focus(), cf);
-    if (confinementRegion.contains(pos.toPoint())) {
+    if (confinementRegion.contains(floorPoint(pos))) {
         return pos;
     }
     QPointF p = pos;
     // allow either x or y to pass
     p = QPointF(m_pos.x(), pos.y());
-    if (confinementRegion.contains(p.toPoint())) {
+
+    if (confinementRegion.contains(floorPoint(p))) {
         return p;
     }
     p = QPointF(pos.x(), m_pos.y());
-    if (confinementRegion.contains(p.toPoint())) {
+    if (confinementRegion.contains(floorPoint(p))) {
         return p;
     }
 
