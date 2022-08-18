@@ -1136,8 +1136,7 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
 
 static void print(const QByteArray &label, const QByteArray &setting)
 {
-    std::cout << std::setw(40) << std::left
-              << label.data() << setting.data() << std::endl;
+    qInfo("%-40s%s", label.data(), setting.data());
 }
 
 void GLPlatform::printResults() const
