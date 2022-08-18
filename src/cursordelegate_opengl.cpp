@@ -59,10 +59,11 @@ void CursorDelegateOpenGL::paint(RenderTarget *renderTarget, const QRegion &regi
     }
 
     const QRect cursorRect = layer()->mapToGlobal(layer()->rect());
+    const qreal scale = renderTarget->devicePixelRatio();
 
     QMatrix4x4 mvp;
-    mvp.ortho(QRect(QPoint(0, 0), renderTarget->size() / renderTarget->devicePixelRatio()));
-    mvp.translate(cursorRect.x(), cursorRect.y());
+    mvp.ortho(QRect(QPoint(0, 0), renderTarget->size()));
+    mvp.translate(cursorRect.x() * scale, cursorRect.y() * scale);
 
     // Don't need to call GLVertexBuffer::beginFrame() and GLVertexBuffer::endOfFrame() because
     // the GLVertexBuffer::streamingBuffer() is not being used when painting cursor.
@@ -72,7 +73,7 @@ void CursorDelegateOpenGL::paint(RenderTarget *renderTarget, const QRegion &regi
     m_cursorTexture->bind();
     ShaderBinder binder(ShaderTrait::MapTexture);
     binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-    m_cursorTexture->render(region, QRect(0, 0, cursorRect.width(), cursorRect.height()), renderTarget->devicePixelRatio());
+    m_cursorTexture->render(region, QRect(0, 0, cursorRect.width(), cursorRect.height()), scale);
     m_cursorTexture->unbind();
     glDisable(GL_BLEND);
 }
