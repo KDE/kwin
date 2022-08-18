@@ -3,6 +3,7 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
                           http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+    <include>config-kwin.h</include>
     <kcfgfile arg="true" />
     <group name="MouseBindings">
         <entry name="CommandTitlebarWheel" type="String">
@@ -124,7 +125,13 @@
                 <choice name="OnMainWindow"/>
                 <choice name="Maximizing"/>
             </choices>
-            <default>Placement::Centered</default>
+            <default type="code">[] {
+                #if KWIN_BUILD_DECORATIONS
+                    return Placement::Centered;
+                #else
+                    return Placement::Maximizing;
+                #endif
+            }()</default>
         </entry>
         <entry name="AutoRaise" type="Bool">
             <default>false</default>

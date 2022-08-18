@@ -761,13 +761,7 @@ void Options::syncFromKcfgc()
     setFocusStealingPreventionLevel(m_settings->focusStealingPreventionLevel());
     setXwaylandCrashPolicy(m_settings->xwaylandCrashPolicy());
     setXwaylandMaxCrashCount(m_settings->xwaylandMaxCrashCount());
-
-#if KWIN_BUILD_DECORATIONS
     setPlacement(m_settings->placement());
-#else
-    setPlacement(Placement::Maximizing);
-#endif
-
     setAutoRaise(m_settings->autoRaise());
     setAutoRaiseInterval(m_settings->autoRaiseInterval());
     setDelayFocusInterval(m_settings->delayFocusInterval());
