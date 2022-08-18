@@ -44,7 +44,7 @@ public:
 
     RenderLoop *renderLoop() const override;
 
-    void init(const QPoint &logicalPosition, const QSize &pixelSize);
+    void init(const QSize &pixelSize);
 
     virtual void lockPointer(KWayland::Client::Pointer *pointer, bool lock)
     {
@@ -57,12 +57,7 @@ public:
         return false;
     }
 
-    /**
-     * @brief defines the geometry of the output
-     * @param logicalPosition top left position of the output in compositor space
-     * @param pixelSize output size as seen from the outside
-     */
-    void setGeometry(const QPoint &logicalPosition, const QSize &pixelSize);
+    void resize(const QSize &pixelSize);
 
     KWayland::Client::Surface *surface() const
     {

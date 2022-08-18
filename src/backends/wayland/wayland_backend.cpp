@@ -772,18 +772,14 @@ void WaylandBackend::createOutputs()
     // create an output window of this size in the end
     const int pixelWidth = initialWindowSize().width() * initialOutputScale() + 0.5;
     const int pixelHeight = initialWindowSize().height() * initialOutputScale() + 0.5;
-    const int logicalWidth = initialWindowSize().width();
 
-    int logicalWidthSum = 0;
     for (int i = 0; i < initialOutputCount(); i++) {
         const QString name = QStringLiteral("WL-%1").arg(i);
-        createOutput(name, QPoint(logicalWidthSum, 0), QSize(pixelWidth, pixelHeight));
-
-        logicalWidthSum += logicalWidth;
+        createOutput(name, QSize(pixelWidth, pixelHeight));
     }
 }
 
-WaylandOutput *WaylandBackend::createOutput(const QString &name, const QPoint &position, const QSize &size)
+WaylandOutput *WaylandBackend::createOutput(const QString &name, const QSize &size)
 {
     auto surface = m_compositor->createSurface(this);
     if (!surface || !surface->isValid()) {
@@ -811,7 +807,7 @@ WaylandOutput *WaylandBackend::createOutput(const QString &name, const QPoint &p
         return nullptr;
     }
 
-    waylandOutput->init(position, size);
+    waylandOutput->init(size);
     connect(waylandOutput, &WaylandOutput::frameRendered, this, [waylandOutput]() {
         // The current time of the monotonic clock is a pretty good estimate when the frame
         // has been presented, however it will be much better if we check whether the host
@@ -973,7 +969,7 @@ void WaylandBackend::clearDpmsFilter()
 
 Output *WaylandBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
-    return createOutput(name, m_outputs.constLast()->geometry().topRight(), size * scale);
+    return createOutput(name, size * scale);
 }
 
 void WaylandBackend::removeVirtualOutput(Output *output)

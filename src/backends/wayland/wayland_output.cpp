@@ -55,23 +55,19 @@ RenderLoop *WaylandOutput::renderLoop() const
     return m_renderLoop.get();
 }
 
-void WaylandOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
+void WaylandOutput::init(const QSize &pixelSize)
 {
     m_renderLoop->setRefreshRate(s_refreshRate);
 
     auto mode = std::make_shared<OutputMode>(pixelSize, s_refreshRate);
     setModesInternal({mode}, mode);
-
-    moveTo(logicalPosition);
     setScale(backend()->initialOutputScale());
 }
 
-void WaylandOutput::setGeometry(const QPoint &logicalPosition, const QSize &pixelSize)
+void WaylandOutput::resize(const QSize &pixelSize)
 {
     auto mode = std::make_shared<OutputMode>(pixelSize, s_refreshRate);
     setModesInternal({mode}, mode);
-
-    moveTo(logicalPosition);
     Q_EMIT m_backend->screensQueried();
 }
 
@@ -146,7 +142,7 @@ void XdgShellOutput::handleConfigure(const QSize &size, XdgShellSurface::States 
     Q_UNUSED(states);
     m_xdgShellSurface->ackConfigure(serial);
     if (size.width() > 0 && size.height() > 0) {
-        setGeometry(geometry().topLeft(), size * scale());
+        resize(size * scale());
         if (m_hasBeenConfigured) {
             Q_EMIT sizeChanged(size);
         }

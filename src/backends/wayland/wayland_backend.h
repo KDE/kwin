@@ -327,7 +327,7 @@ private:
     void createOutputs();
     void destroyOutputs();
 
-    WaylandOutput *createOutput(const QString &name, const QPoint &position, const QSize &size);
+    WaylandOutput *createOutput(const QString &name, const QSize &size);
 
     wl_display *m_display;
     KWayland::Client::EventQueue *m_eventQueue;
