@@ -39,6 +39,7 @@ class PlasmaWindowActivationFeedbackInterface;
 class PlasmaVirtualDesktopManagementInterface;
 class PlasmaWindowManagementInterface;
 class PrimaryOutputV1Interface;
+class OutputDeviceV2Interface;
 class OutputManagementV2Interface;
 class XdgForeignV2Interface;
 class XdgOutputManagerV1Interface;
@@ -60,7 +61,6 @@ class XdgPopupWindow;
 class XdgSurfaceWindow;
 class XdgToplevelWindow;
 class WaylandOutput;
-class WaylandOutputDevice;
 
 class KWIN_EXPORT WaylandServer : public QObject
 {
@@ -294,7 +294,7 @@ private:
     QList<Window *> m_windows;
     InitializationFlags m_initFlags;
     QHash<Output *, WaylandOutput *> m_waylandOutputs;
-    QHash<Output *, WaylandOutputDevice *> m_waylandOutputDevices;
+    QHash<Output *, KWaylandServer::OutputDeviceV2Interface *> m_waylandOutputDevices;
     KWIN_SINGLETON(WaylandServer)
 };
 

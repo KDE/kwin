@@ -229,7 +229,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
 
     if (kwinApp()->platform()->applyOutputChanges(config)) {
         if (primaryOutput.has_value() || !kwinApp()->platform()->primaryOutput()->isEnabled()) {
-            auto requestedPrimaryOutput = kwinApp()->platform()->findOutput((*primaryOutput)->uuid());
+            auto requestedPrimaryOutput = (*primaryOutput)->handle();
             if (requestedPrimaryOutput && requestedPrimaryOutput->isEnabled()) {
                 kwinApp()->platform()->setPrimaryOutput(requestedPrimaryOutput);
             } else {

@@ -146,7 +146,6 @@ target_sources(kwin PRIVATE
     was_user_interaction_x11_filter.cpp
     wayland_server.cpp
     waylandoutput.cpp
-    waylandoutputdevicev2.cpp
     waylandshellintegration.cpp
     waylandwindow.cpp
     window.cpp

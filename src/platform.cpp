@@ -140,19 +140,6 @@ bool Platform::applyOutputChanges(const OutputConfiguration &config)
     return true;
 }
 
-Output *Platform::findOutput(const QUuid &uuid) const
-{
-    const auto outs = outputs();
-    auto it = std::find_if(outs.constBegin(), outs.constEnd(),
-                           [uuid](Output *output) {
-                               return output->uuid() == uuid;
-                           });
-    if (it != outs.constEnd()) {
-        return *it;
-    }
-    return nullptr;
-}
-
 Output *Platform::findOutput(const QString &name) const
 {
     const auto candidates = outputs();

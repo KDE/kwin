@@ -38,6 +38,7 @@
 #include "wayland/keystate_interface.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/output_interface.h"
+#include "wayland/outputdevice_v2_interface.h"
 #include "wayland/outputmanagement_v2_interface.h"
 #include "wayland/plasmashell_interface.h"
 #include "wayland/plasmavirtualdesktop_interface.h"
@@ -60,7 +61,6 @@
 #include "wayland/xdgoutput_v1_interface.h"
 #include "wayland/xdgshell_interface.h"
 #include "waylandoutput.h"
-#include "waylandoutputdevicev2.h"
 #include "workspace.h"
 #include "x11window.h"
 #include "xdgactivationv1.h"
@@ -274,14 +274,14 @@ void WaylandServer::registerXdgGenericWindow(Window *window)
 void WaylandServer::handleOutputAdded(Output *output)
 {
     if (!output->isPlaceholder() && !output->isNonDesktop()) {
-        m_waylandOutputDevices.insert(output, new WaylandOutputDevice(output));
+        m_waylandOutputDevices.insert(output, new KWaylandServer::OutputDeviceV2Interface(m_display, output));
     }
 }
 
 void WaylandServer::handleOutputRemoved(Output *output)
 {
-    if (!output->isPlaceholder() && !output->isNonDesktop()) {
-        delete m_waylandOutputDevices.take(output);
+    if (auto outputDevice = m_waylandOutputDevices.take(output)) {
+        outputDevice->remove();
     }
 }
 

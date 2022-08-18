@@ -287,7 +287,6 @@ public:
     }
 
     virtual Outputs outputs() const = 0;
-    Output *findOutput(const QUuid &uuid) const;
     Output *findOutput(const QString &name) const;
 
     /**
