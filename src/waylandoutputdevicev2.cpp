@@ -97,23 +97,24 @@ WaylandOutputDevice::WaylandOutputDevice(Output *output, QObject *parent)
 void WaylandOutputDevice::updateModes(Output *output)
 {
     QList<OutputDeviceModeV2Interface *> deviceModes;
+    OutputDeviceModeV2Interface *currentMode = nullptr;
 
     const auto modes = output->modes();
     deviceModes.reserve(modes.size());
     for (const std::shared_ptr<OutputMode> &mode : modes) {
         OutputDeviceModeV2Interface::ModeFlags flags;
-
-        if (output->currentMode() == mode) {
-            flags |= OutputDeviceModeV2Interface::ModeFlag::Current;
-        }
         if (mode->flags() & OutputMode::Flag::Preferred) {
             flags |= OutputDeviceModeV2Interface::ModeFlag::Preferred;
         }
 
         OutputDeviceModeV2Interface *deviceMode = new OutputDeviceModeV2Interface(mode, mode->size(), mode->refreshRate(), flags);
         deviceModes << deviceMode;
+
+        if (output->currentMode() == mode) {
+            currentMode = deviceMode;
+        }
     }
-    m_outputDeviceV2->setModes(deviceModes);
+    m_outputDeviceV2->setModes(deviceModes, currentMode);
 }
 
 void WaylandOutputDevice::handleModesChanged()
@@ -143,7 +144,13 @@ void WaylandOutputDevice::handleTransformChanged()
 
 void WaylandOutputDevice::handleCurrentModeChanged()
 {
-    m_outputDeviceV2->setCurrentMode(m_platformOutput->modeSize(), m_platformOutput->refreshRate());
+    const auto modes = m_outputDeviceV2->modes();
+    for (KWaylandServer::OutputDeviceModeV2Interface *mode : modes) {
+        if (mode->handle().lock() == m_platformOutput->currentMode()) {
+            m_outputDeviceV2->setCurrentMode(mode);
+            break;
+        }
+    }
 }
 
 void WaylandOutputDevice::handleCapabilitiesChanged()
