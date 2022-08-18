@@ -164,6 +164,10 @@ target_sources(kwin PRIVATE
     xwaylandwindow.cpp
 )
 
+if (KWIN_BUILD_DLT_LOGGING)
+    target_sources(kwin PRIVATE dlt_logging.cpp)
+endif()
+
 target_link_libraries(kwin
     kwineffects
     kwinglutils
@@ -211,6 +215,10 @@ target_link_libraries(kwin
 )
 if (QT_MAJOR_VERSION EQUAL "5")
     target_link_libraries(kwin Qt5::X11Extras Qt5::XkbCommonSupportPrivate)
+endif()
+
+if (KWIN_BUILD_DLT_LOGGING)
+    target_link_libraries(kwin Qt${QT_MAJOR_VERSION}::GeniviExtras)
 endif()
 
 if (KWIN_BUILD_NOTIFICATIONS)

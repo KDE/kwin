@@ -377,6 +377,7 @@ ecm_find_qmlmodule(org.kde.plasma.components 2.0)
 include(CMakeDependentOption)
 
 option(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
+option(KWIN_BUILD_DLT_LOGGING "Enable logging to DLT (Diagnostic Log and Trace)" OFF)
 option(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
 option(KWIN_BUILD_NOTIFICATIONS "Enable building of KWin with knotifications support" ON)
 option(KWIN_BUILD_SCREENLOCKER "Enable building of KWin lockscreen functionality" ON)
@@ -408,6 +409,10 @@ add_feature_info("SCHED_RESET_ON_FORK"
 
 pkg_check_modules(PipeWire IMPORTED_TARGET libpipewire-0.3>=0.3.29)
 add_feature_info(PipeWire PipeWire_FOUND "Required for Wayland screencasting")
+
+if (KWIN_BUILD_DLT_LOGGING)
+    find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS GeniviExtras)
+endif()
 
 if (KWIN_BUILD_NOTIFICATIONS)
     find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS Notifications)
