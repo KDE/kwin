@@ -74,13 +74,13 @@ SoftwareVsyncMonitor *X11WindowedOutput::vsyncMonitor() const
     return m_vsyncMonitor.get();
 }
 
-void X11WindowedOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
+void X11WindowedOutput::init(const QSize &pixelSize)
 {
     const int refreshRate = 60000; // TODO: get refresh rate via randr
     m_renderLoop->setRefreshRate(refreshRate);
     m_vsyncMonitor->setRefreshRate(refreshRate);
 
-    setGeometry(logicalPosition, pixelSize);
+    resize(pixelSize);
     setScale(m_backend->initialOutputScale());
 
     const uint32_t eventMask = XCB_EVENT_MASK_KEY_PRESS
@@ -157,12 +157,10 @@ void X11WindowedOutput::initXInputForWindow()
 #endif
 }
 
-void X11WindowedOutput::setGeometry(const QPoint &logicalPosition, const QSize &pixelSize)
+void X11WindowedOutput::resize(const QSize &pixelSize)
 {
     auto mode = std::make_shared<OutputMode>(pixelSize, m_renderLoop->refreshRate());
     setModesInternal({mode}, mode);
-
-    moveTo(logicalPosition);
 }
 
 void X11WindowedOutput::setWindowTitle(const QString &title)

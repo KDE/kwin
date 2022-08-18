@@ -281,12 +281,10 @@ void X11WindowedBackend::createOutputs()
     // create an output window of this size in the end
     const int pixelWidth = initialWindowSize().width() * initialOutputScale() + 0.5;
     const int pixelHeight = initialWindowSize().height() * initialOutputScale() + 0.5;
-    const int logicalWidth = initialWindowSize().width();
 
-    int logicalWidthSum = 0;
     for (int i = 0; i < initialOutputCount(); ++i) {
         auto *output = new X11WindowedOutput(this);
-        output->init(QPoint(logicalWidthSum, 0), QSize(pixelWidth, pixelHeight));
+        output->init(QSize(pixelWidth, pixelHeight));
 
         m_protocols = protocolsAtom;
         m_deleteWindowProtocol = deleteWindowAtom;
@@ -299,7 +297,6 @@ void X11WindowedBackend::createOutputs()
                             32, 1,
                             &m_deleteWindowProtocol);
 
-        logicalWidthSum += logicalWidth;
         m_outputs << output;
         Q_EMIT outputAdded(output);
         output->setEnabled(true);
@@ -500,13 +497,6 @@ void X11WindowedBackend::handleClientMessage(xcb_client_message_event_t *event)
                 auto removedOutput = *it;
                 it = m_outputs.erase(it);
 
-                // update the sizes
-                int x = removedOutput->internalPosition().x();
-                for (; it != m_outputs.end(); ++it) {
-                    (*it)->setGeometry(QPoint(x, 0), (*it)->pixelSize());
-                    x += (*it)->geometry().width();
-                }
-
                 removedOutput->setEnabled(false);
                 Q_EMIT outputRemoved(removedOutput);
                 delete removedOutput;
@@ -590,7 +580,7 @@ void X11WindowedBackend::updateSize(xcb_configure_notify_event_t *event)
 
     const QSize s = QSize(event->width, event->height);
     if (s != output->pixelSize()) {
-        output->setGeometry(output->internalPosition(), s);
+        output->resize(s);
     }
     Q_EMIT sizeChanged();
 }
