@@ -12,6 +12,7 @@ namespace KWin
 {
 
 class OffscreenEffectPrivate;
+class CrossFadeEffectPrivate;
 
 /**
  * The OffscreenEffect class is the base class for effects that paint deformed windows.
@@ -36,13 +37,6 @@ public:
 
     static bool supported();
 
-    /**
-     * If set our offscreen texture will be updated with the latest contents
-     * It should be set before redirecting windows
-     * The default is true
-     */
-    void setLive(bool live);
-
 protected:
     void drawWindow(EffectWindow *window, int mask, const QRegion &region, WindowPaintData &data) override;
 
@@ -62,12 +56,6 @@ protected:
      */
     virtual void apply(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads);
 
-    /**
-     * Allows to specify a @p shader to draw the redirected texture for @p window.
-     * Can only be called once the window is redirected.
-     * @since 5.25
-     **/
-    void setShader(EffectWindow *window, GLShader *shader);
 
 private Q_SLOTS:
     void handleWindowDamaged(EffectWindow *window);
@@ -78,6 +66,39 @@ private:
     void destroyConnections();
 
     std::unique_ptr<OffscreenEffectPrivate> d;
+};
+
+class KWINEFFECTS_EXPORT CrossFadeEffect : public Effect
+{
+    Q_OBJECT
+public:
+    explicit CrossFadeEffect(QObject *parent = nullptr);
+    ~CrossFadeEffect() override;
+
+    void drawWindow(EffectWindow *window, int mask, const QRegion &region, WindowPaintData &data) override;
+
+    /**
+     * This function must be called when the effect wants to animate the specified
+     * @a window.
+     */
+    void redirect(EffectWindow *window);
+    /**
+     * This function must be called when the effect is done animating the specified
+     * @a window. The window will be automatically unredirected if it's deleted.
+     */
+    void unredirect(EffectWindow *window);
+
+    /**
+     * Allows to specify a @p shader to draw the redirected texture for @p window.
+     * Can only be called once the window is redirected.
+     * @since 5.25
+     **/
+    void setShader(EffectWindow *window, GLShader *shader);
+
+    static bool supported();
+
+private:
+    std::unique_ptr<CrossFadeEffectPrivate> d;
 };
 
 } // namespace KWin

@@ -13,10 +13,20 @@ namespace KWin
 
 struct OffscreenData
 {
-    std::unique_ptr<GLTexture> texture;
-    std::unique_ptr<GLFramebuffer> fbo;
-    bool isDirty = true;
-    GLShader *shader = nullptr;
+public:
+    void setDirty();
+    void setShader(GLShader *newShader);
+
+    void paint(EffectWindow *window, const QRegion &region,
+               const WindowPaintData &data, const WindowQuadList &quads);
+
+    void maybeRender(EffectWindow *window);
+
+private:
+    std::unique_ptr<GLTexture> m_texture;
+    std::unique_ptr<GLFramebuffer> m_fbo;
+    bool m_isDirty = true;
+    GLShader *m_shader = nullptr;
 };
 
 class OffscreenEffectPrivate
@@ -25,12 +35,13 @@ public:
     QHash<EffectWindow *, OffscreenData *> windows;
     QMetaObject::Connection windowDamagedConnection;
     QMetaObject::Connection windowDeletedConnection;
+};
 
-    void paint(EffectWindow *window, GLTexture *texture, const QRegion &region,
-               const WindowPaintData &data, const WindowQuadList &quads, GLShader *offscreenShader);
-
-    GLTexture *maybeRender(EffectWindow *window, OffscreenData *offscreenData);
-    bool live = true;
+class CrossFadeEffectPrivate
+{
+public:
+    QHash<EffectWindow *, OffscreenData *> windows;
+    qreal progress;
 };
 
 OffscreenEffect::OffscreenEffect(QObject *parent)
@@ -49,12 +60,6 @@ bool OffscreenEffect::supported()
     return effects->isOpenGLCompositing();
 }
 
-void OffscreenEffect::setLive(bool live)
-{
-    Q_ASSERT(d->windows.isEmpty());
-    d->live = live;
-}
-
 void OffscreenEffect::redirect(EffectWindow *window)
 {
     OffscreenData *&offscreenData = d->windows[window];
@@ -65,11 +70,6 @@ void OffscreenEffect::redirect(EffectWindow *window)
 
     if (d->windows.count() == 1) {
         setupConnections();
-    }
-
-    if (!d->live) {
-        effects->makeOpenGLContextCurrent();
-        d->maybeRender(window, offscreenData);
     }
 }
 
@@ -89,7 +89,7 @@ void OffscreenEffect::apply(EffectWindow *window, int mask, WindowPaintData &dat
     Q_UNUSED(quads)
 }
 
-GLTexture *OffscreenEffectPrivate::maybeRender(EffectWindow *window, OffscreenData *offscreenData)
+void OffscreenData::maybeRender(EffectWindow *window)
 {
     const QRect geometry = window->expandedGeometry().toAlignedRect();
     QSize textureSize = geometry.size();
@@ -98,16 +98,16 @@ GLTexture *OffscreenEffectPrivate::maybeRender(EffectWindow *window, OffscreenDa
         textureSize *= screen->devicePixelRatio();
     }
 
-    if (!offscreenData->texture || offscreenData->texture->size() != textureSize) {
-        offscreenData->texture.reset(new GLTexture(GL_RGBA8, textureSize));
-        offscreenData->texture->setFilter(GL_LINEAR);
-        offscreenData->texture->setWrapMode(GL_CLAMP_TO_EDGE);
-        offscreenData->fbo.reset(new GLFramebuffer(offscreenData->texture.get()));
-        offscreenData->isDirty = true;
+    if (!m_texture || m_texture->size() != textureSize) {
+        m_texture.reset(new GLTexture(GL_RGBA8, textureSize));
+        m_texture->setFilter(GL_LINEAR);
+        m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
+        m_fbo.reset(new GLFramebuffer(m_texture.get()));
+        m_isDirty = true;
     }
 
-    if (offscreenData->isDirty) {
-        GLFramebuffer::pushFramebuffer(offscreenData->fbo.get());
+    if (m_isDirty) {
+        GLFramebuffer::pushFramebuffer(m_fbo.get());
         glClearColor(0.0, 0.0, 0.0, 0.0);
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -124,16 +124,24 @@ GLTexture *OffscreenEffectPrivate::maybeRender(EffectWindow *window, OffscreenDa
         effects->drawWindow(window, mask, infiniteRegion(), data);
 
         GLFramebuffer::popFramebuffer();
-        offscreenData->isDirty = false;
+        m_isDirty = false;
     }
-
-    return offscreenData->texture.get();
 }
 
-void OffscreenEffectPrivate::paint(EffectWindow *window, GLTexture *texture, const QRegion &region,
-                                const WindowPaintData &data, const WindowQuadList &quads, GLShader *offscreenShader)
+void OffscreenData::setDirty()
 {
-    GLShader *shader = offscreenShader ? offscreenShader : ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::AdjustSaturation);
+    m_isDirty = true;
+}
+
+void OffscreenData::setShader(GLShader *newShader)
+{
+    m_shader = newShader;
+}
+
+void OffscreenData::paint(EffectWindow *window, const QRegion &region,
+                          const WindowPaintData &data, const WindowQuadList &quads)
+{
+    GLShader *shader = m_shader ? m_shader : ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::AdjustSaturation);
     ShaderBinder binder(shader);
 
     const bool indexedQuads = GLVertexBuffer::supportsIndexedQuads();
@@ -151,7 +159,7 @@ void OffscreenEffectPrivate::paint(EffectWindow *window, GLTexture *texture, con
     const size_t size = verticesPerQuad * quads.count() * sizeof(GLVertex2D);
     GLVertex2D *map = static_cast<GLVertex2D *>(vbo->map(size));
 
-    quads.makeInterleavedArrays(primitiveType, map, texture->matrix(NormalizedCoordinates));
+    quads.makeInterleavedArrays(primitiveType, map, m_texture->matrix(NormalizedCoordinates));
     vbo->unmap();
     vbo->bindArrays();
 
@@ -164,8 +172,8 @@ void OffscreenEffectPrivate::paint(EffectWindow *window, GLTexture *texture, con
     shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp * data.toMatrix());
     shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
     shader->setUniform(GLShader::Saturation, data.saturation());
-    shader->setUniform(GLShader::TextureWidth, texture->width());
-    shader->setUniform(GLShader::TextureHeight, texture->height());
+    shader->setUniform(GLShader::TextureWidth, m_texture->width());
+    shader->setUniform(GLShader::TextureHeight, m_texture->height());
 
     const bool clipping = region != infiniteRegion();
     const QRegion clipRegion = clipping ? effects->mapToRenderTarget(region) : infiniteRegion();
@@ -177,9 +185,9 @@ void OffscreenEffectPrivate::paint(EffectWindow *window, GLTexture *texture, con
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-    texture->bind();
+    m_texture->bind();
     vbo->draw(clipRegion, primitiveType, 0, verticesPerQuad * quads.count(), clipping);
-    texture->unbind();
+    m_texture->unbind();
 
     glDisable(GL_BLEND);
     if (clipping) {
@@ -211,15 +219,15 @@ void OffscreenEffect::drawWindow(EffectWindow *window, int mask, const QRegion &
     quads.append(quad);
     apply(window, mask, data, quads);
 
-    GLTexture *texture = d->maybeRender(window, offscreenData);
-    d->paint(window, texture, region, data, quads, offscreenData->shader);
+    offscreenData->maybeRender(window);
+    offscreenData->paint(window, region, data, quads);
 }
 
 void OffscreenEffect::handleWindowDamaged(EffectWindow *window)
 {
     OffscreenData *offscreenData = d->windows.value(window);
     if (offscreenData) {
-        offscreenData->isDirty = true;
+        offscreenData->setDirty();
     }
 }
 
@@ -230,10 +238,9 @@ void OffscreenEffect::handleWindowDeleted(EffectWindow *window)
 
 void OffscreenEffect::setupConnections()
 {
-    if (d->live) {
-        d->windowDamagedConnection =
-            connect(effects, &EffectsHandler::windowDamaged, this, &OffscreenEffect::handleWindowDamaged);
-    }
+    d->windowDamagedConnection =
+        connect(effects, &EffectsHandler::windowDamaged, this, &OffscreenEffect::handleWindowDamaged);
+
     d->windowDeletedConnection =
         connect(effects, &EffectsHandler::windowDeleted, this, &OffscreenEffect::handleWindowDeleted);
 }
@@ -247,11 +254,70 @@ void OffscreenEffect::destroyConnections()
     d->windowDeletedConnection = {};
 }
 
-void OffscreenEffect::setShader(EffectWindow *window, GLShader *shader)
+CrossFadeEffect::CrossFadeEffect(QObject *parent)
+    : Effect(parent)
+    , d(new CrossFadeEffectPrivate)
+{
+}
+
+CrossFadeEffect::~CrossFadeEffect()
+{
+    qDeleteAll(d->windows);
+}
+
+void CrossFadeEffect::drawWindow(EffectWindow *window, int mask, const QRegion &region, WindowPaintData &data)
+{
+    Q_UNUSED(mask)
+
+    // paint the new window (if applicable) underneath
+    Effect::drawWindow(window, mask, region, data);
+
+    // paint old snapshot on top
+    WindowPaintData previousWindowData = data;
+    previousWindowData.setOpacity((1.0 - data.crossFadeProgress()) * data.opacity());
+    OffscreenData *offscreenData = d->windows[window];
+    if (!offscreenData) {
+        return;
+    }
+
+    const QRectF expandedGeometry = window->expandedGeometry();
+    const QRectF frameGeometry = window->frameGeometry();
+
+    QRectF visibleRect = expandedGeometry;
+    visibleRect.moveTopLeft(expandedGeometry.topLeft() - frameGeometry.topLeft());
+    WindowQuad quad;
+    quad[0] = WindowVertex(visibleRect.topLeft(), QPointF(0, 0));
+    quad[1] = WindowVertex(visibleRect.topRight(), QPointF(1, 0));
+    quad[2] = WindowVertex(visibleRect.bottomRight(), QPointF(1, 1));
+    quad[3] = WindowVertex(visibleRect.bottomLeft(), QPointF(0, 1));
+
+    WindowQuadList quads;
+    quads.append(quad);
+    offscreenData->paint(window, region, previousWindowData, quads);
+}
+
+void CrossFadeEffect::redirect(EffectWindow *window)
+{
+    OffscreenData *&offscreenData = d->windows[window];
+    if (offscreenData) {
+        return;
+    }
+    offscreenData = new OffscreenData;
+
+    effects->makeOpenGLContextCurrent();
+    offscreenData->maybeRender(window);
+}
+
+void CrossFadeEffect::unredirect(EffectWindow *window)
+{
+    delete d->windows.take(window);
+}
+
+void CrossFadeEffect::setShader(EffectWindow *window, GLShader *shader)
 {
     OffscreenData *offscreenData = d->windows.value(window);
     if (offscreenData) {
-        offscreenData->shader = shader;
+        offscreenData->setShader(shader);
     }
 }
 

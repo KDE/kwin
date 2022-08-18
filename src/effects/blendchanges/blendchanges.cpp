@@ -16,14 +16,13 @@
 namespace KWin
 {
 BlendChanges::BlendChanges()
-    : OffscreenEffect()
+    : CrossFadeEffect()
 {
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin/BlendChanges"),
                                                  QStringLiteral("org.kde.KWin.BlendChanges"),
                                                  this,
                                                  QDBusConnection::ExportAllSlots);
 
-    setLive(false);
     m_timeline.setEasingCurve(QEasingCurve::InOutCubic);
 }
 
@@ -36,6 +35,8 @@ bool BlendChanges::supported()
 
 void KWin::BlendChanges::start(int delay)
 {
+    qDebug() << "HELLO";
+
     int animationDuration = animationTime(400);
 
     if (!supported() || m_state != Off) {
@@ -59,26 +60,6 @@ void KWin::BlendChanges::start(int delay)
     m_state = ShowingCache;
 }
 
-void BlendChanges::drawWindow(EffectWindow *window, int mask, const QRegion &region, WindowPaintData &data)
-{
-    // draw the new picture underneath at full opacity
-    if (m_state != ShowingCache) {
-        Effect::drawWindow(window, mask, region, data);
-    }
-    // then the old on top, it works better than changing both alphas with the current blend mode
-    if (m_state != Off) {
-        OffscreenEffect::drawWindow(window, mask, region, data);
-    }
-}
-
-void BlendChanges::apply(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads)
-{
-    Q_UNUSED(window)
-    Q_UNUSED(mask)
-    Q_UNUSED(quads)
-    data.setOpacity((1.0 - m_timeline.value()) * data.opacity());
-}
-
 bool BlendChanges::isActive() const
 {
     return m_state != Off;
@@ -96,6 +77,15 @@ void BlendChanges::postPaintScreen()
         }
     }
     effects->addRepaintFull();
+}
+
+void BlendChanges::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+{
+    Q_UNUSED(w)
+    Q_UNUSED(mask)
+    Q_UNUSED(region)
+    data.setCrossFadeProgress(m_timeline.value());
+    effects->paintWindow(w, mask, region, data);
 }
 
 void BlendChanges::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
