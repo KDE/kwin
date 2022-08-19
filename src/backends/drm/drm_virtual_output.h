@@ -27,7 +27,7 @@ class DrmVirtualOutput : public DrmAbstractOutput
     Q_OBJECT
 
 public:
-    DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size, VirtualOutputType type);
+    DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size, qreal scale, VirtualOutputType type);
     ~DrmVirtualOutput() override;
 
     bool present() override;

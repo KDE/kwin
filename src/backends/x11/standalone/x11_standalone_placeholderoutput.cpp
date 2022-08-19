@@ -22,16 +22,27 @@ X11PlaceholderOutput::X11PlaceholderOutput(X11StandalonePlatform *backend, QObje
     }
 
     auto mode = std::make_shared<OutputMode>(pixelSize, 60000);
-    setModesInternal({mode}, mode);
 
     setInformation(Information{
         .name = QStringLiteral("Placeholder-0"),
+    });
+
+    setState(State{
+        .modes = {mode},
+        .currentMode = mode,
     });
 }
 
 RenderLoop *X11PlaceholderOutput::renderLoop() const
 {
     return m_backend->renderLoop();
+}
+
+void X11PlaceholderOutput::updateEnabled(bool enabled)
+{
+    State next = m_state;
+    next.enabled = enabled;
+    setState(next);
 }
 
 } // namespace KWin

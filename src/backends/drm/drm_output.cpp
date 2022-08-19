@@ -50,9 +50,11 @@ DrmOutput::DrmOutput(DrmPipeline *pipeline, KWaylandServer::DrmLeaseDeviceV1Inte
     m_renderLoop->setRefreshRate(m_pipeline->mode()->refreshRate());
 
     Capabilities capabilities = Capability::Dpms;
+    State initialState;
+
     if (conn->hasOverscan()) {
         capabilities |= Capability::Overscan;
-        setOverscanInternal(conn->overscan());
+        initialState.overscan = conn->overscan();
     }
     if (conn->vrrCapable()) {
         capabilities |= Capability::Vrr;
@@ -60,7 +62,7 @@ DrmOutput::DrmOutput(DrmPipeline *pipeline, KWaylandServer::DrmLeaseDeviceV1Inte
     }
     if (conn->hasRgbRange()) {
         capabilities |= Capability::RgbRange;
-        setRgbRangeInternal(conn->rgbRange());
+        initialState.rgbRange = conn->rgbRange();
     }
 
     const Edid *edid = conn->edid();
@@ -79,12 +81,13 @@ DrmOutput::DrmOutput(DrmPipeline *pipeline, KWaylandServer::DrmLeaseDeviceV1Inte
         .nonDesktop = conn->isNonDesktop(),
     });
 
-    const QList<std::shared_ptr<OutputMode>> modes = getModes();
-    std::shared_ptr<OutputMode> currentMode = m_pipeline->mode();
-    if (!currentMode) {
-        currentMode = modes.constFirst();
+    initialState.modes = getModes();
+    initialState.currentMode = m_pipeline->mode();
+    if (!initialState.currentMode) {
+        initialState.currentMode = initialState.modes.constFirst();
     }
-    setModesInternal(modes, currentMode);
+
+    setState(initialState);
 
     m_turnOffTimer.setSingleShot(true);
     m_turnOffTimer.setInterval(dimAnimationTime());
@@ -261,13 +264,13 @@ bool DrmOutput::setDrmDpmsMode(DpmsMode mode)
     bool active = mode == DpmsMode::On;
     bool isActive = dpmsMode() == DpmsMode::On;
     if (active == isActive) {
-        setDpmsModeInternal(mode);
+        updateDpmsMode(mode);
         return true;
     }
     m_pipeline->setActive(active);
     if (DrmPipeline::commitPipelines({m_pipeline}, active ? DrmPipeline::CommitMode::TestAllowModeset : DrmPipeline::CommitMode::CommitModeset) == DrmPipeline::Error::None) {
         m_pipeline->applyPendingChanges();
-        setDpmsModeInternal(mode);
+        updateDpmsMode(mode);
         if (active) {
             m_gpu->platform()->checkOutputsAreOn();
             m_renderLoop->uninhibit();
@@ -314,7 +317,8 @@ DrmPlane::Transformations outputToPlaneTransform(DrmOutput::Transform transform)
 
 void DrmOutput::updateModes()
 {
-    const QList<std::shared_ptr<OutputMode>> modes = getModes();
+    State next = m_state;
+    next.modes = getModes();
 
     if (m_pipeline->crtc()) {
         const auto currentMode = m_pipeline->connector()->findMode(m_pipeline->crtc()->queryCurrentMode());
@@ -331,12 +335,19 @@ void DrmOutput::updateModes()
         }
     }
 
-    std::shared_ptr<OutputMode> currentMode = m_pipeline->mode();
-    if (!currentMode) {
-        currentMode = modes.constFirst();
+    next.currentMode = m_pipeline->mode();
+    if (!next.currentMode) {
+        next.currentMode = next.modes.constFirst();
     }
 
-    setModesInternal(modes, currentMode);
+    setState(next);
+}
+
+void DrmOutput::updateDpmsMode(DpmsMode dpmsMode)
+{
+    State next = m_state;
+    next.dpmsMode = dpmsMode;
+    setState(next);
 }
 
 bool DrmOutput::present()
@@ -407,22 +418,26 @@ void DrmOutput::applyQueuedChanges(const OutputConfiguration &config)
     m_pipeline->applyPendingChanges();
 
     auto props = config.constChangeSet(this);
-    setEnabled(props->enabled && m_pipeline->crtc());
+
+    State next = m_state;
+    next.enabled = props->enabled && m_pipeline->crtc();
+    next.position = props->pos;
+    next.scale = props->scale;
+    next.transform = props->transform;
+    next.currentMode = m_pipeline->mode();
+    next.overscan = m_pipeline->overscan();
+    next.rgbRange = m_pipeline->rgbRange();
+
+    setState(next);
+    setVrrPolicy(props->vrrPolicy);
+
     if (!isEnabled() && m_pipeline->needsModeset()) {
         m_gpu->maybeModeset();
     }
-    moveTo(props->pos);
-    setScale(props->scale);
-    setTransformInternal(props->transform);
 
-    const auto mode = m_pipeline->mode();
-    setCurrentModeInternal(mode);
-    m_renderLoop->setRefreshRate(mode->refreshRate());
-    setOverscanInternal(m_pipeline->overscan());
-    setRgbRangeInternal(m_pipeline->rgbRange());
-    setVrrPolicy(props->vrrPolicy);
-
+    m_renderLoop->setRefreshRate(refreshRate());
     m_renderLoop->scheduleRepaint();
+
     Q_EMIT changed();
 
     updateCursor();

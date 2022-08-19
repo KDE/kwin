@@ -32,6 +32,8 @@ class KWIN_EXPORT X11Output : public Output
 public:
     explicit X11Output(X11StandalonePlatform *backend, QObject *parent = nullptr);
 
+    void updateEnabled(bool enabled);
+
     bool usesSoftwareCursor() const override;
 
     RenderLoop *renderLoop() const override;
@@ -41,8 +43,6 @@ public:
     void setXineramaNumber(int number);
 
     void setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation) override;
-
-    void setMode(const QSize &size, uint32_t refreshRate);
 
 private:
     void setCrtc(xcb_randr_crtc_t crtc);

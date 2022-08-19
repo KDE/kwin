@@ -318,12 +318,12 @@ void DrmBackend::addOutput(DrmAbstractOutput *o)
 {
     m_outputs.append(o);
     Q_EMIT outputAdded(o);
-    o->setEnabled(true);
+    o->updateEnabled(true);
 }
 
 void DrmBackend::removeOutput(DrmAbstractOutput *o)
 {
-    o->setEnabled(false);
+    o->updateEnabled(false);
     m_outputs.removeOne(o);
     Q_EMIT outputRemoved(o);
 }

@@ -117,13 +117,6 @@ public:
     bool isEnabled() const;
 
     /**
-     * Enable or disable the output.
-     *
-     * Default implementation does nothing
-     */
-    void setEnabled(bool enable);
-
-    /**
      * Returns geometry of this output in device independent pixels.
      */
     QRect geometry() const;
@@ -212,9 +205,6 @@ public:
     Transform transform() const;
 
     virtual bool usesSoftwareCursor() const;
-
-    void moveTo(const QPoint &pos);
-    void setScale(qreal scale);
 
     void applyChanges(const OutputConfiguration &config);
 
@@ -314,38 +304,38 @@ protected:
         bool nonDesktop = false;
     };
 
+    struct State
+    {
+        QPoint position;
+        qreal scale = 1;
+        Transform transform = Transform::Normal;
+        QList<std::shared_ptr<OutputMode>> modes;
+        std::shared_ptr<OutputMode> currentMode;
+        DpmsMode dpmsMode = DpmsMode::On;
+        SubPixel subPixel = SubPixel::Unknown;
+        bool enabled = false;
+        uint32_t overscan = 0;
+        RgbRange rgbRange = RgbRange::Automatic;
+    };
+
     void setInformation(const Information &information);
+    void setState(const State &state);
 
     virtual void updateEnablement(bool enable)
     {
         Q_UNUSED(enable);
     }
 
-    void setModesInternal(const QList<std::shared_ptr<OutputMode>> &modes, const std::shared_ptr<OutputMode> &currentMode);
-    void setCurrentModeInternal(const std::shared_ptr<OutputMode> &currentMode);
-    void setTransformInternal(Transform transform);
-    void setDpmsModeInternal(DpmsMode dpmsMode);
-    void setOverscanInternal(uint32_t overscan);
-    void setRgbRangeInternal(RgbRange range);
-
     QSize orientateSize(const QSize &size) const;
+
+    State m_state;
 
 private:
     Q_DISABLE_COPY(Output)
     EffectScreenImpl *m_effectScreen = nullptr;
-    int m_directScanoutCount = 0;
     Information m_information;
     QUuid m_uuid;
-    QPoint m_position;
-    qreal m_scale = 1;
-    Transform m_transform = Transform::Normal;
-    QList<std::shared_ptr<OutputMode>> m_modes;
-    std::shared_ptr<OutputMode> m_currentMode;
-    DpmsMode m_dpmsMode = DpmsMode::On;
-    SubPixel m_subPixel = SubPixel::Unknown;
-    bool m_isEnabled = false;
-    uint32_t m_overscan = 0;
-    RgbRange m_rgbRange = RgbRange::Automatic;
+    int m_directScanoutCount = 0;
     friend class EffectScreenImpl; // to access m_effectScreen
 };
 

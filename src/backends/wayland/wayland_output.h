@@ -66,6 +66,9 @@ public:
 
     void setDpmsMode(DpmsMode mode) override;
 
+    void updateDpmsMode(DpmsMode dpmsMode);
+    void updateEnabled(bool enabled);
+
 Q_SIGNALS:
     void sizeChanged(const QSize &size);
     void frameRendered();

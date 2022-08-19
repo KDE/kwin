@@ -32,6 +32,8 @@ public:
 
     void init(const QPoint &logicalPosition, const QSize &pixelSize);
     void setGeometry(const QRect &geo);
+    void updateScale(qreal scale);
+    void updateEnabled(bool enabled);
 
 private:
     void vblank(std::chrono::nanoseconds timestamp);

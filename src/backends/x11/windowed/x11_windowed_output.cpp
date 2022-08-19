@@ -80,8 +80,13 @@ void X11WindowedOutput::init(const QSize &pixelSize)
     m_renderLoop->setRefreshRate(refreshRate);
     m_vsyncMonitor->setRefreshRate(refreshRate);
 
-    resize(pixelSize);
-    setScale(m_backend->initialOutputScale());
+    auto mode = std::make_shared<OutputMode>(pixelSize, m_renderLoop->refreshRate());
+
+    State initialState;
+    initialState.modes = {mode};
+    initialState.currentMode = mode;
+    initialState.scale = m_backend->initialOutputScale();
+    setState(initialState);
 
     const uint32_t eventMask = XCB_EVENT_MASK_KEY_PRESS
         | XCB_EVENT_MASK_KEY_RELEASE
@@ -160,7 +165,11 @@ void X11WindowedOutput::initXInputForWindow()
 void X11WindowedOutput::resize(const QSize &pixelSize)
 {
     auto mode = std::make_shared<OutputMode>(pixelSize, m_renderLoop->refreshRate());
-    setModesInternal({mode}, mode);
+
+    State next = m_state;
+    next.modes = {mode};
+    next.currentMode = mode;
+    setState(next);
 }
 
 void X11WindowedOutput::setWindowTitle(const QString &title)
@@ -192,6 +201,13 @@ void X11WindowedOutput::vblank(std::chrono::nanoseconds timestamp)
 bool X11WindowedOutput::usesSoftwareCursor() const
 {
     return false;
+}
+
+void X11WindowedOutput::updateEnabled(bool enabled)
+{
+    State next = m_state;
+    next.enabled = enabled;
+    setState(next);
 }
 
 } // namespace KWin

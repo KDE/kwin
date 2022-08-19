@@ -32,6 +32,8 @@ public:
     virtual bool present() = 0;
     virtual DrmOutputLayer *outputLayer() const = 0;
 
+    void updateEnabled(bool enabled);
+
 protected:
     friend class DrmGpu;
 

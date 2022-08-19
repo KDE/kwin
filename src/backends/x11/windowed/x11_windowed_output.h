@@ -66,6 +66,8 @@ public:
     void addExposedArea(const QRect &rect);
     void clearExposedArea();
 
+    void updateEnabled(bool enabled);
+
 private:
     void initXInputForWindow();
     void vblank(std::chrono::nanoseconds timestamp);

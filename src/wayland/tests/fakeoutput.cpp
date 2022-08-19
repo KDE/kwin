@@ -21,7 +21,32 @@ KWin::RenderLoop *FakeOutput::renderLoop() const
 void FakeOutput::setMode(QSize size, uint32_t refreshRate)
 {
     auto mode = std::make_shared<KWin::OutputMode>(size, refreshRate);
-    setModesInternal({mode}, mode);
+
+    State state = m_state;
+    state.modes = {mode};
+    state.currentMode = mode;
+    setState(state);
+}
+
+void FakeOutput::setTransform(Transform transform)
+{
+    State state = m_state;
+    state.transform = transform;
+    setState(state);
+}
+
+void FakeOutput::moveTo(const QPoint &pos)
+{
+    State state = m_state;
+    state.position = pos;
+    setState(state);
+}
+
+void FakeOutput::setScale(qreal scale)
+{
+    State state = m_state;
+    state.scale = scale;
+    setState(state);
 }
 
 void FakeOutput::setSubPixel(SubPixel subPixel)
@@ -43,9 +68,4 @@ void FakeOutput::setPhysicalSize(QSize size)
     setInformation({
         .physicalSize = size,
     });
-}
-
-void FakeOutput::setTransform(Transform transform)
-{
-    setTransformInternal(transform);
 }

@@ -56,8 +56,27 @@ void VirtualOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
 void VirtualOutput::setGeometry(const QRect &geo)
 {
     auto mode = std::make_shared<OutputMode>(geo.size(), m_vsyncMonitor->refreshRate());
-    setModesInternal({mode}, mode);
-    moveTo(geo.topLeft());
+
+    State next = m_state;
+    next.modes = {mode};
+    next.currentMode = mode;
+    next.position = geo.topLeft();
+
+    setState(next);
+}
+
+void VirtualOutput::updateScale(qreal scale)
+{
+    State next = m_state;
+    next.scale = scale;
+    setState(next);
+}
+
+void VirtualOutput::updateEnabled(bool enabled)
+{
+    State next = m_state;
+    next.enabled = enabled;
+    setState(next);
 }
 
 void VirtualOutput::vblank(std::chrono::nanoseconds timestamp)

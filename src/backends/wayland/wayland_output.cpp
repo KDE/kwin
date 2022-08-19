@@ -41,7 +41,7 @@ WaylandOutput::WaylandOutput(const QString &name, Surface *surface, WaylandBacke
     m_turnOffTimer.setSingleShot(true);
     m_turnOffTimer.setInterval(dimAnimationTime());
     connect(&m_turnOffTimer, &QTimer::timeout, this, [this] {
-        setDpmsModeInternal(DpmsMode::Off);
+        updateDpmsMode(DpmsMode::Off);
     });
 }
 
@@ -61,14 +61,23 @@ void WaylandOutput::init(const QSize &pixelSize)
     m_renderLoop->setRefreshRate(s_refreshRate);
 
     auto mode = std::make_shared<OutputMode>(pixelSize, s_refreshRate);
-    setModesInternal({mode}, mode);
-    setScale(backend()->initialOutputScale());
+
+    State initialState;
+    initialState.modes = {mode};
+    initialState.currentMode = mode;
+    initialState.scale = m_backend->initialOutputScale();
+    setState(initialState);
 }
 
 void WaylandOutput::resize(const QSize &pixelSize)
 {
     auto mode = std::make_shared<OutputMode>(pixelSize, s_refreshRate);
-    setModesInternal({mode}, mode);
+
+    State next = m_state;
+    next.modes = {mode};
+    next.currentMode = mode;
+    setState(next);
+
     Q_EMIT m_backend->screensQueried();
 }
 
@@ -85,10 +94,24 @@ void WaylandOutput::setDpmsMode(DpmsMode mode)
         m_backend->clearDpmsFilter();
 
         if (mode != dpmsMode()) {
-            setDpmsModeInternal(mode);
+            updateDpmsMode(mode);
             Q_EMIT wakeUp();
         }
     }
+}
+
+void WaylandOutput::updateDpmsMode(DpmsMode dpmsMode)
+{
+    State next = m_state;
+    next.dpmsMode = dpmsMode;
+    setState(next);
+}
+
+void WaylandOutput::updateEnabled(bool enabled)
+{
+    State next = m_state;
+    next.enabled = enabled;
+    setState(next);
 }
 
 XdgShellOutput::XdgShellOutput(const QString &name, Surface *surface, XdgShell *xdgShell, WaylandBackend *backend, int number, bool placeholder)

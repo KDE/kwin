@@ -81,7 +81,7 @@ QUuid Output::uuid() const
 
 Output::Transform Output::transform() const
 {
-    return m_transform;
+    return m_state.transform;
 }
 
 QString Output::eisaId() const
@@ -147,21 +147,12 @@ Output::Capabilities Output::capabilities() const
 
 qreal Output::scale() const
 {
-    return m_scale;
-}
-
-void Output::setScale(qreal scale)
-{
-    if (m_scale != scale) {
-        m_scale = scale;
-        Q_EMIT scaleChanged();
-        Q_EMIT geometryChanged();
-    }
+    return m_state.scale;
 }
 
 QRect Output::geometry() const
 {
-    return QRect(m_position, pixelSize() / scale());
+    return QRect(m_state.position, pixelSize() / scale());
 }
 
 QSize Output::physicalSize() const
@@ -171,25 +162,17 @@ QSize Output::physicalSize() const
 
 int Output::refreshRate() const
 {
-    return m_currentMode->refreshRate();
-}
-
-void Output::moveTo(const QPoint &pos)
-{
-    if (m_position != pos) {
-        m_position = pos;
-        Q_EMIT geometryChanged();
-    }
+    return m_state.currentMode ? m_state.currentMode->refreshRate() : 0;
 }
 
 QSize Output::modeSize() const
 {
-    return m_currentMode->size();
+    return m_state.currentMode ? m_state.currentMode->size() : QSize();
 }
 
 QSize Output::pixelSize() const
 {
-    return orientateSize(m_currentMode->size());
+    return orientateSize(modeSize());
 }
 
 QByteArray Output::edid() const
@@ -199,29 +182,12 @@ QByteArray Output::edid() const
 
 QList<std::shared_ptr<OutputMode>> Output::modes() const
 {
-    return m_modes;
+    return m_state.modes;
 }
 
 std::shared_ptr<OutputMode> Output::currentMode() const
 {
-    return m_currentMode;
-}
-
-void Output::setModesInternal(const QList<std::shared_ptr<OutputMode>> &modes, const std::shared_ptr<OutputMode> &currentMode)
-{
-    const auto oldModes = m_modes;
-    const auto oldCurrentMode = m_currentMode;
-
-    m_modes = modes;
-    m_currentMode = currentMode;
-
-    if (m_modes != oldModes) {
-        Q_EMIT modesChanged();
-    }
-    if (m_currentMode != oldCurrentMode) {
-        Q_EMIT currentModeChanged();
-        Q_EMIT geometryChanged();
-    }
+    return m_state.currentMode;
 }
 
 Output::SubPixel Output::subPixel() const
@@ -234,43 +200,27 @@ void Output::applyChanges(const OutputConfiguration &config)
     auto props = config.constChangeSet(this);
     Q_EMIT aboutToChange();
 
-    setEnabled(props->enabled);
-    setTransformInternal(props->transform);
-    moveTo(props->pos);
-    setScale(props->scale);
+    State next = m_state;
+    next.enabled = props->enabled;
+    next.transform = props->transform;
+    next.position = props->pos;
+    next.scale = props->scale;
+    next.rgbRange = props->rgbRange;
+
+    setState(next);
     setVrrPolicy(props->vrrPolicy);
-    setRgbRangeInternal(props->rgbRange);
 
     Q_EMIT changed();
 }
 
 bool Output::isEnabled() const
 {
-    return m_isEnabled;
-}
-
-void Output::setEnabled(bool enable)
-{
-    if (m_isEnabled != enable) {
-        m_isEnabled = enable;
-        updateEnablement(enable);
-        Q_EMIT enabledChanged();
-    }
+    return m_state.enabled;
 }
 
 QString Output::description() const
 {
     return manufacturer() + ' ' + model();
-}
-
-void Output::setCurrentModeInternal(const std::shared_ptr<OutputMode> &currentMode)
-{
-    if (m_currentMode != currentMode) {
-        m_currentMode = currentMode;
-
-        Q_EMIT currentModeChanged();
-        Q_EMIT geometryChanged();
-    }
 }
 
 static QUuid generateOutputId(const QString &eisaId, const QString &model,
@@ -289,29 +239,50 @@ void Output::setInformation(const Information &information)
     m_uuid = generateOutputId(eisaId(), model(), serialNumber(), name());
 }
 
-QSize Output::orientateSize(const QSize &size) const
+void Output::setState(const State &state)
 {
-    if (m_transform == Transform::Rotated90 || m_transform == Transform::Rotated270 || m_transform == Transform::Flipped90 || m_transform == Transform::Flipped270) {
-        return size.transposed();
-    }
-    return size;
-}
+    const QRect oldGeometry = geometry();
+    const State oldState = m_state;
 
-void Output::setTransformInternal(Transform transform)
-{
-    if (m_transform != transform) {
-        m_transform = transform;
-        Q_EMIT transformChanged();
-        Q_EMIT currentModeChanged();
+    m_state = state;
+
+    if (oldGeometry != geometry()) {
         Q_EMIT geometryChanged();
     }
+    if (oldState.modes != state.modes) {
+        Q_EMIT modesChanged();
+    }
+    if (oldState.currentMode != state.currentMode) {
+        Q_EMIT currentModeChanged();
+    }
+    if (oldState.transform != state.transform) {
+        Q_EMIT transformChanged();
+    }
+    if (oldState.overscan != state.overscan) {
+        Q_EMIT overscanChanged();
+    }
+    if (oldState.dpmsMode != state.dpmsMode) {
+        Q_EMIT dpmsModeChanged();
+    }
+    if (oldState.rgbRange != state.rgbRange) {
+        Q_EMIT rgbRangeChanged();
+    }
+    if (oldState.enabled != state.enabled) {
+        updateEnablement(state.enabled);
+        Q_EMIT enabledChanged();
+    }
 }
 
-void Output::setDpmsModeInternal(DpmsMode dpmsMode)
+QSize Output::orientateSize(const QSize &size) const
 {
-    if (m_dpmsMode != dpmsMode) {
-        m_dpmsMode = dpmsMode;
-        Q_EMIT dpmsModeChanged();
+    switch (m_state.transform) {
+    case Transform::Rotated90:
+    case Transform::Rotated270:
+    case Transform::Flipped90:
+    case Transform::Flipped270:
+        return size.transposed();
+    default:
+        return size;
     }
 }
 
@@ -322,7 +293,7 @@ void Output::setDpmsMode(DpmsMode mode)
 
 Output::DpmsMode Output::dpmsMode() const
 {
-    return m_dpmsMode;
+    return m_state.dpmsMode;
 }
 
 QMatrix4x4 Output::logicalToNativeMatrix(const QRect &rect, qreal scale, Transform transform)
@@ -368,17 +339,9 @@ QMatrix4x4 Output::logicalToNativeMatrix(const QRect &rect, qreal scale, Transfo
     return matrix;
 }
 
-void Output::setOverscanInternal(uint32_t overscan)
-{
-    if (m_overscan != overscan) {
-        m_overscan = overscan;
-        Q_EMIT overscanChanged();
-    }
-}
-
 uint32_t Output::overscan() const
 {
-    return m_overscan;
+    return m_state.overscan;
 }
 
 void Output::setVrrPolicy(RenderLoop::VrrPolicy policy)
@@ -406,15 +369,7 @@ bool Output::isNonDesktop() const
 
 Output::RgbRange Output::rgbRange() const
 {
-    return m_rgbRange;
-}
-
-void Output::setRgbRangeInternal(RgbRange range)
-{
-    if (m_rgbRange != range) {
-        m_rgbRange = range;
-        Q_EMIT rgbRangeChanged();
-    }
+    return m_state.rgbRange;
 }
 
 void Output::setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation)

@@ -528,8 +528,6 @@ void X11StandalonePlatform::doUpdateOutputs()
                     output->setRenderLoop(m_renderLoop.get());
                     output->setCrtc(crtc);
                     output->setGammaRampSize(gamma.isNull() ? 0 : gamma->size);
-                    output->setMode(geometry.size(), refreshRate * 1000);
-                    output->moveTo(geometry.topLeft());
                     auto it = std::find(crtcs.begin(), crtcs.end(), crtc);
                     int crtcIndex = std::distance(crtcs.begin(), it);
                     output->setXineramaNumber(crtcIndex);
@@ -564,7 +562,15 @@ void X11StandalonePlatform::doUpdateOutputs()
                         }
                     }
 
+                    auto mode = std::make_shared<OutputMode>(geometry.size(), refreshRate * 1000);
+
+                    X11Output::State state = output->m_state;
+                    state.modes = {mode};
+                    state.currentMode = mode;
+                    state.position = geometry.topLeft();
+
                     output->setInformation(information);
+                    output->setState(state);
                     break;
                 }
             }
@@ -577,20 +583,28 @@ void X11StandalonePlatform::doUpdateOutputs()
         auto dummyOutput = new X11PlaceholderOutput(this);
         m_outputs << dummyOutput;
         Q_EMIT outputAdded(dummyOutput);
-        dummyOutput->setEnabled(true);
+        dummyOutput->updateEnabled(true);
     }
 
     // Process new outputs. Note new outputs must be introduced before removing any other outputs.
     for (Output *output : qAsConst(added)) {
         m_outputs.append(output);
         Q_EMIT outputAdded(output);
-        output->setEnabled(true);
+        if (auto placeholderOutput = qobject_cast<X11PlaceholderOutput *>(output)) {
+            placeholderOutput->updateEnabled(true);
+        } else if (auto nativeOutput = qobject_cast<X11Output *>(output)) {
+            nativeOutput->updateEnabled(true);
+        }
     }
 
     // Outputs have to be removed last to avoid the case where there are no enabled outputs.
     for (Output *output : qAsConst(removed)) {
         m_outputs.removeOne(output);
-        output->setEnabled(false);
+        if (auto placeholderOutput = qobject_cast<X11PlaceholderOutput *>(output)) {
+            placeholderOutput->updateEnabled(false);
+        } else if (auto nativeOutput = qobject_cast<X11Output *>(output)) {
+            nativeOutput->updateEnabled(false);
+        }
         Q_EMIT outputRemoved(output);
         delete output;
     }

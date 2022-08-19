@@ -299,7 +299,7 @@ void X11WindowedBackend::createOutputs()
 
         m_outputs << output;
         Q_EMIT outputAdded(output);
-        output->setEnabled(true);
+        output->updateEnabled(true);
     }
 
     updateWindowTitle();
@@ -497,7 +497,7 @@ void X11WindowedBackend::handleClientMessage(xcb_client_message_event_t *event)
                 auto removedOutput = *it;
                 it = m_outputs.erase(it);
 
-                removedOutput->setEnabled(false);
+                removedOutput->updateEnabled(false);
                 Q_EMIT outputRemoved(removedOutput);
                 delete removedOutput;
                 Q_EMIT screensQueried();

@@ -23,4 +23,6 @@ public:
     void setDpmsSupported(bool supported);
     void setPhysicalSize(QSize size);
     void setTransform(Transform transform);
+    void moveTo(const QPoint &pos);
+    void setScale(qreal scale);
 };

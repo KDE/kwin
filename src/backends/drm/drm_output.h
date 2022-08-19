@@ -55,6 +55,7 @@ public:
     void applyQueuedChanges(const OutputConfiguration &config);
     void revertQueuedChanges();
     void updateModes();
+    void updateDpmsMode(DpmsMode dpmsMode);
 
     bool usesSoftwareCursor() const override;
     void updateCursor();

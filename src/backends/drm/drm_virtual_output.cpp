@@ -20,20 +20,25 @@
 namespace KWin
 {
 
-DrmVirtualOutput::DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size, VirtualOutputType type)
+DrmVirtualOutput::DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size, qreal scale, VirtualOutputType type)
     : DrmAbstractOutput(gpu)
     , m_vsyncMonitor(SoftwareVsyncMonitor::create())
 {
     connect(m_vsyncMonitor.get(), &VsyncMonitor::vblankOccurred, this, &DrmVirtualOutput::vblank);
 
     auto mode = std::make_shared<OutputMode>(size, 60000, OutputMode::Flag::Preferred);
-    setModesInternal({mode}, mode);
     m_renderLoop->setRefreshRate(mode->refreshRate());
 
     setInformation(Information{
         .name = QStringLiteral("Virtual-") + name,
         .physicalSize = size,
         .placeholder = type == VirtualOutputType::Placeholder,
+    });
+
+    setState(State{
+        .scale = scale,
+        .modes = {mode},
+        .currentMode = mode,
     });
 
     recreateSurface();
@@ -60,7 +65,9 @@ void DrmVirtualOutput::vblank(std::chrono::nanoseconds timestamp)
 
 void DrmVirtualOutput::setDpmsMode(DpmsMode mode)
 {
-    setDpmsModeInternal(mode);
+    State next = m_state;
+    next.dpmsMode = mode;
+    setState(next);
 }
 
 DrmOutputLayer *DrmVirtualOutput::outputLayer() const

@@ -63,13 +63,11 @@ bool X11Output::usesSoftwareCursor() const
     return false;
 }
 
-void X11Output::setMode(const QSize &size, uint32_t refreshRate)
+void X11Output::updateEnabled(bool enabled)
 {
-    const auto current = currentMode();
-    if (!current || current->size() != size || current->refreshRate() != refreshRate) {
-        auto mode = std::make_shared<OutputMode>(size, refreshRate);
-        setModesInternal({mode}, mode);
-    }
+    State next = m_state;
+    next.enabled = enabled;
+    setState(next);
 }
 
 } // namespace KWin

@@ -57,4 +57,11 @@ DrmGpu *DrmAbstractOutput::gpu() const
     return m_gpu;
 }
 
+void DrmAbstractOutput::updateEnabled(bool enabled)
+{
+    State next = m_state;
+    next.enabled = enabled;
+    setState(next);
+}
+
 }

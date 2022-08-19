@@ -305,7 +305,7 @@ bool DrmGpu::updateOutputs()
             pipeline->applyPendingChanges();
             if (pipeline->output() && !pipeline->crtc()) {
                 pipeline->setEnable(false);
-                pipeline->output()->setEnabled(false);
+                pipeline->output()->updateEnabled(false);
             }
         }
     } else if (err == DrmPipeline::Error::NoPermission) {
@@ -328,7 +328,7 @@ bool DrmGpu::updateOutputs()
             pipeline->revertPendingChanges();
         }
         for (const auto &output : qAsConst(addedOutputs)) {
-            output->setEnabled(false);
+            output->updateEnabled(false);
             output->pipeline()->setEnable(false);
             output->pipeline()->applyPendingChanges();
         }
@@ -589,8 +589,7 @@ const QVector<DrmPipeline *> DrmGpu::pipelines() const
 
 DrmVirtualOutput *DrmGpu::createVirtualOutput(const QString &name, const QSize &size, double scale, VirtualOutputType type)
 {
-    auto output = new DrmVirtualOutput(name, this, size, type);
-    output->setScale(scale);
+    auto output = new DrmVirtualOutput(name, this, size, scale, type);
     m_outputs << output;
     Q_EMIT outputAdded(output);
     return output;

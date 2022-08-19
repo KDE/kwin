@@ -55,7 +55,7 @@ bool VirtualBackend::initialize()
         dummyOutput->init(QPoint(0, 0), initialWindowSize());
         m_outputs << dummyOutput;
         Q_EMIT outputAdded(dummyOutput);
-        dummyOutput->setEnabled(true);
+        dummyOutput->updateEnabled(true);
     }
     setReady(true);
 
@@ -104,15 +104,15 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
             sumWidth += initialWindowSize().width();
         }
         if (scales.size()) {
-            vo->setScale(scales.at(i));
+            vo->updateScale(scales.at(i));
         }
         m_outputs.append(vo);
         Q_EMIT outputAdded(vo);
-        vo->setEnabled(true);
+        vo->updateEnabled(true);
     }
 
     for (VirtualOutput *output : removed) {
-        output->setEnabled(false);
+        output->updateEnabled(false);
         m_outputs.removeOne(output);
         Q_EMIT outputRemoved(output);
         delete output;
@@ -124,7 +124,7 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
 void VirtualBackend::removeOutput(Output *output)
 {
     VirtualOutput *virtualOutput = static_cast<VirtualOutput *>(output);
-    virtualOutput->setEnabled(false);
+    virtualOutput->updateEnabled(false);
 
     m_outputs.removeOne(virtualOutput);
     Q_EMIT outputRemoved(virtualOutput);
