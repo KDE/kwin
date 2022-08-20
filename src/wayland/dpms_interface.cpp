@@ -7,6 +7,8 @@
 #include "dpms_interface_p.h"
 #include "output_interface.h"
 
+using namespace KWin;
+
 namespace KWaylandServer
 {
 static const quint32 s_version = 1;
@@ -26,11 +28,8 @@ void DpmsManagerInterfacePrivate::org_kde_kwin_dpms_manager_get(Resource *resour
         wl_client_post_no_memory(resource->client());
         return;
     }
-    auto dpms = new DpmsInterface(o, dpms_resource);
 
-    dpms->sendSupported();
-    dpms->sendMode();
-    dpms->sendDone();
+    new DpmsInterface(o, dpms_resource);
 }
 
 DpmsManagerInterface::DpmsManagerInterface(Display *display, QObject *parent)
@@ -44,19 +43,25 @@ DpmsManagerInterface::~DpmsManagerInterface() = default;
 DpmsInterface::DpmsInterface(OutputInterface *output, wl_resource *resource)
     : QObject()
     , QtWaylandServer::org_kde_kwin_dpms(resource)
-    , output(output)
+    , m_output(output)
 {
-    connect(output, &OutputInterface::dpmsSupportedChanged, this, [this] {
+    if (!m_output) {
+        return;
+    }
+
+    sendSupported();
+    sendMode();
+    sendDone();
+
+    connect(m_output->handle(), &Output::capabilitiesChanged, this, [this]() {
         sendSupported();
         sendDone();
     });
-    connect(output, &KWaylandServer::OutputInterface::dpmsModeChanged, this, [this] {
+    connect(m_output->handle(), &Output::dpmsModeChanged, this, [this]() {
         sendMode();
         sendDone();
     });
 }
-
-DpmsInterface::~DpmsInterface() = default;
 
 void DpmsInterface::org_kde_kwin_dpms_release(Resource *resource)
 {
@@ -72,34 +77,39 @@ void DpmsInterface::org_kde_kwin_dpms_destroy_resource(Resource *resource)
 void DpmsInterface::org_kde_kwin_dpms_set(Resource *resource, uint32_t mode)
 {
     Q_UNUSED(resource)
-    KWin::Output::DpmsMode dpmsMode;
+    if (!m_output) {
+        return;
+    }
+
+    Output::DpmsMode dpmsMode;
     switch (mode) {
     case ORG_KDE_KWIN_DPMS_MODE_ON:
-        dpmsMode = KWin::Output::DpmsMode::On;
+        dpmsMode = Output::DpmsMode::On;
         break;
     case ORG_KDE_KWIN_DPMS_MODE_STANDBY:
-        dpmsMode = KWin::Output::DpmsMode::Standby;
+        dpmsMode = Output::DpmsMode::Standby;
         break;
     case ORG_KDE_KWIN_DPMS_MODE_SUSPEND:
-        dpmsMode = KWin::Output::DpmsMode::Suspend;
+        dpmsMode = Output::DpmsMode::Suspend;
         break;
     case ORG_KDE_KWIN_DPMS_MODE_OFF:
-        dpmsMode = KWin::Output::DpmsMode::Off;
+        dpmsMode = Output::DpmsMode::Off;
         break;
     default:
         return;
     }
-    Q_EMIT output->dpmsModeRequested(dpmsMode);
+
+    m_output->handle()->setDpmsMode(dpmsMode);
 }
 
 void DpmsInterface::sendSupported()
 {
-    send_supported(output->isDpmsSupported() ? 1 : 0);
+    send_supported(m_output->handle()->capabilities() & Output::Capability::Dpms ? 1 : 0);
 }
 
 void DpmsInterface::sendMode()
 {
-    const auto mode = output->dpmsMode();
+    const auto mode = m_output->handle()->dpmsMode();
     org_kde_kwin_dpms_mode wlMode;
     switch (mode) {
     case KWin::Output::DpmsMode::On:

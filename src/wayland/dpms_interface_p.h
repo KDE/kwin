@@ -7,10 +7,13 @@
 
 #include "dpms_interface.h"
 
+#include <QPointer>
+
 #include <qwayland-server-dpms.h>
 
 namespace KWaylandServer
 {
+
 class OutputInterface;
 
 class DpmsManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_dpms_manager
@@ -29,13 +32,12 @@ class DpmsInterface : public QObject, QtWaylandServer::org_kde_kwin_dpms
     Q_OBJECT
 public:
     explicit DpmsInterface(OutputInterface *output, wl_resource *resource);
-    ~DpmsInterface() override;
 
     void sendSupported();
     void sendMode();
     void sendDone();
 
-    OutputInterface *output;
+    QPointer<OutputInterface> m_output;
 
 protected:
     void org_kde_kwin_dpms_destroy_resource(Resource *resource) override;

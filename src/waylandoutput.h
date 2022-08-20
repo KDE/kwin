@@ -24,9 +24,6 @@ public:
     explicit WaylandOutput(Output *output, QObject *parent = nullptr);
 
 private Q_SLOTS:
-    void handleDpmsModeChanged();
-    void handleDpmsModeRequested(KWin::Output::DpmsMode dpmsMode);
-
     void update();
     void scheduleUpdate();
 

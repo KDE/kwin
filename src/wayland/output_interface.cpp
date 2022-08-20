@@ -43,11 +43,6 @@ public:
     KWin::Output::SubPixel subPixel = KWin::Output::SubPixel::Unknown;
     KWin::Output::Transform transform = KWin::Output::Transform::Normal;
     OutputInterface::Mode mode;
-    struct
-    {
-        KWin::Output::DpmsMode mode = KWin::Output::DpmsMode::Off;
-        bool supported = false;
-    } dpms;
 
 private:
     void output_destroy_global() override;
@@ -351,34 +346,6 @@ void OutputInterface::setTransform(KWin::Output::Transform transform)
     Q_EMIT transformChanged(d->transform);
 }
 
-void OutputInterface::setDpmsMode(KWin::Output::DpmsMode mode)
-{
-    if (d->dpms.mode == mode) {
-        return;
-    }
-    d->dpms.mode = mode;
-    Q_EMIT dpmsModeChanged();
-}
-
-void OutputInterface::setDpmsSupported(bool supported)
-{
-    if (d->dpms.supported == supported) {
-        return;
-    }
-    d->dpms.supported = supported;
-    Q_EMIT dpmsSupportedChanged();
-}
-
-KWin::Output::DpmsMode OutputInterface::dpmsMode() const
-{
-    return d->dpms.mode;
-}
-
-bool OutputInterface::isDpmsSupported() const
-{
-    return d->dpms.supported;
-}
-
 QVector<wl_resource *> OutputInterface::clientResources(ClientConnection *client) const
 {
     const auto outputResources = d->resourceMap().values(client->client());
@@ -390,14 +357,6 @@ QVector<wl_resource *> OutputInterface::clientResources(ClientConnection *client
     }
 
     return ret;
-}
-
-bool OutputInterface::isEnabled() const
-{
-    if (!d->dpms.supported) {
-        return true;
-    }
-    return d->dpms.mode == KWin::Output::DpmsMode::On;
 }
 
 void OutputInterface::done()

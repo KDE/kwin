@@ -65,8 +65,6 @@ public:
     KWin::Output::SubPixel subPixel() const;
     KWin::Output::Transform transform() const;
     Mode mode() const;
-    bool isDpmsSupported() const;
-    KWin::Output::DpmsMode dpmsMode() const;
 
     void setPhysicalSize(const QSize &size);
     void setGlobalPosition(const QPoint &pos);
@@ -79,25 +77,9 @@ public:
     void setMode(const QSize &size, int refreshRate = 60000);
 
     /**
-     * Sets whether Dpms is supported for this output.
-     * Default is @c false.
-     */
-    void setDpmsSupported(bool supported);
-    /**
-     * Sets the currently used dpms mode.
-     * Default is @c DpmsMode::On.
-     */
-    void setDpmsMode(KWin::Output::DpmsMode mode);
-
-    /**
      * @returns all wl_resources bound for the @p client
      */
     QVector<wl_resource *> clientResources(ClientConnection *client) const;
-
-    /**
-     * Returns @c true if the output is on; otherwise returns false.
-     */
-    bool isEnabled() const;
 
     /**
      * Submit changes to all clients.
@@ -124,15 +106,7 @@ Q_SIGNALS:
     void subPixelChanged(KWin::Output::SubPixel);
     void transformChanged(KWin::Output::Transform);
     void modeChanged();
-    void dpmsModeChanged();
-    void dpmsSupportedChanged();
     void removed();
-
-    /**
-     * Change of dpms @p mode is requested.
-     * A server is free to ignore this request.
-     */
-    void dpmsModeRequested(KWin::Output::DpmsMode mode);
 
     /**
      * Emitted when a client binds to a given output

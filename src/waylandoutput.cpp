@@ -24,8 +24,6 @@ WaylandOutput::WaylandOutput(Output *output, QObject *parent)
     m_waylandOutput->setManufacturer(output->manufacturer());
     m_waylandOutput->setModel(output->model());
     m_waylandOutput->setPhysicalSize(output->physicalSize());
-    m_waylandOutput->setDpmsMode(output->dpmsMode());
-    m_waylandOutput->setDpmsSupported(output->capabilities() & Output::Capability::Dpms);
     m_waylandOutput->setGlobalPosition(geometry.topLeft());
     m_waylandOutput->setScale(std::ceil(output->scale()));
     m_waylandOutput->setMode(output->modeSize(), output->refreshRate());
@@ -38,12 +36,6 @@ WaylandOutput::WaylandOutput(Output *output, QObject *parent)
 
     m_waylandOutput->done();
     m_xdgOutputV1->done();
-
-    // The dpms functionality is not part of the wl_output interface, but org_kde_kwin_dpms.
-    connect(output, &Output::dpmsModeChanged,
-            this, &WaylandOutput::handleDpmsModeChanged);
-    connect(m_waylandOutput.get(), &KWaylandServer::OutputInterface::dpmsModeRequested,
-            this, &WaylandOutput::handleDpmsModeRequested);
 
     // The timer is used to compress output updates so the wayland clients are not spammed.
     m_updateTimer.setSingleShot(true);
@@ -74,16 +66,6 @@ void WaylandOutput::update()
 
     m_waylandOutput->done();
     m_xdgOutputV1->done();
-}
-
-void WaylandOutput::handleDpmsModeChanged()
-{
-    m_waylandOutput->setDpmsMode(m_platformOutput->dpmsMode());
-}
-
-void WaylandOutput::handleDpmsModeRequested(KWin::Output::DpmsMode dpmsMode)
-{
-    m_platformOutput->setDpmsMode(dpmsMode);
 }
 
 } // namespace KWin
