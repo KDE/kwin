@@ -129,7 +129,7 @@ Rectangle {
         id: grid
 
         property Item currentItem
-        readonly property real targetScale : 1 / Math.max(rows, columns)
+        readonly property real targetScale: Math.min(parent.width / width, parent.height / height)
         property real panelOpacity: 1
 
         Behavior on x {
@@ -161,8 +161,8 @@ Rectangle {
             }
         }
 
-        width: parent.width * columns
-        height: parent.height * rows
+        width: (parent.width + columnSpacing) * columns - columnSpacing
+        height: (parent.height + rowSpacing) * rows - rowSpacing
         rowSpacing: PlasmaCore.Units.gridUnit
         columnSpacing: PlasmaCore.Units.gridUnit
         rows: container.effect.gridRows
