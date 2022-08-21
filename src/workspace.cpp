@@ -2210,6 +2210,22 @@ void Workspace::desktopResized()
     }
 
     updateClientArea();
+
+    // restore cursor position
+    const auto oldCursorOutput = std::find_if(m_oldScreenGeometries.cbegin(), m_oldScreenGeometries.cend(), [](const auto &geometry) {
+        return geometry.contains(Cursors::self()->mouse()->pos());
+    });
+    if (oldCursorOutput != m_oldScreenGeometries.end()) {
+        const Output *cursorOutput = oldCursorOutput.key();
+        if (std::find(m_outputs.cbegin(), m_outputs.cend(), cursorOutput) != m_outputs.cend()) {
+            const QRect oldGeometry = oldCursorOutput.value();
+            const QRect newGeometry = cursorOutput->geometry();
+            const QPoint relativePosition = Cursors::self()->mouse()->pos() - oldGeometry.topLeft();
+            const QPoint newRelativePosition(newGeometry.width() * relativePosition.x() / float(oldGeometry.width()), newGeometry.height() * relativePosition.y() / float(oldGeometry.height()));
+            Cursors::self()->mouse()->setPos(newGeometry.topLeft() + newRelativePosition);
+        }
+    }
+
     saveOldScreenSizes(); // after updateClientArea(), so that one still uses the previous one
 
     // TODO: emit a signal instead and remove the deep function calls into edges and effects
