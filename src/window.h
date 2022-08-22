@@ -1033,8 +1033,8 @@ public:
     Q_INVOKABLE void setMaximize(bool vertically, bool horizontally);
     virtual bool noBorder() const;
     virtual void setNoBorder(bool set);
-    QPalette palette() const;
-    const Decoration::DecorationPalette *decorationPalette() const;
+    QPalette palette();
+    const Decoration::DecorationPalette *decorationPalette();
     /**
      * Returns whether the window is resizable or has a fixed size.
      */
@@ -1658,6 +1658,7 @@ protected:
 
     void setupWindowManagementInterface();
     void updateColorScheme();
+    void ensurePalette();
     void setTransientFor(Window *transientFor);
     /**
      * Just removes the @p cl from the transients without any further checks.

@@ -1417,16 +1417,15 @@ void Window::doMinimize()
 {
 }
 
-QPalette Window::palette() const
+QPalette Window::palette()
 {
-    if (!m_palette) {
-        return QPalette();
-    }
+    ensurePalette();
     return m_palette->palette();
 }
 
-const Decoration::DecorationPalette *Window::decorationPalette() const
+const Decoration::DecorationPalette *Window::decorationPalette()
 {
+    ensurePalette();
     return m_palette.get();
 }
 
@@ -1447,45 +1446,60 @@ void Window::setColorScheme(const QString &colorScheme)
         requestedColorScheme = QStringLiteral("kdeglobals");
     }
 
-    if (!m_palette || m_colorScheme != requestedColorScheme) {
-        m_colorScheme = requestedColorScheme;
-
-        if (m_palette) {
-            disconnect(m_palette.get(), &Decoration::DecorationPalette::changed, this, &Window::handlePaletteChange);
-        }
-
-        auto it = s_palettes.find(m_colorScheme);
-
-        if (it == s_palettes.end() || it->expired()) {
-            m_palette = std::make_shared<Decoration::DecorationPalette>(m_colorScheme);
-            if (m_palette->isValid()) {
-                s_palettes[m_colorScheme] = m_palette;
-            } else {
-                if (!s_defaultPalette) {
-                    s_defaultPalette = std::make_shared<Decoration::DecorationPalette>(QStringLiteral("kdeglobals"));
-                    s_palettes[QStringLiteral("kdeglobals")] = s_defaultPalette;
-                }
-
-                m_palette = s_defaultPalette;
-            }
-
-            if (m_colorScheme == QStringLiteral("kdeglobals")) {
-                s_defaultPalette = m_palette;
-            }
-        } else {
-            m_palette = it->lock();
-        }
-
-        connect(m_palette.get(), &Decoration::DecorationPalette::changed, this, &Window::handlePaletteChange);
-
-        Q_EMIT paletteChanged(palette());
-        Q_EMIT colorSchemeChanged();
+    if (m_colorScheme == requestedColorScheme) {
+        return;
     }
+
+    m_colorScheme = requestedColorScheme;
+
+    if (m_palette) {
+        disconnect(m_palette.get(), &Decoration::DecorationPalette::changed, this, &Window::handlePaletteChange);
+        m_palette.reset();
+
+        // If there already was a palette, re-create it right away
+        // so the signals for repainting the decoration are emitted.
+        ensurePalette();
+    }
+
+    Q_EMIT colorSchemeChanged();
 }
 
 void Window::updateColorScheme()
 {
     setColorScheme(preferredColorScheme());
+}
+
+void Window::ensurePalette()
+{
+    if (m_palette) {
+        return;
+    }
+
+    auto it = s_palettes.find(m_colorScheme);
+
+    if (it == s_palettes.end() || it->expired()) {
+        m_palette = std::make_shared<Decoration::DecorationPalette>(m_colorScheme);
+        if (m_palette->isValid()) {
+            s_palettes[m_colorScheme] = m_palette;
+        } else {
+            if (!s_defaultPalette) {
+                s_defaultPalette = std::make_shared<Decoration::DecorationPalette>(QStringLiteral("kdeglobals"));
+                s_palettes[QStringLiteral("kdeglobals")] = s_defaultPalette;
+            }
+
+            m_palette = s_defaultPalette;
+        }
+
+        if (m_colorScheme == QStringLiteral("kdeglobals")) {
+            s_defaultPalette = m_palette;
+        }
+    } else {
+        m_palette = it->lock();
+    }
+
+    connect(m_palette.get(), &Decoration::DecorationPalette::changed, this, &Window::handlePaletteChange);
+
+    handlePaletteChange();
 }
 
 void Window::handlePaletteChange()
