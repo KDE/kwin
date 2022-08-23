@@ -51,7 +51,7 @@ public:
 
 private:
     friend class DataDeviceManagerInterfacePrivate;
-    explicit DataSourceInterface(DataDeviceManagerInterface *parent, wl_resource *parentResource);
+    explicit DataSourceInterface(wl_resource *resource);
 
     std::unique_ptr<DataSourceInterfacePrivate> d;
 };

@@ -1605,6 +1605,7 @@ QModelIndex DataSourceModel::index(int row, int column, const QModelIndex &paren
 
 QModelIndex DataSourceModel::parent(const QModelIndex &child) const
 {
+    Q_UNUSED(child)
     return QModelIndex();
 }
 

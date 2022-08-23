@@ -41,7 +41,7 @@ void PrimarySelectionDeviceManagerV1InterfacePrivate::zwp_primary_selection_devi
         wl_resource_post_no_memory(resource->handle);
         return;
     }
-    PrimarySelectionSourceV1Interface *dataSource = new PrimarySelectionSourceV1Interface(q, data_source_resource);
+    PrimarySelectionSourceV1Interface *dataSource = new PrimarySelectionSourceV1Interface(data_source_resource);
     Q_EMIT q->dataSourceCreated(dataSource);
 }
 

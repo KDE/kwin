@@ -44,7 +44,7 @@ void DataDeviceManagerInterfacePrivate::data_device_manager_create_data_source(R
         wl_resource_post_no_memory(resource->handle);
         return;
     }
-    DataSourceInterface *dataSource = new DataSourceInterface(q, data_source_resource);
+    DataSourceInterface *dataSource = new DataSourceInterface(data_source_resource);
     Q_EMIT q->dataSourceCreated(dataSource);
 }
 

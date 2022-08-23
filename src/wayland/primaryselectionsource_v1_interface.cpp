@@ -55,7 +55,7 @@ void PrimarySelectionSourceV1InterfacePrivate::zwp_primary_selection_source_v1_d
     wl_resource_destroy(resource->handle);
 }
 
-PrimarySelectionSourceV1Interface::PrimarySelectionSourceV1Interface(PrimarySelectionDeviceManagerV1Interface *parent, ::wl_resource *resource)
+PrimarySelectionSourceV1Interface::PrimarySelectionSourceV1Interface(::wl_resource *resource)
     : d(new PrimarySelectionSourceV1InterfacePrivate(this, resource))
 {
 }

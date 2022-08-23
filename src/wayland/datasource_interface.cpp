@@ -93,7 +93,7 @@ void DataSourceInterfacePrivate::data_source_set_actions(Resource *resource, uin
     }
 }
 
-DataSourceInterface::DataSourceInterface(DataDeviceManagerInterface *parent, wl_resource *resource)
+DataSourceInterface::DataSourceInterface(wl_resource *resource)
     : d(new DataSourceInterfacePrivate(this, resource))
 {
     if (d->resource()->version() < WL_DATA_SOURCE_ACTION_SINCE_VERSION) {

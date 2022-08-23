@@ -29,7 +29,7 @@ class KWIN_EXPORT EglOnXBackend : public AbstractEglBackend
 
 public:
     EglOnXBackend(Display *display);
-    explicit EglOnXBackend(xcb_connection_t *connection, Display *display, xcb_window_t rootWindow, int screenNumber, xcb_window_t renderingWindow);
+    explicit EglOnXBackend(xcb_connection_t *connection, Display *display, xcb_window_t rootWindow, xcb_window_t renderingWindow);
     ~EglOnXBackend() override;
     OverlayWindow *overlayWindow() const override;
     void init() override;

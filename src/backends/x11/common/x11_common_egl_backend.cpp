@@ -35,7 +35,7 @@ EglOnXBackend::EglOnXBackend(Display *display)
     setIsDirectRendering(true);
 }
 
-EglOnXBackend::EglOnXBackend(xcb_connection_t *connection, Display *display, xcb_window_t rootWindow, int screenNumber, xcb_window_t renderingWindow)
+EglOnXBackend::EglOnXBackend(xcb_connection_t *connection, Display *display, xcb_window_t rootWindow, xcb_window_t renderingWindow)
     : AbstractEglBackend()
     , m_overlayWindow(nullptr)
     , surfaceHasSubPost(0)

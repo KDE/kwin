@@ -310,9 +310,6 @@ void Workspace::initializeX11()
     // Select windowmanager privileges
     selectWmInputEventMask();
 
-    // Compatibility
-    int32_t data = 1;
-
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         m_wasUserInteractionFilter.reset(new WasUserInteractionX11Filter);
         m_movingClientFilter.reset(new MovingClientX11Filter);

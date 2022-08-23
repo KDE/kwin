@@ -508,7 +508,6 @@ void DrmOutput::renderCursorOpengl(const RenderTarget &renderTarget, const QSize
 
 void DrmOutput::renderCursorQPainter(const RenderTarget &renderTarget)
 {
-    const auto layer = m_pipeline->cursorLayer();
     const Cursor *cursor = Cursors::self()->currentCursor();
     const QImage cursorImage = cursor->image();
 
