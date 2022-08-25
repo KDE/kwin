@@ -328,11 +328,8 @@ protected:
 
     QSize orientateSize(const QSize &size) const;
 
-    State m_state;
-
-private:
-    Q_DISABLE_COPY(Output)
     EffectScreenImpl *m_effectScreen = nullptr;
+    State m_state;
     Information m_information;
     QUuid m_uuid;
     int m_directScanoutCount = 0;
