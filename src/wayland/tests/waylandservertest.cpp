@@ -9,6 +9,8 @@
 #include "../seat_interface.h"
 #include "../xdgshell_interface.h"
 
+#include "fakeoutput.h"
+
 #include <QFile>
 #include <QGuiApplication>
 #include <private/qeventdispatcher_glib_p.h>
@@ -75,9 +77,14 @@ int main(int argc, char **argv)
     display.createShm();
     new CompositorInterface(&display, &display);
     new XdgShellInterface(&display, &display);
-    OutputInterface *output = new OutputInterface(&display, &display);
-    output->setPhysicalSize(QSize(10, 10));
-    output->setMode(QSize(1024, 768));
+
+    auto outputHandle = std::make_unique<FakeOutput>();
+    outputHandle->setMode(QSize(1024, 768), 60000);
+    outputHandle->setPhysicalSize(QSize(10, 10));
+
+    OutputInterface *outputInterface = new OutputInterface(&display, outputHandle.get(), &display);
+    outputInterface->setPhysicalSize(QSize(10, 10));
+    outputInterface->setMode(QSize(1024, 768));
 
     // starts XWayland by forking and opening a pipe
     const int pipe = startXServer();

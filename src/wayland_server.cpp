@@ -309,16 +309,6 @@ void WaylandServer::setEnablePrimarySelection(bool enable)
     }
 }
 
-Output *WaylandServer::findOutput(KWaylandServer::OutputInterface *outputIface) const
-{
-    for (auto it = m_waylandOutputs.constBegin(); it != m_waylandOutputs.constEnd(); ++it) {
-        if ((*it)->waylandOutput() == outputIface) {
-            return it.key();
-        }
-    }
-    return nullptr;
-}
-
 bool WaylandServer::start()
 {
     return m_display->start();

@@ -7,14 +7,14 @@
 #include <QtTest>
 // KWin
 #include "wayland/display.h"
-#include "wayland/dpms_interface.h"
 #include "wayland/output_interface.h"
 
 #include "KWayland/Client/connection_thread.h"
-#include "KWayland/Client/dpms.h"
 #include "KWayland/Client/event_queue.h"
 #include "KWayland/Client/output.h"
 #include "KWayland/Client/registry.h"
+
+#include "../../tests/fakeoutput.h"
 
 // Wayland
 #include <wayland-client-protocol.h>
@@ -38,15 +38,10 @@ private Q_SLOTS:
     void testTransform_data();
     void testTransform();
 
-    void testDpms_data();
-    void testDpms();
-
-    void testDpmsRequestMode_data();
-    void testDpmsRequestMode();
-
 private:
     KWaylandServer::Display *m_display;
-    KWaylandServer::OutputInterface *m_serverOutput;
+    std::unique_ptr<FakeOutput> m_outputHandle;
+    std::unique_ptr<KWaylandServer::OutputInterface> m_outputInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::EventQueue *m_queue;
     QThread *m_thread;
@@ -57,7 +52,6 @@ static const QString s_socketName = QStringLiteral("kwin-test-wayland-output-0")
 TestWaylandOutput::TestWaylandOutput(QObject *parent)
     : QObject(parent)
     , m_display(nullptr)
-    , m_serverOutput(nullptr)
     , m_connection(nullptr)
     , m_thread(nullptr)
 {
@@ -72,14 +66,11 @@ void TestWaylandOutput::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
 
-    m_serverOutput = new OutputInterface(m_display, this);
-    QCOMPARE(m_serverOutput->pixelSize(), QSize());
-    QCOMPARE(m_serverOutput->refreshRate(), 60000);
-    m_serverOutput->setMode(QSize(1024, 768));
-    QCOMPARE(m_serverOutput->pixelSize(), QSize(1024, 768));
-    QCOMPARE(m_serverOutput->refreshRate(), 60000);
-    QCOMPARE(m_serverOutput->isDpmsSupported(), false);
-    QCOMPARE(m_serverOutput->dpmsMode(), KWin::Output::DpmsMode::Off);
+    m_outputHandle = std::make_unique<FakeOutput>();
+    m_outputHandle->setMode(QSize(1024, 768), 60000);
+
+    m_outputInterface = std::make_unique<OutputInterface>(m_display, m_outputHandle.get());
+    m_outputInterface->setMode(QSize(1024, 768), 60000);
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -117,32 +108,36 @@ void TestWaylandOutput::cleanup()
     delete m_display;
     m_display = nullptr;
 
-    // these are the children of the display
-    m_serverOutput = nullptr;
+    m_outputInterface.reset();
+    m_outputHandle.reset();
 }
 
 void TestWaylandOutput::testRegistry()
 {
-    QSignalSpy globalPositionChangedSpy(m_serverOutput, &KWaylandServer::OutputInterface::globalPositionChanged);
+    QSignalSpy globalPositionChangedSpy(m_outputInterface.get(), &KWaylandServer::OutputInterface::globalPositionChanged);
     QVERIFY(globalPositionChangedSpy.isValid());
-    QCOMPARE(m_serverOutput->globalPosition(), QPoint(0, 0));
-    m_serverOutput->setGlobalPosition(QPoint(100, 50));
-    QCOMPARE(m_serverOutput->globalPosition(), QPoint(100, 50));
+    QCOMPARE(m_outputInterface->globalPosition(), QPoint(0, 0));
+    m_outputHandle->moveTo(QPoint(100, 50));
+    m_outputInterface->setGlobalPosition(QPoint(100, 50));
+    QCOMPARE(m_outputInterface->globalPosition(), QPoint(100, 50));
     QCOMPARE(globalPositionChangedSpy.count(), 1);
     // changing again should not trigger signal
-    m_serverOutput->setGlobalPosition(QPoint(100, 50));
+    m_outputHandle->moveTo(QPoint(100, 50));
+    m_outputInterface->setGlobalPosition(QPoint(100, 50));
     QCOMPARE(globalPositionChangedSpy.count(), 1);
 
-    QSignalSpy physicalSizeChangedSpy(m_serverOutput, &KWaylandServer::OutputInterface::physicalSizeChanged);
+    QSignalSpy physicalSizeChangedSpy(m_outputInterface.get(), &KWaylandServer::OutputInterface::physicalSizeChanged);
     QVERIFY(physicalSizeChangedSpy.isValid());
-    QCOMPARE(m_serverOutput->physicalSize(), QSize());
-    m_serverOutput->setPhysicalSize(QSize(200, 100));
-    QCOMPARE(m_serverOutput->physicalSize(), QSize(200, 100));
+    QCOMPARE(m_outputInterface->physicalSize(), QSize());
+    m_outputHandle->setPhysicalSize(QSize(200, 100));
+    m_outputInterface->setPhysicalSize(QSize(200, 100));
+    QCOMPARE(m_outputInterface->physicalSize(), QSize(200, 100));
     QCOMPARE(physicalSizeChangedSpy.count(), 1);
     // changing again should not trigger signal
-    m_serverOutput->setPhysicalSize(QSize(200, 100));
+    m_outputHandle->setPhysicalSize(QSize(200, 100));
+    m_outputInterface->setPhysicalSize(QSize(200, 100));
     QCOMPARE(physicalSizeChangedSpy.count(), 1);
-    m_serverOutput->done();
+    m_outputInterface->done();
 
     KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, &KWayland::Client::Registry::outputAnnounced);
@@ -218,9 +213,10 @@ void TestWaylandOutput::testModeChange()
     QCOMPARE(output.refreshRate(), 60000);
 
     // change once more
-    m_serverOutput->setMode(QSize(1280, 1024), 90000);
-    QCOMPARE(m_serverOutput->refreshRate(), 90000);
-    m_serverOutput->done();
+    m_outputHandle->setMode(QSize(1280, 1024), 90000);
+    m_outputInterface->setMode(QSize(1280, 1024), 90000);
+    QCOMPARE(m_outputInterface->refreshRate(), 90000);
+    m_outputInterface->done();
     QVERIFY(outputChanged.wait());
     QCOMPARE(modeAddedSpy.count(), 2);
     QCOMPARE(modeAddedSpy.at(1).first().value<Output::Mode>().size, QSize(1280, 1024));
@@ -251,24 +247,27 @@ void TestWaylandOutput::testScaleChange()
 
     // change the scale
     outputChanged.clear();
-    QCOMPARE(m_serverOutput->scale(), 1);
-    QSignalSpy serverScaleChanged(m_serverOutput, &KWaylandServer::OutputInterface::scaleChanged);
+    QCOMPARE(m_outputInterface->scale(), 1);
+    QSignalSpy serverScaleChanged(m_outputInterface.get(), &KWaylandServer::OutputInterface::scaleChanged);
     QVERIFY(serverScaleChanged.isValid());
-    m_serverOutput->setScale(2);
-    QCOMPARE(m_serverOutput->scale(), 2);
-    m_serverOutput->done();
+    m_outputHandle->setScale(2);
+    m_outputInterface->setScale(2);
+    QCOMPARE(m_outputInterface->scale(), 2);
+    m_outputInterface->done();
     QCOMPARE(serverScaleChanged.count(), 1);
     QVERIFY(outputChanged.wait());
     QCOMPARE(output.scale(), 2);
     // changing to same value should not trigger
-    m_serverOutput->setScale(2);
+    m_outputHandle->setScale(2);
+    m_outputInterface->setScale(2);
     QCOMPARE(serverScaleChanged.count(), 1);
     QVERIFY(!outputChanged.wait(100));
 
     // change once more
     outputChanged.clear();
-    m_serverOutput->setScale(4);
-    m_serverOutput->done();
+    m_outputHandle->setScale(4);
+    m_outputInterface->setScale(4);
+    m_outputInterface->done();
     QVERIFY(outputChanged.wait());
     QCOMPARE(output.scale(), 4);
 }
@@ -292,14 +291,16 @@ void TestWaylandOutput::testSubPixel()
     using namespace KWayland::Client;
     using namespace KWaylandServer;
     QFETCH(KWin::Output::SubPixel, actual);
-    QCOMPARE(m_serverOutput->subPixel(), KWin::Output::SubPixel::Unknown);
-    QSignalSpy serverSubPixelChangedSpy(m_serverOutput, &KWaylandServer::OutputInterface::subPixelChanged);
+    QCOMPARE(m_outputInterface->subPixel(), KWin::Output::SubPixel::Unknown);
+    QSignalSpy serverSubPixelChangedSpy(m_outputInterface.get(), &KWaylandServer::OutputInterface::subPixelChanged);
     QVERIFY(serverSubPixelChangedSpy.isValid());
-    m_serverOutput->setSubPixel(actual);
-    QCOMPARE(m_serverOutput->subPixel(), actual);
+    m_outputHandle->setSubPixel(actual);
+    m_outputInterface->setSubPixel(actual);
+    QCOMPARE(m_outputInterface->subPixel(), actual);
     QCOMPARE(serverSubPixelChangedSpy.count(), 1);
     // changing to same value should not trigger the signal
-    m_serverOutput->setSubPixel(actual);
+    m_outputHandle->setSubPixel(actual);
+    m_outputInterface->setSubPixel(actual);
     QCOMPARE(serverSubPixelChangedSpy.count(), 1);
 
     KWayland::Client::Registry registry;
@@ -323,9 +324,10 @@ void TestWaylandOutput::testSubPixel()
 
     // change back to unknown
     outputChanged.clear();
-    m_serverOutput->setSubPixel(KWin::Output::SubPixel::Unknown);
-    QCOMPARE(m_serverOutput->subPixel(), KWin::Output::SubPixel::Unknown);
-    m_serverOutput->done();
+    m_outputHandle->setSubPixel(KWin::Output::SubPixel::Unknown);
+    m_outputInterface->setSubPixel(KWin::Output::SubPixel::Unknown);
+    QCOMPARE(m_outputInterface->subPixel(), KWin::Output::SubPixel::Unknown);
+    m_outputInterface->done();
     QCOMPARE(serverSubPixelChangedSpy.count(), 2);
     if (outputChanged.isEmpty()) {
         QVERIFY(outputChanged.wait());
@@ -354,14 +356,16 @@ void TestWaylandOutput::testTransform()
     using namespace KWayland::Client;
     using namespace KWaylandServer;
     QFETCH(KWin::Output::Transform, actual);
-    QCOMPARE(m_serverOutput->transform(), KWin::Output::Transform::Normal);
-    QSignalSpy serverTransformChangedSpy(m_serverOutput, &KWaylandServer::OutputInterface::transformChanged);
+    QCOMPARE(m_outputInterface->transform(), KWin::Output::Transform::Normal);
+    QSignalSpy serverTransformChangedSpy(m_outputInterface.get(), &KWaylandServer::OutputInterface::transformChanged);
     QVERIFY(serverTransformChangedSpy.isValid());
-    m_serverOutput->setTransform(actual);
-    QCOMPARE(m_serverOutput->transform(), actual);
+    m_outputHandle->setTransform(actual);
+    m_outputInterface->setTransform(actual);
+    QCOMPARE(m_outputInterface->transform(), actual);
     QCOMPARE(serverTransformChangedSpy.count(), 1);
     // changing to same should not trigger signal
-    m_serverOutput->setTransform(actual);
+    m_outputHandle->setTransform(actual);
+    m_outputInterface->setTransform(actual);
     QCOMPARE(serverTransformChangedSpy.count(), 1);
 
     KWayland::Client::Registry registry;
@@ -384,170 +388,15 @@ void TestWaylandOutput::testTransform()
 
     // change back to normal
     outputChanged.clear();
-    m_serverOutput->setTransform(KWin::Output::Transform::Normal);
-    QCOMPARE(m_serverOutput->transform(), KWin::Output::Transform::Normal);
-    m_serverOutput->done();
+    m_outputHandle->setTransform(KWin::Output::Transform::Normal);
+    m_outputInterface->setTransform(KWin::Output::Transform::Normal);
+    QCOMPARE(m_outputInterface->transform(), KWin::Output::Transform::Normal);
+    m_outputInterface->done();
     QCOMPARE(serverTransformChangedSpy.count(), 2);
     if (outputChanged.isEmpty()) {
         QVERIFY(outputChanged.wait());
     }
     QCOMPARE(output->transform(), Output::Transform::Normal);
-}
-
-void TestWaylandOutput::testDpms_data()
-{
-    using namespace KWayland::Client;
-    using namespace KWaylandServer;
-
-    QTest::addColumn<KWayland::Client::Dpms::Mode>("client");
-    QTest::addColumn<KWin::Output::DpmsMode>("server");
-
-    QTest::newRow("Standby") << Dpms::Mode::Standby << KWin::Output::DpmsMode::Standby;
-    QTest::newRow("Suspend") << Dpms::Mode::Suspend << KWin::Output::DpmsMode::Suspend;
-    QTest::newRow("On") << Dpms::Mode::On << KWin::Output::DpmsMode::On;
-}
-
-void TestWaylandOutput::testDpms()
-{
-    using namespace KWayland::Client;
-    using namespace KWaylandServer;
-
-    DpmsManagerInterface iface(m_display);
-
-    // set Dpms on the Output
-    QSignalSpy serverDpmsSupportedChangedSpy(m_serverOutput, &OutputInterface::dpmsSupportedChanged);
-    QVERIFY(serverDpmsSupportedChangedSpy.isValid());
-    QCOMPARE(m_serverOutput->isDpmsSupported(), false);
-    m_serverOutput->setDpmsSupported(true);
-    QCOMPARE(serverDpmsSupportedChangedSpy.count(), 1);
-    QCOMPARE(m_serverOutput->isDpmsSupported(), true);
-
-    KWayland::Client::Registry registry;
-    registry.setEventQueue(m_queue);
-    QSignalSpy announced(&registry, &Registry::interfacesAnnounced);
-    QVERIFY(announced.isValid());
-    QSignalSpy dpmsAnnouncedSpy(&registry, &Registry::dpmsAnnounced);
-    QVERIFY(dpmsAnnouncedSpy.isValid());
-    registry.create(m_connection->display());
-    QVERIFY(registry.isValid());
-    registry.setup();
-    m_connection->flush();
-    QVERIFY(announced.wait());
-    QCOMPARE(dpmsAnnouncedSpy.count(), 1);
-
-    Output *output =
-        registry.createOutput(registry.interface(Registry::Interface::Output).name, registry.interface(Registry::Interface::Output).version, &registry);
-
-    DpmsManager *dpmsManager =
-        registry.createDpmsManager(dpmsAnnouncedSpy.first().first().value<quint32>(), dpmsAnnouncedSpy.first().last().value<quint32>(), &registry);
-    QVERIFY(dpmsManager->isValid());
-
-    Dpms *dpms = dpmsManager->getDpms(output, &registry);
-    QSignalSpy clientDpmsSupportedChangedSpy(dpms, &Dpms::supportedChanged);
-    QVERIFY(clientDpmsSupportedChangedSpy.isValid());
-    QVERIFY(dpms->isValid());
-    QCOMPARE(dpms->isSupported(), false);
-    QCOMPARE(dpms->mode(), Dpms::Mode::On);
-    m_connection->flush();
-    QVERIFY(clientDpmsSupportedChangedSpy.wait());
-    QCOMPARE(clientDpmsSupportedChangedSpy.count(), 1);
-    QCOMPARE(dpms->isSupported(), true);
-
-    // and let's change to suspend
-    QSignalSpy serverDpmsModeChangedSpy(m_serverOutput, &KWaylandServer::OutputInterface::dpmsModeChanged);
-    QVERIFY(serverDpmsModeChangedSpy.isValid());
-    QSignalSpy clientDpmsModeChangedSpy(dpms, &Dpms::modeChanged);
-    QVERIFY(clientDpmsModeChangedSpy.isValid());
-
-    QCOMPARE(m_serverOutput->dpmsMode(), KWin::Output::DpmsMode::Off);
-    QFETCH(KWin::Output::DpmsMode, server);
-    m_serverOutput->setDpmsMode(server);
-    QCOMPARE(m_serverOutput->dpmsMode(), server);
-    QCOMPARE(serverDpmsModeChangedSpy.count(), 1);
-
-    QVERIFY(clientDpmsModeChangedSpy.wait());
-    QCOMPARE(clientDpmsModeChangedSpy.count(), 1);
-    QTEST(dpms->mode(), "client");
-
-    // test supported changed
-    QSignalSpy supportedChangedSpy(dpms, &Dpms::supportedChanged);
-    QVERIFY(supportedChangedSpy.isValid());
-    m_serverOutput->setDpmsSupported(false);
-    QVERIFY(supportedChangedSpy.wait());
-    QCOMPARE(supportedChangedSpy.count(), 1);
-    QVERIFY(!dpms->isSupported());
-    m_serverOutput->setDpmsSupported(true);
-    QVERIFY(supportedChangedSpy.wait());
-    QCOMPARE(supportedChangedSpy.count(), 2);
-    QVERIFY(dpms->isSupported());
-
-    // and switch back to off
-    m_serverOutput->setDpmsMode(KWin::Output::DpmsMode::Off);
-    QVERIFY(clientDpmsModeChangedSpy.wait());
-    QCOMPARE(clientDpmsModeChangedSpy.count(), 2);
-    QCOMPARE(dpms->mode(), Dpms::Mode::Off);
-}
-
-void TestWaylandOutput::testDpmsRequestMode_data()
-{
-    using namespace KWayland::Client;
-    using namespace KWaylandServer;
-
-    QTest::addColumn<KWayland::Client::Dpms::Mode>("client");
-    QTest::addColumn<KWin::Output::DpmsMode>("server");
-
-    QTest::newRow("Standby") << Dpms::Mode::Standby << KWin::Output::DpmsMode::Standby;
-    QTest::newRow("Suspend") << Dpms::Mode::Suspend << KWin::Output::DpmsMode::Suspend;
-    QTest::newRow("Off") << Dpms::Mode::Off << KWin::Output::DpmsMode::Off;
-    QTest::newRow("On") << Dpms::Mode::On << KWin::Output::DpmsMode::On;
-}
-
-void TestWaylandOutput::testDpmsRequestMode()
-{
-    // this test verifies that requesting a dpms change from client side emits the signal on server side
-    using namespace KWayland::Client;
-    using namespace KWaylandServer;
-
-    // setup code
-    DpmsManagerInterface iface(m_display);
-
-    // set Dpms on the Output
-    QSignalSpy serverDpmsSupportedChangedSpy(m_serverOutput, &OutputInterface::dpmsSupportedChanged);
-    QVERIFY(serverDpmsSupportedChangedSpy.isValid());
-    QCOMPARE(m_serverOutput->isDpmsSupported(), false);
-    m_serverOutput->setDpmsSupported(true);
-    QCOMPARE(serverDpmsSupportedChangedSpy.count(), 1);
-    QCOMPARE(m_serverOutput->isDpmsSupported(), true);
-
-    KWayland::Client::Registry registry;
-    registry.setEventQueue(m_queue);
-    QSignalSpy announced(&registry, &Registry::interfacesAnnounced);
-    QVERIFY(announced.isValid());
-    QSignalSpy dpmsAnnouncedSpy(&registry, &Registry::dpmsAnnounced);
-    QVERIFY(dpmsAnnouncedSpy.isValid());
-    registry.create(m_connection->display());
-    QVERIFY(registry.isValid());
-    registry.setup();
-    m_connection->flush();
-    QVERIFY(announced.wait());
-    QCOMPARE(dpmsAnnouncedSpy.count(), 1);
-
-    Output *output =
-        registry.createOutput(registry.interface(Registry::Interface::Output).name, registry.interface(Registry::Interface::Output).version, &registry);
-
-    DpmsManager *dpmsManager =
-        registry.createDpmsManager(dpmsAnnouncedSpy.first().first().value<quint32>(), dpmsAnnouncedSpy.first().last().value<quint32>(), &registry);
-    QVERIFY(dpmsManager->isValid());
-
-    Dpms *dpms = dpmsManager->getDpms(output, &registry);
-    // and test request mode
-    QSignalSpy modeRequestedSpy(m_serverOutput, &KWaylandServer::OutputInterface::dpmsModeRequested);
-    QVERIFY(modeRequestedSpy.isValid());
-
-    QFETCH(Dpms::Mode, client);
-    dpms->requestMode(client);
-    QVERIFY(modeRequestedSpy.wait());
-    QTEST(modeRequestedSpy.last().first().value<KWin::Output::DpmsMode>(), "server");
 }
 
 QTEST_GUILESS_MAIN(TestWaylandOutput)

@@ -25,6 +25,8 @@
 #include "KWayland/Client/shm_pool.h"
 #include "KWayland/Client/surface.h"
 
+#include "../../tests/fakeoutput.h"
+
 // Wayland
 #include <wayland-client-protocol.h>
 
@@ -1022,7 +1024,8 @@ void TestWaylandSurface::testOutput()
     QSignalSpy outputAnnouncedSpy(&registry, &Registry::outputAnnounced);
     QVERIFY(outputAnnouncedSpy.isValid());
 
-    auto serverOutput = new OutputInterface(m_display, m_display);
+    auto outputHandle = std::make_unique<FakeOutput>();
+    auto serverOutput = std::make_unique<OutputInterface>(m_display, outputHandle.get());
     QVERIFY(outputAnnouncedSpy.wait());
     std::unique_ptr<Output> clientOutput(
         registry.createOutput(outputAnnouncedSpy.first().first().value<quint32>(), outputAnnouncedSpy.first().last().value<quint32>()));
@@ -1031,15 +1034,15 @@ void TestWaylandSurface::testOutput()
     m_display->dispatchEvents();
 
     // now enter it
-    serverSurface->setOutputs(QVector<OutputInterface *>{serverOutput});
-    QCOMPARE(serverSurface->outputs(), QVector<OutputInterface *>{serverOutput});
+    serverSurface->setOutputs(QVector<OutputInterface *>{serverOutput.get()});
+    QCOMPARE(serverSurface->outputs(), QVector<OutputInterface *>{serverOutput.get()});
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 1);
     QCOMPARE(enteredSpy.first().first().value<Output *>(), clientOutput.get());
     QCOMPARE(s->outputs(), QVector<Output *>{clientOutput.get()});
 
     // adding to same should not trigger
-    serverSurface->setOutputs(QVector<OutputInterface *>{serverOutput});
+    serverSurface->setOutputs(QVector<OutputInterface *>{serverOutput.get()});
 
     // leave again
     serverSurface->setOutputs(QVector<OutputInterface *>());
@@ -1054,15 +1057,16 @@ void TestWaylandSurface::testOutput()
     serverSurface->setOutputs(QVector<OutputInterface *>());
 
     // and enter again, just to verify
-    serverSurface->setOutputs(QVector<OutputInterface *>{serverOutput});
-    QCOMPARE(serverSurface->outputs(), QVector<OutputInterface *>{serverOutput});
+    serverSurface->setOutputs(QVector<OutputInterface *>{serverOutput.get()});
+    QCOMPARE(serverSurface->outputs(), QVector<OutputInterface *>{serverOutput.get()});
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 2);
     QCOMPARE(leftSpy.count(), 1);
 
     // delete output client is on.
     // client should get an exit and be left on no outputs (which is allowed)
-    serverOutput->deleteLater();
+    serverOutput.reset();
+    outputHandle.reset();
     QVERIFY(leftSpy.wait());
     QCOMPARE(serverSurface->outputs(), QVector<OutputInterface *>());
 }

@@ -9,6 +9,8 @@
 #include "display_p.h"
 #include "utils.h"
 
+#include "output.h"
+
 #include "qwayland-server-wayland.h"
 
 #include <QPointer>
@@ -21,7 +23,7 @@ static const int s_version = 3;
 class OutputInterfacePrivate : public QtWaylandServer::wl_output
 {
 public:
-    explicit OutputInterfacePrivate(Display *display, OutputInterface *q);
+    explicit OutputInterfacePrivate(Display *display, OutputInterface *q, KWin::Output *handle);
 
     void sendScale(Resource *resource);
     void sendGeometry(Resource *resource);
@@ -32,6 +34,7 @@ public:
 
     OutputInterface *q;
     QPointer<Display> display;
+    QPointer<KWin::Output> handle;
     QSize physicalSize;
     QPoint globalPosition;
     QString manufacturer = QStringLiteral("org.kde.kwin");
@@ -52,10 +55,11 @@ private:
     void output_release(Resource *resource) override;
 };
 
-OutputInterfacePrivate::OutputInterfacePrivate(Display *display, OutputInterface *q)
+OutputInterfacePrivate::OutputInterfacePrivate(Display *display, OutputInterface *q, KWin::Output *handle)
     : QtWaylandServer::wl_output(*display, s_version)
     , q(q)
     , display(display)
+    , handle(handle)
 {
 }
 
@@ -167,9 +171,9 @@ void OutputInterfacePrivate::output_bind_resource(Resource *resource)
     Q_EMIT q->bound(display->getConnection(resource->client()), resource->handle);
 }
 
-OutputInterface::OutputInterface(Display *display, QObject *parent)
+OutputInterface::OutputInterface(Display *display, KWin::Output *handle, QObject *parent)
     : QObject(parent)
-    , d(new OutputInterfacePrivate(display, this))
+    , d(new OutputInterfacePrivate(display, this, handle))
 {
     DisplayPrivate *displayPrivate = DisplayPrivate::get(display);
     displayPrivate->outputs.append(this);
@@ -178,6 +182,11 @@ OutputInterface::OutputInterface(Display *display, QObject *parent)
 OutputInterface::~OutputInterface()
 {
     remove();
+}
+
+KWin::Output *OutputInterface::handle() const
+{
+    return d->handle;
 }
 
 void OutputInterface::remove()

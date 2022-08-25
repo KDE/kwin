@@ -121,7 +121,7 @@ void ScreencastManager::streamWaylandOutput(KWaylandServer::ScreencastStreamV1In
                                             KWaylandServer::OutputInterface *output,
                                             KWaylandServer::ScreencastV1Interface::CursorMode mode)
 {
-    streamOutput(waylandStream, waylandServer()->findOutput(output), mode);
+    streamOutput(waylandStream, output->handle(), mode);
 }
 
 void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamV1Interface *waylandStream,

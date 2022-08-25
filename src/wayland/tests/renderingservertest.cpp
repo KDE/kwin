@@ -13,6 +13,8 @@
 #include "../shmclientbuffer.h"
 #include "../xdgshell_interface.h"
 
+#include "fakeoutput.h"
+
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QDateTime>
@@ -242,10 +244,17 @@ int main(int argc, char **argv)
     new CompositorInterface(&display, &display);
     XdgShellInterface *shell = new XdgShellInterface(&display);
     display.createShm();
-    OutputInterface *output = new OutputInterface(&display, &display);
-    output->setPhysicalSize(QSize(269, 202));
+
     const QSize windowSize(1024, 768);
-    output->setMode(windowSize);
+
+    auto outputHandle = std::make_unique<FakeOutput>();
+    outputHandle->setPhysicalSize(QSize(269, 202));
+    outputHandle->setMode(windowSize, 60000);
+
+    OutputInterface *outputInterface = new OutputInterface(&display, outputHandle.get(), &display);
+    outputInterface->setPhysicalSize(QSize(269, 202));
+    outputInterface->setMode(windowSize);
+
     SeatInterface *seat = new SeatInterface(&display);
     seat->setHasKeyboard(true);
     seat->setHasPointer(true);

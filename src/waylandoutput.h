@@ -23,8 +23,6 @@ class WaylandOutput : public QObject
 public:
     explicit WaylandOutput(Output *output, QObject *parent = nullptr);
 
-    KWaylandServer::OutputInterface *waylandOutput() const;
-
 private Q_SLOTS:
     void handleDpmsModeChanged();
     void handleDpmsModeRequested(KWin::Output::DpmsMode dpmsMode);

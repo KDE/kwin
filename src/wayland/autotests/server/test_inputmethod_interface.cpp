@@ -8,6 +8,9 @@
 #include <QHash>
 #include <QThread>
 #include <QtTest>
+
+#include "../../tests/fakeoutput.h"
+
 // WaylandServer
 #include "wayland/compositor_interface.h"
 #include "wayland/display.h"
@@ -174,6 +177,8 @@ private:
     KWaylandServer::Display m_display;
     SeatInterface *m_seat;
     CompositorInterface *m_serverCompositor;
+    std::unique_ptr<FakeOutput> m_outputHandle;
+    std::unique_ptr<OutputInterface> m_outputInterface;
 
     KWaylandServer::InputMethodV1Interface *m_inputMethodIface;
     KWaylandServer::InputPanelV1Interface *m_inputPanelIface;
@@ -193,7 +198,9 @@ void TestInputMethodInterface::initTestCase()
     m_serverCompositor = new CompositorInterface(&m_display, this);
     m_inputMethodIface = new InputMethodV1Interface(&m_display, this);
     m_inputPanelIface = new InputPanelV1Interface(&m_display, this);
-    new OutputInterface(&m_display, this);
+
+    m_outputHandle = std::make_unique<FakeOutput>();
+    m_outputInterface = std::make_unique<OutputInterface>(&m_display, m_outputHandle.get());
 
     connect(m_serverCompositor, &CompositorInterface::surfaceCreated, this, [this](SurfaceInterface *surface) {
         m_surfaces += surface;

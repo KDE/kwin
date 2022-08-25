@@ -18,6 +18,8 @@
 #include "KWayland/Client/registry.h"
 #include "KWayland/Client/xdgoutput.h"
 
+#include "../../tests/fakeoutput.h"
+
 class TestXdgOutput : public QObject
 {
     Q_OBJECT
@@ -30,6 +32,7 @@ private Q_SLOTS:
 
 private:
     KWaylandServer::Display *m_display;
+    std::unique_ptr<FakeOutput> m_outputHandle;
     KWaylandServer::OutputInterface *m_serverOutput;
     KWaylandServer::XdgOutputManagerV1Interface *m_serverXdgOutputManager;
     KWaylandServer::XdgOutputV1Interface *m_serverXdgOutput;
@@ -58,7 +61,10 @@ void TestXdgOutput::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
 
-    m_serverOutput = new OutputInterface(m_display, this);
+    m_outputHandle = std::make_unique<FakeOutput>();
+    m_outputHandle->setMode(QSize(1920, 1080), 60000);
+
+    m_serverOutput = new OutputInterface(m_display, m_outputHandle.get(), this);
     m_serverOutput->setMode(QSize(1920, 1080));
 
     m_serverXdgOutputManager = new XdgOutputManagerV1Interface(m_display, this);
@@ -105,6 +111,7 @@ void TestXdgOutput::cleanup()
 
     delete m_serverOutput;
     m_serverOutput = nullptr;
+    m_outputHandle.reset();
 
     delete m_display;
     m_display = nullptr;

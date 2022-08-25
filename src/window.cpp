@@ -2349,7 +2349,7 @@ void Window::setupWindowManagementInterface()
         setOnActivity(activityId, false);
     });
     connect(w, &PlasmaWindowInterface::sendToOutput, this, [this](KWaylandServer::OutputInterface *output) {
-        sendToOutput(waylandServer()->findOutput(output));
+        sendToOutput(output->handle());
     });
 
     m_windowManagementInterface = w;

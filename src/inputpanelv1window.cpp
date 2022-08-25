@@ -168,7 +168,7 @@ void InputPanelV1Window::setOutput(OutputInterface *outputIface)
         disconnect(m_output, &Output::geometryChanged, this, &InputPanelV1Window::reposition);
     }
 
-    m_output = waylandServer()->findOutput(outputIface);
+    m_output = outputIface ? outputIface->handle() : nullptr;
 
     if (m_output) {
         connect(m_output, &Output::geometryChanged, this, &InputPanelV1Window::reposition);

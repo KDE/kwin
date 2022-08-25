@@ -25,6 +25,8 @@
 #include "wayland/surface_interface.h"
 #include "wayland/xdgshell_interface.h"
 
+#include "../../tests/fakeoutput.h"
+
 using namespace KWayland::Client;
 using namespace KWaylandServer;
 
@@ -63,8 +65,10 @@ private:
     XdgShell *m_xdgShell = nullptr;
     KWaylandServer::Display *m_display = nullptr;
     CompositorInterface *m_compositorInterface = nullptr;
-    OutputInterface *m_o1Interface = nullptr;
-    OutputInterface *m_o2Interface = nullptr;
+    std::unique_ptr<FakeOutput> m_output1Handle;
+    OutputInterface *m_output1Interface = nullptr;
+    std::unique_ptr<FakeOutput> m_output2Handle;
+    OutputInterface *m_output2Interface = nullptr;
     SeatInterface *m_seatInterface = nullptr;
     ConnectionThread *m_connection = nullptr;
     QThread *m_thread = nullptr;
@@ -93,10 +97,14 @@ void XdgShellTest::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
     m_display->createShm();
-    m_o1Interface = new OutputInterface(m_display, m_display);
-    m_o1Interface->setMode(QSize(1024, 768));
-    m_o2Interface = new OutputInterface(m_display, m_display);
-    m_o2Interface->setMode(QSize(1024, 768));
+    m_output1Handle = std::make_unique<FakeOutput>();
+    m_output1Handle->setMode(QSize(1024, 768), 60000);
+    m_output1Interface = new OutputInterface(m_display, m_output1Handle.get(), m_display);
+    m_output1Interface->setMode(QSize(1024, 768));
+    m_output2Handle = std::make_unique<FakeOutput>();
+    m_output2Handle->setMode(QSize(1024, 768), 60000);
+    m_output2Interface = new OutputInterface(m_display, m_output2Handle.get(), m_display);
+    m_output2Interface->setMode(QSize(1024, 768));
     m_seatInterface = new SeatInterface(m_display, m_display);
     m_seatInterface->setHasKeyboard(true);
     m_seatInterface->setHasPointer(true);
@@ -193,8 +201,10 @@ void XdgShellTest::cleanup()
     // these are the children of the display
     m_compositorInterface = nullptr;
     m_xdgShellInterface = nullptr;
-    m_o1Interface = nullptr;
-    m_o2Interface = nullptr;
+    m_output1Handle.reset();
+    m_output1Interface = nullptr;
+    m_output2Handle.reset();
+    m_output2Interface = nullptr;
     m_seatInterface = nullptr;
 }
 
@@ -329,13 +339,13 @@ void XdgShellTest::testFullscreen()
     xdgSurface->setFullscreen(true, m_output1);
     QVERIFY(fullscreenRequestedSpy.wait());
     QCOMPARE(fullscreenRequestedSpy.count(), 2);
-    QCOMPARE(fullscreenRequestedSpy.last().at(0).value<OutputInterface *>(), m_o1Interface);
+    QCOMPARE(fullscreenRequestedSpy.last().at(0).value<OutputInterface *>(), m_output1Interface);
 
     // now other output
     xdgSurface->setFullscreen(true, m_output2);
     QVERIFY(fullscreenRequestedSpy.wait());
     QCOMPARE(fullscreenRequestedSpy.count(), 3);
-    QCOMPARE(fullscreenRequestedSpy.last().at(0).value<OutputInterface *>(), m_o2Interface);
+    QCOMPARE(fullscreenRequestedSpy.last().at(0).value<OutputInterface *>(), m_output2Interface);
 }
 
 void XdgShellTest::testShowWindowMenu()

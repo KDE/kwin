@@ -8,7 +8,6 @@
 // WaylandServer
 #include "wayland/clientconnection.h"
 #include "wayland/display.h"
-#include "wayland/output_interface.h"
 // Wayland
 #include <wayland-server.h>
 // system
@@ -24,7 +23,6 @@ class TestWaylandServerDisplay : public QObject
 private Q_SLOTS:
     void testSocketName();
     void testStartStop();
-    void testAddRemoveOutput();
     void testClientConnection();
     void testConnectNoSocket();
     void testAutoSocketName();
@@ -67,20 +65,6 @@ void TestWaylandServerDisplay::testStartStop()
 
     display.reset();
     QVERIFY(!runtimeDir.exists(testSocketName));
-}
-
-void TestWaylandServerDisplay::testAddRemoveOutput()
-{
-    KWaylandServer::Display display;
-    display.addSocketName(QStringLiteral("kwin-wayland-server-display-test-output-0"));
-    display.start();
-
-    OutputInterface *output = new OutputInterface(&display);
-    QCOMPARE(display.outputs().size(), 1);
-    QCOMPARE(display.outputs().first(), output);
-
-    delete output;
-    QVERIFY(display.outputs().isEmpty());
 }
 
 void TestWaylandServerDisplay::testClientConnection()

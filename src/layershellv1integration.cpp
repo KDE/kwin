@@ -10,6 +10,7 @@
 #include "platform.h"
 #include "wayland/display.h"
 #include "wayland/layershell_v1_interface.h"
+#include "wayland/output_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -37,10 +38,7 @@ LayerShellV1Integration::LayerShellV1Integration(QObject *parent)
 
 void LayerShellV1Integration::createWindow(LayerSurfaceV1Interface *shellSurface)
 {
-    Output *output = waylandServer()->findOutput(shellSurface->output());
-    if (!output) {
-        output = workspace()->activeOutput();
-    }
+    Output *output = shellSurface->output() ? shellSurface->output()->handle() : workspace()->activeOutput();
     if (!output) {
         qCWarning(KWIN_CORE) << "Could not find any suitable output for a layer surface";
         shellSurface->sendClosed();

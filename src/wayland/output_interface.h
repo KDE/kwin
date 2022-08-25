@@ -16,6 +16,11 @@
 struct wl_resource;
 struct wl_client;
 
+namespace KWin
+{
+class Output;
+}
+
 namespace KWaylandServer
 {
 class ClientConnection;
@@ -43,10 +48,12 @@ public:
         int refreshRate = 60000;
     };
 
-    explicit OutputInterface(Display *display, QObject *parent = nullptr);
+    explicit OutputInterface(Display *display, KWin::Output *handle, QObject *parent = nullptr);
     ~OutputInterface() override;
 
     void remove();
+
+    KWin::Output *handle() const;
 
     QSize physicalSize() const;
     QPoint globalPosition() const;

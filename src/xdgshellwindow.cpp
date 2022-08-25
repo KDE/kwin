@@ -1234,8 +1234,7 @@ void XdgToplevelWindow::handleUnmaximizeRequested()
 
 void XdgToplevelWindow::handleFullscreenRequested(OutputInterface *output)
 {
-    m_fullScreenRequestedOutput = waylandServer()->findOutput(output);
-
+    m_fullScreenRequestedOutput = output ? output->handle() : nullptr;
     if (m_isInitialized) {
         setFullScreen(/* set */ true, /* user */ false);
         scheduleConfigure();

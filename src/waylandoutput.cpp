@@ -15,7 +15,7 @@ namespace KWin
 WaylandOutput::WaylandOutput(Output *output, QObject *parent)
     : QObject(parent)
     , m_platformOutput(output)
-    , m_waylandOutput(new KWaylandServer::OutputInterface(waylandServer()->display()))
+    , m_waylandOutput(new KWaylandServer::OutputInterface(waylandServer()->display(), output))
     , m_xdgOutputV1(waylandServer()->xdgOutputManagerV1()->createXdgOutput(m_waylandOutput.get(), m_waylandOutput.get()))
 {
     const QRect geometry = m_platformOutput->geometry();
@@ -53,11 +53,6 @@ WaylandOutput::WaylandOutput(Output *output, QObject *parent)
     connect(output, &Output::geometryChanged, this, &WaylandOutput::scheduleUpdate);
     connect(output, &Output::transformChanged, this, &WaylandOutput::scheduleUpdate);
     connect(output, &Output::scaleChanged, this, &WaylandOutput::scheduleUpdate);
-}
-
-KWaylandServer::OutputInterface *WaylandOutput::waylandOutput() const
-{
-    return m_waylandOutput.get();
 }
 
 void WaylandOutput::scheduleUpdate()
