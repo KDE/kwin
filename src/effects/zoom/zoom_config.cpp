@@ -62,8 +62,8 @@ ZoomEffectConfig::ZoomEffectConfig(QWidget *parent, const QVariantList &args)
     QAction *a;
     a = actionCollection->addAction(KStandardAction::ZoomIn);
     a->setProperty("isConfigurationAction", true);
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Equal));
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Equal));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Plus));
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Plus) << (Qt::META | Qt::Key_Equal));
 
     a = actionCollection->addAction(KStandardAction::ZoomOut);
     a->setProperty("isConfigurationAction", true);
