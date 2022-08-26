@@ -248,10 +248,10 @@ private:
     void registerXdgToplevelWindow(XdgToplevelWindow *window);
     void registerXdgPopupWindow(XdgPopupWindow *window);
     void registerWindow(Window *window);
-    void handleOutputAdded(Output *output);
-    void handleOutputRemoved(Output *output);
-    void handleOutputEnabled(Output *output);
-    void handleOutputDisabled(Output *output);
+    void handlePlatformOutputAdded(Output *output);
+    void handlePlatformOutputRemoved(Output *output);
+    void handleWorkspaceOutputAdded(Output *output);
+    void handleWorkspaceOutputRemoved(Output *output);
 
     class LockScreenPresentationWatcher : public QObject
     {

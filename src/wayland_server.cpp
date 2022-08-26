@@ -271,28 +271,28 @@ void WaylandServer::registerXdgGenericWindow(Window *window)
     qCDebug(KWIN_CORE) << "Received invalid xdg shell window:" << window->surface();
 }
 
-void WaylandServer::handleOutputAdded(Output *output)
+void WaylandServer::handlePlatformOutputAdded(Output *output)
 {
     if (!output->isPlaceholder() && !output->isNonDesktop()) {
         m_waylandOutputDevices.insert(output, new KWaylandServer::OutputDeviceV2Interface(m_display, output));
     }
 }
 
-void WaylandServer::handleOutputRemoved(Output *output)
+void WaylandServer::handlePlatformOutputRemoved(Output *output)
 {
     if (auto outputDevice = m_waylandOutputDevices.take(output)) {
         outputDevice->remove();
     }
 }
 
-void WaylandServer::handleOutputEnabled(Output *output)
+void WaylandServer::handleWorkspaceOutputAdded(Output *output)
 {
     if (!output->isPlaceholder() && !output->isNonDesktop()) {
         m_waylandOutputs.insert(output, new WaylandOutput(output));
     }
 }
 
-void WaylandServer::handleOutputDisabled(Output *output)
+void WaylandServer::handleWorkspaceOutputRemoved(Output *output)
 {
     if (!output->isPlaceholder() && !output->isNonDesktop()) {
         delete m_waylandOutputs.take(output);
@@ -533,17 +533,17 @@ void WaylandServer::initWorkspace()
 
     const auto availableOutputs = kwinApp()->platform()->outputs();
     for (Output *output : availableOutputs) {
-        handleOutputAdded(output);
+        handlePlatformOutputAdded(output);
     }
-    connect(kwinApp()->platform(), &Platform::outputAdded, this, &WaylandServer::handleOutputAdded);
-    connect(kwinApp()->platform(), &Platform::outputRemoved, this, &WaylandServer::handleOutputRemoved);
+    connect(kwinApp()->platform(), &Platform::outputAdded, this, &WaylandServer::handlePlatformOutputAdded);
+    connect(kwinApp()->platform(), &Platform::outputRemoved, this, &WaylandServer::handlePlatformOutputRemoved);
 
     const auto outputs = workspace()->outputs();
     for (Output *output : outputs) {
-        handleOutputEnabled(output);
+        handleWorkspaceOutputAdded(output);
     }
-    connect(workspace(), &Workspace::outputAdded, this, &WaylandServer::handleOutputEnabled);
-    connect(workspace(), &Workspace::outputRemoved, this, &WaylandServer::handleOutputDisabled);
+    connect(workspace(), &Workspace::outputAdded, this, &WaylandServer::handleWorkspaceOutputAdded);
+    connect(workspace(), &Workspace::outputRemoved, this, &WaylandServer::handleWorkspaceOutputRemoved);
 
     if (hasScreenLockerIntegration()) {
         initScreenLocker();
