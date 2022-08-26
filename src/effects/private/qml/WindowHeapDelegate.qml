@@ -21,7 +21,9 @@ Item {
 
     readonly property bool selected: windowHeap.selectedIndex === index
 
-    readonly property bool initialHidden: client.minimized || client.desktop !== KWinComponents.Workspace.currentDesktop
+    // -1 is a special value which means "All Desktops"
+    readonly property bool presentOnCurrentDesktop: client.desktop === KWinComponents.Workspace.currentDesktop || client.desktop === -1
+    readonly property bool initialHidden: client.minimized || !presentOnCurrentDesktop
     readonly property bool activeHidden: {
         if (windowHeap.showOnly === "activeClass") {
             // client.resourceName is not an actual String as comes from a QByteArray so === would fail
@@ -72,7 +74,7 @@ Item {
 
     visible: opacity > 0
     z: activeDragHandler.active ? 1000
-        : client.stackingOrder * (client.desktop === KWinComponents.Workspace.currentDesktop ? 1 : 0.001)
+        : client.stackingOrder * (presentOnCurrentDesktop ? 1 : 0.001)
 
     component TweenBehavior : Behavior {
         enabled: thumb.state !== "partial" && thumb.windowHeap.animationEnabled && !thumb.activeDragHandler.active
