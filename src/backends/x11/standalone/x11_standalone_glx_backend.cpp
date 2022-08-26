@@ -28,7 +28,6 @@
 #include "platform.h"
 #include "renderloop_p.h"
 #include "scene.h"
-#include "screens.h"
 #include "surfaceitem_x11.h"
 #include "utils/xcbutils.h"
 #include "workspace.h"
@@ -137,7 +136,7 @@ GlxBackend::GlxBackend(Display *display, X11StandalonePlatform *backend)
     // by Mesa when using DRI2.
     QOpenGLContext::supportsThreadedOpenGL();
 
-    connect(workspace()->screens(), &Screens::sizeChanged, this, &GlxBackend::screenGeometryChanged);
+    connect(workspace(), &Workspace::geometryChanged, this, &GlxBackend::screenGeometryChanged);
 }
 
 GlxBackend::~GlxBackend()
@@ -227,7 +226,7 @@ void GlxBackend::init()
     glPlatform->printResults();
     initGL(&getProcAddress);
 
-    m_fbo = std::make_unique<GLFramebuffer>(0, workspace()->screens()->size());
+    m_fbo = std::make_unique<GLFramebuffer>(0, workspace()->geometry().size());
 
     bool supportsSwapEvent = false;
 
@@ -456,7 +455,7 @@ bool GlxBackend::initBuffer()
         xcb_colormap_t colormap = xcb_generate_id(c);
         xcb_create_colormap(c, false, colormap, rootWindow(), visual);
 
-        const QSize size = workspace()->screens()->size();
+        const QSize size = workspace()->geometry().size();
 
         window = xcb_generate_id(c);
         xcb_create_window(c, visualDepth(visual), window, overlayWindow()->window(),
@@ -732,7 +731,7 @@ void GlxBackend::setSwapInterval(int interval)
 
 void GlxBackend::present(const QRegion &damage)
 {
-    const QSize &screenSize = workspace()->screens()->size();
+    const QSize &screenSize = workspace()->geometry().size();
     const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
     const bool fullRepaint = supportsBufferAge() || (damage == displayRegion);
 
@@ -749,7 +748,7 @@ void GlxBackend::present(const QRegion &damage)
         }
     } else { // Copy Pixels (horribly slow on Mesa)
         glDrawBuffer(GL_FRONT);
-        copyPixels(damage);
+        copyPixels(damage, screenSize);
         glDrawBuffer(GL_BACK);
     }
 
@@ -761,7 +760,7 @@ void GlxBackend::present(const QRegion &damage)
 
 void GlxBackend::screenGeometryChanged()
 {
-    const QSize size = workspace()->screens()->size();
+    const QSize size = workspace()->geometry().size();
     doneCurrent();
 
     XMoveResizeWindow(display(), window, 0, 0, size.width(), size.height());
@@ -815,14 +814,14 @@ void GlxBackend::present(Output *output)
         m_vsyncMonitor->arm();
     }
 
-    const QRegion displayRegion(workspace()->screens()->geometry());
+    const QRect displayRect = workspace()->geometry();
 
     QRegion effectiveRenderedRegion = m_lastRenderedRegion;
-    if (!supportsBufferAge() && options->glPreferBufferSwap() == Options::CopyFrontBuffer && m_lastRenderedRegion != displayRegion) {
+    if (!supportsBufferAge() && options->glPreferBufferSwap() == Options::CopyFrontBuffer && m_lastRenderedRegion != displayRect) {
         glReadBuffer(GL_FRONT);
-        copyPixels(displayRegion - m_lastRenderedRegion);
+        copyPixels(QRegion(displayRect) - m_lastRenderedRegion, displayRect.size());
         glReadBuffer(GL_BACK);
-        effectiveRenderedRegion = displayRegion;
+        effectiveRenderedRegion = displayRect;
     }
 
     GLFramebuffer::popFramebuffer();

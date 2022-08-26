@@ -124,7 +124,7 @@ public:
     /**
      * Copy a region of pixels from the current read to the current draw buffer
      */
-    void copyPixels(const QRegion &region);
+    void copyPixels(const QRegion &region, const QSize &screenSize);
 
     virtual std::shared_ptr<GLTexture> textureForOutput(Output *output) const;
 

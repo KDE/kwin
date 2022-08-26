@@ -32,8 +32,6 @@ private Q_SLOTS:
     void initTestCase();
     void init();
     void cleanup();
-    void testSize_data();
-    void testSize();
     void testCurrent_data();
     void testCurrent();
     void testCurrentWithFollowsMouse_data();
@@ -90,31 +88,6 @@ void ScreensTest::cleanup()
 
     // Reset the screen layout of the test environment.
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
-}
-
-void ScreensTest::testSize_data()
-{
-    QTest::addColumn<QVector<QRect>>("geometries");
-    QTest::addColumn<QSize>("expectedSize");
-
-    QTest::newRow("empty") << QVector<QRect>{{QRect()}} << QSize(0, 0);
-    QTest::newRow("cloned") << QVector<QRect>{{QRect{0, 0, 200, 100}, QRect{0, 0, 200, 100}}} << QSize(200, 100);
-    QTest::newRow("adjacent") << QVector<QRect>{{QRect{0, 0, 200, 100}, QRect{200, 100, 400, 300}}} << QSize(600, 400);
-    QTest::newRow("overlapping") << QVector<QRect>{{QRect{-10, -20, 50, 100}, QRect{0, 0, 100, 200}}} << QSize(110, 220);
-    QTest::newRow("gap") << QVector<QRect>{{QRect{0, 0, 10, 20}, QRect{20, 40, 10, 20}}} << QSize(30, 60);
-}
-
-void ScreensTest::testSize()
-{
-    QSignalSpy sizeChangedSpy(workspace()->screens(), &Screens::sizeChanged);
-    QVERIFY(sizeChangedSpy.isValid());
-
-    QFETCH(QVector<QRect>, geometries);
-    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::QueuedConnection,
-                              Q_ARG(int, geometries.count()), Q_ARG(QVector<QRect>, geometries));
-
-    QVERIFY(sizeChangedSpy.wait());
-    QTEST(workspace()->screens()->size(), "expectedSize");
 }
 
 void ScreensTest::testCurrent_data()

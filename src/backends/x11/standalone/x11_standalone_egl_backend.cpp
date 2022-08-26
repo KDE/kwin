@@ -12,7 +12,6 @@
 #include "platform.h"
 #include "renderloop_p.h"
 #include "scene.h"
-#include "screens.h"
 #include "softwarevsyncmonitor.h"
 #include "surfaceitem_x11.h"
 #include "workspace.h"
@@ -58,7 +57,7 @@ EglBackend::EglBackend(Display *display, X11StandalonePlatform *backend)
     m_vsyncMonitor->setRefreshRate(backend->renderLoop()->refreshRate());
 
     connect(m_vsyncMonitor.get(), &VsyncMonitor::vblankOccurred, this, &EglBackend::vblank);
-    connect(workspace()->screens(), &Screens::sizeChanged, this, &EglBackend::screenGeometryChanged);
+    connect(workspace(), &Workspace::geometryChanged, this, &EglBackend::screenGeometryChanged);
 }
 
 EglBackend::~EglBackend()
@@ -107,7 +106,7 @@ void EglBackend::init()
         return;
     }
 
-    m_fbo = std::make_unique<GLFramebuffer>(0, workspace()->screens()->size());
+    m_fbo = std::make_unique<GLFramebuffer>(0, workspace()->geometry().size());
 
     kwinApp()->platform()->setSceneEglDisplay(shareDisplay);
     kwinApp()->platform()->setSceneEglGlobalShareContext(shareContext);
@@ -116,11 +115,11 @@ void EglBackend::init()
 
 void EglBackend::screenGeometryChanged()
 {
-    overlayWindow()->resize(workspace()->screens()->size());
+    overlayWindow()->resize(workspace()->geometry().size());
 
     // The back buffer contents are now undefined
     m_bufferAge = 0;
-    m_fbo = std::make_unique<GLFramebuffer>(0, workspace()->screens()->size());
+    m_fbo = std::make_unique<GLFramebuffer>(0, workspace()->geometry().size());
 }
 
 OutputLayerBeginFrameInfo EglBackend::beginFrame()
@@ -160,19 +159,19 @@ void EglBackend::present(Output *output)
 
     QRegion effectiveRenderedRegion = m_lastRenderedRegion;
     if (!GLPlatform::instance()->isGLES()) {
-        const QRegion displayRegion(workspace()->screens()->geometry());
-        if (!supportsBufferAge() && options->glPreferBufferSwap() == Options::CopyFrontBuffer && m_lastRenderedRegion != displayRegion) {
+        const QRect displayRect = workspace()->geometry();
+        if (!supportsBufferAge() && options->glPreferBufferSwap() == Options::CopyFrontBuffer && m_lastRenderedRegion != displayRect) {
             glReadBuffer(GL_FRONT);
-            copyPixels(displayRegion - m_lastRenderedRegion);
+            copyPixels(QRegion(displayRect) - m_lastRenderedRegion, displayRect.size());
             glReadBuffer(GL_BACK);
-            effectiveRenderedRegion = displayRegion;
+            effectiveRenderedRegion = displayRect;
         }
     }
 
     // Pop the default render target from the render target stack.
     GLFramebuffer::popFramebuffer();
 
-    presentSurface(surface(), effectiveRenderedRegion, workspace()->screens()->geometry());
+    presentSurface(surface(), effectiveRenderedRegion, workspace()->geometry());
 
     if (overlayWindow() && overlayWindow()->window()) { // show the window only after the first pass,
         overlayWindow()->show(); // since that pass may take long

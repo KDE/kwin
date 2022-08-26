@@ -11,7 +11,6 @@
 #include <kwineffects.h>
 #include <kwinglutils_funcs.h>
 
-#include "screens.h"
 #include "surfaceitem.h"
 #include "utils/common.h"
 #include "workspace.h"
@@ -45,9 +44,9 @@ void OpenGLBackend::setFailed(const QString &reason)
     m_failed = true;
 }
 
-void OpenGLBackend::copyPixels(const QRegion &region)
+void OpenGLBackend::copyPixels(const QRegion &region, const QSize &screenSize)
 {
-    const int height = workspace()->screens()->size().height();
+    const int height = screenSize.height();
     for (const QRect &r : region) {
         const int x0 = r.x();
         const int y0 = height - r.y() - r.height();
