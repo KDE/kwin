@@ -34,7 +34,6 @@ private Q_SLOTS:
     void cleanup();
     void testSize_data();
     void testSize();
-    void testCount();
     void testCurrent_data();
     void testCurrent();
     void testCurrentWithFollowsMouse_data();
@@ -116,28 +115,6 @@ void ScreensTest::testSize()
 
     QVERIFY(sizeChangedSpy.wait());
     QTEST(workspace()->screens()->size(), "expectedSize");
-}
-
-void ScreensTest::testCount()
-{
-    QSignalSpy countChangedSpy(workspace()->screens(), &Screens::countChanged);
-    QVERIFY(countChangedSpy.isValid());
-
-    // the test environments has two outputs
-    QCOMPARE(workspace()->screens()->count(), 2);
-
-    // change to one screen
-    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::QueuedConnection, Q_ARG(int, 1));
-    QVERIFY(countChangedSpy.wait());
-    QCOMPARE(countChangedSpy.count(), 1);
-    QCOMPARE(workspace()->screens()->count(), 1);
-
-    // setting the same geometries shouldn't emit the signal, but we should get a changed signal
-    QSignalSpy changedSpy(workspace()->screens(), &Screens::changed);
-    QVERIFY(changedSpy.isValid());
-    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::QueuedConnection, Q_ARG(int, 1));
-    QVERIFY(changedSpy.wait());
-    QCOMPARE(countChangedSpy.count(), 1);
 }
 
 void ScreensTest::testCurrent_data()

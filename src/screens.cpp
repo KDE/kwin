@@ -22,17 +22,13 @@ namespace KWin
 {
 
 Screens::Screens()
-    : m_count(0)
-    , m_maxScale(1.0)
+    : m_maxScale(1.0)
 {
-    connect(kwinApp()->platform(), &Platform::screensQueried, this, &Screens::updateCount);
     connect(kwinApp()->platform(), &Platform::screensQueried, this, &Screens::changed);
 }
 
 void Screens::init()
 {
-    updateCount();
-    connect(this, &Screens::countChanged, this, &Screens::changed, Qt::QueuedConnection);
     connect(this, &Screens::changed, this, &Screens::updateSize);
     connect(this, &Screens::sizeChanged, this, &Screens::geometryChanged);
 
@@ -64,7 +60,7 @@ void Screens::updateSize()
 {
     QRect bounding;
     qreal maxScale = 1.0;
-    for (int i = 0; i < count(); ++i) {
+    for (int i = 0; i < workspace()->outputs().count(); ++i) {
         bounding = bounding.united(geometry(i));
         maxScale = qMax(maxScale, scale(i));
     }
@@ -78,29 +74,9 @@ void Screens::updateSize()
     }
 }
 
-void Screens::updateCount()
-{
-    setCount(workspace()->outputs().size());
-}
-
-void Screens::setCount(int count)
-{
-    if (m_count == count) {
-        return;
-    }
-    const int previous = m_count;
-    m_count = count;
-    Q_EMIT countChanged(previous, count);
-}
-
 Output *Screens::findOutput(int screen) const
 {
     return workspace()->outputs().value(screen);
-}
-
-int Screens::count() const
-{
-    return m_count;
 }
 
 QSize Screens::size() const

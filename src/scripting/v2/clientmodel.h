@@ -187,9 +187,10 @@ public:
     Window *clientForId(quint32 child) const override;
 private Q_SLOTS:
     void desktopCountChanged(uint previousCount, uint newCount);
-    void screenCountChanged(int previousCount, int newCount);
     void activityAdded(const QString &id);
     void activityRemoved(const QString &id);
+    void outputAdded();
+    void outputRemoved();
 
 private:
     QList<AbstractLevel *> m_children;

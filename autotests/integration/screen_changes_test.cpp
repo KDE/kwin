@@ -11,7 +11,6 @@
 #include "cursor.h"
 #include "output.h"
 #include "platform.h"
-#include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -87,15 +86,11 @@ void ScreenChangesTest::testScreenAddRemove()
     outputAnnouncedSpy.clear();
 
     // let's announce a new output
-    QSignalSpy screensChangedSpy(workspace()->screens(), &Screens::changed);
-    QVERIFY(screensChangedSpy.isValid());
     const QVector<QRect> geometries{QRect(0, 0, 1280, 1024), QRect(1280, 0, 1280, 1024)};
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs",
                               Qt::DirectConnection,
                               Q_ARG(int, 2),
                               Q_ARG(QVector<QRect>, geometries));
-    QVERIFY(screensChangedSpy.wait());
-    QCOMPARE(screensChangedSpy.count(), 2);
     auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
     QCOMPARE(outputs[0]->geometry(), geometries[0]);
@@ -154,7 +149,6 @@ void ScreenChangesTest::testScreenAddRemove()
     // now let's try to remove one output again
     outputAnnouncedSpy.clear();
     outputRemovedSpy.clear();
-    screensChangedSpy.clear();
 
     QSignalSpy o1RemovedSpy(o1.get(), &KWayland::Client::Output::removed);
     QVERIFY(o1RemovedSpy.isValid());
@@ -166,8 +160,6 @@ void ScreenChangesTest::testScreenAddRemove()
                               Qt::DirectConnection,
                               Q_ARG(int, 1),
                               Q_ARG(QVector<QRect>, geometries2));
-    QVERIFY(screensChangedSpy.wait());
-    QCOMPARE(screensChangedSpy.count(), 2);
     outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 1);
     QCOMPARE(outputs[0]->geometry(), geometries2.at(0));

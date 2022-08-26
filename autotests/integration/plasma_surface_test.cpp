@@ -11,7 +11,6 @@
 #include "cursor.h"
 #include "output.h"
 #include "platform.h"
-#include "screens.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -195,15 +194,11 @@ void PlasmaSurfaceTest::testOSDPlacement()
     QCOMPARE(window->frameGeometry(), QRect(1280 / 2 - 100 / 2, 2 * 1024 / 3 - 50 / 2, 100, 50));
 
     // change the screen size
-    QSignalSpy screensChangedSpy(workspace()->screens(), &Screens::changed);
-    QVERIFY(screensChangedSpy.isValid());
     const QVector<QRect> geometries{QRect(0, 0, 1280, 1024), QRect(1280, 0, 1280, 1024)};
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs",
                               Qt::DirectConnection,
                               Q_ARG(int, 2),
                               Q_ARG(QVector<QRect>, geometries));
-    QVERIFY(screensChangedSpy.wait());
-    QCOMPARE(screensChangedSpy.count(), 2);
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
     QCOMPARE(outputs[0]->geometry(), geometries[0]);

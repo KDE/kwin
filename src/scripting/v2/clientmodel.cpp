@@ -10,12 +10,12 @@
 
 #include <config-kwin.h>
 
-#include "window.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
-#include "screens.h"
+#include "output.h"
 #include "virtualdesktops.h"
+#include "window.h"
 #include "workspace.h"
 
 namespace KWin::ScriptingModels::V2
@@ -324,7 +324,7 @@ AbstractLevel *AbstractLevel::create(const QList<ClientModel::LevelRestriction> 
 #endif
     }
     case ClientModel::ScreenRestriction:
-        for (int i = 0; i < workspace()->screens()->count(); ++i) {
+        for (int i = 0; i < workspace()->outputs().count(); ++i) {
             AbstractLevel *childLevel = create(childRestrictions, childrenRestrictions, model, currentLevel);
             if (!childLevel) {
                 continue;
@@ -398,7 +398,8 @@ ForkLevel::ForkLevel(const QList<ClientModel::LevelRestriction> &childRestrictio
     , m_childRestrictions(childRestrictions)
 {
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::countChanged, this, &ForkLevel::desktopCountChanged);
-    connect(workspace()->screens(), &Screens::countChanged, this, &ForkLevel::screenCountChanged);
+    connect(workspace(), &Workspace::outputAdded, this, &ForkLevel::outputAdded);
+    connect(workspace(), &Workspace::outputRemoved, this, &ForkLevel::outputRemoved);
 #if KWIN_BUILD_ACTIVITIES
     if (Activities *activities = Workspace::self()->activities()) {
         connect(activities, &Activities::added, this, &ForkLevel::activityAdded);
@@ -442,36 +443,36 @@ void ForkLevel::desktopCountChanged(uint previousCount, uint newCount)
     }
 }
 
-void ForkLevel::screenCountChanged(int previousCount, int newCount)
+void ForkLevel::outputAdded()
 {
     if (restriction() != ClientModel::ClientModel::ClientModel::ScreenRestriction) {
         return;
     }
-    if (newCount == previousCount || previousCount != count()) {
+
+    const int row = count();
+
+    AbstractLevel *childLevel = AbstractLevel::create(m_childRestrictions, restrictions(), model(), this);
+    if (!childLevel) {
+        return;
+    }
+    Q_EMIT beginInsert(row, row, id());
+    childLevel->setScreen(row);
+    childLevel->init();
+    addChild(childLevel);
+    Q_EMIT endInsert();
+}
+
+void ForkLevel::outputRemoved()
+{
+    if (restriction() != ClientModel::ClientModel::ClientModel::ScreenRestriction) {
         return;
     }
 
-    if (previousCount > newCount) {
-        // screens got removed
-        Q_EMIT beginRemove(newCount, previousCount - 1, id());
-        while (m_children.count() > newCount) {
-            delete m_children.takeLast();
-        }
-        Q_EMIT endRemove();
-    } else {
-        // screens got added
-        Q_EMIT beginInsert(previousCount, newCount - 1, id());
-        for (int i = previousCount; i < newCount; ++i) {
-            AbstractLevel *childLevel = AbstractLevel::create(m_childRestrictions, restrictions(), model(), this);
-            if (!childLevel) {
-                continue;
-            }
-            childLevel->setScreen(i);
-            childLevel->init();
-            addChild(childLevel);
-        }
-        Q_EMIT endInsert();
-    }
+    const int row = count() - 1;
+
+    Q_EMIT beginRemove(row, row, id());
+    delete m_children.takeLast();
+    Q_EMIT endRemove();
 }
 
 void ForkLevel::activityAdded(const QString &activityId)

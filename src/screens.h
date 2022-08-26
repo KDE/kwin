@@ -29,14 +29,12 @@ class Platform;
 class KWIN_EXPORT Screens : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int count READ count WRITE setCount NOTIFY countChanged)
 
 public:
     explicit Screens();
 
     void init();
 
-    int count() const;
     QRect geometry(int screen) const;
     /**
      * The bounding geometry of all screens combined. Overlapping areas
@@ -67,7 +65,6 @@ public:
     QSize size() const;
 
 Q_SIGNALS:
-    void countChanged(int previousCount, int newCount);
     /**
      * Emitted whenever the screens are changed either count or geometry.
      */
@@ -90,17 +87,12 @@ Q_SIGNALS:
      */
     void maxScaleChanged();
 
-protected Q_SLOTS:
-    void setCount(int count);
-    void updateCount();
-
 private Q_SLOTS:
     void updateSize();
 
 private:
     Output *findOutput(int screenId) const;
 
-    int m_count;
     QSize m_boundingSize;
     qreal m_maxScale;
 };
