@@ -9,6 +9,8 @@
 
 #include <QObject>
 
+#include <memory>
+
 namespace KWaylandServer
 {
 class Display;

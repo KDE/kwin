@@ -3,19 +3,50 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
+#include "dpms_interface.h"
 #include "display.h"
-#include "dpms_interface_p.h"
 #include "output_interface.h"
+
+#include <QPointer>
+
+#include <qwayland-server-dpms.h>
 
 using namespace KWin;
 
 namespace KWaylandServer
 {
+
 static const quint32 s_version = 1;
 
-DpmsManagerInterfacePrivate::DpmsManagerInterfacePrivate(DpmsManagerInterface *_q, Display *display)
+class DpmsManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_dpms_manager
+{
+public:
+    DpmsManagerInterfacePrivate(Display *d);
+
+protected:
+    void org_kde_kwin_dpms_manager_get(Resource *resource, uint32_t id, wl_resource *output) override;
+};
+
+class DpmsInterface : public QObject, QtWaylandServer::org_kde_kwin_dpms
+{
+    Q_OBJECT
+public:
+    explicit DpmsInterface(OutputInterface *output, wl_resource *resource);
+
+    void sendSupported();
+    void sendMode();
+    void sendDone();
+
+    QPointer<OutputInterface> m_output;
+
+protected:
+    void org_kde_kwin_dpms_destroy_resource(Resource *resource) override;
+    void org_kde_kwin_dpms_set(Resource *resource, uint32_t mode) override;
+    void org_kde_kwin_dpms_release(Resource *resource) override;
+};
+
+DpmsManagerInterfacePrivate::DpmsManagerInterfacePrivate(Display *display)
     : QtWaylandServer::org_kde_kwin_dpms_manager(*display, s_version)
-    , q(_q)
 {
 }
 
@@ -34,7 +65,7 @@ void DpmsManagerInterfacePrivate::org_kde_kwin_dpms_manager_get(Resource *resour
 
 DpmsManagerInterface::DpmsManagerInterface(Display *display, QObject *parent)
     : QObject(parent)
-    , d(new DpmsManagerInterfacePrivate(this, display))
+    , d(new DpmsManagerInterfacePrivate(display))
 {
 }
 
@@ -136,3 +167,5 @@ void DpmsInterface::sendDone()
 }
 
 }
+
+#include "dpms_interface.moc"
