@@ -317,7 +317,12 @@ DrmLeaseV1Interface::DrmLeaseV1Interface(DrmLeaseDeviceV1InterfacePrivate *devic
 
 DrmLeaseV1Interface::~DrmLeaseV1Interface()
 {
-    deny();
+    if (d->lesseeId) {
+        revoke();
+    } else {
+        deny();
+    }
+
     d->device->leases.removeOne(this);
 }
 
