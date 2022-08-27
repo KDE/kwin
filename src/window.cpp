@@ -24,7 +24,6 @@
 #include "focuschain.h"
 #include "outline.h"
 #include "platform.h"
-#include "screens.h"
 #if KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
@@ -80,7 +79,6 @@ Window::Window()
 #endif
     , m_colorScheme(QStringLiteral("kdeglobals"))
 {
-    connect(workspace()->screens(), &Screens::changed, this, &Window::screenChanged);
     connect(this, &Window::bufferGeometryChanged, this, &Window::inputTransformationChanged);
 
     // Only for compatibility reasons, drop in the next major release.
