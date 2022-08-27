@@ -40,6 +40,11 @@ class ScreenEdges;
 class OutputConfiguration;
 struct DmaBufParams;
 
+enum class VirtualOutputType {
+    Normal,
+    Placeholder,
+};
+
 class KWIN_EXPORT Outputs : public QVector<Output *>
 {
 public:
@@ -317,7 +322,7 @@ public:
         m_selectedCompositor = type;
     }
 
-    virtual Output *createVirtualOutput(const QString &name, const QSize &size, qreal scaling);
+    virtual Output *createVirtualOutput(const QString &name, const QSize &size, qreal scaling, VirtualOutputType type);
     virtual void removeVirtualOutput(Output *output);
 
     /**

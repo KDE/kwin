@@ -24,7 +24,7 @@ namespace Wayland
 using namespace KWayland::Client;
 static const int s_refreshRate = 60000; // TODO: can we get refresh rate data from Wayland host?
 
-WaylandOutput::WaylandOutput(const QString &name, Surface *surface, WaylandBackend *backend)
+WaylandOutput::WaylandOutput(const QString &name, Surface *surface, WaylandBackend *backend, bool placeholder)
     : Output(backend)
     , m_renderLoop(std::make_unique<RenderLoop>())
     , m_surface(surface)
@@ -34,6 +34,7 @@ WaylandOutput::WaylandOutput(const QString &name, Surface *surface, WaylandBacke
         .name = name,
         .model = name,
         .capabilities = Capability::Dpms,
+        .placeholder = placeholder,
     });
 
     connect(surface, &Surface::frameRendered, this, &WaylandOutput::frameRendered);
@@ -90,8 +91,8 @@ void WaylandOutput::setDpmsMode(DpmsMode mode)
     }
 }
 
-XdgShellOutput::XdgShellOutput(const QString &name, Surface *surface, XdgShell *xdgShell, WaylandBackend *backend, int number)
-    : WaylandOutput(name, surface, backend)
+XdgShellOutput::XdgShellOutput(const QString &name, Surface *surface, XdgShell *xdgShell, WaylandBackend *backend, int number, bool placeholder)
+    : WaylandOutput(name, surface, backend, placeholder)
     , m_number(number)
 {
     m_xdgShellSurface = xdgShell->createSurface(surface, this);

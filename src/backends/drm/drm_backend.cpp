@@ -355,31 +355,6 @@ void DrmBackend::updateOutputs()
     Q_EMIT screensQueried();
 }
 
-void DrmBackend::enableOutput(DrmAbstractOutput *output, bool enable)
-{
-    if (enable) {
-        checkOutputsAreOn();
-        if (m_placeHolderOutput && !output->isNonDesktop()) {
-            qCDebug(KWIN_DRM) << "removing placeholder output";
-            primaryGpu()->removeVirtualOutput(m_placeHolderOutput);
-            m_placeHolderOutput = nullptr;
-            m_placeholderFilter.reset();
-        }
-    } else {
-        const int normalOutputsCount = std::count_if(m_outputs.constBegin(), m_outputs.constEnd(), [](const auto output) {
-            return output->isEnabled() && !output->isNonDesktop();
-        });
-        if (normalOutputsCount == 0 && !output->isNonDesktop() && !kwinApp()->isTerminating()) {
-            qCDebug(KWIN_DRM) << "adding placeholder output";
-            m_placeHolderOutput = primaryGpu()->createVirtualOutput({}, output->pixelSize(), 1, DrmVirtualOutput::Type::Placeholder);
-            // placeholder doesn't actually need to render anything
-            m_placeHolderOutput->renderLoop()->inhibit();
-            m_placeholderFilter = std::make_unique<PlaceholderInputEventFilter>();
-            input()->prependInputEventFilter(m_placeholderFilter.get());
-        }
-    }
-}
-
 std::unique_ptr<InputBackend> DrmBackend::createInputBackend()
 {
     return std::make_unique<LibinputBackend>(m_session);
@@ -428,9 +403,9 @@ QString DrmBackend::supportInformation() const
     return supportInfo;
 }
 
-Output *DrmBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
+Output *DrmBackend::createVirtualOutput(const QString &name, const QSize &size, double scale, VirtualOutputType type)
 {
-    auto output = primaryGpu()->createVirtualOutput(name, size * scale, scale, DrmVirtualOutput::Type::Virtual);
+    auto output = primaryGpu()->createVirtualOutput(name, size * scale, scale, type);
     Q_EMIT screensQueried();
     return output;
 }

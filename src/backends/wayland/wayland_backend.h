@@ -298,7 +298,7 @@ public:
     void createDpmsFilter();
     void clearDpmsFilter();
 
-    Output *createVirtualOutput(const QString &name, const QSize &size, double scale) override;
+    Output *createVirtualOutput(const QString &name, const QSize &size, double scale, VirtualOutputType type) override;
     void removeVirtualOutput(Output *output) override;
 
     std::optional<DmaBufParams> testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers) override;
@@ -327,7 +327,7 @@ private:
     void createOutputs();
     void destroyOutputs();
 
-    WaylandOutput *createOutput(const QString &name, const QSize &size);
+    WaylandOutput *createOutput(const QString &name, const QSize &size, bool placeholder);
 
     wl_display *m_display;
     KWayland::Client::EventQueue *m_eventQueue;

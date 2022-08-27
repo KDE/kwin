@@ -110,7 +110,7 @@ void ScreencastManager::streamVirtualOutput(KWaylandServer::ScreencastStreamV1In
                                             double scale,
                                             KWaylandServer::ScreencastV1Interface::CursorMode mode)
 {
-    auto output = kwinApp()->platform()->createVirtualOutput(name, size, scale);
+    auto output = kwinApp()->platform()->createVirtualOutput(name, size, scale, VirtualOutputType::Normal);
     streamOutput(stream, output, mode);
     connect(stream, &KWaylandServer::ScreencastStreamV1Interface::finished, output, [output] {
         kwinApp()->platform()->removeVirtualOutput(output);

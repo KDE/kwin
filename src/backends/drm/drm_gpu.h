@@ -74,7 +74,7 @@ public:
 
     bool updateOutputs();
 
-    DrmVirtualOutput *createVirtualOutput(const QString &name, const QSize &size, double scale, DrmVirtualOutput::Type type);
+    DrmVirtualOutput *createVirtualOutput(const QString &name, const QSize &size, double scale, VirtualOutputType type);
     void removeVirtualOutput(DrmVirtualOutput *output);
 
     DrmPipeline::Error testPendingConfiguration();

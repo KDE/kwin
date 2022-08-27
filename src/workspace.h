@@ -74,6 +74,7 @@ class Screens;
 #if KWIN_BUILD_ACTIVITIES
 class Activities;
 #endif
+class PlaceholderInputEventFilter;
 
 class KWIN_EXPORT Workspace : public QObject
 {
@@ -750,6 +751,9 @@ private:
 #if KWIN_BUILD_ACTIVITIES
     std::unique_ptr<Activities> m_activities;
 #endif
+
+    Output *m_placeholderOutput = nullptr;
+    std::unique_ptr<PlaceholderInputEventFilter> m_placeholderFilter;
 
 private:
     friend bool performTransiencyCheck();

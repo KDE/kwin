@@ -10,6 +10,7 @@
 #pragma once
 
 #include "drm_abstract_output.h"
+#include "platform.h"
 
 #include <QObject>
 #include <QRect>
@@ -26,12 +27,7 @@ class DrmVirtualOutput : public DrmAbstractOutput
     Q_OBJECT
 
 public:
-    enum class Type {
-        Virtual,
-        Placeholder,
-    };
-
-    DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size, Type type);
+    DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size, VirtualOutputType type);
     ~DrmVirtualOutput() override;
 
     bool present() override;
@@ -41,7 +37,6 @@ public:
 private:
     void vblank(std::chrono::nanoseconds timestamp);
     void setDpmsMode(DpmsMode mode) override;
-    void updateEnablement(bool enable) override;
 
     std::shared_ptr<DrmOutputLayer> m_layer;
     bool m_pageFlipPending = true;

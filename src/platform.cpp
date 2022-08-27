@@ -142,11 +142,12 @@ void Platform::setReady(bool ready)
     Q_EMIT readyChanged(m_ready);
 }
 
-Output *Platform::createVirtualOutput(const QString &name, const QSize &size, double scale)
+Output *Platform::createVirtualOutput(const QString &name, const QSize &size, double scale, VirtualOutputType type)
 {
     Q_UNUSED(name);
     Q_UNUSED(size);
     Q_UNUSED(scale);
+    Q_UNUSED(type);
     return nullptr;
 }
 

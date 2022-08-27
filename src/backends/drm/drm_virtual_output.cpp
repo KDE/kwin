@@ -20,7 +20,7 @@
 namespace KWin
 {
 
-DrmVirtualOutput::DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size, Type type)
+DrmVirtualOutput::DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size, VirtualOutputType type)
     : DrmAbstractOutput(gpu)
     , m_vsyncMonitor(SoftwareVsyncMonitor::create())
 {
@@ -33,7 +33,7 @@ DrmVirtualOutput::DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize
     setInformation(Information{
         .name = QStringLiteral("Virtual-") + name,
         .physicalSize = size,
-        .placeholder = type == Type::Placeholder,
+        .placeholder = type == VirtualOutputType::Placeholder,
     });
 
     recreateSurface();
@@ -61,11 +61,6 @@ void DrmVirtualOutput::vblank(std::chrono::nanoseconds timestamp)
 void DrmVirtualOutput::setDpmsMode(DpmsMode mode)
 {
     setDpmsModeInternal(mode);
-}
-
-void DrmVirtualOutput::updateEnablement(bool enable)
-{
-    m_gpu->platform()->enableOutput(this, enable);
 }
 
 DrmOutputLayer *DrmVirtualOutput::outputLayer() const

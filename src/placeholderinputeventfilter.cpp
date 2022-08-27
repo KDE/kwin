@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "drm_placeholderinputeventfilter.h"
+#include "placeholderinputeventfilter.h"
 
 namespace KWin
 {

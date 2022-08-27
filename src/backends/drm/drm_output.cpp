@@ -235,11 +235,6 @@ QList<std::shared_ptr<OutputMode>> DrmOutput::getModes() const
     return ret;
 }
 
-void DrmOutput::updateEnablement(bool enable)
-{
-    m_gpu->platform()->enableOutput(this, enable);
-}
-
 void DrmOutput::setDpmsMode(DpmsMode mode)
 {
     if (mode == DpmsMode::Off) {

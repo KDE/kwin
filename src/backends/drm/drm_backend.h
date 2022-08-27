@@ -11,7 +11,6 @@
 #include "platform.h"
 
 #include "dpmsinputeventfilter.h"
-#include "drm_placeholderinputeventfilter.h"
 
 #include <QPointer>
 #include <QSize>
@@ -55,15 +54,13 @@ public:
 
     Outputs outputs() const override;
 
-    void enableOutput(DrmAbstractOutput *output, bool enable);
-
     void createDpmsFilter();
     void checkOutputsAreOn();
 
     QVector<CompositingType> supportedCompositors() const override;
 
     QString supportInformation() const override;
-    Output *createVirtualOutput(const QString &name, const QSize &size, double scale) override;
+    Output *createVirtualOutput(const QString &name, const QSize &size, double scale, VirtualOutputType type) override;
     void removeVirtualOutput(Output *output) override;
 
     DrmGpu *primaryGpu() const;
@@ -109,7 +106,6 @@ private:
     const QStringList m_explicitGpus;
     std::vector<std::unique_ptr<DrmGpu>> m_gpus;
     std::unique_ptr<DpmsInputEventFilter> m_dpmsFilter;
-    std::unique_ptr<PlaceholderInputEventFilter> m_placeholderFilter;
     DrmRenderBackend *m_renderBackend = nullptr;
 
     gbm_bo *createBo(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers);

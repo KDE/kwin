@@ -68,7 +68,6 @@ public:
     void setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation) override;
 
 private:
-    void updateEnablement(bool enable) override;
     bool setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
 

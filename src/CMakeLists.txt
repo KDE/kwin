@@ -93,6 +93,7 @@ target_sources(kwin PRIVATE
     outputconfiguration.cpp
     outputlayer.cpp
     overlaywindow.cpp
+    placeholderinputeventfilter.cpp
     placement.cpp
     platform.cpp
     plugin.cpp

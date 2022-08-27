@@ -21,7 +21,6 @@ target_sources(kwin PRIVATE
     drm_output.cpp
     drm_pipeline.cpp
     drm_pipeline_legacy.cpp
-    drm_placeholderinputeventfilter.cpp
     drm_property.cpp
     drm_qpainter_backend.cpp
     drm_qpainter_layer.cpp
