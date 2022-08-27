@@ -221,8 +221,6 @@ void Workspace::init()
         slotPlatformOutputAdded(output);
     }
 
-    m_screens->init();
-
     // create VirtualDesktopManager and perform dependency injection
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
     connect(vds, &VirtualDesktopManager::desktopCreated, this, &Workspace::slotDesktopAdded);

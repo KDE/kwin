@@ -33,39 +33,11 @@ class KWIN_EXPORT Screens : public QObject
 public:
     explicit Screens();
 
-    void init();
-
-    /**
-     * The highest scale() of all connected screens
-     * for use when deciding what scale to load global assets at
-     * Similar to QGuiApplication::scale
-     * @see scale
-     */
-    qreal maxScale() const;
-
-    /**
-     * The output scale for this display, for use by high DPI displays
-     */
-    qreal scale(int screen) const;
-
 Q_SIGNALS:
     /**
      * Emitted whenever the screens are changed either count or geometry.
      */
     void changed();
-    /**
-     * Emitted when the maximum scale of all attached screens changes
-     * @see maxScale
-     */
-    void maxScaleChanged();
-
-private Q_SLOTS:
-    void updateSize();
-
-private:
-    Output *findOutput(int screenId) const;
-
-    qreal m_maxScale;
 };
 }
 
