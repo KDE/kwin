@@ -38,7 +38,6 @@
 #include "pluginmanager.h"
 #include "rules.h"
 #include "screenedge.h"
-#include "screens.h"
 #include "scripting/scripting.h"
 #include "syncalarmx11filter.h"
 #include "x11window.h"
@@ -158,7 +157,6 @@ Workspace::Workspace()
     m_rulebook = std::make_unique<RuleBook>();
     m_rulebook->load();
 
-    m_screens = std::make_unique<Screens>();
     m_screenEdges = std::make_unique<ScreenEdges>();
 
     // VirtualDesktopManager needs to be created prior to init shortcuts
@@ -3088,11 +3086,6 @@ RuleBook *Workspace::rulebook() const
 ScreenEdges *Workspace::screenEdges() const
 {
     return m_screenEdges.get();
-}
-
-Screens *Workspace::screens() const
-{
-    return m_screens.get();
 }
 
 #if KWIN_BUILD_TABBOX

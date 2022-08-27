@@ -110,7 +110,6 @@ target_sources(kwin PRIVATE
     rules.cpp
     scene.cpp
     screenedge.cpp
-    screens.cpp
     scripting/v2/clientmodel.cpp
     scripting/v3/clientmodel.cpp
     scripting/v3/virtualdesktopmodel.cpp

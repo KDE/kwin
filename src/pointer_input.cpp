@@ -20,7 +20,6 @@
 #include "osd.h"
 #include "output.h"
 #include "platform.h"
-#include "screens.h"
 #include "wayland/datadevice_interface.h"
 #include "wayland/display.h"
 #include "wayland/pointer_interface.h"
@@ -107,7 +106,7 @@ void PointerInputRedirection::init()
     });
     Q_EMIT m_cursor->changed();
 
-    connect(workspace()->screens(), &Screens::changed, this, &PointerInputRedirection::updateAfterScreenChange);
+    connect(kwinApp()->platform(), &Platform::screensQueried, this, &PointerInputRedirection::updateAfterScreenChange);
 #if KWIN_BUILD_SCREENLOCKER
     if (waylandServer()->hasScreenLockerIntegration()) {
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, [this]() {
