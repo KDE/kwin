@@ -304,13 +304,7 @@ void NightColorManager::readConfig()
     QTime mrB = QTime::fromString(s->morningBeginFixed(), "hhmm");
     QTime evB = QTime::fromString(s->eveningBeginFixed(), "hhmm");
 
-    int diffME = mrB.msecsTo(evB);
-    if (diffME <= 0) {
-        // morning not strictly before evening - use defaults
-        mrB = QTime(6, 0);
-        evB = QTime(18, 0);
-        diffME = mrB.msecsTo(evB);
-    }
+    int diffME = evB > mrB ? mrB.msecsTo(evB) : evB.msecsTo(mrB);
     int diffMin = qMin(diffME, MSC_DAY - diffME);
 
     int trTime = s->transitionTime() * 1000 * 60;
@@ -535,20 +529,19 @@ void NightColorManager::updateTransitionTimings(bool force)
     const QDateTime todayNow = QDateTime::currentDateTime();
 
     if (m_mode == NightColorMode::Timings) {
-        const QDateTime morB = QDateTime(todayNow.date(), m_morning);
-        const QDateTime morE = morB.addSecs(m_trTime * 60);
-        const QDateTime eveB = QDateTime(todayNow.date(), m_evening);
-        const QDateTime eveE = eveB.addSecs(m_trTime * 60);
+        const QDateTime nextMorB = QDateTime(todayNow.date().addDays(m_morning < todayNow.time()), m_morning);
+        const QDateTime nextMorE = nextMorB.addSecs(m_trTime * 60);
+        const QDateTime nextEveB = QDateTime(todayNow.date().addDays(m_evening < todayNow.time()), m_evening);
+        const QDateTime nextEveE = nextEveB.addSecs(m_trTime * 60);
 
-        if (morB <= todayNow && todayNow < eveB) {
-            m_next = DateTimes(eveB, eveE);
-            m_prev = DateTimes(morB, morE);
-        } else if (todayNow < morB) {
-            m_next = DateTimes(morB, morE);
-            m_prev = DateTimes(eveB.addDays(-1), eveE.addDays(-1));
+        if (nextEveB < nextMorB) {
+            m_daylight = true;
+            m_next = DateTimes(nextEveB, nextEveE);
+            m_prev = DateTimes(nextMorB.addDays(-1), nextMorE.addDays(-1));
         } else {
-            m_next = DateTimes(morB.addDays(1), morE.addDays(1));
-            m_prev = DateTimes(eveB, eveE);
+            m_daylight = false;
+            m_next = DateTimes(nextMorB, nextMorE);
+            m_prev = DateTimes(nextEveB.addDays(-1), nextEveE.addDays(-1));
         }
         Q_EMIT previousTransitionTimingsChanged();
         Q_EMIT scheduledTransitionTimingsChanged();
@@ -581,14 +574,17 @@ void NightColorManager::updateTransitionTimings(bool force)
         // in case this fails, reset them
         DateTimes morning = getSunTimings(todayNow, lat, lng, true);
         if (todayNow < morning.first) {
+            m_daylight = false;
             m_prev = getSunTimings(todayNow.addDays(-1), lat, lng, false);
             m_next = morning;
         } else {
             DateTimes evening = getSunTimings(todayNow, lat, lng, false);
             if (todayNow < evening.first) {
+                m_daylight = true;
                 m_prev = morning;
                 m_next = evening;
             } else {
+                m_daylight = false;
                 m_prev = evening;
                 m_next = getSunTimings(todayNow.addDays(1), lat, lng, true);
             }
@@ -635,7 +631,7 @@ bool NightColorManager::checkAutomaticSunTimings() const
 
 bool NightColorManager::daylight() const
 {
-    return m_prev.first.date() == m_next.first.date();
+    return m_daylight;
 }
 
 int NightColorManager::currentTargetTemp() const

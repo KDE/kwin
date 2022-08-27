@@ -282,6 +282,9 @@ private:
     DateTimes m_prev = DateTimes();
     DateTimes m_next = DateTimes();
 
+    // whether it is currently day or night
+    bool m_daylight = true;
+
     // manual times from config
     QTime m_morning = QTime(6, 0);
     QTime m_evening = QTime(18, 0);
