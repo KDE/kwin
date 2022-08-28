@@ -521,7 +521,18 @@ void UserActionsMenu::desktopPopupAboutToShow()
         m_desktopMenu->setPalette(m_window->palette());
     }
     QActionGroup *group = new QActionGroup(m_desktopMenu);
-    QAction *action = m_desktopMenu->addAction(i18n("&All Desktops"));
+
+    QAction *action = m_desktopMenu->addAction(i18n("Move &To Current Desktop"));
+    action->setEnabled(m_window && (m_window->isOnAllDesktops() || !m_window->isOnDesktop(vds->currentDesktop())));
+    connect(action, &QAction::triggered, this, [this]() {
+        if (!m_window) {
+            return;
+        }
+        VirtualDesktopManager *vds = VirtualDesktopManager::self();
+        workspace()->sendWindowToDesktop(m_window, vds->currentDesktop()->x11DesktopNumber(), false);
+    });
+
+    action = m_desktopMenu->addAction(i18n("&All Desktops"));
     connect(action, &QAction::triggered, this, [this]() {
         if (m_window) {
             m_window->setOnAllDesktops(!m_window->isOnAllDesktops());
