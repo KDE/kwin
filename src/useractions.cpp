@@ -533,9 +533,6 @@ void UserActionsMenu::desktopPopupAboutToShow()
     }
     group->addAction(action);
 
-    if (m_window && m_window->isOnAllDesktops()) {
-        action->setChecked(true);
-    }
     m_desktopMenu->addSeparator();
 
     const uint BASE = 10;
