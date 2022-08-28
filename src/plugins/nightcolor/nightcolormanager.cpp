@@ -266,7 +266,8 @@ void NightColorManager::readConfig()
         break;
     }
 
-    m_nightTargetTemp = qBound(MIN_TEMPERATURE, s->nightTemperature(), NEUTRAL_TEMPERATURE);
+    m_dayTargetTemp = qBound(MIN_TEMPERATURE, s->dayTemperature(), DEFAULT_DAY_TEMPERATURE);
+    m_nightTargetTemp = qBound(MIN_TEMPERATURE, s->nightTemperature(), DEFAULT_DAY_TEMPERATURE);
 
     double lat, lng;
     auto correctReadin = [&lat, &lng]() {
@@ -628,7 +629,7 @@ bool NightColorManager::daylight() const
 int NightColorManager::currentTargetTemp() const
 {
     if (!m_running) {
-        return NEUTRAL_TEMPERATURE;
+        return DEFAULT_DAY_TEMPERATURE;
     }
 
     if (m_mode == NightColorMode::Constant) {

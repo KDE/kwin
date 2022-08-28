@@ -300,9 +300,9 @@ private:
     QTimer *m_quickAdjustTimer = nullptr;
     QTimer *m_previewTimer = nullptr;
 
-    int m_currentTemp = NEUTRAL_TEMPERATURE;
-    int m_targetTemperature = NEUTRAL_TEMPERATURE;
-    int m_dayTargetTemp = NEUTRAL_TEMPERATURE;
+    int m_currentTemp = DEFAULT_DAY_TEMPERATURE;
+    int m_targetTemperature = DEFAULT_DAY_TEMPERATURE;
+    int m_dayTargetTemp = DEFAULT_DAY_TEMPERATURE;
     int m_nightTargetTemp = DEFAULT_NIGHT_TEMPERATURE;
 
     int m_inhibitReferenceCount = 0;

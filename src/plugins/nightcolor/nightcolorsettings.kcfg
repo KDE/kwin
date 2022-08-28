@@ -17,6 +17,9 @@
             </choices>
             <default>NightColorMode::Automatic</default>
         </entry>
+        <entry name="DayTemperature" type="Int">
+            <default>6500</default>
+        </entry>
         <entry name="NightTemperature" type="Int">
             <default>4500</default>
         </entry>
