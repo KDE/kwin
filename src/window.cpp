@@ -3942,16 +3942,8 @@ void Window::sendToOutput(Output *newOutput)
 
     if (isFullScreen()) {
         updateGeometryRestoresForFullscreen(newOutput);
-        checkWorkspacePosition(oldGeom);
-    } else {
-        // align geom_restore - checkWorkspacePosition operates on it
-        setGeometryRestore(moveResizeGeometry());
-
-        checkWorkspacePosition(oldGeom);
-
-        // re-align geom_restore to constrained geometry
-        setGeometryRestore(moveResizeGeometry());
     }
+    checkWorkspacePosition(oldGeom);
     // finally reset special states
     // NOTICE that MaximizeRestore/QuickTileFlag::None checks are required.
     // eg. setting QuickTileFlag::None would break maximization
