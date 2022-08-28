@@ -548,14 +548,16 @@ void NightColorManager::updateTransitionTimings(bool force)
 
     if (!force) {
         // first try by only switching the timings
-        if (daylight()) {
-            // next is morning
-            m_prev = m_next;
-            m_next = getSunTimings(todayNow.addDays(1), lat, lng, true);
-        } else {
+        if (m_prev.first.date() == m_next.first.date()) {
             // next is evening
+            m_daylight = true;
             m_prev = m_next;
             m_next = getSunTimings(todayNow, lat, lng, false);
+        } else {
+            // next is morning
+            m_daylight = false;
+            m_prev = m_next;
+            m_next = getSunTimings(todayNow.addDays(1), lat, lng, true);
         }
     }
 
