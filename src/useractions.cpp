@@ -563,7 +563,9 @@ void UserActionsMenu::desktopPopupAboutToShow()
     }
 
     m_desktopMenu->addSeparator();
+
     action = m_desktopMenu->addAction(i18nc("Create a new desktop and move the window there", "&New Desktop"));
+    action->setIcon(QIcon::fromTheme(QStringLiteral("list-add")));
     connect(action, &QAction::triggered, this, [this]() {
         if (!m_window) {
             return;
