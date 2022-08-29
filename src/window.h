@@ -1142,6 +1142,7 @@ public:
 
     virtual QRectF resizeWithChecks(const QRectF &geometry, const QSizeF &s) = 0;
     void keepInArea(QRectF area, bool partial = false);
+    QRectF keepInArea(QRectF geometry, QRectF area, bool partial = false);
     virtual QSizeF minSize() const;
     virtual QSizeF maxSize() const;
 

@@ -1505,7 +1505,7 @@ void Window::handlePaletteChange()
     Q_EMIT paletteChanged(palette());
 }
 
-void Window::keepInArea(QRectF area, bool partial)
+QRectF Window::keepInArea(QRectF geometry, QRectF area, bool partial)
 {
     if (partial) {
         // increase the area so that can have only 100 pixels in the area
@@ -1517,13 +1517,11 @@ void Window::keepInArea(QRectF area, bool partial)
     }
     if (!partial) {
         // resize to fit into area
-        const QRectF geometry = moveResizeGeometry();
         if (area.width() < geometry.width() || area.height() < geometry.height()) {
-            moveResize(resizeWithChecks(geometry, geometry.size().boundedTo(area.size())));
+            geometry = resizeWithChecks(geometry, geometry.size().boundedTo(area.size()));
         }
     }
 
-    QRectF geometry = moveResizeGeometry();
     if (geometry.right() > area.right() && geometry.width() <= area.width()) {
         geometry.moveRight(area.right());
     }
@@ -1537,10 +1535,12 @@ void Window::keepInArea(QRectF area, bool partial)
     if (geometry.top() < area.top()) {
         geometry.moveTop(area.top());
     }
+    return geometry;
+}
 
-    if (moveResizeGeometry().topLeft() != geometry.topLeft()) {
-        move(geometry.topLeft());
-    }
+void Window::keepInArea(QRectF area, bool partial)
+{
+    moveResize(keepInArea(moveResizeGeometry(), area, partial));
 }
 
 /**
@@ -3930,15 +3930,15 @@ void Window::sendToOutput(Output *newOutput)
     center.setY(center.y() * screenArea.height() / oldScreenArea.height());
     center += screenArea.center();
     newGeom.moveCenter(center);
-    moveResize(newGeom);
 
     // If the window was inside the old screen area, explicitly make sure its inside also the new screen area.
     // Calling checkWorkspacePosition() should ensure that, but when moving to a small screen the window could
     // be big enough to overlap outside of the new screen area, making struts from other screens come into effect,
     // which could alter the resulting geometry.
     if (oldScreenArea.contains(oldGeom)) {
-        keepInArea(screenArea);
+        newGeom = keepInArea(newGeom, screenArea);
     }
+    moveResize(newGeom);
 
     if (isFullScreen()) {
         updateGeometryRestoresForFullscreen(newOutput);
