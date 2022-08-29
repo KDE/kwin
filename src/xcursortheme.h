@@ -112,6 +112,16 @@ public:
     bool isEmpty() const;
 
     /**
+     * Returns the name of the cursor theme.
+     */
+    QString name() const;
+
+    /**
+     * Returns the device pixel ratio of the cursor sprites.
+     */
+    qreal devicePixelRatio() const;
+
+    /**
      * Returns the list of cursor sprites for the cursor with the given @a name.
      */
     QVector<KXcursorSprite> shape(const QByteArray &name) const;

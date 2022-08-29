@@ -182,6 +182,8 @@ class WaylandCursorImage : public QObject
 public:
     explicit WaylandCursorImage(QObject *parent = nullptr);
 
+    void reconfigure();
+
     struct Image
     {
         QImage image;
@@ -196,8 +198,6 @@ Q_SIGNALS:
 
 private:
     bool loadThemeCursor_helper(const QByteArray &name, Image *cursorImage);
-    bool ensureCursorTheme();
-    void invalidateCursorTheme();
 
     KXcursorTheme m_cursorTheme;
 };

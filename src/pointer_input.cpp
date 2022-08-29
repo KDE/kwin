@@ -1216,36 +1216,33 @@ WaylandCursorImage::WaylandCursorImage(QObject *parent)
     : QObject(parent)
 {
     Cursor *pointerCursor = Cursors::self()->mouse();
+    reconfigure();
 
-    connect(pointerCursor, &Cursor::themeChanged, this, &WaylandCursorImage::invalidateCursorTheme);
-    connect(workspace()->screens(), &Screens::maxScaleChanged, this, &WaylandCursorImage::invalidateCursorTheme);
+    connect(pointerCursor, &Cursor::themeChanged, this, &WaylandCursorImage::reconfigure);
+    connect(workspace()->screens(), &Screens::changed, this, &WaylandCursorImage::reconfigure);
 }
 
-bool WaylandCursorImage::ensureCursorTheme()
+void WaylandCursorImage::reconfigure()
 {
-    if (!m_cursorTheme.isEmpty()) {
-        return true;
-    }
-
     const Cursor *pointerCursor = Cursors::self()->mouse();
-    const qreal targetDevicePixelRatio = workspace()->screens()->maxScale();
+    const QString themeName = pointerCursor->themeName();
 
-    m_cursorTheme = KXcursorTheme(pointerCursor->themeName(), pointerCursor->themeSize(), targetDevicePixelRatio);
-    if (!m_cursorTheme.isEmpty()) {
-        return true;
+    qreal devicePixelRatio = 1;
+    const auto outputs = workspace()->outputs();
+    for (const Output *output : outputs) {
+        if (output->scale() > devicePixelRatio) {
+            devicePixelRatio = output->scale();
+        }
     }
 
-    m_cursorTheme = KXcursorTheme(Cursor::defaultThemeName(), Cursor::defaultThemeSize(), targetDevicePixelRatio);
-    if (!m_cursorTheme.isEmpty()) {
-        return true;
+    if (m_cursorTheme.name() == themeName && m_cursorTheme.devicePixelRatio() == devicePixelRatio) {
+        return;
     }
 
-    return false;
-}
-
-void WaylandCursorImage::invalidateCursorTheme()
-{
-    m_cursorTheme = KXcursorTheme();
+    m_cursorTheme = KXcursorTheme(themeName, pointerCursor->themeSize(), devicePixelRatio);
+    if (m_cursorTheme.isEmpty()) {
+        m_cursorTheme = KXcursorTheme(Cursor::defaultThemeName(), Cursor::defaultThemeSize(), devicePixelRatio);
+    }
 }
 
 void WaylandCursorImage::loadThemeCursor(const CursorShape &shape, Image *cursorImage)
@@ -1255,10 +1252,6 @@ void WaylandCursorImage::loadThemeCursor(const CursorShape &shape, Image *cursor
 
 void WaylandCursorImage::loadThemeCursor(const QByteArray &name, Image *cursorImage)
 {
-    if (!ensureCursorTheme()) {
-        return;
-    }
-
     if (loadThemeCursor_helper(name, cursorImage)) {
         return;
     }

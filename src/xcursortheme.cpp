@@ -33,6 +33,8 @@ public:
     void loadCursors(const QString &packagePath, int size, qreal devicePixelRatio);
 
     QHash<QByteArray, QVector<KXcursorSprite>> registry;
+    QString name;
+    qreal devicePixelRatio;
 };
 
 KXcursorSprite::KXcursorSprite()
@@ -184,6 +186,9 @@ KXcursorTheme::KXcursorTheme()
 KXcursorTheme::KXcursorTheme(const QString &themeName, int size, qreal devicePixelRatio)
     : d(new KXcursorThemePrivate)
 {
+    d->devicePixelRatio = devicePixelRatio;
+    d->name = themeName;
+
     d->load(themeName, size, devicePixelRatio);
 }
 
@@ -205,6 +210,16 @@ KXcursorTheme &KXcursorTheme::operator=(const KXcursorTheme &other)
 bool KXcursorTheme::isEmpty() const
 {
     return d->registry.isEmpty();
+}
+
+QString KXcursorTheme::name() const
+{
+    return d->name;
+}
+
+qreal KXcursorTheme::devicePixelRatio() const
+{
+    return d->devicePixelRatio;
 }
 
 QVector<KXcursorSprite> KXcursorTheme::shape(const QByteArray &name) const
