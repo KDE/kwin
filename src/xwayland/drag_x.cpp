@@ -44,10 +44,12 @@ static QStringList atomToMimeTypes(xcb_atom_t atom)
         mimeTypes << QString::fromLatin1("text/plain;charset=utf-8");
     } else if (atom == atoms->text) {
         mimeTypes << QString::fromLatin1("text/plain");
-    } else if (atom == atoms->uri_list || atom == atoms->netscape_url || atom == atoms->moz_url) {
-        // We identify netscape and moz format as less detailed formats text/uri-list,
-        // text/x-uri and accept the information loss.
+    } else if (atom == atoms->uri_list) {
         mimeTypes << QString::fromLatin1("text/uri-list") << QString::fromLatin1("text/x-uri");
+    } else if (atom == atoms->moz_url) {
+        mimeTypes << QStringLiteral("text/x-moz-url");
+    } else if (atom == atoms->netscape_url) {
+        mimeTypes << QStringLiteral("_NETSCAPE_URL");
     } else {
         mimeTypes << Selection::atomName(atom);
     }

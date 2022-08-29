@@ -155,41 +155,15 @@ public:
 
     void transferFromProperty(xcb_get_property_reply_t *reply);
 
-    virtual void setData(const char *value, int length);
+    void setData(const char *value, int length);
     QByteArray data() const;
 
     void partRead(int length);
-
-protected:
-    void setDataInternal(QByteArray data)
-    {
-        m_data = data;
-    }
 
 private:
     xcb_get_property_reply_t *m_propertyReply = nullptr;
     int m_propertyStart = 0;
     QByteArray m_data;
-};
-
-/**
- * Compatibility receiver for clients only
- * supporting the NETSCAPE_URL scheme (Firefox)
- */
-class NetscapeUrlReceiver : public DataReceiver
-{
-public:
-    void setData(const char *value, int length) override;
-};
-
-/**
- * Compatibility receiver for clients only
- * supporting the text/x-moz-url scheme (Chromium on own drags)
- */
-class MozUrlReceiver : public DataReceiver
-{
-public:
-    void setData(const char *value, int length) override;
 };
 
 /**
