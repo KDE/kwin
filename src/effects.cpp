@@ -731,8 +731,9 @@ bool EffectsHandlerImpl::tabletToolEvent(TabletEvent *event)
     return false;
 }
 
-bool EffectsHandlerImpl::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId)
+bool EffectsHandlerImpl::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, uint time)
 {
+    Q_UNUSED(time)
     // TODO: reverse call order?
     for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
         if (it->second->tabletToolButtonEvent(button, pressed, tabletToolId.m_uniqueId)) {
@@ -742,8 +743,9 @@ bool EffectsHandlerImpl::tabletToolButtonEvent(uint button, bool pressed, const 
     return false;
 }
 
-bool EffectsHandlerImpl::tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId)
+bool EffectsHandlerImpl::tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, uint time)
 {
+    Q_UNUSED(time)
     // TODO: reverse call order?
     for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
         if (it->second->tabletPadButtonEvent(button, pressed, tabletPadId.data)) {
@@ -753,8 +755,9 @@ bool EffectsHandlerImpl::tabletPadButtonEvent(uint button, bool pressed, const T
     return false;
 }
 
-bool EffectsHandlerImpl::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId)
+bool EffectsHandlerImpl::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time)
 {
+    Q_UNUSED(time)
     // TODO: reverse call order?
     for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
         if (it->second->tabletPadStripEvent(number, position, isFinger, tabletPadId.data)) {
@@ -764,8 +767,9 @@ bool EffectsHandlerImpl::tabletPadStripEvent(int number, int position, bool isFi
     return false;
 }
 
-bool EffectsHandlerImpl::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId)
+bool EffectsHandlerImpl::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time)
 {
+    Q_UNUSED(time)
     // TODO: reverse call order?
     for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
         if (it->second->tabletPadRingEvent(number, position, isFinger, tabletPadId.data)) {

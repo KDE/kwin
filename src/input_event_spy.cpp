@@ -131,33 +131,37 @@ void InputEventSpy::tabletToolEvent(TabletEvent *event)
     Q_UNUSED(event)
 }
 
-void InputEventSpy::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId)
+void InputEventSpy::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, uint time)
 {
     Q_UNUSED(button)
     Q_UNUSED(pressed)
     Q_UNUSED(tabletToolId)
+    Q_UNUSED(time)
 }
 
-void InputEventSpy::tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId)
+void InputEventSpy::tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, uint time)
 {
     Q_UNUSED(button)
     Q_UNUSED(pressed)
     Q_UNUSED(tabletPadId)
+    Q_UNUSED(time)
 }
 
-void InputEventSpy::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId)
+void InputEventSpy::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time)
 {
     Q_UNUSED(number)
     Q_UNUSED(position)
     Q_UNUSED(isFinger)
     Q_UNUSED(tabletPadId)
+    Q_UNUSED(time)
 }
 
-void InputEventSpy::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId)
+void InputEventSpy::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time)
 {
     Q_UNUSED(number)
     Q_UNUSED(position)
     Q_UNUSED(isFinger)
     Q_UNUSED(tabletPadId)
+    Q_UNUSED(time)
 }
 }

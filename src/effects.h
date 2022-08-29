@@ -225,10 +225,10 @@ public:
     bool touchUp(qint32 id, quint32 time);
 
     bool tabletToolEvent(KWin::TabletEvent *event);
-    bool tabletToolButtonEvent(uint button, bool pressed, const KWin::TabletToolId &tabletToolId);
-    bool tabletPadButtonEvent(uint button, bool pressed, const KWin::TabletPadId &tabletPadId);
-    bool tabletPadStripEvent(int number, int position, bool isFinger, const KWin::TabletPadId &tabletPadId);
-    bool tabletPadRingEvent(int number, int position, bool isFinger, const KWin::TabletPadId &tabletPadId);
+    bool tabletToolButtonEvent(uint button, bool pressed, const KWin::TabletToolId &tabletToolId, uint time);
+    bool tabletPadButtonEvent(uint button, bool pressed, const KWin::TabletPadId &tabletPadId, uint time);
+    bool tabletPadStripEvent(int number, int position, bool isFinger, const KWin::TabletPadId &tabletPadId, uint time);
+    bool tabletPadRingEvent(int number, int position, bool isFinger, const KWin::TabletPadId &tabletPadId, uint time);
 
     void highlightWindows(const QVector<EffectWindow *> &windows);
 

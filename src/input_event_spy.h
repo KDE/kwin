@@ -81,10 +81,10 @@ public:
     virtual void switchEvent(SwitchEvent *event);
 
     virtual void tabletToolEvent(TabletEvent *event);
-    virtual void tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId);
-    virtual void tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId);
-    virtual void tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId);
-    virtual void tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId);
+    virtual void tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, uint time);
+    virtual void tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, uint time);
+    virtual void tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time);
+    virtual void tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time);
 };
 
 } // namespace KWin

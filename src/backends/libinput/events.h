@@ -339,6 +339,11 @@ public:
         return libinput_event_tablet_tool_get_tool(m_tabletToolEvent);
     }
 
+    uint32_t time() const
+    {
+        return libinput_event_tablet_tool_get_time(m_tabletToolEvent);
+    }
+
 private:
     libinput_event_tablet_tool *m_tabletToolEvent;
 };
@@ -359,6 +364,10 @@ public:
     libinput_tablet_pad_ring_axis_source source() const
     {
         return libinput_event_tablet_pad_get_ring_source(m_tabletPadEvent);
+    }
+    uint32_t time() const
+    {
+        return libinput_event_tablet_pad_get_time(m_tabletPadEvent);
     }
 
 private:
@@ -382,6 +391,10 @@ public:
     {
         return libinput_event_tablet_pad_get_strip_source(m_tabletPadEvent);
     }
+    uint32_t time() const
+    {
+        return libinput_event_tablet_pad_get_time(m_tabletPadEvent);
+    }
 
 private:
     libinput_event_tablet_pad *m_tabletPadEvent;
@@ -400,6 +413,10 @@ public:
     {
         const auto state = libinput_event_tablet_pad_get_button_state(m_tabletPadEvent);
         return state == LIBINPUT_BUTTON_STATE_PRESSED;
+    }
+    uint32_t time() const
+    {
+        return libinput_event_tablet_pad_get_time(m_tabletPadEvent);
     }
 
 private:

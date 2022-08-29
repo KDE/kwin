@@ -432,10 +432,10 @@ public:
     virtual bool switchEvent(SwitchEvent *event);
 
     virtual bool tabletToolEvent(TabletEvent *event);
-    virtual bool tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId);
-    virtual bool tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId);
-    virtual bool tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId);
-    virtual bool tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId);
+    virtual bool tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, uint time);
+    virtual bool tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, uint time);
+    virtual bool tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time);
+    virtual bool tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time);
 
 protected:
     void passToWaylandServer(QKeyEvent *event);

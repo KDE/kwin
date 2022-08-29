@@ -239,37 +239,41 @@ bool InputEventFilter::tabletToolEvent(TabletEvent *event)
     return false;
 }
 
-bool InputEventFilter::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletId)
+bool InputEventFilter::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletId, uint time)
 {
     Q_UNUSED(button)
     Q_UNUSED(pressed)
     Q_UNUSED(tabletId)
+    Q_UNUSED(time)
     return false;
 }
 
-bool InputEventFilter::tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId)
+bool InputEventFilter::tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, uint time)
 {
     Q_UNUSED(button)
     Q_UNUSED(pressed)
     Q_UNUSED(tabletPadId)
+    Q_UNUSED(time)
     return false;
 }
 
-bool InputEventFilter::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId)
+bool InputEventFilter::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time)
 {
     Q_UNUSED(number)
     Q_UNUSED(position)
     Q_UNUSED(isFinger)
     Q_UNUSED(tabletPadId)
+    Q_UNUSED(time)
     return false;
 }
 
-bool InputEventFilter::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId)
+bool InputEventFilter::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time)
 {
     Q_UNUSED(number)
     Q_UNUSED(position)
     Q_UNUSED(isFinger)
     Q_UNUSED(tabletPadId)
+    Q_UNUSED(time)
     return false;
 }
 
@@ -620,33 +624,33 @@ public:
         }
         return static_cast<EffectsHandlerImpl *>(effects)->tabletToolEvent(event);
     }
-    bool tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId) override
+    bool tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, uint time) override
     {
         if (!effects) {
             return false;
         }
-        return static_cast<EffectsHandlerImpl *>(effects)->tabletToolButtonEvent(button, pressed, tabletToolId);
+        return static_cast<EffectsHandlerImpl *>(effects)->tabletToolButtonEvent(button, pressed, tabletToolId, time);
     }
-    bool tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId) override
+    bool tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, uint time) override
     {
         if (!effects) {
             return false;
         }
-        return static_cast<EffectsHandlerImpl *>(effects)->tabletPadButtonEvent(button, pressed, tabletPadId);
+        return static_cast<EffectsHandlerImpl *>(effects)->tabletPadButtonEvent(button, pressed, tabletPadId, time);
     }
-    bool tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId) override
+    bool tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time) override
     {
         if (!effects) {
             return false;
         }
-        return static_cast<EffectsHandlerImpl *>(effects)->tabletPadStripEvent(number, position, isFinger, tabletPadId);
+        return static_cast<EffectsHandlerImpl *>(effects)->tabletPadStripEvent(number, position, isFinger, tabletPadId, time);
     }
-    bool tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId) override
+    bool tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time) override
     {
         if (!effects) {
             return false;
         }
-        return static_cast<EffectsHandlerImpl *>(effects)->tabletPadRingEvent(number, position, isFinger, tabletPadId);
+        return static_cast<EffectsHandlerImpl *>(effects)->tabletPadRingEvent(number, position, isFinger, tabletPadId, time);
     }
 };
 
@@ -2296,8 +2300,9 @@ public:
         return true;
     }
 
-    bool tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId) override
+    bool tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, uint time) override
     {
+        Q_UNUSED(time)
         KWaylandServer::TabletSeatV2Interface *tabletSeat = findTabletSeat();
         auto tool = tabletSeat->toolByHardwareSerial(tabletToolId.m_serialId, getType(tabletToolId));
         if (!tool) {
@@ -2328,17 +2333,17 @@ public:
         return pad;
     }
 
-    bool tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId) override
+    bool tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, uint time) override
     {
         auto pad = findAndAdoptPad(tabletPadId);
         if (!pad) {
             return false;
         }
-        pad->sendButton(QDateTime::currentMSecsSinceEpoch(), button, pressed);
+        pad->sendButton(time, button, pressed);
         return true;
     }
 
-    bool tabletPadRingEvent(int number, int angle, bool isFinger, const TabletPadId &tabletPadId) override
+    bool tabletPadRingEvent(int number, int angle, bool isFinger, const TabletPadId &tabletPadId, uint time) override
     {
         auto pad = findAndAdoptPad(tabletPadId);
         if (!pad) {
@@ -2350,11 +2355,11 @@ public:
         if (isFinger) {
             ring->sendSource(KWaylandServer::TabletPadRingV2Interface::SourceFinger);
         }
-        ring->sendFrame(QDateTime::currentMSecsSinceEpoch());
+        ring->sendFrame(time);
         return true;
     }
 
-    bool tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId) override
+    bool tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time) override
     {
         auto pad = findAndAdoptPad(tabletPadId);
         if (!pad) {
@@ -2366,7 +2371,7 @@ public:
         if (isFinger) {
             strip->sendSource(KWaylandServer::TabletPadStripV2Interface::SourceFinger);
         }
-        strip->sendFrame(QDateTime::currentMSecsSinceEpoch());
+        strip->sendFrame(time);
         return true;
     }
 
@@ -2688,16 +2693,18 @@ public:
         update();
     }
 
-    void tabletPadButtonEvent(uint, bool pressed, const KWin::TabletPadId &) override
+    void tabletPadButtonEvent(uint, bool pressed, const KWin::TabletPadId &, uint time) override
     {
+        Q_UNUSED(time)
         if (!pressed) {
             return;
         }
         update();
     }
 
-    void tabletToolButtonEvent(uint, bool pressed, const KWin::TabletToolId &) override
+    void tabletToolButtonEvent(uint, bool pressed, const KWin::TabletToolId &, uint time) override
     {
+        Q_UNUSED(time)
         if (!pressed) {
             return;
         }
@@ -2838,34 +2845,38 @@ public:
         Q_UNUSED(event)
         notifyActivity();
     }
-    void tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId) override
+    void tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, uint time) override
     {
         Q_UNUSED(button)
         Q_UNUSED(pressed)
         Q_UNUSED(tabletToolId)
+        Q_UNUSED(time)
         notifyActivity();
     }
-    void tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId) override
+    void tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, uint time) override
     {
         Q_UNUSED(button)
         Q_UNUSED(pressed)
         Q_UNUSED(tabletPadId)
+        Q_UNUSED(time)
         notifyActivity();
     }
-    void tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId) override
+    void tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time) override
     {
         Q_UNUSED(number)
         Q_UNUSED(position)
         Q_UNUSED(isFinger)
         Q_UNUSED(tabletPadId)
+        Q_UNUSED(time)
         notifyActivity();
     }
-    void tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId) override
+    void tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time) override
     {
         Q_UNUSED(number)
         Q_UNUSED(position)
         Q_UNUSED(isFinger)
         Q_UNUSED(tabletPadId)
+        Q_UNUSED(time)
         notifyActivity();
     }
 
