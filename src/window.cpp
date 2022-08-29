@@ -3881,6 +3881,47 @@ void Window::doSetQuickTileMode()
 {
 }
 
+QRectF Window::moveToArea(const QRectF &geometry, const QRectF &oldArea, const QRectF &newArea)
+{
+    QRectF ret = geometry;
+    // move the window to have the same relative position to the center of the screen
+    // (i.e. one near the middle of the right edge will also end up near the middle of the right edge)
+    QPointF center = geometry.center() - oldArea.center();
+    center.setX(center.x() * newArea.width() / oldArea.width());
+    center.setY(center.y() * newArea.height() / oldArea.height());
+    center += newArea.center();
+    ret.moveCenter(center);
+
+    // If the window was inside the old screen area, explicitly make sure its inside also the new screen area
+    if (oldArea.contains(geometry)) {
+        ret = keepInArea(ret, newArea);
+    }
+    return ret;
+}
+
+QRectF Window::ensureSpecialStateGeometry(const QRectF &geometry)
+{
+    if (isRequestedFullScreen()) {
+        return workspace()->clientArea(FullScreenArea, this, geometry.center());
+    } else if (requestedMaximizeMode() != MaximizeRestore) {
+        const QRectF maximizeArea = workspace()->clientArea(MaximizeArea, this, geometry.center());
+        QRectF ret = geometry;
+        if (requestedMaximizeMode() & MaximizeHorizontal) {
+            ret.setX(maximizeArea.x());
+            ret.setWidth(maximizeArea.width());
+        }
+        if (requestedMaximizeMode() & MaximizeVertical) {
+            ret.setY(maximizeArea.y());
+            ret.setHeight(maximizeArea.height());
+        }
+        return ret;
+    } else if (quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
+        return quickTileGeometry(quickTileMode(), geometry.center());
+    } else {
+        return geometry;
+    }
+}
+
 void Window::sendToOutput(Output *newOutput)
 {
     newOutput = rules()->checkOutput(newOutput);
@@ -3894,65 +3935,22 @@ void Window::sendToOutput(Output *newOutput)
             }
         }
     }
-    if (output() == newOutput) { // Don't use isOnScreen(), that's true even when only partially
+    const QRectF oldGeom = moveResizeGeometry();
+    // output() may be outdated here
+    if (workspace()->outputAt(oldGeom.center()) == newOutput) {
         return;
     }
 
-    GeometryUpdatesBlocker blocker(this);
+    const QRectF oldScreenArea = workspace()->clientArea(MaximizeArea, this);
+    const QRectF screenArea = workspace()->clientArea(MaximizeArea, this, newOutput);
 
-    // operating on the maximized / quicktiled window would leave the old geom_restore behind,
-    // so we clear the state first
-    MaximizeMode maxMode = maximizeMode();
-    QuickTileMode qtMode = quickTileMode();
-    if (maxMode != MaximizeRestore) {
-        maximize(MaximizeRestore);
-    }
-    if (qtMode != QuickTileMode(QuickTileFlag::None)) {
-        setQuickTileMode(QuickTileFlag::None, true);
-    }
-
-    QRectF oldScreenArea = workspace()->clientArea(MaximizeArea, this);
-    QRectF screenArea = workspace()->clientArea(MaximizeArea, this, newOutput);
-
-    // the window can have its center so that the position correction moves the new center onto
-    // the old screen, what will tile it where it is. Ie. the screen is not changed
-    // this happens esp. with electric border quicktiling
-    if (qtMode != QuickTileMode(QuickTileFlag::None)) {
-        keepInArea(oldScreenArea);
-    }
-
-    QRectF oldGeom = moveResizeGeometry();
-    QRectF newGeom = oldGeom;
-    // move the window to have the same relative position to the center of the screen
-    // (i.e. one near the middle of the right edge will also end up near the middle of the right edge)
-    QPointF center = newGeom.center() - oldScreenArea.center();
-    center.setX(center.x() * screenArea.width() / oldScreenArea.width());
-    center.setY(center.y() * screenArea.height() / oldScreenArea.height());
-    center += screenArea.center();
-    newGeom.moveCenter(center);
-
-    // If the window was inside the old screen area, explicitly make sure its inside also the new screen area.
-    // Calling checkWorkspacePosition() should ensure that, but when moving to a small screen the window could
-    // be big enough to overlap outside of the new screen area, making struts from other screens come into effect,
-    // which could alter the resulting geometry.
-    if (oldScreenArea.contains(oldGeom)) {
-        newGeom = keepInArea(newGeom, screenArea);
-    }
+    QRectF newGeom = moveToArea(oldGeom, oldScreenArea, screenArea);
+    newGeom = ensureSpecialStateGeometry(newGeom);
     moveResize(newGeom);
 
-    if (isFullScreen()) {
-        updateGeometryRestoresForFullscreen(newOutput);
-    }
-    checkWorkspacePosition(oldGeom);
-    // finally reset special states
-    // NOTICE that MaximizeRestore/QuickTileFlag::None checks are required.
-    // eg. setting QuickTileFlag::None would break maximization
-    if (maxMode != MaximizeRestore) {
-        maximize(maxMode);
-    }
-    if (qtMode != QuickTileMode(QuickTileFlag::None) && qtMode != quickTileMode()) {
-        setQuickTileMode(qtMode, true);
-    }
+    // move geometry restores to the new output as well
+    m_fullscreenGeometryRestore = moveToArea(m_fullscreenGeometryRestore, oldScreenArea, screenArea);
+    m_maximizeGeometryRestore = moveToArea(m_maximizeGeometryRestore, oldScreenArea, screenArea);
 
     auto tso = workspace()->ensureStackingOrder(transients());
     for (auto it = tso.constBegin(), end = tso.constEnd(); it != end; ++it) {

@@ -1911,8 +1911,10 @@ private:
     qreal m_opacity = 1.0;
     int m_stackingOrder = 0;
 
-private:
     void handlePaletteChange();
+    QRectF moveToArea(const QRectF &geometry, const QRectF &oldArea, const QRectF &newArea);
+    QRectF ensureSpecialStateGeometry(const QRectF &geometry);
+
     QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
     bool m_firstInTabBox = false;
     bool m_skipTaskbar = false;
