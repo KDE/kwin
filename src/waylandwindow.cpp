@@ -96,9 +96,9 @@ Window *WaylandWindow::findModal(bool allow_itself)
     return nullptr;
 }
 
-void WaylandWindow::resizeWithChecks(const QSizeF &size)
+QRectF WaylandWindow::resizeWithChecks(const QRectF &geometry, const QSizeF &size)
 {
-    const QRectF area = workspace()->clientArea(WorkArea, this);
+    const QRectF area = workspace()->clientArea(WorkArea, this, geometry.center());
 
     qreal width = size.width();
     qreal height = size.height();
@@ -110,7 +110,7 @@ void WaylandWindow::resizeWithChecks(const QSizeF &size)
     if (height > area.height()) {
         height = area.height();
     }
-    resize(QSizeF(width, height));
+    return QRectF(geometry.topLeft(), QSizeF(width, height));
 }
 
 void WaylandWindow::killWindow()

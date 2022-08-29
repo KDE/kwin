@@ -101,8 +101,9 @@ public:
     { /* nothing to do */
     }
     void updateCaption() override { /* nothing to do */ }
-    void resizeWithChecks(const QSizeF &) override
+    QRectF resizeWithChecks(const QRectF &geometry, const QSizeF &) override
     { /* nothing to do */
+        return geometry;
     }
     WindowItem *createItem() override;
 

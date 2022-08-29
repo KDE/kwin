@@ -1519,7 +1519,7 @@ void Window::keepInArea(QRectF area, bool partial)
         // resize to fit into area
         const QRectF geometry = moveResizeGeometry();
         if (area.width() < geometry.width() || area.height() < geometry.height()) {
-            resizeWithChecks(geometry.size().boundedTo(area.size()));
+            moveResize(resizeWithChecks(geometry, geometry.size().boundedTo(area.size())));
         }
     }
 

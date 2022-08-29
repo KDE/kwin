@@ -1140,7 +1140,7 @@ public:
     void resize(const QSizeF &size);
     void moveResize(const QRectF &rect);
 
-    virtual void resizeWithChecks(const QSizeF &s) = 0;
+    virtual QRectF resizeWithChecks(const QRectF &geometry, const QSizeF &s) = 0;
     void keepInArea(QRectF area, bool partial = false);
     virtual QSizeF minSize() const;
     virtual QSizeF maxSize() const;

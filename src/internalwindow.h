@@ -49,7 +49,7 @@ public:
     bool isHiddenInternal() const override;
     void hideClient() override;
     void showClient() override;
-    void resizeWithChecks(const QSizeF &size) override;
+    QRectF resizeWithChecks(const QRectF &geometry, const QSizeF &size) override;
     Window *findModal(bool allow_itself = false) override;
     bool takeFocus() override;
     void setNoBorder(bool set) override;

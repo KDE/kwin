@@ -3723,7 +3723,7 @@ void X11Window::getWmNormalHints()
         QSizeF new_size = clientSizeToFrameSize(constrainClientSize(clientSize()));
         if (new_size != size() && !isFullScreen()) {
             QRectF origClientGeometry = m_clientGeometry;
-            resizeWithChecks(new_size);
+            moveResize(resizeWithChecks(moveResizeGeometry(), new_size));
             if ((!isSpecialWindow() || isToolbar()) && !isFullScreen()) {
                 // try to keep the window in its xinerama screen if possible,
                 // if that fails at least keep it visible somewhere
@@ -3982,7 +3982,7 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
         if (requestedFrameSize != size()) { // don't restore if some app sets its own size again
             QRectF origClientGeometry = m_clientGeometry;
             GeometryUpdatesBlocker blocker(this);
-            resizeWithChecks(requestedFrameSize, xcb_gravity_t(gravity));
+            moveResize(resizeWithChecks(moveResizeGeometry(), requestedFrameSize, xcb_gravity_t(gravity)));
             if (!from_tool && (!isSpecialWindow() || isToolbar()) && !isFullScreen()) {
                 // try to keep the window in its xinerama screen if possible,
                 // if that fails at least keep it visible somewhere
@@ -4002,7 +4002,7 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
     // Handling of the real ConfigureRequest event forces sending it, as there it's necessary.
 }
 
-void X11Window::resizeWithChecks(qreal w, qreal h, xcb_gravity_t gravity)
+QRectF X11Window::resizeWithChecks(const QRectF &geometry, qreal w, qreal h, xcb_gravity_t gravity)
 {
     Q_ASSERT(!shade_geometry_change);
     if (isShade()) {
@@ -4010,9 +4010,9 @@ void X11Window::resizeWithChecks(qreal w, qreal h, xcb_gravity_t gravity)
             qCWarning(KWIN_CORE) << "Shaded geometry passed for size:";
         }
     }
-    qreal newx = x();
-    qreal newy = y();
-    QRectF area = workspace()->clientArea(WorkArea, this);
+    qreal newx = geometry.x();
+    qreal newy = geometry.y();
+    QRectF area = workspace()->clientArea(WorkArea, this, geometry.center());
     // don't allow growing larger than workarea
     if (w > area.width()) {
         w = area.width();
@@ -4031,38 +4031,38 @@ void X11Window::resizeWithChecks(qreal w, qreal h, xcb_gravity_t gravity)
     default:
         break;
     case XCB_GRAVITY_NORTH: // middle of top border doesn't move
-        newx = (newx + width() / 2) - (w / 2);
+        newx = (newx + geometry.width() / 2) - (w / 2);
         break;
     case XCB_GRAVITY_NORTH_EAST: // top right corner doesn't move
-        newx = newx + width() - w;
+        newx = newx + geometry.width() - w;
         break;
     case XCB_GRAVITY_WEST: // middle of left border doesn't move
-        newy = (newy + height() / 2) - (h / 2);
+        newy = (newy + geometry.height() / 2) - (h / 2);
         break;
     case XCB_GRAVITY_CENTER: // middle point doesn't move
-        newx = (newx + width() / 2) - (w / 2);
-        newy = (newy + height() / 2) - (h / 2);
+        newx = (newx + geometry.width() / 2) - (w / 2);
+        newy = (newy + geometry.height() / 2) - (h / 2);
         break;
     case XCB_GRAVITY_STATIC: // top left corner of _client_ window doesn't move
         // since decoration doesn't change, equal to NorthWestGravity
         break;
     case XCB_GRAVITY_EAST: // // middle of right border doesn't move
-        newx = newx + width() - w;
-        newy = (newy + height() / 2) - (h / 2);
+        newx = newx + geometry.width() - w;
+        newy = (newy + geometry.height() / 2) - (h / 2);
         break;
     case XCB_GRAVITY_SOUTH_WEST: // bottom left corner doesn't move
-        newy = newy + height() - h;
+        newy = newy + geometry.height() - h;
         break;
     case XCB_GRAVITY_SOUTH: // middle of bottom border doesn't move
-        newx = (newx + width() / 2) - (w / 2);
-        newy = newy + height() - h;
+        newx = (newx + geometry.width() / 2) - (w / 2);
+        newy = newy + geometry.height() - h;
         break;
     case XCB_GRAVITY_SOUTH_EAST: // bottom right corner doesn't move
-        newx = newx + width() - w;
-        newy = newy + height() - h;
+        newx = newx + geometry.width() - w;
+        newy = newy + geometry.height() - h;
         break;
     }
-    moveResize(QRectF{newx, newy, w, h});
+    return QRectF{newx, newy, w, h};
 }
 
 // _NET_MOVERESIZE_WINDOW

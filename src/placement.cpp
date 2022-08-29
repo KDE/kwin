@@ -613,7 +613,7 @@ void Placement::placeMaximizing(Window *c, const QRect &area, Policy nextPlaceme
             c->moveResize(area);
         }
     } else {
-        c->resizeWithChecks(c->maxSize().boundedTo(area.size()));
+        c->moveResize(c->resizeWithChecks(c->moveResizeGeometry(), c->maxSize().boundedTo(area.size())));
         place(c, area, nextPlacement);
     }
 }
