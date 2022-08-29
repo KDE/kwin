@@ -10,9 +10,9 @@
 #include "kwin_wayland_test.h"
 
 #include "composite.h"
+#include "core/platform.h"
 #include "effectloader.h"
 #include "effects.h"
-#include "platform.h"
 #include "scene.h"
 #include "wayland_server.h"
 #include "window.h"

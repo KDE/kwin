@@ -10,9 +10,9 @@
 #include "outputmanagement_v2_interface.h"
 #include "utils/common.h"
 
+#include "core/outputconfiguration.h"
+#include "core/platform.h"
 #include "main.h"
-#include "outputconfiguration.h"
-#include "platform.h"
 #include "screens.h"
 #include "workspace.h"
 

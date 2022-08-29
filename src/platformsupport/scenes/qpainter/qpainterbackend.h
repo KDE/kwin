@@ -9,7 +9,7 @@
 #ifndef KWIN_SCENE_QPAINTER_BACKEND_H
 #define KWIN_SCENE_QPAINTER_BACKEND_H
 
-#include "renderbackend.h"
+#include "core/renderbackend.h"
 
 #include <memory>
 

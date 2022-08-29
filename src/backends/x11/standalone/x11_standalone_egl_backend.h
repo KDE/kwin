@@ -7,8 +7,8 @@
 #pragma once
 
 #include "../common/x11_common_egl_backend.h"
+#include "core/outputlayer.h"
 #include "openglsurfacetexture_x11.h"
-#include "outputlayer.h"
 #include "utils/damagejournal.h"
 
 #include <kwingltexture.h>

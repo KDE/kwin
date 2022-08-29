@@ -9,10 +9,10 @@
 */
 #include "kwin_wayland_test.h"
 
+#include "core/output.h"
+#include "core/platform.h"
 #include "cursor.h"
-#include "output.h"
 #include "placement.h"
-#include "platform.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"

@@ -11,6 +11,8 @@
 #include <config-kwin.h>
 
 #include "abstract_egl_backend.h"
+#include "core/renderloop_p.h"
+#include "core/session.h"
 #include "drm_backend.h"
 #include "drm_egl_backend.h"
 #include "drm_layer.h"
@@ -22,8 +24,6 @@
 #include "drm_pipeline.h"
 #include "drm_virtual_output.h"
 #include "gbm_dmabuf.h"
-#include "renderloop_p.h"
-#include "session.h"
 #include "wayland/drmleasedevice_v1_interface.h"
 #include "wayland_server.h"
 // system

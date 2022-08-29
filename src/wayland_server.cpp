@@ -11,13 +11,13 @@
 #include <config-kwin.h>
 
 #include "composite.h"
+#include "core/output.h"
+#include "core/platform.h"
 #include "idle_inhibition.h"
 #include "inputpanelv1integration.h"
 #include "keyboard_input.h"
 #include "layershellv1integration.h"
 #include "main.h"
-#include "output.h"
-#include "platform.h"
 #include "scene.h"
 #include "unmanaged.h"
 #include "utils/serviceutils.h"

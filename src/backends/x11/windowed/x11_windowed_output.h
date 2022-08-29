@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include "output.h"
+#include "core/output.h"
 #include <kwin_export.h>
 
 #include <QObject>

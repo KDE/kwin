@@ -10,9 +10,9 @@
 #include "kwin_wayland_test.h"
 
 #include "atoms.h"
+#include "core/platform.h"
 #include "deleted.h"
 #include "main.h"
-#include "platform.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"

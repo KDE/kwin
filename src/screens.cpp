@@ -10,9 +10,9 @@
 
 #include <config-kwin.h>
 
+#include "core/output.h"
+#include "core/platform.h"
 #include "cursor.h"
-#include "output.h"
-#include "platform.h"
 #include "settings.h"
 #include "utils/common.h"
 #include <window.h>

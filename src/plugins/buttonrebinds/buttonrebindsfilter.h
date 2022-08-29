@@ -8,8 +8,8 @@
 
 #include "plugin.h"
 
+#include "core/inputdevice.h"
 #include "input.h"
-#include "inputdevice.h"
 
 class InputDevice : public KWin::InputDevice
 {

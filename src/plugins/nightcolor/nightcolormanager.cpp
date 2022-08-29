@@ -15,10 +15,10 @@
 #include "nightcolorsettings.h"
 #include "suncalc.h"
 
+#include <core/platform.h>
+#include <core/session.h>
 #include <input.h>
 #include <main.h>
-#include <platform.h>
-#include <session.h>
 #include <workspace.h>
 
 #include <KGlobalAccel>

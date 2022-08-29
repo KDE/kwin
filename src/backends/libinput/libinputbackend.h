@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "inputbackend.h"
+#include "core/inputbackend.h"
 
 #include <QThread>
 

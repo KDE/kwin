@@ -8,9 +8,9 @@
 */
 #ifndef KWIN_GLX_BACKEND_H
 #define KWIN_GLX_BACKEND_H
+#include "core/outputlayer.h"
 #include "openglbackend.h"
 #include "openglsurfacetexture_x11.h"
-#include "outputlayer.h"
 #include "utils/damagejournal.h"
 #include "x11eventfilter.h"
 

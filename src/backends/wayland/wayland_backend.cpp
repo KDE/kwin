@@ -13,7 +13,7 @@
 #include "wayland_egl_backend.h"
 #include <gbm.h>
 #endif
-#include "renderloop_p.h"
+#include "core/renderloop_p.h"
 #include "wayland_logging.h"
 #include "wayland_output.h"
 #include "wayland_qpainter_backend.h"

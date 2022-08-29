@@ -10,8 +10,8 @@
 #ifndef KWIN_SCENE_H
 #define KWIN_SCENE_H
 
+#include "core/renderlayerdelegate.h"
 #include "kwineffects.h"
-#include "renderlayerdelegate.h"
 #include "utils/common.h"
 #include "window.h"
 

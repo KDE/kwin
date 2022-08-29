@@ -8,11 +8,12 @@
 */
 #pragma once
 
+#include "kwin_export.h"
+
+#include "output.h"
+
 #include <QPoint>
 #include <QSize>
-
-#include "kwin_export.h"
-#include "output.h"
 
 namespace KWin
 {

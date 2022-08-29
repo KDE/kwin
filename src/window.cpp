@@ -9,7 +9,7 @@
 */
 #include "window.h"
 
-#include "output.h"
+#include "core/output.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -17,6 +17,7 @@
 #include "atoms.h"
 #include "client_machine.h"
 #include "composite.h"
+#include "core/platform.h"
 #include "decorations/decoratedclient.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/decorationpalette.h"
@@ -24,7 +25,6 @@
 #include "focuschain.h"
 #include "outline.h"
 #include "placement.h"
-#include "platform.h"
 #if KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif

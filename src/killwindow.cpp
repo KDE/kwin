@@ -9,9 +9,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "killwindow.h"
+#include "core/platform.h"
 #include "main.h"
 #include "osd.h"
-#include "platform.h"
 #include "unmanaged.h"
 #include "window.h"
 

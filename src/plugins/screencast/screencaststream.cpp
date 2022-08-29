@@ -8,6 +8,7 @@
 
 #include "screencaststream.h"
 #include "composite.h"
+#include "core/platform.h"
 #include "cursor.h"
 #include "dmabuftexture.h"
 #include "eglnativefence.h"
@@ -18,7 +19,6 @@
 #include "kwinscreencast_logging.h"
 #include "main.h"
 #include "pipewirecore.h"
-#include "platform.h"
 #include "scene.h"
 #include "screencastsource.h"
 #include "utils/common.h"

@@ -10,7 +10,7 @@
 #include "events.h"
 #include "libinput_logging.h"
 
-#include "session.h"
+#include "core/session.h"
 #include "utils/udev.h"
 
 #include <fcntl.h>

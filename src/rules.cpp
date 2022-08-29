@@ -20,8 +20,8 @@
 
 #ifndef KCMRULES
 #include "client_machine.h"
+#include "core/platform.h"
 #include "main.h"
-#include "platform.h"
 #include "virtualdesktops.h"
 #include "window.h"
 #include "workspace.h"

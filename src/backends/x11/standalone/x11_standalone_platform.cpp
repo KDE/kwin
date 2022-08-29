@@ -11,7 +11,7 @@
 #include <config-kwin.h>
 
 #include "atoms.h"
-#include "session.h"
+#include "core/session.h"
 #include "x11_standalone_cursor.h"
 #include "x11_standalone_edge.h"
 #include "x11_standalone_placeholderoutput.h"
@@ -23,9 +23,9 @@
 #if HAVE_X11_XINPUT
 #include "x11_standalone_xinputintegration.h"
 #endif
+#include "core/renderloop.h"
 #include "keyboard_input.h"
 #include "options.h"
-#include "renderloop.h"
 #include "utils/c_ptr.h"
 #include "utils/edid.h"
 #include "utils/xcbutils.h"

@@ -9,9 +9,9 @@
 */
 
 #include "workspace_wrapper.h"
+#include "core/output.h"
+#include "core/platform.h"
 #include "outline.h"
-#include "output.h"
-#include "platform.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
 #include "x11window.h"

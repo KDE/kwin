@@ -9,10 +9,10 @@
 #include "kwin_wayland_test.h"
 
 #include "composite.h"
+#include "core/output.h"
+#include "core/platform.h"
+#include "core/renderbackend.h"
 #include "cursor.h"
-#include "output.h"
-#include "platform.h"
-#include "renderbackend.h"
 #include "screenedge.h"
 #include "wayland/keyboard_interface.h"
 #include "wayland/seat_interface.h"

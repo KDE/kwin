@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "output.h"
+#include "core/output.h"
 #include "wayland/output_interface.h"
 #include "wayland/utils.h"
 #include "wayland/xdgoutput_v1_interface.h"

@@ -8,8 +8,8 @@
 */
 #include "kwin_wayland_test.h"
 
+#include "core/platform.h"
 #include "cursor.h"
-#include "platform.h"
 #include "wayland_server.h"
 
 namespace KWin

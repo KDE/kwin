@@ -5,11 +5,11 @@
 */
 
 #include "cursordelegate_opengl.h"
+#include "core/renderlayer.h"
+#include "core/rendertarget.h"
 #include "cursor.h"
 #include "kwingltexture.h"
 #include "kwinglutils.h"
-#include "renderlayer.h"
-#include "rendertarget.h"
 
 namespace KWin
 {

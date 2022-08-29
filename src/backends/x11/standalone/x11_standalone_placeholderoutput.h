@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "output.h"
+#include "core/output.h"
 
 namespace KWin
 {

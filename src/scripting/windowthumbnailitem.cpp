@@ -8,8 +8,8 @@
 
 #include "windowthumbnailitem.h"
 #include "composite.h"
+#include "core/renderbackend.h"
 #include "effects.h"
-#include "renderbackend.h"
 #include "scene.h"
 #include "scripting_logging.h"
 #include "virtualdesktops.h"

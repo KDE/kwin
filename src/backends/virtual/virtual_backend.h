@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include "platform.h"
+#include "core/platform.h"
 
 #include <kwin_export.h>
 

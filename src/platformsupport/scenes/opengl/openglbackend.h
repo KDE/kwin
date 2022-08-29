@@ -10,7 +10,7 @@
 #ifndef KWIN_SCENE_OPENGL_BACKEND_H
 #define KWIN_SCENE_OPENGL_BACKEND_H
 
-#include "renderbackend.h"
+#include "core/renderbackend.h"
 
 #include <QRegion>
 #include <memory>

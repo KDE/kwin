@@ -11,7 +11,7 @@
 #include "utils.h"
 #include "utils/common.h"
 
-#include "output.h"
+#include "core/output.h"
 
 #include <QDebug>
 #include <QPointer>

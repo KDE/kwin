@@ -10,6 +10,7 @@
 #include "basiceglsurfacetexture_internal.h"
 #include "basiceglsurfacetexture_wayland.h"
 // kwin
+#include "core/renderloop_p.h"
 #include "drm_abstract_output.h"
 #include "drm_backend.h"
 #include "drm_buffer_gbm.h"
@@ -28,7 +29,6 @@
 #include "kwineglutils_p.h"
 #include "linux_dmabuf.h"
 #include "options.h"
-#include "renderloop_p.h"
 #include "surfaceitem_wayland.h"
 #include "wayland/clientconnection.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"

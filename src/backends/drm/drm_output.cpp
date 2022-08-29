@@ -14,6 +14,10 @@
 #include "drm_object_crtc.h"
 #include "drm_pipeline.h"
 
+#include "core/outputconfiguration.h"
+#include "core/renderloop.h"
+#include "core/renderloop_p.h"
+#include "core/session.h"
 #include "cursor.h"
 #include "drm_dumb_buffer.h"
 #include "drm_dumb_swapchain.h"
@@ -21,10 +25,6 @@
 #include "drm_layer.h"
 #include "drm_logging.h"
 #include "kwinglutils.h"
-#include "outputconfiguration.h"
-#include "renderloop.h"
-#include "renderloop_p.h"
-#include "session.h"
 #include "wayland/drmleasedevice_v1_interface.h"
 // Qt
 #include <QCryptographicHash>

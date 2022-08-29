@@ -8,9 +8,9 @@
 */
 #include "x11syncmanager.h"
 #include "composite.h"
+#include "core/platform.h"
+#include "core/renderbackend.h"
 #include "main.h"
-#include "platform.h"
-#include "renderbackend.h"
 #include "scene.h"
 #include "utils/common.h"
 

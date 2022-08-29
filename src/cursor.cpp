@@ -10,11 +10,11 @@
 #include "cursor.h"
 // kwin
 #include "composite.h"
+#include "core/output.h"
+#include "core/platform.h"
 #include "input.h"
 #include "keyboard_input.h"
 #include "main.h"
-#include "output.h"
-#include "platform.h"
 #include "scene.h"
 #include "utils/common.h"
 #include "utils/xcbutils.h"

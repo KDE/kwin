@@ -9,8 +9,8 @@
 */
 #pragma once
 
+#include "core/platform.h"
 #include "drm_abstract_output.h"
-#include "platform.h"
 
 #include <QObject>
 #include <QRect>

@@ -10,7 +10,7 @@
 
 #include <config-kwin.h>
 
-#include "renderloop_p.h"
+#include "core/renderloop_p.h"
 #include "softwarevsyncmonitor.h"
 #include "x11_windowed_backend.h"
 

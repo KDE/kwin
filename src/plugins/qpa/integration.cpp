@@ -15,9 +15,9 @@
 #include "screen.h"
 #include "window.h"
 
+#include "core/output.h"
+#include "core/platform.h"
 #include "main.h"
-#include "output.h"
-#include "platform.h"
 #include "workspace.h"
 
 #include <QCoreApplication>

@@ -25,7 +25,7 @@
 #include <QDebug>
 
 #include "atoms.h"
-#include "platform.h"
+#include "core/platform.h"
 #include "workspace.h"
 
 #include <cstdio>

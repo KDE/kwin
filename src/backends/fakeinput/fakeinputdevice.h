@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "inputdevice.h"
+#include "core/inputdevice.h"
 
 namespace KWaylandServer
 {

@@ -13,7 +13,7 @@
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
-#include "output.h"
+#include "core/output.h"
 #include "virtualdesktops.h"
 #include "window.h"
 #include "workspace.h"

@@ -8,7 +8,7 @@
 */
 #ifndef KWIN_X11_PLATFORM_H
 #define KWIN_X11_PLATFORM_H
-#include "platform.h"
+#include "core/platform.h"
 
 #include <kwin_export.h>
 

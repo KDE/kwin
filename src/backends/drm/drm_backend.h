@@ -8,7 +8,7 @@
 */
 #ifndef KWIN_DRM_BACKEND_H
 #define KWIN_DRM_BACKEND_H
-#include "platform.h"
+#include "core/platform.h"
 
 #include "dpmsinputeventfilter.h"
 

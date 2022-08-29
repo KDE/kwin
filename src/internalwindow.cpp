@@ -8,9 +8,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "internalwindow.h"
+#include "core/platform.h"
 #include "decorations/decorationbridge.h"
 #include "deleted.h"
-#include "platform.h"
 #include "surfaceitem.h"
 #include "windowitem.h"
 #include "workspace.h"

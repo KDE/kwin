@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "x11_standalone_output.h"
-#include "colorlut.h"
+#include "core/colorlut.h"
 #include "x11_standalone_platform.h"
 
 namespace KWin

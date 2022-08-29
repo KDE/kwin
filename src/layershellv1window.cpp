@@ -5,9 +5,9 @@
 */
 
 #include "layershellv1window.h"
+#include "core/output.h"
 #include "deleted.h"
 #include "layershellv1integration.h"
-#include "output.h"
 #include "wayland/layershell_v1_interface.h"
 #include "wayland/output_interface.h"
 #include "wayland/surface_interface.h"

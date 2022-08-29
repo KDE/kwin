@@ -7,10 +7,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "colortransformation.h"
+#include "colorpipelinestage.h"
 
 #include <lcms2.h>
 
-#include "colorpipelinestage.h"
 #include "utils/common.h"
 
 namespace KWin

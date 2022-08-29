@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include "output.h"
+#include "core/output.h"
 
 class FakeOutput : public KWin::Output
 {

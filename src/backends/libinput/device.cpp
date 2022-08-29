@@ -10,11 +10,11 @@
 
 #include <config-kwin.h>
 
+#include "core/output.h"
+#include "core/platform.h"
 #include "libinput_logging.h"
 #include "main.h"
 #include "mousebuttons.h"
-#include "output.h"
-#include "platform.h"
 #include "pointer_input.h"
 
 #include <QDBusArgument>

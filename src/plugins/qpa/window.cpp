@@ -8,8 +8,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "window.h"
+#include "core/platform.h"
 #include "eglhelpers.h"
-#include "platform.h"
 
 #include "internalwindow.h"
 

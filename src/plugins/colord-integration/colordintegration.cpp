@@ -7,7 +7,7 @@
 #include "colordintegration.h"
 #include "colorddevice.h"
 #include "colordlogging.h"
-#include "output.h"
+#include "core/output.h"
 #include "workspace.h"
 
 #include <QDBusPendingCallWatcher>

@@ -6,9 +6,9 @@
 
 #include "colormanager.h"
 #include "colordevice.h"
+#include "core/output.h"
+#include "core/session.h"
 #include "main.h"
-#include "output.h"
-#include "session.h"
 #include "utils/common.h"
 #include "workspace.h"
 

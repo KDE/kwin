@@ -9,8 +9,8 @@
 #pragma once
 
 #include "../common/x11_common_egl_backend.h"
+#include "core/outputlayer.h"
 #include "kwinglutils.h"
-#include "outputlayer.h"
 
 #include <QMap>
 

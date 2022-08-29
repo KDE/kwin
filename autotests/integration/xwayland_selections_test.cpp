@@ -9,8 +9,8 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "output.h"
-#include "platform.h"
+#include "core/output.h"
+#include "core/platform.h"
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "window.h"

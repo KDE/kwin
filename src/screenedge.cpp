@@ -20,12 +20,12 @@
 
 #include <config-kwin.h>
 
+#include "core/output.h"
+#include "core/platform.h"
 #include "cursor.h"
 #include "effects.h"
 #include "gestures.h"
 #include "main.h"
-#include "output.h"
-#include "platform.h"
 #include "utils/common.h"
 #include "virtualdesktops.h"
 #include <workspace.h>

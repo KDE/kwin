@@ -9,7 +9,7 @@
 #ifndef KWIN_X11_OUTPUT_H
 #define KWIN_X11_OUTPUT_H
 
-#include "output.h"
+#include "core/output.h"
 #include <kwin_export.h>
 
 #include <QObject>

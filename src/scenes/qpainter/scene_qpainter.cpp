@@ -9,9 +9,9 @@
 #include "scene_qpainter.h"
 #include "qpaintersurfacetexture.h"
 // KWin
+#include "core/output.h"
 #include "decorations/decoratedclient.h"
 #include "effects.h"
-#include "output.h"
 #include "surfaceitem.h"
 #include "window.h"
 #include "windowitem.h"

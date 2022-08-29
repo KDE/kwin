@@ -13,13 +13,15 @@
 // kwin libs
 #include <kwinglplatform.h>
 // kwin
-#include "output.h"
+#include "core/output.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
 #include "appmenu.h"
 #include "atoms.h"
 #include "composite.h"
+#include "core/outputconfiguration.h"
+#include "core/platform.h"
 #include "cursor.h"
 #include "dbusinterface.h"
 #include "deleted.h"
@@ -32,9 +34,7 @@
 #include "moving_client_x11_filter.h"
 #include "netinfo.h"
 #include "outline.h"
-#include "outputconfiguration.h"
 #include "placement.h"
-#include "platform.h"
 #include "pluginmanager.h"
 #include "rules.h"
 #include "screenedge.h"

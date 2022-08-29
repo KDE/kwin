@@ -13,8 +13,8 @@
 #include <QRegion>
 #include <optional>
 
+#include "core/outputlayer.h"
 #include "drm_object_plane.h"
-#include "outputlayer.h"
 
 namespace KWaylandServer
 {

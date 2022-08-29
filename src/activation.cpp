@@ -15,10 +15,10 @@
 
 */
 
+#include "core/platform.h"
 #include "cursor.h"
 #include "focuschain.h"
 #include "netinfo.h"
-#include "platform.h"
 #include "workspace.h"
 #include "x11window.h"
 #if KWIN_BUILD_ACTIVITIES

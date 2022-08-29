@@ -12,7 +12,7 @@
 
 #include "config-kwin.h"
 
-#include "platform.h"
+#include "core/platform.h"
 #include "utils/common.h"
 
 #ifndef KCMRULES

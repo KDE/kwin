@@ -18,9 +18,9 @@
 #include "xwaylandlauncher.h"
 #include "xwldrophandler.h"
 
+#include "core/output.h"
+#include "core/platform.h"
 #include "main_wayland.h"
-#include "output.h"
-#include "platform.h"
 #include "utils/common.h"
 #include "utils/xcbutils.h"
 #include "wayland_server.h"

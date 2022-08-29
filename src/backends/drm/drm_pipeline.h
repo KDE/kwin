@@ -16,10 +16,10 @@
 #include <chrono>
 #include <xf86drmMode.h>
 
-#include "colorlut.h"
+#include "core/colorlut.h"
+#include "core/output.h"
+#include "core/renderloop_p.h"
 #include "drm_object_plane.h"
-#include "output.h"
-#include "renderloop_p.h"
 
 namespace KWin
 {

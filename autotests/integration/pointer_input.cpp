@@ -8,12 +8,12 @@
 */
 #include "kwin_wayland_test.h"
 
+#include "core/output.h"
+#include "core/platform.h"
 #include "cursor.h"
 #include "deleted.h"
 #include "effects.h"
 #include "options.h"
-#include "output.h"
-#include "platform.h"
 #include "pointer_input.h"
 #include "screenedge.h"
 #include "screens.h"

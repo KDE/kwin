@@ -12,14 +12,14 @@
 
 #include <config-kwin.h>
 
+#include "core/output.h"
+#include "core/platform.h"
 #include "decorations/decoratedclient.h"
 #include "effects.h"
 #include "input_event.h"
 #include "input_event_spy.h"
 #include "mousebuttons.h"
 #include "osd.h"
-#include "output.h"
-#include "platform.h"
 #include "screens.h"
 #include "wayland/datadevice_interface.h"
 #include "wayland/display.h"

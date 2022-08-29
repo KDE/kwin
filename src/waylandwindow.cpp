@@ -7,7 +7,7 @@
 */
 
 #include "waylandwindow.h"
-#include "platform.h"
+#include "core/platform.h"
 #include "screens.h"
 #include "wayland/clientbuffer.h"
 #include "wayland/clientconnection.h"

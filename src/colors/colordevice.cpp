@@ -5,9 +5,9 @@
 */
 
 #include "colordevice.h"
-#include "colorpipelinestage.h"
-#include "colortransformation.h"
-#include "output.h"
+#include "core/colorpipelinestage.h"
+#include "core/colortransformation.h"
+#include "core/output.h"
 #include "utils/common.h"
 
 #include "3rdparty/colortemperature.h"

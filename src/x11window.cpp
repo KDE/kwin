@@ -10,13 +10,14 @@
 // own
 #include "x11window.h"
 // kwin
-#include "output.h"
+#include "core/output.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
 #include "atoms.h"
 #include "client_machine.h"
 #include "composite.h"
+#include "core/platform.h"
 #include "cursor.h"
 #include "decorations/decoratedclient.h"
 #include "decorations/decorationbridge.h"
@@ -26,7 +27,6 @@
 #include "group.h"
 #include "netinfo.h"
 #include "placement.h"
-#include "platform.h"
 #include "screenedge.h"
 #include "shadow.h"
 #include "surfaceitem_x11.h"

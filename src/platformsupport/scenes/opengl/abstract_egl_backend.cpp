@@ -8,15 +8,15 @@
 */
 #include "abstract_egl_backend.h"
 #include "composite.h"
+#include "core/output.h"
+#include "core/platform.h"
+#include "dmabuftexture.h"
 #include "egl_dmabuf.h"
 #include "options.h"
-#include "output.h"
-#include "platform.h"
 #include "utils/common.h"
 #include "utils/egl_context_attribute_builder.h"
 #include "wayland/display.h"
 #include "wayland_server.h"
-#include "dmabuftexture.h"
 // kwin libs
 #include <kwineglimagetexture.h>
 #include <kwineglutils_p.h>

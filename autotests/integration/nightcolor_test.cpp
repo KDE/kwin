@@ -8,7 +8,7 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "platform.h"
+#include "core/platform.h"
 #include "plugins/nightcolor/constants.h"
 #include "plugins/nightcolor/nightcolormanager.h"
 #include "wayland_server.h"

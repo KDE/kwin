@@ -9,7 +9,7 @@
 #include "virtual_output.h"
 #include "virtual_backend.h"
 
-#include "renderloop_p.h"
+#include "core/renderloop_p.h"
 #include "softwarevsyncmonitor.h"
 
 namespace KWin

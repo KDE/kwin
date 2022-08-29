@@ -9,7 +9,7 @@
 #include "colordlogging.h"
 #include "colordprofileinterface.h"
 #include "colormanager.h"
-#include "output.h"
+#include "core/output.h"
 
 namespace KWin
 {

@@ -7,9 +7,9 @@
 #include "kwin_wayland_test.h"
 
 #include "composite.h"
+#include "core/output.h"
+#include "core/platform.h"
 #include "main.h"
-#include "output.h"
-#include "platform.h"
 #include "scene.h"
 #include "unmanaged.h"
 #include "wayland_server.h"

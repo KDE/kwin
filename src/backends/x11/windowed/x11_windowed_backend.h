@@ -8,9 +8,9 @@
 */
 #pragma once
 
-#include "inputbackend.h"
-#include "inputdevice.h"
-#include "platform.h"
+#include "core/inputbackend.h"
+#include "core/inputdevice.h"
+#include "core/platform.h"
 
 #include <kwin_export.h>
 

@@ -8,8 +8,8 @@
 */
 #include "debug_console.h"
 #include "composite.h"
+#include "core/inputdevice.h"
 #include "input_event.h"
-#include "inputdevice.h"
 #include "internalwindow.h"
 #include "keyboard_input.h"
 #include "main.h"

@@ -24,14 +24,14 @@
 
 #include <config-kwin.h>
 
-#include "useractions.h"
 #include "composite.h"
+#include "core/output.h"
+#include "core/platform.h"
 #include "cursor.h"
 #include "effects.h"
 #include "input.h"
-#include "output.h"
-#include "platform.h"
 #include "scripting/scripting.h"
+#include "useractions.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
 #include "x11window.h"

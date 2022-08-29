@@ -14,9 +14,9 @@
 
 #include <QSize>
 
+#include "core/output.h"
 #include "drm_object.h"
 #include "drm_pointer.h"
-#include "output.h"
 #include "utils/edid.h"
 
 namespace KWin

@@ -8,10 +8,10 @@
 */
 #include "kwin_wayland_test.h"
 
+#include "core/output.h"
+#include "core/platform.h"
 #include "debug_console.h"
 #include "internalwindow.h"
-#include "output.h"
-#include "platform.h"
 #include "utils/xcbutils.h"
 #include "wayland_server.h"
 #include "window.h"

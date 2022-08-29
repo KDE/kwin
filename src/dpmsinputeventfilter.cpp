@@ -7,9 +7,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "dpmsinputeventfilter.h"
+#include "core/output.h"
+#include "core/platform.h"
 #include "main.h"
-#include "output.h"
-#include "platform.h"
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"

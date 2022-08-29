@@ -10,7 +10,7 @@
 #ifndef KWIN_OVERLAYWINDOW_X11_H
 #define KWIN_OVERLAYWINDOW_X11_H
 
-#include "overlaywindow.h"
+#include "core/overlaywindow.h"
 #include "x11eventfilter.h"
 
 namespace KWin

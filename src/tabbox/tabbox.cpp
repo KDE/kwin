@@ -24,11 +24,11 @@
 #include "activities.h"
 #endif
 #include "composite.h"
+#include "core/platform.h"
 #include "effects.h"
 #include "focuschain.h"
 #include "input.h"
 #include "keyboard_input.h"
-#include "platform.h"
 #include "pointer_input.h"
 #include "screenedge.h"
 #include "unmanaged.h"

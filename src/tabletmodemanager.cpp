@@ -7,12 +7,12 @@
 
 #include "tabletmodemanager.h"
 
-#include "backends/libinput/device.h"
 #include "backends/fakeinput/fakeinputdevice.h"
+#include "backends/libinput/device.h"
+#include "core/inputdevice.h"
 #include "input.h"
 #include "input_event.h"
 #include "input_event_spy.h"
-#include "inputdevice.h"
 #include "main.h"
 #include "wayland_server.h"
 

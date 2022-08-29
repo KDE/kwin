@@ -7,11 +7,11 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "keyboard_layout.h"
+#include "core/platform.h"
 #include "input_event.h"
 #include "keyboard_input.h"
 #include "keyboard_layout_switching.h"
 #include "main.h"
-#include "platform.h"
 
 #include <KGlobalAccel>
 #include <KLocalizedString>

@@ -12,12 +12,14 @@
 
 #include <config-kwin.h>
 
+#include "core/output.h"
 #include "effectloader.h"
 #include "effectsadaptor.h"
-#include "output.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
+#include "core/renderbackend.h"
+#include "core/renderlayer.h"
 #include "cursor.h"
 #include "deleted.h"
 #include "group.h"
@@ -25,8 +27,6 @@
 #include "internalwindow.h"
 #include "osd.h"
 #include "pointer_input.h"
-#include "renderbackend.h"
-#include "renderlayer.h"
 #include "unmanaged.h"
 #include "x11window.h"
 #if KWIN_BUILD_TABBOX
@@ -38,11 +38,11 @@
 #include "screenlockerwatcher.h"
 #endif
 #include "composite.h"
+#include "core/platform.h"
 #include "decorations/decorationbridge.h"
 #include "inputmethod.h"
 #include "inputpanelv1window.h"
 #include "kwinglutils.h"
-#include "platform.h"
 #include "utils/xcbutils.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"

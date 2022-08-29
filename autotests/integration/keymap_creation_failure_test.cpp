@@ -8,9 +8,9 @@
 */
 #include "kwin_wayland_test.h"
 
+#include "core/platform.h"
 #include "keyboard_input.h"
 #include "keyboard_layout.h"
-#include "platform.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "window.h"

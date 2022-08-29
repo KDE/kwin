@@ -10,7 +10,7 @@
 #pragma once
 
 #include "abstract_egl_backend.h"
-#include "outputlayer.h"
+#include "core/outputlayer.h"
 #include "utils/damagejournal.h"
 // wayland
 #include <dmabuftexture.h>

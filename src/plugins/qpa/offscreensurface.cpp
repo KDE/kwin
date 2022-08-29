@@ -8,9 +8,9 @@
 */
 
 #include "offscreensurface.h"
+#include "core/platform.h"
 #include "eglhelpers.h"
 #include "main.h"
-#include "platform.h"
 
 #include <QOffscreenSurface>
 

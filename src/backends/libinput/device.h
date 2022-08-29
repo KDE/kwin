@@ -9,7 +9,7 @@
 #ifndef KWIN_LIBINPUT_DEVICE_H
 #define KWIN_LIBINPUT_DEVICE_H
 
-#include "inputdevice.h"
+#include "core/inputdevice.h"
 
 #include <libinput.h>
 

@@ -13,16 +13,16 @@
 
 // TODO: Make it compile also in testing environment
 #ifndef KWIN_BUILD_TESTING
+#include "core/output.h"
+#include "core/platform.h"
 #include "main.h"
-#include "output.h"
-#include "platform.h"
 #include "window.h"
 #include "workspace.h"
 #endif
 
+#include "core/session.h"
 #include "input_event.h"
 #include "libinput_logging.h"
-#include "session.h"
 #include "utils/realtime.h"
 #include "utils/udev.h"
 

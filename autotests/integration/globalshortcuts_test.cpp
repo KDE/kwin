@@ -8,11 +8,11 @@
 */
 #include "kwin_wayland_test.h"
 
+#include "core/platform.h"
 #include "cursor.h"
 #include "input.h"
 #include "internalwindow.h"
 #include "keyboard_input.h"
-#include "platform.h"
 #include "useractions.h"
 #include "wayland/keyboard_interface.h"
 #include "wayland/seat_interface.h"

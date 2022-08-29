@@ -7,13 +7,13 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "composite.h"
+#include "core/platform.h"
+#include "core/renderbackend.h"
 #include "cursor.h"
 #include "deleted.h"
 #include "effectloader.h"
 #include "effects.h"
 #include "kwin_wayland_test.h"
-#include "platform.h"
-#include "renderbackend.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"

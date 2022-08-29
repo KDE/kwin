@@ -5,13 +5,13 @@
 */
 
 #include "desktopbackgrounditem.h"
-#include "output.h"
+#include "core/output.h"
 #include "window.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
+#include "core/platform.h"
 #include "main.h"
-#include "platform.h"
 #include "scripting_logging.h"
 #include "virtualdesktops.h"
 #include "workspace.h"

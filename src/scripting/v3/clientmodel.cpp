@@ -5,8 +5,8 @@
 */
 
 #include "clientmodel.h"
-#include "output.h"
-#include "platform.h"
+#include "core/output.h"
+#include "core/platform.h"
 #include "virtualdesktops.h"
 #include "window.h"
 #include "workspace.h"

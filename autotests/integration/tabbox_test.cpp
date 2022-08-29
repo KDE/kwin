@@ -8,9 +8,9 @@
 */
 #include "kwin_wayland_test.h"
 
+#include "core/platform.h"
 #include "cursor.h"
 #include "input.h"
-#include "platform.h"
 #include "tabbox/tabbox.h"
 #include "wayland_server.h"
 #include "window.h"

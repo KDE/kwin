@@ -8,10 +8,10 @@
 #include "screencastutils.h"
 
 #include "composite.h"
+#include "core/output.h"
+#include "core/renderloop.h"
 #include "kwingltexture.h"
 #include "kwinglutils.h"
-#include "output.h"
-#include "renderloop.h"
 #include "scene.h"
 
 namespace KWin

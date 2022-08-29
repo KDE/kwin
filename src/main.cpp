@@ -14,16 +14,16 @@
 #include "atoms.h"
 #include "colormanager.h"
 #include "composite.h"
+#include "core/platform.h"
 #include "cursor.h"
 #include "input.h"
 #include "inputmethod.h"
 #include "options.h"
-#include "platform.h"
 #include "pluginmanager.h"
 #if KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
 #endif
-#include "session.h"
+#include "core/session.h"
 #include "sm.h"
 #include "tabletmodemanager.h"
 #include "utils/xcbutils.h"

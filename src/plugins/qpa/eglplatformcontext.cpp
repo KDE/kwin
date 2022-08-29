@@ -9,10 +9,10 @@
 */
 
 #include "eglplatformcontext.h"
+#include "core/platform.h"
 #include "eglhelpers.h"
 #include "internalwindow.h"
 #include "offscreensurface.h"
-#include "platform.h"
 #include "utils/egl_context_attribute_builder.h"
 #include "window.h"
 

@@ -32,11 +32,28 @@ target_sources(kwin PRIVATE
     atoms.cpp
     client_machine.cpp
     colors/colordevice.cpp
-    colors/colorlut.cpp
     colors/colormanager.cpp
-    colors/colorpipelinestage.cpp
-    colors/colortransformation.cpp
     composite.cpp
+    core/colorlut.cpp
+    core/colorpipelinestage.cpp
+    core/colortransformation.cpp
+    core/inputbackend.cpp
+    core/inputdevice.cpp
+    core/output.cpp
+    core/outputconfiguration.cpp
+    core/outputlayer.cpp
+    core/overlaywindow.cpp
+    core/platform.cpp
+    core/renderbackend.cpp
+    core/renderjournal.cpp
+    core/renderlayer.cpp
+    core/renderlayerdelegate.cpp
+    core/renderloop.cpp
+    core/rendertarget.cpp
+    core/session.cpp
+    core/session_consolekit.cpp
+    core/session_logind.cpp
+    core/session_noop.cpp
     cursor.cpp
     cursordelegate_opengl.cpp
     cursordelegate_qpainter.cpp
@@ -59,13 +76,12 @@ target_sources(kwin PRIVATE
     gestures.cpp
     globalshortcuts.cpp
     group.cpp
+    hide_cursor_spy.cpp
     idle_inhibition.cpp
     idledetector.cpp
     input.cpp
     input_event.cpp
     input_event_spy.cpp
-    inputbackend.cpp
-    inputdevice.cpp
     inputmethod.cpp
     inputpanelv1integration.cpp
     inputpanelv1window.cpp
@@ -89,33 +105,19 @@ target_sources(kwin PRIVATE
     options.cpp
     osd.cpp
     outline.cpp
-    output.cpp
-    outputconfiguration.cpp
-    outputlayer.cpp
-    overlaywindow.cpp
     placeholderinputeventfilter.cpp
     placement.cpp
     placementtracker.cpp
-    platform.cpp
     plugin.cpp
     pluginmanager.cpp
     pointer_input.cpp
     popup_input_filter.cpp
-    renderbackend.cpp
-    renderjournal.cpp
-    renderlayer.cpp
-    renderlayerdelegate.cpp
-    renderloop.cpp
-    rendertarget.cpp
     rootinfo_filter.cpp
     rulebooksettings.cpp
     rules.cpp
     scene.cpp
     screenedge.cpp
     screens.cpp
-    scripting/v2/clientmodel.cpp
-    scripting/v3/clientmodel.cpp
-    scripting/v3/virtualdesktopmodel.cpp
     scripting/dbuscall.cpp
     scripting/desktopbackgrounditem.cpp
     scripting/screenedgeitem.cpp
@@ -123,12 +125,11 @@ target_sources(kwin PRIVATE
     scripting/scripting.cpp
     scripting/scripting_logging.cpp
     scripting/scriptingutils.cpp
+    scripting/v2/clientmodel.cpp
+    scripting/v3/clientmodel.cpp
+    scripting/v3/virtualdesktopmodel.cpp
     scripting/windowthumbnailitem.cpp
     scripting/workspace_wrapper.cpp
-    session.cpp
-    session_consolekit.cpp
-    session_logind.cpp
-    session_noop.cpp
     shadow.cpp
     shadowitem.cpp
     sm.cpp
@@ -139,7 +140,6 @@ target_sources(kwin PRIVATE
     syncalarmx11filter.cpp
     tablet_input.cpp
     tabletmodemanager.cpp
-    hide_cursor_spy.cpp
     touch_input.cpp
     unmanaged.cpp
     useractions.cpp

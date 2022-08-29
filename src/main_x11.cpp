@@ -13,8 +13,8 @@
 #include <config-kwin.h>
 
 #include "backends/x11/standalone/x11_standalone_platform.h"
-#include "platform.h"
-#include "session.h"
+#include "core/platform.h"
+#include "core/session.h"
 #include "sm.h"
 #include "tabletmodemanager.h"
 #include "utils/xcbutils.h"

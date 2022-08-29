@@ -10,10 +10,10 @@
 
 #include "kwin_wayland_test.h"
 
+#include "core/platform.h"
 #include "cursor.h"
 #include "effectloader.h"
 #include "main.h"
-#include "platform.h"
 #include "screenedge.h"
 #include "wayland_server.h"
 #include "window.h"

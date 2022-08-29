@@ -9,7 +9,7 @@
 #ifndef KWIN_WAYLAND_TEST_H
 #define KWIN_WAYLAND_TEST_H
 
-#include "inputdevice.h"
+#include "core/inputdevice.h"
 #include "main.h"
 #include "window.h"
 

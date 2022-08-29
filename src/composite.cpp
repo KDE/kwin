@@ -10,6 +10,12 @@
 
 #include <config-kwin.h>
 
+#include "core/output.h"
+#include "core/outputlayer.h"
+#include "core/overlaywindow.h"
+#include "core/platform.h"
+#include "core/renderlayer.h"
+#include "core/renderloop.h"
 #include "cursordelegate_opengl.h"
 #include "cursordelegate_qpainter.h"
 #include "dbusinterface.h"
@@ -19,13 +25,7 @@
 #include "ftrace.h"
 #include "internalwindow.h"
 #include "openglbackend.h"
-#include "output.h"
-#include "outputlayer.h"
-#include "overlaywindow.h"
-#include "platform.h"
 #include "qpainterbackend.h"
-#include "renderlayer.h"
-#include "renderloop.h"
 #include "scene.h"
 #include "scenes/opengl/scene_opengl.h"
 #include "scenes/qpainter/scene_qpainter.h"

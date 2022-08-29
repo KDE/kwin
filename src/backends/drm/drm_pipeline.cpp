@@ -11,6 +11,7 @@
 
 #include <errno.h>
 
+#include "core/session.h"
 #include "cursor.h"
 #include "drm_backend.h"
 #include "drm_buffer.h"
@@ -23,7 +24,6 @@
 #include "drm_object_crtc.h"
 #include "drm_object_plane.h"
 #include "drm_output.h"
-#include "session.h"
 
 #include <drm_fourcc.h>
 #include <gbm.h>

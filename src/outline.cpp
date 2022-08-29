@@ -11,8 +11,8 @@
 #include "outline.h"
 // KWin
 #include "composite.h"
+#include "core/platform.h"
 #include "main.h"
-#include "platform.h"
 #include "scripting/scripting.h"
 #include "utils/common.h"
 // Frameworks

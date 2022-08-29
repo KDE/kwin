@@ -9,7 +9,7 @@
 #include "display_p.h"
 #include "utils.h"
 
-#include "output.h"
+#include "core/output.h"
 
 #include "qwayland-server-wayland.h"
 

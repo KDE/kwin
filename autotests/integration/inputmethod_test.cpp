@@ -8,13 +8,13 @@
 */
 #include "kwin_wayland_test.h"
 
+#include "core/output.h"
+#include "core/platform.h"
 #include "cursor.h"
 #include "deleted.h"
 #include "effects.h"
 #include "inputmethod.h"
 #include "keyboard_input.h"
-#include "output.h"
-#include "platform.h"
 #include "qwayland-input-method-unstable-v1.h"
 #include "qwayland-text-input-unstable-v3.h"
 #include "virtualkeyboard_dbus.h"

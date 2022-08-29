@@ -9,8 +9,8 @@
 
 #include "kwin_wayland_test.h"
 
+#include "core/platform.h"
 #include "main.h"
-#include "platform.h"
 #include "virtualkeyboard_dbus.h"
 #include "wayland_server.h"
 

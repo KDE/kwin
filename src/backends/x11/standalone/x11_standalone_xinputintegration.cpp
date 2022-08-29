@@ -7,10 +7,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "x11_standalone_xinputintegration.h"
+#include "core/platform.h"
 #include "gestures.h"
 #include "keyboard_input.h"
 #include "main.h"
-#include "platform.h"
 #include "pointer_input.h"
 #include "screenedge.h"
 #include "x11_standalone_cursor.h"

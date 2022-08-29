@@ -9,14 +9,13 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "xdgshellwindow.h"
-#include "output.h"
+#include "core/output.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
 #include "decorations/decorationbridge.h"
 #include "deleted.h"
 #include "placement.h"
-#include "platform.h"
 #include "screenedge.h"
 #include "touch_input.h"
 #include "utils/subsurfacemonitor.h"

@@ -6,11 +6,11 @@
 */
 
 #include "x11_standalone_egl_backend.h"
+#include "core/overlaywindow.h"
+#include "core/platform.h"
+#include "core/renderloop_p.h"
 #include "kwinglplatform.h"
 #include "options.h"
-#include "overlaywindow.h"
-#include "platform.h"
-#include "renderloop_p.h"
 #include "scene.h"
 #include "softwarevsyncmonitor.h"
 #include "surfaceitem_x11.h"

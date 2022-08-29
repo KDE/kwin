@@ -11,10 +11,10 @@
 
 #include "kwin_wayland_test.h"
 
+#include "core/output.h"
+#include "core/outputconfiguration.h"
+#include "core/platform.h"
 #include "cursor.h"
-#include "output.h"
-#include "outputconfiguration.h"
-#include "platform.h"
 #include "rules.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"

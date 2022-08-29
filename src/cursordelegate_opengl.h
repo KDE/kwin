@@ -7,7 +7,7 @@
 #pragma once
 #include <memory>
 
-#include "renderlayerdelegate.h"
+#include "core/renderlayerdelegate.h"
 
 namespace KWin
 {

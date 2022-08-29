@@ -9,7 +9,7 @@
 */
 #pragma once
 
-#include "outputlayer.h"
+#include "core/outputlayer.h"
 #include "qpainterbackend.h"
 #include "utils/damagejournal.h"
 

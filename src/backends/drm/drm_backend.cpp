@@ -11,6 +11,9 @@
 #include <config-kwin.h>
 
 #include "backends/libinput/libinputbackend.h"
+#include "core/outputconfiguration.h"
+#include "core/renderloop.h"
+#include "core/session.h"
 #include "drm_egl_backend.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
@@ -23,9 +26,6 @@
 #include "drm_render_backend.h"
 #include "drm_virtual_output.h"
 #include "gbm_dmabuf.h"
-#include "outputconfiguration.h"
-#include "renderloop.h"
-#include "session.h"
 #include "utils/udev.h"
 // KF5
 #include <KCoreAddons>

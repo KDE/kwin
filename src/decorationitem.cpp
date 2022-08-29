@@ -7,9 +7,9 @@
 
 #include "decorationitem.h"
 #include "composite.h"
+#include "core/output.h"
 #include "decorations/decoratedclient.h"
 #include "deleted.h"
-#include "output.h"
 #include "scene.h"
 #include "utils/common.h"
 #include "window.h"

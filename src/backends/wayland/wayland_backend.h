@@ -11,9 +11,9 @@
 
 #include <config-kwin.h>
 // KWin
-#include "inputbackend.h"
-#include "inputdevice.h"
-#include "platform.h"
+#include "core/inputbackend.h"
+#include "core/inputdevice.h"
+#include "core/platform.h"
 #include "utils/filedescriptor.h"
 #include <kwinglobals.h>
 // Qt

@@ -8,8 +8,8 @@
 */
 #include "kwin_wayland_test.h"
 
+#include "core/platform.h"
 #include "main.h"
-#include "platform.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "window.h"

@@ -9,11 +9,11 @@
 
 #include "kwin_wayland_test.h"
 
+#include "core/platform.h"
 #include "deleted.h"
 #include "effectloader.h"
 #include "effects.h"
 #include "internalwindow.h"
-#include "platform.h"
 #include "useractions.h"
 #include "wayland_server.h"
 #include "window.h"

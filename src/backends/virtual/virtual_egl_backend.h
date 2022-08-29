@@ -9,7 +9,7 @@
 #pragma once
 
 #include "abstract_egl_backend.h"
-#include "outputlayer.h"
+#include "core/outputlayer.h"
 
 namespace KWin
 {

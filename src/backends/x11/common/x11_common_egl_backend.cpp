@@ -10,10 +10,10 @@
 // kwineffects
 #include <kwinglutils.h>
 // kwin
+#include "core/overlaywindow.h"
+#include "core/platform.h"
 #include "main.h"
 #include "options.h"
-#include "overlaywindow.h"
-#include "platform.h"
 #include "utils/common.h"
 #include "utils/xcbutils.h"
 // X11

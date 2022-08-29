@@ -18,10 +18,10 @@
 #include <kwinoffscreenquickview.h>
 
 #include "composite.h"
+#include "core/output.h"
 #include "decorations/decoratedclient.h"
 #include "effects.h"
 #include "main.h"
-#include "output.h"
 #include "shadowitem.h"
 #include "surfaceitem.h"
 #include "utils/common.h"

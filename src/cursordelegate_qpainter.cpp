@@ -5,9 +5,9 @@
 */
 
 #include "cursordelegate_qpainter.h"
+#include "core/renderlayer.h"
+#include "core/rendertarget.h"
 #include "cursor.h"
-#include "renderlayer.h"
-#include "rendertarget.h"
 
 #include <QPainter>
 

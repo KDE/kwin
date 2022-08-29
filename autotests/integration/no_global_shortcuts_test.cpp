@@ -8,10 +8,10 @@
 */
 #include "kwin_wayland_test.h"
 
+#include "core/platform.h"
 #include "cursor.h"
 #include "input.h"
 #include "keyboard_input.h"
-#include "platform.h"
 #include "screenedge.h"
 #include "wayland_server.h"
 #include "workspace.h"

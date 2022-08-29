@@ -8,11 +8,11 @@
 */
 #include "kwin_wayland_test.h"
 
+#include "core/output.h"
+#include "core/platform.h"
 #include "cursor.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/settings.h"
-#include "output.h"
-#include "platform.h"
 #include "scripting/scripting.h"
 #include "wayland_server.h"
 #include "window.h"
