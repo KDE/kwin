@@ -321,11 +321,6 @@ protected:
     void setInformation(const Information &information);
     void setState(const State &state);
 
-    virtual void updateEnablement(bool enable)
-    {
-        Q_UNUSED(enable);
-    }
-
     QSize orientateSize(const QSize &size) const;
 
     EffectScreenImpl *m_effectScreen = nullptr;

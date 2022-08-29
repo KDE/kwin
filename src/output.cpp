@@ -268,7 +268,6 @@ void Output::setState(const State &state)
         Q_EMIT rgbRangeChanged();
     }
     if (oldState.enabled != state.enabled) {
-        updateEnablement(state.enabled);
         Q_EMIT enabledChanged();
     }
 }
