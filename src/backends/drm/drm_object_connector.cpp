@@ -321,10 +321,16 @@ bool DrmConnector::updateProperties()
             m_modes.clear();
             m_modes.append(m_driverModes);
             m_modes.append(generateCommonModes());
-            if (!m_pipeline->mode()) {
+            if (m_pipeline->mode()) {
+                if (const auto mode = findMode(*m_pipeline->mode()->nativeMode())) {
+                    m_pipeline->setMode(mode);
+                } else {
+                    m_pipeline->setMode(m_modes.constFirst());
+                }
+            } else {
                 m_pipeline->setMode(m_modes.constFirst());
-                m_pipeline->applyPendingChanges();
             }
+            m_pipeline->applyPendingChanges();
             if (m_pipeline->output()) {
                 m_pipeline->output()->updateModes();
             }
