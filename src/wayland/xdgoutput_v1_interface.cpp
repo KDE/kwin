@@ -188,6 +188,10 @@ void XdgOutputV1InterfacePrivate::zxdg_output_v1_destroy(Resource *resource)
 
 void XdgOutputV1InterfacePrivate::zxdg_output_v1_bind_resource(Resource *resource)
 {
+    if (!output || output->isRemoved()) {
+        return;
+    }
+
     send_logical_position(resource->handle, pos.x(), pos.y());
     send_logical_size(resource->handle, size.width(), size.height());
     if (resource->version() >= ZXDG_OUTPUT_V1_NAME_SINCE_VERSION) {

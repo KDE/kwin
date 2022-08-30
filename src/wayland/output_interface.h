@@ -46,6 +46,7 @@ public:
     explicit OutputInterface(Display *display, QObject *parent = nullptr);
     ~OutputInterface() override;
 
+    bool isRemoved() const;
     void remove();
 
     QSize physicalSize() const;

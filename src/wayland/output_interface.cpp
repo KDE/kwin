@@ -180,6 +180,11 @@ OutputInterface::~OutputInterface()
     remove();
 }
 
+bool OutputInterface::isRemoved() const
+{
+    return d->isGlobalRemoved();
+}
+
 void OutputInterface::remove()
 {
     if (d->isGlobalRemoved()) {
