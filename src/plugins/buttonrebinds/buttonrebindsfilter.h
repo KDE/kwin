@@ -11,6 +11,9 @@
 #include "input.h"
 #include "inputdevice.h"
 
+// tabletpadname + button-id
+using Tablet = QPair<QString, uint>;
+
 class InputDevice : public KWin::InputDevice
 {
     QString sysName() const override;
@@ -39,11 +42,14 @@ class ButtonRebindsFilter : public KWin::Plugin, public KWin::InputEventFilter
 public:
     explicit ButtonRebindsFilter();
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override;
+    bool tabletPadButtonEvent(uint button, bool pressed, const KWin::TabletPadId &tabletPadId, uint time) override;
 
 private:
     void loadConfig(const KConfigGroup &group);
+    bool sendKeySequence(const QKeySequence &sequence, bool pressed, uint time);
 
     InputDevice m_inputDevice;
     QMap<Qt::MouseButton, QKeySequence> m_mouseMapping;
+    QMap<Tablet, QKeySequence> m_tabletMapping;
     KConfigWatcher::Ptr m_configWatcher;
 };

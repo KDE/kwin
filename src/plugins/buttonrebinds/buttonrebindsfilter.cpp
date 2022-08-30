@@ -101,31 +101,52 @@ ButtonRebindsFilter::ButtonRebindsFilter()
     KWin::input()->addInputDevice(&m_inputDevice);
     const QLatin1String groupName("ButtonRebinds");
     connect(m_configWatcher.get(), &KConfigWatcher::configChanged, this, [this, groupName](const KConfigGroup &group) {
-        if (group.parent().name() != groupName) {
-            return;
+        if (group.parent().name() == groupName) {
+            loadConfig(group.parent());
+        } else if (group.parent().parent().name() == groupName) {
+            loadConfig(group.parent().parent());
         }
-        loadConfig(group.parent());
     });
     loadConfig(m_configWatcher->config()->group(groupName));
 }
 
 void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
 {
+    Q_ASSERT(QLatin1String("ButtonRebinds") == group.name());
     KWin::input()->uninstallInputEventFilter(this);
     m_mouseMapping.clear();
-    auto mouseButtonEnum = QMetaEnum::fromType<Qt::MouseButtons>();
-    auto mouseGroup = group.group("Mouse");
+    const auto mouseButtonEnum = QMetaEnum::fromType<Qt::MouseButtons>();
+    const auto mouseGroup = group.group("Mouse");
     for (int i = 1; i <= 24; ++i) {
         const QByteArray buttonName = QByteArray("ExtraButton") + QByteArray::number(i);
-        auto entry = mouseGroup.readEntry(buttonName.constData(), QStringList());
+        const auto entry = mouseGroup.readEntry(buttonName.constData(), QStringList());
         if (entry.size() == 2 && entry.first() == QLatin1String("Key")) {
-            auto keys = QKeySequence::fromString(entry.at(1), QKeySequence::PortableText);
+            const auto keys = QKeySequence::fromString(entry.at(1), QKeySequence::PortableText);
             if (!keys.isEmpty()) {
                 m_mouseMapping.insert(static_cast<Qt::MouseButton>(mouseButtonEnum.keyToValue(buttonName)), keys);
             }
         }
     }
-    if (m_mouseMapping.size() != 0) {
+
+    const auto tabletsGroup = group.group("Tablet");
+    const auto tablets = tabletsGroup.groupList();
+    for (const auto &tabletName : tablets) {
+        const auto tabletGroup = tabletsGroup.group(tabletName);
+        const auto tabletButtons = tabletGroup.keyList();
+        for (const auto &buttonName : tabletButtons) {
+            const auto entry = tabletGroup.readEntry(buttonName, QStringList());
+            bool ok;
+            const uint button = buttonName.toUInt(&ok);
+            if (ok && entry.size() == 2 && entry.first() == QLatin1String("Key")) {
+                const auto keys = QKeySequence::fromString(entry.at(1), QKeySequence::PortableText);
+                if (!keys.isEmpty()) {
+                    m_tabletMapping.insert(qMakePair(tabletName, button), keys);
+                }
+            }
+        }
+    }
+
+    if (!m_mouseMapping.isEmpty() || !m_tabletMapping.isEmpty()) {
         KWin::input()->prependInputEventFilter(this);
     }
 }
@@ -138,7 +159,23 @@ bool ButtonRebindsFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
         return false;
     }
 
-    const QKeySequence keys = m_mouseMapping.value(event->button());
+    if (m_mouseMapping.isEmpty()) {
+        return false;
+    }
+
+    return sendKeySequence(m_mouseMapping.value(event->button()), event->type() == QEvent::MouseButtonPress, event->timestamp());
+}
+
+bool ButtonRebindsFilter::tabletPadButtonEvent(uint button, bool pressed, const KWin::TabletPadId &tabletPadId, uint time)
+{
+    if (m_tabletMapping.isEmpty()) {
+        return false;
+    }
+    return sendKeySequence(m_tabletMapping.value(qMakePair(tabletPadId.name, button)), pressed, time);
+}
+
+bool ButtonRebindsFilter::sendKeySequence(const QKeySequence &keys, bool pressed, uint time)
+{
     if (keys.isEmpty()) {
         return false;
     }
@@ -156,9 +193,9 @@ bool ButtonRebindsFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
         return false;
     }
 
-    auto sendKey = [this, event](xkb_keycode_t key) {
-        auto state = event->type() == QEvent::MouseButtonPress ? KWin::InputRedirection::KeyboardKeyPressed : KWin::InputRedirection::KeyboardKeyReleased;
-        Q_EMIT m_inputDevice.keyChanged(key, state, event->timestamp(), &m_inputDevice);
+    auto sendKey = [this, pressed, time](xkb_keycode_t key) {
+        auto state = pressed ? KWin::InputRedirection::KeyboardKeyPressed : KWin::InputRedirection::KeyboardKeyReleased;
+        Q_EMIT m_inputDevice.keyChanged(key, state, time, &m_inputDevice);
     };
 
     if (key & Qt::ShiftModifier) {
@@ -175,6 +212,5 @@ bool ButtonRebindsFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
     }
 
     sendKey(keyCode.value());
-
     return true;
 }
