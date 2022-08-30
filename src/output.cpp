@@ -249,6 +249,9 @@ void Output::setState(const State &state)
     if (oldGeometry != geometry()) {
         Q_EMIT geometryChanged();
     }
+    if (oldState.scale != state.scale) {
+        Q_EMIT scaleChanged();
+    }
     if (oldState.modes != state.modes) {
         Q_EMIT modesChanged();
     }
