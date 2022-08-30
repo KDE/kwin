@@ -125,9 +125,8 @@ void ContrastInterfacePrivate::org_kde_kwin_contrast_commit(Resource *resource)
 void ContrastInterfacePrivate::org_kde_kwin_contrast_set_region(Resource *resource, wl_resource *region)
 {
     Q_UNUSED(resource)
-    RegionInterface *r = RegionInterface::get(region);
-    if (r) {
-        pendingRegion = r->region();
+    if (region) {
+        pendingRegion = RegionInterface::fromResource(region)->m_region;
     } else {
         pendingRegion = QRegion();
     }

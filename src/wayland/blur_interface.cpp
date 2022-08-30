@@ -108,9 +108,8 @@ void BlurInterfacePrivate::org_kde_kwin_blur_commit(Resource *resource)
 void BlurInterfacePrivate::org_kde_kwin_blur_set_region(Resource *resource, wl_resource *region)
 {
     Q_UNUSED(resource)
-    RegionInterface *r = RegionInterface::get(region);
-    if (r) {
-        pendingRegion = r->region();
+    if (region) {
+        pendingRegion = RegionInterface::fromResource(region)->m_region;
     } else {
         pendingRegion = QRegion();
     }

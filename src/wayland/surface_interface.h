@@ -72,7 +72,7 @@ class KWIN_EXPORT SurfaceInterface : public QObject
     Q_PROPERTY(KWin::Output::Transform bufferTransform READ bufferTransform NOTIFY bufferTransformChanged)
     Q_PROPERTY(QSizeF size READ size NOTIFY sizeChanged)
 public:
-    explicit SurfaceInterface(CompositorInterface *compositor, wl_resource *resource);
+    explicit SurfaceInterface(CompositorInterface *compositor, wl_client *client, int version, uint32_t id);
     ~SurfaceInterface() override;
 
     /**

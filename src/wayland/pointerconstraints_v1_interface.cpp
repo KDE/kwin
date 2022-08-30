@@ -23,8 +23,7 @@ PointerConstraintsV1InterfacePrivate::PointerConstraintsV1InterfacePrivate(Displ
 
 static QRegion regionFromResource(::wl_resource *resource)
 {
-    const RegionInterface *region = RegionInterface::get(resource);
-    return region ? region->region() : QRegion();
+    return resource ? RegionInterface::fromResource(resource)->m_region : QRegion();
 }
 
 void PointerConstraintsV1InterfacePrivate::zwp_pointer_constraints_v1_lock_pointer(Resource *resource,

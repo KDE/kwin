@@ -12,7 +12,7 @@
 #include <QHash>
 #include <QVector>
 // Wayland
-#include "qwayland-server-wayland.h"
+#include <wayland-server-protocol.h>
 
 namespace KWaylandServer
 {
@@ -63,16 +63,17 @@ struct SurfaceState
     } viewport;
 };
 
-class SurfaceInterfacePrivate : public QtWaylandServer::wl_surface
+class SurfaceInterfacePrivate
 {
 public:
+    static SurfaceInterfacePrivate *fromResource(wl_resource *resource);
     static SurfaceInterfacePrivate *get(SurfaceInterface *surface)
     {
         return surface->d.get();
     }
 
-    explicit SurfaceInterfacePrivate(SurfaceInterface *q);
-    ~SurfaceInterfacePrivate() override;
+    explicit SurfaceInterfacePrivate(SurfaceInterface *q, wl_client *client, int version, uint32_t id);
+    ~SurfaceInterfacePrivate();
 
     void addChild(SubSurfaceInterface *subsurface);
     void removeChild(SubSurfaceInterface *subsurface);
@@ -105,6 +106,7 @@ public:
 
     CompositorInterface *compositor;
     SurfaceInterface *q;
+    wl_resource *resource;
     SurfaceRole *role = nullptr;
     SurfaceState current;
     SurfaceState pending;
@@ -136,19 +138,32 @@ public:
     std::unique_ptr<LinuxDmaBufV1Feedback> dmabufFeedbackV1;
     ClientConnection *client = nullptr;
 
-protected:
-    void surface_destroy_resource(Resource *resource) override;
-    void surface_destroy(Resource *resource) override;
-    void surface_attach(Resource *resource, struct ::wl_resource *buffer, int32_t x, int32_t y) override;
-    void surface_damage(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height) override;
-    void surface_frame(Resource *resource, uint32_t callback) override;
-    void surface_set_opaque_region(Resource *resource, struct ::wl_resource *region) override;
-    void surface_set_input_region(Resource *resource, struct ::wl_resource *region) override;
-    void surface_commit(Resource *resource) override;
-    void surface_set_buffer_transform(Resource *resource, int32_t transform) override;
-    void surface_set_buffer_scale(Resource *resource, int32_t scale) override;
-    void surface_damage_buffer(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height) override;
-    void surface_offset(Resource *resource, int32_t x, int32_t y) override;
+    static void surface_destroy_resource(wl_resource *resource);
+    static void surface_destroy(wl_client *client, wl_resource *resource);
+    static void surface_attach(wl_client *client, wl_resource *resource, wl_resource *buffer, int32_t x, int32_t y);
+    static void surface_damage(wl_client *client, wl_resource *resource, int32_t x, int32_t y, int32_t width, int32_t height);
+    static void surface_frame(wl_client *client, wl_resource *resource, uint32_t callback);
+    static void surface_set_opaque_region(wl_client *client, wl_resource *resource, wl_resource *region);
+    static void surface_set_input_region(wl_client *client, wl_resource *resource, wl_resource *region);
+    static void surface_commit(wl_client *client, wl_resource *resource);
+    static void surface_set_buffer_transform(wl_client *client, wl_resource *resource, int32_t transform);
+    static void surface_set_buffer_scale(wl_client *client, wl_resource *resource, int32_t scale);
+    static void surface_damage_buffer(wl_client *client, wl_resource *resource, int32_t x, int32_t y, int32_t width, int32_t height);
+    static void surface_offset(wl_client *client, wl_resource *resource, int32_t x, int32_t y);
+
+    static constexpr struct wl_surface_interface implementation = {
+        .destroy = surface_destroy,
+        .attach = surface_attach,
+        .damage = surface_damage,
+        .frame = surface_frame,
+        .set_opaque_region = surface_set_opaque_region,
+        .set_input_region = surface_set_input_region,
+        .commit = surface_commit,
+        .set_buffer_transform = surface_set_buffer_transform,
+        .set_buffer_scale = surface_set_buffer_scale,
+        .damage_buffer = surface_damage_buffer,
+        .offset = surface_offset,
+    };
 
 private:
     QMetaObject::Connection constrainsOneShotConnection;

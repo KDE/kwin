@@ -17,10 +17,7 @@
 #include "subsurface_interface_p.h"
 #include "surface_interface_p.h"
 #include "surfacerole_p.h"
-#include "utils.h"
 
-#include <wayland-server.h>
-// std
 #include <algorithm>
 
 namespace KWaylandServer
@@ -35,12 +32,21 @@ static QRegion map_helper(const QMatrix4x4 &matrix, const QRegion &region)
     return result;
 }
 
-SurfaceInterfacePrivate::SurfaceInterfacePrivate(SurfaceInterface *q)
+SurfaceInterfacePrivate *SurfaceInterfacePrivate::fromResource(wl_resource *resource)
+{
+    Q_ASSERT(wl_resource_instance_of(resource, &wl_surface_interface, &implementation));
+    return static_cast<SurfaceInterfacePrivate *>(wl_resource_get_user_data(resource));
+}
+
+SurfaceInterfacePrivate::SurfaceInterfacePrivate(SurfaceInterface *q, wl_client *client, int version, uint32_t id)
     : q(q)
 {
     wl_list_init(&current.frameCallbacks);
     wl_list_init(&pending.frameCallbacks);
     wl_list_init(&cached.frameCallbacks);
+
+    resource = wl_resource_create(client, &wl_surface_interface, version, id);
+    wl_resource_set_implementation(resource, &implementation, this, surface_destroy_resource);
 }
 
 SurfaceInterfacePrivate::~SurfaceInterfacePrivate()
@@ -235,127 +241,135 @@ void SurfaceInterfacePrivate::installIdleInhibitor(IdleInhibitorV1Interface *inh
     }
 }
 
-void SurfaceInterfacePrivate::surface_destroy_resource(Resource *)
+void SurfaceInterfacePrivate::surface_destroy_resource(wl_resource *resource)
 {
-    Q_EMIT q->aboutToBeDestroyed();
-    delete q;
+    auto surface = SurfaceInterface::get(resource);
+    Q_EMIT surface->aboutToBeDestroyed();
+    delete surface;
 }
 
-void SurfaceInterfacePrivate::surface_destroy(Resource *resource)
+void SurfaceInterfacePrivate::surface_destroy(wl_client *client, wl_resource *resource)
 {
-    wl_resource_destroy(resource->handle);
+    Q_UNUSED(client)
+    wl_resource_destroy(resource);
 }
 
-void SurfaceInterfacePrivate::surface_attach(Resource *resource, struct ::wl_resource *buffer, int32_t x, int32_t y)
+void SurfaceInterfacePrivate::surface_attach(wl_client *client, wl_resource *resource, struct ::wl_resource *buffer, int32_t x, int32_t y)
 {
-    if (wl_resource_get_version(resource->handle) >= WL_SURFACE_OFFSET_SINCE_VERSION) {
+    auto surfacePrivate = SurfaceInterfacePrivate::fromResource(resource);
+    if (wl_resource_get_version(resource) >= WL_SURFACE_OFFSET_SINCE_VERSION) {
         if (x != 0 || y != 0) {
-            wl_resource_post_error(resource->handle, error_invalid_offset, "wl_surface.attach offset must be 0");
+            wl_resource_post_error(resource, WL_SURFACE_ERROR_INVALID_OFFSET, "wl_surface.attach offset must be 0");
             return;
         }
     } else {
-        pending.offset = QPoint(x, y);
+        surfacePrivate->pending.offset = QPoint(x, y);
     }
 
-    pending.bufferIsSet = true;
+    surfacePrivate->pending.bufferIsSet = true;
     if (!buffer) {
         // got a null buffer, deletes content in next frame
-        pending.buffer = nullptr;
-        pending.damage = QRegion();
-        pending.bufferDamage = QRegion();
+        surfacePrivate->pending.buffer = nullptr;
+        surfacePrivate->pending.damage = QRegion();
+        surfacePrivate->pending.bufferDamage = QRegion();
         return;
     }
-    pending.buffer = compositor->display()->clientBufferForResource(buffer);
+    surfacePrivate->pending.buffer = surfacePrivate->compositor->display()->clientBufferForResource(buffer);
 }
 
-void SurfaceInterfacePrivate::surface_damage(Resource *, int32_t x, int32_t y, int32_t width, int32_t height)
+void SurfaceInterfacePrivate::surface_damage(wl_client *client, wl_resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
 {
-    pending.damage |= QRect(x, y, width, height);
+    auto surfacePrivate = SurfaceInterfacePrivate::fromResource(resource);
+    surfacePrivate->pending.damage |= QRect(x, y, width, height);
 }
 
-void SurfaceInterfacePrivate::surface_frame(Resource *resource, uint32_t callback)
+void SurfaceInterfacePrivate::surface_frame(wl_client *client, wl_resource *resource, uint32_t callback)
 {
-    wl_resource *callbackResource = wl_resource_create(resource->client(),
+    wl_resource *callbackResource = wl_resource_create(client,
                                                        &wl_callback_interface,
                                                        /* version */ 1,
                                                        callback);
     if (!callbackResource) {
-        wl_resource_post_no_memory(resource->handle);
+        wl_resource_post_no_memory(resource);
         return;
     }
+
+    auto surfacePrivate = SurfaceInterfacePrivate::fromResource(resource);
 
     wl_resource_set_implementation(callbackResource, nullptr, nullptr, [](wl_resource *resource) {
         wl_list_remove(wl_resource_get_link(resource));
     });
 
-    wl_list_insert(pending.frameCallbacks.prev, wl_resource_get_link(callbackResource));
+    wl_list_insert(surfacePrivate->pending.frameCallbacks.prev, wl_resource_get_link(callbackResource));
 }
 
-void SurfaceInterfacePrivate::surface_set_opaque_region(Resource *resource, struct ::wl_resource *region)
+void SurfaceInterfacePrivate::surface_set_opaque_region(wl_client *client, wl_resource *resource, struct ::wl_resource *region)
 {
-    Q_UNUSED(resource)
-    RegionInterface *r = RegionInterface::get(region);
-    pending.opaque = r ? r->region() : QRegion();
-    pending.opaqueIsSet = true;
+    auto surfacePrivate = SurfaceInterfacePrivate::fromResource(resource);
+
+    surfacePrivate->pending.opaque = region ? RegionInterface::fromResource(resource)->m_region : QRegion();
+    surfacePrivate->pending.opaqueIsSet = true;
 }
 
-void SurfaceInterfacePrivate::surface_set_input_region(Resource *resource, struct ::wl_resource *region)
+void SurfaceInterfacePrivate::surface_set_input_region(wl_client *client, wl_resource *resource, struct ::wl_resource *region)
 {
-    Q_UNUSED(resource)
-    RegionInterface *r = RegionInterface::get(region);
-    pending.input = r ? r->region() : infiniteRegion();
-    pending.inputIsSet = true;
+    auto surfacePrivate = SurfaceInterfacePrivate::fromResource(resource);
+
+    surfacePrivate->pending.input = region ? RegionInterface::fromResource(region)->m_region : infiniteRegion();
+    surfacePrivate->pending.inputIsSet = true;
 }
 
-void SurfaceInterfacePrivate::surface_commit(Resource *resource)
+void SurfaceInterfacePrivate::surface_commit(wl_client *client, wl_resource *resource)
 {
-    Q_UNUSED(resource)
-    if (subSurface) {
-        commitSubSurface();
+    auto surfacePrivate = SurfaceInterfacePrivate::fromResource(resource);
+    if (surfacePrivate->subSurface) {
+        surfacePrivate->commitSubSurface();
     } else {
-        applyState(&pending);
+        surfacePrivate->applyState(&surfacePrivate->pending);
     }
 }
 
-void SurfaceInterfacePrivate::surface_set_buffer_transform(Resource *resource, int32_t transform)
+void SurfaceInterfacePrivate::surface_set_buffer_transform(wl_client *client, wl_resource *resource, int32_t transform)
 {
     if (transform < 0 || transform > WL_OUTPUT_TRANSFORM_FLIPPED_270) {
-        wl_resource_post_error(resource->handle, error_invalid_transform, "buffer transform must be a valid transform (%d specified)", transform);
+        wl_resource_post_error(resource, WL_SURFACE_ERROR_INVALID_TRANSFORM,
+                               "buffer transform must be a valid transform (%d specified)", transform);
         return;
     }
-    pending.bufferTransform = KWin::Output::Transform(transform);
-    pending.bufferTransformIsSet = true;
+    auto surfacePrivate = SurfaceInterfacePrivate::fromResource(resource);
+    surfacePrivate->pending.bufferTransform = KWin::Output::Transform(transform);
+    surfacePrivate->pending.bufferTransformIsSet = true;
 }
 
-void SurfaceInterfacePrivate::surface_set_buffer_scale(Resource *resource, int32_t scale)
+void SurfaceInterfacePrivate::surface_set_buffer_scale(wl_client *client, wl_resource *resource, int32_t scale)
 {
     if (scale < 1) {
-        wl_resource_post_error(resource->handle, error_invalid_scale, "buffer scale must be at least one (%d specified)", scale);
+        wl_resource_post_error(resource, WL_SURFACE_ERROR_INVALID_SCALE,
+                               "buffer scale must be at least one (%d specified)", scale);
         return;
     }
-    pending.bufferScale = scale;
-    pending.bufferScaleIsSet = true;
+    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::fromResource(resource);
+    surfacePrivate->pending.bufferScale = scale;
+    surfacePrivate->pending.bufferScaleIsSet = true;
 }
 
-void SurfaceInterfacePrivate::surface_damage_buffer(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
+void SurfaceInterfacePrivate::surface_damage_buffer(wl_client *client, wl_resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
 {
-    Q_UNUSED(resource)
-    pending.bufferDamage |= QRect(x, y, width, height);
+    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::fromResource(resource);
+    surfacePrivate->pending.bufferDamage |= QRect(x, y, width, height);
 }
 
-void SurfaceInterfacePrivate::surface_offset(Resource *resource, int32_t x, int32_t y)
+void SurfaceInterfacePrivate::surface_offset(wl_client *client, wl_resource *resource, int32_t x, int32_t y)
 {
-    Q_UNUSED(resource)
-    pending.offset = QPoint(x, y);
+    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::fromResource(resource);
+    surfacePrivate->pending.offset = QPoint(x, y);
 }
 
-SurfaceInterface::SurfaceInterface(CompositorInterface *compositor, wl_resource *resource)
-    : QObject(compositor)
-    , d(new SurfaceInterfacePrivate(this))
+SurfaceInterface::SurfaceInterface(CompositorInterface *compositor, wl_client *client, int version, uint32_t id)
+    : d(new SurfaceInterfacePrivate(this, client, version, id))
 {
     d->compositor = compositor;
-    d->init(resource);
-    d->client = compositor->display()->getConnection(d->resource()->client());
+    d->client = compositor->display()->getConnection(wl_resource_get_client(d->resource));
 
     d->pendingScaleOverride = d->client->scaleOverride();
     d->scaleOverride = d->pendingScaleOverride;
@@ -380,7 +394,7 @@ ClientConnection *SurfaceInterface::client() const
 
 wl_resource *SurfaceInterface::resource() const
 {
-    return d->resource()->handle;
+    return d->resource;
 }
 
 CompositorInterface *SurfaceInterface::compositor() const
@@ -812,16 +826,16 @@ QPoint SurfaceInterface::offset() const
 
 SurfaceInterface *SurfaceInterface::get(wl_resource *native)
 {
-    if (auto surfacePrivate = resource_cast<SurfaceInterfacePrivate *>(native)) {
-        return surfacePrivate->q;
-    }
-    return nullptr;
+    auto surfacePrivate = SurfaceInterfacePrivate::fromResource(native);
+    return surfacePrivate->q;
 }
 
 SurfaceInterface *SurfaceInterface::get(quint32 id, const ClientConnection *client)
 {
     if (client) {
-        return get(client->getResource(id));
+        if (wl_resource *resource = client->getResource(id)) {
+            return get(resource);
+        }
     }
     return nullptr;
 }
@@ -902,7 +916,7 @@ void SurfaceInterface::setOutputs(const QVector<OutputInterface *> &outputs)
     for (auto it = removedOutputs.constBegin(), end = removedOutputs.constEnd(); it != end; ++it) {
         const auto resources = (*it)->clientResources(client());
         for (wl_resource *outputResource : resources) {
-            d->send_leave(outputResource);
+            wl_surface_send_leave(d->resource, outputResource);
         }
         disconnect(d->outputDestroyedConnections.take(*it));
         disconnect(d->outputBoundConnections.take(*it));
@@ -916,7 +930,7 @@ void SurfaceInterface::setOutputs(const QVector<OutputInterface *> &outputs)
         const auto o = *it;
         const auto resources = o->clientResources(client());
         for (wl_resource *outputResource : resources) {
-            d->send_enter(outputResource);
+            wl_surface_send_enter(d->resource, outputResource);
         }
         d->outputDestroyedConnections[o] = connect(o, &OutputInterface::aboutToBeDestroyed, this, [this, o] {
             auto outputs = d->outputs;
@@ -930,7 +944,7 @@ void SurfaceInterface::setOutputs(const QVector<OutputInterface *> &outputs)
             if (c != client()) {
                 return;
             }
-            d->send_enter(outputResource);
+            wl_surface_send_enter(d->resource, outputResource);
         });
     }
 
