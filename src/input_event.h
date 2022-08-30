@@ -196,6 +196,7 @@ public:
 class TabletPadId
 {
 public:
+    const QString name;
     void *data;
 };
 
