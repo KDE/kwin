@@ -3958,35 +3958,6 @@ void Window::sendToOutput(Output *newOutput)
     }
 }
 
-void Window::updateGeometryRestoresForFullscreen(Output *output)
-{
-    const QRectF screenArea = workspace()->clientArea(MaximizeArea, this, output);
-
-    // TODO: Reuse geometry calculation code in checkWorkspacePosition().
-    if (fullscreenGeometryRestore().isValid() && !screenArea.contains(fullscreenGeometryRestore().center())) {
-        QRectF restore = screenArea;
-        if (!(requestedMaximizeMode() & MaximizeVertical)) {
-            restore.setHeight(fullscreenGeometryRestore().height());
-        }
-        if (!(requestedMaximizeMode() & MaximizeHorizontal)) {
-            restore.setWidth(fullscreenGeometryRestore().width());
-        }
-        restore.setSize(restore.size().boundedTo(screenArea.size()));
-        const QSizeF move = (screenArea.size() - restore.size()) / 2;
-        restore.translate(move.width(), move.height());
-
-        setFullscreenGeometryRestore(restore);
-    }
-
-    if (geometryRestore().isValid() && !screenArea.contains(geometryRestore().center())) {
-        QRectF restore = QRectF(screenArea.topLeft(), geometryRestore().size().boundedTo(screenArea.size()));
-        const QSizeF move = (screenArea.size() - restore.size()) / 2;
-        restore.translate(move.width(), move.height());
-
-        setGeometryRestore(restore);
-    }
-}
-
 void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *oldDesktop)
 {
     if (isDock() || isDesktop() || !isPlaceable()) {
@@ -3997,25 +3968,6 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
 
     if (!oldGeometry.isValid()) {
         oldGeometry = newGeom;
-    }
-    if (isRequestedFullScreen()) {
-        moveResize(workspace()->clientArea(FullScreenArea, this, newGeom.center()));
-        updateGeometryRestoresForFullscreen(workspace()->outputAt(newGeom.center()));
-        return;
-    }
-
-    if (requestedMaximizeMode() != MaximizeRestore) {
-        changeMaximize(false, false, true); // adjust size
-        QRectF geom = moveResizeGeometry();
-        const QRectF screenArea = workspace()->clientArea(ScreenArea, this, geom.center());
-        checkOffscreenPosition(&geom, screenArea);
-        moveResize(geom);
-        return;
-    }
-
-    if (quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
-        moveResize(quickTileGeometry(quickTileMode(), moveResizeGeometry().center()));
-        return;
     }
 
     // this can be true only if this window was mapped before KWin
@@ -4054,6 +4006,14 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
         oldScreenArea = workspace()->clientArea(ScreenArea, workspace()->outputAt(oldGeometry.center()), oldDesktop).toRect();
         screenArea = workspace()->clientArea(ScreenArea, this, newGeom.center()).toRect();
     }
+
+    if (isRequestedFullScreen() || requestedMaximizeMode() != MaximizeRestore || quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
+        moveResize(ensureSpecialStateGeometry(newGeom));
+        m_fullscreenGeometryRestore = moveToArea(m_fullscreenGeometryRestore, oldScreenArea, screenArea);
+        m_maximizeGeometryRestore = moveToArea(m_maximizeGeometryRestore, oldScreenArea, screenArea);
+        return;
+    }
+
     const QRect oldGeomTall = QRect(oldGeometry.x(), oldScreenArea.y(), oldGeometry.width(), oldScreenArea.height()); // Full screen height
     const QRect oldGeomWide = QRect(oldScreenArea.x(), oldGeometry.y(), oldScreenArea.width(), oldGeometry.height()); // Full screen width
     int oldTopMax = oldScreenArea.y();

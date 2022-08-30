@@ -990,7 +990,6 @@ public:
      */
     bool isSpecialWindow() const;
     void sendToOutput(Output *output);
-    void updateGeometryRestoresForFullscreen(Output *output);
     const QKeySequence &shortcut() const
     {
         return _shortcut;
