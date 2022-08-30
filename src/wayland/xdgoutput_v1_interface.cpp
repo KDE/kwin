@@ -195,6 +195,10 @@ void XdgOutputV1InterfacePrivate::zxdg_output_v1_destroy(Resource *resource)
 
 void XdgOutputV1InterfacePrivate::zxdg_output_v1_bind_resource(Resource *resource)
 {
+    if (!output || output->isRemoved()) {
+        return;
+    }
+
     sendLogicalPosition(resource, pos);
     sendLogicalSize(resource, size);
     if (resource->version() >= ZXDG_OUTPUT_V1_NAME_SINCE_VERSION) {
@@ -212,7 +216,7 @@ void XdgOutputV1InterfacePrivate::zxdg_output_v1_bind_resource(Resource *resourc
 
 void XdgOutputV1InterfacePrivate::sendLogicalSize(Resource *resource, const QSize &size)
 {
-    if (!output) {
+    if (!output || output->isRemoved()) {
         return;
     }
     ClientConnection *connection = output->display()->getConnection(resource->client());
@@ -223,7 +227,7 @@ void XdgOutputV1InterfacePrivate::sendLogicalSize(Resource *resource, const QSiz
 
 void XdgOutputV1InterfacePrivate::sendLogicalPosition(Resource *resource, const QPoint &pos)
 {
-    if (!output) {
+    if (!output || output->isRemoved()) {
         return;
     }
     ClientConnection *connection = output->display()->getConnection(resource->client());
@@ -234,14 +238,12 @@ void XdgOutputV1InterfacePrivate::sendLogicalPosition(Resource *resource, const 
 
 void XdgOutputV1InterfacePrivate::sendDone(Resource *resource)
 {
-    if (!doneOnce) {
+    if (!doneOnce || !output || output->isRemoved()) {
         return;
     }
 
     if (wl_resource_get_version(resource->handle) >= 3) {
-        if (output) {
-            output->done(resource->client());
-        }
+        output->done(resource->client());
     } else {
         send_done(resource->handle);
     }

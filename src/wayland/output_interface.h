@@ -51,6 +51,7 @@ public:
     explicit OutputInterface(Display *display, KWin::Output *handle, QObject *parent = nullptr);
     ~OutputInterface() override;
 
+    bool isRemoved() const;
     void remove();
 
     KWin::Output *handle() const;
