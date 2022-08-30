@@ -2255,7 +2255,7 @@ void Workspace::desktopResized()
     const auto oldCursorOutput = std::find_if(m_oldScreenGeometries.cbegin(), m_oldScreenGeometries.cend(), [](const auto &geometry) {
         return geometry.contains(Cursors::self()->mouse()->pos());
     });
-    if (oldCursorOutput != m_oldScreenGeometries.end()) {
+    if (oldCursorOutput != m_oldScreenGeometries.cend()) {
         const Output *cursorOutput = oldCursorOutput.key();
         if (std::find(m_outputs.cbegin(), m_outputs.cend(), cursorOutput) != m_outputs.cend()) {
             const QRect oldGeometry = oldCursorOutput.value();
