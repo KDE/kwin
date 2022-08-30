@@ -99,7 +99,7 @@ void LayerShellV1InterfacePrivate::zwlr_layer_shell_v1_get_layer_surface(Resourc
                                                                          const QString &scope)
 {
     SurfaceInterface *surface = SurfaceInterface::get(surface_resource);
-    OutputInterface *output = OutputInterface::get(output_resource);
+    OutputInterface *output = output_resource ? OutputInterface::get(output_resource) : nullptr;
 
     if (surface->buffer()) {
         wl_resource_post_error(resource->handle, error_already_constructed, "the wl_surface already has a buffer attached");

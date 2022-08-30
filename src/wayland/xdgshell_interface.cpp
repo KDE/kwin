@@ -456,8 +456,7 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_unset_maximized(Resource *resourc
 void XdgToplevelInterfacePrivate::xdg_toplevel_set_fullscreen(Resource *resource, ::wl_resource *outputResource)
 {
     Q_UNUSED(resource)
-    OutputInterface *output = OutputInterface::get(outputResource);
-    Q_EMIT q->fullscreenRequested(output);
+    Q_EMIT q->fullscreenRequested(outputResource ? OutputInterface::get(outputResource) : nullptr);
 }
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_unset_fullscreen(Resource *resource)

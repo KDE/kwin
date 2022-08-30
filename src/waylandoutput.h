@@ -30,8 +30,8 @@ private Q_SLOTS:
 private:
     Output *m_platformOutput;
     QTimer m_updateTimer;
-    KWaylandServer::ScopedGlobalPointer<KWaylandServer::OutputInterface> m_waylandOutput;
-    KWaylandServer::XdgOutputV1Interface *m_xdgOutputV1;
+    std::unique_ptr<KWaylandServer::OutputInterface> m_waylandOutput;
+    std::unique_ptr<KWaylandServer::XdgOutputV1Interface> m_xdgOutputV1;
 };
 
 } // namespace KWin

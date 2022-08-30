@@ -8,10 +8,12 @@
 #include "display.h"
 #include "display_p.h"
 #include "utils.h"
+#include "utils/global.h"
 
 #include "output.h"
 
-#include "qwayland-server-wayland.h"
+#include <wayland-server-core.h>
+#include <wayland-server-protocol.h>
 
 #include <QPointer>
 #include <QVector>
@@ -20,19 +22,31 @@ namespace KWaylandServer
 {
 static const int s_version = 3;
 
-class OutputInterfacePrivate : public QtWaylandServer::wl_output
+class OutputInterfacePrivate
 {
 public:
     explicit OutputInterfacePrivate(Display *display, OutputInterface *q, KWin::Output *handle);
 
-    void sendScale(Resource *resource);
-    void sendGeometry(Resource *resource);
-    void sendMode(Resource *resource);
-    void sendDone(Resource *resource);
+    static OutputInterfacePrivate *fromResource(wl_resource *resource);
+
+    void sendScale(wl_resource *resource);
+    void sendGeometry(wl_resource *resource);
+    void sendMode(wl_resource *resource);
+    void sendDone(wl_resource *resource);
 
     void broadcastGeometry();
 
+    static void output_bind_resource(wl_client *client, void *data, uint32_t version, uint32_t id);
+    static void output_destroy_resource(wl_resource *resource);
+    static void output_release(wl_client *client, wl_resource *resource);
+
+    static constexpr struct wl_output_interface implementation = {
+        .release = output_release,
+    };
+
     OutputInterface *q;
+    wl_global *global;
+    QMultiMap<wl_client *, wl_resource *> resourceMap;
     QPointer<Display> display;
     QPointer<KWin::Output> handle;
     QSize physicalSize;
@@ -43,30 +57,69 @@ public:
     KWin::Output::SubPixel subPixel = KWin::Output::SubPixel::Unknown;
     KWin::Output::Transform transform = KWin::Output::Transform::Normal;
     OutputInterface::Mode mode;
-
-private:
-    void output_destroy_global() override;
-    void output_bind_resource(Resource *resource) override;
-    void output_release(Resource *resource) override;
 };
 
+OutputInterfacePrivate *OutputInterfacePrivate::fromResource(wl_resource *resource)
+{
+    Q_ASSERT(wl_resource_instance_of(resource, &wl_output_interface, &implementation));
+    return static_cast<OutputInterfacePrivate *>(wl_resource_get_user_data(resource));
+}
+
+void OutputInterfacePrivate::output_destroy_resource(wl_resource *resource)
+{
+    auto outputPrivate = OutputInterfacePrivate::fromResource(resource);
+    if (outputPrivate) {
+        outputPrivate->resourceMap.remove(wl_resource_get_client(resource), resource);
+    }
+}
+
+void OutputInterfacePrivate::output_bind_resource(wl_client *client, void *data, uint32_t version, uint32_t id)
+{
+    wl_resource *resource = wl_resource_create(client, &wl_output_interface, version, id);
+    if (!resource) {
+        wl_client_post_no_memory(client);
+        return;
+    }
+
+    wl_resource_set_implementation(resource, &implementation, data, output_destroy_resource);
+
+    auto outputPrivate = static_cast<OutputInterfacePrivate *>(data);
+    if (!outputPrivate) {
+        return;
+    }
+
+    outputPrivate->resourceMap.insert(client, resource);
+
+    outputPrivate->sendMode(resource);
+    outputPrivate->sendScale(resource);
+    outputPrivate->sendGeometry(resource);
+    outputPrivate->sendDone(resource);
+
+    Q_EMIT outputPrivate->q->bound(outputPrivate->display->getConnection(client), resource);
+}
+
+void OutputInterfacePrivate::output_release(wl_client *client, wl_resource *resource)
+{
+    wl_resource_destroy(resource);
+}
+
 OutputInterfacePrivate::OutputInterfacePrivate(Display *display, OutputInterface *q, KWin::Output *handle)
-    : QtWaylandServer::wl_output(*display, s_version)
-    , q(q)
+    : q(q)
     , display(display)
     , handle(handle)
 {
+    global = wl_global_create(*display, &wl_output_interface, s_version, this, output_bind_resource);
 }
 
-void OutputInterfacePrivate::sendMode(Resource *resource)
+void OutputInterfacePrivate::sendMode(wl_resource *resource)
 {
-    send_mode(resource->handle, mode_current, mode.size.width(), mode.size.height(), mode.refreshRate);
+    wl_output_send_mode(resource, WL_OUTPUT_MODE_CURRENT, mode.size.width(), mode.size.height(), mode.refreshRate);
 }
 
-void OutputInterfacePrivate::sendScale(Resource *resource)
+void OutputInterfacePrivate::sendScale(wl_resource *resource)
 {
-    if (resource->version() >= WL_OUTPUT_SCALE_SINCE_VERSION) {
-        send_scale(resource->handle, scale);
+    if (wl_resource_get_version(resource) >= WL_OUTPUT_SCALE_SINCE_VERSION) {
+        wl_output_send_scale(resource, scale);
     }
 }
 
@@ -74,21 +127,21 @@ static quint32 kwaylandServerTransformToWaylandTransform(KWin::Output::Transform
 {
     switch (transform) {
     case KWin::Output::Transform::Normal:
-        return OutputInterfacePrivate::transform_normal;
+        return WL_OUTPUT_TRANSFORM_NORMAL;
     case KWin::Output::Transform::Rotated90:
-        return OutputInterfacePrivate::transform_90;
+        return WL_OUTPUT_TRANSFORM_90;
     case KWin::Output::Transform::Rotated180:
-        return OutputInterfacePrivate::transform_180;
+        return WL_OUTPUT_TRANSFORM_180;
     case KWin::Output::Transform::Rotated270:
-        return OutputInterfacePrivate::transform_270;
+        return WL_OUTPUT_TRANSFORM_270;
     case KWin::Output::Transform::Flipped:
-        return OutputInterfacePrivate::transform_flipped;
+        return WL_OUTPUT_TRANSFORM_FLIPPED;
     case KWin::Output::Transform::Flipped90:
-        return OutputInterfacePrivate::transform_flipped_90;
+        return WL_OUTPUT_TRANSFORM_FLIPPED_90;
     case KWin::Output::Transform::Flipped180:
-        return OutputInterfacePrivate::transform_flipped_180;
+        return WL_OUTPUT_TRANSFORM_FLIPPED_180;
     case KWin::Output::Transform::Flipped270:
-        return OutputInterfacePrivate::transform_flipped_270;
+        return WL_OUTPUT_TRANSFORM_FLIPPED_270;
     default:
         Q_UNREACHABLE();
     }
@@ -98,72 +151,47 @@ static quint32 kwaylandServerSubPixelToWaylandSubPixel(KWin::Output::SubPixel su
 {
     switch (subPixel) {
     case KWin::Output::SubPixel::Unknown:
-        return OutputInterfacePrivate::subpixel_unknown;
+        return WL_OUTPUT_SUBPIXEL_UNKNOWN;
     case KWin::Output::SubPixel::None:
-        return OutputInterfacePrivate::subpixel_none;
+        return WL_OUTPUT_SUBPIXEL_NONE;
     case KWin::Output::SubPixel::Horizontal_RGB:
-        return OutputInterfacePrivate::subpixel_horizontal_rgb;
+        return WL_OUTPUT_SUBPIXEL_HORIZONTAL_RGB;
     case KWin::Output::SubPixel::Horizontal_BGR:
-        return OutputInterfacePrivate::subpixel_horizontal_bgr;
+        return WL_OUTPUT_SUBPIXEL_HORIZONTAL_BGR;
     case KWin::Output::SubPixel::Vertical_RGB:
-        return OutputInterfacePrivate::subpixel_vertical_rgb;
+        return WL_OUTPUT_SUBPIXEL_VERTICAL_RGB;
     case KWin::Output::SubPixel::Vertical_BGR:
-        return OutputInterfacePrivate::subpixel_vertical_bgr;
+        return WL_OUTPUT_SUBPIXEL_VERTICAL_BGR;
     default:
         Q_UNREACHABLE();
     }
 }
 
-void OutputInterfacePrivate::sendGeometry(Resource *resource)
+void OutputInterfacePrivate::sendGeometry(wl_resource *resource)
 {
-    send_geometry(resource->handle,
-                  globalPosition.x(),
-                  globalPosition.y(),
-                  physicalSize.width(),
-                  physicalSize.height(),
-                  kwaylandServerSubPixelToWaylandSubPixel(subPixel),
-                  manufacturer,
-                  model,
-                  kwaylandServerTransformToWaylandTransform(transform));
+    wl_output_send_geometry(resource,
+                            globalPosition.x(),
+                            globalPosition.y(),
+                            physicalSize.width(),
+                            physicalSize.height(),
+                            kwaylandServerSubPixelToWaylandSubPixel(subPixel),
+                            manufacturer.toUtf8().constData(),
+                            model.toUtf8().constData(),
+                            kwaylandServerTransformToWaylandTransform(transform));
 }
 
-void OutputInterfacePrivate::sendDone(Resource *resource)
+void OutputInterfacePrivate::sendDone(wl_resource *resource)
 {
-    if (resource->version() >= WL_OUTPUT_DONE_SINCE_VERSION) {
-        send_done(resource->handle);
+    if (wl_resource_get_version(resource) >= WL_OUTPUT_DONE_SINCE_VERSION) {
+        wl_output_send_done(resource);
     }
 }
 
 void OutputInterfacePrivate::broadcastGeometry()
 {
-    const auto outputResources = resourceMap();
-    for (Resource *resource : outputResources) {
+    for (wl_resource *resource : std::as_const(resourceMap)) {
         sendGeometry(resource);
     }
-}
-
-void OutputInterfacePrivate::output_destroy_global()
-{
-    delete q;
-}
-
-void OutputInterfacePrivate::output_release(Resource *resource)
-{
-    wl_resource_destroy(resource->handle);
-}
-
-void OutputInterfacePrivate::output_bind_resource(Resource *resource)
-{
-    if (isGlobalRemoved()) {
-        return; // We are waiting for the wl_output global to be destroyed.
-    }
-
-    sendMode(resource);
-    sendScale(resource);
-    sendGeometry(resource);
-    sendDone(resource);
-
-    Q_EMIT q->bound(display->getConnection(resource->client()), resource->handle);
 }
 
 OutputInterface::OutputInterface(Display *display, KWin::Output *handle, QObject *parent)
@@ -172,31 +200,34 @@ OutputInterface::OutputInterface(Display *display, KWin::Output *handle, QObject
 {
     DisplayPrivate *displayPrivate = DisplayPrivate::get(display);
     displayPrivate->outputs.append(this);
+
+    connect(display, &Display::aboutToTerminate, this, [this]() {
+        wl_global_destroy(d->global);
+        d->global = nullptr;
+    });
 }
 
 OutputInterface::~OutputInterface()
 {
-    remove();
-}
+    Q_EMIT aboutToBeDestroyed();
 
-KWin::Output *OutputInterface::handle() const
-{
-    return d->handle;
-}
+    for (wl_resource *resource : std::as_const(d->resourceMap)) {
+        wl_resource_set_user_data(resource, nullptr);
+    }
 
-void OutputInterface::remove()
-{
-    if (d->isGlobalRemoved()) {
-        return;
+    if (d->global) {
+        wl_global_destroy_deferred(d->global);
     }
 
     if (d->display) {
         DisplayPrivate *displayPrivate = DisplayPrivate::get(d->display);
         displayPrivate->outputs.removeOne(this);
     }
+}
 
-    Q_EMIT removed();
-    d->globalRemove();
+KWin::Output *OutputInterface::handle() const
+{
+    return d->handle;
 }
 
 QSize OutputInterface::pixelSize() const
@@ -222,8 +253,7 @@ void OutputInterface::setMode(const Mode &mode)
 
     d->mode = mode;
 
-    const auto outputResources = d->resourceMap();
-    for (OutputInterfacePrivate::Resource *resource : outputResources) {
+    for (wl_resource *resource : std::as_const(d->resourceMap)) {
         d->sendMode(resource);
     }
 
@@ -308,8 +338,7 @@ void OutputInterface::setScale(int scale)
     }
     d->scale = scale;
 
-    const auto outputResources = d->resourceMap();
-    for (OutputInterfacePrivate::Resource *resource : outputResources) {
+    for (wl_resource *resource : std::as_const(d->resourceMap)) {
         d->sendScale(resource);
     }
 
@@ -346,35 +375,26 @@ void OutputInterface::setTransform(KWin::Output::Transform transform)
     Q_EMIT transformChanged(d->transform);
 }
 
-QVector<wl_resource *> OutputInterface::clientResources(ClientConnection *client) const
+QList<wl_resource *> OutputInterface::clientResources(ClientConnection *client) const
 {
-    const auto outputResources = d->resourceMap().values(client->client());
-    QVector<wl_resource *> ret;
-    ret.reserve(outputResources.count());
-
-    for (OutputInterfacePrivate::Resource *resource : outputResources) {
-        ret.append(resource->handle);
-    }
-
-    return ret;
+    return d->resourceMap.values(client->client());
 }
 
 void OutputInterface::done()
 {
-    const auto outputResources = d->resourceMap();
-    for (OutputInterfacePrivate::Resource *resource : outputResources) {
+    for (wl_resource *resource : std::as_const(d->resourceMap)) {
         d->sendDone(resource);
     }
 }
 
 void OutputInterface::done(wl_client *client)
 {
-    d->sendDone(d->resourceMap().value(client));
+    d->sendDone(d->resourceMap.value(client));
 }
 
 OutputInterface *OutputInterface::get(wl_resource *native)
 {
-    if (auto outputPrivate = resource_cast<OutputInterfacePrivate *>(native)) {
+    if (auto outputPrivate = OutputInterfacePrivate::fromResource(native)) {
         return outputPrivate->q;
     }
     return nullptr;

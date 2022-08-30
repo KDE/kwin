@@ -154,6 +154,7 @@ Q_SIGNALS:
     void runningChanged(bool);
     void clientConnected(KWaylandServer::ClientConnection *);
     void clientDisconnected(KWaylandServer::ClientConnection *);
+    void aboutToTerminate();
 
 private:
     friend class DisplayPrivate;

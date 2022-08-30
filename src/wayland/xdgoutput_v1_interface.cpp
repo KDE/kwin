@@ -8,7 +8,7 @@
 #include "display.h"
 #include "output_interface.h"
 
-#include "qwayland-server-xdg-output-unstable-v1.h"
+#include "wayland-xdg-output-unstable-v1-server-protocol.h"
 
 #include <QDebug>
 #include <QHash>
@@ -16,30 +16,39 @@
 
 namespace KWaylandServer
 {
+
 static const quint32 s_version = 3;
 
-class XdgOutputManagerV1InterfacePrivate : public QtWaylandServer::zxdg_output_manager_v1
+class XdgOutputManagerV1InterfacePrivate
 {
 public:
-    XdgOutputManagerV1InterfacePrivate(XdgOutputManagerV1Interface *q, Display *display);
+    explicit XdgOutputManagerV1InterfacePrivate(Display *display);
+    ~XdgOutputManagerV1InterfacePrivate();
+
+    static XdgOutputManagerV1InterfacePrivate *fromResource(wl_resource *resource);
+
     QHash<OutputInterface *, XdgOutputV1Interface *> outputs;
+    wl_global *global = nullptr;
 
-    XdgOutputManagerV1Interface *q;
+    static void zxdg_output_manager_v1_bind_resource(wl_client *client, void *data, uint32_t version, uint32_t id);
+    static void zxdg_output_manager_v1_destroy(wl_client *client, wl_resource *resource);
+    static void zxdg_output_manager_v1_get_xdg_output(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *output);
 
-protected:
-    void zxdg_output_manager_v1_destroy(Resource *resource) override;
-    void zxdg_output_manager_v1_get_xdg_output(Resource *resource, uint32_t id, wl_resource *output) override;
+    static constexpr struct zxdg_output_manager_v1_interface implementation = {
+        .destroy = zxdg_output_manager_v1_destroy,
+        .get_xdg_output = zxdg_output_manager_v1_get_xdg_output,
+    };
 };
 
-class XdgOutputV1InterfacePrivate : public QtWaylandServer::zxdg_output_v1
+class XdgOutputV1InterfacePrivate
 {
 public:
-    XdgOutputV1InterfacePrivate(XdgOutputV1Interface *q, OutputInterface *wlOutput)
-        : output(wlOutput)
-        , q(q)
-    {
-    }
+    XdgOutputV1InterfacePrivate(XdgOutputV1Interface *q, OutputInterface *output);
+    ~XdgOutputV1InterfacePrivate();
 
+    static XdgOutputV1InterfacePrivate *fromResource(wl_resource *resource);
+
+    QMultiMap<wl_client *, wl_resource *> resourceMap;
     QPoint pos;
     QSize size;
     QString name;
@@ -49,20 +58,93 @@ public:
     QPointer<OutputInterface> output;
     XdgOutputV1Interface *const q;
 
-    void sendLogicalPosition(Resource *resource, const QPoint &position);
-    void sendLogicalSize(Resource *resource, const QSize &size);
+    void add(wl_client *client, wl_resource *resource);
 
-    void sendDone(Resource *resource);
+    void sendLogicalPosition(wl_resource *resource, const QPoint &position);
+    void sendLogicalSize(wl_resource *resource, const QSize &size);
+    void sendDone(wl_resource *resource);
 
-protected:
-    void zxdg_output_v1_bind_resource(Resource *resource) override;
-    void zxdg_output_v1_destroy(Resource *resource) override;
+    static void zxdg_output_v1_destroy_resource(wl_resource *resource);
+    static void zxdg_output_v1_destroy(wl_client *client, wl_resource *resource);
+
+    static constexpr struct zxdg_output_v1_interface implementation = {
+        .destroy = zxdg_output_v1_destroy,
+    };
 };
+
+XdgOutputManagerV1InterfacePrivate *XdgOutputManagerV1InterfacePrivate::fromResource(wl_resource *resource)
+{
+    Q_ASSERT(wl_resource_instance_of(resource, &zxdg_output_manager_v1_interface, &implementation));
+    return static_cast<XdgOutputManagerV1InterfacePrivate *>(wl_resource_get_user_data(resource));
+}
+
+XdgOutputManagerV1InterfacePrivate::XdgOutputManagerV1InterfacePrivate(Display *display)
+{
+    global = wl_global_create(*display, &zxdg_output_manager_v1_interface, s_version, this, zxdg_output_manager_v1_bind_resource);
+}
+
+XdgOutputManagerV1InterfacePrivate::~XdgOutputManagerV1InterfacePrivate()
+{
+    if (global) {
+        wl_global_destroy(global);
+        global = nullptr;
+    }
+}
+
+void XdgOutputManagerV1InterfacePrivate::zxdg_output_manager_v1_bind_resource(wl_client *client, void *data, uint32_t version, uint32_t id)
+{
+    wl_resource *resource = wl_resource_create(client, &zxdg_output_manager_v1_interface, version, id);
+    if (!resource) {
+        wl_client_post_no_memory(client);
+        return;
+    }
+
+    wl_resource_set_implementation(resource, &implementation, data, nullptr);
+}
+
+void XdgOutputManagerV1InterfacePrivate::zxdg_output_manager_v1_get_xdg_output(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *output_resource)
+{
+    XdgOutputManagerV1InterfacePrivate *managerPrivate = XdgOutputManagerV1InterfacePrivate::fromResource(resource);
+
+    wl_resource *xdgOutputResource = wl_resource_create(client, &zxdg_output_v1_interface, wl_resource_get_version(resource), id);
+    if (!xdgOutputResource) {
+        wl_client_post_no_memory(client);
+        return;
+    }
+
+    XdgOutputV1Interface *xdgOutput = managerPrivate->outputs.value(OutputInterface::get(output_resource));
+
+    // means that the output has been removed
+    if (!xdgOutput) {
+        wl_resource_set_implementation(xdgOutputResource,
+                                       &XdgOutputV1InterfacePrivate::implementation,
+                                       nullptr,
+                                       nullptr);
+        return;
+    }
+
+    wl_resource_set_implementation(xdgOutputResource,
+                                   &XdgOutputV1InterfacePrivate::implementation,
+                                   xdgOutput->d.get(),
+                                   XdgOutputV1InterfacePrivate::zxdg_output_v1_destroy_resource);
+
+    xdgOutput->d->add(client, xdgOutputResource);
+}
+
+void XdgOutputManagerV1InterfacePrivate::zxdg_output_manager_v1_destroy(wl_client *client, wl_resource *resource)
+{
+    Q_UNUSED(client)
+    wl_resource_destroy(resource);
+}
 
 XdgOutputManagerV1Interface::XdgOutputManagerV1Interface(Display *display, QObject *parent)
     : QObject(parent)
-    , d(new XdgOutputManagerV1InterfacePrivate(this, display))
+    , d(new XdgOutputManagerV1InterfacePrivate(display))
 {
+    connect(display, &Display::aboutToTerminate, this, [this]() {
+        wl_global_destroy(d->global);
+        d->global = nullptr;
+    });
 }
 
 XdgOutputManagerV1Interface::~XdgOutputManagerV1Interface()
@@ -88,30 +170,6 @@ XdgOutputV1Interface *XdgOutputManagerV1Interface::createXdgOutput(OutputInterfa
     return xdgOutput;
 }
 
-XdgOutputManagerV1InterfacePrivate::XdgOutputManagerV1InterfacePrivate(XdgOutputManagerV1Interface *qptr, Display *d)
-    : QtWaylandServer::zxdg_output_manager_v1(*d, s_version)
-    , q(qptr)
-{
-}
-
-void XdgOutputManagerV1InterfacePrivate::zxdg_output_manager_v1_get_xdg_output(Resource *resource, uint32_t id, wl_resource *outputResource)
-{
-    auto output = OutputInterface::get(outputResource);
-    if (!output) { // output client is requesting XdgOutput for an Output that doesn't exist
-        return;
-    }
-    auto xdgOutput = outputs.value(output);
-    if (!xdgOutput) {
-        return; // client is requesting XdgOutput for an Output that doesn't exist
-    }
-    xdgOutput->d->add(resource->client(), id, resource->version());
-}
-
-void XdgOutputManagerV1InterfacePrivate::zxdg_output_manager_v1_destroy(Resource *resource)
-{
-    wl_resource_destroy(resource->handle);
-}
-
 XdgOutputV1Interface::XdgOutputV1Interface(OutputInterface *output, QObject *parent)
     : QObject(parent)
     , d(new XdgOutputV1InterfacePrivate(this, output))
@@ -130,8 +188,7 @@ void XdgOutputV1Interface::setLogicalSize(const QSize &size)
     d->size = size;
     d->dirty = true;
 
-    const auto outputResources = d->resourceMap();
-    for (auto resource : outputResources) {
+    for (wl_resource *resource : std::as_const(d->resourceMap)) {
         d->sendLogicalSize(resource, size);
     }
 }
@@ -149,8 +206,7 @@ void XdgOutputV1Interface::setLogicalPosition(const QPoint &pos)
     d->pos = pos;
     d->dirty = true;
 
-    const auto outputResources = d->resourceMap();
-    for (auto resource : outputResources) {
+    for (wl_resource *resource : std::as_const(d->resourceMap)) {
         d->sendLogicalPosition(resource, pos);
     }
 }
@@ -180,70 +236,93 @@ void XdgOutputV1Interface::done()
     }
     d->dirty = false;
 
-    const auto outputResources = d->resourceMap();
-    for (auto resource : outputResources) {
-        if (wl_resource_get_version(resource->handle) < 3) {
-            d->send_done(resource->handle);
+    for (wl_resource *resource : std::as_const(d->resourceMap)) {
+        if (wl_resource_get_version(resource) < 3) {
+            zxdg_output_v1_send_done(resource);
         }
     }
 }
 
-void XdgOutputV1InterfacePrivate::zxdg_output_v1_destroy(Resource *resource)
+XdgOutputV1InterfacePrivate *XdgOutputV1InterfacePrivate::fromResource(wl_resource *resource)
 {
-    wl_resource_destroy(resource->handle);
+    Q_ASSERT(wl_resource_instance_of(resource, &zxdg_output_v1_interface, &implementation));
+    return static_cast<XdgOutputV1InterfacePrivate *>(wl_resource_get_user_data(resource));
 }
 
-void XdgOutputV1InterfacePrivate::zxdg_output_v1_bind_resource(Resource *resource)
+XdgOutputV1InterfacePrivate::XdgOutputV1InterfacePrivate(XdgOutputV1Interface *q, OutputInterface *output)
+    : output(output)
+    , q(q)
 {
+}
+
+XdgOutputV1InterfacePrivate::~XdgOutputV1InterfacePrivate()
+{
+    for (wl_resource *resource : std::as_const(resourceMap)) {
+        wl_resource_set_user_data(resource, nullptr);
+    }
+}
+
+void XdgOutputV1InterfacePrivate::add(wl_client *client, wl_resource *resource)
+{
+    resourceMap.insert(client, resource);
+
+    if (wl_resource_get_version(resource) >= ZXDG_OUTPUT_V1_NAME_SINCE_VERSION) {
+        zxdg_output_v1_send_name(resource, name.toUtf8());
+    }
+    if (wl_resource_get_version(resource) >= ZXDG_OUTPUT_V1_DESCRIPTION_SINCE_VERSION) {
+        zxdg_output_v1_send_description(resource, description.toUtf8());
+    }
+
     sendLogicalPosition(resource, pos);
     sendLogicalSize(resource, size);
-    if (resource->version() >= ZXDG_OUTPUT_V1_NAME_SINCE_VERSION) {
-        send_name(resource->handle, name);
-    }
-    if (resource->version() >= ZXDG_OUTPUT_V1_DESCRIPTION_SINCE_VERSION) {
-        send_description(resource->handle, description);
-    }
-
     sendDone(resource);
 
-    ClientConnection *connection = output->display()->getConnection(resource->client());
+    ClientConnection *connection = output->display()->getConnection(wl_resource_get_client(resource));
     QObject::connect(connection, &ClientConnection::scaleOverrideChanged, q, &XdgOutputV1Interface::sendRefresh, Qt::UniqueConnection);
 }
 
-void XdgOutputV1InterfacePrivate::sendLogicalSize(Resource *resource, const QSize &size)
+void XdgOutputV1InterfacePrivate::zxdg_output_v1_destroy_resource(wl_resource *resource)
 {
-    if (!output) {
-        return;
+    auto outputPrivate = XdgOutputV1InterfacePrivate::fromResource(resource);
+    if (outputPrivate) {
+        outputPrivate->resourceMap.remove(wl_resource_get_client(resource), resource);
     }
-    ClientConnection *connection = output->display()->getConnection(resource->client());
-    qreal scaleOverride = connection->scaleOverride();
-
-    send_logical_size(resource->handle, size.width() * scaleOverride, size.height() * scaleOverride);
 }
 
-void XdgOutputV1InterfacePrivate::sendLogicalPosition(Resource *resource, const QPoint &pos)
+void XdgOutputV1InterfacePrivate::zxdg_output_v1_destroy(wl_client *client, wl_resource *resource)
 {
-    if (!output) {
-        return;
-    }
-    ClientConnection *connection = output->display()->getConnection(resource->client());
-    qreal scaleOverride = connection->scaleOverride();
-
-    send_logical_position(resource->handle, pos.x() * scaleOverride, pos.y() * scaleOverride);
+    Q_UNUSED(client)
+    wl_resource_destroy(resource);
 }
 
-void XdgOutputV1InterfacePrivate::sendDone(Resource *resource)
+void XdgOutputV1InterfacePrivate::sendLogicalSize(wl_resource *resource, const QSize &size)
+{
+    ClientConnection *connection = output->display()->getConnection(wl_resource_get_client(resource));
+    qreal scaleOverride = connection->scaleOverride();
+
+    zxdg_output_v1_send_logical_size(resource, size.width() * scaleOverride, size.height() * scaleOverride);
+}
+
+void XdgOutputV1InterfacePrivate::sendLogicalPosition(wl_resource *resource, const QPoint &pos)
+{
+    ClientConnection *connection = output->display()->getConnection(wl_resource_get_client(resource));
+    qreal scaleOverride = connection->scaleOverride();
+
+    zxdg_output_v1_send_logical_position(resource, pos.x() * scaleOverride, pos.y() * scaleOverride);
+}
+
+void XdgOutputV1InterfacePrivate::sendDone(wl_resource *resource)
 {
     if (!doneOnce) {
         return;
     }
 
-    if (wl_resource_get_version(resource->handle) >= 3) {
+    if (wl_resource_get_version(resource) >= 3) {
         if (output) {
-            output->done(resource->client());
+            output->done(wl_resource_get_client(resource));
         }
     } else {
-        send_done(resource->handle);
+        zxdg_output_v1_send_done(resource);
     }
 }
 
@@ -251,9 +330,8 @@ void XdgOutputV1Interface::sendRefresh()
 {
     auto changedConnection = qobject_cast<ClientConnection *>(sender());
 
-    const auto outputResources = d->resourceMap();
-    for (auto resource : outputResources) {
-        ClientConnection *connection = d->output->display()->getConnection(resource->client());
+    for (wl_resource *resource : std::as_const(d->resourceMap)) {
+        ClientConnection *connection = d->output->display()->getConnection(wl_resource_get_client(resource));
         if (connection == changedConnection) {
             d->sendLogicalPosition(resource, d->pos);
             d->sendLogicalSize(resource, d->size);

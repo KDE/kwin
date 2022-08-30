@@ -51,8 +51,6 @@ public:
     explicit OutputInterface(Display *display, KWin::Output *handle, QObject *parent = nullptr);
     ~OutputInterface() override;
 
-    void remove();
-
     KWin::Output *handle() const;
 
     QSize physicalSize() const;
@@ -79,7 +77,7 @@ public:
     /**
      * @returns all wl_resources bound for the @p client
      */
-    QVector<wl_resource *> clientResources(ClientConnection *client) const;
+    QList<wl_resource *> clientResources(ClientConnection *client) const;
 
     /**
      * Submit changes to all clients.
@@ -106,7 +104,7 @@ Q_SIGNALS:
     void subPixelChanged(KWin::Output::SubPixel);
     void transformChanged(KWin::Output::Transform);
     void modeChanged();
-    void removed();
+    void aboutToBeDestroyed();
 
     /**
      * Emitted when a client binds to a given output

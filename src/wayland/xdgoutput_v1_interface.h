@@ -44,7 +44,7 @@ public:
      * @arg output the wl_output interface this XDG output is for
      * @parent the parent of the newly created object
      */
-    XdgOutputV1Interface *createXdgOutput(OutputInterface *output, QObject *parent);
+    XdgOutputV1Interface *createXdgOutput(OutputInterface *output, QObject *parent = nullptr);
 
 private:
     std::unique_ptr<XdgOutputManagerV1InterfacePrivate> d;
