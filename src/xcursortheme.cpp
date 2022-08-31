@@ -12,7 +12,9 @@
 
 #include <QDir>
 #include <QFile>
+#include <QSet>
 #include <QSharedData>
+#include <QStack>
 #include <QStandardPaths>
 
 namespace KWin
@@ -157,22 +159,36 @@ static QStringList searchPaths()
 void KXcursorThemePrivate::load(const QString &themeName, int size, qreal devicePixelRatio)
 {
     const QStringList paths = searchPaths();
-    QStringList inherits;
 
-    for (const QString &path : paths) {
-        const QDir dir(path + QLatin1Char('/') + themeName);
-        if (!dir.exists()) {
+    QStack<QString> stack;
+    QSet<QString> loaded;
+
+    stack.push(themeName);
+
+    while (!stack.isEmpty()) {
+        const QString themeName = stack.pop();
+        if (loaded.contains(themeName)) {
             continue;
         }
-        loadCursors(dir.filePath(QStringLiteral("cursors")), size, devicePixelRatio);
-        if (inherits.isEmpty()) {
-            const KConfig config(dir.filePath(QStringLiteral("index.theme")), KConfig::NoGlobals);
-            inherits << KConfigGroup(&config, "Icon Theme").readEntry("Inherits", QStringList());
-        }
-    }
 
-    for (const QString &inherit : inherits) {
-        load(inherit, size, devicePixelRatio);
+        QStringList inherits;
+
+        for (const QString &path : paths) {
+            const QDir dir(path + QLatin1Char('/') + themeName);
+            if (!dir.exists()) {
+                continue;
+            }
+            loadCursors(dir.filePath(QStringLiteral("cursors")), size, devicePixelRatio);
+            if (inherits.isEmpty()) {
+                const KConfig config(dir.filePath(QStringLiteral("index.theme")), KConfig::NoGlobals);
+                inherits << KConfigGroup(&config, "Icon Theme").readEntry("Inherits", QStringList());
+            }
+        }
+
+        loaded.insert(themeName);
+        for (auto it = inherits.crbegin(); it != inherits.crend(); ++it) {
+            stack.push(*it);
+        }
     }
 }
 
