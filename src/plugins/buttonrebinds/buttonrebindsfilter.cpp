@@ -18,6 +18,11 @@
 
 #include <optional>
 
+quint32 qHash(const Trigger &t)
+{
+    return qHash(t.device) * (t.button + 1);
+}
+
 QString InputDevice::name() const
 {
     return QStringLiteral("Button rebinding device");
@@ -114,17 +119,20 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
 {
     Q_ASSERT(QLatin1String("ButtonRebinds") == group.name());
     KWin::input()->uninstallInputEventFilter(this);
-    m_mouseMapping.clear();
+    for (auto &action : m_actions) {
+        action.clear();
+    }
+
+    bool foundActions = false;
     const auto mouseButtonEnum = QMetaEnum::fromType<Qt::MouseButtons>();
     const auto mouseGroup = group.group("Mouse");
     for (int i = 1; i <= 24; ++i) {
         const QByteArray buttonName = QByteArray("ExtraButton") + QByteArray::number(i);
-        const auto entry = mouseGroup.readEntry(buttonName.constData(), QStringList());
-        if (entry.size() == 2 && entry.first() == QLatin1String("Key")) {
-            const auto keys = QKeySequence::fromString(entry.at(1), QKeySequence::PortableText);
-            if (!keys.isEmpty()) {
-                m_mouseMapping.insert(static_cast<Qt::MouseButton>(mouseButtonEnum.keyToValue(buttonName)), keys);
-            }
+        if (mouseGroup.hasKey(buttonName.constData())) {
+            const auto entry = mouseGroup.readEntry(buttonName.constData(), QStringList());
+            const auto button = static_cast<Qt::MouseButton>(mouseButtonEnum.keyToValue(buttonName));
+            insert(Pointer, {QString(), button}, entry);
+            foundActions = true;
         }
     }
 
@@ -137,16 +145,14 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
             const auto entry = tabletGroup.readEntry(buttonName, QStringList());
             bool ok;
             const uint button = buttonName.toUInt(&ok);
-            if (ok && entry.size() == 2 && entry.first() == QLatin1String("Key")) {
-                const auto keys = QKeySequence::fromString(entry.at(1), QKeySequence::PortableText);
-                if (!keys.isEmpty()) {
-                    m_tabletMapping.insert(qMakePair(tabletName, button), keys);
-                }
+            if (ok) {
+                foundActions = true;
+                insert(TabletPad, {tabletName, button}, entry);
             }
         }
     }
 
-    if (!m_mouseMapping.isEmpty() || !m_tabletMapping.isEmpty()) {
+    if (foundActions) {
         KWin::input()->prependInputEventFilter(this);
     }
 }
@@ -159,19 +165,31 @@ bool ButtonRebindsFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
         return false;
     }
 
-    if (m_mouseMapping.isEmpty()) {
-        return false;
-    }
-
-    return sendKeySequence(m_mouseMapping.value(event->button()), event->type() == QEvent::MouseButtonPress, event->timestamp());
+    return send(Pointer, {{}, event->button()}, event->type() == QEvent::MouseButtonPress, event->timestamp());
 }
 
 bool ButtonRebindsFilter::tabletPadButtonEvent(uint button, bool pressed, const KWin::TabletPadId &tabletPadId, uint time)
 {
-    if (m_tabletMapping.isEmpty()) {
+    return send(TabletPad, {tabletPadId.name, button}, pressed, time);
+}
+
+void ButtonRebindsFilter::insert(TriggerType type, const Trigger &trigger, const QStringList &entry)
+{
+    if (entry.size() == 2 && entry.first() == QLatin1String("Key")) {
+        const auto keys = QKeySequence::fromString(entry.at(1), QKeySequence::PortableText);
+        if (!keys.isEmpty()) {
+            m_actions[type].insert(trigger, keys);
+        }
+    }
+}
+
+bool ButtonRebindsFilter::send(TriggerType type, const Trigger &trigger, bool pressed, uint timestamp)
+{
+    const auto &typeActions = m_actions[type];
+    if (typeActions.isEmpty()) {
         return false;
     }
-    return sendKeySequence(m_tabletMapping.value(qMakePair(tabletPadId.name, button)), pressed, time);
+    return sendKeySequence(typeActions[trigger], pressed, timestamp);
 }
 
 bool ButtonRebindsFilter::sendKeySequence(const QKeySequence &keys, bool pressed, uint time)
