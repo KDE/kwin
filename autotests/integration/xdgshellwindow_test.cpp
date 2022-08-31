@@ -303,20 +303,16 @@ void TestXdgShellWindow::testWindowOutputs()
     QSignalSpy outputLeftSpy(surface.get(), &KWayland::Client::Surface::outputLeft);
 
     auto window = Test::renderAndWaitForShown(surface.get(), size, Qt::blue);
-    // move to be in the first screen
-    window->moveResize(QRect(QPoint(100, 100), size));
-    // we don't don't know where the compositor first placed this window,
-    // this might fire, it might not
-    outputEnteredSpy.wait(5);
-    outputEnteredSpy.clear();
-
+    // assumption: window is initially placed on first screen
+    QVERIFY(outputEnteredSpy.wait());
+    QCOMPARE(outputEnteredSpy.count(), 1);
     QCOMPARE(surface->outputs().count(), 1);
     QCOMPARE(surface->outputs().first()->globalPosition(), QPoint(0, 0));
 
     // move to overlapping both first and second screen
     window->moveResize(QRect(QPoint(1250, 100), size));
     QVERIFY(outputEnteredSpy.wait());
-    QCOMPARE(outputEnteredSpy.count(), 1);
+    QCOMPARE(outputEnteredSpy.count(), 2);
     QCOMPARE(outputLeftSpy.count(), 0);
     QCOMPARE(surface->outputs().count(), 2);
     QVERIFY(surface->outputs()[0] != surface->outputs()[1]);
@@ -324,7 +320,7 @@ void TestXdgShellWindow::testWindowOutputs()
     // move entirely into second screen
     window->moveResize(QRect(QPoint(1400, 100), size));
     QVERIFY(outputLeftSpy.wait());
-    QCOMPARE(outputEnteredSpy.count(), 1);
+    QCOMPARE(outputEnteredSpy.count(), 2);
     QCOMPARE(outputLeftSpy.count(), 1);
     QCOMPARE(surface->outputs().count(), 1);
     QCOMPARE(surface->outputs().first()->globalPosition(), QPoint(1280, 0));
