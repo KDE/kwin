@@ -105,6 +105,7 @@ class KWIN_EXPORT Options : public QObject
     Q_PROPERTY(bool separateScreenFocus READ isSeparateScreenFocus WRITE setSeparateScreenFocus NOTIFY separateScreenFocusChanged)
     Q_PROPERTY(bool activeMouseScreen READ activeMouseScreen WRITE setActiveMouseScreen NOTIFY activeMouseScreenChanged)
     Q_PROPERTY(int placement READ placement WRITE setPlacement NOTIFY placementChanged)
+    Q_PROPERTY(ActivationDesktopPolicy activationDesktopPolicy READ activationDesktopPolicy WRITE setActivationDesktopPolicy NOTIFY activationDesktopPolicyChanged)
     Q_PROPERTY(bool focusPolicyIsReasonable READ focusPolicyIsReasonable NOTIFY focusPolicyIsResonableChanged)
     /**
      * The size of the zone that triggers snapping on desktop borders.
@@ -325,6 +326,17 @@ public:
     bool focusPolicyIsReasonable()
     {
         return m_focusPolicy == ClickToFocus || m_focusPolicy == FocusFollowsMouse;
+    }
+
+    enum ActivationDesktopPolicy {
+        SwitchToOtherDesktop,
+        BringToCurrentDesktop
+    };
+    Q_ENUM(ActivationDesktopPolicy)
+
+    ActivationDesktopPolicy activationDesktopPolicy() const
+    {
+        return m_activationDesktopPolicy;
     }
 
     /**
@@ -688,6 +700,7 @@ public:
     void setSeparateScreenFocus(bool separateScreenFocus);
     void setActiveMouseScreen(bool activeMouseScreen);
     void setPlacement(int placement);
+    void setActivationDesktopPolicy(ActivationDesktopPolicy activationDesktopPolicy);
     void setBorderSnapZone(int borderSnapZone);
     void setWindowSnapZone(int windowSnapZone);
     void setCenterSnapZone(int centerSnapZone);
@@ -861,6 +874,10 @@ public:
     {
         return RenderTimeEstimatorMaximum;
     }
+    static ActivationDesktopPolicy defaultActivationDesktopPolicy()
+    {
+        return ActivationDesktopPolicy::SwitchToOtherDesktop;
+    }
     /**
      * Performs loading all settings except compositing related.
      */
@@ -888,6 +905,7 @@ Q_SIGNALS:
     void separateScreenFocusChanged(bool);
     void activeMouseScreenChanged();
     void placementChanged();
+    void activationDesktopPolicyChanged();
     void borderSnapZoneChanged();
     void windowSnapZoneChanged();
     void centerSnapZoneChanged();
@@ -950,6 +968,7 @@ private:
     bool m_separateScreenFocus;
     bool m_activeMouseScreen;
     Placement::Policy m_placement;
+    ActivationDesktopPolicy m_activationDesktopPolicy;
     int m_borderSnapZone;
     int m_windowSnapZone;
     int m_centerSnapZone;

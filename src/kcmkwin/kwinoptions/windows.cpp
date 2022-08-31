@@ -257,6 +257,9 @@ void KAdvancedConfig::initialize(KWinOptionsSettings *settings, KWinOptionsKDEGl
     // This option lives in the kdeglobals file because it is consumed by
     // kxmlgui.
     m_ui->kcfg_AllowKDEAppsToRememberWindowPositions->setVisible(KWindowSystem::isPlatformX11());
+
+    m_ui->kcfg_ActivationDesktopPolicy->setItemData(KWinOptionsSettings::ActivationDesktopPolicyChoices::SwitchToOtherDesktop, "SwitchToOtherDesktop");
+    m_ui->kcfg_ActivationDesktopPolicy->setItemData(KWinOptionsSettings::ActivationDesktopPolicyChoices::BringToCurrentDesktop, "BringToCurrentDesktop");
 }
 
 void KAdvancedConfig::showEvent(QShowEvent *ev)

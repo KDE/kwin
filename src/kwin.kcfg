@@ -133,6 +133,13 @@
                 #endif
             }()</default>
         </entry>
+        <entry name="ActivationDesktopPolicy" type="Enum">
+            <choices name="KWin::Options::ActivationDesktopPolicy">
+                <choice name="SwitchToOtherDesktop"/>
+                <choice name="BringToCurrentDesktop"/>
+            </choices>
+            <default>KWin::Options::ActivationDesktopPolicy::SwitchToOtherDesktop</default>
+        </entry>
         <entry name="AutoRaise" type="Bool">
             <default>false</default>
         </entry>

@@ -290,7 +290,14 @@ void Workspace::activateWindow(Window *window, bool force)
     raiseWindow(window);
     if (!window->isOnCurrentDesktop()) {
         ++block_focus;
-        VirtualDesktopManager::self()->setCurrent(window->desktops().constLast());
+        switch (options->activationDesktopPolicy()) {
+        case Options::ActivationDesktopPolicy::SwitchToOtherDesktop:
+            VirtualDesktopManager::self()->setCurrent(window->desktops().constLast());
+            break;
+        case Options::ActivationDesktopPolicy::BringToCurrentDesktop:
+            window->enterDesktop(VirtualDesktopManager::self()->currentDesktop());
+            break;
+        }
         --block_focus;
     }
 #if KWIN_BUILD_ACTIVITIES

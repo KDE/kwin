@@ -54,6 +54,14 @@
         <default>true</default>
     </entry>
 
+    <entry name="ActivationDesktopPolicy" type="Enum">
+        <choices name="ActivationDesktopPolicyChoices">
+            <choice name="SwitchToOtherDesktop"></choice>
+            <choice name="BringToCurrentDesktop"></choice>
+        </choices>
+        <default>SwitchToOtherDesktop</default>
+    </entry>
+
     <entry key="TitlebarDoubleClickCommand" type="Enum">
         <default>Maximize</default>
         <choices>

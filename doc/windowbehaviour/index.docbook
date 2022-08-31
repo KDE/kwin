@@ -16,8 +16,8 @@
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<date>2021-04-09</date>
-<releaseinfo>Plasma 5.20</releaseinfo>
+<date>2022-08-31</date>
+<releaseinfo>Plasma 5.26</releaseinfo>
 
 <keywordset>
 <keyword>KDE</keyword>
@@ -698,6 +698,21 @@ with the proper window type for this feature to work.</para></listitem>
 </varlistentry>
 
 </variablelist>
+
+<sect3 id="action-virtual-desktop-behavior">
+<title>Virtual Desktop behavior</title>
+<para>Sometimes calling an application will activate an existing window rather than opening a new window. This setting controls what should happen if that activated window is located on a Virtual Desktop other than the current one.</para>
+<variablelist>
+<varlistentry>
+<term><guilabel>Switch to that Virtual Desktop</guilabel></term>
+<listitem><para>Will switch to the Virtual Desktop where the window is currently located. Choose this option if you would like the active desktop to automatically follow windows to their assigned desktop.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Bring window to current Virtual Desktop</guilabel></term>
+<listitem><para>Will cause the window to jump to the active Virtual Desktop. Choose this option if you would like windows to always open on the current Virtual Desktop, and the active Virtual Desktop to only switch when navigating there manually.</para></listitem>
+</varlistentry>
+</variablelist>
+</sect3>
 
 </sect2>
 
