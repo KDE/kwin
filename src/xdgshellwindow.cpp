@@ -15,6 +15,7 @@
 #endif
 #include "decorations/decorationbridge.h"
 #include "deleted.h"
+#include "placement.h"
 #include "platform.h"
 #include "screenedge.h"
 #include "touch_input.h"

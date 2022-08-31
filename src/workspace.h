@@ -76,6 +76,7 @@ class Screens;
 class Activities;
 #endif
 class PlaceholderInputEventFilter;
+class Placement;
 
 class KWIN_EXPORT Workspace : public QObject
 {

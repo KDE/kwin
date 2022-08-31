@@ -112,24 +112,24 @@
             <max>4</max>
         </entry>
         <entry name="Placement" type="Enum">
-            <choices name="KWin::Placement::Policy">
-                <choice name="NoPlacement"/>
-                <choice name="Default"/>
-                <choice name="Unknown"/>
-                <choice name="Random"/>
-                <choice name="Smart"/>
-                <choice name="Cascade"/>
-                <choice name="Centered"/>
-                <choice name="ZeroCornered"/>
-                <choice name="UnderMouse"/>
-                <choice name="OnMainWindow"/>
-                <choice name="Maximizing"/>
+            <choices name="KWin::PlacementPolicy">
+                <choice name="PlacementNone" value="NoPlacement"/>
+                <choice name="PlacementDefault" value="Default"/>
+                <choice name="PlacementUnknown" value="Unknown"/>
+                <choice name="PlacementRandom" value="Random"/>
+                <choice name="PlacementSmart" value="Smart"/>
+                <choice name="PlacementCascade" value="Cascade"/>
+                <choice name="PlacementCentered" value="Centered"/>
+                <choice name="PlacementZeroCornered" value="ZeroCornered"/>
+                <choice name="PlacementUnderMouse" value="UnderMouse"/>
+                <choice name="PlacementOnMainWindow" value="OnMainWindow"/>
+                <choice name="PlacementMaximizing" value="Maximizing"/>
             </choices>
             <default type="code">[] {
                 #if KWIN_BUILD_DECORATIONS
-                    return Placement::Centered;
+                    return PlacementCentered;
                 #else
-                    return Placement::Maximizing;
+                    return PlacementMaximizing;
                 #endif
             }()</default>
         </entry>

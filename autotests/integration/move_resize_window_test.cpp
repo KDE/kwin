@@ -14,6 +14,7 @@
 #include "deleted.h"
 #include "effects.h"
 #include "output.h"
+#include "placement.h"
 #include "platform.h"
 #include "wayland_server.h"
 #include "window.h"

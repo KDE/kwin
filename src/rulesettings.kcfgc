@@ -1,5 +1,5 @@
 File=rulesettings.kcfg
-IncludeFiles=\"rules.h\",\"placement.h\",netwm_def.h
+IncludeFiles=\"rules.h\",netwm_def.h
 NameSpace=KWin
 ClassName=RuleSettings
 UseEnumTypes=true

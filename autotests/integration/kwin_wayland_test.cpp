@@ -12,6 +12,7 @@
 #include "composite.h"
 #include "effects.h"
 #include "inputmethod.h"
+#include "placement.h"
 #include "platform.h"
 #include "pluginmanager.h"
 #include "session.h"
@@ -61,7 +62,7 @@ WaylandTestApplication::WaylandTestApplication(OperationMode mode, int &argc, ch
 
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     KConfigGroup windowsGroup = config->group("Windows");
-    windowsGroup.writeEntry("Placement", Placement::policyToString(Placement::Smart));
+    windowsGroup.writeEntry("Placement", Placement::policyToString(PlacementSmart));
     windowsGroup.sync();
     setConfig(config);
 

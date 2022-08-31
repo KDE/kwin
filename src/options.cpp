@@ -43,7 +43,7 @@ Options::Options(QObject *parent)
     , m_shadeHoverInterval(0)
     , m_separateScreenFocus(false)
     , m_activeMouseScreen(false)
-    , m_placement(Placement::NoPlacement)
+    , m_placement(PlacementNone)
     , m_activationDesktopPolicy(Options::defaultActivationDesktopPolicy())
     , m_borderSnapZone(0)
     , m_windowSnapZone(0)
@@ -235,12 +235,12 @@ void Options::setActiveMouseScreen(bool activeMouseScreen)
     Q_EMIT activeMouseScreenChanged();
 }
 
-void Options::setPlacement(int placement)
+void Options::setPlacement(PlacementPolicy placement)
 {
-    if (m_placement == static_cast<Placement::Policy>(placement)) {
+    if (m_placement == placement) {
         return;
     }
-    m_placement = static_cast<Placement::Policy>(placement);
+    m_placement = placement;
     Q_EMIT placementChanged();
 }
 

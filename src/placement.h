@@ -12,7 +12,7 @@
 #ifndef KWIN_PLACEMENT_H
 #define KWIN_PLACEMENT_H
 // KWin
-#include <kwinglobals.h>
+#include "options.h"
 // Qt
 #include <QList>
 #include <QPoint>
@@ -30,30 +30,10 @@ class KWIN_EXPORT Placement
 public:
     explicit Placement();
 
-    /**
-     * Placement policies. How workspace decides the way windows get positioned
-     * on the screen. The better the policy, the heavier the resource use.
-     * Normally you don't have to worry. What the WM adds to the startup time
-     * is nil compared to the creation of the window itself in the memory
-     */
-    enum Policy {
-        NoPlacement, // not really a placement
-        Default, // special, means to use the global default
-        Unknown, // special, means the function should use its default
-        Random,
-        Smart,
-        Cascade,
-        Centered,
-        ZeroCornered,
-        UnderMouse, // special
-        OnMainWindow, // special
-        Maximizing
-    };
-
     void place(Window *c, const QRectF &area);
-    void placeSmart(Window *c, const QRectF &area, Policy next = Unknown);
+    void placeSmart(Window *c, const QRectF &area, PlacementPolicy next = PlacementUnknown);
 
-    void placeCentered(Window *c, const QRectF &area, Policy next = Unknown);
+    void placeCentered(Window *c, const QRectF &area, PlacementPolicy next = PlacementUnknown);
 
     void reinitCascading(int desktop);
 
@@ -66,20 +46,20 @@ public:
      */
     void unclutterDesktop();
 
-    static const char *policyToString(Policy policy);
+    static const char *policyToString(PlacementPolicy policy);
 
 private:
-    void place(Window *c, const QRectF &area, Policy policy, Policy nextPlacement = Unknown);
-    void placeUnderMouse(Window *c, const QRect &area, Policy next = Unknown);
-    void placeOnMainWindow(Window *c, const QRect &area, Policy next = Unknown);
+    void place(Window *c, const QRectF &area, PlacementPolicy policy, PlacementPolicy nextPlacement = PlacementUnknown);
+    void placeUnderMouse(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
+    void placeOnMainWindow(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
     void placeTransient(Window *c);
 
-    void placeAtRandom(Window *c, const QRect &area, Policy next = Unknown);
-    void placeCascaded(Window *c, const QRect &area, Policy next = Unknown);
-    void placeMaximizing(Window *c, const QRect &area, Policy next = Unknown);
-    void placeZeroCornered(Window *c, const QRect &area, Policy next = Unknown);
-    void placeDialog(Window *c, const QRect &area, Policy next = Unknown);
-    void placeUtility(Window *c, const QRect &area, Policy next = Unknown);
+    void placeAtRandom(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
+    void placeCascaded(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
+    void placeMaximizing(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
+    void placeZeroCornered(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
+    void placeDialog(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
+    void placeUtility(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
     void placeOnScreenDisplay(Window *c, const QRect &area);
 
     // CT needed for cascading+

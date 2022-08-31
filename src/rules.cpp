@@ -554,7 +554,7 @@ bool Rules::update(Window *c, int selection)
         return checkForceStop(var##rule);    \
     }
 
-APPLY_FORCE_RULE(placement, Placement, Placement::Policy)
+APPLY_FORCE_RULE(placement, Placement, PlacementPolicy)
 
 bool Rules::applyGeometry(QRectF &rect, bool init) const
 {
@@ -810,7 +810,7 @@ void WindowRules::update(Window *c, int selection)
         return ret;                                              \
     }
 
-CHECK_FORCE_RULE(Placement, Placement::Policy)
+CHECK_FORCE_RULE(Placement, PlacementPolicy)
 
 QRectF WindowRules::checkGeometry(QRectF rect, bool init) const
 {

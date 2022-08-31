@@ -25,6 +25,7 @@
 #include "focuschain.h"
 #include "group.h"
 #include "netinfo.h"
+#include "placement.h"
 #include "platform.h"
 #include "screenedge.h"
 #include "shadow.h"

@@ -11,6 +11,7 @@
 
 #include "cursor.h"
 #include "output.h"
+#include "placement.h"
 #include "platform.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -52,7 +53,7 @@ private Q_SLOTS:
     void testFullscreen();
 
 private:
-    void setPlacementPolicy(Placement::Policy policy);
+    void setPlacementPolicy(PlacementPolicy policy);
     /*
      * Create a window and return relevant results for testing
      * defaultSize is the buffer size to use if the compositor returns an empty size in the first configure
@@ -93,7 +94,7 @@ void TestPlacement::initTestCase()
     QCOMPARE(outputs[1]->geometry(), QRect(1280, 0, 1280, 1024));
 }
 
-void TestPlacement::setPlacementPolicy(Placement::Policy policy)
+void TestPlacement::setPlacementPolicy(PlacementPolicy policy)
 {
     auto group = kwinApp()->config()->group("Windows");
     group.writeEntry("Placement", Placement::policyToString(policy));
@@ -132,7 +133,7 @@ std::pair<PlaceWindowResult, std::unique_ptr<KWayland::Client::Surface>> TestPla
 
 void TestPlacement::testPlaceSmart()
 {
-    setPlacementPolicy(Placement::Smart);
+    setPlacementPolicy(PlacementSmart);
 
     std::vector<std::unique_ptr<KWayland::Client::Surface>> surfaces;
     QRegion usedArea;
@@ -154,7 +155,7 @@ void TestPlacement::testPlaceSmart()
 
 void TestPlacement::testPlaceZeroCornered()
 {
-    setPlacementPolicy(Placement::ZeroCornered);
+    setPlacementPolicy(PlacementZeroCornered);
 
     std::vector<std::unique_ptr<KWayland::Client::Surface>> surfaces;
     for (int i = 0; i < 4; i++) {
@@ -171,7 +172,7 @@ void TestPlacement::testPlaceZeroCornered()
 
 void TestPlacement::testPlaceMaximized()
 {
-    setPlacementPolicy(Placement::Maximizing);
+    setPlacementPolicy(PlacementMaximizing);
 
     // add a top panel
     std::unique_ptr<KWayland::Client::Surface> panelSurface(Test::createSurface());
@@ -195,7 +196,7 @@ void TestPlacement::testPlaceMaximized()
 
 void TestPlacement::testPlaceMaximizedLeavesFullscreen()
 {
-    setPlacementPolicy(Placement::Maximizing);
+    setPlacementPolicy(PlacementMaximizing);
 
     // add a top panel
     std::unique_ptr<KWayland::Client::Surface> panelSurface(Test::createSurface());
@@ -236,7 +237,7 @@ void TestPlacement::testPlaceCentered()
     // This test verifies that Centered placement policy works.
 
     KConfigGroup group = kwinApp()->config()->group("Windows");
-    group.writeEntry("Placement", Placement::policyToString(Placement::Centered));
+    group.writeEntry("Placement", Placement::policyToString(PlacementCentered));
     group.sync();
     workspace()->slotReconfigure();
 
@@ -255,7 +256,7 @@ void TestPlacement::testPlaceUnderMouse()
     // This test verifies that Under Mouse placement policy works.
 
     KConfigGroup group = kwinApp()->config()->group("Windows");
-    group.writeEntry("Placement", Placement::policyToString(Placement::UnderMouse));
+    group.writeEntry("Placement", Placement::policyToString(PlacementUnderMouse));
     group.sync();
     workspace()->slotReconfigure();
 
@@ -277,7 +278,7 @@ void TestPlacement::testPlaceCascaded()
     // This test verifies that Cascaded placement policy works.
 
     KConfigGroup group = kwinApp()->config()->group("Windows");
-    group.writeEntry("Placement", Placement::policyToString(Placement::Cascade));
+    group.writeEntry("Placement", Placement::policyToString(PlacementCascade));
     group.sync();
     workspace()->slotReconfigure();
 
@@ -315,7 +316,7 @@ void TestPlacement::testPlaceRandom()
     // This test verifies that Random placement policy works.
 
     KConfigGroup group = kwinApp()->config()->group("Windows");
-    group.writeEntry("Placement", Placement::policyToString(Placement::Random));
+    group.writeEntry("Placement", Placement::policyToString(PlacementRandom));
     group.sync();
     workspace()->slotReconfigure();
 
@@ -352,7 +353,7 @@ void TestPlacement::testFullscreen()
 {
     const QList<Output *> outputs = workspace()->outputs();
 
-    setPlacementPolicy(Placement::Smart);
+    setPlacementPolicy(PlacementSmart);
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
 

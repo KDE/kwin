@@ -23,6 +23,7 @@
 #include "effects.h"
 #include "focuschain.h"
 #include "outline.h"
+#include "placement.h"
 #include "platform.h"
 #if KWIN_BUILD_TABBOX
 #include "tabbox.h"

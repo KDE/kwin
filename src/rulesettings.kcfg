@@ -67,8 +67,8 @@
 
     <entry name="placement" type="Enum">
       <label>Initial placement</label>
-      <choices name="Placement::Policy"/>
-      <default code="true">Placement::Centered</default>
+      <choices name="PlacementPolicy"/>
+      <default code="true">PlacementCentered</default>
     </entry>
     <entry name="placementrule" type="Int">
       <label>Initial placement rule type</label>

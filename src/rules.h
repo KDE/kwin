@@ -15,7 +15,6 @@
 #include <netwm_def.h>
 
 #include "options.h"
-#include "placement.h"
 #include "utils/common.h"
 
 class QDebug;
@@ -42,7 +41,7 @@ public:
     void discardTemporary();
     bool contains(const Rules *rule) const;
     void remove(Rules *rule);
-    Placement::Policy checkPlacement(Placement::Policy placement) const;
+    PlacementPolicy checkPlacement(PlacementPolicy placement) const;
     QRectF checkGeometry(QRectF rect, bool init = false) const;
     // use 'invalidPoint' with checkPosition, unlike QSize() and QRect(), QPoint() is a valid point
     QPointF checkPosition(QPointF pos, bool init = false) const;
@@ -151,7 +150,7 @@ public:
     bool update(Window *, int selection);
     bool isTemporary() const;
     bool discardTemporary(bool force); // removes if temporary and forced or too old
-    bool applyPlacement(Placement::Policy &placement) const;
+    bool applyPlacement(PlacementPolicy &placement) const;
     bool applyGeometry(QRectF &rect, bool init) const;
     // use 'invalidPoint' with applyPosition, unlike QSize() and QRect(), QPoint() is a valid point
     bool applyPosition(QPointF &pos, bool init) const;
@@ -221,7 +220,7 @@ private:
     QByteArray clientmachine;
     StringMatch clientmachinematch;
     NET::WindowTypes types; // types for matching
-    Placement::Policy placement;
+    PlacementPolicy placement;
     ForceRule placementrule;
     QPoint position;
     SetRule positionrule;

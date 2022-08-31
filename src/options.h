@@ -13,7 +13,6 @@
 #define KWIN_OPTIONS_H
 
 #include "main.h"
-#include "placement.h"
 
 #include <KConfigWatcher>
 
@@ -62,6 +61,26 @@ enum RenderTimeEstimator {
     RenderTimeEstimatorAverage,
 };
 
+/**
+ * Placement policies. How workspace decides the way windows get positioned
+ * on the screen. The better the policy, the heavier the resource use.
+ * Normally you don't have to worry. What the WM adds to the startup time
+ * is nil compared to the creation of the window itself in the memory
+ */
+enum PlacementPolicy {
+    PlacementNone, // not really a placement
+    PlacementDefault, // special, means to use the global default
+    PlacementUnknown, // special, means the function should use its default
+    PlacementRandom,
+    PlacementSmart,
+    PlacementCascade,
+    PlacementCentered,
+    PlacementZeroCornered,
+    PlacementUnderMouse, // special
+    PlacementOnMainWindow, // special
+    PlacementMaximizing,
+};
+
 class Settings;
 
 class KWIN_EXPORT Options : public QObject
@@ -70,6 +89,7 @@ class KWIN_EXPORT Options : public QObject
     Q_ENUM(XwaylandCrashPolicy)
     Q_ENUM(LatencyPolicy)
     Q_ENUM(RenderTimeEstimator)
+    Q_ENUM(PlacementPolicy)
     Q_PROPERTY(FocusPolicy focusPolicy READ focusPolicy WRITE setFocusPolicy NOTIFY focusPolicyChanged)
     Q_PROPERTY(XwaylandCrashPolicy xwaylandCrashPolicy READ xwaylandCrashPolicy WRITE setXwaylandCrashPolicy NOTIFY xwaylandCrashPolicyChanged)
     Q_PROPERTY(int xwaylandMaxCrashCount READ xwaylandMaxCrashCount WRITE setXwaylandMaxCrashCount NOTIFY xwaylandMaxCrashCountChanged)
@@ -104,7 +124,7 @@ class KWIN_EXPORT Options : public QObject
      */
     Q_PROPERTY(bool separateScreenFocus READ isSeparateScreenFocus WRITE setSeparateScreenFocus NOTIFY separateScreenFocusChanged)
     Q_PROPERTY(bool activeMouseScreen READ activeMouseScreen WRITE setActiveMouseScreen NOTIFY activeMouseScreenChanged)
-    Q_PROPERTY(int placement READ placement WRITE setPlacement NOTIFY placementChanged)
+    Q_PROPERTY(PlacementPolicy placement READ placement WRITE setPlacement NOTIFY placementChanged)
     Q_PROPERTY(ActivationDesktopPolicy activationDesktopPolicy READ activationDesktopPolicy WRITE setActivationDesktopPolicy NOTIFY activationDesktopPolicyChanged)
     Q_PROPERTY(bool focusPolicyIsReasonable READ focusPolicyIsReasonable NOTIFY focusPolicyIsResonableChanged)
     /**
@@ -318,7 +338,7 @@ public:
         return m_activeMouseScreen;
     }
 
-    Placement::Policy placement() const
+    PlacementPolicy placement() const
     {
         return m_placement;
     }
@@ -699,7 +719,7 @@ public:
     void setShadeHoverInterval(int shadeHoverInterval);
     void setSeparateScreenFocus(bool separateScreenFocus);
     void setActiveMouseScreen(bool activeMouseScreen);
-    void setPlacement(int placement);
+    void setPlacement(PlacementPolicy placement);
     void setActivationDesktopPolicy(ActivationDesktopPolicy activationDesktopPolicy);
     void setBorderSnapZone(int borderSnapZone);
     void setWindowSnapZone(int windowSnapZone);
@@ -967,7 +987,7 @@ private:
     int m_shadeHoverInterval;
     bool m_separateScreenFocus;
     bool m_activeMouseScreen;
-    Placement::Policy m_placement;
+    PlacementPolicy m_placement;
     ActivationDesktopPolicy m_activationDesktopPolicy;
     int m_borderSnapZone;
     int m_windowSnapZone;
