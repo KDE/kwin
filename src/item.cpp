@@ -7,7 +7,6 @@
 #include "item.h"
 #include "composite.h"
 #include "core/output.h"
-#include "core/platform.h"
 #include "core/renderloop.h"
 #include "main.h"
 #include "scene.h"

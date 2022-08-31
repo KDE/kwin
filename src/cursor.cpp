@@ -11,7 +11,6 @@
 // kwin
 #include "composite.h"
 #include "core/output.h"
-#include "core/platform.h"
 #include "input.h"
 #include "keyboard_input.h"
 #include "main.h"

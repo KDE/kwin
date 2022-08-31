@@ -20,7 +20,6 @@
 
 #ifndef KCMRULES
 #include "client_machine.h"
-#include "core/platform.h"
 #include "main.h"
 #include "virtualdesktops.h"
 #include "window.h"

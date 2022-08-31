@@ -17,7 +17,6 @@
 #include "atoms.h"
 #include "client_machine.h"
 #include "composite.h"
-#include "core/platform.h"
 #include "decorations/decoratedclient.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/decorationpalette.h"

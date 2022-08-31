@@ -9,7 +9,6 @@
 
 #include "unmanaged.h"
 
-#include "core/platform.h"
 #include "deleted.h"
 #include "effects.h"
 #include "surfaceitem_x11.h"

@@ -7,7 +7,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "hide_cursor_spy.h"
-#include "core/platform.h"
 #include "cursor.h"
 #include "input_event.h"
 #include "main.h"

@@ -6,7 +6,6 @@
 
 #include "layershellv1integration.h"
 #include "core/output.h"
-#include "core/platform.h"
 #include "layershellv1window.h"
 #include "wayland/display.h"
 #include "wayland/layershell_v1_interface.h"

@@ -7,8 +7,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "placementtracker.h"
-#include "output.h"
-#include "platform.h"
+#include "core/output.h"
+#include "core/platform.h"
 #include "window.h"
 #include "workspace.h"
 

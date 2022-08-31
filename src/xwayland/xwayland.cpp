@@ -19,7 +19,6 @@
 #include "xwldrophandler.h"
 
 #include "core/output.h"
-#include "core/platform.h"
 #include "main_wayland.h"
 #include "utils/common.h"
 #include "utils/xcbutils.h"

@@ -8,7 +8,7 @@
 
 #include "kwin_export.h"
 
-#include "dmabufattributes.h"
+#include "core/dmabufattributes.h"
 
 #include <memory>
 

@@ -15,7 +15,6 @@
 
 */
 
-#include "core/platform.h"
 #include "cursor.h"
 #include "focuschain.h"
 #include "netinfo.h"

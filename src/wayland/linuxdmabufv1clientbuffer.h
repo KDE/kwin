@@ -11,7 +11,7 @@
 #include "clientbuffer.h"
 #include "clientbufferintegration.h"
 
-#include "dmabufattributes.h"
+#include "core/dmabufattributes.h"
 
 #include <QHash>
 #include <QSet>

@@ -9,7 +9,6 @@
 
 #include "inputpanelv1window.h"
 #include "core/output.h"
-#include "core/platform.h"
 #include "deleted.h"
 #include "inputmethod.h"
 #include "wayland/output_interface.h"

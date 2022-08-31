@@ -8,7 +8,6 @@
 */
 #include "dpmsinputeventfilter.h"
 #include "core/output.h"
-#include "core/platform.h"
 #include "main.h"
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"

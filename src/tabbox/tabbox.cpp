@@ -24,7 +24,6 @@
 #include "activities.h"
 #endif
 #include "composite.h"
-#include "core/platform.h"
 #include "effects.h"
 #include "focuschain.h"
 #include "input.h"

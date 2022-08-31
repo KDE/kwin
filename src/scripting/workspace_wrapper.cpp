@@ -10,7 +10,6 @@
 
 #include "workspace_wrapper.h"
 #include "core/output.h"
-#include "core/platform.h"
 #include "outline.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
