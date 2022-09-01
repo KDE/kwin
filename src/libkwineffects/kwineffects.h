@@ -3117,8 +3117,11 @@ public:
 
     /**
      * Returns the corresponding transform matrix.
+     *
+     * The transform matrix is converted to device coordinates using the
+     * supplied deviceScale.
      */
-    QMatrix4x4 toMatrix() const;
+    QMatrix4x4 toMatrix(qreal deviceScale) const;
 
 protected:
     PaintData();

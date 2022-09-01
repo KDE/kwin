@@ -204,21 +204,20 @@ void PaintData::setRotationOrigin(const QVector3D &origin)
     d->rotationOrigin = origin;
 }
 
-QMatrix4x4 PaintData::toMatrix() const
+QMatrix4x4 PaintData::toMatrix(qreal deviceScale) const
 {
     QMatrix4x4 ret;
     if (d->translation != QVector3D(0, 0, 0)) {
-        ret.translate(d->translation);
+        ret.translate(d->translation * deviceScale);
     }
     if (d->scale != QVector3D(1, 1, 1)) {
         ret.scale(d->scale);
     }
 
     if (d->rotationAngle != 0) {
-        ret.translate(d->rotationOrigin);
-        const QVector3D axis = d->rotationAxis;
-        ret.rotate(d->rotationAngle, axis.x(), axis.y(), axis.z());
-        ret.translate(-d->rotationOrigin);
+        ret.translate(d->rotationOrigin * deviceScale);
+        ret.rotate(d->rotationAngle, d->rotationAxis);
+        ret.translate(-d->rotationOrigin * deviceScale);
     }
 
     return ret;

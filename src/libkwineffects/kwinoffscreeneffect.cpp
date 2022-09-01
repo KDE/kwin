@@ -85,13 +85,10 @@ void OffscreenEffect::apply(EffectWindow *window, int mask, WindowPaintData &dat
 
 void OffscreenData::maybeRender(EffectWindow *window)
 {
-    QRectF geometry = window->expandedGeometry();
+    QRectF logicalGeometry = window->expandedGeometry();
+    QRectF deviceGeometry = scaledRect(logicalGeometry, effects->renderTargetScale());
 
-    if (const EffectScreen *screen = window->screen()) {
-        geometry = scaledRect(geometry, effects->renderTargetScale());
-    }
-
-    QSize textureSize = geometry.toAlignedRect().size();
+    QSize textureSize = deviceGeometry.toAlignedRect().size();
 
     if (!m_texture || m_texture->size() != textureSize) {
         m_texture.reset(new GLTexture(GL_RGBA8, textureSize));
@@ -107,11 +104,11 @@ void OffscreenData::maybeRender(EffectWindow *window)
         glClear(GL_COLOR_BUFFER_BIT);
 
         QMatrix4x4 projectionMatrix;
-        projectionMatrix.ortho(QRectF(0, 0, geometry.width(), geometry.height()));
+        projectionMatrix.ortho(QRectF(0, 0, deviceGeometry.width(), deviceGeometry.height()));
 
         WindowPaintData data;
-        data.setXTranslation(-geometry.x());
-        data.setYTranslation(-geometry.y());
+        data.setXTranslation(-logicalGeometry.x());
+        data.setYTranslation(-logicalGeometry.y());
         data.setOpacity(1.0);
         data.setProjectionMatrix(projectionMatrix);
 
@@ -171,7 +168,7 @@ void OffscreenData::paint(EffectWindow *window, const QRegion &region,
     QMatrix4x4 mvp = data.screenProjectionMatrix();
     mvp.translate(window->x() * scale, window->y() * scale);
 
-    shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp * data.toMatrix());
+    shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp * data.toMatrix(effects->renderTargetScale()));
     shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
     shader->setUniform(GLShader::Saturation, data.saturation());
     shader->setUniform(GLShader::TextureWidth, m_texture->width());

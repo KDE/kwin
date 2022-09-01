@@ -435,7 +435,7 @@ void SceneOpenGL::render(Item *item, int mask, const QRegion &region, const Wind
     renderContext.transformStack.push(QMatrix4x4());
     renderContext.opacityStack.push(data.opacity());
 
-    item->setTransform(data.toMatrix());
+    item->setTransform(data.toMatrix(renderTargetScale()));
 
     createRenderNode(item, &renderContext);
 
