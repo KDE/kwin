@@ -189,7 +189,6 @@ Item {
                                 PC3.ToolTip.text: text
                                 PC3.ToolTip.visible: hovered
                                 PC3. ToolTip.delay: Kirigami.Units.toolTipDelay
-                                Accessible.name: text
 
                                 onClicked: delegate.remove()
                             }
