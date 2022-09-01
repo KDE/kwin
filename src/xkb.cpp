@@ -619,4 +619,22 @@ void Xkb::setSeat(KWaylandServer::SeatInterface *seat)
     m_seat = QPointer<KWaylandServer::SeatInterface>(seat);
 }
 
+std::optional<int> Xkb::keycodeFromKeysym(xkb_keysym_t keysym)
+{
+    auto layout = xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE);
+    const xkb_keycode_t max = xkb_keymap_max_keycode(m_keymap);
+    for (xkb_keycode_t keycode = xkb_keymap_min_keycode(m_keymap); keycode < max; keycode++) {
+        uint levelCount = xkb_keymap_num_levels_for_key(m_keymap, keycode, layout);
+        for (uint currentLevel = 0; currentLevel < levelCount; currentLevel++) {
+            const xkb_keysym_t *syms;
+            uint num_syms = xkb_keymap_key_get_syms_by_level(m_keymap, keycode, layout, currentLevel, &syms);
+            for (uint sym = 0; sym < num_syms; sym++) {
+                if (syms[sym] == keysym) {
+                    return {keycode - EVDEV_OFFSET};
+                }
+            }
+        }
+    }
+    return {};
+}
 }

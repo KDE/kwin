@@ -93,26 +93,6 @@ bool InputDevice::isTouchpad() const
     return false;
 }
 
-static std::optional<int> keycodeFromKeysym(xkb_keysym_t keysym)
-{
-    auto xkb = KWin::input()->keyboard()->xkb();
-    auto layout = xkb_state_serialize_layout(xkb->state(), XKB_STATE_LAYOUT_EFFECTIVE);
-    const xkb_keycode_t max = xkb_keymap_max_keycode(xkb->keymap());
-    for (xkb_keycode_t keycode = xkb_keymap_min_keycode(xkb->keymap()); keycode < max; keycode++) {
-        uint levelCount = xkb_keymap_num_levels_for_key(xkb->keymap(), keycode, layout);
-        for (uint currentLevel = 0; currentLevel < levelCount; currentLevel++) {
-            const xkb_keysym_t *syms;
-            uint num_syms = xkb_keymap_key_get_syms_by_level(xkb->keymap(), keycode, layout, currentLevel, &syms);
-            for (uint sym = 0; sym < num_syms; sym++) {
-                if (syms[sym] == keysym) {
-                    return {keycode - 8};
-                }
-            }
-        }
-    }
-    return {};
-}
-
 ButtonRebindsFilter::ButtonRebindsFilter()
     : KWin::Plugin()
     , KWin::InputEventFilter()
@@ -170,7 +150,7 @@ bool ButtonRebindsFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
         return false;
     }
     // KKeyServer returns upper case syms, lower it to not confuse modifiers handling
-    auto keyCode = keycodeFromKeysym(sym);
+    auto keyCode = KWin::input()->keyboard()->xkb()->keycodeFromKeysym(sym);
     if (!keyCode) {
         qCWarning(KWIN_BUTTONREBINDS) << "Could not convert" << keys << "sym: " << sym << "to keycode";
         return false;

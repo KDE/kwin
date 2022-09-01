@@ -16,6 +16,9 @@
 #include <KConfigGroup>
 
 #include <QLoggingCategory>
+
+#include <optional>
+
 Q_DECLARE_LOGGING_CATEGORY(KWIN_XKB)
 
 struct xkb_context;
@@ -103,6 +106,8 @@ public:
 
     void setSeat(KWaylandServer::SeatInterface *seat);
     QByteArray keymapContents() const;
+
+    std::optional<int> keycodeFromKeysym(xkb_keysym_t keysym);
 
 Q_SIGNALS:
     void ledsChanged(const LEDs &leds);
