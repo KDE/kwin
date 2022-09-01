@@ -23,7 +23,6 @@
 #include "drm_render_backend.h"
 #include "drm_virtual_output.h"
 #include "gbm_dmabuf.h"
-#include "main.h"
 #include "outputconfiguration.h"
 #include "renderloop.h"
 #include "session.h"
@@ -32,6 +31,7 @@
 #include <KCoreAddons>
 #include <KLocalizedString>
 // Qt
+#include <QCoreApplication>
 #include <QSocketNotifier>
 // system
 #include <algorithm>
@@ -251,7 +251,7 @@ void DrmBackend::handleUdevEvent()
             if (gpu) {
                 if (primaryGpu() == gpu) {
                     qCCritical(KWIN_DRM) << "Primary gpu has been removed! Quitting...";
-                    kwinApp()->quit();
+                    QCoreApplication::exit(1);
                     return;
                 } else {
                     removeGpu(gpu);
