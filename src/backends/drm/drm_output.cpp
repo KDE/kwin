@@ -188,6 +188,7 @@ void DrmOutput::updateCursor()
             m_pipeline->setCursor();
         }
         m_setCursorSuccessful = false;
+        return;
     }
 
     const QSize surfaceSize = m_gpu->cursorSize() / scale();
