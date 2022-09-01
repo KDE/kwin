@@ -162,7 +162,7 @@
    <item row="5" column="1">
     <widget class="QComboBox" name="kcfg_ActivationDesktopPolicy">
      <property name="whatsThis">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This setting controls what happens when an open window located on a Virtual Desktop other than the current one is activated. &lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Switch to other Virtual Desktop&lt;/span&gt; will switch to the Virtual Desktop where the window is currently located. &lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Bring window to current Virtual Desktop&lt;/span&gt; will cause the window to jump to the active Virtual Desktop. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This setting controls what happens when an open window located on a Virtual Desktop other than the current one is activated. &lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Switch to that Virtual Desktop&lt;/span&gt; will switch to the Virtual Desktop where the window is currently located. &lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Bring window to current Virtual Desktop&lt;/span&gt; will cause the window to jump to the active Virtual Desktop. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <item>
       <property name="text">
