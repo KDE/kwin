@@ -504,11 +504,12 @@ bool DrmPipeline::pruneModifier()
         return false;
     }
     auto &modifiers = m_pending.formats[m_pending.layer->currentBuffer()->buffer()->format()];
-    if (modifiers.count() <= 1) {
+    if (modifiers.empty()) {
         return false;
+    } else {
+        modifiers.clear();
+        return true;
     }
-    modifiers.removeOne(m_pending.layer->currentBuffer()->buffer()->modifier());
-    return true;
 }
 
 bool DrmPipeline::needsModeset() const
