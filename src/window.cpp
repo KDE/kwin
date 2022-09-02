@@ -1606,7 +1606,7 @@ bool Window::startInteractiveMoveResize()
     if (QApplication::activePopupWidget() != nullptr) {
         return false; // popups have grab
     }
-    if (isFullScreen() && (workspace()->outputs().count() < 2 || !isMovableAcrossScreens())) {
+    if (isRequestedFullScreen() && (workspace()->outputs().count() < 2 || !isMovableAcrossScreens())) {
         return false;
     }
     if (!doStartInteractiveMoveResize()) {
@@ -1687,7 +1687,7 @@ void Window::finishInteractiveMoveResize(bool cancel)
     }
     if (moveResizeOutput() != interactiveMoveResizeStartOutput()) {
         workspace()->sendWindowToOutput(this, moveResizeOutput()); // checks rule validity
-        if (isFullScreen() || requestedMaximizeMode() != MaximizeRestore) {
+        if (isRequestedFullScreen() || requestedMaximizeMode() != MaximizeRestore) {
             checkWorkspacePosition();
         }
     }
@@ -1790,7 +1790,7 @@ void Window::handleInteractiveMoveResize(const QPointF &local, const QPointF &gl
 {
     const QRectF oldGeo = moveResizeGeometry();
     handleInteractiveMoveResize(local.x(), local.y(), global.x(), global.y());
-    if (!isFullScreen() && isInteractiveMove()) {
+    if (!isRequestedFullScreen() && isInteractiveMove()) {
         if (quickTileMode() != QuickTileMode(QuickTileFlag::None) && oldGeo != moveResizeGeometry()) {
             GeometryUpdatesBlocker blocker(this);
             setQuickTileMode(QuickTileFlag::None);
@@ -2033,7 +2033,7 @@ void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
         if (!isMovable()) { // isMovableAcrossScreens() must have been true to get here
             // Special moving of maximized windows on Xinerama screens
             Output *output = workspace()->outputAt(globalPos);
-            if (isFullScreen()) {
+            if (isRequestedFullScreen()) {
                 nextMoveResizeGeom = workspace()->clientArea(FullScreenArea, this, output);
             } else {
                 nextMoveResizeGeom = workspace()->clientArea(MaximizeArea, this, output);
@@ -3251,7 +3251,7 @@ void Window::setVirtualKeyboardGeometry(const QRectF &geo)
     m_virtualKeyboardGeometry = geo;
 
     // Don't resize Desktop and fullscreen windows
-    if (isFullScreen() || isDesktop()) {
+    if (isRequestedFullScreen() || isDesktop()) {
         return;
     }
 
@@ -4456,7 +4456,7 @@ void Window::applyWindowRules()
     setSkipSwitcher(skipSwitcher());
     setKeepAbove(keepAbove());
     setKeepBelow(keepBelow());
-    setFullScreen(isFullScreen(), true);
+    setFullScreen(isRequestedFullScreen(), true);
     setNoBorder(noBorder());
     updateColorScheme();
     // FSP
