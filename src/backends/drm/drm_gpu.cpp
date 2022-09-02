@@ -574,7 +574,7 @@ void DrmGpu::removeOutput(DrmOutput *output)
     output->pipeline()->setLayers(nullptr, nullptr);
     m_outputs.removeOne(output);
     Q_EMIT outputRemoved(output);
-    delete output;
+    output->deleteLater();
 }
 
 DrmBackend *DrmGpu::platform() const
@@ -599,7 +599,7 @@ void DrmGpu::removeVirtualOutput(DrmVirtualOutput *output)
 {
     if (m_outputs.removeOne(output)) {
         Q_EMIT outputRemoved(output);
-        delete output;
+        output->deleteLater();
     }
 }
 

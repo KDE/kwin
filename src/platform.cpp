@@ -119,6 +119,7 @@ bool Platform::applyOutputChanges(const OutputConfiguration &config)
     for (const auto &output : toBeDisabledOutputs) {
         output->applyChanges(config);
     }
+    Q_EMIT screensConfigured();
     return true;
 }
 

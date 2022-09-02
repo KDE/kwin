@@ -541,8 +541,8 @@ private Q_SLOTS:
     void slotCurrentDesktopChangingCancelled();
     void slotDesktopAdded(VirtualDesktop *desktop);
     void slotDesktopRemoved(VirtualDesktop *desktop);
-    void slotPlatformOutputAdded(Output *output);
-    void slotPlatformOutputRemoved(Output *output);
+    void slotPlatformScreensQueried();
+    void slotPlatformScreensConfigured();
 
 Q_SIGNALS:
     /**
@@ -635,8 +635,6 @@ private:
     Window *findWindowToActivateOnDesktop(VirtualDesktop *desktop);
     void removeWindow(Window *window);
     QString getPlacementTrackerHash();
-
-    void updateOutputConfiguration();
 
     struct Constraint
     {

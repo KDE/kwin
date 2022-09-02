@@ -335,6 +335,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void screensQueried();
+    void screensConfigured();
     void readyChanged(bool);
     /**
      * This signal is emitted when an output has been connected. The @a output is not ready

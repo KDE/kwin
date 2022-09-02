@@ -522,6 +522,7 @@ bool DrmBackend::applyOutputChanges(const OutputConfiguration &config)
             output->applyChanges(config);
         }
     }
+    Q_EMIT screensConfigured();
     return true;
 }
 

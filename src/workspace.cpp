@@ -211,18 +211,12 @@ void Workspace::init()
     m_focusChain->setSeparateScreenFocus(options->isSeparateScreenFocus());
 
     if (waylandServer()) {
-        updateOutputConfiguration();
-        connect(kwinApp()->platform(), &Platform::screensQueried, this, &Workspace::updateOutputConfiguration);
+        slotPlatformScreensQueried();
+        connect(kwinApp()->platform(), &Platform::screensQueried, this, &Workspace::slotPlatformScreensQueried);
     }
 
-    Platform *platform = kwinApp()->platform();
-    connect(platform, &Platform::outputAdded, this, &Workspace::slotPlatformOutputAdded);
-    connect(platform, &Platform::outputRemoved, this, &Workspace::slotPlatformOutputRemoved);
-
-    const QVector<Output *> outputs = platform->outputs();
-    for (Output *output : outputs) {
-        slotPlatformOutputAdded(output);
-    }
+    slotPlatformScreensConfigured();
+    connect(kwinApp()->platform(), &Platform::screensConfigured, this, &Workspace::slotPlatformScreensConfigured);
 
     m_screens->init();
 
@@ -624,7 +618,7 @@ std::shared_ptr<OutputMode> parseMode(Output *output, const QJsonObject &modeInf
 }
 }
 
-void Workspace::updateOutputConfiguration()
+void Workspace::slotPlatformScreensQueried()
 {
     // There's conflict between this code and setVirtualOutputs(), need to adjust the tests.
     if (QStandardPaths::isTestModeEnabled()) {
@@ -695,6 +689,34 @@ void Workspace::updateOutputConfiguration()
         return;
     }
     setPrimaryOutput(primaryOutput);
+}
+
+void Workspace::slotPlatformScreensConfigured()
+{
+    QList<Output *> added;
+    QList<Output *> removed = m_outputs;
+
+    const auto availableOutputs = kwinApp()->platform()->outputs();
+    for (Output *output : availableOutputs) {
+        if (output->isNonDesktop()) {
+            continue;
+        }
+        if (removed.removeOne(output)) {
+            continue;
+        }
+        if (!m_outputs.contains(output)) {
+            added.append(output);
+        }
+    }
+
+    for (Output *output : added) {
+        addOutput(output);
+    }
+    for (Output *output : removed) {
+        removeOutput(output);
+    }
+
+    desktopResized();
 }
 
 void Workspace::setupWindowConnections(Window *window)
@@ -1404,32 +1426,6 @@ Output *Workspace::outputAt(const QPointF &pos) const
     return bestOutput;
 }
 
-void Workspace::slotPlatformOutputAdded(Output *output)
-{
-    if (output->isNonDesktop()) {
-        return;
-    }
-
-    if (output->isEnabled()) {
-        addOutput(output);
-    }
-
-    connect(output, &Output::enabledChanged, this, [this, output]() {
-        if (output->isEnabled()) {
-            addOutput(output);
-        } else {
-            removeOutput(output);
-        }
-    });
-}
-
-void Workspace::slotPlatformOutputRemoved(Output *output)
-{
-    if (!output->isNonDesktop()) {
-        removeOutput(output);
-    }
-}
-
 void Workspace::addOutput(Output *output)
 {
     if (!m_activeOutput) {
@@ -1440,9 +1436,6 @@ void Workspace::addOutput(Output *output)
     }
 
     m_outputs.append(output);
-
-    connect(output, &Output::geometryChanged, this, &Workspace::desktopResized);
-    desktopResized();
 
     // Trigger a re-check of output-related rules on all windows
     for (Window *window : qAsConst(m_allClients)) {
@@ -1478,9 +1471,6 @@ void Workspace::removeOutput(Output *output)
     if (m_primaryOutput == output) {
         setPrimaryOutput(m_outputs.constFirst());
     }
-
-    disconnect(output, &Output::geometryChanged, this, &Workspace::desktopResized);
-    desktopResized();
 
     Q_EMIT outputRemoved(output);
 }
