@@ -62,7 +62,7 @@ public:
         TestBufferFailed,
         Unknown,
     };
-    Q_ENUM(Error);
+    Q_ENUM(Error)
 
     /**
      * tests the pending commit first and commits it if the test passes
@@ -131,7 +131,7 @@ public:
         Commit,
         CommitModeset
     };
-    Q_ENUM(CommitMode);
+    Q_ENUM(CommitMode)
     static Error commitPipelines(const QVector<DrmPipeline *> &pipelines, CommitMode mode, const QVector<DrmObject *> &unusedObjects = {});
 
 private:
