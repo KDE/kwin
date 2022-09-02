@@ -3957,7 +3957,7 @@ void Window::sendToOutput(Output *newOutput)
     }
 
     const QRectF oldGeom = moveResizeGeometry();
-    const QRectF oldScreenArea = workspace()->clientArea(MaximizeArea, this);
+    const QRectF oldScreenArea = workspace()->clientArea(MaximizeArea, this, moveResizeOutput());
     const QRectF screenArea = workspace()->clientArea(MaximizeArea, this, newOutput);
 
     QRectF newGeom = moveToArea(oldGeom, oldScreenArea, screenArea);
