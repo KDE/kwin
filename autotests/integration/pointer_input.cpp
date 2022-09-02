@@ -17,13 +17,13 @@
 #include "pointer_input.h"
 #include "screenedge.h"
 #include "screens.h"
+#include "utils/xcursortheme.h"
 #include "virtualdesktops.h"
 #include "wayland/clientconnection.h"
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
-#include "xcursortheme.h"
 #include <kwineffects.h>
 
 #include <KWayland/Client/buffer.h>

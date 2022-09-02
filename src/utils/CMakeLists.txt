@@ -9,4 +9,5 @@ target_sources(kwin PRIVATE
     subsurfacemonitor.cpp
     udev.cpp
     xcbutils.cpp
+    xcursortheme.cpp
 )

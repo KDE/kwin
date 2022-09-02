@@ -13,7 +13,7 @@
 
 #include "cursor.h"
 #include "input.h"
-#include "xcursortheme.h"
+#include "utils/xcursortheme.h"
 
 #include <QElapsedTimer>
 #include <QObject>

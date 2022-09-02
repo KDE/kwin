@@ -158,7 +158,6 @@ target_sources(kwin PRIVATE
     x11eventfilter.cpp
     x11syncmanager.cpp
     x11window.cpp
-    xcursortheme.cpp
     xdgactivationv1.cpp
     xdgshellintegration.cpp
     xdgshellwindow.cpp
