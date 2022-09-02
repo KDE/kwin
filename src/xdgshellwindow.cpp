@@ -791,22 +791,22 @@ StrutRect XdgToplevelWindow::strutRect(StrutArea area) const
 
     switch (area) {
     case StrutAreaTop:
-        if (top && ((!left && !right) || horizontal)) {
+        if (top && horizontal) {
             return StrutRect(windowRect, StrutAreaTop);
         }
         return StrutRect();
     case StrutAreaRight:
-        if (right && ((!top && !bottom) || !horizontal)) {
+        if (right && !horizontal) {
             return StrutRect(windowRect, StrutAreaRight);
         }
         return StrutRect();
     case StrutAreaBottom:
-        if (bottom && ((!left && !right) || horizontal)) {
+        if (bottom && horizontal) {
             return StrutRect(windowRect, StrutAreaBottom);
         }
         return StrutRect();
     case StrutAreaLeft:
-        if (left && ((!top && !bottom) || !horizontal)) {
+        if (left && !horizontal) {
             return StrutRect(windowRect, StrutAreaLeft);
         }
         return StrutRect();
