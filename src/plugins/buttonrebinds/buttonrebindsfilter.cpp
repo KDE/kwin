@@ -171,7 +171,7 @@ bool ButtonRebindsFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
         sendKey(KEY_LEFTALT);
     }
     if (key & Qt::MetaModifier) {
-        sendKey(XKB_KEY_Super_L);
+        sendKey(KEY_LEFTMETA);
     }
 
     sendKey(keyCode.value());
