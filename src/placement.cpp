@@ -671,7 +671,7 @@ void Window::packTo(qreal left, qreal top)
     move(QPointF(left, top));
     if (moveResizeOutput() != oldOutput) {
         workspace()->sendWindowToOutput(this, moveResizeOutput()); // checks rule validity
-        if (maximizeMode() != MaximizeRestore) {
+        if (requestedMaximizeMode() != MaximizeRestore) {
             checkWorkspacePosition();
         }
     }

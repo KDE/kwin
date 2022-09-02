@@ -1618,28 +1618,28 @@ bool Window::startInteractiveMoveResize()
     setInteractiveMoveResize(true);
     workspace()->setMoveResizeWindow(this);
 
-    if (maximizeMode() != MaximizeRestore) {
+    if (requestedMaximizeMode() != MaximizeRestore) {
         switch (interactiveMoveResizeGravity()) {
         case Gravity::Left:
         case Gravity::Right:
             // Quit maximized horizontally state if the window is resized horizontally.
-            if (maximizeMode() & MaximizeHorizontal) {
+            if (requestedMaximizeMode() & MaximizeHorizontal) {
                 QRectF originalGeometry = geometryRestore();
                 originalGeometry.setX(moveResizeGeometry().x());
                 originalGeometry.setWidth(moveResizeGeometry().width());
                 setGeometryRestore(originalGeometry);
-                maximize(maximizeMode() ^ MaximizeHorizontal);
+                maximize(requestedMaximizeMode() ^ MaximizeHorizontal);
             }
             break;
         case Gravity::Top:
         case Gravity::Bottom:
             // Quit maximized vertically state if the window is resized vertically.
-            if (maximizeMode() & MaximizeVertical) {
+            if (requestedMaximizeMode() & MaximizeVertical) {
                 QRectF originalGeometry = geometryRestore();
                 originalGeometry.setY(moveResizeGeometry().y());
                 originalGeometry.setHeight(moveResizeGeometry().height());
                 setGeometryRestore(originalGeometry);
-                maximize(maximizeMode() ^ MaximizeVertical);
+                maximize(requestedMaximizeMode() ^ MaximizeVertical);
             }
             break;
         case Gravity::TopLeft:
@@ -1687,7 +1687,7 @@ void Window::finishInteractiveMoveResize(bool cancel)
     }
     if (moveResizeOutput() != interactiveMoveResizeStartOutput()) {
         workspace()->sendWindowToOutput(this, moveResizeOutput()); // checks rule validity
-        if (isFullScreen() || maximizeMode() != MaximizeRestore) {
+        if (isFullScreen() || requestedMaximizeMode() != MaximizeRestore) {
             checkWorkspacePosition();
         }
     }
@@ -3238,7 +3238,7 @@ void Window::setVirtualKeyboardGeometry(const QRectF &geo)
     // No keyboard anymore
     if (geo.isEmpty() && !m_keyboardGeometryRestore.isEmpty()) {
         const QRectF availableArea = workspace()->clientArea(MaximizeArea, this);
-        QRectF newWindowGeometry = (maximizeMode() & MaximizeHorizontal) ? availableArea : m_keyboardGeometryRestore;
+        QRectF newWindowGeometry = (requestedMaximizeMode() & MaximizeHorizontal) ? availableArea : m_keyboardGeometryRestore;
         moveResize(newWindowGeometry);
         m_keyboardGeometryRestore = QRectF();
     } else if (geo.isEmpty()) {
@@ -3260,7 +3260,7 @@ void Window::setVirtualKeyboardGeometry(const QRectF &geo)
     }
 
     const QRectF availableArea = workspace()->clientArea(MaximizeArea, this);
-    QRectF newWindowGeometry = (maximizeMode() & MaximizeHorizontal) ? availableArea : m_keyboardGeometryRestore;
+    QRectF newWindowGeometry = (requestedMaximizeMode() & MaximizeHorizontal) ? availableArea : m_keyboardGeometryRestore;
     newWindowGeometry.setHeight(std::min(newWindowGeometry.height(), geo.top() - availableArea.top()));
     newWindowGeometry.moveTop(std::max(geo.top() - newWindowGeometry.height(), availableArea.top()));
     newWindowGeometry = newWindowGeometry.intersected(availableArea);
@@ -3712,7 +3712,7 @@ void Window::setElectricBorderMaximizing(bool maximizing)
 QRectF Window::quickTileGeometry(QuickTileMode mode, const QPointF &pos) const
 {
     if (mode == QuickTileMode(QuickTileFlag::Maximize)) {
-        if (maximizeMode() == MaximizeFull) {
+        if (requestedMaximizeMode() == MaximizeFull) {
             return geometryRestore();
         } else {
             return workspace()->clientArea(MaximizeArea, this, pos);
@@ -3738,11 +3738,11 @@ void Window::updateElectricGeometryRestore()
 {
     m_electricGeometryRestore = geometryRestore();
     if (quickTileMode() == QuickTileMode(QuickTileFlag::None)) {
-        if (!(maximizeMode() & MaximizeHorizontal)) {
+        if (!(requestedMaximizeMode() & MaximizeHorizontal)) {
             m_electricGeometryRestore.setX(x());
             m_electricGeometryRestore.setWidth(width());
         }
-        if (!(maximizeMode() & MaximizeVertical)) {
+        if (!(requestedMaximizeMode() & MaximizeVertical)) {
             m_electricGeometryRestore.setY(y());
             m_electricGeometryRestore.setHeight(height());
         }
@@ -4443,7 +4443,7 @@ void Window::applyWindowRules()
     workspace()->sendWindowToOutput(this, moveResizeOutput());
     setOnActivities(activities());
     // Type
-    maximize(maximizeMode());
+    maximize(requestedMaximizeMode());
     // Minimize : functions don't check, and there are two functions
     if (client_rules->checkMinimize(isMinimized())) {
         minimize();
