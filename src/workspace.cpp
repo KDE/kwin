@@ -213,7 +213,7 @@ void Workspace::init()
 
     if (waylandServer()) {
         updateOutputConfiguration();
-        connect(kwinApp()->platform(), &Platform::screensQueried, this, &Workspace::updateOutputConfiguration);
+        connect(kwinApp()->platform(), &Platform::outputsQueried, this, &Workspace::updateOutputConfiguration);
     }
 
     Platform *platform = kwinApp()->platform();

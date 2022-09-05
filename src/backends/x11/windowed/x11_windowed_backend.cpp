@@ -225,7 +225,7 @@ bool X11WindowedBackend::initialize()
             m_touchDevice = new X11WindowedInputDevice(this);
             m_touchDevice->setTouch(true);
         }
-        Q_EMIT screensQueried();
+        Q_EMIT outputsQueried();
         return true;
     } else {
         return false;
@@ -500,7 +500,7 @@ void X11WindowedBackend::handleClientMessage(xcb_client_message_event_t *event)
                 removedOutput->updateEnabled(false);
                 Q_EMIT outputRemoved(removedOutput);
                 delete removedOutput;
-                Q_EMIT screensQueried();
+                Q_EMIT outputsQueried();
             }
         }
     }

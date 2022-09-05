@@ -77,7 +77,7 @@ void WaylandOutput::resize(const QSize &pixelSize)
     next.currentMode = mode;
     setState(next);
 
-    Q_EMIT m_backend->screensQueried();
+    Q_EMIT m_backend->outputsQueried();
 }
 
 void WaylandOutput::setDpmsMode(DpmsMode mode)

@@ -59,7 +59,7 @@ bool VirtualBackend::initialize()
     }
     setReady(true);
 
-    Q_EMIT screensQueried();
+    Q_EMIT outputsQueried();
     return true;
 }
 
@@ -118,7 +118,7 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
         delete output;
     }
 
-    Q_EMIT screensQueried();
+    Q_EMIT outputsQueried();
 }
 
 void VirtualBackend::removeOutput(Output *output)

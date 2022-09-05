@@ -327,7 +327,7 @@ void DrmBackend::updateOutputs()
         }
     }
 
-    Q_EMIT screensQueried();
+    Q_EMIT outputsQueried();
 
     for (auto it = m_gpus.begin(); it != m_gpus.end();) {
         DrmGpu *gpu = it->get();
@@ -391,7 +391,7 @@ QString DrmBackend::supportInformation() const
 Output *DrmBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
     auto output = primaryGpu()->createVirtualOutput(name, size * scale, scale);
-    Q_EMIT screensQueried();
+    Q_EMIT outputsQueried();
     return output;
 }
 

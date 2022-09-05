@@ -142,13 +142,13 @@ void WaylandTestApplication::performStartup()
     if (!platform()->outputs().isEmpty()) {
         continueStartupWithScreens();
     } else {
-        connect(platform(), &Platform::screensQueried, this, &WaylandTestApplication::continueStartupWithScreens);
+        connect(platform(), &Platform::outputsQueried, this, &WaylandTestApplication::continueStartupWithScreens);
     }
 }
 
 void WaylandTestApplication::continueStartupWithScreens()
 {
-    disconnect(kwinApp()->platform(), &Platform::screensQueried, this, &WaylandTestApplication::continueStartupWithScreens);
+    disconnect(kwinApp()->platform(), &Platform::outputsQueried, this, &WaylandTestApplication::continueStartupWithScreens);
     WaylandCompositor::create();
     connect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::continueStartupWithScene);
 }

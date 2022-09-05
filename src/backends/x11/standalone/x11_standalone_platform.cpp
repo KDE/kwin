@@ -623,7 +623,7 @@ void X11StandalonePlatform::doUpdateOutputs()
         return xa->xineramaNumber() < xb->xineramaNumber();
     });
 
-    Q_EMIT screensQueried();
+    Q_EMIT outputsQueried();
 }
 
 X11Output *X11StandalonePlatform::findX11Output(const QString &name) const
