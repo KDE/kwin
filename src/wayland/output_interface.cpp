@@ -18,7 +18,7 @@
 
 namespace KWaylandServer
 {
-static const int s_version = 3;
+static const int s_version = 4;
 
 class OutputInterfacePrivate : public QtWaylandServer::wl_output
 {
@@ -43,6 +43,8 @@ public:
     KWin::Output::SubPixel subPixel = KWin::Output::SubPixel::Unknown;
     KWin::Output::Transform transform = KWin::Output::Transform::Normal;
     OutputInterface::Mode mode;
+    QString name;
+    QString description;
 
 private:
     void output_destroy_global() override;
@@ -158,6 +160,13 @@ void OutputInterfacePrivate::output_bind_resource(Resource *resource)
         return; // We are waiting for the wl_output global to be destroyed.
     }
 
+    if (resource->version() >= WL_OUTPUT_NAME_SINCE_VERSION) {
+        send_name(name);
+    }
+    if (resource->version() >= WL_OUTPUT_DESCRIPTION_SINCE_VERSION) {
+        send_description(description);
+    }
+
     sendMode(resource);
     sendScale(resource);
     sendGeometry(resource);
@@ -240,6 +249,16 @@ void OutputInterface::setMode(const Mode &mode)
 void OutputInterface::setMode(const QSize &size, int refreshRate)
 {
     setMode({size, refreshRate});
+}
+
+void OutputInterface::setName(const QString &name)
+{
+    d->name = name;
+}
+
+void OutputInterface::setDescription(const QString &description)
+{
+    d->description = description;
 }
 
 QSize OutputInterface::physicalSize() const

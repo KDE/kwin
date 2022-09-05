@@ -20,6 +20,8 @@ WaylandOutput::WaylandOutput(Output *output, QObject *parent)
 {
     const QRect geometry = m_platformOutput->geometry();
 
+    m_waylandOutput->setName(output->name());
+    m_waylandOutput->setDescription(output->description());
     m_waylandOutput->setTransform(output->transform());
     m_waylandOutput->setManufacturer(output->manufacturer());
     m_waylandOutput->setModel(output->model());

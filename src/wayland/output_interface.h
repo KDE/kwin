@@ -76,6 +76,8 @@ public:
     void setTransform(KWin::Output::Transform transform);
     void setMode(const Mode &mode);
     void setMode(const QSize &size, int refreshRate = 60000);
+    void setName(const QString &name);
+    void setDescription(const QString &description);
 
     /**
      * @returns all wl_resources bound for the @p client
