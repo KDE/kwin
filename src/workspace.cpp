@@ -211,19 +211,8 @@ void Workspace::init()
     connect(options, &Options::separateScreenFocusChanged, m_focusChain.get(), &FocusChain::setSeparateScreenFocus);
     m_focusChain->setSeparateScreenFocus(options->isSeparateScreenFocus());
 
-    if (waylandServer()) {
-        updateOutputConfiguration();
-        connect(kwinApp()->platform(), &Platform::outputsQueried, this, &Workspace::updateOutputConfiguration);
-    }
-
-    Platform *platform = kwinApp()->platform();
-    connect(platform, &Platform::outputAdded, this, &Workspace::slotPlatformOutputAdded);
-    connect(platform, &Platform::outputRemoved, this, &Workspace::slotPlatformOutputRemoved);
-
-    const auto outputs = platform->outputs();
-    for (const std::shared_ptr<Output> &output : outputs) {
-        slotPlatformOutputAdded(output);
-    }
+    slotPlatformOutputsQueried();
+    connect(kwinApp()->platform(), &Platform::outputsQueried, this, &Workspace::slotPlatformOutputsQueried);
 
     m_screens->init();
 
@@ -623,6 +612,16 @@ std::shared_ptr<OutputMode> parseMode(Output *output, const QJsonObject &modeInf
     });
     return (it != modes.end()) ? *it : nullptr;
 }
+}
+
+bool Workspace::applyOutputConfiguration(const OutputConfiguration &config)
+{
+    if (!kwinApp()->platform()->applyOutputChanges(config)) {
+        return false;
+    }
+
+    updateOutputs();
+    return true;
 }
 
 void Workspace::updateOutputConfiguration()
@@ -1405,87 +1404,69 @@ Output *Workspace::outputAt(const QPointF &pos) const
     return bestOutput;
 }
 
-void Workspace::slotPlatformOutputAdded(std::shared_ptr<Output> output)
+void Workspace::slotPlatformOutputsQueried()
 {
-    if (output->isNonDesktop()) {
-        return;
+    if (waylandServer()) {
+        updateOutputConfiguration();
     }
+    updateOutputs();
+}
 
-    if (output->isEnabled()) {
-        addOutput(output);
-    }
+void Workspace::updateOutputs()
+{
+    const auto availableOutputs = kwinApp()->platform()->outputs();
+    const auto oldOutputs = m_outputs;
 
-    connect(output.get(), &Output::enabledChanged, this, [this, output]() {
-        if (output->isEnabled()) {
-            addOutput(output);
-        } else {
-            removeOutput(output);
+    m_outputs.clear();
+    for (const std::shared_ptr<Output> &output : availableOutputs) {
+        if (!output->isNonDesktop() && output->isEnabled()) {
+            m_outputs.append(output);
         }
-    });
-}
-
-void Workspace::slotPlatformOutputRemoved(std::shared_ptr<Output> output)
-{
-    if (!output->isNonDesktop()) {
-        removeOutput(output);
-    }
-}
-
-void Workspace::addOutput(std::shared_ptr<Output> output)
-{
-    if (!m_activeOutput) {
-        m_activeOutput = output.get();
-    }
-    if (!m_primaryOutput) {
-        setPrimaryOutput(output.get());
     }
 
-    m_outputs.append(output);
-
-    connect(output.get(), &Output::geometryChanged, this, &Workspace::desktopResized);
-    desktopResized();
-
-    // Trigger a re-check of output-related rules on all windows
-    for (Window *window : qAsConst(m_allClients)) {
-        sendWindowToOutput(window, window->output());
-    }
-
-    Q_EMIT outputAdded(output.get());
-
-    if (m_placeholderOutput) {
-        m_outputs.removeOne(m_placeholderOutput);
-        Q_EMIT outputRemoved(m_placeholderOutput.get());
+    // The workspace requires at least one output connected.
+    if (m_outputs.isEmpty()) {
+        if (!m_placeholderOutput) {
+            m_placeholderOutput = std::make_shared<PlaceholderOutput>(QSize(16535, 16535), 1, this);
+            m_placeholderFilter = std::make_unique<PlaceholderInputEventFilter>();
+            input()->prependInputEventFilter(m_placeholderFilter.get());
+        }
+        m_outputs.append(m_placeholderOutput);
+    } else {
         m_placeholderOutput.reset();
         m_placeholderFilter.reset();
     }
-}
 
-void Workspace::removeOutput(std::shared_ptr<Output> output)
-{
-    if (!m_outputs.removeOne(output)) {
-        return;
+    if (!m_activeOutput || !m_outputs.contains(m_activeOutput->shared_from_this())) {
+        setActiveOutput(m_outputs[0].get());
     }
-    if (m_outputs.empty()) {
-        // not all parts of KWin handle having no output yet. To prevent crashes, create a placeholder output
-        m_placeholderOutput = std::make_shared<PlaceholderOutput>(output->pixelSize(), output->scale());
-        m_outputs.append(m_placeholderOutput);
-        Q_EMIT outputAdded(m_placeholderOutput.get());
-        // also prevent accidental inputs while the user has no screen connected
-        m_placeholderFilter = std::make_unique<PlaceholderInputEventFilter>();
-        input()->prependInputEventFilter(m_placeholderFilter.get());
+    if (!m_primaryOutput || !m_outputs.contains(m_primaryOutput->shared_from_this())) {
+        setPrimaryOutput(m_outputs[0].get());
     }
 
-    if (m_activeOutput == output.get()) {
-        m_activeOutput = outputAt(output->geometry().center());
-    }
-    if (m_primaryOutput == output.get()) {
-        setPrimaryOutput(m_outputs.constFirst().get());
-    }
-
-    disconnect(output.get(), &Output::geometryChanged, this, &Workspace::desktopResized);
     desktopResized();
 
-    Q_EMIT outputRemoved(output.get());
+    QSet<Output *> oldOutputsSet;
+    for (const auto &output : oldOutputs) {
+        oldOutputsSet.insert(output.get());
+    }
+
+    QSet<Output *> outputsSet;
+    for (const auto &output : std::as_const(m_outputs)) {
+        outputsSet.insert(output.get());
+    }
+
+    const auto added = outputsSet - oldOutputsSet;
+    for (Output *output : added) {
+        Q_EMIT outputAdded(output);
+    }
+
+    const auto removed = oldOutputsSet - outputsSet;
+    for (Output *output : removed) {
+        Q_EMIT outputRemoved(output);
+    }
+
+    Q_EMIT outputsChanged();
 }
 
 void Workspace::slotDesktopAdded(VirtualDesktop *desktop)

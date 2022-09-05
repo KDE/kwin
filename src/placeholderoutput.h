@@ -16,7 +16,7 @@ class PlaceholderOutput : public Output
     Q_OBJECT
 
 public:
-    PlaceholderOutput(const QSize &size, qreal scale = 1);
+    PlaceholderOutput(const QSize &size, qreal scale, QObject *parent = nullptr);
     ~PlaceholderOutput() override;
 
     RenderLoop *renderLoop() const override;

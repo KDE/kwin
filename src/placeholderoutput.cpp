@@ -9,7 +9,8 @@
 namespace KWin
 {
 
-PlaceholderOutput::PlaceholderOutput(const QSize &size, qreal scale)
+PlaceholderOutput::PlaceholderOutput(const QSize &size, qreal scale, QObject *parent)
+    : Output(parent)
 {
     auto mode = std::make_shared<OutputMode>(size, 60000);
 

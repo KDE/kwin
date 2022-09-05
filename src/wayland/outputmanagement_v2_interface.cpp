@@ -13,7 +13,6 @@
 #include "core/outputconfiguration.h"
 #include "core/platform.h"
 #include "main.h"
-#include "screens.h"
 #include "workspace.h"
 
 #include "qwayland-server-kde-output-management-v2.h"
@@ -227,14 +226,13 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
         return;
     }
 
-    if (kwinApp()->platform()->applyOutputChanges(config)) {
+    if (workspace()->applyOutputConfiguration(config)) {
         if (primaryOutput.has_value()) {
             auto requestedPrimaryOutput = (*primaryOutput)->handle();
             if (requestedPrimaryOutput && requestedPrimaryOutput->isEnabled()) {
                 workspace()->setPrimaryOutput(requestedPrimaryOutput);
             }
         }
-        Q_EMIT workspace()->screens()->changed();
         send_applied();
     } else {
         qCDebug(KWIN_CORE) << "Applying config failed";
