@@ -232,22 +232,18 @@ enum class GestureDirection {
     Right = 1 << 4,
     Expanding = 1 << 5,
     Contracting = 1 << 6,
-    VerticalAxis = Up | Down, // Up is positive values
-    HorizontalAxis = Left | Right, // Right is positive
-    DirectionlessSwipe = Left | Right | Up | Down, // Positive is Up/Right
-    BiDirectionalPinch = Expanding | Contracting, // Positive is Expanding
 };
 
 Q_DECLARE_FLAGS(GestureDirections, GestureDirection)
 Q_DECLARE_OPERATORS_FOR_FLAGS(GestureDirections)
 Q_DECLARE_METATYPE(GestureDirection)
 
-static bool isSwipeDirection(GestureDirections d)
+inline bool isSwipeDirection(GestureDirections d)
 {
     return d & (GestureDirection::Up | GestureDirection::Down | GestureDirection::Left | GestureDirection::Right);
 }
 
-static bool isPinchDirection(GestureDirections d)
+inline bool isPinchDirection(GestureDirections d)
 {
     return d & (GestureDirection::Contracting | GestureDirection::Expanding);
 }
