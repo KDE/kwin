@@ -115,23 +115,10 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
         output->updateEnabled(false);
         m_outputs.removeOne(output);
         Q_EMIT outputRemoved(output);
-        delete output;
+        output->unref();
     }
 
     Q_EMIT outputsQueried();
-}
-
-void VirtualBackend::removeOutput(Output *output)
-{
-    VirtualOutput *virtualOutput = static_cast<VirtualOutput *>(output);
-    virtualOutput->updateEnabled(false);
-
-    m_outputs.removeOne(virtualOutput);
-    Q_EMIT outputRemoved(virtualOutput);
-
-    delete virtualOutput;
-
-    Q_EMIT screensQueried();
 }
 
 QImage VirtualBackend::captureOutput(Output *output) const

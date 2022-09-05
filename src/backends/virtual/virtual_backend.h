@@ -53,7 +53,6 @@ public:
         return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
     }
 
-    Q_INVOKABLE void removeOutput(Output *output);
     Q_INVOKABLE QImage captureOutput(Output *output) const;
 
 Q_SIGNALS:

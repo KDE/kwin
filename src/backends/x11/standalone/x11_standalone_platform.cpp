@@ -606,7 +606,7 @@ void X11StandalonePlatform::doUpdateOutputs()
             nativeOutput->updateEnabled(false);
         }
         Q_EMIT outputRemoved(output);
-        delete output;
+        output->unref();
     }
 
     // Make sure that the position of an output in m_outputs matches its xinerama index, there

@@ -87,7 +87,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputIsDisabled()
         auto changeSet = config.changeSet(outputs[0]);
         changeSet->enabled = false;
     }
-    kwinApp()->platform()->applyOutputChanges(config);
+    workspace()->applyOutputConfiguration(config);
 
     // The window will be sent to the second output, which is at (1280, 0).
     QCOMPARE(window->frameGeometry(), QRect(1280 + 42, 0 + 67, 100, 50));
@@ -117,7 +117,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterAnotherOutputIsDisabled()
         auto changeSet = config.changeSet(outputs[1]);
         changeSet->pos = QPoint(0, 0);
     }
-    kwinApp()->platform()->applyOutputChanges(config);
+    workspace()->applyOutputConfiguration(config);
 
     // The position of the window relative to its output should remain the same.
     QCOMPARE(window->frameGeometry(), QRect(42, 67, 100, 50));
@@ -143,7 +143,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputIsMoved()
         auto changeSet = config.changeSet(outputs[0]);
         changeSet->pos = QPoint(-10, 20);
     }
-    kwinApp()->platform()->applyOutputChanges(config);
+    workspace()->applyOutputConfiguration(config);
 
     // The position of the window relative to its output should remain the same.
     QCOMPARE(window->frameGeometry(), QRect(-10 + 42, 20 + 67, 100, 50));

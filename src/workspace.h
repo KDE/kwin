@@ -78,6 +78,7 @@ class Activities;
 class PlaceholderInputEventFilter;
 class PlaceholderOutput;
 class Placement;
+class OutputConfiguration;
 
 class KWIN_EXPORT Workspace : public QObject
 {
@@ -464,6 +465,12 @@ public:
     Activities *activities() const;
 #endif
 
+    /**
+     * Apply the requested output configuration. Note that you must use this function
+     * instead of Platform::applyOutputChanges().
+     */
+    bool applyOutputConfiguration(const OutputConfiguration &config);
+
 public Q_SLOTS:
     void performWindowOperation(KWin::Window *window, Options::WindowOperation op);
     // Keybindings
@@ -543,8 +550,7 @@ private Q_SLOTS:
     void slotCurrentDesktopChangingCancelled();
     void slotDesktopAdded(VirtualDesktop *desktop);
     void slotDesktopRemoved(VirtualDesktop *desktop);
-    void slotPlatformOutputAdded(Output *output);
-    void slotPlatformOutputRemoved(Output *output);
+    void slotPlatformOutputsQueried();
 
 Q_SIGNALS:
     /**
@@ -574,6 +580,7 @@ Q_SIGNALS:
     void primaryOutputChanged();
     void outputAdded(KWin::Output *);
     void outputRemoved(KWin::Output *);
+    void outputsChanged();
     /**
      * This signal is emitted when the stacking order changed, i.e. a window is risen
      * or lowered
@@ -623,9 +630,6 @@ private:
     Unmanaged *createUnmanaged(xcb_window_t windowId);
     void addUnmanaged(Unmanaged *c);
 
-    void addOutput(Output *output);
-    void removeOutput(Output *output);
-
     void addWaylandWindow(Window *window);
     void removeWaylandWindow(Window *window);
 
@@ -639,6 +643,7 @@ private:
     QString getPlacementTrackerHash();
 
     void updateOutputConfiguration();
+    void updateOutputs();
 
     struct Constraint
     {
@@ -757,7 +762,7 @@ private:
 #endif
     std::unique_ptr<PlacementTracker> m_placementTracker;
 
-    std::unique_ptr<PlaceholderOutput> m_placeholderOutput;
+    PlaceholderOutput *m_placeholderOutput = nullptr;
     std::unique_ptr<PlaceholderInputEventFilter> m_placeholderFilter;
 
 private:

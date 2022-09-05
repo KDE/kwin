@@ -2910,14 +2910,14 @@ void TestXdgShellWindowRules::testScreenForce()
     OutputConfiguration config;
     auto changeSet = config.changeSet(outputs.at(1));
     changeSet->enabled = false;
-    kwinApp()->platform()->applyOutputChanges(config);
+    workspace()->applyOutputConfiguration(config);
 
     QVERIFY(!outputs.at(1)->isEnabled());
     QCOMPARE(m_window->output()->name(), outputs.at(0)->name());
 
     // Enable the output and check that the window is moved there again
     changeSet->enabled = true;
-    kwinApp()->platform()->applyOutputChanges(config);
+    workspace()->applyOutputConfiguration(config);
 
     QVERIFY(outputs.at(1)->isEnabled());
     QCOMPARE(m_window->output()->name(), outputs.at(1)->name());

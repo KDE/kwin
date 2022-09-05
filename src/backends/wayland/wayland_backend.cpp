@@ -978,7 +978,7 @@ void WaylandBackend::removeVirtualOutput(Output *output)
     if (waylandOutput && m_outputs.removeAll(waylandOutput)) {
         waylandOutput->updateEnabled(false);
         Q_EMIT outputRemoved(waylandOutput);
-        delete waylandOutput;
+        waylandOutput->unref();
     }
 }
 
