@@ -640,6 +640,16 @@ QVector<KWayland::Client::Output *> waylandOutputs()
     return s_waylandConnection.outputs;
 }
 
+KWayland::Client::Output *waylandOutput(const QString &name)
+{
+    for (KWayland::Client::Output *output : std::as_const(s_waylandConnection.outputs)) {
+        if (output->name() == name) {
+            return output;
+        }
+    }
+    return nullptr;
+}
+
 QVector<KWin::Test::WaylandOutputDeviceV2 *> waylandOutputDevicesV2()
 {
     return s_waylandConnection.outputDevicesV2;

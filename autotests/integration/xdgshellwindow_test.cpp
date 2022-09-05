@@ -561,7 +561,7 @@ void TestXdgShellWindow::testFullscreenMultipleOutputs()
     // this test verifies that kwin will place fullscreen windows in the outputs its instructed to
 
     const auto outputs = workspace()->outputs();
-    for (int i = 0; i < outputs.count(); ++i) {
+    for (KWin::Output *output : outputs) {
         Test::XdgToplevel::States states;
 
         std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
@@ -590,10 +590,10 @@ void TestXdgShellWindow::testFullscreenMultipleOutputs()
         QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
 
         // Ask the compositor to show the window in full screen mode.
-        shellSurface->set_fullscreen(*Test::waylandOutputs()[i]);
+        shellSurface->set_fullscreen(*Test::waylandOutput(output->name()));
         QVERIFY(surfaceConfigureRequestedSpy.wait());
         QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
-        QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), outputs[i]->geometry().size());
+        QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), output->geometry().size());
 
         shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
         Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::red);
@@ -605,7 +605,7 @@ void TestXdgShellWindow::testFullscreenMultipleOutputs()
 
         QVERIFY(window->isFullScreen());
 
-        QCOMPARE(window->frameGeometry(), outputs[i]->geometry());
+        QCOMPARE(window->frameGeometry(), output->geometry());
     }
 }
 

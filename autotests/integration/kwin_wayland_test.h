@@ -571,6 +571,7 @@ KWayland::Client::AppMenuManager *waylandAppMenuManager();
 WaylandOutputManagementV2 *waylandOutputManagementV2();
 KWayland::Client::TextInputManager *waylandTextInputManager();
 QVector<KWayland::Client::Output *> waylandOutputs();
+KWayland::Client::Output *waylandOutput(const QString &name);
 QVector<WaylandOutputDeviceV2 *> waylandOutputDevicesV2();
 
 bool waitForWaylandSurface(Window *window);

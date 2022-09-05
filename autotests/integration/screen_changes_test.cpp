@@ -120,27 +120,31 @@ void ScreenChangesTest::testScreenAddRemove()
     QSignalSpy o1ChangedSpy(o1.get(), &KWayland::Client::Output::changed);
     QVERIFY(o1ChangedSpy.isValid());
     QVERIFY(o1ChangedSpy.wait());
-    QCOMPARE(o1->geometry(), geometries.at(0));
+    KWin::Output *serverOutput1 = kwinApp()->platform()->findOutput(o1->name()); // use wl_output.name to find the compositor side output
+    QCOMPARE(o1->globalPosition(), serverOutput1->geometry().topLeft());
+    QCOMPARE(o1->pixelSize(), serverOutput1->modeSize());
     std::unique_ptr<KWayland::Client::Output> o2(registry.createOutput(outputAnnouncedSpy.last().first().value<quint32>(), outputAnnouncedSpy.last().last().value<quint32>()));
     QVERIFY(o2->isValid());
     QSignalSpy o2ChangedSpy(o2.get(), &KWayland::Client::Output::changed);
     QVERIFY(o2ChangedSpy.isValid());
     QVERIFY(o2ChangedSpy.wait());
-    QCOMPARE(o2->geometry(), geometries.at(1));
+    KWin::Output *serverOutput2 = kwinApp()->platform()->findOutput(o2->name()); // use wl_output.name to find the compositor side output
+    QCOMPARE(o2->globalPosition(), serverOutput2->geometry().topLeft());
+    QCOMPARE(o2->pixelSize(), serverOutput2->modeSize());
 
     // and check XDGOutput is synced
     std::unique_ptr<XdgOutput> xdgO1(xdgOutputManager->getXdgOutput(o1.get()));
     QSignalSpy xdgO1ChangedSpy(xdgO1.get(), &XdgOutput::changed);
     QVERIFY(xdgO1ChangedSpy.isValid());
     QVERIFY(xdgO1ChangedSpy.wait());
-    QCOMPARE(xdgO1->logicalPosition(), geometries.at(0).topLeft());
-    QCOMPARE(xdgO1->logicalSize(), geometries.at(0).size());
+    QCOMPARE(xdgO1->logicalPosition(), serverOutput1->geometry().topLeft());
+    QCOMPARE(xdgO1->logicalSize(), serverOutput1->geometry().size());
     std::unique_ptr<XdgOutput> xdgO2(xdgOutputManager->getXdgOutput(o2.get()));
     QSignalSpy xdgO2ChangedSpy(xdgO2.get(), &XdgOutput::changed);
     QVERIFY(xdgO2ChangedSpy.isValid());
     QVERIFY(xdgO2ChangedSpy.wait());
-    QCOMPARE(xdgO2->logicalPosition(), geometries.at(1).topLeft());
-    QCOMPARE(xdgO2->logicalSize(), geometries.at(1).size());
+    QCOMPARE(xdgO2->logicalPosition(), serverOutput2->geometry().topLeft());
+    QCOMPARE(xdgO2->logicalSize(), serverOutput2->geometry().size());
 
     QVERIFY(xdgO1->name().startsWith("Virtual-"));
     QVERIFY(xdgO1->name() != xdgO2->name());
