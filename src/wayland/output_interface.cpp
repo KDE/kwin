@@ -161,10 +161,10 @@ void OutputInterfacePrivate::output_bind_resource(Resource *resource)
     }
 
     if (resource->version() >= WL_OUTPUT_NAME_SINCE_VERSION) {
-        send_name(name);
+        send_name(resource->handle, name);
     }
     if (resource->version() >= WL_OUTPUT_DESCRIPTION_SINCE_VERSION) {
-        send_description(description);
+        send_description(resource->handle, description);
     }
 
     sendMode(resource);
