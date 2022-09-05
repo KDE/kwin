@@ -18,7 +18,6 @@ FocusScope {
 
     required property QtObject clientModel
     required property QtObject desktop
-    /** @type {{int: rect}} */
     required property var dndManagerStore
     readonly property bool dragActive: heap.dragActive || dragHandler.active || xAnim.running || yAnim.running
     property real panelOpacity: 1

@@ -50,7 +50,6 @@ FocusScope {
         activated();
     }
 
-    /** @type {{client.internalId: rect}} */
     property var dndManagerStore: ({})
 
     function saveDND(key: int, rect: rect) {

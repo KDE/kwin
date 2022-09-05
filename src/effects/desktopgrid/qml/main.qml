@@ -24,9 +24,7 @@ Rectangle {
     property bool animationEnabled: false
     property bool organized: false
 
-    /** Shared Drag&Drop store to keep track of DND state across desktops.
-     * @type {{client.internalId: rect}}
-     */
+    /** Shared Drag&Drop store to keep track of DND state across desktops. */
     property var dndManagerStore: ({})
 
     color: "black"
