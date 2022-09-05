@@ -8,7 +8,7 @@
 */
 
 #include "customtile.h"
-#include "output.h"
+#include "core/output.h"
 #include "tilemanager.h"
 
 namespace KWin

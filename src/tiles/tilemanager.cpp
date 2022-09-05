@@ -8,7 +8,7 @@
 */
 
 #include "tilemanager.h"
-#include "output.h"
+#include "core/output.h"
 #include "quicktile.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
@@ -105,6 +105,11 @@ Tile *TileManager::bestTileForPosition(const QPointF &pos)
         }
     }
     return ret;
+}
+
+QVariant TileManager::bestTileForPosition(qreal x, qreal y)
+{
+    return QVariant::fromValue(bestTileForPosition({x, y}));
 }
 
 CustomTile *TileManager::rootTile() const
@@ -316,6 +321,9 @@ void TileManager::removeTile(CustomTile *tile)
     beginRemoveRows(parentIndex, tile->row(), tile->row());
     parentTile->destroyChild(tile);
     endRemoveRows();
+
+    Q_EMIT tileRemoved(tile);
+
     // On linear layouts remove the last one and promote the layout as leaf
     if (parentTile->layoutDirection() != CustomTile::LayoutDirection::Floating && parentTile->childCount() == 1) {
         auto *lastTile = static_cast<CustomTile *>(parentTile->childTile(0));

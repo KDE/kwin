@@ -8,7 +8,7 @@
 */
 
 #include "tile.h"
-#include "output.h"
+#include "core/output.h"
 #include "tilemanager.h"
 #include "virtualdesktops.h"
 #include "window.h"

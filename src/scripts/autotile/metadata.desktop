@@ -1,0 +1,20 @@
+[Desktop Entry]
+Name=Auto tiling
+Comment=Automatically tile every window
+Icon=preferences-system-windows-script-test
+
+X-Plasma-API=javascript
+X-Plasma-MainScript=code/main.js
+
+X-KDE-PluginInfo-Author=Marco Martin
+X-KDE-PluginInfo-Email=mart@kde.org
+X-KDE-PluginInfo-Name=autotile
+X-KDE-PluginInfo-Version=1.0
+
+X-KDE-PluginInfo-License=GPL
+X-KDE-ServiceTypes=KWin/Script,KCModule
+
+X-KDE-ConfigModule=kwin/effects/configs/kcm_kwin4_genericscripted
+X-KDE-PluginKeyword=autotile
+
+Type=Service

@@ -597,7 +597,7 @@ class KWIN_EXPORT Window : public QObject
     /**
      * The Tile this window is associated to, if any
      */
-    Q_PROPERTY(KWin::Tile *tile READ tile NOTIFY tileChanged)
+    Q_PROPERTY(KWin::Tile *tile READ tile WRITE setTile NOTIFY tileChanged)
 
 public:
     ~Window() override;
@@ -1527,7 +1527,7 @@ Q_SIGNALS:
     /**
      * This signal is emitted when associated tile has changed, including from and to none
      */
-    void tileChanged(Tile *tile);
+    void tileChanged(KWin::Tile *tile);
 
     void fullScreenChanged();
     void skipTaskbarChanged();

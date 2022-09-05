@@ -3956,6 +3956,7 @@ void Window::setTile(Tile *tile)
     m_tile = tile;
 
     if (!tile) {
+        Q_EMIT tileChanged(tile);
         return;
     }
 
@@ -3978,6 +3979,8 @@ void Window::setTile(Tile *tile)
             setTile(tile);
         }
     });
+
+    Q_EMIT tileChanged(tile);
 }
 
 Tile *Window::tile() const
@@ -4051,7 +4054,7 @@ void Window::sendToOutput(Output *newOutput)
     const QRectF oldScreenArea = workspace()->clientArea(MaximizeArea, this, moveResizeOutput());
     const QRectF screenArea = workspace()->clientArea(MaximizeArea, this, newOutput);
 
-    if (m_quickTileMode == QuickTileMode(QuickTileFlag::CustomZone)) {
+    if (m_quickTileMode == QuickTileMode(QuickTileFlag::Custom)) {
         setTile(nullptr);
     }
 

@@ -49,6 +49,7 @@ public:
     Output *output() const;
 
     Tile *bestTileForPosition(const QPointF &pos);
+    Q_INVOKABLE QVariant bestTileForPosition(qreal x, qreal y); // For scripting
     CustomTile *rootTile() const;
     Tile *quickTile(QuickTileMode mode) const;
 
@@ -61,6 +62,9 @@ public:
     QModelIndex parent(const QModelIndex &index) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+
+Q_SIGNALS:
+    void tileRemoved(KWin::Tile *tile);
 
 private:
     CustomTile *addTile(const QRectF &relativeGeometry, CustomTile::LayoutDirection layoutDirection, int position, CustomTile *parentTile);

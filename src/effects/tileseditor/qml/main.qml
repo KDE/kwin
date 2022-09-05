@@ -129,7 +129,7 @@ FocusScope {
     }
 
     TileDelegate {
-        tile: KWinComponents.Workspace.customTilingForScreen(root.targetScreen.name).rootTile
+        tile: KWinComponents.Workspace.tilingForScreen(root.targetScreen.name).rootTile
         visible: tilesRepeater.count === 0
     }
     Item {
@@ -146,7 +146,7 @@ FocusScope {
         Repeater {
             id: tilesRepeater
             model: KitemModels.KDescendantsProxyModel {
-                model: KWinComponents.Workspace.customTilingForScreen(root.targetScreen.name)
+                model: KWinComponents.Workspace.tilingForScreen(root.targetScreen.name)
             }
             delegate: TileDelegate {}
         }

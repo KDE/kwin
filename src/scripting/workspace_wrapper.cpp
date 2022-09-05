@@ -10,8 +10,8 @@
 
 #include "workspace_wrapper.h"
 #include "core/output.h"
+#include "core/platform.h"
 #include "outline.h"
-#include "platform.h"
 #include "tiles/tilemanager.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
@@ -454,9 +454,18 @@ void WorkspaceWrapper::sendClientToScreen(Window *client, int screen)
     }
 }
 
-KWin::TileManager *WorkspaceWrapper::customTilingForScreen(const QString &screenName) const
+KWin::TileManager *WorkspaceWrapper::tilingForScreen(const QString &screenName) const
 {
     Output *output = kwinApp()->platform()->findOutput(screenName);
+    if (output) {
+        return output->customTiling();
+    }
+    return nullptr;
+}
+
+KWin::TileManager *WorkspaceWrapper::tilingForScreen(int screen) const
+{
+    Output *output = workspace()->outputs().value(screen);
     if (output) {
         return output->customTiling();
     }
