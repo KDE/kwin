@@ -24,7 +24,7 @@ namespace KWin
 Screens::Screens()
     : m_maxScale(1.0)
 {
-    connect(kwinApp()->platform(), &Platform::screensQueried, this, &Screens::changed);
+    connect(kwinApp()->platform(), &Platform::outputsQueried, this, &Screens::changed);
 }
 
 void Screens::init()

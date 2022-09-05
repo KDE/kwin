@@ -341,7 +341,7 @@ void DrmBackend::updateOutputs()
         }
     }
 
-    Q_EMIT screensQueried();
+    Q_EMIT outputsQueried();
 }
 
 std::unique_ptr<InputBackend> DrmBackend::createInputBackend()
@@ -395,7 +395,7 @@ QString DrmBackend::supportInformation() const
 std::shared_ptr<Output> DrmBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
     auto output = primaryGpu()->createVirtualOutput(name, size * scale, scale);
-    Q_EMIT screensQueried();
+    Q_EMIT outputsQueried();
     return output;
 }
 

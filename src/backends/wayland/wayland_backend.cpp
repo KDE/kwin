@@ -947,7 +947,7 @@ void WaylandBackend::addConfiguredOutput(std::shared_ptr<WaylandOutput> output)
         // (i.e, received their first configure and it is now safe to commit
         // buffers to them)
         setReady(true);
-        Q_EMIT screensQueried();
+        Q_EMIT outputsQueried();
     }
 }
 

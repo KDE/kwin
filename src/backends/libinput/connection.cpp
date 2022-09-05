@@ -136,7 +136,7 @@ void Connection::doSetup()
             deactivate();
         }
     });
-    connect(kwinApp()->platform(), &Platform::screensQueried, this, &Connection::updateScreens);
+    connect(kwinApp()->platform(), &Platform::outputsQueried, this, &Connection::updateScreens);
     handleEvent();
 }
 
