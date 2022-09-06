@@ -48,6 +48,7 @@
 #include "decorations/decorationbridge.h"
 #include "main.h"
 #include "placeholderinputeventfilter.h"
+#include "placeholderoutput.h"
 #include "placementtracker.h"
 #include "unmanaged.h"
 #include "useractions.h"
@@ -1452,8 +1453,9 @@ void Workspace::addOutput(Output *output)
     Q_EMIT outputAdded(output);
 
     if (m_placeholderOutput) {
-        kwinApp()->platform()->removeVirtualOutput(m_placeholderOutput);
-        m_placeholderOutput = nullptr;
+        m_outputs.removeOne(m_placeholderOutput.get());
+        Q_EMIT outputRemoved(m_placeholderOutput.get());
+        m_placeholderOutput.reset();
         m_placeholderFilter.reset();
     }
 }
@@ -1465,8 +1467,9 @@ void Workspace::removeOutput(Output *output)
     }
     if (m_outputs.empty()) {
         // not all parts of KWin handle having no output yet. To prevent crashes, create a placeholder output
-        m_placeholderOutput = kwinApp()->platform()->createVirtualOutput("placeholder", output->pixelSize(), output->scale(), VirtualOutputType::Placeholder);
-        m_placeholderOutput->renderLoop()->inhibit();
+        m_placeholderOutput = std::make_unique<PlaceholderOutput>(output->pixelSize(), output->scale());
+        m_outputs.append(m_placeholderOutput.get());
+        Q_EMIT outputAdded(m_placeholderOutput.get());
         // also prevent accidental inputs while the user has no screen connected
         m_placeholderFilter = std::make_unique<PlaceholderInputEventFilter>();
         input()->prependInputEventFilter(m_placeholderFilter.get());

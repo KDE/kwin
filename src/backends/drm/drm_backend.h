@@ -60,7 +60,7 @@ public:
     QVector<CompositingType> supportedCompositors() const override;
 
     QString supportInformation() const override;
-    Output *createVirtualOutput(const QString &name, const QSize &size, double scale, VirtualOutputType type) override;
+    Output *createVirtualOutput(const QString &name, const QSize &size, double scale) override;
     void removeVirtualOutput(Output *output) override;
 
     DrmGpu *primaryGpu() const;

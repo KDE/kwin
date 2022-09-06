@@ -39,7 +39,7 @@ class WaylandOutput : public Output
 {
     Q_OBJECT
 public:
-    WaylandOutput(const QString &name, KWayland::Client::Surface *surface, WaylandBackend *backend, bool placeholder);
+    WaylandOutput(const QString &name, KWayland::Client::Surface *surface, WaylandBackend *backend);
     ~WaylandOutput() override;
 
     RenderLoop *renderLoop() const override;
@@ -92,7 +92,7 @@ public:
     XdgShellOutput(const QString &name,
                    KWayland::Client::Surface *surface,
                    KWayland::Client::XdgShell *xdgShell,
-                   WaylandBackend *backend, int number, bool placeholder);
+                   WaylandBackend *backend, int number);
     ~XdgShellOutput() override;
 
     void lockPointer(KWayland::Client::Pointer *pointer, bool lock) override;

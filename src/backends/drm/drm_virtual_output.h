@@ -9,7 +9,6 @@
 */
 #pragma once
 
-#include "core/platform.h"
 #include "drm_abstract_output.h"
 
 #include <QObject>
@@ -27,7 +26,7 @@ class DrmVirtualOutput : public DrmAbstractOutput
     Q_OBJECT
 
 public:
-    DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size, qreal scale, VirtualOutputType type);
+    DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size, qreal scale);
     ~DrmVirtualOutput() override;
 
     bool present() override;

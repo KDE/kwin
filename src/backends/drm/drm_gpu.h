@@ -11,7 +11,6 @@
 #define DRM_GPU_H
 
 #include "drm_pipeline.h"
-#include "drm_virtual_output.h"
 
 #include <QPointer>
 #include <QSize>
@@ -42,6 +41,7 @@ class DrmBackend;
 class EglGbmBackend;
 class DrmAbstractOutput;
 class DrmRenderBackend;
+class DrmVirtualOutput;
 
 class DrmGpu : public QObject
 {
@@ -74,7 +74,7 @@ public:
 
     bool updateOutputs();
 
-    DrmVirtualOutput *createVirtualOutput(const QString &name, const QSize &size, double scale, VirtualOutputType type);
+    DrmVirtualOutput *createVirtualOutput(const QString &name, const QSize &size, double scale);
     void removeVirtualOutput(DrmVirtualOutput *output);
 
     DrmPipeline::Error testPendingConfiguration();

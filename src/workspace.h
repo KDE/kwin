@@ -76,6 +76,7 @@ class Screens;
 class Activities;
 #endif
 class PlaceholderInputEventFilter;
+class PlaceholderOutput;
 class Placement;
 
 class KWIN_EXPORT Workspace : public QObject
@@ -756,7 +757,7 @@ private:
 #endif
     std::unique_ptr<PlacementTracker> m_placementTracker;
 
-    Output *m_placeholderOutput = nullptr;
+    std::unique_ptr<PlaceholderOutput> m_placeholderOutput;
     std::unique_ptr<PlaceholderInputEventFilter> m_placeholderFilter;
 
 private:

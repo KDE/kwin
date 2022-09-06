@@ -20,7 +20,7 @@
 namespace KWin
 {
 
-DrmVirtualOutput::DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size, qreal scale, VirtualOutputType type)
+DrmVirtualOutput::DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size, qreal scale)
     : DrmAbstractOutput(gpu)
     , m_vsyncMonitor(SoftwareVsyncMonitor::create())
 {
@@ -32,7 +32,6 @@ DrmVirtualOutput::DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize
     setInformation(Information{
         .name = QStringLiteral("Virtual-") + name,
         .physicalSize = size,
-        .placeholder = type == VirtualOutputType::Placeholder,
     });
 
     setState(State{

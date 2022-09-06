@@ -403,9 +403,9 @@ QString DrmBackend::supportInformation() const
     return supportInfo;
 }
 
-Output *DrmBackend::createVirtualOutput(const QString &name, const QSize &size, double scale, VirtualOutputType type)
+Output *DrmBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
-    auto output = primaryGpu()->createVirtualOutput(name, size * scale, scale, type);
+    auto output = primaryGpu()->createVirtualOutput(name, size * scale, scale);
     Q_EMIT screensQueried();
     return output;
 }

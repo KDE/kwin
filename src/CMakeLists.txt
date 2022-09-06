@@ -106,6 +106,7 @@ target_sources(kwin PRIVATE
     osd.cpp
     outline.cpp
     placeholderinputeventfilter.cpp
+    placeholderoutput.cpp
     placement.cpp
     placementtracker.cpp
     plugin.cpp

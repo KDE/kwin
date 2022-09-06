@@ -775,11 +775,11 @@ void WaylandBackend::createOutputs()
 
     for (int i = 0; i < initialOutputCount(); i++) {
         const QString name = QStringLiteral("WL-%1").arg(i);
-        createOutput(name, QSize(pixelWidth, pixelHeight), false);
+        createOutput(name, QSize(pixelWidth, pixelHeight));
     }
 }
 
-WaylandOutput *WaylandBackend::createOutput(const QString &name, const QSize &size, bool placeholder)
+WaylandOutput *WaylandBackend::createOutput(const QString &name, const QSize &size)
 {
     auto surface = m_compositor->createSurface(this);
     if (!surface || !surface->isValid()) {
@@ -799,7 +799,7 @@ WaylandOutput *WaylandBackend::createOutput(const QString &name, const QSize &si
     WaylandOutput *waylandOutput = nullptr;
 
     if (m_xdgShell && m_xdgShell->isValid()) {
-        waylandOutput = new XdgShellOutput(name, surface, m_xdgShell, this, m_nextId++, placeholder);
+        waylandOutput = new XdgShellOutput(name, surface, m_xdgShell, this, m_nextId++);
     }
 
     if (!waylandOutput) {
@@ -967,9 +967,9 @@ void WaylandBackend::clearDpmsFilter()
     m_dpmsFilter.reset();
 }
 
-Output *WaylandBackend::createVirtualOutput(const QString &name, const QSize &size, double scale, VirtualOutputType type)
+Output *WaylandBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
-    return createOutput(name, size * scale, type == VirtualOutputType::Placeholder);
+    return createOutput(name, size * scale);
 }
 
 void WaylandBackend::removeVirtualOutput(Output *output)
