@@ -341,17 +341,6 @@ void DrmBackend::updateOutputs()
         }
     }
 
-    std::sort(m_outputs.begin(), m_outputs.end(), [](DrmAbstractOutput *a, DrmAbstractOutput *b) {
-        auto da = qobject_cast<DrmOutput *>(a);
-        auto db = qobject_cast<DrmOutput *>(b);
-        if (da && !db) {
-            return true;
-        } else if (da && db) {
-            return da->pipeline()->connector()->id() < db->pipeline()->connector()->id();
-        } else {
-            return false;
-        }
-    });
     Q_EMIT screensQueried();
 }
 
