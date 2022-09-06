@@ -236,10 +236,20 @@ void InputMethod::setTrackedWindow(Window *trackedWindow)
 
 void InputMethod::handleFocusedSurfaceChanged()
 {
-    SurfaceInterface *focusedSurface = waylandServer()->seat()->focusedTextInputSurface();
+    auto seat = waylandServer()->seat();
+    SurfaceInterface *focusedSurface = seat->focusedTextInputSurface();
+
     setTrackedWindow(waylandServer()->findWindow(focusedSurface));
     if (!focusedSurface) {
         setActive(false);
+    }
+
+    const auto client = focusedSurface ? focusedSurface->client() : nullptr;
+    bool ret = seat->textInputV2()->clientSupportsTextInput(client)
+            || seat->textInputV3()->clientSupportsTextInput(client);
+    if (ret != m_activeClientSupportsTextInput) {
+        m_activeClientSupportsTextInput = ret;
+        Q_EMIT activeClientSupportsTextInputChanged();
     }
 }
 
@@ -807,6 +817,17 @@ void InputMethod::resetPendingPreedit()
     preedit.text = QString();
     preedit.cursor = 0;
     preedit.highlightRanges.clear();
+}
+
+bool InputMethod::activeClientSupportsTextInput() const
+{
+    return m_activeClientSupportsTextInput;
+}
+
+void InputMethod::forceActivate()
+{
+    setActive(true);
+    show();
 }
 
 }

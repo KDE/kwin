@@ -13,6 +13,7 @@
 struct wl_resource;
 namespace KWaylandServer
 {
+class ClientConnection;
 class Display;
 class SeatInterface;
 class SurfaceInterface;
@@ -147,6 +148,11 @@ public:
      * should be applied.
      */
     void done();
+
+    /**
+     * @return whether @p client supports text-input-v3
+     */
+    bool clientSupportsTextInput(ClientConnection *client) const;
 
 Q_SIGNALS:
 

@@ -496,4 +496,8 @@ bool TextInputV3Interface::isEnabled() const
     return d->isEnabled();
 }
 
+bool TextInputV3Interface::clientSupportsTextInput(ClientConnection *client) const
+{
+    return client && d->resourceMap().contains(*client);
+}
 }

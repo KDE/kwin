@@ -22,11 +22,13 @@ class KWIN_EXPORT VirtualKeyboardDBus : public QObject
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(bool active READ isActive WRITE setActive NOTIFY activeChanged)
     Q_PROPERTY(bool visible READ isVisible NOTIFY visibleChanged)
+    Q_PROPERTY(bool activeClientSupportsTextInput READ activeClientSupportsTextInput NOTIFY activeClientSupportsTextInputChanged)
 public:
     explicit VirtualKeyboardDBus(InputMethod *inputMethod);
     ~VirtualKeyboardDBus() override;
     bool isEnabled() const;
 
+    bool activeClientSupportsTextInput() const;
     bool isVisible() const;
     bool isActive() const;
     bool isAvailable() const;
@@ -34,12 +36,14 @@ public:
     void setActive(bool active);
 
     Q_SCRIPTABLE bool willShowOnActive() const;
+    Q_SCRIPTABLE void forceActivate();
 
 Q_SIGNALS:
     Q_SCRIPTABLE void enabledChanged();
     Q_SCRIPTABLE void activeChanged();
     Q_SCRIPTABLE void visibleChanged();
     Q_SCRIPTABLE void availableChanged();
+    Q_SCRIPTABLE void activeClientSupportsTextInputChanged();
 
 private:
     InputMethod *const m_inputMethod;

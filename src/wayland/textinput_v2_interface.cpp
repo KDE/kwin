@@ -561,4 +561,8 @@ bool TextInputV2Interface::isEnabled() const
     return d->surface && d->m_enabledSurfaces.contains(d->surface);
 }
 
+bool TextInputV2Interface::clientSupportsTextInput(ClientConnection *client) const
+{
+    return client && d->resourceMap().contains(*client);
+}
 }

@@ -13,6 +13,7 @@
 struct wl_resource;
 namespace KWaylandServer
 {
+class ClientConnection;
 class Display;
 class SeatInterface;
 class SurfaceInterface;
@@ -121,6 +122,11 @@ public:
      * @see enabledChanged
      */
     QPointer<SurfaceInterface> surface() const;
+
+    /**
+     * @return whether @p client supports text-input-v2
+     */
+    bool clientSupportsTextInput(ClientConnection *client) const;
 
     /**
      * @return Whether the TextInputV2Interface is currently enabled for a SurfaceInterface.
