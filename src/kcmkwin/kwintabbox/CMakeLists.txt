@@ -24,6 +24,8 @@ if (QT_MAJOR_VERSION EQUAL "6")
         BATCHABLE
         PRECOMPILE
         OPTIMIZED
+        NOHLSL
+        NOMSL
         PREFIX "/org/kde/kwin/tabbox/shaders/"
         FILES
             brightnesssaturation.vert
