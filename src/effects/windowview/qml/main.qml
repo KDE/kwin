@@ -98,6 +98,14 @@ Item {
             Layout.topMargin: PlasmaCore.Units.gridUnit
             Layout.preferredWidth: Math.min(parent.width, 20 * PlasmaCore.Units.gridUnit)
             focus: false
+
+            // Otherwise it's always 100% opaque even while the blurry desktop background's
+            // opacity is changing, which looks weird and is different from what Overview does.
+            opacity: container.organized ? 1 : 0
+            Behavior on opacity {
+                OpacityAnimator { duration: container.effect.animationDuration; easing.type: Easing.OutCubic }
+            }
+
             // Binding loops will be avoided from the fact that setting the text to the same won't emit textChanged
             // We can't use activeFocus because is not reliable on qml effects
             onTextChanged: {
