@@ -113,16 +113,7 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
 
 DrmGpu::~DrmGpu()
 {
-    waitIdle();
-
-    const auto outputs = m_drmOutputs;
-    for (const auto &output : outputs) {
-        removeOutput(output);
-    }
-    const auto virtualOutputs = m_virtualOutputs;
-    for (const auto &output : virtualOutputs) {
-        removeVirtualOutput(output);
-    }
+    removeOutputs();
     if (m_eglDisplay != EGL_NO_DISPLAY) {
         eglTerminate(m_eglDisplay);
     }
@@ -338,6 +329,20 @@ bool DrmGpu::updateOutputs()
     // to signal clients to handle the changes
     m_leaseDevice->done();
     return true;
+}
+
+void DrmGpu::removeOutputs()
+{
+    waitIdle();
+
+    const auto outputs = m_drmOutputs;
+    for (const auto &output : outputs) {
+        removeOutput(output);
+    }
+    const auto virtualOutputs = m_virtualOutputs;
+    for (const auto &output : virtualOutputs) {
+        removeVirtualOutput(output);
+    }
 }
 
 DrmPipeline::Error DrmGpu::checkCrtcAssignment(QVector<DrmConnector *> connectors, const QVector<DrmCrtc *> &crtcs)
@@ -707,6 +712,16 @@ bool DrmGpu::addFB2ModifiersSupported() const
 bool DrmGpu::isNVidia() const
 {
     return m_isNVidia;
+}
+
+bool DrmGpu::isRemoved() const
+{
+    return m_isRemoved;
+}
+
+void DrmGpu::setRemoved()
+{
+    m_isRemoved = true;
 }
 
 bool DrmGpu::needsModeset() const
