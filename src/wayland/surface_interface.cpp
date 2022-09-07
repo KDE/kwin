@@ -572,17 +572,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         confinedPointerPrivate->commit();
     }
 
-    if (bufferRef != current.buffer) {
-        if (bufferRef) {
-            bufferRef->unref();
-        }
-        bufferRef = current.buffer;
-        if (bufferRef) {
-            bufferRef->ref();
-        }
-    }
-
-    // TODO: Refactor the state management code because it gets more clumsy.
+    bufferRef = current.buffer;
     if (current.buffer) {
         bufferSize = current.buffer->size();
 
@@ -802,7 +792,7 @@ KWin::Output::Transform SurfaceInterface::bufferTransform() const
 
 ClientBuffer *SurfaceInterface::buffer() const
 {
-    return d->bufferRef;
+    return d->bufferRef.get();
 }
 
 QPoint SurfaceInterface::offset() const

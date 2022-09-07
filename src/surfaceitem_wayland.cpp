@@ -145,7 +145,6 @@ SurfacePixmapWayland::SurfacePixmapWayland(SurfaceItemWayland *item, QObject *pa
 
 SurfacePixmapWayland::~SurfacePixmapWayland()
 {
-    setBuffer(nullptr);
 }
 
 SurfaceItemWayland *SurfacePixmapWayland::item() const
@@ -160,7 +159,7 @@ KWaylandServer::SurfaceInterface *SurfacePixmapWayland::surface() const
 
 KWaylandServer::ClientBuffer *SurfacePixmapWayland::buffer() const
 {
-    return m_buffer;
+    return m_buffer.get();
 }
 
 void SurfacePixmapWayland::create()
@@ -186,12 +185,8 @@ void SurfacePixmapWayland::setBuffer(KWaylandServer::ClientBuffer *buffer)
     if (m_buffer == buffer) {
         return;
     }
-    if (m_buffer) {
-        m_buffer->unref();
-    }
     m_buffer = buffer;
     if (m_buffer) {
-        m_buffer->ref();
         m_hasAlphaChannel = m_buffer->hasAlphaChannel();
         m_size = m_buffer->size();
     }

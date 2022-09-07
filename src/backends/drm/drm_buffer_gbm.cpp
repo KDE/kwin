@@ -86,14 +86,10 @@ GbmBuffer::GbmBuffer(DrmGpu *gpu, gbm_bo *bo, KWaylandServer::LinuxDmaBufV1Clien
     , m_bo(bo)
     , m_clientBuffer(clientBuffer)
 {
-    m_clientBuffer->ref();
 }
 
 GbmBuffer::~GbmBuffer()
 {
-    if (m_clientBuffer) {
-        m_clientBuffer->unref();
-    }
     if (m_mapping) {
         gbm_bo_unmap(m_bo, m_mapping);
     }
@@ -116,7 +112,7 @@ void *GbmBuffer::mappedData() const
 
 KWaylandServer::ClientBuffer *GbmBuffer::clientBuffer() const
 {
-    return m_clientBuffer;
+    return m_clientBuffer.get();
 }
 
 bool GbmBuffer::map(uint32_t flags)

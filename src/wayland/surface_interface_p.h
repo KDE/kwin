@@ -8,6 +8,7 @@
 
 #include "surface_interface.h"
 #include "utils.h"
+#include "utils/memory.h"
 // Qt
 #include <QHash>
 #include <QVector>
@@ -118,7 +119,7 @@ public:
 
     QRegion inputRegion;
     QRegion opaqueRegion;
-    ClientBuffer *bufferRef = nullptr;
+    RefPtr<ClientBuffer> bufferRef;
     bool mapped = false;
     bool hasCacheState = false;
     qreal scaleOverride = 1.;

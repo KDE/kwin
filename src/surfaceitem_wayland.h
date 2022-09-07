@@ -7,6 +7,7 @@
 #pragma once
 
 #include "surfaceitem.h"
+#include "utils/memory.h"
 
 namespace KWaylandServer
 {
@@ -74,7 +75,7 @@ private:
     void setBuffer(KWaylandServer::ClientBuffer *buffer);
 
     SurfaceItemWayland *m_item;
-    KWaylandServer::ClientBuffer *m_buffer = nullptr;
+    RefPtr<KWaylandServer::ClientBuffer> m_buffer;
 };
 
 /**
