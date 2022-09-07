@@ -4205,6 +4205,7 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
         return;
     }
 
+    Q_EMIT frameGeometryAboutToChange(this);
     const QRectF oldBufferGeometry = m_lastBufferGeometry;
     const QRectF oldFrameGeometry = m_lastFrameGeometry;
     const QRectF oldClientGeometry = m_lastClientGeometry;

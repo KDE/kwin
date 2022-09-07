@@ -46,7 +46,8 @@ public:
 quint64 AnimationEffectPrivate::m_animCounter = 0;
 
 AnimationEffect::AnimationEffect()
-    : d_ptr(new AnimationEffectPrivate())
+    : CrossFadeEffect()
+    , d_ptr(new AnimationEffectPrivate())
 {
     if (!s_clock.isValid()) {
         s_clock.start();
@@ -236,7 +237,7 @@ quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, int 
 
     PreviousWindowPixmapLockPtr previousPixmap;
     if (a == CrossFadePrevious) {
-        previousPixmap = PreviousWindowPixmapLockPtr::create(w);
+        CrossFadeEffect::redirect(w);
     }
 
     it->first.append(AniData(
@@ -282,7 +283,7 @@ quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, int 
         triggerRepaint();
     }
     if (shader) {
-        OffscreenEffect::redirect(w);
+        CrossFadeEffect::redirect(w);
     }
     return ret_id;
 }
@@ -308,6 +309,9 @@ bool AnimationEffect::retarget(quint64 animationId, FPx2 newTarget, int newRemai
                 anim->timeLine.setDuration(std::chrono::milliseconds(newRemainingTime));
                 anim->timeLine.reset();
 
+                if (anim->attribute == CrossFadePrevious) {
+                    CrossFadeEffect::redirect(entry.key());
+                }
                 return true;
             }
         }
@@ -343,7 +347,6 @@ bool AnimationEffect::freezeInTime(quint64 animationId, qint64 frozenTime)
 bool AnimationEffect::redirect(quint64 animationId, Direction direction, TerminationFlags terminationFlags)
 {
     Q_D(AnimationEffect);
-
     if (animationId == d->m_justEndedAnimation) {
         return false;
     }
@@ -393,6 +396,7 @@ bool AnimationEffect::complete(quint64 animationId)
         }
 
         animIt->timeLine.setElapsed(animIt->timeLine.duration());
+        unredirect(entryIt.key());
 
         return true;
     }
@@ -532,6 +536,8 @@ void AnimationEffect::paintWindow(EffectWindow *w, int mask, QRegion region, Win
 {
     Q_D(AnimationEffect);
     AniMap::const_iterator entry = d->m_animations.constFind(w);
+    auto finalRegion = region;
+
     if (entry != d->m_animations.constEnd()) {
         for (QList<AniData>::const_iterator anim = entry->first.constBegin(); anim != entry->first.constEnd(); ++anim) {
 
@@ -571,7 +577,7 @@ void AnimationEffect::paintWindow(EffectWindow *w, int mask, QRegion region, Win
                 break;
             }
             case Clip:
-                region = clipRect(w->expandedGeometry().toAlignedRect(), *anim);
+                finalRegion = clipRect(w->expandedGeometry().toAlignedRect(), *anim);
                 break;
             case Translation:
                 data += QPointF(interpolated(*anim, 0), interpolated(*anim, 1));
@@ -676,6 +682,7 @@ void AnimationEffect::postPaintScreen()
             if (anim->shader && std::none_of(entry->first.begin(), entry->first.end(), [anim] (const auto &other) { return anim->id != other.id && other.shader; })) {
                 unredirect(window);
             }
+            unredirect(window);
             animationEnded(window, anim->attribute, anim->meta);
             d->m_justEndedAnimation = 0;
             // NOTICE animationEnded is an external call and might have called "::animate"

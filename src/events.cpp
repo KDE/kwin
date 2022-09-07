@@ -1312,6 +1312,8 @@ void Unmanaged::configureNotifyEvent(xcb_configure_notify_event_t *e)
     }
     QRectF newgeom(Xcb::fromXNative(e->x), Xcb::fromXNative(e->y), Xcb::fromXNative(e->width), Xcb::fromXNative(e->height));
     if (newgeom != m_frameGeometry) {
+        Q_EMIT frameGeometryAboutToChange(this);
+
         QRectF old = m_frameGeometry;
         m_clientGeometry = newgeom;
         m_frameGeometry = newgeom;

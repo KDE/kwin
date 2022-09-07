@@ -486,6 +486,8 @@ void InternalWindow::commitGeometry(const QRectF &rect)
     const QRectF oldFrameGeometry = m_frameGeometry;
     const Output *oldOutput = m_output;
 
+    Q_EMIT frameGeometryAboutToChange(this);
+
     m_clientGeometry = frameRectToClientRect(rect);
     m_frameGeometry = rect;
     m_bufferGeometry = m_clientGeometry;

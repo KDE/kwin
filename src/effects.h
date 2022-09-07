@@ -65,6 +65,7 @@ public:
     Effect *provides(Effect::Feature ef);
 
     void drawWindow(EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) override;
+    void renderWindow(EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) override;
 
     void activateWindow(EffectWindow *c) override;
     EffectWindow *activeWindow() const override;

@@ -296,6 +296,8 @@ void XdgSurfaceWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mod
         return;
     }
 
+    Q_EMIT frameGeometryAboutToChange(this);
+
     if (mode != MoveResizeMode::Move) {
         const QSizeF requestedClientSize = frameSizeToClientSize(rect.size());
         if (requestedClientSize == clientSize()) {

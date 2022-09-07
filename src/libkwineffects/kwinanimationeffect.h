@@ -191,7 +191,7 @@ class AnimationEffectPrivate;
  *
  * @since 4.8
  */
-class KWINEFFECTS_EXPORT AnimationEffect : public OffscreenEffect
+class KWINEFFECTS_EXPORT AnimationEffect : public CrossFadeEffect
 {
     Q_OBJECT
 

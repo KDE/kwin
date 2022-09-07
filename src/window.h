@@ -1499,6 +1499,11 @@ Q_SIGNALS:
     void clientGeometryChanged(KWin::Window *window, const QRectF &oldGeometry);
 
     /**
+     * This signal is emitted when the frame geometry is about to change. the new geometry is not known yet
+     */
+    void frameGeometryAboutToChange(KWin::Window *window);
+
+    /**
      * This signal is emitted when the visible geometry has changed.
      */
     void visibleGeometryChanged();
@@ -1525,6 +1530,7 @@ Q_SIGNALS:
     void paletteChanged(const QPalette &p);
     void colorSchemeChanged();
     void captionChanged();
+    void clientMaximizedStateAboutToChange(KWin::Window *, MaximizeMode);
     void clientMaximizedStateChanged(KWin::Window *, MaximizeMode);
     void clientMaximizedStateChanged(KWin::Window *c, bool h, bool v);
     void transientChanged();

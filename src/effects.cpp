@@ -293,6 +293,18 @@ void EffectsHandlerImpl::setupWindowConnections(Window *window)
     connect(window, &Window::windowClosed, this, &EffectsHandlerImpl::slotWindowClosed);
     connect(window, static_cast<void (Window::*)(KWin::Window *, MaximizeMode)>(&Window::clientMaximizedStateChanged),
             this, &EffectsHandlerImpl::slotClientMaximized);
+    connect(window, static_cast<void (Window::*)(KWin::Window *, MaximizeMode)>(&Window::clientMaximizedStateAboutToChange),
+            this, [this](KWin::Window *window, MaximizeMode m) {
+                if (EffectWindowImpl *w = window->effectWindow()) {
+                    Q_EMIT windowMaximizedStateAboutToChange(w, m & MaximizeHorizontal, m & MaximizeVertical);
+                }
+            });
+    connect(window, &Window::frameGeometryAboutToChange,
+            this, [this](KWin::Window *window) {
+                if (EffectWindowImpl *w = window->effectWindow()) {
+                    Q_EMIT windowFrameGeometryAboutToChange(w);
+                }
+            });
     connect(window, &Window::clientStartUserMovedResized, this, [this](Window *window) {
         Q_EMIT windowStartUserMovedResized(window->effectWindow());
     });
@@ -356,6 +368,11 @@ void EffectsHandlerImpl::setupUnmanagedConnections(Unmanaged *u)
     connect(u, &Unmanaged::damaged, this, &EffectsHandlerImpl::slotWindowDamaged);
     connect(u, &Unmanaged::visibleGeometryChanged, this, [this, u]() {
         Q_EMIT windowExpandedGeometryChanged(u->effectWindow());
+    });
+    connect(u, &Unmanaged::frameGeometryAboutToChange, this, [this](Window *window) {
+        if (EffectWindowImpl *w = window->effectWindow()) {
+            Q_EMIT windowFrameGeometryAboutToChange(w);
+        }
     });
 }
 
@@ -439,6 +456,11 @@ void EffectsHandlerImpl::drawWindow(EffectWindow *w, int mask, const QRegion &re
     } else {
         m_scene->finalDrawWindow(static_cast<EffectWindowImpl *>(w), mask, region, data);
     }
+}
+
+void EffectsHandlerImpl::renderWindow(EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
+{
+    m_scene->finalDrawWindow(static_cast<EffectWindowImpl *>(w), mask, region, data);
 }
 
 bool EffectsHandlerImpl::hasDecorationShadows() const
