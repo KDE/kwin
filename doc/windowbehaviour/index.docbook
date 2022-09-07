@@ -13,6 +13,7 @@
 <authorgroup>
 <author>&Mike.McBride; &Mike.McBride.mail;</author>
 <author>&Jost.Schenck; &Jost.Schenck.mail;</author>
+<author><firstname>Natalie</firstname><surname>Clarius</surname><email>natalie_clarius@yahoo.de</email></author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
@@ -24,10 +25,19 @@
 <keyword>KControl</keyword>
 <keyword>system settings</keyword>
 <keyword>actions</keyword>
+<keyword>window</keyword>
 <keyword>window placement</keyword>
 <keyword>window size</keyword>
+<keyword>window management</keyword>
+<keyword>window behavior</keyword>
+<keyword>focus</keyword>
+<keyword>raise</keyword>
+<keyword>titlebar</keyword>
+<keyword>screen</keyword>
+<keyword>snap</keyword>
 </keywordset>
 </articleinfo>
+
 <sect1 id="window-behavior">
 <title>Window Behavior</title>
 
@@ -36,11 +46,11 @@ tabs: <guilabel>Focus</guilabel>, <guilabel>Titlebar Actions</guilabel>,
 <guilabel>Window Actions</guilabel>, <guilabel>Movement</guilabel> and
 <guilabel>Advanced</guilabel>. In the
 <guilabel>Focus</guilabel> panel you can configure how windows gain or
-lose focus, &ie; become active or inactive.  Using
+lose focus, &ie; become active or inactive. Using
 <guilabel>Titlebar Actions</guilabel> and <guilabel>Window Actions</guilabel>
 you can configure how titlebars and windows react to
 mouse clicks. <guilabel>Movement</guilabel> allows you to configure how
-windows move and place themselves when started.  The
+windows move and place themselves when started. The
 <guilabel>Advanced</guilabel> options cover some specialized options
 like <quote>window shading</quote>.
 </para>
@@ -54,21 +64,23 @@ customize window behavior.
 </para>
 </note>
 
-<sect2 id="action-focus">
+<sect2 id="focus">
 <title>Focus</title>
 
 <para>
-The <quote>focus</quote> of the desktop refers to the window which the
+The <quote>focus</quote> of the workspace refers to the window which the
 user is currently working on. The window with focus is often referred to
 as the <quote>active window</quote>.
 </para>
 
-<para>Focus does not necessarily mean the window is the one at the
+<para>
+Focus does not necessarily mean the window is the one at the
 front &mdash; this is referred to as <quote>raised</quote>, and
 although this is configured here as well, focus and raising of windows
-are configured independently.</para>
+are configured independently.
+</para>
 
-<sect3 id="action-focus-focuspolicy">
+<sect3 id="focus-focuspolicy">
 <title>Windows activation policy</title>
 
 <para>
@@ -76,6 +88,7 @@ There are six methods &kwin; can use to determine the current focus:
 </para>
 
 <variablelist>
+
 <varlistentry>
 <term><guilabel>Click to focus</guilabel></term>
 <listitem>
@@ -110,7 +123,6 @@ without you having to point the mouse at them explicitly.
 Focus stealing prevention takes place as usual.
 Think as <guilabel>Click to focus</guilabel> just without having to actually click.
 </para>
-
 <para>
 In other window managers, this is sometimes known as <quote>Sloppy focus
 follows mouse</quote>.
@@ -135,9 +147,9 @@ Choose this, if you want a hover controlled focus.
 <term><guilabel>Focus under mouse</guilabel></term>
 <listitem>
 <para>
-The window that happens to be under the mouse pointer becomes active.  If
-the mouse is not over a window (for instance, it's on the desktop) the last
-window that was under the mouse has focus.  New windows such as the mini
+The window that happens to be under the mouse pointer becomes active. If
+the mouse is not over a window (for instance, it's over the desktop wallpaper) the last
+window that was under the mouse has focus. New windows such as the mini
 command line invoked with <keycombo action="simul">&Alt;<keycap>F2</keycap></keycombo> will
 not receive the focus, you must move the mouse over them to type.
 </para>
@@ -147,38 +159,55 @@ not receive the focus, you must move the mouse over them to type.
 <varlistentry>
 <term><guilabel>Focus strictly under mouse</guilabel></term>
 <listitem>
-<para>Similar to <guilabel>Focus under mouse</guilabel>, but even more
-strict with its interpretation.  Only the window under the mouse pointer is
-active.  If the mouse pointer is not over a window, no window has focus.
+<para>
+Similar to <guilabel>Focus under mouse</guilabel>, but even more
+strict with its interpretation. Only the window under the mouse pointer is
+active. If the mouse pointer is not over a window, no window has focus.
 New windows such as the mini command line invoked with
 <keycombo action="simul">&Alt;<keycap>F2</keycap></keycombo> will not receive the focus,
 you must move the mouse over them to type. 
 </para>
-
 </listitem>
 </varlistentry>
+
 </variablelist>
 
-<note><para>Note that <guilabel>Focus under mouse</guilabel> and
+<note>
+<para>
+Note that <guilabel>Focus under mouse</guilabel> and
 <guilabel>Focus strictly under mouse</guilabel> prevent certain
 features, such as <guilabel>Focus stealing prevention</guilabel> and the 
 <keycombo action="simul">&Alt;&Tab;</keycombo>
-walk-through-windows dialog, from working properly.</para>
+walk-through-windows dialog, from working properly.
+</para>
 </note>
 
 </sect3>
 
-<sect3 id="action-focus-focusstealin">
+<sect3 id="focus-focusdelay">
+<title>Delay focus by</title>
+
+<para>
+This is the delay after which the window the mouse pointer is over will automatically receive focus.
+</para>
+
+</sect3>
+
+<sect3 id="focus-focusstealing">
 <title>Focus stealing prevention</title>
 
-<para>This option specifies how much KWin will try to prevent unwanted focus 
-stealing caused by unexpected activation of new windows.</para> 
+<para>
+This option specifies how much KWin will try to prevent unwanted focus 
+stealing caused by unexpected activation of new windows.
+</para> 
 
 <variablelist>
+
 <varlistentry>
 <term><guilabel>None</guilabel></term>
 <listitem><para>Prevention is turned off and new windows always become activated.</para></listitem>
 </varlistentry>
+
 <varlistentry>
 <term><guilabel>Low</guilabel></term>
 <listitem><para>Prevention is enabled; when some window does not have support 
@@ -186,6 +215,7 @@ for the underlying mechanism and KWin cannot reliably decide whether to activate
 the window or not, it will be activated. This setting may have both worse and better 
 results than the medium level, depending on the applications.</para></listitem>
 </varlistentry>
+
 <varlistentry>
 <term><guilabel>Medium</guilabel></term>
 <listitem><para>Prevention is enabled.</para></listitem>
@@ -198,50 +228,81 @@ if no window is currently active or if they belong to the currently active
 application. This setting is probably not really usable when not using mouse 
 focus policy.</para></listitem>
 </varlistentry>
+
 <varlistentry>
 <term><guilabel>Extreme</guilabel></term>
 <listitem><para>All windows must be explicitly activated by the user.</para></listitem>
 </varlistentry>
+
 </variablelist>
-<para>Windows that are prevented from stealing focus are marked as demanding 
-attention, which by default means their taskbar entry will be highlighted. 
-This can be changed in the Notifications control module.</para>
-</sect3>
-  
-<sect3 id="action-focus-raisingwindow">
-<title>Raising window</title>
+
 <para>
-Once you have determined the focus policy, there are the window
-raising options.
+Windows that are prevented from stealing focus are marked as demanding 
+attention, which by default means their taskbar entry will be highlighted. 
+This can be changed in the Notifications control module.
 </para>
 
-<para>With a click to focus policy by default <guilabel>Click raises active window</guilabel> 
-is enabled and raise on hover is not available.
+</sect3>
+
+<sect3 id="focus-raisingwindow">
+<title>Raising windows</title>
+
+<para>
+Besides receiving focus, you can also control under which conditions windows get raised, &ie; brought to the front.
 </para>
 
-<para>With a hover to focus policy you can alternatively use auto raise.
-By placing a mark in front of <guilabel>Raise on hover, delayed by</guilabel>, &kwin; can
-bring a window to the front if the mouse is over that window for a
-specified period of time. You can determine the delay for this option by using the spin box control.
+<para>
+You should make sure that at least one of the raising options is enabled, otherwise windows will not be raised at all.
+</para>
+
+<para>
+<guilabel>Click raises active window</guilabel> will bring a window to the front when it is clicked on. This is enabled by default with a click to focus policy.
+</para>
+
+<para>
+By activating <guilabel>Raise on hover, delayed by</guilabel> you can alternatively bring a window to the front if the mouse pointer is over that window for a specified period of time. You can determine the delay for this option by using the spin box control. This auto-raising option is only available with a hover to focus policy.
 </para>
 
 <tip>
 <para>
 Setting the delay too short will cause a rapid fire changing of
-windows, which can be quite distracting.  Most people will like a delay
-of 100-300 ms.  This is responsive, but it will let you slide over the
+windows, which can be quite distracting. Most people will like a delay
+of 100-300 ms. This is responsive, but it will let you slide over the
 corners of a window on your way to your destination without bringing
-that window to the front.  
+that window to the front. 
 </para>
 </tip>
 
+</sect3>
+
+<sect3 id="focus-multiscreen">
+<title>Multiscreen behavior</title>
+
 <para>
-If you do not use auto raise, make sure the
-<guilabel>Click raises active window</guilabel> option has a mark in front of it.  You
-will not be happy with both auto raise and
-<guilabel>Click raise active window</guilabel> disabled, the net effect is that
-windows are not raised at all.
+This controls the behavior of window focus with multiple screens. Note that these options appear only when more than one screen is currently connected.
 </para>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Active screen follows mouse</guilabel></term>
+<listitem>
+<para>
+When this option is enabled, the active screen (where new windows appear, for example) is the screen containing the mouse pointer. When disabled, the active screen is the screen containing the focused window.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Separate screen focus</guilabel></term>
+<listitem>
+<para>
+When this option is enabled, focus operations are limited only to the active screen. For instance, when you close a window, then the next window to receive focus will be a window on the active screen, even if there is a more recently used window on a different screen.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
 
 </sect3>
 
@@ -255,56 +316,211 @@ In this panel you can configure what happens to windows when a mousebutton is
 clicked on their titlebars.
 </para>
 
-<sect3 id="action-actions-sec1">
-<title>Double-click</title>
+<sect3 id="actions-titlebar">
+<title><guilabel>Titlebar Actions</guilabel></title>
 
 <para>
-In this drop down box you can select either
-<guilabel>Shade</guilabel>, several variations of
-<guilabel>Maximize</guilabel> or <guilabel>Lower</guilabel>,
-<guilabel>Close</guilabel> and <guilabel>On All Desktops</guilabel>.
+This section allows you to determine what happens when you double-click
+or scroll the mouse wheel on the titlebar of a window.
 </para>
 
 <para>
-Selecting <guilabel>Maximize</guilabel> causes &kwin; to maximize the
-window whenever you doubleclick on the titlebar. You can further
-choose to maximize windows only horizontally or only
-vertically.</para>
+The following actions are available for <guilabel>Double-click</guilabel>:
+</para>
 
-<para><guilabel>Shade</guilabel>, on the other hand, causes the window to be
-reduced to simply the titlebar.  Double clicking on the titlebar again,
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Maximize</guilabel></term>
+<listitem>
+<para>
+Resizes the window to fill the height and width of the screen.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Vertically maximize</guilabel></term>
+<listitem>
+<para>
+Resizes the window to the height of the screen.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Horizontally maximize</guilabel></term>
+<listitem>
+<para>
+Resizes the window to the width of the screen.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Minimize</guilabel></term>
+<listitem>
+<para>
+Hides the window into its minimized state, from which it can be restored &eg; via the Task Manager or Task Switcher.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Shade</guilabel></term>
+<listitem>
+<para>
+Causes the window to be
+reduced to simply the titlebar. Double-clicking on the titlebar again
 restores the window to its normal size.
 </para>
+</listitem>
+</varlistentry>
 
-<para>Similar options are available for <guilabel>Mouse wheel</guilabel>.
+<varlistentry>
+<term><guilabel>Close</guilabel></term>
+<listitem>
+<para>
+Closes the window.
 </para>
-<!--FIXME Raise/Lower Shade/Unshade Maximize/Restore Keep Above/Below Move to Previous/Next Desktop Change Opacity -->
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Show on all desktops</guilabel></term>
+<listitem>
+<para>
+Makes the window be visible on all Virtual Desktops.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Do nothing</guilabel></term>
+<listitem>
+<para>
+Nothing happens on double-click.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>
+The <guilabel>Mouse wheel</guilabel> can be used to trigger an action depending on whether it is scrolled up or down:
+</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Raise/lower</guilabel></term>
+<listitem>
+<para>
+Scrolling up will move the window on top of other windows.
+</para>
+<para>
+Scrolling down will move the window below other windows.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Shade/unshade</guilabel></term>
+<listitem>
+<para>
+Scrolling up will collapse the window to just its titlebar.
+</para>
+<para>
+Scrolling down will restore the window to its normal size.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Maximize/restore</guilabel></term>
+<listitem>
+<para>
+Scrolling up will maximize the window to fill the whole screen.
+</para>
+<para>
+Scrolling down will restore it to its previous size.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Keep above/below</guilabel></term>
+<listitem>
+<para>
+Scrolling up will make the window stay on top, covering other windows.
+</para>
+<para>
+Scrolling down will make the window stay covered below other windows.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Move to previous/next desktop</guilabel></term>
+<listitem>
+<para>
+Scrolling up will move the window to the previous Virtual Desktop.
+</para>
+<para>
+Scrolling down will move the window to the next Virtual Desktop.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Change opacity</guilabel></term>
+<listitem>
+<para>
+Scrolling up will make the window less transparent.
+</para>
+<para>
+Scrolling down will make the window more transparent.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Do nothing</guilabel></term>
+<listitem>
+<para>
+Nothing happens when scrolling up or down on the window's titlebar.
+</para>
+</listitem>
+</varlistentry>
+  
+</variablelist>
 
 <tip>
 <para>
 You can have windows automatically unshade when you simply place the
-mouse over their shaded titlebar. Just check the <guilabel>Window
-unshading</guilabel> check box in the <guilabel>Advanced</guilabel> tab of
-this module.  This is a great way to reclaim desktop space when you are
+mouse over their shaded titlebar. Just check the <link  linkend="advanced-unshading"><guilabel>Window
+unshading</guilabel></link> check box in the <guilabel>Advanced</guilabel> tab of
+this module. This is a great way to reclaim screen space when you are
 cutting and pasting between a lot of windows, for example.
 </para>
 </tip>
 
 </sect3>
 
-<sect3 id="action-actions-sec2">
+<sect3 id="actions-titlebar-frame">
 <title><guilabel>Titlebar and Frame Actions</guilabel></title>
 
 <para>
 This section allows you to determine what happens when you single click
-on the titlebar or frame of a window.  Notice that you can have
+on the titlebar or frame of a window. Notice that you can have
 different actions associated with the same click depending on whether
 the window is active or not.
 </para>
 
 <para> For each combination of mousebuttons, Active and
-Inactive, you can select the most appropriate choice.  The actions are
-as follows: </para>
+Inactive, you can select the most appropriate choice. The actions are
+as follows:
+</para>
 
 <variablelist>
 
@@ -312,8 +528,8 @@ as follows: </para>
 <term><guilabel>Raise</guilabel></term>
 <listitem>
 <para>
-Will bring the window to the top of the display.  All other windows
-which overlap with this one, will be hidden <quote>below</quote> it.
+Will bring the window to the top of the window stack. All other windows
+which overlap with this one will be hidden <quote>below</quote> it.
 </para>
 </listitem>
 </varlistentry>
@@ -322,7 +538,7 @@ which overlap with this one, will be hidden <quote>below</quote> it.
 <term><guilabel>Lower</guilabel></term>
 <listitem>
 <para>
-Will move this window to the bottom of the display.  This will get the
+Will move this window to the bottom of the window stack. This will get the
 window out of the way.
 </para>
 </listitem>
@@ -338,15 +554,31 @@ are already on top.
 </listitem>
 </varlistentry>
 
-<!--FIXME missing:
-Minimize, Shade, Close
--->
-
 <varlistentry>
-<term><guilabel>Do nothing</guilabel></term>
+<term><guilabel>Minimize</guilabel></term>
 <listitem>
 <para>
-Just like it says.  Nothing happens.
+Hides the window into its minimized state, from which it can be restored &eg; via the Task Manager or Task Switcher.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+
+<term><guilabel>Shade</guilabel></term>
+<listitem>
+<para>
+Causes the window to be
+reduced to simply the titlebar. Double-clicking on the titlebar again
+restores the window to its normal size.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Close</guilabel></term>
+<listitem>
+<para>
+Closes the window.
 </para>
 </listitem>
 </varlistentry>
@@ -355,22 +587,64 @@ Just like it says.  Nothing happens.
 <term><guilabel>Show actions menu</guilabel></term>
 <listitem>
 <para>
-Will bring up a small submenu, where you can choose window related
-commands (&ie; Maximize, Minimize, Close, &etc;).
+Will bring up a small submenu where you can choose window related
+commands (&ie; Move to Desktop, Move to Screen, Maximize, Minimize, Close, &etc;).
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Do nothing</guilabel></term>
+<listitem>
+<para>
+Nothing happens on click.
 </para>
 </listitem>
 </varlistentry>
 
 </variablelist>
+
 </sect3>
 
-<sect3 id="action-actions-maximize-button">
+<sect3 id="actions-maximize-button">
 <title><guilabel>Maximize Button Actions</guilabel></title>
+
 <para>
 This section allows you to determine the behavior of the three mouse buttons 
-onto the maximize button. You have the choice between vertical only, horizontal 
-only or both directions.
+onto the maximize button.
 </para>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Maximize</guilabel></term>
+<listitem>
+<para>
+Resizes the window to the height and width of the screen.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Vertially maximize</guilabel></term>
+<listitem>
+<para>
+Resizes the window to the height of the screen.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Horizontally maximize</guilabel></term>
+<listitem>
+<para>
+Resizes the window to the width of the screen.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
 </sect3>
 
 </sect2>
@@ -378,7 +652,7 @@ only or both directions.
 <sect2 id="window-actions">
 <title>Window Actions</title>
 
-<sect3 id="action-actions-sec3">
+<sect3 id="actions-inactive-inner-window">
 <title><guilabel>Inactive Inner Window</guilabel></title>
 
 <para>
@@ -392,6 +666,7 @@ Your choices are as follows:
 </para>
 
 <variablelist>
+
 <varlistentry>
 <term><guilabel>Activate, raise and pass click</guilabel></term>
 <listitem>
@@ -432,6 +707,7 @@ the window.
 </para>
 </listitem>
 </varlistentry>
+
 </variablelist>
 
 <para>
@@ -439,6 +715,7 @@ Your choices for <guilabel>Mouse wheel</guilabel> are as follows:
 </para>
 
 <variablelist>
+
 <varlistentry>
 <term><guilabel>Scroll</guilabel></term>
 <listitem>
@@ -466,16 +743,22 @@ the display, and scrolls the content.
 </para>
 </listitem>
 </varlistentry>
+
 </variablelist>
+
 </sect3>
 
-<sect3 id="action-actions-sec4">
+<sect3 id="actions-inner-window-titlebar-frame">
 <title><guilabel>Inner Window, Titlebar and Frame</guilabel></title>
 
 <para>
-This bottom section, allows you to configure additional actions, when
-a modifier key (by default &Meta;) is pressed, and a mouse click is
-made on a window.</para>
+This bottom section allows you to configure additional actions when
+clicking on a window with a modifier key pressed.
+</para>
+
+<para>
+As a <guilabel>Modifier key</guilabel>, you can select between <guilabel>Meta</guilabel> (default) or <guilabel>Alt</guilabel>.
+</para>
 
 <para>
 Once again, you can select different actions for
@@ -484,43 +767,37 @@ Once again, you can select different actions for
 wheel</guilabel>.
 </para>
 
-<para>Your choices are:</para>
+<para>
+Your choices for the mouse buttons are:
+</para>
 
 <variablelist>
+
 <varlistentry>
 <term><guilabel>Move</guilabel></term>
 <listitem>
 <para>
-Allows you to drag the selected window around the desktop.
+Allows you to drag the selected window around the workspace.
 </para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Lower</guilabel></term>
+<term><guilabel>Activate, raise and move</guilabel></term>
 <listitem>
 <para>
-Will move this window to the bottom of the display.  This will get the
-window out of the way.
+This makes the clicked window active, raises it to the top of the
+window stack, and drags the window around the workspace.
 </para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Nothing</guilabel></term>
+<term><guilabel>Toggle raise and lower</guilabel></term>
 <listitem>
 <para>
-Just like it says.  Nothing happens.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Raise</guilabel></term>
-<listitem>
-<para>
-Will bring the window to the top of the display.  All other windows
-which overlap with this one, will be hidden <quote>below</quote> it.
+This will raise windows which are not on top, and lower windows which
+are already on top.
 </para>
 </listitem>
 </varlistentry>
@@ -535,118 +812,221 @@ Allows you to change the size of the selected window.
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Toggle raise and lower</guilabel></term>
+<term><guilabel>Raise</guilabel></term>
 <listitem>
 <para>
-This will raise windows which are not on top, and lower windows which
-are already on top.
+Will bring the window to the top of the window stack. All other windows
+which overlap with this one will be hidden <quote>below</quote> it.
 </para>
 </listitem>
 </varlistentry>
+
 <varlistentry>
-<term><guilabel>Activate</guilabel></term>
+<term><guilabel>Lower</guilabel></term>
 <listitem>
 <para>
-Make this window active.
+ Will move this window to the bottom of the window stack. This will get the
+window out of the way.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Minimize</guilabel></term>
+<listitem>
+<para>
+Hides the window into its minimized state, from which it can be restored &eg; via the Task Manager or Task Switcher.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Decrease opacity</guilabel></term>
+<listitem>
+<para>
+Makes the window more transparent.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Increase opacity</guilabel></term>
+<listitem>
+<para>
+Makes the window less transparent.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Do nothing</guilabel></term>
+<listitem>
+<para>
+Nothing happens on click.
 </para>
 </listitem>
 </varlistentry>
 
 </variablelist>
-<!-- FIXME missing:
-Activate, Raise &amp; Move
-Minimize
-Increase Opacity + Decrease Opacity
--->
-<!--FIXME
-Mouse Wheel has different choices:
-Raise/Lower, Shade/Unshade, Maximize/Restore, Keep Above/Below, 
-Move to Previous/Next Desktop, Change Opacity
-Nothing
--->
+
+<para>
+Your choices for the mouse wheel are:
+</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Raise/lower</guilabel></term>
+<listitem>
+<para>
+Scrolling up will move the window on top of other windows.
+</para>
+<para>
+Scrolling down will move the window below other windows.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Shade/unshade</guilabel></term>
+<listitem>
+<para>
+Scrolling up will collapse the window to just its titlebar.
+</para>
+<para>
+Scrolling down will restore the window to its normal size.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Maximize/restore</guilabel></term>
+<listitem>
+<para>
+Scrolling up will maximize the window to fill the whole screen.
+</para>
+<para>
+Scrolling down will restore it to its previous size.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Keep above/below</guilabel></term>
+<listitem>
+<para>
+Scrolling up will make the window stay on top, covering other windows.
+</para>
+<para>
+Scrolling down will make the window stay covered below other windows.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Move to previous/next desktop</guilabel></term>
+<listitem>
+<para>
+Scrolling up will move the window to the previous Virtual Desktop.
+</para>
+<para>
+Scrolling down will move the window to the next Virtual Desktop.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Change opacity</guilabel></term>
+<listitem>
+<para>
+Scrolling up will make the window less transparent.
+</para>
+<para>
+Scrolling down will make the window more transparent.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Do nothing</guilabel></term>
+<listitem>
+<para>
+Nothing happens on when scrolling up or down the window's titlebar.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
 
 </sect3>
 
 </sect2>
 
-<sect2 id="action-moving">
+<sect2 id="movement">
 <title>Movement</title>
 
-<para>
-The options here determine how windows appear on screen when you
-are moving them.</para>
-
-<sect3>
-<title><guilabel>Window geometry</guilabel></title>
-
-<variablelist>
-<varlistentry>
-<term><guilabel>Display when moving or resizing</guilabel></term>
-<listitem>
-<para>Enable this option if you want a window's geometry to be displayed 
-while it is being moved or resized. The window position relative to the top-left 
-corner of the screen is displayed together with its size.</para>
-</listitem>
-</varlistentry>
-</variablelist>
-
-</sect3>
-
-<sect3>
-<title><guilabel>Snap Zones</guilabel></title>
-
-<para>The rest of this page allows you to configure the <guilabel>Snap
-Zones</guilabel>.  These are like a magnetic field along the side of
-the desktop and each window, which will make windows snap alongside
-when moved near.</para>
+<para>This page allows you to configure the <guilabel>Snap
+Zones</guilabel>. These are like a magnetic field along the side of
+the screen and each window, which will make windows snap alongside
+when moved near.
+</para>
 
 <variablelist>
-<varlistentry>
-<term><guilabel>Screen edge snap zone:</guilabel></term>
-<listitem>
 
-<para>Here you can set the snap zone for screen borders.  Moving a
+<varlistentry>
+<term><guilabel>Screen edge snap zone</guilabel></term>
+<listitem>
+<para>Here you can set the snap zone for screen borders. Moving a
 window within the configured distance will make it snap to the edge of
-the desktop.</para>
+the screen.
+</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Window snap zone:</guilabel></term>
+<term><guilabel>Window snap zone</guilabel></term>
 <listitem>
-
-<para>Here you can set the snap zone for windows.  As with screen
+<para>
+Here you can set the snap zone for windows. As with screen
 borders, moving a window near to another will make it snap to the edge
-as if the windows were magnetized.</para>
+as if the windows were magnetized.
+</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Center snap zone:</guilabel></term>
+<term><guilabel>Center snap zone</guilabel></term>
 <listitem>
-
-<para>Here you can set the snap zone for the screen center, &ie; the 
+<para>
+Here you can set the snap zone for the screen center, &ie; the 
 <quote>strength</quote> of the magnetic field which will make windows snap 
-to the center of the screen when moved near it.</para>
+to the center of the screen when moved near it.
+</para>
 </listitem>
 </varlistentry>
-
 
 <varlistentry>
 <term><guilabel>Snap windows: Only when overlapping</guilabel></term>
 <listitem>
-
-<para>If checked, windows will not snap together if they are only near
+<para>
+If checked, windows will not snap together if they are only near
 each other, they must be overlapping, by the configured amount or
-less.</para>
+less.
+</para>
 </listitem>
 </varlistentry>
+
 </variablelist>
-</sect3>
+
+<tip>
+<para>
+In the <guilabel>Screen Edges</guilabel> settings module in the <guilabel>Workspace Behavior</guilabel> section of the system settings, you can configure windows to be quick-tiled to the whole, half, or quarter of the screen when dragged near the screen edges.
+</para>
+</tip>
 
 </sect2>
 
-<sect2 id="action-advanced">
+<sect2 id="advanced">
 <title>Advanced</title>
 
 <para>
@@ -654,9 +1034,10 @@ In the <guilabel>Advanced</guilabel> panel you can do more advanced fine
 tuning to the window behavior.
 </para>
 
-<variablelist>
+<sect3 id="advanced-unshading">
 <title>Window unshading</title>
 
+<variablelist>
 <varlistentry>
 <term><guilabel>On titlebar hover after</guilabel></term>
 <listitem>
@@ -668,50 +1049,158 @@ the spinbox to configure the delay un-shading.
 </listitem>
 </varlistentry>
 </variablelist>
+</sect3>
+
+<sect3 id="advanced-placement">
+<title>Window placement</title>
+
+<para>
+The placement policy determines where a new window will appear
+on the screen.
+</para>
+
+<para>
+In a multi-monitor setup, the screen for windows to appear on is always the active screen (that is, the screen that has the mouse pointer or the focused window; see <link linkend="focus-multiscreen">Multiscreen behavior</link>), with the exception of windows remembering their previous position (see <link  linkend="advanced-remember-positions">below</link>).
+</para>
 
 <variablelist>
 
 <varlistentry>
-<term><guilabel>Window placement</guilabel></term>
-<listitem><para>The placement policy determines where a new window will appear
-on the desktop.  <guilabel>Minimal Overlapping</guilabel> will try to achieve a minimum
-overlap of windows, <guilabel>Cascaded</guilabel> will cascade the
-windows, and <guilabel>Random</guilabel> will use a random
-position.  <guilabel>Centered</guilabel> will open all new windows in
-the center of the screen, and <guilabel>In Top-Left Corner</guilabel> will
-open all windows with their top left corner in the top left corner of
-the screen. Check the <guilabel>Allow KDE apps to remember the positions of
-their own windows</guilabel> item to keep the data on the &plasma; windows
-positions.</para></listitem>
+<term><guilabel>Minimal Overlapping</guilabel></term>
+<listitem>
+<para>
+Will place all new windows in such a manner as to overlap existing windows as little as possible.
+</para>
+</listitem>
 </varlistentry>
 
+<varlistentry>
+<term><guilabel>Maximized</guilabel></term>
+<listitem>
+<para>
+Will try to maximize all new windows to fill the whole screen.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Cascaded</guilabel></term>
+<listitem>
+<para>
+Will cascade all new windows, opening each one down and to the right of the active window, starting from the top left corner of the screen when no windows are already open.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Random</guilabel></term>
+<listitem>
+<para>
+Will place all new windows in random locations.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Centered</guilabel></term>
+<listitem>
+<para>
+Will place all new windows in the center of the screen.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>In Top-Left Corner</guilabel></term>
+<listitem>
+<para>
+Will place all new windows with their top left corner in the top left corner of
+the screen. 
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Under Mouse</guilabel></term>
+<listitem>
+<para>
+Will place all new windows centered under the mouse pointer.
+</para>
+</listitem>
+</varlistentry>
+  
 </variablelist>
 
+<para id="advanced-remember-positions">
+Check the <guilabel>Allow apps to remember the positions of
+their own windows</guilabel> item to open windows where they previously were rather than by the placement method chosen above. Note that this remembered position includes the screen assignment, so windows may open on a screen other than the active one if this is where they were last located. Note also that this option is only available on X11, not on Wayland, and is only supported by some KDE applications.
+</para>
+
+<tip>
+<para>
+If you would like some windows to appear on specific positions, screens, or Virtual Desktops, you can set up <guilabel>Window Rules</guilabel> to configure special window or application settings. You can find this by right-clicking on the titlebar of a window and chooseng <guimenu>More Actions</guimenu>, or in the <guilabel>Window Rules</guilabel> module in the <guilabel>Window Management</guilabel> section of system settings.
+</para>
+</tip>
+
+
+</sect3>
+
+<sect3 id="advanced-special-windows">
+<title>Special windows</title>
+
 <variablelist>
-<title>Special Window</title>
+
 <varlistentry>
 <term><guilabel>Hide utility windows for inactive applications</guilabel></term>
-<listitem><para>When turned on, utility windows (tool windows, torn-off menus,...) of 
+<listitem>
+<para>
+When turned on, utility windows (tool windows, torn-off menus, ...) of 
 inactive applications will be hidden and will be shown only when the 
 application becomes active. Note that applications have to mark the windows 
-with the proper window type for this feature to work.</para></listitem>
+with the proper window type for this feature to work.
+</para>
+</listitem>
 </varlistentry>
 
 </variablelist>
 
-<sect3 id="action-virtual-desktop-behavior">
+</sect3>
+
+<sect3 id="advanced-virtual-desktop-behavior">
 <title>Virtual Desktop behavior</title>
-<para>Sometimes calling an application will activate an existing window rather than opening a new window. This setting controls what should happen if that activated window is located on a Virtual Desktop other than the current one.</para>
+
+<para>
+Sometimes calling an application will activate an existing window rather than opening a new window. This setting controls what should happen if that activated window is located on a Virtual Desktop other than the current one.
+</para>
+
 <variablelist>
+
 <varlistentry>
 <term><guilabel>Switch to that Virtual Desktop</guilabel></term>
-<listitem><para>Will switch to the Virtual Desktop where the window is currently located. Choose this option if you would like the active desktop to automatically follow windows to their assigned desktop.</para></listitem>
+<listitem>
+<para>
+Will switch to the Virtual Desktop where the window is currently located.
+</para>
+<para>
+Choose this option if you would like the active Virtual Desktop to automatically follow windows to their assigned Virtual Desktop.
+</para>
+</listitem>
 </varlistentry>
+
 <varlistentry>
 <term><guilabel>Bring window to current Virtual Desktop</guilabel></term>
-<listitem><para>Will cause the window to jump to the active Virtual Desktop. Choose this option if you would like windows to always open on the current Virtual Desktop, and the active Virtual Desktop to only switch when navigating there manually.</para></listitem>
+<listitem>
+<para>
+Will cause the window to jump to the active Virtual Desktop.
+</para>
+<para>
+Choose this option if you would like windows to always open on the current Virtual Desktop, and the active Virtual Desktop to only switch when navigating there manually.
+</para>
+</listitem>
 </varlistentry>
+
 </variablelist>
+
 </sect3>
 
 </sect2>
