@@ -114,13 +114,14 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
 DrmGpu::~DrmGpu()
 {
     waitIdle();
-    const auto outputs = m_outputs;
+
+    const auto outputs = m_drmOutputs;
     for (const auto &output : outputs) {
-        if (auto drmOutput = qobject_cast<DrmOutput *>(output)) {
-            removeOutput(drmOutput);
-        } else {
-            removeVirtualOutput(dynamic_cast<DrmVirtualOutput *>(output));
-        }
+        removeOutput(output);
+    }
+    const auto virtualOutputs = m_virtualOutputs;
+    for (const auto &output : virtualOutputs) {
+        removeVirtualOutput(output);
     }
     if (m_eglDisplay != EGL_NO_DISPLAY) {
         eglTerminate(m_eglDisplay);
@@ -276,7 +277,6 @@ bool DrmGpu::updateOutputs()
             m_pipelines << pipeline;
             auto output = new DrmOutput(pipeline, m_leaseDevice);
             m_drmOutputs << output;
-            m_outputs << output;
             addedOutputs << output;
             Q_EMIT outputAdded(output);
             pipeline->setLayers(m_platform->renderBackend()->createPrimaryLayer(pipeline), m_platform->renderBackend()->createCursorLayer(pipeline));
@@ -569,10 +569,9 @@ void DrmGpu::dispatchEvents()
 void DrmGpu::removeOutput(DrmOutput *output)
 {
     qCDebug(KWIN_DRM) << "Removing output" << output;
-    m_drmOutputs.removeOne(output);
     m_pipelines.removeOne(output->pipeline());
     output->pipeline()->setLayers(nullptr, nullptr);
-    m_outputs.removeOne(output);
+    m_drmOutputs.removeOne(output);
     Q_EMIT outputRemoved(output);
     delete output;
 }
@@ -590,14 +589,14 @@ const QVector<DrmPipeline *> DrmGpu::pipelines() const
 DrmVirtualOutput *DrmGpu::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
     auto output = new DrmVirtualOutput(name, this, size, scale);
-    m_outputs << output;
+    m_virtualOutputs << output;
     Q_EMIT outputAdded(output);
     return output;
 }
 
 void DrmGpu::removeVirtualOutput(DrmVirtualOutput *output)
 {
-    if (m_outputs.removeOne(output)) {
+    if (m_virtualOutputs.removeOne(output)) {
         Q_EMIT outputRemoved(output);
         delete output;
     }
@@ -655,9 +654,14 @@ void DrmGpu::handleLeaseRevoked(KWaylandServer::DrmLeaseV1Interface *lease)
     drmModeRevokeLease(m_fd, lease->lesseeId());
 }
 
-QVector<DrmAbstractOutput *> DrmGpu::outputs() const
+QVector<DrmVirtualOutput *> DrmGpu::virtualOutputs() const
 {
-    return m_outputs;
+    return m_virtualOutputs;
+}
+
+QVector<DrmOutput *> DrmGpu::drmOutputs() const
+{
+    return m_drmOutputs;
 }
 
 int DrmGpu::fd() const
@@ -782,10 +786,8 @@ void DrmGpu::releaseBuffers()
         pipeline->primaryLayer()->releaseBuffers();
         pipeline->cursorLayer()->releaseBuffers();
     }
-    for (const auto &output : qAsConst(m_outputs)) {
-        if (const auto virtualOutput = qobject_cast<DrmVirtualOutput *>(output)) {
-            virtualOutput->outputLayer()->releaseBuffers();
-        }
+    for (const auto &output : qAsConst(m_virtualOutputs)) {
+        output->outputLayer()->releaseBuffers();
     }
 }
 
@@ -795,10 +797,8 @@ void DrmGpu::recreateSurfaces()
         pipeline->setLayers(m_platform->renderBackend()->createPrimaryLayer(pipeline), m_platform->renderBackend()->createCursorLayer(pipeline));
         pipeline->applyPendingChanges();
     }
-    for (const auto &output : qAsConst(m_outputs)) {
-        if (const auto virtualOutput = qobject_cast<DrmVirtualOutput *>(output)) {
-            virtualOutput->recreateSurface();
-        }
+    for (const auto &output : qAsConst(m_virtualOutputs)) {
+        output->recreateSurface();
     }
     for (const auto &output : qAsConst(m_drmOutputs)) {
         output->updateCursor();

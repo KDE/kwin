@@ -333,7 +333,7 @@ void DrmBackend::updateOutputs()
     for (auto it = m_gpus.begin(); it < m_gpus.end();) {
         auto gpu = it->get();
         gpu->updateOutputs();
-        if (gpu->outputs().isEmpty() && gpu != primaryGpu()) {
+        if (gpu->drmOutputs().isEmpty() && gpu != primaryGpu()) {
             qCDebug(KWIN_DRM) << "removing unused GPU" << gpu->devNode();
             it = m_gpus.erase(it);
         } else {
@@ -473,11 +473,9 @@ bool DrmBackend::applyOutputChanges(const OutputConfiguration &config)
     QVector<DrmOutput *> toBeEnabled;
     QVector<DrmOutput *> toBeDisabled;
     for (const auto &gpu : qAsConst(m_gpus)) {
-        const auto &outputs = gpu->outputs();
-        for (const auto &o : outputs) {
-            DrmOutput *output = qobject_cast<DrmOutput *>(o);
-            if (!output || output->isNonDesktop()) {
-                // virtual and non-desktop outputs don't need testing
+        const auto &outputs = gpu->drmOutputs();
+        for (const auto &output : outputs) {
+            if (output->isNonDesktop()) {
                 continue;
             }
             output->queueChanges(config);
@@ -506,8 +504,9 @@ bool DrmBackend::applyOutputChanges(const OutputConfiguration &config)
         output->applyQueuedChanges(config);
     }
     // only then apply changes to the virtual outputs
-    for (const auto &output : qAsConst(m_outputs)) {
-        if (!qobject_cast<DrmOutput *>(output)) {
+    for (const auto &gpu : qAsConst(m_gpus)) {
+        const auto &outputs = gpu->virtualOutputs();
+        for (const auto &output : outputs) {
             output->applyChanges(config);
         }
     }
