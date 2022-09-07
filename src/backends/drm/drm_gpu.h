@@ -67,7 +67,8 @@ public:
     clockid_t presentationClock() const;
     QSize cursorSize() const;
 
-    QVector<DrmAbstractOutput *> outputs() const;
+    QVector<DrmVirtualOutput *> virtualOutputs() const;
+    QVector<DrmOutput *> outputs() const;
     const QVector<DrmPipeline *> pipelines() const;
 
     void setEglDisplay(EGLDisplay display);
@@ -123,7 +124,7 @@ private:
     QVector<DrmPipeline *> m_pipelines;
 
     QVector<DrmOutput *> m_drmOutputs;
-    QVector<DrmAbstractOutput *> m_outputs;
+    QVector<DrmVirtualOutput *> m_virtualOutputs;
     KWaylandServer::DrmLeaseDeviceV1Interface *m_leaseDevice = nullptr;
 
     QSocketNotifier *m_socketNotifier = nullptr;
