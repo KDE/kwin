@@ -1585,7 +1585,13 @@ void Window::blockGeometryUpdates(bool block)
 
 void Window::maximize(MaximizeMode m)
 {
+    setTile(nullptr);
     setMaximize(m & MaximizeVertical, m & MaximizeHorizontal);
+    if (m == MaximizeRestore) {
+        setTile(nullptr);
+    } else {
+        setTile(output()->customTiling()->maximizeTile(frameGeometry().center()));
+    }
 }
 
 void Window::setMaximize(bool vertically, bool horizontally)
@@ -1661,7 +1667,10 @@ bool Window::startInteractiveMoveResize()
     }
 
     if (m_tile && !m_tile->supportsResizeGravity(interactiveMoveResizeGravity())) {
-        setQuickTileMode(QuickTileFlag::None);
+        const auto maxMode = maximizeMode();
+        if (maxMode == MaximizeRestore || maxMode == MaximizeFull) {
+            setQuickTileMode(QuickTileFlag::None);
+        }
     }
 
     updateInitialMoveResizeGeometry();
@@ -2048,7 +2057,7 @@ void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
         calculateMoveResizeGeom();
 
         if (currentMoveResizeGeom.size() != nextMoveResizeGeom.size()) {
-            if (m_tile) {
+            if (m_tile && maximizeMode() == MaximizeRestore) {
                 m_tile->setGeometryFromWindow(nextMoveResizeGeom);
             }
         }
@@ -2995,7 +3004,7 @@ void Window::endInteractiveMoveResize()
         setInteractiveMoveResizeGravity(mouseGravity());
     }
     updateCursor();
-    if (m_tile) {
+    if (m_tile && maximizeMode() != MaximizeRestore) {
         moveResize(m_tile->windowGeometry());
     }
 }
@@ -3928,7 +3937,7 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
         }
         checkWorkspacePosition(); // Just in case it's a different screen
     } else if (mode == QuickTileMode(QuickTileFlag::Custom)) {
-        // If was neede to be moved between outputs is already done
+        // If was needed to be moved between outputs, is already done
         Tile *tile = output()->customTiling()->bestTileForPosition(keyboard ? moveResizeGeometry().center() : Cursors::self()->mouse()->pos());
         setTile(tile);
     } else {
@@ -3942,9 +3951,29 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
 
 void Window::setTile(Tile *tile)
 {
+    const auto windowGeometryForTile = [this]() {
+        if (!m_tile) {
+            return frameGeometry();
+        }
+        const auto maxMode = maximizeMode();
+        const auto maxGeom = m_tile->maximizedWindowGeometry();
+
+        switch (maxMode) {
+        case MaximizeFull:
+            return maxGeom;
+        case MaximizeVertical:
+            return QRectF(frameGeometry().x(), maxGeom.y(), frameGeometry().width(), maxGeom.height());
+        case MaximizeHorizontal:
+            return QRectF(maxGeom.x(), frameGeometry().y(), maxGeom.width(), frameGeometry().height());
+        case MaximizeRestore:
+        default:
+            return m_tile->windowGeometry();
+        }
+    };
+
     if (m_tile == tile) {
         if (tile) {
-            moveResize(tile->windowGeometry());
+            moveResize(windowGeometryForTile());
         }
         return;
     }
@@ -3960,11 +3989,11 @@ void Window::setTile(Tile *tile)
         return;
     }
 
-    moveResize(tile->windowGeometry());
+    moveResize(windowGeometryForTile());
 
-    connect(tile, &Tile::windowGeometryChanged, this, [this]() {
+    connect(tile, &Tile::windowGeometryChanged, this, [this, windowGeometryForTile]() {
         if (!isInteractiveMoveResize()) {
-            moveResize(m_tile->windowGeometry());
+            moveResize(windowGeometryForTile());
         }
     });
 

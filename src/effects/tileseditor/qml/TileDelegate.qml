@@ -132,6 +132,15 @@ Item {
                 onClicked: tile.split(KWinComponents.Tile.Floating)
             }
             PlasmaComponents.Button {
+                Layout.fillWidth: true
+                visible: tile.layoutDirection !== KWinComponents.Tile.Floating
+                icon.name: "window-maximize"
+                text: i18n("Maximize Area")
+                checkable: true
+                checked: tile.isMaximizeArea
+                onCheckedChanged: tile.isMaximizeArea = checked;
+            }
+            PlasmaComponents.Button {
                 id: deleteButton
                 visible: tile.canBeRemoved
                 Layout.fillWidth: true

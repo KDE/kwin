@@ -157,6 +157,20 @@ void Tile::setPadding(const QMarginsF &padding)
     Q_EMIT absoluteGeometryChanged();
 }
 
+void Tile::setMaximizeArea(bool isMaximize)
+{
+    if (isMaximize == m_isMaximizeArea) {
+        return;
+    }
+    m_isMaximizeArea = isMaximize;
+    Q_EMIT isMaximizeAreaChanged(isMaximize);
+}
+
+bool Tile::isMaximizeArea() const
+{
+    return m_isMaximizeArea;
+}
+
 void Tile::resizeByPixels(qreal delta, Qt::Edge edge)
 {
     if (!m_parentTile) {

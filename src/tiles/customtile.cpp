@@ -33,6 +33,7 @@ CustomTile::CustomTile(TileManager *tiling, CustomTile *parentItem)
 {
     m_geometryLock = true;
     connect(this, &CustomTile::layoutModified, parentItem, &CustomTile::layoutModified);
+    connect(this, &CustomTile::isMaximizeAreaChanged, parentItem, &CustomTile::layoutModified);
 }
 
 CustomTile::~CustomTile()
