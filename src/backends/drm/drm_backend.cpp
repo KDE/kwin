@@ -474,10 +474,8 @@ bool DrmBackend::applyOutputChanges(const OutputConfiguration &config)
     QVector<DrmOutput *> toBeDisabled;
     for (const auto &gpu : qAsConst(m_gpus)) {
         const auto &outputs = gpu->outputs();
-        for (const auto &o : outputs) {
-            DrmOutput *output = qobject_cast<DrmOutput *>(o);
-            if (!output || output->isNonDesktop()) {
-                // virtual and non-desktop outputs don't need testing
+        for (const auto &output : outputs) {
+            if (output->isNonDesktop()) {
                 continue;
             }
             output->queueChanges(config);
@@ -506,8 +504,9 @@ bool DrmBackend::applyOutputChanges(const OutputConfiguration &config)
         output->applyQueuedChanges(config);
     }
     // only then apply changes to the virtual outputs
-    for (const auto &output : qAsConst(m_outputs)) {
-        if (!qobject_cast<DrmOutput *>(output)) {
+    for (const auto &gpu : qAsConst(m_gpus)) {
+        const auto &outputs = gpu->virtualOutputs();
+        for (const auto &output : outputs) {
             output->applyChanges(config);
         }
     }
