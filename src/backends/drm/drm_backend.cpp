@@ -254,7 +254,7 @@ void DrmBackend::handleUdevEvent()
                     QCoreApplication::exit(1);
                     return;
                 } else {
-                    removeGpu(gpu);
+                    gpu->setRemoved();
                     updateOutputs();
                 }
             }
@@ -303,17 +303,6 @@ DrmGpu *DrmBackend::addGpu(const QString &fileName)
     return gpu;
 }
 
-void DrmBackend::removeGpu(DrmGpu *gpu)
-{
-    auto it = std::find_if(m_gpus.begin(), m_gpus.end(), [gpu](const auto &g) {
-        return g.get() == gpu;
-    });
-    if (it != m_gpus.end()) {
-        qCDebug(KWIN_DRM) << "Removing gpu" << gpu->devNode();
-        m_gpus.erase(it);
-    }
-}
-
 void DrmBackend::addOutput(DrmAbstractOutput *o)
 {
     m_outputs.append(o);
@@ -330,18 +319,25 @@ void DrmBackend::removeOutput(DrmAbstractOutput *o)
 
 void DrmBackend::updateOutputs()
 {
-    for (auto it = m_gpus.begin(); it < m_gpus.end();) {
-        auto gpu = it->get();
-        gpu->updateOutputs();
-        if (gpu->outputs().isEmpty() && gpu != primaryGpu()) {
-            qCDebug(KWIN_DRM) << "removing unused GPU" << gpu->devNode();
+    for (auto it = m_gpus.begin(); it != m_gpus.end(); ++it) {
+        if ((*it)->isRemoved()) {
+            (*it)->removeOutputs();
+        } else {
+            (*it)->updateOutputs();
+        }
+    }
+
+    Q_EMIT screensQueried();
+
+    for (auto it = m_gpus.begin(); it != m_gpus.end();) {
+        DrmGpu *gpu = it->get();
+        if (gpu->isRemoved() || (gpu != primaryGpu() && gpu->outputs().isEmpty())) {
+            qCDebug(KWIN_DRM) << "Removing GPU" << (*it)->devNode();
             it = m_gpus.erase(it);
         } else {
             it++;
         }
     }
-
-    Q_EMIT screensQueried();
 }
 
 std::unique_ptr<InputBackend> DrmBackend::createInputBackend()

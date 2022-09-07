@@ -93,7 +93,6 @@ private:
     void reactivate();
     void deactivate();
     void handleUdevEvent();
-    void removeGpu(DrmGpu *gpu);
     DrmGpu *addGpu(const QString &fileName);
 
     std::unique_ptr<Udev> m_udev;

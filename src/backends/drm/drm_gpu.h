@@ -54,6 +54,9 @@ public:
     dev_t deviceId() const;
     QString devNode() const;
 
+    bool isRemoved() const;
+    void setRemoved();
+
     bool atomicModeSetting() const;
     bool addFB2ModifiersSupported() const;
     bool isNVidia() const;
@@ -74,6 +77,7 @@ public:
     void setEglDisplay(EGLDisplay display);
 
     bool updateOutputs();
+    void removeOutputs();
 
     DrmVirtualOutput *createVirtualOutput(const QString &name, const QSize &size, double scale);
     void removeVirtualOutput(DrmVirtualOutput *output);
@@ -112,6 +116,7 @@ private:
     bool m_addFB2ModifiersSupported = false;
     bool m_isNVidia;
     bool m_isVirtualMachine;
+    bool m_isRemoved = false;
     clockid_t m_presentationClock;
     gbm_device *m_gbmDevice;
     EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
