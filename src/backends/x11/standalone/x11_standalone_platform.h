@@ -78,7 +78,7 @@ private:
      */
     static bool hasGlx();
 
-    X11Output *findX11Output(const QString &name) const;
+    std::shared_ptr<X11Output> findX11Output(const QString &name) const;
     template<typename T>
     void doUpdateOutputs();
     void updateRefreshRate();
@@ -93,7 +93,7 @@ private:
     std::unique_ptr<X11EventFilter> m_screenEdgesFilter;
     std::unique_ptr<X11EventFilter> m_randrEventFilter;
     std::unique_ptr<RenderLoop> m_renderLoop;
-    QVector<Output *> m_outputs;
+    QVector<std::shared_ptr<Output>> m_outputs;
 };
 
 }

@@ -61,7 +61,7 @@ void Screens::updateSize()
 
 Output *Screens::findOutput(int screen) const
 {
-    return workspace()->outputs().value(screen);
+    return workspace()->outputs().value(screen).get();
 }
 
 } // namespace

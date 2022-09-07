@@ -259,9 +259,9 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     connect(ws, &Workspace::outputAdded, this, &EffectsHandlerImpl::slotOutputAdded);
     connect(ws, &Workspace::outputRemoved, this, &EffectsHandlerImpl::slotOutputRemoved);
 
-    const QList<Output *> outputs = ws->outputs();
-    for (Output *output : outputs) {
-        slotOutputAdded(output);
+    const auto outputs = ws->outputs();
+    for (const std::shared_ptr<Output> &output : outputs) {
+        slotOutputAdded(output.get());
     }
 
     if (auto inputMethod = kwinApp()->inputMethod()) {

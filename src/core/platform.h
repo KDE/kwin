@@ -40,7 +40,7 @@ class ScreenEdges;
 class OutputConfiguration;
 struct DmaBufParams;
 
-class KWIN_EXPORT Outputs : public QVector<Output *>
+class KWIN_EXPORT Outputs : public QVector<std::shared_ptr<Output>>
 {
 public:
     Outputs(){};
@@ -317,8 +317,8 @@ public:
         m_selectedCompositor = type;
     }
 
-    virtual Output *createVirtualOutput(const QString &name, const QSize &size, qreal scale);
-    virtual void removeVirtualOutput(Output *output);
+    virtual std::shared_ptr<Output> createVirtualOutput(const QString &name, const QSize &size, qreal scale);
+    virtual void removeVirtualOutput(std::shared_ptr<Output> output);
 
     /**
      * Applies the output changes. Default implementation only sets values common between platforms
@@ -335,11 +335,11 @@ Q_SIGNALS:
      * This signal is emitted when an output has been connected. The @a output is not ready
      * for compositing yet.
      */
-    void outputAdded(Output *output);
+    void outputAdded(std::shared_ptr<Output> output);
     /**
      * This signal is emitted when an output has been disconnected.
      */
-    void outputRemoved(Output *output);
+    void outputRemoved(std::shared_ptr<Output> output);
 
 protected:
     explicit Platform(QObject *parent = nullptr);

@@ -88,7 +88,7 @@ public:
     OutputLayer *primaryLayer(Output *output) override;
 
 private:
-    void createOutput(Output *waylandOutput);
+    void createOutput(const std::shared_ptr<Output> &waylandOutput);
     void frameRendered();
 
     WaylandBackend *m_backend;

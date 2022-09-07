@@ -561,7 +561,7 @@ void TestXdgShellWindow::testFullscreenMultipleOutputs()
     // this test verifies that kwin will place fullscreen windows in the outputs its instructed to
 
     const auto outputs = workspace()->outputs();
-    for (KWin::Output *output : outputs) {
+    for (const auto &output : outputs) {
         Test::XdgToplevel::States states;
 
         std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();

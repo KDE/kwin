@@ -107,10 +107,10 @@ bool Platform::applyOutputChanges(const OutputConfiguration &config)
     QVector<Output *> toBeEnabledOutputs;
     QVector<Output *> toBeDisabledOutputs;
     for (const auto &output : availableOutputs) {
-        if (config.constChangeSet(output)->enabled) {
-            toBeEnabledOutputs << output;
+        if (config.constChangeSet(output.get())->enabled) {
+            toBeEnabledOutputs << output.get();
         } else {
-            toBeDisabledOutputs << output;
+            toBeDisabledOutputs << output.get();
         }
     }
     for (const auto &output : toBeEnabledOutputs) {
@@ -125,9 +125,9 @@ bool Platform::applyOutputChanges(const OutputConfiguration &config)
 Output *Platform::findOutput(const QString &name) const
 {
     const auto candidates = outputs();
-    for (Output *candidate : candidates) {
+    for (const std::shared_ptr<Output> &candidate : candidates) {
         if (candidate->name() == name) {
-            return candidate;
+            return candidate.get();
         }
     }
     return nullptr;
@@ -142,7 +142,7 @@ void Platform::setReady(bool ready)
     Q_EMIT readyChanged(m_ready);
 }
 
-Output *Platform::createVirtualOutput(const QString &name, const QSize &size, double scale)
+std::shared_ptr<Output> Platform::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
     Q_UNUSED(name);
     Q_UNUSED(size);
@@ -150,7 +150,7 @@ Output *Platform::createVirtualOutput(const QString &name, const QSize &size, do
     return nullptr;
 }
 
-void Platform::removeVirtualOutput(Output *output)
+void Platform::removeVirtualOutput(std::shared_ptr<Output> output)
 {
     Q_ASSERT(!output);
 }

@@ -273,16 +273,16 @@ void WaylandServer::registerXdgGenericWindow(Window *window)
     qCDebug(KWIN_CORE) << "Received invalid xdg shell window:" << window->surface();
 }
 
-void WaylandServer::handleOutputAdded(Output *output)
+void WaylandServer::handleOutputAdded(std::shared_ptr<Output> output)
 {
     if (!output->isPlaceholder() && !output->isNonDesktop()) {
-        m_waylandOutputDevices.insert(output, new KWaylandServer::OutputDeviceV2Interface(m_display, output));
+        m_waylandOutputDevices.insert(output.get(), new KWaylandServer::OutputDeviceV2Interface(m_display, output.get()));
     }
 }
 
-void WaylandServer::handleOutputRemoved(Output *output)
+void WaylandServer::handleOutputRemoved(std::shared_ptr<Output> output)
 {
-    if (auto outputDevice = m_waylandOutputDevices.take(output)) {
+    if (auto outputDevice = m_waylandOutputDevices.take(output.get())) {
         outputDevice->remove();
     }
 }
@@ -543,15 +543,15 @@ void WaylandServer::initWorkspace()
     });
 
     const auto availableOutputs = kwinApp()->platform()->outputs();
-    for (Output *output : availableOutputs) {
+    for (const std::shared_ptr<Output> &output : availableOutputs) {
         handleOutputAdded(output);
     }
     connect(kwinApp()->platform(), &Platform::outputAdded, this, &WaylandServer::handleOutputAdded);
     connect(kwinApp()->platform(), &Platform::outputRemoved, this, &WaylandServer::handleOutputRemoved);
 
     const auto outputs = workspace()->outputs();
-    for (Output *output : outputs) {
-        handleOutputEnabled(output);
+    for (const auto &output : outputs) {
+        handleOutputEnabled(output.get());
     }
     connect(workspace(), &Workspace::outputAdded, this, &WaylandServer::handleOutputEnabled);
     connect(workspace(), &Workspace::outputRemoved, this, &WaylandServer::handleOutputDisabled);

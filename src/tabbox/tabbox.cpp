@@ -24,6 +24,7 @@
 #include "activities.h"
 #endif
 #include "composite.h"
+#include "core/output.h"
 #include "effects.h"
 #include "focuschain.h"
 #include "input.h"
@@ -81,7 +82,7 @@ TabBoxHandlerImpl::~TabBoxHandlerImpl()
 
 int TabBoxHandlerImpl::activeScreen() const
 {
-    return workspace()->outputs().indexOf(workspace()->activeOutput());
+    return workspace()->outputs().indexOf(workspace()->activeOutput()->shared_from_this());
 }
 
 int TabBoxHandlerImpl::currentDesktop() const

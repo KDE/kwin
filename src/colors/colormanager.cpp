@@ -24,9 +24,9 @@ public:
 ColorManager::ColorManager()
     : d(std::make_unique<ColorManagerPrivate>())
 {
-    const QList<Output *> outputs = workspace()->outputs();
-    for (Output *output : outputs) {
-        handleOutputAdded(output);
+    const auto outputs = workspace()->outputs();
+    for (const std::shared_ptr<Output> &output : outputs) {
+        handleOutputAdded(output.get());
     }
 
     connect(workspace(), &Workspace::outputAdded, this, &ColorManager::handleOutputAdded);

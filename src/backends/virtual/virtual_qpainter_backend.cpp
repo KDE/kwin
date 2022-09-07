@@ -51,21 +51,21 @@ VirtualQPainterBackend::VirtualQPainterBackend(VirtualBackend *backend)
     connect(backend, &VirtualBackend::outputRemoved, this, &VirtualQPainterBackend::removeOutput);
 
     const auto outputs = backend->outputs();
-    for (Output *output : outputs) {
+    for (const auto &output : outputs) {
         addOutput(output);
     }
 }
 
 VirtualQPainterBackend::~VirtualQPainterBackend() = default;
 
-void VirtualQPainterBackend::addOutput(Output *output)
+void VirtualQPainterBackend::addOutput(const std::shared_ptr<Output> &output)
 {
-    m_outputs[output] = std::make_unique<VirtualQPainterLayer>(output);
+    m_outputs[output.get()] = std::make_unique<VirtualQPainterLayer>(output.get());
 }
 
-void VirtualQPainterBackend::removeOutput(Output *output)
+void VirtualQPainterBackend::removeOutput(const std::shared_ptr<Output> &output)
 {
-    m_outputs.erase(output);
+    m_outputs.erase(output.get());
 }
 
 void VirtualQPainterBackend::present(Output *output)

@@ -67,16 +67,16 @@ public:
     clockid_t presentationClock() const;
     QSize cursorSize() const;
 
-    QVector<DrmVirtualOutput *> virtualOutputs() const;
-    QVector<DrmOutput *> outputs() const;
+    QVector<std::shared_ptr<DrmVirtualOutput>> virtualOutputs() const;
+    QVector<std::shared_ptr<DrmOutput>> outputs() const;
     const QVector<DrmPipeline *> pipelines() const;
 
     void setEglDisplay(EGLDisplay display);
 
     bool updateOutputs();
 
-    DrmVirtualOutput *createVirtualOutput(const QString &name, const QSize &size, double scale);
-    void removeVirtualOutput(DrmVirtualOutput *output);
+    std::shared_ptr<DrmVirtualOutput> createVirtualOutput(const QString &name, const QSize &size, double scale);
+    void removeVirtualOutput(std::shared_ptr<DrmVirtualOutput> output);
 
     DrmPipeline::Error testPendingConfiguration();
     bool needsModeset() const;
@@ -86,13 +86,13 @@ public:
     void recreateSurfaces();
 
 Q_SIGNALS:
-    void outputAdded(DrmAbstractOutput *output);
-    void outputRemoved(DrmAbstractOutput *output);
+    void outputAdded(std::shared_ptr<DrmAbstractOutput> output);
+    void outputRemoved(std::shared_ptr<DrmAbstractOutput> output);
 
 private:
     void dispatchEvents();
-    DrmOutput *findOutput(quint32 connector);
-    void removeOutput(DrmOutput *output);
+    std::shared_ptr<DrmOutput> findOutput(quint32 connector);
+    void removeOutput(std::shared_ptr<DrmOutput> output);
     void initDrmResources();
     void waitIdle();
 
@@ -123,8 +123,8 @@ private:
     QVector<DrmObject *> m_allObjects;
     QVector<DrmPipeline *> m_pipelines;
 
-    QVector<DrmOutput *> m_drmOutputs;
-    QVector<DrmVirtualOutput *> m_virtualOutputs;
+    QVector<std::shared_ptr<DrmOutput>> m_drmOutputs;
+    QVector<std::shared_ptr<DrmVirtualOutput>> m_virtualOutputs;
     KWaylandServer::DrmLeaseDeviceV1Interface *m_leaseDevice = nullptr;
 
     QSocketNotifier *m_socketNotifier = nullptr;

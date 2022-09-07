@@ -150,13 +150,13 @@ WaylandQPainterBackend::WaylandQPainterBackend(Wayland::WaylandBackend *b)
 {
 
     const auto waylandOutputs = m_backend->waylandOutputs();
-    for (auto *output : waylandOutputs) {
+    for (const auto &output : waylandOutputs) {
         createOutput(output);
     }
     connect(m_backend, &WaylandBackend::outputAdded, this, &WaylandQPainterBackend::createOutput);
-    connect(m_backend, &WaylandBackend::outputRemoved, this, [this](Output *waylandOutput) {
+    connect(m_backend, &WaylandBackend::outputRemoved, this, [this](const std::shared_ptr<Output> &waylandOutput) {
         auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [waylandOutput](const auto &output) {
-            return output->m_waylandOutput == waylandOutput;
+            return output->m_waylandOutput == waylandOutput.get();
         });
         if (it == m_outputs.end()) {
             return;
@@ -169,11 +169,11 @@ WaylandQPainterBackend::~WaylandQPainterBackend()
 {
 }
 
-void WaylandQPainterBackend::createOutput(Output *waylandOutput)
+void WaylandQPainterBackend::createOutput(const std::shared_ptr<Output> &waylandOutput)
 {
-    const auto output = std::make_shared<WaylandQPainterOutput>(static_cast<WaylandOutput *>(waylandOutput));
+    const auto output = std::make_shared<WaylandQPainterOutput>(static_cast<WaylandOutput *>(waylandOutput.get()));
     output->init(m_backend->shmPool());
-    m_outputs.insert(waylandOutput, output);
+    m_outputs.insert(waylandOutput.get(), output);
 }
 
 void WaylandQPainterBackend::present(Output *output)

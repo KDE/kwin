@@ -110,7 +110,7 @@ void DrmBackend::createDpmsFilter()
 void DrmBackend::turnOutputsOn()
 {
     m_dpmsFilter.reset();
-    for (Output *output : std::as_const(m_outputs)) {
+    for (const std::shared_ptr<DrmAbstractOutput> &output : std::as_const(m_outputs)) {
         if (output->isEnabled()) {
             output->setDpmsMode(Output::DpmsMode::On);
         }
@@ -123,7 +123,7 @@ void DrmBackend::checkOutputsAreOn()
         // already disabled, all outputs are on
         return;
     }
-    for (Output *output : std::as_const(m_outputs)) {
+    for (const std::shared_ptr<DrmAbstractOutput> &output : std::as_const(m_outputs)) {
         if (output->isEnabled() && output->dpmsMode() != Output::DpmsMode::On) {
             // dpms still disabled, need to keep the filter
             return;
@@ -314,14 +314,14 @@ void DrmBackend::removeGpu(DrmGpu *gpu)
     }
 }
 
-void DrmBackend::addOutput(DrmAbstractOutput *o)
+void DrmBackend::addOutput(std::shared_ptr<DrmAbstractOutput> o)
 {
     m_outputs.append(o);
     Q_EMIT outputAdded(o);
     o->updateEnabled(true);
 }
 
-void DrmBackend::removeOutput(DrmAbstractOutput *o)
+void DrmBackend::removeOutput(std::shared_ptr<DrmAbstractOutput> o)
 {
     o->updateEnabled(false);
     m_outputs.removeOne(o);
@@ -392,16 +392,16 @@ QString DrmBackend::supportInformation() const
     return supportInfo;
 }
 
-Output *DrmBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
+std::shared_ptr<Output> DrmBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
     auto output = primaryGpu()->createVirtualOutput(name, size * scale, scale);
     Q_EMIT screensQueried();
     return output;
 }
 
-void DrmBackend::removeVirtualOutput(Output *output)
+void DrmBackend::removeVirtualOutput(std::shared_ptr<Output> output)
 {
-    auto virtualOutput = qobject_cast<DrmVirtualOutput *>(output);
+    auto virtualOutput = std::dynamic_pointer_cast<DrmVirtualOutput>(output);
     if (!virtualOutput) {
         return;
     }
@@ -479,10 +479,10 @@ bool DrmBackend::applyOutputChanges(const OutputConfiguration &config)
                 continue;
             }
             output->queueChanges(config);
-            if (config.constChangeSet(output)->enabled) {
-                toBeEnabled << output;
+            if (config.constChangeSet(output.get())->enabled) {
+                toBeEnabled << output.get();
             } else {
-                toBeDisabled << output;
+                toBeDisabled << output.get();
             }
         }
         if (gpu->testPendingConfiguration() != DrmPipeline::Error::None) {

@@ -51,7 +51,7 @@ bool VirtualBackend::initialize()
      * TODO: rewrite all tests to explicitly set the outputs.
      */
     if (m_outputs.isEmpty()) {
-        VirtualOutput *dummyOutput = new VirtualOutput(this);
+        auto dummyOutput = std::make_shared<VirtualOutput>(this);
         dummyOutput->init(QPoint(0, 0), initialWindowSize());
         m_outputs << dummyOutput;
         Q_EMIT outputAdded(dummyOutput);
@@ -91,11 +91,11 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
     Q_ASSERT(geometries.size() == 0 || geometries.size() == count);
     Q_ASSERT(scales.size() == 0 || scales.size() == count);
 
-    const QVector<VirtualOutput *> removed = m_outputs;
+    const QVector<std::shared_ptr<VirtualOutput>> removed = m_outputs;
 
     int sumWidth = 0;
     for (int i = 0; i < count; i++) {
-        VirtualOutput *vo = new VirtualOutput(this);
+        auto vo = std::make_shared<VirtualOutput>(this);
         if (geometries.size()) {
             const QRect geo = geometries.at(i);
             vo->init(geo.topLeft(), geo.size());
@@ -111,25 +111,11 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
         vo->updateEnabled(true);
     }
 
-    for (VirtualOutput *output : removed) {
+    for (const std::shared_ptr<VirtualOutput> &output : removed) {
         output->updateEnabled(false);
         m_outputs.removeOne(output);
         Q_EMIT outputRemoved(output);
-        delete output;
     }
-
-    Q_EMIT screensQueried();
-}
-
-void VirtualBackend::removeOutput(Output *output)
-{
-    VirtualOutput *virtualOutput = static_cast<VirtualOutput *>(output);
-    virtualOutput->updateEnabled(false);
-
-    m_outputs.removeOne(virtualOutput);
-    Q_EMIT outputRemoved(virtualOutput);
-
-    delete virtualOutput;
 
     Q_EMIT screensQueried();
 }

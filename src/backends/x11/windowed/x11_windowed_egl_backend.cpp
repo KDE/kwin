@@ -97,11 +97,11 @@ bool X11WindowedEglBackend::createSurfaces()
 {
     const auto &outputs = m_backend->outputs();
     for (const auto &output : outputs) {
-        EGLSurface s = createSurface(m_backend->windowForScreen(output));
+        EGLSurface s = createSurface(m_backend->windowForScreen(output.get()));
         if (s == EGL_NO_SURFACE) {
             return false;
         }
-        m_outputs[output] = std::make_shared<X11WindowedEglOutput>(this, static_cast<X11WindowedOutput *>(output), s);
+        m_outputs[output.get()] = std::make_shared<X11WindowedEglOutput>(this, static_cast<X11WindowedOutput *>(output.get()), s);
     }
     if (m_outputs.isEmpty()) {
         return false;

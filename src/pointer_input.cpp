@@ -54,7 +54,7 @@ namespace KWin
 static bool screenContainsPos(const QPointF &pos)
 {
     const auto outputs = workspace()->outputs();
-    for (const Output *output : outputs) {
+    for (const std::shared_ptr<Output> &output : outputs) {
         if (output->geometry().contains(pos.toPoint())) {
             return true;
         }

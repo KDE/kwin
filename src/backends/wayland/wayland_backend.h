@@ -290,16 +290,16 @@ public:
     WaylandOutput *getOutputAt(const QPointF &globalPosition);
     WaylandOutput *findOutput(KWayland::Client::Surface *nativeSurface) const;
     Outputs outputs() const override;
-    QVector<WaylandOutput *> waylandOutputs() const
+    QVector<std::shared_ptr<WaylandOutput>> waylandOutputs() const
     {
         return m_outputs;
     }
-    void addConfiguredOutput(WaylandOutput *output);
+    void addConfiguredOutput(std::shared_ptr<WaylandOutput> output);
     void createDpmsFilter();
     void clearDpmsFilter();
 
-    Output *createVirtualOutput(const QString &name, const QSize &size, double scale) override;
-    void removeVirtualOutput(Output *output) override;
+    std::shared_ptr<Output> createVirtualOutput(const QString &name, const QSize &size, double scale) override;
+    void removeVirtualOutput(std::shared_ptr<Output> output) override;
 
     std::optional<DmaBufParams> testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers) override;
     std::shared_ptr<DmaBufTexture> createDmaBufTexture(const QSize &size, quint32 format, uint64_t modifier) override;
@@ -327,7 +327,7 @@ private:
     void createOutputs();
     void destroyOutputs();
 
-    WaylandOutput *createOutput(const QString &name, const QSize &size);
+    std::shared_ptr<WaylandOutput> createOutput(const QString &name, const QSize &size);
 
     wl_display *m_display;
     KWayland::Client::EventQueue *m_eventQueue;
@@ -345,7 +345,7 @@ private:
     WaylandEglBackend *m_eglBackend = nullptr;
 
     QThread *m_connectionThread;
-    QVector<WaylandOutput *> m_outputs;
+    QVector<std::shared_ptr<WaylandOutput>> m_outputs;
     int m_pendingInitialOutputs = 0;
 
     WaylandCursor *m_waylandCursor = nullptr;

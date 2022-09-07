@@ -79,9 +79,9 @@ void RegionScreenCastSource::render(GLFramebuffer *target)
         m_renderedTexture.reset(new GLTexture(hasAlphaChannel() ? GL_RGBA8 : GL_RGB8, textureSize()));
         m_target.reset(new GLFramebuffer(m_renderedTexture.get()));
         const auto allOutputs = workspace()->outputs();
-        for (auto output : allOutputs) {
+        for (const auto &output : allOutputs) {
             if (output->geometry().intersects(m_region)) {
-                updateOutput(output);
+                updateOutput(output.get());
             }
         }
     }

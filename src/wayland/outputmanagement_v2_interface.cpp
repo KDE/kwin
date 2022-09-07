@@ -219,7 +219,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
 
     const auto allOutputs = kwinApp()->platform()->outputs();
     const bool allDisabled = !std::any_of(allOutputs.begin(), allOutputs.end(), [this](const auto &output) {
-        return config.constChangeSet(output)->enabled;
+        return config.constChangeSet(output.get())->enabled;
     });
     if (allDisabled) {
         qCWarning(KWIN_CORE) << "Disabling all outputs through configuration changes is not allowed";

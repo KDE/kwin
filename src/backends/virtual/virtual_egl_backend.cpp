@@ -121,7 +121,7 @@ void VirtualEglBackend::init()
     initWayland();
 
     const auto outputs = m_backend->outputs();
-    for (Output *output : outputs) {
+    for (const auto &output : outputs) {
         addOutput(output);
     }
 
@@ -140,16 +140,16 @@ bool VirtualEglBackend::initRenderingContext()
     return makeCurrent();
 }
 
-void VirtualEglBackend::addOutput(Output *output)
+void VirtualEglBackend::addOutput(const std::shared_ptr<Output> &output)
 {
     makeCurrent();
-    m_outputs[output] = std::make_unique<VirtualEglLayer>(output, this);
+    m_outputs[output.get()] = std::make_unique<VirtualEglLayer>(output.get(), this);
 }
 
-void VirtualEglBackend::removeOutput(Output *output)
+void VirtualEglBackend::removeOutput(const std::shared_ptr<Output> &output)
 {
     makeCurrent();
-    m_outputs.erase(output);
+    m_outputs.erase(output.get());
 }
 
 bool VirtualEglBackend::initBufferConfigs()

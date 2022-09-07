@@ -39,9 +39,9 @@ void ColordIntegration::initialize()
                                         QStringLiteral("/org/freedesktop/ColorManager"),
                                         QDBusConnection::systemBus(), this);
 
-    const QList<Output *> outputs = workspace()->outputs();
-    for (Output *output : outputs) {
-        handleOutputAdded(output);
+    const auto outputs = workspace()->outputs();
+    for (const std::shared_ptr<Output> &output : outputs) {
+        handleOutputAdded(output.get());
     }
 
     connect(workspace(), &Workspace::outputAdded, this, &ColordIntegration::handleOutputAdded);
@@ -50,9 +50,9 @@ void ColordIntegration::initialize()
 
 void ColordIntegration::teardown()
 {
-    const QList<Output *> outputs = workspace()->outputs();
-    for (Output *output : outputs) {
-        handleOutputRemoved(output);
+    const auto outputs = workspace()->outputs();
+    for (const std::shared_ptr<Output> &output : outputs) {
+        handleOutputRemoved(output.get());
     }
 
     delete m_colordInterface;

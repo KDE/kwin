@@ -197,10 +197,10 @@ void QuickTilingTest::testQuickTiling()
     QCOMPARE(window->frameGeometry(), expectedGeometry);
 
     // send window to other screen
-    QList<Output *> outputs = workspace()->outputs();
-    QCOMPARE(window->output(), outputs[0]);
-    window->sendToOutput(outputs[1]);
-    QCOMPARE(window->output(), outputs[1]);
+    const auto outputs = workspace()->outputs();
+    QCOMPARE(window->output(), outputs[0].get());
+    window->sendToOutput(outputs[1].get());
+    QCOMPARE(window->output(), outputs[1].get());
     // quick tile should not be changed
     QCOMPARE(window->quickTileMode(), mode);
     QTEST(window->frameGeometry(), "secondScreen");
@@ -613,10 +613,10 @@ void QuickTilingTest::testX11QuickTiling()
 
     // quick tile to same edge again should also act like send to screen
     const auto outputs = workspace()->outputs();
-    QCOMPARE(window->output(), outputs[0]);
+    QCOMPARE(window->output(), outputs[0].get());
     window->setQuickTileMode(mode, true);
     QFETCH(int, screenId);
-    QCOMPARE(window->output(), outputs[screenId]);
+    QCOMPARE(window->output(), outputs[screenId].get());
     QTEST(window->quickTileMode(), "modeAfterToggle");
     QCOMPARE(window->geometryRestore(), origGeo);
 

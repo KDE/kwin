@@ -220,9 +220,9 @@ WaylandEglBackend::WaylandEglBackend(WaylandBackend *b)
     setIsDirectRendering(true);
 
     connect(m_backend, &WaylandBackend::outputAdded, this, &WaylandEglBackend::createEglWaylandOutput);
-    connect(m_backend, &WaylandBackend::outputRemoved, this, [this](Output *output) {
+    connect(m_backend, &WaylandBackend::outputRemoved, this, [this](const std::shared_ptr<Output> &output) {
         auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [output](const auto &o) {
-            return o->m_waylandOutput == output;
+            return o->m_waylandOutput == output.get();
         });
         if (it == m_outputs.end()) {
             return;
@@ -243,13 +243,13 @@ void WaylandEglBackend::cleanupSurfaces()
     m_outputs.clear();
 }
 
-bool WaylandEglBackend::createEglWaylandOutput(Output *waylandOutput)
+bool WaylandEglBackend::createEglWaylandOutput(const std::shared_ptr<Output> &waylandOutput)
 {
-    const auto output = std::make_shared<WaylandEglOutput>(static_cast<WaylandOutput *>(waylandOutput), this);
+    const auto output = std::make_shared<WaylandEglOutput>(static_cast<WaylandOutput *>(waylandOutput.get()), this);
     if (!output->init()) {
         return false;
     }
-    m_outputs.insert(waylandOutput, output);
+    m_outputs.insert(waylandOutput.get(), output);
     return true;
 }
 
@@ -312,7 +312,7 @@ bool WaylandEglBackend::initRenderingContext()
         return false;
     }
 
-    for (auto *out : waylandOutputs) {
+    for (const auto &out : waylandOutputs) {
         if (!createEglWaylandOutput(out)) {
             return false;
         }

@@ -169,7 +169,7 @@ private:
     int m_majorVersion = 0;
     int m_minorVersion = 0;
 
-    QVector<X11WindowedOutput *> m_outputs;
+    QVector<std::shared_ptr<X11WindowedOutput>> m_outputs;
 };
 
 } // namespace KWin

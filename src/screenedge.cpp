@@ -568,7 +568,7 @@ void Edge::setGeometry(const QRect &geometry)
     doGeometryUpdate();
 
     if (isScreenEdge()) {
-        const Output *output = workspace()->outputAt(m_geometry.center());
+        const auto &output = workspace()->outputAt(m_geometry.center());
         m_gesture->setStartGeometry(m_geometry);
         m_gesture->setMinimumDelta(QSizeF(MINIMUM_DELTA, MINIMUM_DELTA) / output->scale());
     }
@@ -957,7 +957,7 @@ static bool isLeftScreen(const QRect &screen, const QRect &fullArea)
         return true;
     }
     // If any other screen has a right edge against our left edge, then this screen is not a left screen
-    for (const Output *output : outputs) {
+    for (const auto &output : outputs) {
         const QRect otherGeo = output->geometry();
         if (otherGeo == screen) {
             // that's our screen to test
@@ -984,7 +984,7 @@ static bool isRightScreen(const QRect &screen, const QRect &fullArea)
         return true;
     }
     // If any other screen has any left edge against any of our right edge, then this screen is not a right screen
-    for (const Output *output : outputs) {
+    for (const auto &output : outputs) {
         const QRect otherGeo = output->geometry();
         if (otherGeo == screen) {
             // that's our screen to test
@@ -1011,7 +1011,7 @@ static bool isTopScreen(const QRect &screen, const QRect &fullArea)
         return true;
     }
     // If any other screen has any bottom edge against any of our top edge, then this screen is not a top screen
-    for (const Output *output : outputs) {
+    for (const auto &output : outputs) {
         const QRect otherGeo = output->geometry();
         if (otherGeo == screen) {
             // that's our screen to test
@@ -1038,7 +1038,7 @@ static bool isBottomScreen(const QRect &screen, const QRect &fullArea)
         return true;
     }
     // If any other screen has any top edge against any of our bottom edge, then this screen is not a bottom screen
-    for (const Output *output : outputs) {
+    for (const auto &output : outputs) {
         const QRect otherGeo = output->geometry();
         if (otherGeo == screen) {
             // that's our screen to test
@@ -1068,25 +1068,25 @@ void ScreenEdges::recreateEdges()
     QRegion processedRegion;
 
     const auto outputs = workspace()->outputs();
-    for (Output *output : outputs) {
+    for (const auto &output : outputs) {
         const QRegion screen = QRegion(output->geometry()).subtracted(processedRegion);
         processedRegion += screen;
         for (const QRect &screenPart : screen) {
             if (isLeftScreen(screenPart, fullArea)) {
                 // left most screen
-                createVerticalEdge(ElectricLeft, screenPart, fullArea, output);
+                createVerticalEdge(ElectricLeft, screenPart, fullArea, output.get());
             }
             if (isRightScreen(screenPart, fullArea)) {
                 // right most screen
-                createVerticalEdge(ElectricRight, screenPart, fullArea, output);
+                createVerticalEdge(ElectricRight, screenPart, fullArea, output.get());
             }
             if (isTopScreen(screenPart, fullArea)) {
                 // top most screen
-                createHorizontalEdge(ElectricTop, screenPart, fullArea, output);
+                createHorizontalEdge(ElectricTop, screenPart, fullArea, output.get());
             }
             if (isBottomScreen(screenPart, fullArea)) {
                 // bottom most screen
-                createHorizontalEdge(ElectricBottom, screenPart, fullArea, output);
+                createHorizontalEdge(ElectricBottom, screenPart, fullArea, output.get());
             }
         }
     }
@@ -1343,8 +1343,8 @@ void ScreenEdges::createEdgeForClient(Window *client, ElectricBorder border)
 
     const auto outputs = workspace()->outputs();
     Output *foundOutput = nullptr;
-    for (Output *output : outputs) {
-        foundOutput = output;
+    for (const auto &output : outputs) {
+        foundOutput = output.get();
         const QRect screen = output->geometry();
         if (!screen.contains(geo)) {
             // ignoring Clients having a geometry overlapping with multiple screens

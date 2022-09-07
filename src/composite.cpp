@@ -354,7 +354,7 @@ void Compositor::startupWithWorkspace()
     Q_ASSERT(m_scene);
     m_scene->initialize();
 
-    const QList<Output *> outputs = workspace()->outputs();
+    const QList<std::shared_ptr<Output>> outputs = workspace()->outputs();
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         auto workspaceLayer = new RenderLayer(outputs.constFirst()->renderLoop());
         workspaceLayer->setDelegate(new SceneDelegate(m_scene.get()));
@@ -364,8 +364,8 @@ void Compositor::startupWithWorkspace()
         });
         addSuperLayer(workspaceLayer);
     } else {
-        for (Output *output : outputs) {
-            addOutput(output);
+        for (const std::shared_ptr<Output> &output : outputs) {
+            addOutput(output.get());
         }
         connect(workspace(), &Workspace::outputAdded, this, &Compositor::addOutput);
         connect(workspace(), &Workspace::outputRemoved, this, &Compositor::removeOutput);
@@ -403,9 +403,9 @@ void Compositor::startupWithWorkspace()
 Output *Compositor::findOutput(RenderLoop *loop) const
 {
     const auto outputs = workspace()->outputs();
-    for (Output *output : outputs) {
+    for (const std::shared_ptr<Output> &output : outputs) {
         if (output->renderLoop() == loop) {
-            return output;
+            return output.get();
         }
     }
     return nullptr;

@@ -243,7 +243,7 @@ bool DrmGpu::updateOutputs()
 
     // check for added and removed connectors
     QVector<DrmConnector *> existing;
-    QVector<DrmOutput *> addedOutputs;
+    QVector<std::shared_ptr<DrmOutput>> addedOutputs;
     for (int i = 0; i < resources->count_connectors; ++i) {
         const uint32_t currentConnector = resources->connectors[i];
         const auto it = std::find_if(m_connectors.begin(), m_connectors.end(), [currentConnector](const auto &connector) {
@@ -275,7 +275,7 @@ bool DrmGpu::updateOutputs()
             qCDebug(KWIN_DRM, "New %soutput on GPU %s: %s", conn->isNonDesktop() ? "non-desktop " : "", qPrintable(m_devNode), qPrintable(conn->modelName()));
             const auto pipeline = conn->pipeline();
             m_pipelines << pipeline;
-            auto output = new DrmOutput(pipeline, m_leaseDevice);
+            auto output = std::make_shared<DrmOutput>(pipeline, m_leaseDevice);
             m_drmOutputs << output;
             addedOutputs << output;
             Q_EMIT outputAdded(output);
@@ -462,9 +462,9 @@ DrmPipeline::Error DrmGpu::testPipelines()
     return test;
 }
 
-DrmOutput *DrmGpu::findOutput(quint32 connector)
+std::shared_ptr<DrmOutput> DrmGpu::findOutput(quint32 connector)
 {
-    auto it = std::find_if(m_drmOutputs.constBegin(), m_drmOutputs.constEnd(), [connector](DrmOutput *o) {
+    auto it = std::find_if(m_drmOutputs.constBegin(), m_drmOutputs.constEnd(), [connector](const std::shared_ptr<DrmOutput> &o) {
         return o->connector()->id() == connector;
     });
     if (it != m_drmOutputs.constEnd()) {
@@ -477,7 +477,7 @@ void DrmGpu::waitIdle()
 {
     m_socketNotifier->setEnabled(false);
     while (true) {
-        const bool idle = std::all_of(m_drmOutputs.constBegin(), m_drmOutputs.constEnd(), [](DrmOutput *output) {
+        const bool idle = std::all_of(m_drmOutputs.constBegin(), m_drmOutputs.constEnd(), [](const std::shared_ptr<DrmOutput> &output) {
             return !output->pipeline()->pageflipPending();
         });
         if (idle) {
@@ -566,14 +566,13 @@ void DrmGpu::dispatchEvents()
     drmHandleEvent(m_fd, &context);
 }
 
-void DrmGpu::removeOutput(DrmOutput *output)
+void DrmGpu::removeOutput(std::shared_ptr<DrmOutput> output)
 {
-    qCDebug(KWIN_DRM) << "Removing output" << output;
+    qCDebug(KWIN_DRM) << "Removing output" << output.get();
     m_pipelines.removeOne(output->pipeline());
     output->pipeline()->setLayers(nullptr, nullptr);
     m_drmOutputs.removeOne(output);
     Q_EMIT outputRemoved(output);
-    delete output;
 }
 
 DrmBackend *DrmGpu::platform() const
@@ -586,30 +585,29 @@ const QVector<DrmPipeline *> DrmGpu::pipelines() const
     return m_pipelines;
 }
 
-DrmVirtualOutput *DrmGpu::createVirtualOutput(const QString &name, const QSize &size, double scale)
+std::shared_ptr<DrmVirtualOutput> DrmGpu::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
-    auto output = new DrmVirtualOutput(name, this, size, scale);
+    auto output = std::make_shared<DrmVirtualOutput>(name, this, size, scale);
     m_virtualOutputs << output;
     Q_EMIT outputAdded(output);
     return output;
 }
 
-void DrmGpu::removeVirtualOutput(DrmVirtualOutput *output)
+void DrmGpu::removeVirtualOutput(std::shared_ptr<DrmVirtualOutput> output)
 {
     if (m_virtualOutputs.removeOne(output)) {
         Q_EMIT outputRemoved(output);
-        delete output;
     }
 }
 
 void DrmGpu::handleLeaseRequest(KWaylandServer::DrmLeaseV1Interface *leaseRequest)
 {
     QVector<uint32_t> objects;
-    QVector<DrmOutput *> outputs;
+    QVector<std::shared_ptr<DrmOutput>> outputs;
 
     const auto connectors = leaseRequest->connectors();
     for (KWaylandServer::DrmLeaseConnectorV1Interface *connector : connectors) {
-        if (DrmOutput *output = findOutput(connector->id())) {
+        if (const std::shared_ptr<DrmOutput> output = findOutput(connector->id())) {
             if (output->lease()) {
                 continue; // already leased
             }
@@ -646,7 +644,7 @@ void DrmGpu::handleLeaseRevoked(KWaylandServer::DrmLeaseV1Interface *lease)
 {
     const auto connectors = lease->connectors();
     for (KWaylandServer::DrmLeaseConnectorV1Interface *connector : connectors) {
-        if (DrmOutput *output = findOutput(connector->id())) {
+        if (const std::shared_ptr<DrmOutput> output = findOutput(connector->id())) {
             output->leaseEnded();
         }
     }
@@ -654,12 +652,12 @@ void DrmGpu::handleLeaseRevoked(KWaylandServer::DrmLeaseV1Interface *lease)
     drmModeRevokeLease(m_fd, lease->lesseeId());
 }
 
-QVector<DrmVirtualOutput *> DrmGpu::virtualOutputs() const
+QVector<std::shared_ptr<DrmVirtualOutput>> DrmGpu::virtualOutputs() const
 {
     return m_virtualOutputs;
 }
 
-QVector<DrmOutput *> DrmGpu::outputs() const
+QVector<std::shared_ptr<DrmOutput>> DrmGpu::outputs() const
 {
     return m_drmOutputs;
 }

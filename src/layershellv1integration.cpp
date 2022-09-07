@@ -200,9 +200,9 @@ void LayerShellV1Integration::rearrange()
 {
     m_rearrangeTimer->stop();
 
-    const QList<Output *> outputs = workspace()->outputs();
-    for (Output *output : outputs) {
-        rearrangeOutput(output);
+    const auto outputs = workspace()->outputs();
+    for (const std::shared_ptr<Output> &output : outputs) {
+        rearrangeOutput(output.get());
     }
 
     if (workspace()) {

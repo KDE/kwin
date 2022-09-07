@@ -167,9 +167,9 @@ void Integration::handleWorkspaceCreated()
     connect(workspace(), &Workspace::outputRemoved,
             this, &Integration::handleOutputDisabled);
 
-    const QList<Output *> outputs = workspace()->outputs();
-    for (Output *output : outputs) {
-        handleOutputEnabled(output);
+    const auto outputs = workspace()->outputs();
+    for (const std::shared_ptr<Output> &output : outputs) {
+        handleOutputEnabled(output.get());
     }
 }
 

@@ -291,18 +291,18 @@ void Item::scheduleRepaint(const QRegion &region)
 
 void Item::scheduleRepaintInternal(const QRegion &region)
 {
-    const QList<Output *> outputs = workspace()->outputs();
+    const auto outputs = workspace()->outputs();
     const QRegion globalRegion = mapToGlobal(region);
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
         for (const auto &output : outputs) {
             const QRegion dirtyRegion = globalRegion & output->geometry();
             if (!dirtyRegion.isEmpty()) {
-                m_repaints[output] += dirtyRegion;
+                m_repaints[output.get()] += dirtyRegion;
                 output->renderLoop()->scheduleRepaint(this);
             }
         }
     } else {
-        m_repaints[outputs.constFirst()] += globalRegion;
+        m_repaints[outputs.constFirst().get()] += globalRegion;
         outputs.constFirst()->renderLoop()->scheduleRepaint(this);
     }
 }
@@ -312,10 +312,10 @@ void Item::scheduleFrame()
     if (!isVisible()) {
         return;
     }
-    const QList<Output *> outputs = workspace()->outputs();
+    const auto outputs = workspace()->outputs();
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
         const QRect geometry = mapToGlobal(rect()).toAlignedRect();
-        for (const Output *output : outputs) {
+        for (const std::shared_ptr<Output> &output : outputs) {
             if (output->geometry().intersects(geometry)) {
                 output->renderLoop()->scheduleRepaint(this);
             }

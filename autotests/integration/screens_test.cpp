@@ -101,7 +101,7 @@ void ScreensTest::testCurrent_data()
 void ScreensTest::testCurrent()
 {
     QFETCH(int, currentId);
-    Output *output = workspace()->outputs().at(currentId);
+    Output *output = workspace()->outputs().at(currentId).get();
 
     // Disable "active screen follows mouse"
     auto group = kwinApp()->config()->group("Windows");
@@ -146,7 +146,7 @@ void ScreensTest::testCurrentWithFollowsMouse()
     KWin::Cursors::self()->mouse()->setPos(cursorPos);
 
     QFETCH(int, expectedId);
-    Output *expected = workspace()->outputs().at(expectedId);
+    Output *expected = workspace()->outputs().at(expectedId).get();
     QCOMPARE(workspace()->activeOutput(), expected);
 }
 
@@ -183,7 +183,7 @@ void ScreensTest::testCurrentPoint()
     workspace()->setActiveOutput(cursorPos);
 
     QFETCH(int, expectedId);
-    Output *expected = workspace()->outputs().at(expectedId);
+    Output *expected = workspace()->outputs().at(expectedId).get();
     QCOMPARE(workspace()->activeOutput(), expected);
 }
 

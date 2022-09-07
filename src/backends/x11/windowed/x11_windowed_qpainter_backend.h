@@ -51,8 +51,8 @@ public:
     OutputLayer *primaryLayer(Output *output) override;
 
 private:
-    void addOutput(Output *output);
-    void removeOutput(Output *output);
+    void addOutput(const std::shared_ptr<Output> &output);
+    void removeOutput(const std::shared_ptr<Output> &output);
 
     xcb_gcontext_t m_gc = XCB_NONE;
     X11WindowedBackend *m_backend;

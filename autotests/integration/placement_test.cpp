@@ -351,7 +351,7 @@ void TestPlacement::testPlaceRandom()
 
 void TestPlacement::testFullscreen()
 {
-    const QList<Output *> outputs = workspace()->outputs();
+    const auto outputs = workspace()->outputs();
 
     setPlacementPolicy(PlacementSmart);
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -359,7 +359,7 @@ void TestPlacement::testFullscreen()
 
     Window *window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::red);
     QVERIFY(window);
-    window->sendToOutput(outputs[0]);
+    window->sendToOutput(outputs[0].get());
 
     // Wait for the configure event with the activated state.
     QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
@@ -376,7 +376,7 @@ void TestPlacement::testFullscreen()
     QCOMPARE(window->frameGeometry(), outputs[0]->geometry());
 
     // this doesn't require a round trip, so should be immediate
-    window->sendToOutput(outputs[1]);
+    window->sendToOutput(outputs[1].get());
     QCOMPARE(window->frameGeometry(), outputs[1]->geometry());
     QCOMPARE(geometryChangedSpy.count(), 2);
 }

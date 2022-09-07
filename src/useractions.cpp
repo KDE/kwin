@@ -688,7 +688,7 @@ void UserActionsMenu::screenPopupAboutToShow()
 
     const auto outputs = workspace()->outputs();
     for (int i = 0; i < outputs.count(); ++i) {
-        Output *output = outputs[i];
+        Output *output = outputs[i].get();
         // assumption: there are not more than 9 screens attached.
         QAction *action = m_screenMenu->addAction(i18nc("@item:inmenu List of all Screens to send a window to. First argument is a number, second the output identifier. E.g. Screen 1 (HDMI1)",
                                                         "Screen &%1 (%2)", (i + 1), output->name()));
@@ -1331,16 +1331,16 @@ static bool screenSwitchImpossible()
 
 Output *Workspace::nextOutput(Output *reference) const
 {
-    const int index = m_outputs.indexOf(reference);
+    const int index = m_outputs.indexOf(reference->shared_from_this());
     Q_ASSERT(index != -1);
-    return m_outputs[(index + 1) % m_outputs.count()];
+    return m_outputs[(index + 1) % m_outputs.count()].get();
 }
 
 Output *Workspace::previousOutput(Output *reference) const
 {
-    const int index = m_outputs.indexOf(reference);
+    const int index = m_outputs.indexOf(reference->shared_from_this());
     Q_ASSERT(index != -1);
-    return m_outputs[(index + m_outputs.count() - 1) % m_outputs.count()];
+    return m_outputs[(index + m_outputs.count() - 1) % m_outputs.count()].get();
 }
 
 void Workspace::slotSwitchToScreen()
@@ -1348,7 +1348,7 @@ void Workspace::slotSwitchToScreen()
     if (screenSwitchImpossible()) {
         return;
     }
-    Output *output = outputs().value(senderValue(sender()));
+    Output *output = outputs().value(senderValue(sender())).get();
     if (output) {
         switchToOutput(output);
     }
@@ -1373,7 +1373,7 @@ void Workspace::slotSwitchToPrevScreen()
 void Workspace::slotWindowToScreen()
 {
     if (USABLE_ACTIVE_WINDOW) {
-        Output *output = outputs().value(senderValue(sender()));
+        Output *output = outputs().value(senderValue(sender())).get();
         if (output) {
             sendWindowToOutput(m_activeWindow, output);
         }

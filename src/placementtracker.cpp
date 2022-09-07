@@ -115,7 +115,7 @@ void PlacementTracker::restore(const QString &key)
                         return output->uuid() == newData.outputUuid;
                     });
                     if (outputIt != outputs.end()) {
-                        window->sendToOutput(*outputIt);
+                        window->sendToOutput(outputIt->get());
                     }
                 } else {
                     window->moveResize(newData.geometry);

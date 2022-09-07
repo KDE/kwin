@@ -2830,7 +2830,7 @@ void TestXdgShellWindowRules::testNoBorderForceTemporarily()
 
 void TestXdgShellWindowRules::testScreenDontAffect()
 {
-    const QList<KWin::Output *> outputs = workspace()->outputs();
+    const auto outputs = workspace()->outputs();
 
     setWindowRule("screen", int(1), int(Rules::DontAffect));
 
@@ -2840,7 +2840,7 @@ void TestXdgShellWindowRules::testScreenDontAffect()
     QCOMPARE(m_window->output()->name(), outputs.at(0)->name());
 
     // The user can still move the window to another screen.
-    workspace()->sendWindowToOutput(m_window, outputs.at(1));
+    workspace()->sendWindowToOutput(m_window, outputs.at(1).get());
     QCOMPARE(m_window->output()->name(), outputs.at(1)->name());
 
     destroyTestWindow();
@@ -2848,7 +2848,7 @@ void TestXdgShellWindowRules::testScreenDontAffect()
 
 void TestXdgShellWindowRules::testScreenApply()
 {
-    const QList<KWin::Output *> outputs = workspace()->outputs();
+    const auto outputs = workspace()->outputs();
 
     setWindowRule("screen", int(1), int(Rules::Apply));
 
@@ -2859,7 +2859,7 @@ void TestXdgShellWindowRules::testScreenApply()
     QCOMPARE(m_window->output()->name(), outputs.at(1)->name());
 
     // The user can move the window to another screen.
-    workspace()->sendWindowToOutput(m_window, outputs.at(0));
+    workspace()->sendWindowToOutput(m_window, outputs.at(0).get());
     QCOMPARE(m_window->output()->name(), outputs.at(0)->name());
 
     destroyTestWindow();
@@ -2867,7 +2867,7 @@ void TestXdgShellWindowRules::testScreenApply()
 
 void TestXdgShellWindowRules::testScreenRemember()
 {
-    const QList<KWin::Output *> outputs = workspace()->outputs();
+    const auto outputs = workspace()->outputs();
 
     setWindowRule("screen", int(1), int(Rules::Remember));
 
@@ -2877,7 +2877,7 @@ void TestXdgShellWindowRules::testScreenRemember()
     QCOMPARE(m_window->output()->name(), outputs.at(0)->name());
 
     // Move the window to the second screen.
-    workspace()->sendWindowToOutput(m_window, outputs.at(1));
+    workspace()->sendWindowToOutput(m_window, outputs.at(1).get());
     QCOMPARE(m_window->output()->name(), outputs.at(1)->name());
 
     // Close and reopen the window.
@@ -2892,7 +2892,7 @@ void TestXdgShellWindowRules::testScreenRemember()
 
 void TestXdgShellWindowRules::testScreenForce()
 {
-    const QList<KWin::Output *> outputs = workspace()->outputs();
+    const auto outputs = workspace()->outputs();
 
     createTestWindow();
     QVERIFY(m_window->isActive());
@@ -2903,12 +2903,12 @@ void TestXdgShellWindowRules::testScreenForce()
     QCOMPARE(m_window->output()->name(), outputs.at(1)->name());
 
     // User should not be able to move the window to another screen.
-    workspace()->sendWindowToOutput(m_window, outputs.at(0));
+    workspace()->sendWindowToOutput(m_window, outputs.at(0).get());
     QCOMPARE(m_window->output()->name(), outputs.at(1)->name());
 
     // Disable the output where the window is on, so the window is moved the other screen
     OutputConfiguration config;
-    auto changeSet = config.changeSet(outputs.at(1));
+    auto changeSet = config.changeSet(outputs.at(1).get());
     changeSet->enabled = false;
     kwinApp()->platform()->applyOutputChanges(config);
 
@@ -2934,7 +2934,7 @@ void TestXdgShellWindowRules::testScreenForce()
 
 void TestXdgShellWindowRules::testScreenApplyNow()
 {
-    const QList<KWin::Output *> outputs = workspace()->outputs();
+    const auto outputs = workspace()->outputs();
 
     createTestWindow();
 
@@ -2945,7 +2945,7 @@ void TestXdgShellWindowRules::testScreenApplyNow()
     QCOMPARE(m_window->output()->name(), outputs.at(1)->name());
 
     // The user can move the window to another screen.
-    workspace()->sendWindowToOutput(m_window, outputs.at(0));
+    workspace()->sendWindowToOutput(m_window, outputs.at(0).get());
     QCOMPARE(m_window->output()->name(), outputs.at(0)->name());
 
     // The rule should not be applied again.
@@ -2957,7 +2957,7 @@ void TestXdgShellWindowRules::testScreenApplyNow()
 
 void TestXdgShellWindowRules::testScreenForceTemporarily()
 {
-    const QList<KWin::Output *> outputs = workspace()->outputs();
+    const auto outputs = workspace()->outputs();
 
     createTestWindow();
 
@@ -2967,7 +2967,7 @@ void TestXdgShellWindowRules::testScreenForceTemporarily()
     QCOMPARE(m_window->output()->name(), outputs.at(1)->name());
 
     // User is not allowed to move it
-    workspace()->sendWindowToOutput(m_window, outputs.at(0));
+    workspace()->sendWindowToOutput(m_window, outputs.at(0).get());
     QCOMPARE(m_window->output()->name(), outputs.at(1)->name());
 
     // Close and reopen the window.

@@ -57,8 +57,8 @@ private:
     bool initBufferConfigs();
     bool initRenderingContext();
 
-    void addOutput(Output *output);
-    void removeOutput(Output *output);
+    void addOutput(const std::shared_ptr<Output> &output);
+    void removeOutput(const std::shared_ptr<Output> &output);
 
     VirtualBackend *m_backend;
     int m_frameCounter = 0;

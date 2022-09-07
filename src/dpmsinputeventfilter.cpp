@@ -105,8 +105,8 @@ bool DpmsInputEventFilter::touchMotion(qint32 id, const QPointF &pos, quint32 ti
 
 void DpmsInputEventFilter::notify()
 {
-    const QList<Output *> outputs = workspace()->outputs();
-    for (Output *output : outputs) {
+    const auto outputs = workspace()->outputs();
+    for (const std::shared_ptr<Output> &output : outputs) {
         output->setDpmsMode(Output::DpmsMode::On);
     }
 }

@@ -55,7 +55,7 @@ X11WindowedQPainterBackend::X11WindowedQPainterBackend(X11WindowedBackend *backe
     , m_backend(backend)
 {
     const auto outputs = m_backend->outputs();
-    for (Output *output : outputs) {
+    for (const auto &output : outputs) {
         addOutput(output);
     }
 
@@ -71,15 +71,15 @@ X11WindowedQPainterBackend::~X11WindowedQPainterBackend()
     }
 }
 
-void X11WindowedQPainterBackend::addOutput(Output *output)
+void X11WindowedQPainterBackend::addOutput(const std::shared_ptr<Output> &output)
 {
-    X11WindowedOutput *x11Output = static_cast<X11WindowedOutput *>(output);
-    m_outputs[output] = std::make_unique<X11WindowedQPainterOutput>(x11Output, m_backend->windowForScreen(x11Output));
+    auto x11Output = std::static_pointer_cast<X11WindowedOutput>(output);
+    m_outputs[output.get()] = std::make_unique<X11WindowedQPainterOutput>(x11Output.get(), m_backend->windowForScreen(x11Output.get()));
 }
 
-void X11WindowedQPainterBackend::removeOutput(Output *output)
+void X11WindowedQPainterBackend::removeOutput(const std::shared_ptr<Output> &output)
 {
-    m_outputs.erase(output);
+    m_outputs.erase(output.get());
 }
 
 void X11WindowedQPainterBackend::present(Output *output)

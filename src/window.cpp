@@ -413,7 +413,7 @@ void Window::deleteItem()
 
 int Window::screen() const
 {
-    return workspace()->outputs().indexOf(m_output);
+    return workspace()->outputs().indexOf(m_output->shared_from_this());
 }
 
 Output *Window::output() const
@@ -2820,13 +2820,13 @@ void Window::checkQuickTilingMaximizationZones(int xroot, int yroot)
     bool innerBorder = false;
 
     const auto outputs = workspace()->outputs();
-    for (const Output *output : outputs) {
+    for (const auto &output : outputs) {
         if (!output->geometry().contains(QPoint(xroot, yroot))) {
             continue;
         }
 
         auto isInScreen = [&output, &outputs](const QPoint &pt) {
-            for (const Output *other : outputs) {
+            for (const auto &other : outputs) {
                 if (other == output) {
                     continue;
                 }
@@ -3831,12 +3831,12 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
         // If trying to tile to the side that the window is already tiled to move the window to the next
         // screen if it exists, otherwise toggle the mode (set QuickTileFlag::None)
         if (quickTileMode() == mode) {
-            const QList<Output *> outputs = workspace()->outputs();
+            const auto outputs = workspace()->outputs();
             const Output *currentOutput = moveResizeOutput();
             const Output *nextOutput = currentOutput;
 
-            for (const Output *output : outputs) {
-                if (output == currentOutput) {
+            for (const auto &output : outputs) {
+                if (output.get() == currentOutput) {
                     continue;
                 }
 
@@ -3858,7 +3858,7 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
                     }
                 }
 
-                nextOutput = output;
+                nextOutput = output.get();
             }
 
             if (nextOutput == currentOutput) {
@@ -4011,7 +4011,7 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
     if (workspace()->inUpdateClientArea()) {
         // check if the window is on an about to be destroyed output
         Output *newOutput = moveResizeOutput();
-        if (!workspace()->outputs().contains(newOutput)) {
+        if (!workspace()->outputs().contains(newOutput->shared_from_this())) {
             newOutput = workspace()->outputAt(newGeom.center());
         }
         // we need to find the screen area as it was before the change

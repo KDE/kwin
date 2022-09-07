@@ -53,7 +53,7 @@ private:
 /**
  * Generic output representation.
  */
-class KWIN_EXPORT Output : public QObject
+class KWIN_EXPORT Output : public QObject, public std::enable_shared_from_this<Output>
 {
     Q_OBJECT
 

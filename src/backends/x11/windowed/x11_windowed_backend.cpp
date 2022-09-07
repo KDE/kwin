@@ -262,12 +262,10 @@ void X11WindowedBackend::initXInput()
 
 X11WindowedOutput *X11WindowedBackend::findOutput(xcb_window_t window) const
 {
-    auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(),
-                           [window](X11WindowedOutput *output) {
-                               return output->window() == window;
-                           });
-    if (it != m_outputs.constEnd()) {
-        return *it;
+    for (const std::shared_ptr<X11WindowedOutput> &output : m_outputs) {
+        if (output->window() == window) {
+            return output.get();
+        }
     }
     return nullptr;
 }
@@ -283,7 +281,7 @@ void X11WindowedBackend::createOutputs()
     const int pixelHeight = initialWindowSize().height() * initialOutputScale() + 0.5;
 
     for (int i = 0; i < initialOutputCount(); ++i) {
-        auto *output = new X11WindowedOutput(this);
+        auto output = std::make_shared<X11WindowedOutput>(this);
         output->init(QSize(pixelWidth, pixelHeight));
 
         m_protocols = protocolsAtom;
@@ -479,7 +477,7 @@ void X11WindowedBackend::updateWindowTitle()
 void X11WindowedBackend::handleClientMessage(xcb_client_message_event_t *event)
 {
     auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
-                           [event](X11WindowedOutput *output) {
+                           [event](const std::shared_ptr<X11WindowedOutput> &output) {
                                return output->window() == event->window;
                            });
     if (it == m_outputs.end()) {
@@ -499,7 +497,6 @@ void X11WindowedBackend::handleClientMessage(xcb_client_message_event_t *event)
 
                 removedOutput->updateEnabled(false);
                 Q_EMIT outputRemoved(removedOutput);
-                delete removedOutput;
                 Q_EMIT screensQueried();
             }
         }

@@ -248,8 +248,8 @@ private:
     void registerXdgToplevelWindow(XdgToplevelWindow *window);
     void registerXdgPopupWindow(XdgPopupWindow *window);
     void registerWindow(Window *window);
-    void handleOutputAdded(Output *output);
-    void handleOutputRemoved(Output *output);
+    void handleOutputAdded(std::shared_ptr<Output> output);
+    void handleOutputRemoved(std::shared_ptr<Output> output);
     void handleOutputEnabled(Output *output);
     void handleOutputDisabled(Output *output);
 

@@ -353,7 +353,7 @@ public:
     Output *previousOutput(Output *reference) const;
     void switchToOutput(Output *output);
 
-    QList<Output *> outputs() const;
+    QList<std::shared_ptr<Output>> outputs() const;
     Output *outputAt(const QPointF &pos) const;
 
     /**
@@ -543,8 +543,8 @@ private Q_SLOTS:
     void slotCurrentDesktopChangingCancelled();
     void slotDesktopAdded(VirtualDesktop *desktop);
     void slotDesktopRemoved(VirtualDesktop *desktop);
-    void slotPlatformOutputAdded(Output *output);
-    void slotPlatformOutputRemoved(Output *output);
+    void slotPlatformOutputAdded(std::shared_ptr<Output> output);
+    void slotPlatformOutputRemoved(std::shared_ptr<Output> output);
 
 Q_SIGNALS:
     /**
@@ -623,8 +623,8 @@ private:
     Unmanaged *createUnmanaged(xcb_window_t windowId);
     void addUnmanaged(Unmanaged *c);
 
-    void addOutput(Output *output);
-    void removeOutput(Output *output);
+    void addOutput(std::shared_ptr<Output> output);
+    void removeOutput(std::shared_ptr<Output> output);
 
     void addWaylandWindow(Window *window);
     void removeWaylandWindow(Window *window);
@@ -660,7 +660,7 @@ private:
     void updateXStackingOrder();
     void updateTabbox();
 
-    QList<Output *> m_outputs;
+    QList<std::shared_ptr<Output>> m_outputs;
     Output *m_activeOutput = nullptr;
     Output *m_primaryOutput = nullptr;
     QString m_outputsHash;
@@ -757,7 +757,7 @@ private:
 #endif
     std::unique_ptr<PlacementTracker> m_placementTracker;
 
-    std::unique_ptr<PlaceholderOutput> m_placeholderOutput;
+    std::shared_ptr<PlaceholderOutput> m_placeholderOutput;
     std::unique_ptr<PlaceholderInputEventFilter> m_placeholderFilter;
 
 private:
@@ -802,7 +802,7 @@ private:
 //---------------------------------------------------------
 // Unsorted
 
-inline QList<Output *> Workspace::outputs() const
+inline QList<std::shared_ptr<Output>> Workspace::outputs() const
 {
     return m_outputs;
 }

@@ -84,7 +84,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputIsDisabled()
     // Disable the output where the window is on.
     OutputConfiguration config;
     {
-        auto changeSet = config.changeSet(outputs[0]);
+        auto changeSet = config.changeSet(outputs[0].get());
         changeSet->enabled = false;
     }
     kwinApp()->platform()->applyOutputChanges(config);
@@ -110,11 +110,11 @@ void OutputChangesTest::testWindowSticksToOutputAfterAnotherOutputIsDisabled()
     // Disable the first output.
     OutputConfiguration config;
     {
-        auto changeSet = config.changeSet(outputs[0]);
+        auto changeSet = config.changeSet(outputs[0].get());
         changeSet->enabled = false;
     }
     {
-        auto changeSet = config.changeSet(outputs[1]);
+        auto changeSet = config.changeSet(outputs[1].get());
         changeSet->pos = QPoint(0, 0);
     }
     kwinApp()->platform()->applyOutputChanges(config);
@@ -140,7 +140,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputIsMoved()
     // Disable the first output.
     OutputConfiguration config;
     {
-        auto changeSet = config.changeSet(outputs[0]);
+        auto changeSet = config.changeSet(outputs[0].get());
         changeSet->pos = QPoint(-10, 20);
     }
     kwinApp()->platform()->applyOutputChanges(config);

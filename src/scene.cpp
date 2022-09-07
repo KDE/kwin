@@ -255,7 +255,7 @@ void Scene::prePaint(Output *output)
     createStackingOrder();
 
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        painted_screen = workspace()->outputs().constFirst();
+        painted_screen = workspace()->outputs().constFirst().get();
         setRenderTargetRect(geometry());
         setRenderTargetScale(1);
     } else {

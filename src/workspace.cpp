@@ -220,8 +220,8 @@ void Workspace::init()
     connect(platform, &Platform::outputAdded, this, &Workspace::slotPlatformOutputAdded);
     connect(platform, &Platform::outputRemoved, this, &Workspace::slotPlatformOutputRemoved);
 
-    const QVector<Output *> outputs = platform->outputs();
-    for (Output *output : outputs) {
+    const auto outputs = platform->outputs();
+    for (const std::shared_ptr<Output> &output : outputs) {
         slotPlatformOutputAdded(output);
     }
 
@@ -538,13 +538,13 @@ QString outputHash(Output *output)
 }
 
 /// See KScreen::Config::connectedOutputsHash in libkscreen
-QString connectedOutputsHash(const QVector<Output *> &outputs)
+QString connectedOutputsHash(const QVector<std::shared_ptr<Output>> &outputs)
 {
     QStringList hashedOutputs;
     hashedOutputs.reserve(outputs.count());
     for (auto output : qAsConst(outputs)) {
         if (!output->isPlaceholder() && !output->isNonDesktop()) {
-            hashedOutputs << outputHash(output);
+            hashedOutputs << outputHash(output.get());
         }
     }
     std::sort(hashedOutputs.begin(), hashedOutputs.end());
@@ -552,7 +552,7 @@ QString connectedOutputsHash(const QVector<Output *> &outputs)
     return QString::fromLatin1(hash.toHex());
 }
 
-QMap<Output *, QJsonObject> outputsConfig(const QVector<Output *> &outputs, const QString &hash)
+QMap<Output *, QJsonObject> outputsConfig(const QVector<std::shared_ptr<Output>> &outputs, const QString &hash)
 {
     const QString kscreenJsonPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kscreen/") % hash);
     if (kscreenJsonPath.isEmpty()) {
@@ -577,8 +577,8 @@ QMap<Output *, QJsonObject> outputsConfig(const QVector<Output *> &outputs, cons
     for (const auto &outputJson : outputsJson) {
         const auto outputObject = outputJson.toObject();
         for (auto it = outputs.constBegin(), itEnd = outputs.constEnd(); it != itEnd;) {
-            if (!ret.contains(*it) && outputObject["id"] == outputHash(*it)) {
-                ret[*it] = outputObject;
+            if (!ret.contains((*it).get()) && outputObject["id"] == outputHash((*it).get())) {
+                ret[(*it).get()] = outputObject;
                 continue;
             }
             ++it;
@@ -641,7 +641,7 @@ void Workspace::updateOutputConfiguration()
     const auto outputsInfo = KWinKScreenIntegration::outputsConfig(outputs, hash);
     m_outputsHash = hash;
 
-    Output *primaryOutput = outputs.constFirst();
+    Output *primaryOutput = outputs.constFirst().get();
     OutputConfiguration cfg;
     // default position goes from left to right
     QPoint pos(0, 0);
@@ -649,12 +649,12 @@ void Workspace::updateOutputConfiguration()
         if (output->isPlaceholder() || output->isNonDesktop()) {
             continue;
         }
-        auto props = cfg.changeSet(output);
-        const QJsonObject outputInfo = outputsInfo[output];
-        qCDebug(KWIN_CORE) << "Reading output configuration for " << output;
+        auto props = cfg.changeSet(output.get());
+        const QJsonObject outputInfo = outputsInfo[output.get()];
+        qCDebug(KWIN_CORE) << "Reading output configuration for " << output.get();
         if (!outputInfo.isEmpty()) {
             if (outputInfo["primary"].toBool()) {
-                primaryOutput = output;
+                primaryOutput = output.get();
             }
             props->enabled = outputInfo["enabled"].toBool(true);
             const QJsonObject pos = outputInfo["pos"].toObject();
@@ -669,7 +669,7 @@ void Workspace::updateOutputConfiguration()
             props->rgbRange = static_cast<Output::RgbRange>(outputInfo["rgbrange"].toInt(static_cast<uint32_t>(props->rgbRange)));
 
             if (const QJsonObject modeInfo = outputInfo["mode"].toObject(); !modeInfo.isEmpty()) {
-                if (auto mode = KWinKScreenIntegration::parseMode(output, modeInfo)) {
+                if (auto mode = KWinKScreenIntegration::parseMode(output.get(), modeInfo)) {
                     props->mode = mode;
                 }
             }
@@ -681,7 +681,7 @@ void Workspace::updateOutputConfiguration()
         pos.setX(pos.x() + output->geometry().width());
     }
     bool allDisabled = std::all_of(outputs.begin(), outputs.end(), [&cfg](const auto &output) {
-        return !cfg.changeSet(output)->enabled;
+        return !cfg.changeSet(output.get())->enabled;
     });
     if (allDisabled) {
         qCWarning(KWIN_CORE) << "KScreen config would disable all outputs!";
@@ -1388,10 +1388,10 @@ Output *Workspace::outputAt(const QPointF &pos) const
 {
     Output *bestOutput = nullptr;
     int minDistance = INT_MAX;
-    for (Output *output : std::as_const(m_outputs)) {
+    for (const std::shared_ptr<Output> &output : std::as_const(m_outputs)) {
         const QRect &geo = output->geometry();
         if (geo.contains(pos.toPoint())) {
-            return output;
+            return output.get();
         }
         qreal distance = QPointF(geo.topLeft() - pos).manhattanLength();
         distance = std::min(distance, QPointF(geo.topRight() - pos).manhattanLength());
@@ -1399,13 +1399,13 @@ Output *Workspace::outputAt(const QPointF &pos) const
         distance = std::min(distance, QPointF(geo.bottomLeft() - pos).manhattanLength());
         if (distance < minDistance) {
             minDistance = distance;
-            bestOutput = output;
+            bestOutput = output.get();
         }
     }
     return bestOutput;
 }
 
-void Workspace::slotPlatformOutputAdded(Output *output)
+void Workspace::slotPlatformOutputAdded(std::shared_ptr<Output> output)
 {
     if (output->isNonDesktop()) {
         return;
@@ -1415,7 +1415,7 @@ void Workspace::slotPlatformOutputAdded(Output *output)
         addOutput(output);
     }
 
-    connect(output, &Output::enabledChanged, this, [this, output]() {
+    connect(output.get(), &Output::enabledChanged, this, [this, output]() {
         if (output->isEnabled()) {
             addOutput(output);
         } else {
@@ -1424,25 +1424,25 @@ void Workspace::slotPlatformOutputAdded(Output *output)
     });
 }
 
-void Workspace::slotPlatformOutputRemoved(Output *output)
+void Workspace::slotPlatformOutputRemoved(std::shared_ptr<Output> output)
 {
     if (!output->isNonDesktop()) {
         removeOutput(output);
     }
 }
 
-void Workspace::addOutput(Output *output)
+void Workspace::addOutput(std::shared_ptr<Output> output)
 {
     if (!m_activeOutput) {
-        m_activeOutput = output;
+        m_activeOutput = output.get();
     }
     if (!m_primaryOutput) {
-        setPrimaryOutput(output);
+        setPrimaryOutput(output.get());
     }
 
     m_outputs.append(output);
 
-    connect(output, &Output::geometryChanged, this, &Workspace::desktopResized);
+    connect(output.get(), &Output::geometryChanged, this, &Workspace::desktopResized);
     desktopResized();
 
     // Trigger a re-check of output-related rules on all windows
@@ -1450,42 +1450,42 @@ void Workspace::addOutput(Output *output)
         sendWindowToOutput(window, window->output());
     }
 
-    Q_EMIT outputAdded(output);
+    Q_EMIT outputAdded(output.get());
 
     if (m_placeholderOutput) {
-        m_outputs.removeOne(m_placeholderOutput.get());
+        m_outputs.removeOne(m_placeholderOutput);
         Q_EMIT outputRemoved(m_placeholderOutput.get());
         m_placeholderOutput.reset();
         m_placeholderFilter.reset();
     }
 }
 
-void Workspace::removeOutput(Output *output)
+void Workspace::removeOutput(std::shared_ptr<Output> output)
 {
     if (!m_outputs.removeOne(output)) {
         return;
     }
     if (m_outputs.empty()) {
         // not all parts of KWin handle having no output yet. To prevent crashes, create a placeholder output
-        m_placeholderOutput = std::make_unique<PlaceholderOutput>(output->pixelSize(), output->scale());
-        m_outputs.append(m_placeholderOutput.get());
+        m_placeholderOutput = std::make_shared<PlaceholderOutput>(output->pixelSize(), output->scale());
+        m_outputs.append(m_placeholderOutput);
         Q_EMIT outputAdded(m_placeholderOutput.get());
         // also prevent accidental inputs while the user has no screen connected
         m_placeholderFilter = std::make_unique<PlaceholderInputEventFilter>();
         input()->prependInputEventFilter(m_placeholderFilter.get());
     }
 
-    if (m_activeOutput == output) {
+    if (m_activeOutput == output.get()) {
         m_activeOutput = outputAt(output->geometry().center());
     }
-    if (m_primaryOutput == output) {
-        setPrimaryOutput(m_outputs.constFirst());
+    if (m_primaryOutput == output.get()) {
+        setPrimaryOutput(m_outputs.constFirst().get());
     }
 
-    disconnect(output, &Output::geometryChanged, this, &Workspace::desktopResized);
+    disconnect(output.get(), &Output::geometryChanged, this, &Workspace::desktopResized);
     desktopResized();
 
-    Q_EMIT outputRemoved(output);
+    Q_EMIT outputRemoved(output.get());
 }
 
 void Workspace::slotDesktopAdded(VirtualDesktop *desktop)
@@ -1813,7 +1813,7 @@ QString Workspace::supportInformation() const
     } else {
         support.append(QStringLiteral(" no\n"));
     }
-    const QVector<Output *> outputs = kwinApp()->platform()->outputs();
+    const QVector<std::shared_ptr<Output>> outputs = kwinApp()->platform()->outputs();
     support.append(QStringLiteral("Number of Screens: %1\n\n").arg(outputs.count()));
     for (int i = 0; i < outputs.count(); ++i) {
         const auto output = outputs[i];
@@ -2261,7 +2261,7 @@ void Workspace::desktopResized()
 
     const QRect oldGeometry = m_geometry;
     m_geometry = QRect();
-    for (const Output *output : std::as_const(m_outputs)) {
+    for (const std::shared_ptr<Output> &output : std::as_const(m_outputs)) {
         m_geometry = m_geometry.united(output->geometry());
     }
 
@@ -2286,7 +2286,7 @@ void Workspace::desktopResized()
     });
     if (oldCursorOutput != m_oldScreenGeometries.cend()) {
         const Output *cursorOutput = oldCursorOutput.key();
-        if (std::find(m_outputs.cbegin(), m_outputs.cend(), cursorOutput) != m_outputs.cend()) {
+        if (std::find(m_outputs.cbegin(), m_outputs.cend(), cursorOutput->shared_from_this()) != m_outputs.cend()) {
             const QRect oldGeometry = oldCursorOutput.value();
             const QRect newGeometry = cursorOutput->geometry();
             const QPoint relativePosition = Cursors::self()->mouse()->pos() - oldGeometry.topLeft();
@@ -2312,8 +2312,8 @@ void Workspace::saveOldScreenSizes()
     olddisplaysize = m_geometry.size();
     m_oldScreenGeometries.clear();
 
-    for (const Output *output : std::as_const(m_outputs)) {
-        m_oldScreenGeometries.insert(output, output->geometry());
+    for (const std::shared_ptr<Output> &output : std::as_const(m_outputs)) {
+        m_oldScreenGeometries.insert(output.get(), output->geometry());
     }
 }
 
@@ -2332,7 +2332,7 @@ static bool hasOffscreenXineramaStrut(Window *window)
 
     // Remove all visible areas so that only the invisible remain
     const auto outputs = workspace()->outputs();
-    for (const Output *output : outputs) {
+    for (const std::shared_ptr<Output> &output : outputs) {
         region -= output->geometry();
     }
 
@@ -2412,8 +2412,8 @@ void Workspace::updateClientArea()
     for (const VirtualDesktop *desktop : desktops) {
         workAreas[desktop] = m_geometry;
 
-        for (const Output *output : std::as_const(m_outputs)) {
-            screenAreas[desktop][output] = output->geometry();
+        for (const std::shared_ptr<Output> &output : std::as_const(m_outputs)) {
+            screenAreas[desktop][output.get()] = output->geometry();
         }
     }
 
@@ -2430,7 +2430,7 @@ void Workspace::updateClientArea()
         }
         // sanity check that a strut doesn't exclude a complete screen geometry
         // this is a violation to EWMH, as KWin just ignores the strut
-        for (const Output *output : std::as_const(m_outputs)) {
+        for (const std::shared_ptr<Output> &output : std::as_const(m_outputs)) {
             if (!r.intersects(output->geometry())) {
                 qCDebug(KWIN_CORE) << "Adjusted client area would exclude a complete screen, ignore";
                 r = m_geometry;
@@ -2457,11 +2457,11 @@ void Workspace::updateClientArea()
                 workAreas[vd] &= r;
             }
             restrictedAreas[vd] += strutRegion;
-            for (Output *output : std::as_const(m_outputs)) {
-                const auto geo = screenAreas[vd][output].intersected(adjustClientArea(window, output->geometry()));
+            for (const std::shared_ptr<Output> &output : std::as_const(m_outputs)) {
+                const auto geo = screenAreas[vd][output.get()].intersected(adjustClientArea(window, output->geometry()));
                 // ignore the geometry if it results in the screen getting removed completely
                 if (!geo.isEmpty()) {
-                    screenAreas[vd][output] = geo;
+                    screenAreas[vd][output.get()] = geo;
                 }
             }
         }
@@ -2615,9 +2615,9 @@ Output *Workspace::xineramaIndexToOutput(int index) const
     const xcb_xinerama_screen_info_t *infos = xcb_xinerama_query_screens_screen_info(screens.get());
     const QRect needle(infos[index].x_org, infos[index].y_org, infos[index].width, infos[index].height);
 
-    for (Output *output : std::as_const(m_outputs)) {
+    for (const std::shared_ptr<Output> &output : std::as_const(m_outputs)) {
         if (Xcb::toXNative(output->geometry()) == needle) {
-            return output;
+            return output.get();
         }
     }
 

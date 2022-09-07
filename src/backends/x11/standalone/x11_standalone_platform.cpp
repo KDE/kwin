@@ -468,9 +468,9 @@ void X11StandalonePlatform::updateOutputs()
 template<typename T>
 void X11StandalonePlatform::doUpdateOutputs()
 {
-    QVector<Output *> changed;
-    QVector<Output *> added;
-    QVector<Output *> removed = m_outputs;
+    QVector<std::shared_ptr<Output>> changed;
+    QVector<std::shared_ptr<Output>> added;
+    QVector<std::shared_ptr<Output>> removed = m_outputs;
 
     if (Xcb::Extensions::self()->isRandrAvailable()) {
         T resources(rootWindow());
@@ -511,12 +511,12 @@ void X11StandalonePlatform::doUpdateOutputs()
                         continue;
                     }
 
-                    X11Output *output = findX11Output(outputInfo.name());
+                    std::shared_ptr<X11Output> output = findX11Output(outputInfo.name());
                     if (output) {
                         changed.append(output);
                         removed.removeOne(output);
                     } else {
-                        output = new X11Output(this);
+                        output = std::make_shared<X11Output>(this);
                         added.append(output);
                     }
 
@@ -580,43 +580,42 @@ void X11StandalonePlatform::doUpdateOutputs()
     // The workspace handles having no outputs poorly. If the last output is about to be
     // removed, create a dummy output to avoid crashing.
     if (changed.isEmpty() && added.isEmpty()) {
-        auto dummyOutput = new X11PlaceholderOutput(this);
+        auto dummyOutput = std::make_shared<X11PlaceholderOutput>(this);
         m_outputs << dummyOutput;
         Q_EMIT outputAdded(dummyOutput);
         dummyOutput->updateEnabled(true);
     }
 
     // Process new outputs. Note new outputs must be introduced before removing any other outputs.
-    for (Output *output : qAsConst(added)) {
+    for (const std::shared_ptr<Output> &output : qAsConst(added)) {
         m_outputs.append(output);
         Q_EMIT outputAdded(output);
-        if (auto placeholderOutput = qobject_cast<X11PlaceholderOutput *>(output)) {
+        if (auto placeholderOutput = std::dynamic_pointer_cast<X11PlaceholderOutput>(output)) {
             placeholderOutput->updateEnabled(true);
-        } else if (auto nativeOutput = qobject_cast<X11Output *>(output)) {
+        } else if (auto nativeOutput = std::dynamic_pointer_cast<X11Output>(output)) {
             nativeOutput->updateEnabled(true);
         }
     }
 
     // Outputs have to be removed last to avoid the case where there are no enabled outputs.
-    for (Output *output : qAsConst(removed)) {
+    for (const std::shared_ptr<Output> &output : qAsConst(removed)) {
         m_outputs.removeOne(output);
-        if (auto placeholderOutput = qobject_cast<X11PlaceholderOutput *>(output)) {
+        if (auto placeholderOutput = std::dynamic_pointer_cast<X11PlaceholderOutput>(output)) {
             placeholderOutput->updateEnabled(false);
-        } else if (auto nativeOutput = qobject_cast<X11Output *>(output)) {
+        } else if (auto nativeOutput = std::dynamic_pointer_cast<X11Output>(output)) {
             nativeOutput->updateEnabled(false);
         }
         Q_EMIT outputRemoved(output);
-        delete output;
     }
 
     // Make sure that the position of an output in m_outputs matches its xinerama index, there
     // are X11 protocols that use xinerama indices to identify outputs.
-    std::sort(m_outputs.begin(), m_outputs.end(), [](const Output *a, const Output *b) {
-        const auto xa = qobject_cast<const X11Output *>(a);
+    std::sort(m_outputs.begin(), m_outputs.end(), [](const std::shared_ptr<Output> &a, const std::shared_ptr<Output> &b) {
+        const auto xa = std::dynamic_pointer_cast<X11Output>(a);
         if (!xa) {
             return false;
         }
-        const auto xb = qobject_cast<const X11Output *>(b);
+        const auto xb = std::dynamic_pointer_cast<X11Output>(b);
         if (!xb) {
             return true;
         }
@@ -626,11 +625,11 @@ void X11StandalonePlatform::doUpdateOutputs()
     Q_EMIT screensQueried();
 }
 
-X11Output *X11StandalonePlatform::findX11Output(const QString &name) const
+std::shared_ptr<X11Output> X11StandalonePlatform::findX11Output(const QString &name) const
 {
-    for (Output *output : m_outputs) {
+    for (const std::shared_ptr<Output> &output : m_outputs) {
         if (output->name() == name) {
-            return qobject_cast<X11Output *>(output);
+            return std::dynamic_pointer_cast<X11Output>(output);
         }
     }
     return nullptr;
@@ -646,7 +645,7 @@ RenderLoop *X11StandalonePlatform::renderLoop() const
     return m_renderLoop.get();
 }
 
-static bool refreshRate_compare(const Output *first, const Output *smallest)
+static bool refreshRate_compare(const std::shared_ptr<Output> &first, const std::shared_ptr<Output> &smallest)
 {
     return first->refreshRate() < smallest->refreshRate();
 }
@@ -658,14 +657,14 @@ static int currentRefreshRate()
         return refreshRate;
     }
 
-    const QVector<Output *> outputs = kwinApp()->platform()->outputs();
+    const QVector<std::shared_ptr<Output>> outputs = kwinApp()->platform()->outputs();
     if (outputs.isEmpty()) {
         return 60000;
     }
 
     static const QString syncDisplayDevice = qEnvironmentVariable("__GL_SYNC_DISPLAY_DEVICE");
     if (!syncDisplayDevice.isEmpty()) {
-        for (const Output *output : outputs) {
+        for (const std::shared_ptr<Output> &output : outputs) {
             if (output->name() == syncDisplayDevice) {
                 return output->refreshRate();
             }

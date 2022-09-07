@@ -364,7 +364,7 @@ void XdgSurfaceWindow::updateShowOnScreenEdge()
         Qt::Edges edges;
 
         const auto outputs = workspace()->outputs();
-        for (const Output *output : outputs) {
+        for (const auto &output : outputs) {
             const QRect screenGeometry = output->geometry();
             if (screenGeometry.left() == clientGeometry.left()) {
                 edges |= Qt::LeftEdge;

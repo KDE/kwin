@@ -303,7 +303,7 @@ static Output *resolveOutput(int outputId)
     if (outputId == -1) {
         return workspace()->activeOutput();
     }
-    return workspace()->outputs().value(outputId);
+    return workspace()->outputs().value(outputId).get();
 }
 
 QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, int outputId, int desktopId) const
@@ -420,12 +420,12 @@ int WorkspaceWrapper::numScreens() const
 
 int WorkspaceWrapper::screenAt(const QPointF &pos) const
 {
-    return workspace()->outputs().indexOf(workspace()->outputAt(pos));
+    return workspace()->outputs().indexOf(workspace()->outputAt(pos)->shared_from_this());
 }
 
 int WorkspaceWrapper::activeScreen() const
 {
-    return workspace()->outputs().indexOf(workspace()->activeOutput());
+    return workspace()->outputs().indexOf(workspace()->activeOutput()->shared_from_this());
 }
 
 QRect WorkspaceWrapper::virtualScreenGeometry() const
@@ -440,7 +440,7 @@ QSize WorkspaceWrapper::virtualScreenSize() const
 
 void WorkspaceWrapper::sendClientToScreen(Window *client, int screen)
 {
-    Output *output = workspace()->outputs().value(screen);
+    Output *output = workspace()->outputs().value(screen).get();
     if (output) {
         workspace()->sendWindowToOutput(client, output);
     }

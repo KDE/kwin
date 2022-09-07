@@ -164,7 +164,7 @@ void XdgShellOutput::handleConfigure(const QSize &size, XdgShellSurface::States 
 
     if (!m_hasBeenConfigured) {
         m_hasBeenConfigured = true;
-        backend()->addConfiguredOutput(this);
+        backend()->addConfiguredOutput(std::static_pointer_cast<WaylandOutput>(shared_from_this()));
     }
 }
 

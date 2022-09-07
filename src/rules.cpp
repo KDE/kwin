@@ -20,6 +20,7 @@
 
 #ifndef KCMRULES
 #include "client_machine.h"
+#include "core/output.h"
 #include "main.h"
 #include "virtualdesktops.h"
 #include "window.h"
@@ -842,13 +843,13 @@ Output *WindowRules::checkOutput(Output *output, bool init) const
     if (rules.isEmpty()) {
         return output;
     }
-    int ret = workspace()->outputs().indexOf(output);
+    int ret = workspace()->outputs().indexOf(output->shared_from_this());
     for (Rules *rule : rules) {
         if (rule->applyScreen(ret, init)) {
             break;
         }
     }
-    Output *ruleOutput = workspace()->outputs().value(ret);
+    Output *ruleOutput = workspace()->outputs().value(ret).get();
     return ruleOutput ? ruleOutput : output;
 }
 

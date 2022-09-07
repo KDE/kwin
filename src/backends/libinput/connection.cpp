@@ -534,17 +534,17 @@ void Connection::applyScreenToDevice(Device *device)
     }
 
     Output *deviceOutput = nullptr;
-    const QVector<Output *> outputs = kwinApp()->platform()->outputs();
+    const QVector<std::shared_ptr<Output>> outputs = kwinApp()->platform()->outputs();
 
     // let's try to find a screen for it
     if (!device->outputName().isEmpty()) {
         // we have an output name, try to find a screen with matching name
-        for (Output *output : outputs) {
+        for (const std::shared_ptr<Output> &output : outputs) {
             if (!output->isEnabled()) {
                 continue;
             }
             if (output->name() == device->outputName()) {
-                deviceOutput = output;
+                deviceOutput = output.get();
                 break;
             }
         }
@@ -552,12 +552,12 @@ void Connection::applyScreenToDevice(Device *device)
     if (!deviceOutput) {
         // do we have an internal screen?
         Output *internalOutput = nullptr;
-        for (Output *output : outputs) {
+        for (const std::shared_ptr<Output> &output : outputs) {
             if (!output->isEnabled()) {
                 continue;
             }
             if (output->isInternal()) {
-                internalOutput = output;
+                internalOutput = output.get();
                 break;
             }
         }
@@ -571,12 +571,12 @@ void Connection::applyScreenToDevice(Device *device)
             deviceOutput = internalOutput;
         }
         // let's compare all screens for size
-        for (Output *output : outputs) {
+        for (const std::shared_ptr<Output> &output : outputs) {
             if (!output->isEnabled()) {
                 continue;
             }
-            if (testScreenMatches(output)) {
-                deviceOutput = output;
+            if (testScreenMatches(output.get())) {
+                deviceOutput = output.get();
                 break;
             }
         }
@@ -586,10 +586,10 @@ void Connection::applyScreenToDevice(Device *device)
                 // we have an internal id, so let's use that
                 deviceOutput = internalOutput;
             } else {
-                for (Output *output : outputs) {
+                for (const std::shared_ptr<Output> &output : outputs) {
                     // just take first screen, we have no clue
                     if (output->isEnabled()) {
-                        deviceOutput = output;
+                        deviceOutput = output.get();
                         break;
                     }
                 }

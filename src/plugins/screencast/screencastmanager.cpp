@@ -111,8 +111,8 @@ void ScreencastManager::streamVirtualOutput(KWaylandServer::ScreencastStreamV1In
                                             KWaylandServer::ScreencastV1Interface::CursorMode mode)
 {
     auto output = kwinApp()->platform()->createVirtualOutput(name, size, scale);
-    streamOutput(stream, output, mode);
-    connect(stream, &KWaylandServer::ScreencastStreamV1Interface::finished, output, [output] {
+    streamOutput(stream, output.get(), mode);
+    connect(stream, &KWaylandServer::ScreencastStreamV1Interface::finished, output.get(), [output] {
         kwinApp()->platform()->removeVirtualOutput(output);
     });
 }
@@ -169,7 +169,7 @@ void ScreencastManager::streamRegion(KWaylandServer::ScreencastStreamV1Interface
         Compositor::self()->scene()->addRepaint(geometry);
 
         const auto allOutputs = workspace()->outputs();
-        for (auto output : allOutputs) {
+        for (const auto &output : allOutputs) {
             if (output->geometry().intersects(geometry)) {
                 auto bufferToStream = [output, stream, source](const QRegion &damagedRegion) {
                     if (damagedRegion.isEmpty()) {
@@ -178,10 +178,10 @@ void ScreencastManager::streamRegion(KWaylandServer::ScreencastStreamV1Interface
 
                     const QRect streamRegion = source->region();
                     const QRegion region = output->pixelSize() != output->modeSize() ? output->geometry() : damagedRegion;
-                    source->updateOutput(output);
+                    source->updateOutput(output.get());
                     stream->recordFrame(region.translated(-streamRegion.topLeft()).intersected(streamRegion));
                 };
-                connect(output, &Output::outputChange, stream, bufferToStream);
+                connect(output.get(), &Output::outputChange, stream, bufferToStream);
             }
         }
     });

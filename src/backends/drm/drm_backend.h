@@ -60,8 +60,8 @@ public:
     QVector<CompositingType> supportedCompositors() const override;
 
     QString supportInformation() const override;
-    Output *createVirtualOutput(const QString &name, const QSize &size, double scale) override;
-    void removeVirtualOutput(Output *output) override;
+    std::shared_ptr<Output> createVirtualOutput(const QString &name, const QSize &size, double scale) override;
+    void removeVirtualOutput(std::shared_ptr<Output> output) override;
 
     DrmGpu *primaryGpu() const;
     DrmGpu *findGpu(dev_t deviceId) const;
@@ -87,8 +87,8 @@ protected:
 
 private:
     friend class DrmGpu;
-    void addOutput(DrmAbstractOutput *output);
-    void removeOutput(DrmAbstractOutput *output);
+    void addOutput(std::shared_ptr<DrmAbstractOutput> output);
+    void removeOutput(std::shared_ptr<DrmAbstractOutput> output);
     void activate(bool active);
     void reactivate();
     void deactivate();
@@ -99,7 +99,7 @@ private:
     std::unique_ptr<Udev> m_udev;
     std::unique_ptr<UdevMonitor> m_udevMonitor;
     Session *m_session;
-    QVector<DrmAbstractOutput *> m_outputs;
+    QVector<std::shared_ptr<DrmAbstractOutput>> m_outputs;
     DrmVirtualOutput *m_placeHolderOutput = nullptr;
 
     bool m_active = false;

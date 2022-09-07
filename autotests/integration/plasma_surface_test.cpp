@@ -267,7 +267,7 @@ void PlasmaSurfaceTest::testPanelTypeHasStrut()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
 
     // the panel is on the first output and the current desktop
-    Output *output = workspace()->outputs().constFirst();
+    Output *output = workspace()->outputs().constFirst().get();
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
 
     QVERIFY(window);
@@ -318,7 +318,7 @@ void PlasmaSurfaceTest::testPanelWindowsCanCover()
     auto panel = Test::renderAndWaitForShown(surface.get(), panelGeometry.size(), Qt::blue);
 
     // the panel is on the first output and the current desktop
-    Output *output = workspace()->outputs().constFirst();
+    Output *output = workspace()->outputs().constFirst().get();
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
 
     QVERIFY(panel);

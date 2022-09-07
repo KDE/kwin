@@ -779,7 +779,7 @@ void WaylandBackend::createOutputs()
     }
 }
 
-WaylandOutput *WaylandBackend::createOutput(const QString &name, const QSize &size)
+std::shared_ptr<WaylandOutput> WaylandBackend::createOutput(const QString &name, const QSize &size)
 {
     auto surface = m_compositor->createSurface(this);
     if (!surface || !surface->isValid()) {
@@ -796,10 +796,10 @@ WaylandOutput *WaylandBackend::createOutput(const QString &name, const QSize &si
         });
     }
 
-    WaylandOutput *waylandOutput = nullptr;
+    std::shared_ptr<WaylandOutput> waylandOutput = nullptr;
 
     if (m_xdgShell && m_xdgShell->isValid()) {
-        waylandOutput = new XdgShellOutput(name, surface, m_xdgShell, this, m_nextId++);
+        waylandOutput = std::make_shared<XdgShellOutput>(name, surface, m_xdgShell, this, m_nextId++);
     }
 
     if (!waylandOutput) {
@@ -808,7 +808,7 @@ WaylandOutput *WaylandBackend::createOutput(const QString &name, const QSize &si
     }
 
     waylandOutput->init(size);
-    connect(waylandOutput, &WaylandOutput::frameRendered, this, [waylandOutput]() {
+    connect(waylandOutput.get(), &WaylandOutput::frameRendered, this, [waylandOutput]() {
         // The current time of the monotonic clock is a pretty good estimate when the frame
         // has been presented, however it will be much better if we check whether the host
         // compositor supports the wp_presentation protocol.
@@ -825,10 +825,9 @@ WaylandOutput *WaylandBackend::createOutput(const QString &name, const QSize &si
 void WaylandBackend::destroyOutputs()
 {
     while (!m_outputs.isEmpty()) {
-        WaylandOutput *output = m_outputs.takeLast();
+        std::shared_ptr<WaylandOutput> output = m_outputs.takeLast();
         output->updateEnabled(false);
         Q_EMIT outputRemoved(output);
-        delete output;
     }
 }
 
@@ -861,18 +860,18 @@ void WaylandBackend::flush()
 WaylandOutput *WaylandBackend::getOutputAt(const QPointF &globalPosition)
 {
     const auto pos = globalPosition.toPoint();
-    auto checkPosition = [pos](WaylandOutput *output) {
+    auto checkPosition = [pos](const std::shared_ptr<WaylandOutput> &output) {
         return output->geometry().contains(pos);
     };
     auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(), checkPosition);
-    return it == m_outputs.constEnd() ? nullptr : *it;
+    return it == m_outputs.constEnd() ? nullptr : (*it).get();
 }
 
 WaylandOutput *WaylandBackend::findOutput(KWayland::Client::Surface *nativeSurface) const
 {
-    for (WaylandOutput *output : m_outputs) {
+    for (const std::shared_ptr<WaylandOutput> &output : m_outputs) {
         if (output->surface() == nativeSurface) {
-            return output;
+            return output.get();
         }
     }
     return nullptr;
@@ -911,7 +910,7 @@ void WaylandBackend::togglePointerLock()
 
 bool WaylandBackend::pointerIsLocked()
 {
-    for (auto *output : qAsConst(m_outputs)) {
+    for (const auto &output : qAsConst(m_outputs)) {
         if (output->pointerIsLocked()) {
             return true;
         }
@@ -936,7 +935,7 @@ Outputs WaylandBackend::outputs() const
     return m_outputs;
 }
 
-void WaylandBackend::addConfiguredOutput(WaylandOutput *output)
+void WaylandBackend::addConfiguredOutput(std::shared_ptr<WaylandOutput> output)
 {
     m_outputs << output;
     Q_EMIT outputAdded(output);
@@ -967,18 +966,17 @@ void WaylandBackend::clearDpmsFilter()
     m_dpmsFilter.reset();
 }
 
-Output *WaylandBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
+std::shared_ptr<Output> WaylandBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
     return createOutput(name, size * scale);
 }
 
-void WaylandBackend::removeVirtualOutput(Output *output)
+void WaylandBackend::removeVirtualOutput(std::shared_ptr<Output> output)
 {
-    WaylandOutput *waylandOutput = dynamic_cast<WaylandOutput *>(output);
+    auto waylandOutput = std::dynamic_pointer_cast<WaylandOutput>(output);
     if (waylandOutput && m_outputs.removeAll(waylandOutput)) {
         waylandOutput->updateEnabled(false);
         Q_EMIT outputRemoved(waylandOutput);
-        delete waylandOutput;
     }
 }
 

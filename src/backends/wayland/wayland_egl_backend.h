@@ -104,7 +104,7 @@ private:
     bool initBufferConfigs();
     bool initRenderingContext();
 
-    bool createEglWaylandOutput(Output *output);
+    bool createEglWaylandOutput(const std::shared_ptr<Output> &output);
 
     void cleanupSurfaces() override;
 
