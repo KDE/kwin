@@ -286,39 +286,49 @@ static GLTexture *bindSurfaceTexture(SurfaceItem *surfaceItem)
     return platformSurfaceTexture->texture();
 }
 
-static WindowQuadList clipQuads(const Item *item, const SceneOpenGL::RenderContext *context)
+static QRectF logicalRectToDeviceRect(const QRectF &logical, qreal deviceScale)
+{
+    return QRectF(QPointF(std::round(logical.left() * deviceScale), std::round(logical.top() * deviceScale)),
+                  QPointF(std::round(logical.right() * deviceScale), std::round(logical.bottom() * deviceScale)));
+}
+
+static RenderGeometry clipQuads(const Item *item, const SceneOpenGL::RenderContext *context)
 {
     const WindowQuadList quads = item->quads();
-    if (context->clip != infiniteRegion() && !context->hardwareClipping) {
-        // transformStack contains translations in device pixels, but clipping
-        // here happens on WindowQuad which is in logical pixels. So convert
-        // this position back to logical pixels as WindowQuad is only converted
-        // to device pixels when the final conversion to GPU geometry happens.
-        const QPointF offset = context->transformStack.top().map(QPointF(0., 0.)) / context->renderTargetScale;
 
-        WindowQuadList ret;
-        ret.reserve(quads.count());
+    // Item to world translation.
+    const QPointF worldTranslation = context->transformStack.top().map(QPointF(0., 0.));
+    const qreal scale = context->renderTargetScale;
 
-        // split all quads in bounding rect with the actual rects in the region
-        for (const WindowQuad &quad : qAsConst(quads)) {
-            for (const QRect &r : qAsConst(context->clip)) {
-                const QRectF rf(QRectF(r).translated(-offset));
-                const QRectF quadRect(QPointF(quad.left(), quad.top()), QPointF(quad.right(), quad.bottom()));
-                const QRectF &intersected = rf.intersected(quadRect);
+    RenderGeometry geometry;
+    geometry.reserve(quads.count() * 6);
+
+    // split all quads in bounding rect with the actual rects in the region
+    for (const WindowQuad &quad : qAsConst(quads)) {
+        if (context->clip != infiniteRegion() && !context->hardwareClipping) {
+            // Scale to device coordinates, rounding as needed.
+            QRectF deviceBounds = logicalRectToDeviceRect(quad.bounds(), scale);
+
+            for (const QRect &clipRect : qAsConst(context->clip)) {
+                QRectF deviceClipRect = logicalRectToDeviceRect(clipRect, scale).translated(-worldTranslation);
+
+                const QRectF &intersected = deviceClipRect.intersected(deviceBounds);
                 if (intersected.isValid()) {
-                    if (quadRect == intersected) {
+                    if (deviceBounds == intersected) {
                         // case 1: completely contains, include and do not check other rects
-                        ret << quad;
+                        geometry.appendWindowQuad(quad, scale);
                         break;
                     }
                     // case 2: intersection
-                    ret << quad.makeSubQuad(intersected.left(), intersected.top(), intersected.right(), intersected.bottom());
+                    geometry.appendSubQuad(quad, intersected, scale);
                 }
             }
+        } else {
+            geometry.appendWindowQuad(quad, scale);
         }
-        return ret;
     }
-    return quads;
+
+    return geometry;
 }
 
 void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
@@ -344,13 +354,15 @@ void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
     }
 
     item->preprocess();
+
+    RenderGeometry geometry = clipQuads(item, context);
+
     if (auto shadowItem = qobject_cast<ShadowItem *>(item)) {
-        WindowQuadList quads = clipQuads(item, context);
-        if (!quads.isEmpty()) {
+        if (!geometry.isEmpty()) {
             SceneOpenGLShadow *shadow = static_cast<SceneOpenGLShadow *>(shadowItem->shadow());
             context->renderNodes.append(RenderNode{
                 .texture = shadow->shadowTexture(),
-                .quads = quads,
+                .geometry = geometry,
                 .transformMatrix = context->transformStack.top(),
                 .opacity = context->opacityStack.top(),
                 .hasAlpha = true,
@@ -359,12 +371,11 @@ void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
             });
         }
     } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {
-        WindowQuadList quads = clipQuads(item, context);
-        if (!quads.isEmpty()) {
+        if (!geometry.isEmpty()) {
             auto renderer = static_cast<const SceneOpenGLDecorationRenderer *>(decorationItem->renderer());
             context->renderNodes.append(RenderNode{
                 .texture = renderer->texture(),
-                .quads = quads,
+                .geometry = geometry,
                 .transformMatrix = context->transformStack.top(),
                 .opacity = context->opacityStack.top(),
                 .hasAlpha = true,
@@ -375,13 +386,12 @@ void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
     } else if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
         SurfacePixmap *pixmap = surfaceItem->pixmap();
         if (pixmap) {
-            WindowQuadList quads = clipQuads(item, context);
-            if (!quads.isEmpty()) {
+            if (!geometry.isEmpty()) {
                 // Don't bother with blending if the entire surface is opaque
                 bool hasAlpha = pixmap->hasAlphaChannel() && !surfaceItem->shape().subtracted(surfaceItem->opaque()).isEmpty();
                 context->renderNodes.append(RenderNode{
                     .texture = bindSurfaceTexture(surfaceItem),
-                    .quads = quads,
+                    .geometry = geometry,
                     .transformMatrix = context->transformStack.top(),
                     .opacity = context->opacityStack.top(),
                     .hasAlpha = hasAlpha,
@@ -439,18 +449,15 @@ void SceneOpenGL::render(Item *item, int mask, const QRegion &region, const Wind
 
     createRenderNode(item, &renderContext);
 
-    int quadCount = 0;
+    int totalVertexCount = 0;
     for (const RenderNode &node : qAsConst(renderContext.renderNodes)) {
-        quadCount += node.quads.count();
+        totalVertexCount += node.geometry.count();
     }
-    if (!quadCount) {
+    if (totalVertexCount == 0) {
         return;
     }
 
-    const bool indexedQuads = GLVertexBuffer::supportsIndexedQuads();
-    const GLenum primitiveType = indexedQuads ? GL_QUADS : GL_TRIANGLES;
-    const int verticesPerQuad = indexedQuads ? 4 : 6;
-    const size_t size = verticesPerQuad * quadCount * sizeof(GLVertex2D);
+    const size_t size = totalVertexCount * sizeof(GLVertex2D);
 
     ShaderTraits shaderTraits = ShaderTrait::MapTexture;
 
@@ -474,7 +481,7 @@ void SceneOpenGL::render(Item *item, int mask, const QRegion &region, const Wind
 
     for (int i = 0, v = 0; i < renderContext.renderNodes.count(); i++) {
         RenderNode &renderNode = renderContext.renderNodes[i];
-        if (renderNode.quads.isEmpty() || !renderNode.texture) {
+        if (renderNode.geometry.isEmpty() || !renderNode.texture) {
             continue;
         }
 
@@ -483,12 +490,21 @@ void SceneOpenGL::render(Item *item, int mask, const QRegion &region, const Wind
         }
 
         renderNode.firstVertex = v;
-        renderNode.vertexCount = renderNode.quads.count() * verticesPerQuad;
+        renderNode.vertexCount = renderNode.geometry.count();
 
-        const QMatrix4x4 matrix = renderNode.texture->matrix(renderNode.coordinateType);
+        const QMatrix4x4 textureMatrix = renderNode.texture->matrix(renderNode.coordinateType);
+        if (!textureMatrix.isIdentity()) {
+            // Adjust the vertex' texture coordinates with the specified matrix.
+            const QVector2D coeff(textureMatrix(0, 0), textureMatrix(1, 1));
+            const QVector2D offset(textureMatrix(0, 3), textureMatrix(1, 3));
 
-        renderNode.quads.makeInterleavedArrays(primitiveType, &map[v], matrix, renderNode.scale);
-        v += renderNode.quads.count() * verticesPerQuad;
+            for (auto &vertex : renderNode.geometry) {
+                vertex.texcoord = vertex.texcoord * coeff + offset;
+            }
+        }
+
+        renderNode.geometry.copy(std::span(&map[v], renderNode.geometry.count()));
+        v += renderNode.geometry.count();
     }
 
     vbo->unmap();
@@ -535,7 +551,7 @@ void SceneOpenGL::render(Item *item, int mask, const QRegion &region, const Wind
         renderNode.texture->setWrapMode(GL_CLAMP_TO_EDGE);
         renderNode.texture->bind();
 
-        vbo->draw(scissorRegion, primitiveType, renderNode.firstVertex,
+        vbo->draw(scissorRegion, GL_TRIANGLES, renderNode.firstVertex,
                   renderNode.vertexCount, renderContext.hardwareClipping);
     }
 

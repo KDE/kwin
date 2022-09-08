@@ -41,6 +41,7 @@
 #include <cmath>
 #include <functional>
 #include <optional>
+#include <span>
 
 class KConfigGroup;
 class QFont;
@@ -2947,6 +2948,68 @@ public:
     WindowQuadList makeRegularGrid(int xSubdivisions, int ySubdivisions) const;
     void makeInterleavedArrays(unsigned int type, GLVertex2D *vertices, const QMatrix4x4 &matrix, qreal scale) const;
     void makeArrays(float **vertices, float **texcoords, const QSizeF &size, bool yInverted) const;
+};
+
+/**
+ * A helper class for render geometry in device coordinates.
+ *
+ * This mostly represents a vector of vertices, with some convenience methods
+ * for easily converting from WindowQuad and related classes to lists of
+ * GLVertex2D. This class assumes rendering happens as unindexed triangles.
+ */
+class KWINEFFECTS_EXPORT RenderGeometry : public QVector<GLVertex2D>
+{
+public:
+    /**
+     * Copy geometry data into another buffer.
+     *
+     * This is primarily intended for copying into a vertex buffer for rendering.
+     *
+     * @param destination The destination buffer. This needs to be at least large
+     *                    enough to contain all elements.
+     */
+    void copy(std::span<GLVertex2D> destination);
+    /**
+     * Append a WindowVertex as a geometry vertex.
+     *
+     * WindowVertex is assumed to be in logical coordinates. It will be converted
+     * to device coordinates using the specified device scale and then rounded
+     * so it fits correctly on the device pixel grid.
+     *
+     * @param windowVertex The WindowVertex instance to append.
+     * @param deviceScale The scaling factor to use to go from logical to device
+     *                    coordinates.
+     */
+    void appendWindowVertex(const WindowVertex &windowVertex, qreal deviceScale);
+    /**
+     * Append a WindowQuad as two triangles.
+     *
+     * This will append the corners of the specified WindowQuad in the right
+     * order so they make two triangles that can be rendered by OpenGL. The
+     * corners are converted to device coordinates and rounded, just like
+     * `appendWindowVertex()` does.
+     *
+     * @param quad The WindowQuad instance to append.
+     * @param deviceScale The scaling factor to use to go from logical to device
+     *                    coordinates.
+     */
+    void appendWindowQuad(const WindowQuad &quad, qreal deviceScale);
+    /**
+     * Append a sub-quad of a WindowQuad as two triangles.
+     *
+     * This will append the sub-quad specified by `intersection` as two
+     * triangles. The quad is expected to be in logical coordinates, while the
+     * intersection is expected to be in device coordinates. The texture
+     * coordinates of the resulting vertices are based upon those of the quad,
+     * using bilinear interpolation for interpolating how much of the original
+     * texture coordinates to use.
+     *
+     * @param quad The WindowQuad instance to use a sub-quad of.
+     * @param subquad The sub-quad to append.
+     * @param deviceScale The scaling factor used to convert from logical to
+     *                    device coordinates.
+     */
+    void appendSubQuad(const WindowQuad &quad, const QRectF &subquad, qreal deviceScale);
 };
 
 class KWINEFFECTS_EXPORT WindowPrePaintData

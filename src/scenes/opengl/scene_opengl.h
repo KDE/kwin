@@ -31,7 +31,7 @@ public:
     struct RenderNode
     {
         GLTexture *texture = nullptr;
-        WindowQuadList quads;
+        RenderGeometry geometry;
         QMatrix4x4 transformMatrix;
         int firstVertex = 0;
         int vertexCount = 0;

@@ -1149,6 +1149,73 @@ void WindowQuadList::makeArrays(float **vertices, float **texcoords, const QSize
     }
 }
 
+void RenderGeometry::copy(std::span<GLVertex2D> destination)
+{
+    Q_ASSERT(int(destination.size()) >= size());
+    for (std::size_t i = 0; i < destination.size(); ++i) {
+        destination[i] = at(i);
+    }
+}
+
+void RenderGeometry::appendWindowVertex(const WindowVertex &windowVertex, qreal deviceScale)
+{
+    GLVertex2D glVertex;
+    glVertex.position = roundVector(QVector2D(windowVertex.x(), windowVertex.y()) * deviceScale);
+    glVertex.texcoord = QVector2D(windowVertex.u(), windowVertex.v());
+    append(glVertex);
+}
+
+void RenderGeometry::appendWindowQuad(const WindowQuad &quad, qreal deviceScale)
+{
+    // Geometry assumes we're rendering triangles, so add the quad's
+    // vertices as two triangles. Vertex order is top-left, bottom-left,
+    // top-right followed by top-right, bottom-left, bottom-right.
+    appendWindowVertex(quad[0], deviceScale);
+    appendWindowVertex(quad[3], deviceScale);
+    appendWindowVertex(quad[1], deviceScale);
+
+    appendWindowVertex(quad[1], deviceScale);
+    appendWindowVertex(quad[3], deviceScale);
+    appendWindowVertex(quad[2], deviceScale);
+}
+
+void RenderGeometry::appendSubQuad(const WindowQuad &quad, const QRectF &subquad, qreal deviceScale)
+{
+    std::array<GLVertex2D, 4> vertices;
+    vertices[0].position = QVector2D(subquad.topLeft());
+    vertices[1].position = QVector2D(subquad.topRight());
+    vertices[2].position = QVector2D(subquad.bottomRight());
+    vertices[3].position = QVector2D(subquad.bottomLeft());
+
+    const auto deviceQuad = QRectF{QPointF(std::round(quad.left() * deviceScale), std::round(quad.top() * deviceScale)),
+                                   QPointF(std::round(quad.right() * deviceScale), std::round(quad.bottom() * deviceScale))};
+
+    const QPointF origin = deviceQuad.topLeft();
+    const QSizeF size = deviceQuad.size();
+
+#pragma GCC unroll 4
+    for (int i = 0; i < 4; ++i) {
+        const double weight1 = (vertices[i].position.x() - origin.x()) / size.width();
+        const double weight2 = (vertices[i].position.y() - origin.y()) / size.height();
+        const double oneMinW1 = 1.0 - weight1;
+        const double oneMinW2 = 1.0 - weight2;
+
+        const float u = oneMinW1 * oneMinW2 * quad[0].u() + weight1 * oneMinW2 * quad[1].u()
+            + weight1 * weight2 * quad[2].u() + oneMinW1 * weight2 * quad[3].u();
+        const float v = oneMinW1 * oneMinW2 * quad[0].v() + weight1 * oneMinW2 * quad[1].v()
+            + weight1 * weight2 * quad[2].v() + oneMinW1 * weight2 * quad[3].v();
+        vertices[i].texcoord = QVector2D(u, v);
+    }
+
+    append(vertices[0]);
+    append(vertices[3]);
+    append(vertices[1]);
+
+    append(vertices[1]);
+    append(vertices[3]);
+    append(vertices[2]);
+}
+
 /***************************************************************
  Motion1D
 ***************************************************************/
