@@ -633,6 +633,10 @@ void Workspace::updateOutputConfiguration()
     }
 
     const auto outputs = kwinApp()->platform()->outputs();
+    if (outputs.empty()) {
+        // nothing to do
+        return;
+    }
     const QString hash = KWinKScreenIntegration::connectedOutputsHash(outputs);
     if (m_outputsHash == hash) {
         return;
