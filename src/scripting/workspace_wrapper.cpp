@@ -281,11 +281,17 @@ QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, const QPoint &p, Vi
 
 QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, const KWin::Window *c) const
 {
+    if (!c) {
+        return QRectF();
+    }
     return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), c);
 }
 
 QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, KWin::Window *c) const
 {
+    if (!c) {
+        return QRectF();
+    }
     return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), c);
 }
 
