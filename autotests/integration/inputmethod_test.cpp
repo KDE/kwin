@@ -201,11 +201,8 @@ void InputMethodTest::testEnableDisableV3()
 
 void InputMethodTest::testEnableActive()
 {
+    // This test verifies that enabling text-input twice won't change the active input method status.
     QVERIFY(!kwinApp()->inputMethod()->isActive());
-
-    QSignalSpy windowRemovedSpy(workspace(), &Workspace::windowRemoved);
-
-    QSignalSpy activateSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
 
     // Create an xdg_toplevel surface and wait for the compositor to catch up.
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -213,35 +210,21 @@ void InputMethodTest::testEnableActive()
     Window *window = Test::renderAndWaitForShown(surface.get(), QSize(1280, 1024), Qt::red);
     QVERIFY(window);
     QVERIFY(window->isActive());
-    QCOMPARE(window->frameGeometry().size(), QSize(1280, 1024));
-    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
-    QVERIFY(frameGeometryChangedSpy.isValid());
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
-
-    std::unique_ptr<TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
-
-    QVERIFY(textInput != nullptr);
-    textInput->enable(surface.get());
-    QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     // Show the keyboard
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    std::unique_ptr<TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
+    textInput->enable(surface.get());
     textInput->showInputPanel();
     QVERIFY(windowAddedSpy.wait());
+    QVERIFY(kwinApp()->inputMethod()->isActive());
 
-    QCOMPARE(workspace()->activeWindow(), window);
-
-    activateSpy.clear();
+    // Ask the keyboard to be shown again.
+    QSignalSpy activateSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
     textInput->enable(surface.get());
     textInput->showInputPanel();
     activateSpy.wait(200);
     QVERIFY(activateSpy.isEmpty());
-    QVERIFY(kwinApp()->inputMethod()->isActive());
-    auto keyboardWindow = Test::inputPanelWindow();
-    QVERIFY(keyboardWindow);
-    textInput->enable(surface.get());
-
     QVERIFY(kwinApp()->inputMethod()->isActive());
 
     // Destroy the test window.
