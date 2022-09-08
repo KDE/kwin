@@ -2519,10 +2519,16 @@ QRectF Workspace::clientArea(clientAreaOption opt, const Window *window, const O
     } else {
         desktop = window->desktops().constLast();
     }
-
+    /* TODO: configuration for fake maximize or fullscreen geometries?
     if (opt == MaximizeArea) {
-        return output->customTiling()->maximizeTile(window->frameGeometry().center())->maximizedWindowGeometry();
+        for (const auto &r : output->customTiling()->tileGeometries()) {
+            const auto intersection = r.intersected(QRectF(window->x(), window->y(), window->width(), window->height()));
+            if (intersection.width() * intersection.height() > (window->width() * window->height()) / 2) {
+                return r.toRect();
+            }
+        }
     }
+*/
     return clientArea(opt, output, desktop);
 }
 

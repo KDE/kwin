@@ -32,7 +32,6 @@ class KWIN_EXPORT Tile : public QObject
     Q_PROPERTY(Tile *parent READ parentTile CONSTANT)
     Q_PROPERTY(QList<Tile *> tiles READ childTiles NOTIFY childTilesChanged)
     Q_PROPERTY(bool isLayout READ isLayout NOTIFY isLayoutChanged)
-    Q_PROPERTY(bool isMaximizeArea READ isMaximizeArea WRITE setMaximizeArea NOTIFY isMaximizeAreaChanged)
     Q_PROPERTY(bool canBeRemoved READ canBeRemoved CONSTANT)
 
 public:
@@ -69,9 +68,6 @@ public:
 
     QMarginsF padding() const;
     void setPadding(const QMarginsF &padding);
-
-    void setMaximizeArea(bool isMaximize);
-    bool isMaximizeArea() const;
 
     /**
      * All tiles directly children of this tile
@@ -116,7 +112,6 @@ Q_SIGNALS:
     void rowChanged(int row);
     void isLayoutChanged(bool isLayout);
     void childTilesChanged();
-    void isMaximizeAreaChanged(bool isMaximizeArea);
 
 protected:
     explicit Tile(TileManager *tiling, Tile *parentItem = nullptr);
@@ -132,7 +127,6 @@ private:
     static QSizeF s_minimumSize;
     QMarginsF m_padding = QMargins(4, 4, 4, 4);
     bool m_canBeRemoved = true;
-    bool m_isMaximizeArea = false;
 };
 
 } // namespace KWin

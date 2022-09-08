@@ -107,40 +107,6 @@ Tile *TileManager::bestTileForPosition(const QPointF &pos)
     return ret;
 }
 
-Tile *TileManager::quickTileForPosition(const QPointF &pos)
-{
-    const auto hotSideMargin = 20;
-    const auto hotTopMargin = 5;
-    const auto maxGeom = m_quickRootTile->maximizedWindowGeometry();
-    if (!maxGeom.contains(pos)) {
-        return nullptr;
-    }
-
-    const auto checkSideTiles = [this](const QPointF &pos, QuickTileFlag baseFlag) {
-        const auto flags = {QuickTileFlag::Top, QuickTileFlag::Bottom};
-        auto *nearestTile = quickTile(baseFlag);
-        auto nearestDistance = (nearestTile->windowGeometry().center() - pos).manhattanLength();
-        for (const auto flag : flags) {
-            auto *tile = quickTile(baseFlag | flag);
-            const auto distance = (tile->windowGeometry().center() - pos).manhattanLength();
-            if (distance < nearestDistance) {
-                nearestTile = tile;
-                nearestDistance = distance;
-            }
-        }
-        return nearestTile;
-    };
-
-    if (options->electricBorderTiling() && pos.x() - maxGeom.x() <= hotSideMargin) {
-        return checkSideTiles(pos, QuickTileFlag::Left);
-    } else if (options->electricBorderTiling() && maxGeom.right() - pos.x() <= hotSideMargin) {
-        return checkSideTiles(pos, QuickTileFlag::Right);
-    } else if (options->electricBorderMaximize() && pos.y() - maxGeom.top() <= hotTopMargin) {
-        return maximizeTile(pos);
-    }
-    return nullptr;
-}
-
 QVariant TileManager::bestTileForPosition(qreal x, qreal y)
 {
     return QVariant::fromValue(bestTileForPosition({x, y}));
@@ -154,16 +120,6 @@ CustomTile *TileManager::rootTile() const
 Tile *TileManager::quickTile(QuickTileMode mode) const
 {
     return m_quickRootTile->tileForMode(mode);
-}
-
-KWin::Tile *TileManager::maximizeTile(const QPointF &pos)
-{
-    auto *t = bestTileForPosition(pos);
-    if (t && t->isMaximizeArea()) {
-        return t;
-    } else {
-        return m_quickRootTile.get();
-    }
 }
 
 QVariant TileManager::data(const QModelIndex &index, int role) const
@@ -312,10 +268,7 @@ CustomTile *TileManager::parseTilingJSon(const QJsonValue &val, const QRectF &av
                 createdTile->setLayoutDirection(dir);
                 parseTilingJSon(arr, createdTile->relativeGeometry(), createdTile);
             }
-        } else if (createdTile && obj.contains(QStringLiteral("isMaximizeArea"))) {
-            createdTile->setMaximizeArea(obj.value(QStringLiteral("isMaximizeArea")).toBool());
         }
-
         return createdTile;
     } else if (val.isArray()) {
         const auto arr = val.toArray();
@@ -430,10 +383,6 @@ QJsonObject TileManager::tileToJSon(CustomTile *tile)
             obj[QStringLiteral("width")] = tile->relativeGeometry().width();
             obj[QStringLiteral("height")] = tile->relativeGeometry().height();
         }
-    }
-
-    if (tile->isMaximizeArea()) {
-        obj[QStringLiteral("isMaximizeArea")] = true;
     }
 
     if (tile->isLayout()) {

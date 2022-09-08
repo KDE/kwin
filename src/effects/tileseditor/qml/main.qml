@@ -104,7 +104,7 @@ FocusScope {
                 width: model.client.width
                 height: model.client.height
                 z: model.client.stackingOrder
-                visible: !model.client.minimized && model.client.tile && (model.client.tile instanceof KWinComponents.Tile)
+                visible: !model.client.minimized && model.client.tile
             }
         }
         property real blurRadius: root.active ? 24 : 0
