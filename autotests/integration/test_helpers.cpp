@@ -533,8 +533,6 @@ void destroyWaylandConnection()
     s_waylandConnection.idleInhibitManagerV1 = nullptr;
     delete s_waylandConnection.shm;
     s_waylandConnection.shm = nullptr;
-    delete s_waylandConnection.queue;
-    s_waylandConnection.queue = nullptr;
     delete s_waylandConnection.registry;
     s_waylandConnection.registry = nullptr;
     delete s_waylandConnection.appMenu;
@@ -549,6 +547,10 @@ void destroyWaylandConnection()
     s_waylandConnection.layerShellV1 = nullptr;
     delete s_waylandConnection.outputManagementV2;
     s_waylandConnection.outputManagementV2 = nullptr;
+
+    delete s_waylandConnection.queue; // Must be destroyed last
+    s_waylandConnection.queue = nullptr;
+
     if (s_waylandConnection.thread) {
         s_waylandConnection.connection->deleteLater();
         s_waylandConnection.thread->quit();
