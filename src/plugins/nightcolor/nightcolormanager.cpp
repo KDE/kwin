@@ -482,6 +482,16 @@ void NightColorManager::preview(uint previewTemp)
     m_previewTimer->setSingleShot(true);
     connect(m_previewTimer, &QTimer::timeout, this, &NightColorManager::stopPreview);
     m_previewTimer->start(15000);
+
+    QDBusMessage message = QDBusMessage::createMethodCall(
+        QStringLiteral("org.kde.plasmashell"),
+        QStringLiteral("/org/kde/osdService"),
+        QStringLiteral("org.kde.osdService"),
+        QStringLiteral("showText"));
+    message.setArguments(
+        {QStringLiteral("preferences-desktop-display-nightcolor-on"),
+         i18n("Color Temperature Preview")});
+    QDBusConnection::sessionBus().asyncCall(message);
 }
 
 void NightColorManager::stopPreview()
