@@ -2930,6 +2930,7 @@ public:
     double right() const;
     double top() const;
     double bottom() const;
+    QRectF bounds() const;
 
 private:
     friend class WindowQuadList;
@@ -4089,6 +4090,11 @@ inline double WindowQuad::top() const
 inline double WindowQuad::bottom() const
 {
     return qMax(verts[0].py, qMax(verts[1].py, qMax(verts[2].py, verts[3].py)));
+}
+
+inline QRectF WindowQuad::bounds() const
+{
+    return QRectF(QPointF(left(), top()), QPointF(right(), bottom()));
 }
 
 /***************************************************************
