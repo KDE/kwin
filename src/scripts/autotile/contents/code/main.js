@@ -146,6 +146,8 @@ var clientAdded = function(client) {
     if (!("interactiveMoveResizeTracker" in client)) {
         client.moveResizedChanged.connect(() => {
             if (!client.tile && !client.move) {
+                const tiling = workspace.tilingForScreen(client.screen);
+
                 assignTileToWindow(tiling.bestTileForPosition(client.frameGeometry.x, client.frameGeometry.y), client);
             }
         });
@@ -193,5 +195,5 @@ workspace.clientUnminimized.connect((client) => {
 
 let clients = workspace.clientList();
 for (let i = 0; i < clients.length; i++) {
-    clientAdded(clients[i]);
+  //  clientAdded(clients[i]);
 }

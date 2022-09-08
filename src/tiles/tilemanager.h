@@ -37,7 +37,7 @@ class TileManager;
 class KWIN_EXPORT TileManager : public QAbstractItemModel
 {
     Q_OBJECT
-    Q_PROPERTY(Tile *rootTile READ rootTile CONSTANT)
+    Q_PROPERTY(KWin::Tile *rootTile READ rootTile CONSTANT)
 
 public:
     enum Roles {
@@ -48,10 +48,10 @@ public:
 
     Output *output() const;
 
-    Tile *bestTileForPosition(const QPointF &pos);
-    Q_INVOKABLE QVariant bestTileForPosition(qreal x, qreal y); // For scripting
+    KWin::Tile *bestTileForPosition(const QPointF &pos);
+    Q_INVOKABLE KWin::Tile *bestTileForPosition(qreal x, qreal y); // For scripting
     CustomTile *rootTile() const;
-    Tile *quickTile(QuickTileMode mode) const;
+    KWin::Tile *quickTile(QuickTileMode mode) const;
 
     // QAbstractItemModel overrides
     QHash<int, QByteArray> roleNames() const override;

@@ -107,9 +107,9 @@ Tile *TileManager::bestTileForPosition(const QPointF &pos)
     return ret;
 }
 
-QVariant TileManager::bestTileForPosition(qreal x, qreal y)
+KWin::Tile *TileManager::bestTileForPosition(qreal x, qreal y)
 {
-    return QVariant::fromValue(bestTileForPosition({x, y}));
+    return bestTileForPosition({x, y});
 }
 
 CustomTile *TileManager::rootTile() const
