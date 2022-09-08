@@ -148,10 +148,6 @@ static xcb_window_t findEventWindow(xcb_generic_event_t *event)
 bool Workspace::workspaceEvent(xcb_generic_event_t *e)
 {
     const uint8_t eventType = e->response_type & ~0x80;
-    if (effects && static_cast<EffectsHandlerImpl *>(effects)->hasKeyboardGrab()
-        && (eventType == XCB_KEY_PRESS || eventType == XCB_KEY_RELEASE)) {
-        return false; // let Qt process it, it'll be intercepted again in eventFilter()
-    }
 
     const xcb_window_t eventWindow = findEventWindow(e);
     if (eventWindow != XCB_WINDOW_NONE) {
@@ -307,19 +303,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         return true; // always eat these, they would tell Qt that KWin is the active app
     default:
         break;
-    }
-    return false;
-}
-
-// Used only to filter events that need to be processed by Qt first
-// (e.g. keyboard input to be composed), otherwise events are
-// handle by the XEvent filter above
-bool Workspace::workspaceEvent(QEvent *e)
-{
-    if ((e->type() == QEvent::KeyPress || e->type() == QEvent::KeyRelease || e->type() == QEvent::ShortcutOverride)
-        && effects && static_cast<EffectsHandlerImpl *>(effects)->hasKeyboardGrab()) {
-        static_cast<EffectsHandlerImpl *>(effects)->grabbedKeyboardEvent(static_cast<QKeyEvent *>(e));
-        return true;
     }
     return false;
 }

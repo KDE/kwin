@@ -93,7 +93,6 @@ public:
     }
 
     bool workspaceEvent(xcb_generic_event_t *);
-    bool workspaceEvent(QEvent *);
 
     bool hasWindow(const Window *);
 

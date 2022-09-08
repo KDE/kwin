@@ -236,6 +236,9 @@ set_package_properties(XKB PROPERTIES
     PURPOSE "Required for building KWin with Wayland support"
 )
 
+pkg_check_modules(XKBX11 IMPORTED_TARGET xkbcommon-x11 REQUIRED)
+add_feature_info(XKBX11 XKBX11_FOUND "Required for handling keyboard events in X11 backend")
+
 find_package(Libinput 1.19)
 set_package_properties(Libinput PROPERTIES TYPE REQUIRED PURPOSE "Required for input handling on Wayland.")
 
@@ -294,6 +297,7 @@ find_package(XCB 1.10 REQUIRED COMPONENTS
     SYNC
     XCB
     XFIXES
+    XKB
     XINERAMA
 )
 set_package_properties(XCB PROPERTIES TYPE REQUIRED)

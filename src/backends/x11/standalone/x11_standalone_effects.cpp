@@ -12,9 +12,10 @@
 #include "screenedge.h"
 #include "utils/common.h"
 #include "workspace.h"
+#include "x11_standalone_effects_keyboard_interception_filter.h"
 #include "x11_standalone_effects_mouse_interception_filter.h"
-
-#include <QDesktopWidget>
+#include "x11_standalone_keyboard.h"
+#include "x11_standalone_platform.h"
 
 namespace KWin
 {
@@ -43,21 +44,22 @@ EffectsHandlerImplX11::~EffectsHandlerImplX11()
 
 bool EffectsHandlerImplX11::doGrabKeyboard()
 {
+    auto keyboard = static_cast<X11StandalonePlatform *>(kwinApp()->platform())->keyboard();
+    if (!keyboard->xkbKeymap()) {
+        return false;
+    }
     bool ret = grabXKeyboard();
     if (!ret) {
         return false;
     }
-    // Workaround for Qt 5.9 regression introduced with 2b34aefcf02f09253473b096eb4faffd3e62b5f4
-    // we no longer get any events for the root window, one needs to call winId() on the desktop window
-    // TODO: change effects event handling to create the appropriate QKeyEvent without relying on Qt
-    // as it's done already in the Wayland case.
-    qApp->desktop()->winId();
+    m_x11KeyboardInterception = std::make_unique<EffectsKeyboardInterceptionX11Filter>(this, keyboard);
     return ret;
 }
 
 void EffectsHandlerImplX11::doUngrabKeyboard()
 {
     ungrabXKeyboard();
+    m_x11KeyboardInterception.reset();
 }
 
 void EffectsHandlerImplX11::doStartMouseInterception(Qt::CursorShape shape)

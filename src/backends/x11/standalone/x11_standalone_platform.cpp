@@ -33,6 +33,7 @@
 #include "workspace.h"
 #include "x11_standalone_effects.h"
 #include "x11_standalone_egl_backend.h"
+#include "x11_standalone_keyboard.h"
 #include "x11_standalone_logging.h"
 #include "x11_standalone_non_composited_outline.h"
 #include "x11_standalone_output.h"
@@ -120,6 +121,8 @@ X11StandalonePlatform::X11StandalonePlatform(QObject *parent)
 
     m_updateOutputsTimer->setSingleShot(true);
     connect(m_updateOutputsTimer.get(), &QTimer::timeout, this, &X11StandalonePlatform::updateOutputs);
+
+    m_keyboard = std::make_unique<X11Keyboard>();
 
     setSupportsGammaControl(true);
 }
@@ -644,6 +647,11 @@ X11Output *X11StandalonePlatform::findX11Output(const QString &name) const
 Outputs X11StandalonePlatform::outputs() const
 {
     return m_outputs;
+}
+
+X11Keyboard *X11StandalonePlatform::keyboard() const
+{
+    return m_keyboard.get();
 }
 
 RenderLoop *X11StandalonePlatform::renderLoop() const

@@ -2,8 +2,10 @@ set(X11PLATFORM_SOURCES
     x11_standalone_cursor.cpp
     x11_standalone_edge.cpp
     x11_standalone_effects.cpp
+    x11_standalone_effects_keyboard_interception_filter.cpp
     x11_standalone_effects_mouse_interception_filter.cpp
     x11_standalone_egl_backend.cpp
+    x11_standalone_keyboard.cpp
     x11_standalone_logging.cpp
     x11_standalone_non_composited_outline.cpp
     x11_standalone_output.cpp
@@ -16,7 +18,7 @@ set(X11PLATFORM_SOURCES
 )
 
 add_library(KWinX11Platform OBJECT ${X11PLATFORM_SOURCES})
-target_link_libraries(KWinX11Platform kwin KF5::Crash X11::X11)
+target_link_libraries(KWinX11Platform kwin KF5::Crash X11::X11 XCB::XKB PkgConfig::XKBX11)
 if (QT_MAJOR_VERSION EQUAL "5")
     target_link_libraries(KWinX11Platform Qt::X11Extras)
 endif()

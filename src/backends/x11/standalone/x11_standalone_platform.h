@@ -26,6 +26,7 @@ class XInputIntegration;
 class WindowSelector;
 class X11EventFilter;
 class X11Output;
+class X11Keyboard;
 
 class KWIN_EXPORT X11StandalonePlatform : public Platform
 {
@@ -63,6 +64,7 @@ public:
     void scheduleUpdateOutputs();
     void updateOutputs();
 
+    X11Keyboard *keyboard() const;
     RenderLoop *renderLoop() const;
     Outputs outputs() const override;
 
@@ -92,6 +94,7 @@ private:
     std::unique_ptr<WindowSelector> m_windowSelector;
     std::unique_ptr<X11EventFilter> m_screenEdgesFilter;
     std::unique_ptr<X11EventFilter> m_randrEventFilter;
+    std::unique_ptr<X11Keyboard> m_keyboard;
     std::unique_ptr<RenderLoop> m_renderLoop;
     QVector<Output *> m_outputs;
 };

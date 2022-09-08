@@ -259,14 +259,6 @@ void ApplicationX11::performStartup()
     createTabletModeManager();
 }
 
-bool ApplicationX11::notify(QObject *o, QEvent *e)
-{
-    if (e->spontaneous() && Workspace::self()->workspaceEvent(e)) {
-        return true;
-    }
-    return QApplication::notify(o, e);
-}
-
 void ApplicationX11::setupCrashHandler()
 {
     KCrash::setEmergencySaveFunction(ApplicationX11::crashHandler);

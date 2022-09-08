@@ -18,6 +18,7 @@
 namespace KWin
 {
 class EffectsMouseInterceptionX11Filter;
+class EffectsKeyboardInterceptionX11Filter;
 
 class EffectsHandlerImplX11 : public EffectsHandlerImpl
 {
@@ -40,6 +41,7 @@ protected:
 private:
     Xcb::Window m_mouseInterceptionWindow;
     std::unique_ptr<EffectsMouseInterceptionX11Filter> m_x11MouseInterception;
+    std::unique_ptr<EffectsKeyboardInterceptionX11Filter> m_x11KeyboardInterception;
 };
 
 }
