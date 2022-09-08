@@ -30,7 +30,7 @@ static QRegion map_helper(const QMatrix4x4 &matrix, const QRegion &region)
 {
     QRegion result;
     for (const QRect &rect : region) {
-        result += matrix.mapRect(rect);
+        result += matrix.mapRect(QRectF(rect)).toAlignedRect();
     }
     return result;
 }
