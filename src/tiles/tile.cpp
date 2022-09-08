@@ -40,6 +40,10 @@ Tile::Tile(TileManager *tiling, Tile *parent)
 
 Tile::~Tile()
 {
+    for (auto *t : m_children) {
+        // Prevents access upon child tiles destruction
+        t->m_parentTile = nullptr;
+    }
     if (m_parentTile) {
         m_parentTile->removeChild(this);
     }
