@@ -47,7 +47,6 @@ public:
     ~Xkb() override;
     void setConfig(const KSharedConfigPtr &config);
     void setNumLockConfig(const KSharedConfigPtr &config);
-    void reconfigure();
 
     void installKeymap(int fd, uint32_t size);
     void updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group);
@@ -109,6 +108,11 @@ public:
 
     std::optional<int> keycodeFromKeysym(xkb_keysym_t keysym);
 
+    void setFollowLocale1(bool follow);
+
+public Q_SLOTS:
+    void reconfigure();
+
 Q_SIGNALS:
     void ledsChanged(const LEDs &leds);
     void modifierStateChanged();
@@ -117,6 +121,7 @@ private:
     void applyEnvironmentRules(xkb_rule_names &);
     xkb_keymap *loadKeymapFromConfig();
     xkb_keymap *loadDefaultKeymap();
+    xkb_keymap *loadKeymapFromLocale1();
     void updateKeymap(xkb_keymap *keymap);
     void createKeymapFile();
     void updateModifiers();
@@ -162,6 +167,7 @@ private:
     Ownership m_ownership = Ownership::Server;
 
     QPointer<KWaylandServer::SeatInterface> m_seat;
+    const bool m_followLocale1;
 };
 
 inline Qt::KeyboardModifiers Xkb::modifiers() const

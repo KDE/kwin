@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "xkb.h"
+#include "dbusproperties_interface.h"
 #include "utils/c_ptr.h"
 #include "utils/common.h"
 #include "wayland/keyboard_interface.h"
@@ -25,6 +26,7 @@
 #include <xkbcommon/xkbcommon-compose.h>
 #include <xkbcommon/xkbcommon-keysyms.h>
 // system
+#include "main.h"
 #include <bitset>
 #include <linux/input-event-codes.h>
 #include <sys/mman.h>
@@ -35,6 +37,7 @@ Q_LOGGING_CATEGORY(KWIN_XKB, "kwin_xkbcommon", QtWarningMsg)
 /* The offset between KEY_* numbering, and keycodes in the XKB evdev
  * dataset. */
 static const int EVDEV_OFFSET = 8;
+static const char *s_locale1Interface = "org.freedesktop.locale1";
 
 namespace KWin
 {
@@ -86,6 +89,7 @@ Xkb::Xkb(QObject *parent)
     , m_consumedModifiers(Qt::NoModifier)
     , m_keysym(XKB_KEY_NoSymbol)
     , m_leds()
+    , m_followLocale1(kwinApp()->followLocale1())
 {
     qRegisterMetaType<KWin::LEDs>();
     if (!m_context) {
@@ -110,6 +114,16 @@ Xkb::Xkb(QObject *parent)
         m_compose.table = xkb_compose_table_new_from_locale(m_context, locale.constData(), XKB_COMPOSE_COMPILE_NO_FLAGS);
         if (m_compose.table) {
             m_compose.state = xkb_compose_state_new(m_compose.table, XKB_COMPOSE_STATE_NO_FLAGS);
+        }
+    }
+
+    if (m_followLocale1) {
+        bool connected = QDBusConnection::systemBus().connect(s_locale1Interface, "/org/freedesktop/locale1", QStringLiteral("org.freedesktop.DBus.Properties"),
+                                                              QStringLiteral("PropertiesChanged"),
+                                                              this,
+                                                              SLOT(reconfigure()));
+        if (!connected) {
+            qCWarning(KWIN_XKB) << "Could not connect to org.freedesktop.locale1";
         }
     }
 }
@@ -141,7 +155,11 @@ void Xkb::reconfigure()
 
     xkb_keymap *keymap = nullptr;
     if (!qEnvironmentVariableIsSet("KWIN_XKB_DEFAULT_KEYMAP")) {
-        keymap = loadKeymapFromConfig();
+        if (m_followLocale1) {
+            keymap = loadKeymapFromLocale1();
+        } else {
+            keymap = loadKeymapFromConfig();
+        }
     }
     if (!keymap) {
         qCDebug(KWIN_XKB) << "Could not create xkb keymap from configuration";
@@ -219,6 +237,23 @@ xkb_keymap *Xkb::loadDefaultKeymap()
     xkb_rule_names ruleNames = {};
     applyEnvironmentRules(ruleNames);
     m_layoutList = QString::fromLatin1(ruleNames.layout).split(QLatin1Char(','));
+    return xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS);
+}
+
+xkb_keymap *Xkb::loadKeymapFromLocale1()
+{
+    OrgFreedesktopDBusPropertiesInterface locale1Properties(s_locale1Interface, "/org/freedesktop/locale1", QDBusConnection::systemBus(), this);
+    const QVariantMap properties = locale1Properties.GetAll(s_locale1Interface);
+    const QString layouts = properties["X11Layout"].toString();
+    xkb_rule_names ruleNames = {
+        nullptr,
+        qPrintable(properties["X11Model"].toString()),
+        qPrintable(layouts),
+        qPrintable(properties["X11Variant"].toString()),
+        qPrintable(properties["X11Options"].toString()),
+    };
+    applyEnvironmentRules(ruleNames);
+    m_layoutList = layouts.split(QLatin1Char(','));
     return xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS);
 }
 

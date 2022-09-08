@@ -225,6 +225,14 @@ public:
         return m_session.get();
     }
     void setSession(std::unique_ptr<Session> &&session);
+    void setFollowLocale1(bool follow)
+    {
+        m_followLocale1 = follow;
+    }
+    bool followLocale1() const
+    {
+        return m_followLocale1;
+    }
 
     bool isTerminating() const
     {
@@ -289,6 +297,7 @@ private:
     QList<QPointer<X11EventFilterContainer>> m_eventFilters;
     QList<QPointer<X11EventFilterContainer>> m_genericEventFilters;
     std::unique_ptr<XcbEventFilter> m_eventFilter;
+    bool m_followLocale1 = false;
     bool m_configLock;
     KSharedConfigPtr m_config;
     KSharedConfigPtr m_kxkbConfig;

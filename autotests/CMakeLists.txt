@@ -206,6 +206,7 @@ set(testXkb_SRCS
     ../src/xkb.cpp
     test_xkb.cpp
 )
+qt_add_dbus_interface(testXkb_SRCS ${CMAKE_SOURCE_DIR}/src/org.freedesktop.DBus.Properties.xml dbusproperties_interface)
 add_executable(testXkb ${testXkb_SRCS})
 target_link_libraries(testXkb
     kwin

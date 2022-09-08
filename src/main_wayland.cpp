@@ -47,6 +47,7 @@
 #include <sched.h>
 #include <sys/resource.h>
 
+#include "keyboard_input.h"
 #include <iomanip>
 #include <iostream>
 
@@ -365,6 +366,7 @@ int main(int argc, char *argv[])
                                      i18n("Exits this instance so it can be restarted by kwin_wayland_wrapper."));
 
     QCommandLineOption drmOption(QStringLiteral("drm"), i18n("Render through drm node."));
+    QCommandLineOption locale1Option(QStringLiteral("locale1"), i18n("Extract locale information from locale1 rather than the user's configuration"));
 
     QCommandLineParser parser;
     a.setupCommandLine(&parser);
@@ -383,6 +385,7 @@ int main(int argc, char *argv[])
     parser.addOption(scaleOption);
     parser.addOption(outputCountOption);
     parser.addOption(drmOption);
+    parser.addOption(locale1Option);
 
     QCommandLineOption inputMethodOption(QStringLiteral("inputmethod"),
                                          i18n("Input method that KWin starts."),
@@ -474,6 +477,10 @@ int main(int argc, char *argv[])
             qWarning("No backend specified, automatically choosing drm");
             backendType = BackendType::Kms;
         }
+    }
+
+    if (parser.isSet(locale1Option)) {
+        a.setFollowLocale1(true);
     }
 
     bool ok = false;
