@@ -386,7 +386,7 @@ bool Output::isNonDesktop() const
     return m_information.nonDesktop;
 }
 
-TileManager *Output::customTiling() const
+TileManager *Output::tileManager() const
 {
     return m_customTiling;
 }

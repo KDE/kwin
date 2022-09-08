@@ -57,7 +57,7 @@ private:
 class KWIN_EXPORT Output : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(TileManager *customTiling READ customTiling CONSTANT)
+    Q_PROPERTY(TileManager *tileManager READ tileManager CONSTANT)
 
 public:
     enum class DpmsMode {
@@ -236,7 +236,7 @@ public:
     bool isPlaceholder() const;
     bool isNonDesktop() const;
 
-    TileManager *customTiling() const;
+    TileManager *tileManager() const;
 
     virtual void setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation);
 

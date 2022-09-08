@@ -1808,7 +1808,7 @@ void Window::handleInteractiveMoveResize(const QPointF &local, const QPointF &gl
             checkQuickTilingMaximizationZones(global.x(), global.y());
         }
 
-        if (input()->modifiersRelevantForGlobalShortcuts() & Qt::ShiftModifier && output()->customTiling()->rootTile()->childCount() > 1) {
+        if (input()->modifiersRelevantForGlobalShortcuts() & Qt::ShiftModifier && output()->tileManager()->rootTile()->childCount() > 1) {
             const auto &r = quickTileGeometry(QuickTileFlag::Custom, Cursors::self()->mouse()->pos());
             if (r.isEmpty()) {
                 workspace()->outline()->hide();
@@ -3754,7 +3754,7 @@ QRectF Window::quickTileGeometry(QuickTileMode mode, const QPointF &pos) const
     auto *out = workspace()->outputAt(pos);
 
     if (mode & QuickTileFlag::Custom) {
-        Tile *tile = out->customTiling()->bestTileForPosition(pos);
+        Tile *tile = out->tileManager()->bestTileForPosition(pos);
         if (tile) {
             return tile->windowGeometry();
         } else {
@@ -3764,7 +3764,7 @@ QRectF Window::quickTileGeometry(QuickTileMode mode, const QPointF &pos) const
 
     QRectF ret = workspace()->clientArea(MaximizeArea, this, pos);
 
-    Tile *tile = out->customTiling()->quickTile(mode);
+    Tile *tile = out->tileManager()->quickTile(mode);
     if (tile) {
         return tile->windowGeometry();
     }
@@ -3929,10 +3929,10 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
         checkWorkspacePosition(); // Just in case it's a different screen
     } else if (mode == QuickTileMode(QuickTileFlag::Custom)) {
         // If was neede to be moved between outputs is already done
-        Tile *tile = output()->customTiling()->bestTileForPosition(keyboard ? moveResizeGeometry().center() : Cursors::self()->mouse()->pos());
+        Tile *tile = output()->tileManager()->bestTileForPosition(keyboard ? moveResizeGeometry().center() : Cursors::self()->mouse()->pos());
         setTile(tile);
     } else {
-        Tile *tile = output()->customTiling()->quickTile(mode);
+        Tile *tile = output()->tileManager()->quickTile(mode);
         setTile(tile);
     }
 
@@ -3969,13 +3969,13 @@ void Window::setTile(Tile *tile)
     });
 
     connect(tile, &Tile::destroyed, this, [this]() {
-        Tile *tile = output()->customTiling()->bestTileForPosition(moveResizeGeometry().center());
+        Tile *tile = output()->tileManager()->bestTileForPosition(moveResizeGeometry().center());
         setTile(tile);
     });
 
     connect(tile, &Tile::isLayoutChanged, this, [this](bool isLayout) {
         if (isLayout) {
-            Tile *tile = output()->customTiling()->bestTileForPosition(moveResizeGeometry().center());
+            Tile *tile = output()->tileManager()->bestTileForPosition(moveResizeGeometry().center());
             setTile(tile);
         }
     });

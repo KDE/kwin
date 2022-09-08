@@ -458,7 +458,7 @@ KWin::TileManager *WorkspaceWrapper::tilingForScreen(const QString &screenName) 
 {
     Output *output = kwinApp()->platform()->findOutput(screenName);
     if (output) {
-        return output->customTiling();
+        return output->tileManager();
     }
     return nullptr;
 }
@@ -467,7 +467,7 @@ KWin::TileManager *WorkspaceWrapper::tilingForScreen(int screen) const
 {
     Output *output = workspace()->outputs().value(screen);
     if (output) {
-        return output->customTiling();
+        return output->tileManager();
     }
     return nullptr;
 }
