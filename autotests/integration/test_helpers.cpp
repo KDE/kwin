@@ -550,11 +550,7 @@ void destroyWaylandConnection()
     delete s_waylandConnection.outputManagementV2;
     s_waylandConnection.outputManagementV2 = nullptr;
     if (s_waylandConnection.thread) {
-        QSignalSpy spy(s_waylandConnection.connection, &QObject::destroyed);
         s_waylandConnection.connection->deleteLater();
-        if (spy.isEmpty()) {
-            QVERIFY(spy.wait());
-        }
         s_waylandConnection.thread->quit();
         s_waylandConnection.thread->wait();
         delete s_waylandConnection.thread;
