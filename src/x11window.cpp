@@ -2443,7 +2443,6 @@ void X11Window::updateAllowedActions(bool force)
     }
     // TODO: This could be delayed and compressed - It's only for pagers etc. anyway
     info->setAllowedActions(allowed_actions);
-
     // ONLY if relevant features have changed (and the window didn't just get/loose moveresize for maximization state changes)
     const NET::Actions relevant = ~(NET::ActionMove | NET::ActionResize);
     if ((allowed_actions & relevant) != (old_allowed_actions & relevant)) {
@@ -4619,6 +4618,7 @@ void X11Window::setFullScreen(bool set, bool user)
     }
 
     updateWindowRules(Rules::Fullscreen | Rules::Position | Rules::Size);
+    updateAllowedActions(false);
     Q_EMIT clientFullScreenSet(this, set, user);
     Q_EMIT fullScreenChanged();
 }

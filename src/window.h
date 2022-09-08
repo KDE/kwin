@@ -392,7 +392,7 @@ class KWIN_EXPORT Window : public QObject
      * Whether the Window can be shaded. The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
      */
-    Q_PROPERTY(bool shadeable READ isShadeable)
+    Q_PROPERTY(bool shadeable READ isShadeable NOTIFY shadeableChanged)
 
     /**
      * Whether the Window is shaded.
