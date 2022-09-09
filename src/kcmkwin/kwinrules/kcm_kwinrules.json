@@ -72,6 +72,7 @@
         "Name[zh_CN]": "窗口规则",
         "Name[zh_TW]": "視窗規則"
     },
+    "X-DocPath": "kcontrol/windowspecific/index.html",
     "X-KDE-Keywords": "size,position,state,window behavior,windows,specific,workarounds,remember,rules,window rules,apps,applications",
     "X-KDE-Keywords[ar]": "حجم,حالة,سلوك النافذة,تذكر,قواعد,قاعدة,تطبيق,تطبيقات",
     "X-KDE-Keywords[az]": "size,position,state,window behavior,windows,specific,workarounds,remember,rules,window rules,apps,applications,olçü,mövqe,pəncərə davranışı,pəncərə,iş əhatəsi,yadda saxlamaq,qaydalar,pəncərə qaydaları,tətbiqlər,tətbiqetmələr",

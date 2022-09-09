@@ -19,7 +19,7 @@ ScrollViewKCM {
     implicitHeight: Kirigami.Units.gridUnit * 25
 
     ConfigModule.columnWidth: Kirigami.Units.gridUnit * 23
-    ConfigModule.buttons: ConfigModule.Apply
+    ConfigModule.buttons: ConfigModule.Help | ConfigModule.Apply
 
     property var selectedIndexes: []
 
