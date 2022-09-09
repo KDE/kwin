@@ -71,7 +71,7 @@
         "Name[zh_CN]": "虚拟桌面",
         "Name[zh_TW]": "虛擬桌面"
     },
-    "X-DocPath": "kcontrol/kwin_virtualdesktops/index.html",
+    "X-DocPath": "kcontrol/desktop/index.html",
     "X-KDE-Keywords": "desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings,indicator,navigation,cube,slide,workspaces",
     "X-KDE-Keywords[ar]": "سطح,أسطح,مكتب,عدد,افتراضي,تنقل,مكعب,مساحة العمل,مؤشر",
     "X-KDE-Keywords[az]": "desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings,indicator,navigation,cube,slide,workspaces,iş masası,iş masaları,say,virtual iş masaları,səhifələyici,səhifələyici vidjet, səhifələyici əlavə,səhifələmə ayarları,göstərici,istiqamət,kub,sürüşmə,iş sahələri",

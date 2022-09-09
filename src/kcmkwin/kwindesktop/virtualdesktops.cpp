@@ -36,7 +36,7 @@ VirtualDesktops::VirtualDesktops(QObject *parent, const QVariantList &args)
 
     qmlRegisterAnonymousType<VirtualDesktopsSettings>("org.kde.kwin.kcm.desktop", 0);
 
-    setButtons(Apply | Default);
+    setButtons(Apply | Default | Help);
 
     QObject::connect(m_data->desktopsModel(), &KWin::DesktopsModel::userModifiedChanged,
                      this, &VirtualDesktops::settingsChanged);
