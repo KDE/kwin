@@ -6,6 +6,7 @@
 
 #include "outputlocator.h"
 
+#include <algorithm>
 #include <kwinoffscreenquickview.h>
 
 #include <KLocalizedString>
@@ -22,6 +23,9 @@ static QString outputName(const EffectScreen *screen)
     const bool shouldShowSerialNumber = std::any_of(screens.cbegin(), screens.cend(), [screen](const EffectScreen *other) {
         return other != screen && other->manufacturer() == screen->manufacturer() && other->model() == screen->model();
     });
+    const bool shouldShowConnector = shouldShowSerialNumber && std::any_of(screens.cbegin(), screens.cend(), [screen](const EffectScreen *other) {
+        return other != screen && other->serialNumber() == screen->serialNumber();
+    });
 
     QStringList parts;
     if (!screen->manufacturer().isEmpty()) {
@@ -34,6 +38,10 @@ static QString outputName(const EffectScreen *screen)
 
     if (shouldShowSerialNumber && !screen->serialNumber().isEmpty()) {
         parts.append(screen->serialNumber());
+    }
+
+    if (shouldShowConnector) {
+        parts.append(screen->name());
     }
 
     if (parts.isEmpty()) {
