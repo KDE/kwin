@@ -1443,6 +1443,11 @@ void Workspace::addOutput(Output *output)
     if (!m_primaryOutput) {
         setPrimaryOutput(output);
     }
+    if (m_placeholderOutput) {
+        m_outputs.removeOne(m_placeholderOutput.get());
+        m_activeOutput = output;
+        m_primaryOutput = output;
+    }
 
     m_outputs.append(output);
 
@@ -1457,7 +1462,6 @@ void Workspace::addOutput(Output *output)
     Q_EMIT outputAdded(output);
 
     if (m_placeholderOutput) {
-        m_outputs.removeOne(m_placeholderOutput.get());
         Q_EMIT outputRemoved(m_placeholderOutput.get());
         m_placeholderOutput.reset();
         m_placeholderFilter.reset();
