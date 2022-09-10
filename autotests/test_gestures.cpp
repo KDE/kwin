@@ -54,26 +54,26 @@ private Q_SLOTS:
 
 void GestureTest::testDirection_data()
 {
-    QTest::addColumn<GestureDirection>("direction");
+    QTest::addColumn<GestureTypeFlag>("direction");
 
-    QTest::newRow("Up") << GestureDirection::Up;
-    QTest::newRow("Left") << GestureDirection::Left;
-    QTest::newRow("Right") << GestureDirection::Right;
-    QTest::newRow("Down") << GestureDirection::Down;
-    QTest::newRow("Contracting") << GestureDirection::Contracting;
-    QTest::newRow("Expanding") << GestureDirection::Expanding;
+    QTest::newRow("Up") << GestureTypeFlag::Up;
+    QTest::newRow("Left") << GestureTypeFlag::Left;
+    QTest::newRow("Right") << GestureTypeFlag::Right;
+    QTest::newRow("Down") << GestureTypeFlag::Down;
+    QTest::newRow("Contracting") << GestureTypeFlag::Contracting;
+    QTest::newRow("Expanding") << GestureTypeFlag::Expanding;
 }
 
 void GestureTest::testDirection()
 {
     SwipeGesture gesture;
     QCOMPARE(gesture.direction(), 0);
-    QFETCH(GestureDirection, direction);
+    QFETCH(GestureTypeFlag, direction);
     gesture.setDirection(direction);
     QCOMPARE(gesture.direction(), direction);
     // back to down
-    gesture.setDirection(GestureDirection::Down);
-    QCOMPARE(gesture.direction(), GestureDirection::Down);
+    gesture.setDirection(GestureTypeFlag::Down);
+    QCOMPARE(gesture.direction(), GestureTypeFlag::Down);
 }
 
 void GestureTest::testMinimumX_data()
@@ -231,19 +231,19 @@ void GestureTest::testDeleteSwipeCancels()
 
 void GestureTest::testSwipeCancel_data()
 {
-    QTest::addColumn<GestureDirection>("direction");
+    QTest::addColumn<GestureTypeFlag>("direction");
 
-    QTest::newRow("Up") << GestureDirection::Up;
-    QTest::newRow("Left") << GestureDirection::Left;
-    QTest::newRow("Right") << GestureDirection::Right;
-    QTest::newRow("Down") << GestureDirection::Down;
+    QTest::newRow("Up") << GestureTypeFlag::Up;
+    QTest::newRow("Left") << GestureTypeFlag::Left;
+    QTest::newRow("Right") << GestureTypeFlag::Right;
+    QTest::newRow("Down") << GestureTypeFlag::Down;
 }
 
 void GestureTest::testSwipeCancel()
 {
     GestureRecognizer recognizer;
     std::unique_ptr<SwipeGesture> gesture(new SwipeGesture);
-    QFETCH(GestureDirection, direction);
+    QFETCH(GestureTypeFlag, direction);
 
     gesture->setDirection(direction);
     QSignalSpy startedSpy(gesture.get(), &SwipeGesture::started);
@@ -264,20 +264,20 @@ void GestureTest::testSwipeCancel()
 
 void GestureTest::testSwipeUpdateTrigger_data()
 {
-    QTest::addColumn<GestureDirection>("direction");
+    QTest::addColumn<GestureTypeFlag>("direction");
     QTest::addColumn<QSizeF>("delta");
 
-    QTest::newRow("Up") << GestureDirection::Up << QSizeF(2, -3);
-    QTest::newRow("Left") << GestureDirection::Left << QSizeF(-3, 1);
-    QTest::newRow("Right") << GestureDirection::Right << QSizeF(20, -19);
-    QTest::newRow("Down") << GestureDirection::Down << QSizeF(0, 50);
+    QTest::newRow("Up") << GestureTypeFlag::Up << QSizeF(2, -3);
+    QTest::newRow("Left") << GestureTypeFlag::Left << QSizeF(-3, 1);
+    QTest::newRow("Right") << GestureTypeFlag::Right << QSizeF(20, -19);
+    QTest::newRow("Down") << GestureTypeFlag::Down << QSizeF(0, 50);
 }
 
 void GestureTest::testSwipeUpdateTrigger()
 {
     GestureRecognizer recognizer;
     SwipeGesture gesture;
-    QFETCH(GestureDirection, direction);
+    QFETCH(GestureTypeFlag, direction);
     gesture.setDirection(direction);
     gesture.setTriggerDelta(QSizeF(1, 1));
 
@@ -333,11 +333,11 @@ void GestureTest::testNotEmitCallbacksBeforeDirectionDecided()
     SwipeGesture right;
     PinchGesture expand;
     PinchGesture contract;
-    up.setDirection(GestureDirection::Up);
-    down.setDirection(GestureDirection::Down);
-    right.setDirection(GestureDirection::Right);
-    expand.setDirection(GestureDirection::Expanding);
-    contract.setDirection(GestureDirection::Contracting);
+    up.setDirection(GestureTypeFlag::Up);
+    down.setDirection(GestureTypeFlag::Down);
+    right.setDirection(GestureTypeFlag::Right);
+    expand.setDirection(GestureTypeFlag::Expanding);
+    contract.setDirection(GestureTypeFlag::Contracting);
     recognizer.registerSwipeGesture(&up);
     recognizer.registerSwipeGesture(&down);
     recognizer.registerSwipeGesture(&right);

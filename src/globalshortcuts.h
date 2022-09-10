@@ -59,9 +59,9 @@ public:
      */
     void registerAxisShortcut(QAction *action, Qt::KeyboardModifiers modifiers, PointerAxisDirection axis);
 
-    void registerGesture(GestureDeviceType device, GestureDirections direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback = nullptr);
+    void registerGesture(GestureDeviceType device, GestureType direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback = nullptr);
 
-    void forceRegisterTouchscreenSwipe(QAction *action, std::function<void(qreal)> progressCallback, GestureDirection direction, uint fingerCount);
+    void forceRegisterTouchscreenSwipe(QAction *action, std::function<void(qreal)> progressCallback, GestureTypeFlag direction, uint fingerCount);
 
     /**
      * @brief Processes a key event to decide whether a shortcut needs to be triggered.
@@ -146,7 +146,7 @@ struct PointerAxisShortcut
 struct GestureShortcut
 {
     GestureDeviceType device;
-    GestureDirections direction;
+    GestureType direction;
 
     Gesture *gesture() const;
     std::unique_ptr<SwipeGesture> swipeGesture;

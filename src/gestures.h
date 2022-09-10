@@ -51,12 +51,12 @@ public:
     bool isFingerCountAcceptable(uint fingers) const;
     QSet<uint> acceptableFingerCounts() const;
 
-    GestureDirections direction() const;
-    void setDirection(GestureDirections direction);
+    GestureType direction() const;
+    void setDirection(GestureType direction);
 
 protected:
     explicit Gesture(QObject *parent);
-    GestureDirections m_direction;
+    GestureType m_direction;
 
 Q_SIGNALS:
     /**
@@ -83,7 +83,7 @@ Q_SIGNALS:
      * Progress is always positive
      * It can be more than 1, indicating an action should happen more than once.
      */
-    void semanticProgress(qreal, GestureDirections);
+    void semanticProgress(qreal, GestureType);
 
 private:
     QSet<uint> m_validFingerCounts = DEFAULT_VALID_FINGER_COUNTS;
@@ -142,7 +142,7 @@ Q_SIGNALS:
      * Summative pixel delta from where the gesture
      * started to where it is now.
      */
-    void pixelDelta(const QSizeF &delta, GestureDirections);
+    void pixelDelta(const QSizeF &delta, GestureType);
 
 private:
     bool m_minimumXRelevant = false;

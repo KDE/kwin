@@ -123,7 +123,7 @@ void GlobalShortcutsManager::registerAxisShortcut(QAction *action, Qt::KeyboardM
     addIfNotExists(GlobalShortcut(PointerAxisShortcut{modifiers, axis}, action));
 }
 
-void GlobalShortcutsManager::registerGesture(GestureDeviceType device, GestureDirections direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
+void GlobalShortcutsManager::registerGesture(GestureDeviceType device, GestureType direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
 {
     // Create and setup the GestureShortcut
     GestureShortcut shortcut{device, direction};
@@ -148,7 +148,7 @@ void GlobalShortcutsManager::registerGesture(GestureDeviceType device, GestureDi
     addIfNotExists(GlobalShortcut(std::move(shortcut), onUp), device);
 }
 
-void GlobalShortcutsManager::forceRegisterTouchscreenSwipe(QAction *onUp, std::function<void(qreal)> progressCallback, GestureDirection direction, uint fingerCount)
+void GlobalShortcutsManager::forceRegisterTouchscreenSwipe(QAction *onUp, std::function<void(qreal)> progressCallback, GestureTypeFlag direction, uint fingerCount)
 {
     std::unique_ptr<SwipeGesture> gesture = std::make_unique<SwipeGesture>();
     gesture->addFingerCount(fingerCount);

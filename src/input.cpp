@@ -3309,7 +3309,7 @@ void InputRedirection::registerAxisShortcut(Qt::KeyboardModifiers modifiers, Poi
     m_shortcuts->registerAxisShortcut(action, modifiers, axis);
 }
 
-void InputRedirection::registerGesture(GestureDeviceType device, GestureDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
+void InputRedirection::registerGesture(GestureDeviceType device, GestureTypeFlag direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
 {
     m_shortcuts->registerGesture(device, direction, fingerCount, onUp, progressCallback);
 }
@@ -3319,7 +3319,7 @@ void InputRedirection::registerGlobalAccel(KGlobalAccelInterface *interface)
     m_shortcuts->setKGlobalAccelInterface(interface);
 }
 
-void InputRedirection::forceRegisterTouchscreenSwipeShortcut(GestureDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
+void InputRedirection::forceRegisterTouchscreenSwipeShortcut(GestureTypeFlag direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
 {
     m_shortcuts->forceRegisterTouchscreenSwipe(action, progressCallback, direction, fingerCount);
 }

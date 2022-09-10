@@ -712,16 +712,16 @@ void Edge::setBorder(ElectricBorder border)
     m_border = border;
     switch (m_border) {
     case ElectricTop:
-        m_gesture->setDirection(GestureDirection::Down);
+        m_gesture->setDirection(GestureTypeFlag::Down);
         break;
     case ElectricRight:
-        m_gesture->setDirection(GestureDirection::Left);
+        m_gesture->setDirection(GestureTypeFlag::Left);
         break;
     case ElectricBottom:
-        m_gesture->setDirection(GestureDirection::Up);
+        m_gesture->setDirection(GestureTypeFlag::Up);
         break;
     case ElectricLeft:
-        m_gesture->setDirection(GestureDirection::Right);
+        m_gesture->setDirection(GestureTypeFlag::Right);
         break;
     default:
         break;

@@ -225,7 +225,7 @@ inline KWIN_EXPORT QRect infiniteRegion()
  * @brief Directions for gestures
  * @since 5.25
  */
-enum class GestureDirection {
+enum class GestureTypeFlag {
     Up = 1 << 1,
     Down = 1 << 2,
     Left = 1 << 3,
@@ -234,18 +234,18 @@ enum class GestureDirection {
     Contracting = 1 << 6,
 };
 
-Q_DECLARE_FLAGS(GestureDirections, GestureDirection)
-Q_DECLARE_OPERATORS_FOR_FLAGS(GestureDirections)
-Q_DECLARE_METATYPE(GestureDirection)
+Q_DECLARE_FLAGS(GestureType, GestureTypeFlag)
+Q_DECLARE_OPERATORS_FOR_FLAGS(GestureType)
+Q_DECLARE_METATYPE(GestureTypeFlag)
 
-inline bool isSwipeDirection(GestureDirections d)
+inline bool isSwipeDirection(GestureType d)
 {
-    return d & (GestureDirection::Up | GestureDirection::Down | GestureDirection::Left | GestureDirection::Right);
+    return d & (GestureTypeFlag::Up | GestureTypeFlag::Down | GestureTypeFlag::Left | GestureTypeFlag::Right);
 }
 
-inline bool isPinchDirection(GestureDirections d)
+inline bool isPinchDirection(GestureType d)
 {
-    return d & (GestureDirection::Contracting | GestureDirection::Expanding);
+    return d & (GestureTypeFlag::Contracting | GestureTypeFlag::Expanding);
 }
 
 Q_DECLARE_METATYPE(std::chrono::nanoseconds)

@@ -67,8 +67,8 @@ OverviewEffect::OverviewEffect()
         }
     };
 
-    effects->registerGesture(GestureDeviceType::Touchpad, GestureDirection::Contracting, 4, m_realtimeToggleAction, progressCallback);
-    effects->registerGesture(GestureDeviceType::Touchscreen, GestureDirection::Up, 3, m_realtimeToggleAction, progressCallback);
+    effects->registerGesture(GestureDeviceType::Touchpad, GestureTypeFlag::Contracting, 4, m_realtimeToggleAction, progressCallback);
+    effects->registerGesture(GestureDeviceType::Touchscreen, GestureTypeFlag::Up, 3, m_realtimeToggleAction, progressCallback);
 
     connect(effects, &EffectsHandler::screenAboutToLock, this, &OverviewEffect::realDeactivate);
 
