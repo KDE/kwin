@@ -104,7 +104,7 @@ public:
     void registerGlobalShortcut(const QKeySequence &shortcut, QAction *action) override;
     void registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action) override;
     void registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action) override;
-    void registerGesture(GestureDeviceType device, GestureTypeFlag direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback) override;
+    void registerGesture(GestureDeviceType device, GestureDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback) override;
 
     void *getProxy(QString name) override;
     void startMousePolling() override;

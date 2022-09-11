@@ -32,7 +32,7 @@ void InputRedirection::registerAxisShortcut(Qt::KeyboardModifiers modifiers, Poi
     Q_UNUSED(action)
 }
 
-void InputRedirection::registerGesture(GestureDeviceType, GestureTypeFlag, uint, QAction *, std::function<void(qreal)>)
+void InputRedirection::registerGesture(GestureDeviceType, GestureDirection, uint, QAction *, std::function<void(qreal)>)
 {
 }
 }

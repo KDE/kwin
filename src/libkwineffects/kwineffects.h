@@ -894,7 +894,7 @@ public:
      * @param action The action which gets triggered when the gesture is released
      * @since 5.26
      */
-    virtual void registerGesture(GestureDeviceType device, GestureTypeFlag direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback = nullptr) = 0;
+    virtual void registerGesture(GestureDeviceType device, GestureDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback = nullptr) = 0;
 
     /**
      * Retrieve the proxy class for an effect if it has one. Will return NULL if

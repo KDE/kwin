@@ -816,7 +816,7 @@ void EffectsHandlerImpl::registerAxisShortcut(Qt::KeyboardModifiers modifiers, P
     input()->registerAxisShortcut(modifiers, axis, action);
 }
 
-void EffectsHandlerImpl::registerGesture(GestureDeviceType device, GestureTypeFlag direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
+void EffectsHandlerImpl::registerGesture(GestureDeviceType device, GestureDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
 {
     input()->registerGesture(device, direction, fingerCount, onUp, progressCallback);
 }

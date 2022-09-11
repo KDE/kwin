@@ -821,24 +821,24 @@ void VirtualDesktopManager::initShortcuts()
             Q_EMIT currentChanging(current(), m_currentDesktopOffset);
         }
     };
-    input()->registerGesture(GestureDeviceType::Touchpad, GestureTypeFlag::Left, 3, m_swipeGestureReleasedX.get(), left);
-    input()->registerGesture(GestureDeviceType::Touchpad, GestureTypeFlag::Right, 3, m_swipeGestureReleasedX.get(), right);
-    input()->registerGesture(GestureDeviceType::Touchpad, GestureTypeFlag::Left, 4, m_swipeGestureReleasedX.get(), left);
-    input()->registerGesture(GestureDeviceType::Touchpad, GestureTypeFlag::Right, 4, m_swipeGestureReleasedX.get(), right);
-    input()->registerGesture(GestureDeviceType::Touchpad, GestureTypeFlag::Down, 3, m_swipeGestureReleasedY.get(), [this](qreal cb) {
+    input()->registerGesture(GestureDeviceType::Touchpad, GestureDirection::Left, 3, m_swipeGestureReleasedX.get(), left);
+    input()->registerGesture(GestureDeviceType::Touchpad, GestureDirection::Right, 3, m_swipeGestureReleasedX.get(), right);
+    input()->registerGesture(GestureDeviceType::Touchpad, GestureDirection::Left, 4, m_swipeGestureReleasedX.get(), left);
+    input()->registerGesture(GestureDeviceType::Touchpad, GestureDirection::Right, 4, m_swipeGestureReleasedX.get(), right);
+    input()->registerGesture(GestureDeviceType::Touchpad, GestureDirection::Down, 3, m_swipeGestureReleasedY.get(), [this](qreal cb) {
         if (grid().height() > 1) {
             m_currentDesktopOffset.setY(-cb);
             Q_EMIT currentChanging(current(), m_currentDesktopOffset);
         }
     });
-    input()->registerGesture(GestureDeviceType::Touchpad, GestureTypeFlag::Up, 3, m_swipeGestureReleasedY.get(), [this](qreal cb) {
+    input()->registerGesture(GestureDeviceType::Touchpad, GestureDirection::Up, 3, m_swipeGestureReleasedY.get(), [this](qreal cb) {
         if (grid().height() > 1) {
             m_currentDesktopOffset.setY(cb);
             Q_EMIT currentChanging(current(), m_currentDesktopOffset);
         }
     });
-    input()->registerGesture(GestureDeviceType::Touchscreen, GestureTypeFlag::Left, 3, m_swipeGestureReleasedX.get(), left);
-    input()->registerGesture(GestureDeviceType::Touchscreen, GestureTypeFlag::Right, 3, m_swipeGestureReleasedX.get(), right);
+    input()->registerGesture(GestureDeviceType::Touchscreen, GestureDirection::Left, 3, m_swipeGestureReleasedX.get(), left);
+    input()->registerGesture(GestureDeviceType::Touchscreen, GestureDirection::Right, 3, m_swipeGestureReleasedX.get(), right);
 
     // axis events
     input()->registerAxisShortcut(Qt::ControlModifier | Qt::AltModifier, PointerAxisDown,

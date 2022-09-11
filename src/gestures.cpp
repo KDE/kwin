@@ -49,25 +49,25 @@ qreal SwipeGesture::getTriggerProgress(const QSizeF &delta) const
 
     qreal progress = 0.0;
 
-    if (m_direction & GestureTypeFlag::Up) {
+    if (m_direction & GestureDirection::Up) {
         qreal candidate = -delta.height() / m_triggerDelta.height();
         if (candidate > progress) {
             progress = candidate;
         }
     }
-    if (m_direction & GestureTypeFlag::Down) {
+    if (m_direction & GestureDirection::Down) {
         qreal candidate = delta.height() / m_triggerDelta.height();
         if (candidate > progress) {
             progress = candidate;
         }
     }
-    if (m_direction & GestureTypeFlag::Left) {
+    if (m_direction & GestureDirection::Left) {
         qreal candidate = -delta.width() / m_triggerDelta.width();
         if (candidate > progress) {
             progress = candidate;
         }
     }
-    if (m_direction & GestureTypeFlag::Right) {
+    if (m_direction & GestureDirection::Right) {
         qreal candidate = delta.width() / m_triggerDelta.width();
         if (candidate > progress) {
             progress = candidate;
@@ -185,11 +185,11 @@ int GestureRecognizer::startSwipeGesture(uint fingerCount, const QPointF &startP
 
         // Only add gestures who's direction aligns with current swipe axis
         if (m_currentSwipeAxis == Axis::Vertical) {
-            if (!(gesture->direction() & (GestureTypeFlag::Up | GestureTypeFlag::Down))) {
+            if (!(gesture->direction() & (GestureDirection::Up | GestureDirection::Down))) {
                 continue;
             }
         } else if (m_currentSwipeAxis == Axis::Horizontal) {
-            if (!(gesture->direction() & (GestureTypeFlag::Left | GestureTypeFlag::Right))) {
+            if (!(gesture->direction() & (GestureDirection::Left | GestureDirection::Right))) {
                 continue;
             }
         }
@@ -205,17 +205,17 @@ void GestureRecognizer::updateSwipeGesture(const QSizeF &delta)
 {
     m_currentDelta += delta;
 
-    GestureTypeFlag direction; // Overall direction
+    GestureDirection direction; // Overall direction
     Axis swipeAxis;
 
     // Pick an axis for gestures so horizontal ones don't change to vertical ones without lifting fingers
     if (m_currentSwipeAxis == Axis::None) {
         if (std::abs(m_currentDelta.width()) >= std::abs(m_currentDelta.height())) {
             swipeAxis = Axis::Horizontal;
-            direction = m_currentDelta.width() < 0 ? GestureTypeFlag::Left : GestureTypeFlag::Right;
+            direction = m_currentDelta.width() < 0 ? GestureDirection::Left : GestureDirection::Right;
         } else {
             swipeAxis = Axis::Vertical;
-            direction = m_currentDelta.height() < 0 ? GestureTypeFlag::Up : GestureTypeFlag::Down;
+            direction = m_currentDelta.height() < 0 ? GestureDirection::Up : GestureDirection::Down;
         }
         if (std::abs(m_currentDelta.width()) >= 5 || std::abs(m_currentDelta.height()) >= 5) {
             // only lock in a direction if the delta is big enough
@@ -229,10 +229,10 @@ void GestureRecognizer::updateSwipeGesture(const QSizeF &delta)
     // Find the current swipe direction
     switch (swipeAxis) {
     case Axis::Vertical:
-        direction = m_currentDelta.height() < 0 ? GestureTypeFlag::Up : GestureTypeFlag::Down;
+        direction = m_currentDelta.height() < 0 ? GestureDirection::Up : GestureDirection::Down;
         break;
     case Axis::Horizontal:
-        direction = m_currentDelta.width() < 0 ? GestureTypeFlag::Left : GestureTypeFlag::Right;
+        direction = m_currentDelta.width() < 0 ? GestureDirection::Left : GestureDirection::Right;
         break;
     default:
         Q_UNREACHABLE();
@@ -335,11 +335,11 @@ void GestureRecognizer::updatePinchGesture(qreal scale, qreal angleDelta, const 
     m_currentScale = scale;
 
     // Determine the direction of the swipe
-    GestureTypeFlag direction;
+    GestureDirection direction;
     if (scale < 1) {
-        direction = GestureTypeFlag::Contracting;
+        direction = GestureDirection::Contracting;
     } else {
-        direction = GestureTypeFlag::Expanding;
+        direction = GestureDirection::Expanding;
     }
 
     // Eliminate wrong gestures (takes two iterations)
@@ -496,25 +496,25 @@ qreal SwipeGesture::getSemanticProgress(const QSizeF &delta) const
 {
     qreal progress = 0;
 
-    if (direction() & GestureTypeFlag::Up) {
+    if (direction() & GestureDirection::Up) {
         qreal val = -delta.height() / m_unitDelta;
         if (val > progress) {
             progress = val;
         }
     }
-    if (direction() & GestureTypeFlag::Down) {
+    if (direction() & GestureDirection::Down) {
         qreal val = delta.height() / m_unitDelta;
         if (val > progress) {
             progress = val;
         }
     }
-    if (direction() & GestureTypeFlag::Left) {
+    if (direction() & GestureDirection::Left) {
         qreal val = -delta.width() / m_unitDelta;
         if (val > progress) {
             progress = val;
         }
     }
-    if (direction() & GestureTypeFlag::Right) {
+    if (direction() & GestureDirection::Right) {
         qreal val = delta.width() / m_unitDelta;
         if (val > progress) {
             progress = val;
@@ -552,12 +552,12 @@ QSet<uint> Gesture::acceptableFingerCounts() const
     return m_validFingerCounts;
 }
 
-GestureType Gesture::direction() const
+GestureDirections Gesture::direction() const
 {
     return m_direction;
 }
 
-void Gesture::setDirection(GestureType direction)
+void Gesture::setDirection(GestureDirections direction)
 {
     m_direction = direction;
 }

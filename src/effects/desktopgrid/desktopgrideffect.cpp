@@ -61,7 +61,7 @@ DesktopGridEffect::DesktopGridEffect()
         }
     });
 
-    effects->registerGesture(GestureDeviceType::Touchpad, GestureTypeFlag::Up, 4, m_realtimeToggleAction, [this](qreal progress) {
+    effects->registerGesture(GestureDeviceType::Touchpad, GestureDirection::Up, 4, m_realtimeToggleAction, [this](qreal progress) {
         progress = std::clamp(progress, 0.0, 1.0);
         if (!effects->hasActiveFullScreenEffect() || effects->activeFullScreenEffect() == this) {
             switch (m_status) {
