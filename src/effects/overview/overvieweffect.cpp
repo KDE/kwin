@@ -52,7 +52,6 @@ OverviewEffect::OverviewEffect()
     });
 
     auto progressCallback = [this](qreal progress) {
-        progress = std::clamp(progress, 0.0, 1.1);
         if (!effects->hasActiveFullScreenEffect() || effects->activeFullScreenEffect() == this) {
             switch (m_status) {
             case Status::Inactive:

@@ -27,7 +27,7 @@ static const QSet<uint> DEFAULT_VALID_FINGER_COUNTS = {1, 2, 3, 4, 5, 6, 7, 8, 9
 /**
  * This is the amount of change for 1 unit of change, like switch by 1 desktop.
  */
-static const qreal DEFAULT_UNIT_DELTA = 200; // Pixels
+static const qreal DEFAULT_UNIT_DELTA = 400; // Pixels
 static const qreal DEFAULT_UNIT_SCALE_DELTA = .2; // 20%
 
 class Gesture : public QObject
@@ -74,7 +74,7 @@ Q_SIGNALS:
      */
     void cancelled();
     /**
-     * Progress towards the minimum threshold to trigger. [0, 1]
+     * Progress towards the minimum threshold to trigger
      */
     void triggerProgress(qreal);
     /**
@@ -84,6 +84,13 @@ Q_SIGNALS:
      * It can be more than 1, indicating an action should happen more than once.
      */
     void semanticProgress(qreal, GestureDirections);
+    /**
+     * Like semantic progress except [-1, 1] and
+     * it captures both of something
+     * example: Up and Down (VerticalAxis), Contracting and Expanding (BiDirectionalPinch)
+     * Positive values are Up, Right and Expanding
+     */
+    void semanticProgressAxis(qreal, GestureDirections);
 
 private:
     QSet<uint> m_validFingerCounts = DEFAULT_VALID_FINGER_COUNTS;
@@ -111,19 +118,10 @@ public:
     bool maximumYIsRelevant() const;
     void setStartGeometry(const QRect &geometry);
 
-    /**
-     * In pixels
-     */
     QSizeF triggerDelta() const;
     void setTriggerDelta(const QSizeF &delta);
     bool isTriggerDeltaRelevant() const;
 
-    /**
-     * Returns the progress [0, 1] of the gesture
-     * being triggered. Picks the largest possible value
-     * considering each direction available to the
-     * gesture.
-     */
     qreal getTriggerProgress(const QSizeF &delta) const;
     bool triggerDeltaReached(const QSizeF &delta) const;
 
@@ -136,6 +134,17 @@ public:
      * that the action should be done more times.
      */
     qreal getSemanticProgress(const QSizeF &delta) const;
+    /**
+     * Like the last one, except [-1, 1]
+     * Positive values are Up and Right
+     */
+    qreal getSemanticAxisProgress(const QSizeF &delta) const;
+    /**
+     * A two dimensional semantic delta.
+     * [-1, 1] on each axis.
+     * Positive is Up and Right
+     */
+    QSizeF getSemanticDelta(const QSizeF &delta) const;
 
 Q_SIGNALS:
     /**
@@ -143,6 +152,17 @@ Q_SIGNALS:
      * started to where it is now.
      */
     void pixelDelta(const QSizeF &delta, GestureDirections);
+    /**
+     * A 2d coordinate giving the semantic axis delta
+     * [-1, 1] on both horizontal and vertical axes.
+     */
+    void semanticDelta(const QSizeF &delta, GestureDirections);
+    /**
+     * GIves a 2d vector of pointing from
+     * where the gesture started to where
+     * it is now.
+     */
+    void swipePixelVector(const QVector2D &vector);
 
 private:
     bool m_minimumXRelevant = false;
@@ -174,9 +194,6 @@ public:
     void setTriggerScaleDelta(const qreal &scaleDelta);
     bool isTriggerScaleDeltaRelevant() const;
 
-    /**
-     * [0, 1]
-     */
     qreal getTriggerProgress(const qreal &scaleDelta) const;
     bool triggerScaleDeltaReached(const qreal &scaleDelta) const;
 
@@ -189,6 +206,18 @@ public:
      * that the action should be done more times.
      */
     qreal getSemanticProgress(const qreal scale) const;
+    /**
+     * Like the last one, except [-1, 1]
+     * Positive is expanding.
+     * Positive values are Expanding
+     */
+    qreal getSemanticAxisProgress(const qreal scale) const;
+
+Q_SIGNALS:
+    /**
+     * The progress is reported in [0.0,1.0]
+     */
+    void triggerProgress(qreal);
 
 private:
     bool m_triggerScaleDeltaRelevant = false;
@@ -222,6 +251,7 @@ public:
 
 private:
     void cancelActiveGestures();
+    bool mutuallyExclusive(GestureDirections d, GestureDirections gestureDir);
     enum class StartPositionBehavior {
         Relevant,
         Irrelevant,

@@ -279,7 +279,6 @@ void GestureTest::testSwipeUpdateTrigger()
     SwipeGesture gesture;
     QFETCH(GestureDirection, direction);
     gesture.setDirection(direction);
-    gesture.setTriggerDelta(QSizeF(1, 1));
 
     QSignalSpy triggeredSpy(&gesture, &SwipeGesture::triggered);
     QVERIFY(triggeredSpy.isValid());
