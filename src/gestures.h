@@ -50,12 +50,8 @@ public:
     bool isFingerCountAcceptable(uint fingers) const;
     QSet<uint> acceptableFingerCounts() const;
 
-    GestureDirections direction() const;
-    void setDirection(GestureDirections direction);
-
 protected:
     explicit Gesture(QObject *parent);
-    GestureDirections m_direction;
 
 Q_SIGNALS:
     /**
@@ -83,6 +79,9 @@ class SwipeGesture : public Gesture
 public:
     explicit SwipeGesture(QObject *parent = nullptr);
     ~SwipeGesture() override;
+
+    GestureDirections direction() const;
+    void setDirection(GestureDirections direction);
 
     void setMinimumX(int x);
     int minimumX() const;
@@ -119,6 +118,7 @@ Q_SIGNALS:
     void deltaProgress(const QSizeF &delta);
 
 private:
+    GestureDirections m_direction = GestureDirection::Down;
     bool m_minimumXRelevant = false;
     int m_minimumX = 0;
     bool m_minimumYRelevant = false;
@@ -137,6 +137,9 @@ class PinchGesture : public Gesture
 public:
     explicit PinchGesture(QObject *parent = nullptr);
     ~PinchGesture() override;
+
+    GestureDirections direction() const;
+    void setDirection(GestureDirections direction);
 
     qreal minimumScaleDelta() const;
 
@@ -158,6 +161,7 @@ Q_SIGNALS:
     void progress(qreal);
 
 private:
+    GestureDirections m_direction = GestureDirection::Expanding;
     bool m_minimumScaleDeltaRelevant = false;
     qreal m_minimumScaleDelta = DEFAULT_UNIT_SCALE_DELTA;
 };
