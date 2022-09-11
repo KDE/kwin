@@ -41,28 +41,24 @@ void SwipeGesture::setStartGeometry(const QRect &geometry)
     Q_ASSERT(m_maximumY >= m_minimumY);
 }
 
-qreal SwipeGesture::getTriggerProgress(const QSizeF &delta) const
+qreal SwipeGesture::deltaToProgress(const QSizeF &delta) const
 {
-    if (!m_triggerDeltaRelevant || m_triggerDelta.isNull()) {
+    if (!m_minimumDeltaRelevant || m_minimumDelta.isNull()) {
         return 1.0;
     }
 
-    if (m_direction.testFlag(GestureDirection::DirectionlessSwipe)) {
-        return std::min(std::hypot(delta.width(), delta.height()) / m_triggerDelta.width(), 1.0);
-    }
-
-    if (m_direction & GestureDirection::VerticalAxis) {
-        return std::min(std::abs(delta.height()) / std::abs(m_triggerDelta.height()), 1.0);
-    } else if (m_direction & GestureDirection::HorizontalAxis) {
-        return std::min(std::abs(delta.width()) / std::abs(m_triggerDelta.width()), 1.0);
+    if (m_direction & (GestureDirection::Up | GestureDirection::Down)) {
+        return std::min(std::abs(delta.height()) / std::abs(m_minimumDelta.height()), 1.0);
+    } else if (m_direction & (GestureDirection::Left | GestureDirection::Right)) {
+        return std::min(std::abs(delta.width()) / std::abs(m_minimumDelta.width()), 1.0);
     }
 
     return 1.0;
 }
 
-bool SwipeGesture::triggerDeltaReached(const QSizeF &delta) const
+bool SwipeGesture::minimumDeltaReached(const QSizeF &delta) const
 {
-    return getTriggerProgress(delta) >= 1.0;
+    return deltaToProgress(delta) >= 1.0;
 }
 
 PinchGesture::PinchGesture(QObject *parent)
@@ -72,14 +68,14 @@ PinchGesture::PinchGesture(QObject *parent)
 
 PinchGesture::~PinchGesture() = default;
 
-qreal PinchGesture::getTriggerProgress(const qreal &scaleDelta) const
+qreal PinchGesture::scaleDeltaToProgress(const qreal &scaleDelta) const
 {
-    return std::clamp(std::abs(scaleDelta - 1) / triggerScaleDelta(), 0.0, 1.0);
+    return std::clamp(std::abs(scaleDelta - 1) / minimumScaleDelta(), 0.0, 1.0);
 }
 
-bool PinchGesture::triggerScaleDeltaReached(const qreal &scaleDelta) const
+bool PinchGesture::minimumScaleDeltaReached(const qreal &scaleDelta) const
 {
-    return getTriggerProgress(scaleDelta) >= 1.0;
+    return scaleDeltaToProgress(scaleDelta) >= 1.0;
 }
 
 GestureRecognizer::GestureRecognizer(QObject *parent)
@@ -167,12 +163,11 @@ int GestureRecognizer::startSwipeGesture(uint fingerCount, const QPointF &startP
         }
 
         // Only add gestures who's direction aligns with current swipe axis
-        if (gesture->direction().testFlag(GestureDirection::DirectionlessSwipe)) {
-        } else if (gesture->direction() & GestureDirection::VerticalAxis) {
+        if (gesture->direction() & (GestureDirection::Up | GestureDirection::Down)) {
             if (m_currentSwipeAxis == Axis::Horizontal) {
                 continue;
             }
-        } else if (gesture->direction() & GestureDirection::HorizontalAxis) {
+        } else if (gesture->direction() & (GestureDirection::Left | GestureDirection::Right)) {
             if (m_currentSwipeAxis == Axis::Vertical) {
                 continue;
             }
@@ -247,37 +242,9 @@ void GestureRecognizer::updateSwipeGesture(const QSizeF &delta)
 
     // Send progress update
     for (SwipeGesture *g : std::as_const(m_activeSwipeGestures)) {
-        Q_EMIT g->triggerProgress(g->getTriggerProgress(m_currentDelta));
-        Q_EMIT g->semanticProgress(g->getSemanticProgress(m_currentDelta), g->direction());
-        Q_EMIT g->pixelDelta(m_currentDelta, g->direction());
-        Q_EMIT g->semanticDelta(g->getSemanticDelta(m_currentDelta), g->direction());
-        if (!g->direction().testFlag(GestureDirection::DirectionlessSwipe)) {
-            Q_EMIT g->semanticProgressAxis(g->getSemanticAxisProgress(m_currentDelta), g->direction());
-        }
-        Q_EMIT g->swipePixelVector(QVector2D(m_currentDelta.width(), m_currentDelta.height()));
+        Q_EMIT g->progress(g->deltaToProgress(m_currentDelta));
+        Q_EMIT g->deltaProgress(m_currentDelta);
     }
-}
-
-bool GestureRecognizer::mutuallyExclusive(GestureDirections currentDir, GestureDirections gestureDir)
-{
-    if (currentDir == gestureDir) {
-        return false;
-    }
-    if (gestureDir.testFlag(GestureDirection::DirectionlessSwipe)) {
-        return false;
-    }
-
-    if (currentDir & GestureDirection::VerticalAxis) {
-        if (gestureDir.testFlag(GestureDirection::VerticalAxis)) {
-            return false;
-        }
-    } else if (currentDir & GestureDirection::HorizontalAxis) {
-        if (gestureDir.testFlag(GestureDirection::HorizontalAxis)) {
-            return false;
-        }
-    }
-
-    return true;
 }
 
 void GestureRecognizer::cancelActiveGestures()
@@ -307,7 +274,7 @@ void GestureRecognizer::endSwipeGesture()
 {
     const QSizeF delta = m_currentDelta;
     for (auto g : qAsConst(m_activeSwipeGestures)) {
-        if (static_cast<SwipeGesture *>(g)->triggerDeltaReached(delta)) {
+        if (static_cast<SwipeGesture *>(g)->minimumDeltaReached(delta)) {
             Q_EMIT g->triggered();
         } else {
             Q_EMIT g->cancelled();
@@ -372,9 +339,7 @@ void GestureRecognizer::updatePinchGesture(qreal scale, qreal angleDelta, const 
     }
 
     for (PinchGesture *g : std::as_const(m_activePinchGestures)) {
-        Q_EMIT g->triggerProgress(g->getTriggerProgress(scale));
-        Q_EMIT g->semanticProgress(g->getSemanticProgress(scale), g->direction());
-        Q_EMIT g->semanticProgressAxis(g->getSemanticAxisProgress(scale), g->direction());
+        Q_EMIT g->progress(g->scaleDeltaToProgress(scale));
     }
 }
 
@@ -389,7 +354,7 @@ void GestureRecognizer::cancelPinchGesture()
 void GestureRecognizer::endPinchGesture() // because fingers up
 {
     for (auto g : qAsConst(m_activePinchGestures)) {
-        if (g->triggerScaleDeltaReached(m_currentScale)) {
+        if (g->minimumScaleDeltaReached(m_currentScale)) {
             Q_EMIT g->triggered();
         } else {
             Q_EMIT g->cancelled();
@@ -466,83 +431,41 @@ bool SwipeGesture::maximumYIsRelevant() const
     return m_maximumYRelevant;
 }
 
-QSizeF SwipeGesture::triggerDelta() const
+QSizeF SwipeGesture::minimumDelta() const
 {
-    return m_triggerDelta;
+    return m_minimumDelta;
 }
 
-void SwipeGesture::setTriggerDelta(const QSizeF &delta)
+void SwipeGesture::setMinimumDelta(const QSizeF &delta)
 {
-    m_triggerDelta = delta;
-    m_triggerDeltaRelevant = true;
+    m_minimumDelta = delta;
+    m_minimumDeltaRelevant = true;
 }
 
-bool SwipeGesture::isTriggerDeltaRelevant() const
+bool SwipeGesture::isMinimumDeltaRelevant() const
 {
-    return m_triggerDeltaRelevant;
+    return m_minimumDeltaRelevant;
 }
 
-qreal PinchGesture::triggerScaleDelta() const
+qreal PinchGesture::minimumScaleDelta() const
 {
-    return m_triggerScaleDelta;
+    return m_minimumScaleDelta;
 }
 
-void PinchGesture::setTriggerScaleDelta(const qreal &scaleDelta)
+void PinchGesture::setMinimumScaleDelta(const qreal &scaleDelta)
 {
-    m_triggerScaleDelta = scaleDelta;
-    m_triggerScaleDeltaRelevant = true;
+    m_minimumScaleDelta = scaleDelta;
+    m_minimumScaleDeltaRelevant = true;
 }
 
-bool PinchGesture::isTriggerScaleDeltaRelevant() const
+bool PinchGesture::isMinimumScaleDeltaRelevant() const
 {
-    return m_triggerScaleDeltaRelevant;
+    return m_minimumScaleDeltaRelevant;
 }
 
 int GestureRecognizer::startSwipeGesture(uint fingerCount)
 {
     return startSwipeGesture(fingerCount, QPointF(), StartPositionBehavior::Irrelevant);
-}
-
-QSizeF SwipeGesture::getSemanticDelta(const QSizeF &delta) const
-{
-    QSizeF d = QSizeF();
-    d.setWidth(delta.width() / m_unitDelta);
-    d.setHeight(delta.height() / m_unitDelta);
-    return d;
-}
-
-qreal SwipeGesture::getSemanticProgress(const QSizeF &delta) const
-{
-    if (m_direction.testFlag(GestureDirection::DirectionlessSwipe)) {
-        return std::hypot(delta.width(), delta.height()) / m_unitDelta;
-    } else if (m_direction & GestureDirection::VerticalAxis) {
-        return std::abs(delta.height()) / m_unitDelta;
-    } else if (m_direction & GestureDirection::HorizontalAxis) {
-        return std::abs(delta.width()) / m_unitDelta;
-    }
-
-    return 1.0;
-}
-
-qreal PinchGesture::getSemanticProgress(const qreal scale) const
-{
-    return std::max(std::abs(1 - scale) / m_unitScaleDelta, 0.0);
-}
-
-qreal SwipeGesture::getSemanticAxisProgress(const QSizeF &delta) const
-{
-    if (m_direction & GestureDirection::VerticalAxis) {
-        return delta.height() / m_unitDelta;
-    } else if (m_direction & GestureDirection::HorizontalAxis) {
-        return delta.width() / m_unitDelta;
-    }
-
-    return 1.0;
-}
-
-qreal PinchGesture::getSemanticAxisProgress(const qreal scale) const
-{
-    return (scale - 1) / m_unitScaleDelta;
 }
 
 int GestureRecognizer::startSwipeGesture(const QPointF &startPos)
