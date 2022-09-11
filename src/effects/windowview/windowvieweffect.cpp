@@ -125,8 +125,8 @@ WindowViewEffect::WindowViewEffect()
             }
         }
     };
-    effects->registerGesture(GestureDeviceType::Touchpad, GestureDirection::Down, 4, m_realtimeToggleAction, gestureCallback);
-    effects->registerGesture(GestureDeviceType::Touchscreen, GestureDirection::Down, 3, m_realtimeToggleAction, gestureCallback);
+    effects->registerRealtimeTouchpadSwipeShortcut(SwipeDirection::Down, 4, m_realtimeToggleAction, gestureCallback);
+    effects->registerTouchscreenSwipeShortcut(SwipeDirection::Down, 3, m_realtimeToggleAction, gestureCallback);
 
     reconfigure(ReconfigureAll);
 }

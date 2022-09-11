@@ -378,7 +378,7 @@ void TouchInputTest::testGestureDetection()
         qWarning() << "progress callback!" << progress;
     };
     QAction action;
-    input()->forceRegisterTouchscreenSwipeShortcut(GestureDirection::Right, 3, &action, callback);
+    input()->forceRegisterTouchscreenSwipeShortcut(SwipeDirection::Right, 3, &action, callback);
 
     // verify that gestures are detected
 
