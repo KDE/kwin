@@ -25,6 +25,8 @@
 namespace KWin
 {
 
+QHash<Output *, TileManager *> TileManager::s_managers = QHash<Output *, TileManager *>();
+
 QDebug operator<<(QDebug debug, const TileManager *tileManager)
 {
     if (tileManager) {
@@ -69,10 +71,26 @@ TileManager::TileManager(Output *parent)
     m_quickRootTile = std::unique_ptr<QuickRootTile>(new QuickRootTile(this));
 
     connect(m_output, &Output::informationChanged, this, &TileManager::readSettings);
+    readSettings();
 }
 
 TileManager::~TileManager()
 {
+}
+
+TileManager *TileManager::instance(Output *output)
+{
+    if (s_managers.contains(output)) {
+        return s_managers[output];
+    }
+
+    auto *tm = new TileManager(output);
+    s_managers[output] = tm;
+    connect(output, &Output::destroyed, output, [output]() {
+        qWarning() << "output destroyed";
+        s_managers.remove(output);
+    });
+    return tm;
 }
 
 Output *TileManager::output() const

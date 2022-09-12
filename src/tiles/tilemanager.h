@@ -46,6 +46,8 @@ public:
     explicit TileManager(Output *parent = nullptr);
     ~TileManager() override;
 
+    static TileManager *instance(Output *output); // TODO, VD and Activity too?
+
     Output *output() const;
 
     KWin::Tile *bestTileForPosition(const QPointF &pos);
@@ -81,6 +83,7 @@ private:
     QTimer *m_saveTimer = nullptr;
     std::unique_ptr<CustomTile> m_rootTile = nullptr;
     std::unique_ptr<QuickRootTile> m_quickRootTile = nullptr;
+    static QHash<Output *, TileManager *> s_managers;
     friend class CustomTile;
 };
 

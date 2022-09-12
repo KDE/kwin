@@ -75,7 +75,7 @@ void TilesTest::init()
     workspace()->setActiveOutput(QPoint(640, 512));
     Cursors::self()->mouse()->setPos(QPoint(640, 512));
     m_output = workspace()->activeOutput();
-    m_tileManager = m_output->tileManager();
+    m_tileManager = TileManager::instance(m_output);
     m_rootTile = m_tileManager->rootTile();
     QAbstractItemModelTester(m_tileManager, QAbstractItemModelTester::FailureReportingMode::QtTest);
 }

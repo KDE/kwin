@@ -28,14 +28,7 @@ Tile::Tile(TileManager *tiling, Tile *parent)
 {
     connect(m_tiling->output(), &Output::informationChanged, this, &Tile::absoluteGeometryChanged);
     connect(m_tiling->output(), &Output::informationChanged, this, &Tile::windowGeometryChanged);
-    if (Workspace::self()) {
-        connect(Workspace::self(), &Workspace::configChanged, this, &Tile::windowGeometryChanged);
-    } else {
-        connect(kwinApp(), &Application::workspaceCreated, this, [this]() {
-            connect(m_tiling->output(), &Output::informationChanged, this, &Tile::windowGeometryChanged);
-            Q_EMIT windowGeometryChanged();
-        });
-    }
+    connect(Workspace::self(), &Workspace::configChanged, this, &Tile::windowGeometryChanged);
 }
 
 Tile::~Tile()
