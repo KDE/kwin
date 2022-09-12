@@ -150,5 +150,31 @@ FocusScope {
             }
             delegate: TileDelegate {}
         }
+
+        PlasmaComponents.Control {
+            anchors {
+                right: parent.right
+                top: parent.top
+            }
+            leftPadding: background.margins.left
+            topPadding: PlasmaCore.Units.smallSpacing
+            rightPadding: PlasmaCore.Units.smallSpacing
+            bottomPadding: background.margins.bottom
+            contentItem: RowLayout {
+                PlasmaComponents.Label {
+                    text: i18n("Padding:")
+                }
+                PlasmaComponents.SpinBox {
+                    from: 0
+                    to: PlasmaCore.Units.gridUnit * 2
+                    value: KWinComponents.Workspace.tilingForScreen(root.targetScreen.name).rootTile.padding
+                    onValueModified: KWinComponents.Workspace.tilingForScreen(root.targetScreen.name).rootTile.padding = value
+                }
+            }
+            background: PlasmaCore.FrameSvgItem {
+                imagePath: "widgets/background"
+                enabledBorders: PlasmaCore.FrameSvg.LeftBorder | PlasmaCore.FrameSvg.BottomBorder
+            }
+        }
     }
 }

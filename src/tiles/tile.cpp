@@ -81,7 +81,7 @@ bool Tile::supportsResizeGravity(Gravity gravity)
 
 void Tile::setGeometryFromWindow(const QRectF &geom)
 {
-    setGeometryFromAbsolute(geom + m_padding);
+    setGeometryFromAbsolute(geom + QMarginsF(m_padding, m_padding, m_padding, m_padding));
 }
 
 void Tile::setGeometryFromAbsolute(const QRectF &geom)
@@ -125,7 +125,7 @@ QRectF Tile::absoluteGeometry() const
 QRectF Tile::windowGeometry() const
 {
     const auto geom = absoluteGeometry();
-    return geom.intersected(workspace()->clientArea(MaximizeArea, m_tiling->output(), VirtualDesktopManager::self()->currentDesktop())) - m_padding;
+    return geom.intersected(workspace()->clientArea(MaximizeArea, m_tiling->output(), VirtualDesktopManager::self()->currentDesktop())) - QMarginsF(m_padding, m_padding, m_padding, m_padding);
 }
 
 QRectF Tile::maximizedWindowGeometry() const
@@ -146,19 +146,26 @@ bool Tile::canBeRemoved() const
     return m_parentTile;
 }
 
-QMarginsF Tile::padding() const
+qreal Tile::padding() const
 {
+    // Assume padding is all the same
     return m_padding;
 }
 
-void Tile::setPadding(const QMarginsF &padding)
+void Tile::setPadding(qreal padding)
 {
     if (m_padding == padding) {
         return;
     }
 
     m_padding = padding;
-    Q_EMIT absoluteGeometryChanged();
+
+    for (auto *t : m_children) {
+        t->setPadding(padding);
+    }
+
+    Q_EMIT paddingChanged(padding);
+    Q_EMIT windowGeometryChanged();
 }
 
 void Tile::resizeByPixels(qreal delta, Qt::Edge edge)

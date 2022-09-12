@@ -15,7 +15,7 @@ namespace KWin
 QuickRootTile::QuickRootTile(TileManager *tiling, Tile *parentItem)
     : Tile(tiling, parentItem)
 {
-    setPadding(QMarginsF());
+    setPadding(0.0);
     setRelativeGeometry(QRectF(0, 0, 1, 1));
 
     m_leftVerticalTile = std::unique_ptr<QuickTile>(new QuickTile(tiling, ElectricBorder::ElectricLeft, this));
@@ -153,7 +153,7 @@ QuickTile::QuickTile(TileManager *tiling, ElectricBorder border, QuickRootTile *
     , m_border(border)
 {
     m_geometryLock = true;
-    setPadding(QMarginsF());
+    setPadding(0);
     switch (border) {
     case ElectricTop:
         setRelativeGeometry(QRectF(0, 0, 1, 0.5));

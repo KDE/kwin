@@ -28,6 +28,7 @@ class KWIN_EXPORT Tile : public QObject
     Q_OBJECT
     Q_PROPERTY(QRectF relativeGeometry READ relativeGeometry NOTIFY relativeGeometryChanged)
     Q_PROPERTY(QRectF absoluteGeometry READ absoluteGeometry NOTIFY absoluteGeometryChanged)
+    Q_PROPERTY(qreal padding READ padding WRITE setPadding NOTIFY paddingChanged)
     Q_PROPERTY(int positionInLayout READ row NOTIFY rowChanged)
     Q_PROPERTY(Tile *parent READ parentTile CONSTANT)
     Q_PROPERTY(QList<Tile *> tiles READ childTiles NOTIFY childTilesChanged)
@@ -66,8 +67,8 @@ public:
     bool isLayout() const;
     bool canBeRemoved() const;
 
-    QMarginsF padding() const;
-    void setPadding(const QMarginsF &padding);
+    qreal padding() const;
+    void setPadding(qreal padding);
 
     /**
      * All tiles directly children of this tile
@@ -109,6 +110,7 @@ Q_SIGNALS:
     void relativeGeometryChanged(const QRectF &relativeGeometry);
     void absoluteGeometryChanged();
     void windowGeometryChanged();
+    void paddingChanged(qreal padding);
     void rowChanged(int row);
     void isLayoutChanged(bool isLayout);
     void childTilesChanged();
@@ -125,7 +127,7 @@ private:
     TileManager *m_tiling;
     QRectF m_relativeGeometry;
     static QSizeF s_minimumSize;
-    QMarginsF m_padding = QMargins(4, 4, 4, 4);
+    qreal m_padding = 4.0;
     bool m_canBeRemoved = true;
 };
 
