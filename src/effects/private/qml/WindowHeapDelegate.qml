@@ -1,5 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2022 ivan tkachenko <me@ratijas.tk>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -39,6 +40,9 @@ Item {
     // Show a text label under this thumbnail
     property bool windowTitleVisible: true
 
+    // Same as for window heap
+    property bool animationEnabled: false
+
     //scale up and down the whole thumbnail without affecting layouting
     property real targetScale: 1.0
 
@@ -73,11 +77,15 @@ Item {
     }
 
     visible: opacity > 0
-    z: activeDragHandler.active ? 1000
+    z: (activeDragHandler.active || returning.running) ? 1000
         : client.stackingOrder * (presentOnCurrentDesktop ? 1 : 0.001)
 
+    function restoreDND(oldGlobalRect: rect) {
+        thumbSource.restoreDND(oldGlobalRect);
+    }
+
     component TweenBehavior : Behavior {
-        enabled: thumb.state !== "partial" && thumb.windowHeap.animationEnabled && !thumb.activeDragHandler.active
+        enabled: thumb.state !== "partial" && thumb.windowHeap.animationEnabled && thumb.animationEnabled && !thumb.activeDragHandler.active
         NumberAnimation {
             duration: thumb.windowHeap.animationDuration
             easing.type: Easing.OutCubic
@@ -92,9 +100,7 @@ Item {
     KWinComponents.WindowThumbnailItem {
         id: thumbSource
         wId: thumb.client.internalId
-        state: thumb.activeDragHandler.active ? "drag" : "normal"
 
-        Drag.active: thumb.activeDragHandler.active
         Drag.proposedAction: Qt.MoveAction
         Drag.supportedActions: Qt.MoveAction
         Drag.source: thumb.client
@@ -105,6 +111,23 @@ Item {
         onXChanged: effect.checkItemDraggedOutOfScreen(thumbSource)
         onYChanged: effect.checkItemDraggedOutOfScreen(thumbSource)
 
+        state: "normal"
+        function saveDND() {
+            const oldGlobalRect = mapToItem(null, 0, 0, width, height);
+            thumb.windowHeap.saveDND(thumb.client.internalId, oldGlobalRect);
+        }
+        function restoreDND(oldGlobalRect: rect) {
+            state = "reparenting";
+
+            const newGlobalRect = mapFromItem(null, oldGlobalRect);
+
+            x = newGlobalRect.x;
+            y = newGlobalRect.y;
+            width = newGlobalRect.width;
+            height = newGlobalRect.height;
+
+            state = "normal";
+        }
         states: [
             State {
                 name: "normal"
@@ -117,6 +140,14 @@ Item {
                 }
             },
             State {
+                name: "pressed"
+                PropertyChanges {
+                    target: thumbSource
+                    width: thumb.width
+                    height: thumb.height
+                }
+            },
+            State {
                 name: "drag"
                 PropertyChanges {
                     target: thumbSource
@@ -124,17 +155,25 @@ Item {
                             thumb.activeDragHandler.centroid.position.x
                     y: -thumb.activeDragHandler.centroid.pressPosition.y * thumb.targetScale +
                             thumb.activeDragHandler.centroid.position.y
-                    width: cell.width * thumb.targetScale
-                    height: cell.height * thumb.targetScale
+                    width: thumb.width * thumb.targetScale
+                    height: thumb.height * thumb.targetScale
+                }
+            },
+            State {
+                name: "reparenting"
+                PropertyChanges {
+                    target: thumbSource
                 }
             }
         ]
         transitions: Transition {
+            id: returning
+            from: "drag,reparenting"
             to: "normal"
             enabled: thumb.windowHeap.animationEnabled
             NumberAnimation {
                 duration: thumb.windowHeap.animationDuration
-                properties: "x, y, width, height, opacity"
+                properties: "x, y, width, height"
                 easing.type: Easing.OutCubic
             }
         }
@@ -316,25 +355,52 @@ Item {
         onTapped: {
             thumb.windowHeap.windowClicked(thumb.client, eventPoint)
         }
+        onPressedChanged: {
+            if (pressed) {
+                var saved = Qt.point(thumbSource.x, thumbSource.y);
+                thumbSource.Drag.active = true;
+                thumbSource.state = "pressed";
+                thumbSource.x = saved.x;
+                thumbSource.y = saved.y;
+            } else if (!thumb.activeDragHandler.active) {
+                thumbSource.Drag.active = false;
+                thumbSource.state = "normal";
+            }
+        }
     }
 
     component DragManager : DragHandler {
         target: null
+        dragThreshold: 0
         grabPermissions: PointerHandler.CanTakeOverFromAnything
+        // This does not work when moving pointer fast and pressing along the way
+        // See also QTBUG-105903, QTBUG-105904
+        // enabled: thumbSource.state !== "normal"
 
         onActiveChanged: {
             thumb.windowHeap.dragActive = active;
             if (active) {
                 thumb.activeDragHandler = this;
+                thumbSource.state = "drag";
             } else {
+                thumbSource.saveDND();
+
                 var action = thumbSource.Drag.drop();
                 if (action === Qt.MoveAction) {
-                    // this whole component is in the process of being destroyed due to drop onto
+                    // This whole component is in the process of being destroyed due to drop onto
                     // another virtual desktop (not another screen).
+                    if (typeof thumbSource !== "undefined") {
+                        // Except the case when it was dropped on the same desktop which it's already on, so let's return to normal state anyway.
+                        thumbSource.state = "normal";
+                    }
                     return;
                 }
+
                 var globalPos = targetScreen.mapToGlobal(centroid.scenePosition);
                 effect.checkItemDroppedOutOfScreen(globalPos, thumbSource);
+
+                // else, return to normal without reparenting
+                thumbSource.state = "normal";
             }
         }
     }

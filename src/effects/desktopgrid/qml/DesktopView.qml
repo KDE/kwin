@@ -1,6 +1,7 @@
 /*
     SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
     SPDX-FileCopyrightText: 2022 Marco Martin <mart@kde.org>
+    SPDX-FileCopyrightText: 2022 ivan tkachenko <me@ratijas.tk>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -17,6 +18,8 @@ FocusScope {
 
     required property QtObject clientModel
     required property QtObject desktop
+    /** @type {{int: rect}} */
+    required property var dndManagerStore
     readonly property bool dragActive: heap.dragActive || dragHandler.active || xAnim.running || yAnim.running
     property real panelOpacity: 1
     focus: true
@@ -115,6 +118,7 @@ FocusScope {
         animationEnabled: container.animationEnabled
         organized: container.organized
         layout.mode: effect.layout
+        dndManagerStore: desktopView.dndManagerStore
         model: KWinComponents.ClientFilterModel {
             activity: KWinComponents.Workspace.currentActivity
             desktop: desktopView.desktop

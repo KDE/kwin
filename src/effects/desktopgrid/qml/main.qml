@@ -1,6 +1,7 @@
 /*
     SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
     SPDX-FileCopyrightText: 2022 Marco Martin <mart@kde.org>
+    SPDX-FileCopyrightText: 2022 ivan tkachenko <me@ratijas.tk>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -22,6 +23,11 @@ Rectangle {
 
     property bool animationEnabled: false
     property bool organized: false
+
+    /** Shared Drag&Drop store to keep track of DND state across desktops.
+     * @type {{client.internalId: rect}}
+     */
+    property var dndManagerStore: ({})
 
     color: "black"
 
@@ -261,6 +267,7 @@ Rectangle {
                 height: container.height
 
                 clientModel: stackModel
+                dndManagerStore: container.dndManagerStore
                 Rectangle {
                     anchors.fill: parent
                     color: "transparent"

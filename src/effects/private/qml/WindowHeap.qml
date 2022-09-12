@@ -1,5 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2022 ivan tkachenko <me@ratijas.tk>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -47,6 +48,13 @@ FocusScope {
     function activateIndex(index) {
         KWinComponents.Workspace.activeClient = windowsRepeater.itemAt(index).client;
         activated();
+    }
+
+    /** @type {{client.internalId: rect}} */
+    property var dndManagerStore: ({})
+
+    function saveDND(key: int, rect: rect) {
+        dndManagerStore[key] = rect;
     }
 
     KWinComponents.WindowThumbnailItem {
@@ -109,6 +117,22 @@ FocusScope {
 
         Repeater {
             id: windowsRepeater
+
+            onItemAdded: (index, item) => {
+                // restore/reparent from drop
+                var key = item.client.internalId;
+                if (key in heap.dndManagerStore) {
+                    expoLayout.forceLayout();
+                    var oldGlobalRect = heap.dndManagerStore[key];
+                    item.restoreDND(oldGlobalRect);
+                    delete heap.dndManagerStore[key];
+                } else if (heap.effectiveOrganized) {
+                    // New window has opened in the middle of a running effect.
+                    // Make sure it is positioned before enabling its animations.
+                    expoLayout.forceLayout();
+                }
+                item.animationEnabled = true;
+            }
             delegate: WindowHeapDelegate {
                 windowHeap: heap
             }
