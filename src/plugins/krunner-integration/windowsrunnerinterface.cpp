@@ -279,7 +279,7 @@ RemoteMatch WindowsRunner::windowsMatch(const Window *window, const WindowsRunne
 
     // When there is no icon name, send a pixmap along instead
     if (match.iconName.isEmpty()) {
-        QImage convertedImage = window->icon().pixmap(QSize(16, 16)).toImage().convertToFormat(QImage::Format_RGBA8888);
+        QImage convertedImage = window->icon().pixmap(QSize(64, 64)).toImage().convertToFormat(QImage::Format_RGBA8888);
         RemoteImage remoteImage{
             convertedImage.width(),
             convertedImage.height(),
