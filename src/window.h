@@ -773,7 +773,7 @@ public:
      * @see hasAlpha
      */
     const QRegion &opaqueRegion() const;
-    QRegion shapeRegion() const;
+    QVector<QRectF> shapeRegion() const;
 
     bool skipsCloseAnimation() const;
     void setSkipCloseAnimation(bool set);
@@ -1925,7 +1925,7 @@ private:
     ClientMachine *m_clientMachine;
     xcb_window_t m_wmClientLeader;
     QRegion opaque_region;
-    mutable QRegion m_shapeRegion;
+    mutable QVector<QRectF> m_shapeRegion;
     mutable bool m_shapeRegionIsValid = false;
     bool m_skipCloseAnimation;
     quint32 m_pendingSurfaceId = 0;

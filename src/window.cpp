@@ -483,13 +483,12 @@ void Window::getWmOpaqueRegion()
     const auto rects = info->opaqueRegion();
     QRegion new_opaque_region;
     for (const auto &r : rects) {
-        new_opaque_region += Xcb::fromXNative(QRect(r.pos.x, r.pos.y, r.size.width, r.size.height)).toAlignedRect();
+        new_opaque_region |= Xcb::fromXNative(QRect(r.pos.x, r.pos.y, r.size.width, r.size.height)).toRect();
     }
-
     opaque_region = new_opaque_region;
 }
 
-QRegion Window::shapeRegion() const
+QVector<QRectF> Window::shapeRegion() const
 {
     if (m_shapeRegionIsValid) {
         return m_shapeRegion;
@@ -501,19 +500,21 @@ QRegion Window::shapeRegion() const
         auto cookie = xcb_shape_get_rectangles_unchecked(kwinApp()->x11Connection(), frameId(), XCB_SHAPE_SK_BOUNDING);
         UniqueCPtr<xcb_shape_get_rectangles_reply_t> reply(xcb_shape_get_rectangles_reply(kwinApp()->x11Connection(), cookie, nullptr));
         if (reply) {
-            m_shapeRegion = QRegion();
+            m_shapeRegion.clear();
             const xcb_rectangle_t *rects = xcb_shape_get_rectangles_rectangles(reply.get());
             const int rectCount = xcb_shape_get_rectangles_rectangles_length(reply.get());
             for (int i = 0; i < rectCount; ++i) {
-                m_shapeRegion += Xcb::fromXNative(QRect(rects[i].x, rects[i].y, rects[i].width, rects[i].height)).toAlignedRect();
+                QRectF region = Xcb::fromXNative(QRect(rects[i].x, rects[i].y, rects[i].width, rects[i].height)).toAlignedRect();
+                // make sure the shape is sane (X is async, maybe even XShape is broken)
+                region = region.intersected(QRectF(QPointF(0, 0), bufferGeometry.size()));
+
+                m_shapeRegion += region;
             }
-            // make sure the shape is sane (X is async, maybe even XShape is broken)
-            m_shapeRegion &= QRegion(0, 0, bufferGeometry.width(), bufferGeometry.height());
         } else {
-            m_shapeRegion = QRegion();
+            m_shapeRegion.clear();
         }
     } else {
-        m_shapeRegion = QRegion(0, 0, bufferGeometry.width(), bufferGeometry.height());
+        m_shapeRegion = {QRectF(0, 0, bufferGeometry.width(), bufferGeometry.height())};
     }
 
     m_shapeRegionIsValid = true;
@@ -523,7 +524,7 @@ QRegion Window::shapeRegion() const
 void Window::discardShapeRegion()
 {
     m_shapeRegionIsValid = false;
-    m_shapeRegion = QRegion();
+    m_shapeRegion.clear();
 }
 
 bool Window::isClient() const

@@ -169,9 +169,9 @@ void Item::updateBoundingRect()
     }
 }
 
-QRegion Item::shape() const
+QVector<QRectF> Item::shape() const
 {
-    return rect().toAlignedRect();
+    return QVector<QRectF>();
 }
 
 QRegion Item::opaque() const

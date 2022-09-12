@@ -167,7 +167,7 @@ void SceneQPainter::renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceIte
     }
     surfaceItem->resetDamage();
 
-    const QRegion shape = surfaceItem->shape();
+    const QVector<QRectF> shape = surfaceItem->shape();
     for (const QRectF rect : shape) {
         const QMatrix4x4 matrix = surfaceItem->surfaceToBufferMatrix();
         const QPointF bufferTopLeft = matrix.map(rect.topLeft());

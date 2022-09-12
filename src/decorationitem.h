@@ -83,7 +83,7 @@ public:
     DecorationRenderer *renderer() const;
     Window *window() const;
 
-    QRegion shape() const override final;
+    QVector<QRectF> shape() const override final;
     QRegion opaque() const override final;
 
 private Q_SLOTS:

@@ -53,9 +53,9 @@ SurfaceItemWayland::SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface
     setSurfaceToBufferMatrix(surface->surfaceToBufferMatrix());
 }
 
-QRegion SurfaceItemWayland::shape() const
+QVector<QRectF> SurfaceItemWayland::shape() const
 {
-    return QRegion(rect().toAlignedRect());
+    return {rect()};
 }
 
 QRegion SurfaceItemWayland::opaque() const
@@ -208,12 +208,16 @@ SurfaceItemXwayland::SurfaceItemXwayland(Window *window, Item *parent)
     connect(window, &Window::geometryShapeChanged, this, &SurfaceItemXwayland::discardQuads);
 }
 
-QRegion SurfaceItemXwayland::shape() const
+QVector<QRectF> SurfaceItemXwayland::shape() const
 {
     const QRectF clipRect = rect() & window()->clientGeometry().translated(-window()->bufferGeometry().topLeft());
-    const QRegion shape = window()->shapeRegion();
+    QVector<QRectF> shape = window()->shapeRegion();
 
-    return shape & clipRect.toRect();
+    // bounded to clipRect
+    for (QRectF &shapePart : shape) {
+        shapePart = shapePart.intersected(clipRect);
+    }
+    return shape;
 }
 
 } // namespace KWin

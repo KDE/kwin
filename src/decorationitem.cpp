@@ -148,16 +148,21 @@ DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Window *win
     handleOutputChanged();
 }
 
-QRegion DecorationItem::shape() const
+QVector<QRectF> DecorationItem::shape() const
 {
     QRectF left, top, right, bottom;
     m_window->layoutDecorationRects(left, top, right, bottom);
-    return QRegion(left.toRect()).united(top.toRect()).united(right.toRect()).united(bottom.toRect());
+    return {left, top, right, bottom};
 }
 
 QRegion DecorationItem::opaque() const
 {
-    return m_window->decorationHasAlpha() ? QRegion() : shape();
+    if (m_window->decorationHasAlpha()) {
+        return QRegion();
+    }
+    QRectF left, top, right, bottom;
+    m_window->layoutDecorationRects(left, top, right, bottom);
+    return QRegion(left.toRect()).united(top.toRect()).united(right.toRect()).united(bottom.toRect());
 }
 
 void DecorationItem::preprocess()

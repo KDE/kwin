@@ -130,11 +130,11 @@ WindowQuadList SurfaceItem::buildQuads() const
         return {};
     }
 
-    const QRegion region = shape();
+    const QVector<QRectF> region = shape();
     const auto size = pixmap()->size();
 
     WindowQuadList quads;
-    quads.reserve(region.rectCount());
+    quads.reserve(region.count());
 
     for (const QRectF rect : region) {
         WindowQuad quad;

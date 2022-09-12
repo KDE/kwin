@@ -11,6 +11,7 @@
 
 #include <QMatrix4x4>
 #include <QObject>
+#include <QVector>
 
 #include <optional>
 
@@ -51,7 +52,7 @@ public:
      */
     QRectF boundingRect() const;
 
-    virtual QRegion shape() const;
+    virtual QVector<QRectF> shape() const;
     virtual QRegion opaque() const;
 
     /**

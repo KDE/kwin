@@ -32,7 +32,7 @@ public:
     void waitForDamage();
     void destroyDamage();
 
-    QRegion shape() const override;
+    QVector<QRectF> shape() const override;
     QRegion opaque() const override;
 
 private Q_SLOTS:

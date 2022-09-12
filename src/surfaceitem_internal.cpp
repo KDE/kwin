@@ -28,9 +28,9 @@ SurfaceItemInternal::SurfaceItemInternal(InternalWindow *window, Item *parent)
     setSurfaceToBufferMatrix(surfaceToBufferMatrix);
 }
 
-QRegion SurfaceItemInternal::shape() const
+QVector<QRectF> SurfaceItemInternal::shape() const
 {
-    return QRegion(rect().toAlignedRect());
+    return {rect()};
 }
 
 std::unique_ptr<SurfacePixmap> SurfaceItemInternal::createPixmap()
