@@ -139,6 +139,20 @@ Item {
             }
         }
 
+        PlasmaCore.FrameSvgItem {
+            anchors {
+                fill: parent
+                topMargin: -PlasmaCore.Units.smallSpacing * 2
+                leftMargin: -PlasmaCore.Units.smallSpacing * 2
+                rightMargin: -PlasmaCore.Units.smallSpacing * 2
+                bottomMargin: -(Math.round(icon.height / 4) + caption.height + (PlasmaCore.Units.smallSpacing * 2))
+            }
+            imagePath: "widgets/viewitem"
+            prefix: "hover"
+            z: -1
+            visible: !thumb.windowHeap.dragActive && (hoverHandler.hovered || thumb.selected) && Window.window.activeFocusItem && windowHeap.effectiveOrganized
+        }
+
         MouseArea {
             anchors.fill: parent
             acceptedButtons: Qt.NoButton
@@ -279,20 +293,6 @@ Item {
             properties: "x, y, width, height, opacity"
             easing.type: Easing.OutCubic
         }
-    }
-
-    PlasmaCore.FrameSvgItem {
-        anchors {
-            fill: parent
-            topMargin: -PlasmaCore.Units.smallSpacing * 2
-            leftMargin: -PlasmaCore.Units.smallSpacing * 2
-            rightMargin: -PlasmaCore.Units.smallSpacing * 2
-            bottomMargin: -(Math.round(icon.height / 4) + caption.height + (PlasmaCore.Units.smallSpacing * 2))
-        }
-        imagePath: "widgets/viewitem"
-        prefix: "hover"
-        z: -1
-        visible: !thumb.windowHeap.dragActive && (hoverHandler.hovered || selected) && Window.window.activeFocusItem && windowHeap.effectiveOrganized
     }
 
     HoverHandler {
