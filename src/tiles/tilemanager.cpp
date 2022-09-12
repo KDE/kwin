@@ -354,6 +354,7 @@ void TileManager::removeTile(CustomTile *tile)
 void TileManager::readSettings()
 {
     KConfigGroup cg = kwinApp()->config()->group(QStringLiteral("Tiling"));
+    qreal padding = cg.readEntry("padding", 4);
     cg = KConfigGroup(&cg, m_output->uuid().toString(QUuid::WithoutBraces));
 
     QJsonParseError error;
@@ -375,6 +376,8 @@ void TileManager::readSettings()
         // Default to horizontal if empty
         m_rootTile->setLayoutDirection(CustomTile::LayoutDirection::Horizontal);
     }
+
+    m_rootTile->setPadding(padding);
 
     qWarning() << this;
 }
@@ -432,6 +435,7 @@ void TileManager::saveSettings()
     auto obj = tileToJSon(m_rootTile.get());
     QJsonDocument doc(obj);
     KConfigGroup cg = kwinApp()->config()->group(QStringLiteral("Tiling"));
+    cg.writeEntry("padding", m_rootTile->padding());
     cg = KConfigGroup(&cg, m_output->uuid().toString(QUuid::WithoutBraces));
     cg.writeEntry("tiles", doc.toJson(QJsonDocument::Compact));
     cg.sync(); // FIXME: less frequent?
