@@ -20,6 +20,7 @@ class IdleInhibitorV1Interface;
 class SurfaceRole;
 class ViewportInterface;
 class ContentTypeV1Interface;
+class TearingControlV1Interface;
 
 struct SurfaceState
 {
@@ -40,6 +41,7 @@ struct SurfaceState
     bool bufferScaleIsSet = false;
     bool bufferTransformIsSet = false;
     bool contentTypeIsSet = false;
+    bool tearingIsSet = false;
     qint32 bufferScale = 1;
     KWin::Output::Transform bufferTransform = KWin::Output::Transform::Normal;
     wl_list frameCallbacks;
@@ -50,6 +52,7 @@ struct SurfaceState
     QPointer<ContrastInterface> contrast;
     QPointer<SlideInterface> slide;
     KWin::ContentType contentType = KWin::ContentType::None;
+    PresentationHint presentationHint = PresentationHint::VSync;
 
     // Subsurfaces are stored in two lists. The below list contains subsurfaces that
     // are below their parent surface; the above list contains subsurfaces that are
@@ -139,6 +142,7 @@ public:
     std::unique_ptr<LinuxDmaBufV1Feedback> dmabufFeedbackV1;
     QPointer<ContentTypeV1Interface> contentTypeInterface;
     ClientConnection *client = nullptr;
+    TearingControlV1Interface *tearing = nullptr;
 
 protected:
     void surface_destroy_resource(Resource *resource) override;

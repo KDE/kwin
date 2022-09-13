@@ -59,6 +59,7 @@
 #include "wayland/shadow_interface.h"
 #include "wayland/subcompositor_interface.h"
 #include "wayland/tablet_v2_interface.h"
+#include "wayland/tearingcontrol_v1_interface.h"
 #include "wayland/viewporter_interface.h"
 #include "wayland/xdgactivation_v1_interface.h"
 #include "wayland/xdgdecoration_v1_interface.h"
@@ -487,6 +488,7 @@ bool WaylandServer::init(InitializationFlags flags)
     });
 
     m_contentTypeManager = new KWaylandServer::ContentTypeManagerV1Interface(m_display, m_display);
+    m_tearingControlInterface = new KWaylandServer::TearingControlManagerV1Interface(m_display, m_display);
 
     return true;
 }

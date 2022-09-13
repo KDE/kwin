@@ -51,6 +51,7 @@ class XdgDecorationManagerV1Interface;
 class XWaylandKeyboardGrabManagerV1Interface;
 class ContentTypeManagerV1Interface;
 class DrmLeaseManagerV1;
+class TearingControlManagerV1Interface;
 }
 
 namespace KWin
@@ -290,6 +291,7 @@ private:
     XdgActivationV1Integration *m_xdgActivationIntegration = nullptr;
     KWaylandServer::XWaylandKeyboardGrabManagerV1Interface *m_xWaylandKeyboardGrabManager = nullptr;
     KWaylandServer::ContentTypeManagerV1Interface *m_contentTypeManager = nullptr;
+    KWaylandServer::TearingControlManagerV1Interface *m_tearingControlInterface = nullptr;
     QList<Window *> m_windows;
     InitializationFlags m_initFlags;
     QHash<Output *, KWaylandServer::OutputInterface *> m_waylandOutputs;

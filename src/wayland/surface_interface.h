@@ -28,6 +28,11 @@ class SubSurfaceInterface;
 class SurfaceInterfacePrivate;
 class LinuxDmaBufV1Feedback;
 
+enum class PresentationHint {
+    VSync,
+    Async
+};
+
 /**
  * @brief Resource representing a wl_surface.
  *
@@ -335,6 +340,11 @@ public:
      * @internal
      */
     QPointF toSurfaceLocal(const QPointF &point) const;
+
+    /**
+     * @returns if the client thinks the content of this surface is suitable for presentation with tearing
+     */
+    PresentationHint presentationHint() const;
 
 Q_SIGNALS:
     /**

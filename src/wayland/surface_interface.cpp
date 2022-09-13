@@ -536,6 +536,10 @@ void SurfaceState::mergeInto(SurfaceState *target)
         target->contentType = contentType;
         target->contentTypeIsSet = true;
     }
+    if (tearingIsSet) {
+        target->presentationHint = presentationHint;
+        target->tearingIsSet = true;
+    }
 
     *this = SurfaceState{};
     below = target->below;
@@ -1095,6 +1099,11 @@ QPoint SurfaceInterface::toSurfaceLocal(const QPoint &point) const
 QPointF SurfaceInterface::toSurfaceLocal(const QPointF &point) const
 {
     return QPointF(point.x() * d->scaleOverride, point.y() * d->scaleOverride);
+}
+
+PresentationHint SurfaceInterface::presentationHint() const
+{
+    return d->current.presentationHint;
 }
 
 } // namespace KWaylandServer

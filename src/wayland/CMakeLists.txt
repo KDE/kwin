@@ -184,6 +184,10 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/ext-idle-notify/ext-idle-notify-v1.xml
     BASENAME ext-idle-notify-v1
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${WaylandProtocols_DATADIR}/staging/tearing-control/tearing-control-v1.xml
+    BASENAME tearing-control-v1
+)
 
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/xwayland-keyboard-grab/xwayland-keyboard-grab-unstable-v1.xml
@@ -256,6 +260,7 @@ target_sources(kwin PRIVATE
     surface_interface.cpp
     surfacerole.cpp
     tablet_v2_interface.cpp
+    tearingcontrol_v1_interface.cpp
     textinput.cpp
     textinput_v2_interface.cpp
     textinput_v3_interface.cpp
