@@ -441,6 +441,10 @@ void DrmOutput::applyQueuedChanges(const OutputConfiguration &config)
 
     Q_EMIT changed();
 
+    if (isEnabled() && dpmsMode() == DpmsMode::On) {
+        m_gpu->platform()->turnOutputsOn();
+    }
+
     updateCursor();
 }
 
