@@ -5,6 +5,7 @@
     SPDX-FileCopyrightText: 1999, 2000 Matthias Ettrich <ettrich@kde.org>
     SPDX-FileCopyrightText: 1997-2002 Cristian Tibirna <tibirna@kde.org>
     SPDX-FileCopyrightText: 2003 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 2022 Natalie Clarius <natalie_clarius@yahoo.de>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -583,6 +584,44 @@ void Placement::placeMaximizing(Window *c, const QRect &area, PlacementPolicy ne
         c->moveResize(c->resizeWithChecks(c->moveResizeGeometry(), c->maxSize().boundedTo(area.size())));
         place(c, area, nextPlacement);
     }
+}
+
+/**
+ * Cascade the window until it no longer fully overlaps any other window
+ */
+void Placement::cascadeIfCovering(Window *window, const QRectF &area)
+{
+    const QPoint offset = workspace()->cascadeOffset(window);
+
+    VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
+
+    QRectF possibleGeo = window->frameGeometry();
+    bool noOverlap = false;
+
+    // cascade until confirmed no total overlap or not enough space to cascade
+    while (!noOverlap) {
+        noOverlap = true;
+        // check current position candidate for overlaps with other windows
+        for (auto l = workspace()->stackingOrder().crbegin(); l != workspace()->stackingOrder().crend(); ++l) {
+            auto other = *l;
+            if (isIrrelevant(other, window, desktop)) {
+                continue;
+            }
+
+            if (possibleGeo.contains(other->frameGeometry())) {
+                // placed window would completely overlap the other window: try to cascade it from the topleft of that other window
+                noOverlap = false;
+                possibleGeo.moveTopLeft(other->pos() + offset);
+                if (possibleGeo.right() > area.right() || possibleGeo.bottom() > area.bottom()) {
+                    // new cascaded geometry would be out of the bounds of the placement area: abort the cascading and keep the window in the original position
+                    return;
+                }
+                break;
+            }
+        }
+    }
+
+    window->move(possibleGeo.topLeft());
 }
 
 void Placement::cascadeDesktop()
