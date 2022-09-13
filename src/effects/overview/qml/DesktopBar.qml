@@ -1,5 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2022 ivan tkachenko <me@ratijas.tk>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -188,7 +189,7 @@ Item {
 
                                 PC3.ToolTip.text: text
                                 PC3.ToolTip.visible: hovered
-                                PC3. ToolTip.delay: Kirigami.Units.toolTipDelay
+                                PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
 
                                 onClicked: delegate.remove()
                             }
@@ -239,6 +240,8 @@ Item {
                             sourceComponent: PC3.TextField {
                                 topPadding: 0
                                 bottomPadding: 0
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
                                 text: delegate.desktop.name
                                 onEditingFinished: {
                                     delegate.desktop.name = text;
