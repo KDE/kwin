@@ -54,6 +54,15 @@ FocusScope {
     function saveDND(key: int, rect: rect) {
         dndManagerStore[key] = rect;
     }
+    function containsDND(key: int): bool {
+        return key in dndManagerStore;
+    }
+    function restoreDND(key: int): rect {
+        return dndManagerStore[key];
+    }
+    function deleteDND(key: int) {
+        delete dndManagerStore[key];
+    }
 
     KWinComponents.WindowThumbnailItem {
         id: otherScreenThumbnail
@@ -119,11 +128,11 @@ FocusScope {
             onItemAdded: (index, item) => {
                 // restore/reparent from drop
                 var key = item.client.internalId;
-                if (key in heap.dndManagerStore) {
+                if (heap.containsDND(key)) {
                     expoLayout.forceLayout();
-                    var oldGlobalRect = heap.dndManagerStore[key];
+                    var oldGlobalRect = heap.restoreDND(key);
                     item.restoreDND(oldGlobalRect);
-                    delete heap.dndManagerStore[key];
+                    heap.deleteDND(key);
                 } else if (heap.effectiveOrganized) {
                     // New window has opened in the middle of a running effect.
                     // Make sure it is positioned before enabling its animations.
