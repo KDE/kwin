@@ -37,6 +37,8 @@ public:
 
     void reinitCascading(int desktop);
 
+    void cascadeIfOverlapping(Window *c, const QRectF &area);
+
     /**
      * Cascades all clients on the current desktop
      */

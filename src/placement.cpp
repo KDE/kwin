@@ -23,6 +23,8 @@
 #include <QTextStream>
 #include <QTimer>
 
+#include <QDebug>
+
 namespace KWin
 {
 
@@ -444,6 +446,8 @@ void Placement::placeCentered(Window *c, const QRectF &area, PlacementPolicy /*n
 
     // place the window
     c->move(QPoint(xp, yp));
+
+    cascadeIfOverlapping(c, area);
 }
 
 /**
@@ -583,6 +587,58 @@ void Placement::placeMaximizing(Window *c, const QRect &area, PlacementPolicy ne
         c->moveResize(c->resizeWithChecks(c->moveResizeGeometry(), c->maxSize().boundedTo(area.size())));
         place(c, area, nextPlacement);
     }
+}
+
+void Placement::cascadeIfOverlapping(Window *window, const QRectF &area)
+{
+    const QPoint offset = workspace()->cascadeOffset(window);
+
+    qDebug() << "cascade:"
+             << "-------" << endl;
+    qDebug() << "cascade:"
+             << "place" << window->caption() << window->frameGeometry() << endl;
+
+    QPointF possiblePos(window->x(), window->y());
+    QPointF optimalPos = possiblePos;
+    bool noOverlap = false;
+    bool endOfArea = false;
+
+    // cascade until confirmed no total overlap or no more space available to cascade any further
+    while (!noOverlap && !endOfArea) {
+        noOverlap = true;
+        // check current position candidate for overlaps with other windows
+        for (auto l = workspace()->stackingOrder().constBegin(); l != workspace()->stackingOrder().constEnd(); ++l) {
+            auto other = *l;
+            if (isIrrelevant(other, window, window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front())) {
+                continue;
+            }
+            qDebug() << "cascade:"
+                     << "check" << other->caption() << possiblePos << endl;
+
+            if (QRectF(possiblePos, window->size()).contains(other->frameGeometry())) {
+                // placed window would completely overlap the other window: try to cascade it from the topleft of that other window
+                noOverlap = false;
+                possiblePos = QPointF(other->x() + offset.x(), other->y() + offset.y());
+                if (QRectF(possiblePos, window->size()).right() > area.right() || QRectF(possiblePos, window->size()).bottom() > area.bottom()) {
+                    // new cascaded geometry would be out of the bounds of the placement area: abort and use the last possible position
+                    endOfArea = true;
+                    qDebug() << "cascade:"
+                             << "end of area reached" << QRectF(possiblePos, window->size()) << endl;
+                } else {
+                    // save the new cascaded position as the candidate for the final position
+                    optimalPos = possiblePos;
+                    qDebug() << "cascade:"
+                             << "new" << QRectF(possiblePos, window->size()) << endl;
+                }
+                break;
+            }
+        }
+    }
+
+    qDebug() << "cascade:"
+             << "placing" << endl;
+
+    window->move(optimalPos);
 }
 
 void Placement::cascadeDesktop()
