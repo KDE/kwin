@@ -90,13 +90,6 @@ Item {
                         width: bar.desktopWidth
                         height: bar.desktopHeight
 
-                        Rectangle {
-                            id: mask
-                            anchors.fill: parent
-                            radius: 3
-                            visible: false
-                        }
-
                         DesktopView {
                             id: thumbnail
 
@@ -148,7 +141,11 @@ Item {
                             anchors.fill: parent
                             cached: true
                             source: thumbnail
-                            maskSource: mask
+                            maskSource: Rectangle {
+                                width: bar.desktopWidth
+                                height: bar.desktopHeight
+                                radius: 3
+                            }
                         }
 
                         Rectangle {
