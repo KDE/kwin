@@ -72,6 +72,7 @@ public:
 
     bool atomicModeSetting() const;
     bool addFB2ModifiersSupported() const;
+    bool asyncPageflipSupported() const;
     bool isNVidia() const;
     gbm_device *gbmDevice() const;
     EGLDisplay eglDisplay() const;
@@ -129,6 +130,7 @@ private:
     bool m_addFB2ModifiersSupported = false;
     bool m_isNVidia;
     bool m_isVirtualMachine;
+    bool m_asyncPageflipSupported;
     bool m_isRemoved = false;
     clockid_t m_presentationClock;
     gbm_device *m_gbmDevice;

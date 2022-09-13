@@ -30,7 +30,11 @@ DrmPipeline::Error DrmPipeline::presentLegacy()
         }
     }
     const auto buffer = m_pending.layer->currentBuffer();
-    if (drmModePageFlip(gpu()->fd(), m_pending.crtc->id(), buffer->framebufferId(), DRM_MODE_PAGE_FLIP_EVENT, gpu()) != 0) {
+    uint32_t flags = DRM_MODE_PAGE_FLIP_EVENT;
+    if (m_pending.syncMode == RenderLoopPrivate::SyncMode::Async) {
+        flags |= DRM_MODE_PAGE_FLIP_ASYNC;
+    }
+    if (drmModePageFlip(gpu()->fd(), m_pending.crtc->id(), buffer->framebufferId(), flags, gpu()) != 0) {
         qCWarning(KWIN_DRM) << "Page flip failed:" << strerror(errno);
         return errnoToError();
     }

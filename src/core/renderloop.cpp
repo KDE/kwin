@@ -7,7 +7,9 @@
 #include "renderloop.h"
 #include "renderloop_p.h"
 #include "surfaceitem.h"
+#include "surfaceitem_wayland.h"
 #include "utils/common.h"
+#include "wayland/surface_interface.h"
 
 namespace KWin
 {
@@ -34,13 +36,13 @@ RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q)
 
 void RenderLoopPrivate::scheduleRepaint()
 {
-    if (kwinApp()->isTerminating() || compositeTimer.isActive()) {
+    if (kwinApp()->isTerminating() || (compositeTimer.isActive() && !allowTearing)) {
         return;
     }
     if (vrrPolicy == RenderLoop::VrrPolicy::Always || (vrrPolicy == RenderLoop::VrrPolicy::Automatic && fullscreenItem != nullptr)) {
         presentMode = SyncMode::Adaptive;
     } else {
-        presentMode = SyncMode::Fixed;
+        presentMode = allowTearing ? SyncMode::Async : SyncMode::Fixed;
     }
     const std::chrono::nanoseconds vblankInterval(1'000'000'000'000ull / refreshRate);
     const std::chrono::nanoseconds currentTime(std::chrono::steady_clock::now().time_since_epoch());
@@ -93,8 +95,12 @@ void RenderLoopPrivate::scheduleRepaint()
         nextRenderTimestamp = currentTime;
     }
 
-    const std::chrono::nanoseconds waitInterval = nextRenderTimestamp - currentTime;
-    compositeTimer.start(std::chrono::duration_cast<std::chrono::milliseconds>(waitInterval));
+    if (presentMode == SyncMode::Async) {
+        compositeTimer.start(0);
+    } else {
+        const std::chrono::nanoseconds waitInterval = nextRenderTimestamp - currentTime;
+        compositeTimer.start(std::chrono::duration_cast<std::chrono::milliseconds>(waitInterval));
+    }
 }
 
 void RenderLoopPrivate::delayScheduleRepaint()
@@ -256,6 +262,11 @@ std::chrono::nanoseconds RenderLoop::nextPresentationTimestamp() const
 void RenderLoop::setFullscreenSurface(Item *surfaceItem)
 {
     d->fullscreenItem = surfaceItem;
+    if (SurfaceItemWayland *wayland = qobject_cast<SurfaceItemWayland *>(surfaceItem)) {
+        d->allowTearing = d->canDoTearing && wayland->surface()->presentationHint() == KWaylandServer::PresentationHint::Async;
+    } else {
+        d->allowTearing = false;
+    }
 }
 
 RenderLoop::VrrPolicy RenderLoop::vrrPolicy() const

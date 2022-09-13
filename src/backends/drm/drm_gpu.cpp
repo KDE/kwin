@@ -83,6 +83,11 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
     connect(m_socketNotifier.get(), &QSocketNotifier::activated, this, &DrmGpu::dispatchEvents);
 
     initDrmResources();
+
+    if (m_atomicModeSetting == false) {
+        // only supported with legacy
+        m_asyncPageflipSupported = drmGetCap(fd, DRM_CAP_ASYNC_PAGE_FLIP, &capability) == 0 && capability == 1;
+    }
 }
 
 DrmGpu::~DrmGpu()
@@ -662,6 +667,11 @@ void DrmGpu::setEglDisplay(EGLDisplay display)
 bool DrmGpu::addFB2ModifiersSupported() const
 {
     return m_addFB2ModifiersSupported;
+}
+
+bool DrmGpu::asyncPageflipSupported() const
+{
+    return m_asyncPageflipSupported;
 }
 
 bool DrmGpu::isNVidia() const
