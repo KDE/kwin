@@ -11,6 +11,7 @@ import QtQuick.Layouts 1.15
 import QtGraphicalEffects 1.15
 import org.kde.kirigami 2.20 as Kirigami
 import org.kde.kwin 3.0 as KWinComponents
+import org.kde.kwin.private.effects 1.0
 import org.kde.plasma.components 3.0 as PC3
 import org.kde.plasma.core 2.0 as PlasmaCore
 
@@ -24,6 +25,7 @@ Item {
     property QtObject clientModel
     property alias desktopModel: desktopRepeater.model
     property QtObject selectedDesktop: null
+    property WindowHeap heap
 
     implicitHeight: columnHeight + 2 * PlasmaCore.Units.smallSpacing
 
@@ -176,7 +178,7 @@ Item {
 
                         Loader {
                             LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
-                            active: (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && desktopRepeater.count > 1
+                            active: !heap.dragActive && (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && desktopRepeater.count > 1
                             anchors.right: parent.right
                             anchors.top: parent.top
                             sourceComponent: PC3.Button {

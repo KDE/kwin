@@ -1,5 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2022 ivan tkachenko <me@ratijas.tk>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -187,6 +188,7 @@ FocusScope {
                     clientModel: stackModel
                     desktopModel: desktopModel
                     selectedDesktop: KWinComponents.Workspace.currentVirtualDesktop
+                    heap: heap
                 }
             }
 
