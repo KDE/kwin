@@ -33,6 +33,8 @@ private Q_SLOTS:
     void testWindowSticksToOutputAfterOutputIsDisabled();
     void testWindowSticksToOutputAfterAnotherOutputIsDisabled();
     void testWindowSticksToOutputAfterOutputIsMoved();
+    void testWindowSticksToOutputAfterOutputsAreSwappedLeftToRight();
+    void testWindowSticksToOutputAfterOutputsAreSwappedRightToLeft();
 };
 
 void OutputChangesTest::initTestCase()
@@ -149,7 +151,73 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputIsMoved()
     QCOMPARE(window->frameGeometry(), QRect(-10 + 42, 20 + 67, 100, 50));
 }
 
+void OutputChangesTest::testWindowSticksToOutputAfterOutputsAreSwappedLeftToRight()
+{
+    // This test verifies that a window placed on the left monitor sticks
+    // to that monitor even after the monitors are swapped horizontally.
+
+    const auto outputs = kwinApp()->platform()->outputs();
+
+    // Create a window.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
+
+    // Move the window to the left output.
+    window->move(QPointF(0, 0));
+    QCOMPARE(window->output(), outputs[0]);
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 100, 50));
+
+    // Swap outputs.
+    OutputConfiguration config;
+    {
+        auto changeSet1 = config.changeSet(outputs[0]);
+        changeSet1->pos = QPoint(1280, 0);
+        auto changeSet2 = config.changeSet(outputs[1]);
+        changeSet2->pos = QPoint(0, 0);
+    }
+    workspace()->applyOutputConfiguration(config);
+
+    // The window should be still on its original output.
+    QCOMPARE(window->output(), outputs[0]);
+    QCOMPARE(window->frameGeometry(), QRectF(1280, 0, 100, 50));
 }
+
+void OutputChangesTest::testWindowSticksToOutputAfterOutputsAreSwappedRightToLeft()
+{
+    // This test verifies that a window placed on the right monitor sticks
+    // to that monitor even after the monitors are swapped horizontally.
+
+    const auto outputs = kwinApp()->platform()->outputs();
+
+    // Create a window.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
+
+    // Move the window to the right output.
+    window->move(QPointF(1280, 0));
+    QCOMPARE(window->output(), outputs[1]);
+    QCOMPARE(window->frameGeometry(), QRectF(1280, 0, 100, 50));
+
+    // Swap outputs.
+    OutputConfiguration config;
+    {
+        auto changeSet1 = config.changeSet(outputs[0]);
+        changeSet1->pos = QPoint(1280, 0);
+        auto changeSet2 = config.changeSet(outputs[1]);
+        changeSet2->pos = QPoint(0, 0);
+    }
+    workspace()->applyOutputConfiguration(config);
+
+    // The window should be still on its original output.
+    QCOMPARE(window->output(), outputs[1]);
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 100, 50));
+}
+
+} // namespace KWin
 
 WAYLANDTEST_MAIN(KWin::OutputChangesTest)
 #include "outputchanges_test.moc"
