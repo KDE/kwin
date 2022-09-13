@@ -23,6 +23,8 @@
 #include <QTextStream>
 #include <QTimer>
 
+#include <cmath>
+
 namespace KWin
 {
 
@@ -143,16 +145,18 @@ void Placement::placeAtRandom(Window *c, const QRect &area, PlacementPolicy /*ne
     c->move(QPoint(tx, ty));
 }
 
-static inline bool isIrrelevant(const Window *window, const Window *regarding, VirtualDesktop *desktop)
+static inline bool isIrrelevant(const Window *window, const Window *regarding)
 {
     return window == regarding
         || !window->isClient()
         || !window->isShown()
         || window->isShade()
-        || !window->isOnDesktop(desktop)
+        || !window->isOnDesktop(regarding->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : regarding->desktops().front())
         || !window->isOnCurrentActivity()
-        || window->isDesktop();
+        || window->screen() != regarding->screen()
+        || window->isDesktop() || window->isDock() || window->isDock() || window->isNotification() || window->isCriticalNotification() || window->resourceClass() == "krunner";
 };
+
 
 /**
  * Place the client \a c according to a really smart placement algorithm :-)
@@ -174,166 +178,59 @@ void Placement::placeSmart(Window *window, const QRectF &area, PlacementPolicy /
         return;
     }
 
-    const int none = 0, h_wrong = -1, w_wrong = -2; // overlap types
-    long int overlap, min_overlap = 0;
-    int x_optimal, y_optimal;
-    int possible;
-    VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
+    unclutterDesktop();
 
-    int cxl, cxr, cyt, cyb; // temp coords
-    int xl, xr, yt, yb; // temp coords
-    int basket; // temp holder
-
-    // get the maximum allowed windows space
-    int x = area.left();
-    int y = area.top();
-    x_optimal = x;
-    y_optimal = y;
-
-    // client gabarit
-    int ch = window->height() - 1;
-    int cw = window->width() - 1;
-
-    bool first_pass = true; // CT lame flag. Don't like it. What else would do?
-
-    // loop over possible positions
-    do {
-        // test if enough room in x and y directions
-        if (y + ch > area.bottom() && ch < area.height()) {
-            overlap = h_wrong; // this throws the algorithm to an exit
-        } else if (x + cw > area.right()) {
-            overlap = w_wrong;
-        } else {
-            overlap = none; // initialize
-
-            cxl = x;
-            cxr = x + cw;
-            cyt = y;
-            cyb = y + ch;
-            for (auto l = workspace()->stackingOrder().constBegin(); l != workspace()->stackingOrder().constEnd(); ++l) {
-                auto client = *l;
-                if (isIrrelevant(client, window, desktop)) {
-                    continue;
-                }
-                xl = client->x();
-                yt = client->y();
-                xr = xl + client->width();
-                yb = yt + client->height();
-
-                // if windows overlap, calc the overall overlapping
-                if ((cxl < xr) && (cxr > xl) && (cyt < yb) && (cyb > yt)) {
-                    xl = std::max(cxl, xl);
-                    xr = std::min(cxr, xr);
-                    yt = std::max(cyt, yt);
-                    yb = std::min(cyb, yb);
-                    if (client->keepAbove()) {
-                        overlap += 16 * (xr - xl) * (yb - yt);
-                    } else if (client->keepBelow() && !client->isDock()) { // ignore KeepBelow windows
-                        overlap += 0; // for placement (see X11Window::belongsToLayer() for Dock)
-                    } else {
-                        overlap += (xr - xl) * (yb - yt);
-                    }
-                }
-            }
+    QList<Window *> relevantClients;
+    QList<qreal> xPossible = {area.left()};
+    QList<qreal> yPossible = {area.top()};
+    // collect possible positions at right and bottom edges of other windows
+    for (auto k = workspace()->stackingOrder().constEnd() - 1; k >= workspace()->stackingOrder().constBegin(); --k) {
+        auto *client = *k;
+        if (isIrrelevant(client, window) || !client->frameGeometry().intersects(area)) {
+            continue;
         }
+        relevantClients.append(client);
 
-        // CT first time we get no overlap we stop.
-        if (overlap == none) {
-            x_optimal = x;
-            y_optimal = y;
-            break;
+        int x = client->frameGeometry().right() + 1;
+        if (x >= area.left() && x + window->width() <= area.right() + 1 && !xPossible.contains(x)) {
+            xPossible.append(x);
         }
-
-        if (first_pass) {
-            first_pass = false;
-            min_overlap = overlap;
+        int y = client->frameGeometry().bottom() + 1;
+        if (y >= area.top() && y + window->height() <= area.bottom() + 1 && !yPossible.contains(y)) {
+            yPossible.append(y);
         }
-        // CT save the best position and the minimum overlap up to now
-        else if (overlap >= none && overlap < min_overlap) {
-            min_overlap = overlap;
-            x_optimal = x;
-            y_optimal = y;
-        }
+    }
+    std::sort(xPossible.begin(), xPossible.end());
+    std::sort(yPossible.begin(), yPossible.end());
 
-        // really need to loop? test if there's any overlap
-        if (overlap > none) {
+    QPointF posOptimal = area.topLeft();
+    qreal overlapOptimal = -1;
+    // check which of the possible positions has the least overlap until a zero overlap is found or the possibilities are exhausted
+    for (auto i = xPossible.constBegin(); i != xPossible.constEnd() && overlapOptimal != 0; ++i) {
+        for (auto j = yPossible.constBegin(); j != yPossible.constEnd() && overlapOptimal != 0; ++j) {
+            QPointF posCurrent(*i, *j);
+            qreal overlapCurrent = 0;
 
-            possible = area.right();
-            if (possible - cw > x) {
-                possible -= cw;
+            // calculate sum of weighted overlaps with other windows for current position
+            for (int k = relevantClients.length() - 1; k >= 0; --k) {
+                auto *client = relevantClients.at(k);
+
+                // penalty of 9/5/3/2/1.5/1.25/1.125/... for stacking order (k): the further on top the higher the weight
+                qreal weight = (client->keepBelow()) ? (qreal)1 / 16 : client->keepAbove() ? 16
+                                                                                           : 1 + pow(2, 3 - k);
+                QRectF intersection = QRectF(posCurrent.x(), posCurrent.y(), window->width(), window->height()).intersected(client->frameGeometry());
+                overlapCurrent += weight * intersection.width() * intersection.height();
             }
 
-            // compare to the position of each client on the same desk
-            for (auto l = workspace()->stackingOrder().constBegin(); l != workspace()->stackingOrder().constEnd(); ++l) {
-                auto client = *l;
-                if (isIrrelevant(client, window, desktop)) {
-                    continue;
-                }
-
-                xl = client->x();
-                yt = client->y();
-                xr = xl + client->width();
-                yb = yt + client->height();
-
-                // if not enough room above or under the current tested client
-                // determine the first non-overlapped x position
-                if ((y < yb) && (yt < ch + y)) {
-
-                    if ((xr > x) && (possible > xr)) {
-                        possible = xr;
-                    }
-
-                    basket = xl - cw;
-                    if ((basket > x) && (possible > basket)) {
-                        possible = basket;
-                    }
-                }
+            // if overlap is the smallest so far, update optimal position
+            if (overlapOptimal < 0 || overlapCurrent < overlapOptimal) {
+                overlapOptimal = overlapCurrent;
+                posOptimal = posCurrent;
             }
-            x = possible;
         }
-
-        // ... else ==> not enough x dimension (overlap was wrong on horizontal)
-        else if (overlap == w_wrong) {
-            x = area.left();
-            possible = area.bottom();
-
-            if (possible - ch > y) {
-                possible -= ch;
-            }
-
-            // test the position of each window on the desk
-            for (auto l = workspace()->stackingOrder().constBegin(); l != workspace()->stackingOrder().constEnd(); ++l) {
-                auto client = *l;
-                if (isIrrelevant(client, window, desktop)) {
-                    continue;
-                }
-
-                xl = client->x();
-                yt = client->y();
-                xr = xl + client->width();
-                yb = yt + client->height();
-
-                // if not enough room to the left or right of the current tested client
-                // determine the first non-overlapped y position
-                if ((yb > y) && (possible > yb)) {
-                    possible = yb;
-                }
-
-                basket = yt - ch;
-                if ((basket > y) && (possible > basket)) {
-                    possible = basket;
-                }
-            }
-            y = possible;
-        }
-    } while ((overlap != none) && (overlap != h_wrong) && (y < area.bottom()));
-
-    if (ch >= area.height()) {
-        y_optimal = area.top();
     }
 
-    // place the window
-    window->move(QPoint(x_optimal, y_optimal));
+    window->move(posOptimal);
 }
 
 void Placement::reinitCascading(int desktop)
@@ -844,9 +741,8 @@ qreal Workspace::packPositionLeft(const Window *window, qreal oldX, bool leftEdg
     if (oldX <= newX) {
         return oldX;
     }
-    VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
     for (auto it = m_allClients.constBegin(), end = m_allClients.constEnd(); it != end; ++it) {
-        if (isIrrelevant(*it, window, desktop)) {
+        if (isIrrelevant(*it, window)) {
             continue;
         }
         const qreal x = leftEdge ? (*it)->frameGeometry().right() : (*it)->frameGeometry().left() - 1;
@@ -871,9 +767,8 @@ qreal Workspace::packPositionRight(const Window *window, qreal oldX, bool rightE
     if (oldX >= newX) {
         return oldX;
     }
-    VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
     for (auto it = m_allClients.constBegin(), end = m_allClients.constEnd(); it != end; ++it) {
-        if (isIrrelevant(*it, window, desktop)) {
+        if (isIrrelevant(*it, window)) {
             continue;
         }
         const qreal x = rightEdge ? (*it)->frameGeometry().left() : (*it)->frameGeometry().right() + 1;
@@ -899,9 +794,8 @@ qreal Workspace::packPositionUp(const Window *window, qreal oldY, bool topEdge) 
     if (oldY <= newY) {
         return oldY;
     }
-    VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
     for (auto it = m_allClients.constBegin(), end = m_allClients.constEnd(); it != end; ++it) {
-        if (isIrrelevant(*it, window, desktop)) {
+        if (isIrrelevant(*it, window)) {
             continue;
         }
         const qreal y = topEdge ? (*it)->frameGeometry().bottom() : (*it)->frameGeometry().top() - 1;
@@ -926,9 +820,8 @@ qreal Workspace::packPositionDown(const Window *window, qreal oldY, bool bottomE
     if (oldY >= newY) {
         return oldY;
     }
-    VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
     for (auto it = m_allClients.constBegin(), end = m_allClients.constEnd(); it != end; ++it) {
-        if (isIrrelevant(*it, window, desktop)) {
+        if (isIrrelevant(*it, window)) {
             continue;
         }
         const qreal y = bottomEdge ? (*it)->frameGeometry().top() : (*it)->frameGeometry().bottom() + 1;
