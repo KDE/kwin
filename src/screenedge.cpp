@@ -295,6 +295,8 @@ bool Edge::check(const QPoint &cursorPos, const QDateTime &triggerTime, bool for
     }
     if (m_lastTrigger.isValid() && // still in cooldown
         m_lastTrigger.msecsTo(triggerTime) < edges()->reActivationThreshold() - edges()->timeThreshold()) {
+        // Reset the time, so the user has to actually keep the mouse still for this long to retrigger
+        m_lastTrigger = triggerTime;
         return false;
     }
     // no pushback so we have to activate at once
