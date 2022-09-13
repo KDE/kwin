@@ -35,6 +35,10 @@ private Q_SLOTS:
     void testWindowSticksToOutputAfterOutputIsMoved();
     void testWindowSticksToOutputAfterOutputsAreSwappedLeftToRight();
     void testWindowSticksToOutputAfterOutputsAreSwappedRightToLeft();
+
+    void testWindowRestoredAfterEnablingOutput();
+
+    void testWindowNotRestoredAfterMovingWindowAndEnablingOutput();
 };
 
 void OutputChangesTest::initTestCase()
@@ -215,6 +219,98 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputsAreSwappedRightToLef
     // The window should be still on its original output.
     QCOMPARE(window->output(), outputs[1]);
     QCOMPARE(window->frameGeometry(), QRectF(0, 0, 100, 50));
+}
+
+void OutputChangesTest::testWindowRestoredAfterEnablingOutput()
+{
+    // This test verifies that a window will be moved back to its original output when it's hotplugged.
+
+    const auto outputs = kwinApp()->platform()->outputs();
+
+    // Create a window.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
+
+    // Move the window to the right output.
+    window->move(QPointF(1280 + 50, 100));
+    QCOMPARE(window->output(), outputs[1]);
+    QCOMPARE(window->frameGeometry(), QRectF(1280 + 50, 100, 100, 50));
+
+    // Disable the right output.
+    OutputConfiguration config1;
+    {
+        auto changeSet = config1.changeSet(outputs[1]);
+        changeSet->enabled = false;
+    }
+    workspace()->applyOutputConfiguration(config1);
+
+    // The window will be moved to the left monitor.
+    QCOMPARE(window->output(), outputs[0]);
+    QCOMPARE(window->frameGeometry(), QRectF(50, 100, 100, 50));
+
+    // Enable the right monitor.
+    OutputConfiguration config2;
+    {
+        auto changeSet = config2.changeSet(outputs[1]);
+        changeSet->enabled = true;
+    }
+    workspace()->applyOutputConfiguration(config2);
+
+    // The window will be moved back to the right monitor.
+    QCOMPARE(window->output(), outputs[1]);
+    QCOMPARE(window->frameGeometry(), QRectF(1280 + 50, 100, 100, 50));
+}
+
+void OutputChangesTest::testWindowNotRestoredAfterMovingWindowAndEnablingOutput()
+{
+    // This test verifies that a window won't be moved to its original output when it's
+    // hotplugged because the window was moved manually by the user.
+
+    const auto outputs = kwinApp()->platform()->outputs();
+
+    // Create a window.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
+
+    // Move the window to the right output.
+    window->move(QPointF(1280 + 50, 100));
+    QCOMPARE(window->output(), outputs[1]);
+    QCOMPARE(window->frameGeometry(), QRectF(1280 + 50, 100, 100, 50));
+
+    // Disable the right output.
+    OutputConfiguration config1;
+    {
+        auto changeSet = config1.changeSet(outputs[1]);
+        changeSet->enabled = false;
+    }
+    workspace()->applyOutputConfiguration(config1);
+
+    // The window will be moved to the left monitor.
+    QCOMPARE(window->output(), outputs[0]);
+    QCOMPARE(window->frameGeometry(), QRectF(50, 100, 100, 50));
+
+    // Pretend that the user moved the window.
+    workspace()->slotWindowMove();
+    QVERIFY(window->isInteractiveMove());
+    window->keyPressEvent(Qt::Key_Right);
+    window->keyPressEvent(Qt::Key_Enter);
+    QCOMPARE(window->frameGeometry(), QRectF(58, 100, 100, 50));
+
+    // Enable the right monitor.
+    OutputConfiguration config2;
+    {
+        auto changeSet = config2.changeSet(outputs[1]);
+        changeSet->enabled = true;
+    }
+    workspace()->applyOutputConfiguration(config2);
+
+    // The window is still on the left monitor because user manually moved it.
+    QCOMPARE(window->output(), outputs[0]);
+    QCOMPARE(window->frameGeometry(), QRectF(58, 100, 100, 50));
 }
 
 } // namespace KWin
