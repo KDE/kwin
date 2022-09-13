@@ -402,6 +402,7 @@ void DrmBackend::removeVirtualOutput(Output *output)
         return;
     }
     primaryGpu()->removeVirtualOutput(virtualOutput);
+    Q_EMIT outputsQueried();
 }
 
 gbm_bo *DrmBackend::createBo(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers)
