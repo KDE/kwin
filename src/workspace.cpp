@@ -212,6 +212,8 @@ void Workspace::init()
     connect(options, &Options::separateScreenFocusChanged, m_focusChain.get(), &FocusChain::setSeparateScreenFocus);
     m_focusChain->setSeparateScreenFocus(options->isSeparateScreenFocus());
 
+    connect(Cursors::self()->mouse(), &Cursor::mouseChanged, this, &Workspace::requestDelayFocusCurrent);
+
     slotOutputBackendOutputsQueried();
     connect(kwinApp()->outputBackend(), &OutputBackend::outputsQueried, this, &Workspace::slotOutputBackendOutputsQueried);
 
@@ -1537,6 +1539,18 @@ void Workspace::delayFocus()
 void Workspace::requestDelayFocus(Window *window)
 {
     m_delayFocusWindow = window;
+    delete delayFocusTimer;
+    delayFocusTimer = new QTimer(this);
+    connect(delayFocusTimer, &QTimer::timeout, this, &Workspace::delayFocus);
+    delayFocusTimer->setSingleShot(true);
+    delayFocusTimer->start(options->delayFocusInterval());
+}
+
+void Workspace::requestDelayFocusCurrent()
+{
+    if (!(delayFocusTimer && delayFocusTimer->remainingTime())) {
+        return;
+    }
     delete delayFocusTimer;
     delayFocusTimer = new QTimer(this);
     connect(delayFocusTimer, &QTimer::timeout, this, &Workspace::delayFocus);

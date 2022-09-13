@@ -108,6 +108,8 @@ Window::Window()
         m_keyboardGeometryRestore = QRectF();
     });
 
+    connect(Cursors::self()->mouse(), &Cursor::mouseChanged, this, &Window::resetAutoRaise);
+
     // replace on-screen-display on size changes
     connect(this, &Window::frameGeometryChanged, this, [this](Window *c, const QRectF &old) {
         if (isOnScreenDisplay() && !frameGeometry().isEmpty() && old.size() != frameGeometry().size() && isPlaceable()) {
@@ -1003,6 +1005,14 @@ void Window::setKeepBelow(bool b)
 
 void Window::doSetKeepBelow()
 {
+}
+
+void Window::resetAutoRaise()
+{
+    if (!(m_autoRaiseTimer && m_autoRaiseTimer->remainingTime())) {
+        return;
+    }
+    startAutoRaise();
 }
 
 void Window::startAutoRaise()
