@@ -96,7 +96,7 @@ Edge::Edge(ScreenEdges *parent)
     , m_approaching(false)
     , m_lastApproachingFactor(0)
     , m_blocked(false)
-    , m_pushBackBlocked(false)
+    , m_needsUserReset(false)
     , m_client(nullptr)
     , m_output(nullptr)
     , m_gesture(new SwipeGesture(this))
@@ -290,6 +290,10 @@ bool Edge::triggersFor(const QPoint &cursorPos) const
 
 bool Edge::check(const QPoint &cursorPos, const QDateTime &triggerTime, bool forceNoPushBack)
 {
+    // If an effect has been triggered, it needs the user to move the mouse away to retrigger, this avoids continuous retriggers if the user keeps pushing the mouse on an edge
+    if ((cursorPos - m_triggeredPoint).manhattanLength() > DISTANCE_RESET) {
+        m_needsUserReset = false;
+    }
     if (!triggersFor(cursorPos)) {
         return false;
     }
@@ -304,7 +308,6 @@ bool Edge::check(const QPoint &cursorPos, const QDateTime &triggerTime, bool for
         handle(cursorPos);
         return true;
     } else {
-        pushCursorBack(cursorPos);
         m_triggeredPoint = cursorPos;
     }
     return false;
@@ -315,10 +318,14 @@ void Edge::markAsTriggered(const QPoint &cursorPos, const QDateTime &triggerTime
     m_lastTrigger = triggerTime;
     m_lastReset = QDateTime(); // invalidate
     m_triggeredPoint = cursorPos;
+    m_needsUserReset = true;
 }
 
 bool Edge::canActivate(const QPoint &cursorPos, const QDateTime &triggerTime)
 {
+    if (m_needsUserReset) {
+        return false;
+    }
     // we check whether either the timer has explicitly been invalidated (successful trigger) or is
     // bigger than the reactivation threshold (activation "aborted", usually due to moving away the cursor
     // from the corner after successful activation)
@@ -335,6 +342,7 @@ bool Edge::canActivate(const QPoint &cursorPos, const QDateTime &triggerTime)
     }
     // does the check on position make any sense at all?
     if ((cursorPos - m_triggeredPoint).manhattanLength() > DISTANCE_RESET) {
+        m_needsUserReset = false;
         return false;
     }
     return true;
@@ -358,14 +366,12 @@ void Edge::handle(const QPoint &cursorPos)
     }
 
     if (m_client) {
-        pushCursorBack(cursorPos);
         m_client->showOnScreenEdge();
         unreserve();
         return;
     }
 
     if (handlePointerAction() || handleByCallback()) {
-        pushCursorBack(cursorPos);
         return;
     }
     if (edges()->isDesktopSwitching() && isCorner()) {
@@ -489,38 +495,13 @@ void Edge::switchDesktop(const QPoint &cursorPos)
     }
     vds->setCurrent(desktop);
     if (vds->currentDesktop() != oldDesktop) {
-        m_pushBackBlocked = true;
         Cursors::self()->mouse()->setPos(pos);
         QMetaObject::Connection *me = new QMetaObject::Connection();
         *me = QObject::connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, this, [this, me]() {
             QObject::disconnect(*me);
             delete me;
-            m_pushBackBlocked = false;
         });
     }
-}
-
-void Edge::pushCursorBack(const QPoint &cursorPos)
-{
-    if (m_pushBackBlocked) {
-        return;
-    }
-    int x = cursorPos.x();
-    int y = cursorPos.y();
-    const QSize &distance = edges()->cursorPushBackDistance();
-    if (isLeft()) {
-        x += distance.width();
-    }
-    if (isRight()) {
-        x -= distance.width();
-    }
-    if (isTop()) {
-        y += distance.height();
-    }
-    if (isBottom()) {
-        y -= distance.height();
-    }
-    Cursors::self()->mouse()->setPos(x, y);
 }
 
 void Edge::setGeometry(const QRect &geometry)

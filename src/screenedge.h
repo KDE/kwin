@@ -146,7 +146,6 @@ private:
     bool handleByCallback();
     void handleTouchCallback();
     void switchDesktop(const QPoint &cursorPos);
-    void pushCursorBack(const QPoint &cursorPos);
     void reserveTouchCallBack(const TouchCallback &callback);
     QVector<TouchCallback> touchCallBacks() const
     {
@@ -166,7 +165,7 @@ private:
     bool m_approaching;
     int m_lastApproachingFactor;
     bool m_blocked;
-    bool m_pushBackBlocked;
+    bool m_needsUserReset;
     Window *m_client;
     Output *m_output;
     SwipeGesture *m_gesture;
