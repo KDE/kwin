@@ -62,7 +62,7 @@ PlasmaCore.Dialog {
         property int animationDuration: 1000
         property bool showGrid: true
 
-        width: dialogItem.showGrid ? view.itemWidth * view.columns : Math.ceil(textElement.implicitWidth)
+        width: dialogItem.showGrid ? view.itemWidth * view.columns : Math.ceil(textElement.implicitWidth) + PlasmaCore.Units.largeSpacing
         height: dialogItem.showGrid ? view.itemHeight * view.rows + textElement.height : textElement.height
 
         PlasmaExtras.Heading {
