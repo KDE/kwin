@@ -410,6 +410,7 @@ public:
 
     void cancelDelayFocus();
     void requestDelayFocus(Window *);
+    void requestDelayFocusCurrent();
 
     /**
      * updates the mouse position to track whether a focus follow mouse focus change was caused by
