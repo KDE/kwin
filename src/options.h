@@ -125,6 +125,10 @@ class KWIN_EXPORT Options : public QObject
      */
     Q_PROPERTY(int shadeHoverInterval READ shadeHoverInterval WRITE setShadeHoverInterval NOTIFY shadeHoverIntervalChanged)
     /**
+    Whether to automatically move the mosue cursor when focus changes
+    */
+    Q_PROPERTY(bool mouseFollowsFocus READ mouseFollowsFocus WRITE setMouseFollowsFocus NOTIFY mouseFollowsFocusChanged)
+    /**
      * Whether to see Xinerama screens separately for focus (in Alt+Tab, when activating next client)
      */
     Q_PROPERTY(bool separateScreenFocus READ isSeparateScreenFocus WRITE setSeparateScreenFocus NOTIFY separateScreenFocusChanged)
@@ -333,6 +337,14 @@ public:
     int shadeHoverInterval()
     {
         return m_shadeHoverInterval;
+    }
+
+    /**
+    * Whether to automatically move the mouse cursor when focus changes
+    */
+    bool mouseFollowsFocus() const
+    {
+        return m_mouseFollowsFocus;
     }
 
     /**
@@ -729,6 +741,7 @@ public:
     void setDelayFocusInterval(int delayFocusInterval);
     void setShadeHover(bool shadeHover);
     void setShadeHoverInterval(int shadeHoverInterval);
+    void setMouseFollowsFocus(bool mouseFollowsFocus);
     void setSeparateScreenFocus(bool separateScreenFocus);
     void setActiveMouseScreen(bool activeMouseScreen);
     void setPlacement(PlacementPolicy placement);
@@ -940,6 +953,7 @@ Q_SIGNALS:
     void delayFocusIntervalChanged();
     void shadeHoverChanged();
     void shadeHoverIntervalChanged();
+    void mouseFollowsFocusChanged();
     void separateScreenFocusChanged(bool);
     void activeMouseScreenChanged();
     void placementChanged();
@@ -1004,6 +1018,7 @@ private:
     int m_delayFocusInterval;
     bool m_shadeHover;
     int m_shadeHoverInterval;
+    bool m_mouseFollowsFocus;
     bool m_separateScreenFocus;
     bool m_activeMouseScreen;
     PlacementPolicy m_placement;

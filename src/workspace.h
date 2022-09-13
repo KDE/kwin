@@ -21,6 +21,7 @@
 #include <QStringList>
 #include <QTimer>
 #include <QVector>
+#include <QPoint>
 // std
 #include <functional>
 #include <memory>
@@ -420,6 +421,14 @@ public:
      */
     void updateFocusMousePosition(const QPointF &pos);
     QPointF focusMousePosition() const;
+
+    /**
+    Follows the mouse cursor along with the focused window as the window gets activated or regeometrized.
+    @param window The window that thriggered the update
+    @param geo The rectangle to place the mouse into
+    @param prevGeo The previous rectangle the mouse was in
+    ***/
+    void updateMousePos(Window *window, const QRectF &geo, const QRectF &prevGeo = QRect());
 
     /**
      * Returns a window that is currently being moved or resized by the user.

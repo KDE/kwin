@@ -42,6 +42,7 @@ Options::Options(QObject *parent)
     , m_delayFocusInterval(0)
     , m_shadeHover(false)
     , m_shadeHoverInterval(0)
+    , m_mouseFollowsFocus(false)
     , m_separateScreenFocus(false)
     , m_activeMouseScreen(false)
     , m_placement(PlacementNone)
@@ -228,6 +229,15 @@ void Options::setShadeHoverInterval(int shadeHoverInterval)
     }
     m_shadeHoverInterval = shadeHoverInterval;
     Q_EMIT shadeHoverIntervalChanged();
+}
+
+void Options::setMouseFollowsFocus(bool mouseFollowsFocus)
+{
+    if (m_mouseFollowsFocus == mouseFollowsFocus) {
+        return;
+    }
+    m_mouseFollowsFocus = mouseFollowsFocus;
+    Q_EMIT mouseFollowsFocusChanged();
 }
 
 void Options::setSeparateScreenFocus(bool separateScreenFocus)
@@ -791,6 +801,7 @@ void Options::syncFromKcfgc()
     setCondensedTitle(m_settings->condensedTitle());
     setFocusPolicy(m_settings->focusPolicy());
     setNextFocusPrefersMouse(m_settings->nextFocusPrefersMouse());
+    setMouseFollowsFocus(m_settings->mouseFollowsFocus());
     setSeparateScreenFocus(m_settings->separateScreenFocus());
     setActiveMouseScreen(m_settings->activeMouseScreen());
     setRollOverDesktops(m_settings->rollOverDesktops());
