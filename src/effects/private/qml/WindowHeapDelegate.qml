@@ -120,6 +120,9 @@ Item {
 
             thumb.substate = "normal";
         }
+        function deleteDND() {
+            thumb.windowHeap.deleteDND(thumb.client.internalId);
+        }
 
         PlasmaCore.FrameSvgItem {
             anchors {
@@ -392,6 +395,7 @@ Item {
                     // another virtual desktop (not another screen).
                     if (typeof thumbSource !== "undefined") {
                         // Except the case when it was dropped on the same desktop which it's already on, so let's return to normal state anyway.
+                        thumbSource.deleteDND();
                         thumb.substate = "normal";
                     }
                     return;
@@ -401,6 +405,7 @@ Item {
                 effect.checkItemDroppedOutOfScreen(globalPos, thumbSource);
 
                 // else, return to normal without reparenting
+                thumbSource.deleteDND();
                 thumb.substate = "normal";
             }
         }
