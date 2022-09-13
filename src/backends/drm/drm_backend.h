@@ -89,7 +89,7 @@ private:
     std::unique_ptr<QSocketNotifier> m_socketNotifier;
     Session *m_session;
     QVector<DrmAbstractOutput *> m_outputs;
-    DrmVirtualOutput *m_placeHolderOutput = nullptr;
+    QVector<QUuid> m_recentlyUnpluggedDpmsOffOutputs;
 
     const QStringList m_explicitGpus;
     std::vector<std::unique_ptr<DrmGpu>> m_gpus;

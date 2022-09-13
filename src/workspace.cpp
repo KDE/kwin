@@ -1292,6 +1292,9 @@ void Workspace::updateOutputs(const QVector<Output *> &outputOrder)
         m_tileManagers[output] = std::make_unique<TileManager>(output);
         connect(output, &Output::aboutToTurnOff, this, &Workspace::createDpmsFilter);
         connect(output, &Output::dpmsModeChanged, this, &Workspace::maybeDestroyDpmsFilter);
+        if (output->dpmsMode() != Output::DpmsMode::On) {
+            createDpmsFilter();
+        }
         Q_EMIT outputAdded(output);
     }
     maybeDestroyDpmsFilter();
