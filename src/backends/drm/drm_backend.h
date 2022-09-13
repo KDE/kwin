@@ -16,6 +16,7 @@
 #include <QSocketNotifier>
 #include <QVector>
 
+#include <map>
 #include <memory>
 
 struct gbm_bo;
@@ -104,7 +105,8 @@ private:
     std::unique_ptr<QSocketNotifier> m_socketNotifier;
     Session *m_session;
     QVector<DrmAbstractOutput *> m_outputs;
-    DrmVirtualOutput *m_placeHolderOutput = nullptr;
+    QVector<QUuid> m_recentlyUnpluggedDpmsOffOutputs;
+    std::map<QUuid, std::chrono::nanoseconds> m_allRecentlyUnpluggedDpmsOffOutputs;
 
     bool m_active = false;
     const QStringList m_explicitGpus;

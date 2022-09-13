@@ -308,6 +308,20 @@ DrmGpu *DrmBackend::addGpu(const QString &fileName)
 
 void DrmBackend::addOutput(DrmAbstractOutput *o)
 {
+    if (m_dpmsFilter) {
+        auto it = m_allRecentlyUnpluggedDpmsOffOutputs.find(o->uuid());
+        if (it != m_allRecentlyUnpluggedDpmsOffOutputs.end()) {
+            qWarning() << "output was gone for" << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch() - it->second).count() << "ms";
+            m_allRecentlyUnpluggedDpmsOffOutputs.erase(it);
+        }
+    }
+    if (m_dpmsFilter && m_recentlyUnpluggedDpmsOffOutputs.contains(o->uuid())) {
+        if (DrmOutput *drmOutput = qobject_cast<DrmOutput *>(o)) {
+            // restore old state
+            drmOutput->updateDpmsMode(Output::DpmsMode::Off);
+            drmOutput->pipeline()->setActive(false);
+        }
+    }
     m_outputs.append(o);
     Q_EMIT outputAdded(o);
     o->updateEnabled(true);
@@ -315,6 +329,14 @@ void DrmBackend::addOutput(DrmAbstractOutput *o)
 
 void DrmBackend::removeOutput(DrmAbstractOutput *o)
 {
+    if (o->dpmsMode() == Output::DpmsMode::Off) {
+        const QUuid id = o->uuid();
+        m_recentlyUnpluggedDpmsOffOutputs.push_back(id);
+        m_allRecentlyUnpluggedDpmsOffOutputs[id] = std::chrono::steady_clock::now().time_since_epoch();
+        QTimer::singleShot(1000, [this, id]() {
+            m_recentlyUnpluggedDpmsOffOutputs.removeOne(id);
+        });
+    }
     o->updateEnabled(false);
     m_outputs.removeOne(o);
     Q_EMIT outputRemoved(o);
