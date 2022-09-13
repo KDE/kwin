@@ -632,6 +632,11 @@ public:
         }
     }
 
+    void zwp_tablet_seat_v2_destroy(Resource *resource) override
+    {
+        wl_resource_destroy(resource->handle);
+    }
+
     void sendToolAdded(Resource *resource, TabletToolV2Interface *tool)
     {
         wl_resource *toolResource = tool->d->add(resource->client(), resource->version())->handle;
