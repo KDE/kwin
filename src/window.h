@@ -909,6 +909,7 @@ public:
     }
 
     void cancelAutoRaise();
+    void resetAutoRaise();
 
     bool wantsTabFocus() const;
 
