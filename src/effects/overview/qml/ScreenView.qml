@@ -241,7 +241,6 @@ FocusScope {
                 model: KWinComponents.ClientFilterModel {
                     activity: KWinComponents.Workspace.currentActivity
                     desktop: KWinComponents.Workspace.currentVirtualDesktop
-                    screenName: targetScreen.name
                     clientModel: stackModel
                     filter: effect.searchText
                     minimizedWindows: !effect.ignoreMinimized
@@ -296,7 +295,6 @@ FocusScope {
     Repeater {
         model: KWinComponents.ClientFilterModel {
             desktop: KWinComponents.Workspace.currentVirtualDesktop
-            screenName: targetScreen.name
             clientModel: stackModel
             windowType: KWinComponents.ClientFilterModel.Dock
         }
@@ -305,8 +303,8 @@ FocusScope {
             id: windowThumbnail
             visible: !model.client.hidden && opacity > 0
             wId: model.client.internalId
-            x: model.client.x - targetScreen.geometry.x
-            y: model.client.y - targetScreen.geometry.y
+            x: model.client.x
+            y: model.client.y
             z: model.client.stackingOrder
             width: model.client.width
             height: model.client.height
