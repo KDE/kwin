@@ -845,6 +845,7 @@ void Window::setActive(bool act)
     doSetActive();
     Q_EMIT activeChanged();
     updateMouseGrab();
+    workspace()->updateMousePos(this, inputGeometry());
 }
 
 void Window::doSetActive()
@@ -3714,24 +3715,30 @@ void Window::setMoveResizeOutput(Output *output)
 
 void Window::move(const QPointF &point)
 {
+    QRectF prevRect = inputGeometry();
     const QRectF rect = QRectF(point, m_moveResizeGeometry.size());
 
     setMoveResizeGeometry(rect);
     moveResizeInternal(rect, MoveResizeMode::Move);
+    workspace()->updateMousePos(this, m_moveResizeGeometry, prevRect);
 }
 
 void Window::resize(const QSizeF &size)
 {
+    QRectF prevRect = inputGeometry();
     const QRectF rect = QRectF(m_moveResizeGeometry.topLeft(), size);
 
     setMoveResizeGeometry(rect);
     moveResizeInternal(rect, MoveResizeMode::Resize);
+    workspace()->updateMousePos(this, m_moveResizeGeometry, prevRect);
 }
 
 void Window::moveResize(const QRectF &rect)
 {
+    QRectF prevPos = inputGeometry();
     setMoveResizeGeometry(rect);
     moveResizeInternal(rect, MoveResizeMode::MoveResize);
+    workspace()->updateMousePos(this, m_moveResizeGeometry, prevPos);
 }
 
 void Window::setElectricBorderMode(QuickTileMode mode)

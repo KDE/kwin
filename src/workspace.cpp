@@ -67,6 +67,7 @@
 #include <KStartupInfo>
 // Qt
 #include <QtConcurrentRun>
+#include <QPoint>
 // xcb
 #include <xcb/xinerama.h>
 
@@ -3076,6 +3077,37 @@ void Workspace::setMoveResizeWindow(Window *window)
         ++block_focus;
     } else {
         --block_focus;
+    }
+}
+
+void Workspace::updateMousePos(Window *window, const QRectF &geo, const QRectF &prevGeo)
+{
+    if (!options->mouseFollowsFocus()) {
+        return;
+    }
+    if (!window->isActive())
+        return;
+    if (!(window->isNormalWindow() || window->isDialog()))
+        return;
+    if (m_moveResizeWindow)
+        return;
+    KWin::Cursor *cursor = Cursors::self()->mouse();
+    QPointF prevPos = cursor->pos();
+    QPointF pos = prevPos;
+    // only move cursor if cursor is not already in window
+    if (!geo.contains(pos)) {
+        if (prevGeo.isEmpty()) {
+            // new or unchanged window: position cursor centered
+            pos = geo.center();
+        } else {
+            // regeometrized window: position cursor in same position relative to previous window geometry
+            float relX = static_cast<float>(prevPos.x() - prevGeo.x()) / prevGeo.width();
+            float relY = static_cast<float>(prevPos.y() - prevGeo.y()) / prevGeo.height();
+            int xp = geo.x() + relX * geo.width();
+            int yp = geo.y() + relY * geo.height();
+            pos = QPointF(xp, yp);
+        }
+        cursor->setPos(pos);
     }
 }
 

@@ -275,6 +275,15 @@ that window to the front.
 
 </sect3>
 
+<sect3 id="focus-mouse-warp">
+<title>Mouse warp</title>
+
+<para>
+When <guilabel>Mouse follows focus</guilabel> is enabled, the mouse cursor will automatically jump into the active window whenever a window is added, activated, moved or resized.
+</para>
+
+</sect3>
+
 <sect3 id="focus-multiscreen">
 <title>Multiscreen behavior</title>
 

@@ -135,6 +135,10 @@
         <default>true</default>
     </entry>
 
+    <entry key="MouseFollowsFocus" type="Bool">
+        <default>false</default>
+    </entry>
+
     <entry key="SeparateScreenFocus" type="Bool">
         <default>false</default>
     </entry>
