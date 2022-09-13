@@ -243,12 +243,6 @@ FocusScope {
                 animationDuration: effect.animationDuration
                 animationEnabled: container.animationEnabled
                 organized: container.organized
-                onWindowClicked: {
-                    if (eventPoint.event.button !== Qt.MiddleButton) {
-                        return;
-                    }
-                    window.closeWindow();
-                }
                 Keys.priority: Keys.AfterItem
                 Keys.forwardTo: searchResults
                 model: KWinComponents.ClientFilterModel {
@@ -262,7 +256,6 @@ FocusScope {
                                 ~KWinComponents.ClientFilterModel.Desktop &
                                 ~KWinComponents.ClientFilterModel.Notification
                 }
-                onActivated: effect.deactivate();
                 delegate: WindowHeapDelegate {
                     windowHeap: heap
 
@@ -281,6 +274,12 @@ FocusScope {
 
                     opacity: 1 - downGestureProgress
                     onDownGestureTriggered: client.closeWindow()
+                }
+                onActivated: effect.deactivate();
+                onWindowClicked: {
+                    if (eventPoint.event.button === Qt.MiddleButton) {
+                        window.closeWindow();
+                    }
                 }
             }
 
