@@ -347,14 +347,6 @@ Item {
             KWinComponents.Workspace.activeClient = thumb.client;
             thumb.windowHeap.activated();
         }
-    }
-
-    TapHandler {
-        acceptedPointerTypes: PointerDevice.GenericPointer | PointerDevice.Pen
-        acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
-        onTapped: {
-            thumb.windowHeap.windowClicked(thumb.client, eventPoint)
-        }
         onPressedChanged: {
             if (pressed) {
                 var saved = Qt.point(thumbSource.x, thumbSource.y);
@@ -366,6 +358,14 @@ Item {
                 thumbSource.Drag.active = false;
                 thumbSource.state = "normal";
             }
+        }
+    }
+
+    TapHandler {
+        acceptedPointerTypes: PointerDevice.GenericPointer | PointerDevice.Pen
+        acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
+        onTapped: {
+            thumb.windowHeap.windowClicked(thumb.client, eventPoint)
         }
     }
 
