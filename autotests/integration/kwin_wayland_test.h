@@ -89,7 +89,6 @@ protected:
     void performStartup() override;
 
 private:
-    void continueStartupWithScreens();
     void continueStartupWithScene();
     void finalizeStartup();
 

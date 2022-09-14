@@ -139,16 +139,6 @@ void WaylandTestApplication::performStartup()
     createInput();
     createVirtualInputDevices();
 
-    if (!platform()->outputs().isEmpty()) {
-        continueStartupWithScreens();
-    } else {
-        connect(platform(), &Platform::outputsQueried, this, &WaylandTestApplication::continueStartupWithScreens);
-    }
-}
-
-void WaylandTestApplication::continueStartupWithScreens()
-{
-    disconnect(kwinApp()->platform(), &Platform::outputsQueried, this, &WaylandTestApplication::continueStartupWithScreens);
     WaylandCompositor::create();
     connect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::continueStartupWithScene);
 }
