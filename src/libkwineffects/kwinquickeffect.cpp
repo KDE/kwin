@@ -434,16 +434,10 @@ void QuickSceneEffect::startInternal()
         d->dummyWindow->requestActivate();
     }
 
-    const QList<EffectScreen *> screens = effects->screens();
-    for (EffectScreen *screen : screens) {
-        addScreen(screen);
-    }
+    addScreen(effects->activeScreen());
 
     // Ensure one view has an active focus item
     activateView(activeView());
-
-    connect(effects, &EffectsHandler::screenAdded, this, &QuickSceneEffect::handleScreenAdded);
-    connect(effects, &EffectsHandler::screenRemoved, this, &QuickSceneEffect::handleScreenRemoved);
 
     effects->grabKeyboard(this);
     effects->startMouseInterception(this, Qt::ArrowCursor);
