@@ -65,14 +65,15 @@ private Q_SLOTS:
     void testMinimizeActiveWindow();
     void testFullscreen_data();
     void testFullscreen();
-
     void testUserCanSetFullscreen();
+    void testSendFullScreenWindowToAnotherOutput();
 
     void testMaximizeHorizontal();
     void testMaximizeVertical();
     void testMaximizeFull();
     void testMaximizedToFullscreen_data();
     void testMaximizedToFullscreen();
+    void testSendMaximizedWindowToAnotherOutput();
     void testFullscreenMultipleOutputs();
     void testHidden();
     void testDesktopFileName();
@@ -455,6 +456,50 @@ void TestXdgShellWindow::testUserCanSetFullscreen()
     QVERIFY(window->isActive());
     QVERIFY(!window->isFullScreen());
     QVERIFY(window->userCanSetFullScreen());
+}
+
+void TestXdgShellWindow::testSendFullScreenWindowToAnotherOutput()
+{
+    // This test verifies that the fullscreen window will have correct geometry restore
+    // after it's sent to another output.
+
+    const auto outputs = workspace()->outputs();
+
+    // Create the window.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
+
+    // Wait for the compositor to send a configure event with the activated state.
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    // Move the window to the left monitor.
+    window->move(QPointF(10, 20));
+    QCOMPARE(window->frameGeometry(), QRectF(10, 20, 100, 50));
+    QCOMPARE(window->output(), outputs[0]);
+
+    // Make the window fullscreen.
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    QVERIFY(frameGeometryChangedSpy.isValid());
+    shellSurface->set_fullscreen(nullptr);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::red);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->isFullScreen(), true);
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 1280, 1024));
+    QCOMPARE(window->fullscreenGeometryRestore(), QRectF(10, 20, 100, 50));
+    QCOMPARE(window->output(), outputs[0]);
+
+    // Send the window to another output.
+    workspace()->sendWindowToOutput(window, outputs[1]);
+    QCOMPARE(window->isFullScreen(), true);
+    QCOMPARE(window->frameGeometry(), QRectF(1280, 0, 1280, 1024));
+    QCOMPARE(window->fullscreenGeometryRestore(), QRectF(1280 + 10, 20, 100, 50));
+    QCOMPARE(window->output(), outputs[1]);
 }
 
 void TestXdgShellWindow::testMaximizedToFullscreen_data()
@@ -1798,6 +1843,50 @@ void TestXdgShellWindow::testMaximizeFull()
     shellSurface.reset();
     surface.reset();
     QVERIFY(Test::waitForWindowDestroyed(window));
+}
+
+void TestXdgShellWindow::testSendMaximizedWindowToAnotherOutput()
+{
+    // This test verifies that the maximized window will have correct geometry restore
+    // after it's sent to another output.
+
+    const auto outputs = workspace()->outputs();
+
+    // Create the window.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
+
+    // Wait for the compositor to send a configure event with the activated state.
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    // Move the window to the left monitor.
+    window->move(QPointF(10, 20));
+    QCOMPARE(window->frameGeometry(), QRectF(10, 20, 100, 50));
+    QCOMPARE(window->output(), outputs[0]);
+
+    // Make the window maximized.
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    QVERIFY(frameGeometryChangedSpy.isValid());
+    shellSurface->set_maximized();
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::red);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->maximizeMode(), MaximizeFull);
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 1280, 1024));
+    QCOMPARE(window->geometryRestore(), QRectF(10, 20, 100, 50));
+    QCOMPARE(window->output(), outputs[0]);
+
+    // Send the window to another output.
+    workspace()->sendWindowToOutput(window, outputs[1]);
+    QCOMPARE(window->maximizeMode(), MaximizeFull);
+    QCOMPARE(window->frameGeometry(), QRectF(1280, 0, 1280, 1024));
+    QCOMPARE(window->geometryRestore(), QRectF(1280 + 10, 20, 100, 50));
+    QCOMPARE(window->output(), outputs[1]);
 }
 
 void TestXdgShellWindow::testMaximizeAndChangeDecorationModeAfterInitialCommit()
