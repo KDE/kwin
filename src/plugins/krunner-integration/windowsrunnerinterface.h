@@ -51,12 +51,17 @@ private:
         ShadeAction,
         KeepAboveAction,
         KeepBelowAction,
+        PinAction,
         // Desktop related actions
-        ActivateDesktopAction
+        ActivateDesktopAction,
+        // Workspace related actions
+        CloseAllAction,
+        MoveAllAction
     };
 
     RemoteMatch desktopMatch(const VirtualDesktop *desktop, const WindowsRunnerAction action = ActivateDesktopAction, qreal relevance = 1.0) const;
     RemoteMatch windowsMatch(const Window *window, const WindowsRunnerAction action = ActivateAction, qreal relevance = 1.0, Plasma::QueryMatch::Type type = Plasma::QueryMatch::ExactMatch) const;
+    RemoteMatch workspaceMatch(const WindowsRunnerAction action, qreal relevance = 1.0, Plasma::QueryMatch::Type = Plasma::QueryMatch::ExactMatch) const;
     bool actionSupported(const Window *window, const WindowsRunnerAction action) const;
 };
 }
