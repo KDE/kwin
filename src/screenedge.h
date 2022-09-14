@@ -27,6 +27,7 @@
 #include <QObject>
 #include <QRect>
 #include <QVector>
+#include <memory>
 
 class QAction;
 class QMouseEvent;
@@ -169,7 +170,7 @@ private:
     bool m_pushBackBlocked;
     Window *m_client;
     Output *m_output;
-    SwipeGesture *m_gesture;
+    std::unique_ptr<SwipeGesture> m_gesture;
     QVector<TouchCallback> m_touchCallbacks;
     friend class ScreenEdges;
 };
@@ -368,6 +369,7 @@ public:
     bool handleDndNotify(xcb_window_t window, const QPoint &point);
     bool handleEnterNotifiy(xcb_window_t window, const QPoint &point, const QDateTime &timestamp);
     bool remainActiveOnFullscreen() const;
+    const std::vector<std::unique_ptr<Edge>> &edges() const;
 
 public Q_SLOTS:
     void reconfigure();
@@ -403,7 +405,7 @@ private:
     void setReActivationThreshold(int threshold);
     void createHorizontalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, Output *output);
     void createVerticalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, Output *output);
-    Edge *createEdge(ElectricBorder border, int x, int y, int width, int height, Output *output, bool createAction = true);
+    std::unique_ptr<Edge> createEdge(ElectricBorder border, int x, int y, int width, int height, Output *output, bool createAction = true);
     void setActionForBorder(ElectricBorder border, ElectricBorderAction *oldValue, ElectricBorderAction newValue);
     void setActionForTouchBorder(ElectricBorder border, ElectricBorderAction newValue);
     void setRemainActiveOnFullscreen(bool remainActive);
@@ -417,7 +419,7 @@ private:
     int m_timeThreshold;
     int m_reactivateThreshold;
     Qt::Orientations m_virtualDesktopLayout;
-    QList<Edge *> m_edges;
+    std::vector<std::unique_ptr<Edge>> m_edges;
     KSharedConfig::Ptr m_config;
     ElectricBorderAction m_actionTopLeft;
     ElectricBorderAction m_actionTop;

@@ -70,7 +70,7 @@ public:
      * Allows the platform to create a platform specific screen edge.
      * The default implementation creates a Edge.
      */
-    virtual Edge *createScreenEdge(ScreenEdges *parent);
+    virtual std::unique_ptr<Edge> createScreenEdge(ScreenEdges *parent);
     /**
      * Allows the platform to create a platform specific Cursor.
      * The default implementation creates an InputRedirectionCursor.

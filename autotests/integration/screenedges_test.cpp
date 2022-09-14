@@ -130,9 +130,9 @@ void ScreenEdgesTest::testTouchCallback()
     s->reconfigure();
 
     // none of our actions should be reserved
-    const QList<Edge *> edges = s->findChildren<Edge *>(QString(), Qt::FindDirectChildrenOnly);
+    const auto &edges = s->edges();
     QCOMPARE(edges.size(), 8);
-    for (auto edge : edges) {
+    for (auto &edge : edges) {
         QCOMPARE(edge->isReserved(), false);
         QCOMPARE(edge->activatesForPointer(), false);
         QCOMPARE(edge->activatesForTouchGesture(), false);
@@ -145,7 +145,7 @@ void ScreenEdgesTest::testTouchCallback()
     // reserve on edge
     QFETCH(KWin::ElectricBorder, border);
     s->reserveTouch(border, &action);
-    for (auto edge : edges) {
+    for (auto &edge : edges) {
         QCOMPARE(edge->isReserved(), edge->border() == border);
         QCOMPARE(edge->activatesForPointer(), false);
         QCOMPARE(edge->activatesForTouchGesture(), edge->border() == border);
@@ -170,7 +170,7 @@ void ScreenEdgesTest::testTouchCallback()
 
     // unreserve again
     s->unreserveTouch(border, &action);
-    for (auto edge : edges) {
+    for (auto &edge : edges) {
         QCOMPARE(edge->isReserved(), false);
         QCOMPARE(edge->activatesForPointer(), false);
         QCOMPARE(edge->activatesForTouchGesture(), false);
@@ -179,7 +179,7 @@ void ScreenEdgesTest::testTouchCallback()
     // reserve another action
     std::unique_ptr<QAction> action2(new QAction);
     s->reserveTouch(border, action2.get());
-    for (auto edge : edges) {
+    for (auto &edge : edges) {
         QCOMPARE(edge->isReserved(), edge->border() == border);
         QCOMPARE(edge->activatesForPointer(), false);
         QCOMPARE(edge->activatesForTouchGesture(), edge->border() == border);
@@ -187,7 +187,7 @@ void ScreenEdgesTest::testTouchCallback()
 
     // and unreserve by destroying
     action2.reset();
-    for (auto edge : edges) {
+    for (auto &edge : edges) {
         QCOMPARE(edge->isReserved(), false);
         QCOMPARE(edge->activatesForPointer(), false);
         QCOMPARE(edge->activatesForTouchGesture(), false);

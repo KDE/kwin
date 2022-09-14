@@ -88,8 +88,7 @@ bool TouchCallback::hasProgressCallback() const
 }
 
 Edge::Edge(ScreenEdges *parent)
-    : QObject(parent)
-    , m_edges(parent)
+    : m_edges(parent)
     , m_border(ElectricNone)
     , m_action(ElectricActionNone)
     , m_reserved(0)
@@ -99,12 +98,12 @@ Edge::Edge(ScreenEdges *parent)
     , m_pushBackBlocked(false)
     , m_client(nullptr)
     , m_output(nullptr)
-    , m_gesture(new SwipeGesture(this))
+    , m_gesture(std::make_unique<SwipeGesture>())
 {
     m_gesture->setMinimumFingerCount(1);
     m_gesture->setMaximumFingerCount(1);
     connect(
-        m_gesture, &Gesture::triggered, this, [this]() {
+        m_gesture.get(), &Gesture::triggered, this, [this]() {
             stopApproaching();
             if (m_client) {
                 m_client->showOnScreenEdge();
@@ -115,21 +114,21 @@ Edge::Edge(ScreenEdges *parent)
             handleTouchCallback();
         },
         Qt::QueuedConnection);
-    connect(m_gesture, &SwipeGesture::started, this, &Edge::startApproaching);
-    connect(m_gesture, &SwipeGesture::cancelled, this, &Edge::stopApproaching);
-    connect(m_gesture, &SwipeGesture::cancelled, this, [this]() {
+    connect(m_gesture.get(), &SwipeGesture::started, this, &Edge::startApproaching);
+    connect(m_gesture.get(), &SwipeGesture::cancelled, this, &Edge::stopApproaching);
+    connect(m_gesture.get(), &SwipeGesture::cancelled, this, [this]() {
         if (!m_touchCallbacks.isEmpty() && m_touchCallbacks.constFirst().hasProgressCallback()) {
             handleTouchCallback();
         }
     });
-    connect(m_gesture, &SwipeGesture::progress, this, [this](qreal progress) {
+    connect(m_gesture.get(), &SwipeGesture::progress, this, [this](qreal progress) {
         int factor = progress * 256.0f;
         if (m_lastApproachingFactor != factor) {
             m_lastApproachingFactor = factor;
             Q_EMIT approaching(border(), m_lastApproachingFactor / 256.0f, m_approachGeometry);
         }
     });
-    connect(m_gesture, &SwipeGesture::deltaProgress, this, [this](const QSizeF &progressDelta) {
+    connect(m_gesture.get(), &SwipeGesture::deltaProgress, this, [this](const QSizeF &progressDelta) {
         if (!m_touchCallbacks.isEmpty()) {
             m_touchCallbacks.constFirst().progressCallback(border(), progressDelta, m_output);
         }
@@ -137,9 +136,9 @@ Edge::Edge(ScreenEdges *parent)
     connect(this, &Edge::activatesForTouchGestureChanged, this, [this]() {
         if (isReserved()) {
             if (activatesForTouchGesture()) {
-                m_edges->gestureRecognizer()->registerSwipeGesture(m_gesture);
+                m_edges->gestureRecognizer()->registerSwipeGesture(m_gesture.get());
             } else {
-                m_edges->gestureRecognizer()->unregisterSwipeGesture(m_gesture);
+                m_edges->gestureRecognizer()->unregisterSwipeGesture(m_gesture.get());
             }
         }
     });
@@ -167,10 +166,9 @@ void Edge::reserve(QObject *object, const char *slot)
 
 void Edge::reserveTouchCallBack(QAction *action, TouchCallback::CallbackFunction callback)
 {
-    if (auto itr = std::find_if(m_touchCallbacks.constBegin(), m_touchCallbacks.constEnd(), [action](const TouchCallback &c) {
+    if (std::any_of(m_touchCallbacks.constBegin(), m_touchCallbacks.constEnd(), [action](const TouchCallback &c) {
             return c.touchUpAction() == action;
-        });
-        itr != m_touchCallbacks.constEnd()) {
+        })) {
         return;
     }
     reserveTouchCallBack(TouchCallback(action, callback));
@@ -178,10 +176,9 @@ void Edge::reserveTouchCallBack(QAction *action, TouchCallback::CallbackFunction
 
 void Edge::reserveTouchCallBack(const TouchCallback &callback)
 {
-    if (auto itr = std::find_if(m_touchCallbacks.constBegin(), m_touchCallbacks.constEnd(), [callback](const TouchCallback &c) {
+    if (std::any_of(m_touchCallbacks.constBegin(), m_touchCallbacks.constEnd(), [callback](const TouchCallback &c) {
             return c.touchUpAction() == callback.touchUpAction();
-        });
-        itr != m_touchCallbacks.constEnd()) {
+        })) {
         return;
     }
     connect(callback.touchUpAction(), &QAction::destroyed, this, [this, callback]() {
@@ -430,9 +427,7 @@ bool Edge::handleByCallback()
     if (m_callBacks.isEmpty()) {
         return false;
     }
-    for (QHash<QObject *, QByteArray>::iterator it = m_callBacks.begin();
-         it != m_callBacks.end();
-         ++it) {
+    for (auto it = m_callBacks.begin(); it != m_callBacks.end(); ++it) {
         bool retVal = false;
         QMetaObject::invokeMethod(it.key(), it.value().constData(), Q_RETURN_ARG(bool, retVal), Q_ARG(ElectricBorder, m_border));
         if (retVal) {
@@ -605,7 +600,7 @@ void Edge::doGeometryUpdate()
 void Edge::activate()
 {
     if (activatesForTouchGesture()) {
-        m_edges->gestureRecognizer()->registerSwipeGesture(m_gesture);
+        m_edges->gestureRecognizer()->registerSwipeGesture(m_gesture.get());
     }
     doActivate();
 }
@@ -616,7 +611,7 @@ void Edge::doActivate()
 
 void Edge::deactivate()
 {
-    m_edges->gestureRecognizer()->unregisterSwipeGesture(m_gesture);
+    m_edges->gestureRecognizer()->unregisterSwipeGesture(m_gesture.get());
     doDeactivate();
 }
 
@@ -866,25 +861,25 @@ void ScreenEdges::setActionForBorder(ElectricBorder border, ElectricBorderAction
     }
     if (*oldValue == ElectricActionNone) {
         // have to reserve
-        for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
-            if ((*it)->border() == border) {
-                (*it)->reserve();
+        for (const auto &edge : m_edges) {
+            if (edge->border() == border) {
+                edge->reserve();
             }
         }
     }
     if (newValue == ElectricActionNone) {
         // have to unreserve
-        for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
-            if ((*it)->border() == border) {
-                (*it)->unreserve();
+        for (const auto &edge : m_edges) {
+            if (edge->border() == border) {
+                edge->unreserve();
             }
         }
     }
     *oldValue = newValue;
     // update action on all Edges for given border
-    for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
-        if ((*it)->border() == border) {
-            (*it)->setAction(newValue);
+    for (const auto &edge : m_edges) {
+        if (edge->border() == border) {
+            edge->setAction(newValue);
         }
     }
 }
@@ -901,17 +896,17 @@ void ScreenEdges::setActionForTouchBorder(ElectricBorder border, ElectricBorderA
     }
     if (oldValue == ElectricActionNone) {
         // have to reserve
-        for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
-            if ((*it)->border() == border) {
-                (*it)->reserve();
+        for (const auto &edge : m_edges) {
+            if (edge->border() == border) {
+                edge->reserve();
             }
         }
     }
     if (newValue == ElectricActionNone) {
         // have to unreserve
-        for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
-            if ((*it)->border() == border) {
-                (*it)->unreserve();
+        for (const auto &edge : m_edges) {
+            if (edge->border() == border) {
+                edge->unreserve();
             }
         }
 
@@ -920,9 +915,9 @@ void ScreenEdges::setActionForTouchBorder(ElectricBorder border, ElectricBorderA
         m_touchCallbacks.insert(border, newValue);
     }
     // update action on all Edges for given border
-    for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
-        if ((*it)->border() == border) {
-            (*it)->setTouchAction(newValue);
+    for (const auto &edge : m_edges) {
+        if (edge->border() == border) {
+            edge->setTouchAction(newValue);
         }
     }
 }
@@ -1064,7 +1059,7 @@ bool ScreenEdges::remainActiveOnFullscreen() const
 
 void ScreenEdges::recreateEdges()
 {
-    QList<Edge *> oldEdges(m_edges);
+    std::vector<std::unique_ptr<Edge>> oldEdges = std::move(m_edges);
     m_edges.clear();
     const QRect fullArea = workspace()->geometry();
     QRegion processedRegion;
@@ -1093,12 +1088,8 @@ void ScreenEdges::recreateEdges()
         }
     }
     // copy over the effect/script reservations from the old edges
-    for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
-        Edge *edge = *it;
-        for (auto oldIt = oldEdges.constBegin();
-             oldIt != oldEdges.constEnd();
-             ++oldIt) {
-            Edge *oldEdge = *oldIt;
+    for (const auto &edge : m_edges) {
+        for (const auto &oldEdge : oldEdges) {
             if (oldEdge->client()) {
                 // show the client again and don't recreate the edge
                 oldEdge->client()->showOnScreenEdge();
@@ -1108,9 +1099,7 @@ void ScreenEdges::recreateEdges()
                 continue;
             }
             const QHash<QObject *, QByteArray> &callbacks = oldEdge->callBacks();
-            for (QHash<QObject *, QByteArray>::const_iterator callback = callbacks.begin();
-                 callback != callbacks.end();
-                 ++callback) {
+            for (auto callback = callbacks.begin(); callback != callbacks.end(); callback++) {
                 edge->reserve(callback.key(), callback.value().constData());
             }
             const auto touchCallBacks = oldEdge->touchCallBacks();
@@ -1119,7 +1108,6 @@ void ScreenEdges::recreateEdges()
             }
         }
     }
-    qDeleteAll(oldEdges);
 }
 
 void ScreenEdges::createVerticalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, Output *output)
@@ -1136,20 +1124,20 @@ void ScreenEdges::createVerticalEdge(ElectricBorder border, const QRect &screen,
         y += m_cornerOffset;
         // create top left/right edge
         const ElectricBorder edge = (border == ElectricLeft) ? ElectricTopLeft : ElectricTopRight;
-        m_edges << createEdge(edge, x, screen.y(), TOUCH_TARGET, TOUCH_TARGET, output);
+        m_edges.push_back(createEdge(edge, x, screen.y(), TOUCH_TARGET, TOUCH_TARGET, output));
     }
     if (isBottomScreen(screen, fullArea)) {
         // also bottom most screen
         height -= m_cornerOffset;
         // create bottom left/right edge
         const ElectricBorder edge = (border == ElectricLeft) ? ElectricBottomLeft : ElectricBottomRight;
-        m_edges << createEdge(edge, x, screen.y() + screen.height() - TOUCH_TARGET, TOUCH_TARGET, TOUCH_TARGET, output);
+        m_edges.push_back(createEdge(edge, x, screen.y() + screen.height() - TOUCH_TARGET, TOUCH_TARGET, TOUCH_TARGET, output));
     }
     if (height <= m_cornerOffset) {
         // An overlap with another output is near complete. We ignore this border.
         return;
     }
-    m_edges << createEdge(border, x, y, TOUCH_TARGET, height, output);
+    m_edges.push_back(createEdge(border, x, y, TOUCH_TARGET, height, output));
 }
 
 void ScreenEdges::createHorizontalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, Output *output)
@@ -1173,12 +1161,12 @@ void ScreenEdges::createHorizontalEdge(ElectricBorder border, const QRect &scree
         return;
     }
     const int y = (border == ElectricTop) ? screen.y() : screen.y() + screen.height() - TOUCH_TARGET;
-    m_edges << createEdge(border, x, y, width, TOUCH_TARGET, output);
+    m_edges.push_back(createEdge(border, x, y, width, TOUCH_TARGET, output));
 }
 
-Edge *ScreenEdges::createEdge(ElectricBorder border, int x, int y, int width, int height, Output *output, bool createAction)
+std::unique_ptr<Edge> ScreenEdges::createEdge(ElectricBorder border, int x, int y, int width, int height, Output *output, bool createAction)
 {
-    Edge *edge = kwinApp()->platform()->createScreenEdge(this);
+    std::unique_ptr<Edge> edge = kwinApp()->platform()->createScreenEdge(this);
     // Edges can not have negative size.
     Q_ASSERT(width >= 0);
     Q_ASSERT(height >= 0);
@@ -1187,12 +1175,12 @@ Edge *ScreenEdges::createEdge(ElectricBorder border, int x, int y, int width, in
     edge->setGeometry(QRect(x, y, width, height));
     edge->setOutput(output);
     if (createAction) {
-        const ElectricBorderAction action = actionForEdge(edge);
+        const ElectricBorderAction action = actionForEdge(edge.get());
         if (action != KWin::ElectricActionNone) {
             edge->reserve();
             edge->setAction(action);
         }
-        const ElectricBorderAction touchAction = actionForTouchEdge(edge);
+        const ElectricBorderAction touchAction = actionForTouchEdge(edge.get());
         if (touchAction != KWin::ElectricActionNone) {
             edge->reserve();
             edge->setTouchAction(touchAction);
@@ -1210,8 +1198,8 @@ Edge *ScreenEdges::createEdge(ElectricBorder border, int x, int y, int width, in
             }
         }
     }
-    connect(edge, &Edge::approaching, this, &ScreenEdges::approaching);
-    connect(this, &ScreenEdges::checkBlocking, edge, &Edge::checkBlocking);
+    connect(edge.get(), &Edge::approaching, this, &ScreenEdges::approaching);
+    connect(this, &ScreenEdges::checkBlocking, edge.get(), &Edge::checkBlocking);
     return edge;
 }
 
@@ -1260,8 +1248,7 @@ void ScreenEdges::reserveDesktopSwitching(bool isToReserve, Qt::Orientations o)
     if (!o) {
         return;
     }
-    for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
-        Edge *edge = *it;
+    for (const auto &edge : m_edges) {
         if (edge->isCorner()) {
             isToReserve ? edge->reserve() : edge->unreserve();
         } else {
@@ -1277,35 +1264,29 @@ void ScreenEdges::reserveDesktopSwitching(bool isToReserve, Qt::Orientations o)
 
 void ScreenEdges::reserve(ElectricBorder border, QObject *object, const char *slot)
 {
-    for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
-        if ((*it)->border() == border) {
-            (*it)->reserve(object, slot);
+    for (const auto &edge : m_edges) {
+        if (edge->border() == border) {
+            edge->reserve(object, slot);
         }
     }
 }
 
 void ScreenEdges::unreserve(ElectricBorder border, QObject *object)
 {
-    for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
-        if ((*it)->border() == border) {
-            (*it)->unreserve(object);
+    for (const auto &edge : m_edges) {
+        if (edge->border() == border) {
+            edge->unreserve(object);
         }
     }
 }
 
 void ScreenEdges::reserve(Window *client, ElectricBorder border)
 {
-    bool hadBorder = false;
-    auto it = m_edges.begin();
-    while (it != m_edges.end()) {
-        if ((*it)->client() == client) {
-            hadBorder = true;
-            delete *it;
-            it = m_edges.erase(it);
-        } else {
-            it++;
-        }
-    }
+    const auto it = std::remove_if(m_edges.begin(), m_edges.end(), [client](const auto &edge) {
+        return edge->client() == client;
+    });
+    const bool hadBorder = it != m_edges.end();
+    m_edges.erase(it, m_edges.end());
 
     if (border != ElectricNone) {
         createEdgeForClient(client, border);
@@ -1318,18 +1299,18 @@ void ScreenEdges::reserve(Window *client, ElectricBorder border)
 
 void ScreenEdges::reserveTouch(ElectricBorder border, QAction *action, TouchCallback::CallbackFunction callback)
 {
-    for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
-        if ((*it)->border() == border) {
-            (*it)->reserveTouchCallBack(action, callback);
+    for (const auto &edge : m_edges) {
+        if (edge->border() == border) {
+            edge->reserveTouchCallBack(action, callback);
         }
     }
 }
 
 void ScreenEdges::unreserveTouch(ElectricBorder border, QAction *action)
 {
-    for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
-        if ((*it)->border() == border) {
-            (*it)->unreserveTouchCallBack(action);
+    for (const auto &edge : m_edges) {
+        if (edge->border() == border) {
+            edge->unreserveTouchCallBack(action);
         }
     }
 }
@@ -1401,9 +1382,9 @@ void ScreenEdges::createEdgeForClient(Window *client, ElectricBorder border)
     }
 
     if (width > 0 && height > 0) {
-        Edge *edge = createEdge(border, x, y, width, height, foundOutput, false);
+        m_edges.push_back(createEdge(border, x, y, width, height, foundOutput, false));
+        Edge *edge = m_edges.back().get();
         edge->setClient(client);
-        m_edges.append(edge);
         edge->reserve();
     } else {
         // we could not create an edge window, so don't allow the window to hide
@@ -1411,38 +1392,33 @@ void ScreenEdges::createEdgeForClient(Window *client, ElectricBorder border)
     }
 }
 
-void ScreenEdges::deleteEdgeForClient(Window *c)
+void ScreenEdges::deleteEdgeForClient(Window *window)
 {
-    auto it = m_edges.begin();
-    while (it != m_edges.end()) {
-        if ((*it)->client() == c) {
-            delete *it;
-            it = m_edges.erase(it);
-        } else {
-            it++;
-        }
-    }
+    const auto it = std::remove_if(m_edges.begin(), m_edges.end(), [window](const auto &edge) {
+        return edge->client() == window;
+    });
+    m_edges.erase(it, m_edges.end());
 }
 
 void ScreenEdges::check(const QPoint &pos, const QDateTime &now, bool forceNoPushBack)
 {
     bool activatedForClient = false;
-    for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
-        if (!(*it)->isReserved() || (*it)->isBlocked()) {
+    for (const auto &edge : m_edges) {
+        if (!edge->isReserved() || edge->isBlocked()) {
             continue;
         }
-        if (!(*it)->activatesForPointer()) {
+        if (!edge->activatesForPointer()) {
             continue;
         }
-        if ((*it)->approachGeometry().contains(pos)) {
-            (*it)->startApproaching();
+        if (edge->approachGeometry().contains(pos)) {
+            edge->startApproaching();
         }
-        if ((*it)->client() != nullptr && activatedForClient) {
-            (*it)->markAsTriggered(pos, now);
+        if (edge->client() != nullptr && activatedForClient) {
+            edge->markAsTriggered(pos, now);
             continue;
         }
-        if ((*it)->check(pos, now, forceNoPushBack)) {
-            if ((*it)->client()) {
+        if (edge->check(pos, now, forceNoPushBack)) {
+            if (edge->client()) {
                 activatedForClient = true;
             }
         }
@@ -1456,8 +1432,7 @@ bool ScreenEdges::isEntered(QMouseEvent *event)
     }
     bool activated = false;
     bool activatedForClient = false;
-    for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
-        Edge *edge = *it;
+    for (const auto &edge : m_edges) {
         if (!edge->isReserved() || edge->isBlocked()) {
             continue;
         }
@@ -1484,9 +1459,9 @@ bool ScreenEdges::isEntered(QMouseEvent *event)
         }
     }
     if (activatedForClient) {
-        for (auto it = m_edges.constBegin(); it != m_edges.constEnd(); ++it) {
-            if ((*it)->client()) {
-                (*it)->markAsTriggered(event->globalPos(), QDateTime::fromMSecsSinceEpoch(event->timestamp(), Qt::UTC));
+        for (const auto &edge : m_edges) {
+            if (edge) {
+                edge->markAsTriggered(event->globalPos(), QDateTime::fromMSecsSinceEpoch(event->timestamp(), Qt::UTC));
             }
         }
     }
@@ -1497,8 +1472,7 @@ bool ScreenEdges::handleEnterNotifiy(xcb_window_t window, const QPoint &point, c
 {
     bool activated = false;
     bool activatedForClient = false;
-    for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
-        Edge *edge = *it;
+    for (const auto &edge : m_edges) {
         if (!edge || edge->window() == XCB_WINDOW_NONE) {
             continue;
         }
@@ -1510,7 +1484,7 @@ bool ScreenEdges::handleEnterNotifiy(xcb_window_t window, const QPoint &point, c
         }
         if (edge->window() == window) {
             if (edge->check(point, timestamp)) {
-                if ((*it)->client()) {
+                if (edge->client()) {
                     activatedForClient = true;
                 }
             }
@@ -1524,9 +1498,9 @@ bool ScreenEdges::handleEnterNotifiy(xcb_window_t window, const QPoint &point, c
         }
     }
     if (activatedForClient) {
-        for (auto it = m_edges.constBegin(); it != m_edges.constEnd(); ++it) {
-            if ((*it)->client()) {
-                (*it)->markAsTriggered(point, timestamp);
+        for (const auto &edge : m_edges) {
+            if (edge->client()) {
+                edge->markAsTriggered(point, timestamp);
             }
         }
     }
@@ -1535,8 +1509,7 @@ bool ScreenEdges::handleEnterNotifiy(xcb_window_t window, const QPoint &point, c
 
 bool ScreenEdges::handleDndNotify(xcb_window_t window, const QPoint &point)
 {
-    for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
-        Edge *edge = *it;
+    for (const auto &edge : m_edges) {
         if (!edge || edge->window() == XCB_WINDOW_NONE) {
             continue;
         }
@@ -1557,10 +1530,7 @@ void ScreenEdges::ensureOnTop()
 QVector<xcb_window_t> ScreenEdges::windows() const
 {
     QVector<xcb_window_t> wins;
-    for (auto it = m_edges.constBegin();
-         it != m_edges.constEnd();
-         ++it) {
-        Edge *edge = *it;
+    for (const auto &edge : m_edges) {
         xcb_window_t w = edge->window();
         if (w != XCB_WINDOW_NONE) {
             wins.append(w);
@@ -1577,6 +1547,11 @@ QVector<xcb_window_t> ScreenEdges::windows() const
 void ScreenEdges::setRemainActiveOnFullscreen(bool remainActive)
 {
     m_remainActiveOnFullscreen = remainActive;
+}
+
+const std::vector<std::unique_ptr<Edge>> &ScreenEdges::edges() const
+{
+    return m_edges;
 }
 
 } // namespace

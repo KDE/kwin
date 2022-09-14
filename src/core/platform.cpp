@@ -91,9 +91,9 @@ std::shared_ptr<DmaBufTexture> Platform::createDmaBufTexture(const DmaBufParams 
     return createDmaBufTexture({attribs.width, attribs.height}, attribs.format, attribs.modifier);
 }
 
-Edge *Platform::createScreenEdge(ScreenEdges *edges)
+std::unique_ptr<Edge> Platform::createScreenEdge(ScreenEdges *edges)
 {
-    return new Edge(edges);
+    return std::make_unique<Edge>(edges);
 }
 
 void Platform::createPlatformCursor(QObject *parent)

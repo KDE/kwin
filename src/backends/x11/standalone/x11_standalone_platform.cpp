@@ -175,12 +175,12 @@ std::unique_ptr<OpenGLBackend> X11StandalonePlatform::createOpenGLBackend()
     }
 }
 
-Edge *X11StandalonePlatform::createScreenEdge(ScreenEdges *edges)
+std::unique_ptr<Edge> X11StandalonePlatform::createScreenEdge(ScreenEdges *edges)
 {
     if (!m_screenEdgesFilter) {
         m_screenEdgesFilter = std::make_unique<ScreenEdgesFilter>();
     }
-    return new WindowBasedEdge(edges);
+    return std::make_unique<WindowBasedEdge>(edges);
 }
 
 void X11StandalonePlatform::createPlatformCursor(QObject *parent)
