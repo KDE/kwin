@@ -74,7 +74,7 @@ private:
     void handleEvent();
     void applyDeviceConfig(Device *device);
     void applyScreenToDevice(Device *device);
-    QSocketNotifier *m_notifier;
+    std::unique_ptr<QSocketNotifier> m_notifier;
     QRecursiveMutex m_mutex;
     std::deque<std::unique_ptr<Event>> m_eventQueue;
     QVector<Device *> m_devices;

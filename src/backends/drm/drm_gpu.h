@@ -130,9 +130,9 @@ private:
 
     QVector<DrmOutput *> m_drmOutputs;
     QVector<DrmVirtualOutput *> m_virtualOutputs;
-    KWaylandServer::DrmLeaseDeviceV1Interface *m_leaseDevice = nullptr;
+    std::unique_ptr<KWaylandServer::DrmLeaseDeviceV1Interface> m_leaseDevice;
 
-    QSocketNotifier *m_socketNotifier = nullptr;
+    std::unique_ptr<QSocketNotifier> m_socketNotifier;
     QSize m_cursorSize;
 };
 

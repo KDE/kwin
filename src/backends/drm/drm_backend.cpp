@@ -214,8 +214,8 @@ bool DrmBackend::initialize()
         m_udevMonitor->filterSubsystemDevType("drm");
         const int fd = m_udevMonitor->fd();
         if (fd != -1) {
-            QSocketNotifier *notifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
-            connect(notifier, &QSocketNotifier::activated, this, &DrmBackend::handleUdevEvent);
+            m_socketNotifier = std::make_unique<QSocketNotifier>(fd, QSocketNotifier::Read);
+            connect(m_socketNotifier.get(), &QSocketNotifier::activated, this, &DrmBackend::handleUdevEvent);
             m_udevMonitor->enable();
         }
     }

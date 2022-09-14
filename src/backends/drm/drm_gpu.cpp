@@ -81,12 +81,12 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
         || strstr(version->name, "vmwgfx") || strstr(version->name, "vboxvideo");
     m_gbmDevice = gbm_create_device(m_fd);
 
-    m_socketNotifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
-    connect(m_socketNotifier, &QSocketNotifier::activated, this, &DrmGpu::dispatchEvents);
+    m_socketNotifier = std::make_unique<QSocketNotifier>(fd, QSocketNotifier::Read);
+    connect(m_socketNotifier.get(), &QSocketNotifier::activated, this, &DrmGpu::dispatchEvents);
 
     initDrmResources();
 
-    m_leaseDevice = new KWaylandServer::DrmLeaseDeviceV1Interface(waylandServer()->display(), [this] {
+    m_leaseDevice = std::make_unique<KWaylandServer::DrmLeaseDeviceV1Interface>(waylandServer()->display(), [this] {
         char *path = drmGetDeviceNameFromFd2(m_fd);
         FileDescriptor fd{open(path, O_RDWR | O_CLOEXEC)};
         if (!fd.isValid()) {
@@ -101,9 +101,9 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
         }
         return fd;
     });
-    connect(m_leaseDevice, &KWaylandServer::DrmLeaseDeviceV1Interface::leaseRequested, this, &DrmGpu::handleLeaseRequest);
-    connect(m_leaseDevice, &KWaylandServer::DrmLeaseDeviceV1Interface::leaseRevoked, this, &DrmGpu::handleLeaseRevoked);
-    connect(m_platform, &DrmBackend::activeChanged, m_leaseDevice, [this]() {
+    connect(m_leaseDevice.get(), &KWaylandServer::DrmLeaseDeviceV1Interface::leaseRequested, this, &DrmGpu::handleLeaseRequest);
+    connect(m_leaseDevice.get(), &KWaylandServer::DrmLeaseDeviceV1Interface::leaseRevoked, this, &DrmGpu::handleLeaseRevoked);
+    connect(m_platform, &DrmBackend::activeChanged, m_leaseDevice.get(), [this]() {
         if (!m_platform->isActive()) {
             // when we gain drm master we want to update outputs first and only then notify the lease device
             m_leaseDevice->setDrmMaster(false);
@@ -120,8 +120,8 @@ DrmGpu::~DrmGpu()
     m_crtcs.clear();
     m_connectors.clear();
     m_planes.clear();
-    delete m_socketNotifier;
-    delete m_leaseDevice;
+    m_leaseDevice.reset();
+    m_socketNotifier.reset();
     if (m_gbmDevice) {
         gbm_device_destroy(m_gbmDevice);
     }
@@ -266,7 +266,7 @@ bool DrmGpu::updateOutputs()
             qCDebug(KWIN_DRM, "New %soutput on GPU %s: %s", conn->isNonDesktop() ? "non-desktop " : "", qPrintable(m_devNode), qPrintable(conn->modelName()));
             const auto pipeline = conn->pipeline();
             m_pipelines << pipeline;
-            auto output = new DrmOutput(pipeline, m_leaseDevice);
+            auto output = new DrmOutput(pipeline, m_leaseDevice.get());
             m_drmOutputs << output;
             addedOutputs << output;
             Q_EMIT outputAdded(output);

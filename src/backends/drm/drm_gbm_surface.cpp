@@ -30,7 +30,7 @@ GbmSurface::GbmSurface(EglGbmBackend *backend, const QSize &size, uint32_t forma
     , m_format(format)
     , m_modifiers(modifiers)
     , m_flags(flags)
-    , m_fbo(new GLFramebuffer(0, size))
+    , m_fbo(std::make_unique<GLFramebuffer>(0, size))
 {
 }
 

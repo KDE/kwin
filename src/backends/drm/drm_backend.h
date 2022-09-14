@@ -14,6 +14,7 @@
 
 #include <QPointer>
 #include <QSize>
+#include <QSocketNotifier>
 #include <QVector>
 
 #include <memory>
@@ -97,6 +98,7 @@ private:
 
     std::unique_ptr<Udev> m_udev;
     std::unique_ptr<UdevMonitor> m_udevMonitor;
+    std::unique_ptr<QSocketNotifier> m_socketNotifier;
     Session *m_session;
     QVector<DrmAbstractOutput *> m_outputs;
     DrmVirtualOutput *m_placeHolderOutput = nullptr;

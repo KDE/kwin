@@ -482,7 +482,7 @@ void DrmOutput::renderCursorOpengl(const RenderTarget &renderTarget, const QSize
             m_cursorTextureDirty = false;
             return;
         }
-        m_cursorTexture.reset(new GLTexture(img));
+        m_cursorTexture = std::make_unique<GLTexture>(img);
         m_cursorTexture->setWrapMode(GL_CLAMP_TO_EDGE);
         m_cursorTextureDirty = false;
     };

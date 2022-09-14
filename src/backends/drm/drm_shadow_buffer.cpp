@@ -43,17 +43,17 @@ ShadowBuffer::ShadowBuffer(const QSize &size, const GbmFormat &format)
     : m_size(size)
     , m_drmFormat(format.drmFormat)
 {
-    m_texture.reset(new GLTexture(internalFormat(format), size));
+    m_texture = std::make_unique<GLTexture>(internalFormat(format), size);
     m_texture->setFilter(GL_NEAREST);
     m_texture->setYInverted(true);
 
-    m_fbo.reset(new GLFramebuffer(m_texture.get()));
+    m_fbo = std::make_unique<GLFramebuffer>(m_texture.get());
     if (!m_fbo->valid()) {
         qCCritical(KWIN_DRM) << "Error: framebuffer not complete!";
         return;
     }
 
-    m_vbo.reset(new GLVertexBuffer(KWin::GLVertexBuffer::Static));
+    m_vbo = std::make_unique<GLVertexBuffer>(KWin::GLVertexBuffer::Static);
     m_vbo->setData(6, 2, vertices, texCoords);
 }
 

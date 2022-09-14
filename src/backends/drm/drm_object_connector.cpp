@@ -109,7 +109,7 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
                                       PropertyDefinition(QByteArrayLiteral("link-status"), Requirement::Optional, {QByteArrayLiteral("Good"), QByteArrayLiteral("Bad")}),
                                   },
                 DRM_MODE_OBJECT_CONNECTOR)
-    , m_pipeline(new DrmPipeline(this))
+    , m_pipeline(std::make_unique<DrmPipeline>(this))
     , m_conn(drmModeGetConnector(gpu->fd(), connectorId))
 {
     if (m_conn) {

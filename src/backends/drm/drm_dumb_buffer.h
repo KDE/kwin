@@ -28,7 +28,7 @@ public:
 private:
     const size_t m_bufferSize;
     void *m_memory = nullptr;
-    QImage *m_image = nullptr;
+    std::unique_ptr<QImage> m_image;
 };
 
 }

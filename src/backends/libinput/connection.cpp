@@ -123,8 +123,8 @@ void Connection::doSetup()
 
     gainRealTime();
 
-    m_notifier = new QSocketNotifier(m_input->fileDescriptor(), QSocketNotifier::Read, this);
-    connect(m_notifier, &QSocketNotifier::activated, this, &Connection::handleEvent);
+    m_notifier = std::make_unique<QSocketNotifier>(m_input->fileDescriptor(), QSocketNotifier::Read);
+    connect(m_notifier.get(), &QSocketNotifier::activated, this, &Connection::handleEvent);
 
     connect(m_input->session(), &Session::activeChanged, this, [this](bool active) {
         if (active) {
