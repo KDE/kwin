@@ -288,15 +288,14 @@ static WindowQuadList clipQuads(const Item *item, const SceneOpenGL::RenderConte
 {
     const WindowQuadList quads = item->quads();
     if (context->clip != infiniteRegion() && !context->hardwareClipping) {
-        const QPoint offset = context->transformStack.top().map(QPoint(0, 0));
-
+        const QPointF offset = context->transformStack.top().map(QPointF(0, 0));
         WindowQuadList ret;
         ret.reserve(quads.count());
 
         // split all quads in bounding rect with the actual rects in the region
         for (const WindowQuad &quad : qAsConst(quads)) {
             for (const QRect &r : qAsConst(context->clip)) {
-                const QRectF rf(r.translated(-offset));
+                const QRectF rf(QRectF(r).translated(-offset));
                 const QRectF quadRect(QPointF(quad.left(), quad.top()), QPointF(quad.right(), quad.bottom()));
                 const QRectF &intersected = rf.intersected(quadRect);
                 if (intersected.isValid()) {
