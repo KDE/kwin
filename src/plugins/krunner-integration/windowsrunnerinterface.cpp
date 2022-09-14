@@ -121,6 +121,9 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
             if (!windowAppName.isEmpty() && !appName.contains(windowAppName, Qt::CaseInsensitive)) {
                 continue;
             }
+            if (!window->isOnCurrentDesktop()) {
+                continue;
+            }
 
             if (targetDesktop && !window->desktops().contains(targetDesktop) && !window->isOnAllDesktops()) {
                 continue;
@@ -165,6 +168,8 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
         }
         const QString appName = window->resourceClass();
         const QString name = window->caption();
+        if (!window->isOnCurrentDesktop())
+            continue;
         if (name.startsWith(term, Qt::CaseInsensitive) || appName.startsWith(term, Qt::CaseInsensitive)) {
             matches << windowsMatch(window, action, 0.8, Plasma::QueryMatch::ExactMatch);
         } else if ((name.contains(term, Qt::CaseInsensitive) || appName.contains(term, Qt::CaseInsensitive)) && actionSupported(window, action)) {
@@ -182,7 +187,7 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
                 if (!window->isNormalWindow()) {
                     continue;
                 }
-                if ((window->desktops().contains(desktop) || window->isOnAllDesktops()) && actionSupported(window, action)) {
+                if (window->isOnCurrentDesktop() && (window->desktops().contains(desktop) || window->isOnAllDesktops()) && actionSupported(window, action)) {
                     matches << windowsMatch(window, action, 0.5, Plasma::QueryMatch::PossibleMatch);
                 }
             }
@@ -271,7 +276,7 @@ RemoteMatch WindowsRunner::windowsMatch(const Window *window, const WindowsRunne
     bool allDesktops = window->isOnAllDesktops();
 
     const VirtualDesktop *targetDesktop = VirtualDesktopManager::self()->currentDesktop();
-    // Show on current desktop unless window is only attached to other desktop, in this case show on the first attached desktop
+    // Show on current desktop unless window is only attached to other desktop, in this case don't return the match
     if (!allDesktops && !window->isOnCurrentDesktop() && !desktops.isEmpty()) {
         targetDesktop = desktops.first();
     }
