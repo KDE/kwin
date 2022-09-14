@@ -539,7 +539,7 @@ void Placement::placeUnderMouse(Window *c, const QRect &area, PlacementPolicy /*
 
     QRectF geom = c->frameGeometry();
     geom.moveCenter(Cursors::self()->mouse()->pos());
-    c->move(geom.topLeft());
+    c->move(geom.topLeft().toPoint());
     c->keepInArea(area); // make sure it's kept inside workarea
 }
 
@@ -668,7 +668,7 @@ void Window::packTo(qreal left, qreal top)
     workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
 
     const Output *oldOutput = moveResizeOutput();
-    move(QPointF(left, top));
+    move(QPoint(left, top));
     if (moveResizeOutput() != oldOutput) {
         workspace()->sendWindowToOutput(this, moveResizeOutput()); // checks rule validity
         if (requestedMaximizeMode() != MaximizeRestore) {
