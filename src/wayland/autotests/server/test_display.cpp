@@ -52,7 +52,7 @@ void TestWaylandServerDisplay::testStartStop()
     QVERIFY(!runtimeDir.exists(testSocketName));
 
     std::unique_ptr<KWaylandServer::Display> display(new KWaylandServer::Display);
-    QSignalSpy runningSpy(display.get(), SIGNAL(runningChanged(bool)));
+    QSignalSpy runningSpy(display.get(), &KWaylandServer::Display::runningChanged);
     QVERIFY(runningSpy.isValid());
     display->addSocketName(testSocketName);
     QVERIFY(!display->isRunning());
@@ -72,9 +72,9 @@ void TestWaylandServerDisplay::testClientConnection()
     KWaylandServer::Display display;
     display.addSocketName(QStringLiteral("kwin-wayland-server-display-test-client-connection"));
     display.start();
-    QSignalSpy connectedSpy(&display, SIGNAL(clientConnected(KWaylandServer::ClientConnection *)));
+    QSignalSpy connectedSpy(&display, &KWaylandServer::Display::clientConnected);
     QVERIFY(connectedSpy.isValid());
-    QSignalSpy disconnectedSpy(&display, SIGNAL(clientDisconnected(KWaylandServer::ClientConnection *)));
+    QSignalSpy disconnectedSpy(&display, &KWaylandServer::Display::clientDisconnected);
     QVERIFY(disconnectedSpy.isValid());
 
     int sv[2];
