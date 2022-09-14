@@ -110,7 +110,7 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
         }
 
         for (const Window *window : Workspace::self()->allClientList()) {
-            if (!window->isNormalWindow()) {
+            if (!(window->isNormalWindow() || (window->isDesktop() && window->isOnActiveOutput()))) {
                 continue;
             }
             const QString appName = window->resourceClass();
@@ -160,7 +160,7 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
 
     // check for matching desktops by name
     for (const Window *window : Workspace::self()->allClientList()) {
-        if (!window->isNormalWindow()) {
+        if (!(window->isNormalWindow() || (window->isDesktop() && window->isOnActiveOutput()))) {
             continue;
         }
         const QString appName = window->resourceClass();
