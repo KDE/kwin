@@ -95,8 +95,7 @@ void DecorationBridge::init()
     }
     m_plugin = readPlugin();
     m_settings = QSharedPointer<KDecoration2::DecorationSettings>::create(this);
-    initPlugin();
-    if (!m_factory) {
+    if (!initPlugin()) {
         if (m_plugin != s_defaultPlugin) {
             // try loading default plugin
             m_plugin = s_defaultPlugin;
@@ -113,20 +112,22 @@ void DecorationBridge::init()
     }
 }
 
-void DecorationBridge::initPlugin()
+bool DecorationBridge::initPlugin()
 {
     const KPluginMetaData metaData = KPluginMetaData::findPluginById(s_pluginName, m_plugin);
     if (!metaData.isValid()) {
         qCWarning(KWIN_DECORATIONS) << "Could not locate decoration plugin" << m_plugin;
-        return;
+        return false;
     }
     qCDebug(KWIN_DECORATIONS) << "Trying to load decoration plugin: " << metaData.fileName();
     auto factoryResult = KPluginFactory::loadFactory(metaData);
-    if (!factoryResult) {
-        qCWarning(KWIN_DECORATIONS) << "Error loading plugin:" << factoryResult.errorText;
-    } else {
-        m_factory = factoryResult.plugin;
+    if (factoryResult) {
+        m_factory.reset(factoryResult.plugin);
         loadMetaData(metaData.rawData());
+        return true;
+    } else {
+        qCWarning(KWIN_DECORATIONS) << "Error loading plugin:" << factoryResult.errorText;
+        return false;
     }
 }
 
@@ -147,8 +148,7 @@ void DecorationBridge::reconfigure()
         if (m_noPlugin) {
             // decorations disabled now
             m_plugin = QString();
-            delete m_factory;
-            m_factory = nullptr;
+            m_factory.reset();
             m_settings.reset();
         } else {
             // decorations enabled now
@@ -161,13 +161,12 @@ void DecorationBridge::reconfigure()
     const QString newPlugin = readPlugin();
     if (newPlugin != m_plugin) {
         // plugin changed, recreate everything
-        auto oldFactory = m_factory;
+        auto oldFactory = std::move(m_factory);
         const auto oldPluginName = m_plugin;
         m_plugin = newPlugin;
-        initPlugin();
-        if (m_factory == oldFactory) {
+        if (!initPlugin()) {
             // loading new plugin failed
-            m_factory = oldFactory;
+            m_factory = std::move(oldFactory);
             m_plugin = oldPluginName;
         } else {
             recreateDecorations();

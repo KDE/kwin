@@ -71,10 +71,10 @@ private:
     QString readPlugin();
     void loadMetaData(const QJsonObject &object);
     void findTheme(const QVariantMap &map);
-    void initPlugin();
+    bool initPlugin();
     QString readTheme() const;
     void readDecorationOptions();
-    KPluginFactory *m_factory;
+    std::unique_ptr<KPluginFactory> m_factory;
     bool m_showToolTips;
     QString m_recommendedBorderSize;
     QString m_plugin;
