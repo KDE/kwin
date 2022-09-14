@@ -44,22 +44,7 @@ VirtualBackend::~VirtualBackend()
 
 bool VirtualBackend::initialize()
 {
-    /*
-     * Some tests currently expect one output present at start,
-     * others set them explicitly.
-     *
-     * TODO: rewrite all tests to explicitly set the outputs.
-     */
-    if (m_outputs.isEmpty()) {
-        VirtualOutput *dummyOutput = new VirtualOutput(this);
-        dummyOutput->init(QPoint(0, 0), initialWindowSize());
-        m_outputs << dummyOutput;
-        Q_EMIT outputAdded(dummyOutput);
-        dummyOutput->updateEnabled(true);
-    }
     setReady(true);
-
-    Q_EMIT outputsQueried();
     return true;
 }
 
