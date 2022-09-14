@@ -807,7 +807,6 @@ QtWayland::zwp_input_panel_surface_v1 *createInputPanelSurfaceV1(KWayland::Clien
 static void waitForConfigured(XdgSurface *shellSurface)
 {
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface, &XdgSurface::configureRequested);
-    QVERIFY(surfaceConfigureRequestedSpy.isValid());
 
     shellSurface->surface()->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(surfaceConfigureRequestedSpy.wait());

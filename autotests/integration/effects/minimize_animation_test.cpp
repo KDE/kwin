@@ -45,7 +45,6 @@ void MinimizeAnimationTest::initTestCase()
 
     qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
 
@@ -99,7 +98,6 @@ void MinimizeAnimationTest::testMinimizeUnminimize()
     using namespace KWayland::Client;
 
     QSignalSpy plasmaWindowCreatedSpy(Test::waylandWindowManagement(), &PlasmaWindowManagement::windowCreated);
-    QVERIFY(plasmaWindowCreatedSpy.isValid());
 
     // Create a panel at the top of the screen.
     const QRect panelRect = QRect(0, 0, 1280, 36);

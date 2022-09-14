@@ -46,7 +46,6 @@ void MinimizeAllScriptTest::initTestCase()
     qRegisterMetaType<Window *>();
 
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
@@ -86,7 +85,6 @@ void MinimizeAllScriptTest::init()
     AbstractScript *script = Scripting::self()->findScript(s_scriptName);
     QVERIFY(script);
     QSignalSpy runningChangedSpy(script, &AbstractScript::runningChanged);
-    QVERIFY(runningChangedSpy.isValid());
     script->run();
     QTRY_COMPARE(runningChangedSpy.count(), 1);
 }

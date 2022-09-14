@@ -62,7 +62,6 @@ void ShadowTest::init()
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
     QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
-    QVERIFY(connectedSpy.isValid());
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -77,7 +76,6 @@ void ShadowTest::init()
 
     Registry registry;
     QSignalSpy interfacesAnnouncedSpy(&registry, &Registry::interfacesAnnounced);
-    QVERIFY(interfacesAnnouncedSpy.isValid());
     registry.setEventQueue(m_queue);
     registry.create(m_connection);
     QVERIFY(registry.isValid());
@@ -128,7 +126,6 @@ void ShadowTest::testCreateShadow()
 {
     // this test verifies the basic shadow behavior, create for surface, commit it, etc.
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
-    QVERIFY(surfaceCreatedSpy.isValid());
     std::unique_ptr<Surface> surface(m_compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
     auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
@@ -136,7 +133,6 @@ void ShadowTest::testCreateShadow()
     // a surface without anything should not have a Shadow
     QVERIFY(!serverSurface->shadow());
     QSignalSpy shadowChangedSpy(serverSurface, &SurfaceInterface::shadowChanged);
-    QVERIFY(shadowChangedSpy.isValid());
 
     // let's create a shadow for the Surface
     std::unique_ptr<Shadow> shadow(m_shadow->createShadow(surface.get()));
@@ -185,13 +181,11 @@ void ShadowTest::testShadowElements()
     // this test verifies that all shadow elements are correctly passed to the server
     // first create surface
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
-    QVERIFY(surfaceCreatedSpy.isValid());
     std::unique_ptr<Surface> surface(m_compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
     auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface);
     QSignalSpy shadowChangedSpy(serverSurface, &SurfaceInterface::shadowChanged);
-    QVERIFY(shadowChangedSpy.isValid());
 
     // now create the shadow
     std::unique_ptr<Shadow> shadow(m_shadow->createShadow(surface.get()));
@@ -242,13 +236,11 @@ void ShadowTest::testSurfaceDestroy()
     using namespace KWayland::Client;
     using namespace KWaylandServer;
     QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
-    QVERIFY(serverSurfaceCreated.isValid());
 
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
     auto serverSurface = serverSurfaceCreated.first().first().value<SurfaceInterface *>();
     QSignalSpy shadowChangedSpy(serverSurface, &SurfaceInterface::shadowChanged);
-    QVERIFY(shadowChangedSpy.isValid());
 
     std::unique_ptr<Shadow> shadow(m_shadow->createShadow(surface.get()));
     shadow->commit();
@@ -259,9 +251,7 @@ void ShadowTest::testSurfaceDestroy()
 
     // destroy the parent surface
     QSignalSpy surfaceDestroyedSpy(serverSurface, &QObject::destroyed);
-    QVERIFY(surfaceDestroyedSpy.isValid());
     QSignalSpy shadowDestroyedSpy(serverShadow.data(), &QObject::destroyed);
-    QVERIFY(shadowDestroyedSpy.isValid());
     surface.reset();
     QVERIFY(surfaceDestroyedSpy.wait());
     QVERIFY(shadowDestroyedSpy.isEmpty());

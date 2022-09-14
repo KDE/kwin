@@ -50,7 +50,6 @@ void XwaylandSelectionsTest::initTestCase()
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<QProcess::ExitStatus>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     //    QSignalSpy clipboardSyncDevicedCreated{waylandServer(), &WaylandServer::xclipboardSyncDataDeviceCreated};
     //    QVERIFY(clipboardSyncDevicedCreated.isValid());
@@ -87,9 +86,7 @@ void XwaylandSelectionsTest::testSync()
     QVERIFY(!paste.isEmpty());
 
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowAddedSpy.isValid());
     QSignalSpy clipboardChangedSpy(waylandServer()->seat(), &KWaylandServer::SeatInterface::selectionChanged);
-    QVERIFY(clipboardChangedSpy.isValid());
 
     QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
 
@@ -117,7 +114,6 @@ void XwaylandSelectionsTest::testSync()
     // start the paste process
     std::unique_ptr<QProcess, ProcessKillBeforeDeleter> pasteProcess(new QProcess());
     QSignalSpy finishedSpy(pasteProcess.get(), static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished));
-    QVERIFY(finishedSpy.isValid());
     QFETCH(QString, pastePlatform);
     environment.insert(QStringLiteral("QT_QPA_PLATFORM"), pastePlatform);
     pasteProcess->setProcessEnvironment(environment);
@@ -135,7 +131,6 @@ void XwaylandSelectionsTest::testSync()
 
     if (workspace()->activeWindow() != pasteWindow) {
         QSignalSpy windowActivatedSpy(workspace(), &Workspace::windowActivated);
-        QVERIFY(windowActivatedSpy.isValid());
         workspace()->activateWindow(pasteWindow);
         QVERIFY(windowActivatedSpy.wait());
     }

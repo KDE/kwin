@@ -196,13 +196,10 @@ void SelectionTest::testClearOnEnter()
 {
     // this test verifies that the selection is cleared prior to keyboard enter if there is no current selection
     QSignalSpy selectionClearedClient1Spy(m_client1.dataDevice, &DataDevice::selectionCleared);
-    QVERIFY(selectionClearedClient1Spy.isValid());
     QSignalSpy keyboardEnteredClient1Spy(m_client1.keyboard, &Keyboard::entered);
-    QVERIFY(keyboardEnteredClient1Spy.isValid());
 
     // now create a Surface
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
-    QVERIFY(surfaceCreatedSpy.isValid());
     std::unique_ptr<Surface> s1(m_client1.compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
     auto serverSurface1 = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
@@ -220,11 +217,8 @@ void SelectionTest::testClearOnEnter()
 
     // now let's bring in client 2
     QSignalSpy selectionOfferedClient2Spy(m_client2.dataDevice, &DataDevice::selectionOffered);
-    QVERIFY(selectionOfferedClient2Spy.isValid());
     QSignalSpy selectionClearedClient2Spy(m_client2.dataDevice, &DataDevice::selectionCleared);
-    QVERIFY(selectionClearedClient2Spy.isValid());
     QSignalSpy keyboardEnteredClient2Spy(m_client2.keyboard, &Keyboard::entered);
-    QVERIFY(keyboardEnteredClient2Spy.isValid());
     std::unique_ptr<Surface> s2(m_client2.compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
     auto serverSurface2 = surfaceCreatedSpy.last().first().value<SurfaceInterface *>();

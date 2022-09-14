@@ -50,7 +50,6 @@ void InputStackingOrderTest::initTestCase()
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
@@ -97,13 +96,10 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
     QSignalSpy enteredSpy(pointer, &Pointer::entered);
-    QVERIFY(enteredSpy.isValid());
     QSignalSpy leftSpy(pointer, &Pointer::left);
-    QVERIFY(leftSpy.isValid());
 
     // now create the two windows and make them overlap
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowAddedSpy.isValid());
     std::unique_ptr<KWayland::Client::Surface> surface1 = Test::createSurface();
     QVERIFY(surface1);
     Test::XdgToplevel *shellSurface1 = Test::createXdgToplevelSurface(surface1.get(), surface1.get());
@@ -150,7 +146,6 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
 
     // let's destroy window1, that should pass focus to window2 again
     QSignalSpy windowClosedSpy(window1, &Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
     surface1.reset();
     QVERIFY(windowClosedSpy.wait());
     QVERIFY(enteredSpy.wait());

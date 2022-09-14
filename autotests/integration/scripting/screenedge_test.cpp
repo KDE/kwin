@@ -49,7 +49,6 @@ private:
 void ScreenEdgeTest::initTestCase()
 {
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
 
@@ -137,14 +136,12 @@ void ScreenEdgeTest::testEdge()
     auto s = Scripting::self()->findScript(scriptToLoad);
     QVERIFY(s);
     QSignalSpy runningChangedSpy(s, &AbstractScript::runningChanged);
-    QVERIFY(runningChangedSpy.isValid());
     s->run();
     QVERIFY(runningChangedSpy.wait());
     QCOMPARE(runningChangedSpy.count(), 1);
     QCOMPARE(runningChangedSpy.first().first().toBool(), true);
     // triggering the edge will result in show desktop being triggered
     QSignalSpy showDesktopSpy(workspace(), &Workspace::showingDesktopChanged);
-    QVERIFY(showDesktopSpy.isValid());
 
     // trigger the edge
     QFETCH(QPoint, triggerPos);
@@ -186,14 +183,12 @@ void ScreenEdgeTest::testTouchEdge()
     auto s = Scripting::self()->findScript(scriptToLoad);
     QVERIFY(s);
     QSignalSpy runningChangedSpy(s, &AbstractScript::runningChanged);
-    QVERIFY(runningChangedSpy.isValid());
     s->run();
     QVERIFY(runningChangedSpy.wait());
     QCOMPARE(runningChangedSpy.count(), 1);
     QCOMPARE(runningChangedSpy.first().first().toBool(), true);
     // triggering the edge will result in show desktop being triggered
     QSignalSpy showDesktopSpy(workspace(), &Workspace::showingDesktopChanged);
-    QVERIFY(showDesktopSpy.isValid());
 
     // trigger the edge
     QFETCH(QPoint, triggerPos);
@@ -229,7 +224,6 @@ void ScreenEdgeTest::testEdgeUnregister()
     QVERIFY(runningChangedSpy.wait());
 
     QSignalSpy showDesktopSpy(workspace(), &Workspace::showingDesktopChanged);
-    QVERIFY(showDesktopSpy.isValid());
 
     // trigger the edge
     KWin::Cursors::self()->mouse()->setPos(triggerPos);
@@ -272,7 +266,6 @@ void ScreenEdgeTest::testDeclarativeTouchEdge()
     QTRY_COMPARE(runningChangedSpy.count(), 1);
 
     QSignalSpy showDesktopSpy(workspace(), &Workspace::showingDesktopChanged);
-    QVERIFY(showDesktopSpy.isValid());
 
     // Trigger the edge through touch
     quint32 timestamp = 0;

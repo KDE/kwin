@@ -90,7 +90,6 @@ void NoGlobalShortcutsTest::initTestCase()
 {
     qRegisterMetaType<KWin::ElectricBorder>("ElectricBorder");
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName, KWin::WaylandServer::InitializationFlag::NoGlobalShortcuts));
 
@@ -139,7 +138,6 @@ void NoGlobalShortcutsTest::testTrigger()
     // test based on ModifierOnlyShortcutTest::testTrigger
     Target target;
     QSignalSpy triggeredSpy(&target, &Target::shortcutTriggered);
-    QVERIFY(triggeredSpy.isValid());
 
     KConfigGroup group = kwinApp()->config()->group("ModifierOnlyShortcuts");
     QFETCH(QStringList, metaConfig);
@@ -175,7 +173,6 @@ void NoGlobalShortcutsTest::testKGlobalAccel()
     action->setProperty("componentName", QStringLiteral(KWIN_NAME));
     action->setObjectName(QStringLiteral("globalshortcuts-test-meta-shift-w"));
     QSignalSpy triggeredSpy(action.get(), &QAction::triggered);
-    QVERIFY(triggeredSpy.isValid());
     KGlobalAccel::self()->setShortcut(action.get(), QList<QKeySequence>{Qt::META | Qt::SHIFT | Qt::Key_W}, KGlobalAccel::NoAutoloading);
     input()->registerShortcut(Qt::META | Qt::SHIFT | Qt::Key_W, action.get());
 
@@ -201,7 +198,6 @@ void NoGlobalShortcutsTest::testPointerShortcut()
     // based on LockScreenTest::testPointerShortcut
     std::unique_ptr<QAction> action(new QAction(nullptr));
     QSignalSpy actionSpy(action.get(), &QAction::triggered);
-    QVERIFY(actionSpy.isValid());
     input()->registerPointerShortcut(Qt::MetaModifier, Qt::LeftButton, action.get());
 
     // try to trigger the shortcut
@@ -232,7 +228,6 @@ void NoGlobalShortcutsTest::testAxisShortcut()
     // based on LockScreenTest::testAxisShortcut
     std::unique_ptr<QAction> action(new QAction(nullptr));
     QSignalSpy actionSpy(action.get(), &QAction::triggered);
-    QVERIFY(actionSpy.isValid());
     QFETCH(Qt::Orientation, direction);
     QFETCH(int, sign);
     PointerAxisDirection axisDirection = PointerAxisUp;
@@ -262,7 +257,6 @@ void NoGlobalShortcutsTest::testScreenEdge()
 {
     // based on LockScreenTest::testScreenEdge
     QSignalSpy screenEdgeSpy(workspace()->screenEdges(), &ScreenEdges::approaching);
-    QVERIFY(screenEdgeSpy.isValid());
     QCOMPARE(screenEdgeSpy.count(), 0);
 
     quint32 timestamp = 1;

@@ -60,7 +60,6 @@ void StrutsTest::initTestCase()
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
@@ -171,7 +170,6 @@ void StrutsTest::testWaylandStruts()
         plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
 
         QSignalSpy configureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
-        QVERIFY(configureRequestedSpy.isValid());
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
         QVERIFY(configureRequestedSpy.wait());
 
@@ -213,7 +211,6 @@ void StrutsTest::testWaylandStruts()
     for (auto it = windows.begin(); it != windows.end();) {
         auto &[window, surface] = *it;
         QSignalSpy destroyedSpy(window, &QObject::destroyed);
-        QVERIFY(destroyedSpy.isValid());
         it = windows.erase(it);
         QVERIFY(destroyedSpy.wait());
     }
@@ -235,7 +232,6 @@ void StrutsTest::testMoveWaylandPanel()
     plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
 
     QSignalSpy configureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
-    QVERIFY(configureRequestedSpy.isValid());
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(configureRequestedSpy.wait());
 
@@ -254,7 +250,6 @@ void StrutsTest::testMoveWaylandPanel()
     QCOMPARE(workspace()->clientArea(WorkArea, outputs[0], desktop), QRect(0, 0, 2560, 1000));
 
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
-    QVERIFY(frameGeometryChangedSpy.isValid());
     plasmaSurface->setPosition(QPoint(1280, 1000));
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(window->frameGeometry(), QRect(1280, 1000, 1280, 24));
@@ -287,7 +282,6 @@ void StrutsTest::testWaylandMobilePanel()
     plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
 
     QSignalSpy configureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
-    QVERIFY(configureRequestedSpy.isValid());
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(configureRequestedSpy.wait());
 
@@ -315,7 +309,6 @@ void StrutsTest::testWaylandMobilePanel()
     plasmaSurface2->setRole(PlasmaShellSurface::Role::Panel);
 
     QSignalSpy configureRequestedSpy2(shellSurface2->xdgSurface(), &Test::XdgSurface::configureRequested);
-    QVERIFY(configureRequestedSpy2.isValid());
     surface2->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(configureRequestedSpy2.wait());
 
@@ -622,7 +615,6 @@ void StrutsTest::testX11Struts()
 
     // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
@@ -661,7 +653,6 @@ void StrutsTest::testX11Struts()
     c.reset();
 
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
     QVERIFY(windowClosedSpy.wait());
 
     // now struts should be removed again
@@ -739,7 +730,6 @@ void StrutsTest::test363804()
 
     // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
@@ -762,7 +752,6 @@ void StrutsTest::test363804()
     c.reset();
 
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
     QVERIFY(windowClosedSpy.wait());
 }
 
@@ -824,7 +813,6 @@ void StrutsTest::testLeftScreenSmallerBottomAligned()
 
     // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
@@ -865,7 +853,6 @@ void StrutsTest::testLeftScreenSmallerBottomAligned()
     QCOMPARE(window2->maximizeMode(), KWin::MaximizeFull);
     // destroy window again
     QSignalSpy normalWindowClosedSpy(window2, &X11Window::windowClosed);
-    QVERIFY(normalWindowClosedSpy.isValid());
     xcb_unmap_window(c.get(), w2);
     xcb_destroy_window(c.get(), w2);
     xcb_flush(c.get());
@@ -878,7 +865,6 @@ void StrutsTest::testLeftScreenSmallerBottomAligned()
     c.reset();
 
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
     QVERIFY(windowClosedSpy.wait());
 }
 
@@ -941,7 +927,6 @@ void StrutsTest::testWindowMoveWithPanelBetweenScreens()
 
     // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);

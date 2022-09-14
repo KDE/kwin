@@ -44,7 +44,6 @@ void ScreensTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
@@ -129,7 +128,6 @@ void ScreensTest::testCurrentWithFollowsMouse_data()
 void ScreensTest::testCurrentWithFollowsMouse()
 {
     QSignalSpy changedSpy(workspace()->screens(), &Screens::changed);
-    QVERIFY(changedSpy.isValid());
 
     // Enable "active screen follows mouse"
     auto group = kwinApp()->config()->group("Windows");
@@ -166,7 +164,6 @@ void ScreensTest::testCurrentPoint_data()
 void ScreensTest::testCurrentPoint()
 {
     QSignalSpy changedSpy(workspace()->screens(), &KWin::Screens::changed);
-    QVERIFY(changedSpy.isValid());
 
     QFETCH(QVector<QRect>, geometries);
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::QueuedConnection,

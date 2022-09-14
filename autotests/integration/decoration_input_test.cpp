@@ -122,7 +122,6 @@ void DecorationInputTest::initTestCase()
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::InternalWindow *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
@@ -378,9 +377,7 @@ void DecorationInputTest::testPressToMove()
     QVERIFY(!window->noBorder());
     window->move(workspace()->activeOutput()->geometry().center() - QPoint(window->width() / 2, window->height() / 2));
     QSignalSpy startMoveResizedSpy(window, &Window::clientStartUserMovedResized);
-    QVERIFY(startMoveResizedSpy.isValid());
     QSignalSpy clientFinishUserMovedResizedSpy(window, &Window::clientFinishUserMovedResized);
-    QVERIFY(clientFinishUserMovedResizedSpy.isValid());
 
     quint32 timestamp = 1;
     MOTION(QPoint(window->frameGeometry().center().x(), window->y() + window->clientPos().y() / 2));
@@ -437,9 +434,7 @@ void DecorationInputTest::testTapToMove()
     QVERIFY(!window->noBorder());
     window->move(workspace()->activeOutput()->geometry().center() - QPoint(window->width() / 2, window->height() / 2));
     QSignalSpy startMoveResizedSpy(window, &Window::clientStartUserMovedResized);
-    QVERIFY(startMoveResizedSpy.isValid());
     QSignalSpy clientFinishUserMovedResizedSpy(window, &Window::clientFinishUserMovedResized);
-    QVERIFY(clientFinishUserMovedResizedSpy.isValid());
 
     quint32 timestamp = 1;
     QPoint p = QPoint(window->frameGeometry().center().x(), window->y() + window->clientPos().y() / 2);
@@ -505,7 +500,6 @@ void DecorationInputTest::testResizeOutsideWindow()
     QVERIFY(window->frameGeometry() != window->inputGeometry());
     QVERIFY(window->inputGeometry().contains(window->frameGeometry()));
     QSignalSpy startMoveResizedSpy(window, &Window::clientStartUserMovedResized);
-    QVERIFY(startMoveResizedSpy.isValid());
 
     // go to border
     quint32 timestamp = 1;
@@ -723,9 +717,7 @@ void DecorationInputTest::testTouchEvents()
     EventHelper helper;
     window->decoration()->installEventFilter(&helper);
     QSignalSpy hoverMoveSpy(&helper, &EventHelper::hoverMove);
-    QVERIFY(hoverMoveSpy.isValid());
     QSignalSpy hoverLeaveSpy(&helper, &EventHelper::hoverLeave);
-    QVERIFY(hoverLeaveSpy.isValid());
 
     quint32 timestamp = 1;
     const QPoint tapPoint(window->frameGeometry().center().x(), window->clientPos().y() / 2);
@@ -762,7 +754,6 @@ void DecorationInputTest::testTooltipDoesntEatKeyEvents()
     auto keyboard = Test::waylandSeat()->createKeyboard(Test::waylandSeat());
     QVERIFY(keyboard);
     QSignalSpy enteredSpy(keyboard, &KWayland::Client::Keyboard::entered);
-    QVERIFY(enteredSpy.isValid());
 
     const auto [window, surface] = showWindow();
     QVERIFY(window);
@@ -774,7 +765,6 @@ void DecorationInputTest::testTooltipDoesntEatKeyEvents()
     QVERIFY(keyEvent.isValid());
 
     QSignalSpy windowAddedSpy(workspace(), &Workspace::internalWindowAdded);
-    QVERIFY(windowAddedSpy.isValid());
     window->decoratedClient()->requestShowToolTip(QStringLiteral("test"));
     // now we should get an internal window
     QVERIFY(windowAddedSpy.wait());

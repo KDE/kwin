@@ -50,7 +50,6 @@ void DontCrashCancelAnimationFromAnimationEndedTest::initTestCase()
     kwinApp()->start();
     QVERIFY(Compositor::self());
     QSignalSpy compositorToggledSpy(Compositor::self(), &Compositor::compositingToggled);
-    QVERIFY(compositorToggledSpy.isValid());
     QVERIFY(compositorToggledSpy.wait());
     QVERIFY(effects);
 }
@@ -97,7 +96,6 @@ void DontCrashCancelAnimationFromAnimationEndedTest::testScript()
 
     // wait for the window to be passed to Deleted
     QSignalSpy windowDeletedSpy(window, &Window::windowClosed);
-    QVERIFY(windowDeletedSpy.isValid());
 
     surface.reset();
 

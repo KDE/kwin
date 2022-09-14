@@ -43,7 +43,6 @@ void ScreenEdgeClientShowTest::initTestCase()
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
@@ -125,7 +124,6 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11()
     xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(window);
@@ -135,7 +133,6 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11()
     QVERIFY(!window->isHiddenInternal());
 
     QSignalSpy effectsWindowAdded(effects, &EffectsHandler::windowAdded);
-    QVERIFY(effectsWindowAdded.isValid());
     QVERIFY(effectsWindowAdded.wait());
 
     // now try to hide
@@ -144,16 +141,13 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11()
     xcb_flush(c.get());
 
     QSignalSpy effectsWindowHiddenSpy(effects, &EffectsHandler::windowHidden);
-    QVERIFY(effectsWindowHiddenSpy.isValid());
     QSignalSpy clientHiddenSpy(window, &X11Window::windowHidden);
-    QVERIFY(clientHiddenSpy.isValid());
     QVERIFY(clientHiddenSpy.wait());
     QVERIFY(window->isHiddenInternal());
     QCOMPARE(effectsWindowHiddenSpy.count(), 1);
 
     // now trigger the edge
     QSignalSpy effectsWindowShownSpy(effects, &EffectsHandler::windowShown);
-    QVERIFY(effectsWindowShownSpy.isValid());
     QFETCH(QPoint, triggerPos);
     Cursors::self()->mouse()->setPos(triggerPos);
     QVERIFY(!window->isHiddenInternal());
@@ -177,7 +171,6 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11()
 
     // destroy window again
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
     xcb_unmap_window(c.get(), windowId);
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());
@@ -229,7 +222,6 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowX11Touch()
     xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(window);
@@ -239,7 +231,6 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowX11Touch()
     QVERIFY(!window->isHiddenInternal());
 
     QSignalSpy effectsWindowAdded(effects, &EffectsHandler::windowAdded);
-    QVERIFY(effectsWindowAdded.isValid());
     QVERIFY(effectsWindowAdded.wait());
 
     // now try to hide
@@ -248,16 +239,13 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowX11Touch()
     xcb_flush(c.get());
 
     QSignalSpy effectsWindowHiddenSpy(effects, &EffectsHandler::windowHidden);
-    QVERIFY(effectsWindowHiddenSpy.isValid());
     QSignalSpy clientHiddenSpy(window, &X11Window::windowHidden);
-    QVERIFY(clientHiddenSpy.isValid());
     QVERIFY(clientHiddenSpy.wait());
     QVERIFY(window->isHiddenInternal());
     QCOMPARE(effectsWindowHiddenSpy.count(), 1);
 
     // now trigger the edge
     QSignalSpy effectsWindowShownSpy(effects, &EffectsHandler::windowShown);
-    QVERIFY(effectsWindowShownSpy.isValid());
     quint32 timestamp = 0;
     QFETCH(QPoint, touchDownPos);
     QFETCH(QPoint, targetPos);
@@ -270,7 +258,6 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowX11Touch()
 
     // destroy window again
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
     xcb_unmap_window(c.get(), windowId);
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());

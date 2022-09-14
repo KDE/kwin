@@ -49,7 +49,6 @@ void ActivationTest::initTestCase()
     qRegisterMetaType<Window *>();
 
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
@@ -371,7 +370,6 @@ void ActivationTest::testSwitchToWindowMaximized()
     workspace()->slotWindowMaximize();
     QVERIFY(surfaceConfigureRequestedSpy1.wait());
     QSignalSpy frameGeometryChangedSpy1(window1, &Window::frameGeometryChanged);
-    QVERIFY(frameGeometryChangedSpy1.isValid());
     shellSurface1->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy1.last().at(0).value<quint32>());
     Test::render(surface1.get(), toplevelConfigureRequestedSpy1.last().at(0).toSize(), Qt::red);
     QVERIFY(frameGeometryChangedSpy1.wait());
@@ -387,7 +385,6 @@ void ActivationTest::testSwitchToWindowMaximized()
     workspace()->slotWindowMaximize();
     QVERIFY(surfaceConfigureRequestedSpy2.wait());
     QSignalSpy frameGeometryChangedSpy2(window2, &Window::frameGeometryChanged);
-    QVERIFY(frameGeometryChangedSpy2.isValid());
     shellSurface2->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy2.last().at(0).value<quint32>());
     Test::render(surface2.get(), toplevelConfigureRequestedSpy2.last().at(0).toSize(), Qt::red);
     QVERIFY(frameGeometryChangedSpy2.wait());
@@ -458,7 +455,6 @@ void ActivationTest::testSwitchToWindowFullScreen()
     workspace()->slotWindowFullScreen();
     QVERIFY(surfaceConfigureRequestedSpy1.wait());
     QSignalSpy frameGeometryChangedSpy1(window1, &Window::frameGeometryChanged);
-    QVERIFY(frameGeometryChangedSpy1.isValid());
     shellSurface1->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy1.last().at(0).value<quint32>());
     Test::render(surface1.get(), toplevelConfigureRequestedSpy1.last().at(0).toSize(), Qt::red);
     QVERIFY(frameGeometryChangedSpy1.wait());
@@ -474,7 +470,6 @@ void ActivationTest::testSwitchToWindowFullScreen()
     workspace()->slotWindowFullScreen();
     QVERIFY(surfaceConfigureRequestedSpy2.wait());
     QSignalSpy frameGeometryChangedSpy2(window2, &Window::frameGeometryChanged);
-    QVERIFY(frameGeometryChangedSpy2.isValid());
     shellSurface2->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy2.last().at(0).value<quint32>());
     Test::render(surface2.get(), toplevelConfigureRequestedSpy2.last().at(0).toSize(), Qt::red);
     QVERIFY(frameGeometryChangedSpy2.wait());

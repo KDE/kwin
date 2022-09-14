@@ -42,7 +42,6 @@ void XWaylandInputTest::initTestCase()
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
@@ -132,9 +131,7 @@ void XWaylandInputTest::testPointerEnterLeaveSsd()
     }
     X11EventReaderHelper eventReader(c.get());
     QSignalSpy enteredSpy(&eventReader, &X11EventReaderHelper::entered);
-    QVERIFY(enteredSpy.isValid());
     QSignalSpy leftSpy(&eventReader, &X11EventReaderHelper::left);
-    QVERIFY(leftSpy.isValid());
     // atom for the screenedge show hide functionality
     Xcb::Atom atom(QByteArrayLiteral("_KDE_NET_WM_SCREEN_EDGE_SHOW"), false, c.get());
 
@@ -159,7 +156,6 @@ void XWaylandInputTest::testPointerEnterLeaveSsd()
     xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(window);
@@ -187,7 +183,6 @@ void XWaylandInputTest::testPointerEnterLeaveSsd()
 
     // destroy window again
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
     xcb_unmap_window(c.get(), windowId);
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());
@@ -210,9 +205,7 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
 
     X11EventReaderHelper eventReader(c.get());
     QSignalSpy enteredSpy(&eventReader, &X11EventReaderHelper::entered);
-    QVERIFY(enteredSpy.isValid());
     QSignalSpy leftSpy(&eventReader, &X11EventReaderHelper::left);
-    QVERIFY(leftSpy.isValid());
 
     // Extents of the client-side drop-shadow.
     NETStrut clientFrameExtent;
@@ -248,7 +241,6 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
     xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(window);
@@ -277,7 +269,6 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
 
     // Destroy the window.
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
     xcb_unmap_window(c.get(), windowId);
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());

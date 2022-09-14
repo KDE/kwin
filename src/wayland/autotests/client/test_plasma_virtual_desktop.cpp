@@ -84,7 +84,6 @@ void TestVirtualDesktop::init()
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
     QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
-    QVERIFY(connectedSpy.isValid());
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -101,13 +100,10 @@ void TestVirtualDesktop::init()
 
     Registry registry;
     QSignalSpy compositorSpy(&registry, &Registry::compositorAnnounced);
-    QVERIFY(compositorSpy.isValid());
 
     QSignalSpy plasmaVirtualDesktopManagementSpy(&registry, &Registry::plasmaVirtualDesktopManagementAnnounced);
-    QVERIFY(plasmaVirtualDesktopManagementSpy.isValid());
 
     QSignalSpy windowManagementSpy(&registry, &Registry::plasmaWindowManagementAnnounced);
-    QVERIFY(windowManagementSpy.isValid());
 
     QVERIFY(!registry.eventQueue());
     registry.setEventQueue(m_queue);
@@ -135,7 +131,6 @@ void TestVirtualDesktop::init()
         registry.createPlasmaWindowManagement(windowManagementSpy.first().first().value<quint32>(), windowManagementSpy.first().last().value<quint32>(), this);
 
     QSignalSpy windowSpy(m_windowManagement, &PlasmaWindowManagement::windowCreated);
-    QVERIFY(windowSpy.isValid());
     m_windowInterface = m_windowManagementInterface->createWindow(this, QUuid::createUuid());
     m_windowInterface->setPid(1337);
 
@@ -272,7 +267,6 @@ void TestVirtualDesktop::testConnectNewClient()
     registry.setup();
 
     QSignalSpy plasmaVirtualDesktopManagementSpy(&registry, &Registry::plasmaVirtualDesktopManagementAnnounced);
-    QVERIFY(plasmaVirtualDesktopManagementSpy.isValid());
 
     QVERIFY(plasmaVirtualDesktopManagementSpy.wait());
 

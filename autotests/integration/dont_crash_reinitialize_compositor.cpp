@@ -47,7 +47,6 @@ void DontCrashReinitializeCompositorTest::initTestCase()
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
@@ -130,7 +129,6 @@ void DontCrashReinitializeCompositorTest::testReinitializeCompositor()
 
     // Close the test window.
     QSignalSpy windowClosedSpy(window, &Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
     shellSurface.reset();
     surface.reset();
     QVERIFY(windowClosedSpy.wait());

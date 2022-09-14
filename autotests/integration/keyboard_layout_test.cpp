@@ -42,8 +42,6 @@ public:
         : layoutsReconfiguredSpy(this, &KeyboardLayoutTest::layoutListChanged)
         , layoutChangedSpy(this, &KeyboardLayoutTest::layoutChanged)
     {
-        QVERIFY(layoutsReconfiguredSpy.isValid());
-        QVERIFY(layoutChangedSpy.isValid());
 
         QVERIFY(QDBusConnection::sessionBus().connect(QStringLiteral("org.kde.keyboard"), QStringLiteral("/Layouts"), QStringLiteral("org.kde.KeyboardLayouts"), QStringLiteral("layoutListChanged"), this, SIGNAL(layoutListChanged())));
         QVERIFY(QDBusConnection::sessionBus().connect(QStringLiteral("org.kde.keyboard"), QStringLiteral("/Layouts"), QStringLiteral("org.kde.KeyboardLayouts"), QStringLiteral("layoutChanged"), this, SIGNAL(layoutChanged(uint))));
@@ -134,7 +132,6 @@ void KeyboardLayoutTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
 
@@ -393,7 +390,6 @@ void KeyboardLayoutTest::testVirtualDesktopPolicy()
 
     // check there are no more layouts left in config than the last actual non-default layouts number
     QSignalSpy deletedDesktopSpy(deletedDesktop, &VirtualDesktop::aboutToBeDestroyed);
-    QVERIFY(deletedDesktopSpy.isValid());
     QVERIFY(deletedDesktopSpy.wait());
     resetLayouts();
     QCOMPARE(layoutGroup.keyList().filter(QStringLiteral("LayoutDefault")).count(), 1);

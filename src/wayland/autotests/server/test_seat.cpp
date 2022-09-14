@@ -38,7 +38,6 @@ void TestWaylandServerSeat::testCapabilities()
     QVERIFY(!seat->hasTouch());
 
     QSignalSpy keyboardSpy(seat, &SeatInterface::hasKeyboardChanged);
-    QVERIFY(keyboardSpy.isValid());
     seat->setHasKeyboard(true);
     QCOMPARE(keyboardSpy.count(), 1);
     QVERIFY(keyboardSpy.last().first().toBool());
@@ -51,7 +50,6 @@ void TestWaylandServerSeat::testCapabilities()
     QCOMPARE(keyboardSpy.count(), 2);
 
     QSignalSpy pointerSpy(seat, &SeatInterface::hasPointerChanged);
-    QVERIFY(pointerSpy.isValid());
     seat->setHasPointer(true);
     QCOMPARE(pointerSpy.count(), 1);
     QVERIFY(pointerSpy.last().first().toBool());
@@ -64,7 +62,6 @@ void TestWaylandServerSeat::testCapabilities()
     QCOMPARE(pointerSpy.count(), 2);
 
     QSignalSpy touchSpy(seat, &SeatInterface::hasTouchChanged);
-    QVERIFY(touchSpy.isValid());
     seat->setHasTouch(true);
     QCOMPARE(touchSpy.count(), 1);
     QVERIFY(touchSpy.last().first().toBool());
@@ -86,7 +83,6 @@ void TestWaylandServerSeat::testName()
     QCOMPARE(seat->name(), QString());
 
     QSignalSpy nameSpy(seat, &SeatInterface::nameChanged);
-    QVERIFY(nameSpy.isValid());
     const QString name = QStringLiteral("foobar");
     seat->setName(name);
     QCOMPARE(seat->name(), name);
@@ -135,7 +131,6 @@ void TestWaylandServerSeat::testPointerPos()
     SeatInterface *seat = new SeatInterface(&display, &display);
     seat->setHasPointer(true);
     QSignalSpy seatPosSpy(seat, &SeatInterface::pointerPosChanged);
-    QVERIFY(seatPosSpy.isValid());
 
     QCOMPARE(seat->pointerPos(), QPointF());
 

@@ -43,7 +43,6 @@ void DontCrashAuroraeDestroyDecoTest::initTestCase()
     qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
     qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
@@ -96,7 +95,6 @@ void DontCrashAuroraeDestroyDecoTest::testBorderlessMaximizedWindows()
 
     // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
@@ -117,7 +115,6 @@ void DontCrashAuroraeDestroyDecoTest::testBorderlessMaximizedWindows()
 
     // simulate click on maximize button
     QSignalSpy maximizedStateChangedSpy(window, static_cast<void (Window::*)(KWin::Window *, MaximizeMode)>(&Window::clientMaximizedStateChanged));
-    QVERIFY(maximizedStateChangedSpy.isValid());
     quint32 timestamp = 1;
     Test::pointerMotion(window->frameGeometry().topLeft() + scenePoint.toPoint(), timestamp++);
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);
@@ -133,7 +130,6 @@ void DontCrashAuroraeDestroyDecoTest::testBorderlessMaximizedWindows()
     xcb_disconnect(c);
 
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
     QVERIFY(windowClosedSpy.wait());
 }
 

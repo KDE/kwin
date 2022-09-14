@@ -47,7 +47,6 @@ void ToplevelOpenCloseAnimationTest::initTestCase()
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
 
@@ -127,7 +126,6 @@ void ToplevelOpenCloseAnimationTest::testAnimateToplevels()
     // Close the test window, the effect should start animating the disappearing
     // of the window.
     QSignalSpy windowClosedSpy(window, &Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
     shellSurface.reset();
     surface.reset();
     QVERIFY(windowClosedSpy.wait());
@@ -192,7 +190,6 @@ void ToplevelOpenCloseAnimationTest::testDontAnimatePopups()
 
     // Destroy the popup, it should not be animated.
     QSignalSpy popupClosedSpy(popup, &Window::windowClosed);
-    QVERIFY(popupClosedSpy.isValid());
     popupShellSurface.reset();
     popupSurface.reset();
     QVERIFY(popupClosedSpy.wait());

@@ -872,7 +872,6 @@ void TestLibinputDevice::testPointerAcceleration()
     QCOMPARE(dbusProperty<qreal>(d.sysName(), "pointerAcceleration"), accel);
 
     QSignalSpy pointerAccelChangedSpy(&d, &Device::pointerAccelerationChanged);
-    QVERIFY(pointerAccelChangedSpy.isValid());
     QFETCH(qreal, setAccel);
     d.setPointerAcceleration(setAccel);
     QTEST(d.pointerAcceleration(), "expectedAccel");
@@ -913,7 +912,6 @@ void TestLibinputDevice::testLeftHanded()
     QCOMPARE(dbusProperty<bool>(d.sysName(), "leftHanded"), supported && initValue);
 
     QSignalSpy leftHandedChangedSpy(&d, &Device::leftHandedChanged);
-    QVERIFY(leftHandedChangedSpy.isValid());
     QFETCH(bool, setValue);
     d.setLeftHanded(setValue);
     QFETCH(bool, expectedValue);
@@ -1051,7 +1049,6 @@ void TestLibinputDevice::testEnabled()
     QCOMPARE(dbusProperty<bool>(d.sysName(), "enabled"), !supported || initValue);
 
     QSignalSpy enabledChangedSpy(&d, &Device::enabledChanged);
-    QVERIFY(enabledChangedSpy.isValid());
     QFETCH(bool, setValue);
     d.setEnabled(setValue);
     QFETCH(bool, expectedValue);
@@ -1093,7 +1090,6 @@ void TestLibinputDevice::testTapToClick()
     QCOMPARE(dbusProperty<bool>(d.sysName(), "tapToClick"), initValue);
 
     QSignalSpy tapToClickChangedSpy(&d, &Device::tapToClickChanged);
-    QVERIFY(tapToClickChangedSpy.isValid());
     QFETCH(bool, setValue);
     d.setTapToClick(setValue);
     QFETCH(bool, expectedValue);
@@ -1150,7 +1146,6 @@ void TestLibinputDevice::testTapAndDrag()
     QCOMPARE(dbusProperty<bool>(d.sysName(), "tapAndDrag"), initValue);
 
     QSignalSpy tapAndDragChangedSpy(&d, &Device::tapAndDragChanged);
-    QVERIFY(tapAndDragChangedSpy.isValid());
     QFETCH(bool, setValue);
     d.setTapAndDrag(setValue);
     QFETCH(bool, expectedValue);
@@ -1207,7 +1202,6 @@ void TestLibinputDevice::testTapDragLock()
     QCOMPARE(dbusProperty<bool>(d.sysName(), "tapDragLock"), initValue);
 
     QSignalSpy tapDragLockChangedSpy(&d, &Device::tapDragLockChanged);
-    QVERIFY(tapDragLockChangedSpy.isValid());
     QFETCH(bool, setValue);
     d.setTapDragLock(setValue);
     QFETCH(bool, expectedValue);
@@ -1249,7 +1243,6 @@ void TestLibinputDevice::testMiddleEmulation()
     QCOMPARE(dbusProperty<bool>(d.sysName(), "middleEmulation"), initValue);
 
     QSignalSpy middleEmulationChangedSpy(&d, &Device::middleEmulationChanged);
-    QVERIFY(middleEmulationChangedSpy.isValid());
     QFETCH(bool, setValue);
     d.setMiddleEmulation(setValue);
     QFETCH(bool, expectedValue);
@@ -1292,7 +1285,6 @@ void TestLibinputDevice::testNaturalScroll()
     QCOMPARE(dbusProperty<bool>(d.sysName(), "naturalScroll"), initValue);
 
     QSignalSpy naturalScrollChangedSpy(&d, &Device::naturalScrollChanged);
-    QVERIFY(naturalScrollChangedSpy.isValid());
     QFETCH(bool, setValue);
     d.setNaturalScroll(setValue);
     QFETCH(bool, expectedValue);
@@ -1314,7 +1306,6 @@ void TestLibinputDevice::testScrollFactor()
     QCOMPARE(dbusProperty<qreal>(d.sysName(), "scrollFactor"), initValue);
 
     QSignalSpy scrollFactorChangedSpy(&d, &Device::scrollFactorChanged);
-    QVERIFY(scrollFactorChangedSpy.isValid());
 
     qreal expectedValue = 2.0;
 
@@ -1364,7 +1355,6 @@ void TestLibinputDevice::testScrollTwoFinger()
     QCOMPARE(dbusProperty<bool>(d.sysName(), "scrollEdge"), otherValue);
 
     QSignalSpy scrollMethodChangedSpy(&d, &Device::scrollMethodChanged);
-    QVERIFY(scrollMethodChangedSpy.isValid());
     QFETCH(bool, setValue);
     d.setScrollTwoFinger(setValue);
     QFETCH(bool, expectedValue);
@@ -1413,7 +1403,6 @@ void TestLibinputDevice::testScrollEdge()
     QCOMPARE(dbusProperty<bool>(d.sysName(), "scrollTwoFinger"), otherValue);
 
     QSignalSpy scrollMethodChangedSpy(&d, &Device::scrollMethodChanged);
-    QVERIFY(scrollMethodChangedSpy.isValid());
     QFETCH(bool, setValue);
     d.setScrollEdge(setValue);
     QFETCH(bool, expectedValue);
@@ -1462,7 +1451,6 @@ void TestLibinputDevice::testScrollButtonDown()
     QCOMPARE(dbusProperty<bool>(d.sysName(), "scrollTwoFinger"), otherValue);
 
     QSignalSpy scrollMethodChangedSpy(&d, &Device::scrollMethodChanged);
-    QVERIFY(scrollMethodChangedSpy.isValid());
     QFETCH(bool, setValue);
     d.setScrollOnButtonDown(setValue);
     QFETCH(bool, expectedValue);
@@ -1502,7 +1490,6 @@ void TestLibinputDevice::testScrollButton()
     QCOMPARE(dbusProperty<quint32>(d.sysName(), "scrollButton"), initValue);
 
     QSignalSpy scrollButtonChangedSpy(&d, &Device::scrollButtonChanged);
-    QVERIFY(scrollButtonChangedSpy.isValid());
     QFETCH(quint32, setValue);
     d.setScrollButton(setValue);
     QFETCH(quint32, expectedValue);
@@ -1593,7 +1580,6 @@ void TestLibinputDevice::testLmrTapButtonMap()
     QCOMPARE(d.property("lmrTapButtonMap").toBool(), initValue);
 
     QSignalSpy tapButtonMapChangedSpy(&d, &Device::tapButtonMapChanged);
-    QVERIFY(tapButtonMapChangedSpy.isValid());
     QFETCH(bool, setValue);
     d.setLmrTapButtonMap(setValue);
     QFETCH(bool, expectedValue);
@@ -1635,7 +1621,6 @@ void TestLibinputDevice::testDisableWhileTyping()
     QCOMPARE(dbusProperty<bool>(d.sysName(), "disableWhileTyping"), initValue);
 
     QSignalSpy disableWhileTypingChangedSpy(&d, &Device::disableWhileTypingChanged);
-    QVERIFY(disableWhileTypingChangedSpy.isValid());
     QFETCH(bool, setValue);
     d.setDisableWhileTyping(setValue);
     QFETCH(bool, expectedValue);

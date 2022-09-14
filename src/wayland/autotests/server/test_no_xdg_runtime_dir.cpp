@@ -30,7 +30,6 @@ void NoXdgRuntimeDirTest::testCreate()
     const QString testSocketName = QStringLiteral("kwayland-test-no-xdg-runtime-dir-0");
     KWaylandServer::Display display;
     QSignalSpy runningSpy(&display, &KWaylandServer::Display::runningChanged);
-    QVERIFY(runningSpy.isValid());
     QVERIFY(!display.addSocketName(testSocketName));
     display.start();
 

@@ -59,7 +59,6 @@ void SceneQPainterTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
 
@@ -107,7 +106,6 @@ void SceneQPainterTest::testStartFrame()
     QVERIFY(scene);
     QCOMPARE(kwinApp()->platform()->selectedCompositor(), QPainterCompositing);
     QSignalSpy frameRenderedSpy(scene, &Scene::frameRendered);
-    QVERIFY(frameRenderedSpy.isValid());
     QVERIFY(frameRenderedSpy.wait());
     // now let's render a reference image for comparison
     QImage referenceImage(QSize(1280, 1024), QImage::Format_RGB32);
@@ -128,7 +126,6 @@ void SceneQPainterTest::testCursorMoving()
     auto scene = Compositor::self()->scene();
     QVERIFY(scene);
     QSignalSpy frameRenderedSpy(scene, &Scene::frameRendered);
-    QVERIFY(frameRenderedSpy.isValid());
     KWin::Cursors::self()->mouse()->setPos(0, 0);
     QVERIFY(frameRenderedSpy.wait());
     KWin::Cursors::self()->mouse()->setPos(10, 0);
@@ -168,7 +165,6 @@ void SceneQPainterTest::testWindow()
     auto scene = KWin::Compositor::self()->scene();
     QVERIFY(scene);
     QSignalSpy frameRenderedSpy(scene, &Scene::frameRendered);
-    QVERIFY(frameRenderedSpy.isValid());
 
     // now let's map the window
     QVERIFY(Test::renderAndWaitForShown(s.get(), QSize(200, 300), Qt::blue));
@@ -210,12 +206,10 @@ void SceneQPainterTest::testWindowScaled()
     std::unique_ptr<Test::XdgToplevel> ss(Test::createXdgToplevelSurface(s.get()));
     std::unique_ptr<Pointer> p(Test::waylandSeat()->createPointer());
     QSignalSpy pointerEnteredSpy(p.get(), &Pointer::entered);
-    QVERIFY(pointerEnteredSpy.isValid());
 
     auto scene = KWin::Compositor::self()->scene();
     QVERIFY(scene);
     QSignalSpy frameRenderedSpy(scene, &Scene::frameRendered);
-    QVERIFY(frameRenderedSpy.isValid());
 
     // now let's set a cursor image
     std::unique_ptr<KWayland::Client::Surface> cs(Test::createSurface());
@@ -266,7 +260,6 @@ void SceneQPainterTest::testCompositorRestart()
     auto oldScene = KWin::Compositor::self()->scene();
     QVERIFY(oldScene);
     QSignalSpy sceneCreatedSpy(KWin::Compositor::self(), &KWin::Compositor::sceneCreated);
-    QVERIFY(sceneCreatedSpy.isValid());
     KWin::Compositor::self()->reinitialize();
     if (sceneCreatedSpy.isEmpty()) {
         QVERIFY(sceneCreatedSpy.wait());
@@ -278,7 +271,6 @@ void SceneQPainterTest::testCompositorRestart()
     // this should directly trigger a frame
     KWin::Compositor::self()->scene()->addRepaintFull();
     QSignalSpy frameRenderedSpy(scene, &Scene::frameRendered);
-    QVERIFY(frameRenderedSpy.isValid());
     QVERIFY(frameRenderedSpy.wait());
 
     // render reference image
@@ -330,7 +322,6 @@ void SceneQPainterTest::testX11Window()
 
     // create X11 window
     QSignalSpy windowAddedSpy(effects, &EffectsHandler::windowAdded);
-    QVERIFY(windowAddedSpy.isValid());
 
     // create an xcb window
     std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
@@ -354,7 +345,6 @@ void SceneQPainterTest::testX11Window()
 
     // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
@@ -376,7 +366,6 @@ void SceneQPainterTest::testX11Window()
     // this should directly trigger a frame
     KWin::Compositor::self()->scene()->addRepaintFull();
     QSignalSpy frameRenderedSpy(scene, &Scene::frameRendered);
-    QVERIFY(frameRenderedSpy.isValid());
     QVERIFY(frameRenderedSpy.wait());
 
     const QPointF startPos = window->pos() + window->clientPos();
@@ -388,7 +377,6 @@ void SceneQPainterTest::testX11Window()
     xcb_flush(c.get());
 
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
     QVERIFY(windowClosedSpy.wait());
     xcb_destroy_window(c.get(), windowId);
     c.reset();

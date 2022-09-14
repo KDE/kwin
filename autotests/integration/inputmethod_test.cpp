@@ -84,7 +84,6 @@ void InputMethodTest::initTestCase()
     qRegisterMetaType<KWayland::Client::Output *>();
 
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
@@ -118,7 +117,6 @@ void InputMethodTest::testOpenClose()
 {
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QSignalSpy windowRemovedSpy(workspace(), &Workspace::windowRemoved);
-    QVERIFY(windowAddedSpy.isValid());
 
     // Create an xdg_toplevel surface and wait for the compositor to catch up.
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -128,7 +126,6 @@ void InputMethodTest::testOpenClose()
     QVERIFY(window->isActive());
     QCOMPARE(window->frameGeometry().size(), QSize(1280, 1024));
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
-    QVERIFY(frameGeometryChangedSpy.isValid());
     QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
 
@@ -239,7 +236,6 @@ void InputMethodTest::testHidePanel()
     touchNow();
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QSignalSpy windowRemovedSpy(workspace(), &Workspace::windowRemoved);
-    QVERIFY(windowAddedSpy.isValid());
 
     QSignalSpy activateSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
     std::unique_ptr<TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
@@ -281,7 +277,6 @@ void InputMethodTest::testSwitchFocusedSurfaces()
 
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QSignalSpy windowRemovedSpy(workspace(), &Workspace::windowRemoved);
-    QVERIFY(windowAddedSpy.isValid());
 
     QSignalSpy activateSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
     std::unique_ptr<TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));

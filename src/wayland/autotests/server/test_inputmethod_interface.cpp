@@ -307,7 +307,6 @@ void TestInputMethodInterface::testActivate()
 {
     QVERIFY(m_inputMethodIface);
     QSignalSpy inputMethodActivateSpy(m_inputMethod, &InputMethodV1::activated);
-    QVERIFY(inputMethodActivateSpy.isValid());
     QSignalSpy inputMethodDeactivateSpy(m_inputMethod, &InputMethodV1::deactivated);
 
     // before sending activate the context should be null
@@ -330,7 +329,6 @@ void TestInputMethodInterface::testContext()
 {
     QVERIFY(m_inputMethodIface);
     QSignalSpy inputMethodActivateSpy(m_inputMethod, &InputMethodV1::activated);
-    QVERIFY(inputMethodActivateSpy.isValid());
     QSignalSpy inputMethodDeactivateSpy(m_inputMethod, &InputMethodV1::deactivated);
 
     // before sending activate the context should be null
@@ -351,7 +349,6 @@ void TestInputMethodInterface::testContext()
 
     // commit some text
     QSignalSpy commitStringSpy(serverContext, &KWaylandServer::InputMethodContextV1Interface::commitString);
-    QVERIFY(commitStringSpy.isValid());
     imContext->commit_string(serial, "hello");
     QVERIFY(commitStringSpy.wait());
     QCOMPARE(commitStringSpy.count(), serial);
@@ -361,7 +358,6 @@ void TestInputMethodInterface::testContext()
 
     // preedit styling event
     QSignalSpy preeditStylingSpy(serverContext, &KWaylandServer::InputMethodContextV1Interface::preeditStyling);
-    QVERIFY(preeditStylingSpy.isValid());
     // protocol does not document 3rd argument mean in much details (styling)
     imContext->preedit_styling(0, 5, 1);
     QVERIFY(preeditStylingSpy.wait());
@@ -372,7 +368,6 @@ void TestInputMethodInterface::testContext()
 
     // preedit cursor event
     QSignalSpy preeditCursorSpy(serverContext, &KWaylandServer::InputMethodContextV1Interface::preeditCursor);
-    QVERIFY(preeditCursorSpy.isValid());
     imContext->preedit_cursor(3);
     QVERIFY(preeditCursorSpy.wait());
     QCOMPARE(preeditCursorSpy.count(), 1);
@@ -380,7 +375,6 @@ void TestInputMethodInterface::testContext()
 
     // commit preedit_string
     QSignalSpy preeditStringSpy(serverContext, &KWaylandServer::InputMethodContextV1Interface::preeditString);
-    QVERIFY(preeditStringSpy.isValid());
     imContext->preedit_string(serial, "hello", "kde");
     QVERIFY(preeditStringSpy.wait());
     QCOMPARE(preeditStringSpy.count(), 1);
@@ -391,7 +385,6 @@ void TestInputMethodInterface::testContext()
 
     // delete surrounding text
     QSignalSpy deleteSurroundingSpy(serverContext, &KWaylandServer::InputMethodContextV1Interface::deleteSurroundingText);
-    QVERIFY(deleteSurroundingSpy.isValid());
     imContext->delete_surrounding_text(0, 5);
     QVERIFY(deleteSurroundingSpy.wait());
     QCOMPARE(deleteSurroundingSpy.count(), 1);
@@ -400,7 +393,6 @@ void TestInputMethodInterface::testContext()
 
     // set cursor position
     QSignalSpy cursorPositionSpy(serverContext, &KWaylandServer::InputMethodContextV1Interface::cursorPosition);
-    QVERIFY(cursorPositionSpy.isValid());
     imContext->cursor_position(2, 4);
     QVERIFY(cursorPositionSpy.wait());
     QCOMPARE(cursorPositionSpy.count(), 1);
@@ -409,7 +401,6 @@ void TestInputMethodInterface::testContext()
 
     // invoke action
     QSignalSpy invokeActionSpy(imContext, &InputMethodV1Context::invoke_action);
-    QVERIFY(invokeActionSpy.isValid());
     serverContext->sendInvokeAction(3, 5);
     QVERIFY(invokeActionSpy.wait());
     QCOMPARE(invokeActionSpy.count(), 1);
@@ -418,7 +409,6 @@ void TestInputMethodInterface::testContext()
 
     // preferred language
     QSignalSpy preferredLanguageSpy(imContext, &InputMethodV1Context::preferred_language);
-    QVERIFY(preferredLanguageSpy.isValid());
     serverContext->sendPreferredLanguage("gu_IN");
     QVERIFY(preferredLanguageSpy.wait());
     QCOMPARE(preferredLanguageSpy.count(), 1);
@@ -426,7 +416,6 @@ void TestInputMethodInterface::testContext()
 
     // surrounding text
     QSignalSpy surroundingTextSpy(imContext, &InputMethodV1Context::surrounding_text);
-    QVERIFY(surroundingTextSpy.isValid());
     serverContext->sendSurroundingText("Hello Plasma!", 2, 4);
     QVERIFY(surroundingTextSpy.wait());
     QCOMPARE(surroundingTextSpy.count(), 1);
@@ -436,7 +425,6 @@ void TestInputMethodInterface::testContext()
 
     // reset
     QSignalSpy resetSpy(imContext, &InputMethodV1Context::reset);
-    QVERIFY(resetSpy.isValid());
     serverContext->sendReset();
     QVERIFY(resetSpy.wait());
     QCOMPARE(resetSpy.count(), 1);
@@ -453,7 +441,6 @@ void TestInputMethodInterface::testGrabkeyboard()
 {
     QVERIFY(m_inputMethodIface);
     QSignalSpy inputMethodActivateSpy(m_inputMethod, &InputMethodV1::activated);
-    QVERIFY(inputMethodActivateSpy.isValid());
     QSignalSpy inputMethodDeactivateSpy(m_inputMethod, &InputMethodV1::deactivated);
 
     // before sending activate the context should be null
@@ -471,13 +458,11 @@ void TestInputMethodInterface::testGrabkeyboard()
     QVERIFY(imContext);
 
     QSignalSpy keyEventSpy(serverContext, &KWaylandServer::InputMethodContextV1Interface::key);
-    QVERIFY(keyEventSpy.isValid());
     imContext->key(0, 123, 56, 1);
     QEXPECT_FAIL("", "We should be not get key event if keyboard is not grabbed", Continue);
     QVERIFY(!keyEventSpy.wait(200));
 
     QSignalSpy modifierEventSpy(serverContext, &KWaylandServer::InputMethodContextV1Interface::modifiers);
-    QVERIFY(modifierEventSpy.isValid());
     imContext->modifiers(1234, 0, 0, 0, 0);
     QEXPECT_FAIL("", "We should be not get modifiers event if keyboard is not grabbed", Continue);
     QVERIFY(!modifierEventSpy.wait(200));
@@ -522,7 +507,6 @@ void TestInputMethodInterface::testContentHints()
 {
     QVERIFY(m_inputMethodIface);
     QSignalSpy inputMethodActivateSpy(m_inputMethod, &InputMethodV1::activated);
-    QVERIFY(inputMethodActivateSpy.isValid());
     QSignalSpy inputMethodDeactivateSpy(m_inputMethod, &InputMethodV1::deactivated);
 
     // before sending activate the context should be null
@@ -540,7 +524,6 @@ void TestInputMethodInterface::testContentHints()
     QVERIFY(imContext);
 
     QSignalSpy contentTypeChangedSpy(imContext, &InputMethodV1Context::content_type_changed);
-    QVERIFY(contentTypeChangedSpy.isValid());
 
     QFETCH(KWaylandServer::TextInputContentHints, serverHints);
     serverContext->sendContentType(serverHints, KWaylandServer::TextInputContentPurpose::Normal);
@@ -582,7 +565,6 @@ void TestInputMethodInterface::testContentPurpose()
 {
     QVERIFY(m_inputMethodIface);
     QSignalSpy inputMethodActivateSpy(m_inputMethod, &InputMethodV1::activated);
-    QVERIFY(inputMethodActivateSpy.isValid());
     QSignalSpy inputMethodDeactivateSpy(m_inputMethod, &InputMethodV1::deactivated);
 
     // before sending activate the context should be null
@@ -600,7 +582,6 @@ void TestInputMethodInterface::testContentPurpose()
     QVERIFY(imContext);
 
     QSignalSpy contentTypeChangedSpy(imContext, &InputMethodV1Context::content_type_changed);
-    QVERIFY(contentTypeChangedSpy.isValid());
 
     QFETCH(KWaylandServer::TextInputContentPurpose, serverPurpose);
     serverContext->sendContentType(KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::None), serverPurpose);

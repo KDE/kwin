@@ -101,7 +101,6 @@ void TestScreencastV1Interface::initTestCase()
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
     QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
-    QVERIFY(connectedSpy.isValid());
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -119,7 +118,6 @@ void TestScreencastV1Interface::initTestCase()
     KWayland::Client::Registry registry;
 
     QSignalSpy screencastSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
-    QVERIFY(screencastSpy.isValid());
     m_screencastInterface = new KWaylandServer::ScreencastV1Interface(m_display, this);
     connect(m_screencastInterface,
             &KWaylandServer::ScreencastV1Interface::windowScreencastRequested,

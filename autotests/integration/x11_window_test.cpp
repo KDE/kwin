@@ -66,7 +66,6 @@ void X11WindowTest::initTestCase()
     qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
     kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
@@ -122,7 +121,6 @@ void X11WindowTest::testMinimumSize()
     xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(window);
@@ -195,7 +193,6 @@ void X11WindowTest::testMinimumSize()
 
     // Destroy the window.
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
     xcb_unmap_window(c.get(), windowId);
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());
@@ -230,7 +227,6 @@ void X11WindowTest::testMaximumSize()
     xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(window);
@@ -302,7 +298,6 @@ void X11WindowTest::testMaximumSize()
 
     // Destroy the window.
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
     xcb_unmap_window(c.get(), windowId);
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());
@@ -338,7 +333,6 @@ void X11WindowTest::testResizeIncrements()
     xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(window);
@@ -389,7 +383,6 @@ void X11WindowTest::testResizeIncrements()
 
     // Destroy the window.
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
     xcb_unmap_window(c.get(), windowId);
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());
@@ -424,7 +417,6 @@ void X11WindowTest::testResizeIncrementsNoBaseSize()
     xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(window);
@@ -475,7 +467,6 @@ void X11WindowTest::testResizeIncrementsNoBaseSize()
 
     // Destroy the window.
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
     xcb_unmap_window(c.get(), windowId);
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());
@@ -531,7 +522,6 @@ void X11WindowTest::testTrimCaption()
 
     // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
@@ -544,7 +534,6 @@ void X11WindowTest::testTrimCaption()
     xcb_flush(c.get());
 
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
     QVERIFY(windowClosedSpy.wait());
     xcb_destroy_window(c.get(), windowId);
     c.reset();
@@ -580,7 +569,6 @@ void X11WindowTest::testFullscreenLayerWithActiveWaylandWindow()
 
     // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
@@ -700,7 +688,6 @@ void X11WindowTest::testFocusInWithWaylandLastActiveWindow()
 
     // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
@@ -760,7 +747,6 @@ void X11WindowTest::testX11WindowId()
 
     // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
@@ -803,7 +789,6 @@ void X11WindowTest::testX11WindowId()
     xcb_unmap_window(c.get(), windowId);
     xcb_flush(c.get());
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
     QVERIFY(windowClosedSpy.wait());
 
     QCOMPARE(deletedUuid.isNull(), false);
@@ -839,7 +824,6 @@ void X11WindowTest::testCaptionChanges()
 
     // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
@@ -847,7 +831,6 @@ void X11WindowTest::testCaptionChanges()
     QCOMPARE(window->caption(), QStringLiteral("foo"));
 
     QSignalSpy captionChangedSpy(window, &X11Window::captionChanged);
-    QVERIFY(captionChangedSpy.isValid());
     info.setName("bar");
     xcb_flush(c.get());
     QVERIFY(captionChangedSpy.wait());
@@ -855,7 +838,6 @@ void X11WindowTest::testCaptionChanges()
 
     // and destroy the window again
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
     xcb_unmap_window(c.get(), windowId);
     xcb_flush(c.get());
     QVERIFY(windowClosedSpy.wait());
@@ -872,7 +854,6 @@ void X11WindowTest::testCaptionWmName()
 
     // open glxgears as that one only uses WM_NAME
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowAddedSpy.isValid());
 
     QProcess glxgears;
     glxgears.setProgram(QStringLiteral("glxgears"));
@@ -917,7 +898,6 @@ void X11WindowTest::testCaptionMultipleWindows()
     xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
@@ -950,7 +930,6 @@ void X11WindowTest::testCaptionMultipleWindows()
     QCOMPARE(QByteArray(info3.visibleIconName()), QByteArrayLiteral("foo <2>\u200E"));
 
     QSignalSpy captionChangedSpy(window2, &X11Window::captionChanged);
-    QVERIFY(captionChangedSpy.isValid());
 
     NETWinInfo info4(c.get(), w2, kwinApp()->x11RootWindow(), NET::Properties(), NET::Properties2());
     info4.setName("foobar");
@@ -994,7 +973,6 @@ void X11WindowTest::testFullscreenWindowGroups()
     xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
@@ -1055,7 +1033,6 @@ void X11WindowTest::testActivateFocusedWindow()
     QVERIFY(!xcb_connection_has_error(connection.get()));
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
 
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_size_hints_t hints;
@@ -1140,7 +1117,6 @@ void X11WindowTest::testReentrantMoveResize()
     xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);

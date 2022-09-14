@@ -51,7 +51,6 @@ void PopupOpenCloseAnimationTest::initTestCase()
     qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::InternalWindow *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
 
@@ -133,7 +132,6 @@ void PopupOpenCloseAnimationTest::testAnimatePopups()
 
     // Destroy the popup, it should not be animated.
     QSignalSpy popupClosedSpy(popup, &Window::windowClosed);
-    QVERIFY(popupClosedSpy.isValid());
     popupShellSurface.reset();
     popupSurface.reset();
     QVERIFY(popupClosedSpy.wait());
@@ -238,7 +236,6 @@ void PopupOpenCloseAnimationTest::testAnimateDecorationTooltips()
 
     // Show a decoration tooltip.
     QSignalSpy tooltipAddedSpy(workspace(), &Workspace::internalWindowAdded);
-    QVERIFY(tooltipAddedSpy.isValid());
     window->decoratedClient()->requestShowToolTip(QStringLiteral("KWin rocks!"));
     QVERIFY(tooltipAddedSpy.wait());
     InternalWindow *tooltip = tooltipAddedSpy.first().first().value<InternalWindow *>();
@@ -252,7 +249,6 @@ void PopupOpenCloseAnimationTest::testAnimateDecorationTooltips()
 
     // Hide the decoration tooltip.
     QSignalSpy tooltipClosedSpy(tooltip, &InternalWindow::windowClosed);
-    QVERIFY(tooltipClosedSpy.isValid());
     window->decoratedClient()->requestHideToolTip();
     QVERIFY(tooltipClosedSpy.wait());
     QVERIFY(effect->isActive());

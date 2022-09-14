@@ -34,7 +34,6 @@ void DontCrashGlxgearsTest::initTestCase()
 {
     qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
     kwinApp()->start();
@@ -47,7 +46,6 @@ void DontCrashGlxgearsTest::testGlxgears()
     // Let's make sure that doesn't happen anymore
 
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowAddedSpy.isValid());
 
     QProcess glxgears;
     glxgears.setProgram(QStringLiteral("glxgears"));
@@ -60,7 +58,6 @@ void DontCrashGlxgearsTest::testGlxgears()
     X11Window *glxgearsWindow = workspace()->clientList().first();
     QVERIFY(glxgearsWindow->isDecorated());
     QSignalSpy closedSpy(glxgearsWindow, &X11Window::windowClosed);
-    QVERIFY(closedSpy.isValid());
     KDecoration2::Decoration *decoration = glxgearsWindow->decoration();
     QVERIFY(decoration);
 

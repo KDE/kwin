@@ -107,9 +107,7 @@ void TestSubSurface::init()
 
     KWayland::Client::Registry registry;
     QSignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
-    QVERIFY(compositorSpy.isValid());
     QSignalSpy subCompositorSpy(&registry, &KWayland::Client::Registry::subCompositorAnnounced);
-    QVERIFY(subCompositorSpy.isValid());
     QVERIFY(!registry.eventQueue());
     registry.setEventQueue(m_queue);
     QCOMPARE(registry.eventQueue(), m_queue);
@@ -171,7 +169,6 @@ void TestSubSurface::testCreate()
     using namespace KWayland::Client;
     using namespace KWaylandServer;
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &KWaylandServer::CompositorInterface::surfaceCreated);
-    QVERIFY(surfaceCreatedSpy.isValid());
 
     // create two Surfaces
     std::unique_ptr<Surface> surface(m_compositor->createSurface());
@@ -186,7 +183,6 @@ void TestSubSurface::testCreate()
     QVERIFY(serverParentSurface);
 
     QSignalSpy subSurfaceCreatedSpy(m_subcompositorInterface, &KWaylandServer::SubCompositorInterface::subSurfaceCreated);
-    QVERIFY(subSurfaceCreatedSpy.isValid());
 
     // create subSurface for surface of parent
     std::unique_ptr<SubSurface> subSurface(m_subCompositor->createSubSurface(QPointer<Surface>(surface.get()), QPointer<Surface>(parent.get())));
@@ -213,7 +209,6 @@ void TestSubSurface::testCreate()
 
     // and let's destroy it again
     QSignalSpy destroyedSpy(serverSubSurface, &QObject::destroyed);
-    QVERIFY(destroyedSpy.isValid());
     subSurface.reset();
     QVERIFY(destroyedSpy.wait());
     QCOMPARE(serverSurface->subSurface(), QPointer<SubSurfaceInterface>());
@@ -242,7 +237,6 @@ void TestSubSurface::testMode()
     std::unique_ptr<Surface> parent(m_compositor->createSurface());
 
     QSignalSpy subSurfaceCreatedSpy(m_subcompositorInterface, &KWaylandServer::SubCompositorInterface::subSurfaceCreated);
-    QVERIFY(subSurfaceCreatedSpy.isValid());
 
     // create the SubSurface for surface of parent
     std::unique_ptr<SubSurface> subSurface(m_subCompositor->createSubSurface(QPointer<Surface>(surface.get()), QPointer<Surface>(parent.get())));
@@ -256,7 +250,6 @@ void TestSubSurface::testMode()
 
     // verify that we can change to desynchronized
     QSignalSpy modeChangedSpy(serverSubSurface, &KWaylandServer::SubSurfaceInterface::modeChanged);
-    QVERIFY(modeChangedSpy.isValid());
 
     subSurface->setMode(SubSurface::Mode::Desynchronized);
     QCOMPARE(subSurface->mode(), SubSurface::Mode::Desynchronized);
@@ -298,7 +291,6 @@ void TestSubSurface::testPosition()
     std::unique_ptr<Surface> parent(m_compositor->createSurface());
 
     QSignalSpy subSurfaceCreatedSpy(m_subcompositorInterface, &KWaylandServer::SubCompositorInterface::subSurfaceCreated);
-    QVERIFY(subSurfaceCreatedSpy.isValid());
 
     // create the SubSurface for surface of parent
     std::unique_ptr<SubSurface> subSurface(m_subCompositor->createSubSurface(QPointer<Surface>(surface.get()), QPointer<Surface>(parent.get())));
@@ -315,7 +307,6 @@ void TestSubSurface::testPosition()
     QCOMPARE(serverSubSurface->position(), QPoint());
 
     QSignalSpy positionChangedSpy(serverSubSurface, &KWaylandServer::SubSurfaceInterface::positionChanged);
-    QVERIFY(positionChangedSpy.isValid());
 
     // changing the position should not trigger a direct update on server side
     subSurface->setPosition(QPoint(10, 20));
@@ -334,7 +325,6 @@ void TestSubSurface::testPosition()
 
     // committing the parent surface should update the position
     QSignalSpy parentCommittedSpy(serverSubSurface->parentSurface(), &SurfaceInterface::committed);
-    QVERIFY(parentCommittedSpy.isValid());
     parent->commit(Surface::CommitFlag::None);
     QVERIFY(parentCommittedSpy.wait());
     QCOMPARE(positionChangedSpy.count(), 1);
@@ -353,7 +343,6 @@ void TestSubSurface::testPlaceAbove()
     std::unique_ptr<Surface> parent(m_compositor->createSurface());
 
     QSignalSpy subSurfaceCreatedSpy(m_subcompositorInterface, &KWaylandServer::SubCompositorInterface::subSurfaceCreated);
-    QVERIFY(subSurfaceCreatedSpy.isValid());
 
     // create the SubSurfaces for surface of parent
     std::unique_ptr<SubSurface> subSurface1(m_subCompositor->createSubSurface(QPointer<Surface>(surface1.get()), QPointer<Surface>(parent.get())));
@@ -456,7 +445,6 @@ void TestSubSurface::testPlaceBelow()
     std::unique_ptr<Surface> parent(m_compositor->createSurface());
 
     QSignalSpy subSurfaceCreatedSpy(m_subcompositorInterface, &KWaylandServer::SubCompositorInterface::subSurfaceCreated);
-    QVERIFY(subSurfaceCreatedSpy.isValid());
 
     // create the SubSurfaces for surface of parent
     std::unique_ptr<SubSurface> subSurface1(m_subCompositor->createSubSurface(QPointer<Surface>(surface1.get()), QPointer<Surface>(parent.get())));
@@ -559,7 +547,6 @@ void TestSubSurface::testSyncMode()
     using namespace KWaylandServer;
 
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
-    QVERIFY(surfaceCreatedSpy.isValid());
 
     std::unique_ptr<Surface> surface(m_compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
@@ -575,7 +562,6 @@ void TestSubSurface::testSyncMode()
 
     // let's damage the child surface
     QSignalSpy childDamagedSpy(childSurface, &SurfaceInterface::damaged);
-    QVERIFY(childDamagedSpy.isValid());
 
     QImage image(QSize(200, 200), QImage::Format_ARGB32_Premultiplied);
     image.fill(Qt::black);
@@ -602,7 +588,6 @@ void TestSubSurface::testSyncMode()
 
     // sending frame rendered to parent should also send it to child
     QSignalSpy frameRenderedSpy(surface.get(), &Surface::frameRendered);
-    QVERIFY(frameRenderedSpy.isValid());
     parentSurface->frameRendered(100);
     QVERIFY(frameRenderedSpy.wait());
 }
@@ -614,7 +599,6 @@ void TestSubSurface::testDeSyncMode()
     using namespace KWaylandServer;
 
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
-    QVERIFY(surfaceCreatedSpy.isValid());
 
     std::unique_ptr<Surface> surface(m_compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
@@ -630,7 +614,6 @@ void TestSubSurface::testDeSyncMode()
 
     // let's damage the child surface
     QSignalSpy childDamagedSpy(childSurface, &SurfaceInterface::damaged);
-    QVERIFY(childDamagedSpy.isValid());
 
     QImage image(QSize(200, 200), QImage::Format_ARGB32_Premultiplied);
     image.fill(Qt::black);
@@ -663,7 +646,6 @@ void TestSubSurface::testMainSurfaceFromTree()
     using namespace KWayland::Client;
     using namespace KWaylandServer;
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
-    QVERIFY(surfaceCreatedSpy.isValid());
 
     std::unique_ptr<Surface> parentSurface(m_compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
@@ -687,7 +669,6 @@ void TestSubSurface::testMainSurfaceFromTree()
     m_subCompositor->createSubSurface(childLevel3Surface.get(), childLevel2Surface.get());
 
     QSignalSpy parentCommittedSpy(parentServerSurface, &SurfaceInterface::committed);
-    QVERIFY(parentCommittedSpy.isValid());
     parentSurface->commit(Surface::CommitFlag::None);
     QVERIFY(parentCommittedSpy.wait());
 
@@ -717,7 +698,6 @@ void TestSubSurface::testRemoveSurface()
     using namespace KWaylandServer;
 
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
-    QVERIFY(surfaceCreatedSpy.isValid());
 
     std::unique_ptr<Surface> parentSurface(m_compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
@@ -729,7 +709,6 @@ void TestSubSurface::testRemoveSurface()
     QVERIFY(childServerSurface);
 
     QSignalSpy childrenChangedSpy(parentServerSurface, &SurfaceInterface::childSubSurfacesChanged);
-    QVERIFY(childrenChangedSpy.isValid());
 
     m_subCompositor->createSubSurface(childSurface.get(), parentSurface.get());
     parentSurface->commit(Surface::CommitFlag::None);
@@ -751,7 +730,6 @@ void TestSubSurface::testMappingOfSurfaceTree()
     using namespace KWayland::Client;
     using namespace KWaylandServer;
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
-    QVERIFY(surfaceCreatedSpy.isValid());
 
     std::unique_ptr<Surface> parentSurface(m_compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
@@ -775,7 +753,6 @@ void TestSubSurface::testMappingOfSurfaceTree()
     auto subSurfaceLevel3 = m_subCompositor->createSubSurface(childLevel3Surface.get(), childLevel2Surface.get());
 
     QSignalSpy parentCommittedSpy(parentServerSurface, &SurfaceInterface::committed);
-    QVERIFY(parentCommittedSpy.isValid());
     parentSurface->commit(Surface::CommitFlag::None);
     QVERIFY(parentCommittedSpy.wait());
 
@@ -806,7 +783,6 @@ void TestSubSurface::testMappingOfSurfaceTree()
 
     // first map the child, should not map it
     QSignalSpy child3DamageSpy(child3->surface(), &SurfaceInterface::damaged);
-    QVERIFY(child3DamageSpy.isValid());
     QImage image(QSize(200, 200), QImage::Format_ARGB32_Premultiplied);
     image.fill(Qt::black);
     childLevel3Surface->attachBuffer(m_shm->createBuffer(image));
@@ -818,7 +794,6 @@ void TestSubSurface::testMappingOfSurfaceTree()
 
     // let's map the top level
     QSignalSpy parentSpy(parentServerSurface, &SurfaceInterface::damaged);
-    QVERIFY(parentSpy.isValid());
     parentSurface->attachBuffer(m_shm->createBuffer(image));
     parentSurface->damage(QRect(0, 0, 200, 200));
     parentSurface->commit(Surface::CommitFlag::None);
@@ -831,7 +806,6 @@ void TestSubSurface::testMappingOfSurfaceTree()
 
     // next level
     QSignalSpy child2DamageSpy(child2->surface(), &SurfaceInterface::damaged);
-    QVERIFY(child2DamageSpy.isValid());
     childLevel2Surface->attachBuffer(m_shm->createBuffer(image));
     childLevel2Surface->damage(QRect(0, 0, 200, 200));
     childLevel2Surface->commit(Surface::CommitFlag::None);
@@ -844,7 +818,6 @@ void TestSubSurface::testMappingOfSurfaceTree()
 
     // last but not least the first child level, which should map all our subsurfaces
     QSignalSpy child1DamageSpy(child->surface(), &SurfaceInterface::damaged);
-    QVERIFY(child1DamageSpy.isValid());
     childLevel1Surface->attachBuffer(m_shm->createBuffer(image));
     childLevel1Surface->damage(QRect(0, 0, 200, 200));
     childLevel1Surface->commit(Surface::CommitFlag::None);
@@ -858,7 +831,6 @@ void TestSubSurface::testMappingOfSurfaceTree()
 
     // unmapping a parent should unmap the complete tree
     QSignalSpy unmappedSpy(child->surface(), &SurfaceInterface::unmapped);
-    QVERIFY(unmappedSpy.isValid());
     childLevel1Surface->attachBuffer(Buffer::Ptr());
     childLevel1Surface->damage(QRect(0, 0, 200, 200));
     childLevel1Surface->commit(Surface::CommitFlag::None);
@@ -877,7 +849,6 @@ void TestSubSurface::testSurfaceAt()
     using namespace KWaylandServer;
     // first create a parent surface and map it
     QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
-    QVERIFY(serverSurfaceCreated.isValid());
     std::unique_ptr<Surface> parent(m_compositor->createSurface());
     QImage image(QSize(100, 100), QImage::Format_ARGB32_Premultiplied);
     image.fill(Qt::red);
@@ -949,7 +920,6 @@ void TestSubSurface::testSurfaceAt()
     partImage.fill(Qt::blue);
 
     QSignalSpy childFor2CommittedSpy(childFor2ServerSurface, &SurfaceInterface::committed);
-    QVERIFY(childFor2CommittedSpy.isValid());
     childFor2->attachBuffer(m_shm->createBuffer(partImage));
     // child for 2's input region is subdivided into quadrants, with input mask on the top left and bottom right
     QRegion region;
@@ -1002,7 +972,6 @@ void TestSubSurface::testDestroyAttachedBuffer()
     using namespace KWaylandServer;
     // create surface
     QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
-    QVERIFY(serverSurfaceCreated.isValid());
     std::unique_ptr<Surface> parent(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
     std::unique_ptr<Surface> child(m_compositor->createSurface());
@@ -1021,7 +990,6 @@ void TestSubSurface::testDestroyAttachedBuffer()
 
     // Let's try to destroy it
     QSignalSpy destroySpy(serverChildSurface, &QObject::destroyed);
-    QVERIFY(destroySpy.isValid());
     delete m_shm;
     m_shm = nullptr;
     child.reset();
@@ -1036,7 +1004,6 @@ void TestSubSurface::testDestroyParentSurface()
     using namespace KWaylandServer;
     // create surface
     QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
-    QVERIFY(serverSurfaceCreated.isValid());
     std::unique_ptr<Surface> parent(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
     SurfaceInterface *serverParentSurface = serverSurfaceCreated.last().first().value<KWaylandServer::SurfaceInterface *>();
@@ -1056,7 +1023,6 @@ void TestSubSurface::testDestroyParentSurface()
     // and at the same time delete the parent surface
     parent.reset();
     QSignalSpy parentDestroyedSpy(serverParentSurface, &QObject::destroyed);
-    QVERIFY(parentDestroyedSpy.isValid());
     QVERIFY(parentDestroyedSpy.wait());
     QImage image(QSize(100, 100), QImage::Format_ARGB32_Premultiplied);
     image.fill(Qt::red);
@@ -1064,12 +1030,10 @@ void TestSubSurface::testDestroyParentSurface()
     grandChild->damage(QRect(0, 0, 100, 100));
     grandChild->commit(Surface::CommitFlag::None);
     QSignalSpy damagedSpy(serverGrandChildSurface, &SurfaceInterface::damaged);
-    QVERIFY(damagedSpy.isValid());
     QVERIFY(damagedSpy.wait());
 
     // Let's try to destroy it
     QSignalSpy destroySpy(serverChildSurface, &QObject::destroyed);
-    QVERIFY(destroySpy.isValid());
     child.reset();
     QVERIFY(destroySpy.wait());
 }

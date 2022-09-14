@@ -59,7 +59,6 @@ void TestDbusInterface::initTestCase()
     qRegisterMetaType<KWin::Window *>();
 
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
 
@@ -101,7 +100,6 @@ void TestDbusInterface::testGetWindowInfoInvalidUuid()
 void TestDbusInterface::testGetWindowInfoXdgShellClient()
 {
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowAddedSpy.isValid());
 
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
@@ -209,7 +207,6 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
     // finally close window
     const auto id = window->internalId();
     QSignalSpy windowClosedSpy(window, &Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
     shellSurface.reset();
     surface.reset();
     QVERIFY(windowClosedSpy.wait());
@@ -254,7 +251,6 @@ void TestDbusInterface::testGetWindowInfoX11Client()
 
     // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
@@ -376,7 +372,6 @@ void TestDbusInterface::testGetWindowInfoX11Client()
     xcb_flush(c.get());
 
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
     QVERIFY(windowClosedSpy.wait());
     xcb_destroy_window(c.get(), windowId);
     c.reset();

@@ -130,7 +130,6 @@ void ScriptedEffectsTest::initTestCase()
     qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::Effect *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
 
@@ -433,7 +432,6 @@ void ScriptedEffectsTest::testKeepAlive()
 
     auto *effect = new ScriptedEffectWithDebugSpy;
     QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
-    QVERIFY(effectOutputSpy.isValid());
     QVERIFY(effect->load(file));
 
     // create a window
@@ -465,7 +463,6 @@ void ScriptedEffectsTest::testKeepAlive()
         // the test effect doesn't keep the window alive, so it should be
         // removed immediately
         QSignalSpy deletedRemovedSpy(workspace(), &Workspace::deletedRemoved);
-        QVERIFY(deletedRemovedSpy.isValid());
         QVERIFY(deletedRemovedSpy.count() == 1 || deletedRemovedSpy.wait(100)); // 100ms is less than duration of the animation
         QCOMPARE(effect->state().count(), 0);
     }
@@ -479,7 +476,6 @@ void ScriptedEffectsTest::testGrab()
     // load the test effect
     auto effect = new ScriptedEffectWithDebugSpy;
     QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
-    QVERIFY(effectOutputSpy.isValid());
     QVERIFY(effect->load(QStringLiteral("grabTest")));
 
     // create test window
@@ -506,13 +502,11 @@ void ScriptedEffectsTest::testGrabAlreadyGrabbedWindow()
     // load effect that will hold the window grab
     auto owner = new ScriptedEffectWithDebugSpy;
     QSignalSpy ownerOutputSpy(owner, &ScriptedEffectWithDebugSpy::testOutput);
-    QVERIFY(ownerOutputSpy.isValid());
     QVERIFY(owner->load(QStringLiteral("grabAlreadyGrabbedWindowTest_owner")));
 
     // load effect that will try to grab already grabbed window
     auto grabber = new ScriptedEffectWithDebugSpy;
     QSignalSpy grabberOutputSpy(grabber, &ScriptedEffectWithDebugSpy::testOutput);
-    QVERIFY(grabberOutputSpy.isValid());
     QVERIFY(grabber->load(QStringLiteral("grabAlreadyGrabbedWindowTest_grabber")));
 
     // create test window
@@ -543,13 +537,11 @@ void ScriptedEffectsTest::testGrabAlreadyGrabbedWindowForced()
     // load effect that initially will be holding the window grab
     auto owner = new ScriptedEffectWithDebugSpy;
     QSignalSpy ownerOutputSpy(owner, &ScriptedEffectWithDebugSpy::testOutput);
-    QVERIFY(ownerOutputSpy.isValid());
     QVERIFY(owner->load(QStringLiteral("grabAlreadyGrabbedWindowForcedTest_owner")));
 
     // load effect that will try to steal the window grab
     auto thief = new ScriptedEffectWithDebugSpy;
     QSignalSpy thiefOutputSpy(thief, &ScriptedEffectWithDebugSpy::testOutput);
-    QVERIFY(thiefOutputSpy.isValid());
     QVERIFY(thief->load(QStringLiteral("grabAlreadyGrabbedWindowForcedTest_thief")));
 
     // create test window
@@ -580,7 +572,6 @@ void ScriptedEffectsTest::testUngrab()
     // load the test effect
     auto effect = new ScriptedEffectWithDebugSpy;
     QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
-    QVERIFY(effectOutputSpy.isValid());
     QVERIFY(effect->load(QStringLiteral("ungrabTest")));
 
     // create test window
@@ -659,7 +650,6 @@ void ScriptedEffectsTest::testRedirect()
     QTest::qWait(250);
 
     QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
-    QVERIFY(effectOutputSpy.isValid());
 
     window->setMinimized(true);
 
@@ -747,7 +737,6 @@ void ScriptedEffectsTest::testComplete()
     // minimize the test window, when the test effect sees that a window was
     // minimized, it will try to complete animation for it
     QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
-    QVERIFY(effectOutputSpy.isValid());
 
     window->setMinimized(true);
 

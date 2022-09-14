@@ -47,7 +47,6 @@ void WobblyWindowsShadeTest::initTestCase()
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::Effect *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
 
@@ -120,7 +119,6 @@ void WobblyWindowsShadeTest::testShadeMove()
 
     // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
@@ -131,7 +129,6 @@ void WobblyWindowsShadeTest::testShadeMove()
     QVERIFY(window->isActive());
 
     QSignalSpy windowShownSpy(window, &Window::windowShown);
-    QVERIFY(windowShownSpy.isValid());
     QVERIFY(windowShownSpy.wait());
 
     // now shade the window
@@ -139,7 +136,6 @@ void WobblyWindowsShadeTest::testShadeMove()
     QVERIFY(window->isShade());
 
     QSignalSpy windowStartUserMovedResizedSpy(e, &EffectsHandler::windowStartUserMovedResized);
-    QVERIFY(windowStartUserMovedResizedSpy.isValid());
 
     // begin move
     QVERIFY(workspace()->moveResizeWindow() == nullptr);

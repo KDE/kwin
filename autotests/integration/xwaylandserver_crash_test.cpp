@@ -47,7 +47,6 @@ void XwaylandServerCrashTest::initTestCase()
     qRegisterMetaType<Unmanaged *>();
     qRegisterMetaType<X11Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
@@ -91,7 +90,6 @@ void XwaylandServerCrashTest::testCrash()
     xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     QPointer<X11Window> window = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(window);
@@ -109,14 +107,12 @@ void XwaylandServerCrashTest::testCrash()
     xcb_flush(c.get());
 
     QSignalSpy unmanagedAddedSpy(workspace(), &Workspace::unmanagedAdded);
-    QVERIFY(unmanagedAddedSpy.isValid());
     QVERIFY(unmanagedAddedSpy.wait());
     QPointer<Unmanaged> unmanaged = unmanagedAddedSpy.last().first().value<Unmanaged *>();
     QVERIFY(unmanaged);
 
     // Let's pretend that the Xwayland process has crashed.
     QSignalSpy x11ConnectionChangedSpy(kwinApp(), &Application::x11ConnectionChanged);
-    QVERIFY(x11ConnectionChangedSpy.isValid());
     Xwl::Xwayland *xwayland = static_cast<Xwl::Xwayland *>(kwinApp()->xwayland());
     xwayland->xwaylandLauncher()->process()->terminate();
     QVERIFY(x11ConnectionChangedSpy.wait());

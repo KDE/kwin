@@ -43,7 +43,6 @@ void WindowRuleTest::initTestCase()
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
@@ -125,7 +124,6 @@ void WindowRuleTest::testApplyInitialMaximizeVert()
     xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(window);
@@ -140,7 +138,6 @@ void WindowRuleTest::testApplyInitialMaximizeVert()
 
     // destroy window again
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
     xcb_unmap_window(c.get(), windowId);
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());
@@ -190,7 +187,6 @@ void WindowRuleTest::testWindowClassChange()
     xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(window);
@@ -205,7 +201,6 @@ void WindowRuleTest::testWindowClassChange()
 
     // now change class
     QSignalSpy windowClassChangedSpy{window, &X11Window::windowClassChanged};
-    QVERIFY(windowClassChangedSpy.isValid());
     xcb_icccm_set_wm_class(c.get(), windowId, 23, "org.kde.foo\0org.kde.foo");
     xcb_flush(c.get());
     QVERIFY(windowClassChangedSpy.wait());
@@ -213,7 +208,6 @@ void WindowRuleTest::testWindowClassChange()
 
     // destroy window
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
     xcb_unmap_window(c.get(), windowId);
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());

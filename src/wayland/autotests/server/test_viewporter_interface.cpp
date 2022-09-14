@@ -135,18 +135,14 @@ void TestViewporterInterface::testCropScale()
 {
     // Create a test surface.
     QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
-    QVERIFY(serverSurfaceCreatedSpy.isValid());
     std::unique_ptr<KWayland::Client::Surface> clientSurface(m_clientCompositor->createSurface(this));
     QVERIFY(serverSurfaceCreatedSpy.wait());
     SurfaceInterface *serverSurface = serverSurfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface);
 
     QSignalSpy serverSurfaceMappedSpy(serverSurface, &SurfaceInterface::mapped);
-    QVERIFY(serverSurfaceMappedSpy.isValid());
     QSignalSpy serverSurfaceSizeChangedSpy(serverSurface, &SurfaceInterface::sizeChanged);
-    QVERIFY(serverSurfaceSizeChangedSpy.isValid());
     QSignalSpy surfaceToBufferMatrixChangedSpy(serverSurface, &SurfaceInterface::surfaceToBufferMatrixChanged);
-    QVERIFY(surfaceToBufferMatrixChangedSpy.isValid());
 
     // Map the surface.
     QImage image(QSize(200, 100), QImage::Format_ARGB32_Premultiplied);

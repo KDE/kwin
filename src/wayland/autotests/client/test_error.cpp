@@ -62,7 +62,6 @@ void ErrorTest::init()
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
     QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
-    QVERIFY(connectedSpy.isValid());
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -77,7 +76,6 @@ void ErrorTest::init()
 
     Registry registry;
     QSignalSpy interfacesAnnouncedSpy(&registry, &Registry::interfacesAnnounced);
-    QVERIFY(interfacesAnnouncedSpy.isValid());
     registry.setEventQueue(m_queue);
     registry.create(m_connection);
     QVERIFY(registry.isValid());
@@ -124,7 +122,6 @@ void ErrorTest::testMultiplePlasmaShellSurfacesForSurface()
 {
     // this test verifies that creating two ShellSurfaces for the same Surface triggers a protocol error
     QSignalSpy errorSpy(m_connection, &ConnectionThread::errorOccurred);
-    QVERIFY(errorSpy.isValid());
     // PlasmaShell is too smart and doesn't allow us to create a second PlasmaShellSurface
     // thus we need to cheat by creating a surface manually
     auto surface = wl_compositor_create_surface(*m_compositor);

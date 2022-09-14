@@ -60,7 +60,6 @@ void PlasmaSurfaceTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
     kwinApp()->start();
@@ -116,7 +115,6 @@ void PlasmaSurfaceTest::testRoleOnAllDesktops()
 
     // now let's try to change that
     QSignalSpy onAllDesktopsSpy(window, &Window::desktopChanged);
-    QVERIFY(onAllDesktopsSpy.isValid());
     QFETCH(KWayland::Client::PlasmaShellSurface::Role, role);
     plasmaSurface->setRole(role);
     QFETCH(bool, expectedOnAllDesktops);
@@ -208,7 +206,6 @@ void PlasmaSurfaceTest::testOSDPlacement()
 
     // change size of window
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
-    QVERIFY(frameGeometryChangedSpy.isValid());
     Test::render(surface.get(), QSize(200, 100), Qt::red);
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(window->frameGeometry(), QRect(1280 / 2 - 200 / 2, 2 * 1024 / 3 - 100 / 2, 200, 100));
@@ -351,7 +348,6 @@ void PlasmaSurfaceTest::testPanelWindowsCanCover()
     QCOMPARE(stackingOrder.last(), window);
 
     QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
-    QVERIFY(stackingOrderChangedSpy.isValid());
     // trigger screenedge
     QFETCH(QPoint, triggerPoint);
     KWin::Cursors::self()->mouse()->setPos(triggerPoint);

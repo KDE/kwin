@@ -213,7 +213,6 @@ void TestTextInputV3Interface::testEnableDisable()
 {
     // create a surface
     QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
-    QVERIFY(serverSurfaceCreatedSpy.isValid());
     std::unique_ptr<KWayland::Client::Surface> clientSurface(m_clientCompositor->createSurface(this));
     QVERIFY(serverSurfaceCreatedSpy.wait());
     SurfaceInterface *serverSurface = serverSurfaceCreatedSpy.first().first().value<SurfaceInterface *>();
@@ -230,8 +229,6 @@ void TestTextInputV3Interface::testEnableDisable()
     QSignalSpy surfaceLeaveSpy(m_clientTextInputV3, &TextInputV3::surface_leave);
 
     // Enter the textinput
-    QVERIFY(focusedSurfaceChangedSpy.isValid());
-    QVERIFY(textInputEnabledSpy.isValid());
 
     QCOMPARE(focusedSurfaceChangedSpy.count(), 0);
 
@@ -281,7 +278,6 @@ void TestTextInputV3Interface::testEvents()
 {
     // create a surface
     QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
-    QVERIFY(serverSurfaceCreatedSpy.isValid());
     std::unique_ptr<KWayland::Client::Surface> clientSurface(m_clientCompositor->createSurface(this));
     QVERIFY(serverSurfaceCreatedSpy.wait());
     SurfaceInterface *serverSurface = serverSurfaceCreatedSpy.first().first().value<SurfaceInterface *>();
@@ -295,7 +291,6 @@ void TestTextInputV3Interface::testEvents()
     QSignalSpy doneSpy(m_clientTextInputV3, &TextInputV3::done);
 
     // Enter the textinput
-    QVERIFY(focusedSurfaceChangedSpy.isValid());
     QCOMPARE(focusedSurfaceChangedSpy.count(), 0);
 
     // Make sure that entering surface does not trigger the text input
@@ -368,7 +363,6 @@ void TestTextInputV3Interface::testContentPurpose()
 {
     // create a surface
     QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
-    QVERIFY(serverSurfaceCreatedSpy.isValid());
     std::unique_ptr<KWayland::Client::Surface> clientSurface(m_clientCompositor->createSurface(this));
     QVERIFY(serverSurfaceCreatedSpy.wait());
     SurfaceInterface *serverSurface = serverSurfaceCreatedSpy.first().first().value<SurfaceInterface *>();
@@ -381,7 +375,6 @@ void TestTextInputV3Interface::testContentPurpose()
     QSignalSpy textInputEnabledSpy(m_serverTextInputV3, &TextInputV3Interface::enabledChanged);
 
     // Enter the textinput
-    QVERIFY(focusedSurfaceChangedSpy.isValid());
     QCOMPARE(focusedSurfaceChangedSpy.count(), 0);
 
     // Make sure that entering surface does not trigger the text input
@@ -400,7 +393,6 @@ void TestTextInputV3Interface::testContentPurpose()
     QCOMPARE(m_serverTextInputV3->contentPurpose(), TextInputContentPurpose::Normal);
 
     QSignalSpy contentTypeChangedSpy(m_serverTextInputV3, &TextInputV3Interface::contentTypeChanged);
-    QVERIFY(contentTypeChangedSpy.isValid());
 
     QFETCH(QtWayland::zwp_text_input_v3::content_purpose, clientPurpose);
     m_clientTextInputV3->enable();
@@ -461,7 +453,6 @@ void TestTextInputV3Interface::testContentHints()
 {
     // create a surface
     QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
-    QVERIFY(serverSurfaceCreatedSpy.isValid());
     std::unique_ptr<KWayland::Client::Surface> clientSurface(m_clientCompositor->createSurface(this));
     QVERIFY(serverSurfaceCreatedSpy.wait());
     SurfaceInterface *serverSurface = serverSurfaceCreatedSpy.first().first().value<SurfaceInterface *>();
@@ -474,7 +465,6 @@ void TestTextInputV3Interface::testContentHints()
     QSignalSpy textInputEnabledSpy(m_serverTextInputV3, &TextInputV3Interface::enabledChanged);
 
     // Enter the textinput
-    QVERIFY(focusedSurfaceChangedSpy.isValid());
     QCOMPARE(focusedSurfaceChangedSpy.count(), 0);
 
     // Make sure that entering surface does not trigger the text input
@@ -498,7 +488,6 @@ void TestTextInputV3Interface::testContentHints()
     m_totalCommits++;
 
     QSignalSpy contentTypeChangedSpy(m_serverTextInputV3, &TextInputV3Interface::contentTypeChanged);
-    QVERIFY(contentTypeChangedSpy.isValid());
 
     QFETCH(quint32, clientHint);
     m_clientTextInputV3->enable();
@@ -542,7 +531,6 @@ void TestTextInputV3Interface::testMultipleTextinputs()
 
     // create a surface
     QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
-    QVERIFY(serverSurfaceCreatedSpy.isValid());
     std::unique_ptr<KWayland::Client::Surface> clientSurface(m_clientCompositor->createSurface(this));
     QVERIFY(serverSurfaceCreatedSpy.wait());
     SurfaceInterface *serverSurface = serverSurfaceCreatedSpy.first().first().value<SurfaceInterface *>();

@@ -62,7 +62,6 @@ void TransientPlacementTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
@@ -527,7 +526,6 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     parentShellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     QSignalSpy frameGeometryChangedSpy{parent, &Window::frameGeometryChanged};
-    QVERIFY(frameGeometryChangedSpy.isValid());
     Test::render(parentSurface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::red);
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(parent->frameGeometry(), output->geometry());

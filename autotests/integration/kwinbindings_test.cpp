@@ -47,7 +47,6 @@ void KWinBindingsTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
 
@@ -169,7 +168,6 @@ void KWinBindingsTest::testSwitchWindowScript()
         auto s = Scripting::self()->findScript(tmpFile.fileName());
         QVERIFY(s);
         QSignalSpy runningChangedSpy(s, &AbstractScript::runningChanged);
-        QVERIFY(runningChangedSpy.isValid());
         s->run();
         QTRY_COMPARE(runningChangedSpy.count(), 1);
     };
@@ -219,7 +217,6 @@ void KWinBindingsTest::testWindowToDesktop()
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QSignalSpy desktopChangedSpy(window, &Window::desktopChanged);
-    QVERIFY(desktopChangedSpy.isValid());
     QCOMPARE(workspace()->activeWindow(), window);
 
     QFETCH(int, desktop);

@@ -32,7 +32,6 @@ void TestWaylandServerDisplay::testSocketName()
 {
     KWaylandServer::Display display;
     QSignalSpy changedSpy(&display, &KWaylandServer::Display::socketNamesChanged);
-    QVERIFY(changedSpy.isValid());
     QCOMPARE(display.socketNames(), QStringList());
     const QString testSName = QStringLiteral("fooBar");
     display.addSocketName(testSName);
@@ -53,7 +52,6 @@ void TestWaylandServerDisplay::testStartStop()
 
     std::unique_ptr<KWaylandServer::Display> display(new KWaylandServer::Display);
     QSignalSpy runningSpy(display.get(), &KWaylandServer::Display::runningChanged);
-    QVERIFY(runningSpy.isValid());
     display->addSocketName(testSocketName);
     QVERIFY(!display->isRunning());
     display->start();
@@ -73,9 +71,7 @@ void TestWaylandServerDisplay::testClientConnection()
     display.addSocketName(QStringLiteral("kwin-wayland-server-display-test-client-connection"));
     display.start();
     QSignalSpy connectedSpy(&display, &KWaylandServer::Display::clientConnected);
-    QVERIFY(connectedSpy.isValid());
     QSignalSpy disconnectedSpy(&display, &KWaylandServer::Display::clientDisconnected);
-    QVERIFY(disconnectedSpy.isValid());
 
     int sv[2];
     QVERIFY(socketpair(AF_UNIX, SOCK_STREAM, 0, sv) >= 0);
@@ -132,7 +128,6 @@ void TestWaylandServerDisplay::testClientConnection()
     wl_client_destroy(client);
     QCOMPARE(disconnectedSpy.count(), 1);
     QSignalSpy clientDestroyedSpy(client2, &QObject::destroyed);
-    QVERIFY(clientDestroyedSpy.isValid());
     client2->destroy();
     QVERIFY(clientDestroyedSpy.wait());
     QCOMPARE(disconnectedSpy.count(), 2);

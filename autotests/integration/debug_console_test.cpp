@@ -50,7 +50,6 @@ void DebugConsoleTest::initTestCase()
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::InternalWindow *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
@@ -124,7 +123,6 @@ void DebugConsoleTest::testX11Window()
 
     // start glxgears, to get a window, which should be added to the model
     QSignalSpy rowsInsertedSpy(&model, &QAbstractItemModel::rowsInserted);
-    QVERIFY(rowsInsertedSpy.isValid());
 
     QProcess glxgears;
     glxgears.setProgram(QStringLiteral("glxgears"));
@@ -180,7 +178,6 @@ void DebugConsoleTest::testX11Window()
 
     // now close the window again, it should be removed from the model
     QSignalSpy rowsRemovedSpy(&model, &QAbstractItemModel::rowsRemoved);
-    QVERIFY(rowsRemovedSpy.isValid());
 
     glxgears.terminate();
     QVERIFY(glxgears.waitForFinished());
@@ -212,7 +209,6 @@ void DebugConsoleTest::testX11Unmanaged()
 
     // we need to create an unmanaged window
     QSignalSpy rowsInsertedSpy(&model, &QAbstractItemModel::rowsInserted);
-    QVERIFY(rowsInsertedSpy.isValid());
 
     // let's create an override redirect window
     const uint32_t values[] = {true};
@@ -270,7 +266,6 @@ void DebugConsoleTest::testX11Unmanaged()
 
     // now close the window again, it should be removed from the model
     QSignalSpy rowsRemovedSpy(&model, &QAbstractItemModel::rowsRemoved);
-    QVERIFY(rowsRemovedSpy.isValid());
 
     window.unmap();
 
@@ -302,7 +297,6 @@ void DebugConsoleTest::testWaylandClient()
 
     // we need to create a wayland window
     QSignalSpy rowsInsertedSpy(&model, &QAbstractItemModel::rowsInserted);
-    QVERIFY(rowsInsertedSpy.isValid());
 
     // create our connection
     QVERIFY(Test::setupWaylandConnection());
@@ -366,7 +360,6 @@ void DebugConsoleTest::testWaylandClient()
 
     // now close the window again, it should be removed from the model
     QSignalSpy rowsRemovedSpy(&model, &QAbstractItemModel::rowsRemoved);
-    QVERIFY(rowsRemovedSpy.isValid());
 
     surface->attachBuffer(Buffer::Ptr());
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
@@ -421,7 +414,6 @@ void DebugConsoleTest::testInternalWindow()
     // given that we just test whether adding a window works.
 
     QSignalSpy rowsInsertedSpy(&model, &QAbstractItemModel::rowsInserted);
-    QVERIFY(rowsInsertedSpy.isValid());
 
     std::unique_ptr<HelperWindow> w(new HelperWindow);
     w->setGeometry(0, 0, 100, 100);
@@ -470,7 +462,6 @@ void DebugConsoleTest::testInternalWindow()
 
     // now close the window again, it should be removed from the model
     QSignalSpy rowsRemovedSpy(&model, &QAbstractItemModel::rowsRemoved);
-    QVERIFY(rowsRemovedSpy.isValid());
 
     w->hide();
     w.reset();
@@ -486,10 +477,8 @@ void DebugConsoleTest::testClosingDebugConsole()
 
     DebugConsole *console = new DebugConsole;
     QSignalSpy destroyedSpy(console, &QObject::destroyed);
-    QVERIFY(destroyedSpy.isValid());
 
     QSignalSpy windowAddedSpy(workspace(), &Workspace::internalWindowAdded);
-    QVERIFY(windowAddedSpy.isValid());
     console->show();
     QCOMPARE(console->windowHandle()->isVisible(), true);
     QTRY_COMPARE(windowAddedSpy.count(), 1);

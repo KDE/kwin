@@ -52,7 +52,6 @@ void TouchInputTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
@@ -160,15 +159,10 @@ void TouchInputTest::testMultipleTouchPoints()
     window->move(QPoint(100, 100));
     QVERIFY(window);
     QSignalSpy sequenceStartedSpy(m_touch, &Touch::sequenceStarted);
-    QVERIFY(sequenceStartedSpy.isValid());
     QSignalSpy pointAddedSpy(m_touch, &Touch::pointAdded);
-    QVERIFY(pointAddedSpy.isValid());
     QSignalSpy pointMovedSpy(m_touch, &Touch::pointMoved);
-    QVERIFY(pointMovedSpy.isValid());
     QSignalSpy pointRemovedSpy(m_touch, &Touch::pointRemoved);
-    QVERIFY(pointRemovedSpy.isValid());
     QSignalSpy endedSpy(m_touch, &Touch::sequenceEnded);
-    QVERIFY(endedSpy.isValid());
 
     quint32 timestamp = 1;
     Test::touchDown(1, QPointF(125, 125) + window->clientPos(), timestamp++);
@@ -220,11 +214,8 @@ void TouchInputTest::testCancel()
     window->move(QPoint(100, 100));
     QVERIFY(window);
     QSignalSpy sequenceStartedSpy(m_touch, &Touch::sequenceStarted);
-    QVERIFY(sequenceStartedSpy.isValid());
     QSignalSpy cancelSpy(m_touch, &Touch::sequenceCanceled);
-    QVERIFY(cancelSpy.isValid());
     QSignalSpy pointRemovedSpy(m_touch, &Touch::pointRemoved);
-    QVERIFY(pointRemovedSpy.isValid());
 
     quint32 timestamp = 1;
     Test::touchDown(1, QPointF(125, 125), timestamp++);
@@ -252,7 +243,6 @@ void TouchInputTest::testTouchMouseAction()
 
     // also create a sequence started spy as the touch event should be passed through
     QSignalSpy sequenceStartedSpy(m_touch, &Touch::sequenceStarted);
-    QVERIFY(sequenceStartedSpy.isValid());
 
     quint32 timestamp = 1;
     Test::touchDown(1, c1->frameGeometry().center(), timestamp++);
@@ -287,7 +277,6 @@ void TouchInputTest::testUpdateFocusOnDecorationDestroy()
     // if decoration was focused and then destroyed on maximize with BorderlessMaximizedWindows option.
 
     QSignalSpy sequenceEndedSpy(m_touch, &KWayland::Client::Touch::sequenceEnded);
-    QVERIFY(sequenceEndedSpy.isValid());
 
     // Enable the borderless maximized windows option.
     auto group = kwinApp()->config()->group("Windows");
@@ -347,7 +336,6 @@ void TouchInputTest::testUpdateFocusOnDecorationDestroy()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
 
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
-    QVERIFY(frameGeometryChangedSpy.isValid());
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), QSize(1280, 1024), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
@@ -392,7 +380,6 @@ void TouchInputTest::testGestureDetection()
 
     // verify that gestures are canceled properly
     QSignalSpy gestureCancelled(&action, &QAction::triggered);
-    QVERIFY(gestureCancelled.isValid());
     Test::touchUp(0, timestamp++);
     QVERIFY(gestureCancelled.wait());
 

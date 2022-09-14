@@ -105,7 +105,6 @@ void TestFilter::testFilter()
     // setup connection
     std::unique_ptr<KWayland::Client::ConnectionThread> connection(new KWayland::Client::ConnectionThread());
     QSignalSpy connectedSpy(connection.get(), &ConnectionThread::connected);
-    QVERIFY(connectedSpy.isValid());
     connection->setSocketName(s_socketName);
 
     std::unique_ptr<QThread> thread(new QThread(this));

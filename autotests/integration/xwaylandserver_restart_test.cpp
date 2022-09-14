@@ -43,7 +43,6 @@ private Q_SLOTS:
 void XwaylandServerRestartTest::initTestCase()
 {
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
@@ -72,7 +71,6 @@ void XwaylandServerRestartTest::testRestart()
 
     // Pretend that the Xwayland process has crashed by sending a SIGKILL to it.
     QSignalSpy startedSpy(xwayland, &Xwl::Xwayland::started);
-    QVERIFY(startedSpy.isValid());
     kwin_safe_kill(xwayland->xwaylandLauncher()->process());
     QVERIFY(startedSpy.wait());
     QCOMPARE(startedSpy.count(), 1);
@@ -95,7 +93,6 @@ void XwaylandServerRestartTest::testRestart()
     xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(window);

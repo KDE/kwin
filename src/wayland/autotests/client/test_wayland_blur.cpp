@@ -68,7 +68,6 @@ void TestBlur::init()
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
     QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
-    QVERIFY(connectedSpy.isValid());
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -85,10 +84,8 @@ void TestBlur::init()
 
     Registry registry;
     QSignalSpy compositorSpy(&registry, &Registry::compositorAnnounced);
-    QVERIFY(compositorSpy.isValid());
 
     QSignalSpy blurSpy(&registry, &Registry::blurAnnounced);
-    QVERIFY(blurSpy.isValid());
 
     QVERIFY(!registry.eventQueue());
     registry.setEventQueue(m_queue);
@@ -137,7 +134,6 @@ void TestBlur::cleanup()
 void TestBlur::testCreate()
 {
     QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWaylandServer::CompositorInterface::surfaceCreated);
-    QVERIFY(serverSurfaceCreated.isValid());
 
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
@@ -155,7 +151,6 @@ void TestBlur::testCreate()
 
     // and destroy
     QSignalSpy destroyedSpy(serverSurface->blur().data(), &QObject::destroyed);
-    QVERIFY(destroyedSpy.isValid());
     delete blur;
     QVERIFY(destroyedSpy.wait());
 }
@@ -163,14 +158,12 @@ void TestBlur::testCreate()
 void TestBlur::testSurfaceDestroy()
 {
     QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWaylandServer::CompositorInterface::surfaceCreated);
-    QVERIFY(serverSurfaceCreated.isValid());
 
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
 
     auto serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
     QSignalSpy blurChanged(serverSurface, &KWaylandServer::SurfaceInterface::blurChanged);
-    QVERIFY(blurChanged.isValid());
 
     std::unique_ptr<KWayland::Client::Blur> blur(m_blurManager->createBlur(surface.get()));
     blur->setRegion(m_compositor->createRegion(QRegion(0, 0, 10, 20), nullptr));
@@ -182,9 +175,7 @@ void TestBlur::testSurfaceDestroy()
 
     // destroy the parent surface
     QSignalSpy surfaceDestroyedSpy(serverSurface, &QObject::destroyed);
-    QVERIFY(surfaceDestroyedSpy.isValid());
     QSignalSpy blurDestroyedSpy(serverSurface->blur().data(), &QObject::destroyed);
-    QVERIFY(blurDestroyedSpy.isValid());
     surface.reset();
     QVERIFY(surfaceDestroyedSpy.wait());
     QVERIFY(blurDestroyedSpy.isEmpty());

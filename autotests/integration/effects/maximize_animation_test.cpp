@@ -42,7 +42,6 @@ void MaximizeAnimationTest::initTestCase()
 
     qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
 
@@ -131,9 +130,7 @@ void MaximizeAnimationTest::testMaximizeRestore()
 
     // Maximize the window.
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
-    QVERIFY(frameGeometryChangedSpy.isValid());
     QSignalSpy maximizeChangedSpy(window, qOverload<Window *, bool, bool>(&Window::clientMaximizedStateChanged));
-    QVERIFY(maximizeChangedSpy.isValid());
 
     workspace()->slotWindowMaximize();
     QVERIFY(surfaceConfigureRequestedSpy.wait());

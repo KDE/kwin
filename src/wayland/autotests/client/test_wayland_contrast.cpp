@@ -87,10 +87,8 @@ void TestContrast::init()
 
     Registry registry;
     QSignalSpy compositorSpy(&registry, &Registry::compositorAnnounced);
-    QVERIFY(compositorSpy.isValid());
 
     QSignalSpy contrastSpy(&registry, &Registry::contrastAnnounced);
-    QVERIFY(contrastSpy.isValid());
 
     QVERIFY(!registry.eventQueue());
     registry.setEventQueue(m_queue);
@@ -140,7 +138,6 @@ void TestContrast::cleanup()
 void TestContrast::testCreate()
 {
     QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWaylandServer::CompositorInterface::surfaceCreated);
-    QVERIFY(serverSurfaceCreated.isValid());
 
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
@@ -166,7 +163,6 @@ void TestContrast::testCreate()
 
     // and destroy
     QSignalSpy destroyedSpy(serverSurface->contrast().data(), &QObject::destroyed);
-    QVERIFY(destroyedSpy.isValid());
     delete contrast;
     QVERIFY(destroyedSpy.wait());
 }
@@ -174,14 +170,12 @@ void TestContrast::testCreate()
 void TestContrast::testSurfaceDestroy()
 {
     QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWaylandServer::CompositorInterface::surfaceCreated);
-    QVERIFY(serverSurfaceCreated.isValid());
 
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
 
     auto serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
     QSignalSpy contrastChanged(serverSurface, &KWaylandServer::SurfaceInterface::contrastChanged);
-    QVERIFY(contrastChanged.isValid());
 
     std::unique_ptr<KWayland::Client::Contrast> contrast(m_contrastManager->createContrast(surface.get()));
     contrast->setRegion(m_compositor->createRegion(QRegion(0, 0, 10, 20), nullptr));
@@ -193,9 +187,7 @@ void TestContrast::testSurfaceDestroy()
 
     // destroy the parent surface
     QSignalSpy surfaceDestroyedSpy(serverSurface, &QObject::destroyed);
-    QVERIFY(surfaceDestroyedSpy.isValid());
     QSignalSpy contrastDestroyedSpy(serverSurface->contrast().data(), &QObject::destroyed);
-    QVERIFY(contrastDestroyedSpy.isValid());
     surface.reset();
     QVERIFY(surfaceDestroyedSpy.wait());
     QVERIFY(contrastDestroyedSpy.isEmpty());

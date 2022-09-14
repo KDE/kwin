@@ -49,7 +49,6 @@ void TestMaximized::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
@@ -117,11 +116,8 @@ void TestMaximized::testMaximizedPassedToDeco()
 
     // now maximize
     QSignalSpy bordersChangedSpy(decoration, &KDecoration2::Decoration::bordersChanged);
-    QVERIFY(bordersChangedSpy.isValid());
     QSignalSpy maximizedChangedSpy(decoration->client().toStrongRef().get(), &KDecoration2::DecoratedClient::maximizedChanged);
-    QVERIFY(maximizedChangedSpy.isValid());
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
-    QVERIFY(frameGeometryChangedSpy.isValid());
 
     workspace()->slotWindowMaximize();
     QVERIFY(surfaceConfigureRequestedSpy.wait());
@@ -274,7 +270,6 @@ void TestMaximized::testBorderlessMaximizedWindow()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
 
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
-    QVERIFY(frameGeometryChangedSpy.isValid());
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), QSize(1280, 1024), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());

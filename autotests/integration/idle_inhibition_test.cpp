@@ -41,7 +41,6 @@ void TestIdleInhibition::initTestCase()
     qRegisterMetaType<KWin::Window *>();
 
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
@@ -196,7 +195,6 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
     QVERIFY(shellSurface != nullptr);
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
-    QVERIFY(surfaceConfigureRequestedSpy.isValid());
 
     // Create the inhibitor object.
     std::unique_ptr<Test::IdleInhibitorV1> inhibitor(Test::createIdleInhibitorV1(surface.get()));
@@ -204,7 +202,6 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
 
     // Map the window.
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowAddedSpy.isValid());
     Test::render(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(windowAddedSpy.isEmpty());
     QVERIFY(windowAddedSpy.wait());

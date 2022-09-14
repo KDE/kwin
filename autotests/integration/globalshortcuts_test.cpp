@@ -58,7 +58,6 @@ void GlobalShortcutsTest::initTestCase()
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::InternalWindow *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
 
@@ -144,7 +143,6 @@ void GlobalShortcutsTest::testNonLatinLayout()
     action->setObjectName("globalshortcuts-test-non-latin-layout");
 
     QSignalSpy triggeredSpy(action.get(), &QAction::triggered);
-    QVERIFY(triggeredSpy.isValid());
 
     KGlobalAccel::self()->stealShortcutSystemwide(seq);
     KGlobalAccel::self()->setShortcut(action.get(), {seq}, KGlobalAccel::NoAutoloading);
@@ -169,7 +167,6 @@ void GlobalShortcutsTest::testConsumedShift()
     action->setProperty("componentName", QStringLiteral(KWIN_NAME));
     action->setObjectName(QStringLiteral("globalshortcuts-test-consumed-shift"));
     QSignalSpy triggeredSpy(action.get(), &QAction::triggered);
-    QVERIFY(triggeredSpy.isValid());
     KGlobalAccel::self()->setShortcut(action.get(), QList<QKeySequence>{Qt::Key_Percent}, KGlobalAccel::NoAutoloading);
     input()->registerShortcut(Qt::Key_Percent, action.get());
 
@@ -194,7 +191,6 @@ void GlobalShortcutsTest::testRepeatedTrigger()
     action->setProperty("componentName", QStringLiteral(KWIN_NAME));
     action->setObjectName(QStringLiteral("globalshortcuts-test-consumed-shift"));
     QSignalSpy triggeredSpy(action.get(), &QAction::triggered);
-    QVERIFY(triggeredSpy.isValid());
     KGlobalAccel::self()->setShortcut(action.get(), QList<QKeySequence>{Qt::Key_Percent}, KGlobalAccel::NoAutoloading);
     input()->registerShortcut(Qt::Key_Percent, action.get());
 
@@ -255,7 +251,6 @@ void GlobalShortcutsTest::testMetaShiftW()
     action->setProperty("componentName", QStringLiteral(KWIN_NAME));
     action->setObjectName(QStringLiteral("globalshortcuts-test-meta-shift-w"));
     QSignalSpy triggeredSpy(action.get(), &QAction::triggered);
-    QVERIFY(triggeredSpy.isValid());
     KGlobalAccel::self()->setShortcut(action.get(), QList<QKeySequence>{Qt::META | Qt::SHIFT | Qt::Key_W}, KGlobalAccel::NoAutoloading);
     input()->registerShortcut(Qt::META | Qt::SHIFT | Qt::Key_W, action.get());
 
@@ -281,7 +276,6 @@ void GlobalShortcutsTest::testComponseKey()
     action->setProperty("componentName", QStringLiteral(KWIN_NAME));
     action->setObjectName(QStringLiteral("globalshortcuts-accent"));
     QSignalSpy triggeredSpy(action.get(), &QAction::triggered);
-    QVERIFY(triggeredSpy.isValid());
     KGlobalAccel::self()->setShortcut(action.get(), QList<QKeySequence>{Qt::NoModifier}, KGlobalAccel::NoAutoloading);
     input()->registerShortcut(Qt::NoModifier, action.get());
 
@@ -330,7 +324,6 @@ void GlobalShortcutsTest::testX11WindowShortcut()
     xcb_flush(c.get());
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(window);
@@ -364,7 +357,6 @@ void GlobalShortcutsTest::testX11WindowShortcut()
 
     // destroy window again
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
     xcb_unmap_window(c.get(), windowId);
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());
@@ -420,7 +412,6 @@ void GlobalShortcutsTest::testSetupWindowShortcut()
     QCOMPARE(window->shortcut(), QKeySequence());
 
     QSignalSpy shortcutDialogAddedSpy(workspace(), &Workspace::internalWindowAdded);
-    QVERIFY(shortcutDialogAddedSpy.isValid());
     workspace()->slotSetupWindowShortcut();
     QTRY_COMPARE(shortcutDialogAddedSpy.count(), 1);
     auto dialog = shortcutDialogAddedSpy.first().first().value<InternalWindow *>();

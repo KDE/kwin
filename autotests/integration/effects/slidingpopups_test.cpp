@@ -52,7 +52,6 @@ void SlidingPopupsTest::initTestCase()
     qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::Effect *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
 
@@ -133,7 +132,6 @@ void SlidingPopupsTest::testWithOtherEffect()
     auto effectloader = e->findChild<AbstractEffectLoader *>();
     QVERIFY(effectloader);
     QSignalSpy effectLoadedSpy(effectloader, &AbstractEffectLoader::effectLoaded);
-    QVERIFY(effectLoadedSpy.isValid());
 
     Effect *slidingPoupus = nullptr;
     Effect *otherEffect = nullptr;
@@ -162,7 +160,6 @@ void SlidingPopupsTest::testWithOtherEffect()
     QTest::qWait(50);
 
     QSignalSpy windowAddedSpy(effects, &EffectsHandler::windowAdded);
-    QVERIFY(windowAddedSpy.isValid());
 
     // create an xcb window
     std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
@@ -199,7 +196,6 @@ void SlidingPopupsTest::testWithOtherEffect()
 
     // we should get a window for it
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
@@ -221,10 +217,8 @@ void SlidingPopupsTest::testWithOtherEffect()
     xcb_flush(c.get());
 
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
 
     QSignalSpy windowDeletedSpy(effects, &EffectsHandler::windowDeleted);
-    QVERIFY(windowDeletedSpy.isValid());
     QVERIFY(windowClosedSpy.wait());
 
     // again we should have the sliding popups active
@@ -271,7 +265,6 @@ void SlidingPopupsTest::testWithOtherEffectWayland()
     auto effectloader = e->findChild<AbstractEffectLoader *>();
     QVERIFY(effectloader);
     QSignalSpy effectLoadedSpy(effectloader, &AbstractEffectLoader::effectLoaded);
-    QVERIFY(effectLoadedSpy.isValid());
 
     Effect *slidingPoupus = nullptr;
     Effect *otherEffect = nullptr;
@@ -296,7 +289,6 @@ void SlidingPopupsTest::testWithOtherEffectWayland()
     QVERIFY(!slidingPoupus->isActive());
     QVERIFY(!otherEffect->isActive());
     QSignalSpy windowAddedSpy(effects, &EffectsHandler::windowAdded);
-    QVERIFY(windowAddedSpy.isValid());
 
     using namespace KWayland::Client;
     // the test created the slide protocol, let's create a Registry and listen for it
@@ -304,7 +296,6 @@ void SlidingPopupsTest::testWithOtherEffectWayland()
     registry->create(Test::waylandConnection());
 
     QSignalSpy interfacesAnnouncedSpy(registry.get(), &Registry::interfacesAnnounced);
-    QVERIFY(interfacesAnnouncedSpy.isValid());
     registry->setup();
     QVERIFY(interfacesAnnouncedSpy.wait());
     auto slideInterface = registry->interface(Registry::Interface::Slide);
@@ -340,10 +331,8 @@ void SlidingPopupsTest::testWithOtherEffectWayland()
     surface.reset();
 
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
 
     QSignalSpy windowDeletedSpy(effects, &EffectsHandler::windowDeleted);
-    QVERIFY(windowDeletedSpy.isValid());
     QVERIFY(windowClosedSpy.wait());
 
     // again we should have the sliding popups active

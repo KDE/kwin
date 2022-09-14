@@ -43,7 +43,6 @@ void TabBoxTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
 
@@ -93,9 +92,7 @@ void TabBoxTest::testCapsLock()
 
     // Setup tabbox signal spies
     QSignalSpy tabboxAddedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxAdded);
-    QVERIFY(tabboxAddedSpy.isValid());
     QSignalSpy tabboxClosedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxClosed);
-    QVERIFY(tabboxClosedSpy.isValid());
 
     // enable capslock
     quint32 timestamp = 0;
@@ -156,9 +153,7 @@ void TabBoxTest::testMoveForward()
 
     // Setup tabbox signal spies
     QSignalSpy tabboxAddedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxAdded);
-    QVERIFY(tabboxAddedSpy.isValid());
     QSignalSpy tabboxClosedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxClosed);
-    QVERIFY(tabboxClosedSpy.isValid());
 
     // press alt+tab
     quint32 timestamp = 0;
@@ -207,9 +202,7 @@ void TabBoxTest::testMoveBackward()
 
     // Setup tabbox signal spies
     QSignalSpy tabboxAddedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxAdded);
-    QVERIFY(tabboxAddedSpy.isValid());
     QSignalSpy tabboxClosedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxClosed);
-    QVERIFY(tabboxClosedSpy.isValid());
 
     // press alt+shift+tab
     quint32 timestamp = 0;

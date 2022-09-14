@@ -71,7 +71,6 @@ void TestAppmenu::init()
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
     QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
-    QVERIFY(connectedSpy.isValid());
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -88,10 +87,8 @@ void TestAppmenu::init()
 
     Registry registry;
     QSignalSpy compositorSpy(&registry, &Registry::compositorAnnounced);
-    QVERIFY(compositorSpy.isValid());
 
     QSignalSpy appmenuSpy(&registry, &Registry::appMenuAnnounced);
-    QVERIFY(appmenuSpy.isValid());
 
     QVERIFY(!registry.eventQueue());
     registry.setEventQueue(m_queue);
@@ -139,7 +136,6 @@ void TestAppmenu::cleanup()
 void TestAppmenu::testCreateAndSet()
 {
     QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWaylandServer::CompositorInterface::surfaceCreated);
-    QVERIFY(serverSurfaceCreated.isValid());
 
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
@@ -167,7 +163,6 @@ void TestAppmenu::testCreateAndSet()
 
     // and destroy
     QSignalSpy destroyedSpy(appMenuInterface, &QObject::destroyed);
-    QVERIFY(destroyedSpy.isValid());
     delete appmenu;
     QVERIFY(destroyedSpy.wait());
     QVERIFY(!m_appmenuManagerInterface->appMenuForSurface(serverSurface));
