@@ -76,6 +76,13 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
     } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "keep below"), Qt::CaseInsensitive)) {
         action = KeepBelowAction;
         term = term.left(term.lastIndexOf(i18nc("Note this is a KRunner keyword", "keep below")) - 1);
+    } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "pin"), Qt::CaseInsensitive)) {
+        action = PinAction;
+        term = term.left(term.lastIndexOf(i18nc("Note this is a KRunner keyword", "pin")) - 1);
+    } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "close all"), Qt::CaseInsensitive)) {
+        matches << workspaceMatch(CloseAllAction);
+    } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "move all"), Qt::CaseInsensitive)) {
+        matches << workspaceMatch(MoveAllAction);
     }
 
     // keyword match: when term starts with "window" we list all windows
@@ -241,6 +248,29 @@ void WindowsRunner::Run(const QString &id, const QString &actionId)
     case KeepBelowAction:
         window->setKeepBelow(!window->keepBelow());
         break;
+    case PinAction:
+        window->setOnAllDesktops(!window->isOnAllDesktops());
+        break;
+    case CloseAllAction: {
+        for (Window *w : Workspace::self()->allClientList()) {
+            if (w->isOnCurrentDesktop() && w->isCloseable()) {
+                w->closeWindow();
+            }
+        }
+        break;
+    }
+    case MoveAllAction: {
+        VirtualDesktopManager *vds = VirtualDesktopManager::self();
+        VirtualDesktop *newDesktop = vds->createVirtualDesktop(vds->count());
+        if (newDesktop) {
+            for (Window *w : Workspace::self()->allClientList()) {
+                if (w->isOnCurrentDesktop() && !w->isSpecialWindow()) {
+                    workspace()->sendWindowToDesktop(w, newDesktop->x11DesktopNumber(), true);
+                }
+            }
+        }
+        break;
+    }
     case ActivateDesktopAction:
         Q_UNREACHABLE();
     }
@@ -318,11 +348,40 @@ RemoteMatch WindowsRunner::windowsMatch(const Window *window, const WindowsRunne
     case KeepBelowAction:
         properties[QStringLiteral("subtext")] = i18n("Toggle keep below running window on %1", desktopName);
         break;
+    case PinAction:
+        properties[QStringLiteral("subtext")] = i18n("Toggle pin to all desktops running window on %1", desktopName);
+        break;
     case ActivateAction:
     default:
         properties[QStringLiteral("subtext")] = i18n("Activate running window on %1", desktopName);
         break;
     }
+    match.properties = properties;
+    return match;
+}
+
+RemoteMatch WindowsRunner::workspaceMatch(const WindowsRunnerAction action, qreal relevance, Plasma::QueryMatch::Type type) const
+{
+    RemoteMatch match;
+    match.type = type;
+    match.id = QString::number((int)action) + QLatin1Char('_') + workspace()->activeWindow()->internalId().toString();
+    match.relevance = relevance;
+    match.iconName = QStringLiteral("preferences-system-windows-move");
+    QVariantMap properties;
+
+    switch (action) {
+    case CloseAllAction:
+        match.text = "Close all windows";
+        properties[QStringLiteral("subtext")] = i18n("Close all windows on current desktop");
+        break;
+    case MoveAllAction:
+        match.text = "Move all windows";
+        properties[QStringLiteral("subtext")] = i18n("Move all windows on current desktop to new desktop");
+        break;
+    default:
+        break;
+    }
+
     match.properties = properties;
     return match;
 }
@@ -340,6 +399,8 @@ bool WindowsRunner::actionSupported(const Window *window, const WindowsRunnerAct
         return window->isShadeable();
     case FullscreenAction:
         return window->isFullScreenable();
+    case PinAction:
+        return !window->isSpecialWindow();
     case KeepAboveAction:
     case KeepBelowAction:
     case ActivateAction:
