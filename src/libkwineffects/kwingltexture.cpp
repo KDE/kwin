@@ -293,13 +293,11 @@ GLTexturePrivate::GLTexturePrivate()
     , m_mipLevels(1)
     , m_unnormalizeActive(0)
     , m_normalizeActive(0)
-    , m_vbo(nullptr)
 {
 }
 
 GLTexturePrivate::~GLTexturePrivate()
 {
-    delete m_vbo;
     if (m_texture != 0 && !m_foreign) {
         glDeleteTextures(1, &m_texture);
     }
@@ -524,7 +522,7 @@ void GLTexture::render(const QRegion &region, const QRect &rect, bool hardwareCl
         QRect r(rect);
         r.moveTo(0, 0);
         if (!d->m_vbo) {
-            d->m_vbo = new GLVertexBuffer(KWin::GLVertexBuffer::Static);
+            d->m_vbo = std::make_unique<GLVertexBuffer>(KWin::GLVertexBuffer::Static);
         }
 
         const float verts[4 * 2] = {
@@ -595,19 +593,17 @@ void GLTexture::clear()
         }
     } else {
         if (const int size = width() * height()) {
-            uint32_t *buffer = new uint32_t[size];
-            memset(buffer, 0, size * sizeof(uint32_t));
+            std::vector<uint32_t> buffer(size, 0);
             bind();
             if (!GLPlatform::instance()->isGLES()) {
                 glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width(), height(),
-                                GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, buffer);
+                                GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, buffer.data());
             } else {
                 const GLenum format = d->s_supportsARGB32 ? GL_BGRA_EXT : GL_RGBA;
                 glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width(), height(),
-                                format, GL_UNSIGNED_BYTE, buffer);
+                                format, GL_UNSIGNED_BYTE, buffer.data());
             }
             unbind();
-            delete[] buffer;
         }
     }
 }
