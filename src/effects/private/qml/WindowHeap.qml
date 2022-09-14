@@ -35,7 +35,6 @@ FocusScope {
     property real padding: 0
     // Either a string "activeClass" or a list internalIds of clients
     property var showOnly: []
-    property string activeClass
 
     required property bool organized
     readonly property bool effectiveOrganized: expoLayout.ready && organized

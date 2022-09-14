@@ -27,8 +27,12 @@ Item {
     readonly property bool initialHidden: client.minimized || !presentOnCurrentDesktop
     readonly property bool activeHidden: {
         if (windowHeap.showOnly === "activeClass") {
-            // client.resourceName is not an actual String as comes from a QByteArray so === would fail
-            return windowHeap.activeClass !== String(client.resourceName);
+            if (!KWinComponents.Workspace.activeClient) {
+                return true;
+            } else {
+                // client.resourceName is not an actual String as comes from a QByteArray so === would fail
+                return String(KWinComponents.Workspace.activeClient.resourceName) !== String(client.resourceName);
+            }
         } else {
             return windowHeap.showOnly.length !== 0
                 && windowHeap.showOnly.indexOf(client.internalId) === -1;
@@ -51,20 +55,6 @@ Item {
     // Swipe down gesture by touch, in some effects will close the window
     readonly property alias downGestureProgress: touchDragHandler.downGestureProgress
     signal downGestureTriggered()
-
-    Component.onCompleted: {
-        if (client.active) {
-            windowHeap.activeClass = client.resourceName;
-        }
-    }
-    Connections {
-        target: thumb.client
-        function onActiveChanged() {
-            if (thumb.client.active) {
-                thumb.windowHeap.activeClass = thumb.client.resourceName;
-            }
-        }
-    }
 
     state: {
         if (effect.gestureInProgress) {
