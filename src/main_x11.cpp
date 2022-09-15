@@ -24,6 +24,7 @@
 #include <KCrash>
 #include <KLocalizedString>
 #include <KSelectionOwner>
+#include <KSignalHandler>
 
 #include <QComboBox>
 #include <QCommandLineParser>
@@ -50,11 +51,6 @@ Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core", QtWarningMsg)
 
 namespace KWin
 {
-
-static void sighandler(int)
-{
-    QApplication::exit();
-}
 
 class AlternativeWMDialog : public QDialog
 {
@@ -339,15 +335,6 @@ int main(int argc, char *argv[])
     KWin::Application::setupMalloc();
     KWin::Application::setupLocalizedString();
 
-    if (signal(SIGTERM, KWin::sighandler) == SIG_IGN) {
-        signal(SIGTERM, SIG_IGN);
-    }
-    if (signal(SIGINT, KWin::sighandler) == SIG_IGN) {
-        signal(SIGINT, SIG_IGN);
-    }
-    if (signal(SIGHUP, KWin::sighandler) == SIG_IGN) {
-        signal(SIGHUP, SIG_IGN);
-    }
     signal(SIGPIPE, SIG_IGN);
 
     // Disable the glib event loop integration, since it seems to be responsible
@@ -374,6 +361,12 @@ int main(int argc, char *argv[])
 
     KWin::ApplicationX11 a(argc, argv);
     a.setupTranslator();
+
+    KSignalHandler::self()->watchSignal(SIGTERM);
+    KSignalHandler::self()->watchSignal(SIGINT);
+    KSignalHandler::self()->watchSignal(SIGHUP);
+    QObject::connect(KSignalHandler::self(), &KSignalHandler::signalReceived,
+                     &a, &QCoreApplication::exit);
 
     KWin::Application::createAboutData();
 
