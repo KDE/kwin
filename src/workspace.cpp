@@ -2731,7 +2731,7 @@ QPointF Workspace::adjustWindowPosition(Window *window, QPointF pos, bool unrest
                 if ((*l) == window) {
                     continue;
                 }
-                if ((*l)->isMinimized() || (*l)->isShade()) {
+                if ((*l)->isMinimized()) {
                     continue;
                 }
                 if (!(*l)->isShown()) {
