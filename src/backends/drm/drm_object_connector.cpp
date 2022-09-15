@@ -293,7 +293,7 @@ bool DrmConnector::updateProperties()
         if (!m_edid.isValid()) {
             qCWarning(KWIN_DRM) << "Couldn't parse EDID for connector" << this;
         }
-    } else {
+    } else if (isConnected()) {
         qCDebug(KWIN_DRM) << "Could not find edid for connector" << this;
     }
 
