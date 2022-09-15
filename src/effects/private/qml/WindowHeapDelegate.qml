@@ -56,12 +56,15 @@ Item {
     readonly property alias downGestureProgress: touchDragHandler.downGestureProgress
     signal downGestureTriggered()
 
+    // "normal" | "pressed" | "drag" | "reparenting"
+    property string substate: "normal"
+
     state: {
         if (effect.gestureInProgress) {
             return "partial";
         }
         if (windowHeap.effectiveOrganized) {
-            return activeHidden ? "active-hidden" : "active";
+            return activeHidden ? "active-hidden" : `active-${substate}`;
         }
         return initialHidden ? "initial-hidden" : "initial";
     }
@@ -101,13 +104,12 @@ Item {
         onXChanged: effect.checkItemDraggedOutOfScreen(thumbSource)
         onYChanged: effect.checkItemDraggedOutOfScreen(thumbSource)
 
-        state: "normal"
         function saveDND() {
             const oldGlobalRect = mapToItem(null, 0, 0, width, height);
             thumb.windowHeap.saveDND(thumb.client.internalId, oldGlobalRect);
         }
         function restoreDND(oldGlobalRect: rect) {
-            state = "reparenting";
+            thumb.substate = "reparenting";
 
             const newGlobalRect = mapFromItem(null, oldGlobalRect);
 
@@ -116,56 +118,7 @@ Item {
             width = newGlobalRect.width;
             height = newGlobalRect.height;
 
-            state = "normal";
-        }
-        states: [
-            State {
-                name: "normal"
-                PropertyChanges {
-                    target: thumbSource
-                    x: 0
-                    y: 0
-                    width: thumb.width
-                    height: thumb.height
-                }
-            },
-            State {
-                name: "pressed"
-                PropertyChanges {
-                    target: thumbSource
-                    width: thumb.width
-                    height: thumb.height
-                }
-            },
-            State {
-                name: "drag"
-                PropertyChanges {
-                    target: thumbSource
-                    x: -thumb.activeDragHandler.centroid.pressPosition.x * thumb.targetScale +
-                            thumb.activeDragHandler.centroid.position.x
-                    y: -thumb.activeDragHandler.centroid.pressPosition.y * thumb.targetScale +
-                            thumb.activeDragHandler.centroid.position.y
-                    width: thumb.width * thumb.targetScale
-                    height: thumb.height * thumb.targetScale
-                }
-            },
-            State {
-                name: "reparenting"
-                PropertyChanges {
-                    target: thumbSource
-                }
-            }
-        ]
-        transitions: Transition {
-            id: returning
-            from: "drag,reparenting"
-            to: "normal"
-            enabled: thumb.windowHeap.animationEnabled
-            NumberAnimation {
-                duration: thumb.windowHeap.animationDuration
-                properties: "x, y, width, height"
-                easing.type: Easing.OutCubic
-            }
+            thumb.substate = "normal";
         }
 
         PlasmaCore.FrameSvgItem {
@@ -245,6 +198,13 @@ Item {
                 height: thumb.client.height
             }
             PropertyChanges {
+                target: thumbSource
+                x: 0
+                y: 0
+                width: thumb.client.width
+                height: thumb.client.height
+            }
+            PropertyChanges {
                 target: icon
                 opacity: 0
             }
@@ -291,6 +251,11 @@ Item {
             }
         },
         State {
+            name: "active-hidden"
+            extend: "initial-hidden"
+        },
+        State {
+            // this state is never directly used without a substate
             name: "active"
             PropertyChanges {
                 target: thumb
@@ -309,20 +274,66 @@ Item {
             }
         },
         State {
-            name: "active-hidden"
-            extend: "initial-hidden"
+            name: "active-normal"
+            extend: "active"
+            PropertyChanges {
+                target: thumbSource
+                x: 0
+                y: 0
+                width: cell.width
+                height: cell.height
+            }
+        },
+        State {
+            name: "active-pressed"
+            extend: "active"
+            PropertyChanges {
+                target: thumbSource
+                width: cell.width
+                height: cell.height
+            }
+        },
+        State {
+            name: "active-drag"
+            extend: "active"
+            PropertyChanges {
+                target: thumbSource
+                x: -thumb.activeDragHandler.centroid.pressPosition.x * thumb.targetScale +
+                        thumb.activeDragHandler.centroid.position.x
+                y: -thumb.activeDragHandler.centroid.pressPosition.y * thumb.targetScale +
+                        thumb.activeDragHandler.centroid.position.y
+                width: cell.width * thumb.targetScale
+                height: cell.height * thumb.targetScale
+            }
+        },
+        State {
+            name: "active-reparenting"
+            extend: "active"
         }
     ]
 
-    transitions: Transition {
-        to: "initial, initial-hidden, active, active-hidden"
-        enabled: thumb.windowHeap.animationEnabled
-        NumberAnimation {
-            duration: thumb.windowHeap.animationDuration
-            properties: "x, y, width, height, opacity"
-            easing.type: Easing.OutCubic
+    transitions: [
+        Transition {
+            id: returning
+            from: "active-drag, active-reparenting"
+            to: "active-normal"
+            enabled: thumb.windowHeap.animationEnabled
+            NumberAnimation {
+                duration: thumb.windowHeap.animationDuration
+                properties: "x, y, width, height"
+                easing.type: Easing.OutCubic
+            }
+        },
+        Transition {
+            to: "initial, initial-hidden, active-normal, active-hidden"
+            enabled: thumb.windowHeap.animationEnabled
+            NumberAnimation {
+                duration: thumb.windowHeap.animationDuration
+                properties: "x, y, width, height, opacity"
+                easing.type: Easing.OutCubic
+            }
         }
-    }
+    ]
 
     HoverHandler {
         id: hoverHandler
@@ -341,12 +352,12 @@ Item {
             if (pressed) {
                 var saved = Qt.point(thumbSource.x, thumbSource.y);
                 thumbSource.Drag.active = true;
-                thumbSource.state = "pressed";
+                thumb.substate = "pressed";
                 thumbSource.x = saved.x;
                 thumbSource.y = saved.y;
             } else if (!thumb.activeDragHandler.active) {
                 thumbSource.Drag.active = false;
-                thumbSource.state = "normal";
+                thumb.substate = "normal";
             }
         }
     }
@@ -365,13 +376,13 @@ Item {
         grabPermissions: PointerHandler.CanTakeOverFromAnything
         // This does not work when moving pointer fast and pressing along the way
         // See also QTBUG-105903, QTBUG-105904
-        // enabled: thumbSource.state !== "normal"
+        // enabled: thumb.state !== "active-normal"
 
         onActiveChanged: {
             thumb.windowHeap.dragActive = active;
             if (active) {
                 thumb.activeDragHandler = this;
-                thumbSource.state = "drag";
+                thumb.substate = "drag";
             } else {
                 thumbSource.saveDND();
 
@@ -381,7 +392,7 @@ Item {
                     // another virtual desktop (not another screen).
                     if (typeof thumbSource !== "undefined") {
                         // Except the case when it was dropped on the same desktop which it's already on, so let's return to normal state anyway.
-                        thumbSource.state = "normal";
+                        thumb.substate = "normal";
                     }
                     return;
                 }
@@ -390,7 +401,7 @@ Item {
                 effect.checkItemDroppedOutOfScreen(globalPos, thumbSource);
 
                 // else, return to normal without reparenting
-                thumbSource.state = "normal";
+                thumb.substate = "normal";
             }
         }
     }
