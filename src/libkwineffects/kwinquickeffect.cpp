@@ -41,16 +41,7 @@ bool QuickSceneEffectPrivate::isItemOnScreen(QQuickItem *item, EffectScreen *scr
     }
 
     const QuickSceneView *view = views[screen];
-    auto *rootItem = view->rootItem();
-    auto candidate = item->parentItem();
-    // Is there a more efficient way?
-    while (candidate) {
-        if (candidate == rootItem) {
-            return true;
-        }
-        candidate = candidate->parentItem();
-    }
-    return false;
+    return item->window() == view->window();
 }
 
 QuickSceneView::QuickSceneView(QuickSceneEffect *effect, EffectScreen *screen)
