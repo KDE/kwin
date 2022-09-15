@@ -33,6 +33,7 @@
 #include <KDesktopFile>
 #include <KLocalizedString>
 #include <KShell>
+#include <KSignalHandler>
 
 // Qt
 #include <QCommandLineParser>
@@ -88,11 +89,6 @@ static void restoreNofileLimit()
     if (setrlimit(RLIMIT_NOFILE, &originalNofileLimit) == -1) {
         std::cerr << "Failed to restore RLIMIT_NOFILE limit, legacy apps might be broken" << std::endl;
     }
-}
-
-static void sighandler(int)
-{
-    QApplication::exit();
 }
 
 void disableDrKonqi()
@@ -288,15 +284,6 @@ int main(int argc, char *argv[])
     KWin::Application::setupLocalizedString();
     KWin::gainRealTime();
 
-    if (signal(SIGTERM, KWin::sighandler) == SIG_IGN) {
-        signal(SIGTERM, SIG_IGN);
-    }
-    if (signal(SIGINT, KWin::sighandler) == SIG_IGN) {
-        signal(SIGINT, SIG_IGN);
-    }
-    if (signal(SIGHUP, KWin::sighandler) == SIG_IGN) {
-        signal(SIGHUP, SIG_IGN);
-    }
     signal(SIGPIPE, SIG_IGN);
 
     // It's easy to exceed the file descriptor limit because many things are backed using fds
@@ -318,6 +305,12 @@ int main(int argc, char *argv[])
     a.setupTranslator();
     // reset QT_QPA_PLATFORM so we don't propagate it to our children (e.g. apps launched from the overview effect)
     qunsetenv("QT_QPA_PLATFORM");
+
+    KSignalHandler::self()->watchSignal(SIGTERM);
+    KSignalHandler::self()->watchSignal(SIGINT);
+    KSignalHandler::self()->watchSignal(SIGHUP);
+    QObject::connect(KSignalHandler::self(), &KSignalHandler::signalReceived,
+                     &a, &QCoreApplication::exit);
 
     KWin::Application::createAboutData();
 
