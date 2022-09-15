@@ -374,7 +374,7 @@ public:
     static EffectScreenImpl *get(Output *output);
 
 private:
-    Output *m_platformOutput;
+    QPointer<Output> m_platformOutput;
 };
 
 class EffectWindowImpl : public EffectWindow
