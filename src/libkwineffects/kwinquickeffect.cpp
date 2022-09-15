@@ -23,7 +23,7 @@ public:
     {
         return effect->d.get();
     }
-    bool isItemOnScreen(QQuickItem *item, EffectScreen *screen);
+    bool isItemOnScreen(QQuickItem *item, EffectScreen *screen) const;
 
     SharedQmlEngine::Ptr qmlEngine;
     std::unique_ptr<QQmlComponent> qmlComponent;
@@ -34,13 +34,13 @@ public:
     std::unique_ptr<QWindow> dummyWindow;
 };
 
-bool QuickSceneEffectPrivate::isItemOnScreen(QQuickItem *item, EffectScreen *screen)
+bool QuickSceneEffectPrivate::isItemOnScreen(QQuickItem *item, EffectScreen *screen) const
 {
     if (!item || !screen || !views.contains(screen)) {
         return false;
     }
 
-    auto *view = views[screen];
+    const QuickSceneView *view = views[screen];
     auto *rootItem = view->rootItem();
     auto candidate = item->parentItem();
     // Is there a more efficient way?
