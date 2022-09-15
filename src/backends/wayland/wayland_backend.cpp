@@ -485,6 +485,7 @@ WaylandSeat::~WaylandSeat()
     destroyPointerDevice();
     destroyKeyboardDevice();
     destroyTouchDevice();
+    m_seat->release();
 }
 
 void WaylandSeat::createPointerDevice()
@@ -576,6 +577,13 @@ WaylandBackend::~WaylandBackend()
 {
     if (sceneEglDisplay() != EGL_NO_DISPLAY) {
         eglTerminate(sceneEglDisplay());
+    }
+
+    if (m_relativePointerManager) {
+        m_relativePointerManager->release();
+    }
+    if (m_ssdManager) {
+        m_ssdManager->release();
     }
 
     if (m_pointerGestures) {
@@ -768,7 +776,7 @@ WaylandOutput *WaylandBackend::createOutput(const QString &name, const QSize &si
     }
 
     if (ssdManager()) {
-        auto decoration = ssdManager()->create(surface.get(), this);
+        auto decoration = ssdManager()->create(surface.get(), surface.get());
         connect(decoration, &ServerSideDecoration::modeChanged, this, [decoration] {
             if (decoration->mode() != ServerSideDecoration::Mode::Server) {
                 decoration->requestMode(ServerSideDecoration::Mode::Server);
