@@ -130,7 +130,7 @@ Item {
                 topMargin: -PlasmaCore.Units.smallSpacing * 2
                 leftMargin: -PlasmaCore.Units.smallSpacing * 2
                 rightMargin: -PlasmaCore.Units.smallSpacing * 2
-                bottomMargin: -(Math.round(icon.height / 4) + caption.height + (PlasmaCore.Units.smallSpacing * 2))
+                bottomMargin: -(Math.round(icon.height / 4) + (thumb.windowTitleVisible ? caption.height : 0) + (PlasmaCore.Units.smallSpacing * 2))
             }
             imagePath: "widgets/viewitem"
             prefix: "hover"
@@ -157,12 +157,12 @@ Item {
     PlasmaCore.IconItem {
         id: icon
         width: PlasmaCore.Units.iconSizes.large
-        height: width
+        height: PlasmaCore.Units.iconSizes.large
         source: thumb.client.icon
         usesPlasmaTheme: false
         anchors.horizontalCenter: thumbSource.horizontalCenter
         anchors.bottom: thumbSource.bottom
-        anchors.bottomMargin: -height / 4
+        anchors.bottomMargin: -Math.round(height / 4)
         visible: !thumb.activeHidden && !activeDragHandler.active
 
         PC3.Label {
@@ -187,7 +187,7 @@ Item {
         naturalWidth: thumb.client.width
         naturalHeight: thumb.client.height
         persistentKey: thumb.client.internalId
-        bottomMargin: icon.height / 4 + caption.height
+        bottomMargin: icon.height / 4 + (thumb.windowTitleVisible ? caption.height : 0)
     }
 
     states: [
