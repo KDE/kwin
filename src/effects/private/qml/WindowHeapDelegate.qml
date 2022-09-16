@@ -229,6 +229,13 @@ Item {
                     : (thumb.activeHidden ? 1 - effect.partialActivationFactor : 1)
             }
             PropertyChanges {
+                target: thumbSource
+                x: 0
+                y: 0
+                width: thumb.width
+                height: thumb.height
+            }
+            PropertyChanges {
                 target: icon
                 opacity: effect.partialActivationFactor
             }
