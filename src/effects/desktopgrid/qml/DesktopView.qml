@@ -88,7 +88,6 @@ FocusScope {
         id: dragHandler
         target: heap
         grabPermissions: PointerHandler.ApprovesTakeOverByHandlersOfSameType
-        cursorShape: active ? Qt.ClosedHandCursor : Qt.ArrowCursor
         onActiveChanged: {
             if (!active) {
                 heap.Drag.drop();
@@ -160,6 +159,12 @@ FocusScope {
                 easing.type: Easing.OutCubic
             }
         }
+    }
+
+    MouseArea {
+        anchors.fill: heap
+        acceptedButtons: Qt.NoButton
+        cursorShape: dragHandler.active ? Qt.ClosedHandCursor : Qt.ArrowCursor
     }
 
     PC3.Control {
