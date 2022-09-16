@@ -33,6 +33,7 @@
 #include "wayland/filtered_display.h"
 #include "wayland/idle_interface.h"
 #include "wayland/idleinhibit_v1_interface.h"
+#include "wayland/idlenotify_v1_interface.h"
 #include "wayland/inputmethod_v1_interface.h"
 #include "wayland/keyboard_shortcuts_inhibit_v1_interface.h"
 #include "wayland/keystate_interface.h"
@@ -393,6 +394,7 @@ bool WaylandServer::init(InitializationFlags flags)
     auto idleInhibition = new IdleInhibition(m_idle);
     connect(this, &WaylandServer::windowAdded, idleInhibition, &IdleInhibition::registerClient);
     new IdleInhibitManagerV1Interface(m_display, m_display);
+    new IdleNotifyV1Interface(m_display, m_display);
     m_plasmaShell = new PlasmaShellInterface(m_display, m_display);
     connect(m_plasmaShell, &PlasmaShellInterface::surfaceCreated, this, [this](PlasmaShellSurfaceInterface *surface) {
         if (XdgSurfaceWindow *window = findXdgSurfaceWindow(surface->surface())) {

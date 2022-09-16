@@ -179,6 +179,10 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-lockscreen-overlay-v1.xml
     BASENAME kde-lockscreen-overlay-v1
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${WaylandProtocols_DATADIR}/staging/ext-idle-notify/ext-idle-notify-v1.xml
+    BASENAME ext-idle-notify-v1
+)
 
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/xwayland-keyboard-grab/xwayland-keyboard-grab-unstable-v1.xml
@@ -211,6 +215,7 @@ target_sources(kwin PRIVATE
     filtered_display.cpp
     idle_interface.cpp
     idleinhibit_v1_interface.cpp
+    idlenotify_v1_interface.cpp
     inputmethod_v1_interface.cpp
     keyboard_interface.cpp
     keyboard_shortcuts_inhibit_v1_interface.cpp

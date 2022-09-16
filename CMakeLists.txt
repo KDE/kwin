@@ -208,7 +208,7 @@ find_package(Wayland 1.21 REQUIRED COMPONENTS
     Server
 )
 
-find_package(WaylandProtocols 1.25)
+find_package(WaylandProtocols 1.27)
 set_package_properties(WaylandProtocols PROPERTIES
     TYPE REQUIRED
     PURPOSE "Collection of Wayland protocols that add functionality not available in the Wayland core protocol"
