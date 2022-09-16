@@ -32,7 +32,6 @@ FocusScope {
     function start() {
         animationEnabled = true;
         organized = true;
-        searchField.text = "";
     }
 
     function stop() {
@@ -205,15 +204,11 @@ FocusScope {
                     focus: true
                     Keys.priority: Keys.BeforeItem
                     Keys.forwardTo: text && heap.count === 0 ? searchResults : heap
-                    onTextChanged: {
+                    text: effect.searchText
+                    onTextEdited: {
                         effect.searchText = text;
                         heap.resetSelected();
                         heap.selectNextItem(WindowHeap.Direction.Down);
-                    }
-                    Binding {
-                        target: searchField
-                        property: "text"
-                        value: effect.searchText
                     }
                 }
             }
@@ -227,13 +222,13 @@ FocusScope {
                 id: placeholderMessage
                 anchors.top: parent.top
                 anchors.horizontalCenter: parent.horizontalCenter
-                visible: container.organized && searchField.text && heap.count === 0
+                visible: container.organized && effect.searchText.length > 0 && heap.count === 0
                 text: i18nd("kwin_effects", "No matching windows")
             }
 
             WindowHeap {
                 id: heap
-                visible: !(container.organized && searchField.text) || heap.count !== 0
+                visible: !(container.organized && effect.searchText.length > 0) || heap.count !== 0
                 anchors.fill: parent
                 layout.mode: effect.layout
                 focus: true
@@ -248,7 +243,7 @@ FocusScope {
                     desktop: KWinComponents.Workspace.currentVirtualDesktop
                     screenName: targetScreen.name
                     clientModel: stackModel
-                    filter: searchField.text
+                    filter: effect.searchText
                     minimizedWindows: !effect.ignoreMinimized
                     windowType: ~KWinComponents.ClientFilterModel.Dock &
                                 ~KWinComponents.ClientFilterModel.Desktop &
@@ -287,8 +282,8 @@ FocusScope {
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: parent.width / 2
                 height: parent.height - placeholderMessage.height - PlasmaCore.Units.largeSpacing
-                queryString: searchField.text
-                visible: container.organized && searchField.text && heap.count === 0
+                queryString: effect.searchText
+                visible: container.organized && effect.searchText.length > 0 && heap.count === 0
 
                 onActivated: {
                     effect.deactivate();
