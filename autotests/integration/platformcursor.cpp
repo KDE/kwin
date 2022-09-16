@@ -30,6 +30,8 @@ void PlatformCursorTest::initTestCase()
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
+    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
+
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
 }
