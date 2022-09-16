@@ -687,7 +687,9 @@ void WaylandServer::destroyInputMethodConnection()
 void WaylandServer::removeWindow(Window *c)
 {
     m_windows.removeAll(c);
-    Q_EMIT windowRemoved(c);
+    if (c->readyForPainting()) {
+        Q_EMIT windowRemoved(c);
+    }
 }
 
 static Window *findWindowInList(const QList<Window *> &windows, const KWaylandServer::SurfaceInterface *surface)
