@@ -35,7 +35,7 @@ inline DmaBufAttributes dmaBufAttributesForBo(gbm_bo *bo)
         return attributes;
     }
 
-    attributes.fd[0] = gbm_bo_get_fd(bo);
+    attributes.fd[0] = FileDescriptor{gbm_bo_get_fd(bo)};
     attributes.offset[0] = gbm_bo_get_offset(bo, 0);
     attributes.pitch[0] = gbm_bo_get_stride_for_plane(bo, 0);
 #endif
