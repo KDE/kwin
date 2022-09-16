@@ -145,7 +145,7 @@ FocusScope {
         }
         Behavior on x {
             enabled: !dragHandler.active
-            XAnimator {
+            NumberAnimation {
                 id: xAnim
                 duration: container.effect.animationDuration
                 easing.type: Easing.OutCubic
@@ -153,7 +153,7 @@ FocusScope {
         }
         Behavior on y {
             enabled: !dragHandler.active
-            YAnimator {
+            NumberAnimation {
                 id: yAnim
                 duration: container.effect.animationDuration
                 easing.type: Easing.OutCubic
