@@ -3990,15 +3990,6 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
         oldGeometry = newGeom;
     }
 
-    // this can be true only if this window was mapped before KWin
-    // was started - in such case, don't adjust position to workarea,
-    // because the window already had its position, and if a window
-    // with a strut altering the workarea would be managed in initialization
-    // after this one, this window would be moved
-    if (!workspace() || workspace()->initializing()) {
-        return;
-    }
-
     VirtualDesktop *desktop = !isOnCurrentDesktop() ? desktops().constLast() : VirtualDesktopManager::self()->currentDesktop();
     if (!oldDesktop) {
         oldDesktop = desktop;

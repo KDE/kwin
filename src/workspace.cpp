@@ -124,7 +124,6 @@ Workspace::Workspace()
     , was_user_interaction(false)
     , block_focus(0)
     , m_userActionsMenu(new UserActionsMenu(this))
-    , workspaceInit(true)
     , m_sessionManager(new SessionManager(this))
     , m_focusChain(std::make_unique<FocusChain>())
     , m_applicationMenu(std::make_unique<ApplicationMenu>())
@@ -269,11 +268,6 @@ void Workspace::init()
         connect(server, &WaylandServer::windowAdded, this, &Workspace::addWaylandWindow);
         connect(server, &WaylandServer::windowRemoved, this, &Workspace::removeWaylandWindow);
     }
-
-    // SELI TODO: This won't work with unreasonable focus policies,
-    // and maybe in rare cases also if the selected window doesn't
-    // want focus
-    workspaceInit = false;
 
     // broadcast that Workspace is ready, but first process all events.
     QMetaObject::invokeMethod(this, "workspaceInitialized", Qt::QueuedConnection);
