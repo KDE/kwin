@@ -203,8 +203,6 @@ FocusScope {
                     anchors.centerIn: parent
                     width: Math.min(parent.width, 20 * PlasmaCore.Units.gridUnit)
                     focus: true
-                    placeholderText: i18nd("kwin_effects", "Search...")
-                    clearButtonShown: true
                     Keys.priority: Keys.BeforeItem
                     Keys.forwardTo: text && heap.count === 0 ? searchResults : heap
                     onTextChanged: {
