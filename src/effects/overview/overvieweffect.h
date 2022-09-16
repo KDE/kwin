@@ -21,6 +21,7 @@ class OverviewEffect : public QuickSceneEffect
     Q_PROPERTY(qreal partialActivationFactor READ partialActivationFactor NOTIFY partialActivationFactorChanged)
     // More efficient from a property binding pov rather than binding to partialActivationFactor !== 0
     Q_PROPERTY(bool gestureInProgress READ gestureInProgress NOTIFY gestureInProgressChanged)
+    Q_PROPERTY(QString searchText MEMBER m_searchText NOTIFY searchTextChanged)
 
 public:
     enum class Status {
@@ -61,6 +62,7 @@ Q_SIGNALS:
     void partialActivationFactorChanged();
     void gestureInProgressChanged();
     void ignoreMinimizedChanged();
+    void searchTextChanged();
 
 public Q_SLOTS:
     void activate();
@@ -84,9 +86,10 @@ private:
     QList<QKeySequence> m_toggleShortcut;
     QList<ElectricBorder> m_borderActivate;
     QList<ElectricBorder> m_touchBorderActivate;
+    QString m_searchText;
+    Status m_status = Status::Inactive;
     qreal m_partialActivationFactor = 0;
     bool m_blurBackground = false;
-    Status m_status = Status::Inactive;
     int m_animationDuration = 400;
     int m_layout = 1;
     bool m_gestureInProgress = false;
