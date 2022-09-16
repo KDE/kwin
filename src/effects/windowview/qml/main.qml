@@ -93,7 +93,15 @@ Item {
     PlasmaExtras.PlaceholderMessage {
         anchors.centerIn: parent
         width: parent.width - (PlasmaCore.Units.gridUnit * 8)
+
         visible: heap.activeEmpty
+        // Otherwise it's always 100% opaque even while the blurry desktop background's
+        // opacity is changing, which looks weird and is different from what Overview does.
+        opacity: container.organized ? 1 : 0
+        Behavior on opacity {
+            OpacityAnimator { duration: container.effect.animationDuration; easing.type: Easing.OutCubic }
+        }
+
         iconName: "edit-none"
         text: effect.searchText.length > 0 ? i18nd("kwin_effects", "No Matches") : i18nd("kwin_effects", "No Windows")
     }
