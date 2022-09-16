@@ -720,8 +720,6 @@ private:
 
     static Workspace *_self;
 
-    bool workspaceInit;
-
     std::unique_ptr<KStartupInfo> m_startup;
     std::unique_ptr<ColorMapper> m_colorMapper;
 
@@ -810,11 +808,6 @@ private:
 inline QList<Output *> Workspace::outputs() const
 {
     return m_outputs;
-}
-
-inline bool Workspace::initializing() const
-{
-    return workspaceInit;
 }
 
 inline Window *Workspace::activeWindow() const
