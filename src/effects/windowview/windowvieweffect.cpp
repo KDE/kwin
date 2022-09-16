@@ -71,9 +71,9 @@ WindowViewEffect::WindowViewEffect()
     });
 
     m_exposeClassCurrentDesktopAction->setObjectName(QStringLiteral("ExposeClassCurrentDesktop"));
-    m_exposeClassAction->setText(i18n("Toggle Present Windows (Window class on current desktop)"));
-    effects->registerGlobalShortcut(QKeySequence{}, m_exposeClassAction);
-    connect(m_exposeClassAction, &QAction::triggered, this, [this]() {
+    m_exposeClassCurrentDesktopAction->setText(i18n("Toggle Present Windows (Window class on current desktop)"));
+    effects->registerGlobalShortcut(QKeySequence{}, m_exposeClassCurrentDesktopAction);
+    connect(m_exposeClassCurrentDesktopAction, &QAction::triggered, this, [this]() {
         toggleMode(ModeWindowClassCurrentDesktop);
     });
 
