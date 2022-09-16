@@ -106,17 +106,12 @@ Item {
                 OpacityAnimator { duration: container.effect.animationDuration; easing.type: Easing.OutCubic }
             }
 
-            // Binding loops will be avoided from the fact that setting the text to the same won't emit textChanged
             // We can't use activeFocus because is not reliable on qml effects
-            onTextChanged: {
+            text: effect.searchText
+            onTextEdited: {
                 effect.searchText = text;
                 heap.resetSelected();
                 heap.selectNextItem(WindowHeap.Direction.Down);
-            }
-            Binding {
-                target: searchField
-                property: "text"
-                value: effect.searchText
             }
             Keys.priority: Keys.AfterItem
             Keys.forwardTo: heap
