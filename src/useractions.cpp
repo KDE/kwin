@@ -1010,7 +1010,7 @@ void Workspace::initShortcuts()
                  0, &Workspace::slotWindowRaiseOrLower);
     initShortcut("Window Fullscreen", i18n("Make Window Fullscreen"),
                  0, &Workspace::slotWindowFullScreen);
-    initShortcut("Window No Border", i18n("Hide Window Border"),
+    initShortcut("Window No Border", i18n("Toggle Window Border"),
                  0, &Workspace::slotWindowNoBorder);
     initShortcut("Window Above Other Windows", i18n("Keep Window Above Others"),
                  0, &Workspace::slotWindowAbove);
