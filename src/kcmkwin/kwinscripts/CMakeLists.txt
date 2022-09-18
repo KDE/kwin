@@ -1,5 +1,5 @@
 # KI18N Translation Domain for this library
-add_definitions(-DTRANSLATION_DOMAIN=\"kcm-kwin-scripts\")
+add_definitions(-DTRANSLATION_DOMAIN=\"kcm_kwin_scripts\")
 
 kcoreaddons_add_plugin(kcm_kwin_scripts INSTALL_NAMESPACE plasma/kcms/systemsettings)
 
