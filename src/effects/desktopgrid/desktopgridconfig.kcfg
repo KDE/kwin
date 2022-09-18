@@ -28,5 +28,8 @@
         <entry name="ShowAddRemove" type="Bool">
             <default>true</default>
         </entry>
+        <entry name="UseExpoLayout" type="Bool">
+            <default>true</default>
+        </entry>
     </group>
 </kcfg>

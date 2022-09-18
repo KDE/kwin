@@ -52,6 +52,8 @@ Item {
 
     property DragManager activeDragHandler: dragHandler
 
+    property bool useExpoLayout: true
+
     // Swipe down gesture by touch, in some effects will close the window
     readonly property alias downGestureProgress: touchDragHandler.downGestureProgress
     signal downGestureTriggered()

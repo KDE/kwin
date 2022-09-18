@@ -19,6 +19,7 @@ FocusScope {
     required property QtObject clientModel
     required property QtObject desktop
     required property var dndManagerStore
+    required property bool useExpoLayout
     readonly property bool dragActive: heap.dragActive || dragHandler.active || xAnim.running || yAnim.running
     property real panelOpacity: 1
     focus: true
@@ -130,6 +131,7 @@ FocusScope {
             windowHeap: heap
             closeButtonVisible: false
             windowTitleVisible: false
+            useExpoLayout: desktopView.useExpoLayout
         }
         onActivated: effect.deactivate(effect.animationDuration);
         onWindowClicked: {

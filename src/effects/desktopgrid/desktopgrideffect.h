@@ -21,6 +21,7 @@ class DesktopGridEffect : public QuickSceneEffect
     Q_PROPERTY(qreal partialActivationFactor READ partialActivationFactor NOTIFY partialActivationFactorChanged)
     Q_PROPERTY(bool gestureInProgress READ gestureInProgress NOTIFY gestureInProgressChanged)
     Q_PROPERTY(bool showAddRemove READ showAddRemove NOTIFY showAddRemoveChanged)
+    Q_PROPERTY(bool useExpoLayout READ useExpoLayout NOTIFY useExpoLayoutChanged)
     Q_PROPERTY(Qt::AlignmentFlag desktopNameAlignment READ desktopNameAlignment NOTIFY desktopNameAlignmentChanged)
     Q_PROPERTY(DesktopLayoutMode desktopLayoutMode READ desktopLayoutMode NOTIFY desktopLayoutModeChanged)
     Q_PROPERTY(int customLayoutRows READ customLayoutRows NOTIFY customLayoutRowsChanged)
@@ -50,6 +51,8 @@ public:
     void setAnimationDuration(int duration);
 
     bool showAddRemove() const;
+
+    bool useExpoLayout() const;
 
     qreal partialActivationFactor() const;
     void setPartialActivationFactor(qreal factor);
@@ -93,6 +96,7 @@ Q_SIGNALS:
     void partialActivationFactorChanged();
     void gestureInProgressChanged();
     void showAddRemoveChanged();
+    void useExpoLayoutChanged();
     void desktopNameAlignmentChanged();
     void desktopLayoutModeChanged();
     void customLayoutRowsChanged();

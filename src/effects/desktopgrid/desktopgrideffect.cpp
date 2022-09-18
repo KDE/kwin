@@ -139,6 +139,7 @@ void DesktopGridEffect::reconfigure(ReconfigureFlags)
     }
 
     Q_EMIT showAddRemoveChanged();
+    Q_EMIT useExpoLayoutChanged();
     Q_EMIT desktopNameAlignmentChanged();
     Q_EMIT desktopLayoutModeChanged();
     Q_EMIT customLayoutRowsChanged();
@@ -258,6 +259,11 @@ void DesktopGridEffect::setAnimationDuration(int duration)
 bool DesktopGridEffect::showAddRemove() const
 {
     return DesktopGridConfig::showAddRemove();
+}
+
+bool DesktopGridEffect::useExpoLayout() const
+{
+    return DesktopGridConfig::useExpoLayout();
 }
 
 int DesktopGridEffect::layout() const

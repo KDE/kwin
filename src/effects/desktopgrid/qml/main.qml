@@ -90,6 +90,8 @@ Rectangle {
         return true;
     }
 
+    property bool useExpoLayout: effect.useExpoLayout
+
     Keys.onPressed: {
         if (event.key === Qt.Key_Escape) {
             effect.deactivate(effect.animationDuration);
@@ -103,6 +105,8 @@ Rectangle {
         } else if (event.key >= Qt.Key_0 && event.key <= Qt.Key_9) {
             const desktopId = event.key === Qt.Key_0 ? 10 : (event.key - Qt.Key_0);
             switchTo(desktopId);
+        } else if (event.key === Qt.Key_X) {
+            useExpoLayout = !useExpoLayout;
         } else if (event.key === Qt.Key_Up) {
             event.accepted = selectNext(WindowHeap.Direction.Up);
             if (!event.accepted) {
@@ -266,6 +270,7 @@ Rectangle {
 
                 clientModel: stackModel
                 dndManagerStore: container.dndManagerStore
+                useExpoLayout: container.useExpoLayout
                 Rectangle {
                     anchors.fill: parent
                     color: "transparent"
