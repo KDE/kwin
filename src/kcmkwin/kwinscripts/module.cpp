@@ -120,6 +120,8 @@ void Module::defaults()
     m_model->defaults();
     m_pendingDeletions.clear();
     Q_EMIT pendingDeletionsChanged();
+
+    setNeedsSave(m_model->isSaveNeeded());
 }
 
 void Module::load()
