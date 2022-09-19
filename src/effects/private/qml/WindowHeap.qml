@@ -93,9 +93,7 @@ FocusScope {
             for (let i in screens) {
                 if (targetScreen === screens[i]) {
                     found = true;
-                    let globalPos = item.screen.mapToGlobal(item.mapToItem(null, 0,0));
-                    let heapRelativePos = targetScreen.mapFromGlobal(globalPos);
-                    heapRelativePos = heap.mapFromItem(null, heapRelativePos.x, heapRelativePos.y);
+                    const heapRelativePos = heap.mapFromGlobal(item.mapToGlobal(0, 0));
                     otherScreenThumbnail.cloneOf = item
                     otherScreenThumbnail.x = heapRelativePos.x;
                     otherScreenThumbnail.y = heapRelativePos.y;
