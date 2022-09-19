@@ -411,9 +411,11 @@ Item {
                 var globalPos = targetScreen.mapToGlobal(centroid.scenePosition);
                 effect.checkItemDroppedOutOfScreen(globalPos, thumbSource);
 
-                // else, return to normal without reparenting
-                thumbSource.deleteDND();
-                thumb.substate = "normal";
+                if (typeof thumbSource !== "undefined") {
+                    // else, return to normal without reparenting
+                    thumbSource.deleteDND();
+                    thumb.substate = "normal";
+                }
             }
         }
     }
