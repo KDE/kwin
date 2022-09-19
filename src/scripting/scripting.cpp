@@ -58,16 +58,36 @@ static QRect scriptValueToRect(const QJSValue &value)
                  value.property(QStringLiteral("height")).toInt());
 }
 
+static QRectF scriptValueToRectF(const QJSValue &value)
+{
+    return QRectF(value.property(QStringLiteral("x")).toNumber(),
+                  value.property(QStringLiteral("y")).toNumber(),
+                  value.property(QStringLiteral("width")).toNumber(),
+                  value.property(QStringLiteral("height")).toNumber());
+}
+
 static QPoint scriptValueToPoint(const QJSValue &value)
 {
     return QPoint(value.property(QStringLiteral("x")).toInt(),
                   value.property(QStringLiteral("y")).toInt());
 }
 
+static QPointF scriptValueToPointF(const QJSValue &value)
+{
+    return QPointF(value.property(QStringLiteral("x")).toNumber(),
+                   value.property(QStringLiteral("y")).toNumber());
+}
+
 static QSize scriptValueToSize(const QJSValue &value)
 {
     return QSize(value.property(QStringLiteral("width")).toInt(),
                  value.property(QStringLiteral("height")).toInt());
+}
+
+static QSizeF scriptValueToSizeF(const QJSValue &value)
+{
+    return QSizeF(value.property(QStringLiteral("width")).toNumber(),
+                  value.property(QStringLiteral("height")).toNumber());
 }
 
 KWin::AbstractScript::AbstractScript(int id, QString scriptName, QString pluginName, QObject *parent)
@@ -113,11 +133,22 @@ KWin::Script::Script(int id, QString scriptName, QString pluginName, QObject *pa
     if (!QMetaType::hasRegisteredConverterFunction<QJSValue, QRect>()) {
         QMetaType::registerConverter<QJSValue, QRect>(scriptValueToRect);
     }
+    if (!QMetaType::hasRegisteredConverterFunction<QJSValue, QRectF>()) {
+        QMetaType::registerConverter<QJSValue, QRectF>(scriptValueToRectF);
+    }
+
     if (!QMetaType::hasRegisteredConverterFunction<QJSValue, QPoint>()) {
         QMetaType::registerConverter<QJSValue, QPoint>(scriptValueToPoint);
     }
+    if (!QMetaType::hasRegisteredConverterFunction<QJSValue, QPointF>()) {
+        QMetaType::registerConverter<QJSValue, QPointF>(scriptValueToPointF);
+    }
+
     if (!QMetaType::hasRegisteredConverterFunction<QJSValue, QSize>()) {
         QMetaType::registerConverter<QJSValue, QSize>(scriptValueToSize);
+    }
+    if (!QMetaType::hasRegisteredConverterFunction<QJSValue, QSizeF>()) {
+        QMetaType::registerConverter<QJSValue, QSizeF>(scriptValueToSizeF);
     }
 
     qRegisterMetaType<QList<KWin::Window *>>();
