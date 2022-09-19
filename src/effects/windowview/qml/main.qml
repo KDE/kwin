@@ -89,6 +89,14 @@ Item {
         }
     }
 
+    PlasmaExtras.PlaceholderMessage {
+        anchors.centerIn: parent
+        width: parent.width - (PlasmaCore.Units.gridUnit * 8)
+        visible: heap.count === 0
+        iconName: "edit-none"
+        text: effect.searchText.length > 0 ? i18nd("kwin_effects", "No Matches") : i18nd("kwin_effects", "No Windows")
+    }
+
     ColumnLayout {
         width: targetScreen.geometry.width
         height: targetScreen.geometry.height
@@ -189,13 +197,6 @@ Item {
             }
             onActivated: effect.deactivate(container.effect.animationDuration);
         }
-    }
-    PlasmaExtras.PlaceholderMessage {
-        anchors.centerIn: parent
-        width: parent.width - (PlasmaCore.Units.gridUnit * 8)
-        visible: heap.count === 0
-        iconName: "edit-none"
-        text: effect.searchText.length > 0 ? i18nd("kwin_effects", "No Matches") : i18nd("kwin_effects", "No Windows")
     }
 
     Repeater {
