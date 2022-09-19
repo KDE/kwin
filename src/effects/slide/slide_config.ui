@@ -67,13 +67,6 @@
     </widget>
    </item>
    <item>
-    <widget class="QCheckBox" name="kcfg_SlideDocks">
-     <property name="text">
-      <string>Slide docks</string>
-     </property>
-    </widget>
-   </item>
-   <item>
     <widget class="QCheckBox" name="kcfg_SlideBackground">
      <property name="text">
       <string>Slide desktop background</string>
