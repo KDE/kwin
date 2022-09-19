@@ -1,5 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2022 ivan tkachenko <me@ratijas.tk>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -92,7 +93,7 @@ Item {
     PlasmaExtras.PlaceholderMessage {
         anchors.centerIn: parent
         width: parent.width - (PlasmaCore.Units.gridUnit * 8)
-        visible: heap.count === 0
+        visible: heap.activeEmpty
         iconName: "edit-none"
         text: effect.searchText.length > 0 ? i18nd("kwin_effects", "No Matches") : i18nd("kwin_effects", "No Windows")
     }
