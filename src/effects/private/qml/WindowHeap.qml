@@ -26,6 +26,16 @@ FocusScope {
     property alias model: windowsRepeater.model
     property alias delegate: windowsRepeater.delegate
     readonly property alias count: windowsRepeater.count
+    readonly property bool activeEmpty: {
+        var children = expoLayout.visibleChildren;
+        for (var i = 0; i < children.length; i++) {
+            var child = children[i];
+            if (child instanceof WindowHeapDelegate && !child.activeHidden) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     property alias layout: expoLayout
     property int selectedIndex: -1
