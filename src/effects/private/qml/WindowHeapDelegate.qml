@@ -98,7 +98,7 @@ Item {
 
         Drag.proposedAction: Qt.MoveAction
         Drag.supportedActions: Qt.MoveAction
-        Drag.source: thumb.client
+        Drag.source: thumbSource
         Drag.hotSpot: Qt.point(
             thumb.activeDragHandler.centroid.pressPosition.x * thumb.targetScale,
             thumb.activeDragHandler.centroid.pressPosition.y * thumb.targetScale)

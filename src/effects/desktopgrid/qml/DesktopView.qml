@@ -42,13 +42,15 @@ FocusScope {
                     return;
                 }
                 effect.swapDesktops(drag.source.desktop.x11DesktopNumber, desktop.x11DesktopNumber);
-            } else {
-                // dragging a KWin::Window
-                if (drag.source.desktop === desktopView.desktop.x11DesktopNumber) {
+            } else if (drag.source instanceof KWinComponents.WindowThumbnailItem) {
+                // dragging an individual window/client
+                var client = drag.source.client;
+
+                if (client.desktop === desktopView.desktop.x11DesktopNumber) {
                     drop.action = Qt.IgnoreAction;
                     return;
                 }
-                drag.source.desktop = desktopView.desktop.x11DesktopNumber;
+                client.desktop = desktopView.desktop.x11DesktopNumber;
             }
         }
     }

@@ -201,12 +201,15 @@ Item {
 
                             onDropped: drop => {
                                 drop.accepted = true;
-                                // dragging a KWin::Window
-                                if (drag.source.desktop === delegate.desktop.x11DesktopNumber) {
-                                    drop.action = Qt.IgnoreAction;
-                                    return;
+                                if (drag.source instanceof KWinComponents.WindowThumbnailItem) {
+                                    // dragging an individual window/client
+                                    var client = drag.source.client;
+                                    if (client.desktop === delegate.desktop.x11DesktopNumber) {
+                                        drop.action = Qt.IgnoreAction;
+                                        return;
+                                    }
+                                    client.desktop = delegate.desktop.x11DesktopNumber;
                                 }
-                                drag.source.desktop = delegate.desktop.x11DesktopNumber;
                             }
                         }
                     }
@@ -303,8 +306,14 @@ Item {
                         drag.accepted = desktopModel.rowCount() < 20
                     }
                     onDropped: {
-                        desktopModel.create(desktopModel.rowCount());
-                        drag.source.desktop = desktopModel.rowCount() + 1;
+                        if (desktopModel.rowCount() < 20 && drag.source instanceof KWinComponents.WindowThumbnailItem) {
+                            drop.accepted = true;
+                            // dragging an individual window/client
+                            var client = drag.source.client;
+
+                            desktopModel.create(desktopModel.rowCount());
+                            client.desktop = desktopModel.rowCount() + 1;
+                        }
                     }
                 }
             }
