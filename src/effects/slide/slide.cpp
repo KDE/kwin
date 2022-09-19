@@ -137,25 +137,7 @@ void SlideEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::millisec
 
 void SlideEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
-    const bool wrap = effects->optionRollOverDesktops();
-    const int w = effects->desktopGridWidth();
-    const int h = effects->desktopGridHeight();
-    bool wrappingX = false, wrappingY = false;
-
-    QPointF drawPosition = forcePositivePosition(m_currentPosition);
-
-    if (wrap) {
-        drawPosition = constrainToDrawableRange(drawPosition);
-    }
-
-    // If we're wrapping, draw the desktop in the second position.
-    if (drawPosition.x() > w - 1) {
-        wrappingX = true;
-    }
-
-    if (drawPosition.y() > h - 1) {
-        wrappingY = true;
-    }
+    m_paintCtx.wrap = effects->optionRollOverDesktops();
 
     // When we enter a virtual desktop that has a window in fullscreen mode,
     // stacking order is fine. When we leave a virtual desktop that has
@@ -174,30 +156,7 @@ void SlideEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &
         }
     }
 
-    // Screen is painted in several passes. Each painting pass paints
-    // a single virtual desktop. There could be either 2 or 4 painting
-    // passes, depending how an user moves between virtual desktops.
-    // Windows, such as docks or keep-above windows, are painted in
-    // the last pass so they are above other windows.
-    m_paintCtx.firstPass = true;
-    const int lastDesktop = m_paintCtx.visibleDesktops.last();
-    for (int desktop : qAsConst(m_paintCtx.visibleDesktops)) {
-        m_paintCtx.desktop = desktop;
-        m_paintCtx.lastPass = (lastDesktop == desktop);
-        m_paintCtx.translation = QPointF(effects->desktopGridCoords(desktop)) - drawPosition; // TODO: verify
-
-        // Decide if that first desktop should be drawn at 0 or the higher position used for wrapping.
-        if (effects->desktopGridCoords(desktop).x() == 0 && wrappingX) {
-            m_paintCtx.translation = QPointF(m_paintCtx.translation.x() + w, m_paintCtx.translation.y());
-        }
-
-        if (effects->desktopGridCoords(desktop).y() == 0 && wrappingY) {
-            m_paintCtx.translation = QPointF(m_paintCtx.translation.x(), m_paintCtx.translation.y() + h);
-        }
-
-        effects->paintScreen(mask, region, data);
-        m_paintCtx.firstPass = false;
-    }
+    effects->paintScreen(mask, region, data);
 }
 
 QPoint SlideEffect::getDrawCoords(QPointF pos, EffectScreen *screen)
@@ -229,43 +188,43 @@ bool SlideEffect::isTranslated(const EffectWindow *w) const
 }
 
 /**
- * Decide whether given window @p w should be painted.
- * @returns @c true if given window @p w should be painted, otherwise @c false
+ * Will a window be painted during this frame?
  */
-bool SlideEffect::isPainted(const EffectWindow *w) const
+bool SlideEffect::willBePainted(const EffectWindow *w) const
 {
     if (w->isOnAllDesktops()) {
-        if (w->isDock()) {
-            if (!m_slideDocks) {
-                return m_paintCtx.lastPass;
-            }
-            for (const EffectWindow *fw : qAsConst(m_paintCtx.fullscreenWindows)) {
-                if (fw->isOnDesktop(m_paintCtx.desktop)
-                    && fw->screen() == w->screen()) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        if (w->isDesktop()) {
-            // If desktop background is not being slided, draw it only
-            // in the first pass. Otherwise, desktop backgrounds from
-            // follow-up virtual desktops will be drawn above windows
-            // from previous virtual desktops.
-            return m_slideBackground || m_paintCtx.firstPass;
-        }
-        // In order to make sure that 'keep above' windows are above
-        // other windows during transition to another virtual desktop,
-        // they should be painted in the last pass.
-        if (w->keepAbove()) {
-            return m_paintCtx.lastPass;
-        }
-        return true;
-    } else if (w == m_movingWindow) {
-        return m_paintCtx.lastPass;
-    } else if (w->isOnDesktop(m_paintCtx.desktop)) {
         return true;
     }
+    if (w == m_movingWindow) {
+        return true;
+    }
+    for (const int &id : qAsConst(m_paintCtx.visibleDesktops)) {
+        if (w->isOnDesktop(id)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * Decide whether given window @p w should be painted on the given desktop.
+ * @returns @c true if given window @p w should be painted, otherwise @c false
+ */
+bool SlideEffect::isPainted(int desktopId, const EffectWindow *w) const
+{
+    if (w->isDock() || w->isAppletPopup()) {
+        for (const EffectWindow *fw : qAsConst(m_paintCtx.fullscreenWindows)) {
+            if (fw->isOnDesktop(desktopId)
+                && fw->screen() == w->screen()) {
+                return false;
+            }
+        }
+        return true;
+    }
+    if (w->isOnDesktop(desktopId)) {
+        return true;
+    }
+
     return false;
 }
 
@@ -277,30 +236,60 @@ void SlideEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std:
 
 void SlideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
-    if (!isPainted(w)) {
+    if (!willBePainted(w)) {
         return;
     }
 
-    for (EffectScreen *screen : effects->screens()) {
-        QPoint translation;
-        if (isTranslated(w)) {
-            translation = getDrawCoords(m_paintCtx.translation, screen);
-            data += translation;
-        }
-
-        const QRect screenArea = screen->geometry();
-        const QRect croppedScreenArea = screenArea.translated(translation).intersected(screenArea);
-
+    if (!isTranslated(w)) {
         effects->paintWindow(
             w,
             mask,
-            // Only paint the region that intersects the current screen and desktop.
-            region.intersected(croppedScreenArea),
+            region,
             data);
+        return;
+    }
 
-        if (isTranslated(w)) {
+    const int gridWidth = effects->desktopGridWidth();
+    const int gridHeight = effects->desktopGridHeight();
+
+    QPointF drawPosition = forcePositivePosition(m_currentPosition);
+    drawPosition = m_paintCtx.wrap ? constrainToDrawableRange(drawPosition) : drawPosition;
+
+    // If we're wrapping, draw the desktop in the second position.
+    const bool wrappingX = drawPosition.x() > gridWidth - 1;
+    const bool wrappingY = drawPosition.y() > gridHeight - 1;
+
+    const auto screens = effects->screens();
+
+    for (int desktop : qAsConst(m_paintCtx.visibleDesktops)) {
+        if (!isPainted(desktop, w)) {
+            continue;
+        }
+        QPointF desktopTranslation = QPointF(effects->desktopGridCoords(desktop)) - drawPosition;
+        // Decide if that first desktop should be drawn at 0 or the higher position used for wrapping.
+        if (effects->desktopGridCoords(desktop).x() == 0 && wrappingX) {
+            desktopTranslation = QPointF(desktopTranslation.x() + gridWidth, desktopTranslation.y());
+        }
+        if (effects->desktopGridCoords(desktop).y() == 0 && wrappingY) {
+            desktopTranslation = QPointF(desktopTranslation.x(), desktopTranslation.y() + gridHeight);
+        }
+
+        for (EffectScreen *screen : screens) {
+            QPoint drawTranslation = getDrawCoords(desktopTranslation, screen);
+            data += drawTranslation;
+
+            const QRect screenArea = screen->geometry();
+            const QRect damage = screenArea.translated(drawTranslation).intersected(screenArea);
+
+            effects->paintWindow(
+                w,
+                mask,
+                // Only paint the region that intersects the current screen and desktop.
+                region.intersected(damage),
+                data);
+
             // Undo the translation for the next screen. I know, it hurts me too.
-            data += QPoint(-translation.x(), -translation.y());
+            data += QPoint(-drawTranslation.x(), -drawTranslation.y());
         }
     }
 }

@@ -30,7 +30,7 @@ namespace KWin
  * After desktopChanging() is done, or without desktopChanging() having been called at all, desktopChanged() is called.
  * The desktopChanged() function configures the m_startPos and m_endPos for the animation, and the duration.
  *
- * m_currentPosition and m_paintCtx.translation and everything else not labeled "drawCoordinate" uses desktops as a unit.
+ * m_currentPosition and everything else not labeled "drawCoordinate" uses desktops as a unit.
  * Exmp: 1.2 means the dekstop at index 1 shifted over by .2 desktops.
  * All coords must be positive.
  *
@@ -85,7 +85,8 @@ private Q_SLOTS:
 private:
     QPoint getDrawCoords(QPointF pos, EffectScreen *screen);
     bool isTranslated(const EffectWindow *w) const;
-    bool isPainted(const EffectWindow *w) const;
+    bool isPainted(int desktopId, const EffectWindow *w) const;
+    bool willBePainted(const EffectWindow *w) const;
     bool shouldElevate(const EffectWindow *w) const;
     QPointF moveInsideDesktopGrid(QPointF p);
     QPointF constrainToDrawableRange(QPointF p);
@@ -123,12 +124,7 @@ private:
 
     struct
     {
-        int desktop;
-        bool firstPass;
-        bool lastPass;
-        QPointF translation; // Uses desktops as units
-
-        QPoint currentPos;
+        bool wrap;
         QVector<int> visibleDesktops;
         EffectWindowList fullscreenWindows;
     } m_paintCtx;
