@@ -28,6 +28,7 @@ public:
     void reconfigure(ReconfigureFlags) override;
     void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
     bool isActive() const override;
+    int requestedEffectChainPosition() const override;
 
     // for properties
     int configuredWidth() const
