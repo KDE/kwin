@@ -44,6 +44,7 @@ public:
     void operator|=(const QRectF &rect);
     void operator+=(const QRectF &rect);
     void operator&=(const QRectF &rect);
+    void operator&=(const RegionF &region);
     bool operator==(const RegionF &region) const;
     bool operator==(const QRectF &rect) const;
     bool operator==(const QRect &rect) const;

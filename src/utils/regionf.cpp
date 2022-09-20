@@ -156,6 +156,11 @@ void RegionF::operator&=(const QRectF &rect)
     }
 }
 
+void RegionF::operator&=(const RegionF &region)
+{
+    *this = *this & region;
+}
+
 bool RegionF::operator==(const RegionF &region) const
 {
     return region.m_rects == m_rects;

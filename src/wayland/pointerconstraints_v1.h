@@ -8,6 +8,7 @@
 #pragma once
 
 #include "kwin_export.h"
+#include "utils/regionf.h"
 
 #include <QObject>
 #include <QRegion>
@@ -82,7 +83,7 @@ public:
      * @see regionChanged
      * @see SurfaceInterface::input
      */
-    QRegion region() const;
+    KWin::RegionF region() const;
 
     /**
      * Indicates where the mouse cursor should be positioned after it has been unlocked again.
@@ -151,7 +152,7 @@ Q_SIGNALS:
     void lockedChanged();
 
 private:
-    LockedPointerV1Interface(SurfaceInterface *surface, LifeTime lifeTime, const QRegion &region, ::wl_resource *resource);
+    LockedPointerV1Interface(SurfaceInterface *surface, LifeTime lifeTime, const KWin::RegionF &region, ::wl_resource *resource);
     std::unique_ptr<LockedPointerV1InterfacePrivate> d;
     friend class LockedPointerV1InterfacePrivate;
     friend class PointerConstraintsV1InterfacePrivate;
@@ -198,7 +199,7 @@ public:
      * @see regionChanged
      * @see SurfaceInterface::input
      */
-    QRegion region() const;
+    KWin::RegionF region() const;
 
     /**
      * Whether the Compositor set this pointer confinement to be active.
@@ -236,7 +237,7 @@ Q_SIGNALS:
     void confinedChanged();
 
 private:
-    ConfinedPointerV1Interface(SurfaceInterface *surface, LifeTime lifeTime, const QRegion &region, ::wl_resource *resource);
+    ConfinedPointerV1Interface(SurfaceInterface *surface, LifeTime lifeTime, const KWin::RegionF &region, ::wl_resource *resource);
     std::unique_ptr<ConfinedPointerV1InterfacePrivate> d;
     friend class ConfinedPointerV1InterfacePrivate;
     friend class PointerConstraintsV1InterfacePrivate;
