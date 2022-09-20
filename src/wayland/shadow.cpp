@@ -52,7 +52,7 @@ void ShadowManagerInterfacePrivate::org_kde_kwin_shadow_manager_create(Resource 
         return;
     }
 
-    auto shadow = new ShadowInterface(q, shadow_resource);
+    auto shadow = new ShadowInterface(q, shadow_resource, s);
 
     SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(s);
     surfacePrivate->setShadow(QPointer<ShadowInterface>(shadow));
@@ -80,7 +80,8 @@ ShadowManagerInterface::~ShadowManagerInterface() = default;
 class ShadowInterfacePrivate : public QtWaylandServer::org_kde_kwin_shadow
 {
 public:
-    ShadowInterfacePrivate(ShadowInterface *_q, wl_resource *resource);
+    ShadowInterfacePrivate(ShadowInterface *_q, wl_resource *resource, SurfaceInterface *surface);
+    ~ShadowInterfacePrivate();
 
     struct Commit
     {
@@ -124,6 +125,8 @@ public:
     GraphicsBufferRef bottom;
     GraphicsBufferRef bottomLeft;
     QMarginsF offset;
+
+    QPointer<SurfaceInterface> surface;
 
 protected:
     void org_kde_kwin_shadow_destroy_resource(Resource *resource) override;
@@ -264,36 +267,41 @@ void ShadowInterfacePrivate::org_kde_kwin_shadow_attach_bottom_left(Resource *re
 void ShadowInterfacePrivate::org_kde_kwin_shadow_set_left_offset(Resource *resource, wl_fixed_t offset)
 {
     pending.flags = Commit::Flags(pending.flags | Commit::Offset);
-    pending.offset.setLeft(wl_fixed_to_double(offset));
+    pending.offset.setLeft(wl_fixed_to_double(offset) * (surface ? surface->compositorToClientScale() : 1));
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_set_top_offset(Resource *resource, wl_fixed_t offset)
 {
     pending.flags = Commit::Flags(pending.flags | Commit::Offset);
-    pending.offset.setTop(wl_fixed_to_double(offset));
+    pending.offset.setTop(wl_fixed_to_double(offset) * (surface ? surface->compositorToClientScale() : 1));
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_set_right_offset(Resource *resource, wl_fixed_t offset)
 {
     pending.flags = Commit::Flags(pending.flags | Commit::Offset);
-    pending.offset.setRight(wl_fixed_to_double(offset));
+    pending.offset.setRight(wl_fixed_to_double(offset) * (surface ? surface->compositorToClientScale() : 1));
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_set_bottom_offset(Resource *resource, wl_fixed_t offset)
 {
     pending.flags = Commit::Flags(pending.flags | Commit::Offset);
-    pending.offset.setBottom(wl_fixed_to_double(offset));
+    pending.offset.setBottom(wl_fixed_to_double(offset) * (surface ? surface->compositorToClientScale() : 1));
 }
 
-ShadowInterfacePrivate::ShadowInterfacePrivate(ShadowInterface *_q, wl_resource *resource)
+ShadowInterfacePrivate::ShadowInterfacePrivate(ShadowInterface *_q, wl_resource *resource, SurfaceInterface *surface)
     : QtWaylandServer::org_kde_kwin_shadow(resource)
     , q(_q)
+    , surface(surface)
 {
 }
 
-ShadowInterface::ShadowInterface(ShadowManagerInterface *manager, wl_resource *resource)
+ShadowInterfacePrivate::~ShadowInterfacePrivate()
+{
+}
+
+ShadowInterface::ShadowInterface(ShadowManagerInterface *manager, wl_resource *resource, SurfaceInterface *surface)
     : QObject()
-    , d(new ShadowInterfacePrivate(this, resource))
+    , d(new ShadowInterfacePrivate(this, resource, surface))
 {
     d->manager = manager;
 }
