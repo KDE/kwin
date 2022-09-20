@@ -150,7 +150,7 @@ public:
      * @returns Geometries of the taskbar entries, indicized by the
      *          surface of the panels
      */
-    QHash<SurfaceInterface *, QRect> minimizedGeometries() const;
+    QHash<SurfaceInterface *, QRectF> minimizedGeometries() const;
 
     /**
      * Sets this PlasmaWindowInterface as a transient window to @p parentWindow.

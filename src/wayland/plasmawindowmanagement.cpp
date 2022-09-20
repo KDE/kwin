@@ -84,7 +84,7 @@ public:
     void setClientGeometry(const QRect &geometry);
 
     quint32 windowId = 0;
-    QHash<SurfaceInterface *, QRect> minimizedGeometries;
+    QHash<SurfaceInterface *, QRectF> minimizedGeometries;
     PlasmaWindowManagementInterface *wm;
 
     bool unmapped = false;
@@ -766,12 +766,14 @@ void PlasmaWindowInterfacePrivate::org_kde_plasma_window_set_minimized_geometry(
     if (!panelSurface) {
         return;
     }
+    QRectF geometry = QRectF(x / panelSurface->clientToCompositorScale(), y / panelSurface->clientToCompositorScale(),
+                             width / panelSurface->clientToCompositorScale(), height / panelSurface->clientToCompositorScale());
 
-    if (minimizedGeometries.value(panelSurface) == QRect(x, y, width, height)) {
+    if (minimizedGeometries.value(panelSurface) == geometry) {
         return;
     }
 
-    minimizedGeometries[panelSurface] = QRect(x, y, width, height);
+    minimizedGeometries[panelSurface] = geometry;
     Q_EMIT q->minimizedGeometriesChanged();
     QObject::connect(panelSurface, &QObject::destroyed, q, [this, panelSurface]() {
         if (minimizedGeometries.remove(panelSurface)) {
@@ -822,7 +824,7 @@ void PlasmaWindowInterface::unmap()
     d->unmap();
 }
 
-QHash<SurfaceInterface *, QRect> PlasmaWindowInterface::minimizedGeometries() const
+QHash<SurfaceInterface *, QRectF> PlasmaWindowInterface::minimizedGeometries() const
 {
     return d->minimizedGeometries;
 }
