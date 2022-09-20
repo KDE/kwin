@@ -215,7 +215,7 @@ set_package_properties(WaylandProtocols PROPERTIES
     URL "https://gitlab.freedesktop.org/wayland/wayland-protocols/"
 )
 
-find_package(PlasmaWaylandProtocols 1.8 CONFIG)
+find_package(PlasmaWaylandProtocols 1.9.0 CONFIG)
 set_package_properties(PlasmaWaylandProtocols PROPERTIES
     TYPE REQUIRED
     PURPOSE "Collection of Plasma-specific Wayland protocols"

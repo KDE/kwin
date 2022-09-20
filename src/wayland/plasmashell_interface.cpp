@@ -13,7 +13,7 @@
 
 namespace KWaylandServer
 {
-static const quint32 s_version = 7;
+static const quint32 s_version = 8;
 static QList<PlasmaShellSurfaceInterface *> s_shellSurfaces;
 
 class PlasmaShellInterfacePrivate : public QtWaylandServer::org_kde_plasma_shell
