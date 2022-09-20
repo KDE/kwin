@@ -180,6 +180,9 @@ public:
     std::optional<OutputTransform> preferredBufferTransform;
     std::optional<std::shared_ptr<ColorDescription>> preferredColorDescription;
 
+    double clientToCompositorScale = 1;
+    double compositorToClientScale = 1;
+
     LockedPointerV1Interface *lockedPointer = nullptr;
     ConfinedPointerV1Interface *confinedPointer = nullptr;
     QHash<OutputInterface *, QMetaObject::Connection> outputDestroyedConnections;

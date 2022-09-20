@@ -391,6 +391,9 @@ public:
 
     QPointF mapToMainSurface(const QPointF &localPoint) const;
 
+    double clientToCompositorScale() const;
+    double compositorToClientScale() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the underlying wl_surface resource is about to be freed.

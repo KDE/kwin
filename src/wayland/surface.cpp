@@ -1181,7 +1181,17 @@ QPoint SurfaceInterface::toSurfaceLocal(const QPoint &point) const
 
 QPointF SurfaceInterface::toSurfaceLocal(const QPointF &point) const
 {
-    return QPointF(point.x() * d->scaleOverride, point.y() * d->scaleOverride);
+    return QPointF(point.x() * d->compositorToClientScale * d->scaleOverride, point.y() * d->compositorToClientScale * d->scaleOverride);
+}
+
+double SurfaceInterface::clientToCompositorScale() const
+{
+    return d->clientToCompositorScale;
+}
+
+double SurfaceInterface::compositorToClientScale() const
+{
+    return d->compositorToClientScale;
 }
 
 PresentationModeHint SurfaceInterface::presentationModeHint() const
