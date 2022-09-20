@@ -106,7 +106,7 @@ struct SurfaceState
         QList<SubSurfaceInterface *> above;
 
         // Subsurface position is here because it is a part of the parent surface's state.
-        QHash<SubSurfaceInterface *, QPoint> position;
+        QHash<SubSurfaceInterface *, QPointF> position;
     } subsurface;
 
     struct

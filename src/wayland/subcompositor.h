@@ -63,7 +63,7 @@ public:
     /**
      * Returns the position of the sub-surface relative to the upper-left corner of its parent.
      */
-    QPoint position() const;
+    QPointF position() const;
 
     /**
      * This enum type is used to specify the commit behavior for a subsurface.
@@ -111,7 +111,7 @@ Q_SIGNALS:
     /**
      * This signal is emitted when the position of the sub-surface has changed.
      */
-    void positionChanged(const QPoint &position);
+    void positionChanged(const QPointF &position);
     /**
      * This signal is emitted when the commit mode of the sub-surface has changed.
      */
