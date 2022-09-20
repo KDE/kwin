@@ -63,10 +63,11 @@ Item {
 
     state: {
         if (effect.gestureInProgress) {
-            return "partial";
+            return useExpoLayout ? "partial-expo" : "partial-plain";
         }
         if (windowHeap.effectiveOrganized) {
-            return activeHidden ? "active-hidden" : `active-${substate}`;
+            const layout = useExpoLayout ? "expo" : "plain";
+            return activeHidden ? "active-hidden" : `active-${layout}-${substate}`;
         }
         return initialHidden ? "initial-hidden" : "initial";
     }
@@ -80,7 +81,7 @@ Item {
     }
 
     component TweenBehavior : Behavior {
-        enabled: thumb.state !== "partial" && thumb.windowHeap.animationEnabled && thumb.animationEnabled && !thumb.activeDragHandler.active
+        enabled: !thumb.state.startsWith("partial-") && thumb.windowHeap.animationEnabled && thumb.animationEnabled && !thumb.activeDragHandler.active
         NumberAnimation {
             duration: thumb.windowHeap.animationDuration
             easing.type: Easing.OutCubic
@@ -137,7 +138,7 @@ Item {
             imagePath: "widgets/viewitem"
             prefix: "hover"
             z: -1
-            visible: !thumb.windowHeap.dragActive && (hoverHandler.hovered || thumb.selected) && Window.window.activeFocusItem && windowHeap.effectiveOrganized
+            visible: thumb.useExpoLayout && !thumb.windowHeap.dragActive && (hoverHandler.hovered || thumb.selected) && Window.window.activeFocusItem && windowHeap.effectiveOrganized
         }
 
         MouseArea {
@@ -197,8 +198,8 @@ Item {
             name: "initial"
             PropertyChanges {
                 target: thumb
-                x: thumb.client.x - targetScreen.geometry.x - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.x : 0)
-                y: thumb.client.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.y : 0)
+                x: thumb.client.x - targetScreen.geometry.x - (thumb.windowHeap.absolutePositioning ? windowHeap.layout.Kirigami.ScenePosition.x : 0)
+                y: thumb.client.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ? windowHeap.layout.Kirigami.ScenePosition.y : 0)
                 width: thumb.client.width
                 height: thumb.client.height
             }
@@ -206,8 +207,8 @@ Item {
                 target: thumbSource
                 x: 0
                 y: 0
-                width: thumb.client.width
-                height: thumb.client.height
+                width: thumb.width
+                height: thumb.height
             }
             PropertyChanges {
                 target: icon
@@ -219,11 +220,33 @@ Item {
             }
         },
         State {
-            name: "partial"
+            name: "initial-hidden"
+            extend: "initial"
             PropertyChanges {
                 target: thumb
-                x: (thumb.client.x - targetScreen.geometry.x - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.x : 0)) * (1 - effect.partialActivationFactor) + cell.x * effect.partialActivationFactor
-                y: (thumb.client.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.y : 0)) * (1 - effect.partialActivationFactor) + cell.y * effect.partialActivationFactor
+                opacity: 0
+            }
+            PropertyChanges {
+                target: icon
+                opacity: 0
+            }
+            PropertyChanges {
+                target: closeButton
+                opacity: 0
+            }
+        },
+        State {
+            name: "active-hidden"
+            extend: "initial-hidden"
+        },
+
+        // using expo layout
+        State {
+            name: "partial-expo"
+            PropertyChanges {
+                target: thumb
+                x: (thumb.client.x - targetScreen.geometry.x - (thumb.windowHeap.absolutePositioning ? windowHeap.layout.Kirigami.ScenePosition.x : 0))
+                y: (thumb.client.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ? windowHeap.layout.Kirigami.ScenePosition.y : 0))
                 width: thumb.client.width * (1 - effect.partialActivationFactor) + cell.width * effect.partialActivationFactor
                 height: thumb.client.height * (1 - effect.partialActivationFactor) + cell.height * effect.partialActivationFactor
                 opacity: thumb.initialHidden
@@ -247,28 +270,29 @@ Item {
             }
         },
         State {
-            name: "initial-hidden"
-            extend: "initial"
+            name: "partial-plain"
+            extend: "partial-expo"
             PropertyChanges {
                 target: thumb
-                opacity: 0
+                x: thumb.client.x - targetScreen.geometry.x - (thumb.windowHeap.absolutePositioning ? windowHeap.layout.Kirigami.ScenePosition.x : 0)
+                y: thumb.client.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ? windowHeap.layout.Kirigami.ScenePosition.y : 0)
+                width: thumb.client.width
+                height: thumb.client.height
+                opacity: thumb.initialHidden
+                    ? (thumb.activeHidden ? 0 : effect.partialActivationFactor)
+                    : (thumb.activeHidden ? 1 - effect.partialActivationFactor : 1)
             }
             PropertyChanges {
-                target: icon
-                opacity: 0
+                target: thumbSource
+                x: 0
+                y: 0
+                width: thumb.width
+                height: thumb.height
             }
-            PropertyChanges {
-                target: closeButton
-                opacity: 0
-            }
-        },
-        State {
-            name: "active-hidden"
-            extend: "initial-hidden"
         },
         State {
             // this state is never directly used without a substate
-            name: "active"
+            name: "active-expo"
             PropertyChanges {
                 target: thumb
                 x: cell.x
@@ -286,19 +310,19 @@ Item {
             }
         },
         State {
-            name: "active-normal"
-            extend: "active"
+            name: "active-expo-normal"
+            extend: "active-expo"
             PropertyChanges {
                 target: thumbSource
                 x: 0
                 y: 0
-                width: cell.width
-                height: cell.height
+                width: thumb.width
+                height: thumb.height
             }
         },
         State {
-            name: "active-pressed"
-            extend: "active"
+            name: "active-expo-pressed"
+            extend: "active-expo"
             PropertyChanges {
                 target: thumbSource
                 width: cell.width
@@ -306,8 +330,8 @@ Item {
             }
         },
         State {
-            name: "active-drag"
-            extend: "active"
+            name: "active-expo-drag"
+            extend: "active-expo"
             PropertyChanges {
                 target: thumbSource
                 x: -thumb.activeDragHandler.centroid.pressPosition.x * thumb.targetScale +
@@ -319,16 +343,60 @@ Item {
             }
         },
         State {
-            name: "active-reparenting"
-            extend: "active"
+            name: "active-expo-reparenting"
+            extend: "active-expo"
+        },
+
+        // Using real windows geometry, i.e. without ExpoLayout
+        State {
+            name: "active-plain-normal"
+            extend: "initial"
+        },
+        State {
+            name: "active-plain-pressed"
+            extend: "active-expo"
+            PropertyChanges {
+                target: thumb
+                x: thumb.client.x - targetScreen.geometry.x - (thumb.windowHeap.absolutePositioning ? windowHeap.layout.Kirigami.ScenePosition.x : 0)
+                y: thumb.client.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ? windowHeap.layout.Kirigami.ScenePosition.y : 0)
+                width: thumb.client.width
+                height: thumb.client.height
+            }
+            PropertyChanges {
+                target: thumbSource
+                width: thumb.client.width
+                height: thumb.client.height
+            }
+        },
+        State {
+            name: "active-plain-drag"
+            extend: "active-expo"
+            PropertyChanges {
+                target: thumb
+                x: thumb.client.x - targetScreen.geometry.x - (thumb.windowHeap.absolutePositioning ? windowHeap.layout.Kirigami.ScenePosition.x : 0)
+                y: thumb.client.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ? windowHeap.layout.Kirigami.ScenePosition.y : 0)
+                width: thumb.client.width
+                height: thumb.client.height
+            }
+            PropertyChanges {
+                target: thumbSource
+                x: -thumb.activeDragHandler.centroid.pressPosition.x * thumb.targetScale +
+                        thumb.activeDragHandler.centroid.position.x
+                y: -thumb.activeDragHandler.centroid.pressPosition.y * thumb.targetScale +
+                        thumb.activeDragHandler.centroid.position.y
+                width: thumb.client.width
+                height: thumb.client.height
+            }
         }
     ]
+
+    onStateChanged: print("YAHAHA", state);
 
     transitions: [
         Transition {
             id: returning
-            from: "active-drag, active-reparenting"
-            to: "active-normal"
+            from: "active-expo-drag, active-expo-reparenting"
+            to: "active-expo-normal"
             enabled: thumb.windowHeap.animationEnabled
             NumberAnimation {
                 duration: thumb.windowHeap.animationDuration
@@ -337,7 +405,12 @@ Item {
             }
         },
         Transition {
-            to: "initial, initial-hidden, active-normal, active-hidden"
+            from: "active-plain-drag"
+            to: "active-plain-normal"
+            // No animations. This transition exists solely to prevent the one below from running.
+        },
+        Transition {
+            to: "initial, initial-hidden, active-expo-normal, active-plain-normal, active-hidden"
             enabled: thumb.windowHeap.animationEnabled
             NumberAnimation {
                 duration: thumb.windowHeap.animationDuration
@@ -357,8 +430,10 @@ Item {
     TapHandler {
         acceptedButtons: Qt.LeftButton
         onTapped: {
-            KWinComponents.Workspace.activeClient = thumb.client;
-            thumb.windowHeap.activated();
+            if (thumb.useExpoLayout) {
+                KWinComponents.Workspace.activeClient = thumb.client;
+                thumb.windowHeap.activated();
+            }
         }
         onPressedChanged: {
             if (pressed) {
@@ -398,7 +473,10 @@ Item {
             } else {
                 thumbSource.saveDND();
 
+                print("DROPPING LIKE A BOMB");
+
                 var action = thumbSource.Drag.drop();
+                print("ACTION", action);
                 if (action === Qt.MoveAction) {
                     // This whole component is in the process of being destroyed due to drop onto
                     // another virtual desktop (not another screen).
@@ -430,6 +508,7 @@ Item {
     DragManager {
         id: touchDragHandler
         acceptedDevices: PointerDevice.TouchScreen
+        enabled: thumb.useExpoLayout
         readonly property double downGestureProgress: {
             if (!active) {
                 return 0.0;
@@ -448,6 +527,31 @@ Item {
             }
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////
+    // to enable this MouseArea, comment out onTapped handlers in both TapHandlers above. //
+    ////////////////////////////////////////////////////////////////////////////////////////
+
+    // MouseArea {
+    //     anchors.fill: parent
+    //     acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
+    //     // visible: thumb.state === "active-plain-normal"
+    //     // visible: windowHeap.effectiveOrganized && thumb.substate === "normal"
+    //     visible: windowHeap.effectiveOrganized && !activeDragHandler.active && !returning.running
+    //     enabled: visible
+    //     // visible: false
+    //     // drag.filterChildren: false
+    //     // propagateComposedEvents: false
+    //     onClicked: event => {
+    //         print("ONCLIKK");
+    //         thumb.windowHeap.windowClicked(thumb.client, event)
+
+    //         if (event.button === Qt.LeftButton) {
+    //             KWinComponents.Workspace.activeClient = thumb.client;
+    //             thumb.windowHeap.activated();
+    //         }
+    //     }
+    // }
 
     PC3.Button {
         id: closeButton

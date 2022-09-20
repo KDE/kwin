@@ -23,6 +23,7 @@ FocusScope {
     readonly property bool dragActive: heap.dragActive || dragHandler.active || xAnim.running || yAnim.running
     property real panelOpacity: 1
     focus: true
+    clip: !dragActive
 
     function selectLastItem(direction) {
         heap.selectLastItem(direction);
@@ -36,21 +37,34 @@ FocusScope {
         onDropped: drop => {
             drop.accepted = true;
             if (drag.source instanceof DesktopView) {
+                print("AAA drag.source instanceof DesktopView");
                 // dragging a desktop as a whole
                 if (drag.source === desktopView) {
                     drop.action = Qt.IgnoreAction;
-                    return;
+                } else {
+                    effect.swapDesktops(drag.source.desktop.x11DesktopNumber, desktop.x11DesktopNumber);
                 }
-                effect.swapDesktops(drag.source.desktop.x11DesktopNumber, desktop.x11DesktopNumber);
             } else if (drag.source instanceof KWinComponents.WindowThumbnailItem) {
+                print("AAA drag.source instanceof KWinComponents.WindowThumbnailItem");
                 // dragging an individual window/client
                 var client = drag.source.client;
-
-                if (client.desktop === desktopView.desktop.x11DesktopNumber) {
+                if (desktopView.useExpoLayout && client.desktop === desktopView.desktop.x11DesktopNumber) {
+                    print("BBB return");
                     drop.action = Qt.IgnoreAction;
                     return;
                 }
-                client.desktop = desktopView.desktop.x11DesktopNumber;
+                if (!desktopView.useExpoLayout) {
+                    var origin = drag.source.mapToItem(desktopView, Qt.point(0, 0));
+                    var destination = client.frameGeometry;
+                    destination.x = Math.round(origin.x);
+                    destination.y = Math.round(origin.y);
+                    client.frameGeometry = destination;
+                    print("CCC frameGeometry", destination);
+                }
+                if (client.desktop !== desktopView.desktop.x11DesktopNumber) {
+                    print("DDD desktop", desktopView.desktop.x11DesktopNumber);
+                    client.desktop = desktopView.desktop.x11DesktopNumber;
+                }
             }
         }
     }
