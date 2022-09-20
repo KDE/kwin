@@ -42,7 +42,7 @@ FocusScope {
 
     signal activated()
     //TODO: for 5.26 the delegate will be a separate component instead
-    signal windowClicked(QtObject window, EventPoint eventPoint)
+    signal windowClicked(QtObject window, var /*MouseEvent*/ event)
 
     function activateIndex(index) {
         KWinComponents.Workspace.activeClient = windowsRepeater.itemAt(index).client;

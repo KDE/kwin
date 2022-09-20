@@ -165,11 +165,10 @@ Item {
                 }
             }
             layout.mode: effect.layout
-            onWindowClicked: {
-                if (eventPoint.event.button !== Qt.MiddleButton) {
-                    return;
+            onWindowClicked: (window, event) => {
+                if (event.button === Qt.MiddleButton) {
+                    window.closeWindow();
                 }
-                window.closeWindow();
             }
             model: KWinComponents.ClientFilterModel {
                 activity: KWinComponents.Workspace.currentActivity

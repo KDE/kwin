@@ -136,10 +136,10 @@ FocusScope {
             useExpoLayout: desktopView.useExpoLayout
         }
         onActivated: effect.deactivate(effect.animationDuration);
-        onWindowClicked: {
-            if (eventPoint.event.button === Qt.MiddleButton) {
+        onWindowClicked: (window, event) => {
+            if (event.button === Qt.MiddleButton) {
                 window.closeWindow();
-            } else if (eventPoint.event.button === Qt.RightButton) {
+            } else if (event.button === Qt.RightButton) {
                 if (window.desktop > -1) {
                     window.desktop = -1;
                 } else {

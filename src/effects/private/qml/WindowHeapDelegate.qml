@@ -377,8 +377,8 @@ Item {
     TapHandler {
         acceptedPointerTypes: PointerDevice.GenericPointer | PointerDevice.Pen
         acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
-        onTapped: {
-            thumb.windowHeap.windowClicked(thumb.client, eventPoint)
+        onTapped: eventPoint => {
+            thumb.windowHeap.windowClicked(thumb.client, eventPoint.event)
         }
     }
 

@@ -269,8 +269,8 @@ FocusScope {
                     onDownGestureTriggered: client.closeWindow()
                 }
                 onActivated: effect.deactivate();
-                onWindowClicked: {
-                    if (eventPoint.event.button === Qt.MiddleButton) {
+                onWindowClicked: (window, event) => {
+                    if (event.button === Qt.MiddleButton) {
                         window.closeWindow();
                     }
                 }
