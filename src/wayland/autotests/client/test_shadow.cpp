@@ -158,7 +158,7 @@ void ShadowTest::testCreateShadow()
     QVERIFY(!serverShadow->left());
 
     // now let's remove the shadow
-    m_shadow->removeShadow(surface.get());
+    shadow.reset();
     // just removing should not remove it yet, surface needs to be committed
     QVERIFY(!shadowChangedSpy.wait(100));
     surface->commit(Surface::CommitFlag::None);

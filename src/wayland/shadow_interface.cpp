@@ -54,22 +54,16 @@ void ShadowManagerInterfacePrivate::org_kde_kwin_shadow_manager_create(Resource 
         return;
     }
 
-    auto shadow = new ShadowInterface(q, shadow_resource);
-
-    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(s);
-    surfacePrivate->setShadow(QPointer<ShadowInterface>(shadow));
+    new ShadowInterface(q, s, shadow_resource);
 }
 
-void ShadowManagerInterfacePrivate::org_kde_kwin_shadow_manager_unset(Resource *resource, wl_resource *surface)
+void ShadowManagerInterfacePrivate::org_kde_kwin_shadow_manager_unset(Resource *resource, wl_resource *surfaceResource)
 {
     Q_UNUSED(resource)
-    SurfaceInterface *s = SurfaceInterface::get(surface);
-    if (!s) {
-        wl_resource_post_error(resource->handle, 0, "Invalid  surface");
-        return;
+    SurfaceInterface *surface = SurfaceInterface::get(surfaceResource);
+    if (surface->shadow()) {
+        delete surface->shadow();
     }
-    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(s);
-    surfacePrivate->setShadow(QPointer<ShadowInterface>());
 }
 
 ShadowManagerInterface::ShadowManagerInterface(Display *display, QObject *parent)
@@ -124,6 +118,7 @@ public:
     State current;
     State pending;
     ShadowInterface *q;
+    QPointer<SurfaceInterface> surface;
 
 protected:
     void org_kde_kwin_shadow_destroy_resource(Resource *resource) override;
@@ -317,14 +312,24 @@ ShadowInterfacePrivate::~ShadowInterfacePrivate()
 #undef CURRENT
 }
 
-ShadowInterface::ShadowInterface(ShadowManagerInterface *manager, wl_resource *resource)
+ShadowInterface::ShadowInterface(ShadowManagerInterface *manager, SurfaceInterface *surface, wl_resource *resource)
     : QObject()
     , d(new ShadowInterfacePrivate(this, resource))
 {
     d->manager = manager;
+    d->surface = surface;
+
+    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
+    surfacePrivate->setShadow(this);
 }
 
-ShadowInterface::~ShadowInterface() = default;
+ShadowInterface::~ShadowInterface()
+{
+    if (d->surface) {
+        SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(d->surface);
+        surfacePrivate->setShadow(nullptr);
+    }
+}
 
 QMarginsF ShadowInterface::offset() const
 {

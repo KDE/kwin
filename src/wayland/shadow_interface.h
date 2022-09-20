@@ -19,6 +19,7 @@ class ClientBuffer;
 class Display;
 class ShadowManagerInterfacePrivate;
 class ShadowInterfacePrivate;
+class SurfaceInterface;
 
 class KWIN_EXPORT ShadowManagerInterface : public QObject
 {
@@ -52,7 +53,7 @@ public:
     QMarginsF offset() const;
 
 private:
-    explicit ShadowInterface(ShadowManagerInterface *manager, wl_resource *resource);
+    ShadowInterface(ShadowManagerInterface *manager, SurfaceInterface *surface, wl_resource *resource);
     friend class ShadowManagerInterfacePrivate;
 
     std::unique_ptr<ShadowInterfacePrivate> d;
