@@ -67,8 +67,13 @@ private:
 private:
     std::unique_ptr<ContrastShader> m_shader;
     long m_net_wm_contrast_region = 0;
-    QHash<const EffectWindow *, QMatrix4x4> m_colorMatrices;
     QHash<const EffectWindow *, QMetaObject::Connection> m_contrastChangedConnections; // used only in Wayland to keep track of effect changed
+    struct Data
+    {
+        QMatrix4x4 colorMatrix;
+        QRegion contrastRegion;
+    };
+    QHash<const EffectWindow *, Data> m_windowData;
     static KWaylandServer::ContrastManagerInterface *s_contrastManager;
     static QTimer *s_contrastManagerRemoveTimer;
 };

@@ -96,6 +96,7 @@ void ContrastEffect::slotScreenGeometryChanged()
 void ContrastEffect::updateContrastRegion(EffectWindow *w)
 {
     QRegion region;
+    QMatrix4x4 matrix;
     float colorTransform[16];
     bool valid = false;
 
@@ -118,8 +119,7 @@ void ContrastEffect::updateContrastRegion(EffectWindow *w)
                 colorTransform[j] = floatCardinals[i + j];
             }
 
-            QMatrix4x4 colorMatrix(colorTransform);
-            m_colorMatrices[w] = colorMatrix;
+            matrix = QMatrix4x4(colorTransform);
         }
 
         valid = !value.isNull();
@@ -129,7 +129,7 @@ void ContrastEffect::updateContrastRegion(EffectWindow *w)
 
     if (surf && surf->contrast()) {
         region = surf->contrast()->region();
-        m_colorMatrices[w] = colorMatrix(surf->contrast()->contrast(), surf->contrast()->intensity(), surf->contrast()->saturation());
+        matrix = colorMatrix(surf->contrast()->contrast(), surf->contrast()->intensity(), surf->contrast()->saturation());
         valid = true;
     }
 
@@ -150,19 +150,18 @@ void ContrastEffect::updateContrastRegion(EffectWindow *w)
             if (!ok) {
                 saturation = 1.0;
             }
-            m_colorMatrices[w] = colorMatrix(contrast, intensity, saturation);
+            matrix = colorMatrix(contrast, intensity, saturation);
             valid = true;
         }
     }
 
-    // If the specified region is empty, enable the contrast effect for the whole window.
-    if (region.isEmpty() && valid) {
-        // Set the data to a dummy value.
-        // This is needed to be able to distinguish between the value not
-        // being set, and being set to an empty region.
-        w->setData(WindowBackgroundContrastRole, 1);
+    if (valid) {
+        m_windowData[w] = {
+            .colorMatrix = matrix,
+            .contrastRegion = region,
+        };
     } else {
-        w->setData(WindowBackgroundContrastRole, region);
+        m_windowData.remove(w);
     }
 }
 
@@ -204,8 +203,8 @@ void ContrastEffect::slotWindowDeleted(EffectWindow *w)
     if (m_contrastChangedConnections.contains(w)) {
         disconnect(m_contrastChangedConnections[w]);
         m_contrastChangedConnections.remove(w);
-        m_colorMatrices.remove(w);
     }
+    m_windowData.remove(w);
 }
 
 void ContrastEffect::slotPropertyNotify(EffectWindow *w, long atom)
@@ -290,10 +289,8 @@ bool ContrastEffect::supported()
 QRegion ContrastEffect::contrastRegion(const EffectWindow *w) const
 {
     QRegion region;
-
-    const QVariant value = w->data(WindowBackgroundContrastRole);
-    if (value.isValid()) {
-        const QRegion appRegion = qvariant_cast<QRegion>(value);
+    if (const auto it = m_windowData.find(w); it != m_windowData.end()) {
+        const QRegion &appRegion = it->contrastRegion;
         if (!appRegion.isEmpty()) {
             region |= appRegion.translated(w->contentsRect().topLeft().toPoint()) & w->decorationInnerRect().toRect();
         } else {
@@ -434,7 +431,7 @@ void ContrastEffect::doContrast(EffectWindow *w, const QRegion &shape, const QRe
 
     // Draw the texture on the offscreen framebuffer object, while blurring it horizontally
 
-    m_shader->setColorMatrix(m_colorMatrices.value(w));
+    m_shader->setColorMatrix(m_windowData.value(w).colorMatrix);
     m_shader->bind();
 
     m_shader->setOpacity(opacity);
