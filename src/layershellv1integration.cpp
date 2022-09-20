@@ -94,14 +94,14 @@ static void rearrangeLayer(const QList<LayerShellV1Window *> &windows, QRect *wo
             continue;
         }
 
-        QRect bounds;
+        QRectF bounds;
         if (shellSurface->exclusiveZone() == -1) {
             bounds = window->desiredOutput()->geometry();
         } else {
             bounds = *workArea;
         }
 
-        QRect geometry(QPoint(0, 0), shellSurface->desiredSize());
+        QRectF geometry(QPointF(0, 0), shellSurface->desiredSize());
 
         if ((shellSurface->anchor() & AnchorHorizontal) && geometry.width() == 0) {
             geometry.setLeft(bounds.left());

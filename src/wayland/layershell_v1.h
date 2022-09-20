@@ -9,6 +9,7 @@
 #include "display.h"
 
 #include <QMargins>
+#include <QSizeF>
 
 namespace KWin
 {
@@ -96,7 +97,7 @@ public:
     /**
      * Returns the desired size for this layer shell surface, in the surface-local coordinates.
      */
-    QSize desiredSize() const;
+    QSizeF desiredSize() const;
 
     /**
      * Returns the stacking order layer where this layer surface has to be rendered.
@@ -112,7 +113,7 @@ public:
      * Returns the margins object that indicates the distance between an anchor edge and
      * the corresponding surface edge.
      */
-    QMargins margins() const;
+    QMarginsF margins() const;
 
     /**
      * Returns the value of the left margin. This is equivalent to calling margins().left().
@@ -167,7 +168,7 @@ public:
      *
      * @see configureAcknowledged()
      */
-    quint32 sendConfigure(const QSize &size);
+    quint32 sendConfigure(const QSizeF &size);
 
     /**
      * Sends a closed event to the client. The client should destroy the surface after receiving

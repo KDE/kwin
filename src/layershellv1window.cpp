@@ -245,7 +245,7 @@ bool LayerShellV1Window::acceptsFocus() const
 
 void LayerShellV1Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
 {
-    const QSize requestedClientSize = nextFrameSizeToClientSize(rect.size()).toSize();
+    const QSizeF requestedClientSize = nextFrameSizeToClientSize(rect.size());
 
     if (!m_configureEvents.isEmpty()) {
         const LayerShellV1ConfigureEvent &lastLayerShellV1ConfigureEvent = m_configureEvents.constLast();
