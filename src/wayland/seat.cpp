@@ -486,7 +486,7 @@ void SeatInterface::setDragTarget(AbstractDropHandler *dropTarget,
 
     if (d->drag.target) {
         QMatrix4x4 surfaceInputTransformation = inputTransformation;
-        surfaceInputTransformation.scale(surface->scaleOverride());
+        surfaceInputTransformation.scale(surface->scaleOverride() * surface->compositorToClientScale());
         d->drag.surface = surface;
         d->drag.transformation = surfaceInputTransformation;
         if (d->dragInhibitsPointer(d->globalPointer.focus.surface)) {
