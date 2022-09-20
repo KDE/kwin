@@ -39,6 +39,15 @@ QRegion RegionInterface::region() const
     return m_region;
 }
 
+RegionF RegionInterface::region(double scale) const
+{
+    RegionF ret;
+    for (const QRect &rect : m_region) {
+        ret |= QRectF(rect.x() / scale, rect.y() / scale, rect.width() / scale, rect.height() / scale);
+    }
+    return ret;
+}
+
 RegionInterface *RegionInterface::get(wl_resource *native)
 {
     return resource_cast<RegionInterface *>(native);
