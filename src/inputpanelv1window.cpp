@@ -47,9 +47,11 @@ void InputPanelV1Window::showOverlayPanel()
 {
     setOutput(nullptr);
     m_mode = Overlay;
-    reposition();
-    showClient();
-    setReadyForPainting();
+    if (m_shouldBeShown && surface()->isMapped()) {
+        setReadyForPainting();
+        reposition();
+        showClient();
+    }
 }
 
 void InputPanelV1Window::showTopLevel(OutputInterface *output, InputPanelSurfaceV1Interface::Position position)
@@ -57,13 +59,39 @@ void InputPanelV1Window::showTopLevel(OutputInterface *output, InputPanelSurface
     Q_UNUSED(position);
     m_mode = Toplevel;
     setOutput(output);
-    showClient();
+    if (m_allowed && m_shouldBeShown && surface()->isMapped()) {
+        setReadyForPainting();
+        reposition();
+        showClient();
+    }
 }
 
 void InputPanelV1Window::allow()
 {
-    setReadyForPainting();
-    reposition();
+    m_allowed = true;
+    if (m_shouldBeShown && surface()->isMapped()) {
+        setReadyForPainting();
+        reposition();
+        showClient();
+    }
+}
+
+void InputPanelV1Window::show()
+{
+    m_shouldBeShown = true;
+    if (m_allowed && surface()->isMapped()) {
+        setReadyForPainting();
+        reposition();
+        showClient();
+    }
+}
+
+void InputPanelV1Window::hide()
+{
+    m_shouldBeShown = false;
+    if (readyForPainting()) {
+        hideClient();
+    }
 }
 
 void KWin::InputPanelV1Window::reposition()

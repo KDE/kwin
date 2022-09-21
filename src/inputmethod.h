@@ -138,6 +138,7 @@ private:
 
     bool m_hasPendingModifiers = false;
     bool m_activeClientSupportsTextInput = false;
+    bool m_shouldShowPanel = false;
 };
 
 }
