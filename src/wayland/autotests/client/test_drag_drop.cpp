@@ -211,6 +211,7 @@ void TestDragAndDrop::testPointerDragAndDrop()
 
     // add some signal spies for client side
     QSignalSpy dragEnteredSpy(m_dataDevice, &DataDevice::dragEntered);
+    QSignalSpy dragLeftSpy(m_dataDevice, &DataDevice::dragLeft);
     QSignalSpy dragMotionSpy(m_dataDevice, &DataDevice::dragMotion);
     QSignalSpy pointerMotionSpy(m_pointer, &Pointer::motion);
     QSignalSpy sourceDropSpy(m_dataSource, &DataSource::dragAndDropPerformed);
@@ -263,11 +264,7 @@ void TestDragAndDrop::testPointerDragAndDrop()
     QVERIFY(droppedSpy.wait());
     QCOMPARE(sourceDropSpy.count(), 1);
     QCOMPARE(serverDragEndedSpy.count(), 1);
-
-    QSignalSpy finishedSpy(m_dataSource, &DataSource::dragAndDropFinished);
-    offer->dragAndDropFinished();
-    QVERIFY(finishedSpy.wait());
-    delete offer;
+    QCOMPARE(dragLeftSpy.count(), 1);
 
     // verify that we did not get any further input events
     QVERIFY(pointerMotionSpy.isEmpty());
@@ -302,6 +299,7 @@ void TestDragAndDrop::testTouchDragAndDrop()
 
     // add some signal spies for client side
     QSignalSpy dragEnteredSpy(m_dataDevice, &DataDevice::dragEntered);
+    QSignalSpy dragLeftSpy(m_dataDevice, &DataDevice::dragLeft);
     QSignalSpy dragMotionSpy(m_dataDevice, &DataDevice::dragMotion);
     QSignalSpy touchMotionSpy(m_touch, &Touch::pointMoved);
     QSignalSpy sourceDropSpy(m_dataSource, &DataSource::dragAndDropPerformed);
@@ -352,11 +350,7 @@ void TestDragAndDrop::testTouchDragAndDrop()
     QVERIFY(droppedSpy.wait());
     QCOMPARE(sourceDropSpy.count(), 1);
     QCOMPARE(serverDragEndedSpy.count(), 1);
-
-    QSignalSpy finishedSpy(m_dataSource, &DataSource::dragAndDropFinished);
-    offer->dragAndDropFinished();
-    QVERIFY(finishedSpy.wait());
-    delete offer;
+    QCOMPARE(dragLeftSpy.count(), 1);
 
     // verify that we did not get any further input events
     QVERIFY(touchMotionSpy.isEmpty());

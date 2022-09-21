@@ -156,6 +156,7 @@ DataOfferInterface *DataDeviceInterfacePrivate::createDataOffer(AbstractDataSour
     DataOfferInterface *offer = new DataOfferInterface(source, data_offer_resource);
     send_data_offer(offer->resource());
     offer->sendAllOffers();
+    offer->sendSourceActions();
     return offer;
 }
 
@@ -203,13 +204,6 @@ void DataDeviceInterface::sendClearSelection()
 void DataDeviceInterface::drop()
 {
     d->send_drop();
-    if (d->drag.posConnection) {
-        disconnect(d->drag.posConnection);
-        d->drag.posConnection = QMetaObject::Connection();
-    }
-    disconnect(d->drag.destroyConnection);
-    d->drag.destroyConnection = QMetaObject::Connection();
-    d->drag.surface = nullptr;
 }
 
 static DataDeviceManagerInterface::DnDAction chooseDndAction(AbstractDataSource *source, DataOfferInterface *offer)
@@ -306,9 +300,7 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
     } else if (d->seat->isDragTouch()) {
         pos = d->seat->dragSurfaceTransformation().map(d->seat->firstTouchPointPosition());
     }
-    d->send_enter(serial, surface->resource(), wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()), offer ? offer->resource() : nullptr);
     if (offer) {
-        offer->sendSourceActions();
         auto matchOffers = [dragSource, offer] {
             const DataDeviceManagerInterface::DnDAction action = chooseDndAction(dragSource, offer);
             offer->dndAction(action);
@@ -317,6 +309,7 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
         d->drag.targetActionConnection = connect(offer, &DataOfferInterface::dragAndDropActionsChanged, dragSource, matchOffers);
         d->drag.sourceActionConnection = connect(dragSource, &AbstractDataSource::supportedDragAndDropActionsChanged, dragSource, matchOffers);
     }
+    d->send_enter(serial, surface->resource(), wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()), offer ? offer->resource() : nullptr);
 }
 
 void DataDeviceInterface::updateProxy(SurfaceInterface *remote)
