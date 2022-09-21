@@ -139,16 +139,18 @@ void InputMethod::init()
 
 void InputMethod::show()
 {
+    m_shouldShowPanel = true;
     if (m_panel) {
-        m_panel->showClient();
+        m_panel->show();
         updateInputPanelState();
     }
 }
 
 void InputMethod::hide()
 {
+    m_shouldShowPanel = false;
     if (m_panel) {
-        m_panel->hideClient();
+        m_panel->hide();
         updateInputPanelState();
     }
 }
@@ -214,6 +216,10 @@ void InputMethod::setPanel(InputPanelV1Window *panel)
     Q_EMIT visibleChanged();
     updateInputPanelState();
     Q_EMIT panelChanged();
+
+    if (m_shouldShowPanel) {
+        show();
+    }
 }
 
 void InputMethod::setTrackedWindow(Window *trackedWindow)

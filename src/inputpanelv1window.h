@@ -77,6 +77,8 @@ public:
         return m_mode;
     }
     void allow();
+    void show();
+    void hide();
 
 protected:
     void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
@@ -89,6 +91,8 @@ private:
 
     QPointer<Output> m_output;
     Mode m_mode = Toplevel;
+    bool m_allowed = false;
+    bool m_shouldBeShown = false;
     const QPointer<KWaylandServer::InputPanelSurfaceV1Interface> m_panelSurface;
 };
 
