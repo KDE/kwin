@@ -255,11 +255,6 @@ static struct
     TextInputManagerV3 *textInputManagerV3 = nullptr;
 } s_waylandConnection;
 
-Window *inputPanelWindow()
-{
-    return s_waylandConnection.inputMethodV1->window();
-}
-
 MockInputMethod *inputMethod()
 {
     return s_waylandConnection.inputMethodV1;
@@ -286,7 +281,7 @@ void MockInputMethod::zwp_input_method_v1_activate(struct ::zwp_input_method_con
         m_inputMethodSurface = Test::createInputPanelSurfaceV1(m_inputSurface.get(), s_waylandConnection.outputs.first());
     }
     m_context = context;
-    m_window = Test::renderAndWaitForShown(m_inputSurface.get(), QSize(1280, 400), Qt::blue);
+    Test::render(m_inputSurface.get(), QSize(1280, 400), Qt::blue);
 
     Q_EMIT activate();
 }

@@ -137,6 +137,8 @@ void InputMethodTest::testOpenClose()
 
     // Show the keyboard
     touchNow();
+    QSignalSpy paneladded(kwinApp()->inputMethod(), &KWin::InputMethod::panelChanged);
+    QVERIFY(paneladded.wait());
     textInput->showInputPanel();
     QVERIFY(windowAddedSpy.wait());
 
@@ -212,6 +214,8 @@ void InputMethodTest::testEnableActive()
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     std::unique_ptr<TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
     textInput->enable(surface.get());
+    QSignalSpy paneladded(kwinApp()->inputMethod(), &KWin::InputMethod::panelChanged);
+    QVERIFY(paneladded.wait());
     textInput->showInputPanel();
     QVERIFY(windowAddedSpy.wait());
     QVERIFY(kwinApp()->inputMethod()->isActive());
@@ -247,6 +251,8 @@ void InputMethodTest::testHidePanel()
     waylandServer()->seat()->setFocusedTextInputSurface(window->surface());
 
     textInput->enable(surface.get());
+    QSignalSpy paneladded(kwinApp()->inputMethod(), &KWin::InputMethod::panelChanged);
+    QVERIFY(paneladded.wait());
     textInput->showInputPanel();
     QVERIFY(windowAddedSpy.wait());
 
@@ -256,7 +262,7 @@ void InputMethodTest::testHidePanel()
     QVERIFY(activateSpy.count() || activateSpy.wait());
     QVERIFY(kwinApp()->inputMethod()->isActive());
 
-    auto keyboardWindow = Test::inputPanelWindow();
+    auto keyboardWindow = kwinApp()->inputMethod()->panel();
     auto ipsurface = Test::inputPanelSurface();
     QVERIFY(keyboardWindow);
     windowRemovedSpy.clear();

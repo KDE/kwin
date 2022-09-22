@@ -438,10 +438,6 @@ public:
     MockInputMethod(struct wl_registry *registry, int id, int version);
     ~MockInputMethod();
 
-    Window *window() const
-    {
-        return m_window;
-    }
     KWayland::Client::Surface *inputPanelSurface() const
     {
         return m_inputSurface.get();
@@ -461,7 +457,6 @@ protected:
 private:
     std::unique_ptr<KWayland::Client::Surface> m_inputSurface;
     QtWayland::zwp_input_panel_surface_v1 *m_inputMethodSurface = nullptr;
-    QPointer<Window> m_window;
     struct ::zwp_input_method_context_v1 *m_context = nullptr;
 };
 
@@ -654,7 +649,6 @@ bool lockScreen();
  */
 bool unlockScreen();
 
-Window *inputPanelWindow();
 MockInputMethod *inputMethod();
 KWayland::Client::Surface *inputPanelSurface();
 
