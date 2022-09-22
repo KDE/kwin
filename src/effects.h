@@ -394,6 +394,7 @@ public:
     bool isDeleted() const override;
     bool isMinimized() const override;
     double opacity() const override;
+    bool isHidden() const override;
 
     QStringList activities() const override;
     int desktop() const override;

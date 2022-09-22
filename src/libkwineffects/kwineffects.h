@@ -2382,6 +2382,7 @@ public:
 
     virtual bool isMinimized() const = 0;
     virtual double opacity() const = 0;
+    virtual bool isHidden() const = 0;
 
     bool isOnCurrentActivity() const;
     Q_SCRIPTABLE bool isOnActivity(const QString &id) const;

@@ -54,7 +54,11 @@ SlidingPopupsEffect::SlidingPopupsEffect()
 
     m_atom = effects->announceSupportProperty("_KDE_SLIDE", this);
     connect(effects, &EffectsHandler::windowAdded, this, &SlidingPopupsEffect::slotWindowAdded);
-    connect(effects, &EffectsHandler::windowClosed, this, &SlidingPopupsEffect::slideOut);
+    connect(effects, &EffectsHandler::windowClosed, this, [this](EffectWindow *w) {
+        if (!w->isHidden()) {
+            slideOut(w);
+        }
+    });
     connect(effects, &EffectsHandler::windowDeleted, this, &SlidingPopupsEffect::slotWindowDeleted);
     connect(effects, &EffectsHandler::propertyNotify, this, &SlidingPopupsEffect::slotPropertyNotify);
     connect(effects, &EffectsHandler::windowShown, this, &SlidingPopupsEffect::slideIn);

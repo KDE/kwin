@@ -116,6 +116,7 @@ void Deleted::copyToDeleted(Window *window)
     m_wasPopupWindow = window->isPopupWindow();
     m_wasOutline = window->isOutline();
     m_wasLockScreen = window->isLockScreen();
+    m_isHidden = window->isHiddenInternal();
 }
 
 void Deleted::unrefWindow()
