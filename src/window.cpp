@@ -1587,8 +1587,6 @@ void Window::maximize(MaximizeMode m)
 
 void Window::setMaximize(bool vertically, bool horizontally)
 {
-    // changeMaximize() flips the state, so change from set->flip
-    Q_EMIT clientMaximizedStateAboutToChange(this, MaximizeMode((vertically ? MaximizeVertical : 0) | (horizontally ? MaximizeHorizontal : 0)));
     const MaximizeMode oldMode = requestedMaximizeMode();
     changeMaximize(
         oldMode & MaximizeHorizontal ? !horizontally : horizontally,

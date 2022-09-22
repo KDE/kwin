@@ -1658,17 +1658,21 @@ void XdgToplevelWindow::changeMaximize(bool horizontal, bool vertical, bool adju
     const QRectF oldGeometry = moveResizeGeometry();
 
     // 'adjust == true' means to update the size only, e.g. after changing workspace size
+    MaximizeMode mode = m_requestedMaximizeMode;
     if (!adjust) {
         if (vertical) {
-            m_requestedMaximizeMode = MaximizeMode(m_requestedMaximizeMode ^ MaximizeVertical);
+            mode = MaximizeMode(mode ^ MaximizeVertical);
         }
         if (horizontal) {
-            m_requestedMaximizeMode = MaximizeMode(m_requestedMaximizeMode ^ MaximizeHorizontal);
+            mode = MaximizeMode(mode ^ MaximizeHorizontal);
         }
     }
 
-    m_requestedMaximizeMode = rules()->checkMaximize(m_requestedMaximizeMode);
-    if (!adjust && m_requestedMaximizeMode == oldMode) {
+    mode = rules()->checkMaximize(mode);
+    if (m_requestedMaximizeMode != mode) {
+        Q_EMIT clientMaximizedStateAboutToChange(this, mode);
+        m_requestedMaximizeMode = mode;
+    } else if (!adjust) {
         return;
     }
 
