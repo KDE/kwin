@@ -4530,6 +4530,11 @@ void X11Window::changeMaximize(MaximizeMode mode)
     updateAllowedActions();
     updateWindowRules(Rules::MaximizeVert | Rules::MaximizeHoriz | Rules::Position | Rules::Size);
     Q_EMIT quickTileModeChanged();
+
+    if (max_mode != old_mode) {
+        Q_EMIT clientMaximizedStateChanged(this, max_mode);
+        Q_EMIT clientMaximizedStateChanged(this, max_mode & MaximizeHorizontal, max_mode & MaximizeVertical);
+    }
 }
 
 bool X11Window::userCanSetFullScreen() const

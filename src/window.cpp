@@ -1582,13 +1582,7 @@ void Window::blockGeometryUpdates(bool block)
 
 void Window::maximize(MaximizeMode m)
 {
-    const MaximizeMode oldMode = requestedMaximizeMode();
     changeMaximize(m);
-    const MaximizeMode newMode = maximizeMode();
-    if (oldMode != newMode) {
-        Q_EMIT clientMaximizedStateChanged(this, newMode);
-        Q_EMIT clientMaximizedStateChanged(this, newMode & MaximizeHorizontal, newMode & MaximizeVertical);
-    }
 }
 
 void Window::setMaximize(bool vertically, bool horizontally)
