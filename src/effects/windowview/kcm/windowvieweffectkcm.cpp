@@ -1,5 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2022 ivan tkachenko <me@ratijas.tk>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -56,6 +57,12 @@ WindowViewEffectConfig::WindowViewEffectConfig(QWidget *parent, const QVariantLi
     toggleAction->setProperty("isConfigurationAction", true);
     KGlobalAccel::self()->setDefaultShortcut(toggleAction, {defaultToggleShortcutClass});
     KGlobalAccel::self()->setShortcut(toggleAction, {defaultToggleShortcutClass});
+
+    toggleAction = actionCollection->addAction(QStringLiteral("ExposeClassCurrentDesktop"));
+    toggleAction->setText(i18n("Toggle Present Windows (Window class on current desktop)"));
+    toggleAction->setProperty("isConfigurationAction", true);
+    KGlobalAccel::self()->setDefaultShortcut(toggleAction, QList<QKeySequence>()); // no default shortcut
+    KGlobalAccel::self()->setShortcut(toggleAction, QList<QKeySequence>());
 
     ui.shortcutsEditor->addCollection(actionCollection);
     connect(ui.shortcutsEditor, &KShortcutsEditor::keyChange, this, &WindowViewEffectConfig::markAsChanged);
