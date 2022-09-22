@@ -1582,20 +1582,25 @@ void Window::blockGeometryUpdates(bool block)
 
 void Window::maximize(MaximizeMode m)
 {
-    setMaximize(m & MaximizeVertical, m & MaximizeHorizontal);
+    const MaximizeMode oldMode = requestedMaximizeMode();
+    changeMaximize(m);
+    const MaximizeMode newMode = maximizeMode();
+    if (oldMode != newMode) {
+        Q_EMIT clientMaximizedStateChanged(this, newMode);
+        Q_EMIT clientMaximizedStateChanged(this, newMode & MaximizeHorizontal, newMode & MaximizeVertical);
+    }
 }
 
 void Window::setMaximize(bool vertically, bool horizontally)
 {
-    const MaximizeMode oldMode = requestedMaximizeMode();
-    changeMaximize(
-        oldMode & MaximizeHorizontal ? !horizontally : horizontally,
-        oldMode & MaximizeVertical ? !vertically : vertically);
-    const MaximizeMode newMode = maximizeMode();
-    if (oldMode != newMode) {
-        Q_EMIT clientMaximizedStateChanged(this, newMode);
-        Q_EMIT clientMaximizedStateChanged(this, horizontally, vertically);
+    MaximizeMode mode = MaximizeRestore;
+    if (vertically) {
+        mode = MaximizeMode(mode | MaximizeVertical);
     }
+    if (horizontally) {
+        mode = MaximizeMode(mode | MaximizeHorizontal);
+    }
+    maximize(mode);
 }
 
 bool Window::startInteractiveMoveResize()
@@ -4333,15 +4338,9 @@ void Window::setGeometryRestore(const QRectF &rect)
     m_maximizeGeometryRestore = rect;
 }
 
-/**
- * Toggles the maximized state along specified dimensions @p horizontal and @p vertical.
- *
- * Default implementation does nothing.
- */
-void Window::changeMaximize(bool horizontal, bool vertical)
+void Window::changeMaximize(MaximizeMode mode)
 {
-    Q_UNUSED(horizontal)
-    Q_UNUSED(vertical)
+    Q_UNUSED(mode)
     qCWarning(KWIN_CORE, "%s doesn't support setting maximized state", metaObject()->className());
 }
 

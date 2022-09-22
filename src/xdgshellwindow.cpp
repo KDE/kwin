@@ -1642,7 +1642,7 @@ void XdgToplevelWindow::setFullScreen(bool set, bool user)
  * \todo Move to Window.
  */
 static bool changeMaximizeRecursion = false;
-void XdgToplevelWindow::changeMaximize(bool horizontal, bool vertical)
+void XdgToplevelWindow::changeMaximize(MaximizeMode mode)
 {
     if (changeMaximizeRecursion) {
         return;
@@ -1656,14 +1656,6 @@ void XdgToplevelWindow::changeMaximize(bool horizontal, bool vertical)
 
     const MaximizeMode oldMode = m_requestedMaximizeMode;
     const QRectF oldGeometry = moveResizeGeometry();
-
-    MaximizeMode mode = m_requestedMaximizeMode;
-    if (vertical) {
-        mode = MaximizeMode(mode ^ MaximizeVertical);
-    }
-    if (horizontal) {
-        mode = MaximizeMode(mode ^ MaximizeHorizontal);
-    }
 
     mode = rules()->checkMaximize(mode);
     if (m_requestedMaximizeMode == mode) {

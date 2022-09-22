@@ -180,7 +180,7 @@ protected:
     bool doStartInteractiveMoveResize() override;
     void doFinishInteractiveMoveResize() override;
     bool acceptsFocus() const override;
-    void changeMaximize(bool horizontal, bool vertical) override;
+    void changeMaximize(MaximizeMode mode) override;
     Layer layerForDock() const override;
     void doSetQuickTileMode() override;
 

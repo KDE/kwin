@@ -392,7 +392,7 @@ private:
     bool isManaged() const; ///< Returns false if this client is not yet managed
     void updateAllowedActions(bool force = false);
     QRect fullscreenMonitorsArea(NETFullscreenMonitors topology) const;
-    void changeMaximize(bool horizontal, bool vertical) override;
+    void changeMaximize(MaximizeMode mode) override;
     void getWmNormalHints();
     void getMotifHints();
     void getIcons();

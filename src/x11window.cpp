@@ -4265,7 +4265,7 @@ void X11Window::updateServerGeometry()
 }
 
 static bool changeMaximizeRecursion = false;
-void X11Window::changeMaximize(bool horizontal, bool vertical)
+void X11Window::changeMaximize(MaximizeMode mode)
 {
     if (changeMaximizeRecursion) {
         return;
@@ -4286,13 +4286,6 @@ void X11Window::changeMaximize(bool horizontal, bool vertical)
     }
 
     MaximizeMode old_mode = max_mode;
-    MaximizeMode mode = max_mode;
-    if (vertical) {
-        mode = MaximizeMode(mode ^ MaximizeVertical);
-    }
-    if (horizontal) {
-        mode = MaximizeMode(mode ^ MaximizeHorizontal);
-    }
 
     // if the client insist on a fix aspect ratio, we check whether the maximizing will get us
     // out of screen bounds and take that as a "full maximization with aspect check" then
@@ -4323,15 +4316,15 @@ void X11Window::changeMaximize(bool horizontal, bool vertical)
 
     GeometryUpdatesBlocker blocker(this);
 
-    Q_EMIT clientMaximizedStateAboutToChange(this, mode);
-    max_mode = mode;
-
     // maximing one way and unmaximizing the other way shouldn't happen,
     // so restore first and then maximize the other way
-    if ((old_mode == MaximizeVertical && max_mode == MaximizeHorizontal)
-        || (old_mode == MaximizeHorizontal && max_mode == MaximizeVertical)) {
-        changeMaximize(false, false); // restore
+    if ((old_mode == MaximizeVertical && mode == MaximizeHorizontal)
+        || (old_mode == MaximizeHorizontal && mode == MaximizeVertical)) {
+        changeMaximize(MaximizeRestore); // restore
     }
+
+    Q_EMIT clientMaximizedStateAboutToChange(this, mode);
+    max_mode = mode;
 
     // save sizes for restoring, if maximalizing
     QSizeF sz;
