@@ -1028,7 +1028,7 @@ public:
     QRectF geometryRestore() const;
     virtual MaximizeMode maximizeMode() const;
     virtual MaximizeMode requestedMaximizeMode() const;
-    void maximize(MaximizeMode);
+    virtual void maximize(MaximizeMode mode);
     /**
      * Sets the maximization according to @p vertically and @p horizontally.
      */
@@ -1721,7 +1721,6 @@ protected:
     int borderRight() const;
     int borderTop() const;
     int borderBottom() const;
-    virtual void changeMaximize(MaximizeMode mode);
     void setGeometryRestore(const QRectF &rect);
 
     void blockGeometryUpdates(bool block);

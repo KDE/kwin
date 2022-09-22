@@ -162,6 +162,7 @@ public:
     void showOnScreenEdge() override;
     void setFullScreen(bool set, bool user) override;
     void closeWindow() override;
+    void maximize(MaximizeMode mode) override;
 
     void installAppMenu(KWaylandServer::AppMenuInterface *appMenu);
     void installServerDecoration(KWaylandServer::ServerSideDecorationInterface *decoration);
@@ -180,7 +181,6 @@ protected:
     bool doStartInteractiveMoveResize() override;
     void doFinishInteractiveMoveResize() override;
     bool acceptsFocus() const override;
-    void changeMaximize(MaximizeMode mode) override;
     Layer layerForDock() const override;
     void doSetQuickTileMode() override;
 

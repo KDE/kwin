@@ -1580,9 +1580,10 @@ void Window::blockGeometryUpdates(bool block)
     }
 }
 
-void Window::maximize(MaximizeMode m)
+void Window::maximize(MaximizeMode mode)
 {
-    changeMaximize(m);
+    Q_UNUSED(mode)
+    qCWarning(KWIN_CORE, "%s doesn't support setting maximized state", metaObject()->className());
 }
 
 void Window::setMaximize(bool vertically, bool horizontally)
@@ -4330,12 +4331,6 @@ QRectF Window::geometryRestore() const
 void Window::setGeometryRestore(const QRectF &rect)
 {
     m_maximizeGeometryRestore = rect;
-}
-
-void Window::changeMaximize(MaximizeMode mode)
-{
-    Q_UNUSED(mode)
-    qCWarning(KWIN_CORE, "%s doesn't support setting maximized state", metaObject()->className());
 }
 
 void Window::invalidateDecoration()

@@ -1638,11 +1638,8 @@ void XdgToplevelWindow::setFullScreen(bool set, bool user)
     doSetFullScreen();
 }
 
-/**
- * \todo Move to Window.
- */
 static bool changeMaximizeRecursion = false;
-void XdgToplevelWindow::changeMaximize(MaximizeMode mode)
+void XdgToplevelWindow::maximize(MaximizeMode mode)
 {
     if (changeMaximizeRecursion) {
         return;
