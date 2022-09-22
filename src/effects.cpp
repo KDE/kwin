@@ -2008,6 +2008,16 @@ const EffectWindowGroup *EffectWindowImpl::group() const
     return nullptr; // TODO
 }
 
+bool EffectWindowImpl::isMaximizedHorizontally() const
+{
+    return m_window->maximizeMode() & MaximizeMode::MaximizeHorizontal;
+}
+
+bool EffectWindowImpl::isMaximizedVertically() const
+{
+    return m_window->maximizeMode() & MaximizeMode::MaximizeVertical;
+}
+
 void EffectWindowImpl::refWindow()
 {
     if (auto d = static_cast<Deleted *>(m_window->isDeleted() ? m_window : nullptr)) {

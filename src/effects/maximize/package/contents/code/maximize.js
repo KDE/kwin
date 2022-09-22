@@ -39,17 +39,24 @@ class MaximizeEffect {
         }
     }
 
-    onWindowMaximizedStateAboutToChange(window) {
-        window.maximizeAnimation2 = animate({
-            window: window,
-            duration: this.duration,
-            animations: [{
-                type: Effect.CrossFadePrevious,
-                to: 1.0,
-                from: 0.0,
-                curve: QEasingCurve.OutCubic
-            }]
-        });
+    onWindowMaximizedStateAboutToChange(window, horiz, vert) {
+        if (window.maximizedHorizontally != horiz && window.maximizedVertically != vert) {
+            window.maximizeAnimation2 = animate({
+                window: window,
+                duration: this.duration,
+                animations: [{
+                    type: Effect.CrossFadePrevious,
+                    to: 1.0,
+                    from: 0.0,
+                    curve: QEasingCurve.OutCubic
+                }]
+            });
+        } else {
+            if (window.maximizeAnimation2) {
+                cancel(window.maximizeAnimation2);
+                delete window.maximizeAnimation2;
+            }
+        }
     }
 
     onWindowMaximizedStateChanged(window) {

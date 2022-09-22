@@ -395,6 +395,8 @@ public:
 
     bool isDeleted() const override;
     bool isMinimized() const override;
+    bool isMaximizedHorizontally() const override;
+    bool isMaximizedVertically() const override;
     double opacity() const override;
     bool hasAlpha() const override;
 

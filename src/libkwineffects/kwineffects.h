@@ -2182,6 +2182,17 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
      * Whether the window is minimized.
      */
     Q_PROPERTY(bool minimized READ isMinimized WRITE setMinimized)
+
+    /**
+     * Whether the window is maximized horizontally.
+     */
+    Q_PROPERTY(bool maximizedHorizontally READ isMaximizedHorizontally)
+
+    /**
+     * Whether the window is maximized vertically.
+     */
+    Q_PROPERTY(bool maximizedVertically READ isMaximizedVertically)
+
     /**
      * Whether the window represents a modal window.
      */
@@ -2363,6 +2374,8 @@ public:
     virtual bool isDeleted() const = 0;
 
     virtual bool isMinimized() const = 0;
+    virtual bool isMaximizedHorizontally() const = 0;
+    virtual bool isMaximizedVertically() const = 0;
     virtual double opacity() const = 0;
     virtual bool hasAlpha() const = 0;
 
