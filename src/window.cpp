@@ -1590,8 +1590,7 @@ void Window::setMaximize(bool vertically, bool horizontally)
     const MaximizeMode oldMode = requestedMaximizeMode();
     changeMaximize(
         oldMode & MaximizeHorizontal ? !horizontally : horizontally,
-        oldMode & MaximizeVertical ? !vertically : vertically,
-        false);
+        oldMode & MaximizeVertical ? !vertically : vertically);
     const MaximizeMode newMode = maximizeMode();
     if (oldMode != newMode) {
         Q_EMIT clientMaximizedStateChanged(this, newMode);
@@ -4337,15 +4336,12 @@ void Window::setGeometryRestore(const QRectF &rect)
 /**
  * Toggles the maximized state along specified dimensions @p horizontal and @p vertical.
  *
- * If @p adjust is @c true, only frame geometry will be updated to match requestedMaximizeMode().
- *
  * Default implementation does nothing.
  */
-void Window::changeMaximize(bool horizontal, bool vertical, bool adjust)
+void Window::changeMaximize(bool horizontal, bool vertical)
 {
     Q_UNUSED(horizontal)
     Q_UNUSED(vertical)
-    Q_UNUSED(adjust)
     qCWarning(KWIN_CORE, "%s doesn't support setting maximized state", metaObject()->className());
 }
 

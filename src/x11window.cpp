@@ -4265,7 +4265,7 @@ void X11Window::updateServerGeometry()
 }
 
 static bool changeMaximizeRecursion = false;
-void X11Window::changeMaximize(bool horizontal, bool vertical, bool adjust)
+void X11Window::changeMaximize(bool horizontal, bool vertical)
 {
     if (changeMaximizeRecursion) {
         return;
@@ -4286,15 +4286,12 @@ void X11Window::changeMaximize(bool horizontal, bool vertical, bool adjust)
     }
 
     MaximizeMode old_mode = max_mode;
-    // 'adjust == true' means to update the size only, e.g. after changing workspace size
     MaximizeMode mode = max_mode;
-    if (!adjust) {
-        if (vertical) {
-            mode = MaximizeMode(mode ^ MaximizeVertical);
-        }
-        if (horizontal) {
-            mode = MaximizeMode(mode ^ MaximizeHorizontal);
-        }
+    if (vertical) {
+        mode = MaximizeMode(mode ^ MaximizeVertical);
+    }
+    if (horizontal) {
+        mode = MaximizeMode(mode ^ MaximizeHorizontal);
     }
 
     // if the client insist on a fix aspect ratio, we check whether the maximizing will get us
@@ -4320,20 +4317,20 @@ void X11Window::changeMaximize(bool horizontal, bool vertical, bool adjust)
     }
 
     mode = rules()->checkMaximize(mode);
-    if (max_mode != mode) {
-        Q_EMIT clientMaximizedStateAboutToChange(this, mode);
-        max_mode = mode;
-    } else if (!adjust) {
+    if (max_mode == mode) {
         return;
     }
 
     GeometryUpdatesBlocker blocker(this);
 
+    Q_EMIT clientMaximizedStateAboutToChange(this, mode);
+    max_mode = mode;
+
     // maximing one way and unmaximizing the other way shouldn't happen,
     // so restore first and then maximize the other way
     if ((old_mode == MaximizeVertical && max_mode == MaximizeHorizontal)
         || (old_mode == MaximizeHorizontal && max_mode == MaximizeVertical)) {
-        changeMaximize(false, false, false); // restore
+        changeMaximize(false, false); // restore
     }
 
     // save sizes for restoring, if maximalizing
@@ -4346,11 +4343,11 @@ void X11Window::changeMaximize(bool horizontal, bool vertical, bool adjust)
 
     if (quickTileMode() == QuickTileMode(QuickTileFlag::None)) {
         QRectF savedGeometry = geometryRestore();
-        if (!adjust && !(old_mode & MaximizeVertical)) {
+        if (!(old_mode & MaximizeVertical)) {
             savedGeometry.setTop(y());
             savedGeometry.setHeight(sz.height());
         }
-        if (!adjust && !(old_mode & MaximizeHorizontal)) {
+        if (!(old_mode & MaximizeHorizontal)) {
             savedGeometry.setLeft(x());
             savedGeometry.setWidth(sz.width());
         }

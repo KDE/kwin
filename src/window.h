@@ -1721,7 +1721,7 @@ protected:
     int borderRight() const;
     int borderTop() const;
     int borderBottom() const;
-    virtual void changeMaximize(bool horizontal, bool vertical, bool adjust);
+    virtual void changeMaximize(bool horizontal, bool vertical);
     void setGeometryRestore(const QRectF &rect);
 
     void blockGeometryUpdates(bool block);
