@@ -1133,7 +1133,7 @@ void Workspace::updateToolWindows(bool also_hide)
     QVector<Window *> to_show, to_hide;
     for (auto it = stacking_order.constBegin(); it != stacking_order.constEnd(); ++it) {
         auto c = *it;
-        if (!c->isClient()) {
+        if (!c->isClient() || !qobject_cast<X11Window *>(c)) {
             continue;
         }
         if (c->isUtility() || c->isMenu() || c->isToolbar()) {
