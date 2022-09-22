@@ -4307,39 +4307,43 @@ void X11Window::changeMaximize(bool horizontal, bool vertical, bool adjust)
 
     MaximizeMode old_mode = max_mode;
     // 'adjust == true' means to update the size only, e.g. after changing workspace size
+    MaximizeMode mode = max_mode;
     if (!adjust) {
         if (vertical) {
-            max_mode = MaximizeMode(max_mode ^ MaximizeVertical);
+            mode = MaximizeMode(mode ^ MaximizeVertical);
         }
         if (horizontal) {
-            max_mode = MaximizeMode(max_mode ^ MaximizeHorizontal);
+            mode = MaximizeMode(mode ^ MaximizeHorizontal);
         }
     }
 
     // if the client insist on a fix aspect ratio, we check whether the maximizing will get us
     // out of screen bounds and take that as a "full maximization with aspect check" then
     if (m_geometryHints.hasAspect() && // fixed aspect
-        (max_mode == MaximizeVertical || max_mode == MaximizeHorizontal) && // ondimensional maximization
+        (mode == MaximizeVertical || mode == MaximizeHorizontal) && // ondimensional maximization
         rules()->checkStrictGeometry(true)) { // obey aspect
         const QSize minAspect = m_geometryHints.minAspect();
         const QSize maxAspect = m_geometryHints.maxAspect();
-        if (max_mode == MaximizeVertical || (old_mode & MaximizeVertical)) {
+        if (mode == MaximizeVertical || (old_mode & MaximizeVertical)) {
             const double fx = minAspect.width(); // use doubles, because the values can be MAX_INT
             const double fy = maxAspect.height(); // use doubles, because the values can be MAX_INT
             if (fx * clientArea.height() / fy > clientArea.width()) { // too big
-                max_mode = old_mode & MaximizeHorizontal ? MaximizeRestore : MaximizeFull;
+                mode = old_mode & MaximizeHorizontal ? MaximizeRestore : MaximizeFull;
             }
-        } else { // max_mode == MaximizeHorizontal
+        } else { // mode == MaximizeHorizontal
             const double fx = maxAspect.width();
             const double fy = minAspect.height();
             if (fy * clientArea.width() / fx > clientArea.height()) { // too big
-                max_mode = old_mode & MaximizeVertical ? MaximizeRestore : MaximizeFull;
+                mode = old_mode & MaximizeVertical ? MaximizeRestore : MaximizeFull;
             }
         }
     }
 
-    max_mode = rules()->checkMaximize(max_mode);
-    if (!adjust && max_mode == old_mode) {
+    mode = rules()->checkMaximize(mode);
+    if (max_mode != mode) {
+        Q_EMIT clientMaximizedStateAboutToChange(this, mode);
+        max_mode = mode;
+    } else if (!adjust) {
         return;
     }
 
