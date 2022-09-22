@@ -487,6 +487,8 @@ protected:
      */
     bool cancel(quint64 animationId);
 
+    qint64 animationId(EffectWindow *w, Attribute a);
+
     /**
      * Called whenever animation that transforms Generic attribute needs to be painted.
      *

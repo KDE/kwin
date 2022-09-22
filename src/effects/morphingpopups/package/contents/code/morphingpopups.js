@@ -15,28 +15,41 @@ var morphingEffect = {
         morphingEffect.duration = animationTime(150);
     },
 
+    handleAnimationEnded: function(window, anim) {
+        if (anim === Number(window.fadeAnimation)) {
+            if (window.fadeAnimation) {
+                delete window.fadeAnimation;
+            }
+            if (window.moveAnimation) {
+                cancel(window.moveAnimation);
+                delete window.moveAnimation;
+            }
+        }
+    },
+
     handleFrameGeometryAboutToChange: function (window) {
         //only tooltips and notifications
         if (!window.tooltip && !window.notification && !window.criticalNotification) {
             return;
         }
-        var couldRetarget = false;
+
         if (window.fadeAnimation) {
-            couldRetarget = retarget(window.fadeAnimation[0], 1.0, morphingEffect.duration);
+            return;
         }
 
-        if (!couldRetarget) {
-            window.fadeAnimation = animate({
-                window: window,
-                duration: morphingEffect.duration,
-                animations: [{
-                    type: Effect.CrossFadePrevious,
-                    to: 1.0,
-                    from: 0.0
-                }]
-            });
-        }
+        var couldRetarget = false;
+
+        window.fadeAnimation = animate({
+            window: window,
+            duration: morphingEffect.duration,
+            animations: [{
+                type: Effect.CrossFadePrevious,
+                to: 1.0,
+                from: 0.0
+            }]
+        });
     },
+
     handleFrameGeometryChanged: function (window, oldGeometry) {
         //only tooltips and notifications
         if (!window.tooltip && !window.notification && !window.criticalNotification) {
@@ -124,6 +137,7 @@ var morphingEffect = {
 
     init: function () {
         effect.configChanged.connect(morphingEffect.loadConfig);
+        effect.animationEnded.connect(morphingEffect.handleAnimationEnded);
         effects.windowFrameGeometryAboutToChange.connect(morphingEffect.handleFrameGeometryAboutToChange);
         effects.windowFrameGeometryChanged.connect(morphingEffect.handleFrameGeometryChanged);
     }

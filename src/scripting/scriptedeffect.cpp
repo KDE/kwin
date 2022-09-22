@@ -302,7 +302,7 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
 void ScriptedEffect::animationEnded(KWin::EffectWindow *w, Attribute a, uint meta)
 {
     AnimationEffect::animationEnded(w, a, meta);
-    Q_EMIT animationEnded(w, 0);
+    Q_EMIT animationEnded(w, animationId(w, a));
 }
 
 QString ScriptedEffect::pluginId() const

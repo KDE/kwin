@@ -431,6 +431,22 @@ bool AnimationEffect::cancel(quint64 animationId)
     return false;
 }
 
+qint64 AnimationEffect::animationId(EffectWindow *w, Attribute a)
+{
+    Q_D(AnimationEffect);
+    if (!d->m_animations.contains(w)) {
+        return 0;
+    }
+
+    const auto datal = d->m_animations[w].first;
+    for (const auto &d : datal) {
+        if (d.attribute == a) {
+            return d.id;
+        }
+    }
+    return 0;
+}
+
 void AnimationEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     Q_D(AnimationEffect);

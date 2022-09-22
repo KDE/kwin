@@ -16,6 +16,7 @@ class MaximizeEffect {
         effects.windowMaximizedStateChanged.connect(
                 this.onWindowMaximizedStateChanged.bind(this));
         effect.animationEnded.connect(this.restoreForceBlurState.bind(this));
+        effect.animationEnded.connect(this.onAnimationEnded);
         effects.windowMaximizedStateAboutToChange.connect(
                 this.onWindowMaximizedStateAboutToChange.bind(this));
 
@@ -26,27 +27,29 @@ class MaximizeEffect {
         this.duration = animationTime(250);
     }
 
+    onAnimationEnded(window, anim) {
+        if (anim === Number(window.maximizeAnimation2)) {
+            if (window.maximizeAnimation1) {
+                cancel(window.maximizeAnimation1);
+                delete window.maximizeAnimation1;
+            }
+            if (window.maximizeAnimation2) {
+                delete window.maximizeAnimation2;
+            }
+        }
+    }
+
     onWindowMaximizedStateAboutToChange(window) {
-        if (window.maximizeAnimation1) {
-            cancel(window.maximizeAnimation1);
-            delete window.maximizeAnimation1;
-        }
-        let couldRetarget = false;
-        if (window.maximizeAnimation2) {
-            couldRetarget = retarget(window.maximizeAnimation2, 1.0, this.duration);
-        }
-        if (!couldRetarget) {
-            window.maximizeAnimation2 = animate({
-                window: window,
-                duration: this.duration,
-                animations: [{
-                    type: Effect.CrossFadePrevious,
-                    to: 1.0,
-                    from: 0.0,
-                    curve: QEasingCurve.OutCubic
-                }]
-            });
-        }
+        window.maximizeAnimation2 = animate({
+            window: window,
+            duration: this.duration,
+            animations: [{
+                type: Effect.CrossFadePrevious,
+                to: 1.0,
+                from: 0.0,
+                curve: QEasingCurve.OutCubic
+            }]
+        });
     }
 
     onWindowMaximizedStateChanged(window) {
