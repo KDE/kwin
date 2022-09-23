@@ -69,7 +69,7 @@ void InputPanelV1Window::showTopLevel(OutputInterface *output, InputPanelSurface
 void InputPanelV1Window::allow()
 {
     m_allowed = true;
-    if (m_shouldBeShown && surface()->isMapped()) {
+    if (m_shouldBeShown && !isZombie() && surface()->isMapped()) {
         setReadyForPainting();
         reposition();
         showClient();
@@ -79,7 +79,7 @@ void InputPanelV1Window::allow()
 void InputPanelV1Window::show()
 {
     m_shouldBeShown = true;
-    if (m_allowed && surface()->isMapped()) {
+    if (m_allowed && !isZombie() && surface()->isMapped()) {
         setReadyForPainting();
         reposition();
         showClient();
