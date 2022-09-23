@@ -204,14 +204,21 @@ bool X11StandalonePlatform::requiresCompositing() const
 
 bool X11StandalonePlatform::openGLCompositingIsBroken() const
 {
-    return KConfigGroup(kwinApp()->config(), "Compositing").readEntry(QLatin1String("OpenGLIsUnsafe"), false);
+    auto timestamp = KConfigGroup(kwinApp()->config(), "Compositing").readEntry(QLatin1String("LastFailureTimestamp"), 0);
+    if (timestamp > 0) {
+        if (QDateTime::currentSecsSinceEpoch() - timestamp < 60) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 QString X11StandalonePlatform::compositingNotPossibleReason() const
 {
     // first off, check whether we figured that we'll crash on detection because of a buggy driver
     KConfigGroup gl_workaround_group(kwinApp()->config(), "Compositing");
-    if (gl_workaround_group.readEntry("Backend", "OpenGL") == QLatin1String("OpenGL") && gl_workaround_group.readEntry(QLatin1String("OpenGLIsUnsafe"), false)) {
+    if (gl_workaround_group.readEntry("Backend", "OpenGL") == QLatin1String("OpenGL") && openGLCompositingIsBroken()) {
         return i18n("<b>OpenGL compositing (the default) has crashed KWin in the past.</b><br>"
                     "This was most likely due to a driver bug."
                     "<p>If you think that you have meanwhile upgraded to a stable driver,<br>"
@@ -231,9 +238,8 @@ bool X11StandalonePlatform::compositingPossible() const
 {
     // first off, check whether we figured that we'll crash on detection because of a buggy driver
     KConfigGroup gl_workaround_group(kwinApp()->config(), "Compositing");
-    if (gl_workaround_group.readEntry("Backend", "OpenGL") == QLatin1String("OpenGL") && gl_workaround_group.readEntry(QLatin1String("OpenGLIsUnsafe"), false)) {
-        qCWarning(KWIN_X11STANDALONE) << "Compositing disabled: video driver seems unstable. If you think it's a false positive, please remove "
-                                      << "OpenGLIsUnsafe from [Compositing] in kwinrc and restart kwin.";
+    if (gl_workaround_group.readEntry("Backend", "OpenGL") == QLatin1String("OpenGL") && openGLCompositingIsBroken()) {
+        qCWarning(KWIN_X11STANDALONE) << "Compositing disabled: video driver seems unstable. If you think it's a false positive, please try again in a few minutes.";
         return false;
     }
 
@@ -267,7 +273,9 @@ void X11StandalonePlatform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
     auto group = KConfigGroup(kwinApp()->config(), "Compositing");
     switch (safePoint) {
     case OpenGLSafePoint::PreInit:
-        group.writeEntry(QLatin1String("OpenGLIsUnsafe"), true);
+        // Explicitly write the failure timestamp so that if we crash during
+        // OpenGL init, we know we should not try again.
+        group.writeEntry(QLatin1String("LastFailureTimestamp"), QDateTime::currentSecsSinceEpoch());
         group.sync();
         // Deliberately continue with PreFrame
         Q_FALLTHROUGH();
@@ -287,7 +295,7 @@ void X11StandalonePlatform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
                 m_openGLFreezeProtection.get(), &QTimer::timeout, m_openGLFreezeProtection.get(),
                 [configName] {
                     auto group = KConfigGroup(KSharedConfig::openConfig(configName), "Compositing");
-                    group.writeEntry(QLatin1String("OpenGLIsUnsafe"), true);
+                    group.writeEntry(QLatin1String("LastFailureTimestamp"), QDateTime::currentSecsSinceEpoch());
                     group.sync();
                     KCrash::setDrKonqiEnabled(false);
                     qFatal("Freeze in OpenGL initialization detected");
@@ -299,7 +307,7 @@ void X11StandalonePlatform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
         }
         break;
     case OpenGLSafePoint::PostInit:
-        group.writeEntry(QLatin1String("OpenGLIsUnsafe"), false);
+        group.deleteEntry(QLatin1String("LastFailureTimestamp"));
         group.sync();
         // Deliberately continue with PostFrame
         Q_FALLTHROUGH();

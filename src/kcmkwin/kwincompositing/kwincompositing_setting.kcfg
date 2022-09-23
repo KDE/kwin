@@ -34,8 +34,8 @@
         <default>true</default>
        </entry>
 
-       <entry name="OpenGLIsUnsafe" type="Bool">
-        <default>true</default>
+       <entry name="LastFailureTimestamp" type="Int">
+           <default>0</default>
        </entry>
 
        <entry name="glPreferBufferSwap" key="GLPreferBufferSwap" type="Enum">

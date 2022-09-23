@@ -99,7 +99,7 @@ KWinCompositingKCM::KWinCompositingKCM(QWidget *parent, const QVariantList &args
 
 void KWinCompositingKCM::reenableGl()
 {
-    m_settings->setOpenGLIsUnsafe(false);
+    m_settings->setLastFailureTimestamp(0);
     m_settings->save();
 }
 
@@ -156,7 +156,7 @@ void KWinCompositingKCM::init()
         }
     });
 
-    if (m_settings->openGLIsUnsafe()) {
+    if (m_settings->lastFailureTimestamp() > 0) {
         m_form.glCrashedWarning->animatedShow();
     }
 }

@@ -24,7 +24,7 @@ bool KWinCompositingData::isDefaults() const
 
     const KConfigSkeletonItem::List itemList = m_settings->items();
     for (const auto &item : itemList) {
-        if (item->key() != QStringLiteral("OpenGLIsUnsafe")) {
+        if (item->key() != QStringLiteral("LastFailureTimestamp")) {
             defaults &= item->isDefault();
         }
     }

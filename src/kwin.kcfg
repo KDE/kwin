@@ -236,6 +236,9 @@
         <entry name="Enabled" type="Bool">
             <default>true</default>
         </entry>
+        <entry name="LastFailureTimestamp" type="Int">
+            <default>0</default>
+        </entry>
         <entry name="GLTextureFilter" type="Int">
             <default>2</default>
             <min>-1</min>
