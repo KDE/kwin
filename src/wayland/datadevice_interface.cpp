@@ -156,6 +156,7 @@ DataOfferInterface *DataDeviceInterfacePrivate::createDataOffer(AbstractDataSour
     DataOfferInterface *offer = new DataOfferInterface(source, data_offer_resource);
     send_data_offer(offer->resource());
     offer->sendAllOffers();
+    offer->sendSourceActions();
     return offer;
 }
 
@@ -308,7 +309,6 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
     }
     d->send_enter(serial, surface->resource(), wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()), offer ? offer->resource() : nullptr);
     if (offer) {
-        offer->sendSourceActions();
         auto matchOffers = [dragSource, offer] {
             const DataDeviceManagerInterface::DnDAction action = chooseDndAction(dragSource, offer);
             offer->dndAction(action);
