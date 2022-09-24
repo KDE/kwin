@@ -957,6 +957,20 @@ void XdgToplevelWindow::doSetMaximized()
     scheduleConfigure();
 }
 
+static Qt::Edges anchorsForMaximizeMode(MaximizeMode mode)
+{
+    Qt::Edges anchors;
+
+    if (mode & MaximizeHorizontal) {
+        anchors |= Qt::LeftEdge | Qt::RightEdge;
+    }
+    if (mode & MaximizeVertical) {
+        anchors |= Qt::TopEdge | Qt::BottomEdge;
+    }
+
+    return anchors;
+}
+
 static Qt::Edges anchorsForQuickTileMode(QuickTileMode mode)
 {
     if (mode == QuickTileMode(QuickTileFlag::None)) {
@@ -984,7 +998,13 @@ static Qt::Edges anchorsForQuickTileMode(QuickTileMode mode)
 
 void XdgToplevelWindow::doSetQuickTileMode()
 {
-    const Qt::Edges anchors = anchorsForQuickTileMode(quickTileMode());
+    Qt::Edges anchors;
+
+    if (requestedMaximizeMode() != MaximizeRestore) {
+        anchors = anchorsForMaximizeMode(requestedMaximizeMode());
+    } else {
+        anchors = anchorsForQuickTileMode(quickTileMode());
+    }
 
     if (anchors & Qt::LeftEdge) {
         m_nextStates |= XdgToplevelInterface::State::TiledLeft;
@@ -1761,12 +1781,12 @@ void XdgToplevelWindow::changeMaximize(bool horizontal, bool vertical, bool adju
 
     moveResize(geometry);
 
+    doSetQuickTileMode();
+    doSetMaximized();
+
     if (oldQuickTileMode != quickTileMode()) {
-        doSetQuickTileMode();
         Q_EMIT quickTileModeChanged();
     }
-
-    doSetMaximized();
 }
 
 XdgPopupWindow::XdgPopupWindow(XdgPopupInterface *shellSurface)
