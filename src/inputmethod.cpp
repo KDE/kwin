@@ -690,7 +690,7 @@ void InputMethod::updateInputPanelState()
 
     QRectF overlap = QRectF(0, 0, 0, 0);
     if (m_trackedWindow) {
-        const bool bottomKeyboard = m_panel && m_panel->mode() != InputPanelV1Window::Mode::Overlay && m_panel->isShown();
+        const bool bottomKeyboard = m_panel && m_panel->mode() != InputPanelV1Window::Mode::Overlay && m_panel->isShown() && m_panel->readyForPainting();
         m_trackedWindow->setVirtualKeyboardGeometry(bottomKeyboard ? m_panel->inputGeometry() : QRectF());
 
         if (m_panel && m_panel->mode() != InputPanelV1Window::Mode::Overlay) {
@@ -698,7 +698,7 @@ void InputMethod::updateInputPanelState()
             overlap.moveTo(m_trackedWindow->mapToLocal(overlap.topLeft()));
         }
     }
-    t->setInputPanelState(m_panel && m_panel->isShown(), overlap.toRect());
+    t->setInputPanelState(m_panel && m_panel->isShown() && m_panel->readyForPainting(), overlap.toRect());
 }
 
 void InputMethod::setInputMethodCommand(const QString &command)
@@ -812,7 +812,7 @@ void InputMethod::updateModifiersMap(const QByteArray &modifiers)
 
 bool InputMethod::isVisible() const
 {
-    return m_panel && m_panel->isShown();
+    return m_panel && m_panel->isShown() && m_panel->readyForPainting();
 }
 
 bool InputMethod::isAvailable() const
