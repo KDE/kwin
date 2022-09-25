@@ -22,6 +22,7 @@
 #include <wayland-server.h>
 // std
 #include <algorithm>
+#include <cmath>
 
 namespace KWaylandServer
 {
