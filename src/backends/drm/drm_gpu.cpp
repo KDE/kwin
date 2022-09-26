@@ -562,9 +562,6 @@ void DrmGpu::pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, un
 
 void DrmGpu::dispatchEvents()
 {
-    if (!m_platform->isActive()) {
-        return;
-    }
     drmEventContext context = {};
     context.version = 3;
     context.page_flip_handler2 = pageFlipHandler;
