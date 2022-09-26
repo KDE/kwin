@@ -1566,6 +1566,9 @@ void Workspace::updateOutputs(const QVector<Output *> &outputOrder)
     if (!m_activeOutput || !m_outputs.contains(m_activeOutput)) {
         setActiveOutput(m_outputs[0]);
     }
+    if (!m_outputs.contains(m_activeCursorOutput)) {
+        m_activeCursorOutput = nullptr;
+    }
 
     if (!outputOrder.empty()) {
         setOutputOrder(outputOrder);
@@ -2772,7 +2775,11 @@ QVector<Output *> Workspace::outputOrder() const
 Output *Workspace::activeOutput() const
 {
     if (options->activeMouseScreen()) {
-        return outputAt(Cursors::self()->mouse()->pos());
+        if (m_activeCursorOutput) {
+            return m_activeCursorOutput;
+        } else {
+            return outputAt(Cursors::self()->mouse()->pos());
+        }
     }
 
     if (m_activeWindow && !m_activeWindow->isOnOutput(m_activeOutput)) {
@@ -2790,6 +2797,16 @@ void Workspace::setActiveOutput(Output *output)
 void Workspace::setActiveOutput(const QPointF &pos)
 {
     setActiveOutput(outputAt(pos));
+}
+
+void Workspace::setActiveCursorOutput(Output *output)
+{
+    m_activeCursorOutput = output;
+}
+
+void Workspace::setActiveCursorOutput(const QPointF &pos)
+{
+    setActiveCursorOutput(outputAt(pos));
 }
 
 /**

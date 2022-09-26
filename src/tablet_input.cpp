@@ -70,6 +70,7 @@ void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEvent
     }
 
     update();
+    workspace()->setActiveCursorOutput(pos);
 
     const auto button = m_tipDown ? Qt::LeftButton : Qt::NoButton;
 

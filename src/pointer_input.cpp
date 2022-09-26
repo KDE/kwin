@@ -766,6 +766,7 @@ void PointerInputRedirection::updatePosition(const QPointF &pos)
 
     m_pos = p;
 
+    workspace()->setActiveCursorOutput(m_pos);
     updateCursorOutputs();
 
     Q_EMIT input()->globalPointerChanged(m_pos);
