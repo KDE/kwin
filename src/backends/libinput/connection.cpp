@@ -529,7 +529,7 @@ void Connection::applyScreenToDevice(Device *device)
 {
 #ifndef KWIN_BUILD_TESTING
     QMutexLocker locker(&m_mutex);
-    if (!device->isTouch()) {
+    if (!device->isTouch() && !device->isTabletTool()) {
         return;
     }
 
@@ -549,7 +549,7 @@ void Connection::applyScreenToDevice(Device *device)
             }
         }
     }
-    if (!deviceOutput) {
+    if (!deviceOutput && device->isTouch()) {
         // do we have an internal screen?
         Output *internalOutput = nullptr;
         for (Output *output : outputs) {
