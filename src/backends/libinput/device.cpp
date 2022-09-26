@@ -628,8 +628,12 @@ void Device::setOrientation(Qt::ScreenOrientation orientation)
 void Device::setOutputName(const QString &name)
 {
 #ifndef KWIN_BUILD_TESTING
+    if (name == m_outputName) {
+        return;
+    }
+
+    setOutput(nullptr);
     if (name.isEmpty()) {
-        setOutput(nullptr);
         return;
     }
     auto outputs = kwinApp()->platform()->outputs();
@@ -642,6 +646,10 @@ void Device::setOutputName(const QString &name)
             break;
         }
     }
+
+    m_outputName = name;
+    writeEntry(ConfigKey::OutputName, name);
+    Q_EMIT outputNameChanged();
 #else
     Q_UNUSED(name)
 #endif
@@ -654,19 +662,7 @@ Output *Device::output() const
 
 void Device::setOutput(Output *output)
 {
-#ifndef KWIN_BUILD_TESTING
     m_output = output;
-    if (m_output) {
-        m_outputName = output->name();
-        writeEntry(ConfigKey::OutputName, output->name());
-    } else {
-        m_outputName = QString();
-        writeEntry(ConfigKey::OutputName, QString());
-    }
-    Q_EMIT outputNameChanged();
-#else
-    Q_UNUSED(output)
-#endif
 }
 
 static libinput_led toLibinputLEDS(LEDs leds)
