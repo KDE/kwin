@@ -339,7 +339,7 @@ FocusScope {
             break;
         case Qt.Key_Return:
         case Qt.Key_Space:
-            handled = true;
+            handled = false;
             let selectedItem = null;
             if (selectedIndex !== -1) {
                 selectedItem = windowsRepeater.itemAt(selectedIndex);
