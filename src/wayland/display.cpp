@@ -166,8 +166,7 @@ QVector<OutputInterface *> Display::outputsIntersecting(const QRect &rect) const
 {
     QVector<OutputInterface *> outputs;
     for (auto *output : qAsConst(d->outputs)) {
-        const QRect outputGeometry(output->globalPosition(), output->pixelSize() / output->scale());
-        if (rect.intersects(outputGeometry)) {
+        if (output->handle()->geometry().intersects(rect)) {
             outputs << output;
         }
     }
