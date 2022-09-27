@@ -1,5 +1,6 @@
 {
     "KPlugin": {
+        "BugReportUrl": "https://bugs.kde.org/enter_bug.cgi?product=systemsettings&component=kcm_kwinscreenedges",
         "Description": "Configure active screen corners and edges",
         "Description[ar]": "اضبط زوايا وحواف الشاشة",
         "Description[az]": "Aktiv ekran künclərini və kənarlarını tənzimləyin",

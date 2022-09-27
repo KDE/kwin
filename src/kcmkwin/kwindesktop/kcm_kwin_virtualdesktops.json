@@ -1,6 +1,7 @@
 {
     "Categories": "Qt;KDE;X-KDE-settings-translations;",
     "KPlugin": {
+        "BugReportUrl": "https://bugs.kde.org/enter_bug.cgi?product=systemsettings&component=kcm_kwinvirtualdesktops",
         "Description": "Configure navigation, number and layout of virtual desktops",
         "Description[ar]": "اضبط عدد وتخطيط أسطح المكتب الافتراضية وكيفية التنقل بينها",
         "Description[az]": "Virtual iş masalarının istiqamətini, sayını və maketini tənzimləyin",

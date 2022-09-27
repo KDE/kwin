@@ -1,6 +1,7 @@
 {
     "Categories": "Qt;KDE;X-KDE-settings-looknfeel;",
     "KPlugin": {
+        "BugReportUrl": "https://bugs.kde.org/enter_bug.cgi?product=systemsettings&component=kcm_kwindecoration",
         "Description": "Configure window titlebars and borders",
         "Description[ar]": "اضبط حدود وشريط عنوان النوافذ",
         "Description[az]": "Pəncərə başlıq zolağını və çərçivələrini tənzimləyin",

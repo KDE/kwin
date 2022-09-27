@@ -1,5 +1,6 @@
 {
     "KPlugin": {
+        "BugReportUrl": "https://bugs.kde.org/enter_bug.cgi?product=systemsettings&component=kcm_kwintabbox",
         "Description": "Navigation Through Windows",
         "Description[ar]": "التنقل بين النوافذ",
         "Description[az]": "Pəncərələr arası naviqasiya",

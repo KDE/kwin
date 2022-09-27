@@ -1,5 +1,6 @@
 {
     "KPlugin": {
+        "BugReportUrl": "https://bugs.kde.org/enter_bug.cgi?product=systemsettings&component=kcm_kwinscripts",
         "Description": "Manage KWin scripts",
         "Description[ar]": "أدر سكربتات كوين",
         "Description[az]": "Kwin skriptlərini idarə edin",

@@ -1,6 +1,7 @@
 {
     "Categories": "Qt;KDE;",
     "KPlugin": {
+        "BugReportUrl": "https://bugs.kde.org/enter_bug.cgi?product=systemsettings&component=kcm_kwinvirtualkeyboard",
         "Description": "Select which virtual keyboard to use",
         "Description[ar]": "اختر أيا من لوحات المفاتيح الافتراضية لإستعمالها",
         "Description[az]": "İstifadə edəcəyiniz virtual klaviaturanı seçin",

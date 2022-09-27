@@ -1,5 +1,6 @@
 {
     "KPlugin": {
+        "BugReportUrl": "https://bugs.kde.org/enter_bug.cgi?product=systemsettings&component=kcm_kwintouchscreen",
         "Description": "Configure touch screen swipe gestures",
         "Description[ar]": "اضبط إيماءات شاشة اللمس ",
         "Description[az]": "Toxunma ekranı jestlərini tənzimləyin",

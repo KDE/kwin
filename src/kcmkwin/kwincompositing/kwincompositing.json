@@ -1,5 +1,6 @@
 {
     "KPlugin": {
+        "BugReportUrl": "https://bugs.kde.org/enter_bug.cgi?product=systemsettings&component=kcm_kwincompositing",
         "Description": "Compositor Settings for Desktop Effects",
         "Description[ar]": "إعدادات المركب لتأثيرات سطح المكتب",
         "Description[az]": "İş masası effektləri üçün düzücü ayarları",

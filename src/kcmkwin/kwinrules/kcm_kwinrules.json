@@ -1,6 +1,7 @@
 {
     "Categories": "Qt;KDE;X-KDE-settings-looknfeel;",
     "KPlugin": {
+        "BugReportUrl": "https://bugs.kde.org/enter_bug.cgi?product=systemsettings&component=kcm_kwinrules",
         "Description": "Individual Window Behavior",
         "Description[ar]": "سلوك النافذ المفردة",
         "Description[az]": "Fərdi pəncərə davranışı",
