@@ -164,9 +164,15 @@ void WindowThumbnailItem::updateFrameRenderingConnection()
         return;
     }
 
-    if (Compositor::self()->backend()->compositingType() == OpenGLCompositing) {
+    if (useGlThumbnails()) {
         m_frameRenderingConnection = connect(Compositor::self()->scene(), &Scene::preFrameRender, this, &WindowThumbnailItem::updateOffscreenTexture);
     }
+}
+
+bool WindowThumbnailItem::useGlThumbnails()
+{
+    static bool qtQuickIsSoftware = QStringList({QStringLiteral("software"), QStringLiteral("softwarecontext")}).contains(QQuickWindow::sceneGraphBackend());
+    return Compositor::self()->backend()->compositingType() == OpenGLCompositing && !qtQuickIsSoftware;
 }
 
 QSize WindowThumbnailItem::sourceSize() const
@@ -188,7 +194,7 @@ void WindowThumbnailItem::destroyOffscreenTexture()
     if (!Compositor::compositing()) {
         return;
     }
-    if (Compositor::self()->backend()->compositingType() != OpenGLCompositing) {
+    if (!useGlThumbnails()) {
         return;
     }
 

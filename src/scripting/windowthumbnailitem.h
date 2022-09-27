@@ -87,6 +87,7 @@ private:
     void destroyOffscreenTexture();
     void updateImplicitSize();
     void updateFrameRenderingConnection();
+    static bool useGlThumbnails();
 
     QSize m_sourceSize;
     QUuid m_wId;
