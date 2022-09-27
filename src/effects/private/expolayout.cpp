@@ -82,11 +82,6 @@ void ExpoCell::setNaturalX(int x)
         m_naturalX = x;
         update();
         Q_EMIT naturalXChanged();
-
-        if (!m_x.has_value()) {
-            m_x = x;
-            Q_EMIT xChanged();
-        }
     }
 }
 
@@ -101,11 +96,6 @@ void ExpoCell::setNaturalY(int y)
         m_naturalY = y;
         update();
         Q_EMIT naturalYChanged();
-
-        if (!m_y.has_value()) {
-            m_y = y;
-            Q_EMIT yChanged();
-        }
     }
 }
 
@@ -120,11 +110,6 @@ void ExpoCell::setNaturalWidth(int width)
         m_naturalWidth = width;
         update();
         Q_EMIT naturalWidthChanged();
-
-        if (!m_width.has_value()) {
-            m_width = width;
-            Q_EMIT widthChanged();
-        }
     }
 }
 
@@ -139,11 +124,6 @@ void ExpoCell::setNaturalHeight(int height)
         m_naturalHeight = height;
         update();
         Q_EMIT naturalHeightChanged();
-
-        if (!m_height.has_value()) {
-            m_height = height;
-            Q_EMIT heightChanged();
-        }
     }
 }
 
