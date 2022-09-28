@@ -2394,7 +2394,7 @@ void Workspace::updateClientArea()
         workAreas[desktop] = m_geometry;
 
         for (const Output *output : std::as_const(m_outputs)) {
-            screenAreas[desktop][output] = output->geometry();
+            screenAreas[desktop][output] = output->fractionalGeometry();
         }
     }
 
@@ -2439,7 +2439,7 @@ void Workspace::updateClientArea()
             }
             restrictedAreas[vd] += strutRegion;
             for (Output *output : std::as_const(m_outputs)) {
-                const auto geo = screenAreas[vd][output].intersected(adjustClientArea(window, output->geometry()));
+                const auto geo = screenAreas[vd][output].intersected(adjustClientArea(window, output->fractionalGeometry()));
                 // ignore the geometry if it results in the screen getting removed completely
                 if (!geo.isEmpty()) {
                     screenAreas[vd][output] = geo;
@@ -2488,12 +2488,12 @@ QRectF Workspace::clientArea(clientAreaOption opt, const Output *output, const V
                 return *outputIt;
             }
         }
-        return output->geometry();
+        return output->fractionalGeometry();
     case MaximizeFullArea:
     case FullScreenArea:
     case MovementArea:
     case ScreenArea:
-        return output->geometry();
+        return output->fractionalGeometry();
     case WorkArea:
         return m_workAreas.value(desktop, m_geometry);
     case FullArea:

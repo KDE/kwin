@@ -44,8 +44,8 @@ public:
     {
     }
 
-    QPoint pos;
-    QSize size;
+    QPointF pos;
+    QSizeF size;
     QString name;
     QString description;
     QPointer<OutputInterface> output;
@@ -137,7 +137,7 @@ void XdgOutputV1Interface::update()
         return;
     }
 
-    const QRect geometry = d->output->handle()->geometry();
+    const QRectF geometry = d->output->handle()->fractionalGeometry();
     const auto resources = d->resourceMap();
 
     if (d->pos != geometry.topLeft()) {
@@ -194,7 +194,7 @@ void XdgOutputV1InterfacePrivate::sendLogicalSize(Resource *resource)
     ClientConnection *connection = output->display()->getConnection(resource->client());
     qreal scaleOverride = connection->scaleOverride();
 
-    send_logical_size(resource->handle, size.width() * scaleOverride, size.height() * scaleOverride);
+    send_logical_size(resource->handle, std::round(size.width() * scaleOverride), std::round(size.height() * scaleOverride));
 }
 
 void XdgOutputV1InterfacePrivate::sendLogicalPosition(Resource *resource)
