@@ -1025,9 +1025,9 @@ public:
     QSizeF resizeIncrements() const
     {
         if (!hasResizeIncrements()) {
-            return QSize(1, 1);
+            return fromXNative(QSize(1, 1));
         }
-        return QSizeF(qMax(fromXNative(m_sizeHints->widthInc), 1.), qMax(fromXNative(m_sizeHints->heightInc), 1.));
+        return Xcb::fromXNative(QSize(std::max(m_sizeHints->widthInc, 1), std::max(m_sizeHints->heightInc, 1)));
     }
     xcb_gravity_t windowGravity() const
     {
