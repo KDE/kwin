@@ -18,7 +18,7 @@ WaylandOutput::WaylandOutput(Output *output, QObject *parent)
     , m_waylandOutput(new KWaylandServer::OutputInterface(waylandServer()->display(), output))
     , m_xdgOutputV1(waylandServer()->xdgOutputManagerV1()->createXdgOutput(m_waylandOutput.get(), m_waylandOutput.get()))
 {
-    const QRect geometry = m_platformOutput->geometry();
+    const QRectF geometry = m_platformOutput->fractionalGeometry();
 
     m_waylandOutput->setName(output->name());
     m_waylandOutput->setDescription(output->description());
@@ -26,7 +26,7 @@ WaylandOutput::WaylandOutput(Output *output, QObject *parent)
     m_waylandOutput->setManufacturer(output->manufacturer());
     m_waylandOutput->setModel(output->model());
     m_waylandOutput->setPhysicalSize(output->physicalSize());
-    m_waylandOutput->setGlobalPosition(geometry.topLeft());
+    m_waylandOutput->setGlobalPosition(geometry.topLeft().toPoint());
     m_waylandOutput->setScale(std::ceil(output->scale()));
     m_waylandOutput->setMode(output->modeSize(), output->refreshRate());
     m_waylandOutput->setSubPixel(output->subPixel());

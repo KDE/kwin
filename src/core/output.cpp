@@ -169,6 +169,11 @@ QRect Output::geometry() const
     return QRect(m_state.position, pixelSize() / scale());
 }
 
+QRectF Output::fractionalGeometry() const
+{
+    return QRectF(m_state.position, QSizeF(pixelSize()) / scale());
+}
+
 QSize Output::physicalSize() const
 {
     return orientateSize(m_information.physicalSize);

@@ -40,8 +40,8 @@ public:
     {
     }
 
-    QPoint pos;
-    QSize size;
+    QPointF pos;
+    QSizeF size;
     QString name;
     QString description;
     bool dirty = false;
@@ -49,8 +49,8 @@ public:
     QPointer<OutputInterface> output;
     XdgOutputV1Interface *const q;
 
-    void sendLogicalPosition(Resource *resource, const QPoint &position);
-    void sendLogicalSize(Resource *resource, const QSize &size);
+    void sendLogicalPosition(Resource *resource, const QPointF &position);
+    void sendLogicalSize(Resource *resource, const QSizeF &size);
 
     void sendDone(Resource *resource);
 
@@ -122,7 +122,7 @@ XdgOutputV1Interface::~XdgOutputV1Interface()
 {
 }
 
-void XdgOutputV1Interface::setLogicalSize(const QSize &size)
+void XdgOutputV1Interface::setLogicalSize(const QSizeF &size)
 {
     if (size == d->size) {
         return;
@@ -136,12 +136,12 @@ void XdgOutputV1Interface::setLogicalSize(const QSize &size)
     }
 }
 
-QSize XdgOutputV1Interface::logicalSize() const
+QSizeF XdgOutputV1Interface::logicalSize() const
 {
     return d->size;
 }
 
-void XdgOutputV1Interface::setLogicalPosition(const QPoint &pos)
+void XdgOutputV1Interface::setLogicalPosition(const QPointF &pos)
 {
     if (pos == d->pos) {
         return;
@@ -155,7 +155,7 @@ void XdgOutputV1Interface::setLogicalPosition(const QPoint &pos)
     }
 }
 
-QPoint XdgOutputV1Interface::logicalPosition() const
+QPointF XdgOutputV1Interface::logicalPosition() const
 {
     return d->pos;
 }
@@ -214,7 +214,7 @@ void XdgOutputV1InterfacePrivate::zxdg_output_v1_bind_resource(Resource *resourc
     QObject::connect(connection, &ClientConnection::scaleOverrideChanged, q, &XdgOutputV1Interface::sendRefresh, Qt::UniqueConnection);
 }
 
-void XdgOutputV1InterfacePrivate::sendLogicalSize(Resource *resource, const QSize &size)
+void XdgOutputV1InterfacePrivate::sendLogicalSize(Resource *resource, const QSizeF &size)
 {
     if (!output || output->isRemoved()) {
         return;
@@ -222,10 +222,10 @@ void XdgOutputV1InterfacePrivate::sendLogicalSize(Resource *resource, const QSiz
     ClientConnection *connection = output->display()->getConnection(resource->client());
     qreal scaleOverride = connection->scaleOverride();
 
-    send_logical_size(resource->handle, size.width() * scaleOverride, size.height() * scaleOverride);
+    send_logical_size(resource->handle, std::round(size.width() * scaleOverride), std::round(size.height() * scaleOverride));
 }
 
-void XdgOutputV1InterfacePrivate::sendLogicalPosition(Resource *resource, const QPoint &pos)
+void XdgOutputV1InterfacePrivate::sendLogicalPosition(Resource *resource, const QPointF &pos)
 {
     if (!output || output->isRemoved()) {
         return;

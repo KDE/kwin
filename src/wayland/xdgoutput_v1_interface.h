@@ -65,24 +65,24 @@ public:
      * Sets the size of this output in logical co-ordinates.
      * Users should call done() after setting all values
      */
-    void setLogicalSize(const QSize &size);
+    void setLogicalSize(const QSizeF &size);
 
     /**
      * Returns the last set logical size on this output
      */
-    QSize logicalSize() const;
+    QSizeF logicalSize() const;
 
     /**
      * Sets the topleft position of this output in logical co-ordinates.
      * Users should call done() after setting all values
      * @see OutputInterface::setPosition
      */
-    void setLogicalPosition(const QPoint &pos);
+    void setLogicalPosition(const QPointF &pos);
 
     /**
      * Returns the last set logical position on this output
      */
-    QPoint logicalPosition() const;
+    QPointF logicalPosition() const;
 
     /**
      * @brief Sets a short name of the output
