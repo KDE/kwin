@@ -176,6 +176,7 @@ public:
     void setNoBorder(bool set) override;
     bool userCanSetNoBorder() const override;
     void checkNoBorder() override;
+    void checkActivities() override;
 
     int sessionStackingOrder() const;
 
@@ -520,7 +521,6 @@ private:
 
     Xcb::StringProperty fetchActivities() const;
     void readActivities(Xcb::StringProperty &property);
-    void checkActivities();
     bool activitiesDefined; // whether the x property was actually set
 
     bool sessionActivityOverride;

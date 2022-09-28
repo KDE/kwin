@@ -71,6 +71,7 @@ Q_SIGNALS:
     void removed(const QString &id);
 
 private Q_SLOTS:
+    void slotServiceStatusChanged();
     void slotRemoved(const QString &activity);
     void slotCurrentChanged(const QString &newActivity);
     void reallyStop(const QString &id); // dbus deadlocks suck

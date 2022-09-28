@@ -1072,6 +1072,12 @@ public:
     virtual bool userCanSetNoBorder() const;
     virtual void checkNoBorder();
 
+    /**
+     * Refresh Window's cache of activites
+     * Called when activity daemon status changes
+     */
+    virtual void checkActivities(){};
+
     void setOnActivity(const QString &activity, bool enable);
     void setOnActivities(const QStringList &newActivitiesList);
     void setOnAllActivities(bool all);
