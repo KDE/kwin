@@ -59,7 +59,7 @@ void SlideEffect::reconfigure(ReconfigureFlags)
 {
     SlideConfig::self()->read();
 
-    const qreal springConstant = 200.0 / effects->animationTimeFactor();
+    const qreal springConstant = 300.0 / effects->animationTimeFactor();
     const qreal dampingRatio = 1.1;
 
     m_motionX = SpringMotion(springConstant, dampingRatio);
