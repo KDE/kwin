@@ -3500,6 +3500,9 @@ void Window::setOnActivities(const QStringList &newActivitiesList)
     if (!Workspace::self()->activities()) {
         return;
     }
+    if (Workspace::self()->activities()->serviceStatus() != KActivities::Consumer::Running) {
+        return;
+    }
     const auto allActivities = Workspace::self()->activities()->all();
     const auto activityList = [&] {
         auto result = rules()->checkActivity(newActivitiesList);
