@@ -4487,32 +4487,33 @@ void X11Window::maximize(MaximizeMode mode)
                     if (closeHeight) {
                         bool tryBottom = titlePos == Qt::BottomEdge;
                         if ((overHeight && titlePos == Qt::TopEdge) || screenArea.top() == clientArea.top()) {
-                            r.setTop(clientArea.top());
+                            r.moveTop(clientArea.top());
                         } else {
                             tryBottom = true;
                         }
                         if (tryBottom && (overHeight || screenArea.bottom() == clientArea.bottom())) {
-                            r.setBottom(clientArea.bottom());
+                            r.moveBottom(clientArea.bottom());
                         }
                     }
                     if (closeWidth) {
                         bool tryLeft = titlePos == Qt::LeftEdge;
                         if ((overWidth && titlePos == Qt::RightEdge) || screenArea.right() == clientArea.right()) {
-                            r.setRight(clientArea.right());
+                            r.moveRight(clientArea.right());
                         } else {
                             tryLeft = true;
                         }
                         if (tryLeft && (overWidth || screenArea.left() == clientArea.left())) {
-                            r.setLeft(clientArea.left());
+                            r.moveLeft(clientArea.left());
                         }
                     }
                 }
             }
             r.moveTopLeft(rules()->checkPosition(r.topLeft()));
+            // The above code tries to center align the window followed by setting top and bottom
+            // it's possible that we're in between two pixels
+            r.setX(Xcb::nativeFloor(r.x()));
+            r.setY(Xcb::nativeFloor(r.y()));
         }
-        // The above code tries to center align the window followed by setting top and bottom
-        // it's possible that we no longer have a valid size
-        r = Xcb::nativeFloor(r);
 
         moveResize(r);
         if (options->electricBorderMaximize() && r.top() == clientArea.top()) {
