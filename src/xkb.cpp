@@ -505,7 +505,7 @@ Qt::KeyboardModifiers Xkb::modifiersRelevantForGlobalShortcuts(uint32_t scanCode
         // in that case the shift should be removed from the consumed modifiers again
         // otherwise it would not be possible to trigger e.g. Shift+W as a shortcut
         // see BUG: 370341
-        if (QChar(toQtKey(m_keysym, scanCode, Qt::ControlModifier)).isLetter()) {
+        if (QChar::isLetter(toQtKey(m_keysym, scanCode, Qt::ControlModifier))) {
             consumedMods = Qt::KeyboardModifiers();
         }
     }
