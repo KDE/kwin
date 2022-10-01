@@ -32,6 +32,8 @@
 namespace KWin
 {
 
+static const QVector<uint64_t> linearModifier = {DRM_FORMAT_MOD_LINEAR};
+
 EglGbmLayerSurface::EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend)
     : m_gpu(gpu)
     , m_eglBackend(eglBackend)
@@ -149,6 +151,7 @@ std::optional<std::tuple<std::shared_ptr<DrmFramebuffer>, QRegion>> EglGbmLayerS
 
 bool EglGbmLayerSurface::checkGbmSurface(const QSize &bufferSize, const QMap<uint32_t, QVector<uint64_t>> &formats, bool forceLinear)
 {
+    forceLinear |= m_importMode == MultiGpuImportMode::DumbBuffer || m_importMode == MultiGpuImportMode::DumbBufferXrgb8888;
     if (doesGbmSurfaceFit(m_gbmSurface.get(), bufferSize, formats)) {
         m_oldGbmSurface.reset();
     } else {
@@ -181,7 +184,7 @@ bool EglGbmLayerSurface::createGbmSurface(const QSize &size, uint32_t format, co
     }
 
     if (allowModifiers) {
-        const auto ret = GbmSurface::createSurface(m_eglBackend, size, format, modifiers, config);
+        const auto ret = GbmSurface::createSurface(m_eglBackend, size, format, forceLinear ? linearModifier : modifiers, config);
         if (const auto surface = std::get_if<std::shared_ptr<GbmSurface>>(&ret)) {
             m_oldGbmSurface = m_gbmSurface;
             m_gbmSurface = *surface;
