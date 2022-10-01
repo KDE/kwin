@@ -68,7 +68,7 @@ QRegion EglGbmLayer::currentDamage() const
 
 bool EglGbmLayer::checkTestBuffer()
 {
-    if (!m_surface.doesSurfaceFit(m_pipeline->bufferSize(), m_pipeline->formats())) {
+    if (!m_currentBuffer || !m_surface.doesSurfaceFit(m_pipeline->bufferSize(), m_pipeline->formats())) {
         const auto buffer = m_surface.renderTestBuffer(m_pipeline->bufferSize(), m_pipeline->formats());
         if (!buffer) {
             return false;
