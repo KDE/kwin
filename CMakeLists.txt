@@ -480,3 +480,5 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KWinDBusInterfaceConfig.cmake
 
 ecm_install_configured_files(INPUT plasma-kwin_x11.service.in plasma-kwin_wayland.service.in @ONLY
             DESTINATION ${KDE_INSTALL_SYSTEMDUSERUNITDIR})
+
+ki18n_install(po)
